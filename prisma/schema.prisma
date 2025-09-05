@@ -1,0 +1,26 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int        @id @default(autoincrement())
+  name       String     @unique
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+  PlayData   UserData[]
+}
+
+model UserData {
+  id         Int      @id @default(autoincrement())
+  play_count Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  user_id    Int      @unique
+  user       User     @relation(fields: [user_id], references: [id])
+}
