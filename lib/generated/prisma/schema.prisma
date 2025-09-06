@@ -9,15 +9,17 @@ datasource db {
 }
 
 model User {
-  id          Int           @id @default(autoincrement())
-  name        String        @unique
-  play_count  Int
-  created_at  DateTime      @default(now())
-  updated_at  DateTime      @updatedAt
-  PlayHistory PlayHistory[]
+  id          Int          @id @default(autoincrement())
+  username    String?      @unique
+  kakao_id    BigInt?      @unique
+  avatar      String?
+  play_count  Int?
+  created_at  DateTime     @default(now())
+  updated_at  DateTime     @updatedAt
+  PlayHistory RecentPlay[]
 }
 
-model PlayHistory {
+model RecentPlay {
   id         Int      @id @default(autoincrement())
   title      String
   artist     String
