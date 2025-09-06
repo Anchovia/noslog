@@ -30,9 +30,9 @@ async function getPlayerData() {
             body: JSON.stringify({ playerData, recentData, totalData }),
         });
 
-        alert("데이터 전송 완료");
+        console.log("데이터 전송 완료");
     } catch (err) {
-        alert("데이터 전송 중 오류 발생");
+        console.log("데이터 전송 중 오류 발생");
         console.log("error state:", err);
     }
 }

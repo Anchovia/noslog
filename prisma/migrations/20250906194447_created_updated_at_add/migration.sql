@@ -19,7 +19,9 @@ CREATE TABLE "Music" (
     "category" TEXT NOT NULL,
     "category_short" TEXT NOT NULL,
     "description" TEXT,
-    "background" TEXT
+    "background" TEXT,
+    "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" DATETIME NOT NULL
 );
 
 -- CreateTable
@@ -54,6 +56,8 @@ CREATE TABLE "PlayData" (
     "grade_basic" INTEGER NOT NULL,
     "grade_recital" INTEGER NOT NULL,
     "besttime" TEXT NOT NULL,
+    "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" DATETIME NOT NULL,
     "user_id" INTEGER NOT NULL,
     "music_idx" TEXT NOT NULL,
     CONSTRAINT "PlayData_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,

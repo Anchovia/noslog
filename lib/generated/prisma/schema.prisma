@@ -30,6 +30,8 @@ model Music {
   category_short String
   description    String?
   background     String?
+  created_at     DateTime     @default(now())
+  updated_at     DateTime     @updatedAt
   RecentPlay     RecentPlay[]
   PlayData       PlayData[]
 }
@@ -51,7 +53,7 @@ model RecentPlay {
 }
 
 model PlayData {
-  id              Int    @id @default(autoincrement())
+  id              Int      @id @default(autoincrement())
   level           Int
   difficulty      String
   score           Int
@@ -64,8 +66,10 @@ model PlayData {
   grade_basic     Int
   grade_recital   Int
   besttime        String
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
   user_id         Int
-  user            User   @relation(fields: [user_id], references: [id])
+  user            User     @relation(fields: [user_id], references: [id])
   music_idx       String
-  music           Music  @relation(fields: [music_idx], references: [index])
+  music           Music    @relation(fields: [music_idx], references: [index])
 }

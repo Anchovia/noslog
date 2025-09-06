@@ -2402,6 +2402,8 @@ export namespace Prisma {
     category_short: string | null
     description: string | null
     background: string | null
+    created_at: Date | null
+    updated_at: Date | null
   }
 
   export type MusicMaxAggregateOutputType = {
@@ -2414,6 +2416,8 @@ export namespace Prisma {
     category_short: string | null
     description: string | null
     background: string | null
+    created_at: Date | null
+    updated_at: Date | null
   }
 
   export type MusicCountAggregateOutputType = {
@@ -2426,6 +2430,8 @@ export namespace Prisma {
     category_short: number
     description: number
     background: number
+    created_at: number
+    updated_at: number
     _all: number
   }
 
@@ -2448,6 +2454,8 @@ export namespace Prisma {
     category_short?: true
     description?: true
     background?: true
+    created_at?: true
+    updated_at?: true
   }
 
   export type MusicMaxAggregateInputType = {
@@ -2460,6 +2468,8 @@ export namespace Prisma {
     category_short?: true
     description?: true
     background?: true
+    created_at?: true
+    updated_at?: true
   }
 
   export type MusicCountAggregateInputType = {
@@ -2472,6 +2482,8 @@ export namespace Prisma {
     category_short?: true
     description?: true
     background?: true
+    created_at?: true
+    updated_at?: true
     _all?: true
   }
 
@@ -2571,6 +2583,8 @@ export namespace Prisma {
     category_short: string
     description: string | null
     background: string | null
+    created_at: Date
+    updated_at: Date
     _count: MusicCountAggregateOutputType | null
     _avg: MusicAvgAggregateOutputType | null
     _sum: MusicSumAggregateOutputType | null
@@ -2602,6 +2616,8 @@ export namespace Prisma {
     category_short?: boolean
     description?: boolean
     background?: boolean
+    created_at?: boolean
+    updated_at?: boolean
     RecentPlay?: boolean | Music$RecentPlayArgs<ExtArgs>
     PlayData?: boolean | Music$PlayDataArgs<ExtArgs>
     _count?: boolean | MusicCountOutputTypeDefaultArgs<ExtArgs>
@@ -2617,6 +2633,8 @@ export namespace Prisma {
     category_short?: boolean
     description?: boolean
     background?: boolean
+    created_at?: boolean
+    updated_at?: boolean
   }, ExtArgs["result"]["music"]>
 
   export type MusicSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -2629,6 +2647,8 @@ export namespace Prisma {
     category_short?: boolean
     description?: boolean
     background?: boolean
+    created_at?: boolean
+    updated_at?: boolean
   }, ExtArgs["result"]["music"]>
 
   export type MusicSelectScalar = {
@@ -2641,9 +2661,11 @@ export namespace Prisma {
     category_short?: boolean
     description?: boolean
     background?: boolean
+    created_at?: boolean
+    updated_at?: boolean
   }
 
-  export type MusicOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "index" | "title" | "title_kana" | "artist" | "category" | "category_short" | "description" | "background", ExtArgs["result"]["music"]>
+  export type MusicOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "index" | "title" | "title_kana" | "artist" | "category" | "category_short" | "description" | "background" | "created_at" | "updated_at", ExtArgs["result"]["music"]>
   export type MusicInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     RecentPlay?: boolean | Music$RecentPlayArgs<ExtArgs>
     PlayData?: boolean | Music$PlayDataArgs<ExtArgs>
@@ -2668,6 +2690,8 @@ export namespace Prisma {
       category_short: string
       description: string | null
       background: string | null
+      created_at: Date
+      updated_at: Date
     }, ExtArgs["result"]["music"]>
     composites: {}
   }
@@ -3102,6 +3126,8 @@ export namespace Prisma {
     readonly category_short: FieldRef<"Music", 'String'>
     readonly description: FieldRef<"Music", 'String'>
     readonly background: FieldRef<"Music", 'String'>
+    readonly created_at: FieldRef<"Music", 'DateTime'>
+    readonly updated_at: FieldRef<"Music", 'DateTime'>
   }
     
 
@@ -4800,6 +4826,8 @@ export namespace Prisma {
     grade_basic: number | null
     grade_recital: number | null
     besttime: string | null
+    created_at: Date | null
+    updated_at: Date | null
     user_id: number | null
     music_idx: string | null
   }
@@ -4818,6 +4846,8 @@ export namespace Prisma {
     grade_basic: number | null
     grade_recital: number | null
     besttime: string | null
+    created_at: Date | null
+    updated_at: Date | null
     user_id: number | null
     music_idx: string | null
   }
@@ -4836,6 +4866,8 @@ export namespace Prisma {
     grade_basic: number
     grade_recital: number
     besttime: number
+    created_at: number
+    updated_at: number
     user_id: number
     music_idx: number
     _all: number
@@ -4884,6 +4916,8 @@ export namespace Prisma {
     grade_basic?: true
     grade_recital?: true
     besttime?: true
+    created_at?: true
+    updated_at?: true
     user_id?: true
     music_idx?: true
   }
@@ -4902,6 +4936,8 @@ export namespace Prisma {
     grade_basic?: true
     grade_recital?: true
     besttime?: true
+    created_at?: true
+    updated_at?: true
     user_id?: true
     music_idx?: true
   }
@@ -4920,6 +4956,8 @@ export namespace Prisma {
     grade_basic?: true
     grade_recital?: true
     besttime?: true
+    created_at?: true
+    updated_at?: true
     user_id?: true
     music_idx?: true
     _all?: true
@@ -5025,6 +5063,8 @@ export namespace Prisma {
     grade_basic: number
     grade_recital: number
     besttime: string
+    created_at: Date
+    updated_at: Date
     user_id: number
     music_idx: string
     _count: PlayDataCountAggregateOutputType | null
@@ -5062,6 +5102,8 @@ export namespace Prisma {
     grade_basic?: boolean
     grade_recital?: boolean
     besttime?: boolean
+    created_at?: boolean
+    updated_at?: boolean
     user_id?: boolean
     music_idx?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -5082,6 +5124,8 @@ export namespace Prisma {
     grade_basic?: boolean
     grade_recital?: boolean
     besttime?: boolean
+    created_at?: boolean
+    updated_at?: boolean
     user_id?: boolean
     music_idx?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -5102,6 +5146,8 @@ export namespace Prisma {
     grade_basic?: boolean
     grade_recital?: boolean
     besttime?: boolean
+    created_at?: boolean
+    updated_at?: boolean
     user_id?: boolean
     music_idx?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -5122,11 +5168,13 @@ export namespace Prisma {
     grade_basic?: boolean
     grade_recital?: boolean
     besttime?: boolean
+    created_at?: boolean
+    updated_at?: boolean
     user_id?: boolean
     music_idx?: boolean
   }
 
-  export type PlayDataOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "level" | "difficulty" | "score" | "rank" | "fc_type" | "play_count" | "fullcombo_count" | "pianistic_count" | "max_combo" | "grade_basic" | "grade_recital" | "besttime" | "user_id" | "music_idx", ExtArgs["result"]["playData"]>
+  export type PlayDataOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "level" | "difficulty" | "score" | "rank" | "fc_type" | "play_count" | "fullcombo_count" | "pianistic_count" | "max_combo" | "grade_basic" | "grade_recital" | "besttime" | "created_at" | "updated_at" | "user_id" | "music_idx", ExtArgs["result"]["playData"]>
   export type PlayDataInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     music?: boolean | MusicDefaultArgs<ExtArgs>
@@ -5160,6 +5208,8 @@ export namespace Prisma {
       grade_basic: number
       grade_recital: number
       besttime: string
+      created_at: Date
+      updated_at: Date
       user_id: number
       music_idx: string
     }, ExtArgs["result"]["playData"]>
@@ -5600,6 +5650,8 @@ export namespace Prisma {
     readonly grade_basic: FieldRef<"PlayData", 'Int'>
     readonly grade_recital: FieldRef<"PlayData", 'Int'>
     readonly besttime: FieldRef<"PlayData", 'String'>
+    readonly created_at: FieldRef<"PlayData", 'DateTime'>
+    readonly updated_at: FieldRef<"PlayData", 'DateTime'>
     readonly user_id: FieldRef<"PlayData", 'Int'>
     readonly music_idx: FieldRef<"PlayData", 'String'>
   }
@@ -6047,7 +6099,9 @@ export namespace Prisma {
     category: 'category',
     category_short: 'category_short',
     description: 'description',
-    background: 'background'
+    background: 'background',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
   };
 
   export type MusicScalarFieldEnum = (typeof MusicScalarFieldEnum)[keyof typeof MusicScalarFieldEnum]
@@ -6084,6 +6138,8 @@ export namespace Prisma {
     grade_basic: 'grade_basic',
     grade_recital: 'grade_recital',
     besttime: 'besttime',
+    created_at: 'created_at',
+    updated_at: 'updated_at',
     user_id: 'user_id',
     music_idx: 'music_idx'
   };
@@ -6233,6 +6289,8 @@ export namespace Prisma {
     category_short?: StringFilter<"Music"> | string
     description?: StringNullableFilter<"Music"> | string | null
     background?: StringNullableFilter<"Music"> | string | null
+    created_at?: DateTimeFilter<"Music"> | Date | string
+    updated_at?: DateTimeFilter<"Music"> | Date | string
     RecentPlay?: RecentPlayListRelationFilter
     PlayData?: PlayDataListRelationFilter
   }
@@ -6247,6 +6305,8 @@ export namespace Prisma {
     category_short?: SortOrder
     description?: SortOrderInput | SortOrder
     background?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
     RecentPlay?: RecentPlayOrderByRelationAggregateInput
     PlayData?: PlayDataOrderByRelationAggregateInput
   }
@@ -6264,6 +6324,8 @@ export namespace Prisma {
     category_short?: StringFilter<"Music"> | string
     description?: StringNullableFilter<"Music"> | string | null
     background?: StringNullableFilter<"Music"> | string | null
+    created_at?: DateTimeFilter<"Music"> | Date | string
+    updated_at?: DateTimeFilter<"Music"> | Date | string
     RecentPlay?: RecentPlayListRelationFilter
     PlayData?: PlayDataListRelationFilter
   }, "id" | "index">
@@ -6278,6 +6340,8 @@ export namespace Prisma {
     category_short?: SortOrder
     description?: SortOrderInput | SortOrder
     background?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
     _count?: MusicCountOrderByAggregateInput
     _avg?: MusicAvgOrderByAggregateInput
     _max?: MusicMaxOrderByAggregateInput
@@ -6298,6 +6362,8 @@ export namespace Prisma {
     category_short?: StringWithAggregatesFilter<"Music"> | string
     description?: StringNullableWithAggregatesFilter<"Music"> | string | null
     background?: StringNullableWithAggregatesFilter<"Music"> | string | null
+    created_at?: DateTimeWithAggregatesFilter<"Music"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"Music"> | Date | string
   }
 
   export type RecentPlayWhereInput = {
@@ -6407,6 +6473,8 @@ export namespace Prisma {
     grade_basic?: IntFilter<"PlayData"> | number
     grade_recital?: IntFilter<"PlayData"> | number
     besttime?: StringFilter<"PlayData"> | string
+    created_at?: DateTimeFilter<"PlayData"> | Date | string
+    updated_at?: DateTimeFilter<"PlayData"> | Date | string
     user_id?: IntFilter<"PlayData"> | number
     music_idx?: StringFilter<"PlayData"> | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -6427,6 +6495,8 @@ export namespace Prisma {
     grade_basic?: SortOrder
     grade_recital?: SortOrder
     besttime?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
     user_id?: SortOrder
     music_idx?: SortOrder
     user?: UserOrderByWithRelationInput
@@ -6450,6 +6520,8 @@ export namespace Prisma {
     grade_basic?: IntFilter<"PlayData"> | number
     grade_recital?: IntFilter<"PlayData"> | number
     besttime?: StringFilter<"PlayData"> | string
+    created_at?: DateTimeFilter<"PlayData"> | Date | string
+    updated_at?: DateTimeFilter<"PlayData"> | Date | string
     user_id?: IntFilter<"PlayData"> | number
     music_idx?: StringFilter<"PlayData"> | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -6470,6 +6542,8 @@ export namespace Prisma {
     grade_basic?: SortOrder
     grade_recital?: SortOrder
     besttime?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
     user_id?: SortOrder
     music_idx?: SortOrder
     _count?: PlayDataCountOrderByAggregateInput
@@ -6496,6 +6570,8 @@ export namespace Prisma {
     grade_basic?: IntWithAggregatesFilter<"PlayData"> | number
     grade_recital?: IntWithAggregatesFilter<"PlayData"> | number
     besttime?: StringWithAggregatesFilter<"PlayData"> | string
+    created_at?: DateTimeWithAggregatesFilter<"PlayData"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"PlayData"> | Date | string
     user_id?: IntWithAggregatesFilter<"PlayData"> | number
     music_idx?: StringWithAggregatesFilter<"PlayData"> | string
   }
@@ -6584,6 +6660,8 @@ export namespace Prisma {
     category_short: string
     description?: string | null
     background?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
     RecentPlay?: RecentPlayCreateNestedManyWithoutMusicInput
     PlayData?: PlayDataCreateNestedManyWithoutMusicInput
   }
@@ -6598,6 +6676,8 @@ export namespace Prisma {
     category_short: string
     description?: string | null
     background?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
     RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutMusicInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutMusicInput
   }
@@ -6611,6 +6691,8 @@ export namespace Prisma {
     category_short?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     background?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     RecentPlay?: RecentPlayUpdateManyWithoutMusicNestedInput
     PlayData?: PlayDataUpdateManyWithoutMusicNestedInput
   }
@@ -6625,6 +6707,8 @@ export namespace Prisma {
     category_short?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     background?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     RecentPlay?: RecentPlayUncheckedUpdateManyWithoutMusicNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutMusicNestedInput
   }
@@ -6639,6 +6723,8 @@ export namespace Prisma {
     category_short: string
     description?: string | null
     background?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
   }
 
   export type MusicUpdateManyMutationInput = {
@@ -6650,6 +6736,8 @@ export namespace Prisma {
     category_short?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     background?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type MusicUncheckedUpdateManyInput = {
@@ -6662,6 +6750,8 @@ export namespace Prisma {
     category_short?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     background?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type RecentPlayCreateInput = {
@@ -6770,6 +6860,8 @@ export namespace Prisma {
     grade_basic: number
     grade_recital: number
     besttime: string
+    created_at?: Date | string
+    updated_at?: Date | string
     user: UserCreateNestedOneWithoutPlayDataInput
     music: MusicCreateNestedOneWithoutPlayDataInput
   }
@@ -6788,6 +6880,8 @@ export namespace Prisma {
     grade_basic: number
     grade_recital: number
     besttime: string
+    created_at?: Date | string
+    updated_at?: Date | string
     user_id: number
     music_idx: string
   }
@@ -6805,6 +6899,8 @@ export namespace Prisma {
     grade_basic?: IntFieldUpdateOperationsInput | number
     grade_recital?: IntFieldUpdateOperationsInput | number
     besttime?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutPlayDataNestedInput
     music?: MusicUpdateOneRequiredWithoutPlayDataNestedInput
   }
@@ -6823,6 +6919,8 @@ export namespace Prisma {
     grade_basic?: IntFieldUpdateOperationsInput | number
     grade_recital?: IntFieldUpdateOperationsInput | number
     besttime?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user_id?: IntFieldUpdateOperationsInput | number
     music_idx?: StringFieldUpdateOperationsInput | string
   }
@@ -6841,6 +6939,8 @@ export namespace Prisma {
     grade_basic: number
     grade_recital: number
     besttime: string
+    created_at?: Date | string
+    updated_at?: Date | string
     user_id: number
     music_idx: string
   }
@@ -6858,6 +6958,8 @@ export namespace Prisma {
     grade_basic?: IntFieldUpdateOperationsInput | number
     grade_recital?: IntFieldUpdateOperationsInput | number
     besttime?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PlayDataUncheckedUpdateManyInput = {
@@ -6874,6 +6976,8 @@ export namespace Prisma {
     grade_basic?: IntFieldUpdateOperationsInput | number
     grade_recital?: IntFieldUpdateOperationsInput | number
     besttime?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user_id?: IntFieldUpdateOperationsInput | number
     music_idx?: StringFieldUpdateOperationsInput | string
   }
@@ -7106,6 +7210,8 @@ export namespace Prisma {
     category_short?: SortOrder
     description?: SortOrder
     background?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
   }
 
   export type MusicAvgOrderByAggregateInput = {
@@ -7122,6 +7228,8 @@ export namespace Prisma {
     category_short?: SortOrder
     description?: SortOrder
     background?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
   }
 
   export type MusicMinOrderByAggregateInput = {
@@ -7134,6 +7242,8 @@ export namespace Prisma {
     category_short?: SortOrder
     description?: SortOrder
     background?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
   }
 
   export type MusicSumOrderByAggregateInput = {
@@ -7239,6 +7349,8 @@ export namespace Prisma {
     grade_basic?: SortOrder
     grade_recital?: SortOrder
     besttime?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
     user_id?: SortOrder
     music_idx?: SortOrder
   }
@@ -7271,6 +7383,8 @@ export namespace Prisma {
     grade_basic?: SortOrder
     grade_recital?: SortOrder
     besttime?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
     user_id?: SortOrder
     music_idx?: SortOrder
   }
@@ -7289,6 +7403,8 @@ export namespace Prisma {
     grade_basic?: SortOrder
     grade_recital?: SortOrder
     besttime?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
     user_id?: SortOrder
     music_idx?: SortOrder
   }
@@ -7804,6 +7920,8 @@ export namespace Prisma {
     grade_basic: number
     grade_recital: number
     besttime: string
+    created_at?: Date | string
+    updated_at?: Date | string
     music: MusicCreateNestedOneWithoutPlayDataInput
   }
 
@@ -7821,6 +7939,8 @@ export namespace Prisma {
     grade_basic: number
     grade_recital: number
     besttime: string
+    created_at?: Date | string
+    updated_at?: Date | string
     music_idx: string
   }
 
@@ -7899,6 +8019,8 @@ export namespace Prisma {
     grade_basic?: IntFilter<"PlayData"> | number
     grade_recital?: IntFilter<"PlayData"> | number
     besttime?: StringFilter<"PlayData"> | string
+    created_at?: DateTimeFilter<"PlayData"> | Date | string
+    updated_at?: DateTimeFilter<"PlayData"> | Date | string
     user_id?: IntFilter<"PlayData"> | number
     music_idx?: StringFilter<"PlayData"> | string
   }
@@ -7950,6 +8072,8 @@ export namespace Prisma {
     grade_basic: number
     grade_recital: number
     besttime: string
+    created_at?: Date | string
+    updated_at?: Date | string
     user: UserCreateNestedOneWithoutPlayDataInput
   }
 
@@ -7967,6 +8091,8 @@ export namespace Prisma {
     grade_basic: number
     grade_recital: number
     besttime: string
+    created_at?: Date | string
+    updated_at?: Date | string
     user_id: number
   }
 
@@ -8046,6 +8172,8 @@ export namespace Prisma {
     category_short: string
     description?: string | null
     background?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
     PlayData?: PlayDataCreateNestedManyWithoutMusicInput
   }
 
@@ -8059,6 +8187,8 @@ export namespace Prisma {
     category_short: string
     description?: string | null
     background?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutMusicInput
   }
 
@@ -8119,6 +8249,8 @@ export namespace Prisma {
     category_short?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     background?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayData?: PlayDataUpdateManyWithoutMusicNestedInput
   }
 
@@ -8132,6 +8264,8 @@ export namespace Prisma {
     category_short?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     background?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayData?: PlayDataUncheckedUpdateManyWithoutMusicNestedInput
   }
 
@@ -8170,6 +8304,8 @@ export namespace Prisma {
     category_short: string
     description?: string | null
     background?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
     RecentPlay?: RecentPlayCreateNestedManyWithoutMusicInput
   }
 
@@ -8183,6 +8319,8 @@ export namespace Prisma {
     category_short: string
     description?: string | null
     background?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
     RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutMusicInput
   }
 
@@ -8243,6 +8381,8 @@ export namespace Prisma {
     category_short?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     background?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     RecentPlay?: RecentPlayUpdateManyWithoutMusicNestedInput
   }
 
@@ -8256,6 +8396,8 @@ export namespace Prisma {
     category_short?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     background?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     RecentPlay?: RecentPlayUncheckedUpdateManyWithoutMusicNestedInput
   }
 
@@ -8286,6 +8428,8 @@ export namespace Prisma {
     grade_basic: number
     grade_recital: number
     besttime: string
+    created_at?: Date | string
+    updated_at?: Date | string
     music_idx: string
   }
 
@@ -8340,6 +8484,8 @@ export namespace Prisma {
     grade_basic?: IntFieldUpdateOperationsInput | number
     grade_recital?: IntFieldUpdateOperationsInput | number
     besttime?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     music?: MusicUpdateOneRequiredWithoutPlayDataNestedInput
   }
 
@@ -8357,6 +8503,8 @@ export namespace Prisma {
     grade_basic?: IntFieldUpdateOperationsInput | number
     grade_recital?: IntFieldUpdateOperationsInput | number
     besttime?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     music_idx?: StringFieldUpdateOperationsInput | string
   }
 
@@ -8374,6 +8522,8 @@ export namespace Prisma {
     grade_basic?: IntFieldUpdateOperationsInput | number
     grade_recital?: IntFieldUpdateOperationsInput | number
     besttime?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     music_idx?: StringFieldUpdateOperationsInput | string
   }
 
@@ -8404,6 +8554,8 @@ export namespace Prisma {
     grade_basic: number
     grade_recital: number
     besttime: string
+    created_at?: Date | string
+    updated_at?: Date | string
     user_id: number
   }
 
@@ -8458,6 +8610,8 @@ export namespace Prisma {
     grade_basic?: IntFieldUpdateOperationsInput | number
     grade_recital?: IntFieldUpdateOperationsInput | number
     besttime?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutPlayDataNestedInput
   }
 
@@ -8475,6 +8629,8 @@ export namespace Prisma {
     grade_basic?: IntFieldUpdateOperationsInput | number
     grade_recital?: IntFieldUpdateOperationsInput | number
     besttime?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user_id?: IntFieldUpdateOperationsInput | number
   }
 
@@ -8492,6 +8648,8 @@ export namespace Prisma {
     grade_basic?: IntFieldUpdateOperationsInput | number
     grade_recital?: IntFieldUpdateOperationsInput | number
     besttime?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user_id?: IntFieldUpdateOperationsInput | number
   }
 
