@@ -5,7 +5,7 @@ import { Outfit } from "next/font/google";
 
 const outfit = Outfit({
     subsets: ["latin"],
-    weight: ["300", "400", "500", "700"],
+    weight: ["100", "200", "300", "400", "500", "500", "700", "800", "900"],
     style: ["normal"],
 });
 
@@ -20,7 +20,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en">
+        <html lang="en" className="bg-black text-white">
             <body className={`${outfit.className} antialiased`}>
                 {children}
             </body>
