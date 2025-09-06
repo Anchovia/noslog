@@ -1,17 +1,6 @@
 import db from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 
-interface PlayData {
-    title: string;
-    artist: string;
-    difficulty: string;
-    level: number;
-    score: number;
-    max_combo: number;
-    rank: string;
-    play_time: string;
-}
-
 // POST 요청 처리
 export async function POST(request: NextRequest) {
     // CORS 헤더
@@ -21,7 +10,7 @@ export async function POST(request: NextRequest) {
     headers.set("Access-Control-Allow-Headers", "Content-Type");
 
     // 요청 body 읽기
-    const { playerData, recentData } = await request.json();
+    const { playerData, recentData, totalData } = await request.json();
     const {
         data: {
             player: { name, play_count },
@@ -34,75 +23,108 @@ export async function POST(request: NextRequest) {
             },
         },
     } = recentData;
+    const {
+        data: { music },
+    } = totalData;
 
-    // db에 유저 없는 경우 유저 생성
-    const user = await db.user.findUnique({
-        where: { name },
-        select: { id: true },
-    });
-    if (!user) {
-        // 유저가 없는 경우 유저 및 플레이 횟수 생성
-        const user = await db.user.create({
-            data: {
-                name,
-                play_count,
-            },
+    // totalData 중 music 생성 로직
+    await music.map(async (data: any) => {
+        // 빈 데이터 null로 변경
+        if (data.artist === "") {
+            data.artist = null;
+        }
+        if (data.description === "") {
+            data.description = null;
+        }
+
+        // idx가 있는지 검증
+        const idx = await db.music.findUnique({
+            where: { index: data["@index"] },
+            select: { index: true },
         });
-
-        // 최근 플레이 히스토리 생성
-        history.map(async (data: PlayData) => {
-            await db.playHistory.create({
+        if (!idx) {
+            // idx가 없을 경우 music create
+            const resultMusic = await db.music.create({
                 data: {
-                    user_id: user.id,
-                    title: data.title,
+                    index: data["@index"],
                     artist: data.artist,
+                    category: data.category,
+                    category_short: data.category_short,
+                    description: data.description,
+                    title: data.title,
+                    title_kana: data.title_kana,
+                },
+            });
+        }
+    });
+
+    // 유저 데이터에 플레이 횟수 업데이트
+    const user = await db.user.update({
+        where: {
+            username: name,
+        },
+        data: {
+            play_count: play_count,
+        },
+        select: {
+            id: true,
+        },
+    });
+
+    // 최근 플레이 히스토리 업데이트
+    const recentPlayDeleteResult = await db.recentPlay.deleteMany({
+        where: {
+            user_id: user.id,
+        },
+    });
+    if (recentPlayDeleteResult) {
+        history.map(async (data: any) => {
+            await db.recentPlay.create({
+                data: {
                     difficulty: data.difficulty,
                     level: data.level,
                     score: data.score,
                     max_combo: data.max_combo,
                     rank: data.rank,
                     play_time: data.play_time,
+                    user_id: user.id,
+                    music_idx: data.music,
                 },
             });
         });
-    } else {
-        // 유저가 있는 경우 플레이 횟수 업데이트
-        await db.user.update({
-            where: { id: user.id },
-            data: {
-                name,
-                play_count,
-            },
-        });
+    }
 
-        // 최근 플레이 히스토리 업데이트
-        const result = await db.playHistory.deleteMany({
-            where: {
-                user_id: user.id,
-            },
-        });
-        if (result) {
-            history.map(async (data: PlayData) => {
-                db.playHistory.deleteMany({
-                    where: {
-                        user_id: user.id,
-                    },
-                });
-                await db.playHistory.create({
+    // PlayData 생성 로직 전 전체 playData 삭제
+    // 전체 playData 삭제
+    const playdataDeleteResult = await db.playData.deleteMany({
+        where: {
+            user_id: user.id,
+        },
+    });
+    // 삭제 성공시 플레이 데이터 생성 시작
+    if (playdataDeleteResult) {
+        await music.map(async (data: any) => {
+            await data.sheet.map(async (sheet: any) => {
+                await db.playData.create({
                     data: {
                         user_id: user.id,
-                        title: data.title,
-                        artist: data.artist,
-                        difficulty: data.difficulty,
-                        level: data.level,
-                        score: data.score,
-                        max_combo: data.max_combo,
-                        rank: data.rank,
-                        play_time: data.play_time,
+                        music_idx: data["@index"],
+                        level: sheet.level,
+                        difficulty: sheet.difficulty,
+                        score: sheet.score,
+                        rank: sheet.rank,
+                        fc_type: sheet.fc_type,
+                        play_count: sheet.play_count,
+                        fullcombo_count: sheet.fullcombo_count,
+                        pianistic_count: sheet.pianistic_count,
+                        max_combo: sheet.max_combo,
+                        grade_basic: sheet.grade_basic,
+                        grade_recital: sheet.grade_recital,
+                        besttime: sheet.besttime,
                     },
                 });
             });
-        }
+        });
     }
 
     // 성공

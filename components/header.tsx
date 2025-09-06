@@ -16,12 +16,15 @@ export default async function Header() {
             {user ? (
                 <Link
                     href="/profile"
-                    className="size-12 rounded-full overflow-hidden relative"
+                    className="size-11 rounded-full overflow-hidden relative"
                 >
                     <Image src={user!.avatar!} alt="avatar" fill />
                 </Link>
             ) : (
-                <Link href="/login" className="size-10 bg-slate-600" />
+                <Link
+                    href="/login"
+                    className="size-11 bg-slate-600 rounded-full"
+                />
             )}
         </header>
     );

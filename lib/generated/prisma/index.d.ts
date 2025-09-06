@@ -19,10 +19,20 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  */
 export type User = $Result.DefaultSelection<Prisma.$UserPayload>
 /**
+ * Model Music
+ * 
+ */
+export type Music = $Result.DefaultSelection<Prisma.$MusicPayload>
+/**
  * Model RecentPlay
  * 
  */
 export type RecentPlay = $Result.DefaultSelection<Prisma.$RecentPlayPayload>
+/**
+ * Model PlayData
+ * 
+ */
+export type PlayData = $Result.DefaultSelection<Prisma.$PlayDataPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -153,6 +163,16 @@ export class PrismaClient<
   get user(): Prisma.UserDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.music`: Exposes CRUD operations for the **Music** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Music
+    * const music = await prisma.music.findMany()
+    * ```
+    */
+  get music(): Prisma.MusicDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.recentPlay`: Exposes CRUD operations for the **RecentPlay** model.
     * Example usage:
     * ```ts
@@ -161,6 +181,16 @@ export class PrismaClient<
     * ```
     */
   get recentPlay(): Prisma.RecentPlayDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.playData`: Exposes CRUD operations for the **PlayData** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PlayData
+    * const playData = await prisma.playData.findMany()
+    * ```
+    */
+  get playData(): Prisma.PlayDataDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -602,7 +632,9 @@ export namespace Prisma {
 
   export const ModelName: {
     User: 'User',
-    RecentPlay: 'RecentPlay'
+    Music: 'Music',
+    RecentPlay: 'RecentPlay',
+    PlayData: 'PlayData'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -621,7 +653,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "recentPlay"
+      modelProps: "user" | "music" | "recentPlay" | "playData"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -699,6 +731,80 @@ export namespace Prisma {
           }
         }
       }
+      Music: {
+        payload: Prisma.$MusicPayload<ExtArgs>
+        fields: Prisma.MusicFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.MusicFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MusicPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.MusicFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MusicPayload>
+          }
+          findFirst: {
+            args: Prisma.MusicFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MusicPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.MusicFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MusicPayload>
+          }
+          findMany: {
+            args: Prisma.MusicFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MusicPayload>[]
+          }
+          create: {
+            args: Prisma.MusicCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MusicPayload>
+          }
+          createMany: {
+            args: Prisma.MusicCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.MusicCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MusicPayload>[]
+          }
+          delete: {
+            args: Prisma.MusicDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MusicPayload>
+          }
+          update: {
+            args: Prisma.MusicUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MusicPayload>
+          }
+          deleteMany: {
+            args: Prisma.MusicDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.MusicUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.MusicUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MusicPayload>[]
+          }
+          upsert: {
+            args: Prisma.MusicUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MusicPayload>
+          }
+          aggregate: {
+            args: Prisma.MusicAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateMusic>
+          }
+          groupBy: {
+            args: Prisma.MusicGroupByArgs<ExtArgs>
+            result: $Utils.Optional<MusicGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.MusicCountArgs<ExtArgs>
+            result: $Utils.Optional<MusicCountAggregateOutputType> | number
+          }
+        }
+      }
       RecentPlay: {
         payload: Prisma.$RecentPlayPayload<ExtArgs>
         fields: Prisma.RecentPlayFieldRefs
@@ -770,6 +876,80 @@ export namespace Prisma {
           count: {
             args: Prisma.RecentPlayCountArgs<ExtArgs>
             result: $Utils.Optional<RecentPlayCountAggregateOutputType> | number
+          }
+        }
+      }
+      PlayData: {
+        payload: Prisma.$PlayDataPayload<ExtArgs>
+        fields: Prisma.PlayDataFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PlayDataFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlayDataPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PlayDataFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlayDataPayload>
+          }
+          findFirst: {
+            args: Prisma.PlayDataFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlayDataPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PlayDataFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlayDataPayload>
+          }
+          findMany: {
+            args: Prisma.PlayDataFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlayDataPayload>[]
+          }
+          create: {
+            args: Prisma.PlayDataCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlayDataPayload>
+          }
+          createMany: {
+            args: Prisma.PlayDataCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PlayDataCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlayDataPayload>[]
+          }
+          delete: {
+            args: Prisma.PlayDataDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlayDataPayload>
+          }
+          update: {
+            args: Prisma.PlayDataUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlayDataPayload>
+          }
+          deleteMany: {
+            args: Prisma.PlayDataDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PlayDataUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.PlayDataUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlayDataPayload>[]
+          }
+          upsert: {
+            args: Prisma.PlayDataUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlayDataPayload>
+          }
+          aggregate: {
+            args: Prisma.PlayDataAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePlayData>
+          }
+          groupBy: {
+            args: Prisma.PlayDataGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PlayDataGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PlayDataCountArgs<ExtArgs>
+            result: $Utils.Optional<PlayDataCountAggregateOutputType> | number
           }
         }
       }
@@ -866,7 +1046,9 @@ export namespace Prisma {
   }
   export type GlobalOmitConfig = {
     user?: UserOmit
+    music?: MusicOmit
     recentPlay?: RecentPlayOmit
+    playData?: PlayDataOmit
   }
 
   /* Types for Logging */
@@ -948,10 +1130,12 @@ export namespace Prisma {
 
   export type UserCountOutputType = {
     PlayHistory: number
+    PlayData: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     PlayHistory?: boolean | UserCountOutputTypeCountPlayHistoryArgs
+    PlayData?: boolean | UserCountOutputTypeCountPlayDataArgs
   }
 
   // Custom InputTypes
@@ -970,6 +1154,53 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountPlayHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: RecentPlayWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountPlayDataArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PlayDataWhereInput
+  }
+
+
+  /**
+   * Count Type MusicCountOutputType
+   */
+
+  export type MusicCountOutputType = {
+    RecentPlay: number
+    PlayData: number
+  }
+
+  export type MusicCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    RecentPlay?: boolean | MusicCountOutputTypeCountRecentPlayArgs
+    PlayData?: boolean | MusicCountOutputTypeCountPlayDataArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * MusicCountOutputType without action
+   */
+  export type MusicCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MusicCountOutputType
+     */
+    select?: MusicCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * MusicCountOutputType without action
+   */
+  export type MusicCountOutputTypeCountRecentPlayArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RecentPlayWhereInput
+  }
+
+  /**
+   * MusicCountOutputType without action
+   */
+  export type MusicCountOutputTypeCountPlayDataArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PlayDataWhereInput
   }
 
 
@@ -1200,6 +1431,7 @@ export namespace Prisma {
     created_at?: boolean
     updated_at?: boolean
     PlayHistory?: boolean | User$PlayHistoryArgs<ExtArgs>
+    PlayData?: boolean | User$PlayDataArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1236,6 +1468,7 @@ export namespace Prisma {
   export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "kakao_id" | "avatar" | "play_count" | "created_at" | "updated_at", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     PlayHistory?: boolean | User$PlayHistoryArgs<ExtArgs>
+    PlayData?: boolean | User$PlayDataArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -1245,6 +1478,7 @@ export namespace Prisma {
     name: "User"
     objects: {
       PlayHistory: Prisma.$RecentPlayPayload<ExtArgs>[]
+      PlayData: Prisma.$PlayDataPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -1649,6 +1883,7 @@ export namespace Prisma {
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     PlayHistory<T extends User$PlayHistoryArgs<ExtArgs> = {}>(args?: Subset<T, User$PlayHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RecentPlayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    PlayData<T extends User$PlayDataArgs<ExtArgs> = {}>(args?: Subset<T, User$PlayDataArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlayDataPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2095,6 +2330,30 @@ export namespace Prisma {
   }
 
   /**
+   * User.PlayData
+   */
+  export type User$PlayDataArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlayData
+     */
+    select?: PlayDataSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PlayData
+     */
+    omit?: PlayDataOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlayDataInclude<ExtArgs> | null
+    where?: PlayDataWhereInput
+    orderBy?: PlayDataOrderByWithRelationInput | PlayDataOrderByWithRelationInput[]
+    cursor?: PlayDataWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PlayDataScalarFieldEnum | PlayDataScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2110,6 +2369,1188 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: UserInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Music
+   */
+
+  export type AggregateMusic = {
+    _count: MusicCountAggregateOutputType | null
+    _avg: MusicAvgAggregateOutputType | null
+    _sum: MusicSumAggregateOutputType | null
+    _min: MusicMinAggregateOutputType | null
+    _max: MusicMaxAggregateOutputType | null
+  }
+
+  export type MusicAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type MusicSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type MusicMinAggregateOutputType = {
+    id: number | null
+    index: string | null
+    title: string | null
+    title_kana: string | null
+    artist: string | null
+    category: string | null
+    category_short: string | null
+    description: string | null
+    background: string | null
+  }
+
+  export type MusicMaxAggregateOutputType = {
+    id: number | null
+    index: string | null
+    title: string | null
+    title_kana: string | null
+    artist: string | null
+    category: string | null
+    category_short: string | null
+    description: string | null
+    background: string | null
+  }
+
+  export type MusicCountAggregateOutputType = {
+    id: number
+    index: number
+    title: number
+    title_kana: number
+    artist: number
+    category: number
+    category_short: number
+    description: number
+    background: number
+    _all: number
+  }
+
+
+  export type MusicAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type MusicSumAggregateInputType = {
+    id?: true
+  }
+
+  export type MusicMinAggregateInputType = {
+    id?: true
+    index?: true
+    title?: true
+    title_kana?: true
+    artist?: true
+    category?: true
+    category_short?: true
+    description?: true
+    background?: true
+  }
+
+  export type MusicMaxAggregateInputType = {
+    id?: true
+    index?: true
+    title?: true
+    title_kana?: true
+    artist?: true
+    category?: true
+    category_short?: true
+    description?: true
+    background?: true
+  }
+
+  export type MusicCountAggregateInputType = {
+    id?: true
+    index?: true
+    title?: true
+    title_kana?: true
+    artist?: true
+    category?: true
+    category_short?: true
+    description?: true
+    background?: true
+    _all?: true
+  }
+
+  export type MusicAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Music to aggregate.
+     */
+    where?: MusicWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Music to fetch.
+     */
+    orderBy?: MusicOrderByWithRelationInput | MusicOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: MusicWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Music from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Music.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Music
+    **/
+    _count?: true | MusicCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: MusicAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: MusicSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: MusicMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: MusicMaxAggregateInputType
+  }
+
+  export type GetMusicAggregateType<T extends MusicAggregateArgs> = {
+        [P in keyof T & keyof AggregateMusic]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateMusic[P]>
+      : GetScalarType<T[P], AggregateMusic[P]>
+  }
+
+
+
+
+  export type MusicGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MusicWhereInput
+    orderBy?: MusicOrderByWithAggregationInput | MusicOrderByWithAggregationInput[]
+    by: MusicScalarFieldEnum[] | MusicScalarFieldEnum
+    having?: MusicScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: MusicCountAggregateInputType | true
+    _avg?: MusicAvgAggregateInputType
+    _sum?: MusicSumAggregateInputType
+    _min?: MusicMinAggregateInputType
+    _max?: MusicMaxAggregateInputType
+  }
+
+  export type MusicGroupByOutputType = {
+    id: number
+    index: string
+    title: string
+    title_kana: string
+    artist: string | null
+    category: string
+    category_short: string
+    description: string | null
+    background: string | null
+    _count: MusicCountAggregateOutputType | null
+    _avg: MusicAvgAggregateOutputType | null
+    _sum: MusicSumAggregateOutputType | null
+    _min: MusicMinAggregateOutputType | null
+    _max: MusicMaxAggregateOutputType | null
+  }
+
+  type GetMusicGroupByPayload<T extends MusicGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<MusicGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof MusicGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], MusicGroupByOutputType[P]>
+            : GetScalarType<T[P], MusicGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type MusicSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    index?: boolean
+    title?: boolean
+    title_kana?: boolean
+    artist?: boolean
+    category?: boolean
+    category_short?: boolean
+    description?: boolean
+    background?: boolean
+    RecentPlay?: boolean | Music$RecentPlayArgs<ExtArgs>
+    PlayData?: boolean | Music$PlayDataArgs<ExtArgs>
+    _count?: boolean | MusicCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["music"]>
+
+  export type MusicSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    index?: boolean
+    title?: boolean
+    title_kana?: boolean
+    artist?: boolean
+    category?: boolean
+    category_short?: boolean
+    description?: boolean
+    background?: boolean
+  }, ExtArgs["result"]["music"]>
+
+  export type MusicSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    index?: boolean
+    title?: boolean
+    title_kana?: boolean
+    artist?: boolean
+    category?: boolean
+    category_short?: boolean
+    description?: boolean
+    background?: boolean
+  }, ExtArgs["result"]["music"]>
+
+  export type MusicSelectScalar = {
+    id?: boolean
+    index?: boolean
+    title?: boolean
+    title_kana?: boolean
+    artist?: boolean
+    category?: boolean
+    category_short?: boolean
+    description?: boolean
+    background?: boolean
+  }
+
+  export type MusicOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "index" | "title" | "title_kana" | "artist" | "category" | "category_short" | "description" | "background", ExtArgs["result"]["music"]>
+  export type MusicInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    RecentPlay?: boolean | Music$RecentPlayArgs<ExtArgs>
+    PlayData?: boolean | Music$PlayDataArgs<ExtArgs>
+    _count?: boolean | MusicCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type MusicIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type MusicIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $MusicPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Music"
+    objects: {
+      RecentPlay: Prisma.$RecentPlayPayload<ExtArgs>[]
+      PlayData: Prisma.$PlayDataPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      index: string
+      title: string
+      title_kana: string
+      artist: string | null
+      category: string
+      category_short: string
+      description: string | null
+      background: string | null
+    }, ExtArgs["result"]["music"]>
+    composites: {}
+  }
+
+  type MusicGetPayload<S extends boolean | null | undefined | MusicDefaultArgs> = $Result.GetResult<Prisma.$MusicPayload, S>
+
+  type MusicCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<MusicFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: MusicCountAggregateInputType | true
+    }
+
+  export interface MusicDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Music'], meta: { name: 'Music' } }
+    /**
+     * Find zero or one Music that matches the filter.
+     * @param {MusicFindUniqueArgs} args - Arguments to find a Music
+     * @example
+     * // Get one Music
+     * const music = await prisma.music.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends MusicFindUniqueArgs>(args: SelectSubset<T, MusicFindUniqueArgs<ExtArgs>>): Prisma__MusicClient<$Result.GetResult<Prisma.$MusicPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Music that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {MusicFindUniqueOrThrowArgs} args - Arguments to find a Music
+     * @example
+     * // Get one Music
+     * const music = await prisma.music.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends MusicFindUniqueOrThrowArgs>(args: SelectSubset<T, MusicFindUniqueOrThrowArgs<ExtArgs>>): Prisma__MusicClient<$Result.GetResult<Prisma.$MusicPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Music that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MusicFindFirstArgs} args - Arguments to find a Music
+     * @example
+     * // Get one Music
+     * const music = await prisma.music.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends MusicFindFirstArgs>(args?: SelectSubset<T, MusicFindFirstArgs<ExtArgs>>): Prisma__MusicClient<$Result.GetResult<Prisma.$MusicPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Music that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MusicFindFirstOrThrowArgs} args - Arguments to find a Music
+     * @example
+     * // Get one Music
+     * const music = await prisma.music.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends MusicFindFirstOrThrowArgs>(args?: SelectSubset<T, MusicFindFirstOrThrowArgs<ExtArgs>>): Prisma__MusicClient<$Result.GetResult<Prisma.$MusicPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Music that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MusicFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Music
+     * const music = await prisma.music.findMany()
+     * 
+     * // Get first 10 Music
+     * const music = await prisma.music.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const musicWithIdOnly = await prisma.music.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends MusicFindManyArgs>(args?: SelectSubset<T, MusicFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MusicPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Music.
+     * @param {MusicCreateArgs} args - Arguments to create a Music.
+     * @example
+     * // Create one Music
+     * const Music = await prisma.music.create({
+     *   data: {
+     *     // ... data to create a Music
+     *   }
+     * })
+     * 
+     */
+    create<T extends MusicCreateArgs>(args: SelectSubset<T, MusicCreateArgs<ExtArgs>>): Prisma__MusicClient<$Result.GetResult<Prisma.$MusicPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Music.
+     * @param {MusicCreateManyArgs} args - Arguments to create many Music.
+     * @example
+     * // Create many Music
+     * const music = await prisma.music.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends MusicCreateManyArgs>(args?: SelectSubset<T, MusicCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Music and returns the data saved in the database.
+     * @param {MusicCreateManyAndReturnArgs} args - Arguments to create many Music.
+     * @example
+     * // Create many Music
+     * const music = await prisma.music.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Music and only return the `id`
+     * const musicWithIdOnly = await prisma.music.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends MusicCreateManyAndReturnArgs>(args?: SelectSubset<T, MusicCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MusicPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Music.
+     * @param {MusicDeleteArgs} args - Arguments to delete one Music.
+     * @example
+     * // Delete one Music
+     * const Music = await prisma.music.delete({
+     *   where: {
+     *     // ... filter to delete one Music
+     *   }
+     * })
+     * 
+     */
+    delete<T extends MusicDeleteArgs>(args: SelectSubset<T, MusicDeleteArgs<ExtArgs>>): Prisma__MusicClient<$Result.GetResult<Prisma.$MusicPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Music.
+     * @param {MusicUpdateArgs} args - Arguments to update one Music.
+     * @example
+     * // Update one Music
+     * const music = await prisma.music.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends MusicUpdateArgs>(args: SelectSubset<T, MusicUpdateArgs<ExtArgs>>): Prisma__MusicClient<$Result.GetResult<Prisma.$MusicPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Music.
+     * @param {MusicDeleteManyArgs} args - Arguments to filter Music to delete.
+     * @example
+     * // Delete a few Music
+     * const { count } = await prisma.music.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends MusicDeleteManyArgs>(args?: SelectSubset<T, MusicDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Music.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MusicUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Music
+     * const music = await prisma.music.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends MusicUpdateManyArgs>(args: SelectSubset<T, MusicUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Music and returns the data updated in the database.
+     * @param {MusicUpdateManyAndReturnArgs} args - Arguments to update many Music.
+     * @example
+     * // Update many Music
+     * const music = await prisma.music.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Music and only return the `id`
+     * const musicWithIdOnly = await prisma.music.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends MusicUpdateManyAndReturnArgs>(args: SelectSubset<T, MusicUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MusicPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Music.
+     * @param {MusicUpsertArgs} args - Arguments to update or create a Music.
+     * @example
+     * // Update or create a Music
+     * const music = await prisma.music.upsert({
+     *   create: {
+     *     // ... data to create a Music
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Music we want to update
+     *   }
+     * })
+     */
+    upsert<T extends MusicUpsertArgs>(args: SelectSubset<T, MusicUpsertArgs<ExtArgs>>): Prisma__MusicClient<$Result.GetResult<Prisma.$MusicPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Music.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MusicCountArgs} args - Arguments to filter Music to count.
+     * @example
+     * // Count the number of Music
+     * const count = await prisma.music.count({
+     *   where: {
+     *     // ... the filter for the Music we want to count
+     *   }
+     * })
+    **/
+    count<T extends MusicCountArgs>(
+      args?: Subset<T, MusicCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], MusicCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Music.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MusicAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends MusicAggregateArgs>(args: Subset<T, MusicAggregateArgs>): Prisma.PrismaPromise<GetMusicAggregateType<T>>
+
+    /**
+     * Group by Music.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MusicGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends MusicGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: MusicGroupByArgs['orderBy'] }
+        : { orderBy?: MusicGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, MusicGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMusicGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Music model
+   */
+  readonly fields: MusicFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Music.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__MusicClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    RecentPlay<T extends Music$RecentPlayArgs<ExtArgs> = {}>(args?: Subset<T, Music$RecentPlayArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RecentPlayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    PlayData<T extends Music$PlayDataArgs<ExtArgs> = {}>(args?: Subset<T, Music$PlayDataArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlayDataPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Music model
+   */
+  interface MusicFieldRefs {
+    readonly id: FieldRef<"Music", 'Int'>
+    readonly index: FieldRef<"Music", 'String'>
+    readonly title: FieldRef<"Music", 'String'>
+    readonly title_kana: FieldRef<"Music", 'String'>
+    readonly artist: FieldRef<"Music", 'String'>
+    readonly category: FieldRef<"Music", 'String'>
+    readonly category_short: FieldRef<"Music", 'String'>
+    readonly description: FieldRef<"Music", 'String'>
+    readonly background: FieldRef<"Music", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Music findUnique
+   */
+  export type MusicFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Music
+     */
+    select?: MusicSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Music
+     */
+    omit?: MusicOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MusicInclude<ExtArgs> | null
+    /**
+     * Filter, which Music to fetch.
+     */
+    where: MusicWhereUniqueInput
+  }
+
+  /**
+   * Music findUniqueOrThrow
+   */
+  export type MusicFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Music
+     */
+    select?: MusicSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Music
+     */
+    omit?: MusicOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MusicInclude<ExtArgs> | null
+    /**
+     * Filter, which Music to fetch.
+     */
+    where: MusicWhereUniqueInput
+  }
+
+  /**
+   * Music findFirst
+   */
+  export type MusicFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Music
+     */
+    select?: MusicSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Music
+     */
+    omit?: MusicOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MusicInclude<ExtArgs> | null
+    /**
+     * Filter, which Music to fetch.
+     */
+    where?: MusicWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Music to fetch.
+     */
+    orderBy?: MusicOrderByWithRelationInput | MusicOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Music.
+     */
+    cursor?: MusicWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Music from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Music.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Music.
+     */
+    distinct?: MusicScalarFieldEnum | MusicScalarFieldEnum[]
+  }
+
+  /**
+   * Music findFirstOrThrow
+   */
+  export type MusicFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Music
+     */
+    select?: MusicSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Music
+     */
+    omit?: MusicOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MusicInclude<ExtArgs> | null
+    /**
+     * Filter, which Music to fetch.
+     */
+    where?: MusicWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Music to fetch.
+     */
+    orderBy?: MusicOrderByWithRelationInput | MusicOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Music.
+     */
+    cursor?: MusicWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Music from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Music.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Music.
+     */
+    distinct?: MusicScalarFieldEnum | MusicScalarFieldEnum[]
+  }
+
+  /**
+   * Music findMany
+   */
+  export type MusicFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Music
+     */
+    select?: MusicSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Music
+     */
+    omit?: MusicOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MusicInclude<ExtArgs> | null
+    /**
+     * Filter, which Music to fetch.
+     */
+    where?: MusicWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Music to fetch.
+     */
+    orderBy?: MusicOrderByWithRelationInput | MusicOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Music.
+     */
+    cursor?: MusicWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Music from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Music.
+     */
+    skip?: number
+    distinct?: MusicScalarFieldEnum | MusicScalarFieldEnum[]
+  }
+
+  /**
+   * Music create
+   */
+  export type MusicCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Music
+     */
+    select?: MusicSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Music
+     */
+    omit?: MusicOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MusicInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Music.
+     */
+    data: XOR<MusicCreateInput, MusicUncheckedCreateInput>
+  }
+
+  /**
+   * Music createMany
+   */
+  export type MusicCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Music.
+     */
+    data: MusicCreateManyInput | MusicCreateManyInput[]
+  }
+
+  /**
+   * Music createManyAndReturn
+   */
+  export type MusicCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Music
+     */
+    select?: MusicSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Music
+     */
+    omit?: MusicOmit<ExtArgs> | null
+    /**
+     * The data used to create many Music.
+     */
+    data: MusicCreateManyInput | MusicCreateManyInput[]
+  }
+
+  /**
+   * Music update
+   */
+  export type MusicUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Music
+     */
+    select?: MusicSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Music
+     */
+    omit?: MusicOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MusicInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Music.
+     */
+    data: XOR<MusicUpdateInput, MusicUncheckedUpdateInput>
+    /**
+     * Choose, which Music to update.
+     */
+    where: MusicWhereUniqueInput
+  }
+
+  /**
+   * Music updateMany
+   */
+  export type MusicUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Music.
+     */
+    data: XOR<MusicUpdateManyMutationInput, MusicUncheckedUpdateManyInput>
+    /**
+     * Filter which Music to update
+     */
+    where?: MusicWhereInput
+    /**
+     * Limit how many Music to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Music updateManyAndReturn
+   */
+  export type MusicUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Music
+     */
+    select?: MusicSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Music
+     */
+    omit?: MusicOmit<ExtArgs> | null
+    /**
+     * The data used to update Music.
+     */
+    data: XOR<MusicUpdateManyMutationInput, MusicUncheckedUpdateManyInput>
+    /**
+     * Filter which Music to update
+     */
+    where?: MusicWhereInput
+    /**
+     * Limit how many Music to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Music upsert
+   */
+  export type MusicUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Music
+     */
+    select?: MusicSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Music
+     */
+    omit?: MusicOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MusicInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Music to update in case it exists.
+     */
+    where: MusicWhereUniqueInput
+    /**
+     * In case the Music found by the `where` argument doesn't exist, create a new Music with this data.
+     */
+    create: XOR<MusicCreateInput, MusicUncheckedCreateInput>
+    /**
+     * In case the Music was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<MusicUpdateInput, MusicUncheckedUpdateInput>
+  }
+
+  /**
+   * Music delete
+   */
+  export type MusicDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Music
+     */
+    select?: MusicSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Music
+     */
+    omit?: MusicOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MusicInclude<ExtArgs> | null
+    /**
+     * Filter which Music to delete.
+     */
+    where: MusicWhereUniqueInput
+  }
+
+  /**
+   * Music deleteMany
+   */
+  export type MusicDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Music to delete
+     */
+    where?: MusicWhereInput
+    /**
+     * Limit how many Music to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Music.RecentPlay
+   */
+  export type Music$RecentPlayArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecentPlay
+     */
+    select?: RecentPlaySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RecentPlay
+     */
+    omit?: RecentPlayOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RecentPlayInclude<ExtArgs> | null
+    where?: RecentPlayWhereInput
+    orderBy?: RecentPlayOrderByWithRelationInput | RecentPlayOrderByWithRelationInput[]
+    cursor?: RecentPlayWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: RecentPlayScalarFieldEnum | RecentPlayScalarFieldEnum[]
+  }
+
+  /**
+   * Music.PlayData
+   */
+  export type Music$PlayDataArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlayData
+     */
+    select?: PlayDataSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PlayData
+     */
+    omit?: PlayDataOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlayDataInclude<ExtArgs> | null
+    where?: PlayDataWhereInput
+    orderBy?: PlayDataOrderByWithRelationInput | PlayDataOrderByWithRelationInput[]
+    cursor?: PlayDataWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PlayDataScalarFieldEnum | PlayDataScalarFieldEnum[]
+  }
+
+  /**
+   * Music without action
+   */
+  export type MusicDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Music
+     */
+    select?: MusicSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Music
+     */
+    omit?: MusicOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MusicInclude<ExtArgs> | null
   }
 
 
@@ -2143,8 +3584,6 @@ export namespace Prisma {
 
   export type RecentPlayMinAggregateOutputType = {
     id: number | null
-    title: string | null
-    artist: string | null
     difficulty: string | null
     level: number | null
     score: number | null
@@ -2154,12 +3593,11 @@ export namespace Prisma {
     created_at: Date | null
     updated_at: Date | null
     user_id: number | null
+    music_idx: string | null
   }
 
   export type RecentPlayMaxAggregateOutputType = {
     id: number | null
-    title: string | null
-    artist: string | null
     difficulty: string | null
     level: number | null
     score: number | null
@@ -2169,12 +3607,11 @@ export namespace Prisma {
     created_at: Date | null
     updated_at: Date | null
     user_id: number | null
+    music_idx: string | null
   }
 
   export type RecentPlayCountAggregateOutputType = {
     id: number
-    title: number
-    artist: number
     difficulty: number
     level: number
     score: number
@@ -2184,6 +3621,7 @@ export namespace Prisma {
     created_at: number
     updated_at: number
     user_id: number
+    music_idx: number
     _all: number
   }
 
@@ -2206,8 +3644,6 @@ export namespace Prisma {
 
   export type RecentPlayMinAggregateInputType = {
     id?: true
-    title?: true
-    artist?: true
     difficulty?: true
     level?: true
     score?: true
@@ -2217,12 +3653,11 @@ export namespace Prisma {
     created_at?: true
     updated_at?: true
     user_id?: true
+    music_idx?: true
   }
 
   export type RecentPlayMaxAggregateInputType = {
     id?: true
-    title?: true
-    artist?: true
     difficulty?: true
     level?: true
     score?: true
@@ -2232,12 +3667,11 @@ export namespace Prisma {
     created_at?: true
     updated_at?: true
     user_id?: true
+    music_idx?: true
   }
 
   export type RecentPlayCountAggregateInputType = {
     id?: true
-    title?: true
-    artist?: true
     difficulty?: true
     level?: true
     score?: true
@@ -2247,6 +3681,7 @@ export namespace Prisma {
     created_at?: true
     updated_at?: true
     user_id?: true
+    music_idx?: true
     _all?: true
   }
 
@@ -2338,8 +3773,6 @@ export namespace Prisma {
 
   export type RecentPlayGroupByOutputType = {
     id: number
-    title: string
-    artist: string
     difficulty: string
     level: number
     score: number
@@ -2349,6 +3782,7 @@ export namespace Prisma {
     created_at: Date
     updated_at: Date
     user_id: number
+    music_idx: string
     _count: RecentPlayCountAggregateOutputType | null
     _avg: RecentPlayAvgAggregateOutputType | null
     _sum: RecentPlaySumAggregateOutputType | null
@@ -2372,8 +3806,6 @@ export namespace Prisma {
 
   export type RecentPlaySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    title?: boolean
-    artist?: boolean
     difficulty?: boolean
     level?: boolean
     score?: boolean
@@ -2383,13 +3815,13 @@ export namespace Prisma {
     created_at?: boolean
     updated_at?: boolean
     user_id?: boolean
+    music_idx?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
+    music?: boolean | MusicDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["recentPlay"]>
 
   export type RecentPlaySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    title?: boolean
-    artist?: boolean
     difficulty?: boolean
     level?: boolean
     score?: boolean
@@ -2399,13 +3831,13 @@ export namespace Prisma {
     created_at?: boolean
     updated_at?: boolean
     user_id?: boolean
+    music_idx?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
+    music?: boolean | MusicDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["recentPlay"]>
 
   export type RecentPlaySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    title?: boolean
-    artist?: boolean
     difficulty?: boolean
     level?: boolean
     score?: boolean
@@ -2415,13 +3847,13 @@ export namespace Prisma {
     created_at?: boolean
     updated_at?: boolean
     user_id?: boolean
+    music_idx?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
+    music?: boolean | MusicDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["recentPlay"]>
 
   export type RecentPlaySelectScalar = {
     id?: boolean
-    title?: boolean
-    artist?: boolean
     difficulty?: boolean
     level?: boolean
     score?: boolean
@@ -2431,28 +3863,31 @@ export namespace Prisma {
     created_at?: boolean
     updated_at?: boolean
     user_id?: boolean
+    music_idx?: boolean
   }
 
-  export type RecentPlayOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "artist" | "difficulty" | "level" | "score" | "max_combo" | "rank" | "play_time" | "created_at" | "updated_at" | "user_id", ExtArgs["result"]["recentPlay"]>
+  export type RecentPlayOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "difficulty" | "level" | "score" | "max_combo" | "rank" | "play_time" | "created_at" | "updated_at" | "user_id" | "music_idx", ExtArgs["result"]["recentPlay"]>
   export type RecentPlayInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
+    music?: boolean | MusicDefaultArgs<ExtArgs>
   }
   export type RecentPlayIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
+    music?: boolean | MusicDefaultArgs<ExtArgs>
   }
   export type RecentPlayIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
+    music?: boolean | MusicDefaultArgs<ExtArgs>
   }
 
   export type $RecentPlayPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "RecentPlay"
     objects: {
       user: Prisma.$UserPayload<ExtArgs>
+      music: Prisma.$MusicPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
-      title: string
-      artist: string
       difficulty: string
       level: number
       score: number
@@ -2462,6 +3897,7 @@ export namespace Prisma {
       created_at: Date
       updated_at: Date
       user_id: number
+      music_idx: string
     }, ExtArgs["result"]["recentPlay"]>
     composites: {}
   }
@@ -2857,6 +4293,7 @@ export namespace Prisma {
   export interface Prisma__RecentPlayClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    music<T extends MusicDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MusicDefaultArgs<ExtArgs>>): Prisma__MusicClient<$Result.GetResult<Prisma.$MusicPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2887,8 +4324,6 @@ export namespace Prisma {
    */
   interface RecentPlayFieldRefs {
     readonly id: FieldRef<"RecentPlay", 'Int'>
-    readonly title: FieldRef<"RecentPlay", 'String'>
-    readonly artist: FieldRef<"RecentPlay", 'String'>
     readonly difficulty: FieldRef<"RecentPlay", 'String'>
     readonly level: FieldRef<"RecentPlay", 'Int'>
     readonly score: FieldRef<"RecentPlay", 'Int'>
@@ -2898,6 +4333,7 @@ export namespace Prisma {
     readonly created_at: FieldRef<"RecentPlay", 'DateTime'>
     readonly updated_at: FieldRef<"RecentPlay", 'DateTime'>
     readonly user_id: FieldRef<"RecentPlay", 'Int'>
+    readonly music_idx: FieldRef<"RecentPlay", 'String'>
   }
     
 
@@ -3311,6 +4747,1274 @@ export namespace Prisma {
 
 
   /**
+   * Model PlayData
+   */
+
+  export type AggregatePlayData = {
+    _count: PlayDataCountAggregateOutputType | null
+    _avg: PlayDataAvgAggregateOutputType | null
+    _sum: PlayDataSumAggregateOutputType | null
+    _min: PlayDataMinAggregateOutputType | null
+    _max: PlayDataMaxAggregateOutputType | null
+  }
+
+  export type PlayDataAvgAggregateOutputType = {
+    id: number | null
+    level: number | null
+    score: number | null
+    fc_type: number | null
+    play_count: number | null
+    fullcombo_count: number | null
+    pianistic_count: number | null
+    max_combo: number | null
+    grade_basic: number | null
+    grade_recital: number | null
+    user_id: number | null
+  }
+
+  export type PlayDataSumAggregateOutputType = {
+    id: number | null
+    level: number | null
+    score: number | null
+    fc_type: number | null
+    play_count: number | null
+    fullcombo_count: number | null
+    pianistic_count: number | null
+    max_combo: number | null
+    grade_basic: number | null
+    grade_recital: number | null
+    user_id: number | null
+  }
+
+  export type PlayDataMinAggregateOutputType = {
+    id: number | null
+    level: number | null
+    difficulty: string | null
+    score: number | null
+    rank: string | null
+    fc_type: number | null
+    play_count: number | null
+    fullcombo_count: number | null
+    pianistic_count: number | null
+    max_combo: number | null
+    grade_basic: number | null
+    grade_recital: number | null
+    besttime: string | null
+    user_id: number | null
+    music_idx: string | null
+  }
+
+  export type PlayDataMaxAggregateOutputType = {
+    id: number | null
+    level: number | null
+    difficulty: string | null
+    score: number | null
+    rank: string | null
+    fc_type: number | null
+    play_count: number | null
+    fullcombo_count: number | null
+    pianistic_count: number | null
+    max_combo: number | null
+    grade_basic: number | null
+    grade_recital: number | null
+    besttime: string | null
+    user_id: number | null
+    music_idx: string | null
+  }
+
+  export type PlayDataCountAggregateOutputType = {
+    id: number
+    level: number
+    difficulty: number
+    score: number
+    rank: number
+    fc_type: number
+    play_count: number
+    fullcombo_count: number
+    pianistic_count: number
+    max_combo: number
+    grade_basic: number
+    grade_recital: number
+    besttime: number
+    user_id: number
+    music_idx: number
+    _all: number
+  }
+
+
+  export type PlayDataAvgAggregateInputType = {
+    id?: true
+    level?: true
+    score?: true
+    fc_type?: true
+    play_count?: true
+    fullcombo_count?: true
+    pianistic_count?: true
+    max_combo?: true
+    grade_basic?: true
+    grade_recital?: true
+    user_id?: true
+  }
+
+  export type PlayDataSumAggregateInputType = {
+    id?: true
+    level?: true
+    score?: true
+    fc_type?: true
+    play_count?: true
+    fullcombo_count?: true
+    pianistic_count?: true
+    max_combo?: true
+    grade_basic?: true
+    grade_recital?: true
+    user_id?: true
+  }
+
+  export type PlayDataMinAggregateInputType = {
+    id?: true
+    level?: true
+    difficulty?: true
+    score?: true
+    rank?: true
+    fc_type?: true
+    play_count?: true
+    fullcombo_count?: true
+    pianistic_count?: true
+    max_combo?: true
+    grade_basic?: true
+    grade_recital?: true
+    besttime?: true
+    user_id?: true
+    music_idx?: true
+  }
+
+  export type PlayDataMaxAggregateInputType = {
+    id?: true
+    level?: true
+    difficulty?: true
+    score?: true
+    rank?: true
+    fc_type?: true
+    play_count?: true
+    fullcombo_count?: true
+    pianistic_count?: true
+    max_combo?: true
+    grade_basic?: true
+    grade_recital?: true
+    besttime?: true
+    user_id?: true
+    music_idx?: true
+  }
+
+  export type PlayDataCountAggregateInputType = {
+    id?: true
+    level?: true
+    difficulty?: true
+    score?: true
+    rank?: true
+    fc_type?: true
+    play_count?: true
+    fullcombo_count?: true
+    pianistic_count?: true
+    max_combo?: true
+    grade_basic?: true
+    grade_recital?: true
+    besttime?: true
+    user_id?: true
+    music_idx?: true
+    _all?: true
+  }
+
+  export type PlayDataAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PlayData to aggregate.
+     */
+    where?: PlayDataWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PlayData to fetch.
+     */
+    orderBy?: PlayDataOrderByWithRelationInput | PlayDataOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PlayDataWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PlayData from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PlayData.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PlayData
+    **/
+    _count?: true | PlayDataCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PlayDataAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PlayDataSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PlayDataMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PlayDataMaxAggregateInputType
+  }
+
+  export type GetPlayDataAggregateType<T extends PlayDataAggregateArgs> = {
+        [P in keyof T & keyof AggregatePlayData]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePlayData[P]>
+      : GetScalarType<T[P], AggregatePlayData[P]>
+  }
+
+
+
+
+  export type PlayDataGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PlayDataWhereInput
+    orderBy?: PlayDataOrderByWithAggregationInput | PlayDataOrderByWithAggregationInput[]
+    by: PlayDataScalarFieldEnum[] | PlayDataScalarFieldEnum
+    having?: PlayDataScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PlayDataCountAggregateInputType | true
+    _avg?: PlayDataAvgAggregateInputType
+    _sum?: PlayDataSumAggregateInputType
+    _min?: PlayDataMinAggregateInputType
+    _max?: PlayDataMaxAggregateInputType
+  }
+
+  export type PlayDataGroupByOutputType = {
+    id: number
+    level: number
+    difficulty: string
+    score: number
+    rank: string
+    fc_type: number
+    play_count: number
+    fullcombo_count: number
+    pianistic_count: number
+    max_combo: number
+    grade_basic: number
+    grade_recital: number
+    besttime: string
+    user_id: number
+    music_idx: string
+    _count: PlayDataCountAggregateOutputType | null
+    _avg: PlayDataAvgAggregateOutputType | null
+    _sum: PlayDataSumAggregateOutputType | null
+    _min: PlayDataMinAggregateOutputType | null
+    _max: PlayDataMaxAggregateOutputType | null
+  }
+
+  type GetPlayDataGroupByPayload<T extends PlayDataGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PlayDataGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PlayDataGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PlayDataGroupByOutputType[P]>
+            : GetScalarType<T[P], PlayDataGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PlayDataSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    level?: boolean
+    difficulty?: boolean
+    score?: boolean
+    rank?: boolean
+    fc_type?: boolean
+    play_count?: boolean
+    fullcombo_count?: boolean
+    pianistic_count?: boolean
+    max_combo?: boolean
+    grade_basic?: boolean
+    grade_recital?: boolean
+    besttime?: boolean
+    user_id?: boolean
+    music_idx?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    music?: boolean | MusicDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["playData"]>
+
+  export type PlayDataSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    level?: boolean
+    difficulty?: boolean
+    score?: boolean
+    rank?: boolean
+    fc_type?: boolean
+    play_count?: boolean
+    fullcombo_count?: boolean
+    pianistic_count?: boolean
+    max_combo?: boolean
+    grade_basic?: boolean
+    grade_recital?: boolean
+    besttime?: boolean
+    user_id?: boolean
+    music_idx?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    music?: boolean | MusicDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["playData"]>
+
+  export type PlayDataSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    level?: boolean
+    difficulty?: boolean
+    score?: boolean
+    rank?: boolean
+    fc_type?: boolean
+    play_count?: boolean
+    fullcombo_count?: boolean
+    pianistic_count?: boolean
+    max_combo?: boolean
+    grade_basic?: boolean
+    grade_recital?: boolean
+    besttime?: boolean
+    user_id?: boolean
+    music_idx?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    music?: boolean | MusicDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["playData"]>
+
+  export type PlayDataSelectScalar = {
+    id?: boolean
+    level?: boolean
+    difficulty?: boolean
+    score?: boolean
+    rank?: boolean
+    fc_type?: boolean
+    play_count?: boolean
+    fullcombo_count?: boolean
+    pianistic_count?: boolean
+    max_combo?: boolean
+    grade_basic?: boolean
+    grade_recital?: boolean
+    besttime?: boolean
+    user_id?: boolean
+    music_idx?: boolean
+  }
+
+  export type PlayDataOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "level" | "difficulty" | "score" | "rank" | "fc_type" | "play_count" | "fullcombo_count" | "pianistic_count" | "max_combo" | "grade_basic" | "grade_recital" | "besttime" | "user_id" | "music_idx", ExtArgs["result"]["playData"]>
+  export type PlayDataInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    music?: boolean | MusicDefaultArgs<ExtArgs>
+  }
+  export type PlayDataIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    music?: boolean | MusicDefaultArgs<ExtArgs>
+  }
+  export type PlayDataIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    music?: boolean | MusicDefaultArgs<ExtArgs>
+  }
+
+  export type $PlayDataPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PlayData"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      music: Prisma.$MusicPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      level: number
+      difficulty: string
+      score: number
+      rank: string
+      fc_type: number
+      play_count: number
+      fullcombo_count: number
+      pianistic_count: number
+      max_combo: number
+      grade_basic: number
+      grade_recital: number
+      besttime: string
+      user_id: number
+      music_idx: string
+    }, ExtArgs["result"]["playData"]>
+    composites: {}
+  }
+
+  type PlayDataGetPayload<S extends boolean | null | undefined | PlayDataDefaultArgs> = $Result.GetResult<Prisma.$PlayDataPayload, S>
+
+  type PlayDataCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PlayDataFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PlayDataCountAggregateInputType | true
+    }
+
+  export interface PlayDataDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PlayData'], meta: { name: 'PlayData' } }
+    /**
+     * Find zero or one PlayData that matches the filter.
+     * @param {PlayDataFindUniqueArgs} args - Arguments to find a PlayData
+     * @example
+     * // Get one PlayData
+     * const playData = await prisma.playData.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PlayDataFindUniqueArgs>(args: SelectSubset<T, PlayDataFindUniqueArgs<ExtArgs>>): Prisma__PlayDataClient<$Result.GetResult<Prisma.$PlayDataPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one PlayData that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PlayDataFindUniqueOrThrowArgs} args - Arguments to find a PlayData
+     * @example
+     * // Get one PlayData
+     * const playData = await prisma.playData.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PlayDataFindUniqueOrThrowArgs>(args: SelectSubset<T, PlayDataFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PlayDataClient<$Result.GetResult<Prisma.$PlayDataPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PlayData that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlayDataFindFirstArgs} args - Arguments to find a PlayData
+     * @example
+     * // Get one PlayData
+     * const playData = await prisma.playData.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PlayDataFindFirstArgs>(args?: SelectSubset<T, PlayDataFindFirstArgs<ExtArgs>>): Prisma__PlayDataClient<$Result.GetResult<Prisma.$PlayDataPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PlayData that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlayDataFindFirstOrThrowArgs} args - Arguments to find a PlayData
+     * @example
+     * // Get one PlayData
+     * const playData = await prisma.playData.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PlayDataFindFirstOrThrowArgs>(args?: SelectSubset<T, PlayDataFindFirstOrThrowArgs<ExtArgs>>): Prisma__PlayDataClient<$Result.GetResult<Prisma.$PlayDataPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more PlayData that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlayDataFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PlayData
+     * const playData = await prisma.playData.findMany()
+     * 
+     * // Get first 10 PlayData
+     * const playData = await prisma.playData.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const playDataWithIdOnly = await prisma.playData.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PlayDataFindManyArgs>(args?: SelectSubset<T, PlayDataFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlayDataPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a PlayData.
+     * @param {PlayDataCreateArgs} args - Arguments to create a PlayData.
+     * @example
+     * // Create one PlayData
+     * const PlayData = await prisma.playData.create({
+     *   data: {
+     *     // ... data to create a PlayData
+     *   }
+     * })
+     * 
+     */
+    create<T extends PlayDataCreateArgs>(args: SelectSubset<T, PlayDataCreateArgs<ExtArgs>>): Prisma__PlayDataClient<$Result.GetResult<Prisma.$PlayDataPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many PlayData.
+     * @param {PlayDataCreateManyArgs} args - Arguments to create many PlayData.
+     * @example
+     * // Create many PlayData
+     * const playData = await prisma.playData.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PlayDataCreateManyArgs>(args?: SelectSubset<T, PlayDataCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many PlayData and returns the data saved in the database.
+     * @param {PlayDataCreateManyAndReturnArgs} args - Arguments to create many PlayData.
+     * @example
+     * // Create many PlayData
+     * const playData = await prisma.playData.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many PlayData and only return the `id`
+     * const playDataWithIdOnly = await prisma.playData.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PlayDataCreateManyAndReturnArgs>(args?: SelectSubset<T, PlayDataCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlayDataPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a PlayData.
+     * @param {PlayDataDeleteArgs} args - Arguments to delete one PlayData.
+     * @example
+     * // Delete one PlayData
+     * const PlayData = await prisma.playData.delete({
+     *   where: {
+     *     // ... filter to delete one PlayData
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PlayDataDeleteArgs>(args: SelectSubset<T, PlayDataDeleteArgs<ExtArgs>>): Prisma__PlayDataClient<$Result.GetResult<Prisma.$PlayDataPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one PlayData.
+     * @param {PlayDataUpdateArgs} args - Arguments to update one PlayData.
+     * @example
+     * // Update one PlayData
+     * const playData = await prisma.playData.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PlayDataUpdateArgs>(args: SelectSubset<T, PlayDataUpdateArgs<ExtArgs>>): Prisma__PlayDataClient<$Result.GetResult<Prisma.$PlayDataPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more PlayData.
+     * @param {PlayDataDeleteManyArgs} args - Arguments to filter PlayData to delete.
+     * @example
+     * // Delete a few PlayData
+     * const { count } = await prisma.playData.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PlayDataDeleteManyArgs>(args?: SelectSubset<T, PlayDataDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PlayData.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlayDataUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PlayData
+     * const playData = await prisma.playData.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PlayDataUpdateManyArgs>(args: SelectSubset<T, PlayDataUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PlayData and returns the data updated in the database.
+     * @param {PlayDataUpdateManyAndReturnArgs} args - Arguments to update many PlayData.
+     * @example
+     * // Update many PlayData
+     * const playData = await prisma.playData.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more PlayData and only return the `id`
+     * const playDataWithIdOnly = await prisma.playData.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends PlayDataUpdateManyAndReturnArgs>(args: SelectSubset<T, PlayDataUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlayDataPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one PlayData.
+     * @param {PlayDataUpsertArgs} args - Arguments to update or create a PlayData.
+     * @example
+     * // Update or create a PlayData
+     * const playData = await prisma.playData.upsert({
+     *   create: {
+     *     // ... data to create a PlayData
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PlayData we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PlayDataUpsertArgs>(args: SelectSubset<T, PlayDataUpsertArgs<ExtArgs>>): Prisma__PlayDataClient<$Result.GetResult<Prisma.$PlayDataPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of PlayData.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlayDataCountArgs} args - Arguments to filter PlayData to count.
+     * @example
+     * // Count the number of PlayData
+     * const count = await prisma.playData.count({
+     *   where: {
+     *     // ... the filter for the PlayData we want to count
+     *   }
+     * })
+    **/
+    count<T extends PlayDataCountArgs>(
+      args?: Subset<T, PlayDataCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PlayDataCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PlayData.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlayDataAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PlayDataAggregateArgs>(args: Subset<T, PlayDataAggregateArgs>): Prisma.PrismaPromise<GetPlayDataAggregateType<T>>
+
+    /**
+     * Group by PlayData.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlayDataGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PlayDataGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PlayDataGroupByArgs['orderBy'] }
+        : { orderBy?: PlayDataGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PlayDataGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPlayDataGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PlayData model
+   */
+  readonly fields: PlayDataFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PlayData.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PlayDataClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    music<T extends MusicDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MusicDefaultArgs<ExtArgs>>): Prisma__MusicClient<$Result.GetResult<Prisma.$MusicPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PlayData model
+   */
+  interface PlayDataFieldRefs {
+    readonly id: FieldRef<"PlayData", 'Int'>
+    readonly level: FieldRef<"PlayData", 'Int'>
+    readonly difficulty: FieldRef<"PlayData", 'String'>
+    readonly score: FieldRef<"PlayData", 'Int'>
+    readonly rank: FieldRef<"PlayData", 'String'>
+    readonly fc_type: FieldRef<"PlayData", 'Int'>
+    readonly play_count: FieldRef<"PlayData", 'Int'>
+    readonly fullcombo_count: FieldRef<"PlayData", 'Int'>
+    readonly pianistic_count: FieldRef<"PlayData", 'Int'>
+    readonly max_combo: FieldRef<"PlayData", 'Int'>
+    readonly grade_basic: FieldRef<"PlayData", 'Int'>
+    readonly grade_recital: FieldRef<"PlayData", 'Int'>
+    readonly besttime: FieldRef<"PlayData", 'String'>
+    readonly user_id: FieldRef<"PlayData", 'Int'>
+    readonly music_idx: FieldRef<"PlayData", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PlayData findUnique
+   */
+  export type PlayDataFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlayData
+     */
+    select?: PlayDataSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PlayData
+     */
+    omit?: PlayDataOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlayDataInclude<ExtArgs> | null
+    /**
+     * Filter, which PlayData to fetch.
+     */
+    where: PlayDataWhereUniqueInput
+  }
+
+  /**
+   * PlayData findUniqueOrThrow
+   */
+  export type PlayDataFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlayData
+     */
+    select?: PlayDataSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PlayData
+     */
+    omit?: PlayDataOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlayDataInclude<ExtArgs> | null
+    /**
+     * Filter, which PlayData to fetch.
+     */
+    where: PlayDataWhereUniqueInput
+  }
+
+  /**
+   * PlayData findFirst
+   */
+  export type PlayDataFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlayData
+     */
+    select?: PlayDataSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PlayData
+     */
+    omit?: PlayDataOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlayDataInclude<ExtArgs> | null
+    /**
+     * Filter, which PlayData to fetch.
+     */
+    where?: PlayDataWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PlayData to fetch.
+     */
+    orderBy?: PlayDataOrderByWithRelationInput | PlayDataOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PlayData.
+     */
+    cursor?: PlayDataWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PlayData from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PlayData.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PlayData.
+     */
+    distinct?: PlayDataScalarFieldEnum | PlayDataScalarFieldEnum[]
+  }
+
+  /**
+   * PlayData findFirstOrThrow
+   */
+  export type PlayDataFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlayData
+     */
+    select?: PlayDataSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PlayData
+     */
+    omit?: PlayDataOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlayDataInclude<ExtArgs> | null
+    /**
+     * Filter, which PlayData to fetch.
+     */
+    where?: PlayDataWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PlayData to fetch.
+     */
+    orderBy?: PlayDataOrderByWithRelationInput | PlayDataOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PlayData.
+     */
+    cursor?: PlayDataWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PlayData from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PlayData.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PlayData.
+     */
+    distinct?: PlayDataScalarFieldEnum | PlayDataScalarFieldEnum[]
+  }
+
+  /**
+   * PlayData findMany
+   */
+  export type PlayDataFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlayData
+     */
+    select?: PlayDataSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PlayData
+     */
+    omit?: PlayDataOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlayDataInclude<ExtArgs> | null
+    /**
+     * Filter, which PlayData to fetch.
+     */
+    where?: PlayDataWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PlayData to fetch.
+     */
+    orderBy?: PlayDataOrderByWithRelationInput | PlayDataOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PlayData.
+     */
+    cursor?: PlayDataWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PlayData from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PlayData.
+     */
+    skip?: number
+    distinct?: PlayDataScalarFieldEnum | PlayDataScalarFieldEnum[]
+  }
+
+  /**
+   * PlayData create
+   */
+  export type PlayDataCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlayData
+     */
+    select?: PlayDataSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PlayData
+     */
+    omit?: PlayDataOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlayDataInclude<ExtArgs> | null
+    /**
+     * The data needed to create a PlayData.
+     */
+    data: XOR<PlayDataCreateInput, PlayDataUncheckedCreateInput>
+  }
+
+  /**
+   * PlayData createMany
+   */
+  export type PlayDataCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PlayData.
+     */
+    data: PlayDataCreateManyInput | PlayDataCreateManyInput[]
+  }
+
+  /**
+   * PlayData createManyAndReturn
+   */
+  export type PlayDataCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlayData
+     */
+    select?: PlayDataSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PlayData
+     */
+    omit?: PlayDataOmit<ExtArgs> | null
+    /**
+     * The data used to create many PlayData.
+     */
+    data: PlayDataCreateManyInput | PlayDataCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlayDataIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PlayData update
+   */
+  export type PlayDataUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlayData
+     */
+    select?: PlayDataSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PlayData
+     */
+    omit?: PlayDataOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlayDataInclude<ExtArgs> | null
+    /**
+     * The data needed to update a PlayData.
+     */
+    data: XOR<PlayDataUpdateInput, PlayDataUncheckedUpdateInput>
+    /**
+     * Choose, which PlayData to update.
+     */
+    where: PlayDataWhereUniqueInput
+  }
+
+  /**
+   * PlayData updateMany
+   */
+  export type PlayDataUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PlayData.
+     */
+    data: XOR<PlayDataUpdateManyMutationInput, PlayDataUncheckedUpdateManyInput>
+    /**
+     * Filter which PlayData to update
+     */
+    where?: PlayDataWhereInput
+    /**
+     * Limit how many PlayData to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PlayData updateManyAndReturn
+   */
+  export type PlayDataUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlayData
+     */
+    select?: PlayDataSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PlayData
+     */
+    omit?: PlayDataOmit<ExtArgs> | null
+    /**
+     * The data used to update PlayData.
+     */
+    data: XOR<PlayDataUpdateManyMutationInput, PlayDataUncheckedUpdateManyInput>
+    /**
+     * Filter which PlayData to update
+     */
+    where?: PlayDataWhereInput
+    /**
+     * Limit how many PlayData to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlayDataIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PlayData upsert
+   */
+  export type PlayDataUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlayData
+     */
+    select?: PlayDataSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PlayData
+     */
+    omit?: PlayDataOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlayDataInclude<ExtArgs> | null
+    /**
+     * The filter to search for the PlayData to update in case it exists.
+     */
+    where: PlayDataWhereUniqueInput
+    /**
+     * In case the PlayData found by the `where` argument doesn't exist, create a new PlayData with this data.
+     */
+    create: XOR<PlayDataCreateInput, PlayDataUncheckedCreateInput>
+    /**
+     * In case the PlayData was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PlayDataUpdateInput, PlayDataUncheckedUpdateInput>
+  }
+
+  /**
+   * PlayData delete
+   */
+  export type PlayDataDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlayData
+     */
+    select?: PlayDataSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PlayData
+     */
+    omit?: PlayDataOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlayDataInclude<ExtArgs> | null
+    /**
+     * Filter which PlayData to delete.
+     */
+    where: PlayDataWhereUniqueInput
+  }
+
+  /**
+   * PlayData deleteMany
+   */
+  export type PlayDataDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PlayData to delete
+     */
+    where?: PlayDataWhereInput
+    /**
+     * Limit how many PlayData to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * PlayData without action
+   */
+  export type PlayDataDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlayData
+     */
+    select?: PlayDataSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PlayData
+     */
+    omit?: PlayDataOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlayDataInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -3334,10 +6038,23 @@ export namespace Prisma {
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
+  export const MusicScalarFieldEnum: {
+    id: 'id',
+    index: 'index',
+    title: 'title',
+    title_kana: 'title_kana',
+    artist: 'artist',
+    category: 'category',
+    category_short: 'category_short',
+    description: 'description',
+    background: 'background'
+  };
+
+  export type MusicScalarFieldEnum = (typeof MusicScalarFieldEnum)[keyof typeof MusicScalarFieldEnum]
+
+
   export const RecentPlayScalarFieldEnum: {
     id: 'id',
-    title: 'title',
-    artist: 'artist',
     difficulty: 'difficulty',
     level: 'level',
     score: 'score',
@@ -3346,10 +6063,32 @@ export namespace Prisma {
     play_time: 'play_time',
     created_at: 'created_at',
     updated_at: 'updated_at',
-    user_id: 'user_id'
+    user_id: 'user_id',
+    music_idx: 'music_idx'
   };
 
   export type RecentPlayScalarFieldEnum = (typeof RecentPlayScalarFieldEnum)[keyof typeof RecentPlayScalarFieldEnum]
+
+
+  export const PlayDataScalarFieldEnum: {
+    id: 'id',
+    level: 'level',
+    difficulty: 'difficulty',
+    score: 'score',
+    rank: 'rank',
+    fc_type: 'fc_type',
+    play_count: 'play_count',
+    fullcombo_count: 'fullcombo_count',
+    pianistic_count: 'pianistic_count',
+    max_combo: 'max_combo',
+    grade_basic: 'grade_basic',
+    grade_recital: 'grade_recital',
+    besttime: 'besttime',
+    user_id: 'user_id',
+    music_idx: 'music_idx'
+  };
+
+  export type PlayDataScalarFieldEnum = (typeof PlayDataScalarFieldEnum)[keyof typeof PlayDataScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -3423,6 +6162,7 @@ export namespace Prisma {
     created_at?: DateTimeFilter<"User"> | Date | string
     updated_at?: DateTimeFilter<"User"> | Date | string
     PlayHistory?: RecentPlayListRelationFilter
+    PlayData?: PlayDataListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -3434,6 +6174,7 @@ export namespace Prisma {
     created_at?: SortOrder
     updated_at?: SortOrder
     PlayHistory?: RecentPlayOrderByRelationAggregateInput
+    PlayData?: PlayDataOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -3448,6 +6189,7 @@ export namespace Prisma {
     created_at?: DateTimeFilter<"User"> | Date | string
     updated_at?: DateTimeFilter<"User"> | Date | string
     PlayHistory?: RecentPlayListRelationFilter
+    PlayData?: PlayDataListRelationFilter
   }, "id" | "username" | "kakao_id">
 
   export type UserOrderByWithAggregationInput = {
@@ -3478,13 +6220,91 @@ export namespace Prisma {
     updated_at?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
 
+  export type MusicWhereInput = {
+    AND?: MusicWhereInput | MusicWhereInput[]
+    OR?: MusicWhereInput[]
+    NOT?: MusicWhereInput | MusicWhereInput[]
+    id?: IntFilter<"Music"> | number
+    index?: StringFilter<"Music"> | string
+    title?: StringFilter<"Music"> | string
+    title_kana?: StringFilter<"Music"> | string
+    artist?: StringNullableFilter<"Music"> | string | null
+    category?: StringFilter<"Music"> | string
+    category_short?: StringFilter<"Music"> | string
+    description?: StringNullableFilter<"Music"> | string | null
+    background?: StringNullableFilter<"Music"> | string | null
+    RecentPlay?: RecentPlayListRelationFilter
+    PlayData?: PlayDataListRelationFilter
+  }
+
+  export type MusicOrderByWithRelationInput = {
+    id?: SortOrder
+    index?: SortOrder
+    title?: SortOrder
+    title_kana?: SortOrder
+    artist?: SortOrderInput | SortOrder
+    category?: SortOrder
+    category_short?: SortOrder
+    description?: SortOrderInput | SortOrder
+    background?: SortOrderInput | SortOrder
+    RecentPlay?: RecentPlayOrderByRelationAggregateInput
+    PlayData?: PlayDataOrderByRelationAggregateInput
+  }
+
+  export type MusicWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    index?: string
+    AND?: MusicWhereInput | MusicWhereInput[]
+    OR?: MusicWhereInput[]
+    NOT?: MusicWhereInput | MusicWhereInput[]
+    title?: StringFilter<"Music"> | string
+    title_kana?: StringFilter<"Music"> | string
+    artist?: StringNullableFilter<"Music"> | string | null
+    category?: StringFilter<"Music"> | string
+    category_short?: StringFilter<"Music"> | string
+    description?: StringNullableFilter<"Music"> | string | null
+    background?: StringNullableFilter<"Music"> | string | null
+    RecentPlay?: RecentPlayListRelationFilter
+    PlayData?: PlayDataListRelationFilter
+  }, "id" | "index">
+
+  export type MusicOrderByWithAggregationInput = {
+    id?: SortOrder
+    index?: SortOrder
+    title?: SortOrder
+    title_kana?: SortOrder
+    artist?: SortOrderInput | SortOrder
+    category?: SortOrder
+    category_short?: SortOrder
+    description?: SortOrderInput | SortOrder
+    background?: SortOrderInput | SortOrder
+    _count?: MusicCountOrderByAggregateInput
+    _avg?: MusicAvgOrderByAggregateInput
+    _max?: MusicMaxOrderByAggregateInput
+    _min?: MusicMinOrderByAggregateInput
+    _sum?: MusicSumOrderByAggregateInput
+  }
+
+  export type MusicScalarWhereWithAggregatesInput = {
+    AND?: MusicScalarWhereWithAggregatesInput | MusicScalarWhereWithAggregatesInput[]
+    OR?: MusicScalarWhereWithAggregatesInput[]
+    NOT?: MusicScalarWhereWithAggregatesInput | MusicScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"Music"> | number
+    index?: StringWithAggregatesFilter<"Music"> | string
+    title?: StringWithAggregatesFilter<"Music"> | string
+    title_kana?: StringWithAggregatesFilter<"Music"> | string
+    artist?: StringNullableWithAggregatesFilter<"Music"> | string | null
+    category?: StringWithAggregatesFilter<"Music"> | string
+    category_short?: StringWithAggregatesFilter<"Music"> | string
+    description?: StringNullableWithAggregatesFilter<"Music"> | string | null
+    background?: StringNullableWithAggregatesFilter<"Music"> | string | null
+  }
+
   export type RecentPlayWhereInput = {
     AND?: RecentPlayWhereInput | RecentPlayWhereInput[]
     OR?: RecentPlayWhereInput[]
     NOT?: RecentPlayWhereInput | RecentPlayWhereInput[]
     id?: IntFilter<"RecentPlay"> | number
-    title?: StringFilter<"RecentPlay"> | string
-    artist?: StringFilter<"RecentPlay"> | string
     difficulty?: StringFilter<"RecentPlay"> | string
     level?: IntFilter<"RecentPlay"> | number
     score?: IntFilter<"RecentPlay"> | number
@@ -3494,13 +6314,13 @@ export namespace Prisma {
     created_at?: DateTimeFilter<"RecentPlay"> | Date | string
     updated_at?: DateTimeFilter<"RecentPlay"> | Date | string
     user_id?: IntFilter<"RecentPlay"> | number
+    music_idx?: StringFilter<"RecentPlay"> | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    music?: XOR<MusicScalarRelationFilter, MusicWhereInput>
   }
 
   export type RecentPlayOrderByWithRelationInput = {
     id?: SortOrder
-    title?: SortOrder
-    artist?: SortOrder
     difficulty?: SortOrder
     level?: SortOrder
     score?: SortOrder
@@ -3510,7 +6330,9 @@ export namespace Prisma {
     created_at?: SortOrder
     updated_at?: SortOrder
     user_id?: SortOrder
+    music_idx?: SortOrder
     user?: UserOrderByWithRelationInput
+    music?: MusicOrderByWithRelationInput
   }
 
   export type RecentPlayWhereUniqueInput = Prisma.AtLeast<{
@@ -3518,8 +6340,6 @@ export namespace Prisma {
     AND?: RecentPlayWhereInput | RecentPlayWhereInput[]
     OR?: RecentPlayWhereInput[]
     NOT?: RecentPlayWhereInput | RecentPlayWhereInput[]
-    title?: StringFilter<"RecentPlay"> | string
-    artist?: StringFilter<"RecentPlay"> | string
     difficulty?: StringFilter<"RecentPlay"> | string
     level?: IntFilter<"RecentPlay"> | number
     score?: IntFilter<"RecentPlay"> | number
@@ -3529,13 +6349,13 @@ export namespace Prisma {
     created_at?: DateTimeFilter<"RecentPlay"> | Date | string
     updated_at?: DateTimeFilter<"RecentPlay"> | Date | string
     user_id?: IntFilter<"RecentPlay"> | number
+    music_idx?: StringFilter<"RecentPlay"> | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    music?: XOR<MusicScalarRelationFilter, MusicWhereInput>
   }, "id">
 
   export type RecentPlayOrderByWithAggregationInput = {
     id?: SortOrder
-    title?: SortOrder
-    artist?: SortOrder
     difficulty?: SortOrder
     level?: SortOrder
     score?: SortOrder
@@ -3545,6 +6365,7 @@ export namespace Prisma {
     created_at?: SortOrder
     updated_at?: SortOrder
     user_id?: SortOrder
+    music_idx?: SortOrder
     _count?: RecentPlayCountOrderByAggregateInput
     _avg?: RecentPlayAvgOrderByAggregateInput
     _max?: RecentPlayMaxOrderByAggregateInput
@@ -3557,8 +6378,6 @@ export namespace Prisma {
     OR?: RecentPlayScalarWhereWithAggregatesInput[]
     NOT?: RecentPlayScalarWhereWithAggregatesInput | RecentPlayScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"RecentPlay"> | number
-    title?: StringWithAggregatesFilter<"RecentPlay"> | string
-    artist?: StringWithAggregatesFilter<"RecentPlay"> | string
     difficulty?: StringWithAggregatesFilter<"RecentPlay"> | string
     level?: IntWithAggregatesFilter<"RecentPlay"> | number
     score?: IntWithAggregatesFilter<"RecentPlay"> | number
@@ -3568,6 +6387,117 @@ export namespace Prisma {
     created_at?: DateTimeWithAggregatesFilter<"RecentPlay"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"RecentPlay"> | Date | string
     user_id?: IntWithAggregatesFilter<"RecentPlay"> | number
+    music_idx?: StringWithAggregatesFilter<"RecentPlay"> | string
+  }
+
+  export type PlayDataWhereInput = {
+    AND?: PlayDataWhereInput | PlayDataWhereInput[]
+    OR?: PlayDataWhereInput[]
+    NOT?: PlayDataWhereInput | PlayDataWhereInput[]
+    id?: IntFilter<"PlayData"> | number
+    level?: IntFilter<"PlayData"> | number
+    difficulty?: StringFilter<"PlayData"> | string
+    score?: IntFilter<"PlayData"> | number
+    rank?: StringFilter<"PlayData"> | string
+    fc_type?: IntFilter<"PlayData"> | number
+    play_count?: IntFilter<"PlayData"> | number
+    fullcombo_count?: IntFilter<"PlayData"> | number
+    pianistic_count?: IntFilter<"PlayData"> | number
+    max_combo?: IntFilter<"PlayData"> | number
+    grade_basic?: IntFilter<"PlayData"> | number
+    grade_recital?: IntFilter<"PlayData"> | number
+    besttime?: StringFilter<"PlayData"> | string
+    user_id?: IntFilter<"PlayData"> | number
+    music_idx?: StringFilter<"PlayData"> | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    music?: XOR<MusicScalarRelationFilter, MusicWhereInput>
+  }
+
+  export type PlayDataOrderByWithRelationInput = {
+    id?: SortOrder
+    level?: SortOrder
+    difficulty?: SortOrder
+    score?: SortOrder
+    rank?: SortOrder
+    fc_type?: SortOrder
+    play_count?: SortOrder
+    fullcombo_count?: SortOrder
+    pianistic_count?: SortOrder
+    max_combo?: SortOrder
+    grade_basic?: SortOrder
+    grade_recital?: SortOrder
+    besttime?: SortOrder
+    user_id?: SortOrder
+    music_idx?: SortOrder
+    user?: UserOrderByWithRelationInput
+    music?: MusicOrderByWithRelationInput
+  }
+
+  export type PlayDataWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: PlayDataWhereInput | PlayDataWhereInput[]
+    OR?: PlayDataWhereInput[]
+    NOT?: PlayDataWhereInput | PlayDataWhereInput[]
+    level?: IntFilter<"PlayData"> | number
+    difficulty?: StringFilter<"PlayData"> | string
+    score?: IntFilter<"PlayData"> | number
+    rank?: StringFilter<"PlayData"> | string
+    fc_type?: IntFilter<"PlayData"> | number
+    play_count?: IntFilter<"PlayData"> | number
+    fullcombo_count?: IntFilter<"PlayData"> | number
+    pianistic_count?: IntFilter<"PlayData"> | number
+    max_combo?: IntFilter<"PlayData"> | number
+    grade_basic?: IntFilter<"PlayData"> | number
+    grade_recital?: IntFilter<"PlayData"> | number
+    besttime?: StringFilter<"PlayData"> | string
+    user_id?: IntFilter<"PlayData"> | number
+    music_idx?: StringFilter<"PlayData"> | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    music?: XOR<MusicScalarRelationFilter, MusicWhereInput>
+  }, "id">
+
+  export type PlayDataOrderByWithAggregationInput = {
+    id?: SortOrder
+    level?: SortOrder
+    difficulty?: SortOrder
+    score?: SortOrder
+    rank?: SortOrder
+    fc_type?: SortOrder
+    play_count?: SortOrder
+    fullcombo_count?: SortOrder
+    pianistic_count?: SortOrder
+    max_combo?: SortOrder
+    grade_basic?: SortOrder
+    grade_recital?: SortOrder
+    besttime?: SortOrder
+    user_id?: SortOrder
+    music_idx?: SortOrder
+    _count?: PlayDataCountOrderByAggregateInput
+    _avg?: PlayDataAvgOrderByAggregateInput
+    _max?: PlayDataMaxOrderByAggregateInput
+    _min?: PlayDataMinOrderByAggregateInput
+    _sum?: PlayDataSumOrderByAggregateInput
+  }
+
+  export type PlayDataScalarWhereWithAggregatesInput = {
+    AND?: PlayDataScalarWhereWithAggregatesInput | PlayDataScalarWhereWithAggregatesInput[]
+    OR?: PlayDataScalarWhereWithAggregatesInput[]
+    NOT?: PlayDataScalarWhereWithAggregatesInput | PlayDataScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"PlayData"> | number
+    level?: IntWithAggregatesFilter<"PlayData"> | number
+    difficulty?: StringWithAggregatesFilter<"PlayData"> | string
+    score?: IntWithAggregatesFilter<"PlayData"> | number
+    rank?: StringWithAggregatesFilter<"PlayData"> | string
+    fc_type?: IntWithAggregatesFilter<"PlayData"> | number
+    play_count?: IntWithAggregatesFilter<"PlayData"> | number
+    fullcombo_count?: IntWithAggregatesFilter<"PlayData"> | number
+    pianistic_count?: IntWithAggregatesFilter<"PlayData"> | number
+    max_combo?: IntWithAggregatesFilter<"PlayData"> | number
+    grade_basic?: IntWithAggregatesFilter<"PlayData"> | number
+    grade_recital?: IntWithAggregatesFilter<"PlayData"> | number
+    besttime?: StringWithAggregatesFilter<"PlayData"> | string
+    user_id?: IntWithAggregatesFilter<"PlayData"> | number
+    music_idx?: StringWithAggregatesFilter<"PlayData"> | string
   }
 
   export type UserCreateInput = {
@@ -3578,6 +6508,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
+    PlayData?: PlayDataCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -3589,6 +6520,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
+    PlayData?: PlayDataUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -3599,6 +6531,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
+    PlayData?: PlayDataUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -3610,6 +6543,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
+    PlayData?: PlayDataUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -3641,9 +6575,96 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type RecentPlayCreateInput = {
+  export type MusicCreateInput = {
+    index: string
     title: string
-    artist: string
+    title_kana: string
+    artist?: string | null
+    category: string
+    category_short: string
+    description?: string | null
+    background?: string | null
+    RecentPlay?: RecentPlayCreateNestedManyWithoutMusicInput
+    PlayData?: PlayDataCreateNestedManyWithoutMusicInput
+  }
+
+  export type MusicUncheckedCreateInput = {
+    id?: number
+    index: string
+    title: string
+    title_kana: string
+    artist?: string | null
+    category: string
+    category_short: string
+    description?: string | null
+    background?: string | null
+    RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutMusicInput
+    PlayData?: PlayDataUncheckedCreateNestedManyWithoutMusicInput
+  }
+
+  export type MusicUpdateInput = {
+    index?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    title_kana?: StringFieldUpdateOperationsInput | string
+    artist?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: StringFieldUpdateOperationsInput | string
+    category_short?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    background?: NullableStringFieldUpdateOperationsInput | string | null
+    RecentPlay?: RecentPlayUpdateManyWithoutMusicNestedInput
+    PlayData?: PlayDataUpdateManyWithoutMusicNestedInput
+  }
+
+  export type MusicUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    index?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    title_kana?: StringFieldUpdateOperationsInput | string
+    artist?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: StringFieldUpdateOperationsInput | string
+    category_short?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    background?: NullableStringFieldUpdateOperationsInput | string | null
+    RecentPlay?: RecentPlayUncheckedUpdateManyWithoutMusicNestedInput
+    PlayData?: PlayDataUncheckedUpdateManyWithoutMusicNestedInput
+  }
+
+  export type MusicCreateManyInput = {
+    id?: number
+    index: string
+    title: string
+    title_kana: string
+    artist?: string | null
+    category: string
+    category_short: string
+    description?: string | null
+    background?: string | null
+  }
+
+  export type MusicUpdateManyMutationInput = {
+    index?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    title_kana?: StringFieldUpdateOperationsInput | string
+    artist?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: StringFieldUpdateOperationsInput | string
+    category_short?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    background?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type MusicUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    index?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    title_kana?: StringFieldUpdateOperationsInput | string
+    artist?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: StringFieldUpdateOperationsInput | string
+    category_short?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    background?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type RecentPlayCreateInput = {
     difficulty: string
     level: number
     score: number
@@ -3653,12 +6674,11 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutPlayHistoryInput
+    music: MusicCreateNestedOneWithoutRecentPlayInput
   }
 
   export type RecentPlayUncheckedCreateInput = {
     id?: number
-    title: string
-    artist: string
     difficulty: string
     level: number
     score: number
@@ -3668,11 +6688,10 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     user_id: number
+    music_idx: string
   }
 
   export type RecentPlayUpdateInput = {
-    title?: StringFieldUpdateOperationsInput | string
-    artist?: StringFieldUpdateOperationsInput | string
     difficulty?: StringFieldUpdateOperationsInput | string
     level?: IntFieldUpdateOperationsInput | number
     score?: IntFieldUpdateOperationsInput | number
@@ -3682,12 +6701,11 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutPlayHistoryNestedInput
+    music?: MusicUpdateOneRequiredWithoutRecentPlayNestedInput
   }
 
   export type RecentPlayUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
-    title?: StringFieldUpdateOperationsInput | string
-    artist?: StringFieldUpdateOperationsInput | string
     difficulty?: StringFieldUpdateOperationsInput | string
     level?: IntFieldUpdateOperationsInput | number
     score?: IntFieldUpdateOperationsInput | number
@@ -3697,12 +6715,11 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user_id?: IntFieldUpdateOperationsInput | number
+    music_idx?: StringFieldUpdateOperationsInput | string
   }
 
   export type RecentPlayCreateManyInput = {
     id?: number
-    title: string
-    artist: string
     difficulty: string
     level: number
     score: number
@@ -3712,11 +6729,10 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     user_id: number
+    music_idx: string
   }
 
   export type RecentPlayUpdateManyMutationInput = {
-    title?: StringFieldUpdateOperationsInput | string
-    artist?: StringFieldUpdateOperationsInput | string
     difficulty?: StringFieldUpdateOperationsInput | string
     level?: IntFieldUpdateOperationsInput | number
     score?: IntFieldUpdateOperationsInput | number
@@ -3729,8 +6745,6 @@ export namespace Prisma {
 
   export type RecentPlayUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
-    title?: StringFieldUpdateOperationsInput | string
-    artist?: StringFieldUpdateOperationsInput | string
     difficulty?: StringFieldUpdateOperationsInput | string
     level?: IntFieldUpdateOperationsInput | number
     score?: IntFieldUpdateOperationsInput | number
@@ -3740,6 +6754,128 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user_id?: IntFieldUpdateOperationsInput | number
+    music_idx?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type PlayDataCreateInput = {
+    level: number
+    difficulty: string
+    score: number
+    rank: string
+    fc_type: number
+    play_count: number
+    fullcombo_count: number
+    pianistic_count: number
+    max_combo: number
+    grade_basic: number
+    grade_recital: number
+    besttime: string
+    user: UserCreateNestedOneWithoutPlayDataInput
+    music: MusicCreateNestedOneWithoutPlayDataInput
+  }
+
+  export type PlayDataUncheckedCreateInput = {
+    id?: number
+    level: number
+    difficulty: string
+    score: number
+    rank: string
+    fc_type: number
+    play_count: number
+    fullcombo_count: number
+    pianistic_count: number
+    max_combo: number
+    grade_basic: number
+    grade_recital: number
+    besttime: string
+    user_id: number
+    music_idx: string
+  }
+
+  export type PlayDataUpdateInput = {
+    level?: IntFieldUpdateOperationsInput | number
+    difficulty?: StringFieldUpdateOperationsInput | string
+    score?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    fc_type?: IntFieldUpdateOperationsInput | number
+    play_count?: IntFieldUpdateOperationsInput | number
+    fullcombo_count?: IntFieldUpdateOperationsInput | number
+    pianistic_count?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    grade_recital?: IntFieldUpdateOperationsInput | number
+    besttime?: StringFieldUpdateOperationsInput | string
+    user?: UserUpdateOneRequiredWithoutPlayDataNestedInput
+    music?: MusicUpdateOneRequiredWithoutPlayDataNestedInput
+  }
+
+  export type PlayDataUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    level?: IntFieldUpdateOperationsInput | number
+    difficulty?: StringFieldUpdateOperationsInput | string
+    score?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    fc_type?: IntFieldUpdateOperationsInput | number
+    play_count?: IntFieldUpdateOperationsInput | number
+    fullcombo_count?: IntFieldUpdateOperationsInput | number
+    pianistic_count?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    grade_recital?: IntFieldUpdateOperationsInput | number
+    besttime?: StringFieldUpdateOperationsInput | string
+    user_id?: IntFieldUpdateOperationsInput | number
+    music_idx?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type PlayDataCreateManyInput = {
+    id?: number
+    level: number
+    difficulty: string
+    score: number
+    rank: string
+    fc_type: number
+    play_count: number
+    fullcombo_count: number
+    pianistic_count: number
+    max_combo: number
+    grade_basic: number
+    grade_recital: number
+    besttime: string
+    user_id: number
+    music_idx: string
+  }
+
+  export type PlayDataUpdateManyMutationInput = {
+    level?: IntFieldUpdateOperationsInput | number
+    difficulty?: StringFieldUpdateOperationsInput | string
+    score?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    fc_type?: IntFieldUpdateOperationsInput | number
+    play_count?: IntFieldUpdateOperationsInput | number
+    fullcombo_count?: IntFieldUpdateOperationsInput | number
+    pianistic_count?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    grade_recital?: IntFieldUpdateOperationsInput | number
+    besttime?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type PlayDataUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    level?: IntFieldUpdateOperationsInput | number
+    difficulty?: StringFieldUpdateOperationsInput | string
+    score?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    fc_type?: IntFieldUpdateOperationsInput | number
+    play_count?: IntFieldUpdateOperationsInput | number
+    fullcombo_count?: IntFieldUpdateOperationsInput | number
+    pianistic_count?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    grade_recital?: IntFieldUpdateOperationsInput | number
+    besttime?: StringFieldUpdateOperationsInput | string
+    user_id?: IntFieldUpdateOperationsInput | number
+    music_idx?: StringFieldUpdateOperationsInput | string
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -3806,12 +6942,22 @@ export namespace Prisma {
     none?: RecentPlayWhereInput
   }
 
+  export type PlayDataListRelationFilter = {
+    every?: PlayDataWhereInput
+    some?: PlayDataWhereInput
+    none?: PlayDataWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
   }
 
   export type RecentPlayOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PlayDataOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -3950,70 +7096,48 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
-  export type UserScalarRelationFilter = {
-    is?: UserWhereInput
-    isNot?: UserWhereInput
-  }
-
-  export type RecentPlayCountOrderByAggregateInput = {
+  export type MusicCountOrderByAggregateInput = {
     id?: SortOrder
+    index?: SortOrder
     title?: SortOrder
+    title_kana?: SortOrder
     artist?: SortOrder
-    difficulty?: SortOrder
-    level?: SortOrder
-    score?: SortOrder
-    max_combo?: SortOrder
-    rank?: SortOrder
-    play_time?: SortOrder
-    created_at?: SortOrder
-    updated_at?: SortOrder
-    user_id?: SortOrder
+    category?: SortOrder
+    category_short?: SortOrder
+    description?: SortOrder
+    background?: SortOrder
   }
 
-  export type RecentPlayAvgOrderByAggregateInput = {
+  export type MusicAvgOrderByAggregateInput = {
     id?: SortOrder
-    level?: SortOrder
-    score?: SortOrder
-    max_combo?: SortOrder
-    user_id?: SortOrder
   }
 
-  export type RecentPlayMaxOrderByAggregateInput = {
+  export type MusicMaxOrderByAggregateInput = {
     id?: SortOrder
+    index?: SortOrder
     title?: SortOrder
+    title_kana?: SortOrder
     artist?: SortOrder
-    difficulty?: SortOrder
-    level?: SortOrder
-    score?: SortOrder
-    max_combo?: SortOrder
-    rank?: SortOrder
-    play_time?: SortOrder
-    created_at?: SortOrder
-    updated_at?: SortOrder
-    user_id?: SortOrder
+    category?: SortOrder
+    category_short?: SortOrder
+    description?: SortOrder
+    background?: SortOrder
   }
 
-  export type RecentPlayMinOrderByAggregateInput = {
+  export type MusicMinOrderByAggregateInput = {
     id?: SortOrder
+    index?: SortOrder
     title?: SortOrder
+    title_kana?: SortOrder
     artist?: SortOrder
-    difficulty?: SortOrder
-    level?: SortOrder
-    score?: SortOrder
-    max_combo?: SortOrder
-    rank?: SortOrder
-    play_time?: SortOrder
-    created_at?: SortOrder
-    updated_at?: SortOrder
-    user_id?: SortOrder
+    category?: SortOrder
+    category_short?: SortOrder
+    description?: SortOrder
+    background?: SortOrder
   }
 
-  export type RecentPlaySumOrderByAggregateInput = {
+  export type MusicSumOrderByAggregateInput = {
     id?: SortOrder
-    level?: SortOrder
-    score?: SortOrder
-    max_combo?: SortOrder
-    user_id?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -4033,6 +7157,156 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
+  export type UserScalarRelationFilter = {
+    is?: UserWhereInput
+    isNot?: UserWhereInput
+  }
+
+  export type MusicScalarRelationFilter = {
+    is?: MusicWhereInput
+    isNot?: MusicWhereInput
+  }
+
+  export type RecentPlayCountOrderByAggregateInput = {
+    id?: SortOrder
+    difficulty?: SortOrder
+    level?: SortOrder
+    score?: SortOrder
+    max_combo?: SortOrder
+    rank?: SortOrder
+    play_time?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    user_id?: SortOrder
+    music_idx?: SortOrder
+  }
+
+  export type RecentPlayAvgOrderByAggregateInput = {
+    id?: SortOrder
+    level?: SortOrder
+    score?: SortOrder
+    max_combo?: SortOrder
+    user_id?: SortOrder
+  }
+
+  export type RecentPlayMaxOrderByAggregateInput = {
+    id?: SortOrder
+    difficulty?: SortOrder
+    level?: SortOrder
+    score?: SortOrder
+    max_combo?: SortOrder
+    rank?: SortOrder
+    play_time?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    user_id?: SortOrder
+    music_idx?: SortOrder
+  }
+
+  export type RecentPlayMinOrderByAggregateInput = {
+    id?: SortOrder
+    difficulty?: SortOrder
+    level?: SortOrder
+    score?: SortOrder
+    max_combo?: SortOrder
+    rank?: SortOrder
+    play_time?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    user_id?: SortOrder
+    music_idx?: SortOrder
+  }
+
+  export type RecentPlaySumOrderByAggregateInput = {
+    id?: SortOrder
+    level?: SortOrder
+    score?: SortOrder
+    max_combo?: SortOrder
+    user_id?: SortOrder
+  }
+
+  export type PlayDataCountOrderByAggregateInput = {
+    id?: SortOrder
+    level?: SortOrder
+    difficulty?: SortOrder
+    score?: SortOrder
+    rank?: SortOrder
+    fc_type?: SortOrder
+    play_count?: SortOrder
+    fullcombo_count?: SortOrder
+    pianistic_count?: SortOrder
+    max_combo?: SortOrder
+    grade_basic?: SortOrder
+    grade_recital?: SortOrder
+    besttime?: SortOrder
+    user_id?: SortOrder
+    music_idx?: SortOrder
+  }
+
+  export type PlayDataAvgOrderByAggregateInput = {
+    id?: SortOrder
+    level?: SortOrder
+    score?: SortOrder
+    fc_type?: SortOrder
+    play_count?: SortOrder
+    fullcombo_count?: SortOrder
+    pianistic_count?: SortOrder
+    max_combo?: SortOrder
+    grade_basic?: SortOrder
+    grade_recital?: SortOrder
+    user_id?: SortOrder
+  }
+
+  export type PlayDataMaxOrderByAggregateInput = {
+    id?: SortOrder
+    level?: SortOrder
+    difficulty?: SortOrder
+    score?: SortOrder
+    rank?: SortOrder
+    fc_type?: SortOrder
+    play_count?: SortOrder
+    fullcombo_count?: SortOrder
+    pianistic_count?: SortOrder
+    max_combo?: SortOrder
+    grade_basic?: SortOrder
+    grade_recital?: SortOrder
+    besttime?: SortOrder
+    user_id?: SortOrder
+    music_idx?: SortOrder
+  }
+
+  export type PlayDataMinOrderByAggregateInput = {
+    id?: SortOrder
+    level?: SortOrder
+    difficulty?: SortOrder
+    score?: SortOrder
+    rank?: SortOrder
+    fc_type?: SortOrder
+    play_count?: SortOrder
+    fullcombo_count?: SortOrder
+    pianistic_count?: SortOrder
+    max_combo?: SortOrder
+    grade_basic?: SortOrder
+    grade_recital?: SortOrder
+    besttime?: SortOrder
+    user_id?: SortOrder
+    music_idx?: SortOrder
+  }
+
+  export type PlayDataSumOrderByAggregateInput = {
+    id?: SortOrder
+    level?: SortOrder
+    score?: SortOrder
+    fc_type?: SortOrder
+    play_count?: SortOrder
+    fullcombo_count?: SortOrder
+    pianistic_count?: SortOrder
+    max_combo?: SortOrder
+    grade_basic?: SortOrder
+    grade_recital?: SortOrder
+    user_id?: SortOrder
+  }
+
   export type RecentPlayCreateNestedManyWithoutUserInput = {
     create?: XOR<RecentPlayCreateWithoutUserInput, RecentPlayUncheckedCreateWithoutUserInput> | RecentPlayCreateWithoutUserInput[] | RecentPlayUncheckedCreateWithoutUserInput[]
     connectOrCreate?: RecentPlayCreateOrConnectWithoutUserInput | RecentPlayCreateOrConnectWithoutUserInput[]
@@ -4040,11 +7314,25 @@ export namespace Prisma {
     connect?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
   }
 
+  export type PlayDataCreateNestedManyWithoutUserInput = {
+    create?: XOR<PlayDataCreateWithoutUserInput, PlayDataUncheckedCreateWithoutUserInput> | PlayDataCreateWithoutUserInput[] | PlayDataUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PlayDataCreateOrConnectWithoutUserInput | PlayDataCreateOrConnectWithoutUserInput[]
+    createMany?: PlayDataCreateManyUserInputEnvelope
+    connect?: PlayDataWhereUniqueInput | PlayDataWhereUniqueInput[]
+  }
+
   export type RecentPlayUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<RecentPlayCreateWithoutUserInput, RecentPlayUncheckedCreateWithoutUserInput> | RecentPlayCreateWithoutUserInput[] | RecentPlayUncheckedCreateWithoutUserInput[]
     connectOrCreate?: RecentPlayCreateOrConnectWithoutUserInput | RecentPlayCreateOrConnectWithoutUserInput[]
     createMany?: RecentPlayCreateManyUserInputEnvelope
     connect?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
+  }
+
+  export type PlayDataUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<PlayDataCreateWithoutUserInput, PlayDataUncheckedCreateWithoutUserInput> | PlayDataCreateWithoutUserInput[] | PlayDataUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PlayDataCreateOrConnectWithoutUserInput | PlayDataCreateOrConnectWithoutUserInput[]
+    createMany?: PlayDataCreateManyUserInputEnvelope
+    connect?: PlayDataWhereUniqueInput | PlayDataWhereUniqueInput[]
   }
 
   export type NullableStringFieldUpdateOperationsInput = {
@@ -4085,6 +7373,20 @@ export namespace Prisma {
     deleteMany?: RecentPlayScalarWhereInput | RecentPlayScalarWhereInput[]
   }
 
+  export type PlayDataUpdateManyWithoutUserNestedInput = {
+    create?: XOR<PlayDataCreateWithoutUserInput, PlayDataUncheckedCreateWithoutUserInput> | PlayDataCreateWithoutUserInput[] | PlayDataUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PlayDataCreateOrConnectWithoutUserInput | PlayDataCreateOrConnectWithoutUserInput[]
+    upsert?: PlayDataUpsertWithWhereUniqueWithoutUserInput | PlayDataUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: PlayDataCreateManyUserInputEnvelope
+    set?: PlayDataWhereUniqueInput | PlayDataWhereUniqueInput[]
+    disconnect?: PlayDataWhereUniqueInput | PlayDataWhereUniqueInput[]
+    delete?: PlayDataWhereUniqueInput | PlayDataWhereUniqueInput[]
+    connect?: PlayDataWhereUniqueInput | PlayDataWhereUniqueInput[]
+    update?: PlayDataUpdateWithWhereUniqueWithoutUserInput | PlayDataUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: PlayDataUpdateManyWithWhereWithoutUserInput | PlayDataUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: PlayDataScalarWhereInput | PlayDataScalarWhereInput[]
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -4107,14 +7409,118 @@ export namespace Prisma {
     deleteMany?: RecentPlayScalarWhereInput | RecentPlayScalarWhereInput[]
   }
 
+  export type PlayDataUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<PlayDataCreateWithoutUserInput, PlayDataUncheckedCreateWithoutUserInput> | PlayDataCreateWithoutUserInput[] | PlayDataUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PlayDataCreateOrConnectWithoutUserInput | PlayDataCreateOrConnectWithoutUserInput[]
+    upsert?: PlayDataUpsertWithWhereUniqueWithoutUserInput | PlayDataUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: PlayDataCreateManyUserInputEnvelope
+    set?: PlayDataWhereUniqueInput | PlayDataWhereUniqueInput[]
+    disconnect?: PlayDataWhereUniqueInput | PlayDataWhereUniqueInput[]
+    delete?: PlayDataWhereUniqueInput | PlayDataWhereUniqueInput[]
+    connect?: PlayDataWhereUniqueInput | PlayDataWhereUniqueInput[]
+    update?: PlayDataUpdateWithWhereUniqueWithoutUserInput | PlayDataUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: PlayDataUpdateManyWithWhereWithoutUserInput | PlayDataUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: PlayDataScalarWhereInput | PlayDataScalarWhereInput[]
+  }
+
+  export type RecentPlayCreateNestedManyWithoutMusicInput = {
+    create?: XOR<RecentPlayCreateWithoutMusicInput, RecentPlayUncheckedCreateWithoutMusicInput> | RecentPlayCreateWithoutMusicInput[] | RecentPlayUncheckedCreateWithoutMusicInput[]
+    connectOrCreate?: RecentPlayCreateOrConnectWithoutMusicInput | RecentPlayCreateOrConnectWithoutMusicInput[]
+    createMany?: RecentPlayCreateManyMusicInputEnvelope
+    connect?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
+  }
+
+  export type PlayDataCreateNestedManyWithoutMusicInput = {
+    create?: XOR<PlayDataCreateWithoutMusicInput, PlayDataUncheckedCreateWithoutMusicInput> | PlayDataCreateWithoutMusicInput[] | PlayDataUncheckedCreateWithoutMusicInput[]
+    connectOrCreate?: PlayDataCreateOrConnectWithoutMusicInput | PlayDataCreateOrConnectWithoutMusicInput[]
+    createMany?: PlayDataCreateManyMusicInputEnvelope
+    connect?: PlayDataWhereUniqueInput | PlayDataWhereUniqueInput[]
+  }
+
+  export type RecentPlayUncheckedCreateNestedManyWithoutMusicInput = {
+    create?: XOR<RecentPlayCreateWithoutMusicInput, RecentPlayUncheckedCreateWithoutMusicInput> | RecentPlayCreateWithoutMusicInput[] | RecentPlayUncheckedCreateWithoutMusicInput[]
+    connectOrCreate?: RecentPlayCreateOrConnectWithoutMusicInput | RecentPlayCreateOrConnectWithoutMusicInput[]
+    createMany?: RecentPlayCreateManyMusicInputEnvelope
+    connect?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
+  }
+
+  export type PlayDataUncheckedCreateNestedManyWithoutMusicInput = {
+    create?: XOR<PlayDataCreateWithoutMusicInput, PlayDataUncheckedCreateWithoutMusicInput> | PlayDataCreateWithoutMusicInput[] | PlayDataUncheckedCreateWithoutMusicInput[]
+    connectOrCreate?: PlayDataCreateOrConnectWithoutMusicInput | PlayDataCreateOrConnectWithoutMusicInput[]
+    createMany?: PlayDataCreateManyMusicInputEnvelope
+    connect?: PlayDataWhereUniqueInput | PlayDataWhereUniqueInput[]
+  }
+
+  export type StringFieldUpdateOperationsInput = {
+    set?: string
+  }
+
+  export type RecentPlayUpdateManyWithoutMusicNestedInput = {
+    create?: XOR<RecentPlayCreateWithoutMusicInput, RecentPlayUncheckedCreateWithoutMusicInput> | RecentPlayCreateWithoutMusicInput[] | RecentPlayUncheckedCreateWithoutMusicInput[]
+    connectOrCreate?: RecentPlayCreateOrConnectWithoutMusicInput | RecentPlayCreateOrConnectWithoutMusicInput[]
+    upsert?: RecentPlayUpsertWithWhereUniqueWithoutMusicInput | RecentPlayUpsertWithWhereUniqueWithoutMusicInput[]
+    createMany?: RecentPlayCreateManyMusicInputEnvelope
+    set?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
+    disconnect?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
+    delete?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
+    connect?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
+    update?: RecentPlayUpdateWithWhereUniqueWithoutMusicInput | RecentPlayUpdateWithWhereUniqueWithoutMusicInput[]
+    updateMany?: RecentPlayUpdateManyWithWhereWithoutMusicInput | RecentPlayUpdateManyWithWhereWithoutMusicInput[]
+    deleteMany?: RecentPlayScalarWhereInput | RecentPlayScalarWhereInput[]
+  }
+
+  export type PlayDataUpdateManyWithoutMusicNestedInput = {
+    create?: XOR<PlayDataCreateWithoutMusicInput, PlayDataUncheckedCreateWithoutMusicInput> | PlayDataCreateWithoutMusicInput[] | PlayDataUncheckedCreateWithoutMusicInput[]
+    connectOrCreate?: PlayDataCreateOrConnectWithoutMusicInput | PlayDataCreateOrConnectWithoutMusicInput[]
+    upsert?: PlayDataUpsertWithWhereUniqueWithoutMusicInput | PlayDataUpsertWithWhereUniqueWithoutMusicInput[]
+    createMany?: PlayDataCreateManyMusicInputEnvelope
+    set?: PlayDataWhereUniqueInput | PlayDataWhereUniqueInput[]
+    disconnect?: PlayDataWhereUniqueInput | PlayDataWhereUniqueInput[]
+    delete?: PlayDataWhereUniqueInput | PlayDataWhereUniqueInput[]
+    connect?: PlayDataWhereUniqueInput | PlayDataWhereUniqueInput[]
+    update?: PlayDataUpdateWithWhereUniqueWithoutMusicInput | PlayDataUpdateWithWhereUniqueWithoutMusicInput[]
+    updateMany?: PlayDataUpdateManyWithWhereWithoutMusicInput | PlayDataUpdateManyWithWhereWithoutMusicInput[]
+    deleteMany?: PlayDataScalarWhereInput | PlayDataScalarWhereInput[]
+  }
+
+  export type RecentPlayUncheckedUpdateManyWithoutMusicNestedInput = {
+    create?: XOR<RecentPlayCreateWithoutMusicInput, RecentPlayUncheckedCreateWithoutMusicInput> | RecentPlayCreateWithoutMusicInput[] | RecentPlayUncheckedCreateWithoutMusicInput[]
+    connectOrCreate?: RecentPlayCreateOrConnectWithoutMusicInput | RecentPlayCreateOrConnectWithoutMusicInput[]
+    upsert?: RecentPlayUpsertWithWhereUniqueWithoutMusicInput | RecentPlayUpsertWithWhereUniqueWithoutMusicInput[]
+    createMany?: RecentPlayCreateManyMusicInputEnvelope
+    set?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
+    disconnect?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
+    delete?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
+    connect?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
+    update?: RecentPlayUpdateWithWhereUniqueWithoutMusicInput | RecentPlayUpdateWithWhereUniqueWithoutMusicInput[]
+    updateMany?: RecentPlayUpdateManyWithWhereWithoutMusicInput | RecentPlayUpdateManyWithWhereWithoutMusicInput[]
+    deleteMany?: RecentPlayScalarWhereInput | RecentPlayScalarWhereInput[]
+  }
+
+  export type PlayDataUncheckedUpdateManyWithoutMusicNestedInput = {
+    create?: XOR<PlayDataCreateWithoutMusicInput, PlayDataUncheckedCreateWithoutMusicInput> | PlayDataCreateWithoutMusicInput[] | PlayDataUncheckedCreateWithoutMusicInput[]
+    connectOrCreate?: PlayDataCreateOrConnectWithoutMusicInput | PlayDataCreateOrConnectWithoutMusicInput[]
+    upsert?: PlayDataUpsertWithWhereUniqueWithoutMusicInput | PlayDataUpsertWithWhereUniqueWithoutMusicInput[]
+    createMany?: PlayDataCreateManyMusicInputEnvelope
+    set?: PlayDataWhereUniqueInput | PlayDataWhereUniqueInput[]
+    disconnect?: PlayDataWhereUniqueInput | PlayDataWhereUniqueInput[]
+    delete?: PlayDataWhereUniqueInput | PlayDataWhereUniqueInput[]
+    connect?: PlayDataWhereUniqueInput | PlayDataWhereUniqueInput[]
+    update?: PlayDataUpdateWithWhereUniqueWithoutMusicInput | PlayDataUpdateWithWhereUniqueWithoutMusicInput[]
+    updateMany?: PlayDataUpdateManyWithWhereWithoutMusicInput | PlayDataUpdateManyWithWhereWithoutMusicInput[]
+    deleteMany?: PlayDataScalarWhereInput | PlayDataScalarWhereInput[]
+  }
+
   export type UserCreateNestedOneWithoutPlayHistoryInput = {
     create?: XOR<UserCreateWithoutPlayHistoryInput, UserUncheckedCreateWithoutPlayHistoryInput>
     connectOrCreate?: UserCreateOrConnectWithoutPlayHistoryInput
     connect?: UserWhereUniqueInput
   }
 
-  export type StringFieldUpdateOperationsInput = {
-    set?: string
+  export type MusicCreateNestedOneWithoutRecentPlayInput = {
+    create?: XOR<MusicCreateWithoutRecentPlayInput, MusicUncheckedCreateWithoutRecentPlayInput>
+    connectOrCreate?: MusicCreateOrConnectWithoutRecentPlayInput
+    connect?: MusicWhereUniqueInput
   }
 
   export type UserUpdateOneRequiredWithoutPlayHistoryNestedInput = {
@@ -4123,6 +7529,42 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutPlayHistoryInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPlayHistoryInput, UserUpdateWithoutPlayHistoryInput>, UserUncheckedUpdateWithoutPlayHistoryInput>
+  }
+
+  export type MusicUpdateOneRequiredWithoutRecentPlayNestedInput = {
+    create?: XOR<MusicCreateWithoutRecentPlayInput, MusicUncheckedCreateWithoutRecentPlayInput>
+    connectOrCreate?: MusicCreateOrConnectWithoutRecentPlayInput
+    upsert?: MusicUpsertWithoutRecentPlayInput
+    connect?: MusicWhereUniqueInput
+    update?: XOR<XOR<MusicUpdateToOneWithWhereWithoutRecentPlayInput, MusicUpdateWithoutRecentPlayInput>, MusicUncheckedUpdateWithoutRecentPlayInput>
+  }
+
+  export type UserCreateNestedOneWithoutPlayDataInput = {
+    create?: XOR<UserCreateWithoutPlayDataInput, UserUncheckedCreateWithoutPlayDataInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPlayDataInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type MusicCreateNestedOneWithoutPlayDataInput = {
+    create?: XOR<MusicCreateWithoutPlayDataInput, MusicUncheckedCreateWithoutPlayDataInput>
+    connectOrCreate?: MusicCreateOrConnectWithoutPlayDataInput
+    connect?: MusicWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutPlayDataNestedInput = {
+    create?: XOR<UserCreateWithoutPlayDataInput, UserUncheckedCreateWithoutPlayDataInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPlayDataInput
+    upsert?: UserUpsertWithoutPlayDataInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPlayDataInput, UserUpdateWithoutPlayDataInput>, UserUncheckedUpdateWithoutPlayDataInput>
+  }
+
+  export type MusicUpdateOneRequiredWithoutPlayDataNestedInput = {
+    create?: XOR<MusicCreateWithoutPlayDataInput, MusicUncheckedCreateWithoutPlayDataInput>
+    connectOrCreate?: MusicCreateOrConnectWithoutPlayDataInput
+    upsert?: MusicUpsertWithoutPlayDataInput
+    connect?: MusicWhereUniqueInput
+    update?: XOR<XOR<MusicUpdateToOneWithWhereWithoutPlayDataInput, MusicUpdateWithoutPlayDataInput>, MusicUncheckedUpdateWithoutPlayDataInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -4316,8 +7758,6 @@ export namespace Prisma {
   }
 
   export type RecentPlayCreateWithoutUserInput = {
-    title: string
-    artist: string
     difficulty: string
     level: number
     score: number
@@ -4326,12 +7766,11 @@ export namespace Prisma {
     play_time: string
     created_at?: Date | string
     updated_at?: Date | string
+    music: MusicCreateNestedOneWithoutRecentPlayInput
   }
 
   export type RecentPlayUncheckedCreateWithoutUserInput = {
     id?: number
-    title: string
-    artist: string
     difficulty: string
     level: number
     score: number
@@ -4340,6 +7779,7 @@ export namespace Prisma {
     play_time: string
     created_at?: Date | string
     updated_at?: Date | string
+    music_idx: string
   }
 
   export type RecentPlayCreateOrConnectWithoutUserInput = {
@@ -4349,6 +7789,48 @@ export namespace Prisma {
 
   export type RecentPlayCreateManyUserInputEnvelope = {
     data: RecentPlayCreateManyUserInput | RecentPlayCreateManyUserInput[]
+  }
+
+  export type PlayDataCreateWithoutUserInput = {
+    level: number
+    difficulty: string
+    score: number
+    rank: string
+    fc_type: number
+    play_count: number
+    fullcombo_count: number
+    pianistic_count: number
+    max_combo: number
+    grade_basic: number
+    grade_recital: number
+    besttime: string
+    music: MusicCreateNestedOneWithoutPlayDataInput
+  }
+
+  export type PlayDataUncheckedCreateWithoutUserInput = {
+    id?: number
+    level: number
+    difficulty: string
+    score: number
+    rank: string
+    fc_type: number
+    play_count: number
+    fullcombo_count: number
+    pianistic_count: number
+    max_combo: number
+    grade_basic: number
+    grade_recital: number
+    besttime: string
+    music_idx: string
+  }
+
+  export type PlayDataCreateOrConnectWithoutUserInput = {
+    where: PlayDataWhereUniqueInput
+    create: XOR<PlayDataCreateWithoutUserInput, PlayDataUncheckedCreateWithoutUserInput>
+  }
+
+  export type PlayDataCreateManyUserInputEnvelope = {
+    data: PlayDataCreateManyUserInput | PlayDataCreateManyUserInput[]
   }
 
   export type RecentPlayUpsertWithWhereUniqueWithoutUserInput = {
@@ -4372,8 +7854,6 @@ export namespace Prisma {
     OR?: RecentPlayScalarWhereInput[]
     NOT?: RecentPlayScalarWhereInput | RecentPlayScalarWhereInput[]
     id?: IntFilter<"RecentPlay"> | number
-    title?: StringFilter<"RecentPlay"> | string
-    artist?: StringFilter<"RecentPlay"> | string
     difficulty?: StringFilter<"RecentPlay"> | string
     level?: IntFilter<"RecentPlay"> | number
     score?: IntFilter<"RecentPlay"> | number
@@ -4383,6 +7863,152 @@ export namespace Prisma {
     created_at?: DateTimeFilter<"RecentPlay"> | Date | string
     updated_at?: DateTimeFilter<"RecentPlay"> | Date | string
     user_id?: IntFilter<"RecentPlay"> | number
+    music_idx?: StringFilter<"RecentPlay"> | string
+  }
+
+  export type PlayDataUpsertWithWhereUniqueWithoutUserInput = {
+    where: PlayDataWhereUniqueInput
+    update: XOR<PlayDataUpdateWithoutUserInput, PlayDataUncheckedUpdateWithoutUserInput>
+    create: XOR<PlayDataCreateWithoutUserInput, PlayDataUncheckedCreateWithoutUserInput>
+  }
+
+  export type PlayDataUpdateWithWhereUniqueWithoutUserInput = {
+    where: PlayDataWhereUniqueInput
+    data: XOR<PlayDataUpdateWithoutUserInput, PlayDataUncheckedUpdateWithoutUserInput>
+  }
+
+  export type PlayDataUpdateManyWithWhereWithoutUserInput = {
+    where: PlayDataScalarWhereInput
+    data: XOR<PlayDataUpdateManyMutationInput, PlayDataUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type PlayDataScalarWhereInput = {
+    AND?: PlayDataScalarWhereInput | PlayDataScalarWhereInput[]
+    OR?: PlayDataScalarWhereInput[]
+    NOT?: PlayDataScalarWhereInput | PlayDataScalarWhereInput[]
+    id?: IntFilter<"PlayData"> | number
+    level?: IntFilter<"PlayData"> | number
+    difficulty?: StringFilter<"PlayData"> | string
+    score?: IntFilter<"PlayData"> | number
+    rank?: StringFilter<"PlayData"> | string
+    fc_type?: IntFilter<"PlayData"> | number
+    play_count?: IntFilter<"PlayData"> | number
+    fullcombo_count?: IntFilter<"PlayData"> | number
+    pianistic_count?: IntFilter<"PlayData"> | number
+    max_combo?: IntFilter<"PlayData"> | number
+    grade_basic?: IntFilter<"PlayData"> | number
+    grade_recital?: IntFilter<"PlayData"> | number
+    besttime?: StringFilter<"PlayData"> | string
+    user_id?: IntFilter<"PlayData"> | number
+    music_idx?: StringFilter<"PlayData"> | string
+  }
+
+  export type RecentPlayCreateWithoutMusicInput = {
+    difficulty: string
+    level: number
+    score: number
+    max_combo: number
+    rank: string
+    play_time: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    user: UserCreateNestedOneWithoutPlayHistoryInput
+  }
+
+  export type RecentPlayUncheckedCreateWithoutMusicInput = {
+    id?: number
+    difficulty: string
+    level: number
+    score: number
+    max_combo: number
+    rank: string
+    play_time: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    user_id: number
+  }
+
+  export type RecentPlayCreateOrConnectWithoutMusicInput = {
+    where: RecentPlayWhereUniqueInput
+    create: XOR<RecentPlayCreateWithoutMusicInput, RecentPlayUncheckedCreateWithoutMusicInput>
+  }
+
+  export type RecentPlayCreateManyMusicInputEnvelope = {
+    data: RecentPlayCreateManyMusicInput | RecentPlayCreateManyMusicInput[]
+  }
+
+  export type PlayDataCreateWithoutMusicInput = {
+    level: number
+    difficulty: string
+    score: number
+    rank: string
+    fc_type: number
+    play_count: number
+    fullcombo_count: number
+    pianistic_count: number
+    max_combo: number
+    grade_basic: number
+    grade_recital: number
+    besttime: string
+    user: UserCreateNestedOneWithoutPlayDataInput
+  }
+
+  export type PlayDataUncheckedCreateWithoutMusicInput = {
+    id?: number
+    level: number
+    difficulty: string
+    score: number
+    rank: string
+    fc_type: number
+    play_count: number
+    fullcombo_count: number
+    pianistic_count: number
+    max_combo: number
+    grade_basic: number
+    grade_recital: number
+    besttime: string
+    user_id: number
+  }
+
+  export type PlayDataCreateOrConnectWithoutMusicInput = {
+    where: PlayDataWhereUniqueInput
+    create: XOR<PlayDataCreateWithoutMusicInput, PlayDataUncheckedCreateWithoutMusicInput>
+  }
+
+  export type PlayDataCreateManyMusicInputEnvelope = {
+    data: PlayDataCreateManyMusicInput | PlayDataCreateManyMusicInput[]
+  }
+
+  export type RecentPlayUpsertWithWhereUniqueWithoutMusicInput = {
+    where: RecentPlayWhereUniqueInput
+    update: XOR<RecentPlayUpdateWithoutMusicInput, RecentPlayUncheckedUpdateWithoutMusicInput>
+    create: XOR<RecentPlayCreateWithoutMusicInput, RecentPlayUncheckedCreateWithoutMusicInput>
+  }
+
+  export type RecentPlayUpdateWithWhereUniqueWithoutMusicInput = {
+    where: RecentPlayWhereUniqueInput
+    data: XOR<RecentPlayUpdateWithoutMusicInput, RecentPlayUncheckedUpdateWithoutMusicInput>
+  }
+
+  export type RecentPlayUpdateManyWithWhereWithoutMusicInput = {
+    where: RecentPlayScalarWhereInput
+    data: XOR<RecentPlayUpdateManyMutationInput, RecentPlayUncheckedUpdateManyWithoutMusicInput>
+  }
+
+  export type PlayDataUpsertWithWhereUniqueWithoutMusicInput = {
+    where: PlayDataWhereUniqueInput
+    update: XOR<PlayDataUpdateWithoutMusicInput, PlayDataUncheckedUpdateWithoutMusicInput>
+    create: XOR<PlayDataCreateWithoutMusicInput, PlayDataUncheckedCreateWithoutMusicInput>
+  }
+
+  export type PlayDataUpdateWithWhereUniqueWithoutMusicInput = {
+    where: PlayDataWhereUniqueInput
+    data: XOR<PlayDataUpdateWithoutMusicInput, PlayDataUncheckedUpdateWithoutMusicInput>
+  }
+
+  export type PlayDataUpdateManyWithWhereWithoutMusicInput = {
+    where: PlayDataScalarWhereInput
+    data: XOR<PlayDataUpdateManyMutationInput, PlayDataUncheckedUpdateManyWithoutMusicInput>
   }
 
   export type UserCreateWithoutPlayHistoryInput = {
@@ -4392,6 +8018,7 @@ export namespace Prisma {
     play_count?: number | null
     created_at?: Date | string
     updated_at?: Date | string
+    PlayData?: PlayDataCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutPlayHistoryInput = {
@@ -4402,11 +8029,42 @@ export namespace Prisma {
     play_count?: number | null
     created_at?: Date | string
     updated_at?: Date | string
+    PlayData?: PlayDataUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutPlayHistoryInput = {
     where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutPlayHistoryInput, UserUncheckedCreateWithoutPlayHistoryInput>
+  }
+
+  export type MusicCreateWithoutRecentPlayInput = {
+    index: string
+    title: string
+    title_kana: string
+    artist?: string | null
+    category: string
+    category_short: string
+    description?: string | null
+    background?: string | null
+    PlayData?: PlayDataCreateNestedManyWithoutMusicInput
+  }
+
+  export type MusicUncheckedCreateWithoutRecentPlayInput = {
+    id?: number
+    index: string
+    title: string
+    title_kana: string
+    artist?: string | null
+    category: string
+    category_short: string
+    description?: string | null
+    background?: string | null
+    PlayData?: PlayDataUncheckedCreateNestedManyWithoutMusicInput
+  }
+
+  export type MusicCreateOrConnectWithoutRecentPlayInput = {
+    where: MusicWhereUniqueInput
+    create: XOR<MusicCreateWithoutRecentPlayInput, MusicUncheckedCreateWithoutRecentPlayInput>
   }
 
   export type UserUpsertWithoutPlayHistoryInput = {
@@ -4427,6 +8085,7 @@ export namespace Prisma {
     play_count?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    PlayData?: PlayDataUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPlayHistoryInput = {
@@ -4437,12 +8096,171 @@ export namespace Prisma {
     play_count?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    PlayData?: PlayDataUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type MusicUpsertWithoutRecentPlayInput = {
+    update: XOR<MusicUpdateWithoutRecentPlayInput, MusicUncheckedUpdateWithoutRecentPlayInput>
+    create: XOR<MusicCreateWithoutRecentPlayInput, MusicUncheckedCreateWithoutRecentPlayInput>
+    where?: MusicWhereInput
+  }
+
+  export type MusicUpdateToOneWithWhereWithoutRecentPlayInput = {
+    where?: MusicWhereInput
+    data: XOR<MusicUpdateWithoutRecentPlayInput, MusicUncheckedUpdateWithoutRecentPlayInput>
+  }
+
+  export type MusicUpdateWithoutRecentPlayInput = {
+    index?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    title_kana?: StringFieldUpdateOperationsInput | string
+    artist?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: StringFieldUpdateOperationsInput | string
+    category_short?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    background?: NullableStringFieldUpdateOperationsInput | string | null
+    PlayData?: PlayDataUpdateManyWithoutMusicNestedInput
+  }
+
+  export type MusicUncheckedUpdateWithoutRecentPlayInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    index?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    title_kana?: StringFieldUpdateOperationsInput | string
+    artist?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: StringFieldUpdateOperationsInput | string
+    category_short?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    background?: NullableStringFieldUpdateOperationsInput | string | null
+    PlayData?: PlayDataUncheckedUpdateManyWithoutMusicNestedInput
+  }
+
+  export type UserCreateWithoutPlayDataInput = {
+    username?: string | null
+    kakao_id?: bigint | number | null
+    avatar?: string | null
+    play_count?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutPlayDataInput = {
+    id?: number
+    username?: string | null
+    kakao_id?: bigint | number | null
+    avatar?: string | null
+    play_count?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutPlayDataInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutPlayDataInput, UserUncheckedCreateWithoutPlayDataInput>
+  }
+
+  export type MusicCreateWithoutPlayDataInput = {
+    index: string
+    title: string
+    title_kana: string
+    artist?: string | null
+    category: string
+    category_short: string
+    description?: string | null
+    background?: string | null
+    RecentPlay?: RecentPlayCreateNestedManyWithoutMusicInput
+  }
+
+  export type MusicUncheckedCreateWithoutPlayDataInput = {
+    id?: number
+    index: string
+    title: string
+    title_kana: string
+    artist?: string | null
+    category: string
+    category_short: string
+    description?: string | null
+    background?: string | null
+    RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutMusicInput
+  }
+
+  export type MusicCreateOrConnectWithoutPlayDataInput = {
+    where: MusicWhereUniqueInput
+    create: XOR<MusicCreateWithoutPlayDataInput, MusicUncheckedCreateWithoutPlayDataInput>
+  }
+
+  export type UserUpsertWithoutPlayDataInput = {
+    update: XOR<UserUpdateWithoutPlayDataInput, UserUncheckedUpdateWithoutPlayDataInput>
+    create: XOR<UserCreateWithoutPlayDataInput, UserUncheckedCreateWithoutPlayDataInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutPlayDataInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutPlayDataInput, UserUncheckedUpdateWithoutPlayDataInput>
+  }
+
+  export type UserUpdateWithoutPlayDataInput = {
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    play_count?: NullableIntFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutPlayDataInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    play_count?: NullableIntFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type MusicUpsertWithoutPlayDataInput = {
+    update: XOR<MusicUpdateWithoutPlayDataInput, MusicUncheckedUpdateWithoutPlayDataInput>
+    create: XOR<MusicCreateWithoutPlayDataInput, MusicUncheckedCreateWithoutPlayDataInput>
+    where?: MusicWhereInput
+  }
+
+  export type MusicUpdateToOneWithWhereWithoutPlayDataInput = {
+    where?: MusicWhereInput
+    data: XOR<MusicUpdateWithoutPlayDataInput, MusicUncheckedUpdateWithoutPlayDataInput>
+  }
+
+  export type MusicUpdateWithoutPlayDataInput = {
+    index?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    title_kana?: StringFieldUpdateOperationsInput | string
+    artist?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: StringFieldUpdateOperationsInput | string
+    category_short?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    background?: NullableStringFieldUpdateOperationsInput | string | null
+    RecentPlay?: RecentPlayUpdateManyWithoutMusicNestedInput
+  }
+
+  export type MusicUncheckedUpdateWithoutPlayDataInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    index?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    title_kana?: StringFieldUpdateOperationsInput | string
+    artist?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: StringFieldUpdateOperationsInput | string
+    category_short?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    background?: NullableStringFieldUpdateOperationsInput | string | null
+    RecentPlay?: RecentPlayUncheckedUpdateManyWithoutMusicNestedInput
   }
 
   export type RecentPlayCreateManyUserInput = {
     id?: number
-    title: string
-    artist: string
     difficulty: string
     level: number
     score: number
@@ -4451,11 +8269,27 @@ export namespace Prisma {
     play_time: string
     created_at?: Date | string
     updated_at?: Date | string
+    music_idx: string
+  }
+
+  export type PlayDataCreateManyUserInput = {
+    id?: number
+    level: number
+    difficulty: string
+    score: number
+    rank: string
+    fc_type: number
+    play_count: number
+    fullcombo_count: number
+    pianistic_count: number
+    max_combo: number
+    grade_basic: number
+    grade_recital: number
+    besttime: string
+    music_idx: string
   }
 
   export type RecentPlayUpdateWithoutUserInput = {
-    title?: StringFieldUpdateOperationsInput | string
-    artist?: StringFieldUpdateOperationsInput | string
     difficulty?: StringFieldUpdateOperationsInput | string
     level?: IntFieldUpdateOperationsInput | number
     score?: IntFieldUpdateOperationsInput | number
@@ -4464,12 +8298,11 @@ export namespace Prisma {
     play_time?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    music?: MusicUpdateOneRequiredWithoutRecentPlayNestedInput
   }
 
   export type RecentPlayUncheckedUpdateWithoutUserInput = {
     id?: IntFieldUpdateOperationsInput | number
-    title?: StringFieldUpdateOperationsInput | string
-    artist?: StringFieldUpdateOperationsInput | string
     difficulty?: StringFieldUpdateOperationsInput | string
     level?: IntFieldUpdateOperationsInput | number
     score?: IntFieldUpdateOperationsInput | number
@@ -4478,12 +8311,11 @@ export namespace Prisma {
     play_time?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    music_idx?: StringFieldUpdateOperationsInput | string
   }
 
   export type RecentPlayUncheckedUpdateManyWithoutUserInput = {
     id?: IntFieldUpdateOperationsInput | number
-    title?: StringFieldUpdateOperationsInput | string
-    artist?: StringFieldUpdateOperationsInput | string
     difficulty?: StringFieldUpdateOperationsInput | string
     level?: IntFieldUpdateOperationsInput | number
     score?: IntFieldUpdateOperationsInput | number
@@ -4492,6 +8324,175 @@ export namespace Prisma {
     play_time?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    music_idx?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type PlayDataUpdateWithoutUserInput = {
+    level?: IntFieldUpdateOperationsInput | number
+    difficulty?: StringFieldUpdateOperationsInput | string
+    score?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    fc_type?: IntFieldUpdateOperationsInput | number
+    play_count?: IntFieldUpdateOperationsInput | number
+    fullcombo_count?: IntFieldUpdateOperationsInput | number
+    pianistic_count?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    grade_recital?: IntFieldUpdateOperationsInput | number
+    besttime?: StringFieldUpdateOperationsInput | string
+    music?: MusicUpdateOneRequiredWithoutPlayDataNestedInput
+  }
+
+  export type PlayDataUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    level?: IntFieldUpdateOperationsInput | number
+    difficulty?: StringFieldUpdateOperationsInput | string
+    score?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    fc_type?: IntFieldUpdateOperationsInput | number
+    play_count?: IntFieldUpdateOperationsInput | number
+    fullcombo_count?: IntFieldUpdateOperationsInput | number
+    pianistic_count?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    grade_recital?: IntFieldUpdateOperationsInput | number
+    besttime?: StringFieldUpdateOperationsInput | string
+    music_idx?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type PlayDataUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    level?: IntFieldUpdateOperationsInput | number
+    difficulty?: StringFieldUpdateOperationsInput | string
+    score?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    fc_type?: IntFieldUpdateOperationsInput | number
+    play_count?: IntFieldUpdateOperationsInput | number
+    fullcombo_count?: IntFieldUpdateOperationsInput | number
+    pianistic_count?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    grade_recital?: IntFieldUpdateOperationsInput | number
+    besttime?: StringFieldUpdateOperationsInput | string
+    music_idx?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type RecentPlayCreateManyMusicInput = {
+    id?: number
+    difficulty: string
+    level: number
+    score: number
+    max_combo: number
+    rank: string
+    play_time: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    user_id: number
+  }
+
+  export type PlayDataCreateManyMusicInput = {
+    id?: number
+    level: number
+    difficulty: string
+    score: number
+    rank: string
+    fc_type: number
+    play_count: number
+    fullcombo_count: number
+    pianistic_count: number
+    max_combo: number
+    grade_basic: number
+    grade_recital: number
+    besttime: string
+    user_id: number
+  }
+
+  export type RecentPlayUpdateWithoutMusicInput = {
+    difficulty?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    score?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    play_time?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutPlayHistoryNestedInput
+  }
+
+  export type RecentPlayUncheckedUpdateWithoutMusicInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    difficulty?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    score?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    play_time?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user_id?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type RecentPlayUncheckedUpdateManyWithoutMusicInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    difficulty?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    score?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    play_time?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user_id?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type PlayDataUpdateWithoutMusicInput = {
+    level?: IntFieldUpdateOperationsInput | number
+    difficulty?: StringFieldUpdateOperationsInput | string
+    score?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    fc_type?: IntFieldUpdateOperationsInput | number
+    play_count?: IntFieldUpdateOperationsInput | number
+    fullcombo_count?: IntFieldUpdateOperationsInput | number
+    pianistic_count?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    grade_recital?: IntFieldUpdateOperationsInput | number
+    besttime?: StringFieldUpdateOperationsInput | string
+    user?: UserUpdateOneRequiredWithoutPlayDataNestedInput
+  }
+
+  export type PlayDataUncheckedUpdateWithoutMusicInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    level?: IntFieldUpdateOperationsInput | number
+    difficulty?: StringFieldUpdateOperationsInput | string
+    score?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    fc_type?: IntFieldUpdateOperationsInput | number
+    play_count?: IntFieldUpdateOperationsInput | number
+    fullcombo_count?: IntFieldUpdateOperationsInput | number
+    pianistic_count?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    grade_recital?: IntFieldUpdateOperationsInput | number
+    besttime?: StringFieldUpdateOperationsInput | string
+    user_id?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type PlayDataUncheckedUpdateManyWithoutMusicInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    level?: IntFieldUpdateOperationsInput | number
+    difficulty?: StringFieldUpdateOperationsInput | string
+    score?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    fc_type?: IntFieldUpdateOperationsInput | number
+    play_count?: IntFieldUpdateOperationsInput | number
+    fullcombo_count?: IntFieldUpdateOperationsInput | number
+    pianistic_count?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    grade_recital?: IntFieldUpdateOperationsInput | number
+    besttime?: StringFieldUpdateOperationsInput | string
+    user_id?: IntFieldUpdateOperationsInput | number
   }
 
 

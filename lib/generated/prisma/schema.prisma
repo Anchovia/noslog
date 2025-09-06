@@ -17,12 +17,25 @@ model User {
   created_at  DateTime     @default(now())
   updated_at  DateTime     @updatedAt
   PlayHistory RecentPlay[]
+  PlayData    PlayData[]
+}
+
+model Music {
+  id             Int          @id @default(autoincrement())
+  index          String       @unique
+  title          String
+  title_kana     String
+  artist         String?
+  category       String
+  category_short String
+  description    String?
+  background     String?
+  RecentPlay     RecentPlay[]
+  PlayData       PlayData[]
 }
 
 model RecentPlay {
   id         Int      @id @default(autoincrement())
-  title      String
-  artist     String
   difficulty String
   level      Int
   score      Int
@@ -33,4 +46,26 @@ model RecentPlay {
   updated_at DateTime @updatedAt
   user_id    Int
   user       User     @relation(fields: [user_id], references: [id])
+  music_idx  String
+  music      Music    @relation(fields: [music_idx], references: [index])
+}
+
+model PlayData {
+  id              Int    @id @default(autoincrement())
+  level           Int
+  difficulty      String
+  score           Int
+  rank            String
+  fc_type         Int
+  play_count      Int
+  fullcombo_count Int
+  pianistic_count Int
+  max_combo       Int
+  grade_basic     Int
+  grade_recital   Int
+  besttime        String
+  user_id         Int
+  user            User   @relation(fields: [user_id], references: [id])
+  music_idx       String
+  music           Music  @relation(fields: [music_idx], references: [index])
 }
