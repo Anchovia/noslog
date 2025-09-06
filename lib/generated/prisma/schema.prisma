@@ -9,18 +9,26 @@ datasource db {
 }
 
 model User {
-  id         Int        @id @default(autoincrement())
-  name       String     @unique
-  created_at DateTime   @default(now())
-  updated_at DateTime   @updatedAt
-  PlayData   UserData[]
+  id          Int           @id @default(autoincrement())
+  name        String        @unique
+  play_count  Int
+  created_at  DateTime      @default(now())
+  updated_at  DateTime      @updatedAt
+  PlayHistory PlayHistory[]
 }
 
-model UserData {
+model PlayHistory {
   id         Int      @id @default(autoincrement())
-  play_count Int
+  title      String
+  artist     String
+  difficulty String
+  level      Int
+  score      Int
+  max_combo  Int
+  rank       String
+  play_time  String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  user_id    Int      @unique
+  user_id    Int
   user       User     @relation(fields: [user_id], references: [id])
 }
