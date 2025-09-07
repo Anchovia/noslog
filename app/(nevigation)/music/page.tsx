@@ -3,6 +3,10 @@ import { existsSync } from "fs";
 import Link from "next/link";
 import path from "path";
 
+// todo: 무한 스크롤 기능 제작 필요
+// todo2: 필터 기능 제작 필요(카테고리, 난이도, 랭크, 악곡 길이 등등)
+// todo3: 악곡 검색 기능 제작 필요(제목, 아티스트 등등)
+
 export default async function Music() {
     const data = await db.music.findMany({
         select: {

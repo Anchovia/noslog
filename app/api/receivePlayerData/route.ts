@@ -125,8 +125,27 @@ export async function POST(request: NextRequest) {
     });
     // 삭제 성공시 플레이 데이터 생성 시작
     if (playdataDeleteResult) {
+        // 클리어 랭크 리스트
+        const rankList = ["P", "S", "A2", "A", "B2"];
+        // 클리어 랭크 저장 변수 선언
+        let score = {
+            P: 0,
+            S: 0,
+            A2: 0,
+            A: 0,
+            B2: 0,
+        };
+
+        // 플레이어 데이터 생성 시작
         await music.map(async (data: any) => {
             await data.sheet.map(async (sheet: any) => {
+                // 클리어 랭크 변수에 값 추가
+                rankList.map((rank) => {
+                    if (sheet.rank === rank) {
+                        score[rank as keyof typeof score] += 1;
+                    }
+                });
+                // playData 생성
                 await db.playData.create({
                     data: {
                         user_id: user.id,
@@ -146,6 +165,111 @@ export async function POST(request: NextRequest) {
                     },
                 });
             });
+        });
+
+        // 유저 테이블에 클리어 랭크 저장
+        await db.user.update({
+            where: { id: user.id },
+            data: {
+                score_p: score.P,
+                score_s: score.S,
+                score_a2: score.A2,
+                score_a: score.A,
+                score_b2: score.B2,
+            },
+        });
+
+        // 그레이드 업데이트
+        // 베이직 그레이드 상위 50개 곡의 그레이드 합산
+        const userBasicGradeData = await db.playData.findMany({
+            where: {
+                user_id: user.id,
+            },
+            select: {
+                grade_basic: true,
+            },
+            orderBy: [{ grade_basic: "desc" }],
+            take: 50,
+        });
+        // 그레이드 합산
+        const userBasicGrade = userBasicGradeData.reduce(
+            (acc, cur) => acc + cur.grade_basic,
+            0
+        );
+        // 리사이틀 그레이드 상위 50개 곡의 그레이드 합산
+        const userRecitalGradeData = await db.playData.findMany({
+            where: {
+                user_id: user.id,
+            },
+            select: {
+                grade_recital: true,
+            },
+            orderBy: [{ grade_recital: "desc" }],
+            take: 50,
+        });
+        // 그레이드 합산
+        const userRecitalGrade = userRecitalGradeData.reduce(
+            (acc, cur) => acc + cur.grade_recital,
+            0
+        );
+        // 그레이드 업데이트
+        await db.user.update({
+            where: { id: user.id },
+            data: {
+                grade_basic: userBasicGrade,
+                grade_recital: userRecitalGrade,
+            },
+        });
+
+        // 랭킹 업데이트
+        // todo: 중복처리 해야함
+        // todo2: 국가별 랭킹도 추후에?
+        // user 테이블에 rank(랭킹) 업데이트(그레이드 순으로 제작)
+        let basic_rank = 1;
+        let recital_rank = 1;
+        // 베이직 그레이드 기준 전체 유저 데이터 불러오기
+        const basicAllUser = await db.user.findMany({
+            select: {
+                id: true,
+                grade_basic: true,
+            },
+            orderBy: [{ grade_basic: "desc" }],
+        });
+        // 리사이틀 그레이드 기준 전체 유저 데이터 불러오기
+        const recitalAllUser = await db.user.findMany({
+            select: {
+                id: true,
+                grade_recital: true,
+            },
+            orderBy: [{ grade_recital: "desc" }],
+        });
+        // 각 유저의 id와 방금 업데이트한 user.id가 같을 경우 해당 랭킹을 업데이트, 다를 경우 rank + 1
+        basicAllUser.map(async (data) => {
+            if (data.id === user.id) {
+                await db.user.update({
+                    where: { id: user.id },
+                    data: {
+                        rank_basic: basic_rank,
+                        rank_basic_country: basic_rank,
+                    },
+                });
+            } else {
+                basic_rank += 1;
+            }
+        });
+        // 리사이틀도 수행
+        recitalAllUser.map(async (data) => {
+            if (data.id === user.id) {
+                await db.user.update({
+                    where: { id: user.id },
+                    data: {
+                        rank_recital: recital_rank,
+                        rank_recital_country: recital_rank,
+                    },
+                });
+            } else {
+                recital_rank += 1;
+            }
         });
     }
 

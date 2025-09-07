@@ -8,11 +8,6 @@ export async function getUser() {
             where: {
                 id: session.id,
             },
-            select: {
-                id: true,
-                username: true,
-                avatar: true,
-            },
         });
         if (user) {
             return user;

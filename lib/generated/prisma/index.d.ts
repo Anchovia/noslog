@@ -1223,13 +1223,35 @@ export namespace Prisma {
   export type UserAvgAggregateOutputType = {
     id: number | null
     kakao_id: number | null
+    rank_basic: number | null
+    rank_recital: number | null
+    rank_basic_country: number | null
+    rank_recital_country: number | null
     play_count: number | null
+    score_p: number | null
+    score_s: number | null
+    score_a2: number | null
+    score_a: number | null
+    score_b2: number | null
+    grade_basic: number | null
+    grade_recital: number | null
   }
 
   export type UserSumAggregateOutputType = {
     id: number | null
     kakao_id: bigint | null
+    rank_basic: number | null
+    rank_recital: number | null
+    rank_basic_country: number | null
+    rank_recital_country: number | null
     play_count: number | null
+    score_p: number | null
+    score_s: number | null
+    score_a2: number | null
+    score_a: number | null
+    score_b2: number | null
+    grade_basic: number | null
+    grade_recital: number | null
   }
 
   export type UserMinAggregateOutputType = {
@@ -1237,7 +1259,19 @@ export namespace Prisma {
     username: string | null
     kakao_id: bigint | null
     avatar: string | null
+    country: string | null
+    rank_basic: number | null
+    rank_recital: number | null
+    rank_basic_country: number | null
+    rank_recital_country: number | null
     play_count: number | null
+    score_p: number | null
+    score_s: number | null
+    score_a2: number | null
+    score_a: number | null
+    score_b2: number | null
+    grade_basic: number | null
+    grade_recital: number | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -1247,7 +1281,19 @@ export namespace Prisma {
     username: string | null
     kakao_id: bigint | null
     avatar: string | null
+    country: string | null
+    rank_basic: number | null
+    rank_recital: number | null
+    rank_basic_country: number | null
+    rank_recital_country: number | null
     play_count: number | null
+    score_p: number | null
+    score_s: number | null
+    score_a2: number | null
+    score_a: number | null
+    score_b2: number | null
+    grade_basic: number | null
+    grade_recital: number | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -1257,7 +1303,19 @@ export namespace Prisma {
     username: number
     kakao_id: number
     avatar: number
+    country: number
+    rank_basic: number
+    rank_recital: number
+    rank_basic_country: number
+    rank_recital_country: number
     play_count: number
+    score_p: number
+    score_s: number
+    score_a2: number
+    score_a: number
+    score_b2: number
+    grade_basic: number
+    grade_recital: number
     created_at: number
     updated_at: number
     _all: number
@@ -1267,13 +1325,35 @@ export namespace Prisma {
   export type UserAvgAggregateInputType = {
     id?: true
     kakao_id?: true
+    rank_basic?: true
+    rank_recital?: true
+    rank_basic_country?: true
+    rank_recital_country?: true
     play_count?: true
+    score_p?: true
+    score_s?: true
+    score_a2?: true
+    score_a?: true
+    score_b2?: true
+    grade_basic?: true
+    grade_recital?: true
   }
 
   export type UserSumAggregateInputType = {
     id?: true
     kakao_id?: true
+    rank_basic?: true
+    rank_recital?: true
+    rank_basic_country?: true
+    rank_recital_country?: true
     play_count?: true
+    score_p?: true
+    score_s?: true
+    score_a2?: true
+    score_a?: true
+    score_b2?: true
+    grade_basic?: true
+    grade_recital?: true
   }
 
   export type UserMinAggregateInputType = {
@@ -1281,7 +1361,19 @@ export namespace Prisma {
     username?: true
     kakao_id?: true
     avatar?: true
+    country?: true
+    rank_basic?: true
+    rank_recital?: true
+    rank_basic_country?: true
+    rank_recital_country?: true
     play_count?: true
+    score_p?: true
+    score_s?: true
+    score_a2?: true
+    score_a?: true
+    score_b2?: true
+    grade_basic?: true
+    grade_recital?: true
     created_at?: true
     updated_at?: true
   }
@@ -1291,7 +1383,19 @@ export namespace Prisma {
     username?: true
     kakao_id?: true
     avatar?: true
+    country?: true
+    rank_basic?: true
+    rank_recital?: true
+    rank_basic_country?: true
+    rank_recital_country?: true
     play_count?: true
+    score_p?: true
+    score_s?: true
+    score_a2?: true
+    score_a?: true
+    score_b2?: true
+    grade_basic?: true
+    grade_recital?: true
     created_at?: true
     updated_at?: true
   }
@@ -1301,7 +1405,19 @@ export namespace Prisma {
     username?: true
     kakao_id?: true
     avatar?: true
+    country?: true
+    rank_basic?: true
+    rank_recital?: true
+    rank_basic_country?: true
+    rank_recital_country?: true
     play_count?: true
+    score_p?: true
+    score_s?: true
+    score_a2?: true
+    score_a?: true
+    score_b2?: true
+    grade_basic?: true
+    grade_recital?: true
     created_at?: true
     updated_at?: true
     _all?: true
@@ -1398,7 +1514,19 @@ export namespace Prisma {
     username: string | null
     kakao_id: bigint | null
     avatar: string | null
+    country: string | null
+    rank_basic: number | null
+    rank_recital: number | null
+    rank_basic_country: number | null
+    rank_recital_country: number | null
     play_count: number | null
+    score_p: number | null
+    score_s: number | null
+    score_a2: number | null
+    score_a: number | null
+    score_b2: number | null
+    grade_basic: number | null
+    grade_recital: number | null
     created_at: Date
     updated_at: Date
     _count: UserCountAggregateOutputType | null
@@ -1427,7 +1555,19 @@ export namespace Prisma {
     username?: boolean
     kakao_id?: boolean
     avatar?: boolean
+    country?: boolean
+    rank_basic?: boolean
+    rank_recital?: boolean
+    rank_basic_country?: boolean
+    rank_recital_country?: boolean
     play_count?: boolean
+    score_p?: boolean
+    score_s?: boolean
+    score_a2?: boolean
+    score_a?: boolean
+    score_b2?: boolean
+    grade_basic?: boolean
+    grade_recital?: boolean
     created_at?: boolean
     updated_at?: boolean
     PlayHistory?: boolean | User$PlayHistoryArgs<ExtArgs>
@@ -1440,7 +1580,19 @@ export namespace Prisma {
     username?: boolean
     kakao_id?: boolean
     avatar?: boolean
+    country?: boolean
+    rank_basic?: boolean
+    rank_recital?: boolean
+    rank_basic_country?: boolean
+    rank_recital_country?: boolean
     play_count?: boolean
+    score_p?: boolean
+    score_s?: boolean
+    score_a2?: boolean
+    score_a?: boolean
+    score_b2?: boolean
+    grade_basic?: boolean
+    grade_recital?: boolean
     created_at?: boolean
     updated_at?: boolean
   }, ExtArgs["result"]["user"]>
@@ -1450,7 +1602,19 @@ export namespace Prisma {
     username?: boolean
     kakao_id?: boolean
     avatar?: boolean
+    country?: boolean
+    rank_basic?: boolean
+    rank_recital?: boolean
+    rank_basic_country?: boolean
+    rank_recital_country?: boolean
     play_count?: boolean
+    score_p?: boolean
+    score_s?: boolean
+    score_a2?: boolean
+    score_a?: boolean
+    score_b2?: boolean
+    grade_basic?: boolean
+    grade_recital?: boolean
     created_at?: boolean
     updated_at?: boolean
   }, ExtArgs["result"]["user"]>
@@ -1460,12 +1624,24 @@ export namespace Prisma {
     username?: boolean
     kakao_id?: boolean
     avatar?: boolean
+    country?: boolean
+    rank_basic?: boolean
+    rank_recital?: boolean
+    rank_basic_country?: boolean
+    rank_recital_country?: boolean
     play_count?: boolean
+    score_p?: boolean
+    score_s?: boolean
+    score_a2?: boolean
+    score_a?: boolean
+    score_b2?: boolean
+    grade_basic?: boolean
+    grade_recital?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "kakao_id" | "avatar" | "play_count" | "created_at" | "updated_at", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "kakao_id" | "avatar" | "country" | "rank_basic" | "rank_recital" | "rank_basic_country" | "rank_recital_country" | "play_count" | "score_p" | "score_s" | "score_a2" | "score_a" | "score_b2" | "grade_basic" | "grade_recital" | "created_at" | "updated_at", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     PlayHistory?: boolean | User$PlayHistoryArgs<ExtArgs>
     PlayData?: boolean | User$PlayDataArgs<ExtArgs>
@@ -1485,7 +1661,19 @@ export namespace Prisma {
       username: string | null
       kakao_id: bigint | null
       avatar: string | null
+      country: string | null
+      rank_basic: number | null
+      rank_recital: number | null
+      rank_basic_country: number | null
+      rank_recital_country: number | null
       play_count: number | null
+      score_p: number | null
+      score_s: number | null
+      score_a2: number | null
+      score_a: number | null
+      score_b2: number | null
+      grade_basic: number | null
+      grade_recital: number | null
       created_at: Date
       updated_at: Date
     }, ExtArgs["result"]["user"]>
@@ -1917,7 +2105,19 @@ export namespace Prisma {
     readonly username: FieldRef<"User", 'String'>
     readonly kakao_id: FieldRef<"User", 'BigInt'>
     readonly avatar: FieldRef<"User", 'String'>
+    readonly country: FieldRef<"User", 'String'>
+    readonly rank_basic: FieldRef<"User", 'Int'>
+    readonly rank_recital: FieldRef<"User", 'Int'>
+    readonly rank_basic_country: FieldRef<"User", 'Int'>
+    readonly rank_recital_country: FieldRef<"User", 'Int'>
     readonly play_count: FieldRef<"User", 'Int'>
+    readonly score_p: FieldRef<"User", 'Int'>
+    readonly score_s: FieldRef<"User", 'Int'>
+    readonly score_a2: FieldRef<"User", 'Int'>
+    readonly score_a: FieldRef<"User", 'Int'>
+    readonly score_b2: FieldRef<"User", 'Int'>
+    readonly grade_basic: FieldRef<"User", 'Int'>
+    readonly grade_recital: FieldRef<"User", 'Int'>
     readonly created_at: FieldRef<"User", 'DateTime'>
     readonly updated_at: FieldRef<"User", 'DateTime'>
   }
@@ -6099,7 +6299,19 @@ export namespace Prisma {
     username: 'username',
     kakao_id: 'kakao_id',
     avatar: 'avatar',
+    country: 'country',
+    rank_basic: 'rank_basic',
+    rank_recital: 'rank_recital',
+    rank_basic_country: 'rank_basic_country',
+    rank_recital_country: 'rank_recital_country',
     play_count: 'play_count',
+    score_p: 'score_p',
+    score_s: 'score_s',
+    score_a2: 'score_a2',
+    score_a: 'score_a',
+    score_b2: 'score_b2',
+    grade_basic: 'grade_basic',
+    grade_recital: 'grade_recital',
     created_at: 'created_at',
     updated_at: 'updated_at'
   };
@@ -6232,7 +6444,19 @@ export namespace Prisma {
     username?: StringNullableFilter<"User"> | string | null
     kakao_id?: BigIntNullableFilter<"User"> | bigint | number | null
     avatar?: StringNullableFilter<"User"> | string | null
+    country?: StringNullableFilter<"User"> | string | null
+    rank_basic?: IntNullableFilter<"User"> | number | null
+    rank_recital?: IntNullableFilter<"User"> | number | null
+    rank_basic_country?: IntNullableFilter<"User"> | number | null
+    rank_recital_country?: IntNullableFilter<"User"> | number | null
     play_count?: IntNullableFilter<"User"> | number | null
+    score_p?: IntNullableFilter<"User"> | number | null
+    score_s?: IntNullableFilter<"User"> | number | null
+    score_a2?: IntNullableFilter<"User"> | number | null
+    score_a?: IntNullableFilter<"User"> | number | null
+    score_b2?: IntNullableFilter<"User"> | number | null
+    grade_basic?: IntNullableFilter<"User"> | number | null
+    grade_recital?: IntNullableFilter<"User"> | number | null
     created_at?: DateTimeFilter<"User"> | Date | string
     updated_at?: DateTimeFilter<"User"> | Date | string
     PlayHistory?: RecentPlayListRelationFilter
@@ -6244,7 +6468,19 @@ export namespace Prisma {
     username?: SortOrderInput | SortOrder
     kakao_id?: SortOrderInput | SortOrder
     avatar?: SortOrderInput | SortOrder
+    country?: SortOrderInput | SortOrder
+    rank_basic?: SortOrderInput | SortOrder
+    rank_recital?: SortOrderInput | SortOrder
+    rank_basic_country?: SortOrderInput | SortOrder
+    rank_recital_country?: SortOrderInput | SortOrder
     play_count?: SortOrderInput | SortOrder
+    score_p?: SortOrderInput | SortOrder
+    score_s?: SortOrderInput | SortOrder
+    score_a2?: SortOrderInput | SortOrder
+    score_a?: SortOrderInput | SortOrder
+    score_b2?: SortOrderInput | SortOrder
+    grade_basic?: SortOrderInput | SortOrder
+    grade_recital?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     PlayHistory?: RecentPlayOrderByRelationAggregateInput
@@ -6259,7 +6495,19 @@ export namespace Prisma {
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
     avatar?: StringNullableFilter<"User"> | string | null
+    country?: StringNullableFilter<"User"> | string | null
+    rank_basic?: IntNullableFilter<"User"> | number | null
+    rank_recital?: IntNullableFilter<"User"> | number | null
+    rank_basic_country?: IntNullableFilter<"User"> | number | null
+    rank_recital_country?: IntNullableFilter<"User"> | number | null
     play_count?: IntNullableFilter<"User"> | number | null
+    score_p?: IntNullableFilter<"User"> | number | null
+    score_s?: IntNullableFilter<"User"> | number | null
+    score_a2?: IntNullableFilter<"User"> | number | null
+    score_a?: IntNullableFilter<"User"> | number | null
+    score_b2?: IntNullableFilter<"User"> | number | null
+    grade_basic?: IntNullableFilter<"User"> | number | null
+    grade_recital?: IntNullableFilter<"User"> | number | null
     created_at?: DateTimeFilter<"User"> | Date | string
     updated_at?: DateTimeFilter<"User"> | Date | string
     PlayHistory?: RecentPlayListRelationFilter
@@ -6271,7 +6519,19 @@ export namespace Prisma {
     username?: SortOrderInput | SortOrder
     kakao_id?: SortOrderInput | SortOrder
     avatar?: SortOrderInput | SortOrder
+    country?: SortOrderInput | SortOrder
+    rank_basic?: SortOrderInput | SortOrder
+    rank_recital?: SortOrderInput | SortOrder
+    rank_basic_country?: SortOrderInput | SortOrder
+    rank_recital_country?: SortOrderInput | SortOrder
     play_count?: SortOrderInput | SortOrder
+    score_p?: SortOrderInput | SortOrder
+    score_s?: SortOrderInput | SortOrder
+    score_a2?: SortOrderInput | SortOrder
+    score_a?: SortOrderInput | SortOrder
+    score_b2?: SortOrderInput | SortOrder
+    grade_basic?: SortOrderInput | SortOrder
+    grade_recital?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     _count?: UserCountOrderByAggregateInput
@@ -6289,7 +6549,19 @@ export namespace Prisma {
     username?: StringNullableWithAggregatesFilter<"User"> | string | null
     kakao_id?: BigIntNullableWithAggregatesFilter<"User"> | bigint | number | null
     avatar?: StringNullableWithAggregatesFilter<"User"> | string | null
+    country?: StringNullableWithAggregatesFilter<"User"> | string | null
+    rank_basic?: IntNullableWithAggregatesFilter<"User"> | number | null
+    rank_recital?: IntNullableWithAggregatesFilter<"User"> | number | null
+    rank_basic_country?: IntNullableWithAggregatesFilter<"User"> | number | null
+    rank_recital_country?: IntNullableWithAggregatesFilter<"User"> | number | null
     play_count?: IntNullableWithAggregatesFilter<"User"> | number | null
+    score_p?: IntNullableWithAggregatesFilter<"User"> | number | null
+    score_s?: IntNullableWithAggregatesFilter<"User"> | number | null
+    score_a2?: IntNullableWithAggregatesFilter<"User"> | number | null
+    score_a?: IntNullableWithAggregatesFilter<"User"> | number | null
+    score_b2?: IntNullableWithAggregatesFilter<"User"> | number | null
+    grade_basic?: IntNullableWithAggregatesFilter<"User"> | number | null
+    grade_recital?: IntNullableWithAggregatesFilter<"User"> | number | null
     created_at?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
@@ -6603,7 +6875,19 @@ export namespace Prisma {
     username?: string | null
     kakao_id?: bigint | number | null
     avatar?: string | null
+    country?: string | null
+    rank_basic?: number | null
+    rank_recital?: number | null
+    rank_basic_country?: number | null
+    rank_recital_country?: number | null
     play_count?: number | null
+    score_p?: number | null
+    score_s?: number | null
+    score_a2?: number | null
+    score_a?: number | null
+    score_b2?: number | null
+    grade_basic?: number | null
+    grade_recital?: number | null
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
@@ -6615,7 +6899,19 @@ export namespace Prisma {
     username?: string | null
     kakao_id?: bigint | number | null
     avatar?: string | null
+    country?: string | null
+    rank_basic?: number | null
+    rank_recital?: number | null
+    rank_basic_country?: number | null
+    rank_recital_country?: number | null
     play_count?: number | null
+    score_p?: number | null
+    score_s?: number | null
+    score_a2?: number | null
+    score_a?: number | null
+    score_b2?: number | null
+    grade_basic?: number | null
+    grade_recital?: number | null
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
@@ -6626,7 +6922,19 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    rank_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_basic_country?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital_country?: NullableIntFieldUpdateOperationsInput | number | null
     play_count?: NullableIntFieldUpdateOperationsInput | number | null
+    score_p?: NullableIntFieldUpdateOperationsInput | number | null
+    score_s?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a2?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a?: NullableIntFieldUpdateOperationsInput | number | null
+    score_b2?: NullableIntFieldUpdateOperationsInput | number | null
+    grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
@@ -6638,7 +6946,19 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    rank_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_basic_country?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital_country?: NullableIntFieldUpdateOperationsInput | number | null
     play_count?: NullableIntFieldUpdateOperationsInput | number | null
+    score_p?: NullableIntFieldUpdateOperationsInput | number | null
+    score_s?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a2?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a?: NullableIntFieldUpdateOperationsInput | number | null
+    score_b2?: NullableIntFieldUpdateOperationsInput | number | null
+    grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
@@ -6650,7 +6970,19 @@ export namespace Prisma {
     username?: string | null
     kakao_id?: bigint | number | null
     avatar?: string | null
+    country?: string | null
+    rank_basic?: number | null
+    rank_recital?: number | null
+    rank_basic_country?: number | null
+    rank_recital_country?: number | null
     play_count?: number | null
+    score_p?: number | null
+    score_s?: number | null
+    score_a2?: number | null
+    score_a?: number | null
+    score_b2?: number | null
+    grade_basic?: number | null
+    grade_recital?: number | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -6659,7 +6991,19 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    rank_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_basic_country?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital_country?: NullableIntFieldUpdateOperationsInput | number | null
     play_count?: NullableIntFieldUpdateOperationsInput | number | null
+    score_p?: NullableIntFieldUpdateOperationsInput | number | null
+    score_s?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a2?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a?: NullableIntFieldUpdateOperationsInput | number | null
+    score_b2?: NullableIntFieldUpdateOperationsInput | number | null
+    grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -6669,7 +7013,19 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    rank_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_basic_country?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital_country?: NullableIntFieldUpdateOperationsInput | number | null
     play_count?: NullableIntFieldUpdateOperationsInput | number | null
+    score_p?: NullableIntFieldUpdateOperationsInput | number | null
+    score_s?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a2?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a?: NullableIntFieldUpdateOperationsInput | number | null
+    score_b2?: NullableIntFieldUpdateOperationsInput | number | null
+    grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -7100,7 +7456,19 @@ export namespace Prisma {
     username?: SortOrder
     kakao_id?: SortOrder
     avatar?: SortOrder
+    country?: SortOrder
+    rank_basic?: SortOrder
+    rank_recital?: SortOrder
+    rank_basic_country?: SortOrder
+    rank_recital_country?: SortOrder
     play_count?: SortOrder
+    score_p?: SortOrder
+    score_s?: SortOrder
+    score_a2?: SortOrder
+    score_a?: SortOrder
+    score_b2?: SortOrder
+    grade_basic?: SortOrder
+    grade_recital?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -7108,7 +7476,18 @@ export namespace Prisma {
   export type UserAvgOrderByAggregateInput = {
     id?: SortOrder
     kakao_id?: SortOrder
+    rank_basic?: SortOrder
+    rank_recital?: SortOrder
+    rank_basic_country?: SortOrder
+    rank_recital_country?: SortOrder
     play_count?: SortOrder
+    score_p?: SortOrder
+    score_s?: SortOrder
+    score_a2?: SortOrder
+    score_a?: SortOrder
+    score_b2?: SortOrder
+    grade_basic?: SortOrder
+    grade_recital?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -7116,7 +7495,19 @@ export namespace Prisma {
     username?: SortOrder
     kakao_id?: SortOrder
     avatar?: SortOrder
+    country?: SortOrder
+    rank_basic?: SortOrder
+    rank_recital?: SortOrder
+    rank_basic_country?: SortOrder
+    rank_recital_country?: SortOrder
     play_count?: SortOrder
+    score_p?: SortOrder
+    score_s?: SortOrder
+    score_a2?: SortOrder
+    score_a?: SortOrder
+    score_b2?: SortOrder
+    grade_basic?: SortOrder
+    grade_recital?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -7126,7 +7517,19 @@ export namespace Prisma {
     username?: SortOrder
     kakao_id?: SortOrder
     avatar?: SortOrder
+    country?: SortOrder
+    rank_basic?: SortOrder
+    rank_recital?: SortOrder
+    rank_basic_country?: SortOrder
+    rank_recital_country?: SortOrder
     play_count?: SortOrder
+    score_p?: SortOrder
+    score_s?: SortOrder
+    score_a2?: SortOrder
+    score_a?: SortOrder
+    score_b2?: SortOrder
+    grade_basic?: SortOrder
+    grade_recital?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -7134,7 +7537,18 @@ export namespace Prisma {
   export type UserSumOrderByAggregateInput = {
     id?: SortOrder
     kakao_id?: SortOrder
+    rank_basic?: SortOrder
+    rank_recital?: SortOrder
+    rank_basic_country?: SortOrder
+    rank_recital_country?: SortOrder
     play_count?: SortOrder
+    score_p?: SortOrder
+    score_s?: SortOrder
+    score_a2?: SortOrder
+    score_a?: SortOrder
+    score_b2?: SortOrder
+    grade_basic?: SortOrder
+    grade_recital?: SortOrder
   }
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -8176,7 +8590,19 @@ export namespace Prisma {
     username?: string | null
     kakao_id?: bigint | number | null
     avatar?: string | null
+    country?: string | null
+    rank_basic?: number | null
+    rank_recital?: number | null
+    rank_basic_country?: number | null
+    rank_recital_country?: number | null
     play_count?: number | null
+    score_p?: number | null
+    score_s?: number | null
+    score_a2?: number | null
+    score_a?: number | null
+    score_b2?: number | null
+    grade_basic?: number | null
+    grade_recital?: number | null
     created_at?: Date | string
     updated_at?: Date | string
     PlayData?: PlayDataCreateNestedManyWithoutUserInput
@@ -8187,7 +8613,19 @@ export namespace Prisma {
     username?: string | null
     kakao_id?: bigint | number | null
     avatar?: string | null
+    country?: string | null
+    rank_basic?: number | null
+    rank_recital?: number | null
+    rank_basic_country?: number | null
+    rank_recital_country?: number | null
     play_count?: number | null
+    score_p?: number | null
+    score_s?: number | null
+    score_a2?: number | null
+    score_a?: number | null
+    score_b2?: number | null
+    grade_basic?: number | null
+    grade_recital?: number | null
     created_at?: Date | string
     updated_at?: Date | string
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutUserInput
@@ -8249,7 +8687,19 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    rank_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_basic_country?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital_country?: NullableIntFieldUpdateOperationsInput | number | null
     play_count?: NullableIntFieldUpdateOperationsInput | number | null
+    score_p?: NullableIntFieldUpdateOperationsInput | number | null
+    score_s?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a2?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a?: NullableIntFieldUpdateOperationsInput | number | null
+    score_b2?: NullableIntFieldUpdateOperationsInput | number | null
+    grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayData?: PlayDataUpdateManyWithoutUserNestedInput
@@ -8260,7 +8710,19 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    rank_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_basic_country?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital_country?: NullableIntFieldUpdateOperationsInput | number | null
     play_count?: NullableIntFieldUpdateOperationsInput | number | null
+    score_p?: NullableIntFieldUpdateOperationsInput | number | null
+    score_s?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a2?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a?: NullableIntFieldUpdateOperationsInput | number | null
+    score_b2?: NullableIntFieldUpdateOperationsInput | number | null
+    grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayData?: PlayDataUncheckedUpdateManyWithoutUserNestedInput
@@ -8312,7 +8774,19 @@ export namespace Prisma {
     username?: string | null
     kakao_id?: bigint | number | null
     avatar?: string | null
+    country?: string | null
+    rank_basic?: number | null
+    rank_recital?: number | null
+    rank_basic_country?: number | null
+    rank_recital_country?: number | null
     play_count?: number | null
+    score_p?: number | null
+    score_s?: number | null
+    score_a2?: number | null
+    score_a?: number | null
+    score_b2?: number | null
+    grade_basic?: number | null
+    grade_recital?: number | null
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
@@ -8323,7 +8797,19 @@ export namespace Prisma {
     username?: string | null
     kakao_id?: bigint | number | null
     avatar?: string | null
+    country?: string | null
+    rank_basic?: number | null
+    rank_recital?: number | null
+    rank_basic_country?: number | null
+    rank_recital_country?: number | null
     play_count?: number | null
+    score_p?: number | null
+    score_s?: number | null
+    score_a2?: number | null
+    score_a?: number | null
+    score_b2?: number | null
+    grade_basic?: number | null
+    grade_recital?: number | null
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
@@ -8385,7 +8871,19 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    rank_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_basic_country?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital_country?: NullableIntFieldUpdateOperationsInput | number | null
     play_count?: NullableIntFieldUpdateOperationsInput | number | null
+    score_p?: NullableIntFieldUpdateOperationsInput | number | null
+    score_s?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a2?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a?: NullableIntFieldUpdateOperationsInput | number | null
+    score_b2?: NullableIntFieldUpdateOperationsInput | number | null
+    grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
@@ -8396,7 +8894,19 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    rank_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_basic_country?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital_country?: NullableIntFieldUpdateOperationsInput | number | null
     play_count?: NullableIntFieldUpdateOperationsInput | number | null
+    score_p?: NullableIntFieldUpdateOperationsInput | number | null
+    score_s?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a2?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a?: NullableIntFieldUpdateOperationsInput | number | null
+    score_b2?: NullableIntFieldUpdateOperationsInput | number | null
+    grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput

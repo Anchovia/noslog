@@ -9,15 +9,27 @@ datasource db {
 }
 
 model User {
-  id          Int          @id @default(autoincrement())
-  username    String?      @unique
-  kakao_id    BigInt?      @unique
-  avatar      String?
-  play_count  Int?
-  created_at  DateTime     @default(now())
-  updated_at  DateTime     @updatedAt
-  PlayHistory RecentPlay[]
-  PlayData    PlayData[]
+  id                   Int          @id @default(autoincrement())
+  username             String?      @unique
+  kakao_id             BigInt?      @unique
+  avatar               String?
+  country              String?
+  rank_basic           Int?
+  rank_recital         Int?
+  rank_basic_country   Int?
+  rank_recital_country Int?
+  play_count           Int?
+  score_p              Int?
+  score_s              Int?
+  score_a2             Int?
+  score_a              Int?
+  score_b2             Int?
+  grade_basic          Int?
+  grade_recital        Int?
+  created_at           DateTime     @default(now())
+  updated_at           DateTime     @updatedAt
+  PlayHistory          RecentPlay[]
+  PlayData             PlayData[]
 }
 
 model Music {
