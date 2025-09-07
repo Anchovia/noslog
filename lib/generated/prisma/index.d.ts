@@ -2386,10 +2386,12 @@ export namespace Prisma {
 
   export type MusicAvgAggregateOutputType = {
     id: number | null
+    sheet_len: number | null
   }
 
   export type MusicSumAggregateOutputType = {
     id: number | null
+    sheet_len: number | null
   }
 
   export type MusicMinAggregateOutputType = {
@@ -2402,6 +2404,7 @@ export namespace Prisma {
     category_short: string | null
     description: string | null
     background: string | null
+    sheet_len: number | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -2416,6 +2419,7 @@ export namespace Prisma {
     category_short: string | null
     description: string | null
     background: string | null
+    sheet_len: number | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -2430,6 +2434,7 @@ export namespace Prisma {
     category_short: number
     description: number
     background: number
+    sheet_len: number
     created_at: number
     updated_at: number
     _all: number
@@ -2438,10 +2443,12 @@ export namespace Prisma {
 
   export type MusicAvgAggregateInputType = {
     id?: true
+    sheet_len?: true
   }
 
   export type MusicSumAggregateInputType = {
     id?: true
+    sheet_len?: true
   }
 
   export type MusicMinAggregateInputType = {
@@ -2454,6 +2461,7 @@ export namespace Prisma {
     category_short?: true
     description?: true
     background?: true
+    sheet_len?: true
     created_at?: true
     updated_at?: true
   }
@@ -2468,6 +2476,7 @@ export namespace Prisma {
     category_short?: true
     description?: true
     background?: true
+    sheet_len?: true
     created_at?: true
     updated_at?: true
   }
@@ -2482,6 +2491,7 @@ export namespace Prisma {
     category_short?: true
     description?: true
     background?: true
+    sheet_len?: true
     created_at?: true
     updated_at?: true
     _all?: true
@@ -2583,6 +2593,7 @@ export namespace Prisma {
     category_short: string
     description: string | null
     background: string | null
+    sheet_len: number
     created_at: Date
     updated_at: Date
     _count: MusicCountAggregateOutputType | null
@@ -2616,6 +2627,7 @@ export namespace Prisma {
     category_short?: boolean
     description?: boolean
     background?: boolean
+    sheet_len?: boolean
     created_at?: boolean
     updated_at?: boolean
     RecentPlay?: boolean | Music$RecentPlayArgs<ExtArgs>
@@ -2633,6 +2645,7 @@ export namespace Prisma {
     category_short?: boolean
     description?: boolean
     background?: boolean
+    sheet_len?: boolean
     created_at?: boolean
     updated_at?: boolean
   }, ExtArgs["result"]["music"]>
@@ -2647,6 +2660,7 @@ export namespace Prisma {
     category_short?: boolean
     description?: boolean
     background?: boolean
+    sheet_len?: boolean
     created_at?: boolean
     updated_at?: boolean
   }, ExtArgs["result"]["music"]>
@@ -2661,11 +2675,12 @@ export namespace Prisma {
     category_short?: boolean
     description?: boolean
     background?: boolean
+    sheet_len?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type MusicOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "index" | "title" | "title_kana" | "artist" | "category" | "category_short" | "description" | "background" | "created_at" | "updated_at", ExtArgs["result"]["music"]>
+  export type MusicOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "index" | "title" | "title_kana" | "artist" | "category" | "category_short" | "description" | "background" | "sheet_len" | "created_at" | "updated_at", ExtArgs["result"]["music"]>
   export type MusicInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     RecentPlay?: boolean | Music$RecentPlayArgs<ExtArgs>
     PlayData?: boolean | Music$PlayDataArgs<ExtArgs>
@@ -2690,6 +2705,7 @@ export namespace Prisma {
       category_short: string
       description: string | null
       background: string | null
+      sheet_len: number
       created_at: Date
       updated_at: Date
     }, ExtArgs["result"]["music"]>
@@ -3126,6 +3142,7 @@ export namespace Prisma {
     readonly category_short: FieldRef<"Music", 'String'>
     readonly description: FieldRef<"Music", 'String'>
     readonly background: FieldRef<"Music", 'String'>
+    readonly sheet_len: FieldRef<"Music", 'Int'>
     readonly created_at: FieldRef<"Music", 'DateTime'>
     readonly updated_at: FieldRef<"Music", 'DateTime'>
   }
@@ -6100,6 +6117,7 @@ export namespace Prisma {
     category_short: 'category_short',
     description: 'description',
     background: 'background',
+    sheet_len: 'sheet_len',
     created_at: 'created_at',
     updated_at: 'updated_at'
   };
@@ -6289,6 +6307,7 @@ export namespace Prisma {
     category_short?: StringFilter<"Music"> | string
     description?: StringNullableFilter<"Music"> | string | null
     background?: StringNullableFilter<"Music"> | string | null
+    sheet_len?: IntFilter<"Music"> | number
     created_at?: DateTimeFilter<"Music"> | Date | string
     updated_at?: DateTimeFilter<"Music"> | Date | string
     RecentPlay?: RecentPlayListRelationFilter
@@ -6305,6 +6324,7 @@ export namespace Prisma {
     category_short?: SortOrder
     description?: SortOrderInput | SortOrder
     background?: SortOrderInput | SortOrder
+    sheet_len?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     RecentPlay?: RecentPlayOrderByRelationAggregateInput
@@ -6324,6 +6344,7 @@ export namespace Prisma {
     category_short?: StringFilter<"Music"> | string
     description?: StringNullableFilter<"Music"> | string | null
     background?: StringNullableFilter<"Music"> | string | null
+    sheet_len?: IntFilter<"Music"> | number
     created_at?: DateTimeFilter<"Music"> | Date | string
     updated_at?: DateTimeFilter<"Music"> | Date | string
     RecentPlay?: RecentPlayListRelationFilter
@@ -6340,6 +6361,7 @@ export namespace Prisma {
     category_short?: SortOrder
     description?: SortOrderInput | SortOrder
     background?: SortOrderInput | SortOrder
+    sheet_len?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     _count?: MusicCountOrderByAggregateInput
@@ -6362,6 +6384,7 @@ export namespace Prisma {
     category_short?: StringWithAggregatesFilter<"Music"> | string
     description?: StringNullableWithAggregatesFilter<"Music"> | string | null
     background?: StringNullableWithAggregatesFilter<"Music"> | string | null
+    sheet_len?: IntWithAggregatesFilter<"Music"> | number
     created_at?: DateTimeWithAggregatesFilter<"Music"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"Music"> | Date | string
   }
@@ -6660,6 +6683,7 @@ export namespace Prisma {
     category_short: string
     description?: string | null
     background?: string | null
+    sheet_len: number
     created_at?: Date | string
     updated_at?: Date | string
     RecentPlay?: RecentPlayCreateNestedManyWithoutMusicInput
@@ -6676,6 +6700,7 @@ export namespace Prisma {
     category_short: string
     description?: string | null
     background?: string | null
+    sheet_len: number
     created_at?: Date | string
     updated_at?: Date | string
     RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutMusicInput
@@ -6691,6 +6716,7 @@ export namespace Prisma {
     category_short?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     background?: NullableStringFieldUpdateOperationsInput | string | null
+    sheet_len?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     RecentPlay?: RecentPlayUpdateManyWithoutMusicNestedInput
@@ -6707,6 +6733,7 @@ export namespace Prisma {
     category_short?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     background?: NullableStringFieldUpdateOperationsInput | string | null
+    sheet_len?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     RecentPlay?: RecentPlayUncheckedUpdateManyWithoutMusicNestedInput
@@ -6723,6 +6750,7 @@ export namespace Prisma {
     category_short: string
     description?: string | null
     background?: string | null
+    sheet_len: number
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -6736,6 +6764,7 @@ export namespace Prisma {
     category_short?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     background?: NullableStringFieldUpdateOperationsInput | string | null
+    sheet_len?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -6750,6 +6779,7 @@ export namespace Prisma {
     category_short?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     background?: NullableStringFieldUpdateOperationsInput | string | null
+    sheet_len?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -7210,12 +7240,14 @@ export namespace Prisma {
     category_short?: SortOrder
     description?: SortOrder
     background?: SortOrder
+    sheet_len?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
 
   export type MusicAvgOrderByAggregateInput = {
     id?: SortOrder
+    sheet_len?: SortOrder
   }
 
   export type MusicMaxOrderByAggregateInput = {
@@ -7228,6 +7260,7 @@ export namespace Prisma {
     category_short?: SortOrder
     description?: SortOrder
     background?: SortOrder
+    sheet_len?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -7242,12 +7275,14 @@ export namespace Prisma {
     category_short?: SortOrder
     description?: SortOrder
     background?: SortOrder
+    sheet_len?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
 
   export type MusicSumOrderByAggregateInput = {
     id?: SortOrder
+    sheet_len?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -8172,6 +8207,7 @@ export namespace Prisma {
     category_short: string
     description?: string | null
     background?: string | null
+    sheet_len: number
     created_at?: Date | string
     updated_at?: Date | string
     PlayData?: PlayDataCreateNestedManyWithoutMusicInput
@@ -8187,6 +8223,7 @@ export namespace Prisma {
     category_short: string
     description?: string | null
     background?: string | null
+    sheet_len: number
     created_at?: Date | string
     updated_at?: Date | string
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutMusicInput
@@ -8249,6 +8286,7 @@ export namespace Prisma {
     category_short?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     background?: NullableStringFieldUpdateOperationsInput | string | null
+    sheet_len?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayData?: PlayDataUpdateManyWithoutMusicNestedInput
@@ -8264,6 +8302,7 @@ export namespace Prisma {
     category_short?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     background?: NullableStringFieldUpdateOperationsInput | string | null
+    sheet_len?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayData?: PlayDataUncheckedUpdateManyWithoutMusicNestedInput
@@ -8304,6 +8343,7 @@ export namespace Prisma {
     category_short: string
     description?: string | null
     background?: string | null
+    sheet_len: number
     created_at?: Date | string
     updated_at?: Date | string
     RecentPlay?: RecentPlayCreateNestedManyWithoutMusicInput
@@ -8319,6 +8359,7 @@ export namespace Prisma {
     category_short: string
     description?: string | null
     background?: string | null
+    sheet_len: number
     created_at?: Date | string
     updated_at?: Date | string
     RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutMusicInput
@@ -8381,6 +8422,7 @@ export namespace Prisma {
     category_short?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     background?: NullableStringFieldUpdateOperationsInput | string | null
+    sheet_len?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     RecentPlay?: RecentPlayUpdateManyWithoutMusicNestedInput
@@ -8396,6 +8438,7 @@ export namespace Prisma {
     category_short?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     background?: NullableStringFieldUpdateOperationsInput | string | null
+    sheet_len?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     RecentPlay?: RecentPlayUncheckedUpdateManyWithoutMusicNestedInput

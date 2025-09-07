@@ -20,6 +20,7 @@ CREATE TABLE "Music" (
     "category_short" TEXT NOT NULL,
     "description" TEXT,
     "background" TEXT,
+    "sheet_len" INTEGER NOT NULL,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME NOT NULL
 );

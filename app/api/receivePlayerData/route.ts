@@ -1,3 +1,4 @@
+import { musicBG } from "@/lib/constants";
 import db from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -53,8 +54,29 @@ export async function POST(request: NextRequest) {
                     description: data.description,
                     title: data.title,
                     title_kana: data.title_kana,
+                    sheet_len: data.sheet.length,
                 },
             });
+
+            if (musicBG[resultMusic.index]) {
+                // music bg 추가 작업
+                await db.music.update({
+                    where: { index: resultMusic.index + "" },
+                    data: {
+                        background: musicBG[resultMusic.index + ""],
+                    },
+                });
+            }
+        } else {
+            if (musicBG[idx.index]) {
+                // music bg 추가 작업
+                await db.music.update({
+                    where: { index: idx.index },
+                    data: {
+                        background: musicBG[idx.index],
+                    },
+                });
+            }
         }
     });
 

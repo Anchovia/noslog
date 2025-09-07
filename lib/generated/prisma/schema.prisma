@@ -30,6 +30,7 @@ model Music {
   category_short String
   description    String?
   background     String?
+  sheet_len      Int
   created_at     DateTime     @default(now())
   updated_at     DateTime     @updatedAt
   RecentPlay     RecentPlay[]

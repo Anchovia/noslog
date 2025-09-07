@@ -9,7 +9,7 @@ export default async function Header() {
         <header className="w-full h-20 flex bg-black text-white items-center px-6 *:text-neutral-500">
             <div className="flex flex-1 gap-4">
                 <Link href="/">메인</Link>
-                <Link href="/song">악곡</Link>
+                <Link href="/music">악곡</Link>
                 <Link href="/ranking">랭킹</Link>
                 <Link href="/bingo">빙고</Link>
             </div>

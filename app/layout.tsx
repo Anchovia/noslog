@@ -20,7 +20,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en" className="bg-black text-white">
+        <html lang="en" className="bg-neutral-950 text-white">
             <body className={`${outfit.className} antialiased`}>
                 {children}
             </body>

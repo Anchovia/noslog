@@ -1,6 +1,7 @@
 import Image from "next/image";
 
 export default async function Home() {
+    // 메인 섹션들 padding py-24 px-16 사용 필수
     return (
         <div className="flex flex-col">
             <section className="py-24 px-16 flex flex-col text-center items-center justify-center bg-neutral-800">
