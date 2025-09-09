@@ -5,6 +5,21 @@ const nextConfig = {
             {
                 hostname: "k.kakaocdn.net",
             },
+
+            {
+                hostname: "p.eagate.573.jp",
+            },
+            /*
+            {
+                hostname: "cdn44.atwikiimg.com",
+            },
+            {
+                hostname: "pbs.twimg.com",
+            },
+            {
+                hostname: "remywiki.com",
+            },
+            */
         ],
     },
 };

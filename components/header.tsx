@@ -12,6 +12,7 @@ export default async function Header() {
                 <Link href="/music">악곡</Link>
                 <Link href="/ranking">랭킹</Link>
                 <Link href="/bingo">빙고</Link>
+                <Link href="/event">이벤트</Link>
             </div>
             {user ? (
                 <Link

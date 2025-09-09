@@ -39,7 +39,7 @@ export default async function Music() {
 
     return (
         <div>
-            <form className="p-8 -mb-8 w-full max-w-lg mx-auto flex flex-col bg-neutral-700 items-center gap-4">
+            <form className="p-8 w-full max-w-lg mx-auto flex flex-col bg-neutral-700 items-center gap-4">
                 <input
                     placeholder="악곡 검색"
                     className="w-full px-4 py-2.5 bg-neutral-500"
@@ -65,48 +65,47 @@ export default async function Music() {
                     </article>
                 </section>
             </form>
-            <section className="py-24 px-16 flex flex-col items-center gap-12 *:w-full *:max-w-lg *:aspect-square *:bg-neutral-500">
+            <section className="px-8 py-4 flex flex-col mx-auto items-center gap-4 w-full max-w-lg">
                 {data.map((music) => (
                     <Link
                         key={music.index}
-                        href={`/music/${music.index}`}
-                        style={{
-                            backgroundImage: `${
-                                music.background
-                                    ? `url(${music.background})`
-                                    : getPublic(music.index)
-                            }`,
-                            backgroundSize: "cover",
-                            backgroundPosition: "center",
-                        }}
-                        className="flex flex-col w-full h-full rounded-b-2xl"
+                        href={`/music/${music.index}/Normal`}
+                        className="flex w-full rounded-2xl overflow-hidden"
                     >
-                        <div className="h-3/5" />
-                        <div className="p-4 h-2/5 flex flex-col gap-2 bg-neutral-600 rounded-b-2xl">
+                        <div
+                            style={{
+                                backgroundImage: `${
+                                    music.background
+                                        ? `url(${music.background})`
+                                        : getPublic(music.index)
+                                }`,
+                                backgroundSize: "cover",
+                                backgroundPosition: "center",
+                            }}
+                            className="w-[9.5rem] aspect-square"
+                        />
+                        <div className="py-3.5 px-5 w-full flex flex-col gap-2 bg-zinc-900 rounded-r-2xl">
                             <div className="flex flex-col flex-1">
-                                <h1>{music.title}</h1>
-                                <span>{music.artist}</span>
-                                {/*<span>{music.index}</span>*/}
+                                <h1 className="text-sm">{music.title}</h1>
+                                <span className="text-xs text-neutral-400">
+                                    {music.artist}
+                                </span>
                             </div>
                             <hr className="border border-neutral-700" />
                             <div className="flex justify-between items-center">
-                                <div className="flex gap-2 *:size-8 *:flex *:rounded-full *:justify-center *:items-center *:font-bold *:text-sm">
-                                    <div className="border-2 border-green-400 text-green-400">
-                                        N
-                                    </div>
-                                    <div className="border-2 border-orange-400 text-orange-400">
-                                        H
-                                    </div>
-                                    <div className="border-2 border-red-500 text-red-500">
-                                        E
-                                    </div>
+                                <div className="flex gap-2 *:size-4 *:flex *:rounded-full *:justify-center *:items-center font-semibold text-xs">
+                                    <div className=" text-green-400">N</div>
+                                    <div className=" text-orange-400">H</div>
+                                    <div className=" text-red-500">E</div>
                                     {music.sheet_len > 3 && (
-                                        <div className="border-2 border-purple-500 text-purple-500">
+                                        <div className=" text-purple-500">
                                             R
                                         </div>
                                     )}
                                 </div>
-                                <div>{music.category_short}</div>
+                                <div className="font-semibold text-sm">
+                                    {music.category_short}
+                                </div>
                             </div>
                         </div>
                     </Link>

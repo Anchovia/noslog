@@ -11,6 +11,6 @@ export function formatToGrade(grade: number | null): string {
     if (grade) {
         return (grade / 100).toFixed(0);
     } else {
-        return "0.00";
+        return "0";
     }
 }

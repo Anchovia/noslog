@@ -12,7 +12,7 @@ export default async function Home() {
                     <span className="font-thin">Welcome to</span>
                     <p className="font-medium">NosLog</p>
                 </h1>
-                <span className="font-normal text-sm pt-8">
+                <span className="font-normal text-base pt-8 max-w-[21rem]">
                     NosLog는 NOSTALGIA의 유저 정보를 제공해주는 팬사이트 입니다.
                 </span>
             </section>
