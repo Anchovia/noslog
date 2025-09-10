@@ -1,4 +1,3 @@
-import { categoryColor, diffArr, diffColor } from "@/lib/constants";
 import db from "@/lib/db";
 import { getPublic } from "@/lib/utils";
 import Image from "next/image";
@@ -21,6 +20,22 @@ export default async function Music() {
             difficulty_levels: true,
         },
     });
+
+    const diffArr: any = ["Normal", "Hard", "Expert", "Real"];
+    const diffColor: any = {
+        [diffArr[0]]: "text-normal",
+        [diffArr[1]]: "text-hard",
+        [diffArr[2]]: "text-expert",
+        [diffArr[3]]: "text-real",
+    };
+    const categoryColor: any = {
+        "Cl/Jz": "border-green-500",
+        Var: "border-amber-500",
+        Org: "border-orange-500",
+        BM: "border-blue-500",
+        anime: "border-pink-500",
+        pops: "border-red-500",
+    };
 
     return (
         <main className="w-full h-full">

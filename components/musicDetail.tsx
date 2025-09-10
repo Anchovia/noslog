@@ -1,4 +1,3 @@
-import { diffArr, diffColor } from "@/lib/constants";
 import { formatToComma, formatToGrade, getPublic } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
@@ -34,6 +33,14 @@ export default function MusicDetail({
     sheet_len,
     difficulty_levels,
 }: MusicDetailProps) {
+    const diffArr: any = ["Normal", "Hard", "Expert", "Real"];
+    const diffColor: any = {
+        [diffArr[0]]: "text-normal",
+        [diffArr[1]]: "text-hard",
+        [diffArr[2]]: "text-expert",
+        [diffArr[3]]: "text-real",
+    };
+
     const gradeType = isRecital ? "recital" : "basic";
     const difficultyLevels = difficulty_levels
         .split(",")

@@ -2,23 +2,6 @@ interface MusicBG {
     [key: string]: string;
 }
 
-export const categoryColor: any = {
-    "Cl/Jz": "border-green-500",
-    Var: "border-amber-500",
-    Org: "border-orange-500",
-    BM: "border-blue-500",
-    anime: "border-pink-500",
-    pops: "border-red-500",
-};
-
-export const diffArr: any = ["Normal", "Hard", "Expert", "Real"];
-export const diffColor: any = {
-    [diffArr[0]]: "text-normal",
-    [diffArr[1]]: "text-hard",
-    [diffArr[2]]: "text-expert",
-    [diffArr[3]]: "text-real",
-};
-
 export const rankImg: any = {
     fc: "https://p.eagate.573.jp/game/nostalgia/op3/img/pdata/music_data/grade/grade_fc_bg.png",
 };
