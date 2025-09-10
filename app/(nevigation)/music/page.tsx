@@ -1,8 +1,8 @@
+import { categoryColor, diffArr, diffColor } from "@/lib/constants";
 import db from "@/lib/db";
-import { existsSync } from "fs";
+import { getPublic } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
-import path from "path";
 
 // todo: 무한 스크롤 기능 제작 필요
 // todo2: 필터 기능 제작 필요(카테고리, 난이도, 랭크, 악곡 길이 등등)
@@ -21,32 +21,6 @@ export default async function Music() {
             difficulty_levels: true,
         },
     });
-
-    // public 폴더에 이미지가 존재하는지 확인하는 함수
-    const getPublic = (idx: string) => {
-        // 이미지 path 생성
-        const imagePath = path.join(
-            process.cwd(),
-            "public",
-            "bg",
-            `${idx}.png`
-        );
-        // existsSync로 이미지 존재 여부 확인
-        if (existsSync(imagePath)) {
-            return `url(/bg/${idx}.png)`;
-        } else {
-            return `url(https://p.eagate.573.jp/game/nostalgia/op3/img/jacket.html?c=${idx})`;
-        }
-    };
-
-    const categoryColor: any = {
-        "Cl/Jz": "border-green-500",
-        Var: "border-amber-500",
-        Org: "border-orange-500",
-        BM: "border-blue-500",
-        anime: "border-pink-500",
-        pops: "border-red-500",
-    };
 
     return (
         <main className="w-full h-full">
@@ -74,7 +48,7 @@ export default async function Music() {
                 {data.map((music) => (
                     <Link
                         key={music.index}
-                        href={`/music/${music.index}/Normal`}
+                        href={`/music/${music.index}/Normal/basic`}
                         className="w-full flex bg-dark-tertiary rounded-lg overflow-hidden border border-dark-secondary"
                     >
                         {/* 자켓 */}
@@ -108,24 +82,28 @@ export default async function Music() {
                                     {music.artist}
                                 </span>
                             </div>
-                            {/* 랭크, 난이도 */}
-                            <div className="flex flex-col gap-1.5 justify-between items-center">
-                                <div className="relative size-9 aspect-square">
-                                    <Image
-                                        src={
-                                            "https://p.eagate.573.jp/game/nostalgia/op3/img/pdata/music_data/grade/grade_fc_bg.png"
-                                        }
-                                        fill
-                                        alt={"fc"}
-                                    />
-                                </div>
+                            {/* 북마크, 난이도 */}
+                            <div className="flex flex-col h-full gap-1.5 justify-between items-center">
+                                <Image
+                                    className="mt-2"
+                                    src={"/icon/heart.png"}
+                                    width={24}
+                                    height={24}
+                                    alt={"blankStar"}
+                                />
                                 <div className="flex text-sm font-medium  justify-center items-center w-14 gap-1">
-                                    <div className=" text-normal">1</div>
-                                    <div className=" text-hard">4</div>
-                                    <div className=" text-expert">10</div>
-                                    {music.sheet_len > 3 ? (
-                                        <div className=" text-real">2</div>
-                                    ) : (
+                                    {music.difficulty_levels
+                                        .split(",")
+                                        .map((level, idx) => (
+                                            <div
+                                                className={
+                                                    diffColor[diffArr[idx]]
+                                                }
+                                            >
+                                                {level}
+                                            </div>
+                                        ))}
+                                    {music.sheet_len < 4 && (
                                         <div className=" text-real">-</div>
                                     )}
                                 </div>

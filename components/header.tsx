@@ -34,7 +34,7 @@ export default async function Header() {
             </div>
             {user ? (
                 <Link
-                    href="/profile"
+                    href={`/profile/${user.id}/basic`}
                     className="size-11 rounded-full overflow-hidden relative"
                 >
                     <Image src={user!.avatar!} alt="avatar" fill />
