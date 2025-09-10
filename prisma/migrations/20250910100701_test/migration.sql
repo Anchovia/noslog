@@ -4,9 +4,33 @@ CREATE TABLE "User" (
     "username" TEXT,
     "kakao_id" BIGINT,
     "avatar" TEXT,
+    "country" TEXT NOT NULL DEFAULT 'ko-KR',
+    "rank_basic" INTEGER,
+    "rank_recital" INTEGER,
+    "rank_basic_country" INTEGER,
+    "rank_recital_country" INTEGER,
     "play_count" INTEGER,
+    "score_p" INTEGER,
+    "score_s" INTEGER,
+    "score_a2" INTEGER,
+    "score_a" INTEGER,
+    "score_b2" INTEGER,
+    "role" TEXT NOT NULL DEFAULT 'user',
+    "grade_basic" INTEGER,
+    "grade_recital" INTEGER,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "Bookmark" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "user_id" INTEGER NOT NULL,
+    "music_id" INTEGER NOT NULL,
+    "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" DATETIME NOT NULL,
+    CONSTRAINT "Bookmark_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "Bookmark_music_id_fkey" FOREIGN KEY ("music_id") REFERENCES "Music" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
@@ -21,6 +45,7 @@ CREATE TABLE "Music" (
     "description" TEXT,
     "background" TEXT,
     "sheet_len" INTEGER NOT NULL,
+    "difficulty_levels" TEXT NOT NULL,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME NOT NULL
 );
@@ -70,6 +95,9 @@ CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_kakao_id_key" ON "User"("kakao_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Bookmark_user_id_music_id_key" ON "Bookmark"("user_id", "music_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Music_index_key" ON "Music"("index");

@@ -1,8 +1,0 @@
--- AlterTable
-ALTER TABLE "User" ADD COLUMN "grade_basic" INTEGER;
-ALTER TABLE "User" ADD COLUMN "grade_recital" INTEGER;
-ALTER TABLE "User" ADD COLUMN "score_a" INTEGER;
-ALTER TABLE "User" ADD COLUMN "score_a_plus" INTEGER;
-ALTER TABLE "User" ADD COLUMN "score_b" INTEGER;
-ALTER TABLE "User" ADD COLUMN "score_b_plus" INTEGER;
-ALTER TABLE "User" ADD COLUMN "score_p" INTEGER;

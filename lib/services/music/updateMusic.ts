@@ -12,7 +12,6 @@ export async function updateMusic(music: any) {
         if (data.description === "") {
             data.description = null;
         }
-        console.log(data);
 
         // idx와 BG가 있는지 검증
         const music = await db.music.findUnique({

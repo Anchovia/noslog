@@ -1,5 +1,6 @@
 import db from "@/lib/db";
 import { existsSync } from "fs";
+import Image from "next/image";
 import Link from "next/link";
 import path from "path";
 
@@ -17,6 +18,7 @@ export default async function Music() {
             category_short: true,
             background: true,
             sheet_len: true,
+            difficulty_levels: true,
         },
     });
 
@@ -37,41 +39,45 @@ export default async function Music() {
         }
     };
 
+    const categoryColor: any = {
+        "Cl/Jz": "border-green-500",
+        Var: "border-amber-500",
+        Org: "border-orange-500",
+        BM: "border-blue-500",
+        anime: "border-pink-500",
+        pops: "border-red-500",
+    };
+
     return (
-        <div>
-            <form className="p-8 w-full max-w-lg mx-auto flex flex-col bg-neutral-700 items-center gap-4">
-                <input
-                    placeholder="악곡 검색"
-                    className="w-full px-4 py-2.5 bg-neutral-500"
-                />
-                <section className="flex gap-4 *:w-full *:bg-neutral-500 *:px-4 *:py-2.5">
-                    <input type="text" placeholder="카테고리: Original" />
-                    <input type="text" placeholder="정렬: Level" />
-                </section>
-                <section className="flex w-full justify-between">
-                    <article className="flex gap-2 items-center">
-                        <span>난이도</span>
-                        <div className="size-8 bg-neutral-500 rounded-full" />
-                        <div className="size-8 bg-neutral-500 rounded-full" />
-                        <div className="size-8 bg-neutral-500 rounded-full" />
-                    </article>
-                    <article className="flex gap-2 items-center">
-                        <span>랭크</span>
-                        <div className="size-8 bg-neutral-500 rounded-full" />
-                        <div className="size-8 bg-neutral-500 rounded-full" />
-                        <div className="size-8 bg-neutral-500 rounded-full" />
-                        <div className="size-8 bg-neutral-500 rounded-full" />
-                        <div className="size-8 bg-neutral-500 rounded-full" />
-                    </article>
-                </section>
-            </form>
-            <section className="px-8 py-4 flex flex-col mx-auto items-center gap-4 w-full max-w-lg">
+        <main className="w-full h-full">
+            <section className="px-6 py-4">
+                <form className="p-2 flex items-center justify-center gap-2  bg-dark-secondary rounded-lg">
+                    <Image
+                        src={"/icon/arrowDown.png"}
+                        alt={"arrowDown"}
+                        width={28}
+                        height={28}
+                    />
+                    <input
+                        placeholder="검색"
+                        className="w-full px-4 py-2 text-sm bg-dark-primary"
+                    />
+                    <Image
+                        src={"/icon/search.png"}
+                        alt={"search"}
+                        width={28}
+                        height={28}
+                    />
+                </form>
+            </section>
+            <section className="px-6 flex flex-col mx-auto items-center gap-2 w-full h-full max-w-lg">
                 {data.map((music) => (
                     <Link
                         key={music.index}
                         href={`/music/${music.index}/Normal`}
-                        className="flex w-full rounded-2xl overflow-hidden"
+                        className="w-full flex bg-dark-tertiary rounded-lg overflow-hidden border border-dark-secondary"
                     >
+                        {/* 자켓 */}
                         <div
                             style={{
                                 backgroundImage: `${
@@ -82,35 +88,52 @@ export default async function Music() {
                                 backgroundSize: "cover",
                                 backgroundPosition: "center",
                             }}
-                            className="w-[9.5rem] aspect-square"
-                        />
-                        <div className="py-3.5 px-5 w-full flex flex-col gap-2 bg-zinc-900 rounded-r-2xl">
-                            <div className="flex flex-col flex-1">
-                                <h1 className="text-sm">{music.title}</h1>
-                                <span className="text-xs text-neutral-400">
+                            className="size-24 border-r border-dark-secondary relative"
+                        >
+                            {/* 카테고리 */}
+                            <div
+                                className={`${
+                                    categoryColor[music.category_short]
+                                } border-8 border-r-transparent border-b-transparent absolute`}
+                            />
+                        </div>
+                        {/* 콘텐츠 */}
+                        <div className="flex flex-1 p-3.5 justify-between items-center">
+                            {/* 제목, 아티스트 */}
+                            <div className="flex flex-col gap-1.5 flex-1 pr-3">
+                                <h1 className="flex text-white-primary leading-[1.175rem] font-medium">
+                                    {music.title}
+                                </h1>
+                                <span className="flex text-xs text-white-secondary font-light">
                                     {music.artist}
                                 </span>
                             </div>
-                            <hr className="border border-neutral-700" />
-                            <div className="flex justify-between items-center">
-                                <div className="flex gap-2 *:size-4 *:flex *:rounded-full *:justify-center *:items-center font-semibold text-xs">
-                                    <div className=" text-green-400">N</div>
-                                    <div className=" text-orange-400">H</div>
-                                    <div className=" text-red-500">E</div>
-                                    {music.sheet_len > 3 && (
-                                        <div className=" text-purple-500">
-                                            R
-                                        </div>
-                                    )}
+                            {/* 랭크, 난이도 */}
+                            <div className="flex flex-col gap-1.5 justify-between items-center">
+                                <div className="relative size-9 aspect-square">
+                                    <Image
+                                        src={
+                                            "https://p.eagate.573.jp/game/nostalgia/op3/img/pdata/music_data/grade/grade_fc_bg.png"
+                                        }
+                                        fill
+                                        alt={"fc"}
+                                    />
                                 </div>
-                                <div className="font-semibold text-sm">
-                                    {music.category_short}
+                                <div className="flex text-sm font-medium  justify-center items-center w-14 gap-1">
+                                    <div className=" text-normal">1</div>
+                                    <div className=" text-hard">4</div>
+                                    <div className=" text-expert">10</div>
+                                    {music.sheet_len > 3 ? (
+                                        <div className=" text-real">2</div>
+                                    ) : (
+                                        <div className=" text-real">-</div>
+                                    )}
                                 </div>
                             </div>
                         </div>
                     </Link>
                 ))}
             </section>
-        </div>
+        </main>
     );
 }

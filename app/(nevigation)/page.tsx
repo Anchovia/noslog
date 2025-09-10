@@ -4,7 +4,7 @@ export default async function Home() {
     // 메인 섹션들 padding py-24 px-16 사용 필수
     return (
         <div className="flex flex-col">
-            <section className="py-24 px-16 flex flex-col text-center items-center justify-center bg-neutral-800">
+            <section className="py-24 px-16 flex flex-col text-center items-center justify-center bg-dark-tertiary">
                 <div className="size-20 rounded-fill overflow-hidden relative">
                     <Image src={"/logo.png"} alt="logo" fill />
                 </div>
@@ -27,7 +27,7 @@ export default async function Home() {
                     <span className="text-lg font-thin">
                         NosLog는 Kakao 소셜 로그인을 지원합니다.
                     </span>
-                    <div className="w-full max-w-lg h-60 bg-neutral-500 rounded-xl" />
+                    <div className="w-full max-w-lg h-60 bg-dark-secondary rounded-xl" />
                 </article>
                 <article className="flex flex-col items-center text-center gap-4">
                     <h3 className="text-xl font-medium">BEMANI 데이터 전송</h3>
@@ -35,7 +35,7 @@ export default async function Home() {
                         JS Console 입력을 통해 BEMANI 데이터를 NosLog로
                         전송합니다.
                     </span>
-                    <div className="w-full max-w-lg h-60 bg-neutral-500 rounded-xl" />
+                    <div className="w-full max-w-lg h-60 bg-dark-secondary rounded-xl" />
                 </article>
                 <article className="flex flex-col items-center text-center gap-4">
                     <h3 className="text-xl font-medium">
@@ -45,7 +45,7 @@ export default async function Home() {
                         악곡, 유저랭킹, 빙고 등 NosLog의 다양한 서비스를
                         이용해보세요.
                     </span>
-                    <div className="mb-24 w-full max-w-lg h-60 bg-neutral-500 rounded-xl" />
+                    <div className="mb-24 w-full max-w-lg h-60 bg-dark-secondary rounded-xl" />
                 </article>
             </section>
         </div>

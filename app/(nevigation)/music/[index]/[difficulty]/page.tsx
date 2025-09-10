@@ -51,10 +51,10 @@ export default async function MusicDetail({
 
     const diffArr: any = ["Normal", "Hard", "Expert", "Real"];
     const diffColor: any = {
-        [diffArr[0]]: "text-green-500",
-        [diffArr[1]]: "text-yellow-500",
-        [diffArr[2]]: "text-red-500",
-        [diffArr[3]]: "text-purple-500",
+        [diffArr[0]]: "text-normal",
+        [diffArr[1]]: "text-hard",
+        [diffArr[2]]: "text-expert",
+        [diffArr[3]]: "text-real",
     };
 
     const {
@@ -74,13 +74,13 @@ export default async function MusicDetail({
         <main className="p-8 flex flex-col gap-6">
             {/* 카테고리, 리사이틀 버튼 */}
             <section className="flex justify-between">
-                <article className="px-3 py-1 bg-neutral-800 rounded-full">
+                <article className="px-3 py-1 bg-dark-secondary rounded-full">
                     {music?.category}
                 </article>
                 <article className="flex text-lg items-center gap-2">
                     <span>Recital</span>
-                    <div className="flex w-10 h-6 rounded-full bg-neutral-700 items-center justify-end px-1">
-                        <div className="size-4 bg-white rounded-full" />
+                    <div className="flex w-10 h-6 rounded-full bg-dark-tertiary items-center justify-end px-1">
+                        <div className="size-4 bg-white-secondary rounded-full" />
                     </div>
                 </article>
             </section>
@@ -89,7 +89,10 @@ export default async function MusicDetail({
                 {/* 자켓, 제목, 아티스트 */}
                 <article className="flex items-center gap-6">
                     <div
-                        style={{ backgroundImage: getPublic(music!.index) }}
+                        style={{
+                            backgroundImage: getPublic(music!.index),
+                            backgroundSize: "cover",
+                        }}
                         className="size-24 aspect-square border border-white/50"
                     />
                     <div className="flex flex-col">
@@ -107,7 +110,7 @@ export default async function MusicDetail({
                     </span>
                 </article>
             </section>
-            <div className="border border-neutral-800" />
+            <div className="border border-dark-secondary" />
             {/* 난이도 링크 */}
             <section className="flex justify-between">
                 {diffArr.map((diff: any, idx: number) => (
@@ -116,12 +119,11 @@ export default async function MusicDetail({
                         href={`/music/${params.index}/${diff}`}
                         className={`w-24 h-32 flex flex-col items-center gap-2 ${
                             params.difficulty === diff
-                                ? "border-b-4 border-neutral-700"
+                                ? "border-b-4 border-dark-tertiary"
                                 : null
                         }`}
                     >
                         <Image
-                            className="border-none"
                             src={
                                 "https://p.eagate.573.jp/game/nostalgia/op3/img/pdata/music_data/grade/grade_fc_bg.png"
                             }
@@ -142,11 +144,11 @@ export default async function MusicDetail({
                     </Link>
                 ))}
             </section>
-            <div className="border border-neutral-800" />
+            <div className="border border-dark-secondary" />
             {/* 플레이어 데이터 */}
             <section className="flex flex-col items-center gap-6">
                 <h1 className="text-2xl">플레이데이터</h1>
-                <article className="flex w-full justify-between items-center gap-8 *:rounded-2xl *:w-full *:aspect-square *:bg-neutral-800 *:flex *:flex-col *:items-center *:justify-center text-lg font-semibold">
+                <article className="flex w-full justify-between items-center gap-4 *:rounded-2xl *:w-full *:aspect-square *:bg-dark-secondary *:flex *:flex-col *:items-center *:justify-center text-lg font-semibold">
                     <div>
                         <span>스코어</span>
                         <span>
@@ -169,7 +171,7 @@ export default async function MusicDetail({
                     </div>
                 </article>
             </section>
-            <div className="border border-neutral-800" />
+            <div className="border border-dark-secondary" />
             {/* 랭킹 */}
             <section className="flex flex-col items-center gap-6">
                 <h1 className="text-2xl">랭킹</h1>

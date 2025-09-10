@@ -15,19 +15,21 @@ export default async function Profile() {
             {user?.username ? (
                 <div className="px-8 py-4 flex flex-col gap-4">
                     <section className="flex flex-col gap-4">
-                        <article className="flex items-center">
-                            <h1 className="text-xl text-neutral-400 font-light">
+                        <article className="flex items-center justify-between">
+                            <h1 className="text-xl text-white-secondary font-light">
                                 <span className="text-white font-normal">
                                     {user.username}
                                 </span>
                                 의 프로필
                             </h1>
+                            <div className="flex gap-2">
+                                <span>Recital</span>
+                                <div className="flex w-10 h-6 rounded-full bg-dark-tertiary items-center justify-end px-1">
+                                    <div className="size-4 bg-white-secondary rounded-full" />
+                                </div>
+                            </div>
                         </article>
-                        <article className="flex gap-4 *:px-5 *:py-1 *:bg-neutral-700 *:rounded-2xl">
-                            <button>Basic</button>
-                            <button>Recital</button>
-                        </article>
-                        <article className="flex bg-neutral-700 rounded-t-xl p-4 gap-4">
+                        <article className="flex bg-dark-tertiary rounded-t-xl p-4 gap-4">
                             <div className="size-24 rounded-3xl relative overflow-hidden">
                                 {user.avatar ? (
                                     <Image
@@ -57,19 +59,25 @@ export default async function Profile() {
                                 )}`}</span>
                             </div>
                         </article>
-                        <article className="-mt-4 flex flex-col gap-2 bg-neutral-800 p-4 rounded-b-xl">
-                            <h2 className="text-xl font-medium">ME</h2>
-                            <hr className="border border-neutral-700" />
-                            <p>hello, everyone</p>
-                            <p>I'm a NosLog developer.</p>
-                            <p>Nice to meet you!</p>
+                        <article className="-mt-4 flex flex-col text-sm gap-2 bg-dark-secondary p-4 rounded-b-xl">
+                            <h2 className="text-xl font-medium">소셜</h2>
+                            <div className="border border-neutral-700" />
+                            <div className="flex gap-2">
+                                <Image
+                                    src={"/icon/discord.png"}
+                                    alt={"discord"}
+                                    width={24}
+                                    height={20}
+                                />
+                                <span>Carol #1234</span>
+                            </div>
                         </article>
                     </section>
                     <section className="flex flex-col">
-                        <article className="p-4 text-center bg-neutral-800 text-md rounded-t-xl">
+                        <article className="p-4 text-center bg-dark-tertiary text-md rounded-t-xl">
                             통계
                         </article>
-                        <article className="flex p-4 justify-between *:flex *:flex-col bg-neutral-900 *:text-center">
+                        <article className="flex p-4 justify-between *:flex *:flex-col bg-dark-secondary *:text-center">
                             <div>
                                 <span>세계 순위</span>
                                 <span className="font-semibold">{`#${formatToComma(
@@ -89,14 +97,14 @@ export default async function Profile() {
                                 </span>
                             </div>
                         </article>
-                        <article className="flex flex-col p-4 bg-neutral-900/50 rounded-b-xl gap-4">
-                            <span className="p-4 bg-neutral-950 rounded-xl">
+                        <article className="flex flex-col p-4 bg-dark-secondary/50 rounded-b-xl gap-4">
+                            <span className="p-4 bg-dark-primary rounded-xl">
                                 플레이 횟수{" "}
                                 <span className="font-semibold">
                                     {formatToComma(user.play_count)}
                                 </span>
                             </span>
-                            <span className="p-4 flex bg-neutral-950 rounded-xl justify-between text-sm">
+                            <span className="p-4 flex bg-dark-primary rounded-xl justify-between text-sm">
                                 <div className="flex gap-2 items-center">
                                     <div className="flex size-6 rounded-full bg-neutral-500 items-center justify-center">
                                         P

@@ -6,13 +6,31 @@ export default async function Header() {
     const user = await getUser();
 
     return (
-        <header className="w-full h-20 flex bg-black text-white items-center px-6 *:text-neutral-500">
-            <div className="flex flex-1 gap-4">
-                <Link href="/">메인</Link>
-                <Link href="/music">악곡</Link>
-                <Link href="/ranking">랭킹</Link>
-                <Link href="/bingo">빙고</Link>
-                <Link href="/event">이벤트</Link>
+        <header className="w-full h-20 flex bg-dark-secondary text-white items-center px-6 *:text-neutral-500">
+            <div className="flex flex-1 gap-8 *:relative *:size-8">
+                <Link href="/">
+                    <Image src={"/icon/home.png"} alt={"home"} fill />
+                </Link>
+                <Link href="/music">
+                    <Image src={"/icon/music.png"} alt={"music"} fill />
+                </Link>
+                <Link href="/ranking">
+                    <Image
+                        src={"/icon/leaderBoard.png"}
+                        alt={"leaderBoard"}
+                        fill
+                    />
+                </Link>
+                <Link href="/bingo">
+                    <Image src={"/icon/checkBox.png"} alt={"checkBox"} fill />
+                </Link>
+                <Link href="/event">
+                    <Image
+                        src={"/icon/celebration.png"}
+                        alt={"celebration"}
+                        fill
+                    />
+                </Link>
             </div>
             {user ? (
                 <Link
