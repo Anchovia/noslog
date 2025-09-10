@@ -132,7 +132,7 @@ export default async function Profile() {
                     </section>
                 </div>
             ) : (
-                redirect("/profile/settings")
+                redirect("/profile/setting")
             )}
         </>
     );

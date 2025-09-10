@@ -12,6 +12,7 @@ export async function updateMusic(music: any) {
         if (data.description === "") {
             data.description = null;
         }
+        console.log(data);
 
         // idx와 BG가 있는지 검증
         const music = await db.music.findUnique({
@@ -21,6 +22,11 @@ export async function updateMusic(music: any) {
         if (!music) {
             console.warn(`새 악곡 데이터 감지: ${data.title}`);
             console.info("새 악곡 데이터 생성 중...");
+            const difficulty_levels: any[] = [];
+            data.sheet.map((sheet: any) => {
+                difficulty_levels.push(sheet.level);
+            });
+
             // idx가 없을 경우 music create
             const resultMusic = await db.music.create({
                 data: {
@@ -32,6 +38,7 @@ export async function updateMusic(music: any) {
                     title: data.title,
                     title_kana: data.title_kana,
                     sheet_len: data.sheet.length,
+                    difficulty_levels: difficulty_levels.toString(),
                 },
             });
 

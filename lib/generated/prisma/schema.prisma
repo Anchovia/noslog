@@ -13,40 +13,58 @@ model User {
   username             String?      @unique
   kakao_id             BigInt?      @unique
   avatar               String?
-  country              String?
+  country              String       @default("ko-KR")
   rank_basic           Int?
   rank_recital         Int?
   rank_basic_country   Int?
   rank_recital_country Int?
   play_count           Int?
+  // 후에 score Int[]로 변경 필요(postgresql 기준)
   score_p              Int?
   score_s              Int?
   score_a2             Int?
   score_a              Int?
   score_b2             Int?
+  role                 String       @default("user")
   grade_basic          Int?
   grade_recital        Int?
   created_at           DateTime     @default(now())
   updated_at           DateTime     @updatedAt
   PlayHistory          RecentPlay[]
   PlayData             PlayData[]
+  Bookmark             Bookmark[]
+}
+
+model Bookmark {
+  id         Int      @id @default(autoincrement())
+  user_id    Int
+  music_id   Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  user       User     @relation(fields: [user_id], references: [id])
+  music      Music    @relation(fields: [music_id], references: [id])
+
+  @@unique([user_id, music_id])
 }
 
 model Music {
-  id             Int          @id @default(autoincrement())
-  index          String       @unique
-  title          String
-  title_kana     String
-  artist         String?
-  category       String
-  category_short String
-  description    String?
-  background     String?
-  sheet_len      Int
-  created_at     DateTime     @default(now())
-  updated_at     DateTime     @updatedAt
-  RecentPlay     RecentPlay[]
-  PlayData       PlayData[]
+  id                Int      @id @default(autoincrement())
+  index             String   @unique
+  title             String
+  title_kana        String
+  artist            String?
+  category          String
+  category_short    String
+  description       String?
+  background        String? // 변수명 jacket으로 변경 필요
+  sheet_len         Int // 변수명 difficulty_len으로 변경 필요
+  difficulty_levels String // 차후에 difficulty_levels Int[]로 변경 필요(postgresql 기준), [1, 4, 10, 1] 이런식임.
+  created_at        DateTime @default(now())
+  updated_at        DateTime @updatedAt
+
+  RecentPlay RecentPlay[]
+  PlayData   PlayData[]
+  Bookmark   Bookmark[]
 }
 
 model RecentPlay {
