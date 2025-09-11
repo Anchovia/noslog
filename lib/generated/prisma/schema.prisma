@@ -12,6 +12,8 @@ model User {
   id                   Int          @id @default(autoincrement())
   username             String?      @unique
   kakao_id             BigInt?      @unique
+  discord_name         String?      @unique
+  discord_tag          String?      @unique
   avatar               String?
   country              String       @default("ko-KR")
   rank_basic           Int?
@@ -28,7 +30,6 @@ model User {
   role                 String       @default("user")
   grade_basic          Int?
   grade_recital        Int?
-  discord_tag          String?      @unique
   created_at           DateTime     @default(now())
   updated_at           DateTime     @updatedAt
   PlayHistory          RecentPlay[]

@@ -17,6 +17,8 @@ export default async function RecitalProfile({
             id,
         },
         select: {
+            discord_name: true,
+            discord_tag: true,
             username: true,
             avatar: true,
             country: true,
@@ -49,6 +51,8 @@ export default async function RecitalProfile({
                     score_a={user.score_a}
                     score_b2={user.score_b2}
                     isRecital={true}
+                    discord_name={user.discord_name}
+                    discord_tag={user.discord_tag}
                 />
             ) : (
                 redirect(`/profile/${id}/setting`)

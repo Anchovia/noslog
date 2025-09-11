@@ -3,6 +3,8 @@ CREATE TABLE "User" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "username" TEXT,
     "kakao_id" BIGINT,
+    "discord_name" TEXT,
+    "discord_tag" TEXT,
     "avatar" TEXT,
     "country" TEXT NOT NULL DEFAULT 'ko-KR',
     "rank_basic" INTEGER,
@@ -18,7 +20,6 @@ CREATE TABLE "User" (
     "role" TEXT NOT NULL DEFAULT 'user',
     "grade_basic" INTEGER,
     "grade_recital" INTEGER,
-    "discord_tag" TEXT,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME NOT NULL
 );
@@ -96,6 +97,9 @@ CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_kakao_id_key" ON "User"("kakao_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_discord_name_key" ON "User"("discord_name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_discord_tag_key" ON "User"("discord_tag");

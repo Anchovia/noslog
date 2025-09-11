@@ -21,6 +21,8 @@ export default async function BasicProfile({
             id,
         },
         select: {
+            discord_name: true,
+            discord_tag: true,
             username: true,
             avatar: true,
             country: true,
@@ -54,9 +56,11 @@ export default async function BasicProfile({
                     score_a={user.score_a}
                     score_b2={user.score_b2}
                     isRecital={false}
+                    discord_name={user.discord_name}
+                    discord_tag={user.discord_tag}
                 />
             ) : (
-                redirect(`/profile/${id}/setting`)
+                redirect(`/profile/${id}/settings`)
             )}
         </>
     );

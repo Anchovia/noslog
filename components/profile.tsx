@@ -3,6 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 interface ProfileProps {
+    discord_name: string | null;
+    discord_tag: string | null;
     isRecital: boolean;
     id: number;
     username: string;
@@ -20,6 +22,8 @@ interface ProfileProps {
 }
 
 export default async function Profile({
+    discord_name,
+    discord_tag,
     isRecital,
     id,
     username,
@@ -38,6 +42,7 @@ export default async function Profile({
     return (
         <div className="px-8 py-4 flex flex-col gap-4">
             <section className="flex flex-col gap-4">
+                {/* 타이틀, 리사이틀 버튼 */}
                 <article className="flex items-center justify-between">
                     <h1 className="text-xl text-white-secondary font-light">
                         <span className="text-white font-normal">
@@ -67,6 +72,7 @@ export default async function Profile({
                         </Link>
                     )}
                 </article>
+                {/* 프로필, 설정 버튼*/}
                 <article className="flex bg-dark-tertiary rounded-t-xl p-4 gap-4">
                     <div className="size-24 rounded-3xl relative overflow-hidden">
                         {avatar ? (
@@ -104,6 +110,7 @@ export default async function Profile({
                         </Link>
                     </div>
                 </article>
+                {/* 소셜(디스코드) */}
                 <article className="-mt-4 flex flex-col text-sm gap-2 bg-dark-secondary p-4 rounded-b-xl">
                     <h2 className="text-xl font-medium">소셜</h2>
                     <div className="border border-neutral-700" />
@@ -114,10 +121,13 @@ export default async function Profile({
                             width={24}
                             height={20}
                         />
-                        <span>Carol #1234</span>
+                        <span>
+                            {discord_name} #{discord_tag}
+                        </span>
                     </div>
                 </article>
             </section>
+            {/* 통계 */}
             <section className="flex flex-col">
                 <article className="p-4 text-center bg-dark-tertiary text-md rounded-t-xl">
                     통계

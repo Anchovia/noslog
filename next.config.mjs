@@ -9,6 +9,9 @@ const nextConfig = {
             {
                 hostname: "p.eagate.573.jp",
             },
+            {
+                hostname: "imagedelivery.net",
+            },
             /*
             {
                 hostname: "cdn44.atwikiimg.com",
