@@ -75,7 +75,7 @@ export default async function Profile({
                             <div className="bg-neutral-500" />
                         )}
                     </div>
-                    <div className="flex flex-col justify-center gap-1">
+                    <div className="flex flex-col justify-center gap-1 flex-1">
                         <div className="flex gap-1 items-center">
                             <div className="relative w-8 h-6 rounded-full overflow-hidden">
                                 <Image
@@ -91,6 +91,17 @@ export default async function Profile({
                         <span className="text-sm text-neutral-300">{`NosLog #${formatToComma(
                             rank
                         )}`}</span>
+                    </div>
+                    <div>
+                        <Link href={`/profile/${id}/settings`}>
+                            <Image
+                                className="fle"
+                                src="/icon/gear.png"
+                                width={28}
+                                height={28}
+                                alt="setting"
+                            />
+                        </Link>
                     </div>
                 </article>
                 <article className="-mt-4 flex flex-col text-sm gap-2 bg-dark-secondary p-4 rounded-b-xl">
