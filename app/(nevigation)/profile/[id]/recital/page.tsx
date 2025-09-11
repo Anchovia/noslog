@@ -1,5 +1,6 @@
 import Profile from "@/components/profile";
 import db from "@/lib/db";
+import getSession from "@/lib/session";
 import { notFound, redirect } from "next/navigation";
 
 export default async function RecitalProfile({
@@ -12,7 +13,7 @@ export default async function RecitalProfile({
         return notFound();
     }
 
-    const user = await db.user.findUnique({
+    const userData = await db.user.findUnique({
         where: {
             id,
         },
@@ -33,29 +34,33 @@ export default async function RecitalProfile({
             score_b2: true,
         },
     });
+
+    const session = await getSession();
     return (
         <>
-            {user && user.username ? (
+            {userData && userData.username ? (
                 <Profile
                     id={id}
-                    username={user.username}
-                    avatar={user.avatar}
-                    country={user.country}
-                    rank={user.rank_recital}
-                    rank_country={user.rank_recital_country}
-                    grade={user.grade_recital}
-                    play_count={user.play_count}
-                    score_p={user.score_p}
-                    score_s={user.score_s}
-                    score_a2={user.score_a2}
-                    score_a={user.score_a}
-                    score_b2={user.score_b2}
+                    username={userData.username}
+                    avatar={userData.avatar}
+                    country={userData.country}
+                    rank={userData.rank_recital}
+                    rank_country={userData.rank_recital_country}
+                    grade={userData.grade_recital}
+                    play_count={userData.play_count}
+                    score_p={userData.score_p}
+                    score_s={userData.score_s}
+                    score_a2={userData.score_a2}
+                    score_a={userData.score_a}
+                    score_b2={userData.score_b2}
                     isRecital={true}
-                    discord_name={user.discord_name}
-                    discord_tag={user.discord_tag}
+                    discord_name={userData.discord_name}
+                    discord_tag={userData.discord_tag}
                 />
+            ) : session.id === id ? (
+                redirect(`/profile/${id}/settings`)
             ) : (
-                redirect(`/profile/${id}/setting`)
+                redirect("/")
             )}
         </>
     );

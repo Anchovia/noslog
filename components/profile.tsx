@@ -133,20 +133,20 @@ export default async function Profile({
                     통계
                 </article>
                 <article className="flex p-4 justify-between *:flex *:flex-col bg-dark-secondary *:text-center">
-                    <div>
+                    <div className="w-1/3">
                         <span>세계 순위</span>
                         <span className="font-semibold">{`#${formatToComma(
                             rank
                         )}`}</span>
                     </div>
-                    <div>
+                    <div className="w-1/3">
                         <span>국가 순위</span>
                         <span className="font-semibold">{`#${formatToComma(
                             rank_country
                         )}`}</span>
                     </div>
-                    <div>
-                        <span>Grd.</span>
+                    <div className="w-1/3">
+                        <span>Grd</span>
                         <span className="font-semibold">
                             {formatToGrade(grade)}
                         </span>

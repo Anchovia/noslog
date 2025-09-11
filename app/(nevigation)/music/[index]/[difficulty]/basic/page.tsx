@@ -1,6 +1,6 @@
 import MusicDetail from "@/components/musicDetail";
 import db from "@/lib/db";
-import getSession from "@/lib/session";
+import { getBasicUserPlayData } from "./action";
 
 export default async function BasicMusicDetail({
     params,
@@ -20,16 +20,12 @@ export default async function BasicMusicDetail({
         },
     });
 
-    const session = await getSession();
-    const userData = await db.playData.findMany({
-        where: {
-            music_idx: params.index,
-            user_id: session.id,
+    const { grade_basic, level, score, max_combo, play_count } =
+        await getBasicUserPlayData({
+            index: params.index,
             difficulty: params.difficulty,
-        },
-    });
+        });
 
-    const { grade_basic, level, score, max_combo, play_count } = userData[0];
     return (
         <>
             {music &&
@@ -47,6 +43,7 @@ export default async function BasicMusicDetail({
                     title: music.title,
                     sheet_len: music.sheet_len,
                     difficulty_levels: music.difficulty_levels,
+                    background: music.background,
                 })}
         </>
     );

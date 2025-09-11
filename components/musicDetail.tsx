@@ -6,13 +6,13 @@ interface MusicDetailProps {
     isRecital: boolean;
     category: string;
     index: string;
-    grade: number;
+    grade: number | null;
     title: string;
     artist: string | null;
-    level: number;
-    score: number;
-    max_combo: number;
-    play_count: number;
+    level: number | null;
+    score: number | null;
+    max_combo: number | null;
+    play_count: number | null;
     difficulty: string;
     sheet_len: number;
     difficulty_levels: string;
@@ -100,9 +100,9 @@ export default function MusicDetail({
                 </article>
                 {/* 그레이드 */}
                 <article className="flex flex-col items-center">
-                    <span className="text-lg">Grd.</span>
+                    <span className="text-lg">Grd</span>
                     <span className="text-xl font-bold">
-                        {formatToGrade(grade)}
+                        {grade ? formatToGrade(grade) : "-"}
                     </span>
                 </article>
             </section>

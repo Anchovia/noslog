@@ -22,7 +22,7 @@ export default async function Header() {
                     />
                 </Link>
                 <Link href="/bingo">
-                    <Image src={"/icon/checkBox.png"} alt={"checkBox"} fill />
+                    <Image src={"/icon/bingo.png"} alt={"bingo"} fill />
                 </Link>
                 <Link href="/event">
                     <Image

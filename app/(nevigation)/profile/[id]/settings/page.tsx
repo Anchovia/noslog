@@ -72,68 +72,70 @@ export default function ProfileSettings() {
         await onSubmit();
     };
     return (
-        <form
-            action={onValid}
-            className="h-screen w-screen flex flex-col items-center justify-center max-w-sm mx-auto gap-3"
-        >
-            {/* 아바타 업로드 */}
-            <label
-                className="size-24 border border-dark-tertiary rounded-full"
-                htmlFor="avatar"
-                style={{
-                    backgroundImage: `url(${preview})`,
-                }}
+        <main className="w-screen flex items-center justify-center py-14">
+            <form
+                action={onValid}
+                className="p-8 flex flex-col items-center justify-center max-w-sm bg-dark-secondary/40 rounded-2xl gap-2"
             >
-                {preview === "" ? (
-                    <>
-                        <div className="size-24 border border-dark-tertiary rounded-full" />
-                    </>
-                ) : null}
-            </label>
-            <input
-                onChange={onImageChange}
-                type="file"
-                id="avatar"
-                name="avatar"
-                className="hidden"
-            />
-            {/* 닉네임 */}
-            <div className="flex flex-col gap-1">
-                <label className="text-sm" htmlFor="username">
-                    닉네임
+                {/* 아바타 업로드 */}
+                <label
+                    className="size-24 border border-dark-tertiary rounded-full"
+                    htmlFor="avatar"
+                    style={{
+                        backgroundImage: `url(${preview})`,
+                    }}
+                >
+                    {preview === "" ? (
+                        <>
+                            <div className="size-24 border border-dark-tertiary rounded-full" />
+                        </>
+                    ) : null}
                 </label>
-                <Input
-                    placeholder="닉네임"
-                    type="text"
-                    required
-                    {...register("username")}
-                    errors={[errors.username?.message ?? ""]}
+                <input
+                    onChange={onImageChange}
+                    type="file"
+                    id="avatar"
+                    name="avatar"
+                    className="hidden"
                 />
-            </div>
-            {/* 디스코드 이름, 태그 */}
-            <div className="flex flex-col gap-1">
-                <label className="text-sm" htmlFor="discord_name">
-                    디스코드 이름
-                </label>
-                <Input
-                    placeholder="디스코드 이름"
-                    type="text"
-                    required
-                    {...register("discord_name")}
-                    errors={[errors.discord_name?.message ?? ""]}
-                />
-                <label className="text-sm" htmlFor="discord_tag">
-                    디스코드 태그
-                </label>
-                <Input
-                    placeholder="디스코드 태그"
-                    type="text"
-                    required
-                    {...register("discord_tag")}
-                    errors={[errors.discord_tag?.message ?? ""]}
-                />
-            </div>
-            <Button text="업데이트" />
-        </form>
+                {/* 닉네임 */}
+                <div className="flex flex-col gap-1">
+                    <label className="text-sm" htmlFor="username">
+                        닉네임
+                    </label>
+                    <Input
+                        placeholder="닉네임"
+                        type="text"
+                        required
+                        {...register("username")}
+                        errors={[errors.username?.message ?? ""]}
+                    />
+                </div>
+                {/* 디스코드 이름, 태그 */}
+                <div className="flex flex-col gap-1">
+                    <label className="text-sm" htmlFor="discord_name">
+                        디스코드 이름
+                    </label>
+                    <Input
+                        placeholder="디스코드 이름"
+                        type="text"
+                        required
+                        {...register("discord_name")}
+                        errors={[errors.discord_name?.message ?? ""]}
+                    />
+                    <label className="text-sm" htmlFor="discord_tag">
+                        디스코드 태그
+                    </label>
+                    <Input
+                        placeholder="디스코드 태그"
+                        type="text"
+                        required
+                        {...register("discord_tag")}
+                        errors={[errors.discord_tag?.message ?? ""]}
+                    />
+                </div>
+                <Button text="업데이트" />
+            </form>
+        </main>
     );
 }
