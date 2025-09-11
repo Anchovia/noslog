@@ -1,4 +1,4 @@
-import { formatToComma, formatToGrade, getPublic } from "@/lib/utils";
+import { formatToComma, formatToGrade } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -16,6 +16,7 @@ interface MusicDetailProps {
     difficulty: string;
     sheet_len: number;
     difficulty_levels: string;
+    background: string | null;
 }
 
 export default function MusicDetail({
@@ -25,7 +26,7 @@ export default function MusicDetail({
     grade,
     title,
     artist,
-    level,
+    background,
     score,
     max_combo,
     play_count,
@@ -81,7 +82,11 @@ export default function MusicDetail({
                 <article className="flex items-center gap-6">
                     <div
                         style={{
-                            backgroundImage: getPublic(index),
+                            backgroundImage: `${
+                                background
+                                    ? `url(${background})`
+                                    : `url(https://p.eagate.573.jp/game/nostalgia/op3/img/jacket.html?c=${index})`
+                            }`,
                             backgroundSize: "cover",
                         }}
                         className="size-24 aspect-square border border-white/50"

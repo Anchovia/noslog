@@ -1382,6 +1382,7 @@ export namespace Prisma {
     role: string | null
     grade_basic: number | null
     grade_recital: number | null
+    discord_tag: string | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -1405,6 +1406,7 @@ export namespace Prisma {
     role: string | null
     grade_basic: number | null
     grade_recital: number | null
+    discord_tag: string | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -1428,6 +1430,7 @@ export namespace Prisma {
     role: number
     grade_basic: number
     grade_recital: number
+    discord_tag: number
     created_at: number
     updated_at: number
     _all: number
@@ -1487,6 +1490,7 @@ export namespace Prisma {
     role?: true
     grade_basic?: true
     grade_recital?: true
+    discord_tag?: true
     created_at?: true
     updated_at?: true
   }
@@ -1510,6 +1514,7 @@ export namespace Prisma {
     role?: true
     grade_basic?: true
     grade_recital?: true
+    discord_tag?: true
     created_at?: true
     updated_at?: true
   }
@@ -1533,6 +1538,7 @@ export namespace Prisma {
     role?: true
     grade_basic?: true
     grade_recital?: true
+    discord_tag?: true
     created_at?: true
     updated_at?: true
     _all?: true
@@ -1643,6 +1649,7 @@ export namespace Prisma {
     role: string
     grade_basic: number | null
     grade_recital: number | null
+    discord_tag: string | null
     created_at: Date
     updated_at: Date
     _count: UserCountAggregateOutputType | null
@@ -1685,6 +1692,7 @@ export namespace Prisma {
     role?: boolean
     grade_basic?: boolean
     grade_recital?: boolean
+    discord_tag?: boolean
     created_at?: boolean
     updated_at?: boolean
     PlayHistory?: boolean | User$PlayHistoryArgs<ExtArgs>
@@ -1712,6 +1720,7 @@ export namespace Prisma {
     role?: boolean
     grade_basic?: boolean
     grade_recital?: boolean
+    discord_tag?: boolean
     created_at?: boolean
     updated_at?: boolean
   }, ExtArgs["result"]["user"]>
@@ -1735,6 +1744,7 @@ export namespace Prisma {
     role?: boolean
     grade_basic?: boolean
     grade_recital?: boolean
+    discord_tag?: boolean
     created_at?: boolean
     updated_at?: boolean
   }, ExtArgs["result"]["user"]>
@@ -1758,11 +1768,12 @@ export namespace Prisma {
     role?: boolean
     grade_basic?: boolean
     grade_recital?: boolean
+    discord_tag?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "kakao_id" | "avatar" | "country" | "rank_basic" | "rank_recital" | "rank_basic_country" | "rank_recital_country" | "play_count" | "score_p" | "score_s" | "score_a2" | "score_a" | "score_b2" | "role" | "grade_basic" | "grade_recital" | "created_at" | "updated_at", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "kakao_id" | "avatar" | "country" | "rank_basic" | "rank_recital" | "rank_basic_country" | "rank_recital_country" | "play_count" | "score_p" | "score_s" | "score_a2" | "score_a" | "score_b2" | "role" | "grade_basic" | "grade_recital" | "discord_tag" | "created_at" | "updated_at", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     PlayHistory?: boolean | User$PlayHistoryArgs<ExtArgs>
     PlayData?: boolean | User$PlayDataArgs<ExtArgs>
@@ -1798,6 +1809,7 @@ export namespace Prisma {
       role: string
       grade_basic: number | null
       grade_recital: number | null
+      discord_tag: string | null
       created_at: Date
       updated_at: Date
     }, ExtArgs["result"]["user"]>
@@ -2244,6 +2256,7 @@ export namespace Prisma {
     readonly role: FieldRef<"User", 'String'>
     readonly grade_basic: FieldRef<"User", 'Int'>
     readonly grade_recital: FieldRef<"User", 'Int'>
+    readonly discord_tag: FieldRef<"User", 'String'>
     readonly created_at: FieldRef<"User", 'DateTime'>
     readonly updated_at: FieldRef<"User", 'DateTime'>
   }
@@ -7610,6 +7623,7 @@ export namespace Prisma {
     role: 'role',
     grade_basic: 'grade_basic',
     grade_recital: 'grade_recital',
+    discord_tag: 'discord_tag',
     created_at: 'created_at',
     updated_at: 'updated_at'
   };
@@ -7768,6 +7782,7 @@ export namespace Prisma {
     role?: StringFilter<"User"> | string
     grade_basic?: IntNullableFilter<"User"> | number | null
     grade_recital?: IntNullableFilter<"User"> | number | null
+    discord_tag?: StringNullableFilter<"User"> | string | null
     created_at?: DateTimeFilter<"User"> | Date | string
     updated_at?: DateTimeFilter<"User"> | Date | string
     PlayHistory?: RecentPlayListRelationFilter
@@ -7794,6 +7809,7 @@ export namespace Prisma {
     role?: SortOrder
     grade_basic?: SortOrderInput | SortOrder
     grade_recital?: SortOrderInput | SortOrder
+    discord_tag?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     PlayHistory?: RecentPlayOrderByRelationAggregateInput
@@ -7805,6 +7821,7 @@ export namespace Prisma {
     id?: number
     username?: string
     kakao_id?: bigint | number
+    discord_tag?: string
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
@@ -7828,7 +7845,7 @@ export namespace Prisma {
     PlayHistory?: RecentPlayListRelationFilter
     PlayData?: PlayDataListRelationFilter
     Bookmark?: BookmarkListRelationFilter
-  }, "id" | "username" | "kakao_id">
+  }, "id" | "username" | "kakao_id" | "discord_tag">
 
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
@@ -7849,6 +7866,7 @@ export namespace Prisma {
     role?: SortOrder
     grade_basic?: SortOrderInput | SortOrder
     grade_recital?: SortOrderInput | SortOrder
+    discord_tag?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     _count?: UserCountOrderByAggregateInput
@@ -7880,6 +7898,7 @@ export namespace Prisma {
     role?: StringWithAggregatesFilter<"User"> | string
     grade_basic?: IntNullableWithAggregatesFilter<"User"> | number | null
     grade_recital?: IntNullableWithAggregatesFilter<"User"> | number | null
+    discord_tag?: StringNullableWithAggregatesFilter<"User"> | string | null
     created_at?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
@@ -8276,6 +8295,7 @@ export namespace Prisma {
     role?: string
     grade_basic?: number | null
     grade_recital?: number | null
+    discord_tag?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
@@ -8302,6 +8322,7 @@ export namespace Prisma {
     role?: string
     grade_basic?: number | null
     grade_recital?: number | null
+    discord_tag?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
@@ -8327,6 +8348,7 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
@@ -8353,6 +8375,7 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
@@ -8379,6 +8402,7 @@ export namespace Prisma {
     role?: string
     grade_basic?: number | null
     grade_recital?: number | null
+    discord_tag?: string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -8401,6 +8425,7 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -8424,6 +8449,7 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -8954,6 +8980,7 @@ export namespace Prisma {
     role?: SortOrder
     grade_basic?: SortOrder
     grade_recital?: SortOrder
+    discord_tag?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -8994,6 +9021,7 @@ export namespace Prisma {
     role?: SortOrder
     grade_basic?: SortOrder
     grade_recital?: SortOrder
+    discord_tag?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -9017,6 +9045,7 @@ export namespace Prisma {
     role?: SortOrder
     grade_basic?: SortOrder
     grade_recital?: SortOrder
+    discord_tag?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -10170,6 +10199,7 @@ export namespace Prisma {
     role?: string
     grade_basic?: number | null
     grade_recital?: number | null
+    discord_tag?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
@@ -10195,6 +10225,7 @@ export namespace Prisma {
     role?: string
     grade_basic?: number | null
     grade_recital?: number | null
+    discord_tag?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
@@ -10275,6 +10306,7 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
@@ -10300,6 +10332,7 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
@@ -10520,6 +10553,7 @@ export namespace Prisma {
     role?: string
     grade_basic?: number | null
     grade_recital?: number | null
+    discord_tag?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     PlayData?: PlayDataCreateNestedManyWithoutUserInput
@@ -10545,6 +10579,7 @@ export namespace Prisma {
     role?: string
     grade_basic?: number | null
     grade_recital?: number | null
+    discord_tag?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutUserInput
@@ -10625,6 +10660,7 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayData?: PlayDataUpdateManyWithoutUserNestedInput
@@ -10650,6 +10686,7 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayData?: PlayDataUncheckedUpdateManyWithoutUserNestedInput
@@ -10720,6 +10757,7 @@ export namespace Prisma {
     role?: string
     grade_basic?: number | null
     grade_recital?: number | null
+    discord_tag?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
@@ -10745,6 +10783,7 @@ export namespace Prisma {
     role?: string
     grade_basic?: number | null
     grade_recital?: number | null
+    discord_tag?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
@@ -10825,6 +10864,7 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
@@ -10850,6 +10890,7 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
