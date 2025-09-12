@@ -40,7 +40,7 @@ export default async function Profile({
     score_b2,
 }: ProfileProps) {
     return (
-        <div className="px-8 py-4 flex flex-col gap-4">
+        <div className="px-8 py-4 max-w-screen-sm mx-auto flex flex-col gap-4">
             <section className="flex flex-col gap-4">
                 {/* 타이틀, 리사이틀 버튼 */}
                 <article className="flex items-center justify-between">

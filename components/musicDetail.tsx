@@ -48,7 +48,7 @@ export default function MusicDetail({
         .map((level) => level.trim());
 
     return (
-        <main className="p-8 flex flex-col gap-6">
+        <main className="max-w-screen-sm mx-auto p-8 flex flex-col gap-6">
             {/* 카테고리, 리사이틀 버튼 */}
             <section className="flex justify-between">
                 <article className="px-3 py-1 bg-dark-secondary rounded-full">
@@ -205,6 +205,11 @@ export default function MusicDetail({
             {/* 랭킹 */}
             <section className="flex flex-col items-center gap-6">
                 <h1 className="text-2xl">랭킹</h1>
+                <tr>
+                    <th className="text-left">국가</th>
+                    <th className="text-left">그레이드</th>
+                    <th className="text-left">랭킹</th>
+                </tr>
             </section>
         </main>
     );

@@ -59,7 +59,7 @@ export default function MusicList({ initialMusics }: MusicListProps) {
     }, [page]);
 
     return (
-        <main className="w-full h-full">
+        <main className="max-w-screen-sm mx-auto h-full">
             <section className="px-6 py-4">
                 <form className="p-2 flex items-center justify-center gap-2  bg-dark-secondary rounded-lg">
                     <Image
@@ -80,7 +80,7 @@ export default function MusicList({ initialMusics }: MusicListProps) {
                     />
                 </form>
             </section>
-            <section className="px-6 flex flex-col mx-auto items-center gap-2 w-full h-full max-w-lg">
+            <section className="px-6 flex flex-col items-center gap-2 w-full h-full">
                 {musics.map((music) => (
                     <MusicCard key={music.index} {...music} />
                 ))}
