@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
         recentData.status === 0 &&
         totalData.status === 0
     ) {
-        console.info("--[BEMANI 데이터 수신 완료]--");
+        console.info("===[BEMANI 데이터 수신 완료]===");
     } else {
         return new NextResponse(
             JSON.stringify({ message: "[BEMANI 데이터 수신 실패]" }),
@@ -47,21 +47,15 @@ export async function POST(request: NextRequest) {
         );
     }
 
-    // music 데이터 업데이트
-    await updateMusic(music);
-    // 유저 플레이 카운트 업데이트 및 user 객체(id 포함) 반환
-    const user = await updatePlayCount(name, play_count);
-    // 최근 플레이 히스토리 업데이트
-    await updateRecentPlay(user, history);
+    await updateMusic(music); // music 데이터 업데이트
+    const user = await updatePlayCount(name, play_count); // 유저 플레이 카운트 업데이트[user 객체(id 포함) 반환]
+    await updateRecentPlay(user, history); // 최근 플레이 히스토리 업데이트
+    await updatePlayData(user, music); // 플레이 데이터 업데이트
+    // 이거는 그냥 임시로 남겨두겠음.
+    await updateGrade(user); // 그레이드 업데이트
+    // todo: 이거는 개선작업 해야함.
+    await updateRank(user); // 랭킹 업데이트
 
-    // todo 아래부터 또 개선작업 해야함.
-
-    // 플레이 데이터 업데이트
-    await updatePlayData(user, music);
-    // 그레이드 업데이트
-    await updateGrade(user);
-    // 랭킹 업데이트
-    await updateRank(user);
     // 성공
     return new NextResponse(
         JSON.stringify({ message: "BEMANI 데이터 처리 성공" }),

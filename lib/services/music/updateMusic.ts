@@ -23,16 +23,15 @@ export async function updateMusic(music: any) {
 
     const newMusicData: any[] = []; // 새로 생성할 음악 데이터 list
     const bgUpdatePromises: Promise<any>[] = []; // 배경 업데이트 프로미스 list
-    console.info(`기존 악곡 데이터 조회 성공 (${existingMusic.length}개)`);
+    console.info(`(1)기존 악곡 데이터 조회 성공(${existingMusic.length}개)`);
 
-    console.info("악곡 데이터 처리 시작...");
     for (const data of music) {
         const index = data["@index"];
 
         // set과 has를 사용하여 O(1) 검사
         // music이 없는 경우 신규 music list에 push
         if (!existingIndexes.has(index)) {
-            console.warn(`새 악곡 데이터 감지: ${data.title}`);
+            console.warn(`(2)새 악곡 데이터 감지: ${data.title}`);
 
             // 난이도 레벨 배열 생성
             const difficulty_levels = data.sheet.map(
@@ -54,7 +53,7 @@ export async function updateMusic(music: any) {
             });
         } else if (musicWithoutBG.has(index) && musicBG[index]) {
             // 업데이트가 필요한 기존 악곡의 신규 BG 데이터 처리
-            console.warn(`기존 악곡 신규 BG 데이터 감지: ${data.title}`);
+            console.warn(`(3)기존 악곡 신규 BG 데이터 감지: ${data.title}`);
 
             // BG promise 리스트에 update Promise 추가
             bgUpdatePromises.push(
@@ -65,9 +64,8 @@ export async function updateMusic(music: any) {
             );
         }
     }
-    console.info("악곡 데이터 처리 완료");
+    console.info("(4)악곡 데이터 처리 완료");
 
-    console.info("신규 악곡 데이터 생성 및 BG 업데이트 시작...");
     // music 데이터 생성 및 BG 업데이트 병렬 실행
     await Promise.allSettled([
         // 새 음악 생성(createMany)
@@ -80,16 +78,16 @@ export async function updateMusic(music: any) {
 
     // 결과 출력
     if (newMusicData.length > 0) {
-        console.info(`새 악곡 데이터 생성 완료 (${newMusicData.length}개)`);
+        console.info(`(5)새 악곡 데이터 생성 완료 (${newMusicData.length}개)`);
     }
     if (bgUpdatePromises.length > 0) {
         console.info(
-            `기존 악곡 BG 업데이트 완료 (${bgUpdatePromises.length}개)`
+            `(6)기존 악곡 BG 업데이트 완료 (${bgUpdatePromises.length}개)`
         );
     }
     const duration = Date.now() - startTime; // 종료 시간
 
     console.info(
-        `--[신규 악곡 데이터 생성 및 BG 업데이트 완료(${duration}ms)]--`
+        `===[신규 악곡 데이터 생성 및 BG 업데이트 성공(${duration}ms)]===`
     );
 }

@@ -1,8 +1,9 @@
 import db from "@/lib/db";
 
 export async function updateRank(user: any) {
+    const startTime = Date.now(); // 시작 시간
+
     // 랭킹 업데이트
-    console.info("랭킹 업데이트 시작...");
     // todo: 중복처리 해야함
     // todo2: 국가별 랭킹도 추후에?
     // user 테이블에 rank(랭킹) 업데이트(그레이드 순으로 제작)
@@ -61,4 +62,7 @@ export async function updateRank(user: any) {
         }
     });
     console.info("리사이틀 랭킹 업데이트 완료");
+
+    const duration = Date.now() - startTime;
+    console.info(`==[랭킹 업데이트 성공(${duration}ms)]==`);
 }
