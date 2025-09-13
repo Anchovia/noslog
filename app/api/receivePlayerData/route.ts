@@ -50,9 +50,9 @@ export async function POST(request: NextRequest) {
     // db 업데이트
     await updateMusic(music); // music 데이터 업데이트
     const user = await updatePlayCount(name, play_count); // 유저 플레이 카운트 업데이트[user 객체(id 포함) 반환]
-    await updateRecentPlay(user, history); // 최근 플레이 히스토리 업데이트
-    await updatePlayData(user, music); // 플레이 데이터 업데이트
-    await updateGrade(user); // 그레이드 업데이트 << 필요하면 리팩토링 해야할지도 ??
+    await updateRecentPlay(user.id, history); // 최근 플레이 히스토리 업데이트
+    await updatePlayData(user.id, music); // 플레이 데이터 업데이트
+    await updateGrade(user.id); // 유저 그레이드 및 베스트 플레이 데이터 업데이트
     await updateRank(); // 랭킹 업데이트
 
     // 성공

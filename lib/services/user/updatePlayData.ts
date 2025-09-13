@@ -1,21 +1,27 @@
 import db from "@/lib/db";
 
-export async function updatePlayData(user: any, music: any) {
+export async function updatePlayData(user_id: number, music: any) {
     const startTime = Date.now(); // 시작 시간
     // 전체 playData 삭제
     const deleteResult = await db.playData.deleteMany({
-        where: { user_id: user.id },
+        where: { user_id },
     });
     if (deleteResult) {
         console.info("(1)기존 플레이 데이터 삭제 완료");
         const newPlayData: any = []; // 새로 생성할 playData 배열
         const score = {
             P: 0,
+            F: 0,
             S: 0,
             A2: 0,
             A: 0,
             B2: 0,
+            B: 0,
+            C: 0,
+            D: 0,
         }; // 클리어 랭크 저장 변수
+
+        const isFC: { [key: string]: string } = { 2: "F" };
 
         for (const data of music) {
             for (const sheet of data.sheet) {
@@ -23,9 +29,12 @@ export async function updatePlayData(user: any, music: any) {
                 if (sheet.rank in score) {
                     score[sheet.rank as keyof typeof score]++;
                 }
+                if (isFC[sheet.fc_type as keyof typeof score] in score) {
+                    score["F"]++;
+                }
                 // 새 playData 객체 생성 및 배열에 push
                 newPlayData.push({
-                    user_id: user.id,
+                    user_id,
                     music_idx: data["@index"],
                     level: sheet.level,
                     difficulty: sheet.difficulty,
@@ -49,13 +58,17 @@ export async function updatePlayData(user: any, music: any) {
         console.info(`(2)새 플레이 데이터 생성 완료(${newPlayData.length}개)`);
         // 클리어 랭크 유저 데이터 업데이트
         await db.user.update({
-            where: { id: user.id },
+            where: { id: user_id },
             data: {
                 score_p: score.P,
+                score_f: score.F,
                 score_s: score.S,
                 score_a2: score.A2,
                 score_a: score.A,
                 score_b2: score.B2,
+                score_b: score.B,
+                score_c: score.C,
+                score_d: score.D,
             },
         });
 

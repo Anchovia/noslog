@@ -1,12 +1,12 @@
 import db from "../../db";
 
-export async function updateRecentPlay(user: any, history: any) {
+export async function updateRecentPlay(user_id: number, history: any) {
     const startTime = Date.now(); // 시작 시간
 
     await db.$transaction(async (transaction) => {
         // 기존 최근 플레이 데이터 삭제(deleteMany)
         await transaction.recentPlay.deleteMany({
-            where: { user_id: user.id },
+            where: { user_id },
         });
         console.info("(1)기존 플레이 히스토리 삭제 완료");
 
@@ -19,8 +19,9 @@ export async function updateRecentPlay(user: any, history: any) {
                 max_combo: data.max_combo,
                 rank: data.rank,
                 play_time: data.play_time,
-                user_id: user.id,
+                user_id,
                 music_idx: data.music,
+                grade_basic: data.grade_basic,
             })),
         });
     });

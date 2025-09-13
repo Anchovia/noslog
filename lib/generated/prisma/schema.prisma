@@ -9,13 +9,13 @@ datasource db {
 }
 
 model User {
-  id                   Int          @id @default(autoincrement())
-  username             String?      @unique
-  kakao_id             BigInt?      @unique
-  discord_name         String?      @unique
-  discord_tag          String?      @unique
+  id                   Int               @id @default(autoincrement())
+  username             String?           @unique
+  kakao_id             BigInt?           @unique
+  discord_name         String?           @unique
+  discord_tag          String?           @unique
   avatar               String?
-  country              String       @default("ko-KR")
+  country              String            @default("ko-KR")
   rank_basic           Int?
   rank_recital         Int?
   rank_basic_country   Int?
@@ -23,18 +23,25 @@ model User {
   play_count           Int?
   // 후에 score Int[]로 변경 필요(postgresql 기준)
   score_p              Int?
+  score_f              Int?
   score_s              Int?
   score_a2             Int?
   score_a              Int?
   score_b2             Int?
-  role                 String       @default("user")
+  score_b              Int?
+  score_c              Int?
+  score_d              Int?
+  role                 String            @default("user")
   grade_basic          Int?
   grade_recital        Int?
-  created_at           DateTime     @default(now())
-  updated_at           DateTime     @updatedAt
+  created_at           DateTime          @default(now())
+  updated_at           DateTime          @updatedAt
   PlayHistory          RecentPlay[]
   PlayData             PlayData[]
   Bookmark             Bookmark[]
+  BasicBestPlay        BasicBestPlay[]
+  RecitalBestPlay      RecitalBestPlay[]
+  UserBestGrade        UserBestGrade[]
 }
 
 model Bookmark {
@@ -50,8 +57,8 @@ model Bookmark {
 }
 
 model Music {
-  id                Int      @id @default(autoincrement())
-  index             String   @unique
+  id                Int               @id @default(autoincrement())
+  index             String            @unique
   title             String
   title_kana        String
   artist            String?
@@ -61,28 +68,77 @@ model Music {
   background        String? // 변수명 jacket으로 변경 필요
   sheet_len         Int // 변수명 difficulty_len으로 변경 필요
   difficulty_levels String // 차후에 difficulty_levels Int[]로 변경 필요(postgresql 기준), [1, 4, 10, 1] 이런식임.
-  created_at        DateTime @default(now())
-  updated_at        DateTime @updatedAt
-
-  RecentPlay RecentPlay[]
-  PlayData   PlayData[]
-  Bookmark   Bookmark[]
+  created_at        DateTime          @default(now())
+  updated_at        DateTime          @updatedAt
+  RecentPlay        RecentPlay[]
+  PlayData          PlayData[]
+  Bookmark          Bookmark[]
+  BasicBestPlay     BasicBestPlay[]
+  RecitalBestPlay   RecitalBestPlay[]
 }
 
 model RecentPlay {
-  id         Int      @id @default(autoincrement())
-  difficulty String
-  level      Int
-  score      Int
-  max_combo  Int
-  rank       String
-  play_time  String
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  user_id    Int
-  user       User     @relation(fields: [user_id], references: [id])
-  music_idx  String
-  music      Music    @relation(fields: [music_idx], references: [index])
+  id          Int      @id @default(autoincrement())
+  difficulty  String
+  level       Int
+  score       Int
+  max_combo   Int
+  rank        String
+  play_time   String
+  grade_basic Int
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  user_id     Int
+  user        User     @relation(fields: [user_id], references: [id])
+  music_idx   String
+  music       Music    @relation(fields: [music_idx], references: [index])
+}
+
+model UserBestGrade {
+  id            Int      @id @default(autoincrement())
+  grade_basic   Int
+  grade_recital Int
+  besttime      String
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+  user_id       Int
+  user          User     @relation(fields: [user_id], references: [id])
+}
+
+model BasicBestPlay {
+  id          Int      @id @default(autoincrement())
+  difficulty  String
+  level       Int
+  score       Int
+  max_combo   Int
+  rank        String
+  besttime    String
+  grade_basic Int
+  fc_type     Int
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  user_id     Int
+  user        User     @relation(fields: [user_id], references: [id])
+  music_idx   String
+  music       Music    @relation(fields: [music_idx], references: [index])
+}
+
+model RecitalBestPlay {
+  id            Int      @id @default(autoincrement())
+  difficulty    String
+  level         Int
+  score         Int
+  max_combo     Int
+  rank          String
+  besttime      String
+  grade_recital Int
+  fc_type       Int
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+  user_id       Int
+  user          User     @relation(fields: [user_id], references: [id])
+  music_idx     String
+  music         Music    @relation(fields: [music_idx], references: [index])
 }
 
 model PlayData {

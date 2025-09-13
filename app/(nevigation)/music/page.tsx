@@ -1,4 +1,4 @@
-import MusicList from "@/components/musicList";
+import MusicList from "@/components/music/musicList";
 import db from "@/lib/db";
 
 // todo: 무한 스크롤 기능 제작 필요
