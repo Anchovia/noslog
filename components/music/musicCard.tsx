@@ -38,7 +38,7 @@ export default function MusicCard({
             <Link
                 key={index}
                 href={`/music/${index}/Normal`}
-                className="w-full flex bg-dark-tertiary rounded-lg overflow-hidden border border-dark-secondary"
+                className="w-full flex bg-dark-secondary rounded-lg overflow-hidden border border-dark-secondary"
             >
                 {/* 자켓 */}
                 <div

@@ -14,9 +14,11 @@ const config: Config = {
 
                 // 배경 보더
                 dark: {
-                    primary: "#0a0d13",
-                    secondary: "#161b26",
-                    tertiary: "#1e2330",
+                    primary: "#101013",
+                    secondary: "#151518",
+                    tertiary: "#1C1C1F",
+                    quaternary: "#242427",
+                    quinary: "#2D2D30",
                 },
 
                 // 타이틀 및 하위 텍스트 기본 색상

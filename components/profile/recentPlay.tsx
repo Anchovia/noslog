@@ -39,8 +39,8 @@ export default function RecentPlay({
         setIsLoading(false);
     };
     return (
-        <section className="flex flex-col bg-dark-secondary/50 rounded-xl">
-            <article className="p-4 text-center bg-dark-tertiary text-md rounded-t-xl">
+        <section className="flex flex-col bg-dark-secondary rounded-xl">
+            <article className="p-4 text-center bg-dark-quinary rounded-t-xl text-secondary">
                 최근 플레이
             </article>
             <article className="flex flex-col p-4 gap-4 ">
@@ -50,19 +50,19 @@ export default function RecentPlay({
                         key={idx}
                         className="*:p-3"
                     >
-                        <div className="flex bg-dark-tertiary justify-between items-center rounded-xl gap-4">
-                            <div className="flex flex-col gap-0.5 flex-1">
-                                <span className="text-xl">
+                        <div className="flex bg-dark-quaternary justify-between items-center rounded-t-xl gap-4">
+                            <div className="flex flex-col gap-0.5 flex-1 text-quinary">
+                                <span className="text-tertiary">
                                     {history.music.title}
                                 </span>
                                 <span
                                     className={`${
                                         diffColor[history.difficulty]
-                                    } text-sm font-serif`}
+                                    } font-serif`}
                                 >
                                     {history.difficulty}
                                 </span>
-                                <span className="text-xs text-white-secondary">
+                                <span className="text-senary">
                                     {formatToTimeAgo(history.play_time)}
                                 </span>
                             </div>
@@ -75,15 +75,17 @@ export default function RecentPlay({
                                 />
                             </div>
                         </div>
-                        <div className="bg-dark-secondary flex justify-between items-center">
+                        <div className="bg-dark-tertiary flex justify-between rounded-b-xl items-center">
                             <div className="flex flex-col">
-                                <span>{formatToComma(history.score)}점</span>
-                                <span className="text-xs text-white-secondary">
+                                <span className="text-quaternary">
+                                    {formatToComma(history.score)}점
+                                </span>
+                                <span className="text-senary">
                                     {formatToComma(history.max_combo)}x
                                 </span>
                             </div>
-                            <span>
-                                Basic: {formatToGrade(history.grade_basic)} Grd
+                            <span className="text-tertiary">
+                                {formatToGrade(history.grade_basic)} Grd
                             </span>
                         </div>
                     </Link>
@@ -92,7 +94,7 @@ export default function RecentPlay({
                     <button
                         onClick={handleClick}
                         disabled={isLoading}
-                        className="disabled:cursor-not-allowed mx-auto rounded-full px-12 py-1.5 bg-dark-tertiary"
+                        className="disabled:cursor-not-allowed mx-auto rounded-full px-12 py-1.5 bg-dark-tertiary text-quaternary"
                     >
                         더 불러오기
                     </button>

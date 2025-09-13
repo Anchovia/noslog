@@ -78,11 +78,9 @@ export default function Profile({
             <section className="flex flex-col gap-4">
                 {/* 타이틀, 리사이틀 버튼 */}
                 <article className="flex items-center justify-between">
-                    <h1 className="text-xl text-white-secondary font-light">
-                        <span className="text-white font-normal">
-                            {username}
-                        </span>
-                        의 프로필
+                    <h1 className="text-tertiary">
+                        <span className="text-secondary">{username}</span>의
+                        프로필
                     </h1>
                     <RecitalToggleButton
                         isRecital={isRecital}
@@ -90,7 +88,7 @@ export default function Profile({
                     />
                 </article>
                 {/* 프로필, 설정 버튼*/}
-                <article className="flex bg-dark-tertiary rounded-t-xl p-4 gap-4">
+                <article className="flex bg-dark-quinary rounded-t-xl p-4 gap-4">
                     <div className="size-24 rounded-3xl relative overflow-hidden">
                         {avatar ? (
                             <Image src={avatar} alt={username} fill />
@@ -100,23 +98,21 @@ export default function Profile({
                     </div>
                     <div className="flex flex-col justify-center gap-1 flex-1">
                         <div className="flex gap-1 items-center">
-                            <div className="relative w-8 h-6 rounded-full overflow-hidden">
+                            <div className="relative w-8 h-6 rounded-full  overflow-hidden">
                                 <Image
                                     src={`/flag/${country}.svg`}
                                     alt={country}
                                     fill
                                 />
                             </div>
-                            <span className="font-medium text-xl">
-                                {username}
-                            </span>
+                            <span className="text-primary">{username}</span>
                         </div>
                         {isRecital ? (
-                            <span className="text-sm text-neutral-300">{`NosLog #${formatToComma(
+                            <span className="text-quaternary">{`NosLog #${formatToComma(
                                 rank_recital
                             )}`}</span>
                         ) : (
-                            <span className="text-sm text-neutral-300">{`NosLog #${formatToComma(
+                            <span className="text-quaternary">{`NosLog #${formatToComma(
                                 rank_basic
                             )}`}</span>
                         )}
@@ -134,22 +130,25 @@ export default function Profile({
                     </div>
                 </article>
                 {/* 소셜(디스코드) */}
-                <article className="-mt-4 flex flex-col text-sm gap-2 bg-dark-secondary p-4">
-                    <h2 className="text-xl font-medium">소셜</h2>
+                <article className="-mt-4 flex flex-col text-sm gap-2 bg-dark-tertiary p-4">
+                    <h2 className="text-secondary">소셜</h2>
                     <div className="border border-neutral-700" />
                     <div className="flex gap-2">
                         <Image
                             src={"/icon/discord.png"}
                             alt={"discord"}
-                            width={24}
+                            width={30}
                             height={20}
                         />
-                        <span>
-                            {discord_name} #{discord_tag}
+                        <span className="flex items-center gap-1 *:flex *:items-center">
+                            <span className="text-quaternary">
+                                {discord_name}
+                            </span>
+                            <span className="text-quinary">#{discord_tag}</span>
                         </span>
                     </div>
                 </article>
-                <article className="-mt-4 flex text-sm gap-3 bg-dark-secondary/50 p-4 rounded-b-xl font-light text-white-primary">
+                <article className="-mt-4 flex gap-3 bg-dark-secondary p-4 rounded-b-xl text-quinary">
                     <span>
                         <span className="font-semibold ">2025년 09월</span> 시작
                     </span>
@@ -161,19 +160,18 @@ export default function Profile({
             </section>
             {/* 통계 */}
             <section className="flex flex-col">
-                <article className="p-4 text-center bg-dark-tertiary text-md rounded-t-xl">
+                <article className="p-4 text-center bg-dark-quinary text-secondary rounded-t-xl">
                     통계
                 </article>
-
-                <article className="flex p-4 justify-between *:flex *:flex-col bg-dark-secondary *:text-center">
+                <article className="flex p-4 justify-between *:text-quaternary *:flex *:flex-col bg-dark-tertiary *:text-center">
                     <div className="w-1/3">
                         <span>세계 순위</span>
                         {isRecital ? (
-                            <span className="font-semibold">{`#${formatToComma(
+                            <span className="text-tertiary">{`#${formatToComma(
                                 rank_recital
                             )}`}</span>
                         ) : (
-                            <span className="font-semibold">{`#${formatToComma(
+                            <span className="text-tertiary">{`#${formatToComma(
                                 rank_basic
                             )}`}</span>
                         )}
@@ -181,11 +179,11 @@ export default function Profile({
                     <div className="w-1/3">
                         <span>국가 순위</span>
                         {isRecital ? (
-                            <span className="font-semibold">{`#${formatToComma(
+                            <span className="text-tertiary">{`#${formatToComma(
                                 rank_recital_country
                             )}`}</span>
                         ) : (
-                            <span className="font-semibold">{`#${formatToComma(
+                            <span className="text-tertiary">{`#${formatToComma(
                                 rank_basic_country
                             )}`}</span>
                         )}
@@ -193,40 +191,38 @@ export default function Profile({
                     <div className="w-1/3">
                         <span>Grd</span>
                         {isRecital ? (
-                            <span className="font-semibold">
+                            <span className="text-tertiary">
                                 {formatToGrade(grade_recital)}
                             </span>
                         ) : (
-                            <span className="font-semibold">
+                            <span className="text-tertiary">
                                 {formatToGrade(grade_basic)}
                             </span>
                         )}
                     </div>
                 </article>
                 {/* 차트 */}
-                <article className="w-full h-60">
+                <article className="w-full h-60 bg-dark-secondary">
                     <Chart
                         userBestGrades={userBestGrades}
                         isRecital={isRecital}
                     />
                 </article>
-                <article className="flex justify-between p-4 bg-dark-secondary/50 rounded-b-xl gap-2">
-                    <span className="flex flex-col bg-dark-primary p-4 rounded-xl font-light text-sm text-left justify-center gap-1 *:text-white-secondary">
+                <article className="flex justify-between p-4 bg-dark-tertiary rounded-b-xl gap-2">
+                    <span className="flex flex-col bg-dark-secondary p-4 rounded-xl text-quinary text-left justify-center gap-1 *:text-white-secondary *:flex *:items-center *:gap-1">
                         <span>
                             플레이 횟수:{" "}
-                            <span className="text-white-primary font-normal">
+                            <span className="text-quaternary">
                                 {formatToComma(play_count)}
                             </span>
                         </span>
                         <span>
                             플레이 시간:{" "}
-                            <span className="text-white-primary font-normal">
-                                23d
-                            </span>
+                            <span className="text-quaternary">23d</span>
                         </span>
                     </span>
-                    <span className="p-4 flex flex-1 bg-dark-primary rounded-xl justify-center gap-4 text-sm *:flex *:flex-col text-white-secondary">
-                        <div className="flex items-center">
+                    <span className="p-4 flex flex-1 bg-dark-secondary rounded-xl justify-center gap-4 text-sm *:flex *:flex-col text-white-secondary *:items-center *:justify-center *:text-quinary">
+                        <div>
                             <Image
                                 src={
                                     "https://p.eagate.573.jp/game/nostalgia/op3/img/pdata/music_data/grade/grade_p.png"
@@ -237,7 +233,7 @@ export default function Profile({
                             />
                             <span>{formatToComma(score_p)}</span>
                         </div>
-                        <div className="flex items-center">
+                        <div>
                             <Image
                                 src={
                                     "https://p.eagate.573.jp/game/nostalgia/op3/img/pdata/music_data/grade/grade_fc_bg.png"
@@ -249,7 +245,7 @@ export default function Profile({
                             <span>{formatToComma(score_f)}</span>
                         </div>
 
-                        <div className="flex items-center">
+                        <div>
                             <Image
                                 src={
                                     "https://p.eagate.573.jp/game/nostalgia/op3/img/pdata/music_data/grade/grade_s.png"
@@ -260,7 +256,7 @@ export default function Profile({
                             />
                             <span>{formatToComma(score_s)}</span>
                         </div>
-                        <div className="flex items-center">
+                        <div>
                             <Image
                                 src={
                                     "https://p.eagate.573.jp/game/nostalgia/op3/img/pdata/music_data/grade/grade_a2.png"
@@ -271,7 +267,7 @@ export default function Profile({
                             />
                             <span>{formatToComma(score_a2)}</span>
                         </div>
-                        <div className="flex items-center">
+                        <div>
                             <Image
                                 src={
                                     "https://p.eagate.573.jp/game/nostalgia/op3/img/pdata/music_data/grade/grade_a.png"

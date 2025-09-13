@@ -1,3 +1,24 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+    .text-primary {
+        @apply text-2xl font-semibold text-white-primary;
+    }
+    .text-secondary {
+        @apply text-xl font-medium text-white-primary/95;
+    }
+    .text-tertiary {
+        @apply text-lg font-normal text-white-primary/90;
+    }
+    .text-quaternary {
+        @apply text-base font-light text-white-primary/85;
+    }
+    .text-quinary {
+        @apply text-sm font-extralight text-white-primary/80;
+    }
+    .text-senary {
+        @apply text-xs font-thin text-white-primary/75;
+    }
+}

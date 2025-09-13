@@ -9,7 +9,7 @@ export default function MusicSearch() {
     const [isRankOpen, setIsRankOpen] = useState(false);
 
     return (
-        <section className="px-6 py-4 bg-dark-secondary/50">
+        <section className="px-6 py-4 bg-dark-secondary">
             <form className="flex flex-col items-center justify-center gap-6 rounded-lg">
                 <input
                     placeholder="검색 입력.."
