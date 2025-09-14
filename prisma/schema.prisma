@@ -76,6 +76,8 @@ model Music {
   Bookmark          Bookmark[]
   BasicBestPlay     BasicBestPlay[]
   RecitalBestPlay   RecitalBestPlay[]
+  Bingo             Bingo[]
+  BingoCell         BingoCell[]
 }
 
 model RecentPlay {
@@ -162,4 +164,25 @@ model PlayData {
   user            User     @relation(fields: [user_id], references: [id])
   music_idx       String
   music           Music    @relation(fields: [music_idx], references: [index])
+}
+
+model Bingo {
+  id        Int         @id @default(autoincrement())
+  nos       Int
+  line      Int
+  music_idx String
+  music     Music       @relation(fields: [music_idx], references: [index])
+  BingoCell BingoCell[]
+}
+
+model BingoCell {
+  id Int @id @default(autoincrement())
+
+  position   Int // 칸 위치(1~25)
+  challenge  String
+  isComplete Boolean @default(false)
+  music_idx  String?
+  music      Music?  @relation(fields: [music_idx], references: [index])
+  bingo_id   Int
+  bingo      Bingo   @relation(fields: [bingo_id], references: [id])
 }

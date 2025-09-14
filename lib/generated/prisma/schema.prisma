@@ -76,6 +76,7 @@ model Music {
   Bookmark          Bookmark[]
   BasicBestPlay     BasicBestPlay[]
   RecitalBestPlay   RecitalBestPlay[]
+  Bingo             Bingo[]
 }
 
 model RecentPlay {
@@ -162,4 +163,11 @@ model PlayData {
   user            User     @relation(fields: [user_id], references: [id])
   music_idx       String
   music           Music    @relation(fields: [music_idx], references: [index])
+}
+
+model Bingo {
+  id        Int    @id @default(autoincrement())
+  nos       Int
+  music_idx String
+  music     Music  @relation(fields: [music_idx], references: [index])
 }
