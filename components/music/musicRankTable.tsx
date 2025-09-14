@@ -1,3 +1,4 @@
+import { formatToGrade } from "@/lib/utils";
 import Image from "next/image";
 
 export default function MusicRankTable({
@@ -23,17 +24,33 @@ export default function MusicRankTable({
                 <tbody>
                     {isRecital
                         ? recitalPlayDatas &&
-                          recitalPlayDatas.map((data: any, index: number) => (
-                              <tr key={index} className="*:text-center">
-                                  <td>{index + 1}</td>
-                                  <td>{data.rank}</td>
-                                  <td>{data.score.toLocaleString()}</td>
-                                  <td>{data.user.username}</td>
-                                  <td>{data.max_combo.toLocaleString()}</td>
-                                  <td>{data.grade_recital}</td>
-                                  <td>{data.besttime}</td>
-                              </tr>
-                          ))
+                          recitalPlayDatas.map(
+                              (data: any, index: number) =>
+                                  data.rank.toLowerCase() !== "-" &&
+                                  data.grade_recital !== 0 && (
+                                      <tr key={index} className="*:text-center">
+                                          <td>{index + 1}</td>
+                                          <td className="relative size-6">
+                                              <Image
+                                                  fill
+                                                  src={`https://p.eagate.573.jp/game/nostalgia/op3/img/pdata/music_data/grade/grade_${data.rank.toLowerCase()}.png`}
+                                                  alt={data.rank.toLowerCase()}
+                                              />
+                                          </td>
+                                          <td>{data.score.toLocaleString()}</td>
+                                          <td>{data.user.username}</td>
+                                          <td>
+                                              {data.max_combo.toLocaleString()}
+                                          </td>
+                                          <td>
+                                              {formatToGrade(
+                                                  data.grade_recital
+                                              )}
+                                          </td>
+                                          <td>{data.besttime}</td>
+                                      </tr>
+                                  )
+                          )
                         : basicPlayDatas &&
                           basicPlayDatas.map(
                               (data: any, index: number) =>
@@ -52,7 +69,9 @@ export default function MusicRankTable({
                                           <td>
                                               {data.max_combo.toLocaleString()}
                                           </td>
-                                          <td>{data.grade_basic}</td>
+                                          <td>
+                                              {formatToGrade(data.grade_basic)}
+                                          </td>
                                           <td>{data.besttime}</td>
                                       </tr>
                                   )
