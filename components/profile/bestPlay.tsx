@@ -2,7 +2,7 @@ import {
     getMoreBasicBestPlays,
     getMoreRecitalBestPlays,
 } from "@/app/(nevigation)/profile/[id]/actions";
-import { formatToComma, formatToGrade } from "@/lib/utils";
+import formatToTimeAgo, { formatToComma, formatToGrade } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -36,6 +36,12 @@ export default function BestPlay({
         [diffArr[1]]: "text-hard",
         [diffArr[2]]: "text-expert",
         [diffArr[3]]: "text-real",
+    };
+    const ringColor: any = {
+        [diffArr[0]]: "ring-normal",
+        [diffArr[1]]: "ring-hard",
+        [diffArr[2]]: "ring-expert",
+        [diffArr[3]]: "ring-real",
     };
 
     const handleClick = async () => {
@@ -74,6 +80,17 @@ export default function BestPlay({
                                 className="*:p-3"
                             >
                                 <div className="flex bg-dark-quaternary justify-between items-center rounded-t-xl gap-4">
+                                    <Image
+                                        src={`https://p.eagate.573.jp/game/nostalgia/op3/img/pdata/music_data/grade/grade_${history.rank.toLowerCase()}.png`}
+                                        alt="123"
+                                        width={34}
+                                        height={34}
+                                        className={
+                                            history.fc_type === 2
+                                                ? `ring-2 ring-offset-1 rounded-full ring-transparent  bg-gradient-to-r from-pink-200 via-purple-200 to-blue-200`
+                                                : undefined
+                                        }
+                                    />
                                     <div className="flex flex-col gap-0.5 flex-1 text-quinary">
                                         <span className="text-tertiary">
                                             {history.music.title}
@@ -89,22 +106,10 @@ export default function BestPlay({
                                             {history.play_time}
                                         </span>
                                     </div>
-                                    <div className="flex gap-2">
-                                        {history.fc_type === 2 && (
-                                            <Image
-                                                src={`https://p.eagate.573.jp/game/nostalgia/op3/img/pdata/music_data/grade/grade_fc_bg.png`}
-                                                alt="123"
-                                                width={34}
-                                                height={34}
-                                            />
-                                        )}
-                                        <Image
-                                            src={`https://p.eagate.573.jp/game/nostalgia/op3/img/pdata/music_data/grade/grade_${history.rank.toLowerCase()}.png`}
-                                            alt="123"
-                                            width={34}
-                                            height={34}
-                                        />
-                                    </div>
+                                    <span className="text-tertiary">
+                                        {formatToGrade(history.grade_recital)}{" "}
+                                        Grd
+                                    </span>
                                 </div>
                                 <div className="bg-dark-tertiary flex justify-between rounded-b-xl items-center">
                                     <div className="flex flex-col">
@@ -115,10 +120,11 @@ export default function BestPlay({
                                             {formatToComma(history.max_combo)}x
                                         </span>
                                     </div>
-                                    <span className="text-tertiary">
-                                        {formatToGrade(history.grade_recital)}{" "}
-                                        Grd
-                                    </span>
+                                    <div className="flex flex-col items-end">
+                                        <span className="text-senary">
+                                            {formatToTimeAgo(history.besttime)}
+                                        </span>
+                                    </div>
                                 </div>
                             </Link>
                         ))}
@@ -141,6 +147,17 @@ export default function BestPlay({
                                 className="*:p-3"
                             >
                                 <div className="flex bg-dark-quaternary justify-between items-center rounded-t-xl gap-4">
+                                    <Image
+                                        src={`https://p.eagate.573.jp/game/nostalgia/op3/img/pdata/music_data/grade/grade_${history.rank.toLowerCase()}.png`}
+                                        alt="123"
+                                        width={34}
+                                        height={34}
+                                        className={
+                                            history.fc_type === 2
+                                                ? `ring ring-offset-2 ring-transparent rounded-full   bg-gradient-to-r from-pink-200 via-purple-200 to-blue-200`
+                                                : undefined
+                                        }
+                                    />
                                     <div className="flex flex-col gap-0.5 flex-1 text-quinary">
                                         <span className="text-tertiary">
                                             {history.music.title}
@@ -156,22 +173,9 @@ export default function BestPlay({
                                             {history.play_time}
                                         </span>
                                     </div>
-                                    <div className="flex gap-2">
-                                        {history.fc_type === 2 && (
-                                            <Image
-                                                src={`https://p.eagate.573.jp/game/nostalgia/op3/img/pdata/music_data/grade/grade_fc_bg.png`}
-                                                alt="123"
-                                                width={34}
-                                                height={34}
-                                            />
-                                        )}
-                                        <Image
-                                            src={`https://p.eagate.573.jp/game/nostalgia/op3/img/pdata/music_data/grade/grade_${history.rank.toLowerCase()}.png`}
-                                            alt="123"
-                                            width={34}
-                                            height={34}
-                                        />
-                                    </div>
+                                    <span className="text-tertiary">
+                                        {formatToGrade(history.grade_basic)} Grd
+                                    </span>
                                 </div>
                                 <div className="bg-dark-tertiary flex justify-between rounded-b-xl items-center">
                                     <div className="flex flex-col">
@@ -182,9 +186,11 @@ export default function BestPlay({
                                             {formatToComma(history.max_combo)}x
                                         </span>
                                     </div>
-                                    <span className="text-tertiary">
-                                        {formatToGrade(history.grade_basic)} Grd
-                                    </span>
+                                    <div className="flex flex-col items-end">
+                                        <span className="text-senary">
+                                            {formatToTimeAgo(history.besttime)}
+                                        </span>
+                                    </div>
                                 </div>
                             </Link>
                         ))}
@@ -192,7 +198,7 @@ export default function BestPlay({
                             <button
                                 onClick={handleClick}
                                 disabled={isLoading}
-                                className="disabled:cursor-not-allowed mx-auto rounded-full px-12 py-1.5 bg-dark-tertiary"
+                                className="disabled:cursor-not-allowed mx-auto rounded-full px-12 py-1.5 bg-dark-tertiary text-quaternary"
                             >
                                 더 불러오기
                             </button>

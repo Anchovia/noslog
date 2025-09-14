@@ -1,30 +1,10 @@
-export default function MusicRankTable() {
-    const datas = [
-        {
-            rank: 1,
-            score: 1000000,
-            nickname: "Player1",
-            combo: 500,
-            grade: "A",
-            date: "2023-01-01",
-        },
-        {
-            rank: 2,
-            score: 950000,
-            nickname: "Player2",
-            combo: 480,
-            grade: "B",
-            date: "2023-01-02",
-        },
-        {
-            rank: 3,
-            score: 900000,
-            nickname: "Player3",
-            combo: 450,
-            grade: "C",
-            date: "2023-01-03",
-        },
-    ];
+import Image from "next/image";
+
+export default function MusicRankTable({
+    basicPlayDatas,
+    recitalPlayDatas,
+    isRecital,
+}: any) {
     return (
         <section className="flex flex-col items-center gap-6">
             <h1 className="text-2xl">랭킹</h1>
@@ -41,17 +21,42 @@ export default function MusicRankTable() {
                     </tr>
                 </thead>
                 <tbody>
-                    {datas.map((data, index) => (
-                        <tr key={index} className="*:text-center">
-                            <td>{index + 1}</td>
-                            <td>{data.rank}</td>
-                            <td>{data.score.toLocaleString()}</td>
-                            <td>{data.nickname}</td>
-                            <td>{data.combo.toLocaleString()}</td>
-                            <td>{data.grade}</td>
-                            <td>{data.date}</td>
-                        </tr>
-                    ))}
+                    {isRecital
+                        ? recitalPlayDatas &&
+                          recitalPlayDatas.map((data: any, index: number) => (
+                              <tr key={index} className="*:text-center">
+                                  <td>{index + 1}</td>
+                                  <td>{data.rank}</td>
+                                  <td>{data.score.toLocaleString()}</td>
+                                  <td>{data.user.username}</td>
+                                  <td>{data.max_combo.toLocaleString()}</td>
+                                  <td>{data.grade_recital}</td>
+                                  <td>{data.besttime}</td>
+                              </tr>
+                          ))
+                        : basicPlayDatas &&
+                          basicPlayDatas.map(
+                              (data: any, index: number) =>
+                                  data.rank.toLowerCase() !== "-" && (
+                                      <tr key={index} className="*:text-center">
+                                          <td>{index + 1}</td>
+                                          <td className="relative size-6">
+                                              <Image
+                                                  fill
+                                                  src={`https://p.eagate.573.jp/game/nostalgia/op3/img/pdata/music_data/grade/grade_${data.rank.toLowerCase()}.png`}
+                                                  alt={data.rank.toLowerCase()}
+                                              />
+                                          </td>
+                                          <td>{data.score.toLocaleString()}</td>
+                                          <td>{data.user.username}</td>
+                                          <td>
+                                              {data.max_combo.toLocaleString()}
+                                          </td>
+                                          <td>{data.grade_basic}</td>
+                                          <td>{data.besttime}</td>
+                                      </tr>
+                                  )
+                          )}
                 </tbody>
             </table>
         </section>

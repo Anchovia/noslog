@@ -50,6 +50,10 @@ export async function updateMusic(music: any) {
                 sheet_len: data.sheet.length,
                 difficulty_levels: difficulty_levels.toString(),
                 background: musicBG[index] || null,
+                difficulty_name:
+                    data.sheet.length === 3
+                        ? "Normal, Hard, Expert"
+                        : "Normal, Hard, Expert, Real",
             });
         } else if (musicWithoutBG.has(index) && musicBG[index]) {
             // 업데이트가 필요한 기존 악곡의 신규 BG 데이터 처리

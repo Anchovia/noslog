@@ -23,6 +23,8 @@ interface MusicDetailProps {
     sheet_len: number;
     difficulty_levels: string;
     background: string | null;
+    basicPlayDatas: any;
+    recitalPlayDatas: any;
 }
 
 const diffArr: any = ["Normal", "Hard", "Expert", "Real"];
@@ -47,6 +49,8 @@ export default function MusicDetail({
     difficulty,
     sheet_len,
     difficulty_levels,
+    basicPlayDatas,
+    recitalPlayDatas,
 }: MusicDetailProps) {
     const difficultyLevels = difficulty_levels
         .split(",")
@@ -172,7 +176,11 @@ export default function MusicDetail({
             </section>
             <div className="border border-dark-secondary" />
             {/* 랭킹 */}
-            <MusicRankTable />
+            <MusicRankTable
+                basicPlayDatas={basicPlayDatas}
+                recitalPlayDatas={recitalPlayDatas}
+                isRecital={isRecital}
+            />
         </main>
     );
 }

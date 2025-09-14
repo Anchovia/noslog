@@ -51,6 +51,14 @@ export default function RecentPlay({
                         className="*:p-3"
                     >
                         <div className="flex bg-dark-quaternary justify-between items-center rounded-t-xl gap-4">
+                            <div className="flex gap-2">
+                                <Image
+                                    src={`https://p.eagate.573.jp/game/nostalgia/op3/img/pdata/music_data/grade/grade_${history.rank}.png`}
+                                    alt="123"
+                                    width={34}
+                                    height={34}
+                                />
+                            </div>
                             <div className="flex flex-col gap-0.5 flex-1 text-quinary">
                                 <span className="text-tertiary">
                                     {history.music.title}
@@ -62,18 +70,10 @@ export default function RecentPlay({
                                 >
                                     {history.difficulty}
                                 </span>
-                                <span className="text-senary">
-                                    {formatToTimeAgo(history.play_time)}
-                                </span>
                             </div>
-                            <div className="flex gap-2">
-                                <Image
-                                    src={`https://p.eagate.573.jp/game/nostalgia/op3/img/pdata/music_data/grade/grade_${history.rank}.png`}
-                                    alt="123"
-                                    width={34}
-                                    height={34}
-                                />
-                            </div>
+                            <span className="text-tertiary">
+                                {formatToGrade(history.grade_basic)} Grd
+                            </span>
                         </div>
                         <div className="bg-dark-tertiary flex justify-between rounded-b-xl items-center">
                             <div className="flex flex-col">
@@ -84,9 +84,11 @@ export default function RecentPlay({
                                     {formatToComma(history.max_combo)}x
                                 </span>
                             </div>
-                            <span className="text-tertiary">
-                                {formatToGrade(history.grade_basic)} Grd
-                            </span>
+                            <div className="flex flex-col items-end">
+                                <span className="text-senary">
+                                    {formatToTimeAgo(history.play_time)}
+                                </span>
+                            </div>
                         </div>
                     </Link>
                 ))}

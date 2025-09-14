@@ -68,6 +68,7 @@ model Music {
   background        String? // 변수명 jacket으로 변경 필요
   sheet_len         Int // 변수명 difficulty_len으로 변경 필요
   difficulty_levels String // 차후에 difficulty_levels Int[]로 변경 필요(postgresql 기준), [1, 4, 10, 1] 이런식임.
+  difficulty_name   String // 차후 변경 필요
   created_at        DateTime          @default(now())
   updated_at        DateTime          @updatedAt
   RecentPlay        RecentPlay[]

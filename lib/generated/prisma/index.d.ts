@@ -4358,6 +4358,7 @@ export namespace Prisma {
     background: string | null
     sheet_len: number | null
     difficulty_levels: string | null
+    difficulty_name: string | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -4374,6 +4375,7 @@ export namespace Prisma {
     background: string | null
     sheet_len: number | null
     difficulty_levels: string | null
+    difficulty_name: string | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -4390,6 +4392,7 @@ export namespace Prisma {
     background: number
     sheet_len: number
     difficulty_levels: number
+    difficulty_name: number
     created_at: number
     updated_at: number
     _all: number
@@ -4418,6 +4421,7 @@ export namespace Prisma {
     background?: true
     sheet_len?: true
     difficulty_levels?: true
+    difficulty_name?: true
     created_at?: true
     updated_at?: true
   }
@@ -4434,6 +4438,7 @@ export namespace Prisma {
     background?: true
     sheet_len?: true
     difficulty_levels?: true
+    difficulty_name?: true
     created_at?: true
     updated_at?: true
   }
@@ -4450,6 +4455,7 @@ export namespace Prisma {
     background?: true
     sheet_len?: true
     difficulty_levels?: true
+    difficulty_name?: true
     created_at?: true
     updated_at?: true
     _all?: true
@@ -4553,6 +4559,7 @@ export namespace Prisma {
     background: string | null
     sheet_len: number
     difficulty_levels: string
+    difficulty_name: string
     created_at: Date
     updated_at: Date
     _count: MusicCountAggregateOutputType | null
@@ -4588,6 +4595,7 @@ export namespace Prisma {
     background?: boolean
     sheet_len?: boolean
     difficulty_levels?: boolean
+    difficulty_name?: boolean
     created_at?: boolean
     updated_at?: boolean
     RecentPlay?: boolean | Music$RecentPlayArgs<ExtArgs>
@@ -4610,6 +4618,7 @@ export namespace Prisma {
     background?: boolean
     sheet_len?: boolean
     difficulty_levels?: boolean
+    difficulty_name?: boolean
     created_at?: boolean
     updated_at?: boolean
   }, ExtArgs["result"]["music"]>
@@ -4626,6 +4635,7 @@ export namespace Prisma {
     background?: boolean
     sheet_len?: boolean
     difficulty_levels?: boolean
+    difficulty_name?: boolean
     created_at?: boolean
     updated_at?: boolean
   }, ExtArgs["result"]["music"]>
@@ -4642,11 +4652,12 @@ export namespace Prisma {
     background?: boolean
     sheet_len?: boolean
     difficulty_levels?: boolean
+    difficulty_name?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type MusicOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "index" | "title" | "title_kana" | "artist" | "category" | "category_short" | "description" | "background" | "sheet_len" | "difficulty_levels" | "created_at" | "updated_at", ExtArgs["result"]["music"]>
+  export type MusicOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "index" | "title" | "title_kana" | "artist" | "category" | "category_short" | "description" | "background" | "sheet_len" | "difficulty_levels" | "difficulty_name" | "created_at" | "updated_at", ExtArgs["result"]["music"]>
   export type MusicInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     RecentPlay?: boolean | Music$RecentPlayArgs<ExtArgs>
     PlayData?: boolean | Music$PlayDataArgs<ExtArgs>
@@ -4679,6 +4690,7 @@ export namespace Prisma {
       background: string | null
       sheet_len: number
       difficulty_levels: string
+      difficulty_name: string
       created_at: Date
       updated_at: Date
     }, ExtArgs["result"]["music"]>
@@ -5120,6 +5132,7 @@ export namespace Prisma {
     readonly background: FieldRef<"Music", 'String'>
     readonly sheet_len: FieldRef<"Music", 'Int'>
     readonly difficulty_levels: FieldRef<"Music", 'String'>
+    readonly difficulty_name: FieldRef<"Music", 'String'>
     readonly created_at: FieldRef<"Music", 'DateTime'>
     readonly updated_at: FieldRef<"Music", 'DateTime'>
   }
@@ -11795,6 +11808,7 @@ export namespace Prisma {
     background: 'background',
     sheet_len: 'sheet_len',
     difficulty_levels: 'difficulty_levels',
+    difficulty_name: 'difficulty_name',
     created_at: 'created_at',
     updated_at: 'updated_at'
   };
@@ -12206,6 +12220,7 @@ export namespace Prisma {
     background?: StringNullableFilter<"Music"> | string | null
     sheet_len?: IntFilter<"Music"> | number
     difficulty_levels?: StringFilter<"Music"> | string
+    difficulty_name?: StringFilter<"Music"> | string
     created_at?: DateTimeFilter<"Music"> | Date | string
     updated_at?: DateTimeFilter<"Music"> | Date | string
     RecentPlay?: RecentPlayListRelationFilter
@@ -12227,6 +12242,7 @@ export namespace Prisma {
     background?: SortOrderInput | SortOrder
     sheet_len?: SortOrder
     difficulty_levels?: SortOrder
+    difficulty_name?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     RecentPlay?: RecentPlayOrderByRelationAggregateInput
@@ -12251,6 +12267,7 @@ export namespace Prisma {
     background?: StringNullableFilter<"Music"> | string | null
     sheet_len?: IntFilter<"Music"> | number
     difficulty_levels?: StringFilter<"Music"> | string
+    difficulty_name?: StringFilter<"Music"> | string
     created_at?: DateTimeFilter<"Music"> | Date | string
     updated_at?: DateTimeFilter<"Music"> | Date | string
     RecentPlay?: RecentPlayListRelationFilter
@@ -12272,6 +12289,7 @@ export namespace Prisma {
     background?: SortOrderInput | SortOrder
     sheet_len?: SortOrder
     difficulty_levels?: SortOrder
+    difficulty_name?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     _count?: MusicCountOrderByAggregateInput
@@ -12296,6 +12314,7 @@ export namespace Prisma {
     background?: StringNullableWithAggregatesFilter<"Music"> | string | null
     sheet_len?: IntWithAggregatesFilter<"Music"> | number
     difficulty_levels?: StringWithAggregatesFilter<"Music"> | string
+    difficulty_name?: StringWithAggregatesFilter<"Music"> | string
     created_at?: DateTimeWithAggregatesFilter<"Music"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"Music"> | Date | string
   }
@@ -13068,6 +13087,7 @@ export namespace Prisma {
     background?: string | null
     sheet_len: number
     difficulty_levels: string
+    difficulty_name: string
     created_at?: Date | string
     updated_at?: Date | string
     RecentPlay?: RecentPlayCreateNestedManyWithoutMusicInput
@@ -13089,6 +13109,7 @@ export namespace Prisma {
     background?: string | null
     sheet_len: number
     difficulty_levels: string
+    difficulty_name: string
     created_at?: Date | string
     updated_at?: Date | string
     RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutMusicInput
@@ -13109,6 +13130,7 @@ export namespace Prisma {
     background?: NullableStringFieldUpdateOperationsInput | string | null
     sheet_len?: IntFieldUpdateOperationsInput | number
     difficulty_levels?: StringFieldUpdateOperationsInput | string
+    difficulty_name?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     RecentPlay?: RecentPlayUpdateManyWithoutMusicNestedInput
@@ -13130,6 +13152,7 @@ export namespace Prisma {
     background?: NullableStringFieldUpdateOperationsInput | string | null
     sheet_len?: IntFieldUpdateOperationsInput | number
     difficulty_levels?: StringFieldUpdateOperationsInput | string
+    difficulty_name?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     RecentPlay?: RecentPlayUncheckedUpdateManyWithoutMusicNestedInput
@@ -13151,6 +13174,7 @@ export namespace Prisma {
     background?: string | null
     sheet_len: number
     difficulty_levels: string
+    difficulty_name: string
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -13166,6 +13190,7 @@ export namespace Prisma {
     background?: NullableStringFieldUpdateOperationsInput | string | null
     sheet_len?: IntFieldUpdateOperationsInput | number
     difficulty_levels?: StringFieldUpdateOperationsInput | string
+    difficulty_name?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -13182,6 +13207,7 @@ export namespace Prisma {
     background?: NullableStringFieldUpdateOperationsInput | string | null
     sheet_len?: IntFieldUpdateOperationsInput | number
     difficulty_levels?: StringFieldUpdateOperationsInput | string
+    difficulty_name?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -14126,6 +14152,7 @@ export namespace Prisma {
     background?: SortOrder
     sheet_len?: SortOrder
     difficulty_levels?: SortOrder
+    difficulty_name?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -14147,6 +14174,7 @@ export namespace Prisma {
     background?: SortOrder
     sheet_len?: SortOrder
     difficulty_levels?: SortOrder
+    difficulty_name?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -14163,6 +14191,7 @@ export namespace Prisma {
     background?: SortOrder
     sheet_len?: SortOrder
     difficulty_levels?: SortOrder
+    difficulty_name?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -15833,6 +15862,7 @@ export namespace Prisma {
     background?: string | null
     sheet_len: number
     difficulty_levels: string
+    difficulty_name: string
     created_at?: Date | string
     updated_at?: Date | string
     RecentPlay?: RecentPlayCreateNestedManyWithoutMusicInput
@@ -15853,6 +15883,7 @@ export namespace Prisma {
     background?: string | null
     sheet_len: number
     difficulty_levels: string
+    difficulty_name: string
     created_at?: Date | string
     updated_at?: Date | string
     RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutMusicInput
@@ -15966,6 +15997,7 @@ export namespace Prisma {
     background?: NullableStringFieldUpdateOperationsInput | string | null
     sheet_len?: IntFieldUpdateOperationsInput | number
     difficulty_levels?: StringFieldUpdateOperationsInput | string
+    difficulty_name?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     RecentPlay?: RecentPlayUpdateManyWithoutMusicNestedInput
@@ -15986,6 +16018,7 @@ export namespace Prisma {
     background?: NullableStringFieldUpdateOperationsInput | string | null
     sheet_len?: IntFieldUpdateOperationsInput | number
     difficulty_levels?: StringFieldUpdateOperationsInput | string
+    difficulty_name?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     RecentPlay?: RecentPlayUncheckedUpdateManyWithoutMusicNestedInput
@@ -16337,6 +16370,7 @@ export namespace Prisma {
     background?: string | null
     sheet_len: number
     difficulty_levels: string
+    difficulty_name: string
     created_at?: Date | string
     updated_at?: Date | string
     PlayData?: PlayDataCreateNestedManyWithoutMusicInput
@@ -16357,6 +16391,7 @@ export namespace Prisma {
     background?: string | null
     sheet_len: number
     difficulty_levels: string
+    difficulty_name: string
     created_at?: Date | string
     updated_at?: Date | string
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutMusicInput
@@ -16470,6 +16505,7 @@ export namespace Prisma {
     background?: NullableStringFieldUpdateOperationsInput | string | null
     sheet_len?: IntFieldUpdateOperationsInput | number
     difficulty_levels?: StringFieldUpdateOperationsInput | string
+    difficulty_name?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayData?: PlayDataUpdateManyWithoutMusicNestedInput
@@ -16490,6 +16526,7 @@ export namespace Prisma {
     background?: NullableStringFieldUpdateOperationsInput | string | null
     sheet_len?: IntFieldUpdateOperationsInput | number
     difficulty_levels?: StringFieldUpdateOperationsInput | string
+    difficulty_name?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayData?: PlayDataUncheckedUpdateManyWithoutMusicNestedInput
@@ -16731,6 +16768,7 @@ export namespace Prisma {
     background?: string | null
     sheet_len: number
     difficulty_levels: string
+    difficulty_name: string
     created_at?: Date | string
     updated_at?: Date | string
     RecentPlay?: RecentPlayCreateNestedManyWithoutMusicInput
@@ -16751,6 +16789,7 @@ export namespace Prisma {
     background?: string | null
     sheet_len: number
     difficulty_levels: string
+    difficulty_name: string
     created_at?: Date | string
     updated_at?: Date | string
     RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutMusicInput
@@ -16864,6 +16903,7 @@ export namespace Prisma {
     background?: NullableStringFieldUpdateOperationsInput | string | null
     sheet_len?: IntFieldUpdateOperationsInput | number
     difficulty_levels?: StringFieldUpdateOperationsInput | string
+    difficulty_name?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     RecentPlay?: RecentPlayUpdateManyWithoutMusicNestedInput
@@ -16884,6 +16924,7 @@ export namespace Prisma {
     background?: NullableStringFieldUpdateOperationsInput | string | null
     sheet_len?: IntFieldUpdateOperationsInput | number
     difficulty_levels?: StringFieldUpdateOperationsInput | string
+    difficulty_name?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     RecentPlay?: RecentPlayUncheckedUpdateManyWithoutMusicNestedInput
@@ -16975,6 +17016,7 @@ export namespace Prisma {
     background?: string | null
     sheet_len: number
     difficulty_levels: string
+    difficulty_name: string
     created_at?: Date | string
     updated_at?: Date | string
     RecentPlay?: RecentPlayCreateNestedManyWithoutMusicInput
@@ -16995,6 +17037,7 @@ export namespace Prisma {
     background?: string | null
     sheet_len: number
     difficulty_levels: string
+    difficulty_name: string
     created_at?: Date | string
     updated_at?: Date | string
     RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutMusicInput
@@ -17108,6 +17151,7 @@ export namespace Prisma {
     background?: NullableStringFieldUpdateOperationsInput | string | null
     sheet_len?: IntFieldUpdateOperationsInput | number
     difficulty_levels?: StringFieldUpdateOperationsInput | string
+    difficulty_name?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     RecentPlay?: RecentPlayUpdateManyWithoutMusicNestedInput
@@ -17128,6 +17172,7 @@ export namespace Prisma {
     background?: NullableStringFieldUpdateOperationsInput | string | null
     sheet_len?: IntFieldUpdateOperationsInput | number
     difficulty_levels?: StringFieldUpdateOperationsInput | string
+    difficulty_name?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     RecentPlay?: RecentPlayUncheckedUpdateManyWithoutMusicNestedInput
@@ -17219,6 +17264,7 @@ export namespace Prisma {
     background?: string | null
     sheet_len: number
     difficulty_levels: string
+    difficulty_name: string
     created_at?: Date | string
     updated_at?: Date | string
     RecentPlay?: RecentPlayCreateNestedManyWithoutMusicInput
@@ -17239,6 +17285,7 @@ export namespace Prisma {
     background?: string | null
     sheet_len: number
     difficulty_levels: string
+    difficulty_name: string
     created_at?: Date | string
     updated_at?: Date | string
     RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutMusicInput
@@ -17352,6 +17399,7 @@ export namespace Prisma {
     background?: NullableStringFieldUpdateOperationsInput | string | null
     sheet_len?: IntFieldUpdateOperationsInput | number
     difficulty_levels?: StringFieldUpdateOperationsInput | string
+    difficulty_name?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     RecentPlay?: RecentPlayUpdateManyWithoutMusicNestedInput
@@ -17372,6 +17420,7 @@ export namespace Prisma {
     background?: NullableStringFieldUpdateOperationsInput | string | null
     sheet_len?: IntFieldUpdateOperationsInput | number
     difficulty_levels?: StringFieldUpdateOperationsInput | string
+    difficulty_name?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     RecentPlay?: RecentPlayUncheckedUpdateManyWithoutMusicNestedInput

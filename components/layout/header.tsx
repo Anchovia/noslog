@@ -14,7 +14,7 @@ export default async function Header() {
                 <Link href="/music">
                     <Image src={"/icon/music.png"} alt={"악곡"} fill />
                 </Link>
-                <Link href="/ranking">
+                <Link href="/rankings">
                     <Image src={"/icon/leaderBoard.png"} alt={"랭킹"} fill />
                 </Link>
                 <Link href="/bingo">
