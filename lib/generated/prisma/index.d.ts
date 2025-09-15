@@ -13333,6 +13333,8 @@ export namespace Prisma {
     challenge: string | null
     category_short: string | null
     music_idx: string | null
+    level: string | null
+    isReal: boolean | null
     bingo_id: number | null
   }
 
@@ -13342,6 +13344,8 @@ export namespace Prisma {
     challenge: string | null
     category_short: string | null
     music_idx: string | null
+    level: string | null
+    isReal: boolean | null
     bingo_id: number | null
   }
 
@@ -13351,6 +13355,8 @@ export namespace Prisma {
     challenge: number
     category_short: number
     music_idx: number
+    level: number
+    isReal: number
     bingo_id: number
     _all: number
   }
@@ -13374,6 +13380,8 @@ export namespace Prisma {
     challenge?: true
     category_short?: true
     music_idx?: true
+    level?: true
+    isReal?: true
     bingo_id?: true
   }
 
@@ -13383,6 +13391,8 @@ export namespace Prisma {
     challenge?: true
     category_short?: true
     music_idx?: true
+    level?: true
+    isReal?: true
     bingo_id?: true
   }
 
@@ -13392,6 +13402,8 @@ export namespace Prisma {
     challenge?: true
     category_short?: true
     music_idx?: true
+    level?: true
+    isReal?: true
     bingo_id?: true
     _all?: true
   }
@@ -13488,6 +13500,8 @@ export namespace Prisma {
     challenge: string
     category_short: string | null
     music_idx: string | null
+    level: string | null
+    isReal: boolean
     bingo_id: number
     _count: BingoCellCountAggregateOutputType | null
     _avg: BingoCellAvgAggregateOutputType | null
@@ -13516,6 +13530,8 @@ export namespace Prisma {
     challenge?: boolean
     category_short?: boolean
     music_idx?: boolean
+    level?: boolean
+    isReal?: boolean
     bingo_id?: boolean
     music?: boolean | BingoCell$musicArgs<ExtArgs>
     bingo?: boolean | BingoDefaultArgs<ExtArgs>
@@ -13529,6 +13545,8 @@ export namespace Prisma {
     challenge?: boolean
     category_short?: boolean
     music_idx?: boolean
+    level?: boolean
+    isReal?: boolean
     bingo_id?: boolean
     music?: boolean | BingoCell$musicArgs<ExtArgs>
     bingo?: boolean | BingoDefaultArgs<ExtArgs>
@@ -13540,6 +13558,8 @@ export namespace Prisma {
     challenge?: boolean
     category_short?: boolean
     music_idx?: boolean
+    level?: boolean
+    isReal?: boolean
     bingo_id?: boolean
     music?: boolean | BingoCell$musicArgs<ExtArgs>
     bingo?: boolean | BingoDefaultArgs<ExtArgs>
@@ -13551,10 +13571,12 @@ export namespace Prisma {
     challenge?: boolean
     category_short?: boolean
     music_idx?: boolean
+    level?: boolean
+    isReal?: boolean
     bingo_id?: boolean
   }
 
-  export type BingoCellOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "position" | "challenge" | "category_short" | "music_idx" | "bingo_id", ExtArgs["result"]["bingoCell"]>
+  export type BingoCellOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "position" | "challenge" | "category_short" | "music_idx" | "level" | "isReal" | "bingo_id", ExtArgs["result"]["bingoCell"]>
   export type BingoCellInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     music?: boolean | BingoCell$musicArgs<ExtArgs>
     bingo?: boolean | BingoDefaultArgs<ExtArgs>
@@ -13583,6 +13605,8 @@ export namespace Prisma {
       challenge: string
       category_short: string | null
       music_idx: string | null
+      level: string | null
+      isReal: boolean
       bingo_id: number
     }, ExtArgs["result"]["bingoCell"]>
     composites: {}
@@ -14015,6 +14039,8 @@ export namespace Prisma {
     readonly challenge: FieldRef<"BingoCell", 'String'>
     readonly category_short: FieldRef<"BingoCell", 'String'>
     readonly music_idx: FieldRef<"BingoCell", 'String'>
+    readonly level: FieldRef<"BingoCell", 'String'>
+    readonly isReal: FieldRef<"BingoCell", 'Boolean'>
     readonly bingo_id: FieldRef<"BingoCell", 'Int'>
   }
     
@@ -15746,6 +15772,8 @@ export namespace Prisma {
     challenge: 'challenge',
     category_short: 'category_short',
     music_idx: 'music_idx',
+    level: 'level',
+    isReal: 'isReal',
     bingo_id: 'bingo_id'
   };
 
@@ -16735,6 +16763,8 @@ export namespace Prisma {
     challenge?: StringFilter<"BingoCell"> | string
     category_short?: StringNullableFilter<"BingoCell"> | string | null
     music_idx?: StringNullableFilter<"BingoCell"> | string | null
+    level?: StringNullableFilter<"BingoCell"> | string | null
+    isReal?: BoolFilter<"BingoCell"> | boolean
     bingo_id?: IntFilter<"BingoCell"> | number
     music?: XOR<MusicNullableScalarRelationFilter, MusicWhereInput> | null
     bingo?: XOR<BingoScalarRelationFilter, BingoWhereInput>
@@ -16747,6 +16777,8 @@ export namespace Prisma {
     challenge?: SortOrder
     category_short?: SortOrderInput | SortOrder
     music_idx?: SortOrderInput | SortOrder
+    level?: SortOrderInput | SortOrder
+    isReal?: SortOrder
     bingo_id?: SortOrder
     music?: MusicOrderByWithRelationInput
     bingo?: BingoOrderByWithRelationInput
@@ -16762,6 +16794,8 @@ export namespace Prisma {
     challenge?: StringFilter<"BingoCell"> | string
     category_short?: StringNullableFilter<"BingoCell"> | string | null
     music_idx?: StringNullableFilter<"BingoCell"> | string | null
+    level?: StringNullableFilter<"BingoCell"> | string | null
+    isReal?: BoolFilter<"BingoCell"> | boolean
     bingo_id?: IntFilter<"BingoCell"> | number
     music?: XOR<MusicNullableScalarRelationFilter, MusicWhereInput> | null
     bingo?: XOR<BingoScalarRelationFilter, BingoWhereInput>
@@ -16774,6 +16808,8 @@ export namespace Prisma {
     challenge?: SortOrder
     category_short?: SortOrderInput | SortOrder
     music_idx?: SortOrderInput | SortOrder
+    level?: SortOrderInput | SortOrder
+    isReal?: SortOrder
     bingo_id?: SortOrder
     _count?: BingoCellCountOrderByAggregateInput
     _avg?: BingoCellAvgOrderByAggregateInput
@@ -16791,6 +16827,8 @@ export namespace Prisma {
     challenge?: StringWithAggregatesFilter<"BingoCell"> | string
     category_short?: StringNullableWithAggregatesFilter<"BingoCell"> | string | null
     music_idx?: StringNullableWithAggregatesFilter<"BingoCell"> | string | null
+    level?: StringNullableWithAggregatesFilter<"BingoCell"> | string | null
+    isReal?: BoolWithAggregatesFilter<"BingoCell"> | boolean
     bingo_id?: IntWithAggregatesFilter<"BingoCell"> | number
   }
 
@@ -17840,6 +17878,8 @@ export namespace Prisma {
     position: number
     challenge: string
     category_short?: string | null
+    level?: string | null
+    isReal?: boolean
     music?: MusicCreateNestedOneWithoutBingoCellInput
     bingo: BingoCreateNestedOneWithoutBingoCellInput
     userBingoData?: userBingoCellDataCreateNestedManyWithoutBingoInput
@@ -17851,6 +17891,8 @@ export namespace Prisma {
     challenge: string
     category_short?: string | null
     music_idx?: string | null
+    level?: string | null
+    isReal?: boolean
     bingo_id: number
     userBingoData?: userBingoCellDataUncheckedCreateNestedManyWithoutBingoInput
   }
@@ -17859,6 +17901,8 @@ export namespace Prisma {
     position?: IntFieldUpdateOperationsInput | number
     challenge?: StringFieldUpdateOperationsInput | string
     category_short?: NullableStringFieldUpdateOperationsInput | string | null
+    level?: NullableStringFieldUpdateOperationsInput | string | null
+    isReal?: BoolFieldUpdateOperationsInput | boolean
     music?: MusicUpdateOneWithoutBingoCellNestedInput
     bingo?: BingoUpdateOneRequiredWithoutBingoCellNestedInput
     userBingoData?: userBingoCellDataUpdateManyWithoutBingoNestedInput
@@ -17870,6 +17914,8 @@ export namespace Prisma {
     challenge?: StringFieldUpdateOperationsInput | string
     category_short?: NullableStringFieldUpdateOperationsInput | string | null
     music_idx?: NullableStringFieldUpdateOperationsInput | string | null
+    level?: NullableStringFieldUpdateOperationsInput | string | null
+    isReal?: BoolFieldUpdateOperationsInput | boolean
     bingo_id?: IntFieldUpdateOperationsInput | number
     userBingoData?: userBingoCellDataUncheckedUpdateManyWithoutBingoNestedInput
   }
@@ -17880,6 +17926,8 @@ export namespace Prisma {
     challenge: string
     category_short?: string | null
     music_idx?: string | null
+    level?: string | null
+    isReal?: boolean
     bingo_id: number
   }
 
@@ -17887,6 +17935,8 @@ export namespace Prisma {
     position?: IntFieldUpdateOperationsInput | number
     challenge?: StringFieldUpdateOperationsInput | string
     category_short?: NullableStringFieldUpdateOperationsInput | string | null
+    level?: NullableStringFieldUpdateOperationsInput | string | null
+    isReal?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type BingoCellUncheckedUpdateManyInput = {
@@ -17895,6 +17945,8 @@ export namespace Prisma {
     challenge?: StringFieldUpdateOperationsInput | string
     category_short?: NullableStringFieldUpdateOperationsInput | string | null
     music_idx?: NullableStringFieldUpdateOperationsInput | string | null
+    level?: NullableStringFieldUpdateOperationsInput | string | null
+    isReal?: BoolFieldUpdateOperationsInput | boolean
     bingo_id?: IntFieldUpdateOperationsInput | number
   }
 
@@ -18810,6 +18862,11 @@ export namespace Prisma {
     line?: SortOrder
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type MusicNullableScalarRelationFilter = {
     is?: MusicWhereInput | null
     isNot?: MusicWhereInput | null
@@ -18826,6 +18883,8 @@ export namespace Prisma {
     challenge?: SortOrder
     category_short?: SortOrder
     music_idx?: SortOrder
+    level?: SortOrder
+    isReal?: SortOrder
     bingo_id?: SortOrder
   }
 
@@ -18841,6 +18900,8 @@ export namespace Prisma {
     challenge?: SortOrder
     category_short?: SortOrder
     music_idx?: SortOrder
+    level?: SortOrder
+    isReal?: SortOrder
     bingo_id?: SortOrder
   }
 
@@ -18850,6 +18911,8 @@ export namespace Prisma {
     challenge?: SortOrder
     category_short?: SortOrder
     music_idx?: SortOrder
+    level?: SortOrder
+    isReal?: SortOrder
     bingo_id?: SortOrder
   }
 
@@ -18859,9 +18922,12 @@ export namespace Prisma {
     bingo_id?: SortOrder
   }
 
-  export type BoolFilter<$PrismaModel = never> = {
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type BingoCellScalarRelationFilter = {
@@ -18900,14 +18966,6 @@ export namespace Prisma {
     id?: SortOrder
     user_id?: SortOrder
     bingo_cell_id?: SortOrder
-  }
-
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type RecentPlayCreateNestedManyWithoutUserInput = {
@@ -19770,6 +19828,10 @@ export namespace Prisma {
     connect?: userBingoCellDataWhereUniqueInput | userBingoCellDataWhereUniqueInput[]
   }
 
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
   export type MusicUpdateOneWithoutBingoCellNestedInput = {
     create?: XOR<MusicCreateWithoutBingoCellInput, MusicUncheckedCreateWithoutBingoCellInput>
     connectOrCreate?: MusicCreateOrConnectWithoutBingoCellInput
@@ -19826,10 +19888,6 @@ export namespace Prisma {
     create?: XOR<BingoCellCreateWithoutUserBingoDataInput, BingoCellUncheckedCreateWithoutUserBingoDataInput>
     connectOrCreate?: BingoCellCreateOrConnectWithoutUserBingoDataInput
     connect?: BingoCellWhereUniqueInput
-  }
-
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
   }
 
   export type UserUpdateOneRequiredWithoutUserBingoCellDataNestedInput = {
@@ -20968,6 +21026,8 @@ export namespace Prisma {
     position: number
     challenge: string
     category_short?: string | null
+    level?: string | null
+    isReal?: boolean
     bingo: BingoCreateNestedOneWithoutBingoCellInput
     userBingoData?: userBingoCellDataCreateNestedManyWithoutBingoInput
   }
@@ -20977,6 +21037,8 @@ export namespace Prisma {
     position: number
     challenge: string
     category_short?: string | null
+    level?: string | null
+    isReal?: boolean
     bingo_id: number
     userBingoData?: userBingoCellDataUncheckedCreateNestedManyWithoutBingoInput
   }
@@ -21121,6 +21183,8 @@ export namespace Prisma {
     challenge?: StringFilter<"BingoCell"> | string
     category_short?: StringNullableFilter<"BingoCell"> | string | null
     music_idx?: StringNullableFilter<"BingoCell"> | string | null
+    level?: StringNullableFilter<"BingoCell"> | string | null
+    isReal?: BoolFilter<"BingoCell"> | boolean
     bingo_id?: IntFilter<"BingoCell"> | number
   }
 
@@ -22372,6 +22436,8 @@ export namespace Prisma {
     position: number
     challenge: string
     category_short?: string | null
+    level?: string | null
+    isReal?: boolean
     music?: MusicCreateNestedOneWithoutBingoCellInput
     userBingoData?: userBingoCellDataCreateNestedManyWithoutBingoInput
   }
@@ -22382,6 +22448,8 @@ export namespace Prisma {
     challenge: string
     category_short?: string | null
     music_idx?: string | null
+    level?: string | null
+    isReal?: boolean
     userBingoData?: userBingoCellDataUncheckedCreateNestedManyWithoutBingoInput
   }
 
@@ -22728,6 +22796,8 @@ export namespace Prisma {
     position: number
     challenge: string
     category_short?: string | null
+    level?: string | null
+    isReal?: boolean
     music?: MusicCreateNestedOneWithoutBingoCellInput
     bingo: BingoCreateNestedOneWithoutBingoCellInput
   }
@@ -22738,6 +22808,8 @@ export namespace Prisma {
     challenge: string
     category_short?: string | null
     music_idx?: string | null
+    level?: string | null
+    isReal?: boolean
     bingo_id: number
   }
 
@@ -22841,6 +22913,8 @@ export namespace Prisma {
     position?: IntFieldUpdateOperationsInput | number
     challenge?: StringFieldUpdateOperationsInput | string
     category_short?: NullableStringFieldUpdateOperationsInput | string | null
+    level?: NullableStringFieldUpdateOperationsInput | string | null
+    isReal?: BoolFieldUpdateOperationsInput | boolean
     music?: MusicUpdateOneWithoutBingoCellNestedInput
     bingo?: BingoUpdateOneRequiredWithoutBingoCellNestedInput
   }
@@ -22851,6 +22925,8 @@ export namespace Prisma {
     challenge?: StringFieldUpdateOperationsInput | string
     category_short?: NullableStringFieldUpdateOperationsInput | string | null
     music_idx?: NullableStringFieldUpdateOperationsInput | string | null
+    level?: NullableStringFieldUpdateOperationsInput | string | null
+    isReal?: BoolFieldUpdateOperationsInput | boolean
     bingo_id?: IntFieldUpdateOperationsInput | number
   }
 
@@ -23268,6 +23344,8 @@ export namespace Prisma {
     position: number
     challenge: string
     category_short?: string | null
+    level?: string | null
+    isReal?: boolean
     bingo_id: number
   }
 
@@ -23499,6 +23577,8 @@ export namespace Prisma {
     position?: IntFieldUpdateOperationsInput | number
     challenge?: StringFieldUpdateOperationsInput | string
     category_short?: NullableStringFieldUpdateOperationsInput | string | null
+    level?: NullableStringFieldUpdateOperationsInput | string | null
+    isReal?: BoolFieldUpdateOperationsInput | boolean
     bingo?: BingoUpdateOneRequiredWithoutBingoCellNestedInput
     userBingoData?: userBingoCellDataUpdateManyWithoutBingoNestedInput
   }
@@ -23508,6 +23588,8 @@ export namespace Prisma {
     position?: IntFieldUpdateOperationsInput | number
     challenge?: StringFieldUpdateOperationsInput | string
     category_short?: NullableStringFieldUpdateOperationsInput | string | null
+    level?: NullableStringFieldUpdateOperationsInput | string | null
+    isReal?: BoolFieldUpdateOperationsInput | boolean
     bingo_id?: IntFieldUpdateOperationsInput | number
     userBingoData?: userBingoCellDataUncheckedUpdateManyWithoutBingoNestedInput
   }
@@ -23517,6 +23599,8 @@ export namespace Prisma {
     position?: IntFieldUpdateOperationsInput | number
     challenge?: StringFieldUpdateOperationsInput | string
     category_short?: NullableStringFieldUpdateOperationsInput | string | null
+    level?: NullableStringFieldUpdateOperationsInput | string | null
+    isReal?: BoolFieldUpdateOperationsInput | boolean
     bingo_id?: IntFieldUpdateOperationsInput | number
   }
 
@@ -23526,12 +23610,16 @@ export namespace Prisma {
     challenge: string
     category_short?: string | null
     music_idx?: string | null
+    level?: string | null
+    isReal?: boolean
   }
 
   export type BingoCellUpdateWithoutBingoInput = {
     position?: IntFieldUpdateOperationsInput | number
     challenge?: StringFieldUpdateOperationsInput | string
     category_short?: NullableStringFieldUpdateOperationsInput | string | null
+    level?: NullableStringFieldUpdateOperationsInput | string | null
+    isReal?: BoolFieldUpdateOperationsInput | boolean
     music?: MusicUpdateOneWithoutBingoCellNestedInput
     userBingoData?: userBingoCellDataUpdateManyWithoutBingoNestedInput
   }
@@ -23542,6 +23630,8 @@ export namespace Prisma {
     challenge?: StringFieldUpdateOperationsInput | string
     category_short?: NullableStringFieldUpdateOperationsInput | string | null
     music_idx?: NullableStringFieldUpdateOperationsInput | string | null
+    level?: NullableStringFieldUpdateOperationsInput | string | null
+    isReal?: BoolFieldUpdateOperationsInput | boolean
     userBingoData?: userBingoCellDataUncheckedUpdateManyWithoutBingoNestedInput
   }
 
@@ -23551,6 +23641,8 @@ export namespace Prisma {
     challenge?: StringFieldUpdateOperationsInput | string
     category_short?: NullableStringFieldUpdateOperationsInput | string | null
     music_idx?: NullableStringFieldUpdateOperationsInput | string | null
+    level?: NullableStringFieldUpdateOperationsInput | string | null
+    isReal?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type userBingoCellDataCreateManyBingoInput = {

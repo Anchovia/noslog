@@ -182,6 +182,8 @@ model BingoCell {
   challenge      String
   category_short String?
   music_idx      String?
+  level          String?
+  isReal         Boolean             @default(false)
   music          Music?              @relation(fields: [music_idx], references: [index])
   bingo_id       Int
   bingo          Bingo               @relation(fields: [bingo_id], references: [id])

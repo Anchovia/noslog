@@ -1,3 +1,4 @@
+import { updateDummy } from "@/lib/dummy/bingo";
 import { updateMusic } from "@/lib/services/music/updateMusic";
 import { updateGrade } from "@/lib/services/user/updateGrade";
 import { updatePlayCount } from "@/lib/services/user/updatePlayCount";
@@ -54,6 +55,8 @@ export async function POST(request: NextRequest) {
     await updatePlayData(user.id, music); // 플레이 데이터 업데이트
     await updateGrade(user.id); // 유저 그레이드 및 베스트 플레이 데이터 업데이트
     await updateRank(); // 랭킹 업데이트
+
+    await updateDummy(); // 더미데이터 업데이트
 
     // 성공
     return new NextResponse(
