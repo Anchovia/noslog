@@ -28,7 +28,7 @@ export default function Chart({ userBestGrades, isRecital }: any) {
                     }}
                     itemStyle={{ color: "white" }}
                     cursor={false}
-                    formatter={(value, name) => [
+                    formatter={(value: any, _: any) => [
                         `${isRecital ? "Recital: " : "Basic: "}${value}`,
                     ]}
                 />

@@ -58,6 +58,16 @@ export type PlayData = $Result.DefaultSelection<Prisma.$PlayDataPayload>
  * 
  */
 export type Bingo = $Result.DefaultSelection<Prisma.$BingoPayload>
+/**
+ * Model BingoCell
+ * 
+ */
+export type BingoCell = $Result.DefaultSelection<Prisma.$BingoCellPayload>
+/**
+ * Model userBingoCellData
+ * 
+ */
+export type userBingoCellData = $Result.DefaultSelection<Prisma.$userBingoCellDataPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -266,6 +276,26 @@ export class PrismaClient<
     * ```
     */
   get bingo(): Prisma.BingoDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.bingoCell`: Exposes CRUD operations for the **BingoCell** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more BingoCells
+    * const bingoCells = await prisma.bingoCell.findMany()
+    * ```
+    */
+  get bingoCell(): Prisma.BingoCellDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.userBingoCellData`: Exposes CRUD operations for the **userBingoCellData** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more UserBingoCellData
+    * const userBingoCellData = await prisma.userBingoCellData.findMany()
+    * ```
+    */
+  get userBingoCellData(): Prisma.userBingoCellDataDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -714,7 +744,9 @@ export namespace Prisma {
     BasicBestPlay: 'BasicBestPlay',
     RecitalBestPlay: 'RecitalBestPlay',
     PlayData: 'PlayData',
-    Bingo: 'Bingo'
+    Bingo: 'Bingo',
+    BingoCell: 'BingoCell',
+    userBingoCellData: 'userBingoCellData'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -733,7 +765,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "bookmark" | "music" | "recentPlay" | "userBestGrade" | "basicBestPlay" | "recitalBestPlay" | "playData" | "bingo"
+      modelProps: "user" | "bookmark" | "music" | "recentPlay" | "userBestGrade" | "basicBestPlay" | "recitalBestPlay" | "playData" | "bingo" | "bingoCell" | "userBingoCellData"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1403,6 +1435,154 @@ export namespace Prisma {
           }
         }
       }
+      BingoCell: {
+        payload: Prisma.$BingoCellPayload<ExtArgs>
+        fields: Prisma.BingoCellFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.BingoCellFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BingoCellPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.BingoCellFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BingoCellPayload>
+          }
+          findFirst: {
+            args: Prisma.BingoCellFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BingoCellPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.BingoCellFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BingoCellPayload>
+          }
+          findMany: {
+            args: Prisma.BingoCellFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BingoCellPayload>[]
+          }
+          create: {
+            args: Prisma.BingoCellCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BingoCellPayload>
+          }
+          createMany: {
+            args: Prisma.BingoCellCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.BingoCellCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BingoCellPayload>[]
+          }
+          delete: {
+            args: Prisma.BingoCellDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BingoCellPayload>
+          }
+          update: {
+            args: Prisma.BingoCellUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BingoCellPayload>
+          }
+          deleteMany: {
+            args: Prisma.BingoCellDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.BingoCellUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.BingoCellUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BingoCellPayload>[]
+          }
+          upsert: {
+            args: Prisma.BingoCellUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BingoCellPayload>
+          }
+          aggregate: {
+            args: Prisma.BingoCellAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateBingoCell>
+          }
+          groupBy: {
+            args: Prisma.BingoCellGroupByArgs<ExtArgs>
+            result: $Utils.Optional<BingoCellGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.BingoCellCountArgs<ExtArgs>
+            result: $Utils.Optional<BingoCellCountAggregateOutputType> | number
+          }
+        }
+      }
+      userBingoCellData: {
+        payload: Prisma.$userBingoCellDataPayload<ExtArgs>
+        fields: Prisma.userBingoCellDataFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.userBingoCellDataFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$userBingoCellDataPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.userBingoCellDataFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$userBingoCellDataPayload>
+          }
+          findFirst: {
+            args: Prisma.userBingoCellDataFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$userBingoCellDataPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.userBingoCellDataFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$userBingoCellDataPayload>
+          }
+          findMany: {
+            args: Prisma.userBingoCellDataFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$userBingoCellDataPayload>[]
+          }
+          create: {
+            args: Prisma.userBingoCellDataCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$userBingoCellDataPayload>
+          }
+          createMany: {
+            args: Prisma.userBingoCellDataCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.userBingoCellDataCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$userBingoCellDataPayload>[]
+          }
+          delete: {
+            args: Prisma.userBingoCellDataDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$userBingoCellDataPayload>
+          }
+          update: {
+            args: Prisma.userBingoCellDataUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$userBingoCellDataPayload>
+          }
+          deleteMany: {
+            args: Prisma.userBingoCellDataDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.userBingoCellDataUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.userBingoCellDataUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$userBingoCellDataPayload>[]
+          }
+          upsert: {
+            args: Prisma.userBingoCellDataUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$userBingoCellDataPayload>
+          }
+          aggregate: {
+            args: Prisma.UserBingoCellDataAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateUserBingoCellData>
+          }
+          groupBy: {
+            args: Prisma.userBingoCellDataGroupByArgs<ExtArgs>
+            result: $Utils.Optional<UserBingoCellDataGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.userBingoCellDataCountArgs<ExtArgs>
+            result: $Utils.Optional<UserBingoCellDataCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1504,6 +1684,8 @@ export namespace Prisma {
     recitalBestPlay?: RecitalBestPlayOmit
     playData?: PlayDataOmit
     bingo?: BingoOmit
+    bingoCell?: BingoCellOmit
+    userBingoCellData?: userBingoCellDataOmit
   }
 
   /* Types for Logging */
@@ -1590,6 +1772,7 @@ export namespace Prisma {
     BasicBestPlay: number
     RecitalBestPlay: number
     UserBestGrade: number
+    userBingoCellData: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1599,6 +1782,7 @@ export namespace Prisma {
     BasicBestPlay?: boolean | UserCountOutputTypeCountBasicBestPlayArgs
     RecitalBestPlay?: boolean | UserCountOutputTypeCountRecitalBestPlayArgs
     UserBestGrade?: boolean | UserCountOutputTypeCountUserBestGradeArgs
+    userBingoCellData?: boolean | UserCountOutputTypeCountUserBingoCellDataArgs
   }
 
   // Custom InputTypes
@@ -1654,6 +1838,13 @@ export namespace Prisma {
     where?: UserBestGradeWhereInput
   }
 
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountUserBingoCellDataArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: userBingoCellDataWhereInput
+  }
+
 
   /**
    * Count Type MusicCountOutputType
@@ -1666,6 +1857,7 @@ export namespace Prisma {
     BasicBestPlay: number
     RecitalBestPlay: number
     Bingo: number
+    BingoCell: number
   }
 
   export type MusicCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1675,6 +1867,7 @@ export namespace Prisma {
     BasicBestPlay?: boolean | MusicCountOutputTypeCountBasicBestPlayArgs
     RecitalBestPlay?: boolean | MusicCountOutputTypeCountRecitalBestPlayArgs
     Bingo?: boolean | MusicCountOutputTypeCountBingoArgs
+    BingoCell?: boolean | MusicCountOutputTypeCountBingoCellArgs
   }
 
   // Custom InputTypes
@@ -1728,6 +1921,75 @@ export namespace Prisma {
    */
   export type MusicCountOutputTypeCountBingoArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: BingoWhereInput
+  }
+
+  /**
+   * MusicCountOutputType without action
+   */
+  export type MusicCountOutputTypeCountBingoCellArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BingoCellWhereInput
+  }
+
+
+  /**
+   * Count Type BingoCountOutputType
+   */
+
+  export type BingoCountOutputType = {
+    BingoCell: number
+  }
+
+  export type BingoCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    BingoCell?: boolean | BingoCountOutputTypeCountBingoCellArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * BingoCountOutputType without action
+   */
+  export type BingoCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BingoCountOutputType
+     */
+    select?: BingoCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * BingoCountOutputType without action
+   */
+  export type BingoCountOutputTypeCountBingoCellArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BingoCellWhereInput
+  }
+
+
+  /**
+   * Count Type BingoCellCountOutputType
+   */
+
+  export type BingoCellCountOutputType = {
+    userBingoData: number
+  }
+
+  export type BingoCellCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    userBingoData?: boolean | BingoCellCountOutputTypeCountUserBingoDataArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * BingoCellCountOutputType without action
+   */
+  export type BingoCellCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BingoCellCountOutputType
+     */
+    select?: BingoCellCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * BingoCellCountOutputType without action
+   */
+  export type BingoCellCountOutputTypeCountUserBingoDataArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: userBingoCellDataWhereInput
   }
 
 
@@ -2175,6 +2437,7 @@ export namespace Prisma {
     BasicBestPlay?: boolean | User$BasicBestPlayArgs<ExtArgs>
     RecitalBestPlay?: boolean | User$RecitalBestPlayArgs<ExtArgs>
     UserBestGrade?: boolean | User$UserBestGradeArgs<ExtArgs>
+    userBingoCellData?: boolean | User$userBingoCellDataArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -2273,6 +2536,7 @@ export namespace Prisma {
     BasicBestPlay?: boolean | User$BasicBestPlayArgs<ExtArgs>
     RecitalBestPlay?: boolean | User$RecitalBestPlayArgs<ExtArgs>
     UserBestGrade?: boolean | User$UserBestGradeArgs<ExtArgs>
+    userBingoCellData?: boolean | User$userBingoCellDataArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -2287,6 +2551,7 @@ export namespace Prisma {
       BasicBestPlay: Prisma.$BasicBestPlayPayload<ExtArgs>[]
       RecitalBestPlay: Prisma.$RecitalBestPlayPayload<ExtArgs>[]
       UserBestGrade: Prisma.$UserBestGradePayload<ExtArgs>[]
+      userBingoCellData: Prisma.$userBingoCellDataPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -2715,6 +2980,7 @@ export namespace Prisma {
     BasicBestPlay<T extends User$BasicBestPlayArgs<ExtArgs> = {}>(args?: Subset<T, User$BasicBestPlayArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BasicBestPlayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     RecitalBestPlay<T extends User$RecitalBestPlayArgs<ExtArgs> = {}>(args?: Subset<T, User$RecitalBestPlayArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RecitalBestPlayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     UserBestGrade<T extends User$UserBestGradeArgs<ExtArgs> = {}>(args?: Subset<T, User$UserBestGradeArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserBestGradePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    userBingoCellData<T extends User$userBingoCellDataArgs<ExtArgs> = {}>(args?: Subset<T, User$userBingoCellDataArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$userBingoCellDataPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3297,6 +3563,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: UserBestGradeScalarFieldEnum | UserBestGradeScalarFieldEnum[]
+  }
+
+  /**
+   * User.userBingoCellData
+   */
+  export type User$userBingoCellDataArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the userBingoCellData
+     */
+    select?: userBingoCellDataSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the userBingoCellData
+     */
+    omit?: userBingoCellDataOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: userBingoCellDataInclude<ExtArgs> | null
+    where?: userBingoCellDataWhereInput
+    orderBy?: userBingoCellDataOrderByWithRelationInput | userBingoCellDataOrderByWithRelationInput[]
+    cursor?: userBingoCellDataWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserBingoCellDataScalarFieldEnum | UserBingoCellDataScalarFieldEnum[]
   }
 
   /**
@@ -4704,6 +4994,7 @@ export namespace Prisma {
     BasicBestPlay?: boolean | Music$BasicBestPlayArgs<ExtArgs>
     RecitalBestPlay?: boolean | Music$RecitalBestPlayArgs<ExtArgs>
     Bingo?: boolean | Music$BingoArgs<ExtArgs>
+    BingoCell?: boolean | Music$BingoCellArgs<ExtArgs>
     _count?: boolean | MusicCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["music"]>
 
@@ -4766,6 +5057,7 @@ export namespace Prisma {
     BasicBestPlay?: boolean | Music$BasicBestPlayArgs<ExtArgs>
     RecitalBestPlay?: boolean | Music$RecitalBestPlayArgs<ExtArgs>
     Bingo?: boolean | Music$BingoArgs<ExtArgs>
+    BingoCell?: boolean | Music$BingoCellArgs<ExtArgs>
     _count?: boolean | MusicCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type MusicIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -4780,6 +5072,7 @@ export namespace Prisma {
       BasicBestPlay: Prisma.$BasicBestPlayPayload<ExtArgs>[]
       RecitalBestPlay: Prisma.$RecitalBestPlayPayload<ExtArgs>[]
       Bingo: Prisma.$BingoPayload<ExtArgs>[]
+      BingoCell: Prisma.$BingoCellPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -5196,6 +5489,7 @@ export namespace Prisma {
     BasicBestPlay<T extends Music$BasicBestPlayArgs<ExtArgs> = {}>(args?: Subset<T, Music$BasicBestPlayArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BasicBestPlayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     RecitalBestPlay<T extends Music$RecitalBestPlayArgs<ExtArgs> = {}>(args?: Subset<T, Music$RecitalBestPlayArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RecitalBestPlayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     Bingo<T extends Music$BingoArgs<ExtArgs> = {}>(args?: Subset<T, Music$BingoArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BingoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    BingoCell<T extends Music$BingoCellArgs<ExtArgs> = {}>(args?: Subset<T, Music$BingoCellArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BingoCellPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5766,6 +6060,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: BingoScalarFieldEnum | BingoScalarFieldEnum[]
+  }
+
+  /**
+   * Music.BingoCell
+   */
+  export type Music$BingoCellArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BingoCell
+     */
+    select?: BingoCellSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BingoCell
+     */
+    omit?: BingoCellOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BingoCellInclude<ExtArgs> | null
+    where?: BingoCellWhereInput
+    orderBy?: BingoCellOrderByWithRelationInput | BingoCellOrderByWithRelationInput[]
+    cursor?: BingoCellWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: BingoCellScalarFieldEnum | BingoCellScalarFieldEnum[]
   }
 
   /**
@@ -12069,6 +12387,8 @@ export namespace Prisma {
     line?: boolean
     music_idx?: boolean
     music?: boolean | MusicDefaultArgs<ExtArgs>
+    BingoCell?: boolean | Bingo$BingoCellArgs<ExtArgs>
+    _count?: boolean | BingoCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["bingo"]>
 
   export type BingoSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -12097,6 +12417,8 @@ export namespace Prisma {
   export type BingoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nos" | "line" | "music_idx", ExtArgs["result"]["bingo"]>
   export type BingoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     music?: boolean | MusicDefaultArgs<ExtArgs>
+    BingoCell?: boolean | Bingo$BingoCellArgs<ExtArgs>
+    _count?: boolean | BingoCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type BingoIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     music?: boolean | MusicDefaultArgs<ExtArgs>
@@ -12109,6 +12431,7 @@ export namespace Prisma {
     name: "Bingo"
     objects: {
       music: Prisma.$MusicPayload<ExtArgs>
+      BingoCell: Prisma.$BingoCellPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -12510,6 +12833,7 @@ export namespace Prisma {
   export interface Prisma__BingoClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     music<T extends MusicDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MusicDefaultArgs<ExtArgs>>): Prisma__MusicClient<$Result.GetResult<Prisma.$MusicPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    BingoCell<T extends Bingo$BingoCellArgs<ExtArgs> = {}>(args?: Subset<T, Bingo$BingoCellArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BingoCellPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -12937,6 +13261,30 @@ export namespace Prisma {
   }
 
   /**
+   * Bingo.BingoCell
+   */
+  export type Bingo$BingoCellArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BingoCell
+     */
+    select?: BingoCellSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BingoCell
+     */
+    omit?: BingoCellOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BingoCellInclude<ExtArgs> | null
+    where?: BingoCellWhereInput
+    orderBy?: BingoCellOrderByWithRelationInput | BingoCellOrderByWithRelationInput[]
+    cursor?: BingoCellWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: BingoCellScalarFieldEnum | BingoCellScalarFieldEnum[]
+  }
+
+  /**
    * Bingo without action
    */
   export type BingoDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -12952,6 +13300,2267 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: BingoInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model BingoCell
+   */
+
+  export type AggregateBingoCell = {
+    _count: BingoCellCountAggregateOutputType | null
+    _avg: BingoCellAvgAggregateOutputType | null
+    _sum: BingoCellSumAggregateOutputType | null
+    _min: BingoCellMinAggregateOutputType | null
+    _max: BingoCellMaxAggregateOutputType | null
+  }
+
+  export type BingoCellAvgAggregateOutputType = {
+    id: number | null
+    position: number | null
+    bingo_id: number | null
+  }
+
+  export type BingoCellSumAggregateOutputType = {
+    id: number | null
+    position: number | null
+    bingo_id: number | null
+  }
+
+  export type BingoCellMinAggregateOutputType = {
+    id: number | null
+    position: number | null
+    challenge: string | null
+    category_short: string | null
+    music_idx: string | null
+    bingo_id: number | null
+  }
+
+  export type BingoCellMaxAggregateOutputType = {
+    id: number | null
+    position: number | null
+    challenge: string | null
+    category_short: string | null
+    music_idx: string | null
+    bingo_id: number | null
+  }
+
+  export type BingoCellCountAggregateOutputType = {
+    id: number
+    position: number
+    challenge: number
+    category_short: number
+    music_idx: number
+    bingo_id: number
+    _all: number
+  }
+
+
+  export type BingoCellAvgAggregateInputType = {
+    id?: true
+    position?: true
+    bingo_id?: true
+  }
+
+  export type BingoCellSumAggregateInputType = {
+    id?: true
+    position?: true
+    bingo_id?: true
+  }
+
+  export type BingoCellMinAggregateInputType = {
+    id?: true
+    position?: true
+    challenge?: true
+    category_short?: true
+    music_idx?: true
+    bingo_id?: true
+  }
+
+  export type BingoCellMaxAggregateInputType = {
+    id?: true
+    position?: true
+    challenge?: true
+    category_short?: true
+    music_idx?: true
+    bingo_id?: true
+  }
+
+  export type BingoCellCountAggregateInputType = {
+    id?: true
+    position?: true
+    challenge?: true
+    category_short?: true
+    music_idx?: true
+    bingo_id?: true
+    _all?: true
+  }
+
+  export type BingoCellAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which BingoCell to aggregate.
+     */
+    where?: BingoCellWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BingoCells to fetch.
+     */
+    orderBy?: BingoCellOrderByWithRelationInput | BingoCellOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: BingoCellWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BingoCells from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BingoCells.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned BingoCells
+    **/
+    _count?: true | BingoCellCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: BingoCellAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: BingoCellSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: BingoCellMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: BingoCellMaxAggregateInputType
+  }
+
+  export type GetBingoCellAggregateType<T extends BingoCellAggregateArgs> = {
+        [P in keyof T & keyof AggregateBingoCell]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateBingoCell[P]>
+      : GetScalarType<T[P], AggregateBingoCell[P]>
+  }
+
+
+
+
+  export type BingoCellGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BingoCellWhereInput
+    orderBy?: BingoCellOrderByWithAggregationInput | BingoCellOrderByWithAggregationInput[]
+    by: BingoCellScalarFieldEnum[] | BingoCellScalarFieldEnum
+    having?: BingoCellScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: BingoCellCountAggregateInputType | true
+    _avg?: BingoCellAvgAggregateInputType
+    _sum?: BingoCellSumAggregateInputType
+    _min?: BingoCellMinAggregateInputType
+    _max?: BingoCellMaxAggregateInputType
+  }
+
+  export type BingoCellGroupByOutputType = {
+    id: number
+    position: number
+    challenge: string
+    category_short: string | null
+    music_idx: string | null
+    bingo_id: number
+    _count: BingoCellCountAggregateOutputType | null
+    _avg: BingoCellAvgAggregateOutputType | null
+    _sum: BingoCellSumAggregateOutputType | null
+    _min: BingoCellMinAggregateOutputType | null
+    _max: BingoCellMaxAggregateOutputType | null
+  }
+
+  type GetBingoCellGroupByPayload<T extends BingoCellGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<BingoCellGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof BingoCellGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], BingoCellGroupByOutputType[P]>
+            : GetScalarType<T[P], BingoCellGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type BingoCellSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    position?: boolean
+    challenge?: boolean
+    category_short?: boolean
+    music_idx?: boolean
+    bingo_id?: boolean
+    music?: boolean | BingoCell$musicArgs<ExtArgs>
+    bingo?: boolean | BingoDefaultArgs<ExtArgs>
+    userBingoData?: boolean | BingoCell$userBingoDataArgs<ExtArgs>
+    _count?: boolean | BingoCellCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["bingoCell"]>
+
+  export type BingoCellSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    position?: boolean
+    challenge?: boolean
+    category_short?: boolean
+    music_idx?: boolean
+    bingo_id?: boolean
+    music?: boolean | BingoCell$musicArgs<ExtArgs>
+    bingo?: boolean | BingoDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["bingoCell"]>
+
+  export type BingoCellSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    position?: boolean
+    challenge?: boolean
+    category_short?: boolean
+    music_idx?: boolean
+    bingo_id?: boolean
+    music?: boolean | BingoCell$musicArgs<ExtArgs>
+    bingo?: boolean | BingoDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["bingoCell"]>
+
+  export type BingoCellSelectScalar = {
+    id?: boolean
+    position?: boolean
+    challenge?: boolean
+    category_short?: boolean
+    music_idx?: boolean
+    bingo_id?: boolean
+  }
+
+  export type BingoCellOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "position" | "challenge" | "category_short" | "music_idx" | "bingo_id", ExtArgs["result"]["bingoCell"]>
+  export type BingoCellInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    music?: boolean | BingoCell$musicArgs<ExtArgs>
+    bingo?: boolean | BingoDefaultArgs<ExtArgs>
+    userBingoData?: boolean | BingoCell$userBingoDataArgs<ExtArgs>
+    _count?: boolean | BingoCellCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type BingoCellIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    music?: boolean | BingoCell$musicArgs<ExtArgs>
+    bingo?: boolean | BingoDefaultArgs<ExtArgs>
+  }
+  export type BingoCellIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    music?: boolean | BingoCell$musicArgs<ExtArgs>
+    bingo?: boolean | BingoDefaultArgs<ExtArgs>
+  }
+
+  export type $BingoCellPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "BingoCell"
+    objects: {
+      music: Prisma.$MusicPayload<ExtArgs> | null
+      bingo: Prisma.$BingoPayload<ExtArgs>
+      userBingoData: Prisma.$userBingoCellDataPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      position: number
+      challenge: string
+      category_short: string | null
+      music_idx: string | null
+      bingo_id: number
+    }, ExtArgs["result"]["bingoCell"]>
+    composites: {}
+  }
+
+  type BingoCellGetPayload<S extends boolean | null | undefined | BingoCellDefaultArgs> = $Result.GetResult<Prisma.$BingoCellPayload, S>
+
+  type BingoCellCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<BingoCellFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: BingoCellCountAggregateInputType | true
+    }
+
+  export interface BingoCellDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['BingoCell'], meta: { name: 'BingoCell' } }
+    /**
+     * Find zero or one BingoCell that matches the filter.
+     * @param {BingoCellFindUniqueArgs} args - Arguments to find a BingoCell
+     * @example
+     * // Get one BingoCell
+     * const bingoCell = await prisma.bingoCell.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends BingoCellFindUniqueArgs>(args: SelectSubset<T, BingoCellFindUniqueArgs<ExtArgs>>): Prisma__BingoCellClient<$Result.GetResult<Prisma.$BingoCellPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one BingoCell that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {BingoCellFindUniqueOrThrowArgs} args - Arguments to find a BingoCell
+     * @example
+     * // Get one BingoCell
+     * const bingoCell = await prisma.bingoCell.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends BingoCellFindUniqueOrThrowArgs>(args: SelectSubset<T, BingoCellFindUniqueOrThrowArgs<ExtArgs>>): Prisma__BingoCellClient<$Result.GetResult<Prisma.$BingoCellPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first BingoCell that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BingoCellFindFirstArgs} args - Arguments to find a BingoCell
+     * @example
+     * // Get one BingoCell
+     * const bingoCell = await prisma.bingoCell.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends BingoCellFindFirstArgs>(args?: SelectSubset<T, BingoCellFindFirstArgs<ExtArgs>>): Prisma__BingoCellClient<$Result.GetResult<Prisma.$BingoCellPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first BingoCell that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BingoCellFindFirstOrThrowArgs} args - Arguments to find a BingoCell
+     * @example
+     * // Get one BingoCell
+     * const bingoCell = await prisma.bingoCell.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends BingoCellFindFirstOrThrowArgs>(args?: SelectSubset<T, BingoCellFindFirstOrThrowArgs<ExtArgs>>): Prisma__BingoCellClient<$Result.GetResult<Prisma.$BingoCellPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more BingoCells that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BingoCellFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all BingoCells
+     * const bingoCells = await prisma.bingoCell.findMany()
+     * 
+     * // Get first 10 BingoCells
+     * const bingoCells = await prisma.bingoCell.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const bingoCellWithIdOnly = await prisma.bingoCell.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends BingoCellFindManyArgs>(args?: SelectSubset<T, BingoCellFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BingoCellPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a BingoCell.
+     * @param {BingoCellCreateArgs} args - Arguments to create a BingoCell.
+     * @example
+     * // Create one BingoCell
+     * const BingoCell = await prisma.bingoCell.create({
+     *   data: {
+     *     // ... data to create a BingoCell
+     *   }
+     * })
+     * 
+     */
+    create<T extends BingoCellCreateArgs>(args: SelectSubset<T, BingoCellCreateArgs<ExtArgs>>): Prisma__BingoCellClient<$Result.GetResult<Prisma.$BingoCellPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many BingoCells.
+     * @param {BingoCellCreateManyArgs} args - Arguments to create many BingoCells.
+     * @example
+     * // Create many BingoCells
+     * const bingoCell = await prisma.bingoCell.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends BingoCellCreateManyArgs>(args?: SelectSubset<T, BingoCellCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many BingoCells and returns the data saved in the database.
+     * @param {BingoCellCreateManyAndReturnArgs} args - Arguments to create many BingoCells.
+     * @example
+     * // Create many BingoCells
+     * const bingoCell = await prisma.bingoCell.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many BingoCells and only return the `id`
+     * const bingoCellWithIdOnly = await prisma.bingoCell.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends BingoCellCreateManyAndReturnArgs>(args?: SelectSubset<T, BingoCellCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BingoCellPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a BingoCell.
+     * @param {BingoCellDeleteArgs} args - Arguments to delete one BingoCell.
+     * @example
+     * // Delete one BingoCell
+     * const BingoCell = await prisma.bingoCell.delete({
+     *   where: {
+     *     // ... filter to delete one BingoCell
+     *   }
+     * })
+     * 
+     */
+    delete<T extends BingoCellDeleteArgs>(args: SelectSubset<T, BingoCellDeleteArgs<ExtArgs>>): Prisma__BingoCellClient<$Result.GetResult<Prisma.$BingoCellPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one BingoCell.
+     * @param {BingoCellUpdateArgs} args - Arguments to update one BingoCell.
+     * @example
+     * // Update one BingoCell
+     * const bingoCell = await prisma.bingoCell.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends BingoCellUpdateArgs>(args: SelectSubset<T, BingoCellUpdateArgs<ExtArgs>>): Prisma__BingoCellClient<$Result.GetResult<Prisma.$BingoCellPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more BingoCells.
+     * @param {BingoCellDeleteManyArgs} args - Arguments to filter BingoCells to delete.
+     * @example
+     * // Delete a few BingoCells
+     * const { count } = await prisma.bingoCell.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends BingoCellDeleteManyArgs>(args?: SelectSubset<T, BingoCellDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more BingoCells.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BingoCellUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many BingoCells
+     * const bingoCell = await prisma.bingoCell.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends BingoCellUpdateManyArgs>(args: SelectSubset<T, BingoCellUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more BingoCells and returns the data updated in the database.
+     * @param {BingoCellUpdateManyAndReturnArgs} args - Arguments to update many BingoCells.
+     * @example
+     * // Update many BingoCells
+     * const bingoCell = await prisma.bingoCell.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more BingoCells and only return the `id`
+     * const bingoCellWithIdOnly = await prisma.bingoCell.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends BingoCellUpdateManyAndReturnArgs>(args: SelectSubset<T, BingoCellUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BingoCellPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one BingoCell.
+     * @param {BingoCellUpsertArgs} args - Arguments to update or create a BingoCell.
+     * @example
+     * // Update or create a BingoCell
+     * const bingoCell = await prisma.bingoCell.upsert({
+     *   create: {
+     *     // ... data to create a BingoCell
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the BingoCell we want to update
+     *   }
+     * })
+     */
+    upsert<T extends BingoCellUpsertArgs>(args: SelectSubset<T, BingoCellUpsertArgs<ExtArgs>>): Prisma__BingoCellClient<$Result.GetResult<Prisma.$BingoCellPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of BingoCells.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BingoCellCountArgs} args - Arguments to filter BingoCells to count.
+     * @example
+     * // Count the number of BingoCells
+     * const count = await prisma.bingoCell.count({
+     *   where: {
+     *     // ... the filter for the BingoCells we want to count
+     *   }
+     * })
+    **/
+    count<T extends BingoCellCountArgs>(
+      args?: Subset<T, BingoCellCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], BingoCellCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a BingoCell.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BingoCellAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends BingoCellAggregateArgs>(args: Subset<T, BingoCellAggregateArgs>): Prisma.PrismaPromise<GetBingoCellAggregateType<T>>
+
+    /**
+     * Group by BingoCell.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BingoCellGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends BingoCellGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: BingoCellGroupByArgs['orderBy'] }
+        : { orderBy?: BingoCellGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, BingoCellGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetBingoCellGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the BingoCell model
+   */
+  readonly fields: BingoCellFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for BingoCell.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__BingoCellClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    music<T extends BingoCell$musicArgs<ExtArgs> = {}>(args?: Subset<T, BingoCell$musicArgs<ExtArgs>>): Prisma__MusicClient<$Result.GetResult<Prisma.$MusicPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    bingo<T extends BingoDefaultArgs<ExtArgs> = {}>(args?: Subset<T, BingoDefaultArgs<ExtArgs>>): Prisma__BingoClient<$Result.GetResult<Prisma.$BingoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    userBingoData<T extends BingoCell$userBingoDataArgs<ExtArgs> = {}>(args?: Subset<T, BingoCell$userBingoDataArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$userBingoCellDataPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the BingoCell model
+   */
+  interface BingoCellFieldRefs {
+    readonly id: FieldRef<"BingoCell", 'Int'>
+    readonly position: FieldRef<"BingoCell", 'Int'>
+    readonly challenge: FieldRef<"BingoCell", 'String'>
+    readonly category_short: FieldRef<"BingoCell", 'String'>
+    readonly music_idx: FieldRef<"BingoCell", 'String'>
+    readonly bingo_id: FieldRef<"BingoCell", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * BingoCell findUnique
+   */
+  export type BingoCellFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BingoCell
+     */
+    select?: BingoCellSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BingoCell
+     */
+    omit?: BingoCellOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BingoCellInclude<ExtArgs> | null
+    /**
+     * Filter, which BingoCell to fetch.
+     */
+    where: BingoCellWhereUniqueInput
+  }
+
+  /**
+   * BingoCell findUniqueOrThrow
+   */
+  export type BingoCellFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BingoCell
+     */
+    select?: BingoCellSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BingoCell
+     */
+    omit?: BingoCellOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BingoCellInclude<ExtArgs> | null
+    /**
+     * Filter, which BingoCell to fetch.
+     */
+    where: BingoCellWhereUniqueInput
+  }
+
+  /**
+   * BingoCell findFirst
+   */
+  export type BingoCellFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BingoCell
+     */
+    select?: BingoCellSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BingoCell
+     */
+    omit?: BingoCellOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BingoCellInclude<ExtArgs> | null
+    /**
+     * Filter, which BingoCell to fetch.
+     */
+    where?: BingoCellWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BingoCells to fetch.
+     */
+    orderBy?: BingoCellOrderByWithRelationInput | BingoCellOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for BingoCells.
+     */
+    cursor?: BingoCellWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BingoCells from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BingoCells.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of BingoCells.
+     */
+    distinct?: BingoCellScalarFieldEnum | BingoCellScalarFieldEnum[]
+  }
+
+  /**
+   * BingoCell findFirstOrThrow
+   */
+  export type BingoCellFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BingoCell
+     */
+    select?: BingoCellSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BingoCell
+     */
+    omit?: BingoCellOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BingoCellInclude<ExtArgs> | null
+    /**
+     * Filter, which BingoCell to fetch.
+     */
+    where?: BingoCellWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BingoCells to fetch.
+     */
+    orderBy?: BingoCellOrderByWithRelationInput | BingoCellOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for BingoCells.
+     */
+    cursor?: BingoCellWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BingoCells from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BingoCells.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of BingoCells.
+     */
+    distinct?: BingoCellScalarFieldEnum | BingoCellScalarFieldEnum[]
+  }
+
+  /**
+   * BingoCell findMany
+   */
+  export type BingoCellFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BingoCell
+     */
+    select?: BingoCellSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BingoCell
+     */
+    omit?: BingoCellOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BingoCellInclude<ExtArgs> | null
+    /**
+     * Filter, which BingoCells to fetch.
+     */
+    where?: BingoCellWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BingoCells to fetch.
+     */
+    orderBy?: BingoCellOrderByWithRelationInput | BingoCellOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing BingoCells.
+     */
+    cursor?: BingoCellWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BingoCells from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BingoCells.
+     */
+    skip?: number
+    distinct?: BingoCellScalarFieldEnum | BingoCellScalarFieldEnum[]
+  }
+
+  /**
+   * BingoCell create
+   */
+  export type BingoCellCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BingoCell
+     */
+    select?: BingoCellSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BingoCell
+     */
+    omit?: BingoCellOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BingoCellInclude<ExtArgs> | null
+    /**
+     * The data needed to create a BingoCell.
+     */
+    data: XOR<BingoCellCreateInput, BingoCellUncheckedCreateInput>
+  }
+
+  /**
+   * BingoCell createMany
+   */
+  export type BingoCellCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many BingoCells.
+     */
+    data: BingoCellCreateManyInput | BingoCellCreateManyInput[]
+  }
+
+  /**
+   * BingoCell createManyAndReturn
+   */
+  export type BingoCellCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BingoCell
+     */
+    select?: BingoCellSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the BingoCell
+     */
+    omit?: BingoCellOmit<ExtArgs> | null
+    /**
+     * The data used to create many BingoCells.
+     */
+    data: BingoCellCreateManyInput | BingoCellCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BingoCellIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * BingoCell update
+   */
+  export type BingoCellUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BingoCell
+     */
+    select?: BingoCellSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BingoCell
+     */
+    omit?: BingoCellOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BingoCellInclude<ExtArgs> | null
+    /**
+     * The data needed to update a BingoCell.
+     */
+    data: XOR<BingoCellUpdateInput, BingoCellUncheckedUpdateInput>
+    /**
+     * Choose, which BingoCell to update.
+     */
+    where: BingoCellWhereUniqueInput
+  }
+
+  /**
+   * BingoCell updateMany
+   */
+  export type BingoCellUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update BingoCells.
+     */
+    data: XOR<BingoCellUpdateManyMutationInput, BingoCellUncheckedUpdateManyInput>
+    /**
+     * Filter which BingoCells to update
+     */
+    where?: BingoCellWhereInput
+    /**
+     * Limit how many BingoCells to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * BingoCell updateManyAndReturn
+   */
+  export type BingoCellUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BingoCell
+     */
+    select?: BingoCellSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the BingoCell
+     */
+    omit?: BingoCellOmit<ExtArgs> | null
+    /**
+     * The data used to update BingoCells.
+     */
+    data: XOR<BingoCellUpdateManyMutationInput, BingoCellUncheckedUpdateManyInput>
+    /**
+     * Filter which BingoCells to update
+     */
+    where?: BingoCellWhereInput
+    /**
+     * Limit how many BingoCells to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BingoCellIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * BingoCell upsert
+   */
+  export type BingoCellUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BingoCell
+     */
+    select?: BingoCellSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BingoCell
+     */
+    omit?: BingoCellOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BingoCellInclude<ExtArgs> | null
+    /**
+     * The filter to search for the BingoCell to update in case it exists.
+     */
+    where: BingoCellWhereUniqueInput
+    /**
+     * In case the BingoCell found by the `where` argument doesn't exist, create a new BingoCell with this data.
+     */
+    create: XOR<BingoCellCreateInput, BingoCellUncheckedCreateInput>
+    /**
+     * In case the BingoCell was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<BingoCellUpdateInput, BingoCellUncheckedUpdateInput>
+  }
+
+  /**
+   * BingoCell delete
+   */
+  export type BingoCellDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BingoCell
+     */
+    select?: BingoCellSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BingoCell
+     */
+    omit?: BingoCellOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BingoCellInclude<ExtArgs> | null
+    /**
+     * Filter which BingoCell to delete.
+     */
+    where: BingoCellWhereUniqueInput
+  }
+
+  /**
+   * BingoCell deleteMany
+   */
+  export type BingoCellDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which BingoCells to delete
+     */
+    where?: BingoCellWhereInput
+    /**
+     * Limit how many BingoCells to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * BingoCell.music
+   */
+  export type BingoCell$musicArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Music
+     */
+    select?: MusicSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Music
+     */
+    omit?: MusicOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MusicInclude<ExtArgs> | null
+    where?: MusicWhereInput
+  }
+
+  /**
+   * BingoCell.userBingoData
+   */
+  export type BingoCell$userBingoDataArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the userBingoCellData
+     */
+    select?: userBingoCellDataSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the userBingoCellData
+     */
+    omit?: userBingoCellDataOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: userBingoCellDataInclude<ExtArgs> | null
+    where?: userBingoCellDataWhereInput
+    orderBy?: userBingoCellDataOrderByWithRelationInput | userBingoCellDataOrderByWithRelationInput[]
+    cursor?: userBingoCellDataWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserBingoCellDataScalarFieldEnum | UserBingoCellDataScalarFieldEnum[]
+  }
+
+  /**
+   * BingoCell without action
+   */
+  export type BingoCellDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BingoCell
+     */
+    select?: BingoCellSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BingoCell
+     */
+    omit?: BingoCellOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BingoCellInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model userBingoCellData
+   */
+
+  export type AggregateUserBingoCellData = {
+    _count: UserBingoCellDataCountAggregateOutputType | null
+    _avg: UserBingoCellDataAvgAggregateOutputType | null
+    _sum: UserBingoCellDataSumAggregateOutputType | null
+    _min: UserBingoCellDataMinAggregateOutputType | null
+    _max: UserBingoCellDataMaxAggregateOutputType | null
+  }
+
+  export type UserBingoCellDataAvgAggregateOutputType = {
+    id: number | null
+    user_id: number | null
+    bingo_cell_id: number | null
+  }
+
+  export type UserBingoCellDataSumAggregateOutputType = {
+    id: number | null
+    user_id: number | null
+    bingo_cell_id: number | null
+  }
+
+  export type UserBingoCellDataMinAggregateOutputType = {
+    id: number | null
+    isCompleted: boolean | null
+    user_id: number | null
+    bingo_cell_id: number | null
+  }
+
+  export type UserBingoCellDataMaxAggregateOutputType = {
+    id: number | null
+    isCompleted: boolean | null
+    user_id: number | null
+    bingo_cell_id: number | null
+  }
+
+  export type UserBingoCellDataCountAggregateOutputType = {
+    id: number
+    isCompleted: number
+    user_id: number
+    bingo_cell_id: number
+    _all: number
+  }
+
+
+  export type UserBingoCellDataAvgAggregateInputType = {
+    id?: true
+    user_id?: true
+    bingo_cell_id?: true
+  }
+
+  export type UserBingoCellDataSumAggregateInputType = {
+    id?: true
+    user_id?: true
+    bingo_cell_id?: true
+  }
+
+  export type UserBingoCellDataMinAggregateInputType = {
+    id?: true
+    isCompleted?: true
+    user_id?: true
+    bingo_cell_id?: true
+  }
+
+  export type UserBingoCellDataMaxAggregateInputType = {
+    id?: true
+    isCompleted?: true
+    user_id?: true
+    bingo_cell_id?: true
+  }
+
+  export type UserBingoCellDataCountAggregateInputType = {
+    id?: true
+    isCompleted?: true
+    user_id?: true
+    bingo_cell_id?: true
+    _all?: true
+  }
+
+  export type UserBingoCellDataAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which userBingoCellData to aggregate.
+     */
+    where?: userBingoCellDataWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of userBingoCellData to fetch.
+     */
+    orderBy?: userBingoCellDataOrderByWithRelationInput | userBingoCellDataOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: userBingoCellDataWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` userBingoCellData from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` userBingoCellData.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned userBingoCellData
+    **/
+    _count?: true | UserBingoCellDataCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: UserBingoCellDataAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: UserBingoCellDataSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: UserBingoCellDataMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: UserBingoCellDataMaxAggregateInputType
+  }
+
+  export type GetUserBingoCellDataAggregateType<T extends UserBingoCellDataAggregateArgs> = {
+        [P in keyof T & keyof AggregateUserBingoCellData]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUserBingoCellData[P]>
+      : GetScalarType<T[P], AggregateUserBingoCellData[P]>
+  }
+
+
+
+
+  export type userBingoCellDataGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: userBingoCellDataWhereInput
+    orderBy?: userBingoCellDataOrderByWithAggregationInput | userBingoCellDataOrderByWithAggregationInput[]
+    by: UserBingoCellDataScalarFieldEnum[] | UserBingoCellDataScalarFieldEnum
+    having?: userBingoCellDataScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: UserBingoCellDataCountAggregateInputType | true
+    _avg?: UserBingoCellDataAvgAggregateInputType
+    _sum?: UserBingoCellDataSumAggregateInputType
+    _min?: UserBingoCellDataMinAggregateInputType
+    _max?: UserBingoCellDataMaxAggregateInputType
+  }
+
+  export type UserBingoCellDataGroupByOutputType = {
+    id: number
+    isCompleted: boolean
+    user_id: number
+    bingo_cell_id: number
+    _count: UserBingoCellDataCountAggregateOutputType | null
+    _avg: UserBingoCellDataAvgAggregateOutputType | null
+    _sum: UserBingoCellDataSumAggregateOutputType | null
+    _min: UserBingoCellDataMinAggregateOutputType | null
+    _max: UserBingoCellDataMaxAggregateOutputType | null
+  }
+
+  type GetUserBingoCellDataGroupByPayload<T extends userBingoCellDataGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<UserBingoCellDataGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof UserBingoCellDataGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], UserBingoCellDataGroupByOutputType[P]>
+            : GetScalarType<T[P], UserBingoCellDataGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type userBingoCellDataSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    isCompleted?: boolean
+    user_id?: boolean
+    bingo_cell_id?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    bingo?: boolean | BingoCellDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userBingoCellData"]>
+
+  export type userBingoCellDataSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    isCompleted?: boolean
+    user_id?: boolean
+    bingo_cell_id?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    bingo?: boolean | BingoCellDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userBingoCellData"]>
+
+  export type userBingoCellDataSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    isCompleted?: boolean
+    user_id?: boolean
+    bingo_cell_id?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    bingo?: boolean | BingoCellDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userBingoCellData"]>
+
+  export type userBingoCellDataSelectScalar = {
+    id?: boolean
+    isCompleted?: boolean
+    user_id?: boolean
+    bingo_cell_id?: boolean
+  }
+
+  export type userBingoCellDataOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "isCompleted" | "user_id" | "bingo_cell_id", ExtArgs["result"]["userBingoCellData"]>
+  export type userBingoCellDataInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    bingo?: boolean | BingoCellDefaultArgs<ExtArgs>
+  }
+  export type userBingoCellDataIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    bingo?: boolean | BingoCellDefaultArgs<ExtArgs>
+  }
+  export type userBingoCellDataIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    bingo?: boolean | BingoCellDefaultArgs<ExtArgs>
+  }
+
+  export type $userBingoCellDataPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "userBingoCellData"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      bingo: Prisma.$BingoCellPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      isCompleted: boolean
+      user_id: number
+      bingo_cell_id: number
+    }, ExtArgs["result"]["userBingoCellData"]>
+    composites: {}
+  }
+
+  type userBingoCellDataGetPayload<S extends boolean | null | undefined | userBingoCellDataDefaultArgs> = $Result.GetResult<Prisma.$userBingoCellDataPayload, S>
+
+  type userBingoCellDataCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<userBingoCellDataFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: UserBingoCellDataCountAggregateInputType | true
+    }
+
+  export interface userBingoCellDataDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['userBingoCellData'], meta: { name: 'userBingoCellData' } }
+    /**
+     * Find zero or one UserBingoCellData that matches the filter.
+     * @param {userBingoCellDataFindUniqueArgs} args - Arguments to find a UserBingoCellData
+     * @example
+     * // Get one UserBingoCellData
+     * const userBingoCellData = await prisma.userBingoCellData.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends userBingoCellDataFindUniqueArgs>(args: SelectSubset<T, userBingoCellDataFindUniqueArgs<ExtArgs>>): Prisma__userBingoCellDataClient<$Result.GetResult<Prisma.$userBingoCellDataPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one UserBingoCellData that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {userBingoCellDataFindUniqueOrThrowArgs} args - Arguments to find a UserBingoCellData
+     * @example
+     * // Get one UserBingoCellData
+     * const userBingoCellData = await prisma.userBingoCellData.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends userBingoCellDataFindUniqueOrThrowArgs>(args: SelectSubset<T, userBingoCellDataFindUniqueOrThrowArgs<ExtArgs>>): Prisma__userBingoCellDataClient<$Result.GetResult<Prisma.$userBingoCellDataPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserBingoCellData that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {userBingoCellDataFindFirstArgs} args - Arguments to find a UserBingoCellData
+     * @example
+     * // Get one UserBingoCellData
+     * const userBingoCellData = await prisma.userBingoCellData.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends userBingoCellDataFindFirstArgs>(args?: SelectSubset<T, userBingoCellDataFindFirstArgs<ExtArgs>>): Prisma__userBingoCellDataClient<$Result.GetResult<Prisma.$userBingoCellDataPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserBingoCellData that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {userBingoCellDataFindFirstOrThrowArgs} args - Arguments to find a UserBingoCellData
+     * @example
+     * // Get one UserBingoCellData
+     * const userBingoCellData = await prisma.userBingoCellData.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends userBingoCellDataFindFirstOrThrowArgs>(args?: SelectSubset<T, userBingoCellDataFindFirstOrThrowArgs<ExtArgs>>): Prisma__userBingoCellDataClient<$Result.GetResult<Prisma.$userBingoCellDataPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more UserBingoCellData that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {userBingoCellDataFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all UserBingoCellData
+     * const userBingoCellData = await prisma.userBingoCellData.findMany()
+     * 
+     * // Get first 10 UserBingoCellData
+     * const userBingoCellData = await prisma.userBingoCellData.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const userBingoCellDataWithIdOnly = await prisma.userBingoCellData.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends userBingoCellDataFindManyArgs>(args?: SelectSubset<T, userBingoCellDataFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$userBingoCellDataPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a UserBingoCellData.
+     * @param {userBingoCellDataCreateArgs} args - Arguments to create a UserBingoCellData.
+     * @example
+     * // Create one UserBingoCellData
+     * const UserBingoCellData = await prisma.userBingoCellData.create({
+     *   data: {
+     *     // ... data to create a UserBingoCellData
+     *   }
+     * })
+     * 
+     */
+    create<T extends userBingoCellDataCreateArgs>(args: SelectSubset<T, userBingoCellDataCreateArgs<ExtArgs>>): Prisma__userBingoCellDataClient<$Result.GetResult<Prisma.$userBingoCellDataPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many UserBingoCellData.
+     * @param {userBingoCellDataCreateManyArgs} args - Arguments to create many UserBingoCellData.
+     * @example
+     * // Create many UserBingoCellData
+     * const userBingoCellData = await prisma.userBingoCellData.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends userBingoCellDataCreateManyArgs>(args?: SelectSubset<T, userBingoCellDataCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many UserBingoCellData and returns the data saved in the database.
+     * @param {userBingoCellDataCreateManyAndReturnArgs} args - Arguments to create many UserBingoCellData.
+     * @example
+     * // Create many UserBingoCellData
+     * const userBingoCellData = await prisma.userBingoCellData.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many UserBingoCellData and only return the `id`
+     * const userBingoCellDataWithIdOnly = await prisma.userBingoCellData.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends userBingoCellDataCreateManyAndReturnArgs>(args?: SelectSubset<T, userBingoCellDataCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$userBingoCellDataPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a UserBingoCellData.
+     * @param {userBingoCellDataDeleteArgs} args - Arguments to delete one UserBingoCellData.
+     * @example
+     * // Delete one UserBingoCellData
+     * const UserBingoCellData = await prisma.userBingoCellData.delete({
+     *   where: {
+     *     // ... filter to delete one UserBingoCellData
+     *   }
+     * })
+     * 
+     */
+    delete<T extends userBingoCellDataDeleteArgs>(args: SelectSubset<T, userBingoCellDataDeleteArgs<ExtArgs>>): Prisma__userBingoCellDataClient<$Result.GetResult<Prisma.$userBingoCellDataPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one UserBingoCellData.
+     * @param {userBingoCellDataUpdateArgs} args - Arguments to update one UserBingoCellData.
+     * @example
+     * // Update one UserBingoCellData
+     * const userBingoCellData = await prisma.userBingoCellData.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends userBingoCellDataUpdateArgs>(args: SelectSubset<T, userBingoCellDataUpdateArgs<ExtArgs>>): Prisma__userBingoCellDataClient<$Result.GetResult<Prisma.$userBingoCellDataPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more UserBingoCellData.
+     * @param {userBingoCellDataDeleteManyArgs} args - Arguments to filter UserBingoCellData to delete.
+     * @example
+     * // Delete a few UserBingoCellData
+     * const { count } = await prisma.userBingoCellData.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends userBingoCellDataDeleteManyArgs>(args?: SelectSubset<T, userBingoCellDataDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserBingoCellData.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {userBingoCellDataUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many UserBingoCellData
+     * const userBingoCellData = await prisma.userBingoCellData.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends userBingoCellDataUpdateManyArgs>(args: SelectSubset<T, userBingoCellDataUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserBingoCellData and returns the data updated in the database.
+     * @param {userBingoCellDataUpdateManyAndReturnArgs} args - Arguments to update many UserBingoCellData.
+     * @example
+     * // Update many UserBingoCellData
+     * const userBingoCellData = await prisma.userBingoCellData.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more UserBingoCellData and only return the `id`
+     * const userBingoCellDataWithIdOnly = await prisma.userBingoCellData.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends userBingoCellDataUpdateManyAndReturnArgs>(args: SelectSubset<T, userBingoCellDataUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$userBingoCellDataPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one UserBingoCellData.
+     * @param {userBingoCellDataUpsertArgs} args - Arguments to update or create a UserBingoCellData.
+     * @example
+     * // Update or create a UserBingoCellData
+     * const userBingoCellData = await prisma.userBingoCellData.upsert({
+     *   create: {
+     *     // ... data to create a UserBingoCellData
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the UserBingoCellData we want to update
+     *   }
+     * })
+     */
+    upsert<T extends userBingoCellDataUpsertArgs>(args: SelectSubset<T, userBingoCellDataUpsertArgs<ExtArgs>>): Prisma__userBingoCellDataClient<$Result.GetResult<Prisma.$userBingoCellDataPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of UserBingoCellData.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {userBingoCellDataCountArgs} args - Arguments to filter UserBingoCellData to count.
+     * @example
+     * // Count the number of UserBingoCellData
+     * const count = await prisma.userBingoCellData.count({
+     *   where: {
+     *     // ... the filter for the UserBingoCellData we want to count
+     *   }
+     * })
+    **/
+    count<T extends userBingoCellDataCountArgs>(
+      args?: Subset<T, userBingoCellDataCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], UserBingoCellDataCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a UserBingoCellData.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserBingoCellDataAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends UserBingoCellDataAggregateArgs>(args: Subset<T, UserBingoCellDataAggregateArgs>): Prisma.PrismaPromise<GetUserBingoCellDataAggregateType<T>>
+
+    /**
+     * Group by UserBingoCellData.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {userBingoCellDataGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends userBingoCellDataGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: userBingoCellDataGroupByArgs['orderBy'] }
+        : { orderBy?: userBingoCellDataGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, userBingoCellDataGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserBingoCellDataGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the userBingoCellData model
+   */
+  readonly fields: userBingoCellDataFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for userBingoCellData.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__userBingoCellDataClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    bingo<T extends BingoCellDefaultArgs<ExtArgs> = {}>(args?: Subset<T, BingoCellDefaultArgs<ExtArgs>>): Prisma__BingoCellClient<$Result.GetResult<Prisma.$BingoCellPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the userBingoCellData model
+   */
+  interface userBingoCellDataFieldRefs {
+    readonly id: FieldRef<"userBingoCellData", 'Int'>
+    readonly isCompleted: FieldRef<"userBingoCellData", 'Boolean'>
+    readonly user_id: FieldRef<"userBingoCellData", 'Int'>
+    readonly bingo_cell_id: FieldRef<"userBingoCellData", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * userBingoCellData findUnique
+   */
+  export type userBingoCellDataFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the userBingoCellData
+     */
+    select?: userBingoCellDataSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the userBingoCellData
+     */
+    omit?: userBingoCellDataOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: userBingoCellDataInclude<ExtArgs> | null
+    /**
+     * Filter, which userBingoCellData to fetch.
+     */
+    where: userBingoCellDataWhereUniqueInput
+  }
+
+  /**
+   * userBingoCellData findUniqueOrThrow
+   */
+  export type userBingoCellDataFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the userBingoCellData
+     */
+    select?: userBingoCellDataSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the userBingoCellData
+     */
+    omit?: userBingoCellDataOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: userBingoCellDataInclude<ExtArgs> | null
+    /**
+     * Filter, which userBingoCellData to fetch.
+     */
+    where: userBingoCellDataWhereUniqueInput
+  }
+
+  /**
+   * userBingoCellData findFirst
+   */
+  export type userBingoCellDataFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the userBingoCellData
+     */
+    select?: userBingoCellDataSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the userBingoCellData
+     */
+    omit?: userBingoCellDataOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: userBingoCellDataInclude<ExtArgs> | null
+    /**
+     * Filter, which userBingoCellData to fetch.
+     */
+    where?: userBingoCellDataWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of userBingoCellData to fetch.
+     */
+    orderBy?: userBingoCellDataOrderByWithRelationInput | userBingoCellDataOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for userBingoCellData.
+     */
+    cursor?: userBingoCellDataWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` userBingoCellData from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` userBingoCellData.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of userBingoCellData.
+     */
+    distinct?: UserBingoCellDataScalarFieldEnum | UserBingoCellDataScalarFieldEnum[]
+  }
+
+  /**
+   * userBingoCellData findFirstOrThrow
+   */
+  export type userBingoCellDataFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the userBingoCellData
+     */
+    select?: userBingoCellDataSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the userBingoCellData
+     */
+    omit?: userBingoCellDataOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: userBingoCellDataInclude<ExtArgs> | null
+    /**
+     * Filter, which userBingoCellData to fetch.
+     */
+    where?: userBingoCellDataWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of userBingoCellData to fetch.
+     */
+    orderBy?: userBingoCellDataOrderByWithRelationInput | userBingoCellDataOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for userBingoCellData.
+     */
+    cursor?: userBingoCellDataWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` userBingoCellData from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` userBingoCellData.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of userBingoCellData.
+     */
+    distinct?: UserBingoCellDataScalarFieldEnum | UserBingoCellDataScalarFieldEnum[]
+  }
+
+  /**
+   * userBingoCellData findMany
+   */
+  export type userBingoCellDataFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the userBingoCellData
+     */
+    select?: userBingoCellDataSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the userBingoCellData
+     */
+    omit?: userBingoCellDataOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: userBingoCellDataInclude<ExtArgs> | null
+    /**
+     * Filter, which userBingoCellData to fetch.
+     */
+    where?: userBingoCellDataWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of userBingoCellData to fetch.
+     */
+    orderBy?: userBingoCellDataOrderByWithRelationInput | userBingoCellDataOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing userBingoCellData.
+     */
+    cursor?: userBingoCellDataWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` userBingoCellData from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` userBingoCellData.
+     */
+    skip?: number
+    distinct?: UserBingoCellDataScalarFieldEnum | UserBingoCellDataScalarFieldEnum[]
+  }
+
+  /**
+   * userBingoCellData create
+   */
+  export type userBingoCellDataCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the userBingoCellData
+     */
+    select?: userBingoCellDataSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the userBingoCellData
+     */
+    omit?: userBingoCellDataOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: userBingoCellDataInclude<ExtArgs> | null
+    /**
+     * The data needed to create a userBingoCellData.
+     */
+    data: XOR<userBingoCellDataCreateInput, userBingoCellDataUncheckedCreateInput>
+  }
+
+  /**
+   * userBingoCellData createMany
+   */
+  export type userBingoCellDataCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many userBingoCellData.
+     */
+    data: userBingoCellDataCreateManyInput | userBingoCellDataCreateManyInput[]
+  }
+
+  /**
+   * userBingoCellData createManyAndReturn
+   */
+  export type userBingoCellDataCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the userBingoCellData
+     */
+    select?: userBingoCellDataSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the userBingoCellData
+     */
+    omit?: userBingoCellDataOmit<ExtArgs> | null
+    /**
+     * The data used to create many userBingoCellData.
+     */
+    data: userBingoCellDataCreateManyInput | userBingoCellDataCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: userBingoCellDataIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * userBingoCellData update
+   */
+  export type userBingoCellDataUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the userBingoCellData
+     */
+    select?: userBingoCellDataSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the userBingoCellData
+     */
+    omit?: userBingoCellDataOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: userBingoCellDataInclude<ExtArgs> | null
+    /**
+     * The data needed to update a userBingoCellData.
+     */
+    data: XOR<userBingoCellDataUpdateInput, userBingoCellDataUncheckedUpdateInput>
+    /**
+     * Choose, which userBingoCellData to update.
+     */
+    where: userBingoCellDataWhereUniqueInput
+  }
+
+  /**
+   * userBingoCellData updateMany
+   */
+  export type userBingoCellDataUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update userBingoCellData.
+     */
+    data: XOR<userBingoCellDataUpdateManyMutationInput, userBingoCellDataUncheckedUpdateManyInput>
+    /**
+     * Filter which userBingoCellData to update
+     */
+    where?: userBingoCellDataWhereInput
+    /**
+     * Limit how many userBingoCellData to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * userBingoCellData updateManyAndReturn
+   */
+  export type userBingoCellDataUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the userBingoCellData
+     */
+    select?: userBingoCellDataSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the userBingoCellData
+     */
+    omit?: userBingoCellDataOmit<ExtArgs> | null
+    /**
+     * The data used to update userBingoCellData.
+     */
+    data: XOR<userBingoCellDataUpdateManyMutationInput, userBingoCellDataUncheckedUpdateManyInput>
+    /**
+     * Filter which userBingoCellData to update
+     */
+    where?: userBingoCellDataWhereInput
+    /**
+     * Limit how many userBingoCellData to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: userBingoCellDataIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * userBingoCellData upsert
+   */
+  export type userBingoCellDataUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the userBingoCellData
+     */
+    select?: userBingoCellDataSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the userBingoCellData
+     */
+    omit?: userBingoCellDataOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: userBingoCellDataInclude<ExtArgs> | null
+    /**
+     * The filter to search for the userBingoCellData to update in case it exists.
+     */
+    where: userBingoCellDataWhereUniqueInput
+    /**
+     * In case the userBingoCellData found by the `where` argument doesn't exist, create a new userBingoCellData with this data.
+     */
+    create: XOR<userBingoCellDataCreateInput, userBingoCellDataUncheckedCreateInput>
+    /**
+     * In case the userBingoCellData was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<userBingoCellDataUpdateInput, userBingoCellDataUncheckedUpdateInput>
+  }
+
+  /**
+   * userBingoCellData delete
+   */
+  export type userBingoCellDataDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the userBingoCellData
+     */
+    select?: userBingoCellDataSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the userBingoCellData
+     */
+    omit?: userBingoCellDataOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: userBingoCellDataInclude<ExtArgs> | null
+    /**
+     * Filter which userBingoCellData to delete.
+     */
+    where: userBingoCellDataWhereUniqueInput
+  }
+
+  /**
+   * userBingoCellData deleteMany
+   */
+  export type userBingoCellDataDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which userBingoCellData to delete
+     */
+    where?: userBingoCellDataWhereInput
+    /**
+     * Limit how many userBingoCellData to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * userBingoCellData without action
+   */
+  export type userBingoCellDataDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the userBingoCellData
+     */
+    select?: userBingoCellDataSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the userBingoCellData
+     */
+    omit?: userBingoCellDataOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: userBingoCellDataInclude<ExtArgs> | null
   }
 
 
@@ -13131,6 +15740,28 @@ export namespace Prisma {
   export type BingoScalarFieldEnum = (typeof BingoScalarFieldEnum)[keyof typeof BingoScalarFieldEnum]
 
 
+  export const BingoCellScalarFieldEnum: {
+    id: 'id',
+    position: 'position',
+    challenge: 'challenge',
+    category_short: 'category_short',
+    music_idx: 'music_idx',
+    bingo_id: 'bingo_id'
+  };
+
+  export type BingoCellScalarFieldEnum = (typeof BingoCellScalarFieldEnum)[keyof typeof BingoCellScalarFieldEnum]
+
+
+  export const UserBingoCellDataScalarFieldEnum: {
+    id: 'id',
+    isCompleted: 'isCompleted',
+    user_id: 'user_id',
+    bingo_cell_id: 'bingo_cell_id'
+  };
+
+  export type UserBingoCellDataScalarFieldEnum = (typeof UserBingoCellDataScalarFieldEnum)[keyof typeof UserBingoCellDataScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -13181,6 +15812,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -13226,6 +15864,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayListRelationFilter
     RecitalBestPlay?: RecitalBestPlayListRelationFilter
     UserBestGrade?: UserBestGradeListRelationFilter
+    userBingoCellData?: UserBingoCellDataListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -13261,6 +15900,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayOrderByRelationAggregateInput
     RecitalBestPlay?: RecitalBestPlayOrderByRelationAggregateInput
     UserBestGrade?: UserBestGradeOrderByRelationAggregateInput
+    userBingoCellData?: userBingoCellDataOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -13299,6 +15939,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayListRelationFilter
     RecitalBestPlay?: RecitalBestPlayListRelationFilter
     UserBestGrade?: UserBestGradeListRelationFilter
+    userBingoCellData?: UserBingoCellDataListRelationFilter
   }, "id" | "username" | "kakao_id" | "discord_name" | "discord_tag">
 
   export type UserOrderByWithAggregationInput = {
@@ -13452,6 +16093,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayListRelationFilter
     RecitalBestPlay?: RecitalBestPlayListRelationFilter
     Bingo?: BingoListRelationFilter
+    BingoCell?: BingoCellListRelationFilter
   }
 
   export type MusicOrderByWithRelationInput = {
@@ -13475,6 +16117,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayOrderByRelationAggregateInput
     RecitalBestPlay?: RecitalBestPlayOrderByRelationAggregateInput
     Bingo?: BingoOrderByRelationAggregateInput
+    BingoCell?: BingoCellOrderByRelationAggregateInput
   }
 
   export type MusicWhereUniqueInput = Prisma.AtLeast<{
@@ -13501,6 +16144,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayListRelationFilter
     RecitalBestPlay?: RecitalBestPlayListRelationFilter
     Bingo?: BingoListRelationFilter
+    BingoCell?: BingoCellListRelationFilter
   }, "id" | "index">
 
   export type MusicOrderByWithAggregationInput = {
@@ -14036,6 +16680,7 @@ export namespace Prisma {
     line?: IntFilter<"Bingo"> | number
     music_idx?: StringFilter<"Bingo"> | string
     music?: XOR<MusicScalarRelationFilter, MusicWhereInput>
+    BingoCell?: BingoCellListRelationFilter
   }
 
   export type BingoOrderByWithRelationInput = {
@@ -14044,6 +16689,7 @@ export namespace Prisma {
     line?: SortOrder
     music_idx?: SortOrder
     music?: MusicOrderByWithRelationInput
+    BingoCell?: BingoCellOrderByRelationAggregateInput
   }
 
   export type BingoWhereUniqueInput = Prisma.AtLeast<{
@@ -14055,6 +16701,7 @@ export namespace Prisma {
     line?: IntFilter<"Bingo"> | number
     music_idx?: StringFilter<"Bingo"> | string
     music?: XOR<MusicScalarRelationFilter, MusicWhereInput>
+    BingoCell?: BingoCellListRelationFilter
   }, "id">
 
   export type BingoOrderByWithAggregationInput = {
@@ -14077,6 +16724,129 @@ export namespace Prisma {
     nos?: IntWithAggregatesFilter<"Bingo"> | number
     line?: IntWithAggregatesFilter<"Bingo"> | number
     music_idx?: StringWithAggregatesFilter<"Bingo"> | string
+  }
+
+  export type BingoCellWhereInput = {
+    AND?: BingoCellWhereInput | BingoCellWhereInput[]
+    OR?: BingoCellWhereInput[]
+    NOT?: BingoCellWhereInput | BingoCellWhereInput[]
+    id?: IntFilter<"BingoCell"> | number
+    position?: IntFilter<"BingoCell"> | number
+    challenge?: StringFilter<"BingoCell"> | string
+    category_short?: StringNullableFilter<"BingoCell"> | string | null
+    music_idx?: StringNullableFilter<"BingoCell"> | string | null
+    bingo_id?: IntFilter<"BingoCell"> | number
+    music?: XOR<MusicNullableScalarRelationFilter, MusicWhereInput> | null
+    bingo?: XOR<BingoScalarRelationFilter, BingoWhereInput>
+    userBingoData?: UserBingoCellDataListRelationFilter
+  }
+
+  export type BingoCellOrderByWithRelationInput = {
+    id?: SortOrder
+    position?: SortOrder
+    challenge?: SortOrder
+    category_short?: SortOrderInput | SortOrder
+    music_idx?: SortOrderInput | SortOrder
+    bingo_id?: SortOrder
+    music?: MusicOrderByWithRelationInput
+    bingo?: BingoOrderByWithRelationInput
+    userBingoData?: userBingoCellDataOrderByRelationAggregateInput
+  }
+
+  export type BingoCellWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: BingoCellWhereInput | BingoCellWhereInput[]
+    OR?: BingoCellWhereInput[]
+    NOT?: BingoCellWhereInput | BingoCellWhereInput[]
+    position?: IntFilter<"BingoCell"> | number
+    challenge?: StringFilter<"BingoCell"> | string
+    category_short?: StringNullableFilter<"BingoCell"> | string | null
+    music_idx?: StringNullableFilter<"BingoCell"> | string | null
+    bingo_id?: IntFilter<"BingoCell"> | number
+    music?: XOR<MusicNullableScalarRelationFilter, MusicWhereInput> | null
+    bingo?: XOR<BingoScalarRelationFilter, BingoWhereInput>
+    userBingoData?: UserBingoCellDataListRelationFilter
+  }, "id">
+
+  export type BingoCellOrderByWithAggregationInput = {
+    id?: SortOrder
+    position?: SortOrder
+    challenge?: SortOrder
+    category_short?: SortOrderInput | SortOrder
+    music_idx?: SortOrderInput | SortOrder
+    bingo_id?: SortOrder
+    _count?: BingoCellCountOrderByAggregateInput
+    _avg?: BingoCellAvgOrderByAggregateInput
+    _max?: BingoCellMaxOrderByAggregateInput
+    _min?: BingoCellMinOrderByAggregateInput
+    _sum?: BingoCellSumOrderByAggregateInput
+  }
+
+  export type BingoCellScalarWhereWithAggregatesInput = {
+    AND?: BingoCellScalarWhereWithAggregatesInput | BingoCellScalarWhereWithAggregatesInput[]
+    OR?: BingoCellScalarWhereWithAggregatesInput[]
+    NOT?: BingoCellScalarWhereWithAggregatesInput | BingoCellScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"BingoCell"> | number
+    position?: IntWithAggregatesFilter<"BingoCell"> | number
+    challenge?: StringWithAggregatesFilter<"BingoCell"> | string
+    category_short?: StringNullableWithAggregatesFilter<"BingoCell"> | string | null
+    music_idx?: StringNullableWithAggregatesFilter<"BingoCell"> | string | null
+    bingo_id?: IntWithAggregatesFilter<"BingoCell"> | number
+  }
+
+  export type userBingoCellDataWhereInput = {
+    AND?: userBingoCellDataWhereInput | userBingoCellDataWhereInput[]
+    OR?: userBingoCellDataWhereInput[]
+    NOT?: userBingoCellDataWhereInput | userBingoCellDataWhereInput[]
+    id?: IntFilter<"userBingoCellData"> | number
+    isCompleted?: BoolFilter<"userBingoCellData"> | boolean
+    user_id?: IntFilter<"userBingoCellData"> | number
+    bingo_cell_id?: IntFilter<"userBingoCellData"> | number
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    bingo?: XOR<BingoCellScalarRelationFilter, BingoCellWhereInput>
+  }
+
+  export type userBingoCellDataOrderByWithRelationInput = {
+    id?: SortOrder
+    isCompleted?: SortOrder
+    user_id?: SortOrder
+    bingo_cell_id?: SortOrder
+    user?: UserOrderByWithRelationInput
+    bingo?: BingoCellOrderByWithRelationInput
+  }
+
+  export type userBingoCellDataWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: userBingoCellDataWhereInput | userBingoCellDataWhereInput[]
+    OR?: userBingoCellDataWhereInput[]
+    NOT?: userBingoCellDataWhereInput | userBingoCellDataWhereInput[]
+    isCompleted?: BoolFilter<"userBingoCellData"> | boolean
+    user_id?: IntFilter<"userBingoCellData"> | number
+    bingo_cell_id?: IntFilter<"userBingoCellData"> | number
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    bingo?: XOR<BingoCellScalarRelationFilter, BingoCellWhereInput>
+  }, "id">
+
+  export type userBingoCellDataOrderByWithAggregationInput = {
+    id?: SortOrder
+    isCompleted?: SortOrder
+    user_id?: SortOrder
+    bingo_cell_id?: SortOrder
+    _count?: userBingoCellDataCountOrderByAggregateInput
+    _avg?: userBingoCellDataAvgOrderByAggregateInput
+    _max?: userBingoCellDataMaxOrderByAggregateInput
+    _min?: userBingoCellDataMinOrderByAggregateInput
+    _sum?: userBingoCellDataSumOrderByAggregateInput
+  }
+
+  export type userBingoCellDataScalarWhereWithAggregatesInput = {
+    AND?: userBingoCellDataScalarWhereWithAggregatesInput | userBingoCellDataScalarWhereWithAggregatesInput[]
+    OR?: userBingoCellDataScalarWhereWithAggregatesInput[]
+    NOT?: userBingoCellDataScalarWhereWithAggregatesInput | userBingoCellDataScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"userBingoCellData"> | number
+    isCompleted?: BoolWithAggregatesFilter<"userBingoCellData"> | boolean
+    user_id?: IntWithAggregatesFilter<"userBingoCellData"> | number
+    bingo_cell_id?: IntWithAggregatesFilter<"userBingoCellData"> | number
   }
 
   export type UserCreateInput = {
@@ -14111,6 +16881,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutUserInput
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeCreateNestedManyWithoutUserInput
+    userBingoCellData?: userBingoCellDataCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -14146,6 +16917,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutUserInput
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeUncheckedCreateNestedManyWithoutUserInput
+    userBingoCellData?: userBingoCellDataUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -14180,6 +16952,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUpdateManyWithoutUserNestedInput
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUpdateManyWithoutUserNestedInput
+    userBingoCellData?: userBingoCellDataUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -14215,6 +16988,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutUserNestedInput
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUncheckedUpdateManyWithoutUserNestedInput
+    userBingoCellData?: userBingoCellDataUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -14374,6 +17148,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutMusicInput
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutMusicInput
     Bingo?: BingoCreateNestedManyWithoutMusicInput
+    BingoCell?: BingoCellCreateNestedManyWithoutMusicInput
   }
 
   export type MusicUncheckedCreateInput = {
@@ -14397,6 +17172,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutMusicInput
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutMusicInput
     Bingo?: BingoUncheckedCreateNestedManyWithoutMusicInput
+    BingoCell?: BingoCellUncheckedCreateNestedManyWithoutMusicInput
   }
 
   export type MusicUpdateInput = {
@@ -14419,6 +17195,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUpdateManyWithoutMusicNestedInput
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutMusicNestedInput
     Bingo?: BingoUpdateManyWithoutMusicNestedInput
+    BingoCell?: BingoCellUpdateManyWithoutMusicNestedInput
   }
 
   export type MusicUncheckedUpdateInput = {
@@ -14442,6 +17219,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutMusicNestedInput
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutMusicNestedInput
     Bingo?: BingoUncheckedUpdateManyWithoutMusicNestedInput
+    BingoCell?: BingoCellUncheckedUpdateManyWithoutMusicNestedInput
   }
 
   export type MusicCreateManyInput = {
@@ -15013,6 +17791,7 @@ export namespace Prisma {
     nos: number
     line: number
     music: MusicCreateNestedOneWithoutBingoInput
+    BingoCell?: BingoCellCreateNestedManyWithoutBingoInput
   }
 
   export type BingoUncheckedCreateInput = {
@@ -15020,12 +17799,14 @@ export namespace Prisma {
     nos: number
     line: number
     music_idx: string
+    BingoCell?: BingoCellUncheckedCreateNestedManyWithoutBingoInput
   }
 
   export type BingoUpdateInput = {
     nos?: IntFieldUpdateOperationsInput | number
     line?: IntFieldUpdateOperationsInput | number
     music?: MusicUpdateOneRequiredWithoutBingoNestedInput
+    BingoCell?: BingoCellUpdateManyWithoutBingoNestedInput
   }
 
   export type BingoUncheckedUpdateInput = {
@@ -15033,6 +17814,7 @@ export namespace Prisma {
     nos?: IntFieldUpdateOperationsInput | number
     line?: IntFieldUpdateOperationsInput | number
     music_idx?: StringFieldUpdateOperationsInput | string
+    BingoCell?: BingoCellUncheckedUpdateManyWithoutBingoNestedInput
   }
 
   export type BingoCreateManyInput = {
@@ -15052,6 +17834,112 @@ export namespace Prisma {
     nos?: IntFieldUpdateOperationsInput | number
     line?: IntFieldUpdateOperationsInput | number
     music_idx?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type BingoCellCreateInput = {
+    position: number
+    challenge: string
+    category_short?: string | null
+    music?: MusicCreateNestedOneWithoutBingoCellInput
+    bingo: BingoCreateNestedOneWithoutBingoCellInput
+    userBingoData?: userBingoCellDataCreateNestedManyWithoutBingoInput
+  }
+
+  export type BingoCellUncheckedCreateInput = {
+    id?: number
+    position: number
+    challenge: string
+    category_short?: string | null
+    music_idx?: string | null
+    bingo_id: number
+    userBingoData?: userBingoCellDataUncheckedCreateNestedManyWithoutBingoInput
+  }
+
+  export type BingoCellUpdateInput = {
+    position?: IntFieldUpdateOperationsInput | number
+    challenge?: StringFieldUpdateOperationsInput | string
+    category_short?: NullableStringFieldUpdateOperationsInput | string | null
+    music?: MusicUpdateOneWithoutBingoCellNestedInput
+    bingo?: BingoUpdateOneRequiredWithoutBingoCellNestedInput
+    userBingoData?: userBingoCellDataUpdateManyWithoutBingoNestedInput
+  }
+
+  export type BingoCellUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    challenge?: StringFieldUpdateOperationsInput | string
+    category_short?: NullableStringFieldUpdateOperationsInput | string | null
+    music_idx?: NullableStringFieldUpdateOperationsInput | string | null
+    bingo_id?: IntFieldUpdateOperationsInput | number
+    userBingoData?: userBingoCellDataUncheckedUpdateManyWithoutBingoNestedInput
+  }
+
+  export type BingoCellCreateManyInput = {
+    id?: number
+    position: number
+    challenge: string
+    category_short?: string | null
+    music_idx?: string | null
+    bingo_id: number
+  }
+
+  export type BingoCellUpdateManyMutationInput = {
+    position?: IntFieldUpdateOperationsInput | number
+    challenge?: StringFieldUpdateOperationsInput | string
+    category_short?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type BingoCellUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    challenge?: StringFieldUpdateOperationsInput | string
+    category_short?: NullableStringFieldUpdateOperationsInput | string | null
+    music_idx?: NullableStringFieldUpdateOperationsInput | string | null
+    bingo_id?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type userBingoCellDataCreateInput = {
+    isCompleted?: boolean
+    user: UserCreateNestedOneWithoutUserBingoCellDataInput
+    bingo: BingoCellCreateNestedOneWithoutUserBingoDataInput
+  }
+
+  export type userBingoCellDataUncheckedCreateInput = {
+    id?: number
+    isCompleted?: boolean
+    user_id: number
+    bingo_cell_id: number
+  }
+
+  export type userBingoCellDataUpdateInput = {
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    user?: UserUpdateOneRequiredWithoutUserBingoCellDataNestedInput
+    bingo?: BingoCellUpdateOneRequiredWithoutUserBingoDataNestedInput
+  }
+
+  export type userBingoCellDataUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    user_id?: IntFieldUpdateOperationsInput | number
+    bingo_cell_id?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type userBingoCellDataCreateManyInput = {
+    id?: number
+    isCompleted?: boolean
+    user_id: number
+    bingo_cell_id: number
+  }
+
+  export type userBingoCellDataUpdateManyMutationInput = {
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type userBingoCellDataUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    user_id?: IntFieldUpdateOperationsInput | number
+    bingo_cell_id?: IntFieldUpdateOperationsInput | number
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -15162,6 +18050,12 @@ export namespace Prisma {
     none?: UserBestGradeWhereInput
   }
 
+  export type UserBingoCellDataListRelationFilter = {
+    every?: userBingoCellDataWhereInput
+    some?: userBingoCellDataWhereInput
+    none?: userBingoCellDataWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -15188,6 +18082,10 @@ export namespace Prisma {
   }
 
   export type UserBestGradeOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type userBingoCellDataOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -15473,7 +18371,17 @@ export namespace Prisma {
     none?: BingoWhereInput
   }
 
+  export type BingoCellListRelationFilter = {
+    every?: BingoCellWhereInput
+    some?: BingoCellWhereInput
+    none?: BingoCellWhereInput
+  }
+
   export type BingoOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type BingoCellOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -15902,6 +18810,106 @@ export namespace Prisma {
     line?: SortOrder
   }
 
+  export type MusicNullableScalarRelationFilter = {
+    is?: MusicWhereInput | null
+    isNot?: MusicWhereInput | null
+  }
+
+  export type BingoScalarRelationFilter = {
+    is?: BingoWhereInput
+    isNot?: BingoWhereInput
+  }
+
+  export type BingoCellCountOrderByAggregateInput = {
+    id?: SortOrder
+    position?: SortOrder
+    challenge?: SortOrder
+    category_short?: SortOrder
+    music_idx?: SortOrder
+    bingo_id?: SortOrder
+  }
+
+  export type BingoCellAvgOrderByAggregateInput = {
+    id?: SortOrder
+    position?: SortOrder
+    bingo_id?: SortOrder
+  }
+
+  export type BingoCellMaxOrderByAggregateInput = {
+    id?: SortOrder
+    position?: SortOrder
+    challenge?: SortOrder
+    category_short?: SortOrder
+    music_idx?: SortOrder
+    bingo_id?: SortOrder
+  }
+
+  export type BingoCellMinOrderByAggregateInput = {
+    id?: SortOrder
+    position?: SortOrder
+    challenge?: SortOrder
+    category_short?: SortOrder
+    music_idx?: SortOrder
+    bingo_id?: SortOrder
+  }
+
+  export type BingoCellSumOrderByAggregateInput = {
+    id?: SortOrder
+    position?: SortOrder
+    bingo_id?: SortOrder
+  }
+
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type BingoCellScalarRelationFilter = {
+    is?: BingoCellWhereInput
+    isNot?: BingoCellWhereInput
+  }
+
+  export type userBingoCellDataCountOrderByAggregateInput = {
+    id?: SortOrder
+    isCompleted?: SortOrder
+    user_id?: SortOrder
+    bingo_cell_id?: SortOrder
+  }
+
+  export type userBingoCellDataAvgOrderByAggregateInput = {
+    id?: SortOrder
+    user_id?: SortOrder
+    bingo_cell_id?: SortOrder
+  }
+
+  export type userBingoCellDataMaxOrderByAggregateInput = {
+    id?: SortOrder
+    isCompleted?: SortOrder
+    user_id?: SortOrder
+    bingo_cell_id?: SortOrder
+  }
+
+  export type userBingoCellDataMinOrderByAggregateInput = {
+    id?: SortOrder
+    isCompleted?: SortOrder
+    user_id?: SortOrder
+    bingo_cell_id?: SortOrder
+  }
+
+  export type userBingoCellDataSumOrderByAggregateInput = {
+    id?: SortOrder
+    user_id?: SortOrder
+    bingo_cell_id?: SortOrder
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
   export type RecentPlayCreateNestedManyWithoutUserInput = {
     create?: XOR<RecentPlayCreateWithoutUserInput, RecentPlayUncheckedCreateWithoutUserInput> | RecentPlayCreateWithoutUserInput[] | RecentPlayUncheckedCreateWithoutUserInput[]
     connectOrCreate?: RecentPlayCreateOrConnectWithoutUserInput | RecentPlayCreateOrConnectWithoutUserInput[]
@@ -15944,6 +18952,13 @@ export namespace Prisma {
     connect?: UserBestGradeWhereUniqueInput | UserBestGradeWhereUniqueInput[]
   }
 
+  export type userBingoCellDataCreateNestedManyWithoutUserInput = {
+    create?: XOR<userBingoCellDataCreateWithoutUserInput, userBingoCellDataUncheckedCreateWithoutUserInput> | userBingoCellDataCreateWithoutUserInput[] | userBingoCellDataUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: userBingoCellDataCreateOrConnectWithoutUserInput | userBingoCellDataCreateOrConnectWithoutUserInput[]
+    createMany?: userBingoCellDataCreateManyUserInputEnvelope
+    connect?: userBingoCellDataWhereUniqueInput | userBingoCellDataWhereUniqueInput[]
+  }
+
   export type RecentPlayUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<RecentPlayCreateWithoutUserInput, RecentPlayUncheckedCreateWithoutUserInput> | RecentPlayCreateWithoutUserInput[] | RecentPlayUncheckedCreateWithoutUserInput[]
     connectOrCreate?: RecentPlayCreateOrConnectWithoutUserInput | RecentPlayCreateOrConnectWithoutUserInput[]
@@ -15984,6 +18999,13 @@ export namespace Prisma {
     connectOrCreate?: UserBestGradeCreateOrConnectWithoutUserInput | UserBestGradeCreateOrConnectWithoutUserInput[]
     createMany?: UserBestGradeCreateManyUserInputEnvelope
     connect?: UserBestGradeWhereUniqueInput | UserBestGradeWhereUniqueInput[]
+  }
+
+  export type userBingoCellDataUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<userBingoCellDataCreateWithoutUserInput, userBingoCellDataUncheckedCreateWithoutUserInput> | userBingoCellDataCreateWithoutUserInput[] | userBingoCellDataUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: userBingoCellDataCreateOrConnectWithoutUserInput | userBingoCellDataCreateOrConnectWithoutUserInput[]
+    createMany?: userBingoCellDataCreateManyUserInputEnvelope
+    connect?: userBingoCellDataWhereUniqueInput | userBingoCellDataWhereUniqueInput[]
   }
 
   export type NullableStringFieldUpdateOperationsInput = {
@@ -16098,6 +19120,20 @@ export namespace Prisma {
     deleteMany?: UserBestGradeScalarWhereInput | UserBestGradeScalarWhereInput[]
   }
 
+  export type userBingoCellDataUpdateManyWithoutUserNestedInput = {
+    create?: XOR<userBingoCellDataCreateWithoutUserInput, userBingoCellDataUncheckedCreateWithoutUserInput> | userBingoCellDataCreateWithoutUserInput[] | userBingoCellDataUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: userBingoCellDataCreateOrConnectWithoutUserInput | userBingoCellDataCreateOrConnectWithoutUserInput[]
+    upsert?: userBingoCellDataUpsertWithWhereUniqueWithoutUserInput | userBingoCellDataUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: userBingoCellDataCreateManyUserInputEnvelope
+    set?: userBingoCellDataWhereUniqueInput | userBingoCellDataWhereUniqueInput[]
+    disconnect?: userBingoCellDataWhereUniqueInput | userBingoCellDataWhereUniqueInput[]
+    delete?: userBingoCellDataWhereUniqueInput | userBingoCellDataWhereUniqueInput[]
+    connect?: userBingoCellDataWhereUniqueInput | userBingoCellDataWhereUniqueInput[]
+    update?: userBingoCellDataUpdateWithWhereUniqueWithoutUserInput | userBingoCellDataUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: userBingoCellDataUpdateManyWithWhereWithoutUserInput | userBingoCellDataUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: userBingoCellDataScalarWhereInput | userBingoCellDataScalarWhereInput[]
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -16190,6 +19226,20 @@ export namespace Prisma {
     deleteMany?: UserBestGradeScalarWhereInput | UserBestGradeScalarWhereInput[]
   }
 
+  export type userBingoCellDataUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<userBingoCellDataCreateWithoutUserInput, userBingoCellDataUncheckedCreateWithoutUserInput> | userBingoCellDataCreateWithoutUserInput[] | userBingoCellDataUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: userBingoCellDataCreateOrConnectWithoutUserInput | userBingoCellDataCreateOrConnectWithoutUserInput[]
+    upsert?: userBingoCellDataUpsertWithWhereUniqueWithoutUserInput | userBingoCellDataUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: userBingoCellDataCreateManyUserInputEnvelope
+    set?: userBingoCellDataWhereUniqueInput | userBingoCellDataWhereUniqueInput[]
+    disconnect?: userBingoCellDataWhereUniqueInput | userBingoCellDataWhereUniqueInput[]
+    delete?: userBingoCellDataWhereUniqueInput | userBingoCellDataWhereUniqueInput[]
+    connect?: userBingoCellDataWhereUniqueInput | userBingoCellDataWhereUniqueInput[]
+    update?: userBingoCellDataUpdateWithWhereUniqueWithoutUserInput | userBingoCellDataUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: userBingoCellDataUpdateManyWithWhereWithoutUserInput | userBingoCellDataUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: userBingoCellDataScalarWhereInput | userBingoCellDataScalarWhereInput[]
+  }
+
   export type UserCreateNestedOneWithoutBookmarkInput = {
     create?: XOR<UserCreateWithoutBookmarkInput, UserUncheckedCreateWithoutBookmarkInput>
     connectOrCreate?: UserCreateOrConnectWithoutBookmarkInput
@@ -16260,6 +19310,13 @@ export namespace Prisma {
     connect?: BingoWhereUniqueInput | BingoWhereUniqueInput[]
   }
 
+  export type BingoCellCreateNestedManyWithoutMusicInput = {
+    create?: XOR<BingoCellCreateWithoutMusicInput, BingoCellUncheckedCreateWithoutMusicInput> | BingoCellCreateWithoutMusicInput[] | BingoCellUncheckedCreateWithoutMusicInput[]
+    connectOrCreate?: BingoCellCreateOrConnectWithoutMusicInput | BingoCellCreateOrConnectWithoutMusicInput[]
+    createMany?: BingoCellCreateManyMusicInputEnvelope
+    connect?: BingoCellWhereUniqueInput | BingoCellWhereUniqueInput[]
+  }
+
   export type RecentPlayUncheckedCreateNestedManyWithoutMusicInput = {
     create?: XOR<RecentPlayCreateWithoutMusicInput, RecentPlayUncheckedCreateWithoutMusicInput> | RecentPlayCreateWithoutMusicInput[] | RecentPlayUncheckedCreateWithoutMusicInput[]
     connectOrCreate?: RecentPlayCreateOrConnectWithoutMusicInput | RecentPlayCreateOrConnectWithoutMusicInput[]
@@ -16300,6 +19357,13 @@ export namespace Prisma {
     connectOrCreate?: BingoCreateOrConnectWithoutMusicInput | BingoCreateOrConnectWithoutMusicInput[]
     createMany?: BingoCreateManyMusicInputEnvelope
     connect?: BingoWhereUniqueInput | BingoWhereUniqueInput[]
+  }
+
+  export type BingoCellUncheckedCreateNestedManyWithoutMusicInput = {
+    create?: XOR<BingoCellCreateWithoutMusicInput, BingoCellUncheckedCreateWithoutMusicInput> | BingoCellCreateWithoutMusicInput[] | BingoCellUncheckedCreateWithoutMusicInput[]
+    connectOrCreate?: BingoCellCreateOrConnectWithoutMusicInput | BingoCellCreateOrConnectWithoutMusicInput[]
+    createMany?: BingoCellCreateManyMusicInputEnvelope
+    connect?: BingoCellWhereUniqueInput | BingoCellWhereUniqueInput[]
   }
 
   export type RecentPlayUpdateManyWithoutMusicNestedInput = {
@@ -16386,6 +19450,20 @@ export namespace Prisma {
     deleteMany?: BingoScalarWhereInput | BingoScalarWhereInput[]
   }
 
+  export type BingoCellUpdateManyWithoutMusicNestedInput = {
+    create?: XOR<BingoCellCreateWithoutMusicInput, BingoCellUncheckedCreateWithoutMusicInput> | BingoCellCreateWithoutMusicInput[] | BingoCellUncheckedCreateWithoutMusicInput[]
+    connectOrCreate?: BingoCellCreateOrConnectWithoutMusicInput | BingoCellCreateOrConnectWithoutMusicInput[]
+    upsert?: BingoCellUpsertWithWhereUniqueWithoutMusicInput | BingoCellUpsertWithWhereUniqueWithoutMusicInput[]
+    createMany?: BingoCellCreateManyMusicInputEnvelope
+    set?: BingoCellWhereUniqueInput | BingoCellWhereUniqueInput[]
+    disconnect?: BingoCellWhereUniqueInput | BingoCellWhereUniqueInput[]
+    delete?: BingoCellWhereUniqueInput | BingoCellWhereUniqueInput[]
+    connect?: BingoCellWhereUniqueInput | BingoCellWhereUniqueInput[]
+    update?: BingoCellUpdateWithWhereUniqueWithoutMusicInput | BingoCellUpdateWithWhereUniqueWithoutMusicInput[]
+    updateMany?: BingoCellUpdateManyWithWhereWithoutMusicInput | BingoCellUpdateManyWithWhereWithoutMusicInput[]
+    deleteMany?: BingoCellScalarWhereInput | BingoCellScalarWhereInput[]
+  }
+
   export type RecentPlayUncheckedUpdateManyWithoutMusicNestedInput = {
     create?: XOR<RecentPlayCreateWithoutMusicInput, RecentPlayUncheckedCreateWithoutMusicInput> | RecentPlayCreateWithoutMusicInput[] | RecentPlayUncheckedCreateWithoutMusicInput[]
     connectOrCreate?: RecentPlayCreateOrConnectWithoutMusicInput | RecentPlayCreateOrConnectWithoutMusicInput[]
@@ -16468,6 +19546,20 @@ export namespace Prisma {
     update?: BingoUpdateWithWhereUniqueWithoutMusicInput | BingoUpdateWithWhereUniqueWithoutMusicInput[]
     updateMany?: BingoUpdateManyWithWhereWithoutMusicInput | BingoUpdateManyWithWhereWithoutMusicInput[]
     deleteMany?: BingoScalarWhereInput | BingoScalarWhereInput[]
+  }
+
+  export type BingoCellUncheckedUpdateManyWithoutMusicNestedInput = {
+    create?: XOR<BingoCellCreateWithoutMusicInput, BingoCellUncheckedCreateWithoutMusicInput> | BingoCellCreateWithoutMusicInput[] | BingoCellUncheckedCreateWithoutMusicInput[]
+    connectOrCreate?: BingoCellCreateOrConnectWithoutMusicInput | BingoCellCreateOrConnectWithoutMusicInput[]
+    upsert?: BingoCellUpsertWithWhereUniqueWithoutMusicInput | BingoCellUpsertWithWhereUniqueWithoutMusicInput[]
+    createMany?: BingoCellCreateManyMusicInputEnvelope
+    set?: BingoCellWhereUniqueInput | BingoCellWhereUniqueInput[]
+    disconnect?: BingoCellWhereUniqueInput | BingoCellWhereUniqueInput[]
+    delete?: BingoCellWhereUniqueInput | BingoCellWhereUniqueInput[]
+    connect?: BingoCellWhereUniqueInput | BingoCellWhereUniqueInput[]
+    update?: BingoCellUpdateWithWhereUniqueWithoutMusicInput | BingoCellUpdateWithWhereUniqueWithoutMusicInput[]
+    updateMany?: BingoCellUpdateManyWithWhereWithoutMusicInput | BingoCellUpdateManyWithWhereWithoutMusicInput[]
+    deleteMany?: BingoCellScalarWhereInput | BingoCellScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutPlayHistoryInput = {
@@ -16602,12 +19694,158 @@ export namespace Prisma {
     connect?: MusicWhereUniqueInput
   }
 
+  export type BingoCellCreateNestedManyWithoutBingoInput = {
+    create?: XOR<BingoCellCreateWithoutBingoInput, BingoCellUncheckedCreateWithoutBingoInput> | BingoCellCreateWithoutBingoInput[] | BingoCellUncheckedCreateWithoutBingoInput[]
+    connectOrCreate?: BingoCellCreateOrConnectWithoutBingoInput | BingoCellCreateOrConnectWithoutBingoInput[]
+    createMany?: BingoCellCreateManyBingoInputEnvelope
+    connect?: BingoCellWhereUniqueInput | BingoCellWhereUniqueInput[]
+  }
+
+  export type BingoCellUncheckedCreateNestedManyWithoutBingoInput = {
+    create?: XOR<BingoCellCreateWithoutBingoInput, BingoCellUncheckedCreateWithoutBingoInput> | BingoCellCreateWithoutBingoInput[] | BingoCellUncheckedCreateWithoutBingoInput[]
+    connectOrCreate?: BingoCellCreateOrConnectWithoutBingoInput | BingoCellCreateOrConnectWithoutBingoInput[]
+    createMany?: BingoCellCreateManyBingoInputEnvelope
+    connect?: BingoCellWhereUniqueInput | BingoCellWhereUniqueInput[]
+  }
+
   export type MusicUpdateOneRequiredWithoutBingoNestedInput = {
     create?: XOR<MusicCreateWithoutBingoInput, MusicUncheckedCreateWithoutBingoInput>
     connectOrCreate?: MusicCreateOrConnectWithoutBingoInput
     upsert?: MusicUpsertWithoutBingoInput
     connect?: MusicWhereUniqueInput
     update?: XOR<XOR<MusicUpdateToOneWithWhereWithoutBingoInput, MusicUpdateWithoutBingoInput>, MusicUncheckedUpdateWithoutBingoInput>
+  }
+
+  export type BingoCellUpdateManyWithoutBingoNestedInput = {
+    create?: XOR<BingoCellCreateWithoutBingoInput, BingoCellUncheckedCreateWithoutBingoInput> | BingoCellCreateWithoutBingoInput[] | BingoCellUncheckedCreateWithoutBingoInput[]
+    connectOrCreate?: BingoCellCreateOrConnectWithoutBingoInput | BingoCellCreateOrConnectWithoutBingoInput[]
+    upsert?: BingoCellUpsertWithWhereUniqueWithoutBingoInput | BingoCellUpsertWithWhereUniqueWithoutBingoInput[]
+    createMany?: BingoCellCreateManyBingoInputEnvelope
+    set?: BingoCellWhereUniqueInput | BingoCellWhereUniqueInput[]
+    disconnect?: BingoCellWhereUniqueInput | BingoCellWhereUniqueInput[]
+    delete?: BingoCellWhereUniqueInput | BingoCellWhereUniqueInput[]
+    connect?: BingoCellWhereUniqueInput | BingoCellWhereUniqueInput[]
+    update?: BingoCellUpdateWithWhereUniqueWithoutBingoInput | BingoCellUpdateWithWhereUniqueWithoutBingoInput[]
+    updateMany?: BingoCellUpdateManyWithWhereWithoutBingoInput | BingoCellUpdateManyWithWhereWithoutBingoInput[]
+    deleteMany?: BingoCellScalarWhereInput | BingoCellScalarWhereInput[]
+  }
+
+  export type BingoCellUncheckedUpdateManyWithoutBingoNestedInput = {
+    create?: XOR<BingoCellCreateWithoutBingoInput, BingoCellUncheckedCreateWithoutBingoInput> | BingoCellCreateWithoutBingoInput[] | BingoCellUncheckedCreateWithoutBingoInput[]
+    connectOrCreate?: BingoCellCreateOrConnectWithoutBingoInput | BingoCellCreateOrConnectWithoutBingoInput[]
+    upsert?: BingoCellUpsertWithWhereUniqueWithoutBingoInput | BingoCellUpsertWithWhereUniqueWithoutBingoInput[]
+    createMany?: BingoCellCreateManyBingoInputEnvelope
+    set?: BingoCellWhereUniqueInput | BingoCellWhereUniqueInput[]
+    disconnect?: BingoCellWhereUniqueInput | BingoCellWhereUniqueInput[]
+    delete?: BingoCellWhereUniqueInput | BingoCellWhereUniqueInput[]
+    connect?: BingoCellWhereUniqueInput | BingoCellWhereUniqueInput[]
+    update?: BingoCellUpdateWithWhereUniqueWithoutBingoInput | BingoCellUpdateWithWhereUniqueWithoutBingoInput[]
+    updateMany?: BingoCellUpdateManyWithWhereWithoutBingoInput | BingoCellUpdateManyWithWhereWithoutBingoInput[]
+    deleteMany?: BingoCellScalarWhereInput | BingoCellScalarWhereInput[]
+  }
+
+  export type MusicCreateNestedOneWithoutBingoCellInput = {
+    create?: XOR<MusicCreateWithoutBingoCellInput, MusicUncheckedCreateWithoutBingoCellInput>
+    connectOrCreate?: MusicCreateOrConnectWithoutBingoCellInput
+    connect?: MusicWhereUniqueInput
+  }
+
+  export type BingoCreateNestedOneWithoutBingoCellInput = {
+    create?: XOR<BingoCreateWithoutBingoCellInput, BingoUncheckedCreateWithoutBingoCellInput>
+    connectOrCreate?: BingoCreateOrConnectWithoutBingoCellInput
+    connect?: BingoWhereUniqueInput
+  }
+
+  export type userBingoCellDataCreateNestedManyWithoutBingoInput = {
+    create?: XOR<userBingoCellDataCreateWithoutBingoInput, userBingoCellDataUncheckedCreateWithoutBingoInput> | userBingoCellDataCreateWithoutBingoInput[] | userBingoCellDataUncheckedCreateWithoutBingoInput[]
+    connectOrCreate?: userBingoCellDataCreateOrConnectWithoutBingoInput | userBingoCellDataCreateOrConnectWithoutBingoInput[]
+    createMany?: userBingoCellDataCreateManyBingoInputEnvelope
+    connect?: userBingoCellDataWhereUniqueInput | userBingoCellDataWhereUniqueInput[]
+  }
+
+  export type userBingoCellDataUncheckedCreateNestedManyWithoutBingoInput = {
+    create?: XOR<userBingoCellDataCreateWithoutBingoInput, userBingoCellDataUncheckedCreateWithoutBingoInput> | userBingoCellDataCreateWithoutBingoInput[] | userBingoCellDataUncheckedCreateWithoutBingoInput[]
+    connectOrCreate?: userBingoCellDataCreateOrConnectWithoutBingoInput | userBingoCellDataCreateOrConnectWithoutBingoInput[]
+    createMany?: userBingoCellDataCreateManyBingoInputEnvelope
+    connect?: userBingoCellDataWhereUniqueInput | userBingoCellDataWhereUniqueInput[]
+  }
+
+  export type MusicUpdateOneWithoutBingoCellNestedInput = {
+    create?: XOR<MusicCreateWithoutBingoCellInput, MusicUncheckedCreateWithoutBingoCellInput>
+    connectOrCreate?: MusicCreateOrConnectWithoutBingoCellInput
+    upsert?: MusicUpsertWithoutBingoCellInput
+    disconnect?: MusicWhereInput | boolean
+    delete?: MusicWhereInput | boolean
+    connect?: MusicWhereUniqueInput
+    update?: XOR<XOR<MusicUpdateToOneWithWhereWithoutBingoCellInput, MusicUpdateWithoutBingoCellInput>, MusicUncheckedUpdateWithoutBingoCellInput>
+  }
+
+  export type BingoUpdateOneRequiredWithoutBingoCellNestedInput = {
+    create?: XOR<BingoCreateWithoutBingoCellInput, BingoUncheckedCreateWithoutBingoCellInput>
+    connectOrCreate?: BingoCreateOrConnectWithoutBingoCellInput
+    upsert?: BingoUpsertWithoutBingoCellInput
+    connect?: BingoWhereUniqueInput
+    update?: XOR<XOR<BingoUpdateToOneWithWhereWithoutBingoCellInput, BingoUpdateWithoutBingoCellInput>, BingoUncheckedUpdateWithoutBingoCellInput>
+  }
+
+  export type userBingoCellDataUpdateManyWithoutBingoNestedInput = {
+    create?: XOR<userBingoCellDataCreateWithoutBingoInput, userBingoCellDataUncheckedCreateWithoutBingoInput> | userBingoCellDataCreateWithoutBingoInput[] | userBingoCellDataUncheckedCreateWithoutBingoInput[]
+    connectOrCreate?: userBingoCellDataCreateOrConnectWithoutBingoInput | userBingoCellDataCreateOrConnectWithoutBingoInput[]
+    upsert?: userBingoCellDataUpsertWithWhereUniqueWithoutBingoInput | userBingoCellDataUpsertWithWhereUniqueWithoutBingoInput[]
+    createMany?: userBingoCellDataCreateManyBingoInputEnvelope
+    set?: userBingoCellDataWhereUniqueInput | userBingoCellDataWhereUniqueInput[]
+    disconnect?: userBingoCellDataWhereUniqueInput | userBingoCellDataWhereUniqueInput[]
+    delete?: userBingoCellDataWhereUniqueInput | userBingoCellDataWhereUniqueInput[]
+    connect?: userBingoCellDataWhereUniqueInput | userBingoCellDataWhereUniqueInput[]
+    update?: userBingoCellDataUpdateWithWhereUniqueWithoutBingoInput | userBingoCellDataUpdateWithWhereUniqueWithoutBingoInput[]
+    updateMany?: userBingoCellDataUpdateManyWithWhereWithoutBingoInput | userBingoCellDataUpdateManyWithWhereWithoutBingoInput[]
+    deleteMany?: userBingoCellDataScalarWhereInput | userBingoCellDataScalarWhereInput[]
+  }
+
+  export type userBingoCellDataUncheckedUpdateManyWithoutBingoNestedInput = {
+    create?: XOR<userBingoCellDataCreateWithoutBingoInput, userBingoCellDataUncheckedCreateWithoutBingoInput> | userBingoCellDataCreateWithoutBingoInput[] | userBingoCellDataUncheckedCreateWithoutBingoInput[]
+    connectOrCreate?: userBingoCellDataCreateOrConnectWithoutBingoInput | userBingoCellDataCreateOrConnectWithoutBingoInput[]
+    upsert?: userBingoCellDataUpsertWithWhereUniqueWithoutBingoInput | userBingoCellDataUpsertWithWhereUniqueWithoutBingoInput[]
+    createMany?: userBingoCellDataCreateManyBingoInputEnvelope
+    set?: userBingoCellDataWhereUniqueInput | userBingoCellDataWhereUniqueInput[]
+    disconnect?: userBingoCellDataWhereUniqueInput | userBingoCellDataWhereUniqueInput[]
+    delete?: userBingoCellDataWhereUniqueInput | userBingoCellDataWhereUniqueInput[]
+    connect?: userBingoCellDataWhereUniqueInput | userBingoCellDataWhereUniqueInput[]
+    update?: userBingoCellDataUpdateWithWhereUniqueWithoutBingoInput | userBingoCellDataUpdateWithWhereUniqueWithoutBingoInput[]
+    updateMany?: userBingoCellDataUpdateManyWithWhereWithoutBingoInput | userBingoCellDataUpdateManyWithWhereWithoutBingoInput[]
+    deleteMany?: userBingoCellDataScalarWhereInput | userBingoCellDataScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutUserBingoCellDataInput = {
+    create?: XOR<UserCreateWithoutUserBingoCellDataInput, UserUncheckedCreateWithoutUserBingoCellDataInput>
+    connectOrCreate?: UserCreateOrConnectWithoutUserBingoCellDataInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type BingoCellCreateNestedOneWithoutUserBingoDataInput = {
+    create?: XOR<BingoCellCreateWithoutUserBingoDataInput, BingoCellUncheckedCreateWithoutUserBingoDataInput>
+    connectOrCreate?: BingoCellCreateOrConnectWithoutUserBingoDataInput
+    connect?: BingoCellWhereUniqueInput
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
+  export type UserUpdateOneRequiredWithoutUserBingoCellDataNestedInput = {
+    create?: XOR<UserCreateWithoutUserBingoCellDataInput, UserUncheckedCreateWithoutUserBingoCellDataInput>
+    connectOrCreate?: UserCreateOrConnectWithoutUserBingoCellDataInput
+    upsert?: UserUpsertWithoutUserBingoCellDataInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutUserBingoCellDataInput, UserUpdateWithoutUserBingoCellDataInput>, UserUncheckedUpdateWithoutUserBingoCellDataInput>
+  }
+
+  export type BingoCellUpdateOneRequiredWithoutUserBingoDataNestedInput = {
+    create?: XOR<BingoCellCreateWithoutUserBingoDataInput, BingoCellUncheckedCreateWithoutUserBingoDataInput>
+    connectOrCreate?: BingoCellCreateOrConnectWithoutUserBingoDataInput
+    upsert?: BingoCellUpsertWithoutUserBingoDataInput
+    connect?: BingoCellWhereUniqueInput
+    update?: XOR<XOR<BingoCellUpdateToOneWithWhereWithoutUserBingoDataInput, BingoCellUpdateWithoutUserBingoDataInput>, BingoCellUncheckedUpdateWithoutUserBingoDataInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -16798,6 +20036,19 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type RecentPlayCreateWithoutUserInput = {
@@ -17006,6 +20257,26 @@ export namespace Prisma {
     data: UserBestGradeCreateManyUserInput | UserBestGradeCreateManyUserInput[]
   }
 
+  export type userBingoCellDataCreateWithoutUserInput = {
+    isCompleted?: boolean
+    bingo: BingoCellCreateNestedOneWithoutUserBingoDataInput
+  }
+
+  export type userBingoCellDataUncheckedCreateWithoutUserInput = {
+    id?: number
+    isCompleted?: boolean
+    bingo_cell_id: number
+  }
+
+  export type userBingoCellDataCreateOrConnectWithoutUserInput = {
+    where: userBingoCellDataWhereUniqueInput
+    create: XOR<userBingoCellDataCreateWithoutUserInput, userBingoCellDataUncheckedCreateWithoutUserInput>
+  }
+
+  export type userBingoCellDataCreateManyUserInputEnvelope = {
+    data: userBingoCellDataCreateManyUserInput | userBingoCellDataCreateManyUserInput[]
+  }
+
   export type RecentPlayUpsertWithWhereUniqueWithoutUserInput = {
     where: RecentPlayWhereUniqueInput
     update: XOR<RecentPlayUpdateWithoutUserInput, RecentPlayUncheckedUpdateWithoutUserInput>
@@ -17205,6 +20476,32 @@ export namespace Prisma {
     user_id?: IntFilter<"UserBestGrade"> | number
   }
 
+  export type userBingoCellDataUpsertWithWhereUniqueWithoutUserInput = {
+    where: userBingoCellDataWhereUniqueInput
+    update: XOR<userBingoCellDataUpdateWithoutUserInput, userBingoCellDataUncheckedUpdateWithoutUserInput>
+    create: XOR<userBingoCellDataCreateWithoutUserInput, userBingoCellDataUncheckedCreateWithoutUserInput>
+  }
+
+  export type userBingoCellDataUpdateWithWhereUniqueWithoutUserInput = {
+    where: userBingoCellDataWhereUniqueInput
+    data: XOR<userBingoCellDataUpdateWithoutUserInput, userBingoCellDataUncheckedUpdateWithoutUserInput>
+  }
+
+  export type userBingoCellDataUpdateManyWithWhereWithoutUserInput = {
+    where: userBingoCellDataScalarWhereInput
+    data: XOR<userBingoCellDataUpdateManyMutationInput, userBingoCellDataUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type userBingoCellDataScalarWhereInput = {
+    AND?: userBingoCellDataScalarWhereInput | userBingoCellDataScalarWhereInput[]
+    OR?: userBingoCellDataScalarWhereInput[]
+    NOT?: userBingoCellDataScalarWhereInput | userBingoCellDataScalarWhereInput[]
+    id?: IntFilter<"userBingoCellData"> | number
+    isCompleted?: BoolFilter<"userBingoCellData"> | boolean
+    user_id?: IntFilter<"userBingoCellData"> | number
+    bingo_cell_id?: IntFilter<"userBingoCellData"> | number
+  }
+
   export type UserCreateWithoutBookmarkInput = {
     username?: string | null
     kakao_id?: bigint | number | null
@@ -17236,6 +20533,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutUserInput
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeCreateNestedManyWithoutUserInput
+    userBingoCellData?: userBingoCellDataCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutBookmarkInput = {
@@ -17270,6 +20568,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutUserInput
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeUncheckedCreateNestedManyWithoutUserInput
+    userBingoCellData?: userBingoCellDataUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutBookmarkInput = {
@@ -17296,6 +20595,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutMusicInput
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutMusicInput
     Bingo?: BingoCreateNestedManyWithoutMusicInput
+    BingoCell?: BingoCellCreateNestedManyWithoutMusicInput
   }
 
   export type MusicUncheckedCreateWithoutBookmarkInput = {
@@ -17318,6 +20618,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutMusicInput
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutMusicInput
     Bingo?: BingoUncheckedCreateNestedManyWithoutMusicInput
+    BingoCell?: BingoCellUncheckedCreateNestedManyWithoutMusicInput
   }
 
   export type MusicCreateOrConnectWithoutBookmarkInput = {
@@ -17367,6 +20668,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUpdateManyWithoutUserNestedInput
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUpdateManyWithoutUserNestedInput
+    userBingoCellData?: userBingoCellDataUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBookmarkInput = {
@@ -17401,6 +20703,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutUserNestedInput
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUncheckedUpdateManyWithoutUserNestedInput
+    userBingoCellData?: userBingoCellDataUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type MusicUpsertWithoutBookmarkInput = {
@@ -17433,6 +20736,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUpdateManyWithoutMusicNestedInput
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutMusicNestedInput
     Bingo?: BingoUpdateManyWithoutMusicNestedInput
+    BingoCell?: BingoCellUpdateManyWithoutMusicNestedInput
   }
 
   export type MusicUncheckedUpdateWithoutBookmarkInput = {
@@ -17455,6 +20759,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutMusicNestedInput
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutMusicNestedInput
     Bingo?: BingoUncheckedUpdateManyWithoutMusicNestedInput
+    BingoCell?: BingoCellUncheckedUpdateManyWithoutMusicNestedInput
   }
 
   export type RecentPlayCreateWithoutMusicInput = {
@@ -17640,12 +20945,14 @@ export namespace Prisma {
   export type BingoCreateWithoutMusicInput = {
     nos: number
     line: number
+    BingoCell?: BingoCellCreateNestedManyWithoutBingoInput
   }
 
   export type BingoUncheckedCreateWithoutMusicInput = {
     id?: number
     nos: number
     line: number
+    BingoCell?: BingoCellUncheckedCreateNestedManyWithoutBingoInput
   }
 
   export type BingoCreateOrConnectWithoutMusicInput = {
@@ -17655,6 +20962,32 @@ export namespace Prisma {
 
   export type BingoCreateManyMusicInputEnvelope = {
     data: BingoCreateManyMusicInput | BingoCreateManyMusicInput[]
+  }
+
+  export type BingoCellCreateWithoutMusicInput = {
+    position: number
+    challenge: string
+    category_short?: string | null
+    bingo: BingoCreateNestedOneWithoutBingoCellInput
+    userBingoData?: userBingoCellDataCreateNestedManyWithoutBingoInput
+  }
+
+  export type BingoCellUncheckedCreateWithoutMusicInput = {
+    id?: number
+    position: number
+    challenge: string
+    category_short?: string | null
+    bingo_id: number
+    userBingoData?: userBingoCellDataUncheckedCreateNestedManyWithoutBingoInput
+  }
+
+  export type BingoCellCreateOrConnectWithoutMusicInput = {
+    where: BingoCellWhereUniqueInput
+    create: XOR<BingoCellCreateWithoutMusicInput, BingoCellUncheckedCreateWithoutMusicInput>
+  }
+
+  export type BingoCellCreateManyMusicInputEnvelope = {
+    data: BingoCellCreateManyMusicInput | BingoCellCreateManyMusicInput[]
   }
 
   export type RecentPlayUpsertWithWhereUniqueWithoutMusicInput = {
@@ -17763,6 +21096,34 @@ export namespace Prisma {
     music_idx?: StringFilter<"Bingo"> | string
   }
 
+  export type BingoCellUpsertWithWhereUniqueWithoutMusicInput = {
+    where: BingoCellWhereUniqueInput
+    update: XOR<BingoCellUpdateWithoutMusicInput, BingoCellUncheckedUpdateWithoutMusicInput>
+    create: XOR<BingoCellCreateWithoutMusicInput, BingoCellUncheckedCreateWithoutMusicInput>
+  }
+
+  export type BingoCellUpdateWithWhereUniqueWithoutMusicInput = {
+    where: BingoCellWhereUniqueInput
+    data: XOR<BingoCellUpdateWithoutMusicInput, BingoCellUncheckedUpdateWithoutMusicInput>
+  }
+
+  export type BingoCellUpdateManyWithWhereWithoutMusicInput = {
+    where: BingoCellScalarWhereInput
+    data: XOR<BingoCellUpdateManyMutationInput, BingoCellUncheckedUpdateManyWithoutMusicInput>
+  }
+
+  export type BingoCellScalarWhereInput = {
+    AND?: BingoCellScalarWhereInput | BingoCellScalarWhereInput[]
+    OR?: BingoCellScalarWhereInput[]
+    NOT?: BingoCellScalarWhereInput | BingoCellScalarWhereInput[]
+    id?: IntFilter<"BingoCell"> | number
+    position?: IntFilter<"BingoCell"> | number
+    challenge?: StringFilter<"BingoCell"> | string
+    category_short?: StringNullableFilter<"BingoCell"> | string | null
+    music_idx?: StringNullableFilter<"BingoCell"> | string | null
+    bingo_id?: IntFilter<"BingoCell"> | number
+  }
+
   export type UserCreateWithoutPlayHistoryInput = {
     username?: string | null
     kakao_id?: bigint | number | null
@@ -17794,6 +21155,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutUserInput
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeCreateNestedManyWithoutUserInput
+    userBingoCellData?: userBingoCellDataCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutPlayHistoryInput = {
@@ -17828,6 +21190,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutUserInput
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeUncheckedCreateNestedManyWithoutUserInput
+    userBingoCellData?: userBingoCellDataUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutPlayHistoryInput = {
@@ -17854,6 +21217,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutMusicInput
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutMusicInput
     Bingo?: BingoCreateNestedManyWithoutMusicInput
+    BingoCell?: BingoCellCreateNestedManyWithoutMusicInput
   }
 
   export type MusicUncheckedCreateWithoutRecentPlayInput = {
@@ -17876,6 +21240,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutMusicInput
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutMusicInput
     Bingo?: BingoUncheckedCreateNestedManyWithoutMusicInput
+    BingoCell?: BingoCellUncheckedCreateNestedManyWithoutMusicInput
   }
 
   export type MusicCreateOrConnectWithoutRecentPlayInput = {
@@ -17925,6 +21290,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUpdateManyWithoutUserNestedInput
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUpdateManyWithoutUserNestedInput
+    userBingoCellData?: userBingoCellDataUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPlayHistoryInput = {
@@ -17959,6 +21325,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutUserNestedInput
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUncheckedUpdateManyWithoutUserNestedInput
+    userBingoCellData?: userBingoCellDataUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type MusicUpsertWithoutRecentPlayInput = {
@@ -17991,6 +21358,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUpdateManyWithoutMusicNestedInput
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutMusicNestedInput
     Bingo?: BingoUpdateManyWithoutMusicNestedInput
+    BingoCell?: BingoCellUpdateManyWithoutMusicNestedInput
   }
 
   export type MusicUncheckedUpdateWithoutRecentPlayInput = {
@@ -18013,6 +21381,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutMusicNestedInput
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutMusicNestedInput
     Bingo?: BingoUncheckedUpdateManyWithoutMusicNestedInput
+    BingoCell?: BingoCellUncheckedUpdateManyWithoutMusicNestedInput
   }
 
   export type UserCreateWithoutUserBestGradeInput = {
@@ -18046,6 +21415,7 @@ export namespace Prisma {
     Bookmark?: BookmarkCreateNestedManyWithoutUserInput
     BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutUserInput
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutUserInput
+    userBingoCellData?: userBingoCellDataCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutUserBestGradeInput = {
@@ -18080,6 +21450,7 @@ export namespace Prisma {
     Bookmark?: BookmarkUncheckedCreateNestedManyWithoutUserInput
     BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutUserInput
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutUserInput
+    userBingoCellData?: userBingoCellDataUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutUserBestGradeInput = {
@@ -18129,6 +21500,7 @@ export namespace Prisma {
     Bookmark?: BookmarkUpdateManyWithoutUserNestedInput
     BasicBestPlay?: BasicBestPlayUpdateManyWithoutUserNestedInput
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutUserNestedInput
+    userBingoCellData?: userBingoCellDataUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserBestGradeInput = {
@@ -18163,6 +21535,7 @@ export namespace Prisma {
     Bookmark?: BookmarkUncheckedUpdateManyWithoutUserNestedInput
     BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutUserNestedInput
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutUserNestedInput
+    userBingoCellData?: userBingoCellDataUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutBasicBestPlayInput = {
@@ -18196,6 +21569,7 @@ export namespace Prisma {
     Bookmark?: BookmarkCreateNestedManyWithoutUserInput
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeCreateNestedManyWithoutUserInput
+    userBingoCellData?: userBingoCellDataCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutBasicBestPlayInput = {
@@ -18230,6 +21604,7 @@ export namespace Prisma {
     Bookmark?: BookmarkUncheckedCreateNestedManyWithoutUserInput
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeUncheckedCreateNestedManyWithoutUserInput
+    userBingoCellData?: userBingoCellDataUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutBasicBestPlayInput = {
@@ -18256,6 +21631,7 @@ export namespace Prisma {
     Bookmark?: BookmarkCreateNestedManyWithoutMusicInput
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutMusicInput
     Bingo?: BingoCreateNestedManyWithoutMusicInput
+    BingoCell?: BingoCellCreateNestedManyWithoutMusicInput
   }
 
   export type MusicUncheckedCreateWithoutBasicBestPlayInput = {
@@ -18278,6 +21654,7 @@ export namespace Prisma {
     Bookmark?: BookmarkUncheckedCreateNestedManyWithoutMusicInput
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutMusicInput
     Bingo?: BingoUncheckedCreateNestedManyWithoutMusicInput
+    BingoCell?: BingoCellUncheckedCreateNestedManyWithoutMusicInput
   }
 
   export type MusicCreateOrConnectWithoutBasicBestPlayInput = {
@@ -18327,6 +21704,7 @@ export namespace Prisma {
     Bookmark?: BookmarkUpdateManyWithoutUserNestedInput
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUpdateManyWithoutUserNestedInput
+    userBingoCellData?: userBingoCellDataUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBasicBestPlayInput = {
@@ -18361,6 +21739,7 @@ export namespace Prisma {
     Bookmark?: BookmarkUncheckedUpdateManyWithoutUserNestedInput
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUncheckedUpdateManyWithoutUserNestedInput
+    userBingoCellData?: userBingoCellDataUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type MusicUpsertWithoutBasicBestPlayInput = {
@@ -18393,6 +21772,7 @@ export namespace Prisma {
     Bookmark?: BookmarkUpdateManyWithoutMusicNestedInput
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutMusicNestedInput
     Bingo?: BingoUpdateManyWithoutMusicNestedInput
+    BingoCell?: BingoCellUpdateManyWithoutMusicNestedInput
   }
 
   export type MusicUncheckedUpdateWithoutBasicBestPlayInput = {
@@ -18415,6 +21795,7 @@ export namespace Prisma {
     Bookmark?: BookmarkUncheckedUpdateManyWithoutMusicNestedInput
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutMusicNestedInput
     Bingo?: BingoUncheckedUpdateManyWithoutMusicNestedInput
+    BingoCell?: BingoCellUncheckedUpdateManyWithoutMusicNestedInput
   }
 
   export type UserCreateWithoutRecitalBestPlayInput = {
@@ -18448,6 +21829,7 @@ export namespace Prisma {
     Bookmark?: BookmarkCreateNestedManyWithoutUserInput
     BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeCreateNestedManyWithoutUserInput
+    userBingoCellData?: userBingoCellDataCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutRecitalBestPlayInput = {
@@ -18482,6 +21864,7 @@ export namespace Prisma {
     Bookmark?: BookmarkUncheckedCreateNestedManyWithoutUserInput
     BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeUncheckedCreateNestedManyWithoutUserInput
+    userBingoCellData?: userBingoCellDataUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutRecitalBestPlayInput = {
@@ -18508,6 +21891,7 @@ export namespace Prisma {
     Bookmark?: BookmarkCreateNestedManyWithoutMusicInput
     BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutMusicInput
     Bingo?: BingoCreateNestedManyWithoutMusicInput
+    BingoCell?: BingoCellCreateNestedManyWithoutMusicInput
   }
 
   export type MusicUncheckedCreateWithoutRecitalBestPlayInput = {
@@ -18530,6 +21914,7 @@ export namespace Prisma {
     Bookmark?: BookmarkUncheckedCreateNestedManyWithoutMusicInput
     BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutMusicInput
     Bingo?: BingoUncheckedCreateNestedManyWithoutMusicInput
+    BingoCell?: BingoCellUncheckedCreateNestedManyWithoutMusicInput
   }
 
   export type MusicCreateOrConnectWithoutRecitalBestPlayInput = {
@@ -18579,6 +21964,7 @@ export namespace Prisma {
     Bookmark?: BookmarkUpdateManyWithoutUserNestedInput
     BasicBestPlay?: BasicBestPlayUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUpdateManyWithoutUserNestedInput
+    userBingoCellData?: userBingoCellDataUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRecitalBestPlayInput = {
@@ -18613,6 +21999,7 @@ export namespace Prisma {
     Bookmark?: BookmarkUncheckedUpdateManyWithoutUserNestedInput
     BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUncheckedUpdateManyWithoutUserNestedInput
+    userBingoCellData?: userBingoCellDataUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type MusicUpsertWithoutRecitalBestPlayInput = {
@@ -18645,6 +22032,7 @@ export namespace Prisma {
     Bookmark?: BookmarkUpdateManyWithoutMusicNestedInput
     BasicBestPlay?: BasicBestPlayUpdateManyWithoutMusicNestedInput
     Bingo?: BingoUpdateManyWithoutMusicNestedInput
+    BingoCell?: BingoCellUpdateManyWithoutMusicNestedInput
   }
 
   export type MusicUncheckedUpdateWithoutRecitalBestPlayInput = {
@@ -18667,6 +22055,7 @@ export namespace Prisma {
     Bookmark?: BookmarkUncheckedUpdateManyWithoutMusicNestedInput
     BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutMusicNestedInput
     Bingo?: BingoUncheckedUpdateManyWithoutMusicNestedInput
+    BingoCell?: BingoCellUncheckedUpdateManyWithoutMusicNestedInput
   }
 
   export type UserCreateWithoutPlayDataInput = {
@@ -18700,6 +22089,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutUserInput
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeCreateNestedManyWithoutUserInput
+    userBingoCellData?: userBingoCellDataCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutPlayDataInput = {
@@ -18734,6 +22124,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutUserInput
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeUncheckedCreateNestedManyWithoutUserInput
+    userBingoCellData?: userBingoCellDataUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutPlayDataInput = {
@@ -18760,6 +22151,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutMusicInput
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutMusicInput
     Bingo?: BingoCreateNestedManyWithoutMusicInput
+    BingoCell?: BingoCellCreateNestedManyWithoutMusicInput
   }
 
   export type MusicUncheckedCreateWithoutPlayDataInput = {
@@ -18782,6 +22174,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutMusicInput
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutMusicInput
     Bingo?: BingoUncheckedCreateNestedManyWithoutMusicInput
+    BingoCell?: BingoCellUncheckedCreateNestedManyWithoutMusicInput
   }
 
   export type MusicCreateOrConnectWithoutPlayDataInput = {
@@ -18831,6 +22224,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUpdateManyWithoutUserNestedInput
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUpdateManyWithoutUserNestedInput
+    userBingoCellData?: userBingoCellDataUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPlayDataInput = {
@@ -18865,6 +22259,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutUserNestedInput
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUncheckedUpdateManyWithoutUserNestedInput
+    userBingoCellData?: userBingoCellDataUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type MusicUpsertWithoutPlayDataInput = {
@@ -18897,6 +22292,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUpdateManyWithoutMusicNestedInput
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutMusicNestedInput
     Bingo?: BingoUpdateManyWithoutMusicNestedInput
+    BingoCell?: BingoCellUpdateManyWithoutMusicNestedInput
   }
 
   export type MusicUncheckedUpdateWithoutPlayDataInput = {
@@ -18919,6 +22315,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutMusicNestedInput
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutMusicNestedInput
     Bingo?: BingoUncheckedUpdateManyWithoutMusicNestedInput
+    BingoCell?: BingoCellUncheckedUpdateManyWithoutMusicNestedInput
   }
 
   export type MusicCreateWithoutBingoInput = {
@@ -18940,6 +22337,7 @@ export namespace Prisma {
     Bookmark?: BookmarkCreateNestedManyWithoutMusicInput
     BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutMusicInput
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutMusicInput
+    BingoCell?: BingoCellCreateNestedManyWithoutMusicInput
   }
 
   export type MusicUncheckedCreateWithoutBingoInput = {
@@ -18962,11 +22360,38 @@ export namespace Prisma {
     Bookmark?: BookmarkUncheckedCreateNestedManyWithoutMusicInput
     BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutMusicInput
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutMusicInput
+    BingoCell?: BingoCellUncheckedCreateNestedManyWithoutMusicInput
   }
 
   export type MusicCreateOrConnectWithoutBingoInput = {
     where: MusicWhereUniqueInput
     create: XOR<MusicCreateWithoutBingoInput, MusicUncheckedCreateWithoutBingoInput>
+  }
+
+  export type BingoCellCreateWithoutBingoInput = {
+    position: number
+    challenge: string
+    category_short?: string | null
+    music?: MusicCreateNestedOneWithoutBingoCellInput
+    userBingoData?: userBingoCellDataCreateNestedManyWithoutBingoInput
+  }
+
+  export type BingoCellUncheckedCreateWithoutBingoInput = {
+    id?: number
+    position: number
+    challenge: string
+    category_short?: string | null
+    music_idx?: string | null
+    userBingoData?: userBingoCellDataUncheckedCreateNestedManyWithoutBingoInput
+  }
+
+  export type BingoCellCreateOrConnectWithoutBingoInput = {
+    where: BingoCellWhereUniqueInput
+    create: XOR<BingoCellCreateWithoutBingoInput, BingoCellUncheckedCreateWithoutBingoInput>
+  }
+
+  export type BingoCellCreateManyBingoInputEnvelope = {
+    data: BingoCellCreateManyBingoInput | BingoCellCreateManyBingoInput[]
   }
 
   export type MusicUpsertWithoutBingoInput = {
@@ -18999,6 +22424,7 @@ export namespace Prisma {
     Bookmark?: BookmarkUpdateManyWithoutMusicNestedInput
     BasicBestPlay?: BasicBestPlayUpdateManyWithoutMusicNestedInput
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutMusicNestedInput
+    BingoCell?: BingoCellUpdateManyWithoutMusicNestedInput
   }
 
   export type MusicUncheckedUpdateWithoutBingoInput = {
@@ -19021,6 +22447,411 @@ export namespace Prisma {
     Bookmark?: BookmarkUncheckedUpdateManyWithoutMusicNestedInput
     BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutMusicNestedInput
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutMusicNestedInput
+    BingoCell?: BingoCellUncheckedUpdateManyWithoutMusicNestedInput
+  }
+
+  export type BingoCellUpsertWithWhereUniqueWithoutBingoInput = {
+    where: BingoCellWhereUniqueInput
+    update: XOR<BingoCellUpdateWithoutBingoInput, BingoCellUncheckedUpdateWithoutBingoInput>
+    create: XOR<BingoCellCreateWithoutBingoInput, BingoCellUncheckedCreateWithoutBingoInput>
+  }
+
+  export type BingoCellUpdateWithWhereUniqueWithoutBingoInput = {
+    where: BingoCellWhereUniqueInput
+    data: XOR<BingoCellUpdateWithoutBingoInput, BingoCellUncheckedUpdateWithoutBingoInput>
+  }
+
+  export type BingoCellUpdateManyWithWhereWithoutBingoInput = {
+    where: BingoCellScalarWhereInput
+    data: XOR<BingoCellUpdateManyMutationInput, BingoCellUncheckedUpdateManyWithoutBingoInput>
+  }
+
+  export type MusicCreateWithoutBingoCellInput = {
+    index: string
+    title: string
+    title_kana: string
+    artist?: string | null
+    category: string
+    category_short: string
+    description?: string | null
+    background?: string | null
+    sheet_len: number
+    difficulty_levels: string
+    difficulty_name: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    RecentPlay?: RecentPlayCreateNestedManyWithoutMusicInput
+    PlayData?: PlayDataCreateNestedManyWithoutMusicInput
+    Bookmark?: BookmarkCreateNestedManyWithoutMusicInput
+    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutMusicInput
+    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutMusicInput
+    Bingo?: BingoCreateNestedManyWithoutMusicInput
+  }
+
+  export type MusicUncheckedCreateWithoutBingoCellInput = {
+    id?: number
+    index: string
+    title: string
+    title_kana: string
+    artist?: string | null
+    category: string
+    category_short: string
+    description?: string | null
+    background?: string | null
+    sheet_len: number
+    difficulty_levels: string
+    difficulty_name: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutMusicInput
+    PlayData?: PlayDataUncheckedCreateNestedManyWithoutMusicInput
+    Bookmark?: BookmarkUncheckedCreateNestedManyWithoutMusicInput
+    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutMusicInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutMusicInput
+    Bingo?: BingoUncheckedCreateNestedManyWithoutMusicInput
+  }
+
+  export type MusicCreateOrConnectWithoutBingoCellInput = {
+    where: MusicWhereUniqueInput
+    create: XOR<MusicCreateWithoutBingoCellInput, MusicUncheckedCreateWithoutBingoCellInput>
+  }
+
+  export type BingoCreateWithoutBingoCellInput = {
+    nos: number
+    line: number
+    music: MusicCreateNestedOneWithoutBingoInput
+  }
+
+  export type BingoUncheckedCreateWithoutBingoCellInput = {
+    id?: number
+    nos: number
+    line: number
+    music_idx: string
+  }
+
+  export type BingoCreateOrConnectWithoutBingoCellInput = {
+    where: BingoWhereUniqueInput
+    create: XOR<BingoCreateWithoutBingoCellInput, BingoUncheckedCreateWithoutBingoCellInput>
+  }
+
+  export type userBingoCellDataCreateWithoutBingoInput = {
+    isCompleted?: boolean
+    user: UserCreateNestedOneWithoutUserBingoCellDataInput
+  }
+
+  export type userBingoCellDataUncheckedCreateWithoutBingoInput = {
+    id?: number
+    isCompleted?: boolean
+    user_id: number
+  }
+
+  export type userBingoCellDataCreateOrConnectWithoutBingoInput = {
+    where: userBingoCellDataWhereUniqueInput
+    create: XOR<userBingoCellDataCreateWithoutBingoInput, userBingoCellDataUncheckedCreateWithoutBingoInput>
+  }
+
+  export type userBingoCellDataCreateManyBingoInputEnvelope = {
+    data: userBingoCellDataCreateManyBingoInput | userBingoCellDataCreateManyBingoInput[]
+  }
+
+  export type MusicUpsertWithoutBingoCellInput = {
+    update: XOR<MusicUpdateWithoutBingoCellInput, MusicUncheckedUpdateWithoutBingoCellInput>
+    create: XOR<MusicCreateWithoutBingoCellInput, MusicUncheckedCreateWithoutBingoCellInput>
+    where?: MusicWhereInput
+  }
+
+  export type MusicUpdateToOneWithWhereWithoutBingoCellInput = {
+    where?: MusicWhereInput
+    data: XOR<MusicUpdateWithoutBingoCellInput, MusicUncheckedUpdateWithoutBingoCellInput>
+  }
+
+  export type MusicUpdateWithoutBingoCellInput = {
+    index?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    title_kana?: StringFieldUpdateOperationsInput | string
+    artist?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: StringFieldUpdateOperationsInput | string
+    category_short?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    background?: NullableStringFieldUpdateOperationsInput | string | null
+    sheet_len?: IntFieldUpdateOperationsInput | number
+    difficulty_levels?: StringFieldUpdateOperationsInput | string
+    difficulty_name?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    RecentPlay?: RecentPlayUpdateManyWithoutMusicNestedInput
+    PlayData?: PlayDataUpdateManyWithoutMusicNestedInput
+    Bookmark?: BookmarkUpdateManyWithoutMusicNestedInput
+    BasicBestPlay?: BasicBestPlayUpdateManyWithoutMusicNestedInput
+    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutMusicNestedInput
+    Bingo?: BingoUpdateManyWithoutMusicNestedInput
+  }
+
+  export type MusicUncheckedUpdateWithoutBingoCellInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    index?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    title_kana?: StringFieldUpdateOperationsInput | string
+    artist?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: StringFieldUpdateOperationsInput | string
+    category_short?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    background?: NullableStringFieldUpdateOperationsInput | string | null
+    sheet_len?: IntFieldUpdateOperationsInput | number
+    difficulty_levels?: StringFieldUpdateOperationsInput | string
+    difficulty_name?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    RecentPlay?: RecentPlayUncheckedUpdateManyWithoutMusicNestedInput
+    PlayData?: PlayDataUncheckedUpdateManyWithoutMusicNestedInput
+    Bookmark?: BookmarkUncheckedUpdateManyWithoutMusicNestedInput
+    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutMusicNestedInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutMusicNestedInput
+    Bingo?: BingoUncheckedUpdateManyWithoutMusicNestedInput
+  }
+
+  export type BingoUpsertWithoutBingoCellInput = {
+    update: XOR<BingoUpdateWithoutBingoCellInput, BingoUncheckedUpdateWithoutBingoCellInput>
+    create: XOR<BingoCreateWithoutBingoCellInput, BingoUncheckedCreateWithoutBingoCellInput>
+    where?: BingoWhereInput
+  }
+
+  export type BingoUpdateToOneWithWhereWithoutBingoCellInput = {
+    where?: BingoWhereInput
+    data: XOR<BingoUpdateWithoutBingoCellInput, BingoUncheckedUpdateWithoutBingoCellInput>
+  }
+
+  export type BingoUpdateWithoutBingoCellInput = {
+    nos?: IntFieldUpdateOperationsInput | number
+    line?: IntFieldUpdateOperationsInput | number
+    music?: MusicUpdateOneRequiredWithoutBingoNestedInput
+  }
+
+  export type BingoUncheckedUpdateWithoutBingoCellInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    nos?: IntFieldUpdateOperationsInput | number
+    line?: IntFieldUpdateOperationsInput | number
+    music_idx?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type userBingoCellDataUpsertWithWhereUniqueWithoutBingoInput = {
+    where: userBingoCellDataWhereUniqueInput
+    update: XOR<userBingoCellDataUpdateWithoutBingoInput, userBingoCellDataUncheckedUpdateWithoutBingoInput>
+    create: XOR<userBingoCellDataCreateWithoutBingoInput, userBingoCellDataUncheckedCreateWithoutBingoInput>
+  }
+
+  export type userBingoCellDataUpdateWithWhereUniqueWithoutBingoInput = {
+    where: userBingoCellDataWhereUniqueInput
+    data: XOR<userBingoCellDataUpdateWithoutBingoInput, userBingoCellDataUncheckedUpdateWithoutBingoInput>
+  }
+
+  export type userBingoCellDataUpdateManyWithWhereWithoutBingoInput = {
+    where: userBingoCellDataScalarWhereInput
+    data: XOR<userBingoCellDataUpdateManyMutationInput, userBingoCellDataUncheckedUpdateManyWithoutBingoInput>
+  }
+
+  export type UserCreateWithoutUserBingoCellDataInput = {
+    username?: string | null
+    kakao_id?: bigint | number | null
+    discord_name?: string | null
+    discord_tag?: string | null
+    avatar?: string | null
+    country?: string
+    rank_basic?: number | null
+    rank_recital?: number | null
+    rank_basic_country?: number | null
+    rank_recital_country?: number | null
+    play_count?: number | null
+    score_p?: number | null
+    score_f?: number | null
+    score_s?: number | null
+    score_a2?: number | null
+    score_a?: number | null
+    score_b2?: number | null
+    score_b?: number | null
+    score_c?: number | null
+    score_d?: number | null
+    role?: string
+    grade_basic?: number | null
+    grade_recital?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
+    PlayData?: PlayDataCreateNestedManyWithoutUserInput
+    Bookmark?: BookmarkCreateNestedManyWithoutUserInput
+    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutUserInput
+    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutUserInput
+    UserBestGrade?: UserBestGradeCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutUserBingoCellDataInput = {
+    id?: number
+    username?: string | null
+    kakao_id?: bigint | number | null
+    discord_name?: string | null
+    discord_tag?: string | null
+    avatar?: string | null
+    country?: string
+    rank_basic?: number | null
+    rank_recital?: number | null
+    rank_basic_country?: number | null
+    rank_recital_country?: number | null
+    play_count?: number | null
+    score_p?: number | null
+    score_f?: number | null
+    score_s?: number | null
+    score_a2?: number | null
+    score_a?: number | null
+    score_b2?: number | null
+    score_b?: number | null
+    score_c?: number | null
+    score_d?: number | null
+    role?: string
+    grade_basic?: number | null
+    grade_recital?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
+    PlayData?: PlayDataUncheckedCreateNestedManyWithoutUserInput
+    Bookmark?: BookmarkUncheckedCreateNestedManyWithoutUserInput
+    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutUserInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutUserInput
+    UserBestGrade?: UserBestGradeUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutUserBingoCellDataInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutUserBingoCellDataInput, UserUncheckedCreateWithoutUserBingoCellDataInput>
+  }
+
+  export type BingoCellCreateWithoutUserBingoDataInput = {
+    position: number
+    challenge: string
+    category_short?: string | null
+    music?: MusicCreateNestedOneWithoutBingoCellInput
+    bingo: BingoCreateNestedOneWithoutBingoCellInput
+  }
+
+  export type BingoCellUncheckedCreateWithoutUserBingoDataInput = {
+    id?: number
+    position: number
+    challenge: string
+    category_short?: string | null
+    music_idx?: string | null
+    bingo_id: number
+  }
+
+  export type BingoCellCreateOrConnectWithoutUserBingoDataInput = {
+    where: BingoCellWhereUniqueInput
+    create: XOR<BingoCellCreateWithoutUserBingoDataInput, BingoCellUncheckedCreateWithoutUserBingoDataInput>
+  }
+
+  export type UserUpsertWithoutUserBingoCellDataInput = {
+    update: XOR<UserUpdateWithoutUserBingoCellDataInput, UserUncheckedUpdateWithoutUserBingoCellDataInput>
+    create: XOR<UserCreateWithoutUserBingoCellDataInput, UserUncheckedCreateWithoutUserBingoCellDataInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutUserBingoCellDataInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutUserBingoCellDataInput, UserUncheckedUpdateWithoutUserBingoCellDataInput>
+  }
+
+  export type UserUpdateWithoutUserBingoCellDataInput = {
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_name?: NullableStringFieldUpdateOperationsInput | string | null
+    discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: StringFieldUpdateOperationsInput | string
+    rank_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_basic_country?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital_country?: NullableIntFieldUpdateOperationsInput | number | null
+    play_count?: NullableIntFieldUpdateOperationsInput | number | null
+    score_p?: NullableIntFieldUpdateOperationsInput | number | null
+    score_f?: NullableIntFieldUpdateOperationsInput | number | null
+    score_s?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a2?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a?: NullableIntFieldUpdateOperationsInput | number | null
+    score_b2?: NullableIntFieldUpdateOperationsInput | number | null
+    score_b?: NullableIntFieldUpdateOperationsInput | number | null
+    score_c?: NullableIntFieldUpdateOperationsInput | number | null
+    score_d?: NullableIntFieldUpdateOperationsInput | number | null
+    role?: StringFieldUpdateOperationsInput | string
+    grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
+    PlayData?: PlayDataUpdateManyWithoutUserNestedInput
+    Bookmark?: BookmarkUpdateManyWithoutUserNestedInput
+    BasicBestPlay?: BasicBestPlayUpdateManyWithoutUserNestedInput
+    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutUserNestedInput
+    UserBestGrade?: UserBestGradeUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutUserBingoCellDataInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_name?: NullableStringFieldUpdateOperationsInput | string | null
+    discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: StringFieldUpdateOperationsInput | string
+    rank_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_basic_country?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital_country?: NullableIntFieldUpdateOperationsInput | number | null
+    play_count?: NullableIntFieldUpdateOperationsInput | number | null
+    score_p?: NullableIntFieldUpdateOperationsInput | number | null
+    score_f?: NullableIntFieldUpdateOperationsInput | number | null
+    score_s?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a2?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a?: NullableIntFieldUpdateOperationsInput | number | null
+    score_b2?: NullableIntFieldUpdateOperationsInput | number | null
+    score_b?: NullableIntFieldUpdateOperationsInput | number | null
+    score_c?: NullableIntFieldUpdateOperationsInput | number | null
+    score_d?: NullableIntFieldUpdateOperationsInput | number | null
+    role?: StringFieldUpdateOperationsInput | string
+    grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
+    PlayData?: PlayDataUncheckedUpdateManyWithoutUserNestedInput
+    Bookmark?: BookmarkUncheckedUpdateManyWithoutUserNestedInput
+    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutUserNestedInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutUserNestedInput
+    UserBestGrade?: UserBestGradeUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type BingoCellUpsertWithoutUserBingoDataInput = {
+    update: XOR<BingoCellUpdateWithoutUserBingoDataInput, BingoCellUncheckedUpdateWithoutUserBingoDataInput>
+    create: XOR<BingoCellCreateWithoutUserBingoDataInput, BingoCellUncheckedCreateWithoutUserBingoDataInput>
+    where?: BingoCellWhereInput
+  }
+
+  export type BingoCellUpdateToOneWithWhereWithoutUserBingoDataInput = {
+    where?: BingoCellWhereInput
+    data: XOR<BingoCellUpdateWithoutUserBingoDataInput, BingoCellUncheckedUpdateWithoutUserBingoDataInput>
+  }
+
+  export type BingoCellUpdateWithoutUserBingoDataInput = {
+    position?: IntFieldUpdateOperationsInput | number
+    challenge?: StringFieldUpdateOperationsInput | string
+    category_short?: NullableStringFieldUpdateOperationsInput | string | null
+    music?: MusicUpdateOneWithoutBingoCellNestedInput
+    bingo?: BingoUpdateOneRequiredWithoutBingoCellNestedInput
+  }
+
+  export type BingoCellUncheckedUpdateWithoutUserBingoDataInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    challenge?: StringFieldUpdateOperationsInput | string
+    category_short?: NullableStringFieldUpdateOperationsInput | string | null
+    music_idx?: NullableStringFieldUpdateOperationsInput | string | null
+    bingo_id?: IntFieldUpdateOperationsInput | number
   }
 
   export type RecentPlayCreateManyUserInput = {
@@ -19100,6 +22931,12 @@ export namespace Prisma {
     besttime: string
     created_at?: Date | string
     updated_at?: Date | string
+  }
+
+  export type userBingoCellDataCreateManyUserInput = {
+    id?: number
+    isCompleted?: boolean
+    bingo_cell_id: number
   }
 
   export type RecentPlayUpdateWithoutUserInput = {
@@ -19333,6 +23170,23 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type userBingoCellDataUpdateWithoutUserInput = {
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    bingo?: BingoCellUpdateOneRequiredWithoutUserBingoDataNestedInput
+  }
+
+  export type userBingoCellDataUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    bingo_cell_id?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type userBingoCellDataUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    bingo_cell_id?: IntFieldUpdateOperationsInput | number
+  }
+
   export type RecentPlayCreateManyMusicInput = {
     id?: number
     difficulty: string
@@ -19407,6 +23261,14 @@ export namespace Prisma {
     id?: number
     nos: number
     line: number
+  }
+
+  export type BingoCellCreateManyMusicInput = {
+    id?: number
+    position: number
+    challenge: string
+    category_short?: string | null
+    bingo_id: number
   }
 
   export type RecentPlayUpdateWithoutMusicInput = {
@@ -19617,18 +23479,101 @@ export namespace Prisma {
   export type BingoUpdateWithoutMusicInput = {
     nos?: IntFieldUpdateOperationsInput | number
     line?: IntFieldUpdateOperationsInput | number
+    BingoCell?: BingoCellUpdateManyWithoutBingoNestedInput
   }
 
   export type BingoUncheckedUpdateWithoutMusicInput = {
     id?: IntFieldUpdateOperationsInput | number
     nos?: IntFieldUpdateOperationsInput | number
     line?: IntFieldUpdateOperationsInput | number
+    BingoCell?: BingoCellUncheckedUpdateManyWithoutBingoNestedInput
   }
 
   export type BingoUncheckedUpdateManyWithoutMusicInput = {
     id?: IntFieldUpdateOperationsInput | number
     nos?: IntFieldUpdateOperationsInput | number
     line?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type BingoCellUpdateWithoutMusicInput = {
+    position?: IntFieldUpdateOperationsInput | number
+    challenge?: StringFieldUpdateOperationsInput | string
+    category_short?: NullableStringFieldUpdateOperationsInput | string | null
+    bingo?: BingoUpdateOneRequiredWithoutBingoCellNestedInput
+    userBingoData?: userBingoCellDataUpdateManyWithoutBingoNestedInput
+  }
+
+  export type BingoCellUncheckedUpdateWithoutMusicInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    challenge?: StringFieldUpdateOperationsInput | string
+    category_short?: NullableStringFieldUpdateOperationsInput | string | null
+    bingo_id?: IntFieldUpdateOperationsInput | number
+    userBingoData?: userBingoCellDataUncheckedUpdateManyWithoutBingoNestedInput
+  }
+
+  export type BingoCellUncheckedUpdateManyWithoutMusicInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    challenge?: StringFieldUpdateOperationsInput | string
+    category_short?: NullableStringFieldUpdateOperationsInput | string | null
+    bingo_id?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type BingoCellCreateManyBingoInput = {
+    id?: number
+    position: number
+    challenge: string
+    category_short?: string | null
+    music_idx?: string | null
+  }
+
+  export type BingoCellUpdateWithoutBingoInput = {
+    position?: IntFieldUpdateOperationsInput | number
+    challenge?: StringFieldUpdateOperationsInput | string
+    category_short?: NullableStringFieldUpdateOperationsInput | string | null
+    music?: MusicUpdateOneWithoutBingoCellNestedInput
+    userBingoData?: userBingoCellDataUpdateManyWithoutBingoNestedInput
+  }
+
+  export type BingoCellUncheckedUpdateWithoutBingoInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    challenge?: StringFieldUpdateOperationsInput | string
+    category_short?: NullableStringFieldUpdateOperationsInput | string | null
+    music_idx?: NullableStringFieldUpdateOperationsInput | string | null
+    userBingoData?: userBingoCellDataUncheckedUpdateManyWithoutBingoNestedInput
+  }
+
+  export type BingoCellUncheckedUpdateManyWithoutBingoInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    challenge?: StringFieldUpdateOperationsInput | string
+    category_short?: NullableStringFieldUpdateOperationsInput | string | null
+    music_idx?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type userBingoCellDataCreateManyBingoInput = {
+    id?: number
+    isCompleted?: boolean
+    user_id: number
+  }
+
+  export type userBingoCellDataUpdateWithoutBingoInput = {
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    user?: UserUpdateOneRequiredWithoutUserBingoCellDataNestedInput
+  }
+
+  export type userBingoCellDataUncheckedUpdateWithoutBingoInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    user_id?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type userBingoCellDataUncheckedUpdateManyWithoutBingoInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    user_id?: IntFieldUpdateOperationsInput | number
   }
 
 

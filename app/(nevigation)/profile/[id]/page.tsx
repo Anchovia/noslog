@@ -1,6 +1,6 @@
 import Profile from "@/components/profile/profile";
 import db from "@/lib/db";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import {
     getInitialBasicBestPlays,
     getInitialRecentPlays,
@@ -33,7 +33,7 @@ export default async function BasicProfile({
 
     return (
         <>
-            {userData && userData.username ? (
+            {userData && (
                 <Profile
                     id={id}
                     username={userData.username}
@@ -59,8 +59,6 @@ export default async function BasicProfile({
                     initialRecitalBestPlays={initialRecitalBestPlays}
                     userBestGrades={userBestGrades}
                 />
-            ) : (
-                redirect("/")
             )}
         </>
     );

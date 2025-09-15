@@ -13,7 +13,7 @@ interface ProfileProps {
     discord_name: string | null;
     discord_tag: string | null;
     id: number;
-    username: string;
+    username: string | null;
     avatar: string | null;
     country: string;
     rank_basic: number | null;
@@ -91,7 +91,7 @@ export default function Profile({
                 <article className="flex bg-dark-quinary rounded-t-xl p-4 gap-4">
                     <div className="size-24 rounded-3xl relative overflow-hidden">
                         {avatar ? (
-                            <Image src={avatar} alt={username} fill />
+                            <Image src={avatar} alt="avatar" fill />
                         ) : (
                             <div className="bg-neutral-500" />
                         )}
@@ -105,7 +105,9 @@ export default function Profile({
                                     fill
                                 />
                             </div>
-                            <span className="text-primary">{username}</span>
+                            <span className="text-primary">
+                                {username ? username : "-"}
+                            </span>
                         </div>
                         {isRecital ? (
                             <span className="text-quaternary">{`NosLog #${formatToComma(
@@ -142,9 +144,11 @@ export default function Profile({
                         />
                         <span className="flex items-center gap-1 *:flex *:items-center">
                             <span className="text-quaternary">
-                                {discord_name}
+                                {discord_name ? discord_name : "-"}
                             </span>
-                            <span className="text-quinary">#{discord_tag}</span>
+                            <span className="text-quinary">
+                                #{discord_tag ? discord_tag : "-"}
+                            </span>
                         </span>
                     </div>
                 </article>

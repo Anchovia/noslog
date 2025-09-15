@@ -14,7 +14,6 @@ const routes: {
 } = {
     publicOnly: {},
     privateOnly: {
-        "/profile": true,
         "/profile/settings": true,
     },
 } as const;

@@ -4,14 +4,15 @@ import Link from "next/link";
 export default async function Bingo() {
     const bingos = await db.bingo.findMany({
         select: {
+            id: true,
+            music_idx: true,
+            nos: true,
             music: {
                 select: {
                     title: true,
                     background: true,
                 },
             },
-            music_idx: true,
-            nos: true,
         },
     });
     return (
@@ -23,7 +24,7 @@ export default async function Bingo() {
                 {bingos.map((bingo, idx) => (
                     <Link
                         key={idx}
-                        href={`/bingo/${bingo.music_idx}`}
+                        href={`/bingo/${bingo.id}`}
                         style={{
                             backgroundImage: `${
                                 bingo.music.background

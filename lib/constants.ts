@@ -6,6 +6,15 @@ export const rankImg: any = {
     fc: "https://p.eagate.573.jp/game/nostalgia/op3/img/pdata/music_data/grade/grade_fc_bg.png",
 };
 
+const bingoCell: any = [
+    {
+        position: 1,
+        challenge: "",
+        music_idx: "",
+        bingo_id: "",
+    },
+];
+
 export const musicBG: MusicBG = {
     "818b48940c2d17325904fbab68689046":
         "http://p.eagate.573.jp//game/bemani/fansite/p/images/music/201703_jk/201703_nst_29.jpg",

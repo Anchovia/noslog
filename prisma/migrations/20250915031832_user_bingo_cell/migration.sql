@@ -157,6 +157,27 @@ CREATE TABLE "Bingo" (
     CONSTRAINT "Bingo_music_idx_fkey" FOREIGN KEY ("music_idx") REFERENCES "Music" ("index") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
+-- CreateTable
+CREATE TABLE "BingoCell" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "position" INTEGER NOT NULL,
+    "challenge" TEXT NOT NULL,
+    "music_idx" TEXT,
+    "bingo_id" INTEGER NOT NULL,
+    CONSTRAINT "BingoCell_music_idx_fkey" FOREIGN KEY ("music_idx") REFERENCES "Music" ("index") ON DELETE SET NULL ON UPDATE CASCADE,
+    CONSTRAINT "BingoCell_bingo_id_fkey" FOREIGN KEY ("bingo_id") REFERENCES "Bingo" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "userBingoCellData" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "isCompleted" BOOLEAN NOT NULL DEFAULT false,
+    "user_id" INTEGER NOT NULL,
+    "bingo_cell_id" INTEGER NOT NULL,
+    CONSTRAINT "userBingoCellData_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "userBingoCellData_bingo_cell_id_fkey" FOREIGN KEY ("bingo_cell_id") REFERENCES "BingoCell" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
 

@@ -9,13 +9,13 @@ datasource db {
 }
 
 model User {
-  id                   Int               @id @default(autoincrement())
-  username             String?           @unique
-  kakao_id             BigInt?           @unique
-  discord_name         String?           @unique
-  discord_tag          String?           @unique
+  id                   Int                 @id @default(autoincrement())
+  username             String?             @unique
+  kakao_id             BigInt?             @unique
+  discord_name         String?             @unique
+  discord_tag          String?             @unique
   avatar               String?
-  country              String            @default("ko-KR")
+  country              String              @default("ko-KR")
   rank_basic           Int?
   rank_recital         Int?
   rank_basic_country   Int?
@@ -31,17 +31,18 @@ model User {
   score_b              Int?
   score_c              Int?
   score_d              Int?
-  role                 String            @default("user")
+  role                 String              @default("user")
   grade_basic          Int?
   grade_recital        Int?
-  created_at           DateTime          @default(now())
-  updated_at           DateTime          @updatedAt
+  created_at           DateTime            @default(now())
+  updated_at           DateTime            @updatedAt
   PlayHistory          RecentPlay[]
   PlayData             PlayData[]
   Bookmark             Bookmark[]
   BasicBestPlay        BasicBestPlay[]
   RecitalBestPlay      RecitalBestPlay[]
   UserBestGrade        UserBestGrade[]
+  userBingoCellData    userBingoCellData[]
 }
 
 model Bookmark {
@@ -77,6 +78,7 @@ model Music {
   BasicBestPlay     BasicBestPlay[]
   RecitalBestPlay   RecitalBestPlay[]
   Bingo             Bingo[]
+  BingoCell         BingoCell[]
 }
 
 model RecentPlay {
@@ -166,8 +168,31 @@ model PlayData {
 }
 
 model Bingo {
-  id        Int    @id @default(autoincrement())
+  id        Int         @id @default(autoincrement())
   nos       Int
+  line      Int
   music_idx String
-  music     Music  @relation(fields: [music_idx], references: [index])
+  music     Music       @relation(fields: [music_idx], references: [index])
+  BingoCell BingoCell[]
+}
+
+model BingoCell {
+  id             Int                 @id @default(autoincrement())
+  position       Int // 칸 위치(1~25)
+  challenge      String
+  category_short String?
+  music_idx      String?
+  music          Music?              @relation(fields: [music_idx], references: [index])
+  bingo_id       Int
+  bingo          Bingo               @relation(fields: [bingo_id], references: [id])
+  userBingoData  userBingoCellData[]
+}
+
+model userBingoCellData {
+  id            Int       @id @default(autoincrement())
+  isCompleted   Boolean   @default(false)
+  user_id       Int
+  user          User      @relation(fields: [user_id], references: [id])
+  bingo_cell_id Int
+  bingo         BingoCell @relation(fields: [bingo_cell_id], references: [id])
 }
