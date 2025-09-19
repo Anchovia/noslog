@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default async function Home() {
     // 메인 섹션들 padding py-24 px-16 사용 필수
@@ -27,7 +28,17 @@ export default async function Home() {
                     <span className="text-lg font-thin">
                         NosLog는 Kakao 소셜 로그인을 지원합니다.
                     </span>
-                    <div className="w-full max-w-lg h-60 bg-dark-secondary rounded-xl" />
+                    <Link
+                        href={"/login"}
+                        className="relative w-80 h-72 rounded-xl"
+                    >
+                        <Image
+                            src={"/main_signup.png"}
+                            alt="signup"
+                            fill
+                            className="bg-center bg-auto"
+                        />
+                    </Link>
                 </article>
                 <article className="flex flex-col items-center text-center gap-4">
                     <h3 className="text-xl font-medium">BEMANI 데이터 전송</h3>
@@ -35,7 +46,10 @@ export default async function Home() {
                         JS Console 입력을 통해 BEMANI 데이터를 NosLog로
                         전송합니다.
                     </span>
-                    <div className="w-full max-w-lg h-60 bg-dark-secondary rounded-xl" />
+                    <Link
+                        href={"/bookmarklet"}
+                        className="w-full max-w-lg h-60 bg-dark-secondary rounded-xl"
+                    ></Link>
                 </article>
                 <article className="flex flex-col items-center text-center gap-4">
                     <h3 className="text-xl font-medium">
