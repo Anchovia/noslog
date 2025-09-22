@@ -7,7 +7,7 @@ export default async function Header() {
 
     return (
         <header className="w-full h-20 flex bg-dark-secondary/50 text-white items-center px-6 *:text-neutral-500">
-            <div className="flex flex-1 gap-8 *:relative *:size-8">
+            <div className="flex flex-1 gap-4 *:relative *:size-8">
                 <Link href="/">
                     <Image src={"/icon/home.png"} alt={"홈"} fill />
                 </Link>

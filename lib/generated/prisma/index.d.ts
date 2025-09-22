@@ -19,11 +19,6 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  */
 export type User = $Result.DefaultSelection<Prisma.$UserPayload>
 /**
- * Model Bookmark
- * 
- */
-export type Bookmark = $Result.DefaultSelection<Prisma.$BookmarkPayload>
-/**
  * Model Music
  * 
  */
@@ -196,16 +191,6 @@ export class PrismaClient<
     * ```
     */
   get user(): Prisma.UserDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.bookmark`: Exposes CRUD operations for the **Bookmark** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Bookmarks
-    * const bookmarks = await prisma.bookmark.findMany()
-    * ```
-    */
-  get bookmark(): Prisma.BookmarkDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.music`: Exposes CRUD operations for the **Music** model.
@@ -737,7 +722,6 @@ export namespace Prisma {
 
   export const ModelName: {
     User: 'User',
-    Bookmark: 'Bookmark',
     Music: 'Music',
     RecentPlay: 'RecentPlay',
     UserBestGrade: 'UserBestGrade',
@@ -765,7 +749,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "bookmark" | "music" | "recentPlay" | "userBestGrade" | "basicBestPlay" | "recitalBestPlay" | "playData" | "bingo" | "bingoCell" | "userBingoCellData"
+      modelProps: "user" | "music" | "recentPlay" | "userBestGrade" | "basicBestPlay" | "recitalBestPlay" | "playData" | "bingo" | "bingoCell" | "userBingoCellData"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -840,80 +824,6 @@ export namespace Prisma {
           count: {
             args: Prisma.UserCountArgs<ExtArgs>
             result: $Utils.Optional<UserCountAggregateOutputType> | number
-          }
-        }
-      }
-      Bookmark: {
-        payload: Prisma.$BookmarkPayload<ExtArgs>
-        fields: Prisma.BookmarkFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.BookmarkFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BookmarkPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.BookmarkFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BookmarkPayload>
-          }
-          findFirst: {
-            args: Prisma.BookmarkFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BookmarkPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.BookmarkFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BookmarkPayload>
-          }
-          findMany: {
-            args: Prisma.BookmarkFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BookmarkPayload>[]
-          }
-          create: {
-            args: Prisma.BookmarkCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BookmarkPayload>
-          }
-          createMany: {
-            args: Prisma.BookmarkCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.BookmarkCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BookmarkPayload>[]
-          }
-          delete: {
-            args: Prisma.BookmarkDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BookmarkPayload>
-          }
-          update: {
-            args: Prisma.BookmarkUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BookmarkPayload>
-          }
-          deleteMany: {
-            args: Prisma.BookmarkDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.BookmarkUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.BookmarkUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BookmarkPayload>[]
-          }
-          upsert: {
-            args: Prisma.BookmarkUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BookmarkPayload>
-          }
-          aggregate: {
-            args: Prisma.BookmarkAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateBookmark>
-          }
-          groupBy: {
-            args: Prisma.BookmarkGroupByArgs<ExtArgs>
-            result: $Utils.Optional<BookmarkGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.BookmarkCountArgs<ExtArgs>
-            result: $Utils.Optional<BookmarkCountAggregateOutputType> | number
           }
         }
       }
@@ -1676,7 +1586,6 @@ export namespace Prisma {
   }
   export type GlobalOmitConfig = {
     user?: UserOmit
-    bookmark?: BookmarkOmit
     music?: MusicOmit
     recentPlay?: RecentPlayOmit
     userBestGrade?: UserBestGradeOmit
@@ -1768,7 +1677,6 @@ export namespace Prisma {
   export type UserCountOutputType = {
     PlayHistory: number
     PlayData: number
-    Bookmark: number
     BasicBestPlay: number
     RecitalBestPlay: number
     UserBestGrade: number
@@ -1778,7 +1686,6 @@ export namespace Prisma {
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     PlayHistory?: boolean | UserCountOutputTypeCountPlayHistoryArgs
     PlayData?: boolean | UserCountOutputTypeCountPlayDataArgs
-    Bookmark?: boolean | UserCountOutputTypeCountBookmarkArgs
     BasicBestPlay?: boolean | UserCountOutputTypeCountBasicBestPlayArgs
     RecitalBestPlay?: boolean | UserCountOutputTypeCountRecitalBestPlayArgs
     UserBestGrade?: boolean | UserCountOutputTypeCountUserBestGradeArgs
@@ -1808,13 +1715,6 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountPlayDataArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PlayDataWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountBookmarkArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: BookmarkWhereInput
   }
 
   /**
@@ -1853,7 +1753,6 @@ export namespace Prisma {
   export type MusicCountOutputType = {
     RecentPlay: number
     PlayData: number
-    Bookmark: number
     BasicBestPlay: number
     RecitalBestPlay: number
     Bingo: number
@@ -1863,7 +1762,6 @@ export namespace Prisma {
   export type MusicCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     RecentPlay?: boolean | MusicCountOutputTypeCountRecentPlayArgs
     PlayData?: boolean | MusicCountOutputTypeCountPlayDataArgs
-    Bookmark?: boolean | MusicCountOutputTypeCountBookmarkArgs
     BasicBestPlay?: boolean | MusicCountOutputTypeCountBasicBestPlayArgs
     RecitalBestPlay?: boolean | MusicCountOutputTypeCountRecitalBestPlayArgs
     Bingo?: boolean | MusicCountOutputTypeCountBingoArgs
@@ -1893,13 +1791,6 @@ export namespace Prisma {
    */
   export type MusicCountOutputTypeCountPlayDataArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PlayDataWhereInput
-  }
-
-  /**
-   * MusicCountOutputType without action
-   */
-  export type MusicCountOutputTypeCountBookmarkArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: BookmarkWhereInput
   }
 
   /**
@@ -2433,7 +2324,6 @@ export namespace Prisma {
     updated_at?: boolean
     PlayHistory?: boolean | User$PlayHistoryArgs<ExtArgs>
     PlayData?: boolean | User$PlayDataArgs<ExtArgs>
-    Bookmark?: boolean | User$BookmarkArgs<ExtArgs>
     BasicBestPlay?: boolean | User$BasicBestPlayArgs<ExtArgs>
     RecitalBestPlay?: boolean | User$RecitalBestPlayArgs<ExtArgs>
     UserBestGrade?: boolean | User$UserBestGradeArgs<ExtArgs>
@@ -2532,7 +2422,6 @@ export namespace Prisma {
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     PlayHistory?: boolean | User$PlayHistoryArgs<ExtArgs>
     PlayData?: boolean | User$PlayDataArgs<ExtArgs>
-    Bookmark?: boolean | User$BookmarkArgs<ExtArgs>
     BasicBestPlay?: boolean | User$BasicBestPlayArgs<ExtArgs>
     RecitalBestPlay?: boolean | User$RecitalBestPlayArgs<ExtArgs>
     UserBestGrade?: boolean | User$UserBestGradeArgs<ExtArgs>
@@ -2547,7 +2436,6 @@ export namespace Prisma {
     objects: {
       PlayHistory: Prisma.$RecentPlayPayload<ExtArgs>[]
       PlayData: Prisma.$PlayDataPayload<ExtArgs>[]
-      Bookmark: Prisma.$BookmarkPayload<ExtArgs>[]
       BasicBestPlay: Prisma.$BasicBestPlayPayload<ExtArgs>[]
       RecitalBestPlay: Prisma.$RecitalBestPlayPayload<ExtArgs>[]
       UserBestGrade: Prisma.$UserBestGradePayload<ExtArgs>[]
@@ -2976,7 +2864,6 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     PlayHistory<T extends User$PlayHistoryArgs<ExtArgs> = {}>(args?: Subset<T, User$PlayHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RecentPlayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     PlayData<T extends User$PlayDataArgs<ExtArgs> = {}>(args?: Subset<T, User$PlayDataArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlayDataPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    Bookmark<T extends User$BookmarkArgs<ExtArgs> = {}>(args?: Subset<T, User$BookmarkArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BookmarkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     BasicBestPlay<T extends User$BasicBestPlayArgs<ExtArgs> = {}>(args?: Subset<T, User$BasicBestPlayArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BasicBestPlayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     RecitalBestPlay<T extends User$RecitalBestPlayArgs<ExtArgs> = {}>(args?: Subset<T, User$RecitalBestPlayArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RecitalBestPlayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     UserBestGrade<T extends User$UserBestGradeArgs<ExtArgs> = {}>(args?: Subset<T, User$UserBestGradeArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserBestGradePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3470,30 +3357,6 @@ export namespace Prisma {
   }
 
   /**
-   * User.Bookmark
-   */
-  export type User$BookmarkArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Bookmark
-     */
-    select?: BookmarkSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Bookmark
-     */
-    omit?: BookmarkOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BookmarkInclude<ExtArgs> | null
-    where?: BookmarkWhereInput
-    orderBy?: BookmarkOrderByWithRelationInput | BookmarkOrderByWithRelationInput[]
-    cursor?: BookmarkWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: BookmarkScalarFieldEnum | BookmarkScalarFieldEnum[]
-  }
-
-  /**
    * User.BasicBestPlay
    */
   export type User$BasicBestPlayArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3605,1112 +3468,6 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: UserInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model Bookmark
-   */
-
-  export type AggregateBookmark = {
-    _count: BookmarkCountAggregateOutputType | null
-    _avg: BookmarkAvgAggregateOutputType | null
-    _sum: BookmarkSumAggregateOutputType | null
-    _min: BookmarkMinAggregateOutputType | null
-    _max: BookmarkMaxAggregateOutputType | null
-  }
-
-  export type BookmarkAvgAggregateOutputType = {
-    id: number | null
-    user_id: number | null
-    music_id: number | null
-  }
-
-  export type BookmarkSumAggregateOutputType = {
-    id: number | null
-    user_id: number | null
-    music_id: number | null
-  }
-
-  export type BookmarkMinAggregateOutputType = {
-    id: number | null
-    user_id: number | null
-    music_id: number | null
-    created_at: Date | null
-    updated_at: Date | null
-  }
-
-  export type BookmarkMaxAggregateOutputType = {
-    id: number | null
-    user_id: number | null
-    music_id: number | null
-    created_at: Date | null
-    updated_at: Date | null
-  }
-
-  export type BookmarkCountAggregateOutputType = {
-    id: number
-    user_id: number
-    music_id: number
-    created_at: number
-    updated_at: number
-    _all: number
-  }
-
-
-  export type BookmarkAvgAggregateInputType = {
-    id?: true
-    user_id?: true
-    music_id?: true
-  }
-
-  export type BookmarkSumAggregateInputType = {
-    id?: true
-    user_id?: true
-    music_id?: true
-  }
-
-  export type BookmarkMinAggregateInputType = {
-    id?: true
-    user_id?: true
-    music_id?: true
-    created_at?: true
-    updated_at?: true
-  }
-
-  export type BookmarkMaxAggregateInputType = {
-    id?: true
-    user_id?: true
-    music_id?: true
-    created_at?: true
-    updated_at?: true
-  }
-
-  export type BookmarkCountAggregateInputType = {
-    id?: true
-    user_id?: true
-    music_id?: true
-    created_at?: true
-    updated_at?: true
-    _all?: true
-  }
-
-  export type BookmarkAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Bookmark to aggregate.
-     */
-    where?: BookmarkWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Bookmarks to fetch.
-     */
-    orderBy?: BookmarkOrderByWithRelationInput | BookmarkOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: BookmarkWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Bookmarks from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Bookmarks.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned Bookmarks
-    **/
-    _count?: true | BookmarkCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: BookmarkAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: BookmarkSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: BookmarkMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: BookmarkMaxAggregateInputType
-  }
-
-  export type GetBookmarkAggregateType<T extends BookmarkAggregateArgs> = {
-        [P in keyof T & keyof AggregateBookmark]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateBookmark[P]>
-      : GetScalarType<T[P], AggregateBookmark[P]>
-  }
-
-
-
-
-  export type BookmarkGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: BookmarkWhereInput
-    orderBy?: BookmarkOrderByWithAggregationInput | BookmarkOrderByWithAggregationInput[]
-    by: BookmarkScalarFieldEnum[] | BookmarkScalarFieldEnum
-    having?: BookmarkScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: BookmarkCountAggregateInputType | true
-    _avg?: BookmarkAvgAggregateInputType
-    _sum?: BookmarkSumAggregateInputType
-    _min?: BookmarkMinAggregateInputType
-    _max?: BookmarkMaxAggregateInputType
-  }
-
-  export type BookmarkGroupByOutputType = {
-    id: number
-    user_id: number
-    music_id: number
-    created_at: Date
-    updated_at: Date
-    _count: BookmarkCountAggregateOutputType | null
-    _avg: BookmarkAvgAggregateOutputType | null
-    _sum: BookmarkSumAggregateOutputType | null
-    _min: BookmarkMinAggregateOutputType | null
-    _max: BookmarkMaxAggregateOutputType | null
-  }
-
-  type GetBookmarkGroupByPayload<T extends BookmarkGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<BookmarkGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof BookmarkGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], BookmarkGroupByOutputType[P]>
-            : GetScalarType<T[P], BookmarkGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type BookmarkSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    user_id?: boolean
-    music_id?: boolean
-    created_at?: boolean
-    updated_at?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    music?: boolean | MusicDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["bookmark"]>
-
-  export type BookmarkSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    user_id?: boolean
-    music_id?: boolean
-    created_at?: boolean
-    updated_at?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    music?: boolean | MusicDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["bookmark"]>
-
-  export type BookmarkSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    user_id?: boolean
-    music_id?: boolean
-    created_at?: boolean
-    updated_at?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    music?: boolean | MusicDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["bookmark"]>
-
-  export type BookmarkSelectScalar = {
-    id?: boolean
-    user_id?: boolean
-    music_id?: boolean
-    created_at?: boolean
-    updated_at?: boolean
-  }
-
-  export type BookmarkOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "user_id" | "music_id" | "created_at" | "updated_at", ExtArgs["result"]["bookmark"]>
-  export type BookmarkInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    music?: boolean | MusicDefaultArgs<ExtArgs>
-  }
-  export type BookmarkIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    music?: boolean | MusicDefaultArgs<ExtArgs>
-  }
-  export type BookmarkIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    music?: boolean | MusicDefaultArgs<ExtArgs>
-  }
-
-  export type $BookmarkPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Bookmark"
-    objects: {
-      user: Prisma.$UserPayload<ExtArgs>
-      music: Prisma.$MusicPayload<ExtArgs>
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: number
-      user_id: number
-      music_id: number
-      created_at: Date
-      updated_at: Date
-    }, ExtArgs["result"]["bookmark"]>
-    composites: {}
-  }
-
-  type BookmarkGetPayload<S extends boolean | null | undefined | BookmarkDefaultArgs> = $Result.GetResult<Prisma.$BookmarkPayload, S>
-
-  type BookmarkCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<BookmarkFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: BookmarkCountAggregateInputType | true
-    }
-
-  export interface BookmarkDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Bookmark'], meta: { name: 'Bookmark' } }
-    /**
-     * Find zero or one Bookmark that matches the filter.
-     * @param {BookmarkFindUniqueArgs} args - Arguments to find a Bookmark
-     * @example
-     * // Get one Bookmark
-     * const bookmark = await prisma.bookmark.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends BookmarkFindUniqueArgs>(args: SelectSubset<T, BookmarkFindUniqueArgs<ExtArgs>>): Prisma__BookmarkClient<$Result.GetResult<Prisma.$BookmarkPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one Bookmark that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {BookmarkFindUniqueOrThrowArgs} args - Arguments to find a Bookmark
-     * @example
-     * // Get one Bookmark
-     * const bookmark = await prisma.bookmark.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends BookmarkFindUniqueOrThrowArgs>(args: SelectSubset<T, BookmarkFindUniqueOrThrowArgs<ExtArgs>>): Prisma__BookmarkClient<$Result.GetResult<Prisma.$BookmarkPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Bookmark that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {BookmarkFindFirstArgs} args - Arguments to find a Bookmark
-     * @example
-     * // Get one Bookmark
-     * const bookmark = await prisma.bookmark.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends BookmarkFindFirstArgs>(args?: SelectSubset<T, BookmarkFindFirstArgs<ExtArgs>>): Prisma__BookmarkClient<$Result.GetResult<Prisma.$BookmarkPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Bookmark that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {BookmarkFindFirstOrThrowArgs} args - Arguments to find a Bookmark
-     * @example
-     * // Get one Bookmark
-     * const bookmark = await prisma.bookmark.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends BookmarkFindFirstOrThrowArgs>(args?: SelectSubset<T, BookmarkFindFirstOrThrowArgs<ExtArgs>>): Prisma__BookmarkClient<$Result.GetResult<Prisma.$BookmarkPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more Bookmarks that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {BookmarkFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all Bookmarks
-     * const bookmarks = await prisma.bookmark.findMany()
-     * 
-     * // Get first 10 Bookmarks
-     * const bookmarks = await prisma.bookmark.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const bookmarkWithIdOnly = await prisma.bookmark.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends BookmarkFindManyArgs>(args?: SelectSubset<T, BookmarkFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BookmarkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a Bookmark.
-     * @param {BookmarkCreateArgs} args - Arguments to create a Bookmark.
-     * @example
-     * // Create one Bookmark
-     * const Bookmark = await prisma.bookmark.create({
-     *   data: {
-     *     // ... data to create a Bookmark
-     *   }
-     * })
-     * 
-     */
-    create<T extends BookmarkCreateArgs>(args: SelectSubset<T, BookmarkCreateArgs<ExtArgs>>): Prisma__BookmarkClient<$Result.GetResult<Prisma.$BookmarkPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many Bookmarks.
-     * @param {BookmarkCreateManyArgs} args - Arguments to create many Bookmarks.
-     * @example
-     * // Create many Bookmarks
-     * const bookmark = await prisma.bookmark.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends BookmarkCreateManyArgs>(args?: SelectSubset<T, BookmarkCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many Bookmarks and returns the data saved in the database.
-     * @param {BookmarkCreateManyAndReturnArgs} args - Arguments to create many Bookmarks.
-     * @example
-     * // Create many Bookmarks
-     * const bookmark = await prisma.bookmark.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many Bookmarks and only return the `id`
-     * const bookmarkWithIdOnly = await prisma.bookmark.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends BookmarkCreateManyAndReturnArgs>(args?: SelectSubset<T, BookmarkCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BookmarkPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a Bookmark.
-     * @param {BookmarkDeleteArgs} args - Arguments to delete one Bookmark.
-     * @example
-     * // Delete one Bookmark
-     * const Bookmark = await prisma.bookmark.delete({
-     *   where: {
-     *     // ... filter to delete one Bookmark
-     *   }
-     * })
-     * 
-     */
-    delete<T extends BookmarkDeleteArgs>(args: SelectSubset<T, BookmarkDeleteArgs<ExtArgs>>): Prisma__BookmarkClient<$Result.GetResult<Prisma.$BookmarkPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one Bookmark.
-     * @param {BookmarkUpdateArgs} args - Arguments to update one Bookmark.
-     * @example
-     * // Update one Bookmark
-     * const bookmark = await prisma.bookmark.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends BookmarkUpdateArgs>(args: SelectSubset<T, BookmarkUpdateArgs<ExtArgs>>): Prisma__BookmarkClient<$Result.GetResult<Prisma.$BookmarkPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more Bookmarks.
-     * @param {BookmarkDeleteManyArgs} args - Arguments to filter Bookmarks to delete.
-     * @example
-     * // Delete a few Bookmarks
-     * const { count } = await prisma.bookmark.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends BookmarkDeleteManyArgs>(args?: SelectSubset<T, BookmarkDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Bookmarks.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {BookmarkUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many Bookmarks
-     * const bookmark = await prisma.bookmark.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends BookmarkUpdateManyArgs>(args: SelectSubset<T, BookmarkUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Bookmarks and returns the data updated in the database.
-     * @param {BookmarkUpdateManyAndReturnArgs} args - Arguments to update many Bookmarks.
-     * @example
-     * // Update many Bookmarks
-     * const bookmark = await prisma.bookmark.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more Bookmarks and only return the `id`
-     * const bookmarkWithIdOnly = await prisma.bookmark.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends BookmarkUpdateManyAndReturnArgs>(args: SelectSubset<T, BookmarkUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BookmarkPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one Bookmark.
-     * @param {BookmarkUpsertArgs} args - Arguments to update or create a Bookmark.
-     * @example
-     * // Update or create a Bookmark
-     * const bookmark = await prisma.bookmark.upsert({
-     *   create: {
-     *     // ... data to create a Bookmark
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the Bookmark we want to update
-     *   }
-     * })
-     */
-    upsert<T extends BookmarkUpsertArgs>(args: SelectSubset<T, BookmarkUpsertArgs<ExtArgs>>): Prisma__BookmarkClient<$Result.GetResult<Prisma.$BookmarkPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of Bookmarks.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {BookmarkCountArgs} args - Arguments to filter Bookmarks to count.
-     * @example
-     * // Count the number of Bookmarks
-     * const count = await prisma.bookmark.count({
-     *   where: {
-     *     // ... the filter for the Bookmarks we want to count
-     *   }
-     * })
-    **/
-    count<T extends BookmarkCountArgs>(
-      args?: Subset<T, BookmarkCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], BookmarkCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a Bookmark.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {BookmarkAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends BookmarkAggregateArgs>(args: Subset<T, BookmarkAggregateArgs>): Prisma.PrismaPromise<GetBookmarkAggregateType<T>>
-
-    /**
-     * Group by Bookmark.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {BookmarkGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends BookmarkGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: BookmarkGroupByArgs['orderBy'] }
-        : { orderBy?: BookmarkGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, BookmarkGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetBookmarkGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the Bookmark model
-   */
-  readonly fields: BookmarkFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for Bookmark.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__BookmarkClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    music<T extends MusicDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MusicDefaultArgs<ExtArgs>>): Prisma__MusicClient<$Result.GetResult<Prisma.$MusicPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the Bookmark model
-   */
-  interface BookmarkFieldRefs {
-    readonly id: FieldRef<"Bookmark", 'Int'>
-    readonly user_id: FieldRef<"Bookmark", 'Int'>
-    readonly music_id: FieldRef<"Bookmark", 'Int'>
-    readonly created_at: FieldRef<"Bookmark", 'DateTime'>
-    readonly updated_at: FieldRef<"Bookmark", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * Bookmark findUnique
-   */
-  export type BookmarkFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Bookmark
-     */
-    select?: BookmarkSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Bookmark
-     */
-    omit?: BookmarkOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BookmarkInclude<ExtArgs> | null
-    /**
-     * Filter, which Bookmark to fetch.
-     */
-    where: BookmarkWhereUniqueInput
-  }
-
-  /**
-   * Bookmark findUniqueOrThrow
-   */
-  export type BookmarkFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Bookmark
-     */
-    select?: BookmarkSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Bookmark
-     */
-    omit?: BookmarkOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BookmarkInclude<ExtArgs> | null
-    /**
-     * Filter, which Bookmark to fetch.
-     */
-    where: BookmarkWhereUniqueInput
-  }
-
-  /**
-   * Bookmark findFirst
-   */
-  export type BookmarkFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Bookmark
-     */
-    select?: BookmarkSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Bookmark
-     */
-    omit?: BookmarkOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BookmarkInclude<ExtArgs> | null
-    /**
-     * Filter, which Bookmark to fetch.
-     */
-    where?: BookmarkWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Bookmarks to fetch.
-     */
-    orderBy?: BookmarkOrderByWithRelationInput | BookmarkOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Bookmarks.
-     */
-    cursor?: BookmarkWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Bookmarks from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Bookmarks.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Bookmarks.
-     */
-    distinct?: BookmarkScalarFieldEnum | BookmarkScalarFieldEnum[]
-  }
-
-  /**
-   * Bookmark findFirstOrThrow
-   */
-  export type BookmarkFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Bookmark
-     */
-    select?: BookmarkSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Bookmark
-     */
-    omit?: BookmarkOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BookmarkInclude<ExtArgs> | null
-    /**
-     * Filter, which Bookmark to fetch.
-     */
-    where?: BookmarkWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Bookmarks to fetch.
-     */
-    orderBy?: BookmarkOrderByWithRelationInput | BookmarkOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Bookmarks.
-     */
-    cursor?: BookmarkWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Bookmarks from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Bookmarks.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Bookmarks.
-     */
-    distinct?: BookmarkScalarFieldEnum | BookmarkScalarFieldEnum[]
-  }
-
-  /**
-   * Bookmark findMany
-   */
-  export type BookmarkFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Bookmark
-     */
-    select?: BookmarkSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Bookmark
-     */
-    omit?: BookmarkOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BookmarkInclude<ExtArgs> | null
-    /**
-     * Filter, which Bookmarks to fetch.
-     */
-    where?: BookmarkWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Bookmarks to fetch.
-     */
-    orderBy?: BookmarkOrderByWithRelationInput | BookmarkOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing Bookmarks.
-     */
-    cursor?: BookmarkWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Bookmarks from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Bookmarks.
-     */
-    skip?: number
-    distinct?: BookmarkScalarFieldEnum | BookmarkScalarFieldEnum[]
-  }
-
-  /**
-   * Bookmark create
-   */
-  export type BookmarkCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Bookmark
-     */
-    select?: BookmarkSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Bookmark
-     */
-    omit?: BookmarkOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BookmarkInclude<ExtArgs> | null
-    /**
-     * The data needed to create a Bookmark.
-     */
-    data: XOR<BookmarkCreateInput, BookmarkUncheckedCreateInput>
-  }
-
-  /**
-   * Bookmark createMany
-   */
-  export type BookmarkCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many Bookmarks.
-     */
-    data: BookmarkCreateManyInput | BookmarkCreateManyInput[]
-  }
-
-  /**
-   * Bookmark createManyAndReturn
-   */
-  export type BookmarkCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Bookmark
-     */
-    select?: BookmarkSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Bookmark
-     */
-    omit?: BookmarkOmit<ExtArgs> | null
-    /**
-     * The data used to create many Bookmarks.
-     */
-    data: BookmarkCreateManyInput | BookmarkCreateManyInput[]
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BookmarkIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * Bookmark update
-   */
-  export type BookmarkUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Bookmark
-     */
-    select?: BookmarkSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Bookmark
-     */
-    omit?: BookmarkOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BookmarkInclude<ExtArgs> | null
-    /**
-     * The data needed to update a Bookmark.
-     */
-    data: XOR<BookmarkUpdateInput, BookmarkUncheckedUpdateInput>
-    /**
-     * Choose, which Bookmark to update.
-     */
-    where: BookmarkWhereUniqueInput
-  }
-
-  /**
-   * Bookmark updateMany
-   */
-  export type BookmarkUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update Bookmarks.
-     */
-    data: XOR<BookmarkUpdateManyMutationInput, BookmarkUncheckedUpdateManyInput>
-    /**
-     * Filter which Bookmarks to update
-     */
-    where?: BookmarkWhereInput
-    /**
-     * Limit how many Bookmarks to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * Bookmark updateManyAndReturn
-   */
-  export type BookmarkUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Bookmark
-     */
-    select?: BookmarkSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Bookmark
-     */
-    omit?: BookmarkOmit<ExtArgs> | null
-    /**
-     * The data used to update Bookmarks.
-     */
-    data: XOR<BookmarkUpdateManyMutationInput, BookmarkUncheckedUpdateManyInput>
-    /**
-     * Filter which Bookmarks to update
-     */
-    where?: BookmarkWhereInput
-    /**
-     * Limit how many Bookmarks to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BookmarkIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * Bookmark upsert
-   */
-  export type BookmarkUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Bookmark
-     */
-    select?: BookmarkSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Bookmark
-     */
-    omit?: BookmarkOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BookmarkInclude<ExtArgs> | null
-    /**
-     * The filter to search for the Bookmark to update in case it exists.
-     */
-    where: BookmarkWhereUniqueInput
-    /**
-     * In case the Bookmark found by the `where` argument doesn't exist, create a new Bookmark with this data.
-     */
-    create: XOR<BookmarkCreateInput, BookmarkUncheckedCreateInput>
-    /**
-     * In case the Bookmark was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<BookmarkUpdateInput, BookmarkUncheckedUpdateInput>
-  }
-
-  /**
-   * Bookmark delete
-   */
-  export type BookmarkDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Bookmark
-     */
-    select?: BookmarkSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Bookmark
-     */
-    omit?: BookmarkOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BookmarkInclude<ExtArgs> | null
-    /**
-     * Filter which Bookmark to delete.
-     */
-    where: BookmarkWhereUniqueInput
-  }
-
-  /**
-   * Bookmark deleteMany
-   */
-  export type BookmarkDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Bookmarks to delete
-     */
-    where?: BookmarkWhereInput
-    /**
-     * Limit how many Bookmarks to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * Bookmark without action
-   */
-  export type BookmarkDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Bookmark
-     */
-    select?: BookmarkSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Bookmark
-     */
-    omit?: BookmarkOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BookmarkInclude<ExtArgs> | null
   }
 
 
@@ -4990,7 +3747,6 @@ export namespace Prisma {
     updated_at?: boolean
     RecentPlay?: boolean | Music$RecentPlayArgs<ExtArgs>
     PlayData?: boolean | Music$PlayDataArgs<ExtArgs>
-    Bookmark?: boolean | Music$BookmarkArgs<ExtArgs>
     BasicBestPlay?: boolean | Music$BasicBestPlayArgs<ExtArgs>
     RecitalBestPlay?: boolean | Music$RecitalBestPlayArgs<ExtArgs>
     Bingo?: boolean | Music$BingoArgs<ExtArgs>
@@ -5053,7 +3809,6 @@ export namespace Prisma {
   export type MusicInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     RecentPlay?: boolean | Music$RecentPlayArgs<ExtArgs>
     PlayData?: boolean | Music$PlayDataArgs<ExtArgs>
-    Bookmark?: boolean | Music$BookmarkArgs<ExtArgs>
     BasicBestPlay?: boolean | Music$BasicBestPlayArgs<ExtArgs>
     RecitalBestPlay?: boolean | Music$RecitalBestPlayArgs<ExtArgs>
     Bingo?: boolean | Music$BingoArgs<ExtArgs>
@@ -5068,7 +3823,6 @@ export namespace Prisma {
     objects: {
       RecentPlay: Prisma.$RecentPlayPayload<ExtArgs>[]
       PlayData: Prisma.$PlayDataPayload<ExtArgs>[]
-      Bookmark: Prisma.$BookmarkPayload<ExtArgs>[]
       BasicBestPlay: Prisma.$BasicBestPlayPayload<ExtArgs>[]
       RecitalBestPlay: Prisma.$RecitalBestPlayPayload<ExtArgs>[]
       Bingo: Prisma.$BingoPayload<ExtArgs>[]
@@ -5485,7 +4239,6 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     RecentPlay<T extends Music$RecentPlayArgs<ExtArgs> = {}>(args?: Subset<T, Music$RecentPlayArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RecentPlayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     PlayData<T extends Music$PlayDataArgs<ExtArgs> = {}>(args?: Subset<T, Music$PlayDataArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlayDataPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    Bookmark<T extends Music$BookmarkArgs<ExtArgs> = {}>(args?: Subset<T, Music$BookmarkArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BookmarkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     BasicBestPlay<T extends Music$BasicBestPlayArgs<ExtArgs> = {}>(args?: Subset<T, Music$BasicBestPlayArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BasicBestPlayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     RecitalBestPlay<T extends Music$RecitalBestPlayArgs<ExtArgs> = {}>(args?: Subset<T, Music$RecitalBestPlayArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RecitalBestPlayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     Bingo<T extends Music$BingoArgs<ExtArgs> = {}>(args?: Subset<T, Music$BingoArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BingoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -5964,30 +4717,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: PlayDataScalarFieldEnum | PlayDataScalarFieldEnum[]
-  }
-
-  /**
-   * Music.Bookmark
-   */
-  export type Music$BookmarkArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Bookmark
-     */
-    select?: BookmarkSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Bookmark
-     */
-    omit?: BookmarkOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BookmarkInclude<ExtArgs> | null
-    where?: BookmarkWhereInput
-    orderBy?: BookmarkOrderByWithRelationInput | BookmarkOrderByWithRelationInput[]
-    cursor?: BookmarkWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: BookmarkScalarFieldEnum | BookmarkScalarFieldEnum[]
   }
 
   /**
@@ -13332,9 +12061,9 @@ export namespace Prisma {
     position: number | null
     challenge: string | null
     category_short: string | null
-    music_idx: string | null
     level: string | null
     isReal: boolean | null
+    music_idx: string | null
     bingo_id: number | null
   }
 
@@ -13343,9 +12072,9 @@ export namespace Prisma {
     position: number | null
     challenge: string | null
     category_short: string | null
-    music_idx: string | null
     level: string | null
     isReal: boolean | null
+    music_idx: string | null
     bingo_id: number | null
   }
 
@@ -13354,9 +12083,9 @@ export namespace Prisma {
     position: number
     challenge: number
     category_short: number
-    music_idx: number
     level: number
     isReal: number
+    music_idx: number
     bingo_id: number
     _all: number
   }
@@ -13379,9 +12108,9 @@ export namespace Prisma {
     position?: true
     challenge?: true
     category_short?: true
-    music_idx?: true
     level?: true
     isReal?: true
+    music_idx?: true
     bingo_id?: true
   }
 
@@ -13390,9 +12119,9 @@ export namespace Prisma {
     position?: true
     challenge?: true
     category_short?: true
-    music_idx?: true
     level?: true
     isReal?: true
+    music_idx?: true
     bingo_id?: true
   }
 
@@ -13401,9 +12130,9 @@ export namespace Prisma {
     position?: true
     challenge?: true
     category_short?: true
-    music_idx?: true
     level?: true
     isReal?: true
+    music_idx?: true
     bingo_id?: true
     _all?: true
   }
@@ -13499,9 +12228,9 @@ export namespace Prisma {
     position: number
     challenge: string
     category_short: string | null
-    music_idx: string | null
     level: string | null
     isReal: boolean
+    music_idx: string | null
     bingo_id: number
     _count: BingoCellCountAggregateOutputType | null
     _avg: BingoCellAvgAggregateOutputType | null
@@ -13529,9 +12258,9 @@ export namespace Prisma {
     position?: boolean
     challenge?: boolean
     category_short?: boolean
-    music_idx?: boolean
     level?: boolean
     isReal?: boolean
+    music_idx?: boolean
     bingo_id?: boolean
     music?: boolean | BingoCell$musicArgs<ExtArgs>
     bingo?: boolean | BingoDefaultArgs<ExtArgs>
@@ -13544,9 +12273,9 @@ export namespace Prisma {
     position?: boolean
     challenge?: boolean
     category_short?: boolean
-    music_idx?: boolean
     level?: boolean
     isReal?: boolean
+    music_idx?: boolean
     bingo_id?: boolean
     music?: boolean | BingoCell$musicArgs<ExtArgs>
     bingo?: boolean | BingoDefaultArgs<ExtArgs>
@@ -13557,9 +12286,9 @@ export namespace Prisma {
     position?: boolean
     challenge?: boolean
     category_short?: boolean
-    music_idx?: boolean
     level?: boolean
     isReal?: boolean
+    music_idx?: boolean
     bingo_id?: boolean
     music?: boolean | BingoCell$musicArgs<ExtArgs>
     bingo?: boolean | BingoDefaultArgs<ExtArgs>
@@ -13570,13 +12299,13 @@ export namespace Prisma {
     position?: boolean
     challenge?: boolean
     category_short?: boolean
-    music_idx?: boolean
     level?: boolean
     isReal?: boolean
+    music_idx?: boolean
     bingo_id?: boolean
   }
 
-  export type BingoCellOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "position" | "challenge" | "category_short" | "music_idx" | "level" | "isReal" | "bingo_id", ExtArgs["result"]["bingoCell"]>
+  export type BingoCellOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "position" | "challenge" | "category_short" | "level" | "isReal" | "music_idx" | "bingo_id", ExtArgs["result"]["bingoCell"]>
   export type BingoCellInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     music?: boolean | BingoCell$musicArgs<ExtArgs>
     bingo?: boolean | BingoDefaultArgs<ExtArgs>
@@ -13604,9 +12333,9 @@ export namespace Prisma {
       position: number
       challenge: string
       category_short: string | null
-      music_idx: string | null
       level: string | null
       isReal: boolean
+      music_idx: string | null
       bingo_id: number
     }, ExtArgs["result"]["bingoCell"]>
     composites: {}
@@ -14038,9 +12767,9 @@ export namespace Prisma {
     readonly position: FieldRef<"BingoCell", 'Int'>
     readonly challenge: FieldRef<"BingoCell", 'String'>
     readonly category_short: FieldRef<"BingoCell", 'String'>
-    readonly music_idx: FieldRef<"BingoCell", 'String'>
     readonly level: FieldRef<"BingoCell", 'String'>
     readonly isReal: FieldRef<"BingoCell", 'Boolean'>
+    readonly music_idx: FieldRef<"BingoCell", 'String'>
     readonly bingo_id: FieldRef<"BingoCell", 'Int'>
   }
     
@@ -15633,17 +14362,6 @@ export namespace Prisma {
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
-  export const BookmarkScalarFieldEnum: {
-    id: 'id',
-    user_id: 'user_id',
-    music_id: 'music_id',
-    created_at: 'created_at',
-    updated_at: 'updated_at'
-  };
-
-  export type BookmarkScalarFieldEnum = (typeof BookmarkScalarFieldEnum)[keyof typeof BookmarkScalarFieldEnum]
-
-
   export const MusicScalarFieldEnum: {
     id: 'id',
     index: 'index',
@@ -15771,9 +14489,9 @@ export namespace Prisma {
     position: 'position',
     challenge: 'challenge',
     category_short: 'category_short',
-    music_idx: 'music_idx',
     level: 'level',
     isReal: 'isReal',
+    music_idx: 'music_idx',
     bingo_id: 'bingo_id'
   };
 
@@ -15888,7 +14606,6 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"User"> | Date | string
     PlayHistory?: RecentPlayListRelationFilter
     PlayData?: PlayDataListRelationFilter
-    Bookmark?: BookmarkListRelationFilter
     BasicBestPlay?: BasicBestPlayListRelationFilter
     RecitalBestPlay?: RecitalBestPlayListRelationFilter
     UserBestGrade?: UserBestGradeListRelationFilter
@@ -15924,7 +14641,6 @@ export namespace Prisma {
     updated_at?: SortOrder
     PlayHistory?: RecentPlayOrderByRelationAggregateInput
     PlayData?: PlayDataOrderByRelationAggregateInput
-    Bookmark?: BookmarkOrderByRelationAggregateInput
     BasicBestPlay?: BasicBestPlayOrderByRelationAggregateInput
     RecitalBestPlay?: RecitalBestPlayOrderByRelationAggregateInput
     UserBestGrade?: UserBestGradeOrderByRelationAggregateInput
@@ -15935,11 +14651,11 @@ export namespace Prisma {
     id?: number
     username?: string
     kakao_id?: bigint | number
-    discord_name?: string
     discord_tag?: string
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
+    discord_name?: StringNullableFilter<"User"> | string | null
     avatar?: StringNullableFilter<"User"> | string | null
     country?: StringFilter<"User"> | string
     rank_basic?: IntNullableFilter<"User"> | number | null
@@ -15963,12 +14679,11 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"User"> | Date | string
     PlayHistory?: RecentPlayListRelationFilter
     PlayData?: PlayDataListRelationFilter
-    Bookmark?: BookmarkListRelationFilter
     BasicBestPlay?: BasicBestPlayListRelationFilter
     RecitalBestPlay?: RecitalBestPlayListRelationFilter
     UserBestGrade?: UserBestGradeListRelationFilter
     userBingoCellData?: UserBingoCellDataListRelationFilter
-  }, "id" | "username" | "kakao_id" | "discord_name" | "discord_tag">
+  }, "id" | "username" | "kakao_id" | "discord_tag">
 
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
@@ -16036,67 +14751,6 @@ export namespace Prisma {
     updated_at?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
 
-  export type BookmarkWhereInput = {
-    AND?: BookmarkWhereInput | BookmarkWhereInput[]
-    OR?: BookmarkWhereInput[]
-    NOT?: BookmarkWhereInput | BookmarkWhereInput[]
-    id?: IntFilter<"Bookmark"> | number
-    user_id?: IntFilter<"Bookmark"> | number
-    music_id?: IntFilter<"Bookmark"> | number
-    created_at?: DateTimeFilter<"Bookmark"> | Date | string
-    updated_at?: DateTimeFilter<"Bookmark"> | Date | string
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    music?: XOR<MusicScalarRelationFilter, MusicWhereInput>
-  }
-
-  export type BookmarkOrderByWithRelationInput = {
-    id?: SortOrder
-    user_id?: SortOrder
-    music_id?: SortOrder
-    created_at?: SortOrder
-    updated_at?: SortOrder
-    user?: UserOrderByWithRelationInput
-    music?: MusicOrderByWithRelationInput
-  }
-
-  export type BookmarkWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
-    user_id_music_id?: BookmarkUser_idMusic_idCompoundUniqueInput
-    AND?: BookmarkWhereInput | BookmarkWhereInput[]
-    OR?: BookmarkWhereInput[]
-    NOT?: BookmarkWhereInput | BookmarkWhereInput[]
-    user_id?: IntFilter<"Bookmark"> | number
-    music_id?: IntFilter<"Bookmark"> | number
-    created_at?: DateTimeFilter<"Bookmark"> | Date | string
-    updated_at?: DateTimeFilter<"Bookmark"> | Date | string
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    music?: XOR<MusicScalarRelationFilter, MusicWhereInput>
-  }, "id" | "user_id_music_id">
-
-  export type BookmarkOrderByWithAggregationInput = {
-    id?: SortOrder
-    user_id?: SortOrder
-    music_id?: SortOrder
-    created_at?: SortOrder
-    updated_at?: SortOrder
-    _count?: BookmarkCountOrderByAggregateInput
-    _avg?: BookmarkAvgOrderByAggregateInput
-    _max?: BookmarkMaxOrderByAggregateInput
-    _min?: BookmarkMinOrderByAggregateInput
-    _sum?: BookmarkSumOrderByAggregateInput
-  }
-
-  export type BookmarkScalarWhereWithAggregatesInput = {
-    AND?: BookmarkScalarWhereWithAggregatesInput | BookmarkScalarWhereWithAggregatesInput[]
-    OR?: BookmarkScalarWhereWithAggregatesInput[]
-    NOT?: BookmarkScalarWhereWithAggregatesInput | BookmarkScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"Bookmark"> | number
-    user_id?: IntWithAggregatesFilter<"Bookmark"> | number
-    music_id?: IntWithAggregatesFilter<"Bookmark"> | number
-    created_at?: DateTimeWithAggregatesFilter<"Bookmark"> | Date | string
-    updated_at?: DateTimeWithAggregatesFilter<"Bookmark"> | Date | string
-  }
-
   export type MusicWhereInput = {
     AND?: MusicWhereInput | MusicWhereInput[]
     OR?: MusicWhereInput[]
@@ -16117,7 +14771,6 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"Music"> | Date | string
     RecentPlay?: RecentPlayListRelationFilter
     PlayData?: PlayDataListRelationFilter
-    Bookmark?: BookmarkListRelationFilter
     BasicBestPlay?: BasicBestPlayListRelationFilter
     RecitalBestPlay?: RecitalBestPlayListRelationFilter
     Bingo?: BingoListRelationFilter
@@ -16141,7 +14794,6 @@ export namespace Prisma {
     updated_at?: SortOrder
     RecentPlay?: RecentPlayOrderByRelationAggregateInput
     PlayData?: PlayDataOrderByRelationAggregateInput
-    Bookmark?: BookmarkOrderByRelationAggregateInput
     BasicBestPlay?: BasicBestPlayOrderByRelationAggregateInput
     RecitalBestPlay?: RecitalBestPlayOrderByRelationAggregateInput
     Bingo?: BingoOrderByRelationAggregateInput
@@ -16168,7 +14820,6 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"Music"> | Date | string
     RecentPlay?: RecentPlayListRelationFilter
     PlayData?: PlayDataListRelationFilter
-    Bookmark?: BookmarkListRelationFilter
     BasicBestPlay?: BasicBestPlayListRelationFilter
     RecitalBestPlay?: RecitalBestPlayListRelationFilter
     Bingo?: BingoListRelationFilter
@@ -16722,15 +15373,15 @@ export namespace Prisma {
 
   export type BingoWhereUniqueInput = Prisma.AtLeast<{
     id?: number
+    music_idx?: string
     AND?: BingoWhereInput | BingoWhereInput[]
     OR?: BingoWhereInput[]
     NOT?: BingoWhereInput | BingoWhereInput[]
     nos?: IntFilter<"Bingo"> | number
     line?: IntFilter<"Bingo"> | number
-    music_idx?: StringFilter<"Bingo"> | string
     music?: XOR<MusicScalarRelationFilter, MusicWhereInput>
     BingoCell?: BingoCellListRelationFilter
-  }, "id">
+  }, "id" | "music_idx">
 
   export type BingoOrderByWithAggregationInput = {
     id?: SortOrder
@@ -16762,9 +15413,9 @@ export namespace Prisma {
     position?: IntFilter<"BingoCell"> | number
     challenge?: StringFilter<"BingoCell"> | string
     category_short?: StringNullableFilter<"BingoCell"> | string | null
-    music_idx?: StringNullableFilter<"BingoCell"> | string | null
     level?: StringNullableFilter<"BingoCell"> | string | null
     isReal?: BoolFilter<"BingoCell"> | boolean
+    music_idx?: StringNullableFilter<"BingoCell"> | string | null
     bingo_id?: IntFilter<"BingoCell"> | number
     music?: XOR<MusicNullableScalarRelationFilter, MusicWhereInput> | null
     bingo?: XOR<BingoScalarRelationFilter, BingoWhereInput>
@@ -16776,9 +15427,9 @@ export namespace Prisma {
     position?: SortOrder
     challenge?: SortOrder
     category_short?: SortOrderInput | SortOrder
-    music_idx?: SortOrderInput | SortOrder
     level?: SortOrderInput | SortOrder
     isReal?: SortOrder
+    music_idx?: SortOrderInput | SortOrder
     bingo_id?: SortOrder
     music?: MusicOrderByWithRelationInput
     bingo?: BingoOrderByWithRelationInput
@@ -16787,29 +15438,29 @@ export namespace Prisma {
 
   export type BingoCellWhereUniqueInput = Prisma.AtLeast<{
     id?: number
+    music_idx?: string
     AND?: BingoCellWhereInput | BingoCellWhereInput[]
     OR?: BingoCellWhereInput[]
     NOT?: BingoCellWhereInput | BingoCellWhereInput[]
     position?: IntFilter<"BingoCell"> | number
     challenge?: StringFilter<"BingoCell"> | string
     category_short?: StringNullableFilter<"BingoCell"> | string | null
-    music_idx?: StringNullableFilter<"BingoCell"> | string | null
     level?: StringNullableFilter<"BingoCell"> | string | null
     isReal?: BoolFilter<"BingoCell"> | boolean
     bingo_id?: IntFilter<"BingoCell"> | number
     music?: XOR<MusicNullableScalarRelationFilter, MusicWhereInput> | null
     bingo?: XOR<BingoScalarRelationFilter, BingoWhereInput>
     userBingoData?: UserBingoCellDataListRelationFilter
-  }, "id">
+  }, "id" | "music_idx">
 
   export type BingoCellOrderByWithAggregationInput = {
     id?: SortOrder
     position?: SortOrder
     challenge?: SortOrder
     category_short?: SortOrderInput | SortOrder
-    music_idx?: SortOrderInput | SortOrder
     level?: SortOrderInput | SortOrder
     isReal?: SortOrder
+    music_idx?: SortOrderInput | SortOrder
     bingo_id?: SortOrder
     _count?: BingoCellCountOrderByAggregateInput
     _avg?: BingoCellAvgOrderByAggregateInput
@@ -16826,9 +15477,9 @@ export namespace Prisma {
     position?: IntWithAggregatesFilter<"BingoCell"> | number
     challenge?: StringWithAggregatesFilter<"BingoCell"> | string
     category_short?: StringNullableWithAggregatesFilter<"BingoCell"> | string | null
-    music_idx?: StringNullableWithAggregatesFilter<"BingoCell"> | string | null
     level?: StringNullableWithAggregatesFilter<"BingoCell"> | string | null
     isReal?: BoolWithAggregatesFilter<"BingoCell"> | boolean
+    music_idx?: StringNullableWithAggregatesFilter<"BingoCell"> | string | null
     bingo_id?: IntWithAggregatesFilter<"BingoCell"> | number
   }
 
@@ -16915,7 +15566,6 @@ export namespace Prisma {
     updated_at?: Date | string
     PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
     PlayData?: PlayDataCreateNestedManyWithoutUserInput
-    Bookmark?: BookmarkCreateNestedManyWithoutUserInput
     BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutUserInput
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeCreateNestedManyWithoutUserInput
@@ -16951,7 +15601,6 @@ export namespace Prisma {
     updated_at?: Date | string
     PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutUserInput
-    Bookmark?: BookmarkUncheckedCreateNestedManyWithoutUserInput
     BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutUserInput
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeUncheckedCreateNestedManyWithoutUserInput
@@ -16986,7 +15635,6 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
     PlayData?: PlayDataUpdateManyWithoutUserNestedInput
-    Bookmark?: BookmarkUpdateManyWithoutUserNestedInput
     BasicBestPlay?: BasicBestPlayUpdateManyWithoutUserNestedInput
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUpdateManyWithoutUserNestedInput
@@ -17022,7 +15670,6 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutUserNestedInput
-    Bookmark?: BookmarkUncheckedUpdateManyWithoutUserNestedInput
     BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutUserNestedInput
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUncheckedUpdateManyWithoutUserNestedInput
@@ -17115,57 +15762,6 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type BookmarkCreateInput = {
-    created_at?: Date | string
-    updated_at?: Date | string
-    user: UserCreateNestedOneWithoutBookmarkInput
-    music: MusicCreateNestedOneWithoutBookmarkInput
-  }
-
-  export type BookmarkUncheckedCreateInput = {
-    id?: number
-    user_id: number
-    music_id: number
-    created_at?: Date | string
-    updated_at?: Date | string
-  }
-
-  export type BookmarkUpdateInput = {
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutBookmarkNestedInput
-    music?: MusicUpdateOneRequiredWithoutBookmarkNestedInput
-  }
-
-  export type BookmarkUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    user_id?: IntFieldUpdateOperationsInput | number
-    music_id?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type BookmarkCreateManyInput = {
-    id?: number
-    user_id: number
-    music_id: number
-    created_at?: Date | string
-    updated_at?: Date | string
-  }
-
-  export type BookmarkUpdateManyMutationInput = {
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type BookmarkUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    user_id?: IntFieldUpdateOperationsInput | number
-    music_id?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type MusicCreateInput = {
     index: string
     title: string
@@ -17182,7 +15778,6 @@ export namespace Prisma {
     updated_at?: Date | string
     RecentPlay?: RecentPlayCreateNestedManyWithoutMusicInput
     PlayData?: PlayDataCreateNestedManyWithoutMusicInput
-    Bookmark?: BookmarkCreateNestedManyWithoutMusicInput
     BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutMusicInput
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutMusicInput
     Bingo?: BingoCreateNestedManyWithoutMusicInput
@@ -17206,7 +15801,6 @@ export namespace Prisma {
     updated_at?: Date | string
     RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutMusicInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutMusicInput
-    Bookmark?: BookmarkUncheckedCreateNestedManyWithoutMusicInput
     BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutMusicInput
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutMusicInput
     Bingo?: BingoUncheckedCreateNestedManyWithoutMusicInput
@@ -17229,7 +15823,6 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     RecentPlay?: RecentPlayUpdateManyWithoutMusicNestedInput
     PlayData?: PlayDataUpdateManyWithoutMusicNestedInput
-    Bookmark?: BookmarkUpdateManyWithoutMusicNestedInput
     BasicBestPlay?: BasicBestPlayUpdateManyWithoutMusicNestedInput
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutMusicNestedInput
     Bingo?: BingoUpdateManyWithoutMusicNestedInput
@@ -17253,7 +15846,6 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     RecentPlay?: RecentPlayUncheckedUpdateManyWithoutMusicNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutMusicNestedInput
-    Bookmark?: BookmarkUncheckedUpdateManyWithoutMusicNestedInput
     BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutMusicNestedInput
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutMusicNestedInput
     Bingo?: BingoUncheckedUpdateManyWithoutMusicNestedInput
@@ -17890,9 +16482,9 @@ export namespace Prisma {
     position: number
     challenge: string
     category_short?: string | null
-    music_idx?: string | null
     level?: string | null
     isReal?: boolean
+    music_idx?: string | null
     bingo_id: number
     userBingoData?: userBingoCellDataUncheckedCreateNestedManyWithoutBingoInput
   }
@@ -17913,9 +16505,9 @@ export namespace Prisma {
     position?: IntFieldUpdateOperationsInput | number
     challenge?: StringFieldUpdateOperationsInput | string
     category_short?: NullableStringFieldUpdateOperationsInput | string | null
-    music_idx?: NullableStringFieldUpdateOperationsInput | string | null
     level?: NullableStringFieldUpdateOperationsInput | string | null
     isReal?: BoolFieldUpdateOperationsInput | boolean
+    music_idx?: NullableStringFieldUpdateOperationsInput | string | null
     bingo_id?: IntFieldUpdateOperationsInput | number
     userBingoData?: userBingoCellDataUncheckedUpdateManyWithoutBingoNestedInput
   }
@@ -17925,9 +16517,9 @@ export namespace Prisma {
     position: number
     challenge: string
     category_short?: string | null
-    music_idx?: string | null
     level?: string | null
     isReal?: boolean
+    music_idx?: string | null
     bingo_id: number
   }
 
@@ -17944,9 +16536,9 @@ export namespace Prisma {
     position?: IntFieldUpdateOperationsInput | number
     challenge?: StringFieldUpdateOperationsInput | string
     category_short?: NullableStringFieldUpdateOperationsInput | string | null
-    music_idx?: NullableStringFieldUpdateOperationsInput | string | null
     level?: NullableStringFieldUpdateOperationsInput | string | null
     isReal?: BoolFieldUpdateOperationsInput | boolean
+    music_idx?: NullableStringFieldUpdateOperationsInput | string | null
     bingo_id?: IntFieldUpdateOperationsInput | number
   }
 
@@ -18078,12 +16670,6 @@ export namespace Prisma {
     none?: PlayDataWhereInput
   }
 
-  export type BookmarkListRelationFilter = {
-    every?: BookmarkWhereInput
-    some?: BookmarkWhereInput
-    none?: BookmarkWhereInput
-  }
-
   export type BasicBestPlayListRelationFilter = {
     every?: BasicBestPlayWhereInput
     some?: BasicBestPlayWhereInput
@@ -18118,10 +16704,6 @@ export namespace Prisma {
   }
 
   export type PlayDataOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type BookmarkOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -18366,57 +16948,6 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type UserScalarRelationFilter = {
-    is?: UserWhereInput
-    isNot?: UserWhereInput
-  }
-
-  export type MusicScalarRelationFilter = {
-    is?: MusicWhereInput
-    isNot?: MusicWhereInput
-  }
-
-  export type BookmarkUser_idMusic_idCompoundUniqueInput = {
-    user_id: number
-    music_id: number
-  }
-
-  export type BookmarkCountOrderByAggregateInput = {
-    id?: SortOrder
-    user_id?: SortOrder
-    music_id?: SortOrder
-    created_at?: SortOrder
-    updated_at?: SortOrder
-  }
-
-  export type BookmarkAvgOrderByAggregateInput = {
-    id?: SortOrder
-    user_id?: SortOrder
-    music_id?: SortOrder
-  }
-
-  export type BookmarkMaxOrderByAggregateInput = {
-    id?: SortOrder
-    user_id?: SortOrder
-    music_id?: SortOrder
-    created_at?: SortOrder
-    updated_at?: SortOrder
-  }
-
-  export type BookmarkMinOrderByAggregateInput = {
-    id?: SortOrder
-    user_id?: SortOrder
-    music_id?: SortOrder
-    created_at?: SortOrder
-    updated_at?: SortOrder
-  }
-
-  export type BookmarkSumOrderByAggregateInput = {
-    id?: SortOrder
-    user_id?: SortOrder
-    music_id?: SortOrder
-  }
-
   export type BingoListRelationFilter = {
     every?: BingoWhereInput
     some?: BingoWhereInput
@@ -18496,6 +17027,16 @@ export namespace Prisma {
   export type MusicSumOrderByAggregateInput = {
     id?: SortOrder
     sheet_len?: SortOrder
+  }
+
+  export type UserScalarRelationFilter = {
+    is?: UserWhereInput
+    isNot?: UserWhereInput
+  }
+
+  export type MusicScalarRelationFilter = {
+    is?: MusicWhereInput
+    isNot?: MusicWhereInput
   }
 
   export type RecentPlayCountOrderByAggregateInput = {
@@ -18882,9 +17423,9 @@ export namespace Prisma {
     position?: SortOrder
     challenge?: SortOrder
     category_short?: SortOrder
-    music_idx?: SortOrder
     level?: SortOrder
     isReal?: SortOrder
+    music_idx?: SortOrder
     bingo_id?: SortOrder
   }
 
@@ -18899,9 +17440,9 @@ export namespace Prisma {
     position?: SortOrder
     challenge?: SortOrder
     category_short?: SortOrder
-    music_idx?: SortOrder
     level?: SortOrder
     isReal?: SortOrder
+    music_idx?: SortOrder
     bingo_id?: SortOrder
   }
 
@@ -18910,9 +17451,9 @@ export namespace Prisma {
     position?: SortOrder
     challenge?: SortOrder
     category_short?: SortOrder
-    music_idx?: SortOrder
     level?: SortOrder
     isReal?: SortOrder
+    music_idx?: SortOrder
     bingo_id?: SortOrder
   }
 
@@ -18982,13 +17523,6 @@ export namespace Prisma {
     connect?: PlayDataWhereUniqueInput | PlayDataWhereUniqueInput[]
   }
 
-  export type BookmarkCreateNestedManyWithoutUserInput = {
-    create?: XOR<BookmarkCreateWithoutUserInput, BookmarkUncheckedCreateWithoutUserInput> | BookmarkCreateWithoutUserInput[] | BookmarkUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: BookmarkCreateOrConnectWithoutUserInput | BookmarkCreateOrConnectWithoutUserInput[]
-    createMany?: BookmarkCreateManyUserInputEnvelope
-    connect?: BookmarkWhereUniqueInput | BookmarkWhereUniqueInput[]
-  }
-
   export type BasicBestPlayCreateNestedManyWithoutUserInput = {
     create?: XOR<BasicBestPlayCreateWithoutUserInput, BasicBestPlayUncheckedCreateWithoutUserInput> | BasicBestPlayCreateWithoutUserInput[] | BasicBestPlayUncheckedCreateWithoutUserInput[]
     connectOrCreate?: BasicBestPlayCreateOrConnectWithoutUserInput | BasicBestPlayCreateOrConnectWithoutUserInput[]
@@ -19029,13 +17563,6 @@ export namespace Prisma {
     connectOrCreate?: PlayDataCreateOrConnectWithoutUserInput | PlayDataCreateOrConnectWithoutUserInput[]
     createMany?: PlayDataCreateManyUserInputEnvelope
     connect?: PlayDataWhereUniqueInput | PlayDataWhereUniqueInput[]
-  }
-
-  export type BookmarkUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<BookmarkCreateWithoutUserInput, BookmarkUncheckedCreateWithoutUserInput> | BookmarkCreateWithoutUserInput[] | BookmarkUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: BookmarkCreateOrConnectWithoutUserInput | BookmarkCreateOrConnectWithoutUserInput[]
-    createMany?: BookmarkCreateManyUserInputEnvelope
-    connect?: BookmarkWhereUniqueInput | BookmarkWhereUniqueInput[]
   }
 
   export type BasicBestPlayUncheckedCreateNestedManyWithoutUserInput = {
@@ -19120,20 +17647,6 @@ export namespace Prisma {
     update?: PlayDataUpdateWithWhereUniqueWithoutUserInput | PlayDataUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: PlayDataUpdateManyWithWhereWithoutUserInput | PlayDataUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: PlayDataScalarWhereInput | PlayDataScalarWhereInput[]
-  }
-
-  export type BookmarkUpdateManyWithoutUserNestedInput = {
-    create?: XOR<BookmarkCreateWithoutUserInput, BookmarkUncheckedCreateWithoutUserInput> | BookmarkCreateWithoutUserInput[] | BookmarkUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: BookmarkCreateOrConnectWithoutUserInput | BookmarkCreateOrConnectWithoutUserInput[]
-    upsert?: BookmarkUpsertWithWhereUniqueWithoutUserInput | BookmarkUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: BookmarkCreateManyUserInputEnvelope
-    set?: BookmarkWhereUniqueInput | BookmarkWhereUniqueInput[]
-    disconnect?: BookmarkWhereUniqueInput | BookmarkWhereUniqueInput[]
-    delete?: BookmarkWhereUniqueInput | BookmarkWhereUniqueInput[]
-    connect?: BookmarkWhereUniqueInput | BookmarkWhereUniqueInput[]
-    update?: BookmarkUpdateWithWhereUniqueWithoutUserInput | BookmarkUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: BookmarkUpdateManyWithWhereWithoutUserInput | BookmarkUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: BookmarkScalarWhereInput | BookmarkScalarWhereInput[]
   }
 
   export type BasicBestPlayUpdateManyWithoutUserNestedInput = {
@@ -19228,20 +17741,6 @@ export namespace Prisma {
     deleteMany?: PlayDataScalarWhereInput | PlayDataScalarWhereInput[]
   }
 
-  export type BookmarkUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<BookmarkCreateWithoutUserInput, BookmarkUncheckedCreateWithoutUserInput> | BookmarkCreateWithoutUserInput[] | BookmarkUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: BookmarkCreateOrConnectWithoutUserInput | BookmarkCreateOrConnectWithoutUserInput[]
-    upsert?: BookmarkUpsertWithWhereUniqueWithoutUserInput | BookmarkUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: BookmarkCreateManyUserInputEnvelope
-    set?: BookmarkWhereUniqueInput | BookmarkWhereUniqueInput[]
-    disconnect?: BookmarkWhereUniqueInput | BookmarkWhereUniqueInput[]
-    delete?: BookmarkWhereUniqueInput | BookmarkWhereUniqueInput[]
-    connect?: BookmarkWhereUniqueInput | BookmarkWhereUniqueInput[]
-    update?: BookmarkUpdateWithWhereUniqueWithoutUserInput | BookmarkUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: BookmarkUpdateManyWithWhereWithoutUserInput | BookmarkUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: BookmarkScalarWhereInput | BookmarkScalarWhereInput[]
-  }
-
   export type BasicBestPlayUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<BasicBestPlayCreateWithoutUserInput, BasicBestPlayUncheckedCreateWithoutUserInput> | BasicBestPlayCreateWithoutUserInput[] | BasicBestPlayUncheckedCreateWithoutUserInput[]
     connectOrCreate?: BasicBestPlayCreateOrConnectWithoutUserInput | BasicBestPlayCreateOrConnectWithoutUserInput[]
@@ -19298,34 +17797,6 @@ export namespace Prisma {
     deleteMany?: userBingoCellDataScalarWhereInput | userBingoCellDataScalarWhereInput[]
   }
 
-  export type UserCreateNestedOneWithoutBookmarkInput = {
-    create?: XOR<UserCreateWithoutBookmarkInput, UserUncheckedCreateWithoutBookmarkInput>
-    connectOrCreate?: UserCreateOrConnectWithoutBookmarkInput
-    connect?: UserWhereUniqueInput
-  }
-
-  export type MusicCreateNestedOneWithoutBookmarkInput = {
-    create?: XOR<MusicCreateWithoutBookmarkInput, MusicUncheckedCreateWithoutBookmarkInput>
-    connectOrCreate?: MusicCreateOrConnectWithoutBookmarkInput
-    connect?: MusicWhereUniqueInput
-  }
-
-  export type UserUpdateOneRequiredWithoutBookmarkNestedInput = {
-    create?: XOR<UserCreateWithoutBookmarkInput, UserUncheckedCreateWithoutBookmarkInput>
-    connectOrCreate?: UserCreateOrConnectWithoutBookmarkInput
-    upsert?: UserUpsertWithoutBookmarkInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutBookmarkInput, UserUpdateWithoutBookmarkInput>, UserUncheckedUpdateWithoutBookmarkInput>
-  }
-
-  export type MusicUpdateOneRequiredWithoutBookmarkNestedInput = {
-    create?: XOR<MusicCreateWithoutBookmarkInput, MusicUncheckedCreateWithoutBookmarkInput>
-    connectOrCreate?: MusicCreateOrConnectWithoutBookmarkInput
-    upsert?: MusicUpsertWithoutBookmarkInput
-    connect?: MusicWhereUniqueInput
-    update?: XOR<XOR<MusicUpdateToOneWithWhereWithoutBookmarkInput, MusicUpdateWithoutBookmarkInput>, MusicUncheckedUpdateWithoutBookmarkInput>
-  }
-
   export type RecentPlayCreateNestedManyWithoutMusicInput = {
     create?: XOR<RecentPlayCreateWithoutMusicInput, RecentPlayUncheckedCreateWithoutMusicInput> | RecentPlayCreateWithoutMusicInput[] | RecentPlayUncheckedCreateWithoutMusicInput[]
     connectOrCreate?: RecentPlayCreateOrConnectWithoutMusicInput | RecentPlayCreateOrConnectWithoutMusicInput[]
@@ -19338,13 +17809,6 @@ export namespace Prisma {
     connectOrCreate?: PlayDataCreateOrConnectWithoutMusicInput | PlayDataCreateOrConnectWithoutMusicInput[]
     createMany?: PlayDataCreateManyMusicInputEnvelope
     connect?: PlayDataWhereUniqueInput | PlayDataWhereUniqueInput[]
-  }
-
-  export type BookmarkCreateNestedManyWithoutMusicInput = {
-    create?: XOR<BookmarkCreateWithoutMusicInput, BookmarkUncheckedCreateWithoutMusicInput> | BookmarkCreateWithoutMusicInput[] | BookmarkUncheckedCreateWithoutMusicInput[]
-    connectOrCreate?: BookmarkCreateOrConnectWithoutMusicInput | BookmarkCreateOrConnectWithoutMusicInput[]
-    createMany?: BookmarkCreateManyMusicInputEnvelope
-    connect?: BookmarkWhereUniqueInput | BookmarkWhereUniqueInput[]
   }
 
   export type BasicBestPlayCreateNestedManyWithoutMusicInput = {
@@ -19387,13 +17851,6 @@ export namespace Prisma {
     connectOrCreate?: PlayDataCreateOrConnectWithoutMusicInput | PlayDataCreateOrConnectWithoutMusicInput[]
     createMany?: PlayDataCreateManyMusicInputEnvelope
     connect?: PlayDataWhereUniqueInput | PlayDataWhereUniqueInput[]
-  }
-
-  export type BookmarkUncheckedCreateNestedManyWithoutMusicInput = {
-    create?: XOR<BookmarkCreateWithoutMusicInput, BookmarkUncheckedCreateWithoutMusicInput> | BookmarkCreateWithoutMusicInput[] | BookmarkUncheckedCreateWithoutMusicInput[]
-    connectOrCreate?: BookmarkCreateOrConnectWithoutMusicInput | BookmarkCreateOrConnectWithoutMusicInput[]
-    createMany?: BookmarkCreateManyMusicInputEnvelope
-    connect?: BookmarkWhereUniqueInput | BookmarkWhereUniqueInput[]
   }
 
   export type BasicBestPlayUncheckedCreateNestedManyWithoutMusicInput = {
@@ -19450,20 +17907,6 @@ export namespace Prisma {
     update?: PlayDataUpdateWithWhereUniqueWithoutMusicInput | PlayDataUpdateWithWhereUniqueWithoutMusicInput[]
     updateMany?: PlayDataUpdateManyWithWhereWithoutMusicInput | PlayDataUpdateManyWithWhereWithoutMusicInput[]
     deleteMany?: PlayDataScalarWhereInput | PlayDataScalarWhereInput[]
-  }
-
-  export type BookmarkUpdateManyWithoutMusicNestedInput = {
-    create?: XOR<BookmarkCreateWithoutMusicInput, BookmarkUncheckedCreateWithoutMusicInput> | BookmarkCreateWithoutMusicInput[] | BookmarkUncheckedCreateWithoutMusicInput[]
-    connectOrCreate?: BookmarkCreateOrConnectWithoutMusicInput | BookmarkCreateOrConnectWithoutMusicInput[]
-    upsert?: BookmarkUpsertWithWhereUniqueWithoutMusicInput | BookmarkUpsertWithWhereUniqueWithoutMusicInput[]
-    createMany?: BookmarkCreateManyMusicInputEnvelope
-    set?: BookmarkWhereUniqueInput | BookmarkWhereUniqueInput[]
-    disconnect?: BookmarkWhereUniqueInput | BookmarkWhereUniqueInput[]
-    delete?: BookmarkWhereUniqueInput | BookmarkWhereUniqueInput[]
-    connect?: BookmarkWhereUniqueInput | BookmarkWhereUniqueInput[]
-    update?: BookmarkUpdateWithWhereUniqueWithoutMusicInput | BookmarkUpdateWithWhereUniqueWithoutMusicInput[]
-    updateMany?: BookmarkUpdateManyWithWhereWithoutMusicInput | BookmarkUpdateManyWithWhereWithoutMusicInput[]
-    deleteMany?: BookmarkScalarWhereInput | BookmarkScalarWhereInput[]
   }
 
   export type BasicBestPlayUpdateManyWithoutMusicNestedInput = {
@@ -19548,20 +17991,6 @@ export namespace Prisma {
     update?: PlayDataUpdateWithWhereUniqueWithoutMusicInput | PlayDataUpdateWithWhereUniqueWithoutMusicInput[]
     updateMany?: PlayDataUpdateManyWithWhereWithoutMusicInput | PlayDataUpdateManyWithWhereWithoutMusicInput[]
     deleteMany?: PlayDataScalarWhereInput | PlayDataScalarWhereInput[]
-  }
-
-  export type BookmarkUncheckedUpdateManyWithoutMusicNestedInput = {
-    create?: XOR<BookmarkCreateWithoutMusicInput, BookmarkUncheckedCreateWithoutMusicInput> | BookmarkCreateWithoutMusicInput[] | BookmarkUncheckedCreateWithoutMusicInput[]
-    connectOrCreate?: BookmarkCreateOrConnectWithoutMusicInput | BookmarkCreateOrConnectWithoutMusicInput[]
-    upsert?: BookmarkUpsertWithWhereUniqueWithoutMusicInput | BookmarkUpsertWithWhereUniqueWithoutMusicInput[]
-    createMany?: BookmarkCreateManyMusicInputEnvelope
-    set?: BookmarkWhereUniqueInput | BookmarkWhereUniqueInput[]
-    disconnect?: BookmarkWhereUniqueInput | BookmarkWhereUniqueInput[]
-    delete?: BookmarkWhereUniqueInput | BookmarkWhereUniqueInput[]
-    connect?: BookmarkWhereUniqueInput | BookmarkWhereUniqueInput[]
-    update?: BookmarkUpdateWithWhereUniqueWithoutMusicInput | BookmarkUpdateWithWhereUniqueWithoutMusicInput[]
-    updateMany?: BookmarkUpdateManyWithWhereWithoutMusicInput | BookmarkUpdateManyWithWhereWithoutMusicInput[]
-    deleteMany?: BookmarkScalarWhereInput | BookmarkScalarWhereInput[]
   }
 
   export type BasicBestPlayUncheckedUpdateManyWithoutMusicNestedInput = {
@@ -20191,28 +18620,6 @@ export namespace Prisma {
     data: PlayDataCreateManyUserInput | PlayDataCreateManyUserInput[]
   }
 
-  export type BookmarkCreateWithoutUserInput = {
-    created_at?: Date | string
-    updated_at?: Date | string
-    music: MusicCreateNestedOneWithoutBookmarkInput
-  }
-
-  export type BookmarkUncheckedCreateWithoutUserInput = {
-    id?: number
-    music_id: number
-    created_at?: Date | string
-    updated_at?: Date | string
-  }
-
-  export type BookmarkCreateOrConnectWithoutUserInput = {
-    where: BookmarkWhereUniqueInput
-    create: XOR<BookmarkCreateWithoutUserInput, BookmarkUncheckedCreateWithoutUserInput>
-  }
-
-  export type BookmarkCreateManyUserInputEnvelope = {
-    data: BookmarkCreateManyUserInput | BookmarkCreateManyUserInput[]
-  }
-
   export type BasicBestPlayCreateWithoutUserInput = {
     difficulty: string
     level: number
@@ -20408,33 +18815,6 @@ export namespace Prisma {
     music_idx?: StringFilter<"PlayData"> | string
   }
 
-  export type BookmarkUpsertWithWhereUniqueWithoutUserInput = {
-    where: BookmarkWhereUniqueInput
-    update: XOR<BookmarkUpdateWithoutUserInput, BookmarkUncheckedUpdateWithoutUserInput>
-    create: XOR<BookmarkCreateWithoutUserInput, BookmarkUncheckedCreateWithoutUserInput>
-  }
-
-  export type BookmarkUpdateWithWhereUniqueWithoutUserInput = {
-    where: BookmarkWhereUniqueInput
-    data: XOR<BookmarkUpdateWithoutUserInput, BookmarkUncheckedUpdateWithoutUserInput>
-  }
-
-  export type BookmarkUpdateManyWithWhereWithoutUserInput = {
-    where: BookmarkScalarWhereInput
-    data: XOR<BookmarkUpdateManyMutationInput, BookmarkUncheckedUpdateManyWithoutUserInput>
-  }
-
-  export type BookmarkScalarWhereInput = {
-    AND?: BookmarkScalarWhereInput | BookmarkScalarWhereInput[]
-    OR?: BookmarkScalarWhereInput[]
-    NOT?: BookmarkScalarWhereInput | BookmarkScalarWhereInput[]
-    id?: IntFilter<"Bookmark"> | number
-    user_id?: IntFilter<"Bookmark"> | number
-    music_id?: IntFilter<"Bookmark"> | number
-    created_at?: DateTimeFilter<"Bookmark"> | Date | string
-    updated_at?: DateTimeFilter<"Bookmark"> | Date | string
-  }
-
   export type BasicBestPlayUpsertWithWhereUniqueWithoutUserInput = {
     where: BasicBestPlayWhereUniqueInput
     update: XOR<BasicBestPlayUpdateWithoutUserInput, BasicBestPlayUncheckedUpdateWithoutUserInput>
@@ -20560,266 +18940,6 @@ export namespace Prisma {
     bingo_cell_id?: IntFilter<"userBingoCellData"> | number
   }
 
-  export type UserCreateWithoutBookmarkInput = {
-    username?: string | null
-    kakao_id?: bigint | number | null
-    discord_name?: string | null
-    discord_tag?: string | null
-    avatar?: string | null
-    country?: string
-    rank_basic?: number | null
-    rank_recital?: number | null
-    rank_basic_country?: number | null
-    rank_recital_country?: number | null
-    play_count?: number | null
-    score_p?: number | null
-    score_f?: number | null
-    score_s?: number | null
-    score_a2?: number | null
-    score_a?: number | null
-    score_b2?: number | null
-    score_b?: number | null
-    score_c?: number | null
-    score_d?: number | null
-    role?: string
-    grade_basic?: number | null
-    grade_recital?: number | null
-    created_at?: Date | string
-    updated_at?: Date | string
-    PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
-    PlayData?: PlayDataCreateNestedManyWithoutUserInput
-    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutUserInput
-    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutUserInput
-    UserBestGrade?: UserBestGradeCreateNestedManyWithoutUserInput
-    userBingoCellData?: userBingoCellDataCreateNestedManyWithoutUserInput
-  }
-
-  export type UserUncheckedCreateWithoutBookmarkInput = {
-    id?: number
-    username?: string | null
-    kakao_id?: bigint | number | null
-    discord_name?: string | null
-    discord_tag?: string | null
-    avatar?: string | null
-    country?: string
-    rank_basic?: number | null
-    rank_recital?: number | null
-    rank_basic_country?: number | null
-    rank_recital_country?: number | null
-    play_count?: number | null
-    score_p?: number | null
-    score_f?: number | null
-    score_s?: number | null
-    score_a2?: number | null
-    score_a?: number | null
-    score_b2?: number | null
-    score_b?: number | null
-    score_c?: number | null
-    score_d?: number | null
-    role?: string
-    grade_basic?: number | null
-    grade_recital?: number | null
-    created_at?: Date | string
-    updated_at?: Date | string
-    PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
-    PlayData?: PlayDataUncheckedCreateNestedManyWithoutUserInput
-    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutUserInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutUserInput
-    UserBestGrade?: UserBestGradeUncheckedCreateNestedManyWithoutUserInput
-    userBingoCellData?: userBingoCellDataUncheckedCreateNestedManyWithoutUserInput
-  }
-
-  export type UserCreateOrConnectWithoutBookmarkInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutBookmarkInput, UserUncheckedCreateWithoutBookmarkInput>
-  }
-
-  export type MusicCreateWithoutBookmarkInput = {
-    index: string
-    title: string
-    title_kana: string
-    artist?: string | null
-    category: string
-    category_short: string
-    description?: string | null
-    background?: string | null
-    sheet_len: number
-    difficulty_levels: string
-    difficulty_name: string
-    created_at?: Date | string
-    updated_at?: Date | string
-    RecentPlay?: RecentPlayCreateNestedManyWithoutMusicInput
-    PlayData?: PlayDataCreateNestedManyWithoutMusicInput
-    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutMusicInput
-    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutMusicInput
-    Bingo?: BingoCreateNestedManyWithoutMusicInput
-    BingoCell?: BingoCellCreateNestedManyWithoutMusicInput
-  }
-
-  export type MusicUncheckedCreateWithoutBookmarkInput = {
-    id?: number
-    index: string
-    title: string
-    title_kana: string
-    artist?: string | null
-    category: string
-    category_short: string
-    description?: string | null
-    background?: string | null
-    sheet_len: number
-    difficulty_levels: string
-    difficulty_name: string
-    created_at?: Date | string
-    updated_at?: Date | string
-    RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutMusicInput
-    PlayData?: PlayDataUncheckedCreateNestedManyWithoutMusicInput
-    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutMusicInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutMusicInput
-    Bingo?: BingoUncheckedCreateNestedManyWithoutMusicInput
-    BingoCell?: BingoCellUncheckedCreateNestedManyWithoutMusicInput
-  }
-
-  export type MusicCreateOrConnectWithoutBookmarkInput = {
-    where: MusicWhereUniqueInput
-    create: XOR<MusicCreateWithoutBookmarkInput, MusicUncheckedCreateWithoutBookmarkInput>
-  }
-
-  export type UserUpsertWithoutBookmarkInput = {
-    update: XOR<UserUpdateWithoutBookmarkInput, UserUncheckedUpdateWithoutBookmarkInput>
-    create: XOR<UserCreateWithoutBookmarkInput, UserUncheckedCreateWithoutBookmarkInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutBookmarkInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutBookmarkInput, UserUncheckedUpdateWithoutBookmarkInput>
-  }
-
-  export type UserUpdateWithoutBookmarkInput = {
-    username?: NullableStringFieldUpdateOperationsInput | string | null
-    kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    discord_name?: NullableStringFieldUpdateOperationsInput | string | null
-    discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
-    avatar?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: StringFieldUpdateOperationsInput | string
-    rank_basic?: NullableIntFieldUpdateOperationsInput | number | null
-    rank_recital?: NullableIntFieldUpdateOperationsInput | number | null
-    rank_basic_country?: NullableIntFieldUpdateOperationsInput | number | null
-    rank_recital_country?: NullableIntFieldUpdateOperationsInput | number | null
-    play_count?: NullableIntFieldUpdateOperationsInput | number | null
-    score_p?: NullableIntFieldUpdateOperationsInput | number | null
-    score_f?: NullableIntFieldUpdateOperationsInput | number | null
-    score_s?: NullableIntFieldUpdateOperationsInput | number | null
-    score_a2?: NullableIntFieldUpdateOperationsInput | number | null
-    score_a?: NullableIntFieldUpdateOperationsInput | number | null
-    score_b2?: NullableIntFieldUpdateOperationsInput | number | null
-    score_b?: NullableIntFieldUpdateOperationsInput | number | null
-    score_c?: NullableIntFieldUpdateOperationsInput | number | null
-    score_d?: NullableIntFieldUpdateOperationsInput | number | null
-    role?: StringFieldUpdateOperationsInput | string
-    grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
-    grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
-    PlayData?: PlayDataUpdateManyWithoutUserNestedInput
-    BasicBestPlay?: BasicBestPlayUpdateManyWithoutUserNestedInput
-    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutUserNestedInput
-    UserBestGrade?: UserBestGradeUpdateManyWithoutUserNestedInput
-    userBingoCellData?: userBingoCellDataUpdateManyWithoutUserNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutBookmarkInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    username?: NullableStringFieldUpdateOperationsInput | string | null
-    kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    discord_name?: NullableStringFieldUpdateOperationsInput | string | null
-    discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
-    avatar?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: StringFieldUpdateOperationsInput | string
-    rank_basic?: NullableIntFieldUpdateOperationsInput | number | null
-    rank_recital?: NullableIntFieldUpdateOperationsInput | number | null
-    rank_basic_country?: NullableIntFieldUpdateOperationsInput | number | null
-    rank_recital_country?: NullableIntFieldUpdateOperationsInput | number | null
-    play_count?: NullableIntFieldUpdateOperationsInput | number | null
-    score_p?: NullableIntFieldUpdateOperationsInput | number | null
-    score_f?: NullableIntFieldUpdateOperationsInput | number | null
-    score_s?: NullableIntFieldUpdateOperationsInput | number | null
-    score_a2?: NullableIntFieldUpdateOperationsInput | number | null
-    score_a?: NullableIntFieldUpdateOperationsInput | number | null
-    score_b2?: NullableIntFieldUpdateOperationsInput | number | null
-    score_b?: NullableIntFieldUpdateOperationsInput | number | null
-    score_c?: NullableIntFieldUpdateOperationsInput | number | null
-    score_d?: NullableIntFieldUpdateOperationsInput | number | null
-    role?: StringFieldUpdateOperationsInput | string
-    grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
-    grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
-    PlayData?: PlayDataUncheckedUpdateManyWithoutUserNestedInput
-    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutUserNestedInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutUserNestedInput
-    UserBestGrade?: UserBestGradeUncheckedUpdateManyWithoutUserNestedInput
-    userBingoCellData?: userBingoCellDataUncheckedUpdateManyWithoutUserNestedInput
-  }
-
-  export type MusicUpsertWithoutBookmarkInput = {
-    update: XOR<MusicUpdateWithoutBookmarkInput, MusicUncheckedUpdateWithoutBookmarkInput>
-    create: XOR<MusicCreateWithoutBookmarkInput, MusicUncheckedCreateWithoutBookmarkInput>
-    where?: MusicWhereInput
-  }
-
-  export type MusicUpdateToOneWithWhereWithoutBookmarkInput = {
-    where?: MusicWhereInput
-    data: XOR<MusicUpdateWithoutBookmarkInput, MusicUncheckedUpdateWithoutBookmarkInput>
-  }
-
-  export type MusicUpdateWithoutBookmarkInput = {
-    index?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    title_kana?: StringFieldUpdateOperationsInput | string
-    artist?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: StringFieldUpdateOperationsInput | string
-    category_short?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    background?: NullableStringFieldUpdateOperationsInput | string | null
-    sheet_len?: IntFieldUpdateOperationsInput | number
-    difficulty_levels?: StringFieldUpdateOperationsInput | string
-    difficulty_name?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    RecentPlay?: RecentPlayUpdateManyWithoutMusicNestedInput
-    PlayData?: PlayDataUpdateManyWithoutMusicNestedInput
-    BasicBestPlay?: BasicBestPlayUpdateManyWithoutMusicNestedInput
-    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutMusicNestedInput
-    Bingo?: BingoUpdateManyWithoutMusicNestedInput
-    BingoCell?: BingoCellUpdateManyWithoutMusicNestedInput
-  }
-
-  export type MusicUncheckedUpdateWithoutBookmarkInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    index?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    title_kana?: StringFieldUpdateOperationsInput | string
-    artist?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: StringFieldUpdateOperationsInput | string
-    category_short?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    background?: NullableStringFieldUpdateOperationsInput | string | null
-    sheet_len?: IntFieldUpdateOperationsInput | number
-    difficulty_levels?: StringFieldUpdateOperationsInput | string
-    difficulty_name?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    RecentPlay?: RecentPlayUncheckedUpdateManyWithoutMusicNestedInput
-    PlayData?: PlayDataUncheckedUpdateManyWithoutMusicNestedInput
-    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutMusicNestedInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutMusicNestedInput
-    Bingo?: BingoUncheckedUpdateManyWithoutMusicNestedInput
-    BingoCell?: BingoCellUncheckedUpdateManyWithoutMusicNestedInput
-  }
-
   export type RecentPlayCreateWithoutMusicInput = {
     difficulty: string
     level: number
@@ -20900,28 +19020,6 @@ export namespace Prisma {
 
   export type PlayDataCreateManyMusicInputEnvelope = {
     data: PlayDataCreateManyMusicInput | PlayDataCreateManyMusicInput[]
-  }
-
-  export type BookmarkCreateWithoutMusicInput = {
-    created_at?: Date | string
-    updated_at?: Date | string
-    user: UserCreateNestedOneWithoutBookmarkInput
-  }
-
-  export type BookmarkUncheckedCreateWithoutMusicInput = {
-    id?: number
-    user_id: number
-    created_at?: Date | string
-    updated_at?: Date | string
-  }
-
-  export type BookmarkCreateOrConnectWithoutMusicInput = {
-    where: BookmarkWhereUniqueInput
-    create: XOR<BookmarkCreateWithoutMusicInput, BookmarkUncheckedCreateWithoutMusicInput>
-  }
-
-  export type BookmarkCreateManyMusicInputEnvelope = {
-    data: BookmarkCreateManyMusicInput | BookmarkCreateManyMusicInput[]
   }
 
   export type BasicBestPlayCreateWithoutMusicInput = {
@@ -21084,22 +19182,6 @@ export namespace Prisma {
     data: XOR<PlayDataUpdateManyMutationInput, PlayDataUncheckedUpdateManyWithoutMusicInput>
   }
 
-  export type BookmarkUpsertWithWhereUniqueWithoutMusicInput = {
-    where: BookmarkWhereUniqueInput
-    update: XOR<BookmarkUpdateWithoutMusicInput, BookmarkUncheckedUpdateWithoutMusicInput>
-    create: XOR<BookmarkCreateWithoutMusicInput, BookmarkUncheckedCreateWithoutMusicInput>
-  }
-
-  export type BookmarkUpdateWithWhereUniqueWithoutMusicInput = {
-    where: BookmarkWhereUniqueInput
-    data: XOR<BookmarkUpdateWithoutMusicInput, BookmarkUncheckedUpdateWithoutMusicInput>
-  }
-
-  export type BookmarkUpdateManyWithWhereWithoutMusicInput = {
-    where: BookmarkScalarWhereInput
-    data: XOR<BookmarkUpdateManyMutationInput, BookmarkUncheckedUpdateManyWithoutMusicInput>
-  }
-
   export type BasicBestPlayUpsertWithWhereUniqueWithoutMusicInput = {
     where: BasicBestPlayWhereUniqueInput
     update: XOR<BasicBestPlayUpdateWithoutMusicInput, BasicBestPlayUncheckedUpdateWithoutMusicInput>
@@ -21182,9 +19264,9 @@ export namespace Prisma {
     position?: IntFilter<"BingoCell"> | number
     challenge?: StringFilter<"BingoCell"> | string
     category_short?: StringNullableFilter<"BingoCell"> | string | null
-    music_idx?: StringNullableFilter<"BingoCell"> | string | null
     level?: StringNullableFilter<"BingoCell"> | string | null
     isReal?: BoolFilter<"BingoCell"> | boolean
+    music_idx?: StringNullableFilter<"BingoCell"> | string | null
     bingo_id?: IntFilter<"BingoCell"> | number
   }
 
@@ -21215,7 +19297,6 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     PlayData?: PlayDataCreateNestedManyWithoutUserInput
-    Bookmark?: BookmarkCreateNestedManyWithoutUserInput
     BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutUserInput
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeCreateNestedManyWithoutUserInput
@@ -21250,7 +19331,6 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutUserInput
-    Bookmark?: BookmarkUncheckedCreateNestedManyWithoutUserInput
     BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutUserInput
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeUncheckedCreateNestedManyWithoutUserInput
@@ -21277,7 +19357,6 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     PlayData?: PlayDataCreateNestedManyWithoutMusicInput
-    Bookmark?: BookmarkCreateNestedManyWithoutMusicInput
     BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutMusicInput
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutMusicInput
     Bingo?: BingoCreateNestedManyWithoutMusicInput
@@ -21300,7 +19379,6 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutMusicInput
-    Bookmark?: BookmarkUncheckedCreateNestedManyWithoutMusicInput
     BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutMusicInput
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutMusicInput
     Bingo?: BingoUncheckedCreateNestedManyWithoutMusicInput
@@ -21350,7 +19428,6 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayData?: PlayDataUpdateManyWithoutUserNestedInput
-    Bookmark?: BookmarkUpdateManyWithoutUserNestedInput
     BasicBestPlay?: BasicBestPlayUpdateManyWithoutUserNestedInput
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUpdateManyWithoutUserNestedInput
@@ -21385,7 +19462,6 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayData?: PlayDataUncheckedUpdateManyWithoutUserNestedInput
-    Bookmark?: BookmarkUncheckedUpdateManyWithoutUserNestedInput
     BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutUserNestedInput
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUncheckedUpdateManyWithoutUserNestedInput
@@ -21418,7 +19494,6 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayData?: PlayDataUpdateManyWithoutMusicNestedInput
-    Bookmark?: BookmarkUpdateManyWithoutMusicNestedInput
     BasicBestPlay?: BasicBestPlayUpdateManyWithoutMusicNestedInput
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutMusicNestedInput
     Bingo?: BingoUpdateManyWithoutMusicNestedInput
@@ -21441,7 +19516,6 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayData?: PlayDataUncheckedUpdateManyWithoutMusicNestedInput
-    Bookmark?: BookmarkUncheckedUpdateManyWithoutMusicNestedInput
     BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutMusicNestedInput
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutMusicNestedInput
     Bingo?: BingoUncheckedUpdateManyWithoutMusicNestedInput
@@ -21476,7 +19550,6 @@ export namespace Prisma {
     updated_at?: Date | string
     PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
     PlayData?: PlayDataCreateNestedManyWithoutUserInput
-    Bookmark?: BookmarkCreateNestedManyWithoutUserInput
     BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutUserInput
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutUserInput
     userBingoCellData?: userBingoCellDataCreateNestedManyWithoutUserInput
@@ -21511,7 +19584,6 @@ export namespace Prisma {
     updated_at?: Date | string
     PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutUserInput
-    Bookmark?: BookmarkUncheckedCreateNestedManyWithoutUserInput
     BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutUserInput
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutUserInput
     userBingoCellData?: userBingoCellDataUncheckedCreateNestedManyWithoutUserInput
@@ -21561,7 +19633,6 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
     PlayData?: PlayDataUpdateManyWithoutUserNestedInput
-    Bookmark?: BookmarkUpdateManyWithoutUserNestedInput
     BasicBestPlay?: BasicBestPlayUpdateManyWithoutUserNestedInput
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutUserNestedInput
     userBingoCellData?: userBingoCellDataUpdateManyWithoutUserNestedInput
@@ -21596,7 +19667,6 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutUserNestedInput
-    Bookmark?: BookmarkUncheckedUpdateManyWithoutUserNestedInput
     BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutUserNestedInput
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutUserNestedInput
     userBingoCellData?: userBingoCellDataUncheckedUpdateManyWithoutUserNestedInput
@@ -21630,7 +19700,6 @@ export namespace Prisma {
     updated_at?: Date | string
     PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
     PlayData?: PlayDataCreateNestedManyWithoutUserInput
-    Bookmark?: BookmarkCreateNestedManyWithoutUserInput
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeCreateNestedManyWithoutUserInput
     userBingoCellData?: userBingoCellDataCreateNestedManyWithoutUserInput
@@ -21665,7 +19734,6 @@ export namespace Prisma {
     updated_at?: Date | string
     PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutUserInput
-    Bookmark?: BookmarkUncheckedCreateNestedManyWithoutUserInput
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeUncheckedCreateNestedManyWithoutUserInput
     userBingoCellData?: userBingoCellDataUncheckedCreateNestedManyWithoutUserInput
@@ -21692,7 +19760,6 @@ export namespace Prisma {
     updated_at?: Date | string
     RecentPlay?: RecentPlayCreateNestedManyWithoutMusicInput
     PlayData?: PlayDataCreateNestedManyWithoutMusicInput
-    Bookmark?: BookmarkCreateNestedManyWithoutMusicInput
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutMusicInput
     Bingo?: BingoCreateNestedManyWithoutMusicInput
     BingoCell?: BingoCellCreateNestedManyWithoutMusicInput
@@ -21715,7 +19782,6 @@ export namespace Prisma {
     updated_at?: Date | string
     RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutMusicInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutMusicInput
-    Bookmark?: BookmarkUncheckedCreateNestedManyWithoutMusicInput
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutMusicInput
     Bingo?: BingoUncheckedCreateNestedManyWithoutMusicInput
     BingoCell?: BingoCellUncheckedCreateNestedManyWithoutMusicInput
@@ -21765,7 +19831,6 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
     PlayData?: PlayDataUpdateManyWithoutUserNestedInput
-    Bookmark?: BookmarkUpdateManyWithoutUserNestedInput
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUpdateManyWithoutUserNestedInput
     userBingoCellData?: userBingoCellDataUpdateManyWithoutUserNestedInput
@@ -21800,7 +19865,6 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutUserNestedInput
-    Bookmark?: BookmarkUncheckedUpdateManyWithoutUserNestedInput
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUncheckedUpdateManyWithoutUserNestedInput
     userBingoCellData?: userBingoCellDataUncheckedUpdateManyWithoutUserNestedInput
@@ -21833,7 +19897,6 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     RecentPlay?: RecentPlayUpdateManyWithoutMusicNestedInput
     PlayData?: PlayDataUpdateManyWithoutMusicNestedInput
-    Bookmark?: BookmarkUpdateManyWithoutMusicNestedInput
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutMusicNestedInput
     Bingo?: BingoUpdateManyWithoutMusicNestedInput
     BingoCell?: BingoCellUpdateManyWithoutMusicNestedInput
@@ -21856,7 +19919,6 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     RecentPlay?: RecentPlayUncheckedUpdateManyWithoutMusicNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutMusicNestedInput
-    Bookmark?: BookmarkUncheckedUpdateManyWithoutMusicNestedInput
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutMusicNestedInput
     Bingo?: BingoUncheckedUpdateManyWithoutMusicNestedInput
     BingoCell?: BingoCellUncheckedUpdateManyWithoutMusicNestedInput
@@ -21890,7 +19952,6 @@ export namespace Prisma {
     updated_at?: Date | string
     PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
     PlayData?: PlayDataCreateNestedManyWithoutUserInput
-    Bookmark?: BookmarkCreateNestedManyWithoutUserInput
     BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeCreateNestedManyWithoutUserInput
     userBingoCellData?: userBingoCellDataCreateNestedManyWithoutUserInput
@@ -21925,7 +19986,6 @@ export namespace Prisma {
     updated_at?: Date | string
     PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutUserInput
-    Bookmark?: BookmarkUncheckedCreateNestedManyWithoutUserInput
     BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeUncheckedCreateNestedManyWithoutUserInput
     userBingoCellData?: userBingoCellDataUncheckedCreateNestedManyWithoutUserInput
@@ -21952,7 +20012,6 @@ export namespace Prisma {
     updated_at?: Date | string
     RecentPlay?: RecentPlayCreateNestedManyWithoutMusicInput
     PlayData?: PlayDataCreateNestedManyWithoutMusicInput
-    Bookmark?: BookmarkCreateNestedManyWithoutMusicInput
     BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutMusicInput
     Bingo?: BingoCreateNestedManyWithoutMusicInput
     BingoCell?: BingoCellCreateNestedManyWithoutMusicInput
@@ -21975,7 +20034,6 @@ export namespace Prisma {
     updated_at?: Date | string
     RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutMusicInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutMusicInput
-    Bookmark?: BookmarkUncheckedCreateNestedManyWithoutMusicInput
     BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutMusicInput
     Bingo?: BingoUncheckedCreateNestedManyWithoutMusicInput
     BingoCell?: BingoCellUncheckedCreateNestedManyWithoutMusicInput
@@ -22025,7 +20083,6 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
     PlayData?: PlayDataUpdateManyWithoutUserNestedInput
-    Bookmark?: BookmarkUpdateManyWithoutUserNestedInput
     BasicBestPlay?: BasicBestPlayUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUpdateManyWithoutUserNestedInput
     userBingoCellData?: userBingoCellDataUpdateManyWithoutUserNestedInput
@@ -22060,7 +20117,6 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutUserNestedInput
-    Bookmark?: BookmarkUncheckedUpdateManyWithoutUserNestedInput
     BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUncheckedUpdateManyWithoutUserNestedInput
     userBingoCellData?: userBingoCellDataUncheckedUpdateManyWithoutUserNestedInput
@@ -22093,7 +20149,6 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     RecentPlay?: RecentPlayUpdateManyWithoutMusicNestedInput
     PlayData?: PlayDataUpdateManyWithoutMusicNestedInput
-    Bookmark?: BookmarkUpdateManyWithoutMusicNestedInput
     BasicBestPlay?: BasicBestPlayUpdateManyWithoutMusicNestedInput
     Bingo?: BingoUpdateManyWithoutMusicNestedInput
     BingoCell?: BingoCellUpdateManyWithoutMusicNestedInput
@@ -22116,7 +20171,6 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     RecentPlay?: RecentPlayUncheckedUpdateManyWithoutMusicNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutMusicNestedInput
-    Bookmark?: BookmarkUncheckedUpdateManyWithoutMusicNestedInput
     BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutMusicNestedInput
     Bingo?: BingoUncheckedUpdateManyWithoutMusicNestedInput
     BingoCell?: BingoCellUncheckedUpdateManyWithoutMusicNestedInput
@@ -22149,7 +20203,6 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
-    Bookmark?: BookmarkCreateNestedManyWithoutUserInput
     BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutUserInput
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeCreateNestedManyWithoutUserInput
@@ -22184,7 +20237,6 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
-    Bookmark?: BookmarkUncheckedCreateNestedManyWithoutUserInput
     BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutUserInput
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeUncheckedCreateNestedManyWithoutUserInput
@@ -22211,7 +20263,6 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     RecentPlay?: RecentPlayCreateNestedManyWithoutMusicInput
-    Bookmark?: BookmarkCreateNestedManyWithoutMusicInput
     BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutMusicInput
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutMusicInput
     Bingo?: BingoCreateNestedManyWithoutMusicInput
@@ -22234,7 +20285,6 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutMusicInput
-    Bookmark?: BookmarkUncheckedCreateNestedManyWithoutMusicInput
     BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutMusicInput
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutMusicInput
     Bingo?: BingoUncheckedCreateNestedManyWithoutMusicInput
@@ -22284,7 +20334,6 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
-    Bookmark?: BookmarkUpdateManyWithoutUserNestedInput
     BasicBestPlay?: BasicBestPlayUpdateManyWithoutUserNestedInput
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUpdateManyWithoutUserNestedInput
@@ -22319,7 +20368,6 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
-    Bookmark?: BookmarkUncheckedUpdateManyWithoutUserNestedInput
     BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutUserNestedInput
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUncheckedUpdateManyWithoutUserNestedInput
@@ -22352,7 +20400,6 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     RecentPlay?: RecentPlayUpdateManyWithoutMusicNestedInput
-    Bookmark?: BookmarkUpdateManyWithoutMusicNestedInput
     BasicBestPlay?: BasicBestPlayUpdateManyWithoutMusicNestedInput
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutMusicNestedInput
     Bingo?: BingoUpdateManyWithoutMusicNestedInput
@@ -22375,7 +20422,6 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     RecentPlay?: RecentPlayUncheckedUpdateManyWithoutMusicNestedInput
-    Bookmark?: BookmarkUncheckedUpdateManyWithoutMusicNestedInput
     BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutMusicNestedInput
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutMusicNestedInput
     Bingo?: BingoUncheckedUpdateManyWithoutMusicNestedInput
@@ -22398,7 +20444,6 @@ export namespace Prisma {
     updated_at?: Date | string
     RecentPlay?: RecentPlayCreateNestedManyWithoutMusicInput
     PlayData?: PlayDataCreateNestedManyWithoutMusicInput
-    Bookmark?: BookmarkCreateNestedManyWithoutMusicInput
     BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutMusicInput
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutMusicInput
     BingoCell?: BingoCellCreateNestedManyWithoutMusicInput
@@ -22421,7 +20466,6 @@ export namespace Prisma {
     updated_at?: Date | string
     RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutMusicInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutMusicInput
-    Bookmark?: BookmarkUncheckedCreateNestedManyWithoutMusicInput
     BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutMusicInput
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutMusicInput
     BingoCell?: BingoCellUncheckedCreateNestedManyWithoutMusicInput
@@ -22447,9 +20491,9 @@ export namespace Prisma {
     position: number
     challenge: string
     category_short?: string | null
-    music_idx?: string | null
     level?: string | null
     isReal?: boolean
+    music_idx?: string | null
     userBingoData?: userBingoCellDataUncheckedCreateNestedManyWithoutBingoInput
   }
 
@@ -22489,7 +20533,6 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     RecentPlay?: RecentPlayUpdateManyWithoutMusicNestedInput
     PlayData?: PlayDataUpdateManyWithoutMusicNestedInput
-    Bookmark?: BookmarkUpdateManyWithoutMusicNestedInput
     BasicBestPlay?: BasicBestPlayUpdateManyWithoutMusicNestedInput
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutMusicNestedInput
     BingoCell?: BingoCellUpdateManyWithoutMusicNestedInput
@@ -22512,7 +20555,6 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     RecentPlay?: RecentPlayUncheckedUpdateManyWithoutMusicNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutMusicNestedInput
-    Bookmark?: BookmarkUncheckedUpdateManyWithoutMusicNestedInput
     BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutMusicNestedInput
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutMusicNestedInput
     BingoCell?: BingoCellUncheckedUpdateManyWithoutMusicNestedInput
@@ -22550,7 +20592,6 @@ export namespace Prisma {
     updated_at?: Date | string
     RecentPlay?: RecentPlayCreateNestedManyWithoutMusicInput
     PlayData?: PlayDataCreateNestedManyWithoutMusicInput
-    Bookmark?: BookmarkCreateNestedManyWithoutMusicInput
     BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutMusicInput
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutMusicInput
     Bingo?: BingoCreateNestedManyWithoutMusicInput
@@ -22573,7 +20614,6 @@ export namespace Prisma {
     updated_at?: Date | string
     RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutMusicInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutMusicInput
-    Bookmark?: BookmarkUncheckedCreateNestedManyWithoutMusicInput
     BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutMusicInput
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutMusicInput
     Bingo?: BingoUncheckedCreateNestedManyWithoutMusicInput
@@ -22649,7 +20689,6 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     RecentPlay?: RecentPlayUpdateManyWithoutMusicNestedInput
     PlayData?: PlayDataUpdateManyWithoutMusicNestedInput
-    Bookmark?: BookmarkUpdateManyWithoutMusicNestedInput
     BasicBestPlay?: BasicBestPlayUpdateManyWithoutMusicNestedInput
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutMusicNestedInput
     Bingo?: BingoUpdateManyWithoutMusicNestedInput
@@ -22672,7 +20711,6 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     RecentPlay?: RecentPlayUncheckedUpdateManyWithoutMusicNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutMusicNestedInput
-    Bookmark?: BookmarkUncheckedUpdateManyWithoutMusicNestedInput
     BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutMusicNestedInput
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutMusicNestedInput
     Bingo?: BingoUncheckedUpdateManyWithoutMusicNestedInput
@@ -22746,7 +20784,6 @@ export namespace Prisma {
     updated_at?: Date | string
     PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
     PlayData?: PlayDataCreateNestedManyWithoutUserInput
-    Bookmark?: BookmarkCreateNestedManyWithoutUserInput
     BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutUserInput
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeCreateNestedManyWithoutUserInput
@@ -22781,7 +20818,6 @@ export namespace Prisma {
     updated_at?: Date | string
     PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutUserInput
-    Bookmark?: BookmarkUncheckedCreateNestedManyWithoutUserInput
     BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutUserInput
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeUncheckedCreateNestedManyWithoutUserInput
@@ -22807,9 +20843,9 @@ export namespace Prisma {
     position: number
     challenge: string
     category_short?: string | null
-    music_idx?: string | null
     level?: string | null
     isReal?: boolean
+    music_idx?: string | null
     bingo_id: number
   }
 
@@ -22857,7 +20893,6 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
     PlayData?: PlayDataUpdateManyWithoutUserNestedInput
-    Bookmark?: BookmarkUpdateManyWithoutUserNestedInput
     BasicBestPlay?: BasicBestPlayUpdateManyWithoutUserNestedInput
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUpdateManyWithoutUserNestedInput
@@ -22892,7 +20927,6 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutUserNestedInput
-    Bookmark?: BookmarkUncheckedUpdateManyWithoutUserNestedInput
     BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutUserNestedInput
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUncheckedUpdateManyWithoutUserNestedInput
@@ -22924,9 +20958,9 @@ export namespace Prisma {
     position?: IntFieldUpdateOperationsInput | number
     challenge?: StringFieldUpdateOperationsInput | string
     category_short?: NullableStringFieldUpdateOperationsInput | string | null
-    music_idx?: NullableStringFieldUpdateOperationsInput | string | null
     level?: NullableStringFieldUpdateOperationsInput | string | null
     isReal?: BoolFieldUpdateOperationsInput | boolean
+    music_idx?: NullableStringFieldUpdateOperationsInput | string | null
     bingo_id?: IntFieldUpdateOperationsInput | number
   }
 
@@ -22961,13 +20995,6 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     music_idx: string
-  }
-
-  export type BookmarkCreateManyUserInput = {
-    id?: number
-    music_id: number
-    created_at?: Date | string
-    updated_at?: Date | string
   }
 
   export type BasicBestPlayCreateManyUserInput = {
@@ -23110,26 +21137,6 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     music_idx?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type BookmarkUpdateWithoutUserInput = {
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    music?: MusicUpdateOneRequiredWithoutBookmarkNestedInput
-  }
-
-  export type BookmarkUncheckedUpdateWithoutUserInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    music_id?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type BookmarkUncheckedUpdateManyWithoutUserInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    music_id?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type BasicBestPlayUpdateWithoutUserInput = {
@@ -23296,13 +21303,6 @@ export namespace Prisma {
     user_id: number
   }
 
-  export type BookmarkCreateManyMusicInput = {
-    id?: number
-    user_id: number
-    created_at?: Date | string
-    updated_at?: Date | string
-  }
-
   export type BasicBestPlayCreateManyMusicInput = {
     id?: number
     difficulty: string
@@ -23444,26 +21444,6 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user_id?: IntFieldUpdateOperationsInput | number
-  }
-
-  export type BookmarkUpdateWithoutMusicInput = {
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutBookmarkNestedInput
-  }
-
-  export type BookmarkUncheckedUpdateWithoutMusicInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    user_id?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type BookmarkUncheckedUpdateManyWithoutMusicInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    user_id?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type BasicBestPlayUpdateWithoutMusicInput = {
@@ -23609,9 +21589,9 @@ export namespace Prisma {
     position: number
     challenge: string
     category_short?: string | null
-    music_idx?: string | null
     level?: string | null
     isReal?: boolean
+    music_idx?: string | null
   }
 
   export type BingoCellUpdateWithoutBingoInput = {
@@ -23629,9 +21609,9 @@ export namespace Prisma {
     position?: IntFieldUpdateOperationsInput | number
     challenge?: StringFieldUpdateOperationsInput | string
     category_short?: NullableStringFieldUpdateOperationsInput | string | null
-    music_idx?: NullableStringFieldUpdateOperationsInput | string | null
     level?: NullableStringFieldUpdateOperationsInput | string | null
     isReal?: BoolFieldUpdateOperationsInput | boolean
+    music_idx?: NullableStringFieldUpdateOperationsInput | string | null
     userBingoData?: userBingoCellDataUncheckedUpdateManyWithoutBingoNestedInput
   }
 
@@ -23640,9 +21620,9 @@ export namespace Prisma {
     position?: IntFieldUpdateOperationsInput | number
     challenge?: StringFieldUpdateOperationsInput | string
     category_short?: NullableStringFieldUpdateOperationsInput | string | null
-    music_idx?: NullableStringFieldUpdateOperationsInput | string | null
     level?: NullableStringFieldUpdateOperationsInput | string | null
     isReal?: BoolFieldUpdateOperationsInput | boolean
+    music_idx?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type userBingoCellDataCreateManyBingoInput = {

@@ -29,17 +29,6 @@ CREATE TABLE "User" (
 );
 
 -- CreateTable
-CREATE TABLE "Bookmark" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "user_id" INTEGER NOT NULL,
-    "music_id" INTEGER NOT NULL,
-    "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" DATETIME NOT NULL,
-    CONSTRAINT "Bookmark_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
-    CONSTRAINT "Bookmark_music_id_fkey" FOREIGN KEY ("music_id") REFERENCES "Music" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
-);
-
--- CreateTable
 CREATE TABLE "Music" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "index" TEXT NOT NULL,
@@ -163,8 +152,9 @@ CREATE TABLE "BingoCell" (
     "position" INTEGER NOT NULL,
     "challenge" TEXT NOT NULL,
     "category_short" TEXT,
-    "music_idx" TEXT,
     "level" TEXT,
+    "isReal" BOOLEAN NOT NULL DEFAULT false,
+    "music_idx" TEXT,
     "bingo_id" INTEGER NOT NULL,
     CONSTRAINT "BingoCell_music_idx_fkey" FOREIGN KEY ("music_idx") REFERENCES "Music" ("index") ON DELETE SET NULL ON UPDATE CASCADE,
     CONSTRAINT "BingoCell_bingo_id_fkey" FOREIGN KEY ("bingo_id") REFERENCES "Bingo" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
@@ -187,13 +177,13 @@ CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
 CREATE UNIQUE INDEX "User_kakao_id_key" ON "User"("kakao_id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_discord_name_key" ON "User"("discord_name");
-
--- CreateIndex
 CREATE UNIQUE INDEX "User_discord_tag_key" ON "User"("discord_tag");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Bookmark_user_id_music_id_key" ON "Bookmark"("user_id", "music_id");
+CREATE UNIQUE INDEX "Music_index_key" ON "Music"("index");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Music_index_key" ON "Music"("index");
+CREATE UNIQUE INDEX "Bingo_music_idx_key" ON "Bingo"("music_idx");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "BingoCell_music_idx_key" ON "BingoCell"("music_idx");

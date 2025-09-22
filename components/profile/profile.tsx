@@ -10,62 +10,35 @@ import Chart from "./chart";
 import RecentPlay from "./recentPlay";
 
 interface ProfileProps {
-    discord_name: string | null;
-    discord_tag: string | null;
-    id: number;
-    username: string | null;
-    avatar: string | null;
-    country: string;
-    rank_basic: number | null;
-    rank_basic_country: number | null;
-    rank_recital: number | null;
-    rank_recital_country: number | null;
-    grade_basic: number | null;
-    grade_recital: number | null;
-    play_count: number | null;
-    score_p: number | null;
-    score_f: number | null;
-    score_s: number | null;
-    score_a2: number | null;
-    score_a: number | null;
-    score_b2: number | null;
+    userData: {
+        discord_name: string | null;
+        discord_tag: string | null;
+        id: number;
+        username: string | null;
+        avatar: string | null;
+        country: string;
+        rank_basic: number | null;
+        rank_basic_country: number | null;
+        rank_recital: number | null;
+        rank_recital_country: number | null;
+        grade_basic: number | null;
+        grade_recital: number | null;
+        play_count: number | null;
+        score_p: number | null;
+        score_f: number | null;
+        score_s: number | null;
+        score_a2: number | null;
+        score_a: number | null;
+        score_b2: number | null;
+    };
     initialRecentPlays: any[];
     initialBasicBestPlays: any[];
     initialRecitalBestPlays: any[];
     userBestGrades: any[];
 }
 
-const rankIcon = {
-    fc: "https://p.eagate.573.jp/game/nostalgia/op3/img/pdata/music_data/grade/grade_fc_bg.png",
-    p: "https://p.eagate.573.jp/game/nostalgia/op3/img/pdata/music_data/grade/grade_p.png",
-    s: "https://p.eagate.573.jp/game/nostalgia/op3/img/pdata/music_data/grade/grade_s.png",
-    a2: "https://p.eagate.573.jp/game/nostalgia/op3/img/pdata/music_data/grade/grade_a2.png",
-    a: "https://p.eagate.573.jp/game/nostalgia/op3/img/pdata/music_data/grade/grade_a.png",
-    b2: "https://p.eagate.573.jp/game/nostalgia/op3/img/pdata/music_data/grade/grade_b2.png",
-    b: "https://p.eagate.573.jp/game/nostalgia/op3/img/pdata/music_data/grade/grade_b.png",
-    c: "https://p.eagate.573.jp/game/nostalgia/op3/img/pdata/music_data/grade/grade_c.png",
-    d: "https://p.eagate.573.jp/game/nostalgia/op3/img/pdata/music_data/grade/grade_d.png",
-};
-
-export default function Profile({
-    discord_name,
-    discord_tag,
-    id,
-    username,
-    avatar,
-    country,
-    rank_basic,
-    rank_basic_country,
-    grade_basic,
-    grade_recital,
-    rank_recital,
-    rank_recital_country,
-    play_count,
-    score_p,
-    score_s,
-    score_a2,
-    score_a,
-    score_f,
+export default function ProfileDetail({
+    userData,
     initialRecentPlays,
     initialBasicBestPlays,
     initialRecitalBestPlays,
@@ -79,8 +52,10 @@ export default function Profile({
                 {/* 타이틀, 리사이틀 버튼 */}
                 <article className="flex items-center justify-between">
                     <h1 className="text-tertiary">
-                        <span className="text-secondary">{username}</span>의
-                        프로필
+                        <span className="text-secondary">
+                            {userData.username}
+                        </span>
+                        의 프로필
                     </h1>
                     <RecitalToggleButton
                         isRecital={isRecital}
@@ -90,8 +65,8 @@ export default function Profile({
                 {/* 프로필, 설정 버튼*/}
                 <article className="flex bg-dark-quinary rounded-t-xl p-4 gap-4">
                     <div className="size-24 rounded-3xl relative overflow-hidden">
-                        {avatar ? (
-                            <Image src={avatar} alt="avatar" fill />
+                        {userData.avatar ? (
+                            <Image src={userData.avatar} alt="avatar" fill />
                         ) : (
                             <div className="bg-neutral-500" />
                         )}
@@ -100,22 +75,22 @@ export default function Profile({
                         <div className="flex gap-1 items-center">
                             <div className="relative w-8 h-6 rounded-full  overflow-hidden">
                                 <Image
-                                    src={`/flag/${country}.svg`}
-                                    alt={country}
+                                    src={`/flag/${userData.country}.svg`}
+                                    alt={userData.country}
                                     fill
                                 />
                             </div>
                             <span className="text-primary">
-                                {username ? username : "-"}
+                                {userData.username ? userData.username : "-"}
                             </span>
                         </div>
                         {isRecital ? (
                             <span className="text-quaternary">{`NosLog #${formatToComma(
-                                rank_recital
+                                userData.rank_recital
                             )}`}</span>
                         ) : (
                             <span className="text-quaternary">{`NosLog #${formatToComma(
-                                rank_basic
+                                userData.rank_basic
                             )}`}</span>
                         )}
                     </div>
@@ -144,10 +119,15 @@ export default function Profile({
                         />
                         <span className="flex items-center gap-1 *:flex *:items-center">
                             <span className="text-quaternary">
-                                {discord_name ? discord_name : "-"}
+                                {userData.discord_name
+                                    ? userData.discord_name
+                                    : "-"}
                             </span>
                             <span className="text-quinary">
-                                #{discord_tag ? discord_tag : "-"}
+                                #
+                                {userData.discord_tag
+                                    ? userData.discord_tag
+                                    : "-"}
                             </span>
                         </span>
                     </div>
@@ -172,11 +152,11 @@ export default function Profile({
                         <span>세계 순위</span>
                         {isRecital ? (
                             <span className="text-tertiary">{`#${formatToComma(
-                                rank_recital
+                                userData.rank_recital
                             )}`}</span>
                         ) : (
                             <span className="text-tertiary">{`#${formatToComma(
-                                rank_basic
+                                userData.rank_basic
                             )}`}</span>
                         )}
                     </div>
@@ -184,11 +164,11 @@ export default function Profile({
                         <span>국가 순위</span>
                         {isRecital ? (
                             <span className="text-tertiary">{`#${formatToComma(
-                                rank_recital_country
+                                userData.rank_recital_country
                             )}`}</span>
                         ) : (
                             <span className="text-tertiary">{`#${formatToComma(
-                                rank_basic_country
+                                userData.rank_basic_country
                             )}`}</span>
                         )}
                     </div>
@@ -196,11 +176,11 @@ export default function Profile({
                         <span>Grd</span>
                         {isRecital ? (
                             <span className="text-tertiary">
-                                {formatToGrade(grade_recital)}
+                                {formatToGrade(userData.grade_recital)}
                             </span>
                         ) : (
                             <span className="text-tertiary">
-                                {formatToGrade(grade_basic)}
+                                {formatToGrade(userData.grade_basic)}
                             </span>
                         )}
                     </div>
@@ -217,7 +197,7 @@ export default function Profile({
                         <span>
                             플레이 횟수:{" "}
                             <span className="text-quaternary">
-                                {formatToComma(play_count)}
+                                {formatToComma(userData.play_count)}
                             </span>
                         </span>
                         <span>
@@ -235,7 +215,7 @@ export default function Profile({
                                 width={24}
                                 height={24}
                             />
-                            <span>{formatToComma(score_p)}</span>
+                            <span>{formatToComma(userData.score_p)}</span>
                         </div>
                         <div>
                             <Image
@@ -246,7 +226,7 @@ export default function Profile({
                                 width={24}
                                 height={24}
                             />
-                            <span>{formatToComma(score_f)}</span>
+                            <span>{formatToComma(userData.score_f)}</span>
                         </div>
 
                         <div>
@@ -258,7 +238,7 @@ export default function Profile({
                                 width={24}
                                 height={24}
                             />
-                            <span>{formatToComma(score_s)}</span>
+                            <span>{formatToComma(userData.score_s)}</span>
                         </div>
                         <div>
                             <Image
@@ -269,7 +249,7 @@ export default function Profile({
                                 width={24}
                                 height={24}
                             />
-                            <span>{formatToComma(score_a2)}</span>
+                            <span>{formatToComma(userData.score_a2)}</span>
                         </div>
                         <div>
                             <Image
@@ -280,18 +260,21 @@ export default function Profile({
                                 width={24}
                                 height={24}
                             />
-                            <span>{formatToComma(score_a)}</span>
+                            <span>{formatToComma(userData.score_a)}</span>
                         </div>
                     </span>
                 </article>
             </section>
             {/* 최근 플레이 기록 */}
-            <RecentPlay initialRecentPlays={initialRecentPlays} id={id} />
+            <RecentPlay
+                initialRecentPlays={initialRecentPlays}
+                id={userData.id}
+            />
             {/* 베스트 플레이 기록 */}
             <BestPlay
                 initialBasicBestPlays={initialBasicBestPlays}
                 initialRecitalBestPlays={initialRecitalBestPlays}
-                id={id}
+                id={userData.id}
                 isRecital={isRecital}
             />
         </div>

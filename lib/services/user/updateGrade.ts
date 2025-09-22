@@ -61,19 +61,21 @@ export async function updateGrade(user_id: number) {
     );
     console.info("(4)리사이틀 그레이드 합산 완료");
 
+    // 유저 베스트 그레이드 가져오기
     const userBestGrade = await db.userBestGrade.findMany({
         where: {
             user_id,
         },
         select: { id: true, besttime: true },
     });
+    // 30개 초과시 가장 오래된 데이터 삭제
     if (userBestGrade.length === 30) {
         if (
             userBestGrade[0].besttime.split(" ")[0] !==
             new Date().toISOString().split("T")[0]
         ) {
             await db.userBestGrade.delete({
-                where: { id: userBestGrade[29].id },
+                where: { id: userBestGrade[0].id },
             });
         }
     }
@@ -90,14 +92,34 @@ export async function updateGrade(user_id: number) {
         });
         console.info("(5)유저 그레이드 업데이트 완료");
 
-        await tx.userBestGrade.create({
-            data: {
-                user_id,
-                besttime: new Date().toISOString().split("T")[0],
-                grade_basic: Number(formatToGrade(basicGrade)),
-                grade_recital: Number(formatToGrade(recitalGrade)),
-            },
-        });
+        // 유저 베스트 그레이드 생성 및 같은 날짜 데이터인 경우 높은값으로 처리
+        if (
+            // 가장 최근 데이터가 오늘과 같은 날인 경우
+            userBestGrade.length > 0 &&
+            userBestGrade[userBestGrade.length - 1].besttime ===
+                new Date().toISOString().split("T")[0]
+        ) {
+            // create가 아닌 해당 날짜 데이터 update
+            await tx.userBestGrade.update({
+                where: {
+                    id: userBestGrade[userBestGrade.length - 1].id,
+                },
+                data: {
+                    grade_basic: Number(formatToGrade(basicGrade)),
+                    grade_recital: Number(formatToGrade(recitalGrade)),
+                },
+            });
+        } else {
+            // 아닌경우 create
+            await tx.userBestGrade.create({
+                data: {
+                    user_id,
+                    besttime: new Date().toISOString().split("T")[0],
+                    grade_basic: Number(formatToGrade(basicGrade)),
+                    grade_recital: Number(formatToGrade(recitalGrade)),
+                },
+            });
+        }
 
         // 기존 베스트 플레이 데이터 삭제 (중복 방지)
         await tx.basicBestPlay.deleteMany({

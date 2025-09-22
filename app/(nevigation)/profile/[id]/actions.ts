@@ -180,40 +180,13 @@ export async function getInitialRecitalBestPlays(id: number) {
     return initialRecitalBestPlays;
 }
 
-export async function getInitialBestPlays(id: number) {
-    const initialBestPlays = await db.recentPlay.findMany({
-        where: {
-            user_id: id,
-        },
-        select: {
-            play_time: true,
-            score: true,
-            rank: true,
-            level: true,
-            difficulty: true,
-            max_combo: true,
-            music_idx: true,
-            grade_basic: true,
-            music: {
-                select: {
-                    title: true,
-                },
-            },
-        },
-        take: 5,
-        orderBy: {
-            play_time: "desc",
-        },
-    });
-    return initialBestPlays;
-}
-
 export async function getUserData(id: number) {
     const userData = await db.user.findUnique({
         where: {
             id,
         },
         select: {
+            id: true,
             discord_name: true,
             discord_tag: true,
             username: true,
