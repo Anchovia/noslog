@@ -203,7 +203,6 @@ export async function getUserData(id: number) {
             score_s: true,
             score_a2: true,
             score_a: true,
-            score_b2: true,
             score_f: true,
         },
     });
