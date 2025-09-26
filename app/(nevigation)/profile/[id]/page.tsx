@@ -1,5 +1,6 @@
 import ProfileDetail from "@/components/profile/profile";
 import db from "@/lib/db";
+import getSession from "@/lib/session";
 import { notFound } from "next/navigation";
 import {
     getInitialBasicBestPlays,
@@ -14,7 +15,6 @@ export default async function Profile({ params }: { params: { id: string } }) {
     if (isNaN(id)) {
         return notFound();
     }
-
     const userData = await getUserData(id);
     const initialRecentPlays = await getInitialRecentPlays(id);
     const initialBasicBestPlays = await getInitialBasicBestPlays(id);
@@ -28,6 +28,7 @@ export default async function Profile({ params }: { params: { id: string } }) {
         },
         orderBy: { besttime: "asc" },
     });
+    const session = await getSession();
 
     return (
         <>
@@ -38,6 +39,7 @@ export default async function Profile({ params }: { params: { id: string } }) {
                     initialBasicBestPlays={initialBasicBestPlays}
                     initialRecitalBestPlays={initialRecitalBestPlays}
                     userBestGrades={userBestGrades}
+                    sessionId={session.id}
                 />
             )}
         </>

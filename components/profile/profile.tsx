@@ -32,6 +32,7 @@ interface ProfileProps {
     initialBasicBestPlays: any[];
     initialRecitalBestPlays: any[];
     userBestGrades: any[];
+    sessionId: number | undefined;
 }
 
 export default function ProfileDetail({
@@ -40,6 +41,7 @@ export default function ProfileDetail({
     initialBasicBestPlays,
     initialRecitalBestPlays,
     userBestGrades,
+    sessionId,
 }: ProfileProps) {
     const [isRecital, setIsRecital] = useState(false);
 
@@ -57,7 +59,11 @@ export default function ProfileDetail({
                 />
             </section>
             {/* 오버뷰 */}
-            <OverView userData={userData} isRecital={isRecital} />
+            <OverView
+                userData={userData}
+                isRecital={isRecital}
+                sessionId={sessionId}
+            />
             {/* 통계 */}
             <Statistics
                 userData={userData}

@@ -14,9 +14,14 @@ interface OverViewProps {
         rank_recital: number | null;
     };
     isRecital: boolean;
+    sessionId: number | undefined;
 }
 
-export default function OverView({ userData, isRecital }: OverViewProps) {
+export default function OverView({
+    userData,
+    isRecital,
+    sessionId,
+}: OverViewProps) {
     return (
         <section className="flex flex-col gap-4">
             {/* 프로필, 설정 버튼*/}
@@ -51,16 +56,25 @@ export default function OverView({ userData, isRecital }: OverViewProps) {
                         )}`}</span>
                     )}
                 </div>
-                <div>
+                <div className="flex flex-col justify-between items-end">
                     <Link href={`/profile/settings`}>
                         <Image
-                            className="fle"
                             src="/icon/gear.png"
                             width={28}
                             height={28}
                             alt="setting"
                         />
                     </Link>
+                    {sessionId && (
+                        <button>
+                            <Image
+                                src="/icon/logout.png"
+                                width={28}
+                                height={28}
+                                alt="logout"
+                            />
+                        </button>
+                    )}
                 </div>
             </article>
             {/* 소셜(디스코드) */}

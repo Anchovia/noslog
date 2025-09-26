@@ -3,7 +3,6 @@
 import { getMoreMusics } from "@/app/(nevigation)/music/action";
 import { useEffect, useRef, useState } from "react";
 import MusicCard from "./musicCard";
-import MusicSearch from "./musicSearch";
 
 interface MusicListProps {
     initialMusics: {
@@ -15,9 +14,10 @@ interface MusicListProps {
         sheet_len: number;
         difficulty_levels: string;
     }[];
+    qurry: string | undefined;
 }
 
-export default function MusicList({ initialMusics }: MusicListProps) {
+export default function MusicList({ initialMusics, qurry }: MusicListProps) {
     const [musics, setMusics] = useState(initialMusics);
     const [page, setPage] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
@@ -35,7 +35,7 @@ export default function MusicList({ initialMusics }: MusicListProps) {
                     observer.unobserve(trigger.current);
 
                     setIsLoading(true);
-                    const newMusics = await getMoreMusics(page + 1);
+                    const newMusics = await getMoreMusics(page + 1, qurry);
                     if (newMusics.length !== 0) {
                         setMusics((prev) => [...prev, ...newMusics]);
                         setPage((prev) => prev + 1);
@@ -59,21 +59,18 @@ export default function MusicList({ initialMusics }: MusicListProps) {
     }, [page]);
 
     return (
-        <main className="max-w-screen-sm mx-auto h-full flex flex-col gap-4">
-            <MusicSearch />
-            <section className="px-6 flex flex-col items-center gap-2 w-full h-full">
-                {musics.map((music) => (
-                    <MusicCard key={music.index} {...music} />
-                ))}
-                {!isLastPage ? (
-                    <span
-                        ref={trigger}
-                        className="text-sm font-semibold bg-dark-tertiary w-fit mx-auto px-3 py-2 rounded-md active:scale-95"
-                    >
-                        {isLoading ? "로딩 중..." : "더 가져오기"}
-                    </span>
-                ) : null}
-            </section>
-        </main>
+        <section className="px-6 flex flex-col items-center gap-2 w-full h-full">
+            {musics.map((music) => (
+                <MusicCard key={music.index} {...music} />
+            ))}
+            {!isLastPage ? (
+                <span
+                    ref={trigger}
+                    className="text-sm font-semibold bg-dark-tertiary w-fit mx-auto px-3 py-2 rounded-md active:scale-95"
+                >
+                    {isLoading ? "로딩 중..." : "더 가져오기"}
+                </span>
+            ) : null}
+        </section>
     );
 }
