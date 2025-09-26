@@ -14,24 +14,21 @@ export async function uploadUserSetting(formdata: FormData) {
         avatar: formdata.get("avatar"),
     };
     console.info("유저 데이터 서버 전송 완료");
+    console.log(data);
 
     // zod validation
-    console.info("validation 시작");
     const result = settingSchema.safeParse(data);
     if (!result.success) {
         console.error("validation 실패");
         return result.error.flatten();
     } else {
         console.info("validation 성공");
-
         // 세션 불러오기
-        console.info("유저 세션 불러오는 중...");
         const session = await getSession();
         if (session.id) {
             console.info("유저 세션 불러오기 성공");
-
+            // 아바타 처리
             // 기존 사진 삭제
-            console.info("이전 사진 삭제 중...");
             const prev = await db.user.findUnique({
                 where: {
                     id: session.id,
@@ -40,43 +37,57 @@ export async function uploadUserSetting(formdata: FormData) {
                     avatar: true,
                 },
             });
+            // 기존 사진이 존재할때
             if (prev?.avatar) {
-                const prevAvatarId = prev.avatar.split("/")[4]; // 사진 id만 추출
-                const response = await fetch(
-                    `https://api.cloudflare.com/client/v4/accounts/${process.env.CLOUDFLARE_ACCOUNT_ID}/images/v1/${prevAvatarId}`,
-                    {
-                        method: "DELETE",
-                        headers: {
-                            Authorization: `Bearer ${process.env.CLOUDFLARE_API_KEY}`,
-                        },
+                // cloudflare 이미지 판단
+                if (prev.avatar.split("/")[2] === "imagedelivery.net") {
+                    // cloudflare 이미지 처리 로직
+                    const prevAvatarId = prev.avatar.split("/")[4]; // 구 사진 id만 추출
+                    const newAvatarId = result.data.avatar.split("/")[4]; // 신 사진 id만 추출
+                    if (prevAvatarId !== newAvatarId) {
+                        const response = await fetch(
+                            `https://api.cloudflare.com/client/v4/accounts/${process.env.CLOUDFLARE_ACCOUNT_ID}/images/v1/${prevAvatarId}`,
+                            {
+                                method: "DELETE",
+                                headers: {
+                                    Authorization: `Bearer ${process.env.CLOUDFLARE_API_KEY}`,
+                                },
+                            }
+                        );
+                        if (response.ok) {
+                            console.info("이전 사진 삭제 성공");
+                            // 이전 사진 삭제 후 아바타 포함 유저 정보 업데이트
+                            await db.user.update({
+                                where: {
+                                    id: session.id,
+                                },
+                                data: {
+                                    username: result.data.username,
+                                    discord_name: result.data.discord_name,
+                                    discord_tag: result.data.discord_tag,
+                                    avatar: `${result.data.avatar}/profile`,
+                                },
+                            });
+                            console.info("유저 정보 업데이트 성공");
+                            redirect(`/profile/${session.id}`);
+                        }
                     }
-                );
-                if (response.ok) {
-                    console.info("이전 사진 삭제 성공");
                 } else {
-                    console.error("이전 사진 삭제 실패");
+                    console.warn("cloudFlare 이미지 아님");
                 }
-            } else {
-                console.warn("이전 사진이 없습니다.");
-            }
-            // 유저 정보 업데이트
-            console.info("유저 정보 업데이트 중...");
-            const user = await db.user.update({
-                where: {
-                    id: session.id,
-                },
-                data: {
-                    username: result.data.username,
-                    discord_name: result.data.discord_name,
-                    discord_tag: result.data.discord_tag,
-                    avatar: `${result.data.avatar}/profile`,
-                },
-            });
-            if (user) {
+                // 아바타 미포함 유저 정보 업데이트
+                await db.user.update({
+                    where: {
+                        id: session.id,
+                    },
+                    data: {
+                        username: result.data.username,
+                        discord_name: result.data.discord_name,
+                        discord_tag: result.data.discord_tag,
+                    },
+                });
                 console.info("유저 정보 업데이트 성공");
-                redirect(`/profile/${user.id}`);
-            } else {
-                console.error("유저 정보 업데이트 실패");
+                redirect(`/profile/${session.id}`);
             }
         }
     }

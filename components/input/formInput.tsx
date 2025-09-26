@@ -9,6 +9,7 @@ const _Input = (
     {
         errors = [],
         name,
+        value,
         ...rest
     }: FormInputProps & InputHTMLAttributes<HTMLInputElement>,
     ref: ForwardedRef<HTMLInputElement>
