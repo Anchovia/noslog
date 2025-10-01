@@ -8,8 +8,6 @@ import { useForm } from "react-hook-form";
 
 export default function MusicSearch() {
     const [isFilterOpen, setIsFilterOpen] = useState(false);
-    const [isLevelOpen, setIsLevelOpen] = useState(false);
-
     const [normal, setNormal] = useState(4);
     const [hard, setHard] = useState(null);
     const [expert, setExpert] = useState(null);
@@ -18,6 +16,10 @@ export default function MusicSearch() {
     const { register, handleSubmit } = useForm<searchType>({
         resolver: zodResolver(searchSchema),
     });
+
+    const handleLevelClick = (e: any) => {
+        const value = e.target.value();
+    };
 
     const onSubmit = handleSubmit(async (data: searchType) => {
         const url =
@@ -34,6 +36,8 @@ export default function MusicSearch() {
         await onSubmit();
     };
 
+    const diffList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
     return (
         <section className="px-6 py-4 bg-dark-secondary">
             <form
@@ -46,43 +50,26 @@ export default function MusicSearch() {
                     {...register("search")}
                 />
                 {/* 필터 버튼 */}
-                <article className="flex w-full gap-3 *:px-5 text-center *:py-2 *:rounded-full *:cursor-pointer">
-                    <div
-                        onClick={() => {
-                            setIsFilterOpen(true);
-                            setIsLevelOpen((prev) => !prev);
-                        }}
-                        className={`bg-dark-tertiary flex justify-center gap-1.5 ${
-                            isLevelOpen && "bg-white-secondary text-black"
-                        }`}
-                    >
-                        {isLevelOpen ? (
-                            <>
-                                <span>레벨:</span>
-                                <span>3~9</span>
-                                <span className="">X</span>
-                            </>
-                        ) : (
-                            <span>레벨</span>
-                        )}
-                    </div>
+                <article
+                    onClick={() => setIsFilterOpen((prev) => !prev)}
+                    className="cursor-pointer w-full py-2 flex items-center justify-center bg-dark-quinary"
+                >
+                    필터
                 </article>
-                {/* 세부 필터 */}
                 {isFilterOpen && (
-                    <article className="w-full flex flex-col gap-6">
-                        {isLevelOpen && (
-                            <div className="flex w-full justify-between gap-2 text-center">
-                                <span className="w-20">레벨</span>
+                    <article>
+                        <div>
+                            <span>Normal</span>
+                            <div>
+                                {diffList.map((level) => (
+                                    <div
+                                        id={level.toString()}
+                                        onClick={handleLevelClick}
+                                    >
+                                        <span>{level}</span>
+                                    </div>
+                                ))}
                             </div>
-                        )}
-                        {/* 접기 버튼 */}
-                        <div
-                            onClick={() => setIsFilterOpen((prev) => !prev)}
-                            className="flex w-full items-center gap-4 *:rounded-full cursor-pointer"
-                        >
-                            <div className="flex-1 h-1 bg-dark-secondary" />
-                            <span>접기</span>
-                            <div className="flex-1 h-1 bg-dark-secondary" />
                         </div>
                     </article>
                 )}
