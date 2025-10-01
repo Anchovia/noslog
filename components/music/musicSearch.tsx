@@ -8,27 +8,23 @@ import { useForm } from "react-hook-form";
 
 export default function MusicSearch() {
     const [isFilterOpen, setIsFilterOpen] = useState(false);
-    const [normal, setNormal] = useState(4);
-    const [hard, setHard] = useState(null);
-    const [expert, setExpert] = useState(null);
-    const [real, setReal] = useState(null);
+    const [normal, setNormal] = useState("");
+    const [hard, setHard] = useState("");
+    const [expert, setExpert] = useState("");
+    const [real, setReal] = useState("");
 
     const { register, handleSubmit } = useForm<searchType>({
         resolver: zodResolver(searchSchema),
     });
 
-    const handleLevelClick = (e: any) => {
-        const value = e.target.value();
-    };
-
     const onSubmit = handleSubmit(async (data: searchType) => {
         const url =
             "music?" +
             (data.search !== "" ? `&qurry=${data.search}` : "") +
-            (normal !== null ? `&normal=${normal}` : "") +
-            (hard !== null ? `&hard=${hard}` : "") +
-            (expert !== null ? `&expert=${expert}` : "") +
-            (real !== null ? `&real=${real}` : "");
+            (normal !== "" ? `&normal=${normal}` : "") +
+            (hard !== "" ? `&hard=${hard}` : "") +
+            (expert !== "" ? `&expert=${expert}` : "") +
+            (real !== "" ? `&real=${real}` : "");
 
         redirect(url);
     });
@@ -36,7 +32,22 @@ export default function MusicSearch() {
         await onSubmit();
     };
 
-    const diffList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+    const handleRangeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.id === "normal") {
+            setNormal(e.target.value);
+        }
+        if (e.target.id === "hard") {
+            setHard(e.target.value);
+        }
+        if (e.target.id === "expert") {
+            setExpert(e.target.value);
+        }
+        if (e.target.id === "real") {
+            setReal(e.target.value);
+        }
+    };
+
+    console.log(normal, hard, expert, real);
 
     return (
         <section className="px-6 py-4 bg-dark-secondary">
@@ -57,19 +68,51 @@ export default function MusicSearch() {
                     필터
                 </article>
                 {isFilterOpen && (
-                    <article>
-                        <div>
+                    <article className="w-full flex gap-8 *:flex *:flex-col">
+                        <div className="*:h-6 gap-3">
                             <span>Normal</span>
-                            <div>
-                                {diffList.map((level) => (
-                                    <div
-                                        id={level.toString()}
-                                        onClick={handleLevelClick}
-                                    >
-                                        <span>{level}</span>
-                                    </div>
-                                ))}
-                            </div>
+                            <span>Hard</span>
+                            <span>Expert</span>
+                            <span>Real</span>
+                        </div>
+                        <div className="flex-1 *:h-6 gap-3">
+                            <input
+                                id="normal"
+                                min={1}
+                                max={12}
+                                step={1}
+                                value={normal}
+                                type="range"
+                                onChange={handleRangeChange}
+                            />
+                            <input
+                                id="hard"
+                                min={1}
+                                max={12}
+                                step={1}
+                                value={hard}
+                                type="range"
+                                onChange={handleRangeChange}
+                            />
+                            <input
+                                id="expert"
+                                min={1}
+                                max={12}
+                                step={1}
+                                value={expert}
+                                type="range"
+                                onChange={handleRangeChange}
+                            />
+                            <input
+                                id="real"
+                                min={1}
+                                max={3}
+                                step={1}
+                                value={real}
+                                type="range"
+                                className="w-1/4"
+                                onChange={handleRangeChange}
+                            />
                         </div>
                     </article>
                 )}

@@ -14,7 +14,6 @@ export async function uploadUserSetting(formdata: FormData) {
         avatar: formdata.get("avatar"),
     };
     console.info("유저 데이터 서버 전송 완료");
-    console.log(data);
 
     // zod validation
     const result = settingSchema.safeParse(data);
