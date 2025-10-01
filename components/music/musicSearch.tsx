@@ -9,19 +9,26 @@ import { useForm } from "react-hook-form";
 export default function MusicSearch() {
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [isLevelOpen, setIsLevelOpen] = useState(false);
-    const [isRealOpen, setIsRealOpen] = useState(false);
 
-    const {
-        register,
-        handleSubmit,
-        setValue,
-        formState: { errors },
-    } = useForm<searchType>({
+    const [normal, setNormal] = useState(4);
+    const [hard, setHard] = useState(null);
+    const [expert, setExpert] = useState(null);
+    const [real, setReal] = useState(null);
+
+    const { register, handleSubmit } = useForm<searchType>({
         resolver: zodResolver(searchSchema),
     });
 
     const onSubmit = handleSubmit(async (data: searchType) => {
-        redirect(`music?qurry=${data.search}`);
+        const url =
+            "music?" +
+            (data.search !== "" ? `&qurry=${data.search}` : "") +
+            (normal !== null ? `&normal=${normal}` : "") +
+            (hard !== null ? `&hard=${hard}` : "") +
+            (expert !== null ? `&expert=${expert}` : "") +
+            (real !== null ? `&real=${real}` : "");
+
+        redirect(url);
     });
     const onValid = async () => {
         await onSubmit();
@@ -44,7 +51,6 @@ export default function MusicSearch() {
                         onClick={() => {
                             setIsFilterOpen(true);
                             setIsLevelOpen((prev) => !prev);
-                            setIsRealOpen(false);
                         }}
                         className={`bg-dark-tertiary flex justify-center gap-1.5 ${
                             isLevelOpen && "bg-white-secondary text-black"
@@ -60,16 +66,6 @@ export default function MusicSearch() {
                             <span>레벨</span>
                         )}
                     </div>
-                    <span
-                        onClick={() => {
-                            setIsFilterOpen(true);
-                            setIsRealOpen((prev) => !prev);
-                            setIsLevelOpen(false);
-                        }}
-                        className="bg-dark-tertiary"
-                    >
-                        Real
-                    </span>
                 </article>
                 {/* 세부 필터 */}
                 {isFilterOpen && (
@@ -77,42 +73,6 @@ export default function MusicSearch() {
                         {isLevelOpen && (
                             <div className="flex w-full justify-between gap-2 text-center">
                                 <span className="w-20">레벨</span>
-                                <input
-                                    type="range"
-                                    list="level"
-                                    min="1"
-                                    max="12"
-                                    step="1"
-                                    className="flex-1"
-                                />
-                                <datalist id="level">
-                                    {[1 * 12].map((_, idx) => (
-                                        <option
-                                            key={idx}
-                                            value={idx}
-                                            label={idx.toString()}
-                                            className="flex flex-col"
-                                        />
-                                    ))}
-                                </datalist>
-                            </div>
-                        )}
-                        {isRealOpen && (
-                            <div className="flex w-full justify-between gap-2 text-center">
-                                <span className="w-20">Real</span>
-                                <input
-                                    type="range"
-                                    list="level"
-                                    min="1"
-                                    max="3"
-                                    step="1"
-                                    className="flex-1"
-                                />
-                                <datalist id="level">
-                                    <option value={1} label={"1"} />
-                                    <option value={2} label={"2"} />
-                                    <option value={3} label={"3"} />
-                                </datalist>
                             </div>
                         )}
                         {/* 접기 버튼 */}

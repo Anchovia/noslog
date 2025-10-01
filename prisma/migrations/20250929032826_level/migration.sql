@@ -42,6 +42,10 @@ CREATE TABLE "Music" (
     "sheet_len" INTEGER NOT NULL,
     "difficulty_levels" TEXT NOT NULL,
     "difficulty_name" TEXT NOT NULL,
+    "normal" INTEGER NOT NULL,
+    "hard" INTEGER NOT NULL,
+    "expert" INTEGER NOT NULL,
+    "real" INTEGER,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME NOT NULL
 );

@@ -39,22 +39,48 @@ export async function updateMusic(music: any) {
             );
 
             // 신규 music data 배열에 추가
-            newMusicData.push({
-                index: index,
-                artist: data.artist,
-                category: data.category,
-                category_short: data.category_short,
-                description: data.description,
-                title: data.title,
-                title_kana: data.title_kana,
-                sheet_len: data.sheet.length,
-                difficulty_levels: difficulty_levels.toString(),
-                background: musicBG[index] || null,
-                difficulty_name:
-                    data.sheet.length === 3
-                        ? "Normal, Hard, Expert"
-                        : "Normal, Hard, Expert, Real",
-            });
+            if (difficulty_levels.length < 4) {
+                newMusicData.push({
+                    index: index,
+                    artist: data.artist,
+                    category: data.category,
+                    category_short: data.category_short,
+                    description: data.description,
+                    title: data.title,
+                    title_kana: data.title_kana,
+                    sheet_len: data.sheet.length,
+                    difficulty_levels: difficulty_levels.toString(),
+                    background: musicBG[index] || null,
+                    normal: difficulty_levels[0],
+                    hard: difficulty_levels[1],
+                    expert: difficulty_levels[2],
+                    difficulty_name:
+                        data.sheet.length === 3
+                            ? "Normal, Hard, Expert"
+                            : "Normal, Hard, Expert, Real",
+                });
+            } else {
+                newMusicData.push({
+                    index: index,
+                    artist: data.artist,
+                    category: data.category,
+                    category_short: data.category_short,
+                    description: data.description,
+                    title: data.title,
+                    title_kana: data.title_kana,
+                    sheet_len: data.sheet.length,
+                    difficulty_levels: difficulty_levels.toString(),
+                    background: musicBG[index] || null,
+                    normal: difficulty_levels[0],
+                    hard: difficulty_levels[1],
+                    expert: difficulty_levels[2],
+                    real: difficulty_levels[3],
+                    difficulty_name:
+                        data.sheet.length === 3
+                            ? "Normal, Hard, Expert"
+                            : "Normal, Hard, Expert, Real",
+                });
+            }
         } else if (musicWithoutBG.has(index) && musicBG[index]) {
             // 업데이트가 필요한 기존 악곡의 신규 BG 데이터 처리
             console.warn(`(3)기존 악곡 신규 BG 데이터 감지: ${data.title}`);

@@ -14,10 +14,19 @@ interface MusicListProps {
         sheet_len: number;
         difficulty_levels: string;
     }[];
-    qurry: string | undefined;
+    searchParams: {
+        qurry?: string;
+        normal?: string;
+        hard?: string;
+        expert?: string;
+        real?: string;
+    };
 }
 
-export default function MusicList({ initialMusics, qurry }: MusicListProps) {
+export default function MusicList({
+    initialMusics,
+    searchParams,
+}: MusicListProps) {
     const [musics, setMusics] = useState(initialMusics);
     const [page, setPage] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
@@ -35,7 +44,10 @@ export default function MusicList({ initialMusics, qurry }: MusicListProps) {
                     observer.unobserve(trigger.current);
 
                     setIsLoading(true);
-                    const newMusics = await getMoreMusics(page + 1, qurry);
+                    const newMusics = await getMoreMusics(
+                        page + 1,
+                        searchParams
+                    );
                     if (newMusics.length !== 0) {
                         setMusics((prev) => [...prev, ...newMusics]);
                         setPage((prev) => prev + 1);

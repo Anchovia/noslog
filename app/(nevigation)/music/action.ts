@@ -2,42 +2,72 @@
 
 import db from "@/lib/db";
 
-export async function getMoreMusics(page: number, qurry: string | undefined) {
-    if (qurry) {
-        const musics = await db.music.findMany({
-            where: {
-                OR: [
-                    { title: { contains: qurry } },
-                    { artist: { contains: qurry } },
-                ],
-            },
-            select: {
-                index: true,
-                title: true,
-                artist: true,
-                category_short: true,
-                background: true,
-                sheet_len: true,
-                difficulty_levels: true,
-            },
-            skip: page * 20,
-            take: 20,
-        });
-        return musics;
-    } else {
-        const musics = await db.music.findMany({
-            select: {
-                index: true,
-                title: true,
-                artist: true,
-                category_short: true,
-                background: true,
-                sheet_len: true,
-                difficulty_levels: true,
-            },
-            skip: page * 20,
-            take: 20,
-        });
-        return musics;
-    }
+interface SearchParamsProps {
+    qurry?: string;
+    normal?: string;
+    hard?: string;
+    expert?: string;
+    real?: string;
+}
+
+export async function getMoreMusics(
+    page: number,
+    { qurry, normal, hard, expert, real }: SearchParamsProps
+) {
+    const musics = await db.music.findMany({
+        where: {
+            AND: [
+                qurry
+                    ? {
+                          OR: [
+                              { title: { contains: qurry } },
+                              { artist: { contains: qurry } },
+                          ],
+                      }
+                    : {},
+                normal
+                    ? {
+                          normal: {
+                              equals: parseInt(normal),
+                          },
+                      }
+                    : {},
+                hard
+                    ? {
+                          hard: {
+                              equals: parseInt(hard),
+                          },
+                      }
+                    : {},
+                expert
+                    ? {
+                          expert: {
+                              equals: parseInt(expert),
+                          },
+                      }
+                    : {},
+
+                real
+                    ? {
+                          real: {
+                              equals: parseInt(real),
+                              not: null,
+                          },
+                      }
+                    : {},
+            ],
+        },
+        select: {
+            index: true,
+            title: true,
+            artist: true,
+            category_short: true,
+            background: true,
+            sheet_len: true,
+            difficulty_levels: true,
+        },
+        skip: page * 20,
+        take: 20,
+    });
+    return musics;
 }
