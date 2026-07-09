@@ -1,3 +1,11 @@
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+// Tailwind className을 조건부로 합치고 충돌 정리
+export function cn(...inputs: ClassValue[]) {
+    return twMerge(clsx(inputs));
+}
+
 // 숫자를 3자리마다 콤마를 찍어주는 함수
 export function formatToComma(number: number | null): string {
     if (number) {
