@@ -1,13 +1,15 @@
 import Link from "next/link";
 
-export default function footer() {
+export default function Footer() {
     return (
-        <footer className="text-white-secondary bg-dark-tertiary flex h-24 flex-col items-center justify-center gap-1 px-4 py-6 text-xs">
-            <span>&copy; 2025 NosLog. All rights reserved.</span>
+        <footer className="border-divider bg-surface text-text-secondary flex h-9 items-center gap-2 border-t px-4 text-xs">
+            <span>&copy; 2026 NosLog</span>
             <span>
-                Git:{" "}
-                <Link href="https://github.com/Anchovia/noslog">
-                    Repository
+                <Link
+                    href="https://github.com/Anchovia/noslog"
+                    className="text-text-primary font-medium"
+                >
+                    GitHub
                 </Link>
             </span>
         </footer>

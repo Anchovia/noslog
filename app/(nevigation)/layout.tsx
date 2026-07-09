@@ -7,10 +7,12 @@ export default function NeviationLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <>
-            <Header />
-            {children}
-            <Footer />
-        </>
+        <div className="bg-bg min-h-screen">
+            <div className="bg-bg mx-auto flex min-h-screen w-full max-w-97.5 flex-col">
+                <Header />
+                <main className="flex-1">{children}</main>
+                <Footer />
+            </div>
+        </div>
     );
 }
