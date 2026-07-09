@@ -18,11 +18,38 @@
     --color-text-secondary: #a0a0aa;
     --color-text-disabled: #666674;
 
+    /* 상태 / 데이터 */
+    --color-success: #22c55e;
+    --color-danger: #ef4444;
+    --color-chart: #38bdf8;
+    --color-score: #facc15;
+    --color-bronze: #b87333;
+
+    /* 랭크 */
+    --color-rank-p-start: #f5d98b;
+    --color-rank-p-end: #e8a9c9;
+    --color-rank-fc: #a3e635;
+    --color-rank-s: #d8b54f;
+    --color-rank-a-plus: #c97b72;
+    --color-rank-a: #b06565;
+
     /* 난이도 */
     --color-normal: #6e9a7c;
     --color-hard: #b08a5e;
     --color-expert: #b06565;
     --color-real: #8f7fb8;
+
+    /* 검정 */
+    --color-basic: #7c9cc6;
+    --color-recital: #c98fb0;
+
+    /* 장르 */
+    --color-genre-pops: #b06565;
+    --color-genre-anime: #b0708f;
+    --color-genre-bm: #6e87b0;
+    --color-genre-original: #b08165;
+    --color-genre-classic-jazz: #b09365;
+    --color-genre-variety: #6e9a7c;
 
     /* 브랜드 */
     --color-discord: #5865f2;
