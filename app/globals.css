@@ -1,53 +1,85 @@
 @import "tailwindcss";
 
 @theme {
-    --color-dark-primary: #0b0b10;
-    --color-dark-secondary: #121218;
-    --color-dark-tertiary: #1a1a22;
-    --color-dark-quaternary: #20202a;
-    --color-dark-quinary: #2a2a35;
+    /* 폰트 */
+    --font-sans:
+        var(--font-pretendard), "Pretendard Variable", Pretendard, system-ui,
+        -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 
-    --color-white-primary: #f2f2f5;
-    --color-white-secondary: #a0a0aa;
-    --color-white-tertiary: #666674;
+    /* 배경 / 표면 */
+    --color-bg: #0b0b10;
+    --color-surface: #121218;
+    --color-surface-muted: #1a1a22;
+    --color-divider: #20202a;
+    --color-border: #2a2a35;
 
+    /* 텍스트 */
+    --color-text-primary: #f2f2f5;
+    --color-text-secondary: #a0a0aa;
+    --color-text-disabled: #666674;
+
+    /* 난이도 */
     --color-normal: #6e9a7c;
     --color-hard: #b08a5e;
     --color-expert: #b06565;
     --color-real: #8f7fb8;
+
+    /* 브랜드 */
     --color-discord: #5865f2;
+
+    /* 모서리 */
+    --radius-card: 0.5rem;
 }
 
 @layer base {
+    /* 기본 테두리 색상을 디자인 토큰과 맞춤 */
     *,
     ::after,
     ::before,
     ::backdrop,
     ::file-selector-button {
-        border-color: var(--color-gray-200, currentcolor);
+        border-color: var(--color-border);
+    }
+
+    /* 앱 전체에 다크 테마와 기본 폰트를 적용 */
+    html,
+    body {
+        min-height: 100vh;
+        background: var(--color-bg);
+        color: var(--color-text-primary);
+        font-family: var(--font-sans);
+    }
+
+    /* 폼 요소가 앱 기본 타이포그래피를 상속하도록 맞춤 */
+    button,
+    input,
+    textarea,
+    select {
+        font: inherit;
     }
 }
 
-@utility text-primary {
-    @apply text-white-primary text-2xl font-semibold;
+/* Figma 스타일 가이드 기준 타이포그래피 유틸리티 */
+@utility text-display {
+    @apply text-text-primary text-2xl leading-tight font-semibold;
 }
 
-@utility text-secondary {
-    @apply text-white-primary/95 text-xl font-medium;
+@utility text-title {
+    @apply text-text-primary text-xl leading-snug font-semibold;
 }
 
-@utility text-tertiary {
-    @apply text-white-primary/90 text-lg font-normal;
+@utility text-subtitle {
+    @apply text-text-primary text-lg leading-snug font-medium;
 }
 
-@utility text-quaternary {
-    @apply text-white-primary/85 text-base font-light;
+@utility text-body {
+    @apply text-text-primary text-base leading-relaxed font-normal;
 }
 
-@utility text-quinary {
-    @apply text-white-primary/80 text-sm font-extralight;
+@utility text-body-muted {
+    @apply text-text-secondary text-sm leading-relaxed font-normal;
 }
 
-@utility text-senary {
-    @apply text-white-primary/75 text-xs font-thin;
+@utility text-caption {
+    @apply text-text-secondary text-xs leading-normal font-normal;
 }
