@@ -2,11 +2,12 @@ import BingoPlate from "@/components/bingo/bingoPlate";
 import db from "@/lib/db";
 import getSession from "@/lib/session";
 
-export default async function BingoDetail({
-    params,
-}: {
-    params: { id: string };
-}) {
+export default async function BingoDetail(
+    props: {
+        params: Promise<{ id: string }>;
+    }
+) {
+    const params = await props.params;
     const cells = await db.bingoCell.findMany({
         where: {
             bingo_id: Number(params.id),

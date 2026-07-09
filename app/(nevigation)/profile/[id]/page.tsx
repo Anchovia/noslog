@@ -9,7 +9,8 @@ import {
     getUserData,
 } from "./actions";
 
-export default async function Profile({ params }: { params: { id: string } }) {
+export default async function Profile(props: { params: Promise<{ id: string }> }) {
+    const params = await props.params;
     // params에 id가 아닌 값 들어왔을 때 예외 처리
     const id = Number(params.id);
     if (isNaN(id)) {

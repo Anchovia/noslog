@@ -2,11 +2,12 @@ import MusicDetail from "@/components/music/musicDetail";
 import db from "@/lib/db";
 import { getBasicUserPlayData } from "./action";
 
-export default async function BasicMusicDetail({
-    params,
-}: {
-    params: { index: string; difficulty: string };
-}) {
+export default async function BasicMusicDetail(
+    props: {
+        params: Promise<{ index: string; difficulty: string }>;
+    }
+) {
+    const params = await props.params;
     const music = await db.music.findUnique({
         where: { index: params.index },
         select: {

@@ -18,7 +18,7 @@ const routes: {
     },
 } as const;
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl;
     const session = await getSession();
 

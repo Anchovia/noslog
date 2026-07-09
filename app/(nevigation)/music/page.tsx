@@ -77,11 +77,12 @@ async function getInitialMusics({
     return initialMusics;
 }
 
-export default async function Music({
-    searchParams,
-}: {
-    searchParams: SearchParamsProps;
-}) {
+export default async function Music(
+    props: {
+        searchParams: Promise<SearchParamsProps>;
+    }
+) {
+    const searchParams = await props.searchParams;
     const initialMusics = await getInitialMusics(searchParams);
 
     return (
