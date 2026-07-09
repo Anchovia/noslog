@@ -33,7 +33,15 @@ export function CardTitle({
     className,
     ...props
 }: HTMLAttributes<HTMLHeadingElement>) {
-    return <h2 className={cn("text-title", className)} {...props} />;
+    return (
+        <h2
+            className={cn(
+                "rounded-card border-border bg-surface border p-4",
+                className
+            )}
+            {...props}
+        />
+    );
 }
 
 // 카드 본문 영역
