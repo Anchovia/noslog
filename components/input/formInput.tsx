@@ -20,7 +20,7 @@ const _Input = (
                 id={name}
                 ref={ref}
                 name={name}
-                className="bg-transparent rounded-lg px-4 w-full h-10 focus:outline-none ring-1 focus:ring-4 transition ring-dark-secondary focus:ring-dark-tertiary placeholder:text-white-secondary"
+                className="bg-transparent rounded-lg px-4 w-full h-10 focus:outline-hidden ring-1 focus:ring-4 transition ring-dark-secondary focus:ring-dark-tertiary placeholder:text-white-secondary"
                 {...rest}
             />
             {errors.map((error, index) => (

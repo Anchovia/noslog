@@ -85,7 +85,7 @@ export default async function Music({
     const initialMusics = await getInitialMusics(searchParams);
 
     return (
-        <main className="max-w-screen-sm mx-auto h-full flex flex-col gap-4 min-h-screen">
+        <main className="max-w-(--breakpoint-sm) mx-auto h-full flex flex-col gap-4 min-h-screen">
             <MusicSearch />
             <MusicList
                 initialMusics={initialMusics}

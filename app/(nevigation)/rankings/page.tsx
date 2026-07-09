@@ -18,7 +18,7 @@ export default async function Rankings() {
     });
 
     return (
-        <main className="max-w-screen-md mx-auto p-8 min-h-screen">
+        <main className="max-w-(--breakpoint-md) mx-auto p-8 min-h-screen">
             <h1 className="text-primary">랭킹</h1>
             <div className="flex gap-4">
                 <h2>국가별</h2>

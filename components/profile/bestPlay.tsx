@@ -87,7 +87,7 @@ export default function BestPlay({
                                         height={34}
                                         className={
                                             history.fc_type === 2
-                                                ? `ring-2 ring-offset-1 rounded-full ring-transparent  bg-gradient-to-r from-pink-200 via-purple-200 to-blue-200`
+                                                ? `ring-2 ring-offset-1 rounded-full ring-transparent  bg-linear-to-r from-pink-200 via-purple-200 to-blue-200`
                                                 : undefined
                                         }
                                     />
@@ -154,7 +154,7 @@ export default function BestPlay({
                                         height={34}
                                         className={
                                             history.fc_type === 2
-                                                ? `ring ring-offset-2 ring-transparent rounded-full   bg-gradient-to-r from-pink-200 via-purple-200 to-blue-200`
+                                                ? `ring-3 ring-offset-2 ring-transparent rounded-full   bg-linear-to-r from-pink-200 via-purple-200 to-blue-200`
                                                 : undefined
                                         }
                                     />

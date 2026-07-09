@@ -59,7 +59,7 @@ export default function MusicDetail({
     const [isRecital, setIsRecital] = useState(false);
 
     return (
-        <main className="max-w-screen-sm mx-auto p-8 flex flex-col gap-6">
+        <main className="max-w-(--breakpoint-sm) mx-auto p-8 flex flex-col gap-6">
             {/* 카테고리, 리사이틀 버튼 */}
             <section className="flex justify-between">
                 <article className="px-3 py-1 bg-dark-secondary rounded-full">

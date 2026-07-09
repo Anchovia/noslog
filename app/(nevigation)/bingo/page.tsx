@@ -16,7 +16,7 @@ export default async function Bingo() {
         },
     });
     return (
-        <main className="max-w-screen-md min-h-screen flex flex-col gap-8 p-8 items-center mx-auto">
+        <main className="max-w-(--breakpoint-md) min-h-screen flex flex-col gap-8 p-8 items-center mx-auto">
             <div className="w-full flex justify-between items-center">
                 <h1 className="text-primary">빙고</h1>
             </div>
@@ -36,7 +36,7 @@ export default async function Bingo() {
                         }}
                         className="relative aspect-square rounded-3xl overflow-hidden flex mix-blend-screen ring-2 ring-dark-primary hover:ring-white-secondary ease-in-out transition-shadow"
                     >
-                        <div className="w-full h-full absolute backdrop-blur-0 bg-black/60 blur-sm" />
+                        <div className="w-full h-full absolute backdrop-blur-0 bg-black/60 blur-xs" />
                         <div className="w-full h-full absolute flex items-center justify-center">
                             <div className="w-full flex flex-col items-center p-4 text-center bg-dark-quaternary mix-blend-screen">
                                 <h1 className="text-tertiary">

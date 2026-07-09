@@ -1,24 +1,53 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-@layer utilities {
-    .text-primary {
-        @apply text-2xl font-semibold text-white-primary;
+@theme {
+    --color-dark-primary: #0b0b10;
+    --color-dark-secondary: #121218;
+    --color-dark-tertiary: #1a1a22;
+    --color-dark-quaternary: #20202a;
+    --color-dark-quinary: #2a2a35;
+
+    --color-white-primary: #f2f2f5;
+    --color-white-secondary: #a0a0aa;
+    --color-white-tertiary: #666674;
+
+    --color-normal: #6e9a7c;
+    --color-hard: #b08a5e;
+    --color-expert: #b06565;
+    --color-real: #8f7fb8;
+    --color-discord: #5865f2;
+}
+
+@layer base {
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-gray-200, currentcolor);
     }
-    .text-secondary {
-        @apply text-xl font-medium text-white-primary/95;
-    }
-    .text-tertiary {
-        @apply text-lg font-normal text-white-primary/90;
-    }
-    .text-quaternary {
-        @apply text-base font-light text-white-primary/85;
-    }
-    .text-quinary {
-        @apply text-sm font-extralight text-white-primary/80;
-    }
-    .text-senary {
-        @apply text-xs font-thin text-white-primary/75;
-    }
+}
+
+@utility text-primary {
+    @apply text-2xl font-semibold text-white-primary;
+}
+
+@utility text-secondary {
+    @apply text-xl font-medium text-white-primary/95;
+}
+
+@utility text-tertiary {
+    @apply text-lg font-normal text-white-primary/90;
+}
+
+@utility text-quaternary {
+    @apply text-base font-light text-white-primary/85;
+}
+
+@utility text-quinary {
+    @apply text-sm font-extralight text-white-primary/80;
+}
+
+@utility text-senary {
+    @apply text-xs font-thin text-white-primary/75;
 }

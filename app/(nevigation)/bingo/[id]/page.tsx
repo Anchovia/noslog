@@ -121,7 +121,7 @@ export default async function BingoDetail({
     const currentLines = calculateBingoLines(cells, userClearMap);
 
     return (
-        <main className="p-8 flex flex-col max-w-screen-sm mx-auto items-center justify-center">
+        <main className="p-8 flex flex-col max-w-(--breakpoint-sm) mx-auto items-center justify-center">
             <section className="w-full">
                 <div
                     style={{
@@ -135,7 +135,7 @@ export default async function BingoDetail({
                     }}
                     className="relative flex w-full h-32 items-center justify-center"
                 >
-                    <div className="absolute w-full h-full bg-black/50 backdrop-blur-sm" />
+                    <div className="absolute w-full h-full bg-black/50 backdrop-blur-xs" />
                     <div className="absolute w-full h-full flex flex-col items-center justify-center">
                         <h1 className="bg-black/30 py-3 w-full text-center text-primary">
                             {bingo?.music.title}
