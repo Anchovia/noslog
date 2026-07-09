@@ -94,14 +94,14 @@ export default function ProfileSettingCard({
     }, []);
 
     return (
-        <main className="w-screen flex items-center justify-center py-14 min-h-screen">
+        <main className="flex min-h-screen w-screen items-center justify-center py-14">
             <form
                 action={onValid}
-                className="p-8 flex flex-col items-center justify-center max-w-sm bg-dark-secondary/40 rounded-2xl gap-2"
+                className="bg-dark-secondary/40 flex max-w-sm flex-col items-center justify-center gap-2 rounded-2xl p-8"
             >
                 {/* 아바타 업로드 */}
                 <label
-                    className="size-24 border border-dark-tertiary rounded-full"
+                    className="border-dark-tertiary size-24 rounded-full border"
                     htmlFor="avatar"
                     style={{
                         backgroundImage: `url(${preview})`,
@@ -112,7 +112,7 @@ export default function ProfileSettingCard({
                 >
                     {preview === "" ? (
                         <>
-                            <div className="size-24 border border-dark-tertiary rounded-full" />
+                            <div className="border-dark-tertiary size-24 rounded-full border" />
                         </>
                     ) : null}
                 </label>

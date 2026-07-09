@@ -59,11 +59,11 @@ export default function Statistics({
 
     return (
         <section className="flex flex-col">
-            <h1 className="p-4 text-center bg-dark-quinary text-secondary rounded-t-xl">
+            <h1 className="bg-dark-quinary text-secondary rounded-t-xl p-4 text-center">
                 통계
             </h1>
             {/* 상단 헤더 통계 */}
-            <article className="flex p-4 justify-between *:text-quaternary *:flex *:flex-col bg-dark-tertiary *:text-center">
+            <article className="*:text-quaternary bg-dark-tertiary flex justify-between p-4 *:flex *:flex-col *:text-center">
                 {statsData.map((stat, _) => (
                     <div key={stat.label} className="w-1/3">
                         <span>{stat.label}</span>
@@ -74,13 +74,13 @@ export default function Statistics({
                 ))}
             </article>
             {/* 차트 */}
-            <article className="w-full h-60 bg-dark-secondary">
+            <article className="bg-dark-secondary h-60 w-full">
                 <Chart userBestGrades={userBestGrades} isRecital={isRecital} />
             </article>
             {/* 플레이 횟수, 시간 / 랭크 기록 */}
-            <article className="flex justify-between p-4 bg-dark-tertiary rounded-b-xl gap-2">
+            <article className="bg-dark-tertiary flex justify-between gap-2 rounded-b-xl p-4">
                 {/* 플레이 횟수, 시간 */}
-                <div className="flex flex-col bg-dark-secondary p-4 rounded-xl text-quinary text-left justify-center gap-1 *:text-white-secondary *:flex *:items-center *:gap-1">
+                <div className="bg-dark-secondary text-quinary *:text-white-secondary flex flex-col justify-center gap-1 rounded-xl p-4 text-left *:flex *:items-center *:gap-1">
                     <span>
                         플레이 횟수:{" "}
                         <span className="text-quaternary">
@@ -93,7 +93,7 @@ export default function Statistics({
                     </span>
                 </div>
                 {/* 랭크 기록 */}
-                <div className="p-4 flex flex-1 bg-dark-secondary rounded-xl justify-center gap-4 text-sm *:flex *:flex-col text-white-secondary *:items-center *:justify-center *:text-quinary">
+                <div className="bg-dark-secondary text-white-secondary *:text-quinary flex flex-1 justify-center gap-4 rounded-xl p-4 text-sm *:flex *:flex-col *:items-center *:justify-center">
                     {Object.entries(ranks).map(([key, value]) => (
                         <div key={key}>
                             <Image

@@ -71,14 +71,14 @@ export default function MusicList({
     }, [page]);
 
     return (
-        <section className="px-6 flex flex-col items-center gap-2 w-full h-full">
+        <section className="flex h-full w-full flex-col items-center gap-2 px-6">
             {musics.map((music) => (
                 <MusicCard key={music.index} {...music} />
             ))}
             {!isLastPage ? (
                 <span
                     ref={trigger}
-                    className="text-sm font-semibold bg-dark-tertiary w-fit mx-auto px-3 py-2 rounded-md active:scale-95"
+                    className="bg-dark-tertiary mx-auto w-fit rounded-md px-3 py-2 text-sm font-semibold active:scale-95"
                 >
                     {isLoading ? "로딩 중..." : "더 가져오기"}
                 </span>

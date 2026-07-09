@@ -25,17 +25,17 @@ export default function OverView({
     return (
         <section className="flex flex-col gap-4">
             {/* 프로필, 설정 버튼*/}
-            <article className="flex bg-dark-quinary rounded-t-xl p-4 gap-4">
-                <div className="size-24 rounded-3xl relative overflow-hidden">
+            <article className="bg-dark-quinary flex gap-4 rounded-t-xl p-4">
+                <div className="relative size-24 overflow-hidden rounded-3xl">
                     {userData.avatar ? (
                         <Image src={userData.avatar} alt="avatar" fill />
                     ) : (
                         <div className="bg-neutral-500" />
                     )}
                 </div>
-                <div className="flex flex-col justify-center gap-1 flex-1">
-                    <div className="flex gap-1 items-center">
-                        <div className="relative w-8 h-6 rounded-full  overflow-hidden">
+                <div className="flex flex-1 flex-col justify-center gap-1">
+                    <div className="flex items-center gap-1">
+                        <div className="relative h-6 w-8 overflow-hidden rounded-full">
                             <Image
                                 src={`/flag/${userData.country}.svg`}
                                 alt={userData.country}
@@ -56,7 +56,7 @@ export default function OverView({
                         )}`}</span>
                     )}
                 </div>
-                <div className="flex flex-col justify-between items-end">
+                <div className="flex flex-col items-end justify-between">
                     <Link href={`/profile/settings`}>
                         <Image
                             src="/icon/gear.png"
@@ -78,7 +78,7 @@ export default function OverView({
                 </div>
             </article>
             {/* 소셜(디스코드) */}
-            <article className="-mt-4 flex flex-col text-sm gap-2 bg-dark-tertiary p-4">
+            <article className="bg-dark-tertiary -mt-4 flex flex-col gap-2 p-4 text-sm">
                 <h2 className="text-secondary">소셜</h2>
                 <div className="border border-neutral-700" />
                 <div className="flex gap-2">
@@ -100,12 +100,12 @@ export default function OverView({
                     </span>
                 </div>
             </article>
-            <article className="-mt-4 flex gap-3 bg-dark-secondary p-4 rounded-b-xl text-quinary">
+            <article className="bg-dark-secondary text-quinary -mt-4 flex gap-3 rounded-b-xl p-4">
                 <span>
-                    <span className="font-semibold ">2025년 09월</span> 시작
+                    <span className="font-semibold">2025년 09월</span> 시작
                 </span>
                 <span>
-                    <span className="font-semibold ">7일전</span> 마지막 플레이
+                    <span className="font-semibold">7일전</span> 마지막 플레이
                 </span>
             </article>
         </section>

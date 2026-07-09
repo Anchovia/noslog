@@ -59,10 +59,10 @@ export default function MusicDetail({
     const [isRecital, setIsRecital] = useState(false);
 
     return (
-        <main className="max-w-(--breakpoint-sm) mx-auto p-8 flex flex-col gap-6">
+        <main className="mx-auto flex max-w-(--breakpoint-sm) flex-col gap-6 p-8">
             {/* 카테고리, 리사이틀 버튼 */}
             <section className="flex justify-between">
-                <article className="px-3 py-1 bg-dark-secondary rounded-full">
+                <article className="bg-dark-secondary rounded-full px-3 py-1">
                     {category}
                 </article>
                 <RecitalToggleButton
@@ -80,16 +80,16 @@ export default function MusicDetail({
                 grade_recital={grade_recital}
                 isRecital={isRecital}
             />
-            <div className="border border-dark-secondary" />
+            <div className="border-dark-secondary border" />
             {/* 난이도 링크 */}
             <section className="flex justify-between">
                 {diffArr.map((diff: any, idx: number) =>
                     sheet_len === 3 && idx === 3 ? (
                         <div
                             key={diff}
-                            className={`w-24 h-32 flex flex-col items-center gap-2 ${
+                            className={`flex h-32 w-24 flex-col items-center gap-2 ${
                                 difficulty === diff
-                                    ? "border-b-4 border-dark-tertiary"
+                                    ? "border-dark-tertiary border-b-4"
                                     : null
                             }`}
                         >
@@ -104,7 +104,7 @@ export default function MusicDetail({
                             <span
                                 className={`${
                                     diffColor[diff]
-                                } text-xl font-serif ${
+                                } font-serif text-xl ${
                                     difficulty === diff
                                         ? "font-black"
                                         : "font-normal"
@@ -118,9 +118,9 @@ export default function MusicDetail({
                         <Link
                             key={diff}
                             href={`/music/${index}/${diff}/`}
-                            className={`w-24 h-32 flex flex-col items-center gap-2 ${
+                            className={`flex h-32 w-24 flex-col items-center gap-2 ${
                                 difficulty === diff
-                                    ? "border-b-4 border-dark-tertiary"
+                                    ? "border-dark-tertiary border-b-4"
                                     : null
                             }`}
                         >
@@ -135,7 +135,7 @@ export default function MusicDetail({
                             <span
                                 className={`${
                                     diffColor[diff]
-                                } text-xl font-serif ${
+                                } font-serif text-xl ${
                                     difficulty === diff
                                         ? "font-black"
                                         : "font-normal"
@@ -151,7 +151,7 @@ export default function MusicDetail({
             {/* 플레이어 데이터 */}
             <section className="flex flex-col items-center gap-6">
                 <h1 className="text-2xl">플레이데이터</h1>
-                <article className="flex w-full justify-between items-center gap-4 *:rounded-2xl *:w-full *:aspect-square *:bg-dark-secondary *:flex *:flex-col *:items-center *:justify-center text-lg font-semibold">
+                <article className="*:bg-dark-secondary flex w-full items-center justify-between gap-4 text-lg font-semibold *:flex *:aspect-square *:w-full *:flex-col *:items-center *:justify-center *:rounded-2xl">
                     <div>
                         <span>스코어</span>
                         <span>
@@ -174,7 +174,7 @@ export default function MusicDetail({
                     </div>
                 </article>
             </section>
-            <div className="border border-dark-secondary" />
+            <div className="border-dark-secondary border" />
             {/* 랭킹 */}
             <MusicRankTable
                 basicPlayDatas={basicPlayDatas}

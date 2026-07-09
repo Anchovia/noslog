@@ -18,7 +18,7 @@ export default async function Rankings() {
     });
 
     return (
-        <main className="max-w-(--breakpoint-md) mx-auto p-8 min-h-screen">
+        <main className="mx-auto min-h-screen max-w-(--breakpoint-md) p-8">
             <h1 className="text-primary">랭킹</h1>
             <div className="flex gap-4">
                 <h2>국가별</h2>
@@ -26,7 +26,7 @@ export default async function Rankings() {
                 <span>ja-JP</span>
                 <span>other</span>
             </div>
-            <table className="w-full h-full">
+            <table className="h-full w-full">
                 <thead className="w-full">
                     <tr>
                         <td className="w-1"></td>

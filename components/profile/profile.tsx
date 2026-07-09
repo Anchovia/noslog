@@ -46,7 +46,7 @@ export default function ProfileDetail({
     const [isRecital, setIsRecital] = useState(false);
 
     return (
-        <div className="px-8 py-4 max-w-(--breakpoint-sm) mx-auto flex flex-col gap-4">
+        <div className="mx-auto flex max-w-(--breakpoint-sm) flex-col gap-4 px-8 py-4">
             {/* 타이틀, 리사이틀 버튼 */}
             <section className="flex items-center justify-between">
                 <h1 className="text-tertiary">

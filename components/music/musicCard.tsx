@@ -38,7 +38,7 @@ export default function MusicCard({
             <Link
                 key={index}
                 href={`/music/${index}/Normal`}
-                className="w-full flex bg-dark-secondary rounded-lg overflow-hidden border border-dark-secondary"
+                className="bg-dark-secondary border-dark-secondary flex w-full overflow-hidden rounded-lg border"
             >
                 {/* 자켓 */}
                 <div
@@ -51,27 +51,27 @@ export default function MusicCard({
                         backgroundSize: "cover",
                         backgroundPosition: "center",
                     }}
-                    className="size-24 border-r border-dark-secondary relative"
+                    className="border-dark-secondary relative size-24 border-r"
                 >
                     {/* 카테고리 */}
                     <div
-                        className={`${categoryColor[category_short]} border-8 border-r-transparent border-b-transparent absolute`}
+                        className={`${categoryColor[category_short]} absolute border-8 border-r-transparent border-b-transparent`}
                     />
                 </div>
                 {/* 콘텐츠 */}
-                <div className="flex flex-1 p-3.5 justify-between items-center">
+                <div className="flex flex-1 items-center justify-between p-3.5">
                     {/* 제목, 아티스트 */}
-                    <div className="flex flex-col gap-1.5 flex-1 pr-3">
-                        <h1 className="flex text-white-primary leading-[1.175rem] font-medium">
+                    <div className="flex flex-1 flex-col gap-1.5 pr-3">
+                        <h1 className="text-white-primary flex leading-[1.175rem] font-medium">
                             {title}
                         </h1>
-                        <span className="flex text-xs text-white-secondary font-light">
+                        <span className="text-white-secondary flex text-xs font-light">
                             {artist}
                         </span>
                     </div>
                     {/* 북마크, 난이도 */}
-                    <div className="flex flex-col h-full gap-1.5 justify-end items-center">
-                        <div className="flex text-sm font-medium justify-center items-center w-14 gap-1">
+                    <div className="flex h-full flex-col items-center justify-end gap-1.5">
+                        <div className="flex w-14 items-center justify-center gap-1 text-sm font-medium">
                             {difficulty_levels.split(",").map((level, idx) => (
                                 <div
                                     key={idx}
@@ -81,7 +81,7 @@ export default function MusicCard({
                                 </div>
                             ))}
                             {sheet_len < 4 && (
-                                <div className=" text-real">-</div>
+                                <div className="text-real">-</div>
                             )}
                         </div>
                     </div>

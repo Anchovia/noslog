@@ -39,18 +39,18 @@ export default function RecentPlay({
         setIsLoading(false);
     };
     return (
-        <section className="flex flex-col bg-dark-secondary rounded-xl">
-            <article className="p-4 text-center bg-dark-quinary rounded-t-xl text-secondary">
+        <section className="bg-dark-secondary flex flex-col rounded-xl">
+            <article className="bg-dark-quinary text-secondary rounded-t-xl p-4 text-center">
                 최근 플레이
             </article>
-            <article className="flex flex-col p-4 gap-4 ">
+            <article className="flex flex-col gap-4 p-4">
                 {recentPlays.map((history: any, idx: number) => (
                     <Link
                         href={`/music/${history.music_idx}/${history.difficulty}`}
                         key={idx}
                         className="*:p-3"
                     >
-                        <div className="flex bg-dark-quaternary justify-between items-center rounded-t-xl gap-4">
+                        <div className="bg-dark-quaternary flex items-center justify-between gap-4 rounded-t-xl">
                             <div className="flex gap-2">
                                 <Image
                                     src={`https://p.eagate.573.jp/game/nostalgia/op3/img/pdata/music_data/grade/grade_${history.rank}.png`}
@@ -59,7 +59,7 @@ export default function RecentPlay({
                                     height={34}
                                 />
                             </div>
-                            <div className="flex flex-col gap-0.5 flex-1 text-quinary">
+                            <div className="text-quinary flex flex-1 flex-col gap-0.5">
                                 <span className="text-tertiary">
                                     {history.music.title}
                                 </span>
@@ -75,7 +75,7 @@ export default function RecentPlay({
                                 {formatToGrade(history.grade_basic)} Grd
                             </span>
                         </div>
-                        <div className="bg-dark-tertiary flex justify-between rounded-b-xl items-center">
+                        <div className="bg-dark-tertiary flex items-center justify-between rounded-b-xl">
                             <div className="flex flex-col">
                                 <span className="text-quaternary">
                                     {formatToComma(history.score)}점
@@ -96,7 +96,7 @@ export default function RecentPlay({
                     <button
                         onClick={handleClick}
                         disabled={isLoading}
-                        className="disabled:cursor-not-allowed mx-auto rounded-full px-12 py-1.5 bg-dark-tertiary text-quaternary"
+                        className="bg-dark-tertiary text-quaternary mx-auto rounded-full px-12 py-1.5 disabled:cursor-not-allowed"
                     >
                         더 불러오기
                     </button>

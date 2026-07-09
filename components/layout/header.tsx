@@ -6,7 +6,7 @@ export default async function Header() {
     const user = await getUser();
 
     return (
-        <header className="w-full h-20 flex bg-dark-secondary/50 text-white items-center px-6 *:text-neutral-500">
+        <header className="bg-dark-secondary/50 flex h-20 w-full items-center px-6 text-white *:text-neutral-500">
             <div className="flex flex-1 gap-4 *:relative *:size-8">
                 <Link href="/">
                     <Image src={"/icon/home.png"} alt={"홈"} fill />
@@ -27,14 +27,14 @@ export default async function Header() {
             {user ? (
                 <Link
                     href={`/profile/${user.id}`}
-                    className="size-11 rounded-full overflow-hidden relative"
+                    className="relative size-11 overflow-hidden rounded-full"
                 >
                     <Image src={user!.avatar!} alt="avatar" fill />
                 </Link>
             ) : (
                 <Link
                     href="/login"
-                    className="size-11 bg-slate-600 rounded-full"
+                    className="size-11 rounded-full bg-slate-600"
                 />
             )}
         </header>

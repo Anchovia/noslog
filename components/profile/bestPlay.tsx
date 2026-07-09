@@ -66,11 +66,11 @@ export default function BestPlay({
         setIsLoading(false);
     };
     return (
-        <section className="flex flex-col bg-dark-secondary rounded-xl">
-            <article className="p-4 text-center bg-dark-quinary rounded-t-xl text-secondary">
+        <section className="bg-dark-secondary flex flex-col rounded-xl">
+            <article className="bg-dark-quinary text-secondary rounded-t-xl p-4 text-center">
                 베스트 플레이
             </article>
-            <article className="flex flex-col p-4 gap-4 ">
+            <article className="flex flex-col gap-4 p-4">
                 {isRecital ? (
                     <>
                         {recitalBestPlays.map((history: any, idx: number) => (
@@ -79,7 +79,7 @@ export default function BestPlay({
                                 key={idx}
                                 className="*:p-3"
                             >
-                                <div className="flex bg-dark-quaternary justify-between items-center rounded-t-xl gap-4">
+                                <div className="bg-dark-quaternary flex items-center justify-between gap-4 rounded-t-xl">
                                     <Image
                                         src={`https://p.eagate.573.jp/game/nostalgia/op3/img/pdata/music_data/grade/grade_${history.rank.toLowerCase()}.png`}
                                         alt="123"
@@ -87,11 +87,11 @@ export default function BestPlay({
                                         height={34}
                                         className={
                                             history.fc_type === 2
-                                                ? `ring-2 ring-offset-1 rounded-full ring-transparent  bg-linear-to-r from-pink-200 via-purple-200 to-blue-200`
+                                                ? `rounded-full bg-linear-to-r from-pink-200 via-purple-200 to-blue-200 ring-2 ring-transparent ring-offset-1`
                                                 : undefined
                                         }
                                     />
-                                    <div className="flex flex-col gap-0.5 flex-1 text-quinary">
+                                    <div className="text-quinary flex flex-1 flex-col gap-0.5">
                                         <span className="text-tertiary">
                                             {history.music.title}
                                         </span>
@@ -111,7 +111,7 @@ export default function BestPlay({
                                         Grd
                                     </span>
                                 </div>
-                                <div className="bg-dark-tertiary flex justify-between rounded-b-xl items-center">
+                                <div className="bg-dark-tertiary flex items-center justify-between rounded-b-xl">
                                     <div className="flex flex-col">
                                         <span className="text-quaternary">
                                             {formatToComma(history.score)}점
@@ -132,7 +132,7 @@ export default function BestPlay({
                             <button
                                 onClick={handleClick}
                                 disabled={isLoading}
-                                className="disabled:cursor-not-allowed mx-auto rounded-full px-12 py-1.5 bg-dark-tertiary text-quaternary"
+                                className="bg-dark-tertiary text-quaternary mx-auto rounded-full px-12 py-1.5 disabled:cursor-not-allowed"
                             >
                                 더 불러오기
                             </button>
@@ -146,7 +146,7 @@ export default function BestPlay({
                                 key={idx}
                                 className="*:p-3"
                             >
-                                <div className="flex bg-dark-quaternary justify-between items-center rounded-t-xl gap-4">
+                                <div className="bg-dark-quaternary flex items-center justify-between gap-4 rounded-t-xl">
                                     <Image
                                         src={`https://p.eagate.573.jp/game/nostalgia/op3/img/pdata/music_data/grade/grade_${history.rank.toLowerCase()}.png`}
                                         alt="123"
@@ -154,11 +154,11 @@ export default function BestPlay({
                                         height={34}
                                         className={
                                             history.fc_type === 2
-                                                ? `ring-3 ring-offset-2 ring-transparent rounded-full   bg-linear-to-r from-pink-200 via-purple-200 to-blue-200`
+                                                ? `rounded-full bg-linear-to-r from-pink-200 via-purple-200 to-blue-200 ring-3 ring-transparent ring-offset-2`
                                                 : undefined
                                         }
                                     />
-                                    <div className="flex flex-col gap-0.5 flex-1 text-quinary">
+                                    <div className="text-quinary flex flex-1 flex-col gap-0.5">
                                         <span className="text-tertiary">
                                             {history.music.title}
                                         </span>
@@ -177,7 +177,7 @@ export default function BestPlay({
                                         {formatToGrade(history.grade_basic)} Grd
                                     </span>
                                 </div>
-                                <div className="bg-dark-tertiary flex justify-between rounded-b-xl items-center">
+                                <div className="bg-dark-tertiary flex items-center justify-between rounded-b-xl">
                                     <div className="flex flex-col">
                                         <span className="text-quaternary">
                                             {formatToComma(history.score)}점
@@ -198,7 +198,7 @@ export default function BestPlay({
                             <button
                                 onClick={handleClick}
                                 disabled={isLoading}
-                                className="disabled:cursor-not-allowed mx-auto rounded-full px-12 py-1.5 bg-dark-tertiary text-quaternary"
+                                className="bg-dark-tertiary text-quaternary mx-auto rounded-full px-12 py-1.5 disabled:cursor-not-allowed"
                             >
                                 더 불러오기
                             </button>

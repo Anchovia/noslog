@@ -50,32 +50,32 @@ export default function MusicSearch() {
     console.log(normal, hard, expert, real);
 
     return (
-        <section className="px-6 py-4 bg-dark-secondary">
+        <section className="bg-dark-secondary px-6 py-4">
             <form
                 action={onValid}
                 className="flex flex-col items-center justify-center gap-6 rounded-lg"
             >
                 <input
                     placeholder="검색 입력.."
-                    className="w-full px-6 py-4 bg-white-secondary rounded-xl"
+                    className="bg-white-secondary w-full rounded-xl px-6 py-4"
                     {...register("search")}
                 />
                 {/* 필터 버튼 */}
                 <article
                     onClick={() => setIsFilterOpen((prev) => !prev)}
-                    className="cursor-pointer w-full py-2 flex items-center justify-center bg-dark-quinary"
+                    className="bg-dark-quinary flex w-full cursor-pointer items-center justify-center py-2"
                 >
                     필터
                 </article>
                 {isFilterOpen && (
-                    <article className="w-full flex gap-8 *:flex *:flex-col">
-                        <div className="*:h-6 gap-3">
+                    <article className="flex w-full gap-8 *:flex *:flex-col">
+                        <div className="gap-3 *:h-6">
                             <span>Normal</span>
                             <span>Hard</span>
                             <span>Expert</span>
                             <span>Real</span>
                         </div>
-                        <div className="flex-1 *:h-6 gap-3">
+                        <div className="flex-1 gap-3 *:h-6">
                             <input
                                 id="normal"
                                 min={1}

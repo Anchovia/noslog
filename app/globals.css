@@ -29,25 +29,25 @@
 }
 
 @utility text-primary {
-    @apply text-2xl font-semibold text-white-primary;
+    @apply text-white-primary text-2xl font-semibold;
 }
 
 @utility text-secondary {
-    @apply text-xl font-medium text-white-primary/95;
+    @apply text-white-primary/95 text-xl font-medium;
 }
 
 @utility text-tertiary {
-    @apply text-lg font-normal text-white-primary/90;
+    @apply text-white-primary/90 text-lg font-normal;
 }
 
 @utility text-quaternary {
-    @apply text-base font-light text-white-primary/85;
+    @apply text-white-primary/85 text-base font-light;
 }
 
 @utility text-quinary {
-    @apply text-sm font-extralight text-white-primary/80;
+    @apply text-white-primary/80 text-sm font-extralight;
 }
 
 @utility text-senary {
-    @apply text-xs font-thin text-white-primary/75;
+    @apply text-white-primary/75 text-xs font-thin;
 }

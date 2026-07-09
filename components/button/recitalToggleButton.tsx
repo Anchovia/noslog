@@ -12,16 +12,16 @@ export default function RecitalToggleButton({
     return (
         <div
             onClick={() => setIsRecital((prev: boolean) => !prev)}
-            className="flex gap-2 cursor-pointer"
+            className="flex cursor-pointer gap-2"
         >
             <span>Recital</span>
             <div
-                className={`flex w-10 h-6 rounded-full items-center px-1 transition-all ${
+                className={`flex h-6 w-10 items-center rounded-full px-1 transition-all ${
                     isRecital ? "bg-blue-500" : "bg-dark-secondary"
                 }`}
             >
                 <div
-                    className={`size-4 bg-white-secondary rounded-full transition-all ${
+                    className={`bg-white-secondary size-4 rounded-full transition-all ${
                         isRecital ? "translate-x-4" : "translate-x-0"
                     }`}
                 />

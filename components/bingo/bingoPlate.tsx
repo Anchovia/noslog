@@ -28,23 +28,23 @@ export default function BingoPlate({
 }: BingoPlateProps) {
     const [isCheck, setIsCheck] = useState(false);
     return (
-        <div className=" bg-dark-secondary p-1 flex flex-col gap-2">
-            <section className="flex justify-between w-full items-center px-2.5">
+        <div className="bg-dark-secondary flex flex-col gap-2 p-1">
+            <section className="flex w-full items-center justify-between px-2.5">
                 <h1 className="text-secondary">빙고판</h1>
                 <div
                     onClick={() => {
                         setIsCheck((prev) => !prev);
                     }}
-                    className="flex gap-2 cursor-pointer"
+                    className="flex cursor-pointer gap-2"
                 >
                     <span>선택 전환</span>
                     <div
-                        className={`flex w-10 h-6 rounded-full items-center px-1 transition-all ${
+                        className={`flex h-6 w-10 items-center rounded-full px-1 transition-all ${
                             isCheck ? "bg-blue-500" : "bg-dark-secondary"
                         }`}
                     >
                         <div
-                            className={`size-4 bg-white-secondary rounded-full transition-all ${
+                            className={`bg-white-secondary size-4 rounded-full transition-all ${
                                 isCheck ? "translate-x-4" : "translate-x-0"
                             }`}
                         />
@@ -55,11 +55,11 @@ export default function BingoPlate({
                 {cells.map((cell, _) => (
                     <div
                         key={cell.position}
-                        className="relative w-full text-xs border aspect-square text-center *:p-2 *:flex *:items-center *:justify-center *:aspect-square bg-dark-primary"
+                        className="bg-dark-primary relative aspect-square w-full border text-center text-xs *:flex *:aspect-square *:items-center *:justify-center *:p-2"
                     >
                         {/* 빙고 클리어 absolute */}
                         {userClearMap.get(cell.id) === true && (
-                            <div className="absolute w-full h-full border-4 border-red-500 z-10" />
+                            <div className="absolute z-10 h-full w-full border-4 border-red-500" />
                         )}
                         {/* 빙고 클리어 체크모드 absolute */}
                         {isCheck && (
@@ -70,7 +70,7 @@ export default function BingoPlate({
                                         user_id ? user_id : 1
                                     );
                                 }}
-                                className={`cursor-pointer absolute w-full h-full border-2 z-20 ${
+                                className={`absolute z-20 h-full w-full cursor-pointer border-2 ${
                                     userClearMap.get(cell.id) === true &&
                                     "border-red-500"
                                 }`}

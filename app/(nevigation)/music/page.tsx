@@ -77,16 +77,14 @@ async function getInitialMusics({
     return initialMusics;
 }
 
-export default async function Music(
-    props: {
-        searchParams: Promise<SearchParamsProps>;
-    }
-) {
+export default async function Music(props: {
+    searchParams: Promise<SearchParamsProps>;
+}) {
     const searchParams = await props.searchParams;
     const initialMusics = await getInitialMusics(searchParams);
 
     return (
-        <main className="max-w-(--breakpoint-sm) mx-auto h-full flex flex-col gap-4 min-h-screen">
+        <main className="mx-auto flex h-full min-h-screen max-w-(--breakpoint-sm) flex-col gap-4">
             <MusicSearch />
             <MusicList
                 initialMusics={initialMusics}

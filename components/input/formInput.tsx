@@ -20,11 +20,11 @@ const _Input = (
                 id={name}
                 ref={ref}
                 name={name}
-                className="bg-transparent rounded-lg px-4 w-full h-10 focus:outline-hidden ring-1 focus:ring-4 transition ring-dark-secondary focus:ring-dark-tertiary placeholder:text-white-secondary"
+                className="ring-dark-secondary focus:ring-dark-tertiary placeholder:text-white-secondary h-10 w-full rounded-lg bg-transparent px-4 ring-1 transition focus:ring-4 focus:outline-hidden"
                 {...rest}
             />
             {errors.map((error, index) => (
-                <span key={index} className="text-red-500 font-medium">
+                <span key={index} className="font-medium text-red-500">
                     {error}
                 </span>
             ))}

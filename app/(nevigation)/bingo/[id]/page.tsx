@@ -2,11 +2,9 @@ import BingoPlate from "@/components/bingo/bingoPlate";
 import db from "@/lib/db";
 import getSession from "@/lib/session";
 
-export default async function BingoDetail(
-    props: {
-        params: Promise<{ id: string }>;
-    }
-) {
+export default async function BingoDetail(props: {
+    params: Promise<{ id: string }>;
+}) {
     const params = await props.params;
     const cells = await db.bingoCell.findMany({
         where: {
@@ -122,7 +120,7 @@ export default async function BingoDetail(
     const currentLines = calculateBingoLines(cells, userClearMap);
 
     return (
-        <main className="p-8 flex flex-col max-w-(--breakpoint-sm) mx-auto items-center justify-center">
+        <main className="mx-auto flex max-w-(--breakpoint-sm) flex-col items-center justify-center p-8">
             <section className="w-full">
                 <div
                     style={{
@@ -134,27 +132,27 @@ export default async function BingoDetail(
                         backgroundSize: "cover",
                         backgroundPosition: "center",
                     }}
-                    className="relative flex w-full h-32 items-center justify-center"
+                    className="relative flex h-32 w-full items-center justify-center"
                 >
-                    <div className="absolute w-full h-full bg-black/50 backdrop-blur-xs" />
-                    <div className="absolute w-full h-full flex flex-col items-center justify-center">
-                        <h1 className="bg-black/30 py-3 w-full text-center text-primary">
+                    <div className="absolute h-full w-full bg-black/50 backdrop-blur-xs" />
+                    <div className="absolute flex h-full w-full flex-col items-center justify-center">
+                        <h1 className="text-primary w-full bg-black/30 py-3 text-center">
                             {bingo?.music.title}
                         </h1>
                     </div>
                 </div>
-                <div className="bg-dark-secondary border-b border-dark-tertiary flex flex-col p-4 gap-4">
+                <div className="bg-dark-secondary border-dark-tertiary flex flex-col gap-4 border-b p-4">
                     <div className="flex flex-col gap-1">
                         <span className="text-quinary">Description</span>
                         <span className="text-secondary">
                             {bingo?.music.description}
                         </span>
                     </div>
-                    <div className="flex justify-between items-end">
+                    <div className="flex items-end justify-between">
                         <span className="text-tertiary">
                             보상: {bingo?.nos}nos
                         </span>
-                        <div className="flex flex-col text-right text-quaternary">
+                        <div className="text-quaternary flex flex-col text-right">
                             <span>필요 줄 수: {bingo?.line}</span>
                             <span>현재 줄 수: {currentLines}</span>
                         </div>

@@ -35,8 +35,19 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-/app/generated/prisma
-
 .env
 *.db
 *.db-journal
+
+# logs
+logs
+*.log
+pnpm-debug.log*
+
+# env
+.env
+.env.*
+!.env.example
+
+# prisma generated temp files
+lib/generated/prisma/*.tmp*

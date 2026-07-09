@@ -16,11 +16,11 @@ export default async function Bingo() {
         },
     });
     return (
-        <main className="max-w-(--breakpoint-md) min-h-screen flex flex-col gap-8 p-8 items-center mx-auto">
-            <div className="w-full flex justify-between items-center">
+        <main className="mx-auto flex min-h-screen max-w-(--breakpoint-md) flex-col items-center gap-8 p-8">
+            <div className="flex w-full items-center justify-between">
                 <h1 className="text-primary">빙고</h1>
             </div>
-            <div className="w-full grid grid-cols-2 gap-4">
+            <div className="grid w-full grid-cols-2 gap-4">
                 {bingos.map((bingo, idx) => (
                     <Link
                         key={idx}
@@ -34,11 +34,11 @@ export default async function Bingo() {
                             backgroundSize: "cover",
                             backgroundPosition: "center",
                         }}
-                        className="relative aspect-square rounded-3xl overflow-hidden flex mix-blend-screen ring-2 ring-dark-primary hover:ring-white-secondary ease-in-out transition-shadow"
+                        className="ring-dark-primary hover:ring-white-secondary relative flex aspect-square overflow-hidden rounded-3xl mix-blend-screen ring-2 transition-shadow ease-in-out"
                     >
-                        <div className="w-full h-full absolute backdrop-blur-0 bg-black/60 blur-xs" />
-                        <div className="w-full h-full absolute flex items-center justify-center">
-                            <div className="w-full flex flex-col items-center p-4 text-center bg-dark-quaternary mix-blend-screen">
+                        <div className="backdrop-blur-0 absolute h-full w-full bg-black/60 blur-xs" />
+                        <div className="absolute flex h-full w-full items-center justify-center">
+                            <div className="bg-dark-quaternary flex w-full flex-col items-center p-4 text-center mix-blend-screen">
                                 <h1 className="text-tertiary">
                                     {bingo.music.title}
                                 </h1>
