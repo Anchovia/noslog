@@ -88,25 +88,29 @@
 
 /* Figma 스타일 가이드 기준 타이포그래피 유틸리티 */
 @utility text-display {
-    @apply text-text-primary text-2xl leading-tight font-semibold;
+    @apply text-text-primary text-2xl leading-tight font-bold;
 }
 
 @utility text-title {
-    @apply text-text-primary text-xl leading-snug font-semibold;
+    @apply text-text-primary text-xl leading-snug font-bold;
 }
 
-@utility text-subtitle {
-    @apply text-text-primary text-lg leading-snug font-medium;
+@utility text-section {
+    @apply text-text-primary text-base leading-snug font-semibold;
 }
 
 @utility text-body {
-    @apply text-text-primary text-base leading-relaxed font-normal;
-}
-
-@utility text-body-muted {
-    @apply text-text-secondary text-sm leading-relaxed font-normal;
+    @apply text-text-primary text-sm leading-relaxed font-medium;
 }
 
 @utility text-caption {
     @apply text-text-secondary text-xs leading-normal font-normal;
+}
+
+@utility text-badge {
+    @apply text-xs leading-none font-extrabold;
+}
+
+@utility text-input {
+    @apply text-text-primary text-base leading-normal font-medium;
 }

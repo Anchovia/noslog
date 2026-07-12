@@ -34,13 +34,7 @@ export function CardTitle({
     ...props
 }: HTMLAttributes<HTMLHeadingElement>) {
     return (
-        <h2
-            className={cn(
-                "rounded-card border-border bg-surface border p-4",
-                className
-            )}
-            {...props}
-        />
+        <h2 className={cn("text-section font-bold", className)} {...props} />
     );
 }
 

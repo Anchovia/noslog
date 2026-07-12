@@ -16,7 +16,7 @@ export default async function Header() {
     return (
         <header className="border-divider bg-surface flex min-h-14 items-center border-b px-4">
             <Link href="/" className="flex shrink-0 items-center gap-2">
-                <span className="text-text-primary text-base font-bold tracking-normal">
+                <span className="text-text-primary text-[17px] font-bold tracking-normal">
                     NosLog
                 </span>
             </Link>

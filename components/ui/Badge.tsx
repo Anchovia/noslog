@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 
 // 공통 배지 스타일과 variant를 한곳에서 관리함
 const badgeVariants = cva(
-    "inline-flex h-6 items-center rounded-card px-2 text-xs font-extrabold",
+    "inline-flex h-6 items-center rounded-card px-2 text-badge",
     {
         variants: {
             variant: {
