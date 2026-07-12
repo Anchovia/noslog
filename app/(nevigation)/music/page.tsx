@@ -1,5 +1,6 @@
 import MusicList from "@/components/music/musicList";
 import MusicSearch from "@/components/music/musicSearch";
+import MusicToolbar from "@/components/music/musicToolbar";
 import db from "@/lib/db";
 import { buildMusicWhere, type MusicSearchParams } from "./query";
 
@@ -35,12 +36,11 @@ export default async function Music(props: {
             <header className="flex items-center justify-between">
                 <h1 className="text-title">악곡</h1>
             </header>
-
             <MusicSearch
                 key={`search-${searchKey}`}
                 searchParams={searchParams}
             />
-
+            <MusicToolbar />
             <MusicList
                 key={`list-${searchKey}`}
                 initialMusics={initialMusics}
