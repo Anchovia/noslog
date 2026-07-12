@@ -1,6 +1,5 @@
-import MusicList from "@/components/music/musicList";
+import MusicResults from "@/components/music/musicResults";
 import MusicSearch from "@/components/music/musicSearch";
-import MusicToolbar from "@/components/music/musicToolbar";
 import db from "@/lib/db";
 import { buildMusicWhere, type MusicSearchParams } from "./query";
 
@@ -40,9 +39,8 @@ export default async function Music(props: {
                 key={`search-${searchKey}`}
                 searchParams={searchParams}
             />
-            <MusicToolbar />
-            <MusicList
-                key={`list-${searchKey}`}
+            <MusicResults
+                key={`results-${searchKey}`}
                 initialMusics={initialMusics}
                 searchParams={searchParams}
             />

@@ -1,23 +1,31 @@
 "use client";
 
 import { Grid2X2, List } from "lucide-react";
-import { useState } from "react";
 
 import { cn } from "@/lib/utils";
 
-type SortMode = "name" | "level";
-type ViewMode = "list" | "grid";
+export type SortMode = "name" | "level";
+export type ViewMode = "list" | "grid";
 
-export default function MusicToolbar() {
-    const [sortMode, setSortMode] = useState<SortMode>("name");
-    const [viewMode, setViewMode] = useState<ViewMode>("list");
+interface MusicToolbarProps {
+    sortMode: SortMode;
+    viewMode: ViewMode;
+    onSortModeChange: (mode: SortMode) => void;
+    onViewModeChange: (mode: ViewMode) => void;
+}
 
+export default function MusicToolbar({
+    sortMode,
+    viewMode,
+    onSortModeChange,
+    onViewModeChange,
+}: MusicToolbarProps) {
     return (
         <section className="flex items-center justify-between">
             <div className="border-border rounded-card flex h-6 overflow-hidden border">
                 <button
                     type="button"
-                    onClick={() => setSortMode("name")}
+                    onClick={() => onSortModeChange("name")}
                     className={cn(
                         "px-3 text-xs leading-none transition-colors",
                         sortMode === "name"
@@ -29,7 +37,7 @@ export default function MusicToolbar() {
                 </button>
                 <button
                     type="button"
-                    onClick={() => setSortMode("level")}
+                    onClick={() => onSortModeChange("level")}
                     className={cn(
                         "px-3 text-xs leading-none transition-colors",
                         sortMode === "level"
@@ -45,7 +53,8 @@ export default function MusicToolbar() {
                 <button
                     type="button"
                     aria-label="리스트 보기"
-                    onClick={() => setViewMode("list")}
+                    aria-pressed={viewMode === "list"}
+                    onClick={() => onViewModeChange("list")}
                     className={cn(
                         "flex w-7 items-center justify-center transition-colors",
                         viewMode === "list"
@@ -57,8 +66,9 @@ export default function MusicToolbar() {
                 </button>
                 <button
                     type="button"
-                    aria-label="카드 보기"
-                    onClick={() => setViewMode("grid")}
+                    aria-label="그리드 보기"
+                    aria-pressed={viewMode === "grid"}
+                    onClick={() => onViewModeChange("grid")}
                     className={cn(
                         "flex w-7 items-center justify-center transition-colors",
                         viewMode === "grid"
