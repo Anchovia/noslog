@@ -1,8 +1,27 @@
+import db from "@/lib/db";
 import { getUser } from "@/lib/user";
+import { formatToGrade } from "@/lib/utils";
 import Link from "next/link";
 
 export default async function Home() {
     const user = await getUser();
+
+    const rankingUsers = await db.user.findMany({
+        select: {
+            id: true,
+            username: true,
+            grade_basic: true,
+        },
+        where: {
+            grade_basic: {
+                not: null,
+            },
+        },
+        orderBy: {
+            grade_basic: "desc",
+        },
+        take: 5,
+    });
 
     return (
         <main className="flex flex-col gap-4 px-4 py-4">
@@ -21,7 +40,7 @@ export default async function Home() {
                 )}
             </section>
             {/* 히어로 + 검색 */}
-            <section className="flex flex-col items-center gap-4 pt-8 text-center">
+            <section className="flex flex-col items-center gap-4 py-2 text-center">
                 <div className="flex flex-col items-center gap-3">
                     <div className="border-text-primary text-text-primary flex size-11 items-center justify-center rounded-full border-2 text-lg font-bold">
                         N
@@ -110,6 +129,64 @@ export default async function Home() {
                 </div>
                 <span className="text-text-disabled text-base">›</span>
             </Link>
+            {/* 랭킹 카드 */}
+            <section className="bg-surface rounded-card overflow-hidden">
+                <div className="bg-surface-muted flex h-10 items-center justify-between px-3">
+                    <div className="flex items-center gap-2">
+                        <h2 className="text-section">유저 랭킹</h2>
+
+                        <div className="border-border rounded-card flex overflow-hidden border">
+                            <span className="bg-border text-text-primary px-2 py-1 text-[10px] font-medium">
+                                Basic
+                            </span>
+                            <span className="text-text-secondary px-2 py-1 text-[10px] font-medium">
+                                Recital
+                            </span>
+                        </div>
+                    </div>
+
+                    <Link
+                        href="/rankings"
+                        className="text-caption hover:text-text-primary transition-colors"
+                    >
+                        전체 →
+                    </Link>
+                </div>
+
+                <div>
+                    {rankingUsers.map((rankingUser, index) => (
+                        <Link
+                            key={rankingUser.id}
+                            href={`/profile/${rankingUser.id}`}
+                            className="border-divider flex h-10 items-center border-t px-3"
+                        >
+                            <span
+                                className={
+                                    index === 0
+                                        ? "text-score w-8 text-sm font-bold"
+                                        : index === 2
+                                          ? "text-bronze w-8 text-sm font-bold"
+                                          : index >= 3
+                                            ? "text-text-disabled w-8 text-sm font-bold"
+                                            : "text-text-primary w-8 text-sm font-bold"
+                                }
+                            >
+                                {index + 1}
+                            </span>
+
+                            <span className="bg-surface-muted mr-3 h-2.5 w-4 shrink-0" />
+
+                            <span className="text-body flex-1 truncate">
+                                {rankingUser.username ?? "Unknown"}
+                            </span>
+
+                            <span className="text-caption text-text-primary tabular-nums">
+                                Grd {formatToGrade(rankingUser.grade_basic)}
+                            </span>
+                        </Link>
+                    ))}
+                </div>
+            </section>
         </main>
     );
 }
