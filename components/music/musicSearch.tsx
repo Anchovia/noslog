@@ -18,9 +18,11 @@ export default function MusicSearch() {
     });
 
     const onSubmit = handleSubmit(async (data: searchType) => {
+        const search = data.search?.trim() ?? "";
+
         const url =
             "music?" +
-            (data.search !== "" ? `&qurry=${data.search}` : "") +
+            (search !== "" ? `&q=${encodeURIComponent(search)}` : "") +
             (normal !== "" ? `&normal=${normal}` : "") +
             (hard !== "" ? `&hard=${hard}` : "") +
             (expert !== "" ? `&expert=${expert}` : "") +
@@ -28,6 +30,7 @@ export default function MusicSearch() {
 
         redirect(url);
     });
+
     const onValid = async () => {
         await onSubmit();
     };
@@ -46,8 +49,6 @@ export default function MusicSearch() {
             setReal(e.target.value);
         }
     };
-
-    console.log(normal, hard, expert, real);
 
     return (
         <section className="bg-dark-secondary px-6 py-4">

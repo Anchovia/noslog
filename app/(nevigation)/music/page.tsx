@@ -4,7 +4,7 @@ import db from "@/lib/db";
 import { revalidatePath } from "next/cache";
 
 interface SearchParamsProps {
-    qurry?: string;
+    q?: string;
     normal?: string;
     hard?: string;
     expert?: string;
@@ -12,7 +12,7 @@ interface SearchParamsProps {
 }
 
 async function getInitialMusics({
-    qurry,
+    q,
     normal,
     hard,
     expert,
@@ -22,11 +22,11 @@ async function getInitialMusics({
     const initialMusics = await db.music.findMany({
         where: {
             AND: [
-                qurry
+                q
                     ? {
                           OR: [
-                              { title: { contains: qurry } },
-                              { artist: { contains: qurry } },
+                              { title: { contains: q } },
+                              { artist: { contains: q } },
                           ],
                       }
                     : {},

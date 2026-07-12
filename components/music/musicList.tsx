@@ -15,7 +15,7 @@ interface MusicListProps {
         difficulty_levels: string;
     }[];
     searchParams: {
-        qurry?: string;
+        q?: string;
         normal?: string;
         hard?: string;
         expert?: string;

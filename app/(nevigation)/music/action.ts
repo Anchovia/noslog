@@ -3,7 +3,7 @@
 import db from "@/lib/db";
 
 interface SearchParamsProps {
-    qurry?: string;
+    q?: string;
     normal?: string;
     hard?: string;
     expert?: string;
@@ -12,16 +12,16 @@ interface SearchParamsProps {
 
 export async function getMoreMusics(
     page: number,
-    { qurry, normal, hard, expert, real }: SearchParamsProps
+    { q, normal, hard, expert, real }: SearchParamsProps
 ) {
     const musics = await db.music.findMany({
         where: {
             AND: [
-                qurry
+                q
                     ? {
                           OR: [
-                              { title: { contains: qurry } },
-                              { artist: { contains: qurry } },
+                              { title: { contains: q } },
+                              { artist: { contains: q } },
                           ],
                       }
                     : {},
