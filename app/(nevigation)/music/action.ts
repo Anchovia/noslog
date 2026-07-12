@@ -1,62 +1,14 @@
 "use server";
 
 import db from "@/lib/db";
-
-interface SearchParamsProps {
-    q?: string;
-    normal?: string;
-    hard?: string;
-    expert?: string;
-    real?: string;
-}
+import { buildMusicWhere, type MusicSearchParams } from "./query";
 
 export async function getMoreMusics(
     page: number,
-    { q, normal, hard, expert, real }: SearchParamsProps
+    searchParams: MusicSearchParams
 ) {
-    const musics = await db.music.findMany({
-        where: {
-            AND: [
-                q
-                    ? {
-                          OR: [
-                              { title: { contains: q } },
-                              { artist: { contains: q } },
-                          ],
-                      }
-                    : {},
-                normal
-                    ? {
-                          normal: {
-                              equals: parseInt(normal),
-                          },
-                      }
-                    : {},
-                hard
-                    ? {
-                          hard: {
-                              equals: parseInt(hard),
-                          },
-                      }
-                    : {},
-                expert
-                    ? {
-                          expert: {
-                              equals: parseInt(expert),
-                          },
-                      }
-                    : {},
-
-                real
-                    ? {
-                          real: {
-                              equals: parseInt(real),
-                              not: null,
-                          },
-                      }
-                    : {},
-            ],
-        },
+    return db.music.findMany({
+        where: buildMusicWhere(searchParams),
         select: {
             index: true,
             title: true,
@@ -65,9 +17,12 @@ export async function getMoreMusics(
             background: true,
             sheet_len: true,
             difficulty_levels: true,
+            normal: true,
+            hard: true,
+            expert: true,
+            real: true,
         },
         skip: page * 20,
         take: 20,
     });
-    return musics;
 }
