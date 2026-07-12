@@ -1,14 +1,16 @@
 "use client";
 
-import { Grid2X2, List } from "lucide-react";
+import { ArrowDown, ArrowUp, Grid2X2, List } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
 export type SortMode = "name" | "level";
+export type SortOrder = "asc" | "desc";
 export type ViewMode = "list" | "grid";
 
 interface MusicToolbarProps {
     sortMode: SortMode;
+    sortOrder: SortOrder;
     viewMode: ViewMode;
     onSortModeChange: (mode: SortMode) => void;
     onViewModeChange: (mode: ViewMode) => void;
@@ -16,10 +18,13 @@ interface MusicToolbarProps {
 
 export default function MusicToolbar({
     sortMode,
+    sortOrder,
     viewMode,
     onSortModeChange,
     onViewModeChange,
 }: MusicToolbarProps) {
+    const SortArrow = sortOrder === "asc" ? ArrowUp : ArrowDown;
+
     return (
         <section className="flex items-center justify-between">
             <div className="border-border rounded-card flex h-6 overflow-hidden border">
@@ -27,25 +32,27 @@ export default function MusicToolbar({
                     type="button"
                     onClick={() => onSortModeChange("name")}
                     className={cn(
-                        "px-3 text-xs leading-none transition-colors",
+                        "flex items-center gap-1 px-3 text-xs leading-none transition-colors",
                         sortMode === "name"
                             ? "bg-border text-text-primary"
                             : "text-text-secondary"
                     )}
                 >
-                    이름순
+                    <span>이름순</span>
+                    {sortMode === "name" && <SortArrow size={12} />}
                 </button>
                 <button
                     type="button"
                     onClick={() => onSortModeChange("level")}
                     className={cn(
-                        "px-3 text-xs leading-none transition-colors",
+                        "flex items-center gap-1 px-3 text-xs leading-none transition-colors",
                         sortMode === "level"
                             ? "bg-border text-text-primary"
                             : "text-text-secondary"
                     )}
                 >
-                    레벨순
+                    <span>레벨순</span>
+                    {sortMode === "level" && <SortArrow size={12} />}
                 </button>
             </div>
 

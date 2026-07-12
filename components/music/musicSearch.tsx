@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as Slider from "@radix-ui/react-slider";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
 const categories = [
@@ -117,6 +117,13 @@ function parseEnabled(value: string | undefined, fallback = false) {
     return value === "true";
 }
 
+function hasExplicitDifficulty(searchParams: MusicSearchParams) {
+    return ["normal", "hard", "expert", "real"].some(
+        (difficulty) =>
+            searchParams[difficulty as keyof MusicSearchParams] !== undefined
+    );
+}
+
 function parseRange(
     min: string | undefined,
     max: string | undefined,
@@ -133,6 +140,8 @@ function parseRange(
 
 export default function MusicSearch({ searchParams }: MusicSearchProps) {
     const router = useRouter();
+    const hasDifficulty = hasExplicitDifficulty(searchParams);
+    const rangeUpdateTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [selectedCategories, setSelectedCategories] = useState<Category[]>(
@@ -142,7 +151,7 @@ export default function MusicSearch({ searchParams }: MusicSearchProps) {
         useState<DifficultyState>(() => ({
             normal: parseEnabled(searchParams.normal),
             hard: parseEnabled(searchParams.hard),
-            expert: parseEnabled(searchParams.expert, true),
+            expert: parseEnabled(searchParams.expert, !hasDifficulty),
             real: parseEnabled(searchParams.real),
         }));
     const [difficultyRanges, setDifficultyRanges] = useState<DifficultyRanges>(
@@ -170,28 +179,92 @@ export default function MusicSearch({ searchParams }: MusicSearchProps) {
         })
     );
 
-    const { register, handleSubmit } = useForm<searchType>({
+    const { register, handleSubmit, getValues } = useForm<searchType>({
         resolver: zodResolver(searchSchema),
         defaultValues: {
             search: searchParams.q ?? "",
         },
     });
 
-    const handleCategoryToggle = (category: Category) => {
-        setSelectedCategories((prev) => {
-            if (prev.includes(category)) {
-                return prev.filter((item) => item !== category);
+    useEffect(() => {
+        return () => {
+            if (rangeUpdateTimer.current) {
+                clearTimeout(rangeUpdateTimer.current);
+            }
+        };
+    }, []);
+
+    const navigateWithFilters = (
+        categories: Category[],
+        difficultyState: DifficultyState,
+        ranges: DifficultyRanges,
+        searchValue = getValues("search")?.trim() ?? ""
+    ) => {
+        const params = new URLSearchParams();
+
+        if (searchValue !== "") {
+            params.set("q", searchValue);
+        }
+
+        if (categories.length > 0) {
+            params.set("categories", categories.join(","));
+        }
+
+        difficulties.forEach((difficulty) => {
+            const isSelected = difficultyState[difficulty.value];
+
+            params.set(difficulty.value, String(isSelected));
+
+            if (!isSelected) {
+                return;
             }
 
-            return [...prev, category];
+            const range = ranges[difficulty.value];
+
+            params.set(difficulty.minParam, String(range[0]));
+            params.set(difficulty.maxParam, String(range[1]));
         });
+
+        if (searchParams.sort) {
+            params.set("sort", searchParams.sort);
+        }
+
+        if (searchParams.order) {
+            params.set("order", searchParams.order);
+        }
+
+        if (searchParams.view) {
+            params.set("view", searchParams.view);
+        }
+
+        router.replace(`/music?${params.toString()}`, { scroll: false });
+    };
+
+    const handleCategoryToggle = (category: Category) => {
+        const nextCategories = selectedCategories.includes(category)
+            ? selectedCategories.filter((item) => item !== category)
+            : [...selectedCategories, category];
+
+        setSelectedCategories(nextCategories);
+        navigateWithFilters(
+            nextCategories,
+            selectedDifficulties,
+            difficultyRanges
+        );
     };
 
     const handleDifficultyToggle = (difficulty: Difficulty) => {
-        setSelectedDifficulties((prev) => ({
-            ...prev,
-            [difficulty]: !prev[difficulty],
-        }));
+        const nextDifficulties = {
+            ...selectedDifficulties,
+            [difficulty]: !selectedDifficulties[difficulty],
+        };
+
+        setSelectedDifficulties(nextDifficulties);
+        navigateWithFilters(
+            selectedCategories,
+            nextDifficulties,
+            difficultyRanges
+        );
     };
 
     const handleRangeChange = (
@@ -199,37 +272,61 @@ export default function MusicSearch({ searchParams }: MusicSearchProps) {
         value: number[],
         fallbackMax: number
     ) => {
-        setDifficultyRanges((prev) => ({
-            ...prev,
+        const nextRanges = {
+            ...difficultyRanges,
             [difficulty]: [value[0] ?? 1, value[1] ?? fallbackMax],
-        }));
+        } as DifficultyRanges;
+
+        setDifficultyRanges(nextRanges);
+
+        if (rangeUpdateTimer.current) {
+            clearTimeout(rangeUpdateTimer.current);
+        }
+
+        rangeUpdateTimer.current = setTimeout(() => {
+            navigateWithFilters(
+                selectedCategories,
+                selectedDifficulties,
+                nextRanges
+            );
+        }, 200);
+    };
+
+    const handleRangeCommit = (
+        difficulty: Difficulty,
+        value: number[],
+        fallbackMax: number
+    ) => {
+        if (rangeUpdateTimer.current) {
+            clearTimeout(rangeUpdateTimer.current);
+            rangeUpdateTimer.current = null;
+        }
+
+        const nextRanges = {
+            ...difficultyRanges,
+            [difficulty]: [value[0] ?? 1, value[1] ?? fallbackMax] as [
+                number,
+                number,
+            ],
+        };
+
+        setDifficultyRanges(nextRanges);
+        navigateWithFilters(
+            selectedCategories,
+            selectedDifficulties,
+            nextRanges
+        );
     };
 
     const onSubmit = handleSubmit((data: searchType) => {
         const search = data.search?.trim() ?? "";
-        const params = new URLSearchParams();
 
-        if (search !== "") {
-            params.set("q", search);
-        }
-
-        if (selectedCategories.length > 0) {
-            params.set("categories", selectedCategories.join(","));
-        }
-
-        difficulties.forEach((difficulty) => {
-            if (!selectedDifficulties[difficulty.value]) {
-                return;
-            }
-
-            const range = difficultyRanges[difficulty.value];
-
-            params.set(difficulty.value, "true");
-            params.set(difficulty.minParam, String(range[0]));
-            params.set(difficulty.maxParam, String(range[1]));
-        });
-
-        router.push(`/music?${params.toString()}`);
+        navigateWithFilters(
+            selectedCategories,
+            selectedDifficulties,
+            difficultyRanges,
+            search
+        );
     });
 
     return (
@@ -358,6 +455,13 @@ export default function MusicSearch({ searchParams }: MusicSearchProps) {
                                         minStepsBetweenThumbs={0}
                                         onValueChange={(value) =>
                                             handleRangeChange(
+                                                difficulty.value,
+                                                value,
+                                                difficulty.max
+                                            )
+                                        }
+                                        onValueCommit={(value) =>
+                                            handleRangeCommit(
                                                 difficulty.value,
                                                 value,
                                                 difficulty.max

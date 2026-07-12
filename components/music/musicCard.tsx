@@ -100,12 +100,14 @@ export default function MusicCard(props: MusicCardProps) {
                     <h2 className="text-text-primary truncate text-sm leading-snug font-semibold">
                         {title}
                     </h2>
-                    <p className="truncate text-xs leading-normal">
-                        <span className="text-text-secondary">
+                    <p className="flex min-w-0 items-center text-xs leading-normal">
+                        <span className="text-text-secondary truncate">
                             {artist || "아티스트 미상"}
                         </span>
-                        <span className="text-text-disabled"> · </span>
-                        <span className={categoryClassName.text}>
+                        <span className="text-text-disabled shrink-0"> · </span>
+                        <span
+                            className={cn("shrink-0", categoryClassName.text)}
+                        >
                             {category_short}
                         </span>
                     </p>
