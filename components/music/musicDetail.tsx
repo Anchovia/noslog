@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Play, ScanSearch } from "lucide-react";
 import MusicRankTable from "./musicRankTable";
+import MusicTierVote from "./musicTierVote";
 import PatternProfileChart from "./patternProfileChart";
 import ScoreTrend from "./scoreTrend";
 
@@ -103,6 +104,38 @@ interface MusicDetailProps {
         totalCount: number;
         userRank: number | null;
     };
+    tier: {
+        constantHistory: {
+            id: number;
+            value: number;
+            effectiveAt: string;
+        }[];
+        community: {
+            average: number | null;
+            count: number;
+            distribution: { value: number; count: number }[];
+        };
+        currentEvaluation: {
+            perceived_constant: number;
+            stairs: number;
+            chord: number;
+            trill: number;
+            glissando: number;
+            repetition: number;
+            comment: string | null;
+        } | null;
+        opinionCount: number;
+        opinions: {
+            id: number;
+            perceivedConstant: number;
+            comment: string;
+            updatedAt: string;
+            user: { id: number; username: string | null };
+            positiveCount: number;
+            negativeCount: number;
+            viewerReaction: number | null;
+        }[];
+    };
 }
 
 const difficultyStyles: Record<Difficulty, string> = {
@@ -140,6 +173,7 @@ export default function MusicDetail({
     recentChartPlays,
     chartDetail,
     ranking,
+    tier,
 }: MusicDetailProps) {
     const jacketImageUrl =
         music.background ||
@@ -689,12 +723,16 @@ export default function MusicDetail({
             )}
 
             {activeTab === "tier" && (
-                <section className="bg-surface rounded-card p-4">
-                    <h2 className="text-section">서열 및 투표</h2>
-                    <p className="text-body-muted mt-3">
-                        등록된 서열 및 투표 데이터가 없습니다.
-                    </p>
-                </section>
+                <MusicTierVote
+                    chartId={chartDetail.id}
+                    level={chartDetail.level}
+                    officialConstant={chartDetail.level_constant}
+                    constantHistory={tier.constantHistory}
+                    community={tier.community}
+                    currentEvaluation={tier.currentEvaluation}
+                    opinionCount={tier.opinionCount}
+                    opinions={tier.opinions}
+                />
             )}
         </main>
     );
