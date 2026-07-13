@@ -106,13 +106,38 @@ export async function updateMusic(music: any) {
         ...bgUpdatePromises, // BG 업데이트 (병렬)
     ]);
 
+    // 악곡의 난이도별 채보를 정규화 테이블과 동기화
+    const chartUpserts = music.flatMap((data: any) =>
+        data.sheet.map((sheet: any) =>
+            db.musicChart.upsert({
+                where: {
+                    music_idx_difficulty: {
+                        music_idx: data["@index"],
+                        difficulty: sheet.difficulty,
+                    },
+                },
+                create: {
+                    music_idx: data["@index"],
+                    difficulty: sheet.difficulty,
+                    level: sheet.level,
+                },
+                update: {
+                    level: sheet.level,
+                },
+            })
+        )
+    );
+
+    await db.$transaction(chartUpserts);
+    console.info(`(5)악곡 채보 데이터 동기화 완료 (${chartUpserts.length}개)`);
+
     // 결과 출력
     if (newMusicData.length > 0) {
-        console.info(`(5)새 악곡 데이터 생성 완료 (${newMusicData.length}개)`);
+        console.info(`(6)새 악곡 데이터 생성 완료 (${newMusicData.length}개)`);
     }
     if (bgUpdatePromises.length > 0) {
         console.info(
-            `(6)기존 악곡 BG 업데이트 완료 (${bgUpdatePromises.length}개)`
+            `(7)기존 악곡 BG 업데이트 완료 (${bgUpdatePromises.length}개)`
         );
     }
     const duration = Date.now() - startTime; // 종료 시간

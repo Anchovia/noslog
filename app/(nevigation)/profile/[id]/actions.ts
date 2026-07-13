@@ -2,34 +2,44 @@
 
 import db from "@/lib/db";
 
-export async function getMoreRecentPlays(page: number, id: number) {
-    const recentPlays = await db.recentPlay.findMany({
-        where: {
-            user_id: id,
-        },
+async function getRecentPlays(page: number, user_id: number) {
+    const plays = await db.chartPlayHistory.findMany({
+        where: { user_id },
         select: {
-            play_time: true,
+            source_play_time: true,
             score: true,
             rank: true,
-            level: true,
-            difficulty: true,
             max_combo: true,
-            music_idx: true,
             grade_basic: true,
-            music: {
+            chart: {
                 select: {
-                    title: true,
+                    level: true,
+                    difficulty: true,
+                    music_idx: true,
+                    music: { select: { title: true } },
                 },
             },
         },
         skip: page * 5,
         take: 5,
-        orderBy: {
-            play_time: "desc",
-        },
+        orderBy: [{ source_play_time: "desc" }, { id: "desc" }],
     });
 
-    return recentPlays;
+    return plays.map((play) => ({
+        play_time: play.source_play_time,
+        score: play.score,
+        rank: play.rank,
+        level: play.chart.level,
+        difficulty: play.chart.difficulty,
+        max_combo: play.max_combo,
+        music_idx: play.chart.music_idx,
+        grade_basic: play.grade_basic,
+        music: play.chart.music,
+    }));
+}
+
+export async function getMoreRecentPlays(page: number, id: number) {
+    return getRecentPlays(page, id);
 }
 
 export async function getMoreBasicBestPlays(page: number, id: number) {
@@ -95,31 +105,7 @@ export async function getMoreRecitalBestPlays(page: number, id: number) {
 }
 
 export async function getInitialRecentPlays(id: number) {
-    const initialRecentPlays = await db.recentPlay.findMany({
-        where: {
-            user_id: id,
-        },
-        select: {
-            play_time: true,
-            score: true,
-            rank: true,
-            level: true,
-            difficulty: true,
-            max_combo: true,
-            music_idx: true,
-            grade_basic: true,
-            music: {
-                select: {
-                    title: true,
-                },
-            },
-        },
-        take: 5,
-        orderBy: {
-            play_time: "desc",
-        },
-    });
-    return initialRecentPlays;
+    return getRecentPlays(0, id);
 }
 
 export async function getInitialBasicBestPlays(id: number) {

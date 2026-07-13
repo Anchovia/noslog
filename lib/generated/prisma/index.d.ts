@@ -24,6 +24,41 @@ export type User = $Result.DefaultSelection<Prisma.$UserPayload>
  */
 export type Music = $Result.DefaultSelection<Prisma.$MusicPayload>
 /**
+ * Model MusicChart
+ * 
+ */
+export type MusicChart = $Result.DefaultSelection<Prisma.$MusicChartPayload>
+/**
+ * Model DataSync
+ * 
+ */
+export type DataSync = $Result.DefaultSelection<Prisma.$DataSyncPayload>
+/**
+ * Model ChartPlayHistory
+ * 
+ */
+export type ChartPlayHistory = $Result.DefaultSelection<Prisma.$ChartPlayHistoryPayload>
+/**
+ * Model ChartRecordSnapshot
+ * 
+ */
+export type ChartRecordSnapshot = $Result.DefaultSelection<Prisma.$ChartRecordSnapshotPayload>
+/**
+ * Model ChartConstantHistory
+ * 
+ */
+export type ChartConstantHistory = $Result.DefaultSelection<Prisma.$ChartConstantHistoryPayload>
+/**
+ * Model ChartEvaluation
+ * 
+ */
+export type ChartEvaluation = $Result.DefaultSelection<Prisma.$ChartEvaluationPayload>
+/**
+ * Model ChartEvaluationReaction
+ * 
+ */
+export type ChartEvaluationReaction = $Result.DefaultSelection<Prisma.$ChartEvaluationReactionPayload>
+/**
  * Model RecentPlay
  * 
  */
@@ -203,6 +238,76 @@ export class PrismaClient<
   get music(): Prisma.MusicDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.musicChart`: Exposes CRUD operations for the **MusicChart** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more MusicCharts
+    * const musicCharts = await prisma.musicChart.findMany()
+    * ```
+    */
+  get musicChart(): Prisma.MusicChartDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.dataSync`: Exposes CRUD operations for the **DataSync** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DataSyncs
+    * const dataSyncs = await prisma.dataSync.findMany()
+    * ```
+    */
+  get dataSync(): Prisma.DataSyncDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.chartPlayHistory`: Exposes CRUD operations for the **ChartPlayHistory** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ChartPlayHistories
+    * const chartPlayHistories = await prisma.chartPlayHistory.findMany()
+    * ```
+    */
+  get chartPlayHistory(): Prisma.ChartPlayHistoryDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.chartRecordSnapshot`: Exposes CRUD operations for the **ChartRecordSnapshot** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ChartRecordSnapshots
+    * const chartRecordSnapshots = await prisma.chartRecordSnapshot.findMany()
+    * ```
+    */
+  get chartRecordSnapshot(): Prisma.ChartRecordSnapshotDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.chartConstantHistory`: Exposes CRUD operations for the **ChartConstantHistory** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ChartConstantHistories
+    * const chartConstantHistories = await prisma.chartConstantHistory.findMany()
+    * ```
+    */
+  get chartConstantHistory(): Prisma.ChartConstantHistoryDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.chartEvaluation`: Exposes CRUD operations for the **ChartEvaluation** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ChartEvaluations
+    * const chartEvaluations = await prisma.chartEvaluation.findMany()
+    * ```
+    */
+  get chartEvaluation(): Prisma.ChartEvaluationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.chartEvaluationReaction`: Exposes CRUD operations for the **ChartEvaluationReaction** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ChartEvaluationReactions
+    * const chartEvaluationReactions = await prisma.chartEvaluationReaction.findMany()
+    * ```
+    */
+  get chartEvaluationReaction(): Prisma.ChartEvaluationReactionDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.recentPlay`: Exposes CRUD operations for the **RecentPlay** model.
     * Example usage:
     * ```ts
@@ -339,8 +444,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 6.15.0
-   * Query Engine version: 85179d7826409ee107a6ba334b5e305ae3fba9fb
+   * Prisma Client JS version: 6.19.3
+   * Query Engine version: c2990dca591cba766e3b7ef5d9e8a84796e47ab7
    */
   export type PrismaVersion = {
     client: string
@@ -353,6 +458,7 @@ export namespace Prisma {
    */
 
 
+  export import Bytes = runtime.Bytes
   export import JsonObject = runtime.JsonObject
   export import JsonArray = runtime.JsonArray
   export import JsonValue = runtime.JsonValue
@@ -723,6 +829,13 @@ export namespace Prisma {
   export const ModelName: {
     User: 'User',
     Music: 'Music',
+    MusicChart: 'MusicChart',
+    DataSync: 'DataSync',
+    ChartPlayHistory: 'ChartPlayHistory',
+    ChartRecordSnapshot: 'ChartRecordSnapshot',
+    ChartConstantHistory: 'ChartConstantHistory',
+    ChartEvaluation: 'ChartEvaluation',
+    ChartEvaluationReaction: 'ChartEvaluationReaction',
     RecentPlay: 'RecentPlay',
     UserBestGrade: 'UserBestGrade',
     BasicBestPlay: 'BasicBestPlay',
@@ -749,7 +862,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "music" | "recentPlay" | "userBestGrade" | "basicBestPlay" | "recitalBestPlay" | "playData" | "bingo" | "bingoCell" | "userBingoCellData"
+      modelProps: "user" | "music" | "musicChart" | "dataSync" | "chartPlayHistory" | "chartRecordSnapshot" | "chartConstantHistory" | "chartEvaluation" | "chartEvaluationReaction" | "recentPlay" | "userBestGrade" | "basicBestPlay" | "recitalBestPlay" | "playData" | "bingo" | "bingoCell" | "userBingoCellData"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -898,6 +1011,524 @@ export namespace Prisma {
           count: {
             args: Prisma.MusicCountArgs<ExtArgs>
             result: $Utils.Optional<MusicCountAggregateOutputType> | number
+          }
+        }
+      }
+      MusicChart: {
+        payload: Prisma.$MusicChartPayload<ExtArgs>
+        fields: Prisma.MusicChartFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.MusicChartFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MusicChartPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.MusicChartFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MusicChartPayload>
+          }
+          findFirst: {
+            args: Prisma.MusicChartFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MusicChartPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.MusicChartFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MusicChartPayload>
+          }
+          findMany: {
+            args: Prisma.MusicChartFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MusicChartPayload>[]
+          }
+          create: {
+            args: Prisma.MusicChartCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MusicChartPayload>
+          }
+          createMany: {
+            args: Prisma.MusicChartCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.MusicChartCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MusicChartPayload>[]
+          }
+          delete: {
+            args: Prisma.MusicChartDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MusicChartPayload>
+          }
+          update: {
+            args: Prisma.MusicChartUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MusicChartPayload>
+          }
+          deleteMany: {
+            args: Prisma.MusicChartDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.MusicChartUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.MusicChartUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MusicChartPayload>[]
+          }
+          upsert: {
+            args: Prisma.MusicChartUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MusicChartPayload>
+          }
+          aggregate: {
+            args: Prisma.MusicChartAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateMusicChart>
+          }
+          groupBy: {
+            args: Prisma.MusicChartGroupByArgs<ExtArgs>
+            result: $Utils.Optional<MusicChartGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.MusicChartCountArgs<ExtArgs>
+            result: $Utils.Optional<MusicChartCountAggregateOutputType> | number
+          }
+        }
+      }
+      DataSync: {
+        payload: Prisma.$DataSyncPayload<ExtArgs>
+        fields: Prisma.DataSyncFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DataSyncFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DataSyncPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DataSyncFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DataSyncPayload>
+          }
+          findFirst: {
+            args: Prisma.DataSyncFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DataSyncPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DataSyncFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DataSyncPayload>
+          }
+          findMany: {
+            args: Prisma.DataSyncFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DataSyncPayload>[]
+          }
+          create: {
+            args: Prisma.DataSyncCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DataSyncPayload>
+          }
+          createMany: {
+            args: Prisma.DataSyncCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DataSyncCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DataSyncPayload>[]
+          }
+          delete: {
+            args: Prisma.DataSyncDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DataSyncPayload>
+          }
+          update: {
+            args: Prisma.DataSyncUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DataSyncPayload>
+          }
+          deleteMany: {
+            args: Prisma.DataSyncDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DataSyncUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.DataSyncUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DataSyncPayload>[]
+          }
+          upsert: {
+            args: Prisma.DataSyncUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DataSyncPayload>
+          }
+          aggregate: {
+            args: Prisma.DataSyncAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDataSync>
+          }
+          groupBy: {
+            args: Prisma.DataSyncGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DataSyncGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DataSyncCountArgs<ExtArgs>
+            result: $Utils.Optional<DataSyncCountAggregateOutputType> | number
+          }
+        }
+      }
+      ChartPlayHistory: {
+        payload: Prisma.$ChartPlayHistoryPayload<ExtArgs>
+        fields: Prisma.ChartPlayHistoryFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ChartPlayHistoryFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartPlayHistoryPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ChartPlayHistoryFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartPlayHistoryPayload>
+          }
+          findFirst: {
+            args: Prisma.ChartPlayHistoryFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartPlayHistoryPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ChartPlayHistoryFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartPlayHistoryPayload>
+          }
+          findMany: {
+            args: Prisma.ChartPlayHistoryFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartPlayHistoryPayload>[]
+          }
+          create: {
+            args: Prisma.ChartPlayHistoryCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartPlayHistoryPayload>
+          }
+          createMany: {
+            args: Prisma.ChartPlayHistoryCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ChartPlayHistoryCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartPlayHistoryPayload>[]
+          }
+          delete: {
+            args: Prisma.ChartPlayHistoryDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartPlayHistoryPayload>
+          }
+          update: {
+            args: Prisma.ChartPlayHistoryUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartPlayHistoryPayload>
+          }
+          deleteMany: {
+            args: Prisma.ChartPlayHistoryDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ChartPlayHistoryUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ChartPlayHistoryUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartPlayHistoryPayload>[]
+          }
+          upsert: {
+            args: Prisma.ChartPlayHistoryUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartPlayHistoryPayload>
+          }
+          aggregate: {
+            args: Prisma.ChartPlayHistoryAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateChartPlayHistory>
+          }
+          groupBy: {
+            args: Prisma.ChartPlayHistoryGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ChartPlayHistoryGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ChartPlayHistoryCountArgs<ExtArgs>
+            result: $Utils.Optional<ChartPlayHistoryCountAggregateOutputType> | number
+          }
+        }
+      }
+      ChartRecordSnapshot: {
+        payload: Prisma.$ChartRecordSnapshotPayload<ExtArgs>
+        fields: Prisma.ChartRecordSnapshotFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ChartRecordSnapshotFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartRecordSnapshotPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ChartRecordSnapshotFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartRecordSnapshotPayload>
+          }
+          findFirst: {
+            args: Prisma.ChartRecordSnapshotFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartRecordSnapshotPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ChartRecordSnapshotFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartRecordSnapshotPayload>
+          }
+          findMany: {
+            args: Prisma.ChartRecordSnapshotFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartRecordSnapshotPayload>[]
+          }
+          create: {
+            args: Prisma.ChartRecordSnapshotCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartRecordSnapshotPayload>
+          }
+          createMany: {
+            args: Prisma.ChartRecordSnapshotCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ChartRecordSnapshotCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartRecordSnapshotPayload>[]
+          }
+          delete: {
+            args: Prisma.ChartRecordSnapshotDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartRecordSnapshotPayload>
+          }
+          update: {
+            args: Prisma.ChartRecordSnapshotUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartRecordSnapshotPayload>
+          }
+          deleteMany: {
+            args: Prisma.ChartRecordSnapshotDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ChartRecordSnapshotUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ChartRecordSnapshotUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartRecordSnapshotPayload>[]
+          }
+          upsert: {
+            args: Prisma.ChartRecordSnapshotUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartRecordSnapshotPayload>
+          }
+          aggregate: {
+            args: Prisma.ChartRecordSnapshotAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateChartRecordSnapshot>
+          }
+          groupBy: {
+            args: Prisma.ChartRecordSnapshotGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ChartRecordSnapshotGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ChartRecordSnapshotCountArgs<ExtArgs>
+            result: $Utils.Optional<ChartRecordSnapshotCountAggregateOutputType> | number
+          }
+        }
+      }
+      ChartConstantHistory: {
+        payload: Prisma.$ChartConstantHistoryPayload<ExtArgs>
+        fields: Prisma.ChartConstantHistoryFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ChartConstantHistoryFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartConstantHistoryPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ChartConstantHistoryFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartConstantHistoryPayload>
+          }
+          findFirst: {
+            args: Prisma.ChartConstantHistoryFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartConstantHistoryPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ChartConstantHistoryFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartConstantHistoryPayload>
+          }
+          findMany: {
+            args: Prisma.ChartConstantHistoryFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartConstantHistoryPayload>[]
+          }
+          create: {
+            args: Prisma.ChartConstantHistoryCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartConstantHistoryPayload>
+          }
+          createMany: {
+            args: Prisma.ChartConstantHistoryCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ChartConstantHistoryCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartConstantHistoryPayload>[]
+          }
+          delete: {
+            args: Prisma.ChartConstantHistoryDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartConstantHistoryPayload>
+          }
+          update: {
+            args: Prisma.ChartConstantHistoryUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartConstantHistoryPayload>
+          }
+          deleteMany: {
+            args: Prisma.ChartConstantHistoryDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ChartConstantHistoryUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ChartConstantHistoryUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartConstantHistoryPayload>[]
+          }
+          upsert: {
+            args: Prisma.ChartConstantHistoryUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartConstantHistoryPayload>
+          }
+          aggregate: {
+            args: Prisma.ChartConstantHistoryAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateChartConstantHistory>
+          }
+          groupBy: {
+            args: Prisma.ChartConstantHistoryGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ChartConstantHistoryGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ChartConstantHistoryCountArgs<ExtArgs>
+            result: $Utils.Optional<ChartConstantHistoryCountAggregateOutputType> | number
+          }
+        }
+      }
+      ChartEvaluation: {
+        payload: Prisma.$ChartEvaluationPayload<ExtArgs>
+        fields: Prisma.ChartEvaluationFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ChartEvaluationFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartEvaluationPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ChartEvaluationFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartEvaluationPayload>
+          }
+          findFirst: {
+            args: Prisma.ChartEvaluationFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartEvaluationPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ChartEvaluationFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartEvaluationPayload>
+          }
+          findMany: {
+            args: Prisma.ChartEvaluationFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartEvaluationPayload>[]
+          }
+          create: {
+            args: Prisma.ChartEvaluationCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartEvaluationPayload>
+          }
+          createMany: {
+            args: Prisma.ChartEvaluationCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ChartEvaluationCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartEvaluationPayload>[]
+          }
+          delete: {
+            args: Prisma.ChartEvaluationDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartEvaluationPayload>
+          }
+          update: {
+            args: Prisma.ChartEvaluationUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartEvaluationPayload>
+          }
+          deleteMany: {
+            args: Prisma.ChartEvaluationDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ChartEvaluationUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ChartEvaluationUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartEvaluationPayload>[]
+          }
+          upsert: {
+            args: Prisma.ChartEvaluationUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartEvaluationPayload>
+          }
+          aggregate: {
+            args: Prisma.ChartEvaluationAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateChartEvaluation>
+          }
+          groupBy: {
+            args: Prisma.ChartEvaluationGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ChartEvaluationGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ChartEvaluationCountArgs<ExtArgs>
+            result: $Utils.Optional<ChartEvaluationCountAggregateOutputType> | number
+          }
+        }
+      }
+      ChartEvaluationReaction: {
+        payload: Prisma.$ChartEvaluationReactionPayload<ExtArgs>
+        fields: Prisma.ChartEvaluationReactionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ChartEvaluationReactionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartEvaluationReactionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ChartEvaluationReactionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartEvaluationReactionPayload>
+          }
+          findFirst: {
+            args: Prisma.ChartEvaluationReactionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartEvaluationReactionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ChartEvaluationReactionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartEvaluationReactionPayload>
+          }
+          findMany: {
+            args: Prisma.ChartEvaluationReactionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartEvaluationReactionPayload>[]
+          }
+          create: {
+            args: Prisma.ChartEvaluationReactionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartEvaluationReactionPayload>
+          }
+          createMany: {
+            args: Prisma.ChartEvaluationReactionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ChartEvaluationReactionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartEvaluationReactionPayload>[]
+          }
+          delete: {
+            args: Prisma.ChartEvaluationReactionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartEvaluationReactionPayload>
+          }
+          update: {
+            args: Prisma.ChartEvaluationReactionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartEvaluationReactionPayload>
+          }
+          deleteMany: {
+            args: Prisma.ChartEvaluationReactionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ChartEvaluationReactionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ChartEvaluationReactionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartEvaluationReactionPayload>[]
+          }
+          upsert: {
+            args: Prisma.ChartEvaluationReactionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartEvaluationReactionPayload>
+          }
+          aggregate: {
+            args: Prisma.ChartEvaluationReactionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateChartEvaluationReaction>
+          }
+          groupBy: {
+            args: Prisma.ChartEvaluationReactionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ChartEvaluationReactionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ChartEvaluationReactionCountArgs<ExtArgs>
+            result: $Utils.Optional<ChartEvaluationReactionCountAggregateOutputType> | number
           }
         }
       }
@@ -1569,6 +2200,10 @@ export namespace Prisma {
       isolationLevel?: Prisma.TransactionIsolationLevel
     }
     /**
+     * Instance of a Driver Adapter, e.g., like one provided by `@prisma/adapter-planetscale`
+     */
+    adapter?: runtime.SqlDriverAdapterFactory | null
+    /**
      * Global configuration for omitting model fields by default.
      * 
      * @example
@@ -1587,6 +2222,13 @@ export namespace Prisma {
   export type GlobalOmitConfig = {
     user?: UserOmit
     music?: MusicOmit
+    musicChart?: MusicChartOmit
+    dataSync?: DataSyncOmit
+    chartPlayHistory?: ChartPlayHistoryOmit
+    chartRecordSnapshot?: ChartRecordSnapshotOmit
+    chartConstantHistory?: ChartConstantHistoryOmit
+    chartEvaluation?: ChartEvaluationOmit
+    chartEvaluationReaction?: ChartEvaluationReactionOmit
     recentPlay?: RecentPlayOmit
     userBestGrade?: UserBestGradeOmit
     basicBestPlay?: BasicBestPlayOmit
@@ -1681,6 +2323,11 @@ export namespace Prisma {
     RecitalBestPlay: number
     UserBestGrade: number
     userBingoCellData: number
+    chartEvaluations: number
+    chartReactions: number
+    dataSyncs: number
+    chartPlayHistory: number
+    chartRecordSnapshots: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1690,6 +2337,11 @@ export namespace Prisma {
     RecitalBestPlay?: boolean | UserCountOutputTypeCountRecitalBestPlayArgs
     UserBestGrade?: boolean | UserCountOutputTypeCountUserBestGradeArgs
     userBingoCellData?: boolean | UserCountOutputTypeCountUserBingoCellDataArgs
+    chartEvaluations?: boolean | UserCountOutputTypeCountChartEvaluationsArgs
+    chartReactions?: boolean | UserCountOutputTypeCountChartReactionsArgs
+    dataSyncs?: boolean | UserCountOutputTypeCountDataSyncsArgs
+    chartPlayHistory?: boolean | UserCountOutputTypeCountChartPlayHistoryArgs
+    chartRecordSnapshots?: boolean | UserCountOutputTypeCountChartRecordSnapshotsArgs
   }
 
   // Custom InputTypes
@@ -1745,6 +2397,41 @@ export namespace Prisma {
     where?: userBingoCellDataWhereInput
   }
 
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountChartEvaluationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ChartEvaluationWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountChartReactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ChartEvaluationReactionWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountDataSyncsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DataSyncWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountChartPlayHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ChartPlayHistoryWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountChartRecordSnapshotsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ChartRecordSnapshotWhereInput
+  }
+
 
   /**
    * Count Type MusicCountOutputType
@@ -1757,6 +2444,7 @@ export namespace Prisma {
     RecitalBestPlay: number
     Bingo: number
     BingoCell: number
+    charts: number
   }
 
   export type MusicCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1766,6 +2454,7 @@ export namespace Prisma {
     RecitalBestPlay?: boolean | MusicCountOutputTypeCountRecitalBestPlayArgs
     Bingo?: boolean | MusicCountOutputTypeCountBingoArgs
     BingoCell?: boolean | MusicCountOutputTypeCountBingoCellArgs
+    charts?: boolean | MusicCountOutputTypeCountChartsArgs
   }
 
   // Custom InputTypes
@@ -1819,6 +2508,178 @@ export namespace Prisma {
    */
   export type MusicCountOutputTypeCountBingoCellArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: BingoCellWhereInput
+  }
+
+  /**
+   * MusicCountOutputType without action
+   */
+  export type MusicCountOutputTypeCountChartsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MusicChartWhereInput
+  }
+
+
+  /**
+   * Count Type MusicChartCountOutputType
+   */
+
+  export type MusicChartCountOutputType = {
+    constantHistory: number
+    evaluations: number
+    RecentPlay: number
+    PlayData: number
+    BasicBestPlay: number
+    RecitalBestPlay: number
+    playHistory: number
+    recordSnapshots: number
+  }
+
+  export type MusicChartCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    constantHistory?: boolean | MusicChartCountOutputTypeCountConstantHistoryArgs
+    evaluations?: boolean | MusicChartCountOutputTypeCountEvaluationsArgs
+    RecentPlay?: boolean | MusicChartCountOutputTypeCountRecentPlayArgs
+    PlayData?: boolean | MusicChartCountOutputTypeCountPlayDataArgs
+    BasicBestPlay?: boolean | MusicChartCountOutputTypeCountBasicBestPlayArgs
+    RecitalBestPlay?: boolean | MusicChartCountOutputTypeCountRecitalBestPlayArgs
+    playHistory?: boolean | MusicChartCountOutputTypeCountPlayHistoryArgs
+    recordSnapshots?: boolean | MusicChartCountOutputTypeCountRecordSnapshotsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * MusicChartCountOutputType without action
+   */
+  export type MusicChartCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MusicChartCountOutputType
+     */
+    select?: MusicChartCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * MusicChartCountOutputType without action
+   */
+  export type MusicChartCountOutputTypeCountConstantHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ChartConstantHistoryWhereInput
+  }
+
+  /**
+   * MusicChartCountOutputType without action
+   */
+  export type MusicChartCountOutputTypeCountEvaluationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ChartEvaluationWhereInput
+  }
+
+  /**
+   * MusicChartCountOutputType without action
+   */
+  export type MusicChartCountOutputTypeCountRecentPlayArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RecentPlayWhereInput
+  }
+
+  /**
+   * MusicChartCountOutputType without action
+   */
+  export type MusicChartCountOutputTypeCountPlayDataArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PlayDataWhereInput
+  }
+
+  /**
+   * MusicChartCountOutputType without action
+   */
+  export type MusicChartCountOutputTypeCountBasicBestPlayArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BasicBestPlayWhereInput
+  }
+
+  /**
+   * MusicChartCountOutputType without action
+   */
+  export type MusicChartCountOutputTypeCountRecitalBestPlayArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RecitalBestPlayWhereInput
+  }
+
+  /**
+   * MusicChartCountOutputType without action
+   */
+  export type MusicChartCountOutputTypeCountPlayHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ChartPlayHistoryWhereInput
+  }
+
+  /**
+   * MusicChartCountOutputType without action
+   */
+  export type MusicChartCountOutputTypeCountRecordSnapshotsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ChartRecordSnapshotWhereInput
+  }
+
+
+  /**
+   * Count Type DataSyncCountOutputType
+   */
+
+  export type DataSyncCountOutputType = {
+    playHistory: number
+    recordSnapshots: number
+  }
+
+  export type DataSyncCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    playHistory?: boolean | DataSyncCountOutputTypeCountPlayHistoryArgs
+    recordSnapshots?: boolean | DataSyncCountOutputTypeCountRecordSnapshotsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * DataSyncCountOutputType without action
+   */
+  export type DataSyncCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DataSyncCountOutputType
+     */
+    select?: DataSyncCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * DataSyncCountOutputType without action
+   */
+  export type DataSyncCountOutputTypeCountPlayHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ChartPlayHistoryWhereInput
+  }
+
+  /**
+   * DataSyncCountOutputType without action
+   */
+  export type DataSyncCountOutputTypeCountRecordSnapshotsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ChartRecordSnapshotWhereInput
+  }
+
+
+  /**
+   * Count Type ChartEvaluationCountOutputType
+   */
+
+  export type ChartEvaluationCountOutputType = {
+    reactions: number
+  }
+
+  export type ChartEvaluationCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    reactions?: boolean | ChartEvaluationCountOutputTypeCountReactionsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ChartEvaluationCountOutputType without action
+   */
+  export type ChartEvaluationCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartEvaluationCountOutputType
+     */
+    select?: ChartEvaluationCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ChartEvaluationCountOutputType without action
+   */
+  export type ChartEvaluationCountOutputTypeCountReactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ChartEvaluationReactionWhereInput
   }
 
 
@@ -2328,6 +3189,11 @@ export namespace Prisma {
     RecitalBestPlay?: boolean | User$RecitalBestPlayArgs<ExtArgs>
     UserBestGrade?: boolean | User$UserBestGradeArgs<ExtArgs>
     userBingoCellData?: boolean | User$userBingoCellDataArgs<ExtArgs>
+    chartEvaluations?: boolean | User$chartEvaluationsArgs<ExtArgs>
+    chartReactions?: boolean | User$chartReactionsArgs<ExtArgs>
+    dataSyncs?: boolean | User$dataSyncsArgs<ExtArgs>
+    chartPlayHistory?: boolean | User$chartPlayHistoryArgs<ExtArgs>
+    chartRecordSnapshots?: boolean | User$chartRecordSnapshotsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -2426,6 +3292,11 @@ export namespace Prisma {
     RecitalBestPlay?: boolean | User$RecitalBestPlayArgs<ExtArgs>
     UserBestGrade?: boolean | User$UserBestGradeArgs<ExtArgs>
     userBingoCellData?: boolean | User$userBingoCellDataArgs<ExtArgs>
+    chartEvaluations?: boolean | User$chartEvaluationsArgs<ExtArgs>
+    chartReactions?: boolean | User$chartReactionsArgs<ExtArgs>
+    dataSyncs?: boolean | User$dataSyncsArgs<ExtArgs>
+    chartPlayHistory?: boolean | User$chartPlayHistoryArgs<ExtArgs>
+    chartRecordSnapshots?: boolean | User$chartRecordSnapshotsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -2440,6 +3311,11 @@ export namespace Prisma {
       RecitalBestPlay: Prisma.$RecitalBestPlayPayload<ExtArgs>[]
       UserBestGrade: Prisma.$UserBestGradePayload<ExtArgs>[]
       userBingoCellData: Prisma.$userBingoCellDataPayload<ExtArgs>[]
+      chartEvaluations: Prisma.$ChartEvaluationPayload<ExtArgs>[]
+      chartReactions: Prisma.$ChartEvaluationReactionPayload<ExtArgs>[]
+      dataSyncs: Prisma.$DataSyncPayload<ExtArgs>[]
+      chartPlayHistory: Prisma.$ChartPlayHistoryPayload<ExtArgs>[]
+      chartRecordSnapshots: Prisma.$ChartRecordSnapshotPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -2868,6 +3744,11 @@ export namespace Prisma {
     RecitalBestPlay<T extends User$RecitalBestPlayArgs<ExtArgs> = {}>(args?: Subset<T, User$RecitalBestPlayArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RecitalBestPlayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     UserBestGrade<T extends User$UserBestGradeArgs<ExtArgs> = {}>(args?: Subset<T, User$UserBestGradeArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserBestGradePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     userBingoCellData<T extends User$userBingoCellDataArgs<ExtArgs> = {}>(args?: Subset<T, User$userBingoCellDataArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$userBingoCellDataPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    chartEvaluations<T extends User$chartEvaluationsArgs<ExtArgs> = {}>(args?: Subset<T, User$chartEvaluationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartEvaluationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    chartReactions<T extends User$chartReactionsArgs<ExtArgs> = {}>(args?: Subset<T, User$chartReactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartEvaluationReactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    dataSyncs<T extends User$dataSyncsArgs<ExtArgs> = {}>(args?: Subset<T, User$dataSyncsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DataSyncPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    chartPlayHistory<T extends User$chartPlayHistoryArgs<ExtArgs> = {}>(args?: Subset<T, User$chartPlayHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartPlayHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    chartRecordSnapshots<T extends User$chartRecordSnapshotsArgs<ExtArgs> = {}>(args?: Subset<T, User$chartRecordSnapshotsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartRecordSnapshotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3453,6 +4334,126 @@ export namespace Prisma {
   }
 
   /**
+   * User.chartEvaluations
+   */
+  export type User$chartEvaluationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartEvaluation
+     */
+    select?: ChartEvaluationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartEvaluation
+     */
+    omit?: ChartEvaluationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartEvaluationInclude<ExtArgs> | null
+    where?: ChartEvaluationWhereInput
+    orderBy?: ChartEvaluationOrderByWithRelationInput | ChartEvaluationOrderByWithRelationInput[]
+    cursor?: ChartEvaluationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ChartEvaluationScalarFieldEnum | ChartEvaluationScalarFieldEnum[]
+  }
+
+  /**
+   * User.chartReactions
+   */
+  export type User$chartReactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartEvaluationReaction
+     */
+    select?: ChartEvaluationReactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartEvaluationReaction
+     */
+    omit?: ChartEvaluationReactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartEvaluationReactionInclude<ExtArgs> | null
+    where?: ChartEvaluationReactionWhereInput
+    orderBy?: ChartEvaluationReactionOrderByWithRelationInput | ChartEvaluationReactionOrderByWithRelationInput[]
+    cursor?: ChartEvaluationReactionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ChartEvaluationReactionScalarFieldEnum | ChartEvaluationReactionScalarFieldEnum[]
+  }
+
+  /**
+   * User.dataSyncs
+   */
+  export type User$dataSyncsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DataSync
+     */
+    select?: DataSyncSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DataSync
+     */
+    omit?: DataSyncOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DataSyncInclude<ExtArgs> | null
+    where?: DataSyncWhereInput
+    orderBy?: DataSyncOrderByWithRelationInput | DataSyncOrderByWithRelationInput[]
+    cursor?: DataSyncWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DataSyncScalarFieldEnum | DataSyncScalarFieldEnum[]
+  }
+
+  /**
+   * User.chartPlayHistory
+   */
+  export type User$chartPlayHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartPlayHistory
+     */
+    select?: ChartPlayHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartPlayHistory
+     */
+    omit?: ChartPlayHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartPlayHistoryInclude<ExtArgs> | null
+    where?: ChartPlayHistoryWhereInput
+    orderBy?: ChartPlayHistoryOrderByWithRelationInput | ChartPlayHistoryOrderByWithRelationInput[]
+    cursor?: ChartPlayHistoryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ChartPlayHistoryScalarFieldEnum | ChartPlayHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * User.chartRecordSnapshots
+   */
+  export type User$chartRecordSnapshotsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartRecordSnapshot
+     */
+    select?: ChartRecordSnapshotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartRecordSnapshot
+     */
+    omit?: ChartRecordSnapshotOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartRecordSnapshotInclude<ExtArgs> | null
+    where?: ChartRecordSnapshotWhereInput
+    orderBy?: ChartRecordSnapshotOrderByWithRelationInput | ChartRecordSnapshotOrderByWithRelationInput[]
+    cursor?: ChartRecordSnapshotWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ChartRecordSnapshotScalarFieldEnum | ChartRecordSnapshotScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3799,6 +4800,7 @@ export namespace Prisma {
     RecitalBestPlay?: boolean | Music$RecitalBestPlayArgs<ExtArgs>
     Bingo?: boolean | Music$BingoArgs<ExtArgs>
     BingoCell?: boolean | Music$BingoCellArgs<ExtArgs>
+    charts?: boolean | Music$chartsArgs<ExtArgs>
     _count?: boolean | MusicCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["music"]>
 
@@ -3873,6 +4875,7 @@ export namespace Prisma {
     RecitalBestPlay?: boolean | Music$RecitalBestPlayArgs<ExtArgs>
     Bingo?: boolean | Music$BingoArgs<ExtArgs>
     BingoCell?: boolean | Music$BingoCellArgs<ExtArgs>
+    charts?: boolean | Music$chartsArgs<ExtArgs>
     _count?: boolean | MusicCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type MusicIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -3887,6 +4890,7 @@ export namespace Prisma {
       RecitalBestPlay: Prisma.$RecitalBestPlayPayload<ExtArgs>[]
       Bingo: Prisma.$BingoPayload<ExtArgs>[]
       BingoCell: Prisma.$BingoCellPayload<ExtArgs>[]
+      charts: Prisma.$MusicChartPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -4307,6 +5311,7 @@ export namespace Prisma {
     RecitalBestPlay<T extends Music$RecitalBestPlayArgs<ExtArgs> = {}>(args?: Subset<T, Music$RecitalBestPlayArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RecitalBestPlayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     Bingo<T extends Music$BingoArgs<ExtArgs> = {}>(args?: Subset<T, Music$BingoArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BingoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     BingoCell<T extends Music$BingoCellArgs<ExtArgs> = {}>(args?: Subset<T, Music$BingoCellArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BingoCellPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    charts<T extends Music$chartsArgs<ExtArgs> = {}>(args?: Subset<T, Music$chartsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MusicChartPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4884,6 +5889,30 @@ export namespace Prisma {
   }
 
   /**
+   * Music.charts
+   */
+  export type Music$chartsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MusicChart
+     */
+    select?: MusicChartSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MusicChart
+     */
+    omit?: MusicChartOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MusicChartInclude<ExtArgs> | null
+    where?: MusicChartWhereInput
+    orderBy?: MusicChartOrderByWithRelationInput | MusicChartOrderByWithRelationInput[]
+    cursor?: MusicChartWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MusicChartScalarFieldEnum | MusicChartScalarFieldEnum[]
+  }
+
+  /**
    * Music without action
    */
   export type MusicDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4899,6 +5928,8555 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: MusicInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model MusicChart
+   */
+
+  export type AggregateMusicChart = {
+    _count: MusicChartCountAggregateOutputType | null
+    _avg: MusicChartAvgAggregateOutputType | null
+    _sum: MusicChartSumAggregateOutputType | null
+    _min: MusicChartMinAggregateOutputType | null
+    _max: MusicChartMaxAggregateOutputType | null
+  }
+
+  export type MusicChartAvgAggregateOutputType = {
+    id: number | null
+    level: number | null
+    level_constant: number | null
+  }
+
+  export type MusicChartSumAggregateOutputType = {
+    id: number | null
+    level: number | null
+    level_constant: number | null
+  }
+
+  export type MusicChartMinAggregateOutputType = {
+    id: number | null
+    difficulty: string | null
+    level: number | null
+    level_constant: number | null
+    music_idx: string | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type MusicChartMaxAggregateOutputType = {
+    id: number | null
+    difficulty: string | null
+    level: number | null
+    level_constant: number | null
+    music_idx: string | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type MusicChartCountAggregateOutputType = {
+    id: number
+    difficulty: number
+    level: number
+    level_constant: number
+    music_idx: number
+    created_at: number
+    updated_at: number
+    _all: number
+  }
+
+
+  export type MusicChartAvgAggregateInputType = {
+    id?: true
+    level?: true
+    level_constant?: true
+  }
+
+  export type MusicChartSumAggregateInputType = {
+    id?: true
+    level?: true
+    level_constant?: true
+  }
+
+  export type MusicChartMinAggregateInputType = {
+    id?: true
+    difficulty?: true
+    level?: true
+    level_constant?: true
+    music_idx?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type MusicChartMaxAggregateInputType = {
+    id?: true
+    difficulty?: true
+    level?: true
+    level_constant?: true
+    music_idx?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type MusicChartCountAggregateInputType = {
+    id?: true
+    difficulty?: true
+    level?: true
+    level_constant?: true
+    music_idx?: true
+    created_at?: true
+    updated_at?: true
+    _all?: true
+  }
+
+  export type MusicChartAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MusicChart to aggregate.
+     */
+    where?: MusicChartWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MusicCharts to fetch.
+     */
+    orderBy?: MusicChartOrderByWithRelationInput | MusicChartOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: MusicChartWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MusicCharts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MusicCharts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned MusicCharts
+    **/
+    _count?: true | MusicChartCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: MusicChartAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: MusicChartSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: MusicChartMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: MusicChartMaxAggregateInputType
+  }
+
+  export type GetMusicChartAggregateType<T extends MusicChartAggregateArgs> = {
+        [P in keyof T & keyof AggregateMusicChart]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateMusicChart[P]>
+      : GetScalarType<T[P], AggregateMusicChart[P]>
+  }
+
+
+
+
+  export type MusicChartGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MusicChartWhereInput
+    orderBy?: MusicChartOrderByWithAggregationInput | MusicChartOrderByWithAggregationInput[]
+    by: MusicChartScalarFieldEnum[] | MusicChartScalarFieldEnum
+    having?: MusicChartScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: MusicChartCountAggregateInputType | true
+    _avg?: MusicChartAvgAggregateInputType
+    _sum?: MusicChartSumAggregateInputType
+    _min?: MusicChartMinAggregateInputType
+    _max?: MusicChartMaxAggregateInputType
+  }
+
+  export type MusicChartGroupByOutputType = {
+    id: number
+    difficulty: string
+    level: number
+    level_constant: number | null
+    music_idx: string
+    created_at: Date
+    updated_at: Date
+    _count: MusicChartCountAggregateOutputType | null
+    _avg: MusicChartAvgAggregateOutputType | null
+    _sum: MusicChartSumAggregateOutputType | null
+    _min: MusicChartMinAggregateOutputType | null
+    _max: MusicChartMaxAggregateOutputType | null
+  }
+
+  type GetMusicChartGroupByPayload<T extends MusicChartGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<MusicChartGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof MusicChartGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], MusicChartGroupByOutputType[P]>
+            : GetScalarType<T[P], MusicChartGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type MusicChartSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    difficulty?: boolean
+    level?: boolean
+    level_constant?: boolean
+    music_idx?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    music?: boolean | MusicDefaultArgs<ExtArgs>
+    constantHistory?: boolean | MusicChart$constantHistoryArgs<ExtArgs>
+    evaluations?: boolean | MusicChart$evaluationsArgs<ExtArgs>
+    RecentPlay?: boolean | MusicChart$RecentPlayArgs<ExtArgs>
+    PlayData?: boolean | MusicChart$PlayDataArgs<ExtArgs>
+    BasicBestPlay?: boolean | MusicChart$BasicBestPlayArgs<ExtArgs>
+    RecitalBestPlay?: boolean | MusicChart$RecitalBestPlayArgs<ExtArgs>
+    playHistory?: boolean | MusicChart$playHistoryArgs<ExtArgs>
+    recordSnapshots?: boolean | MusicChart$recordSnapshotsArgs<ExtArgs>
+    _count?: boolean | MusicChartCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["musicChart"]>
+
+  export type MusicChartSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    difficulty?: boolean
+    level?: boolean
+    level_constant?: boolean
+    music_idx?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    music?: boolean | MusicDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["musicChart"]>
+
+  export type MusicChartSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    difficulty?: boolean
+    level?: boolean
+    level_constant?: boolean
+    music_idx?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    music?: boolean | MusicDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["musicChart"]>
+
+  export type MusicChartSelectScalar = {
+    id?: boolean
+    difficulty?: boolean
+    level?: boolean
+    level_constant?: boolean
+    music_idx?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }
+
+  export type MusicChartOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "difficulty" | "level" | "level_constant" | "music_idx" | "created_at" | "updated_at", ExtArgs["result"]["musicChart"]>
+  export type MusicChartInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    music?: boolean | MusicDefaultArgs<ExtArgs>
+    constantHistory?: boolean | MusicChart$constantHistoryArgs<ExtArgs>
+    evaluations?: boolean | MusicChart$evaluationsArgs<ExtArgs>
+    RecentPlay?: boolean | MusicChart$RecentPlayArgs<ExtArgs>
+    PlayData?: boolean | MusicChart$PlayDataArgs<ExtArgs>
+    BasicBestPlay?: boolean | MusicChart$BasicBestPlayArgs<ExtArgs>
+    RecitalBestPlay?: boolean | MusicChart$RecitalBestPlayArgs<ExtArgs>
+    playHistory?: boolean | MusicChart$playHistoryArgs<ExtArgs>
+    recordSnapshots?: boolean | MusicChart$recordSnapshotsArgs<ExtArgs>
+    _count?: boolean | MusicChartCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type MusicChartIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    music?: boolean | MusicDefaultArgs<ExtArgs>
+  }
+  export type MusicChartIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    music?: boolean | MusicDefaultArgs<ExtArgs>
+  }
+
+  export type $MusicChartPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "MusicChart"
+    objects: {
+      music: Prisma.$MusicPayload<ExtArgs>
+      constantHistory: Prisma.$ChartConstantHistoryPayload<ExtArgs>[]
+      evaluations: Prisma.$ChartEvaluationPayload<ExtArgs>[]
+      RecentPlay: Prisma.$RecentPlayPayload<ExtArgs>[]
+      PlayData: Prisma.$PlayDataPayload<ExtArgs>[]
+      BasicBestPlay: Prisma.$BasicBestPlayPayload<ExtArgs>[]
+      RecitalBestPlay: Prisma.$RecitalBestPlayPayload<ExtArgs>[]
+      playHistory: Prisma.$ChartPlayHistoryPayload<ExtArgs>[]
+      recordSnapshots: Prisma.$ChartRecordSnapshotPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      difficulty: string
+      level: number
+      level_constant: number | null
+      music_idx: string
+      created_at: Date
+      updated_at: Date
+    }, ExtArgs["result"]["musicChart"]>
+    composites: {}
+  }
+
+  type MusicChartGetPayload<S extends boolean | null | undefined | MusicChartDefaultArgs> = $Result.GetResult<Prisma.$MusicChartPayload, S>
+
+  type MusicChartCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<MusicChartFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: MusicChartCountAggregateInputType | true
+    }
+
+  export interface MusicChartDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['MusicChart'], meta: { name: 'MusicChart' } }
+    /**
+     * Find zero or one MusicChart that matches the filter.
+     * @param {MusicChartFindUniqueArgs} args - Arguments to find a MusicChart
+     * @example
+     * // Get one MusicChart
+     * const musicChart = await prisma.musicChart.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends MusicChartFindUniqueArgs>(args: SelectSubset<T, MusicChartFindUniqueArgs<ExtArgs>>): Prisma__MusicChartClient<$Result.GetResult<Prisma.$MusicChartPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one MusicChart that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {MusicChartFindUniqueOrThrowArgs} args - Arguments to find a MusicChart
+     * @example
+     * // Get one MusicChart
+     * const musicChart = await prisma.musicChart.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends MusicChartFindUniqueOrThrowArgs>(args: SelectSubset<T, MusicChartFindUniqueOrThrowArgs<ExtArgs>>): Prisma__MusicChartClient<$Result.GetResult<Prisma.$MusicChartPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MusicChart that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MusicChartFindFirstArgs} args - Arguments to find a MusicChart
+     * @example
+     * // Get one MusicChart
+     * const musicChart = await prisma.musicChart.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends MusicChartFindFirstArgs>(args?: SelectSubset<T, MusicChartFindFirstArgs<ExtArgs>>): Prisma__MusicChartClient<$Result.GetResult<Prisma.$MusicChartPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MusicChart that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MusicChartFindFirstOrThrowArgs} args - Arguments to find a MusicChart
+     * @example
+     * // Get one MusicChart
+     * const musicChart = await prisma.musicChart.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends MusicChartFindFirstOrThrowArgs>(args?: SelectSubset<T, MusicChartFindFirstOrThrowArgs<ExtArgs>>): Prisma__MusicChartClient<$Result.GetResult<Prisma.$MusicChartPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more MusicCharts that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MusicChartFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all MusicCharts
+     * const musicCharts = await prisma.musicChart.findMany()
+     * 
+     * // Get first 10 MusicCharts
+     * const musicCharts = await prisma.musicChart.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const musicChartWithIdOnly = await prisma.musicChart.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends MusicChartFindManyArgs>(args?: SelectSubset<T, MusicChartFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MusicChartPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a MusicChart.
+     * @param {MusicChartCreateArgs} args - Arguments to create a MusicChart.
+     * @example
+     * // Create one MusicChart
+     * const MusicChart = await prisma.musicChart.create({
+     *   data: {
+     *     // ... data to create a MusicChart
+     *   }
+     * })
+     * 
+     */
+    create<T extends MusicChartCreateArgs>(args: SelectSubset<T, MusicChartCreateArgs<ExtArgs>>): Prisma__MusicChartClient<$Result.GetResult<Prisma.$MusicChartPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many MusicCharts.
+     * @param {MusicChartCreateManyArgs} args - Arguments to create many MusicCharts.
+     * @example
+     * // Create many MusicCharts
+     * const musicChart = await prisma.musicChart.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends MusicChartCreateManyArgs>(args?: SelectSubset<T, MusicChartCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many MusicCharts and returns the data saved in the database.
+     * @param {MusicChartCreateManyAndReturnArgs} args - Arguments to create many MusicCharts.
+     * @example
+     * // Create many MusicCharts
+     * const musicChart = await prisma.musicChart.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many MusicCharts and only return the `id`
+     * const musicChartWithIdOnly = await prisma.musicChart.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends MusicChartCreateManyAndReturnArgs>(args?: SelectSubset<T, MusicChartCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MusicChartPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a MusicChart.
+     * @param {MusicChartDeleteArgs} args - Arguments to delete one MusicChart.
+     * @example
+     * // Delete one MusicChart
+     * const MusicChart = await prisma.musicChart.delete({
+     *   where: {
+     *     // ... filter to delete one MusicChart
+     *   }
+     * })
+     * 
+     */
+    delete<T extends MusicChartDeleteArgs>(args: SelectSubset<T, MusicChartDeleteArgs<ExtArgs>>): Prisma__MusicChartClient<$Result.GetResult<Prisma.$MusicChartPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one MusicChart.
+     * @param {MusicChartUpdateArgs} args - Arguments to update one MusicChart.
+     * @example
+     * // Update one MusicChart
+     * const musicChart = await prisma.musicChart.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends MusicChartUpdateArgs>(args: SelectSubset<T, MusicChartUpdateArgs<ExtArgs>>): Prisma__MusicChartClient<$Result.GetResult<Prisma.$MusicChartPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more MusicCharts.
+     * @param {MusicChartDeleteManyArgs} args - Arguments to filter MusicCharts to delete.
+     * @example
+     * // Delete a few MusicCharts
+     * const { count } = await prisma.musicChart.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends MusicChartDeleteManyArgs>(args?: SelectSubset<T, MusicChartDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MusicCharts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MusicChartUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many MusicCharts
+     * const musicChart = await prisma.musicChart.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends MusicChartUpdateManyArgs>(args: SelectSubset<T, MusicChartUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MusicCharts and returns the data updated in the database.
+     * @param {MusicChartUpdateManyAndReturnArgs} args - Arguments to update many MusicCharts.
+     * @example
+     * // Update many MusicCharts
+     * const musicChart = await prisma.musicChart.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more MusicCharts and only return the `id`
+     * const musicChartWithIdOnly = await prisma.musicChart.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends MusicChartUpdateManyAndReturnArgs>(args: SelectSubset<T, MusicChartUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MusicChartPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one MusicChart.
+     * @param {MusicChartUpsertArgs} args - Arguments to update or create a MusicChart.
+     * @example
+     * // Update or create a MusicChart
+     * const musicChart = await prisma.musicChart.upsert({
+     *   create: {
+     *     // ... data to create a MusicChart
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the MusicChart we want to update
+     *   }
+     * })
+     */
+    upsert<T extends MusicChartUpsertArgs>(args: SelectSubset<T, MusicChartUpsertArgs<ExtArgs>>): Prisma__MusicChartClient<$Result.GetResult<Prisma.$MusicChartPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of MusicCharts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MusicChartCountArgs} args - Arguments to filter MusicCharts to count.
+     * @example
+     * // Count the number of MusicCharts
+     * const count = await prisma.musicChart.count({
+     *   where: {
+     *     // ... the filter for the MusicCharts we want to count
+     *   }
+     * })
+    **/
+    count<T extends MusicChartCountArgs>(
+      args?: Subset<T, MusicChartCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], MusicChartCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a MusicChart.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MusicChartAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends MusicChartAggregateArgs>(args: Subset<T, MusicChartAggregateArgs>): Prisma.PrismaPromise<GetMusicChartAggregateType<T>>
+
+    /**
+     * Group by MusicChart.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MusicChartGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends MusicChartGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: MusicChartGroupByArgs['orderBy'] }
+        : { orderBy?: MusicChartGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, MusicChartGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMusicChartGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the MusicChart model
+   */
+  readonly fields: MusicChartFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for MusicChart.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__MusicChartClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    music<T extends MusicDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MusicDefaultArgs<ExtArgs>>): Prisma__MusicClient<$Result.GetResult<Prisma.$MusicPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    constantHistory<T extends MusicChart$constantHistoryArgs<ExtArgs> = {}>(args?: Subset<T, MusicChart$constantHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartConstantHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    evaluations<T extends MusicChart$evaluationsArgs<ExtArgs> = {}>(args?: Subset<T, MusicChart$evaluationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartEvaluationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    RecentPlay<T extends MusicChart$RecentPlayArgs<ExtArgs> = {}>(args?: Subset<T, MusicChart$RecentPlayArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RecentPlayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    PlayData<T extends MusicChart$PlayDataArgs<ExtArgs> = {}>(args?: Subset<T, MusicChart$PlayDataArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlayDataPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    BasicBestPlay<T extends MusicChart$BasicBestPlayArgs<ExtArgs> = {}>(args?: Subset<T, MusicChart$BasicBestPlayArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BasicBestPlayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    RecitalBestPlay<T extends MusicChart$RecitalBestPlayArgs<ExtArgs> = {}>(args?: Subset<T, MusicChart$RecitalBestPlayArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RecitalBestPlayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    playHistory<T extends MusicChart$playHistoryArgs<ExtArgs> = {}>(args?: Subset<T, MusicChart$playHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartPlayHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    recordSnapshots<T extends MusicChart$recordSnapshotsArgs<ExtArgs> = {}>(args?: Subset<T, MusicChart$recordSnapshotsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartRecordSnapshotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the MusicChart model
+   */
+  interface MusicChartFieldRefs {
+    readonly id: FieldRef<"MusicChart", 'Int'>
+    readonly difficulty: FieldRef<"MusicChart", 'String'>
+    readonly level: FieldRef<"MusicChart", 'Int'>
+    readonly level_constant: FieldRef<"MusicChart", 'Float'>
+    readonly music_idx: FieldRef<"MusicChart", 'String'>
+    readonly created_at: FieldRef<"MusicChart", 'DateTime'>
+    readonly updated_at: FieldRef<"MusicChart", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * MusicChart findUnique
+   */
+  export type MusicChartFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MusicChart
+     */
+    select?: MusicChartSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MusicChart
+     */
+    omit?: MusicChartOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MusicChartInclude<ExtArgs> | null
+    /**
+     * Filter, which MusicChart to fetch.
+     */
+    where: MusicChartWhereUniqueInput
+  }
+
+  /**
+   * MusicChart findUniqueOrThrow
+   */
+  export type MusicChartFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MusicChart
+     */
+    select?: MusicChartSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MusicChart
+     */
+    omit?: MusicChartOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MusicChartInclude<ExtArgs> | null
+    /**
+     * Filter, which MusicChart to fetch.
+     */
+    where: MusicChartWhereUniqueInput
+  }
+
+  /**
+   * MusicChart findFirst
+   */
+  export type MusicChartFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MusicChart
+     */
+    select?: MusicChartSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MusicChart
+     */
+    omit?: MusicChartOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MusicChartInclude<ExtArgs> | null
+    /**
+     * Filter, which MusicChart to fetch.
+     */
+    where?: MusicChartWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MusicCharts to fetch.
+     */
+    orderBy?: MusicChartOrderByWithRelationInput | MusicChartOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MusicCharts.
+     */
+    cursor?: MusicChartWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MusicCharts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MusicCharts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MusicCharts.
+     */
+    distinct?: MusicChartScalarFieldEnum | MusicChartScalarFieldEnum[]
+  }
+
+  /**
+   * MusicChart findFirstOrThrow
+   */
+  export type MusicChartFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MusicChart
+     */
+    select?: MusicChartSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MusicChart
+     */
+    omit?: MusicChartOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MusicChartInclude<ExtArgs> | null
+    /**
+     * Filter, which MusicChart to fetch.
+     */
+    where?: MusicChartWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MusicCharts to fetch.
+     */
+    orderBy?: MusicChartOrderByWithRelationInput | MusicChartOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MusicCharts.
+     */
+    cursor?: MusicChartWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MusicCharts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MusicCharts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MusicCharts.
+     */
+    distinct?: MusicChartScalarFieldEnum | MusicChartScalarFieldEnum[]
+  }
+
+  /**
+   * MusicChart findMany
+   */
+  export type MusicChartFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MusicChart
+     */
+    select?: MusicChartSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MusicChart
+     */
+    omit?: MusicChartOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MusicChartInclude<ExtArgs> | null
+    /**
+     * Filter, which MusicCharts to fetch.
+     */
+    where?: MusicChartWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MusicCharts to fetch.
+     */
+    orderBy?: MusicChartOrderByWithRelationInput | MusicChartOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing MusicCharts.
+     */
+    cursor?: MusicChartWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MusicCharts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MusicCharts.
+     */
+    skip?: number
+    distinct?: MusicChartScalarFieldEnum | MusicChartScalarFieldEnum[]
+  }
+
+  /**
+   * MusicChart create
+   */
+  export type MusicChartCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MusicChart
+     */
+    select?: MusicChartSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MusicChart
+     */
+    omit?: MusicChartOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MusicChartInclude<ExtArgs> | null
+    /**
+     * The data needed to create a MusicChart.
+     */
+    data: XOR<MusicChartCreateInput, MusicChartUncheckedCreateInput>
+  }
+
+  /**
+   * MusicChart createMany
+   */
+  export type MusicChartCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many MusicCharts.
+     */
+    data: MusicChartCreateManyInput | MusicChartCreateManyInput[]
+  }
+
+  /**
+   * MusicChart createManyAndReturn
+   */
+  export type MusicChartCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MusicChart
+     */
+    select?: MusicChartSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the MusicChart
+     */
+    omit?: MusicChartOmit<ExtArgs> | null
+    /**
+     * The data used to create many MusicCharts.
+     */
+    data: MusicChartCreateManyInput | MusicChartCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MusicChartIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * MusicChart update
+   */
+  export type MusicChartUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MusicChart
+     */
+    select?: MusicChartSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MusicChart
+     */
+    omit?: MusicChartOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MusicChartInclude<ExtArgs> | null
+    /**
+     * The data needed to update a MusicChart.
+     */
+    data: XOR<MusicChartUpdateInput, MusicChartUncheckedUpdateInput>
+    /**
+     * Choose, which MusicChart to update.
+     */
+    where: MusicChartWhereUniqueInput
+  }
+
+  /**
+   * MusicChart updateMany
+   */
+  export type MusicChartUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update MusicCharts.
+     */
+    data: XOR<MusicChartUpdateManyMutationInput, MusicChartUncheckedUpdateManyInput>
+    /**
+     * Filter which MusicCharts to update
+     */
+    where?: MusicChartWhereInput
+    /**
+     * Limit how many MusicCharts to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * MusicChart updateManyAndReturn
+   */
+  export type MusicChartUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MusicChart
+     */
+    select?: MusicChartSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the MusicChart
+     */
+    omit?: MusicChartOmit<ExtArgs> | null
+    /**
+     * The data used to update MusicCharts.
+     */
+    data: XOR<MusicChartUpdateManyMutationInput, MusicChartUncheckedUpdateManyInput>
+    /**
+     * Filter which MusicCharts to update
+     */
+    where?: MusicChartWhereInput
+    /**
+     * Limit how many MusicCharts to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MusicChartIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * MusicChart upsert
+   */
+  export type MusicChartUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MusicChart
+     */
+    select?: MusicChartSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MusicChart
+     */
+    omit?: MusicChartOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MusicChartInclude<ExtArgs> | null
+    /**
+     * The filter to search for the MusicChart to update in case it exists.
+     */
+    where: MusicChartWhereUniqueInput
+    /**
+     * In case the MusicChart found by the `where` argument doesn't exist, create a new MusicChart with this data.
+     */
+    create: XOR<MusicChartCreateInput, MusicChartUncheckedCreateInput>
+    /**
+     * In case the MusicChart was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<MusicChartUpdateInput, MusicChartUncheckedUpdateInput>
+  }
+
+  /**
+   * MusicChart delete
+   */
+  export type MusicChartDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MusicChart
+     */
+    select?: MusicChartSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MusicChart
+     */
+    omit?: MusicChartOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MusicChartInclude<ExtArgs> | null
+    /**
+     * Filter which MusicChart to delete.
+     */
+    where: MusicChartWhereUniqueInput
+  }
+
+  /**
+   * MusicChart deleteMany
+   */
+  export type MusicChartDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MusicCharts to delete
+     */
+    where?: MusicChartWhereInput
+    /**
+     * Limit how many MusicCharts to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * MusicChart.constantHistory
+   */
+  export type MusicChart$constantHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartConstantHistory
+     */
+    select?: ChartConstantHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartConstantHistory
+     */
+    omit?: ChartConstantHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartConstantHistoryInclude<ExtArgs> | null
+    where?: ChartConstantHistoryWhereInput
+    orderBy?: ChartConstantHistoryOrderByWithRelationInput | ChartConstantHistoryOrderByWithRelationInput[]
+    cursor?: ChartConstantHistoryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ChartConstantHistoryScalarFieldEnum | ChartConstantHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * MusicChart.evaluations
+   */
+  export type MusicChart$evaluationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartEvaluation
+     */
+    select?: ChartEvaluationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartEvaluation
+     */
+    omit?: ChartEvaluationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartEvaluationInclude<ExtArgs> | null
+    where?: ChartEvaluationWhereInput
+    orderBy?: ChartEvaluationOrderByWithRelationInput | ChartEvaluationOrderByWithRelationInput[]
+    cursor?: ChartEvaluationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ChartEvaluationScalarFieldEnum | ChartEvaluationScalarFieldEnum[]
+  }
+
+  /**
+   * MusicChart.RecentPlay
+   */
+  export type MusicChart$RecentPlayArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecentPlay
+     */
+    select?: RecentPlaySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RecentPlay
+     */
+    omit?: RecentPlayOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RecentPlayInclude<ExtArgs> | null
+    where?: RecentPlayWhereInput
+    orderBy?: RecentPlayOrderByWithRelationInput | RecentPlayOrderByWithRelationInput[]
+    cursor?: RecentPlayWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: RecentPlayScalarFieldEnum | RecentPlayScalarFieldEnum[]
+  }
+
+  /**
+   * MusicChart.PlayData
+   */
+  export type MusicChart$PlayDataArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlayData
+     */
+    select?: PlayDataSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PlayData
+     */
+    omit?: PlayDataOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlayDataInclude<ExtArgs> | null
+    where?: PlayDataWhereInput
+    orderBy?: PlayDataOrderByWithRelationInput | PlayDataOrderByWithRelationInput[]
+    cursor?: PlayDataWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PlayDataScalarFieldEnum | PlayDataScalarFieldEnum[]
+  }
+
+  /**
+   * MusicChart.BasicBestPlay
+   */
+  export type MusicChart$BasicBestPlayArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BasicBestPlay
+     */
+    select?: BasicBestPlaySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BasicBestPlay
+     */
+    omit?: BasicBestPlayOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BasicBestPlayInclude<ExtArgs> | null
+    where?: BasicBestPlayWhereInput
+    orderBy?: BasicBestPlayOrderByWithRelationInput | BasicBestPlayOrderByWithRelationInput[]
+    cursor?: BasicBestPlayWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: BasicBestPlayScalarFieldEnum | BasicBestPlayScalarFieldEnum[]
+  }
+
+  /**
+   * MusicChart.RecitalBestPlay
+   */
+  export type MusicChart$RecitalBestPlayArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecitalBestPlay
+     */
+    select?: RecitalBestPlaySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RecitalBestPlay
+     */
+    omit?: RecitalBestPlayOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RecitalBestPlayInclude<ExtArgs> | null
+    where?: RecitalBestPlayWhereInput
+    orderBy?: RecitalBestPlayOrderByWithRelationInput | RecitalBestPlayOrderByWithRelationInput[]
+    cursor?: RecitalBestPlayWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: RecitalBestPlayScalarFieldEnum | RecitalBestPlayScalarFieldEnum[]
+  }
+
+  /**
+   * MusicChart.playHistory
+   */
+  export type MusicChart$playHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartPlayHistory
+     */
+    select?: ChartPlayHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartPlayHistory
+     */
+    omit?: ChartPlayHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartPlayHistoryInclude<ExtArgs> | null
+    where?: ChartPlayHistoryWhereInput
+    orderBy?: ChartPlayHistoryOrderByWithRelationInput | ChartPlayHistoryOrderByWithRelationInput[]
+    cursor?: ChartPlayHistoryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ChartPlayHistoryScalarFieldEnum | ChartPlayHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * MusicChart.recordSnapshots
+   */
+  export type MusicChart$recordSnapshotsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartRecordSnapshot
+     */
+    select?: ChartRecordSnapshotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartRecordSnapshot
+     */
+    omit?: ChartRecordSnapshotOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartRecordSnapshotInclude<ExtArgs> | null
+    where?: ChartRecordSnapshotWhereInput
+    orderBy?: ChartRecordSnapshotOrderByWithRelationInput | ChartRecordSnapshotOrderByWithRelationInput[]
+    cursor?: ChartRecordSnapshotWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ChartRecordSnapshotScalarFieldEnum | ChartRecordSnapshotScalarFieldEnum[]
+  }
+
+  /**
+   * MusicChart without action
+   */
+  export type MusicChartDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MusicChart
+     */
+    select?: MusicChartSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MusicChart
+     */
+    omit?: MusicChartOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MusicChartInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model DataSync
+   */
+
+  export type AggregateDataSync = {
+    _count: DataSyncCountAggregateOutputType | null
+    _avg: DataSyncAvgAggregateOutputType | null
+    _sum: DataSyncSumAggregateOutputType | null
+    _min: DataSyncMinAggregateOutputType | null
+    _max: DataSyncMaxAggregateOutputType | null
+  }
+
+  export type DataSyncAvgAggregateOutputType = {
+    id: number | null
+    received_plays: number | null
+    inserted_plays: number | null
+    changed_records: number | null
+    user_id: number | null
+  }
+
+  export type DataSyncSumAggregateOutputType = {
+    id: number | null
+    received_plays: number | null
+    inserted_plays: number | null
+    changed_records: number | null
+    user_id: number | null
+  }
+
+  export type DataSyncMinAggregateOutputType = {
+    id: number | null
+    status: string | null
+    received_plays: number | null
+    inserted_plays: number | null
+    changed_records: number | null
+    error_message: string | null
+    user_id: number | null
+    started_at: Date | null
+    completed_at: Date | null
+  }
+
+  export type DataSyncMaxAggregateOutputType = {
+    id: number | null
+    status: string | null
+    received_plays: number | null
+    inserted_plays: number | null
+    changed_records: number | null
+    error_message: string | null
+    user_id: number | null
+    started_at: Date | null
+    completed_at: Date | null
+  }
+
+  export type DataSyncCountAggregateOutputType = {
+    id: number
+    status: number
+    received_plays: number
+    inserted_plays: number
+    changed_records: number
+    error_message: number
+    user_id: number
+    started_at: number
+    completed_at: number
+    _all: number
+  }
+
+
+  export type DataSyncAvgAggregateInputType = {
+    id?: true
+    received_plays?: true
+    inserted_plays?: true
+    changed_records?: true
+    user_id?: true
+  }
+
+  export type DataSyncSumAggregateInputType = {
+    id?: true
+    received_plays?: true
+    inserted_plays?: true
+    changed_records?: true
+    user_id?: true
+  }
+
+  export type DataSyncMinAggregateInputType = {
+    id?: true
+    status?: true
+    received_plays?: true
+    inserted_plays?: true
+    changed_records?: true
+    error_message?: true
+    user_id?: true
+    started_at?: true
+    completed_at?: true
+  }
+
+  export type DataSyncMaxAggregateInputType = {
+    id?: true
+    status?: true
+    received_plays?: true
+    inserted_plays?: true
+    changed_records?: true
+    error_message?: true
+    user_id?: true
+    started_at?: true
+    completed_at?: true
+  }
+
+  export type DataSyncCountAggregateInputType = {
+    id?: true
+    status?: true
+    received_plays?: true
+    inserted_plays?: true
+    changed_records?: true
+    error_message?: true
+    user_id?: true
+    started_at?: true
+    completed_at?: true
+    _all?: true
+  }
+
+  export type DataSyncAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DataSync to aggregate.
+     */
+    where?: DataSyncWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DataSyncs to fetch.
+     */
+    orderBy?: DataSyncOrderByWithRelationInput | DataSyncOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DataSyncWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DataSyncs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DataSyncs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned DataSyncs
+    **/
+    _count?: true | DataSyncCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: DataSyncAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: DataSyncSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DataSyncMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DataSyncMaxAggregateInputType
+  }
+
+  export type GetDataSyncAggregateType<T extends DataSyncAggregateArgs> = {
+        [P in keyof T & keyof AggregateDataSync]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDataSync[P]>
+      : GetScalarType<T[P], AggregateDataSync[P]>
+  }
+
+
+
+
+  export type DataSyncGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DataSyncWhereInput
+    orderBy?: DataSyncOrderByWithAggregationInput | DataSyncOrderByWithAggregationInput[]
+    by: DataSyncScalarFieldEnum[] | DataSyncScalarFieldEnum
+    having?: DataSyncScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DataSyncCountAggregateInputType | true
+    _avg?: DataSyncAvgAggregateInputType
+    _sum?: DataSyncSumAggregateInputType
+    _min?: DataSyncMinAggregateInputType
+    _max?: DataSyncMaxAggregateInputType
+  }
+
+  export type DataSyncGroupByOutputType = {
+    id: number
+    status: string
+    received_plays: number
+    inserted_plays: number
+    changed_records: number
+    error_message: string | null
+    user_id: number
+    started_at: Date
+    completed_at: Date | null
+    _count: DataSyncCountAggregateOutputType | null
+    _avg: DataSyncAvgAggregateOutputType | null
+    _sum: DataSyncSumAggregateOutputType | null
+    _min: DataSyncMinAggregateOutputType | null
+    _max: DataSyncMaxAggregateOutputType | null
+  }
+
+  type GetDataSyncGroupByPayload<T extends DataSyncGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DataSyncGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DataSyncGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DataSyncGroupByOutputType[P]>
+            : GetScalarType<T[P], DataSyncGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DataSyncSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    status?: boolean
+    received_plays?: boolean
+    inserted_plays?: boolean
+    changed_records?: boolean
+    error_message?: boolean
+    user_id?: boolean
+    started_at?: boolean
+    completed_at?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    playHistory?: boolean | DataSync$playHistoryArgs<ExtArgs>
+    recordSnapshots?: boolean | DataSync$recordSnapshotsArgs<ExtArgs>
+    _count?: boolean | DataSyncCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["dataSync"]>
+
+  export type DataSyncSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    status?: boolean
+    received_plays?: boolean
+    inserted_plays?: boolean
+    changed_records?: boolean
+    error_message?: boolean
+    user_id?: boolean
+    started_at?: boolean
+    completed_at?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["dataSync"]>
+
+  export type DataSyncSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    status?: boolean
+    received_plays?: boolean
+    inserted_plays?: boolean
+    changed_records?: boolean
+    error_message?: boolean
+    user_id?: boolean
+    started_at?: boolean
+    completed_at?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["dataSync"]>
+
+  export type DataSyncSelectScalar = {
+    id?: boolean
+    status?: boolean
+    received_plays?: boolean
+    inserted_plays?: boolean
+    changed_records?: boolean
+    error_message?: boolean
+    user_id?: boolean
+    started_at?: boolean
+    completed_at?: boolean
+  }
+
+  export type DataSyncOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "status" | "received_plays" | "inserted_plays" | "changed_records" | "error_message" | "user_id" | "started_at" | "completed_at", ExtArgs["result"]["dataSync"]>
+  export type DataSyncInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    playHistory?: boolean | DataSync$playHistoryArgs<ExtArgs>
+    recordSnapshots?: boolean | DataSync$recordSnapshotsArgs<ExtArgs>
+    _count?: boolean | DataSyncCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type DataSyncIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type DataSyncIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $DataSyncPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DataSync"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      playHistory: Prisma.$ChartPlayHistoryPayload<ExtArgs>[]
+      recordSnapshots: Prisma.$ChartRecordSnapshotPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      status: string
+      received_plays: number
+      inserted_plays: number
+      changed_records: number
+      error_message: string | null
+      user_id: number
+      started_at: Date
+      completed_at: Date | null
+    }, ExtArgs["result"]["dataSync"]>
+    composites: {}
+  }
+
+  type DataSyncGetPayload<S extends boolean | null | undefined | DataSyncDefaultArgs> = $Result.GetResult<Prisma.$DataSyncPayload, S>
+
+  type DataSyncCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DataSyncFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DataSyncCountAggregateInputType | true
+    }
+
+  export interface DataSyncDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DataSync'], meta: { name: 'DataSync' } }
+    /**
+     * Find zero or one DataSync that matches the filter.
+     * @param {DataSyncFindUniqueArgs} args - Arguments to find a DataSync
+     * @example
+     * // Get one DataSync
+     * const dataSync = await prisma.dataSync.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DataSyncFindUniqueArgs>(args: SelectSubset<T, DataSyncFindUniqueArgs<ExtArgs>>): Prisma__DataSyncClient<$Result.GetResult<Prisma.$DataSyncPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one DataSync that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DataSyncFindUniqueOrThrowArgs} args - Arguments to find a DataSync
+     * @example
+     * // Get one DataSync
+     * const dataSync = await prisma.dataSync.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DataSyncFindUniqueOrThrowArgs>(args: SelectSubset<T, DataSyncFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DataSyncClient<$Result.GetResult<Prisma.$DataSyncPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DataSync that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DataSyncFindFirstArgs} args - Arguments to find a DataSync
+     * @example
+     * // Get one DataSync
+     * const dataSync = await prisma.dataSync.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DataSyncFindFirstArgs>(args?: SelectSubset<T, DataSyncFindFirstArgs<ExtArgs>>): Prisma__DataSyncClient<$Result.GetResult<Prisma.$DataSyncPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DataSync that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DataSyncFindFirstOrThrowArgs} args - Arguments to find a DataSync
+     * @example
+     * // Get one DataSync
+     * const dataSync = await prisma.dataSync.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DataSyncFindFirstOrThrowArgs>(args?: SelectSubset<T, DataSyncFindFirstOrThrowArgs<ExtArgs>>): Prisma__DataSyncClient<$Result.GetResult<Prisma.$DataSyncPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more DataSyncs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DataSyncFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DataSyncs
+     * const dataSyncs = await prisma.dataSync.findMany()
+     * 
+     * // Get first 10 DataSyncs
+     * const dataSyncs = await prisma.dataSync.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const dataSyncWithIdOnly = await prisma.dataSync.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DataSyncFindManyArgs>(args?: SelectSubset<T, DataSyncFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DataSyncPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a DataSync.
+     * @param {DataSyncCreateArgs} args - Arguments to create a DataSync.
+     * @example
+     * // Create one DataSync
+     * const DataSync = await prisma.dataSync.create({
+     *   data: {
+     *     // ... data to create a DataSync
+     *   }
+     * })
+     * 
+     */
+    create<T extends DataSyncCreateArgs>(args: SelectSubset<T, DataSyncCreateArgs<ExtArgs>>): Prisma__DataSyncClient<$Result.GetResult<Prisma.$DataSyncPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many DataSyncs.
+     * @param {DataSyncCreateManyArgs} args - Arguments to create many DataSyncs.
+     * @example
+     * // Create many DataSyncs
+     * const dataSync = await prisma.dataSync.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DataSyncCreateManyArgs>(args?: SelectSubset<T, DataSyncCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many DataSyncs and returns the data saved in the database.
+     * @param {DataSyncCreateManyAndReturnArgs} args - Arguments to create many DataSyncs.
+     * @example
+     * // Create many DataSyncs
+     * const dataSync = await prisma.dataSync.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many DataSyncs and only return the `id`
+     * const dataSyncWithIdOnly = await prisma.dataSync.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends DataSyncCreateManyAndReturnArgs>(args?: SelectSubset<T, DataSyncCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DataSyncPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a DataSync.
+     * @param {DataSyncDeleteArgs} args - Arguments to delete one DataSync.
+     * @example
+     * // Delete one DataSync
+     * const DataSync = await prisma.dataSync.delete({
+     *   where: {
+     *     // ... filter to delete one DataSync
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DataSyncDeleteArgs>(args: SelectSubset<T, DataSyncDeleteArgs<ExtArgs>>): Prisma__DataSyncClient<$Result.GetResult<Prisma.$DataSyncPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one DataSync.
+     * @param {DataSyncUpdateArgs} args - Arguments to update one DataSync.
+     * @example
+     * // Update one DataSync
+     * const dataSync = await prisma.dataSync.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DataSyncUpdateArgs>(args: SelectSubset<T, DataSyncUpdateArgs<ExtArgs>>): Prisma__DataSyncClient<$Result.GetResult<Prisma.$DataSyncPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more DataSyncs.
+     * @param {DataSyncDeleteManyArgs} args - Arguments to filter DataSyncs to delete.
+     * @example
+     * // Delete a few DataSyncs
+     * const { count } = await prisma.dataSync.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DataSyncDeleteManyArgs>(args?: SelectSubset<T, DataSyncDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DataSyncs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DataSyncUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DataSyncs
+     * const dataSync = await prisma.dataSync.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DataSyncUpdateManyArgs>(args: SelectSubset<T, DataSyncUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DataSyncs and returns the data updated in the database.
+     * @param {DataSyncUpdateManyAndReturnArgs} args - Arguments to update many DataSyncs.
+     * @example
+     * // Update many DataSyncs
+     * const dataSync = await prisma.dataSync.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more DataSyncs and only return the `id`
+     * const dataSyncWithIdOnly = await prisma.dataSync.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends DataSyncUpdateManyAndReturnArgs>(args: SelectSubset<T, DataSyncUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DataSyncPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one DataSync.
+     * @param {DataSyncUpsertArgs} args - Arguments to update or create a DataSync.
+     * @example
+     * // Update or create a DataSync
+     * const dataSync = await prisma.dataSync.upsert({
+     *   create: {
+     *     // ... data to create a DataSync
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DataSync we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DataSyncUpsertArgs>(args: SelectSubset<T, DataSyncUpsertArgs<ExtArgs>>): Prisma__DataSyncClient<$Result.GetResult<Prisma.$DataSyncPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of DataSyncs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DataSyncCountArgs} args - Arguments to filter DataSyncs to count.
+     * @example
+     * // Count the number of DataSyncs
+     * const count = await prisma.dataSync.count({
+     *   where: {
+     *     // ... the filter for the DataSyncs we want to count
+     *   }
+     * })
+    **/
+    count<T extends DataSyncCountArgs>(
+      args?: Subset<T, DataSyncCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DataSyncCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DataSync.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DataSyncAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DataSyncAggregateArgs>(args: Subset<T, DataSyncAggregateArgs>): Prisma.PrismaPromise<GetDataSyncAggregateType<T>>
+
+    /**
+     * Group by DataSync.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DataSyncGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DataSyncGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DataSyncGroupByArgs['orderBy'] }
+        : { orderBy?: DataSyncGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DataSyncGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDataSyncGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the DataSync model
+   */
+  readonly fields: DataSyncFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DataSync.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DataSyncClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    playHistory<T extends DataSync$playHistoryArgs<ExtArgs> = {}>(args?: Subset<T, DataSync$playHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartPlayHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    recordSnapshots<T extends DataSync$recordSnapshotsArgs<ExtArgs> = {}>(args?: Subset<T, DataSync$recordSnapshotsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartRecordSnapshotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the DataSync model
+   */
+  interface DataSyncFieldRefs {
+    readonly id: FieldRef<"DataSync", 'Int'>
+    readonly status: FieldRef<"DataSync", 'String'>
+    readonly received_plays: FieldRef<"DataSync", 'Int'>
+    readonly inserted_plays: FieldRef<"DataSync", 'Int'>
+    readonly changed_records: FieldRef<"DataSync", 'Int'>
+    readonly error_message: FieldRef<"DataSync", 'String'>
+    readonly user_id: FieldRef<"DataSync", 'Int'>
+    readonly started_at: FieldRef<"DataSync", 'DateTime'>
+    readonly completed_at: FieldRef<"DataSync", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * DataSync findUnique
+   */
+  export type DataSyncFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DataSync
+     */
+    select?: DataSyncSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DataSync
+     */
+    omit?: DataSyncOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DataSyncInclude<ExtArgs> | null
+    /**
+     * Filter, which DataSync to fetch.
+     */
+    where: DataSyncWhereUniqueInput
+  }
+
+  /**
+   * DataSync findUniqueOrThrow
+   */
+  export type DataSyncFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DataSync
+     */
+    select?: DataSyncSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DataSync
+     */
+    omit?: DataSyncOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DataSyncInclude<ExtArgs> | null
+    /**
+     * Filter, which DataSync to fetch.
+     */
+    where: DataSyncWhereUniqueInput
+  }
+
+  /**
+   * DataSync findFirst
+   */
+  export type DataSyncFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DataSync
+     */
+    select?: DataSyncSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DataSync
+     */
+    omit?: DataSyncOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DataSyncInclude<ExtArgs> | null
+    /**
+     * Filter, which DataSync to fetch.
+     */
+    where?: DataSyncWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DataSyncs to fetch.
+     */
+    orderBy?: DataSyncOrderByWithRelationInput | DataSyncOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DataSyncs.
+     */
+    cursor?: DataSyncWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DataSyncs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DataSyncs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DataSyncs.
+     */
+    distinct?: DataSyncScalarFieldEnum | DataSyncScalarFieldEnum[]
+  }
+
+  /**
+   * DataSync findFirstOrThrow
+   */
+  export type DataSyncFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DataSync
+     */
+    select?: DataSyncSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DataSync
+     */
+    omit?: DataSyncOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DataSyncInclude<ExtArgs> | null
+    /**
+     * Filter, which DataSync to fetch.
+     */
+    where?: DataSyncWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DataSyncs to fetch.
+     */
+    orderBy?: DataSyncOrderByWithRelationInput | DataSyncOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DataSyncs.
+     */
+    cursor?: DataSyncWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DataSyncs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DataSyncs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DataSyncs.
+     */
+    distinct?: DataSyncScalarFieldEnum | DataSyncScalarFieldEnum[]
+  }
+
+  /**
+   * DataSync findMany
+   */
+  export type DataSyncFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DataSync
+     */
+    select?: DataSyncSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DataSync
+     */
+    omit?: DataSyncOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DataSyncInclude<ExtArgs> | null
+    /**
+     * Filter, which DataSyncs to fetch.
+     */
+    where?: DataSyncWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DataSyncs to fetch.
+     */
+    orderBy?: DataSyncOrderByWithRelationInput | DataSyncOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing DataSyncs.
+     */
+    cursor?: DataSyncWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DataSyncs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DataSyncs.
+     */
+    skip?: number
+    distinct?: DataSyncScalarFieldEnum | DataSyncScalarFieldEnum[]
+  }
+
+  /**
+   * DataSync create
+   */
+  export type DataSyncCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DataSync
+     */
+    select?: DataSyncSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DataSync
+     */
+    omit?: DataSyncOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DataSyncInclude<ExtArgs> | null
+    /**
+     * The data needed to create a DataSync.
+     */
+    data: XOR<DataSyncCreateInput, DataSyncUncheckedCreateInput>
+  }
+
+  /**
+   * DataSync createMany
+   */
+  export type DataSyncCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DataSyncs.
+     */
+    data: DataSyncCreateManyInput | DataSyncCreateManyInput[]
+  }
+
+  /**
+   * DataSync createManyAndReturn
+   */
+  export type DataSyncCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DataSync
+     */
+    select?: DataSyncSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DataSync
+     */
+    omit?: DataSyncOmit<ExtArgs> | null
+    /**
+     * The data used to create many DataSyncs.
+     */
+    data: DataSyncCreateManyInput | DataSyncCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DataSyncIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DataSync update
+   */
+  export type DataSyncUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DataSync
+     */
+    select?: DataSyncSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DataSync
+     */
+    omit?: DataSyncOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DataSyncInclude<ExtArgs> | null
+    /**
+     * The data needed to update a DataSync.
+     */
+    data: XOR<DataSyncUpdateInput, DataSyncUncheckedUpdateInput>
+    /**
+     * Choose, which DataSync to update.
+     */
+    where: DataSyncWhereUniqueInput
+  }
+
+  /**
+   * DataSync updateMany
+   */
+  export type DataSyncUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DataSyncs.
+     */
+    data: XOR<DataSyncUpdateManyMutationInput, DataSyncUncheckedUpdateManyInput>
+    /**
+     * Filter which DataSyncs to update
+     */
+    where?: DataSyncWhereInput
+    /**
+     * Limit how many DataSyncs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DataSync updateManyAndReturn
+   */
+  export type DataSyncUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DataSync
+     */
+    select?: DataSyncSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DataSync
+     */
+    omit?: DataSyncOmit<ExtArgs> | null
+    /**
+     * The data used to update DataSyncs.
+     */
+    data: XOR<DataSyncUpdateManyMutationInput, DataSyncUncheckedUpdateManyInput>
+    /**
+     * Filter which DataSyncs to update
+     */
+    where?: DataSyncWhereInput
+    /**
+     * Limit how many DataSyncs to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DataSyncIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DataSync upsert
+   */
+  export type DataSyncUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DataSync
+     */
+    select?: DataSyncSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DataSync
+     */
+    omit?: DataSyncOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DataSyncInclude<ExtArgs> | null
+    /**
+     * The filter to search for the DataSync to update in case it exists.
+     */
+    where: DataSyncWhereUniqueInput
+    /**
+     * In case the DataSync found by the `where` argument doesn't exist, create a new DataSync with this data.
+     */
+    create: XOR<DataSyncCreateInput, DataSyncUncheckedCreateInput>
+    /**
+     * In case the DataSync was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DataSyncUpdateInput, DataSyncUncheckedUpdateInput>
+  }
+
+  /**
+   * DataSync delete
+   */
+  export type DataSyncDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DataSync
+     */
+    select?: DataSyncSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DataSync
+     */
+    omit?: DataSyncOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DataSyncInclude<ExtArgs> | null
+    /**
+     * Filter which DataSync to delete.
+     */
+    where: DataSyncWhereUniqueInput
+  }
+
+  /**
+   * DataSync deleteMany
+   */
+  export type DataSyncDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DataSyncs to delete
+     */
+    where?: DataSyncWhereInput
+    /**
+     * Limit how many DataSyncs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * DataSync.playHistory
+   */
+  export type DataSync$playHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartPlayHistory
+     */
+    select?: ChartPlayHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartPlayHistory
+     */
+    omit?: ChartPlayHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartPlayHistoryInclude<ExtArgs> | null
+    where?: ChartPlayHistoryWhereInput
+    orderBy?: ChartPlayHistoryOrderByWithRelationInput | ChartPlayHistoryOrderByWithRelationInput[]
+    cursor?: ChartPlayHistoryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ChartPlayHistoryScalarFieldEnum | ChartPlayHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * DataSync.recordSnapshots
+   */
+  export type DataSync$recordSnapshotsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartRecordSnapshot
+     */
+    select?: ChartRecordSnapshotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartRecordSnapshot
+     */
+    omit?: ChartRecordSnapshotOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartRecordSnapshotInclude<ExtArgs> | null
+    where?: ChartRecordSnapshotWhereInput
+    orderBy?: ChartRecordSnapshotOrderByWithRelationInput | ChartRecordSnapshotOrderByWithRelationInput[]
+    cursor?: ChartRecordSnapshotWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ChartRecordSnapshotScalarFieldEnum | ChartRecordSnapshotScalarFieldEnum[]
+  }
+
+  /**
+   * DataSync without action
+   */
+  export type DataSyncDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DataSync
+     */
+    select?: DataSyncSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DataSync
+     */
+    omit?: DataSyncOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DataSyncInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ChartPlayHistory
+   */
+
+  export type AggregateChartPlayHistory = {
+    _count: ChartPlayHistoryCountAggregateOutputType | null
+    _avg: ChartPlayHistoryAvgAggregateOutputType | null
+    _sum: ChartPlayHistorySumAggregateOutputType | null
+    _min: ChartPlayHistoryMinAggregateOutputType | null
+    _max: ChartPlayHistoryMaxAggregateOutputType | null
+  }
+
+  export type ChartPlayHistoryAvgAggregateOutputType = {
+    id: number | null
+    score: number | null
+    max_combo: number | null
+    grade_basic: number | null
+    chart_id: number | null
+    user_id: number | null
+    first_sync_id: number | null
+  }
+
+  export type ChartPlayHistorySumAggregateOutputType = {
+    id: number | null
+    score: number | null
+    max_combo: number | null
+    grade_basic: number | null
+    chart_id: number | null
+    user_id: number | null
+    first_sync_id: number | null
+  }
+
+  export type ChartPlayHistoryMinAggregateOutputType = {
+    id: number | null
+    score: number | null
+    max_combo: number | null
+    rank: string | null
+    grade_basic: number | null
+    source_play_time: string | null
+    chart_id: number | null
+    user_id: number | null
+    first_sync_id: number | null
+    created_at: Date | null
+  }
+
+  export type ChartPlayHistoryMaxAggregateOutputType = {
+    id: number | null
+    score: number | null
+    max_combo: number | null
+    rank: string | null
+    grade_basic: number | null
+    source_play_time: string | null
+    chart_id: number | null
+    user_id: number | null
+    first_sync_id: number | null
+    created_at: Date | null
+  }
+
+  export type ChartPlayHistoryCountAggregateOutputType = {
+    id: number
+    score: number
+    max_combo: number
+    rank: number
+    grade_basic: number
+    source_play_time: number
+    chart_id: number
+    user_id: number
+    first_sync_id: number
+    created_at: number
+    _all: number
+  }
+
+
+  export type ChartPlayHistoryAvgAggregateInputType = {
+    id?: true
+    score?: true
+    max_combo?: true
+    grade_basic?: true
+    chart_id?: true
+    user_id?: true
+    first_sync_id?: true
+  }
+
+  export type ChartPlayHistorySumAggregateInputType = {
+    id?: true
+    score?: true
+    max_combo?: true
+    grade_basic?: true
+    chart_id?: true
+    user_id?: true
+    first_sync_id?: true
+  }
+
+  export type ChartPlayHistoryMinAggregateInputType = {
+    id?: true
+    score?: true
+    max_combo?: true
+    rank?: true
+    grade_basic?: true
+    source_play_time?: true
+    chart_id?: true
+    user_id?: true
+    first_sync_id?: true
+    created_at?: true
+  }
+
+  export type ChartPlayHistoryMaxAggregateInputType = {
+    id?: true
+    score?: true
+    max_combo?: true
+    rank?: true
+    grade_basic?: true
+    source_play_time?: true
+    chart_id?: true
+    user_id?: true
+    first_sync_id?: true
+    created_at?: true
+  }
+
+  export type ChartPlayHistoryCountAggregateInputType = {
+    id?: true
+    score?: true
+    max_combo?: true
+    rank?: true
+    grade_basic?: true
+    source_play_time?: true
+    chart_id?: true
+    user_id?: true
+    first_sync_id?: true
+    created_at?: true
+    _all?: true
+  }
+
+  export type ChartPlayHistoryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ChartPlayHistory to aggregate.
+     */
+    where?: ChartPlayHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChartPlayHistories to fetch.
+     */
+    orderBy?: ChartPlayHistoryOrderByWithRelationInput | ChartPlayHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ChartPlayHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChartPlayHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChartPlayHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ChartPlayHistories
+    **/
+    _count?: true | ChartPlayHistoryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ChartPlayHistoryAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ChartPlayHistorySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ChartPlayHistoryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ChartPlayHistoryMaxAggregateInputType
+  }
+
+  export type GetChartPlayHistoryAggregateType<T extends ChartPlayHistoryAggregateArgs> = {
+        [P in keyof T & keyof AggregateChartPlayHistory]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateChartPlayHistory[P]>
+      : GetScalarType<T[P], AggregateChartPlayHistory[P]>
+  }
+
+
+
+
+  export type ChartPlayHistoryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ChartPlayHistoryWhereInput
+    orderBy?: ChartPlayHistoryOrderByWithAggregationInput | ChartPlayHistoryOrderByWithAggregationInput[]
+    by: ChartPlayHistoryScalarFieldEnum[] | ChartPlayHistoryScalarFieldEnum
+    having?: ChartPlayHistoryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ChartPlayHistoryCountAggregateInputType | true
+    _avg?: ChartPlayHistoryAvgAggregateInputType
+    _sum?: ChartPlayHistorySumAggregateInputType
+    _min?: ChartPlayHistoryMinAggregateInputType
+    _max?: ChartPlayHistoryMaxAggregateInputType
+  }
+
+  export type ChartPlayHistoryGroupByOutputType = {
+    id: number
+    score: number
+    max_combo: number
+    rank: string
+    grade_basic: number
+    source_play_time: string
+    chart_id: number
+    user_id: number
+    first_sync_id: number | null
+    created_at: Date
+    _count: ChartPlayHistoryCountAggregateOutputType | null
+    _avg: ChartPlayHistoryAvgAggregateOutputType | null
+    _sum: ChartPlayHistorySumAggregateOutputType | null
+    _min: ChartPlayHistoryMinAggregateOutputType | null
+    _max: ChartPlayHistoryMaxAggregateOutputType | null
+  }
+
+  type GetChartPlayHistoryGroupByPayload<T extends ChartPlayHistoryGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ChartPlayHistoryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ChartPlayHistoryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ChartPlayHistoryGroupByOutputType[P]>
+            : GetScalarType<T[P], ChartPlayHistoryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ChartPlayHistorySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    score?: boolean
+    max_combo?: boolean
+    rank?: boolean
+    grade_basic?: boolean
+    source_play_time?: boolean
+    chart_id?: boolean
+    user_id?: boolean
+    first_sync_id?: boolean
+    created_at?: boolean
+    chart?: boolean | MusicChartDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    firstSync?: boolean | ChartPlayHistory$firstSyncArgs<ExtArgs>
+  }, ExtArgs["result"]["chartPlayHistory"]>
+
+  export type ChartPlayHistorySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    score?: boolean
+    max_combo?: boolean
+    rank?: boolean
+    grade_basic?: boolean
+    source_play_time?: boolean
+    chart_id?: boolean
+    user_id?: boolean
+    first_sync_id?: boolean
+    created_at?: boolean
+    chart?: boolean | MusicChartDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    firstSync?: boolean | ChartPlayHistory$firstSyncArgs<ExtArgs>
+  }, ExtArgs["result"]["chartPlayHistory"]>
+
+  export type ChartPlayHistorySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    score?: boolean
+    max_combo?: boolean
+    rank?: boolean
+    grade_basic?: boolean
+    source_play_time?: boolean
+    chart_id?: boolean
+    user_id?: boolean
+    first_sync_id?: boolean
+    created_at?: boolean
+    chart?: boolean | MusicChartDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    firstSync?: boolean | ChartPlayHistory$firstSyncArgs<ExtArgs>
+  }, ExtArgs["result"]["chartPlayHistory"]>
+
+  export type ChartPlayHistorySelectScalar = {
+    id?: boolean
+    score?: boolean
+    max_combo?: boolean
+    rank?: boolean
+    grade_basic?: boolean
+    source_play_time?: boolean
+    chart_id?: boolean
+    user_id?: boolean
+    first_sync_id?: boolean
+    created_at?: boolean
+  }
+
+  export type ChartPlayHistoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "score" | "max_combo" | "rank" | "grade_basic" | "source_play_time" | "chart_id" | "user_id" | "first_sync_id" | "created_at", ExtArgs["result"]["chartPlayHistory"]>
+  export type ChartPlayHistoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    chart?: boolean | MusicChartDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    firstSync?: boolean | ChartPlayHistory$firstSyncArgs<ExtArgs>
+  }
+  export type ChartPlayHistoryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    chart?: boolean | MusicChartDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    firstSync?: boolean | ChartPlayHistory$firstSyncArgs<ExtArgs>
+  }
+  export type ChartPlayHistoryIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    chart?: boolean | MusicChartDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    firstSync?: boolean | ChartPlayHistory$firstSyncArgs<ExtArgs>
+  }
+
+  export type $ChartPlayHistoryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ChartPlayHistory"
+    objects: {
+      chart: Prisma.$MusicChartPayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs>
+      firstSync: Prisma.$DataSyncPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      score: number
+      max_combo: number
+      rank: string
+      grade_basic: number
+      source_play_time: string
+      chart_id: number
+      user_id: number
+      first_sync_id: number | null
+      created_at: Date
+    }, ExtArgs["result"]["chartPlayHistory"]>
+    composites: {}
+  }
+
+  type ChartPlayHistoryGetPayload<S extends boolean | null | undefined | ChartPlayHistoryDefaultArgs> = $Result.GetResult<Prisma.$ChartPlayHistoryPayload, S>
+
+  type ChartPlayHistoryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ChartPlayHistoryFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ChartPlayHistoryCountAggregateInputType | true
+    }
+
+  export interface ChartPlayHistoryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ChartPlayHistory'], meta: { name: 'ChartPlayHistory' } }
+    /**
+     * Find zero or one ChartPlayHistory that matches the filter.
+     * @param {ChartPlayHistoryFindUniqueArgs} args - Arguments to find a ChartPlayHistory
+     * @example
+     * // Get one ChartPlayHistory
+     * const chartPlayHistory = await prisma.chartPlayHistory.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ChartPlayHistoryFindUniqueArgs>(args: SelectSubset<T, ChartPlayHistoryFindUniqueArgs<ExtArgs>>): Prisma__ChartPlayHistoryClient<$Result.GetResult<Prisma.$ChartPlayHistoryPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ChartPlayHistory that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ChartPlayHistoryFindUniqueOrThrowArgs} args - Arguments to find a ChartPlayHistory
+     * @example
+     * // Get one ChartPlayHistory
+     * const chartPlayHistory = await prisma.chartPlayHistory.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ChartPlayHistoryFindUniqueOrThrowArgs>(args: SelectSubset<T, ChartPlayHistoryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ChartPlayHistoryClient<$Result.GetResult<Prisma.$ChartPlayHistoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ChartPlayHistory that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChartPlayHistoryFindFirstArgs} args - Arguments to find a ChartPlayHistory
+     * @example
+     * // Get one ChartPlayHistory
+     * const chartPlayHistory = await prisma.chartPlayHistory.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ChartPlayHistoryFindFirstArgs>(args?: SelectSubset<T, ChartPlayHistoryFindFirstArgs<ExtArgs>>): Prisma__ChartPlayHistoryClient<$Result.GetResult<Prisma.$ChartPlayHistoryPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ChartPlayHistory that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChartPlayHistoryFindFirstOrThrowArgs} args - Arguments to find a ChartPlayHistory
+     * @example
+     * // Get one ChartPlayHistory
+     * const chartPlayHistory = await prisma.chartPlayHistory.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ChartPlayHistoryFindFirstOrThrowArgs>(args?: SelectSubset<T, ChartPlayHistoryFindFirstOrThrowArgs<ExtArgs>>): Prisma__ChartPlayHistoryClient<$Result.GetResult<Prisma.$ChartPlayHistoryPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ChartPlayHistories that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChartPlayHistoryFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ChartPlayHistories
+     * const chartPlayHistories = await prisma.chartPlayHistory.findMany()
+     * 
+     * // Get first 10 ChartPlayHistories
+     * const chartPlayHistories = await prisma.chartPlayHistory.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const chartPlayHistoryWithIdOnly = await prisma.chartPlayHistory.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ChartPlayHistoryFindManyArgs>(args?: SelectSubset<T, ChartPlayHistoryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartPlayHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ChartPlayHistory.
+     * @param {ChartPlayHistoryCreateArgs} args - Arguments to create a ChartPlayHistory.
+     * @example
+     * // Create one ChartPlayHistory
+     * const ChartPlayHistory = await prisma.chartPlayHistory.create({
+     *   data: {
+     *     // ... data to create a ChartPlayHistory
+     *   }
+     * })
+     * 
+     */
+    create<T extends ChartPlayHistoryCreateArgs>(args: SelectSubset<T, ChartPlayHistoryCreateArgs<ExtArgs>>): Prisma__ChartPlayHistoryClient<$Result.GetResult<Prisma.$ChartPlayHistoryPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ChartPlayHistories.
+     * @param {ChartPlayHistoryCreateManyArgs} args - Arguments to create many ChartPlayHistories.
+     * @example
+     * // Create many ChartPlayHistories
+     * const chartPlayHistory = await prisma.chartPlayHistory.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ChartPlayHistoryCreateManyArgs>(args?: SelectSubset<T, ChartPlayHistoryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ChartPlayHistories and returns the data saved in the database.
+     * @param {ChartPlayHistoryCreateManyAndReturnArgs} args - Arguments to create many ChartPlayHistories.
+     * @example
+     * // Create many ChartPlayHistories
+     * const chartPlayHistory = await prisma.chartPlayHistory.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ChartPlayHistories and only return the `id`
+     * const chartPlayHistoryWithIdOnly = await prisma.chartPlayHistory.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ChartPlayHistoryCreateManyAndReturnArgs>(args?: SelectSubset<T, ChartPlayHistoryCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartPlayHistoryPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ChartPlayHistory.
+     * @param {ChartPlayHistoryDeleteArgs} args - Arguments to delete one ChartPlayHistory.
+     * @example
+     * // Delete one ChartPlayHistory
+     * const ChartPlayHistory = await prisma.chartPlayHistory.delete({
+     *   where: {
+     *     // ... filter to delete one ChartPlayHistory
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ChartPlayHistoryDeleteArgs>(args: SelectSubset<T, ChartPlayHistoryDeleteArgs<ExtArgs>>): Prisma__ChartPlayHistoryClient<$Result.GetResult<Prisma.$ChartPlayHistoryPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ChartPlayHistory.
+     * @param {ChartPlayHistoryUpdateArgs} args - Arguments to update one ChartPlayHistory.
+     * @example
+     * // Update one ChartPlayHistory
+     * const chartPlayHistory = await prisma.chartPlayHistory.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ChartPlayHistoryUpdateArgs>(args: SelectSubset<T, ChartPlayHistoryUpdateArgs<ExtArgs>>): Prisma__ChartPlayHistoryClient<$Result.GetResult<Prisma.$ChartPlayHistoryPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ChartPlayHistories.
+     * @param {ChartPlayHistoryDeleteManyArgs} args - Arguments to filter ChartPlayHistories to delete.
+     * @example
+     * // Delete a few ChartPlayHistories
+     * const { count } = await prisma.chartPlayHistory.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ChartPlayHistoryDeleteManyArgs>(args?: SelectSubset<T, ChartPlayHistoryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ChartPlayHistories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChartPlayHistoryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ChartPlayHistories
+     * const chartPlayHistory = await prisma.chartPlayHistory.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ChartPlayHistoryUpdateManyArgs>(args: SelectSubset<T, ChartPlayHistoryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ChartPlayHistories and returns the data updated in the database.
+     * @param {ChartPlayHistoryUpdateManyAndReturnArgs} args - Arguments to update many ChartPlayHistories.
+     * @example
+     * // Update many ChartPlayHistories
+     * const chartPlayHistory = await prisma.chartPlayHistory.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ChartPlayHistories and only return the `id`
+     * const chartPlayHistoryWithIdOnly = await prisma.chartPlayHistory.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ChartPlayHistoryUpdateManyAndReturnArgs>(args: SelectSubset<T, ChartPlayHistoryUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartPlayHistoryPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ChartPlayHistory.
+     * @param {ChartPlayHistoryUpsertArgs} args - Arguments to update or create a ChartPlayHistory.
+     * @example
+     * // Update or create a ChartPlayHistory
+     * const chartPlayHistory = await prisma.chartPlayHistory.upsert({
+     *   create: {
+     *     // ... data to create a ChartPlayHistory
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ChartPlayHistory we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ChartPlayHistoryUpsertArgs>(args: SelectSubset<T, ChartPlayHistoryUpsertArgs<ExtArgs>>): Prisma__ChartPlayHistoryClient<$Result.GetResult<Prisma.$ChartPlayHistoryPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ChartPlayHistories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChartPlayHistoryCountArgs} args - Arguments to filter ChartPlayHistories to count.
+     * @example
+     * // Count the number of ChartPlayHistories
+     * const count = await prisma.chartPlayHistory.count({
+     *   where: {
+     *     // ... the filter for the ChartPlayHistories we want to count
+     *   }
+     * })
+    **/
+    count<T extends ChartPlayHistoryCountArgs>(
+      args?: Subset<T, ChartPlayHistoryCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ChartPlayHistoryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ChartPlayHistory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChartPlayHistoryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ChartPlayHistoryAggregateArgs>(args: Subset<T, ChartPlayHistoryAggregateArgs>): Prisma.PrismaPromise<GetChartPlayHistoryAggregateType<T>>
+
+    /**
+     * Group by ChartPlayHistory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChartPlayHistoryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ChartPlayHistoryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ChartPlayHistoryGroupByArgs['orderBy'] }
+        : { orderBy?: ChartPlayHistoryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ChartPlayHistoryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetChartPlayHistoryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ChartPlayHistory model
+   */
+  readonly fields: ChartPlayHistoryFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ChartPlayHistory.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ChartPlayHistoryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    chart<T extends MusicChartDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MusicChartDefaultArgs<ExtArgs>>): Prisma__MusicChartClient<$Result.GetResult<Prisma.$MusicChartPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    firstSync<T extends ChartPlayHistory$firstSyncArgs<ExtArgs> = {}>(args?: Subset<T, ChartPlayHistory$firstSyncArgs<ExtArgs>>): Prisma__DataSyncClient<$Result.GetResult<Prisma.$DataSyncPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ChartPlayHistory model
+   */
+  interface ChartPlayHistoryFieldRefs {
+    readonly id: FieldRef<"ChartPlayHistory", 'Int'>
+    readonly score: FieldRef<"ChartPlayHistory", 'Int'>
+    readonly max_combo: FieldRef<"ChartPlayHistory", 'Int'>
+    readonly rank: FieldRef<"ChartPlayHistory", 'String'>
+    readonly grade_basic: FieldRef<"ChartPlayHistory", 'Int'>
+    readonly source_play_time: FieldRef<"ChartPlayHistory", 'String'>
+    readonly chart_id: FieldRef<"ChartPlayHistory", 'Int'>
+    readonly user_id: FieldRef<"ChartPlayHistory", 'Int'>
+    readonly first_sync_id: FieldRef<"ChartPlayHistory", 'Int'>
+    readonly created_at: FieldRef<"ChartPlayHistory", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ChartPlayHistory findUnique
+   */
+  export type ChartPlayHistoryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartPlayHistory
+     */
+    select?: ChartPlayHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartPlayHistory
+     */
+    omit?: ChartPlayHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartPlayHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which ChartPlayHistory to fetch.
+     */
+    where: ChartPlayHistoryWhereUniqueInput
+  }
+
+  /**
+   * ChartPlayHistory findUniqueOrThrow
+   */
+  export type ChartPlayHistoryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartPlayHistory
+     */
+    select?: ChartPlayHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartPlayHistory
+     */
+    omit?: ChartPlayHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartPlayHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which ChartPlayHistory to fetch.
+     */
+    where: ChartPlayHistoryWhereUniqueInput
+  }
+
+  /**
+   * ChartPlayHistory findFirst
+   */
+  export type ChartPlayHistoryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartPlayHistory
+     */
+    select?: ChartPlayHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartPlayHistory
+     */
+    omit?: ChartPlayHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartPlayHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which ChartPlayHistory to fetch.
+     */
+    where?: ChartPlayHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChartPlayHistories to fetch.
+     */
+    orderBy?: ChartPlayHistoryOrderByWithRelationInput | ChartPlayHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ChartPlayHistories.
+     */
+    cursor?: ChartPlayHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChartPlayHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChartPlayHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ChartPlayHistories.
+     */
+    distinct?: ChartPlayHistoryScalarFieldEnum | ChartPlayHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * ChartPlayHistory findFirstOrThrow
+   */
+  export type ChartPlayHistoryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartPlayHistory
+     */
+    select?: ChartPlayHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartPlayHistory
+     */
+    omit?: ChartPlayHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartPlayHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which ChartPlayHistory to fetch.
+     */
+    where?: ChartPlayHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChartPlayHistories to fetch.
+     */
+    orderBy?: ChartPlayHistoryOrderByWithRelationInput | ChartPlayHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ChartPlayHistories.
+     */
+    cursor?: ChartPlayHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChartPlayHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChartPlayHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ChartPlayHistories.
+     */
+    distinct?: ChartPlayHistoryScalarFieldEnum | ChartPlayHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * ChartPlayHistory findMany
+   */
+  export type ChartPlayHistoryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartPlayHistory
+     */
+    select?: ChartPlayHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartPlayHistory
+     */
+    omit?: ChartPlayHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartPlayHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which ChartPlayHistories to fetch.
+     */
+    where?: ChartPlayHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChartPlayHistories to fetch.
+     */
+    orderBy?: ChartPlayHistoryOrderByWithRelationInput | ChartPlayHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ChartPlayHistories.
+     */
+    cursor?: ChartPlayHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChartPlayHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChartPlayHistories.
+     */
+    skip?: number
+    distinct?: ChartPlayHistoryScalarFieldEnum | ChartPlayHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * ChartPlayHistory create
+   */
+  export type ChartPlayHistoryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartPlayHistory
+     */
+    select?: ChartPlayHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartPlayHistory
+     */
+    omit?: ChartPlayHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartPlayHistoryInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ChartPlayHistory.
+     */
+    data: XOR<ChartPlayHistoryCreateInput, ChartPlayHistoryUncheckedCreateInput>
+  }
+
+  /**
+   * ChartPlayHistory createMany
+   */
+  export type ChartPlayHistoryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ChartPlayHistories.
+     */
+    data: ChartPlayHistoryCreateManyInput | ChartPlayHistoryCreateManyInput[]
+  }
+
+  /**
+   * ChartPlayHistory createManyAndReturn
+   */
+  export type ChartPlayHistoryCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartPlayHistory
+     */
+    select?: ChartPlayHistorySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartPlayHistory
+     */
+    omit?: ChartPlayHistoryOmit<ExtArgs> | null
+    /**
+     * The data used to create many ChartPlayHistories.
+     */
+    data: ChartPlayHistoryCreateManyInput | ChartPlayHistoryCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartPlayHistoryIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ChartPlayHistory update
+   */
+  export type ChartPlayHistoryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartPlayHistory
+     */
+    select?: ChartPlayHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartPlayHistory
+     */
+    omit?: ChartPlayHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartPlayHistoryInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ChartPlayHistory.
+     */
+    data: XOR<ChartPlayHistoryUpdateInput, ChartPlayHistoryUncheckedUpdateInput>
+    /**
+     * Choose, which ChartPlayHistory to update.
+     */
+    where: ChartPlayHistoryWhereUniqueInput
+  }
+
+  /**
+   * ChartPlayHistory updateMany
+   */
+  export type ChartPlayHistoryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ChartPlayHistories.
+     */
+    data: XOR<ChartPlayHistoryUpdateManyMutationInput, ChartPlayHistoryUncheckedUpdateManyInput>
+    /**
+     * Filter which ChartPlayHistories to update
+     */
+    where?: ChartPlayHistoryWhereInput
+    /**
+     * Limit how many ChartPlayHistories to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ChartPlayHistory updateManyAndReturn
+   */
+  export type ChartPlayHistoryUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartPlayHistory
+     */
+    select?: ChartPlayHistorySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartPlayHistory
+     */
+    omit?: ChartPlayHistoryOmit<ExtArgs> | null
+    /**
+     * The data used to update ChartPlayHistories.
+     */
+    data: XOR<ChartPlayHistoryUpdateManyMutationInput, ChartPlayHistoryUncheckedUpdateManyInput>
+    /**
+     * Filter which ChartPlayHistories to update
+     */
+    where?: ChartPlayHistoryWhereInput
+    /**
+     * Limit how many ChartPlayHistories to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartPlayHistoryIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ChartPlayHistory upsert
+   */
+  export type ChartPlayHistoryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartPlayHistory
+     */
+    select?: ChartPlayHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartPlayHistory
+     */
+    omit?: ChartPlayHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartPlayHistoryInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ChartPlayHistory to update in case it exists.
+     */
+    where: ChartPlayHistoryWhereUniqueInput
+    /**
+     * In case the ChartPlayHistory found by the `where` argument doesn't exist, create a new ChartPlayHistory with this data.
+     */
+    create: XOR<ChartPlayHistoryCreateInput, ChartPlayHistoryUncheckedCreateInput>
+    /**
+     * In case the ChartPlayHistory was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ChartPlayHistoryUpdateInput, ChartPlayHistoryUncheckedUpdateInput>
+  }
+
+  /**
+   * ChartPlayHistory delete
+   */
+  export type ChartPlayHistoryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartPlayHistory
+     */
+    select?: ChartPlayHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartPlayHistory
+     */
+    omit?: ChartPlayHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartPlayHistoryInclude<ExtArgs> | null
+    /**
+     * Filter which ChartPlayHistory to delete.
+     */
+    where: ChartPlayHistoryWhereUniqueInput
+  }
+
+  /**
+   * ChartPlayHistory deleteMany
+   */
+  export type ChartPlayHistoryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ChartPlayHistories to delete
+     */
+    where?: ChartPlayHistoryWhereInput
+    /**
+     * Limit how many ChartPlayHistories to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ChartPlayHistory.firstSync
+   */
+  export type ChartPlayHistory$firstSyncArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DataSync
+     */
+    select?: DataSyncSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DataSync
+     */
+    omit?: DataSyncOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DataSyncInclude<ExtArgs> | null
+    where?: DataSyncWhereInput
+  }
+
+  /**
+   * ChartPlayHistory without action
+   */
+  export type ChartPlayHistoryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartPlayHistory
+     */
+    select?: ChartPlayHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartPlayHistory
+     */
+    omit?: ChartPlayHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartPlayHistoryInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ChartRecordSnapshot
+   */
+
+  export type AggregateChartRecordSnapshot = {
+    _count: ChartRecordSnapshotCountAggregateOutputType | null
+    _avg: ChartRecordSnapshotAvgAggregateOutputType | null
+    _sum: ChartRecordSnapshotSumAggregateOutputType | null
+    _min: ChartRecordSnapshotMinAggregateOutputType | null
+    _max: ChartRecordSnapshotMaxAggregateOutputType | null
+  }
+
+  export type ChartRecordSnapshotAvgAggregateOutputType = {
+    id: number | null
+    level: number | null
+    score: number | null
+    fc_type: number | null
+    play_count: number | null
+    fullcombo_count: number | null
+    pianistic_count: number | null
+    max_combo: number | null
+    grade_basic: number | null
+    grade_recital: number | null
+    chart_id: number | null
+    user_id: number | null
+    sync_id: number | null
+  }
+
+  export type ChartRecordSnapshotSumAggregateOutputType = {
+    id: number | null
+    level: number | null
+    score: number | null
+    fc_type: number | null
+    play_count: number | null
+    fullcombo_count: number | null
+    pianistic_count: number | null
+    max_combo: number | null
+    grade_basic: number | null
+    grade_recital: number | null
+    chart_id: number | null
+    user_id: number | null
+    sync_id: number | null
+  }
+
+  export type ChartRecordSnapshotMinAggregateOutputType = {
+    id: number | null
+    level: number | null
+    score: number | null
+    rank: string | null
+    fc_type: number | null
+    play_count: number | null
+    fullcombo_count: number | null
+    pianistic_count: number | null
+    max_combo: number | null
+    grade_basic: number | null
+    grade_recital: number | null
+    besttime: string | null
+    chart_id: number | null
+    user_id: number | null
+    sync_id: number | null
+    created_at: Date | null
+  }
+
+  export type ChartRecordSnapshotMaxAggregateOutputType = {
+    id: number | null
+    level: number | null
+    score: number | null
+    rank: string | null
+    fc_type: number | null
+    play_count: number | null
+    fullcombo_count: number | null
+    pianistic_count: number | null
+    max_combo: number | null
+    grade_basic: number | null
+    grade_recital: number | null
+    besttime: string | null
+    chart_id: number | null
+    user_id: number | null
+    sync_id: number | null
+    created_at: Date | null
+  }
+
+  export type ChartRecordSnapshotCountAggregateOutputType = {
+    id: number
+    level: number
+    score: number
+    rank: number
+    fc_type: number
+    play_count: number
+    fullcombo_count: number
+    pianistic_count: number
+    max_combo: number
+    grade_basic: number
+    grade_recital: number
+    besttime: number
+    chart_id: number
+    user_id: number
+    sync_id: number
+    created_at: number
+    _all: number
+  }
+
+
+  export type ChartRecordSnapshotAvgAggregateInputType = {
+    id?: true
+    level?: true
+    score?: true
+    fc_type?: true
+    play_count?: true
+    fullcombo_count?: true
+    pianistic_count?: true
+    max_combo?: true
+    grade_basic?: true
+    grade_recital?: true
+    chart_id?: true
+    user_id?: true
+    sync_id?: true
+  }
+
+  export type ChartRecordSnapshotSumAggregateInputType = {
+    id?: true
+    level?: true
+    score?: true
+    fc_type?: true
+    play_count?: true
+    fullcombo_count?: true
+    pianistic_count?: true
+    max_combo?: true
+    grade_basic?: true
+    grade_recital?: true
+    chart_id?: true
+    user_id?: true
+    sync_id?: true
+  }
+
+  export type ChartRecordSnapshotMinAggregateInputType = {
+    id?: true
+    level?: true
+    score?: true
+    rank?: true
+    fc_type?: true
+    play_count?: true
+    fullcombo_count?: true
+    pianistic_count?: true
+    max_combo?: true
+    grade_basic?: true
+    grade_recital?: true
+    besttime?: true
+    chart_id?: true
+    user_id?: true
+    sync_id?: true
+    created_at?: true
+  }
+
+  export type ChartRecordSnapshotMaxAggregateInputType = {
+    id?: true
+    level?: true
+    score?: true
+    rank?: true
+    fc_type?: true
+    play_count?: true
+    fullcombo_count?: true
+    pianistic_count?: true
+    max_combo?: true
+    grade_basic?: true
+    grade_recital?: true
+    besttime?: true
+    chart_id?: true
+    user_id?: true
+    sync_id?: true
+    created_at?: true
+  }
+
+  export type ChartRecordSnapshotCountAggregateInputType = {
+    id?: true
+    level?: true
+    score?: true
+    rank?: true
+    fc_type?: true
+    play_count?: true
+    fullcombo_count?: true
+    pianistic_count?: true
+    max_combo?: true
+    grade_basic?: true
+    grade_recital?: true
+    besttime?: true
+    chart_id?: true
+    user_id?: true
+    sync_id?: true
+    created_at?: true
+    _all?: true
+  }
+
+  export type ChartRecordSnapshotAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ChartRecordSnapshot to aggregate.
+     */
+    where?: ChartRecordSnapshotWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChartRecordSnapshots to fetch.
+     */
+    orderBy?: ChartRecordSnapshotOrderByWithRelationInput | ChartRecordSnapshotOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ChartRecordSnapshotWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChartRecordSnapshots from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChartRecordSnapshots.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ChartRecordSnapshots
+    **/
+    _count?: true | ChartRecordSnapshotCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ChartRecordSnapshotAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ChartRecordSnapshotSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ChartRecordSnapshotMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ChartRecordSnapshotMaxAggregateInputType
+  }
+
+  export type GetChartRecordSnapshotAggregateType<T extends ChartRecordSnapshotAggregateArgs> = {
+        [P in keyof T & keyof AggregateChartRecordSnapshot]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateChartRecordSnapshot[P]>
+      : GetScalarType<T[P], AggregateChartRecordSnapshot[P]>
+  }
+
+
+
+
+  export type ChartRecordSnapshotGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ChartRecordSnapshotWhereInput
+    orderBy?: ChartRecordSnapshotOrderByWithAggregationInput | ChartRecordSnapshotOrderByWithAggregationInput[]
+    by: ChartRecordSnapshotScalarFieldEnum[] | ChartRecordSnapshotScalarFieldEnum
+    having?: ChartRecordSnapshotScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ChartRecordSnapshotCountAggregateInputType | true
+    _avg?: ChartRecordSnapshotAvgAggregateInputType
+    _sum?: ChartRecordSnapshotSumAggregateInputType
+    _min?: ChartRecordSnapshotMinAggregateInputType
+    _max?: ChartRecordSnapshotMaxAggregateInputType
+  }
+
+  export type ChartRecordSnapshotGroupByOutputType = {
+    id: number
+    level: number
+    score: number
+    rank: string
+    fc_type: number
+    play_count: number
+    fullcombo_count: number
+    pianistic_count: number
+    max_combo: number
+    grade_basic: number
+    grade_recital: number
+    besttime: string
+    chart_id: number
+    user_id: number
+    sync_id: number
+    created_at: Date
+    _count: ChartRecordSnapshotCountAggregateOutputType | null
+    _avg: ChartRecordSnapshotAvgAggregateOutputType | null
+    _sum: ChartRecordSnapshotSumAggregateOutputType | null
+    _min: ChartRecordSnapshotMinAggregateOutputType | null
+    _max: ChartRecordSnapshotMaxAggregateOutputType | null
+  }
+
+  type GetChartRecordSnapshotGroupByPayload<T extends ChartRecordSnapshotGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ChartRecordSnapshotGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ChartRecordSnapshotGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ChartRecordSnapshotGroupByOutputType[P]>
+            : GetScalarType<T[P], ChartRecordSnapshotGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ChartRecordSnapshotSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    level?: boolean
+    score?: boolean
+    rank?: boolean
+    fc_type?: boolean
+    play_count?: boolean
+    fullcombo_count?: boolean
+    pianistic_count?: boolean
+    max_combo?: boolean
+    grade_basic?: boolean
+    grade_recital?: boolean
+    besttime?: boolean
+    chart_id?: boolean
+    user_id?: boolean
+    sync_id?: boolean
+    created_at?: boolean
+    chart?: boolean | MusicChartDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    sync?: boolean | DataSyncDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["chartRecordSnapshot"]>
+
+  export type ChartRecordSnapshotSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    level?: boolean
+    score?: boolean
+    rank?: boolean
+    fc_type?: boolean
+    play_count?: boolean
+    fullcombo_count?: boolean
+    pianistic_count?: boolean
+    max_combo?: boolean
+    grade_basic?: boolean
+    grade_recital?: boolean
+    besttime?: boolean
+    chart_id?: boolean
+    user_id?: boolean
+    sync_id?: boolean
+    created_at?: boolean
+    chart?: boolean | MusicChartDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    sync?: boolean | DataSyncDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["chartRecordSnapshot"]>
+
+  export type ChartRecordSnapshotSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    level?: boolean
+    score?: boolean
+    rank?: boolean
+    fc_type?: boolean
+    play_count?: boolean
+    fullcombo_count?: boolean
+    pianistic_count?: boolean
+    max_combo?: boolean
+    grade_basic?: boolean
+    grade_recital?: boolean
+    besttime?: boolean
+    chart_id?: boolean
+    user_id?: boolean
+    sync_id?: boolean
+    created_at?: boolean
+    chart?: boolean | MusicChartDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    sync?: boolean | DataSyncDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["chartRecordSnapshot"]>
+
+  export type ChartRecordSnapshotSelectScalar = {
+    id?: boolean
+    level?: boolean
+    score?: boolean
+    rank?: boolean
+    fc_type?: boolean
+    play_count?: boolean
+    fullcombo_count?: boolean
+    pianistic_count?: boolean
+    max_combo?: boolean
+    grade_basic?: boolean
+    grade_recital?: boolean
+    besttime?: boolean
+    chart_id?: boolean
+    user_id?: boolean
+    sync_id?: boolean
+    created_at?: boolean
+  }
+
+  export type ChartRecordSnapshotOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "level" | "score" | "rank" | "fc_type" | "play_count" | "fullcombo_count" | "pianistic_count" | "max_combo" | "grade_basic" | "grade_recital" | "besttime" | "chart_id" | "user_id" | "sync_id" | "created_at", ExtArgs["result"]["chartRecordSnapshot"]>
+  export type ChartRecordSnapshotInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    chart?: boolean | MusicChartDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    sync?: boolean | DataSyncDefaultArgs<ExtArgs>
+  }
+  export type ChartRecordSnapshotIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    chart?: boolean | MusicChartDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    sync?: boolean | DataSyncDefaultArgs<ExtArgs>
+  }
+  export type ChartRecordSnapshotIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    chart?: boolean | MusicChartDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    sync?: boolean | DataSyncDefaultArgs<ExtArgs>
+  }
+
+  export type $ChartRecordSnapshotPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ChartRecordSnapshot"
+    objects: {
+      chart: Prisma.$MusicChartPayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs>
+      sync: Prisma.$DataSyncPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      level: number
+      score: number
+      rank: string
+      fc_type: number
+      play_count: number
+      fullcombo_count: number
+      pianistic_count: number
+      max_combo: number
+      grade_basic: number
+      grade_recital: number
+      besttime: string
+      chart_id: number
+      user_id: number
+      sync_id: number
+      created_at: Date
+    }, ExtArgs["result"]["chartRecordSnapshot"]>
+    composites: {}
+  }
+
+  type ChartRecordSnapshotGetPayload<S extends boolean | null | undefined | ChartRecordSnapshotDefaultArgs> = $Result.GetResult<Prisma.$ChartRecordSnapshotPayload, S>
+
+  type ChartRecordSnapshotCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ChartRecordSnapshotFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ChartRecordSnapshotCountAggregateInputType | true
+    }
+
+  export interface ChartRecordSnapshotDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ChartRecordSnapshot'], meta: { name: 'ChartRecordSnapshot' } }
+    /**
+     * Find zero or one ChartRecordSnapshot that matches the filter.
+     * @param {ChartRecordSnapshotFindUniqueArgs} args - Arguments to find a ChartRecordSnapshot
+     * @example
+     * // Get one ChartRecordSnapshot
+     * const chartRecordSnapshot = await prisma.chartRecordSnapshot.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ChartRecordSnapshotFindUniqueArgs>(args: SelectSubset<T, ChartRecordSnapshotFindUniqueArgs<ExtArgs>>): Prisma__ChartRecordSnapshotClient<$Result.GetResult<Prisma.$ChartRecordSnapshotPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ChartRecordSnapshot that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ChartRecordSnapshotFindUniqueOrThrowArgs} args - Arguments to find a ChartRecordSnapshot
+     * @example
+     * // Get one ChartRecordSnapshot
+     * const chartRecordSnapshot = await prisma.chartRecordSnapshot.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ChartRecordSnapshotFindUniqueOrThrowArgs>(args: SelectSubset<T, ChartRecordSnapshotFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ChartRecordSnapshotClient<$Result.GetResult<Prisma.$ChartRecordSnapshotPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ChartRecordSnapshot that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChartRecordSnapshotFindFirstArgs} args - Arguments to find a ChartRecordSnapshot
+     * @example
+     * // Get one ChartRecordSnapshot
+     * const chartRecordSnapshot = await prisma.chartRecordSnapshot.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ChartRecordSnapshotFindFirstArgs>(args?: SelectSubset<T, ChartRecordSnapshotFindFirstArgs<ExtArgs>>): Prisma__ChartRecordSnapshotClient<$Result.GetResult<Prisma.$ChartRecordSnapshotPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ChartRecordSnapshot that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChartRecordSnapshotFindFirstOrThrowArgs} args - Arguments to find a ChartRecordSnapshot
+     * @example
+     * // Get one ChartRecordSnapshot
+     * const chartRecordSnapshot = await prisma.chartRecordSnapshot.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ChartRecordSnapshotFindFirstOrThrowArgs>(args?: SelectSubset<T, ChartRecordSnapshotFindFirstOrThrowArgs<ExtArgs>>): Prisma__ChartRecordSnapshotClient<$Result.GetResult<Prisma.$ChartRecordSnapshotPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ChartRecordSnapshots that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChartRecordSnapshotFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ChartRecordSnapshots
+     * const chartRecordSnapshots = await prisma.chartRecordSnapshot.findMany()
+     * 
+     * // Get first 10 ChartRecordSnapshots
+     * const chartRecordSnapshots = await prisma.chartRecordSnapshot.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const chartRecordSnapshotWithIdOnly = await prisma.chartRecordSnapshot.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ChartRecordSnapshotFindManyArgs>(args?: SelectSubset<T, ChartRecordSnapshotFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartRecordSnapshotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ChartRecordSnapshot.
+     * @param {ChartRecordSnapshotCreateArgs} args - Arguments to create a ChartRecordSnapshot.
+     * @example
+     * // Create one ChartRecordSnapshot
+     * const ChartRecordSnapshot = await prisma.chartRecordSnapshot.create({
+     *   data: {
+     *     // ... data to create a ChartRecordSnapshot
+     *   }
+     * })
+     * 
+     */
+    create<T extends ChartRecordSnapshotCreateArgs>(args: SelectSubset<T, ChartRecordSnapshotCreateArgs<ExtArgs>>): Prisma__ChartRecordSnapshotClient<$Result.GetResult<Prisma.$ChartRecordSnapshotPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ChartRecordSnapshots.
+     * @param {ChartRecordSnapshotCreateManyArgs} args - Arguments to create many ChartRecordSnapshots.
+     * @example
+     * // Create many ChartRecordSnapshots
+     * const chartRecordSnapshot = await prisma.chartRecordSnapshot.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ChartRecordSnapshotCreateManyArgs>(args?: SelectSubset<T, ChartRecordSnapshotCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ChartRecordSnapshots and returns the data saved in the database.
+     * @param {ChartRecordSnapshotCreateManyAndReturnArgs} args - Arguments to create many ChartRecordSnapshots.
+     * @example
+     * // Create many ChartRecordSnapshots
+     * const chartRecordSnapshot = await prisma.chartRecordSnapshot.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ChartRecordSnapshots and only return the `id`
+     * const chartRecordSnapshotWithIdOnly = await prisma.chartRecordSnapshot.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ChartRecordSnapshotCreateManyAndReturnArgs>(args?: SelectSubset<T, ChartRecordSnapshotCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartRecordSnapshotPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ChartRecordSnapshot.
+     * @param {ChartRecordSnapshotDeleteArgs} args - Arguments to delete one ChartRecordSnapshot.
+     * @example
+     * // Delete one ChartRecordSnapshot
+     * const ChartRecordSnapshot = await prisma.chartRecordSnapshot.delete({
+     *   where: {
+     *     // ... filter to delete one ChartRecordSnapshot
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ChartRecordSnapshotDeleteArgs>(args: SelectSubset<T, ChartRecordSnapshotDeleteArgs<ExtArgs>>): Prisma__ChartRecordSnapshotClient<$Result.GetResult<Prisma.$ChartRecordSnapshotPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ChartRecordSnapshot.
+     * @param {ChartRecordSnapshotUpdateArgs} args - Arguments to update one ChartRecordSnapshot.
+     * @example
+     * // Update one ChartRecordSnapshot
+     * const chartRecordSnapshot = await prisma.chartRecordSnapshot.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ChartRecordSnapshotUpdateArgs>(args: SelectSubset<T, ChartRecordSnapshotUpdateArgs<ExtArgs>>): Prisma__ChartRecordSnapshotClient<$Result.GetResult<Prisma.$ChartRecordSnapshotPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ChartRecordSnapshots.
+     * @param {ChartRecordSnapshotDeleteManyArgs} args - Arguments to filter ChartRecordSnapshots to delete.
+     * @example
+     * // Delete a few ChartRecordSnapshots
+     * const { count } = await prisma.chartRecordSnapshot.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ChartRecordSnapshotDeleteManyArgs>(args?: SelectSubset<T, ChartRecordSnapshotDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ChartRecordSnapshots.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChartRecordSnapshotUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ChartRecordSnapshots
+     * const chartRecordSnapshot = await prisma.chartRecordSnapshot.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ChartRecordSnapshotUpdateManyArgs>(args: SelectSubset<T, ChartRecordSnapshotUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ChartRecordSnapshots and returns the data updated in the database.
+     * @param {ChartRecordSnapshotUpdateManyAndReturnArgs} args - Arguments to update many ChartRecordSnapshots.
+     * @example
+     * // Update many ChartRecordSnapshots
+     * const chartRecordSnapshot = await prisma.chartRecordSnapshot.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ChartRecordSnapshots and only return the `id`
+     * const chartRecordSnapshotWithIdOnly = await prisma.chartRecordSnapshot.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ChartRecordSnapshotUpdateManyAndReturnArgs>(args: SelectSubset<T, ChartRecordSnapshotUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartRecordSnapshotPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ChartRecordSnapshot.
+     * @param {ChartRecordSnapshotUpsertArgs} args - Arguments to update or create a ChartRecordSnapshot.
+     * @example
+     * // Update or create a ChartRecordSnapshot
+     * const chartRecordSnapshot = await prisma.chartRecordSnapshot.upsert({
+     *   create: {
+     *     // ... data to create a ChartRecordSnapshot
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ChartRecordSnapshot we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ChartRecordSnapshotUpsertArgs>(args: SelectSubset<T, ChartRecordSnapshotUpsertArgs<ExtArgs>>): Prisma__ChartRecordSnapshotClient<$Result.GetResult<Prisma.$ChartRecordSnapshotPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ChartRecordSnapshots.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChartRecordSnapshotCountArgs} args - Arguments to filter ChartRecordSnapshots to count.
+     * @example
+     * // Count the number of ChartRecordSnapshots
+     * const count = await prisma.chartRecordSnapshot.count({
+     *   where: {
+     *     // ... the filter for the ChartRecordSnapshots we want to count
+     *   }
+     * })
+    **/
+    count<T extends ChartRecordSnapshotCountArgs>(
+      args?: Subset<T, ChartRecordSnapshotCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ChartRecordSnapshotCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ChartRecordSnapshot.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChartRecordSnapshotAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ChartRecordSnapshotAggregateArgs>(args: Subset<T, ChartRecordSnapshotAggregateArgs>): Prisma.PrismaPromise<GetChartRecordSnapshotAggregateType<T>>
+
+    /**
+     * Group by ChartRecordSnapshot.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChartRecordSnapshotGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ChartRecordSnapshotGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ChartRecordSnapshotGroupByArgs['orderBy'] }
+        : { orderBy?: ChartRecordSnapshotGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ChartRecordSnapshotGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetChartRecordSnapshotGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ChartRecordSnapshot model
+   */
+  readonly fields: ChartRecordSnapshotFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ChartRecordSnapshot.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ChartRecordSnapshotClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    chart<T extends MusicChartDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MusicChartDefaultArgs<ExtArgs>>): Prisma__MusicChartClient<$Result.GetResult<Prisma.$MusicChartPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    sync<T extends DataSyncDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DataSyncDefaultArgs<ExtArgs>>): Prisma__DataSyncClient<$Result.GetResult<Prisma.$DataSyncPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ChartRecordSnapshot model
+   */
+  interface ChartRecordSnapshotFieldRefs {
+    readonly id: FieldRef<"ChartRecordSnapshot", 'Int'>
+    readonly level: FieldRef<"ChartRecordSnapshot", 'Int'>
+    readonly score: FieldRef<"ChartRecordSnapshot", 'Int'>
+    readonly rank: FieldRef<"ChartRecordSnapshot", 'String'>
+    readonly fc_type: FieldRef<"ChartRecordSnapshot", 'Int'>
+    readonly play_count: FieldRef<"ChartRecordSnapshot", 'Int'>
+    readonly fullcombo_count: FieldRef<"ChartRecordSnapshot", 'Int'>
+    readonly pianistic_count: FieldRef<"ChartRecordSnapshot", 'Int'>
+    readonly max_combo: FieldRef<"ChartRecordSnapshot", 'Int'>
+    readonly grade_basic: FieldRef<"ChartRecordSnapshot", 'Int'>
+    readonly grade_recital: FieldRef<"ChartRecordSnapshot", 'Int'>
+    readonly besttime: FieldRef<"ChartRecordSnapshot", 'String'>
+    readonly chart_id: FieldRef<"ChartRecordSnapshot", 'Int'>
+    readonly user_id: FieldRef<"ChartRecordSnapshot", 'Int'>
+    readonly sync_id: FieldRef<"ChartRecordSnapshot", 'Int'>
+    readonly created_at: FieldRef<"ChartRecordSnapshot", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ChartRecordSnapshot findUnique
+   */
+  export type ChartRecordSnapshotFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartRecordSnapshot
+     */
+    select?: ChartRecordSnapshotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartRecordSnapshot
+     */
+    omit?: ChartRecordSnapshotOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartRecordSnapshotInclude<ExtArgs> | null
+    /**
+     * Filter, which ChartRecordSnapshot to fetch.
+     */
+    where: ChartRecordSnapshotWhereUniqueInput
+  }
+
+  /**
+   * ChartRecordSnapshot findUniqueOrThrow
+   */
+  export type ChartRecordSnapshotFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartRecordSnapshot
+     */
+    select?: ChartRecordSnapshotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartRecordSnapshot
+     */
+    omit?: ChartRecordSnapshotOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartRecordSnapshotInclude<ExtArgs> | null
+    /**
+     * Filter, which ChartRecordSnapshot to fetch.
+     */
+    where: ChartRecordSnapshotWhereUniqueInput
+  }
+
+  /**
+   * ChartRecordSnapshot findFirst
+   */
+  export type ChartRecordSnapshotFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartRecordSnapshot
+     */
+    select?: ChartRecordSnapshotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartRecordSnapshot
+     */
+    omit?: ChartRecordSnapshotOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartRecordSnapshotInclude<ExtArgs> | null
+    /**
+     * Filter, which ChartRecordSnapshot to fetch.
+     */
+    where?: ChartRecordSnapshotWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChartRecordSnapshots to fetch.
+     */
+    orderBy?: ChartRecordSnapshotOrderByWithRelationInput | ChartRecordSnapshotOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ChartRecordSnapshots.
+     */
+    cursor?: ChartRecordSnapshotWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChartRecordSnapshots from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChartRecordSnapshots.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ChartRecordSnapshots.
+     */
+    distinct?: ChartRecordSnapshotScalarFieldEnum | ChartRecordSnapshotScalarFieldEnum[]
+  }
+
+  /**
+   * ChartRecordSnapshot findFirstOrThrow
+   */
+  export type ChartRecordSnapshotFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartRecordSnapshot
+     */
+    select?: ChartRecordSnapshotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartRecordSnapshot
+     */
+    omit?: ChartRecordSnapshotOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartRecordSnapshotInclude<ExtArgs> | null
+    /**
+     * Filter, which ChartRecordSnapshot to fetch.
+     */
+    where?: ChartRecordSnapshotWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChartRecordSnapshots to fetch.
+     */
+    orderBy?: ChartRecordSnapshotOrderByWithRelationInput | ChartRecordSnapshotOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ChartRecordSnapshots.
+     */
+    cursor?: ChartRecordSnapshotWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChartRecordSnapshots from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChartRecordSnapshots.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ChartRecordSnapshots.
+     */
+    distinct?: ChartRecordSnapshotScalarFieldEnum | ChartRecordSnapshotScalarFieldEnum[]
+  }
+
+  /**
+   * ChartRecordSnapshot findMany
+   */
+  export type ChartRecordSnapshotFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartRecordSnapshot
+     */
+    select?: ChartRecordSnapshotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartRecordSnapshot
+     */
+    omit?: ChartRecordSnapshotOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartRecordSnapshotInclude<ExtArgs> | null
+    /**
+     * Filter, which ChartRecordSnapshots to fetch.
+     */
+    where?: ChartRecordSnapshotWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChartRecordSnapshots to fetch.
+     */
+    orderBy?: ChartRecordSnapshotOrderByWithRelationInput | ChartRecordSnapshotOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ChartRecordSnapshots.
+     */
+    cursor?: ChartRecordSnapshotWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChartRecordSnapshots from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChartRecordSnapshots.
+     */
+    skip?: number
+    distinct?: ChartRecordSnapshotScalarFieldEnum | ChartRecordSnapshotScalarFieldEnum[]
+  }
+
+  /**
+   * ChartRecordSnapshot create
+   */
+  export type ChartRecordSnapshotCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartRecordSnapshot
+     */
+    select?: ChartRecordSnapshotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartRecordSnapshot
+     */
+    omit?: ChartRecordSnapshotOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartRecordSnapshotInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ChartRecordSnapshot.
+     */
+    data: XOR<ChartRecordSnapshotCreateInput, ChartRecordSnapshotUncheckedCreateInput>
+  }
+
+  /**
+   * ChartRecordSnapshot createMany
+   */
+  export type ChartRecordSnapshotCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ChartRecordSnapshots.
+     */
+    data: ChartRecordSnapshotCreateManyInput | ChartRecordSnapshotCreateManyInput[]
+  }
+
+  /**
+   * ChartRecordSnapshot createManyAndReturn
+   */
+  export type ChartRecordSnapshotCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartRecordSnapshot
+     */
+    select?: ChartRecordSnapshotSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartRecordSnapshot
+     */
+    omit?: ChartRecordSnapshotOmit<ExtArgs> | null
+    /**
+     * The data used to create many ChartRecordSnapshots.
+     */
+    data: ChartRecordSnapshotCreateManyInput | ChartRecordSnapshotCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartRecordSnapshotIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ChartRecordSnapshot update
+   */
+  export type ChartRecordSnapshotUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartRecordSnapshot
+     */
+    select?: ChartRecordSnapshotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartRecordSnapshot
+     */
+    omit?: ChartRecordSnapshotOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartRecordSnapshotInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ChartRecordSnapshot.
+     */
+    data: XOR<ChartRecordSnapshotUpdateInput, ChartRecordSnapshotUncheckedUpdateInput>
+    /**
+     * Choose, which ChartRecordSnapshot to update.
+     */
+    where: ChartRecordSnapshotWhereUniqueInput
+  }
+
+  /**
+   * ChartRecordSnapshot updateMany
+   */
+  export type ChartRecordSnapshotUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ChartRecordSnapshots.
+     */
+    data: XOR<ChartRecordSnapshotUpdateManyMutationInput, ChartRecordSnapshotUncheckedUpdateManyInput>
+    /**
+     * Filter which ChartRecordSnapshots to update
+     */
+    where?: ChartRecordSnapshotWhereInput
+    /**
+     * Limit how many ChartRecordSnapshots to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ChartRecordSnapshot updateManyAndReturn
+   */
+  export type ChartRecordSnapshotUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartRecordSnapshot
+     */
+    select?: ChartRecordSnapshotSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartRecordSnapshot
+     */
+    omit?: ChartRecordSnapshotOmit<ExtArgs> | null
+    /**
+     * The data used to update ChartRecordSnapshots.
+     */
+    data: XOR<ChartRecordSnapshotUpdateManyMutationInput, ChartRecordSnapshotUncheckedUpdateManyInput>
+    /**
+     * Filter which ChartRecordSnapshots to update
+     */
+    where?: ChartRecordSnapshotWhereInput
+    /**
+     * Limit how many ChartRecordSnapshots to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartRecordSnapshotIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ChartRecordSnapshot upsert
+   */
+  export type ChartRecordSnapshotUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartRecordSnapshot
+     */
+    select?: ChartRecordSnapshotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartRecordSnapshot
+     */
+    omit?: ChartRecordSnapshotOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartRecordSnapshotInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ChartRecordSnapshot to update in case it exists.
+     */
+    where: ChartRecordSnapshotWhereUniqueInput
+    /**
+     * In case the ChartRecordSnapshot found by the `where` argument doesn't exist, create a new ChartRecordSnapshot with this data.
+     */
+    create: XOR<ChartRecordSnapshotCreateInput, ChartRecordSnapshotUncheckedCreateInput>
+    /**
+     * In case the ChartRecordSnapshot was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ChartRecordSnapshotUpdateInput, ChartRecordSnapshotUncheckedUpdateInput>
+  }
+
+  /**
+   * ChartRecordSnapshot delete
+   */
+  export type ChartRecordSnapshotDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartRecordSnapshot
+     */
+    select?: ChartRecordSnapshotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartRecordSnapshot
+     */
+    omit?: ChartRecordSnapshotOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartRecordSnapshotInclude<ExtArgs> | null
+    /**
+     * Filter which ChartRecordSnapshot to delete.
+     */
+    where: ChartRecordSnapshotWhereUniqueInput
+  }
+
+  /**
+   * ChartRecordSnapshot deleteMany
+   */
+  export type ChartRecordSnapshotDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ChartRecordSnapshots to delete
+     */
+    where?: ChartRecordSnapshotWhereInput
+    /**
+     * Limit how many ChartRecordSnapshots to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ChartRecordSnapshot without action
+   */
+  export type ChartRecordSnapshotDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartRecordSnapshot
+     */
+    select?: ChartRecordSnapshotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartRecordSnapshot
+     */
+    omit?: ChartRecordSnapshotOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartRecordSnapshotInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ChartConstantHistory
+   */
+
+  export type AggregateChartConstantHistory = {
+    _count: ChartConstantHistoryCountAggregateOutputType | null
+    _avg: ChartConstantHistoryAvgAggregateOutputType | null
+    _sum: ChartConstantHistorySumAggregateOutputType | null
+    _min: ChartConstantHistoryMinAggregateOutputType | null
+    _max: ChartConstantHistoryMaxAggregateOutputType | null
+  }
+
+  export type ChartConstantHistoryAvgAggregateOutputType = {
+    id: number | null
+    value: number | null
+    chart_id: number | null
+  }
+
+  export type ChartConstantHistorySumAggregateOutputType = {
+    id: number | null
+    value: number | null
+    chart_id: number | null
+  }
+
+  export type ChartConstantHistoryMinAggregateOutputType = {
+    id: number | null
+    value: number | null
+    effective_at: Date | null
+    chart_id: number | null
+    created_at: Date | null
+  }
+
+  export type ChartConstantHistoryMaxAggregateOutputType = {
+    id: number | null
+    value: number | null
+    effective_at: Date | null
+    chart_id: number | null
+    created_at: Date | null
+  }
+
+  export type ChartConstantHistoryCountAggregateOutputType = {
+    id: number
+    value: number
+    effective_at: number
+    chart_id: number
+    created_at: number
+    _all: number
+  }
+
+
+  export type ChartConstantHistoryAvgAggregateInputType = {
+    id?: true
+    value?: true
+    chart_id?: true
+  }
+
+  export type ChartConstantHistorySumAggregateInputType = {
+    id?: true
+    value?: true
+    chart_id?: true
+  }
+
+  export type ChartConstantHistoryMinAggregateInputType = {
+    id?: true
+    value?: true
+    effective_at?: true
+    chart_id?: true
+    created_at?: true
+  }
+
+  export type ChartConstantHistoryMaxAggregateInputType = {
+    id?: true
+    value?: true
+    effective_at?: true
+    chart_id?: true
+    created_at?: true
+  }
+
+  export type ChartConstantHistoryCountAggregateInputType = {
+    id?: true
+    value?: true
+    effective_at?: true
+    chart_id?: true
+    created_at?: true
+    _all?: true
+  }
+
+  export type ChartConstantHistoryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ChartConstantHistory to aggregate.
+     */
+    where?: ChartConstantHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChartConstantHistories to fetch.
+     */
+    orderBy?: ChartConstantHistoryOrderByWithRelationInput | ChartConstantHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ChartConstantHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChartConstantHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChartConstantHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ChartConstantHistories
+    **/
+    _count?: true | ChartConstantHistoryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ChartConstantHistoryAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ChartConstantHistorySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ChartConstantHistoryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ChartConstantHistoryMaxAggregateInputType
+  }
+
+  export type GetChartConstantHistoryAggregateType<T extends ChartConstantHistoryAggregateArgs> = {
+        [P in keyof T & keyof AggregateChartConstantHistory]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateChartConstantHistory[P]>
+      : GetScalarType<T[P], AggregateChartConstantHistory[P]>
+  }
+
+
+
+
+  export type ChartConstantHistoryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ChartConstantHistoryWhereInput
+    orderBy?: ChartConstantHistoryOrderByWithAggregationInput | ChartConstantHistoryOrderByWithAggregationInput[]
+    by: ChartConstantHistoryScalarFieldEnum[] | ChartConstantHistoryScalarFieldEnum
+    having?: ChartConstantHistoryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ChartConstantHistoryCountAggregateInputType | true
+    _avg?: ChartConstantHistoryAvgAggregateInputType
+    _sum?: ChartConstantHistorySumAggregateInputType
+    _min?: ChartConstantHistoryMinAggregateInputType
+    _max?: ChartConstantHistoryMaxAggregateInputType
+  }
+
+  export type ChartConstantHistoryGroupByOutputType = {
+    id: number
+    value: number
+    effective_at: Date
+    chart_id: number
+    created_at: Date
+    _count: ChartConstantHistoryCountAggregateOutputType | null
+    _avg: ChartConstantHistoryAvgAggregateOutputType | null
+    _sum: ChartConstantHistorySumAggregateOutputType | null
+    _min: ChartConstantHistoryMinAggregateOutputType | null
+    _max: ChartConstantHistoryMaxAggregateOutputType | null
+  }
+
+  type GetChartConstantHistoryGroupByPayload<T extends ChartConstantHistoryGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ChartConstantHistoryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ChartConstantHistoryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ChartConstantHistoryGroupByOutputType[P]>
+            : GetScalarType<T[P], ChartConstantHistoryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ChartConstantHistorySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    value?: boolean
+    effective_at?: boolean
+    chart_id?: boolean
+    created_at?: boolean
+    chart?: boolean | MusicChartDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["chartConstantHistory"]>
+
+  export type ChartConstantHistorySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    value?: boolean
+    effective_at?: boolean
+    chart_id?: boolean
+    created_at?: boolean
+    chart?: boolean | MusicChartDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["chartConstantHistory"]>
+
+  export type ChartConstantHistorySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    value?: boolean
+    effective_at?: boolean
+    chart_id?: boolean
+    created_at?: boolean
+    chart?: boolean | MusicChartDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["chartConstantHistory"]>
+
+  export type ChartConstantHistorySelectScalar = {
+    id?: boolean
+    value?: boolean
+    effective_at?: boolean
+    chart_id?: boolean
+    created_at?: boolean
+  }
+
+  export type ChartConstantHistoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "value" | "effective_at" | "chart_id" | "created_at", ExtArgs["result"]["chartConstantHistory"]>
+  export type ChartConstantHistoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    chart?: boolean | MusicChartDefaultArgs<ExtArgs>
+  }
+  export type ChartConstantHistoryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    chart?: boolean | MusicChartDefaultArgs<ExtArgs>
+  }
+  export type ChartConstantHistoryIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    chart?: boolean | MusicChartDefaultArgs<ExtArgs>
+  }
+
+  export type $ChartConstantHistoryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ChartConstantHistory"
+    objects: {
+      chart: Prisma.$MusicChartPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      value: number
+      effective_at: Date
+      chart_id: number
+      created_at: Date
+    }, ExtArgs["result"]["chartConstantHistory"]>
+    composites: {}
+  }
+
+  type ChartConstantHistoryGetPayload<S extends boolean | null | undefined | ChartConstantHistoryDefaultArgs> = $Result.GetResult<Prisma.$ChartConstantHistoryPayload, S>
+
+  type ChartConstantHistoryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ChartConstantHistoryFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ChartConstantHistoryCountAggregateInputType | true
+    }
+
+  export interface ChartConstantHistoryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ChartConstantHistory'], meta: { name: 'ChartConstantHistory' } }
+    /**
+     * Find zero or one ChartConstantHistory that matches the filter.
+     * @param {ChartConstantHistoryFindUniqueArgs} args - Arguments to find a ChartConstantHistory
+     * @example
+     * // Get one ChartConstantHistory
+     * const chartConstantHistory = await prisma.chartConstantHistory.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ChartConstantHistoryFindUniqueArgs>(args: SelectSubset<T, ChartConstantHistoryFindUniqueArgs<ExtArgs>>): Prisma__ChartConstantHistoryClient<$Result.GetResult<Prisma.$ChartConstantHistoryPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ChartConstantHistory that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ChartConstantHistoryFindUniqueOrThrowArgs} args - Arguments to find a ChartConstantHistory
+     * @example
+     * // Get one ChartConstantHistory
+     * const chartConstantHistory = await prisma.chartConstantHistory.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ChartConstantHistoryFindUniqueOrThrowArgs>(args: SelectSubset<T, ChartConstantHistoryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ChartConstantHistoryClient<$Result.GetResult<Prisma.$ChartConstantHistoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ChartConstantHistory that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChartConstantHistoryFindFirstArgs} args - Arguments to find a ChartConstantHistory
+     * @example
+     * // Get one ChartConstantHistory
+     * const chartConstantHistory = await prisma.chartConstantHistory.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ChartConstantHistoryFindFirstArgs>(args?: SelectSubset<T, ChartConstantHistoryFindFirstArgs<ExtArgs>>): Prisma__ChartConstantHistoryClient<$Result.GetResult<Prisma.$ChartConstantHistoryPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ChartConstantHistory that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChartConstantHistoryFindFirstOrThrowArgs} args - Arguments to find a ChartConstantHistory
+     * @example
+     * // Get one ChartConstantHistory
+     * const chartConstantHistory = await prisma.chartConstantHistory.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ChartConstantHistoryFindFirstOrThrowArgs>(args?: SelectSubset<T, ChartConstantHistoryFindFirstOrThrowArgs<ExtArgs>>): Prisma__ChartConstantHistoryClient<$Result.GetResult<Prisma.$ChartConstantHistoryPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ChartConstantHistories that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChartConstantHistoryFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ChartConstantHistories
+     * const chartConstantHistories = await prisma.chartConstantHistory.findMany()
+     * 
+     * // Get first 10 ChartConstantHistories
+     * const chartConstantHistories = await prisma.chartConstantHistory.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const chartConstantHistoryWithIdOnly = await prisma.chartConstantHistory.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ChartConstantHistoryFindManyArgs>(args?: SelectSubset<T, ChartConstantHistoryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartConstantHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ChartConstantHistory.
+     * @param {ChartConstantHistoryCreateArgs} args - Arguments to create a ChartConstantHistory.
+     * @example
+     * // Create one ChartConstantHistory
+     * const ChartConstantHistory = await prisma.chartConstantHistory.create({
+     *   data: {
+     *     // ... data to create a ChartConstantHistory
+     *   }
+     * })
+     * 
+     */
+    create<T extends ChartConstantHistoryCreateArgs>(args: SelectSubset<T, ChartConstantHistoryCreateArgs<ExtArgs>>): Prisma__ChartConstantHistoryClient<$Result.GetResult<Prisma.$ChartConstantHistoryPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ChartConstantHistories.
+     * @param {ChartConstantHistoryCreateManyArgs} args - Arguments to create many ChartConstantHistories.
+     * @example
+     * // Create many ChartConstantHistories
+     * const chartConstantHistory = await prisma.chartConstantHistory.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ChartConstantHistoryCreateManyArgs>(args?: SelectSubset<T, ChartConstantHistoryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ChartConstantHistories and returns the data saved in the database.
+     * @param {ChartConstantHistoryCreateManyAndReturnArgs} args - Arguments to create many ChartConstantHistories.
+     * @example
+     * // Create many ChartConstantHistories
+     * const chartConstantHistory = await prisma.chartConstantHistory.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ChartConstantHistories and only return the `id`
+     * const chartConstantHistoryWithIdOnly = await prisma.chartConstantHistory.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ChartConstantHistoryCreateManyAndReturnArgs>(args?: SelectSubset<T, ChartConstantHistoryCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartConstantHistoryPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ChartConstantHistory.
+     * @param {ChartConstantHistoryDeleteArgs} args - Arguments to delete one ChartConstantHistory.
+     * @example
+     * // Delete one ChartConstantHistory
+     * const ChartConstantHistory = await prisma.chartConstantHistory.delete({
+     *   where: {
+     *     // ... filter to delete one ChartConstantHistory
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ChartConstantHistoryDeleteArgs>(args: SelectSubset<T, ChartConstantHistoryDeleteArgs<ExtArgs>>): Prisma__ChartConstantHistoryClient<$Result.GetResult<Prisma.$ChartConstantHistoryPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ChartConstantHistory.
+     * @param {ChartConstantHistoryUpdateArgs} args - Arguments to update one ChartConstantHistory.
+     * @example
+     * // Update one ChartConstantHistory
+     * const chartConstantHistory = await prisma.chartConstantHistory.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ChartConstantHistoryUpdateArgs>(args: SelectSubset<T, ChartConstantHistoryUpdateArgs<ExtArgs>>): Prisma__ChartConstantHistoryClient<$Result.GetResult<Prisma.$ChartConstantHistoryPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ChartConstantHistories.
+     * @param {ChartConstantHistoryDeleteManyArgs} args - Arguments to filter ChartConstantHistories to delete.
+     * @example
+     * // Delete a few ChartConstantHistories
+     * const { count } = await prisma.chartConstantHistory.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ChartConstantHistoryDeleteManyArgs>(args?: SelectSubset<T, ChartConstantHistoryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ChartConstantHistories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChartConstantHistoryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ChartConstantHistories
+     * const chartConstantHistory = await prisma.chartConstantHistory.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ChartConstantHistoryUpdateManyArgs>(args: SelectSubset<T, ChartConstantHistoryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ChartConstantHistories and returns the data updated in the database.
+     * @param {ChartConstantHistoryUpdateManyAndReturnArgs} args - Arguments to update many ChartConstantHistories.
+     * @example
+     * // Update many ChartConstantHistories
+     * const chartConstantHistory = await prisma.chartConstantHistory.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ChartConstantHistories and only return the `id`
+     * const chartConstantHistoryWithIdOnly = await prisma.chartConstantHistory.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ChartConstantHistoryUpdateManyAndReturnArgs>(args: SelectSubset<T, ChartConstantHistoryUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartConstantHistoryPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ChartConstantHistory.
+     * @param {ChartConstantHistoryUpsertArgs} args - Arguments to update or create a ChartConstantHistory.
+     * @example
+     * // Update or create a ChartConstantHistory
+     * const chartConstantHistory = await prisma.chartConstantHistory.upsert({
+     *   create: {
+     *     // ... data to create a ChartConstantHistory
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ChartConstantHistory we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ChartConstantHistoryUpsertArgs>(args: SelectSubset<T, ChartConstantHistoryUpsertArgs<ExtArgs>>): Prisma__ChartConstantHistoryClient<$Result.GetResult<Prisma.$ChartConstantHistoryPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ChartConstantHistories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChartConstantHistoryCountArgs} args - Arguments to filter ChartConstantHistories to count.
+     * @example
+     * // Count the number of ChartConstantHistories
+     * const count = await prisma.chartConstantHistory.count({
+     *   where: {
+     *     // ... the filter for the ChartConstantHistories we want to count
+     *   }
+     * })
+    **/
+    count<T extends ChartConstantHistoryCountArgs>(
+      args?: Subset<T, ChartConstantHistoryCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ChartConstantHistoryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ChartConstantHistory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChartConstantHistoryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ChartConstantHistoryAggregateArgs>(args: Subset<T, ChartConstantHistoryAggregateArgs>): Prisma.PrismaPromise<GetChartConstantHistoryAggregateType<T>>
+
+    /**
+     * Group by ChartConstantHistory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChartConstantHistoryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ChartConstantHistoryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ChartConstantHistoryGroupByArgs['orderBy'] }
+        : { orderBy?: ChartConstantHistoryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ChartConstantHistoryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetChartConstantHistoryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ChartConstantHistory model
+   */
+  readonly fields: ChartConstantHistoryFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ChartConstantHistory.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ChartConstantHistoryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    chart<T extends MusicChartDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MusicChartDefaultArgs<ExtArgs>>): Prisma__MusicChartClient<$Result.GetResult<Prisma.$MusicChartPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ChartConstantHistory model
+   */
+  interface ChartConstantHistoryFieldRefs {
+    readonly id: FieldRef<"ChartConstantHistory", 'Int'>
+    readonly value: FieldRef<"ChartConstantHistory", 'Float'>
+    readonly effective_at: FieldRef<"ChartConstantHistory", 'DateTime'>
+    readonly chart_id: FieldRef<"ChartConstantHistory", 'Int'>
+    readonly created_at: FieldRef<"ChartConstantHistory", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ChartConstantHistory findUnique
+   */
+  export type ChartConstantHistoryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartConstantHistory
+     */
+    select?: ChartConstantHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartConstantHistory
+     */
+    omit?: ChartConstantHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartConstantHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which ChartConstantHistory to fetch.
+     */
+    where: ChartConstantHistoryWhereUniqueInput
+  }
+
+  /**
+   * ChartConstantHistory findUniqueOrThrow
+   */
+  export type ChartConstantHistoryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartConstantHistory
+     */
+    select?: ChartConstantHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartConstantHistory
+     */
+    omit?: ChartConstantHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartConstantHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which ChartConstantHistory to fetch.
+     */
+    where: ChartConstantHistoryWhereUniqueInput
+  }
+
+  /**
+   * ChartConstantHistory findFirst
+   */
+  export type ChartConstantHistoryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartConstantHistory
+     */
+    select?: ChartConstantHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartConstantHistory
+     */
+    omit?: ChartConstantHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartConstantHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which ChartConstantHistory to fetch.
+     */
+    where?: ChartConstantHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChartConstantHistories to fetch.
+     */
+    orderBy?: ChartConstantHistoryOrderByWithRelationInput | ChartConstantHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ChartConstantHistories.
+     */
+    cursor?: ChartConstantHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChartConstantHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChartConstantHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ChartConstantHistories.
+     */
+    distinct?: ChartConstantHistoryScalarFieldEnum | ChartConstantHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * ChartConstantHistory findFirstOrThrow
+   */
+  export type ChartConstantHistoryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartConstantHistory
+     */
+    select?: ChartConstantHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartConstantHistory
+     */
+    omit?: ChartConstantHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartConstantHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which ChartConstantHistory to fetch.
+     */
+    where?: ChartConstantHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChartConstantHistories to fetch.
+     */
+    orderBy?: ChartConstantHistoryOrderByWithRelationInput | ChartConstantHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ChartConstantHistories.
+     */
+    cursor?: ChartConstantHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChartConstantHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChartConstantHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ChartConstantHistories.
+     */
+    distinct?: ChartConstantHistoryScalarFieldEnum | ChartConstantHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * ChartConstantHistory findMany
+   */
+  export type ChartConstantHistoryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartConstantHistory
+     */
+    select?: ChartConstantHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartConstantHistory
+     */
+    omit?: ChartConstantHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartConstantHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which ChartConstantHistories to fetch.
+     */
+    where?: ChartConstantHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChartConstantHistories to fetch.
+     */
+    orderBy?: ChartConstantHistoryOrderByWithRelationInput | ChartConstantHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ChartConstantHistories.
+     */
+    cursor?: ChartConstantHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChartConstantHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChartConstantHistories.
+     */
+    skip?: number
+    distinct?: ChartConstantHistoryScalarFieldEnum | ChartConstantHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * ChartConstantHistory create
+   */
+  export type ChartConstantHistoryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartConstantHistory
+     */
+    select?: ChartConstantHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartConstantHistory
+     */
+    omit?: ChartConstantHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartConstantHistoryInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ChartConstantHistory.
+     */
+    data: XOR<ChartConstantHistoryCreateInput, ChartConstantHistoryUncheckedCreateInput>
+  }
+
+  /**
+   * ChartConstantHistory createMany
+   */
+  export type ChartConstantHistoryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ChartConstantHistories.
+     */
+    data: ChartConstantHistoryCreateManyInput | ChartConstantHistoryCreateManyInput[]
+  }
+
+  /**
+   * ChartConstantHistory createManyAndReturn
+   */
+  export type ChartConstantHistoryCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartConstantHistory
+     */
+    select?: ChartConstantHistorySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartConstantHistory
+     */
+    omit?: ChartConstantHistoryOmit<ExtArgs> | null
+    /**
+     * The data used to create many ChartConstantHistories.
+     */
+    data: ChartConstantHistoryCreateManyInput | ChartConstantHistoryCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartConstantHistoryIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ChartConstantHistory update
+   */
+  export type ChartConstantHistoryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartConstantHistory
+     */
+    select?: ChartConstantHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartConstantHistory
+     */
+    omit?: ChartConstantHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartConstantHistoryInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ChartConstantHistory.
+     */
+    data: XOR<ChartConstantHistoryUpdateInput, ChartConstantHistoryUncheckedUpdateInput>
+    /**
+     * Choose, which ChartConstantHistory to update.
+     */
+    where: ChartConstantHistoryWhereUniqueInput
+  }
+
+  /**
+   * ChartConstantHistory updateMany
+   */
+  export type ChartConstantHistoryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ChartConstantHistories.
+     */
+    data: XOR<ChartConstantHistoryUpdateManyMutationInput, ChartConstantHistoryUncheckedUpdateManyInput>
+    /**
+     * Filter which ChartConstantHistories to update
+     */
+    where?: ChartConstantHistoryWhereInput
+    /**
+     * Limit how many ChartConstantHistories to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ChartConstantHistory updateManyAndReturn
+   */
+  export type ChartConstantHistoryUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartConstantHistory
+     */
+    select?: ChartConstantHistorySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartConstantHistory
+     */
+    omit?: ChartConstantHistoryOmit<ExtArgs> | null
+    /**
+     * The data used to update ChartConstantHistories.
+     */
+    data: XOR<ChartConstantHistoryUpdateManyMutationInput, ChartConstantHistoryUncheckedUpdateManyInput>
+    /**
+     * Filter which ChartConstantHistories to update
+     */
+    where?: ChartConstantHistoryWhereInput
+    /**
+     * Limit how many ChartConstantHistories to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartConstantHistoryIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ChartConstantHistory upsert
+   */
+  export type ChartConstantHistoryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartConstantHistory
+     */
+    select?: ChartConstantHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartConstantHistory
+     */
+    omit?: ChartConstantHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartConstantHistoryInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ChartConstantHistory to update in case it exists.
+     */
+    where: ChartConstantHistoryWhereUniqueInput
+    /**
+     * In case the ChartConstantHistory found by the `where` argument doesn't exist, create a new ChartConstantHistory with this data.
+     */
+    create: XOR<ChartConstantHistoryCreateInput, ChartConstantHistoryUncheckedCreateInput>
+    /**
+     * In case the ChartConstantHistory was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ChartConstantHistoryUpdateInput, ChartConstantHistoryUncheckedUpdateInput>
+  }
+
+  /**
+   * ChartConstantHistory delete
+   */
+  export type ChartConstantHistoryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartConstantHistory
+     */
+    select?: ChartConstantHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartConstantHistory
+     */
+    omit?: ChartConstantHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartConstantHistoryInclude<ExtArgs> | null
+    /**
+     * Filter which ChartConstantHistory to delete.
+     */
+    where: ChartConstantHistoryWhereUniqueInput
+  }
+
+  /**
+   * ChartConstantHistory deleteMany
+   */
+  export type ChartConstantHistoryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ChartConstantHistories to delete
+     */
+    where?: ChartConstantHistoryWhereInput
+    /**
+     * Limit how many ChartConstantHistories to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ChartConstantHistory without action
+   */
+  export type ChartConstantHistoryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartConstantHistory
+     */
+    select?: ChartConstantHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartConstantHistory
+     */
+    omit?: ChartConstantHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartConstantHistoryInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ChartEvaluation
+   */
+
+  export type AggregateChartEvaluation = {
+    _count: ChartEvaluationCountAggregateOutputType | null
+    _avg: ChartEvaluationAvgAggregateOutputType | null
+    _sum: ChartEvaluationSumAggregateOutputType | null
+    _min: ChartEvaluationMinAggregateOutputType | null
+    _max: ChartEvaluationMaxAggregateOutputType | null
+  }
+
+  export type ChartEvaluationAvgAggregateOutputType = {
+    id: number | null
+    perceived_constant: number | null
+    stairs: number | null
+    chord: number | null
+    trill: number | null
+    glissando: number | null
+    repetition: number | null
+    chart_id: number | null
+    user_id: number | null
+  }
+
+  export type ChartEvaluationSumAggregateOutputType = {
+    id: number | null
+    perceived_constant: number | null
+    stairs: number | null
+    chord: number | null
+    trill: number | null
+    glissando: number | null
+    repetition: number | null
+    chart_id: number | null
+    user_id: number | null
+  }
+
+  export type ChartEvaluationMinAggregateOutputType = {
+    id: number | null
+    perceived_constant: number | null
+    stairs: number | null
+    chord: number | null
+    trill: number | null
+    glissando: number | null
+    repetition: number | null
+    comment: string | null
+    chart_id: number | null
+    user_id: number | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type ChartEvaluationMaxAggregateOutputType = {
+    id: number | null
+    perceived_constant: number | null
+    stairs: number | null
+    chord: number | null
+    trill: number | null
+    glissando: number | null
+    repetition: number | null
+    comment: string | null
+    chart_id: number | null
+    user_id: number | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type ChartEvaluationCountAggregateOutputType = {
+    id: number
+    perceived_constant: number
+    stairs: number
+    chord: number
+    trill: number
+    glissando: number
+    repetition: number
+    comment: number
+    chart_id: number
+    user_id: number
+    created_at: number
+    updated_at: number
+    _all: number
+  }
+
+
+  export type ChartEvaluationAvgAggregateInputType = {
+    id?: true
+    perceived_constant?: true
+    stairs?: true
+    chord?: true
+    trill?: true
+    glissando?: true
+    repetition?: true
+    chart_id?: true
+    user_id?: true
+  }
+
+  export type ChartEvaluationSumAggregateInputType = {
+    id?: true
+    perceived_constant?: true
+    stairs?: true
+    chord?: true
+    trill?: true
+    glissando?: true
+    repetition?: true
+    chart_id?: true
+    user_id?: true
+  }
+
+  export type ChartEvaluationMinAggregateInputType = {
+    id?: true
+    perceived_constant?: true
+    stairs?: true
+    chord?: true
+    trill?: true
+    glissando?: true
+    repetition?: true
+    comment?: true
+    chart_id?: true
+    user_id?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type ChartEvaluationMaxAggregateInputType = {
+    id?: true
+    perceived_constant?: true
+    stairs?: true
+    chord?: true
+    trill?: true
+    glissando?: true
+    repetition?: true
+    comment?: true
+    chart_id?: true
+    user_id?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type ChartEvaluationCountAggregateInputType = {
+    id?: true
+    perceived_constant?: true
+    stairs?: true
+    chord?: true
+    trill?: true
+    glissando?: true
+    repetition?: true
+    comment?: true
+    chart_id?: true
+    user_id?: true
+    created_at?: true
+    updated_at?: true
+    _all?: true
+  }
+
+  export type ChartEvaluationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ChartEvaluation to aggregate.
+     */
+    where?: ChartEvaluationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChartEvaluations to fetch.
+     */
+    orderBy?: ChartEvaluationOrderByWithRelationInput | ChartEvaluationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ChartEvaluationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChartEvaluations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChartEvaluations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ChartEvaluations
+    **/
+    _count?: true | ChartEvaluationCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ChartEvaluationAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ChartEvaluationSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ChartEvaluationMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ChartEvaluationMaxAggregateInputType
+  }
+
+  export type GetChartEvaluationAggregateType<T extends ChartEvaluationAggregateArgs> = {
+        [P in keyof T & keyof AggregateChartEvaluation]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateChartEvaluation[P]>
+      : GetScalarType<T[P], AggregateChartEvaluation[P]>
+  }
+
+
+
+
+  export type ChartEvaluationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ChartEvaluationWhereInput
+    orderBy?: ChartEvaluationOrderByWithAggregationInput | ChartEvaluationOrderByWithAggregationInput[]
+    by: ChartEvaluationScalarFieldEnum[] | ChartEvaluationScalarFieldEnum
+    having?: ChartEvaluationScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ChartEvaluationCountAggregateInputType | true
+    _avg?: ChartEvaluationAvgAggregateInputType
+    _sum?: ChartEvaluationSumAggregateInputType
+    _min?: ChartEvaluationMinAggregateInputType
+    _max?: ChartEvaluationMaxAggregateInputType
+  }
+
+  export type ChartEvaluationGroupByOutputType = {
+    id: number
+    perceived_constant: number
+    stairs: number
+    chord: number
+    trill: number
+    glissando: number
+    repetition: number
+    comment: string | null
+    chart_id: number
+    user_id: number
+    created_at: Date
+    updated_at: Date
+    _count: ChartEvaluationCountAggregateOutputType | null
+    _avg: ChartEvaluationAvgAggregateOutputType | null
+    _sum: ChartEvaluationSumAggregateOutputType | null
+    _min: ChartEvaluationMinAggregateOutputType | null
+    _max: ChartEvaluationMaxAggregateOutputType | null
+  }
+
+  type GetChartEvaluationGroupByPayload<T extends ChartEvaluationGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ChartEvaluationGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ChartEvaluationGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ChartEvaluationGroupByOutputType[P]>
+            : GetScalarType<T[P], ChartEvaluationGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ChartEvaluationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    perceived_constant?: boolean
+    stairs?: boolean
+    chord?: boolean
+    trill?: boolean
+    glissando?: boolean
+    repetition?: boolean
+    comment?: boolean
+    chart_id?: boolean
+    user_id?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    chart?: boolean | MusicChartDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    reactions?: boolean | ChartEvaluation$reactionsArgs<ExtArgs>
+    _count?: boolean | ChartEvaluationCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["chartEvaluation"]>
+
+  export type ChartEvaluationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    perceived_constant?: boolean
+    stairs?: boolean
+    chord?: boolean
+    trill?: boolean
+    glissando?: boolean
+    repetition?: boolean
+    comment?: boolean
+    chart_id?: boolean
+    user_id?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    chart?: boolean | MusicChartDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["chartEvaluation"]>
+
+  export type ChartEvaluationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    perceived_constant?: boolean
+    stairs?: boolean
+    chord?: boolean
+    trill?: boolean
+    glissando?: boolean
+    repetition?: boolean
+    comment?: boolean
+    chart_id?: boolean
+    user_id?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    chart?: boolean | MusicChartDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["chartEvaluation"]>
+
+  export type ChartEvaluationSelectScalar = {
+    id?: boolean
+    perceived_constant?: boolean
+    stairs?: boolean
+    chord?: boolean
+    trill?: boolean
+    glissando?: boolean
+    repetition?: boolean
+    comment?: boolean
+    chart_id?: boolean
+    user_id?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }
+
+  export type ChartEvaluationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "perceived_constant" | "stairs" | "chord" | "trill" | "glissando" | "repetition" | "comment" | "chart_id" | "user_id" | "created_at" | "updated_at", ExtArgs["result"]["chartEvaluation"]>
+  export type ChartEvaluationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    chart?: boolean | MusicChartDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    reactions?: boolean | ChartEvaluation$reactionsArgs<ExtArgs>
+    _count?: boolean | ChartEvaluationCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type ChartEvaluationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    chart?: boolean | MusicChartDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type ChartEvaluationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    chart?: boolean | MusicChartDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $ChartEvaluationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ChartEvaluation"
+    objects: {
+      chart: Prisma.$MusicChartPayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs>
+      reactions: Prisma.$ChartEvaluationReactionPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      perceived_constant: number
+      stairs: number
+      chord: number
+      trill: number
+      glissando: number
+      repetition: number
+      comment: string | null
+      chart_id: number
+      user_id: number
+      created_at: Date
+      updated_at: Date
+    }, ExtArgs["result"]["chartEvaluation"]>
+    composites: {}
+  }
+
+  type ChartEvaluationGetPayload<S extends boolean | null | undefined | ChartEvaluationDefaultArgs> = $Result.GetResult<Prisma.$ChartEvaluationPayload, S>
+
+  type ChartEvaluationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ChartEvaluationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ChartEvaluationCountAggregateInputType | true
+    }
+
+  export interface ChartEvaluationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ChartEvaluation'], meta: { name: 'ChartEvaluation' } }
+    /**
+     * Find zero or one ChartEvaluation that matches the filter.
+     * @param {ChartEvaluationFindUniqueArgs} args - Arguments to find a ChartEvaluation
+     * @example
+     * // Get one ChartEvaluation
+     * const chartEvaluation = await prisma.chartEvaluation.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ChartEvaluationFindUniqueArgs>(args: SelectSubset<T, ChartEvaluationFindUniqueArgs<ExtArgs>>): Prisma__ChartEvaluationClient<$Result.GetResult<Prisma.$ChartEvaluationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ChartEvaluation that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ChartEvaluationFindUniqueOrThrowArgs} args - Arguments to find a ChartEvaluation
+     * @example
+     * // Get one ChartEvaluation
+     * const chartEvaluation = await prisma.chartEvaluation.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ChartEvaluationFindUniqueOrThrowArgs>(args: SelectSubset<T, ChartEvaluationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ChartEvaluationClient<$Result.GetResult<Prisma.$ChartEvaluationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ChartEvaluation that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChartEvaluationFindFirstArgs} args - Arguments to find a ChartEvaluation
+     * @example
+     * // Get one ChartEvaluation
+     * const chartEvaluation = await prisma.chartEvaluation.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ChartEvaluationFindFirstArgs>(args?: SelectSubset<T, ChartEvaluationFindFirstArgs<ExtArgs>>): Prisma__ChartEvaluationClient<$Result.GetResult<Prisma.$ChartEvaluationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ChartEvaluation that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChartEvaluationFindFirstOrThrowArgs} args - Arguments to find a ChartEvaluation
+     * @example
+     * // Get one ChartEvaluation
+     * const chartEvaluation = await prisma.chartEvaluation.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ChartEvaluationFindFirstOrThrowArgs>(args?: SelectSubset<T, ChartEvaluationFindFirstOrThrowArgs<ExtArgs>>): Prisma__ChartEvaluationClient<$Result.GetResult<Prisma.$ChartEvaluationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ChartEvaluations that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChartEvaluationFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ChartEvaluations
+     * const chartEvaluations = await prisma.chartEvaluation.findMany()
+     * 
+     * // Get first 10 ChartEvaluations
+     * const chartEvaluations = await prisma.chartEvaluation.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const chartEvaluationWithIdOnly = await prisma.chartEvaluation.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ChartEvaluationFindManyArgs>(args?: SelectSubset<T, ChartEvaluationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartEvaluationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ChartEvaluation.
+     * @param {ChartEvaluationCreateArgs} args - Arguments to create a ChartEvaluation.
+     * @example
+     * // Create one ChartEvaluation
+     * const ChartEvaluation = await prisma.chartEvaluation.create({
+     *   data: {
+     *     // ... data to create a ChartEvaluation
+     *   }
+     * })
+     * 
+     */
+    create<T extends ChartEvaluationCreateArgs>(args: SelectSubset<T, ChartEvaluationCreateArgs<ExtArgs>>): Prisma__ChartEvaluationClient<$Result.GetResult<Prisma.$ChartEvaluationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ChartEvaluations.
+     * @param {ChartEvaluationCreateManyArgs} args - Arguments to create many ChartEvaluations.
+     * @example
+     * // Create many ChartEvaluations
+     * const chartEvaluation = await prisma.chartEvaluation.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ChartEvaluationCreateManyArgs>(args?: SelectSubset<T, ChartEvaluationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ChartEvaluations and returns the data saved in the database.
+     * @param {ChartEvaluationCreateManyAndReturnArgs} args - Arguments to create many ChartEvaluations.
+     * @example
+     * // Create many ChartEvaluations
+     * const chartEvaluation = await prisma.chartEvaluation.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ChartEvaluations and only return the `id`
+     * const chartEvaluationWithIdOnly = await prisma.chartEvaluation.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ChartEvaluationCreateManyAndReturnArgs>(args?: SelectSubset<T, ChartEvaluationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartEvaluationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ChartEvaluation.
+     * @param {ChartEvaluationDeleteArgs} args - Arguments to delete one ChartEvaluation.
+     * @example
+     * // Delete one ChartEvaluation
+     * const ChartEvaluation = await prisma.chartEvaluation.delete({
+     *   where: {
+     *     // ... filter to delete one ChartEvaluation
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ChartEvaluationDeleteArgs>(args: SelectSubset<T, ChartEvaluationDeleteArgs<ExtArgs>>): Prisma__ChartEvaluationClient<$Result.GetResult<Prisma.$ChartEvaluationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ChartEvaluation.
+     * @param {ChartEvaluationUpdateArgs} args - Arguments to update one ChartEvaluation.
+     * @example
+     * // Update one ChartEvaluation
+     * const chartEvaluation = await prisma.chartEvaluation.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ChartEvaluationUpdateArgs>(args: SelectSubset<T, ChartEvaluationUpdateArgs<ExtArgs>>): Prisma__ChartEvaluationClient<$Result.GetResult<Prisma.$ChartEvaluationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ChartEvaluations.
+     * @param {ChartEvaluationDeleteManyArgs} args - Arguments to filter ChartEvaluations to delete.
+     * @example
+     * // Delete a few ChartEvaluations
+     * const { count } = await prisma.chartEvaluation.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ChartEvaluationDeleteManyArgs>(args?: SelectSubset<T, ChartEvaluationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ChartEvaluations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChartEvaluationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ChartEvaluations
+     * const chartEvaluation = await prisma.chartEvaluation.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ChartEvaluationUpdateManyArgs>(args: SelectSubset<T, ChartEvaluationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ChartEvaluations and returns the data updated in the database.
+     * @param {ChartEvaluationUpdateManyAndReturnArgs} args - Arguments to update many ChartEvaluations.
+     * @example
+     * // Update many ChartEvaluations
+     * const chartEvaluation = await prisma.chartEvaluation.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ChartEvaluations and only return the `id`
+     * const chartEvaluationWithIdOnly = await prisma.chartEvaluation.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ChartEvaluationUpdateManyAndReturnArgs>(args: SelectSubset<T, ChartEvaluationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartEvaluationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ChartEvaluation.
+     * @param {ChartEvaluationUpsertArgs} args - Arguments to update or create a ChartEvaluation.
+     * @example
+     * // Update or create a ChartEvaluation
+     * const chartEvaluation = await prisma.chartEvaluation.upsert({
+     *   create: {
+     *     // ... data to create a ChartEvaluation
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ChartEvaluation we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ChartEvaluationUpsertArgs>(args: SelectSubset<T, ChartEvaluationUpsertArgs<ExtArgs>>): Prisma__ChartEvaluationClient<$Result.GetResult<Prisma.$ChartEvaluationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ChartEvaluations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChartEvaluationCountArgs} args - Arguments to filter ChartEvaluations to count.
+     * @example
+     * // Count the number of ChartEvaluations
+     * const count = await prisma.chartEvaluation.count({
+     *   where: {
+     *     // ... the filter for the ChartEvaluations we want to count
+     *   }
+     * })
+    **/
+    count<T extends ChartEvaluationCountArgs>(
+      args?: Subset<T, ChartEvaluationCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ChartEvaluationCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ChartEvaluation.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChartEvaluationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ChartEvaluationAggregateArgs>(args: Subset<T, ChartEvaluationAggregateArgs>): Prisma.PrismaPromise<GetChartEvaluationAggregateType<T>>
+
+    /**
+     * Group by ChartEvaluation.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChartEvaluationGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ChartEvaluationGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ChartEvaluationGroupByArgs['orderBy'] }
+        : { orderBy?: ChartEvaluationGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ChartEvaluationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetChartEvaluationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ChartEvaluation model
+   */
+  readonly fields: ChartEvaluationFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ChartEvaluation.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ChartEvaluationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    chart<T extends MusicChartDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MusicChartDefaultArgs<ExtArgs>>): Prisma__MusicChartClient<$Result.GetResult<Prisma.$MusicChartPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    reactions<T extends ChartEvaluation$reactionsArgs<ExtArgs> = {}>(args?: Subset<T, ChartEvaluation$reactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartEvaluationReactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ChartEvaluation model
+   */
+  interface ChartEvaluationFieldRefs {
+    readonly id: FieldRef<"ChartEvaluation", 'Int'>
+    readonly perceived_constant: FieldRef<"ChartEvaluation", 'Float'>
+    readonly stairs: FieldRef<"ChartEvaluation", 'Int'>
+    readonly chord: FieldRef<"ChartEvaluation", 'Int'>
+    readonly trill: FieldRef<"ChartEvaluation", 'Int'>
+    readonly glissando: FieldRef<"ChartEvaluation", 'Int'>
+    readonly repetition: FieldRef<"ChartEvaluation", 'Int'>
+    readonly comment: FieldRef<"ChartEvaluation", 'String'>
+    readonly chart_id: FieldRef<"ChartEvaluation", 'Int'>
+    readonly user_id: FieldRef<"ChartEvaluation", 'Int'>
+    readonly created_at: FieldRef<"ChartEvaluation", 'DateTime'>
+    readonly updated_at: FieldRef<"ChartEvaluation", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ChartEvaluation findUnique
+   */
+  export type ChartEvaluationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartEvaluation
+     */
+    select?: ChartEvaluationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartEvaluation
+     */
+    omit?: ChartEvaluationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartEvaluationInclude<ExtArgs> | null
+    /**
+     * Filter, which ChartEvaluation to fetch.
+     */
+    where: ChartEvaluationWhereUniqueInput
+  }
+
+  /**
+   * ChartEvaluation findUniqueOrThrow
+   */
+  export type ChartEvaluationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartEvaluation
+     */
+    select?: ChartEvaluationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartEvaluation
+     */
+    omit?: ChartEvaluationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartEvaluationInclude<ExtArgs> | null
+    /**
+     * Filter, which ChartEvaluation to fetch.
+     */
+    where: ChartEvaluationWhereUniqueInput
+  }
+
+  /**
+   * ChartEvaluation findFirst
+   */
+  export type ChartEvaluationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartEvaluation
+     */
+    select?: ChartEvaluationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartEvaluation
+     */
+    omit?: ChartEvaluationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartEvaluationInclude<ExtArgs> | null
+    /**
+     * Filter, which ChartEvaluation to fetch.
+     */
+    where?: ChartEvaluationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChartEvaluations to fetch.
+     */
+    orderBy?: ChartEvaluationOrderByWithRelationInput | ChartEvaluationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ChartEvaluations.
+     */
+    cursor?: ChartEvaluationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChartEvaluations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChartEvaluations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ChartEvaluations.
+     */
+    distinct?: ChartEvaluationScalarFieldEnum | ChartEvaluationScalarFieldEnum[]
+  }
+
+  /**
+   * ChartEvaluation findFirstOrThrow
+   */
+  export type ChartEvaluationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartEvaluation
+     */
+    select?: ChartEvaluationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartEvaluation
+     */
+    omit?: ChartEvaluationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartEvaluationInclude<ExtArgs> | null
+    /**
+     * Filter, which ChartEvaluation to fetch.
+     */
+    where?: ChartEvaluationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChartEvaluations to fetch.
+     */
+    orderBy?: ChartEvaluationOrderByWithRelationInput | ChartEvaluationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ChartEvaluations.
+     */
+    cursor?: ChartEvaluationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChartEvaluations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChartEvaluations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ChartEvaluations.
+     */
+    distinct?: ChartEvaluationScalarFieldEnum | ChartEvaluationScalarFieldEnum[]
+  }
+
+  /**
+   * ChartEvaluation findMany
+   */
+  export type ChartEvaluationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartEvaluation
+     */
+    select?: ChartEvaluationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartEvaluation
+     */
+    omit?: ChartEvaluationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartEvaluationInclude<ExtArgs> | null
+    /**
+     * Filter, which ChartEvaluations to fetch.
+     */
+    where?: ChartEvaluationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChartEvaluations to fetch.
+     */
+    orderBy?: ChartEvaluationOrderByWithRelationInput | ChartEvaluationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ChartEvaluations.
+     */
+    cursor?: ChartEvaluationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChartEvaluations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChartEvaluations.
+     */
+    skip?: number
+    distinct?: ChartEvaluationScalarFieldEnum | ChartEvaluationScalarFieldEnum[]
+  }
+
+  /**
+   * ChartEvaluation create
+   */
+  export type ChartEvaluationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartEvaluation
+     */
+    select?: ChartEvaluationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartEvaluation
+     */
+    omit?: ChartEvaluationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartEvaluationInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ChartEvaluation.
+     */
+    data: XOR<ChartEvaluationCreateInput, ChartEvaluationUncheckedCreateInput>
+  }
+
+  /**
+   * ChartEvaluation createMany
+   */
+  export type ChartEvaluationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ChartEvaluations.
+     */
+    data: ChartEvaluationCreateManyInput | ChartEvaluationCreateManyInput[]
+  }
+
+  /**
+   * ChartEvaluation createManyAndReturn
+   */
+  export type ChartEvaluationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartEvaluation
+     */
+    select?: ChartEvaluationSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartEvaluation
+     */
+    omit?: ChartEvaluationOmit<ExtArgs> | null
+    /**
+     * The data used to create many ChartEvaluations.
+     */
+    data: ChartEvaluationCreateManyInput | ChartEvaluationCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartEvaluationIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ChartEvaluation update
+   */
+  export type ChartEvaluationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartEvaluation
+     */
+    select?: ChartEvaluationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartEvaluation
+     */
+    omit?: ChartEvaluationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartEvaluationInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ChartEvaluation.
+     */
+    data: XOR<ChartEvaluationUpdateInput, ChartEvaluationUncheckedUpdateInput>
+    /**
+     * Choose, which ChartEvaluation to update.
+     */
+    where: ChartEvaluationWhereUniqueInput
+  }
+
+  /**
+   * ChartEvaluation updateMany
+   */
+  export type ChartEvaluationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ChartEvaluations.
+     */
+    data: XOR<ChartEvaluationUpdateManyMutationInput, ChartEvaluationUncheckedUpdateManyInput>
+    /**
+     * Filter which ChartEvaluations to update
+     */
+    where?: ChartEvaluationWhereInput
+    /**
+     * Limit how many ChartEvaluations to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ChartEvaluation updateManyAndReturn
+   */
+  export type ChartEvaluationUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartEvaluation
+     */
+    select?: ChartEvaluationSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartEvaluation
+     */
+    omit?: ChartEvaluationOmit<ExtArgs> | null
+    /**
+     * The data used to update ChartEvaluations.
+     */
+    data: XOR<ChartEvaluationUpdateManyMutationInput, ChartEvaluationUncheckedUpdateManyInput>
+    /**
+     * Filter which ChartEvaluations to update
+     */
+    where?: ChartEvaluationWhereInput
+    /**
+     * Limit how many ChartEvaluations to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartEvaluationIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ChartEvaluation upsert
+   */
+  export type ChartEvaluationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartEvaluation
+     */
+    select?: ChartEvaluationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartEvaluation
+     */
+    omit?: ChartEvaluationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartEvaluationInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ChartEvaluation to update in case it exists.
+     */
+    where: ChartEvaluationWhereUniqueInput
+    /**
+     * In case the ChartEvaluation found by the `where` argument doesn't exist, create a new ChartEvaluation with this data.
+     */
+    create: XOR<ChartEvaluationCreateInput, ChartEvaluationUncheckedCreateInput>
+    /**
+     * In case the ChartEvaluation was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ChartEvaluationUpdateInput, ChartEvaluationUncheckedUpdateInput>
+  }
+
+  /**
+   * ChartEvaluation delete
+   */
+  export type ChartEvaluationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartEvaluation
+     */
+    select?: ChartEvaluationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartEvaluation
+     */
+    omit?: ChartEvaluationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartEvaluationInclude<ExtArgs> | null
+    /**
+     * Filter which ChartEvaluation to delete.
+     */
+    where: ChartEvaluationWhereUniqueInput
+  }
+
+  /**
+   * ChartEvaluation deleteMany
+   */
+  export type ChartEvaluationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ChartEvaluations to delete
+     */
+    where?: ChartEvaluationWhereInput
+    /**
+     * Limit how many ChartEvaluations to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ChartEvaluation.reactions
+   */
+  export type ChartEvaluation$reactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartEvaluationReaction
+     */
+    select?: ChartEvaluationReactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartEvaluationReaction
+     */
+    omit?: ChartEvaluationReactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartEvaluationReactionInclude<ExtArgs> | null
+    where?: ChartEvaluationReactionWhereInput
+    orderBy?: ChartEvaluationReactionOrderByWithRelationInput | ChartEvaluationReactionOrderByWithRelationInput[]
+    cursor?: ChartEvaluationReactionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ChartEvaluationReactionScalarFieldEnum | ChartEvaluationReactionScalarFieldEnum[]
+  }
+
+  /**
+   * ChartEvaluation without action
+   */
+  export type ChartEvaluationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartEvaluation
+     */
+    select?: ChartEvaluationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartEvaluation
+     */
+    omit?: ChartEvaluationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartEvaluationInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ChartEvaluationReaction
+   */
+
+  export type AggregateChartEvaluationReaction = {
+    _count: ChartEvaluationReactionCountAggregateOutputType | null
+    _avg: ChartEvaluationReactionAvgAggregateOutputType | null
+    _sum: ChartEvaluationReactionSumAggregateOutputType | null
+    _min: ChartEvaluationReactionMinAggregateOutputType | null
+    _max: ChartEvaluationReactionMaxAggregateOutputType | null
+  }
+
+  export type ChartEvaluationReactionAvgAggregateOutputType = {
+    id: number | null
+    value: number | null
+    evaluation_id: number | null
+    user_id: number | null
+  }
+
+  export type ChartEvaluationReactionSumAggregateOutputType = {
+    id: number | null
+    value: number | null
+    evaluation_id: number | null
+    user_id: number | null
+  }
+
+  export type ChartEvaluationReactionMinAggregateOutputType = {
+    id: number | null
+    value: number | null
+    evaluation_id: number | null
+    user_id: number | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type ChartEvaluationReactionMaxAggregateOutputType = {
+    id: number | null
+    value: number | null
+    evaluation_id: number | null
+    user_id: number | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type ChartEvaluationReactionCountAggregateOutputType = {
+    id: number
+    value: number
+    evaluation_id: number
+    user_id: number
+    created_at: number
+    updated_at: number
+    _all: number
+  }
+
+
+  export type ChartEvaluationReactionAvgAggregateInputType = {
+    id?: true
+    value?: true
+    evaluation_id?: true
+    user_id?: true
+  }
+
+  export type ChartEvaluationReactionSumAggregateInputType = {
+    id?: true
+    value?: true
+    evaluation_id?: true
+    user_id?: true
+  }
+
+  export type ChartEvaluationReactionMinAggregateInputType = {
+    id?: true
+    value?: true
+    evaluation_id?: true
+    user_id?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type ChartEvaluationReactionMaxAggregateInputType = {
+    id?: true
+    value?: true
+    evaluation_id?: true
+    user_id?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type ChartEvaluationReactionCountAggregateInputType = {
+    id?: true
+    value?: true
+    evaluation_id?: true
+    user_id?: true
+    created_at?: true
+    updated_at?: true
+    _all?: true
+  }
+
+  export type ChartEvaluationReactionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ChartEvaluationReaction to aggregate.
+     */
+    where?: ChartEvaluationReactionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChartEvaluationReactions to fetch.
+     */
+    orderBy?: ChartEvaluationReactionOrderByWithRelationInput | ChartEvaluationReactionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ChartEvaluationReactionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChartEvaluationReactions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChartEvaluationReactions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ChartEvaluationReactions
+    **/
+    _count?: true | ChartEvaluationReactionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ChartEvaluationReactionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ChartEvaluationReactionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ChartEvaluationReactionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ChartEvaluationReactionMaxAggregateInputType
+  }
+
+  export type GetChartEvaluationReactionAggregateType<T extends ChartEvaluationReactionAggregateArgs> = {
+        [P in keyof T & keyof AggregateChartEvaluationReaction]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateChartEvaluationReaction[P]>
+      : GetScalarType<T[P], AggregateChartEvaluationReaction[P]>
+  }
+
+
+
+
+  export type ChartEvaluationReactionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ChartEvaluationReactionWhereInput
+    orderBy?: ChartEvaluationReactionOrderByWithAggregationInput | ChartEvaluationReactionOrderByWithAggregationInput[]
+    by: ChartEvaluationReactionScalarFieldEnum[] | ChartEvaluationReactionScalarFieldEnum
+    having?: ChartEvaluationReactionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ChartEvaluationReactionCountAggregateInputType | true
+    _avg?: ChartEvaluationReactionAvgAggregateInputType
+    _sum?: ChartEvaluationReactionSumAggregateInputType
+    _min?: ChartEvaluationReactionMinAggregateInputType
+    _max?: ChartEvaluationReactionMaxAggregateInputType
+  }
+
+  export type ChartEvaluationReactionGroupByOutputType = {
+    id: number
+    value: number
+    evaluation_id: number
+    user_id: number
+    created_at: Date
+    updated_at: Date
+    _count: ChartEvaluationReactionCountAggregateOutputType | null
+    _avg: ChartEvaluationReactionAvgAggregateOutputType | null
+    _sum: ChartEvaluationReactionSumAggregateOutputType | null
+    _min: ChartEvaluationReactionMinAggregateOutputType | null
+    _max: ChartEvaluationReactionMaxAggregateOutputType | null
+  }
+
+  type GetChartEvaluationReactionGroupByPayload<T extends ChartEvaluationReactionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ChartEvaluationReactionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ChartEvaluationReactionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ChartEvaluationReactionGroupByOutputType[P]>
+            : GetScalarType<T[P], ChartEvaluationReactionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ChartEvaluationReactionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    value?: boolean
+    evaluation_id?: boolean
+    user_id?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    evaluation?: boolean | ChartEvaluationDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["chartEvaluationReaction"]>
+
+  export type ChartEvaluationReactionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    value?: boolean
+    evaluation_id?: boolean
+    user_id?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    evaluation?: boolean | ChartEvaluationDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["chartEvaluationReaction"]>
+
+  export type ChartEvaluationReactionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    value?: boolean
+    evaluation_id?: boolean
+    user_id?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    evaluation?: boolean | ChartEvaluationDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["chartEvaluationReaction"]>
+
+  export type ChartEvaluationReactionSelectScalar = {
+    id?: boolean
+    value?: boolean
+    evaluation_id?: boolean
+    user_id?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }
+
+  export type ChartEvaluationReactionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "value" | "evaluation_id" | "user_id" | "created_at" | "updated_at", ExtArgs["result"]["chartEvaluationReaction"]>
+  export type ChartEvaluationReactionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    evaluation?: boolean | ChartEvaluationDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type ChartEvaluationReactionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    evaluation?: boolean | ChartEvaluationDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type ChartEvaluationReactionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    evaluation?: boolean | ChartEvaluationDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $ChartEvaluationReactionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ChartEvaluationReaction"
+    objects: {
+      evaluation: Prisma.$ChartEvaluationPayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      value: number
+      evaluation_id: number
+      user_id: number
+      created_at: Date
+      updated_at: Date
+    }, ExtArgs["result"]["chartEvaluationReaction"]>
+    composites: {}
+  }
+
+  type ChartEvaluationReactionGetPayload<S extends boolean | null | undefined | ChartEvaluationReactionDefaultArgs> = $Result.GetResult<Prisma.$ChartEvaluationReactionPayload, S>
+
+  type ChartEvaluationReactionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ChartEvaluationReactionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ChartEvaluationReactionCountAggregateInputType | true
+    }
+
+  export interface ChartEvaluationReactionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ChartEvaluationReaction'], meta: { name: 'ChartEvaluationReaction' } }
+    /**
+     * Find zero or one ChartEvaluationReaction that matches the filter.
+     * @param {ChartEvaluationReactionFindUniqueArgs} args - Arguments to find a ChartEvaluationReaction
+     * @example
+     * // Get one ChartEvaluationReaction
+     * const chartEvaluationReaction = await prisma.chartEvaluationReaction.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ChartEvaluationReactionFindUniqueArgs>(args: SelectSubset<T, ChartEvaluationReactionFindUniqueArgs<ExtArgs>>): Prisma__ChartEvaluationReactionClient<$Result.GetResult<Prisma.$ChartEvaluationReactionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ChartEvaluationReaction that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ChartEvaluationReactionFindUniqueOrThrowArgs} args - Arguments to find a ChartEvaluationReaction
+     * @example
+     * // Get one ChartEvaluationReaction
+     * const chartEvaluationReaction = await prisma.chartEvaluationReaction.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ChartEvaluationReactionFindUniqueOrThrowArgs>(args: SelectSubset<T, ChartEvaluationReactionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ChartEvaluationReactionClient<$Result.GetResult<Prisma.$ChartEvaluationReactionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ChartEvaluationReaction that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChartEvaluationReactionFindFirstArgs} args - Arguments to find a ChartEvaluationReaction
+     * @example
+     * // Get one ChartEvaluationReaction
+     * const chartEvaluationReaction = await prisma.chartEvaluationReaction.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ChartEvaluationReactionFindFirstArgs>(args?: SelectSubset<T, ChartEvaluationReactionFindFirstArgs<ExtArgs>>): Prisma__ChartEvaluationReactionClient<$Result.GetResult<Prisma.$ChartEvaluationReactionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ChartEvaluationReaction that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChartEvaluationReactionFindFirstOrThrowArgs} args - Arguments to find a ChartEvaluationReaction
+     * @example
+     * // Get one ChartEvaluationReaction
+     * const chartEvaluationReaction = await prisma.chartEvaluationReaction.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ChartEvaluationReactionFindFirstOrThrowArgs>(args?: SelectSubset<T, ChartEvaluationReactionFindFirstOrThrowArgs<ExtArgs>>): Prisma__ChartEvaluationReactionClient<$Result.GetResult<Prisma.$ChartEvaluationReactionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ChartEvaluationReactions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChartEvaluationReactionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ChartEvaluationReactions
+     * const chartEvaluationReactions = await prisma.chartEvaluationReaction.findMany()
+     * 
+     * // Get first 10 ChartEvaluationReactions
+     * const chartEvaluationReactions = await prisma.chartEvaluationReaction.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const chartEvaluationReactionWithIdOnly = await prisma.chartEvaluationReaction.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ChartEvaluationReactionFindManyArgs>(args?: SelectSubset<T, ChartEvaluationReactionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartEvaluationReactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ChartEvaluationReaction.
+     * @param {ChartEvaluationReactionCreateArgs} args - Arguments to create a ChartEvaluationReaction.
+     * @example
+     * // Create one ChartEvaluationReaction
+     * const ChartEvaluationReaction = await prisma.chartEvaluationReaction.create({
+     *   data: {
+     *     // ... data to create a ChartEvaluationReaction
+     *   }
+     * })
+     * 
+     */
+    create<T extends ChartEvaluationReactionCreateArgs>(args: SelectSubset<T, ChartEvaluationReactionCreateArgs<ExtArgs>>): Prisma__ChartEvaluationReactionClient<$Result.GetResult<Prisma.$ChartEvaluationReactionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ChartEvaluationReactions.
+     * @param {ChartEvaluationReactionCreateManyArgs} args - Arguments to create many ChartEvaluationReactions.
+     * @example
+     * // Create many ChartEvaluationReactions
+     * const chartEvaluationReaction = await prisma.chartEvaluationReaction.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ChartEvaluationReactionCreateManyArgs>(args?: SelectSubset<T, ChartEvaluationReactionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ChartEvaluationReactions and returns the data saved in the database.
+     * @param {ChartEvaluationReactionCreateManyAndReturnArgs} args - Arguments to create many ChartEvaluationReactions.
+     * @example
+     * // Create many ChartEvaluationReactions
+     * const chartEvaluationReaction = await prisma.chartEvaluationReaction.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ChartEvaluationReactions and only return the `id`
+     * const chartEvaluationReactionWithIdOnly = await prisma.chartEvaluationReaction.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ChartEvaluationReactionCreateManyAndReturnArgs>(args?: SelectSubset<T, ChartEvaluationReactionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartEvaluationReactionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ChartEvaluationReaction.
+     * @param {ChartEvaluationReactionDeleteArgs} args - Arguments to delete one ChartEvaluationReaction.
+     * @example
+     * // Delete one ChartEvaluationReaction
+     * const ChartEvaluationReaction = await prisma.chartEvaluationReaction.delete({
+     *   where: {
+     *     // ... filter to delete one ChartEvaluationReaction
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ChartEvaluationReactionDeleteArgs>(args: SelectSubset<T, ChartEvaluationReactionDeleteArgs<ExtArgs>>): Prisma__ChartEvaluationReactionClient<$Result.GetResult<Prisma.$ChartEvaluationReactionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ChartEvaluationReaction.
+     * @param {ChartEvaluationReactionUpdateArgs} args - Arguments to update one ChartEvaluationReaction.
+     * @example
+     * // Update one ChartEvaluationReaction
+     * const chartEvaluationReaction = await prisma.chartEvaluationReaction.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ChartEvaluationReactionUpdateArgs>(args: SelectSubset<T, ChartEvaluationReactionUpdateArgs<ExtArgs>>): Prisma__ChartEvaluationReactionClient<$Result.GetResult<Prisma.$ChartEvaluationReactionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ChartEvaluationReactions.
+     * @param {ChartEvaluationReactionDeleteManyArgs} args - Arguments to filter ChartEvaluationReactions to delete.
+     * @example
+     * // Delete a few ChartEvaluationReactions
+     * const { count } = await prisma.chartEvaluationReaction.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ChartEvaluationReactionDeleteManyArgs>(args?: SelectSubset<T, ChartEvaluationReactionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ChartEvaluationReactions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChartEvaluationReactionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ChartEvaluationReactions
+     * const chartEvaluationReaction = await prisma.chartEvaluationReaction.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ChartEvaluationReactionUpdateManyArgs>(args: SelectSubset<T, ChartEvaluationReactionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ChartEvaluationReactions and returns the data updated in the database.
+     * @param {ChartEvaluationReactionUpdateManyAndReturnArgs} args - Arguments to update many ChartEvaluationReactions.
+     * @example
+     * // Update many ChartEvaluationReactions
+     * const chartEvaluationReaction = await prisma.chartEvaluationReaction.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ChartEvaluationReactions and only return the `id`
+     * const chartEvaluationReactionWithIdOnly = await prisma.chartEvaluationReaction.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ChartEvaluationReactionUpdateManyAndReturnArgs>(args: SelectSubset<T, ChartEvaluationReactionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartEvaluationReactionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ChartEvaluationReaction.
+     * @param {ChartEvaluationReactionUpsertArgs} args - Arguments to update or create a ChartEvaluationReaction.
+     * @example
+     * // Update or create a ChartEvaluationReaction
+     * const chartEvaluationReaction = await prisma.chartEvaluationReaction.upsert({
+     *   create: {
+     *     // ... data to create a ChartEvaluationReaction
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ChartEvaluationReaction we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ChartEvaluationReactionUpsertArgs>(args: SelectSubset<T, ChartEvaluationReactionUpsertArgs<ExtArgs>>): Prisma__ChartEvaluationReactionClient<$Result.GetResult<Prisma.$ChartEvaluationReactionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ChartEvaluationReactions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChartEvaluationReactionCountArgs} args - Arguments to filter ChartEvaluationReactions to count.
+     * @example
+     * // Count the number of ChartEvaluationReactions
+     * const count = await prisma.chartEvaluationReaction.count({
+     *   where: {
+     *     // ... the filter for the ChartEvaluationReactions we want to count
+     *   }
+     * })
+    **/
+    count<T extends ChartEvaluationReactionCountArgs>(
+      args?: Subset<T, ChartEvaluationReactionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ChartEvaluationReactionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ChartEvaluationReaction.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChartEvaluationReactionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ChartEvaluationReactionAggregateArgs>(args: Subset<T, ChartEvaluationReactionAggregateArgs>): Prisma.PrismaPromise<GetChartEvaluationReactionAggregateType<T>>
+
+    /**
+     * Group by ChartEvaluationReaction.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChartEvaluationReactionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ChartEvaluationReactionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ChartEvaluationReactionGroupByArgs['orderBy'] }
+        : { orderBy?: ChartEvaluationReactionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ChartEvaluationReactionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetChartEvaluationReactionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ChartEvaluationReaction model
+   */
+  readonly fields: ChartEvaluationReactionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ChartEvaluationReaction.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ChartEvaluationReactionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    evaluation<T extends ChartEvaluationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ChartEvaluationDefaultArgs<ExtArgs>>): Prisma__ChartEvaluationClient<$Result.GetResult<Prisma.$ChartEvaluationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ChartEvaluationReaction model
+   */
+  interface ChartEvaluationReactionFieldRefs {
+    readonly id: FieldRef<"ChartEvaluationReaction", 'Int'>
+    readonly value: FieldRef<"ChartEvaluationReaction", 'Int'>
+    readonly evaluation_id: FieldRef<"ChartEvaluationReaction", 'Int'>
+    readonly user_id: FieldRef<"ChartEvaluationReaction", 'Int'>
+    readonly created_at: FieldRef<"ChartEvaluationReaction", 'DateTime'>
+    readonly updated_at: FieldRef<"ChartEvaluationReaction", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ChartEvaluationReaction findUnique
+   */
+  export type ChartEvaluationReactionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartEvaluationReaction
+     */
+    select?: ChartEvaluationReactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartEvaluationReaction
+     */
+    omit?: ChartEvaluationReactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartEvaluationReactionInclude<ExtArgs> | null
+    /**
+     * Filter, which ChartEvaluationReaction to fetch.
+     */
+    where: ChartEvaluationReactionWhereUniqueInput
+  }
+
+  /**
+   * ChartEvaluationReaction findUniqueOrThrow
+   */
+  export type ChartEvaluationReactionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartEvaluationReaction
+     */
+    select?: ChartEvaluationReactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartEvaluationReaction
+     */
+    omit?: ChartEvaluationReactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartEvaluationReactionInclude<ExtArgs> | null
+    /**
+     * Filter, which ChartEvaluationReaction to fetch.
+     */
+    where: ChartEvaluationReactionWhereUniqueInput
+  }
+
+  /**
+   * ChartEvaluationReaction findFirst
+   */
+  export type ChartEvaluationReactionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartEvaluationReaction
+     */
+    select?: ChartEvaluationReactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartEvaluationReaction
+     */
+    omit?: ChartEvaluationReactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartEvaluationReactionInclude<ExtArgs> | null
+    /**
+     * Filter, which ChartEvaluationReaction to fetch.
+     */
+    where?: ChartEvaluationReactionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChartEvaluationReactions to fetch.
+     */
+    orderBy?: ChartEvaluationReactionOrderByWithRelationInput | ChartEvaluationReactionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ChartEvaluationReactions.
+     */
+    cursor?: ChartEvaluationReactionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChartEvaluationReactions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChartEvaluationReactions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ChartEvaluationReactions.
+     */
+    distinct?: ChartEvaluationReactionScalarFieldEnum | ChartEvaluationReactionScalarFieldEnum[]
+  }
+
+  /**
+   * ChartEvaluationReaction findFirstOrThrow
+   */
+  export type ChartEvaluationReactionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartEvaluationReaction
+     */
+    select?: ChartEvaluationReactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartEvaluationReaction
+     */
+    omit?: ChartEvaluationReactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartEvaluationReactionInclude<ExtArgs> | null
+    /**
+     * Filter, which ChartEvaluationReaction to fetch.
+     */
+    where?: ChartEvaluationReactionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChartEvaluationReactions to fetch.
+     */
+    orderBy?: ChartEvaluationReactionOrderByWithRelationInput | ChartEvaluationReactionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ChartEvaluationReactions.
+     */
+    cursor?: ChartEvaluationReactionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChartEvaluationReactions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChartEvaluationReactions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ChartEvaluationReactions.
+     */
+    distinct?: ChartEvaluationReactionScalarFieldEnum | ChartEvaluationReactionScalarFieldEnum[]
+  }
+
+  /**
+   * ChartEvaluationReaction findMany
+   */
+  export type ChartEvaluationReactionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartEvaluationReaction
+     */
+    select?: ChartEvaluationReactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartEvaluationReaction
+     */
+    omit?: ChartEvaluationReactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartEvaluationReactionInclude<ExtArgs> | null
+    /**
+     * Filter, which ChartEvaluationReactions to fetch.
+     */
+    where?: ChartEvaluationReactionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChartEvaluationReactions to fetch.
+     */
+    orderBy?: ChartEvaluationReactionOrderByWithRelationInput | ChartEvaluationReactionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ChartEvaluationReactions.
+     */
+    cursor?: ChartEvaluationReactionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChartEvaluationReactions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChartEvaluationReactions.
+     */
+    skip?: number
+    distinct?: ChartEvaluationReactionScalarFieldEnum | ChartEvaluationReactionScalarFieldEnum[]
+  }
+
+  /**
+   * ChartEvaluationReaction create
+   */
+  export type ChartEvaluationReactionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartEvaluationReaction
+     */
+    select?: ChartEvaluationReactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartEvaluationReaction
+     */
+    omit?: ChartEvaluationReactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartEvaluationReactionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ChartEvaluationReaction.
+     */
+    data: XOR<ChartEvaluationReactionCreateInput, ChartEvaluationReactionUncheckedCreateInput>
+  }
+
+  /**
+   * ChartEvaluationReaction createMany
+   */
+  export type ChartEvaluationReactionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ChartEvaluationReactions.
+     */
+    data: ChartEvaluationReactionCreateManyInput | ChartEvaluationReactionCreateManyInput[]
+  }
+
+  /**
+   * ChartEvaluationReaction createManyAndReturn
+   */
+  export type ChartEvaluationReactionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartEvaluationReaction
+     */
+    select?: ChartEvaluationReactionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartEvaluationReaction
+     */
+    omit?: ChartEvaluationReactionOmit<ExtArgs> | null
+    /**
+     * The data used to create many ChartEvaluationReactions.
+     */
+    data: ChartEvaluationReactionCreateManyInput | ChartEvaluationReactionCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartEvaluationReactionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ChartEvaluationReaction update
+   */
+  export type ChartEvaluationReactionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartEvaluationReaction
+     */
+    select?: ChartEvaluationReactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartEvaluationReaction
+     */
+    omit?: ChartEvaluationReactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartEvaluationReactionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ChartEvaluationReaction.
+     */
+    data: XOR<ChartEvaluationReactionUpdateInput, ChartEvaluationReactionUncheckedUpdateInput>
+    /**
+     * Choose, which ChartEvaluationReaction to update.
+     */
+    where: ChartEvaluationReactionWhereUniqueInput
+  }
+
+  /**
+   * ChartEvaluationReaction updateMany
+   */
+  export type ChartEvaluationReactionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ChartEvaluationReactions.
+     */
+    data: XOR<ChartEvaluationReactionUpdateManyMutationInput, ChartEvaluationReactionUncheckedUpdateManyInput>
+    /**
+     * Filter which ChartEvaluationReactions to update
+     */
+    where?: ChartEvaluationReactionWhereInput
+    /**
+     * Limit how many ChartEvaluationReactions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ChartEvaluationReaction updateManyAndReturn
+   */
+  export type ChartEvaluationReactionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartEvaluationReaction
+     */
+    select?: ChartEvaluationReactionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartEvaluationReaction
+     */
+    omit?: ChartEvaluationReactionOmit<ExtArgs> | null
+    /**
+     * The data used to update ChartEvaluationReactions.
+     */
+    data: XOR<ChartEvaluationReactionUpdateManyMutationInput, ChartEvaluationReactionUncheckedUpdateManyInput>
+    /**
+     * Filter which ChartEvaluationReactions to update
+     */
+    where?: ChartEvaluationReactionWhereInput
+    /**
+     * Limit how many ChartEvaluationReactions to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartEvaluationReactionIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ChartEvaluationReaction upsert
+   */
+  export type ChartEvaluationReactionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartEvaluationReaction
+     */
+    select?: ChartEvaluationReactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartEvaluationReaction
+     */
+    omit?: ChartEvaluationReactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartEvaluationReactionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ChartEvaluationReaction to update in case it exists.
+     */
+    where: ChartEvaluationReactionWhereUniqueInput
+    /**
+     * In case the ChartEvaluationReaction found by the `where` argument doesn't exist, create a new ChartEvaluationReaction with this data.
+     */
+    create: XOR<ChartEvaluationReactionCreateInput, ChartEvaluationReactionUncheckedCreateInput>
+    /**
+     * In case the ChartEvaluationReaction was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ChartEvaluationReactionUpdateInput, ChartEvaluationReactionUncheckedUpdateInput>
+  }
+
+  /**
+   * ChartEvaluationReaction delete
+   */
+  export type ChartEvaluationReactionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartEvaluationReaction
+     */
+    select?: ChartEvaluationReactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartEvaluationReaction
+     */
+    omit?: ChartEvaluationReactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartEvaluationReactionInclude<ExtArgs> | null
+    /**
+     * Filter which ChartEvaluationReaction to delete.
+     */
+    where: ChartEvaluationReactionWhereUniqueInput
+  }
+
+  /**
+   * ChartEvaluationReaction deleteMany
+   */
+  export type ChartEvaluationReactionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ChartEvaluationReactions to delete
+     */
+    where?: ChartEvaluationReactionWhereInput
+    /**
+     * Limit how many ChartEvaluationReactions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ChartEvaluationReaction without action
+   */
+  export type ChartEvaluationReactionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChartEvaluationReaction
+     */
+    select?: ChartEvaluationReactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChartEvaluationReaction
+     */
+    omit?: ChartEvaluationReactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChartEvaluationReactionInclude<ExtArgs> | null
   }
 
 
@@ -4921,6 +14499,7 @@ export namespace Prisma {
     max_combo: number | null
     grade_basic: number | null
     user_id: number | null
+    chart_id: number | null
   }
 
   export type RecentPlaySumAggregateOutputType = {
@@ -4930,6 +14509,7 @@ export namespace Prisma {
     max_combo: number | null
     grade_basic: number | null
     user_id: number | null
+    chart_id: number | null
   }
 
   export type RecentPlayMinAggregateOutputType = {
@@ -4945,6 +14525,7 @@ export namespace Prisma {
     updated_at: Date | null
     user_id: number | null
     music_idx: string | null
+    chart_id: number | null
   }
 
   export type RecentPlayMaxAggregateOutputType = {
@@ -4960,6 +14541,7 @@ export namespace Prisma {
     updated_at: Date | null
     user_id: number | null
     music_idx: string | null
+    chart_id: number | null
   }
 
   export type RecentPlayCountAggregateOutputType = {
@@ -4975,6 +14557,7 @@ export namespace Prisma {
     updated_at: number
     user_id: number
     music_idx: number
+    chart_id: number
     _all: number
   }
 
@@ -4986,6 +14569,7 @@ export namespace Prisma {
     max_combo?: true
     grade_basic?: true
     user_id?: true
+    chart_id?: true
   }
 
   export type RecentPlaySumAggregateInputType = {
@@ -4995,6 +14579,7 @@ export namespace Prisma {
     max_combo?: true
     grade_basic?: true
     user_id?: true
+    chart_id?: true
   }
 
   export type RecentPlayMinAggregateInputType = {
@@ -5010,6 +14595,7 @@ export namespace Prisma {
     updated_at?: true
     user_id?: true
     music_idx?: true
+    chart_id?: true
   }
 
   export type RecentPlayMaxAggregateInputType = {
@@ -5025,6 +14611,7 @@ export namespace Prisma {
     updated_at?: true
     user_id?: true
     music_idx?: true
+    chart_id?: true
   }
 
   export type RecentPlayCountAggregateInputType = {
@@ -5040,6 +14627,7 @@ export namespace Prisma {
     updated_at?: true
     user_id?: true
     music_idx?: true
+    chart_id?: true
     _all?: true
   }
 
@@ -5142,6 +14730,7 @@ export namespace Prisma {
     updated_at: Date
     user_id: number
     music_idx: string
+    chart_id: number | null
     _count: RecentPlayCountAggregateOutputType | null
     _avg: RecentPlayAvgAggregateOutputType | null
     _sum: RecentPlaySumAggregateOutputType | null
@@ -5176,8 +14765,10 @@ export namespace Prisma {
     updated_at?: boolean
     user_id?: boolean
     music_idx?: boolean
+    chart_id?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     music?: boolean | MusicDefaultArgs<ExtArgs>
+    chart?: boolean | RecentPlay$chartArgs<ExtArgs>
   }, ExtArgs["result"]["recentPlay"]>
 
   export type RecentPlaySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -5193,8 +14784,10 @@ export namespace Prisma {
     updated_at?: boolean
     user_id?: boolean
     music_idx?: boolean
+    chart_id?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     music?: boolean | MusicDefaultArgs<ExtArgs>
+    chart?: boolean | RecentPlay$chartArgs<ExtArgs>
   }, ExtArgs["result"]["recentPlay"]>
 
   export type RecentPlaySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -5210,8 +14803,10 @@ export namespace Prisma {
     updated_at?: boolean
     user_id?: boolean
     music_idx?: boolean
+    chart_id?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     music?: boolean | MusicDefaultArgs<ExtArgs>
+    chart?: boolean | RecentPlay$chartArgs<ExtArgs>
   }, ExtArgs["result"]["recentPlay"]>
 
   export type RecentPlaySelectScalar = {
@@ -5227,20 +14822,24 @@ export namespace Prisma {
     updated_at?: boolean
     user_id?: boolean
     music_idx?: boolean
+    chart_id?: boolean
   }
 
-  export type RecentPlayOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "difficulty" | "level" | "score" | "max_combo" | "rank" | "play_time" | "grade_basic" | "created_at" | "updated_at" | "user_id" | "music_idx", ExtArgs["result"]["recentPlay"]>
+  export type RecentPlayOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "difficulty" | "level" | "score" | "max_combo" | "rank" | "play_time" | "grade_basic" | "created_at" | "updated_at" | "user_id" | "music_idx" | "chart_id", ExtArgs["result"]["recentPlay"]>
   export type RecentPlayInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     music?: boolean | MusicDefaultArgs<ExtArgs>
+    chart?: boolean | RecentPlay$chartArgs<ExtArgs>
   }
   export type RecentPlayIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     music?: boolean | MusicDefaultArgs<ExtArgs>
+    chart?: boolean | RecentPlay$chartArgs<ExtArgs>
   }
   export type RecentPlayIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     music?: boolean | MusicDefaultArgs<ExtArgs>
+    chart?: boolean | RecentPlay$chartArgs<ExtArgs>
   }
 
   export type $RecentPlayPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5248,6 +14847,7 @@ export namespace Prisma {
     objects: {
       user: Prisma.$UserPayload<ExtArgs>
       music: Prisma.$MusicPayload<ExtArgs>
+      chart: Prisma.$MusicChartPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -5262,6 +14862,7 @@ export namespace Prisma {
       updated_at: Date
       user_id: number
       music_idx: string
+      chart_id: number | null
     }, ExtArgs["result"]["recentPlay"]>
     composites: {}
   }
@@ -5658,6 +15259,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     music<T extends MusicDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MusicDefaultArgs<ExtArgs>>): Prisma__MusicClient<$Result.GetResult<Prisma.$MusicPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    chart<T extends RecentPlay$chartArgs<ExtArgs> = {}>(args?: Subset<T, RecentPlay$chartArgs<ExtArgs>>): Prisma__MusicChartClient<$Result.GetResult<Prisma.$MusicChartPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5699,6 +15301,7 @@ export namespace Prisma {
     readonly updated_at: FieldRef<"RecentPlay", 'DateTime'>
     readonly user_id: FieldRef<"RecentPlay", 'Int'>
     readonly music_idx: FieldRef<"RecentPlay", 'String'>
+    readonly chart_id: FieldRef<"RecentPlay", 'Int'>
   }
     
 
@@ -6090,6 +15693,25 @@ export namespace Prisma {
      * Limit how many RecentPlays to delete.
      */
     limit?: number
+  }
+
+  /**
+   * RecentPlay.chart
+   */
+  export type RecentPlay$chartArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MusicChart
+     */
+    select?: MusicChartSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MusicChart
+     */
+    omit?: MusicChartOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MusicChartInclude<ExtArgs> | null
+    where?: MusicChartWhereInput
   }
 
   /**
@@ -7259,6 +16881,7 @@ export namespace Prisma {
     grade_basic: number | null
     fc_type: number | null
     user_id: number | null
+    chart_id: number | null
   }
 
   export type BasicBestPlaySumAggregateOutputType = {
@@ -7269,6 +16892,7 @@ export namespace Prisma {
     grade_basic: number | null
     fc_type: number | null
     user_id: number | null
+    chart_id: number | null
   }
 
   export type BasicBestPlayMinAggregateOutputType = {
@@ -7285,6 +16909,7 @@ export namespace Prisma {
     updated_at: Date | null
     user_id: number | null
     music_idx: string | null
+    chart_id: number | null
   }
 
   export type BasicBestPlayMaxAggregateOutputType = {
@@ -7301,6 +16926,7 @@ export namespace Prisma {
     updated_at: Date | null
     user_id: number | null
     music_idx: string | null
+    chart_id: number | null
   }
 
   export type BasicBestPlayCountAggregateOutputType = {
@@ -7317,6 +16943,7 @@ export namespace Prisma {
     updated_at: number
     user_id: number
     music_idx: number
+    chart_id: number
     _all: number
   }
 
@@ -7329,6 +16956,7 @@ export namespace Prisma {
     grade_basic?: true
     fc_type?: true
     user_id?: true
+    chart_id?: true
   }
 
   export type BasicBestPlaySumAggregateInputType = {
@@ -7339,6 +16967,7 @@ export namespace Prisma {
     grade_basic?: true
     fc_type?: true
     user_id?: true
+    chart_id?: true
   }
 
   export type BasicBestPlayMinAggregateInputType = {
@@ -7355,6 +16984,7 @@ export namespace Prisma {
     updated_at?: true
     user_id?: true
     music_idx?: true
+    chart_id?: true
   }
 
   export type BasicBestPlayMaxAggregateInputType = {
@@ -7371,6 +17001,7 @@ export namespace Prisma {
     updated_at?: true
     user_id?: true
     music_idx?: true
+    chart_id?: true
   }
 
   export type BasicBestPlayCountAggregateInputType = {
@@ -7387,6 +17018,7 @@ export namespace Prisma {
     updated_at?: true
     user_id?: true
     music_idx?: true
+    chart_id?: true
     _all?: true
   }
 
@@ -7490,6 +17122,7 @@ export namespace Prisma {
     updated_at: Date
     user_id: number
     music_idx: string
+    chart_id: number | null
     _count: BasicBestPlayCountAggregateOutputType | null
     _avg: BasicBestPlayAvgAggregateOutputType | null
     _sum: BasicBestPlaySumAggregateOutputType | null
@@ -7525,8 +17158,10 @@ export namespace Prisma {
     updated_at?: boolean
     user_id?: boolean
     music_idx?: boolean
+    chart_id?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     music?: boolean | MusicDefaultArgs<ExtArgs>
+    chart?: boolean | BasicBestPlay$chartArgs<ExtArgs>
   }, ExtArgs["result"]["basicBestPlay"]>
 
   export type BasicBestPlaySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -7543,8 +17178,10 @@ export namespace Prisma {
     updated_at?: boolean
     user_id?: boolean
     music_idx?: boolean
+    chart_id?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     music?: boolean | MusicDefaultArgs<ExtArgs>
+    chart?: boolean | BasicBestPlay$chartArgs<ExtArgs>
   }, ExtArgs["result"]["basicBestPlay"]>
 
   export type BasicBestPlaySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -7561,8 +17198,10 @@ export namespace Prisma {
     updated_at?: boolean
     user_id?: boolean
     music_idx?: boolean
+    chart_id?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     music?: boolean | MusicDefaultArgs<ExtArgs>
+    chart?: boolean | BasicBestPlay$chartArgs<ExtArgs>
   }, ExtArgs["result"]["basicBestPlay"]>
 
   export type BasicBestPlaySelectScalar = {
@@ -7579,20 +17218,24 @@ export namespace Prisma {
     updated_at?: boolean
     user_id?: boolean
     music_idx?: boolean
+    chart_id?: boolean
   }
 
-  export type BasicBestPlayOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "difficulty" | "level" | "score" | "max_combo" | "rank" | "besttime" | "grade_basic" | "fc_type" | "created_at" | "updated_at" | "user_id" | "music_idx", ExtArgs["result"]["basicBestPlay"]>
+  export type BasicBestPlayOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "difficulty" | "level" | "score" | "max_combo" | "rank" | "besttime" | "grade_basic" | "fc_type" | "created_at" | "updated_at" | "user_id" | "music_idx" | "chart_id", ExtArgs["result"]["basicBestPlay"]>
   export type BasicBestPlayInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     music?: boolean | MusicDefaultArgs<ExtArgs>
+    chart?: boolean | BasicBestPlay$chartArgs<ExtArgs>
   }
   export type BasicBestPlayIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     music?: boolean | MusicDefaultArgs<ExtArgs>
+    chart?: boolean | BasicBestPlay$chartArgs<ExtArgs>
   }
   export type BasicBestPlayIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     music?: boolean | MusicDefaultArgs<ExtArgs>
+    chart?: boolean | BasicBestPlay$chartArgs<ExtArgs>
   }
 
   export type $BasicBestPlayPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7600,6 +17243,7 @@ export namespace Prisma {
     objects: {
       user: Prisma.$UserPayload<ExtArgs>
       music: Prisma.$MusicPayload<ExtArgs>
+      chart: Prisma.$MusicChartPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -7615,6 +17259,7 @@ export namespace Prisma {
       updated_at: Date
       user_id: number
       music_idx: string
+      chart_id: number | null
     }, ExtArgs["result"]["basicBestPlay"]>
     composites: {}
   }
@@ -8011,6 +17656,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     music<T extends MusicDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MusicDefaultArgs<ExtArgs>>): Prisma__MusicClient<$Result.GetResult<Prisma.$MusicPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    chart<T extends BasicBestPlay$chartArgs<ExtArgs> = {}>(args?: Subset<T, BasicBestPlay$chartArgs<ExtArgs>>): Prisma__MusicChartClient<$Result.GetResult<Prisma.$MusicChartPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8053,6 +17699,7 @@ export namespace Prisma {
     readonly updated_at: FieldRef<"BasicBestPlay", 'DateTime'>
     readonly user_id: FieldRef<"BasicBestPlay", 'Int'>
     readonly music_idx: FieldRef<"BasicBestPlay", 'String'>
+    readonly chart_id: FieldRef<"BasicBestPlay", 'Int'>
   }
     
 
@@ -8447,6 +18094,25 @@ export namespace Prisma {
   }
 
   /**
+   * BasicBestPlay.chart
+   */
+  export type BasicBestPlay$chartArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MusicChart
+     */
+    select?: MusicChartSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MusicChart
+     */
+    omit?: MusicChartOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MusicChartInclude<ExtArgs> | null
+    where?: MusicChartWhereInput
+  }
+
+  /**
    * BasicBestPlay without action
    */
   export type BasicBestPlayDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8485,6 +18151,7 @@ export namespace Prisma {
     grade_recital: number | null
     fc_type: number | null
     user_id: number | null
+    chart_id: number | null
   }
 
   export type RecitalBestPlaySumAggregateOutputType = {
@@ -8495,6 +18162,7 @@ export namespace Prisma {
     grade_recital: number | null
     fc_type: number | null
     user_id: number | null
+    chart_id: number | null
   }
 
   export type RecitalBestPlayMinAggregateOutputType = {
@@ -8511,6 +18179,7 @@ export namespace Prisma {
     updated_at: Date | null
     user_id: number | null
     music_idx: string | null
+    chart_id: number | null
   }
 
   export type RecitalBestPlayMaxAggregateOutputType = {
@@ -8527,6 +18196,7 @@ export namespace Prisma {
     updated_at: Date | null
     user_id: number | null
     music_idx: string | null
+    chart_id: number | null
   }
 
   export type RecitalBestPlayCountAggregateOutputType = {
@@ -8543,6 +18213,7 @@ export namespace Prisma {
     updated_at: number
     user_id: number
     music_idx: number
+    chart_id: number
     _all: number
   }
 
@@ -8555,6 +18226,7 @@ export namespace Prisma {
     grade_recital?: true
     fc_type?: true
     user_id?: true
+    chart_id?: true
   }
 
   export type RecitalBestPlaySumAggregateInputType = {
@@ -8565,6 +18237,7 @@ export namespace Prisma {
     grade_recital?: true
     fc_type?: true
     user_id?: true
+    chart_id?: true
   }
 
   export type RecitalBestPlayMinAggregateInputType = {
@@ -8581,6 +18254,7 @@ export namespace Prisma {
     updated_at?: true
     user_id?: true
     music_idx?: true
+    chart_id?: true
   }
 
   export type RecitalBestPlayMaxAggregateInputType = {
@@ -8597,6 +18271,7 @@ export namespace Prisma {
     updated_at?: true
     user_id?: true
     music_idx?: true
+    chart_id?: true
   }
 
   export type RecitalBestPlayCountAggregateInputType = {
@@ -8613,6 +18288,7 @@ export namespace Prisma {
     updated_at?: true
     user_id?: true
     music_idx?: true
+    chart_id?: true
     _all?: true
   }
 
@@ -8716,6 +18392,7 @@ export namespace Prisma {
     updated_at: Date
     user_id: number
     music_idx: string
+    chart_id: number | null
     _count: RecitalBestPlayCountAggregateOutputType | null
     _avg: RecitalBestPlayAvgAggregateOutputType | null
     _sum: RecitalBestPlaySumAggregateOutputType | null
@@ -8751,8 +18428,10 @@ export namespace Prisma {
     updated_at?: boolean
     user_id?: boolean
     music_idx?: boolean
+    chart_id?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     music?: boolean | MusicDefaultArgs<ExtArgs>
+    chart?: boolean | RecitalBestPlay$chartArgs<ExtArgs>
   }, ExtArgs["result"]["recitalBestPlay"]>
 
   export type RecitalBestPlaySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -8769,8 +18448,10 @@ export namespace Prisma {
     updated_at?: boolean
     user_id?: boolean
     music_idx?: boolean
+    chart_id?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     music?: boolean | MusicDefaultArgs<ExtArgs>
+    chart?: boolean | RecitalBestPlay$chartArgs<ExtArgs>
   }, ExtArgs["result"]["recitalBestPlay"]>
 
   export type RecitalBestPlaySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -8787,8 +18468,10 @@ export namespace Prisma {
     updated_at?: boolean
     user_id?: boolean
     music_idx?: boolean
+    chart_id?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     music?: boolean | MusicDefaultArgs<ExtArgs>
+    chart?: boolean | RecitalBestPlay$chartArgs<ExtArgs>
   }, ExtArgs["result"]["recitalBestPlay"]>
 
   export type RecitalBestPlaySelectScalar = {
@@ -8805,20 +18488,24 @@ export namespace Prisma {
     updated_at?: boolean
     user_id?: boolean
     music_idx?: boolean
+    chart_id?: boolean
   }
 
-  export type RecitalBestPlayOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "difficulty" | "level" | "score" | "max_combo" | "rank" | "besttime" | "grade_recital" | "fc_type" | "created_at" | "updated_at" | "user_id" | "music_idx", ExtArgs["result"]["recitalBestPlay"]>
+  export type RecitalBestPlayOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "difficulty" | "level" | "score" | "max_combo" | "rank" | "besttime" | "grade_recital" | "fc_type" | "created_at" | "updated_at" | "user_id" | "music_idx" | "chart_id", ExtArgs["result"]["recitalBestPlay"]>
   export type RecitalBestPlayInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     music?: boolean | MusicDefaultArgs<ExtArgs>
+    chart?: boolean | RecitalBestPlay$chartArgs<ExtArgs>
   }
   export type RecitalBestPlayIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     music?: boolean | MusicDefaultArgs<ExtArgs>
+    chart?: boolean | RecitalBestPlay$chartArgs<ExtArgs>
   }
   export type RecitalBestPlayIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     music?: boolean | MusicDefaultArgs<ExtArgs>
+    chart?: boolean | RecitalBestPlay$chartArgs<ExtArgs>
   }
 
   export type $RecitalBestPlayPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8826,6 +18513,7 @@ export namespace Prisma {
     objects: {
       user: Prisma.$UserPayload<ExtArgs>
       music: Prisma.$MusicPayload<ExtArgs>
+      chart: Prisma.$MusicChartPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -8841,6 +18529,7 @@ export namespace Prisma {
       updated_at: Date
       user_id: number
       music_idx: string
+      chart_id: number | null
     }, ExtArgs["result"]["recitalBestPlay"]>
     composites: {}
   }
@@ -9237,6 +18926,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     music<T extends MusicDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MusicDefaultArgs<ExtArgs>>): Prisma__MusicClient<$Result.GetResult<Prisma.$MusicPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    chart<T extends RecitalBestPlay$chartArgs<ExtArgs> = {}>(args?: Subset<T, RecitalBestPlay$chartArgs<ExtArgs>>): Prisma__MusicChartClient<$Result.GetResult<Prisma.$MusicChartPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9279,6 +18969,7 @@ export namespace Prisma {
     readonly updated_at: FieldRef<"RecitalBestPlay", 'DateTime'>
     readonly user_id: FieldRef<"RecitalBestPlay", 'Int'>
     readonly music_idx: FieldRef<"RecitalBestPlay", 'String'>
+    readonly chart_id: FieldRef<"RecitalBestPlay", 'Int'>
   }
     
 
@@ -9673,6 +19364,25 @@ export namespace Prisma {
   }
 
   /**
+   * RecitalBestPlay.chart
+   */
+  export type RecitalBestPlay$chartArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MusicChart
+     */
+    select?: MusicChartSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MusicChart
+     */
+    omit?: MusicChartOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MusicChartInclude<ExtArgs> | null
+    where?: MusicChartWhereInput
+  }
+
+  /**
    * RecitalBestPlay without action
    */
   export type RecitalBestPlayDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -9715,6 +19425,7 @@ export namespace Prisma {
     grade_basic: number | null
     grade_recital: number | null
     user_id: number | null
+    chart_id: number | null
   }
 
   export type PlayDataSumAggregateOutputType = {
@@ -9729,6 +19440,7 @@ export namespace Prisma {
     grade_basic: number | null
     grade_recital: number | null
     user_id: number | null
+    chart_id: number | null
   }
 
   export type PlayDataMinAggregateOutputType = {
@@ -9749,6 +19461,7 @@ export namespace Prisma {
     updated_at: Date | null
     user_id: number | null
     music_idx: string | null
+    chart_id: number | null
   }
 
   export type PlayDataMaxAggregateOutputType = {
@@ -9769,6 +19482,7 @@ export namespace Prisma {
     updated_at: Date | null
     user_id: number | null
     music_idx: string | null
+    chart_id: number | null
   }
 
   export type PlayDataCountAggregateOutputType = {
@@ -9789,6 +19503,7 @@ export namespace Prisma {
     updated_at: number
     user_id: number
     music_idx: number
+    chart_id: number
     _all: number
   }
 
@@ -9805,6 +19520,7 @@ export namespace Prisma {
     grade_basic?: true
     grade_recital?: true
     user_id?: true
+    chart_id?: true
   }
 
   export type PlayDataSumAggregateInputType = {
@@ -9819,6 +19535,7 @@ export namespace Prisma {
     grade_basic?: true
     grade_recital?: true
     user_id?: true
+    chart_id?: true
   }
 
   export type PlayDataMinAggregateInputType = {
@@ -9839,6 +19556,7 @@ export namespace Prisma {
     updated_at?: true
     user_id?: true
     music_idx?: true
+    chart_id?: true
   }
 
   export type PlayDataMaxAggregateInputType = {
@@ -9859,6 +19577,7 @@ export namespace Prisma {
     updated_at?: true
     user_id?: true
     music_idx?: true
+    chart_id?: true
   }
 
   export type PlayDataCountAggregateInputType = {
@@ -9879,6 +19598,7 @@ export namespace Prisma {
     updated_at?: true
     user_id?: true
     music_idx?: true
+    chart_id?: true
     _all?: true
   }
 
@@ -9986,6 +19706,7 @@ export namespace Prisma {
     updated_at: Date
     user_id: number
     music_idx: string
+    chart_id: number | null
     _count: PlayDataCountAggregateOutputType | null
     _avg: PlayDataAvgAggregateOutputType | null
     _sum: PlayDataSumAggregateOutputType | null
@@ -10025,8 +19746,10 @@ export namespace Prisma {
     updated_at?: boolean
     user_id?: boolean
     music_idx?: boolean
+    chart_id?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     music?: boolean | MusicDefaultArgs<ExtArgs>
+    chart?: boolean | PlayData$chartArgs<ExtArgs>
   }, ExtArgs["result"]["playData"]>
 
   export type PlayDataSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -10047,8 +19770,10 @@ export namespace Prisma {
     updated_at?: boolean
     user_id?: boolean
     music_idx?: boolean
+    chart_id?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     music?: boolean | MusicDefaultArgs<ExtArgs>
+    chart?: boolean | PlayData$chartArgs<ExtArgs>
   }, ExtArgs["result"]["playData"]>
 
   export type PlayDataSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -10069,8 +19794,10 @@ export namespace Prisma {
     updated_at?: boolean
     user_id?: boolean
     music_idx?: boolean
+    chart_id?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     music?: boolean | MusicDefaultArgs<ExtArgs>
+    chart?: boolean | PlayData$chartArgs<ExtArgs>
   }, ExtArgs["result"]["playData"]>
 
   export type PlayDataSelectScalar = {
@@ -10091,20 +19818,24 @@ export namespace Prisma {
     updated_at?: boolean
     user_id?: boolean
     music_idx?: boolean
+    chart_id?: boolean
   }
 
-  export type PlayDataOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "level" | "difficulty" | "score" | "rank" | "fc_type" | "play_count" | "fullcombo_count" | "pianistic_count" | "max_combo" | "grade_basic" | "grade_recital" | "besttime" | "created_at" | "updated_at" | "user_id" | "music_idx", ExtArgs["result"]["playData"]>
+  export type PlayDataOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "level" | "difficulty" | "score" | "rank" | "fc_type" | "play_count" | "fullcombo_count" | "pianistic_count" | "max_combo" | "grade_basic" | "grade_recital" | "besttime" | "created_at" | "updated_at" | "user_id" | "music_idx" | "chart_id", ExtArgs["result"]["playData"]>
   export type PlayDataInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     music?: boolean | MusicDefaultArgs<ExtArgs>
+    chart?: boolean | PlayData$chartArgs<ExtArgs>
   }
   export type PlayDataIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     music?: boolean | MusicDefaultArgs<ExtArgs>
+    chart?: boolean | PlayData$chartArgs<ExtArgs>
   }
   export type PlayDataIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     music?: boolean | MusicDefaultArgs<ExtArgs>
+    chart?: boolean | PlayData$chartArgs<ExtArgs>
   }
 
   export type $PlayDataPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10112,6 +19843,7 @@ export namespace Prisma {
     objects: {
       user: Prisma.$UserPayload<ExtArgs>
       music: Prisma.$MusicPayload<ExtArgs>
+      chart: Prisma.$MusicChartPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -10131,6 +19863,7 @@ export namespace Prisma {
       updated_at: Date
       user_id: number
       music_idx: string
+      chart_id: number | null
     }, ExtArgs["result"]["playData"]>
     composites: {}
   }
@@ -10527,6 +20260,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     music<T extends MusicDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MusicDefaultArgs<ExtArgs>>): Prisma__MusicClient<$Result.GetResult<Prisma.$MusicPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    chart<T extends PlayData$chartArgs<ExtArgs> = {}>(args?: Subset<T, PlayData$chartArgs<ExtArgs>>): Prisma__MusicChartClient<$Result.GetResult<Prisma.$MusicChartPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10573,6 +20307,7 @@ export namespace Prisma {
     readonly updated_at: FieldRef<"PlayData", 'DateTime'>
     readonly user_id: FieldRef<"PlayData", 'Int'>
     readonly music_idx: FieldRef<"PlayData", 'String'>
+    readonly chart_id: FieldRef<"PlayData", 'Int'>
   }
     
 
@@ -10964,6 +20699,25 @@ export namespace Prisma {
      * Limit how many PlayData to delete.
      */
     limit?: number
+  }
+
+  /**
+   * PlayData.chart
+   */
+  export type PlayData$chartArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MusicChart
+     */
+    select?: MusicChartSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MusicChart
+     */
+    omit?: MusicChartOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MusicChartInclude<ExtArgs> | null
+    where?: MusicChartWhereInput
   }
 
   /**
@@ -14454,6 +24208,113 @@ export namespace Prisma {
   export type MusicScalarFieldEnum = (typeof MusicScalarFieldEnum)[keyof typeof MusicScalarFieldEnum]
 
 
+  export const MusicChartScalarFieldEnum: {
+    id: 'id',
+    difficulty: 'difficulty',
+    level: 'level',
+    level_constant: 'level_constant',
+    music_idx: 'music_idx',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+  };
+
+  export type MusicChartScalarFieldEnum = (typeof MusicChartScalarFieldEnum)[keyof typeof MusicChartScalarFieldEnum]
+
+
+  export const DataSyncScalarFieldEnum: {
+    id: 'id',
+    status: 'status',
+    received_plays: 'received_plays',
+    inserted_plays: 'inserted_plays',
+    changed_records: 'changed_records',
+    error_message: 'error_message',
+    user_id: 'user_id',
+    started_at: 'started_at',
+    completed_at: 'completed_at'
+  };
+
+  export type DataSyncScalarFieldEnum = (typeof DataSyncScalarFieldEnum)[keyof typeof DataSyncScalarFieldEnum]
+
+
+  export const ChartPlayHistoryScalarFieldEnum: {
+    id: 'id',
+    score: 'score',
+    max_combo: 'max_combo',
+    rank: 'rank',
+    grade_basic: 'grade_basic',
+    source_play_time: 'source_play_time',
+    chart_id: 'chart_id',
+    user_id: 'user_id',
+    first_sync_id: 'first_sync_id',
+    created_at: 'created_at'
+  };
+
+  export type ChartPlayHistoryScalarFieldEnum = (typeof ChartPlayHistoryScalarFieldEnum)[keyof typeof ChartPlayHistoryScalarFieldEnum]
+
+
+  export const ChartRecordSnapshotScalarFieldEnum: {
+    id: 'id',
+    level: 'level',
+    score: 'score',
+    rank: 'rank',
+    fc_type: 'fc_type',
+    play_count: 'play_count',
+    fullcombo_count: 'fullcombo_count',
+    pianistic_count: 'pianistic_count',
+    max_combo: 'max_combo',
+    grade_basic: 'grade_basic',
+    grade_recital: 'grade_recital',
+    besttime: 'besttime',
+    chart_id: 'chart_id',
+    user_id: 'user_id',
+    sync_id: 'sync_id',
+    created_at: 'created_at'
+  };
+
+  export type ChartRecordSnapshotScalarFieldEnum = (typeof ChartRecordSnapshotScalarFieldEnum)[keyof typeof ChartRecordSnapshotScalarFieldEnum]
+
+
+  export const ChartConstantHistoryScalarFieldEnum: {
+    id: 'id',
+    value: 'value',
+    effective_at: 'effective_at',
+    chart_id: 'chart_id',
+    created_at: 'created_at'
+  };
+
+  export type ChartConstantHistoryScalarFieldEnum = (typeof ChartConstantHistoryScalarFieldEnum)[keyof typeof ChartConstantHistoryScalarFieldEnum]
+
+
+  export const ChartEvaluationScalarFieldEnum: {
+    id: 'id',
+    perceived_constant: 'perceived_constant',
+    stairs: 'stairs',
+    chord: 'chord',
+    trill: 'trill',
+    glissando: 'glissando',
+    repetition: 'repetition',
+    comment: 'comment',
+    chart_id: 'chart_id',
+    user_id: 'user_id',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+  };
+
+  export type ChartEvaluationScalarFieldEnum = (typeof ChartEvaluationScalarFieldEnum)[keyof typeof ChartEvaluationScalarFieldEnum]
+
+
+  export const ChartEvaluationReactionScalarFieldEnum: {
+    id: 'id',
+    value: 'value',
+    evaluation_id: 'evaluation_id',
+    user_id: 'user_id',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+  };
+
+  export type ChartEvaluationReactionScalarFieldEnum = (typeof ChartEvaluationReactionScalarFieldEnum)[keyof typeof ChartEvaluationReactionScalarFieldEnum]
+
+
   export const RecentPlayScalarFieldEnum: {
     id: 'id',
     difficulty: 'difficulty',
@@ -14466,7 +24327,8 @@ export namespace Prisma {
     created_at: 'created_at',
     updated_at: 'updated_at',
     user_id: 'user_id',
-    music_idx: 'music_idx'
+    music_idx: 'music_idx',
+    chart_id: 'chart_id'
   };
 
   export type RecentPlayScalarFieldEnum = (typeof RecentPlayScalarFieldEnum)[keyof typeof RecentPlayScalarFieldEnum]
@@ -14498,7 +24360,8 @@ export namespace Prisma {
     created_at: 'created_at',
     updated_at: 'updated_at',
     user_id: 'user_id',
-    music_idx: 'music_idx'
+    music_idx: 'music_idx',
+    chart_id: 'chart_id'
   };
 
   export type BasicBestPlayScalarFieldEnum = (typeof BasicBestPlayScalarFieldEnum)[keyof typeof BasicBestPlayScalarFieldEnum]
@@ -14517,7 +24380,8 @@ export namespace Prisma {
     created_at: 'created_at',
     updated_at: 'updated_at',
     user_id: 'user_id',
-    music_idx: 'music_idx'
+    music_idx: 'music_idx',
+    chart_id: 'chart_id'
   };
 
   export type RecitalBestPlayScalarFieldEnum = (typeof RecitalBestPlayScalarFieldEnum)[keyof typeof RecitalBestPlayScalarFieldEnum]
@@ -14540,7 +24404,8 @@ export namespace Prisma {
     created_at: 'created_at',
     updated_at: 'updated_at',
     user_id: 'user_id',
-    music_idx: 'music_idx'
+    music_idx: 'music_idx',
+    chart_id: 'chart_id'
   };
 
   export type PlayDataScalarFieldEnum = (typeof PlayDataScalarFieldEnum)[keyof typeof PlayDataScalarFieldEnum]
@@ -14630,16 +24495,16 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Boolean'
+   * Reference to a field of type 'Float'
    */
-  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
     
 
 
   /**
-   * Reference to a field of type 'Float'
+   * Reference to a field of type 'Boolean'
    */
-  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
   /**
    * Deep Input Types
@@ -14682,6 +24547,11 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayListRelationFilter
     UserBestGrade?: UserBestGradeListRelationFilter
     userBingoCellData?: UserBingoCellDataListRelationFilter
+    chartEvaluations?: ChartEvaluationListRelationFilter
+    chartReactions?: ChartEvaluationReactionListRelationFilter
+    dataSyncs?: DataSyncListRelationFilter
+    chartPlayHistory?: ChartPlayHistoryListRelationFilter
+    chartRecordSnapshots?: ChartRecordSnapshotListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -14717,6 +24587,11 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayOrderByRelationAggregateInput
     UserBestGrade?: UserBestGradeOrderByRelationAggregateInput
     userBingoCellData?: userBingoCellDataOrderByRelationAggregateInput
+    chartEvaluations?: ChartEvaluationOrderByRelationAggregateInput
+    chartReactions?: ChartEvaluationReactionOrderByRelationAggregateInput
+    dataSyncs?: DataSyncOrderByRelationAggregateInput
+    chartPlayHistory?: ChartPlayHistoryOrderByRelationAggregateInput
+    chartRecordSnapshots?: ChartRecordSnapshotOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -14755,6 +24630,11 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayListRelationFilter
     UserBestGrade?: UserBestGradeListRelationFilter
     userBingoCellData?: UserBingoCellDataListRelationFilter
+    chartEvaluations?: ChartEvaluationListRelationFilter
+    chartReactions?: ChartEvaluationReactionListRelationFilter
+    dataSyncs?: DataSyncListRelationFilter
+    chartPlayHistory?: ChartPlayHistoryListRelationFilter
+    chartRecordSnapshots?: ChartRecordSnapshotListRelationFilter
   }, "id" | "username" | "kakao_id" | "discord_tag">
 
   export type UserOrderByWithAggregationInput = {
@@ -14851,6 +24731,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayListRelationFilter
     Bingo?: BingoListRelationFilter
     BingoCell?: BingoCellListRelationFilter
+    charts?: MusicChartListRelationFilter
   }
 
   export type MusicOrderByWithRelationInput = {
@@ -14878,6 +24759,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayOrderByRelationAggregateInput
     Bingo?: BingoOrderByRelationAggregateInput
     BingoCell?: BingoCellOrderByRelationAggregateInput
+    charts?: MusicChartOrderByRelationAggregateInput
   }
 
   export type MusicWhereUniqueInput = Prisma.AtLeast<{
@@ -14908,6 +24790,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayListRelationFilter
     Bingo?: BingoListRelationFilter
     BingoCell?: BingoCellListRelationFilter
+    charts?: MusicChartListRelationFilter
   }, "id" | "index">
 
   export type MusicOrderByWithAggregationInput = {
@@ -14960,6 +24843,611 @@ export namespace Prisma {
     updated_at?: DateTimeWithAggregatesFilter<"Music"> | Date | string
   }
 
+  export type MusicChartWhereInput = {
+    AND?: MusicChartWhereInput | MusicChartWhereInput[]
+    OR?: MusicChartWhereInput[]
+    NOT?: MusicChartWhereInput | MusicChartWhereInput[]
+    id?: IntFilter<"MusicChart"> | number
+    difficulty?: StringFilter<"MusicChart"> | string
+    level?: IntFilter<"MusicChart"> | number
+    level_constant?: FloatNullableFilter<"MusicChart"> | number | null
+    music_idx?: StringFilter<"MusicChart"> | string
+    created_at?: DateTimeFilter<"MusicChart"> | Date | string
+    updated_at?: DateTimeFilter<"MusicChart"> | Date | string
+    music?: XOR<MusicScalarRelationFilter, MusicWhereInput>
+    constantHistory?: ChartConstantHistoryListRelationFilter
+    evaluations?: ChartEvaluationListRelationFilter
+    RecentPlay?: RecentPlayListRelationFilter
+    PlayData?: PlayDataListRelationFilter
+    BasicBestPlay?: BasicBestPlayListRelationFilter
+    RecitalBestPlay?: RecitalBestPlayListRelationFilter
+    playHistory?: ChartPlayHistoryListRelationFilter
+    recordSnapshots?: ChartRecordSnapshotListRelationFilter
+  }
+
+  export type MusicChartOrderByWithRelationInput = {
+    id?: SortOrder
+    difficulty?: SortOrder
+    level?: SortOrder
+    level_constant?: SortOrderInput | SortOrder
+    music_idx?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    music?: MusicOrderByWithRelationInput
+    constantHistory?: ChartConstantHistoryOrderByRelationAggregateInput
+    evaluations?: ChartEvaluationOrderByRelationAggregateInput
+    RecentPlay?: RecentPlayOrderByRelationAggregateInput
+    PlayData?: PlayDataOrderByRelationAggregateInput
+    BasicBestPlay?: BasicBestPlayOrderByRelationAggregateInput
+    RecitalBestPlay?: RecitalBestPlayOrderByRelationAggregateInput
+    playHistory?: ChartPlayHistoryOrderByRelationAggregateInput
+    recordSnapshots?: ChartRecordSnapshotOrderByRelationAggregateInput
+  }
+
+  export type MusicChartWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    music_idx_difficulty?: MusicChartMusic_idxDifficultyCompoundUniqueInput
+    AND?: MusicChartWhereInput | MusicChartWhereInput[]
+    OR?: MusicChartWhereInput[]
+    NOT?: MusicChartWhereInput | MusicChartWhereInput[]
+    difficulty?: StringFilter<"MusicChart"> | string
+    level?: IntFilter<"MusicChart"> | number
+    level_constant?: FloatNullableFilter<"MusicChart"> | number | null
+    music_idx?: StringFilter<"MusicChart"> | string
+    created_at?: DateTimeFilter<"MusicChart"> | Date | string
+    updated_at?: DateTimeFilter<"MusicChart"> | Date | string
+    music?: XOR<MusicScalarRelationFilter, MusicWhereInput>
+    constantHistory?: ChartConstantHistoryListRelationFilter
+    evaluations?: ChartEvaluationListRelationFilter
+    RecentPlay?: RecentPlayListRelationFilter
+    PlayData?: PlayDataListRelationFilter
+    BasicBestPlay?: BasicBestPlayListRelationFilter
+    RecitalBestPlay?: RecitalBestPlayListRelationFilter
+    playHistory?: ChartPlayHistoryListRelationFilter
+    recordSnapshots?: ChartRecordSnapshotListRelationFilter
+  }, "id" | "music_idx_difficulty">
+
+  export type MusicChartOrderByWithAggregationInput = {
+    id?: SortOrder
+    difficulty?: SortOrder
+    level?: SortOrder
+    level_constant?: SortOrderInput | SortOrder
+    music_idx?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    _count?: MusicChartCountOrderByAggregateInput
+    _avg?: MusicChartAvgOrderByAggregateInput
+    _max?: MusicChartMaxOrderByAggregateInput
+    _min?: MusicChartMinOrderByAggregateInput
+    _sum?: MusicChartSumOrderByAggregateInput
+  }
+
+  export type MusicChartScalarWhereWithAggregatesInput = {
+    AND?: MusicChartScalarWhereWithAggregatesInput | MusicChartScalarWhereWithAggregatesInput[]
+    OR?: MusicChartScalarWhereWithAggregatesInput[]
+    NOT?: MusicChartScalarWhereWithAggregatesInput | MusicChartScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"MusicChart"> | number
+    difficulty?: StringWithAggregatesFilter<"MusicChart"> | string
+    level?: IntWithAggregatesFilter<"MusicChart"> | number
+    level_constant?: FloatNullableWithAggregatesFilter<"MusicChart"> | number | null
+    music_idx?: StringWithAggregatesFilter<"MusicChart"> | string
+    created_at?: DateTimeWithAggregatesFilter<"MusicChart"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"MusicChart"> | Date | string
+  }
+
+  export type DataSyncWhereInput = {
+    AND?: DataSyncWhereInput | DataSyncWhereInput[]
+    OR?: DataSyncWhereInput[]
+    NOT?: DataSyncWhereInput | DataSyncWhereInput[]
+    id?: IntFilter<"DataSync"> | number
+    status?: StringFilter<"DataSync"> | string
+    received_plays?: IntFilter<"DataSync"> | number
+    inserted_plays?: IntFilter<"DataSync"> | number
+    changed_records?: IntFilter<"DataSync"> | number
+    error_message?: StringNullableFilter<"DataSync"> | string | null
+    user_id?: IntFilter<"DataSync"> | number
+    started_at?: DateTimeFilter<"DataSync"> | Date | string
+    completed_at?: DateTimeNullableFilter<"DataSync"> | Date | string | null
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    playHistory?: ChartPlayHistoryListRelationFilter
+    recordSnapshots?: ChartRecordSnapshotListRelationFilter
+  }
+
+  export type DataSyncOrderByWithRelationInput = {
+    id?: SortOrder
+    status?: SortOrder
+    received_plays?: SortOrder
+    inserted_plays?: SortOrder
+    changed_records?: SortOrder
+    error_message?: SortOrderInput | SortOrder
+    user_id?: SortOrder
+    started_at?: SortOrder
+    completed_at?: SortOrderInput | SortOrder
+    user?: UserOrderByWithRelationInput
+    playHistory?: ChartPlayHistoryOrderByRelationAggregateInput
+    recordSnapshots?: ChartRecordSnapshotOrderByRelationAggregateInput
+  }
+
+  export type DataSyncWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: DataSyncWhereInput | DataSyncWhereInput[]
+    OR?: DataSyncWhereInput[]
+    NOT?: DataSyncWhereInput | DataSyncWhereInput[]
+    status?: StringFilter<"DataSync"> | string
+    received_plays?: IntFilter<"DataSync"> | number
+    inserted_plays?: IntFilter<"DataSync"> | number
+    changed_records?: IntFilter<"DataSync"> | number
+    error_message?: StringNullableFilter<"DataSync"> | string | null
+    user_id?: IntFilter<"DataSync"> | number
+    started_at?: DateTimeFilter<"DataSync"> | Date | string
+    completed_at?: DateTimeNullableFilter<"DataSync"> | Date | string | null
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    playHistory?: ChartPlayHistoryListRelationFilter
+    recordSnapshots?: ChartRecordSnapshotListRelationFilter
+  }, "id">
+
+  export type DataSyncOrderByWithAggregationInput = {
+    id?: SortOrder
+    status?: SortOrder
+    received_plays?: SortOrder
+    inserted_plays?: SortOrder
+    changed_records?: SortOrder
+    error_message?: SortOrderInput | SortOrder
+    user_id?: SortOrder
+    started_at?: SortOrder
+    completed_at?: SortOrderInput | SortOrder
+    _count?: DataSyncCountOrderByAggregateInput
+    _avg?: DataSyncAvgOrderByAggregateInput
+    _max?: DataSyncMaxOrderByAggregateInput
+    _min?: DataSyncMinOrderByAggregateInput
+    _sum?: DataSyncSumOrderByAggregateInput
+  }
+
+  export type DataSyncScalarWhereWithAggregatesInput = {
+    AND?: DataSyncScalarWhereWithAggregatesInput | DataSyncScalarWhereWithAggregatesInput[]
+    OR?: DataSyncScalarWhereWithAggregatesInput[]
+    NOT?: DataSyncScalarWhereWithAggregatesInput | DataSyncScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"DataSync"> | number
+    status?: StringWithAggregatesFilter<"DataSync"> | string
+    received_plays?: IntWithAggregatesFilter<"DataSync"> | number
+    inserted_plays?: IntWithAggregatesFilter<"DataSync"> | number
+    changed_records?: IntWithAggregatesFilter<"DataSync"> | number
+    error_message?: StringNullableWithAggregatesFilter<"DataSync"> | string | null
+    user_id?: IntWithAggregatesFilter<"DataSync"> | number
+    started_at?: DateTimeWithAggregatesFilter<"DataSync"> | Date | string
+    completed_at?: DateTimeNullableWithAggregatesFilter<"DataSync"> | Date | string | null
+  }
+
+  export type ChartPlayHistoryWhereInput = {
+    AND?: ChartPlayHistoryWhereInput | ChartPlayHistoryWhereInput[]
+    OR?: ChartPlayHistoryWhereInput[]
+    NOT?: ChartPlayHistoryWhereInput | ChartPlayHistoryWhereInput[]
+    id?: IntFilter<"ChartPlayHistory"> | number
+    score?: IntFilter<"ChartPlayHistory"> | number
+    max_combo?: IntFilter<"ChartPlayHistory"> | number
+    rank?: StringFilter<"ChartPlayHistory"> | string
+    grade_basic?: IntFilter<"ChartPlayHistory"> | number
+    source_play_time?: StringFilter<"ChartPlayHistory"> | string
+    chart_id?: IntFilter<"ChartPlayHistory"> | number
+    user_id?: IntFilter<"ChartPlayHistory"> | number
+    first_sync_id?: IntNullableFilter<"ChartPlayHistory"> | number | null
+    created_at?: DateTimeFilter<"ChartPlayHistory"> | Date | string
+    chart?: XOR<MusicChartScalarRelationFilter, MusicChartWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    firstSync?: XOR<DataSyncNullableScalarRelationFilter, DataSyncWhereInput> | null
+  }
+
+  export type ChartPlayHistoryOrderByWithRelationInput = {
+    id?: SortOrder
+    score?: SortOrder
+    max_combo?: SortOrder
+    rank?: SortOrder
+    grade_basic?: SortOrder
+    source_play_time?: SortOrder
+    chart_id?: SortOrder
+    user_id?: SortOrder
+    first_sync_id?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    chart?: MusicChartOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
+    firstSync?: DataSyncOrderByWithRelationInput
+  }
+
+  export type ChartPlayHistoryWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    user_id_chart_id_source_play_time_score_max_combo_rank?: ChartPlayHistoryUser_idChart_idSource_play_timeScoreMax_comboRankCompoundUniqueInput
+    AND?: ChartPlayHistoryWhereInput | ChartPlayHistoryWhereInput[]
+    OR?: ChartPlayHistoryWhereInput[]
+    NOT?: ChartPlayHistoryWhereInput | ChartPlayHistoryWhereInput[]
+    score?: IntFilter<"ChartPlayHistory"> | number
+    max_combo?: IntFilter<"ChartPlayHistory"> | number
+    rank?: StringFilter<"ChartPlayHistory"> | string
+    grade_basic?: IntFilter<"ChartPlayHistory"> | number
+    source_play_time?: StringFilter<"ChartPlayHistory"> | string
+    chart_id?: IntFilter<"ChartPlayHistory"> | number
+    user_id?: IntFilter<"ChartPlayHistory"> | number
+    first_sync_id?: IntNullableFilter<"ChartPlayHistory"> | number | null
+    created_at?: DateTimeFilter<"ChartPlayHistory"> | Date | string
+    chart?: XOR<MusicChartScalarRelationFilter, MusicChartWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    firstSync?: XOR<DataSyncNullableScalarRelationFilter, DataSyncWhereInput> | null
+  }, "id" | "user_id_chart_id_source_play_time_score_max_combo_rank">
+
+  export type ChartPlayHistoryOrderByWithAggregationInput = {
+    id?: SortOrder
+    score?: SortOrder
+    max_combo?: SortOrder
+    rank?: SortOrder
+    grade_basic?: SortOrder
+    source_play_time?: SortOrder
+    chart_id?: SortOrder
+    user_id?: SortOrder
+    first_sync_id?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    _count?: ChartPlayHistoryCountOrderByAggregateInput
+    _avg?: ChartPlayHistoryAvgOrderByAggregateInput
+    _max?: ChartPlayHistoryMaxOrderByAggregateInput
+    _min?: ChartPlayHistoryMinOrderByAggregateInput
+    _sum?: ChartPlayHistorySumOrderByAggregateInput
+  }
+
+  export type ChartPlayHistoryScalarWhereWithAggregatesInput = {
+    AND?: ChartPlayHistoryScalarWhereWithAggregatesInput | ChartPlayHistoryScalarWhereWithAggregatesInput[]
+    OR?: ChartPlayHistoryScalarWhereWithAggregatesInput[]
+    NOT?: ChartPlayHistoryScalarWhereWithAggregatesInput | ChartPlayHistoryScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"ChartPlayHistory"> | number
+    score?: IntWithAggregatesFilter<"ChartPlayHistory"> | number
+    max_combo?: IntWithAggregatesFilter<"ChartPlayHistory"> | number
+    rank?: StringWithAggregatesFilter<"ChartPlayHistory"> | string
+    grade_basic?: IntWithAggregatesFilter<"ChartPlayHistory"> | number
+    source_play_time?: StringWithAggregatesFilter<"ChartPlayHistory"> | string
+    chart_id?: IntWithAggregatesFilter<"ChartPlayHistory"> | number
+    user_id?: IntWithAggregatesFilter<"ChartPlayHistory"> | number
+    first_sync_id?: IntNullableWithAggregatesFilter<"ChartPlayHistory"> | number | null
+    created_at?: DateTimeWithAggregatesFilter<"ChartPlayHistory"> | Date | string
+  }
+
+  export type ChartRecordSnapshotWhereInput = {
+    AND?: ChartRecordSnapshotWhereInput | ChartRecordSnapshotWhereInput[]
+    OR?: ChartRecordSnapshotWhereInput[]
+    NOT?: ChartRecordSnapshotWhereInput | ChartRecordSnapshotWhereInput[]
+    id?: IntFilter<"ChartRecordSnapshot"> | number
+    level?: IntFilter<"ChartRecordSnapshot"> | number
+    score?: IntFilter<"ChartRecordSnapshot"> | number
+    rank?: StringFilter<"ChartRecordSnapshot"> | string
+    fc_type?: IntFilter<"ChartRecordSnapshot"> | number
+    play_count?: IntFilter<"ChartRecordSnapshot"> | number
+    fullcombo_count?: IntFilter<"ChartRecordSnapshot"> | number
+    pianistic_count?: IntFilter<"ChartRecordSnapshot"> | number
+    max_combo?: IntFilter<"ChartRecordSnapshot"> | number
+    grade_basic?: IntFilter<"ChartRecordSnapshot"> | number
+    grade_recital?: IntFilter<"ChartRecordSnapshot"> | number
+    besttime?: StringFilter<"ChartRecordSnapshot"> | string
+    chart_id?: IntFilter<"ChartRecordSnapshot"> | number
+    user_id?: IntFilter<"ChartRecordSnapshot"> | number
+    sync_id?: IntFilter<"ChartRecordSnapshot"> | number
+    created_at?: DateTimeFilter<"ChartRecordSnapshot"> | Date | string
+    chart?: XOR<MusicChartScalarRelationFilter, MusicChartWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    sync?: XOR<DataSyncScalarRelationFilter, DataSyncWhereInput>
+  }
+
+  export type ChartRecordSnapshotOrderByWithRelationInput = {
+    id?: SortOrder
+    level?: SortOrder
+    score?: SortOrder
+    rank?: SortOrder
+    fc_type?: SortOrder
+    play_count?: SortOrder
+    fullcombo_count?: SortOrder
+    pianistic_count?: SortOrder
+    max_combo?: SortOrder
+    grade_basic?: SortOrder
+    grade_recital?: SortOrder
+    besttime?: SortOrder
+    chart_id?: SortOrder
+    user_id?: SortOrder
+    sync_id?: SortOrder
+    created_at?: SortOrder
+    chart?: MusicChartOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
+    sync?: DataSyncOrderByWithRelationInput
+  }
+
+  export type ChartRecordSnapshotWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    sync_id_chart_id?: ChartRecordSnapshotSync_idChart_idCompoundUniqueInput
+    AND?: ChartRecordSnapshotWhereInput | ChartRecordSnapshotWhereInput[]
+    OR?: ChartRecordSnapshotWhereInput[]
+    NOT?: ChartRecordSnapshotWhereInput | ChartRecordSnapshotWhereInput[]
+    level?: IntFilter<"ChartRecordSnapshot"> | number
+    score?: IntFilter<"ChartRecordSnapshot"> | number
+    rank?: StringFilter<"ChartRecordSnapshot"> | string
+    fc_type?: IntFilter<"ChartRecordSnapshot"> | number
+    play_count?: IntFilter<"ChartRecordSnapshot"> | number
+    fullcombo_count?: IntFilter<"ChartRecordSnapshot"> | number
+    pianistic_count?: IntFilter<"ChartRecordSnapshot"> | number
+    max_combo?: IntFilter<"ChartRecordSnapshot"> | number
+    grade_basic?: IntFilter<"ChartRecordSnapshot"> | number
+    grade_recital?: IntFilter<"ChartRecordSnapshot"> | number
+    besttime?: StringFilter<"ChartRecordSnapshot"> | string
+    chart_id?: IntFilter<"ChartRecordSnapshot"> | number
+    user_id?: IntFilter<"ChartRecordSnapshot"> | number
+    sync_id?: IntFilter<"ChartRecordSnapshot"> | number
+    created_at?: DateTimeFilter<"ChartRecordSnapshot"> | Date | string
+    chart?: XOR<MusicChartScalarRelationFilter, MusicChartWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    sync?: XOR<DataSyncScalarRelationFilter, DataSyncWhereInput>
+  }, "id" | "sync_id_chart_id">
+
+  export type ChartRecordSnapshotOrderByWithAggregationInput = {
+    id?: SortOrder
+    level?: SortOrder
+    score?: SortOrder
+    rank?: SortOrder
+    fc_type?: SortOrder
+    play_count?: SortOrder
+    fullcombo_count?: SortOrder
+    pianistic_count?: SortOrder
+    max_combo?: SortOrder
+    grade_basic?: SortOrder
+    grade_recital?: SortOrder
+    besttime?: SortOrder
+    chart_id?: SortOrder
+    user_id?: SortOrder
+    sync_id?: SortOrder
+    created_at?: SortOrder
+    _count?: ChartRecordSnapshotCountOrderByAggregateInput
+    _avg?: ChartRecordSnapshotAvgOrderByAggregateInput
+    _max?: ChartRecordSnapshotMaxOrderByAggregateInput
+    _min?: ChartRecordSnapshotMinOrderByAggregateInput
+    _sum?: ChartRecordSnapshotSumOrderByAggregateInput
+  }
+
+  export type ChartRecordSnapshotScalarWhereWithAggregatesInput = {
+    AND?: ChartRecordSnapshotScalarWhereWithAggregatesInput | ChartRecordSnapshotScalarWhereWithAggregatesInput[]
+    OR?: ChartRecordSnapshotScalarWhereWithAggregatesInput[]
+    NOT?: ChartRecordSnapshotScalarWhereWithAggregatesInput | ChartRecordSnapshotScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"ChartRecordSnapshot"> | number
+    level?: IntWithAggregatesFilter<"ChartRecordSnapshot"> | number
+    score?: IntWithAggregatesFilter<"ChartRecordSnapshot"> | number
+    rank?: StringWithAggregatesFilter<"ChartRecordSnapshot"> | string
+    fc_type?: IntWithAggregatesFilter<"ChartRecordSnapshot"> | number
+    play_count?: IntWithAggregatesFilter<"ChartRecordSnapshot"> | number
+    fullcombo_count?: IntWithAggregatesFilter<"ChartRecordSnapshot"> | number
+    pianistic_count?: IntWithAggregatesFilter<"ChartRecordSnapshot"> | number
+    max_combo?: IntWithAggregatesFilter<"ChartRecordSnapshot"> | number
+    grade_basic?: IntWithAggregatesFilter<"ChartRecordSnapshot"> | number
+    grade_recital?: IntWithAggregatesFilter<"ChartRecordSnapshot"> | number
+    besttime?: StringWithAggregatesFilter<"ChartRecordSnapshot"> | string
+    chart_id?: IntWithAggregatesFilter<"ChartRecordSnapshot"> | number
+    user_id?: IntWithAggregatesFilter<"ChartRecordSnapshot"> | number
+    sync_id?: IntWithAggregatesFilter<"ChartRecordSnapshot"> | number
+    created_at?: DateTimeWithAggregatesFilter<"ChartRecordSnapshot"> | Date | string
+  }
+
+  export type ChartConstantHistoryWhereInput = {
+    AND?: ChartConstantHistoryWhereInput | ChartConstantHistoryWhereInput[]
+    OR?: ChartConstantHistoryWhereInput[]
+    NOT?: ChartConstantHistoryWhereInput | ChartConstantHistoryWhereInput[]
+    id?: IntFilter<"ChartConstantHistory"> | number
+    value?: FloatFilter<"ChartConstantHistory"> | number
+    effective_at?: DateTimeFilter<"ChartConstantHistory"> | Date | string
+    chart_id?: IntFilter<"ChartConstantHistory"> | number
+    created_at?: DateTimeFilter<"ChartConstantHistory"> | Date | string
+    chart?: XOR<MusicChartScalarRelationFilter, MusicChartWhereInput>
+  }
+
+  export type ChartConstantHistoryOrderByWithRelationInput = {
+    id?: SortOrder
+    value?: SortOrder
+    effective_at?: SortOrder
+    chart_id?: SortOrder
+    created_at?: SortOrder
+    chart?: MusicChartOrderByWithRelationInput
+  }
+
+  export type ChartConstantHistoryWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: ChartConstantHistoryWhereInput | ChartConstantHistoryWhereInput[]
+    OR?: ChartConstantHistoryWhereInput[]
+    NOT?: ChartConstantHistoryWhereInput | ChartConstantHistoryWhereInput[]
+    value?: FloatFilter<"ChartConstantHistory"> | number
+    effective_at?: DateTimeFilter<"ChartConstantHistory"> | Date | string
+    chart_id?: IntFilter<"ChartConstantHistory"> | number
+    created_at?: DateTimeFilter<"ChartConstantHistory"> | Date | string
+    chart?: XOR<MusicChartScalarRelationFilter, MusicChartWhereInput>
+  }, "id">
+
+  export type ChartConstantHistoryOrderByWithAggregationInput = {
+    id?: SortOrder
+    value?: SortOrder
+    effective_at?: SortOrder
+    chart_id?: SortOrder
+    created_at?: SortOrder
+    _count?: ChartConstantHistoryCountOrderByAggregateInput
+    _avg?: ChartConstantHistoryAvgOrderByAggregateInput
+    _max?: ChartConstantHistoryMaxOrderByAggregateInput
+    _min?: ChartConstantHistoryMinOrderByAggregateInput
+    _sum?: ChartConstantHistorySumOrderByAggregateInput
+  }
+
+  export type ChartConstantHistoryScalarWhereWithAggregatesInput = {
+    AND?: ChartConstantHistoryScalarWhereWithAggregatesInput | ChartConstantHistoryScalarWhereWithAggregatesInput[]
+    OR?: ChartConstantHistoryScalarWhereWithAggregatesInput[]
+    NOT?: ChartConstantHistoryScalarWhereWithAggregatesInput | ChartConstantHistoryScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"ChartConstantHistory"> | number
+    value?: FloatWithAggregatesFilter<"ChartConstantHistory"> | number
+    effective_at?: DateTimeWithAggregatesFilter<"ChartConstantHistory"> | Date | string
+    chart_id?: IntWithAggregatesFilter<"ChartConstantHistory"> | number
+    created_at?: DateTimeWithAggregatesFilter<"ChartConstantHistory"> | Date | string
+  }
+
+  export type ChartEvaluationWhereInput = {
+    AND?: ChartEvaluationWhereInput | ChartEvaluationWhereInput[]
+    OR?: ChartEvaluationWhereInput[]
+    NOT?: ChartEvaluationWhereInput | ChartEvaluationWhereInput[]
+    id?: IntFilter<"ChartEvaluation"> | number
+    perceived_constant?: FloatFilter<"ChartEvaluation"> | number
+    stairs?: IntFilter<"ChartEvaluation"> | number
+    chord?: IntFilter<"ChartEvaluation"> | number
+    trill?: IntFilter<"ChartEvaluation"> | number
+    glissando?: IntFilter<"ChartEvaluation"> | number
+    repetition?: IntFilter<"ChartEvaluation"> | number
+    comment?: StringNullableFilter<"ChartEvaluation"> | string | null
+    chart_id?: IntFilter<"ChartEvaluation"> | number
+    user_id?: IntFilter<"ChartEvaluation"> | number
+    created_at?: DateTimeFilter<"ChartEvaluation"> | Date | string
+    updated_at?: DateTimeFilter<"ChartEvaluation"> | Date | string
+    chart?: XOR<MusicChartScalarRelationFilter, MusicChartWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    reactions?: ChartEvaluationReactionListRelationFilter
+  }
+
+  export type ChartEvaluationOrderByWithRelationInput = {
+    id?: SortOrder
+    perceived_constant?: SortOrder
+    stairs?: SortOrder
+    chord?: SortOrder
+    trill?: SortOrder
+    glissando?: SortOrder
+    repetition?: SortOrder
+    comment?: SortOrderInput | SortOrder
+    chart_id?: SortOrder
+    user_id?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    chart?: MusicChartOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
+    reactions?: ChartEvaluationReactionOrderByRelationAggregateInput
+  }
+
+  export type ChartEvaluationWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    chart_id_user_id?: ChartEvaluationChart_idUser_idCompoundUniqueInput
+    AND?: ChartEvaluationWhereInput | ChartEvaluationWhereInput[]
+    OR?: ChartEvaluationWhereInput[]
+    NOT?: ChartEvaluationWhereInput | ChartEvaluationWhereInput[]
+    perceived_constant?: FloatFilter<"ChartEvaluation"> | number
+    stairs?: IntFilter<"ChartEvaluation"> | number
+    chord?: IntFilter<"ChartEvaluation"> | number
+    trill?: IntFilter<"ChartEvaluation"> | number
+    glissando?: IntFilter<"ChartEvaluation"> | number
+    repetition?: IntFilter<"ChartEvaluation"> | number
+    comment?: StringNullableFilter<"ChartEvaluation"> | string | null
+    chart_id?: IntFilter<"ChartEvaluation"> | number
+    user_id?: IntFilter<"ChartEvaluation"> | number
+    created_at?: DateTimeFilter<"ChartEvaluation"> | Date | string
+    updated_at?: DateTimeFilter<"ChartEvaluation"> | Date | string
+    chart?: XOR<MusicChartScalarRelationFilter, MusicChartWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    reactions?: ChartEvaluationReactionListRelationFilter
+  }, "id" | "chart_id_user_id">
+
+  export type ChartEvaluationOrderByWithAggregationInput = {
+    id?: SortOrder
+    perceived_constant?: SortOrder
+    stairs?: SortOrder
+    chord?: SortOrder
+    trill?: SortOrder
+    glissando?: SortOrder
+    repetition?: SortOrder
+    comment?: SortOrderInput | SortOrder
+    chart_id?: SortOrder
+    user_id?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    _count?: ChartEvaluationCountOrderByAggregateInput
+    _avg?: ChartEvaluationAvgOrderByAggregateInput
+    _max?: ChartEvaluationMaxOrderByAggregateInput
+    _min?: ChartEvaluationMinOrderByAggregateInput
+    _sum?: ChartEvaluationSumOrderByAggregateInput
+  }
+
+  export type ChartEvaluationScalarWhereWithAggregatesInput = {
+    AND?: ChartEvaluationScalarWhereWithAggregatesInput | ChartEvaluationScalarWhereWithAggregatesInput[]
+    OR?: ChartEvaluationScalarWhereWithAggregatesInput[]
+    NOT?: ChartEvaluationScalarWhereWithAggregatesInput | ChartEvaluationScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"ChartEvaluation"> | number
+    perceived_constant?: FloatWithAggregatesFilter<"ChartEvaluation"> | number
+    stairs?: IntWithAggregatesFilter<"ChartEvaluation"> | number
+    chord?: IntWithAggregatesFilter<"ChartEvaluation"> | number
+    trill?: IntWithAggregatesFilter<"ChartEvaluation"> | number
+    glissando?: IntWithAggregatesFilter<"ChartEvaluation"> | number
+    repetition?: IntWithAggregatesFilter<"ChartEvaluation"> | number
+    comment?: StringNullableWithAggregatesFilter<"ChartEvaluation"> | string | null
+    chart_id?: IntWithAggregatesFilter<"ChartEvaluation"> | number
+    user_id?: IntWithAggregatesFilter<"ChartEvaluation"> | number
+    created_at?: DateTimeWithAggregatesFilter<"ChartEvaluation"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"ChartEvaluation"> | Date | string
+  }
+
+  export type ChartEvaluationReactionWhereInput = {
+    AND?: ChartEvaluationReactionWhereInput | ChartEvaluationReactionWhereInput[]
+    OR?: ChartEvaluationReactionWhereInput[]
+    NOT?: ChartEvaluationReactionWhereInput | ChartEvaluationReactionWhereInput[]
+    id?: IntFilter<"ChartEvaluationReaction"> | number
+    value?: IntFilter<"ChartEvaluationReaction"> | number
+    evaluation_id?: IntFilter<"ChartEvaluationReaction"> | number
+    user_id?: IntFilter<"ChartEvaluationReaction"> | number
+    created_at?: DateTimeFilter<"ChartEvaluationReaction"> | Date | string
+    updated_at?: DateTimeFilter<"ChartEvaluationReaction"> | Date | string
+    evaluation?: XOR<ChartEvaluationScalarRelationFilter, ChartEvaluationWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type ChartEvaluationReactionOrderByWithRelationInput = {
+    id?: SortOrder
+    value?: SortOrder
+    evaluation_id?: SortOrder
+    user_id?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    evaluation?: ChartEvaluationOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type ChartEvaluationReactionWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    evaluation_id_user_id?: ChartEvaluationReactionEvaluation_idUser_idCompoundUniqueInput
+    AND?: ChartEvaluationReactionWhereInput | ChartEvaluationReactionWhereInput[]
+    OR?: ChartEvaluationReactionWhereInput[]
+    NOT?: ChartEvaluationReactionWhereInput | ChartEvaluationReactionWhereInput[]
+    value?: IntFilter<"ChartEvaluationReaction"> | number
+    evaluation_id?: IntFilter<"ChartEvaluationReaction"> | number
+    user_id?: IntFilter<"ChartEvaluationReaction"> | number
+    created_at?: DateTimeFilter<"ChartEvaluationReaction"> | Date | string
+    updated_at?: DateTimeFilter<"ChartEvaluationReaction"> | Date | string
+    evaluation?: XOR<ChartEvaluationScalarRelationFilter, ChartEvaluationWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "evaluation_id_user_id">
+
+  export type ChartEvaluationReactionOrderByWithAggregationInput = {
+    id?: SortOrder
+    value?: SortOrder
+    evaluation_id?: SortOrder
+    user_id?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    _count?: ChartEvaluationReactionCountOrderByAggregateInput
+    _avg?: ChartEvaluationReactionAvgOrderByAggregateInput
+    _max?: ChartEvaluationReactionMaxOrderByAggregateInput
+    _min?: ChartEvaluationReactionMinOrderByAggregateInput
+    _sum?: ChartEvaluationReactionSumOrderByAggregateInput
+  }
+
+  export type ChartEvaluationReactionScalarWhereWithAggregatesInput = {
+    AND?: ChartEvaluationReactionScalarWhereWithAggregatesInput | ChartEvaluationReactionScalarWhereWithAggregatesInput[]
+    OR?: ChartEvaluationReactionScalarWhereWithAggregatesInput[]
+    NOT?: ChartEvaluationReactionScalarWhereWithAggregatesInput | ChartEvaluationReactionScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"ChartEvaluationReaction"> | number
+    value?: IntWithAggregatesFilter<"ChartEvaluationReaction"> | number
+    evaluation_id?: IntWithAggregatesFilter<"ChartEvaluationReaction"> | number
+    user_id?: IntWithAggregatesFilter<"ChartEvaluationReaction"> | number
+    created_at?: DateTimeWithAggregatesFilter<"ChartEvaluationReaction"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"ChartEvaluationReaction"> | Date | string
+  }
+
   export type RecentPlayWhereInput = {
     AND?: RecentPlayWhereInput | RecentPlayWhereInput[]
     OR?: RecentPlayWhereInput[]
@@ -14976,8 +25464,10 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"RecentPlay"> | Date | string
     user_id?: IntFilter<"RecentPlay"> | number
     music_idx?: StringFilter<"RecentPlay"> | string
+    chart_id?: IntNullableFilter<"RecentPlay"> | number | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     music?: XOR<MusicScalarRelationFilter, MusicWhereInput>
+    chart?: XOR<MusicChartNullableScalarRelationFilter, MusicChartWhereInput> | null
   }
 
   export type RecentPlayOrderByWithRelationInput = {
@@ -14993,8 +25483,10 @@ export namespace Prisma {
     updated_at?: SortOrder
     user_id?: SortOrder
     music_idx?: SortOrder
+    chart_id?: SortOrderInput | SortOrder
     user?: UserOrderByWithRelationInput
     music?: MusicOrderByWithRelationInput
+    chart?: MusicChartOrderByWithRelationInput
   }
 
   export type RecentPlayWhereUniqueInput = Prisma.AtLeast<{
@@ -15013,8 +25505,10 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"RecentPlay"> | Date | string
     user_id?: IntFilter<"RecentPlay"> | number
     music_idx?: StringFilter<"RecentPlay"> | string
+    chart_id?: IntNullableFilter<"RecentPlay"> | number | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     music?: XOR<MusicScalarRelationFilter, MusicWhereInput>
+    chart?: XOR<MusicChartNullableScalarRelationFilter, MusicChartWhereInput> | null
   }, "id">
 
   export type RecentPlayOrderByWithAggregationInput = {
@@ -15030,6 +25524,7 @@ export namespace Prisma {
     updated_at?: SortOrder
     user_id?: SortOrder
     music_idx?: SortOrder
+    chart_id?: SortOrderInput | SortOrder
     _count?: RecentPlayCountOrderByAggregateInput
     _avg?: RecentPlayAvgOrderByAggregateInput
     _max?: RecentPlayMaxOrderByAggregateInput
@@ -15053,6 +25548,7 @@ export namespace Prisma {
     updated_at?: DateTimeWithAggregatesFilter<"RecentPlay"> | Date | string
     user_id?: IntWithAggregatesFilter<"RecentPlay"> | number
     music_idx?: StringWithAggregatesFilter<"RecentPlay"> | string
+    chart_id?: IntNullableWithAggregatesFilter<"RecentPlay"> | number | null
   }
 
   export type UserBestGradeWhereInput = {
@@ -15139,8 +25635,10 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"BasicBestPlay"> | Date | string
     user_id?: IntFilter<"BasicBestPlay"> | number
     music_idx?: StringFilter<"BasicBestPlay"> | string
+    chart_id?: IntNullableFilter<"BasicBestPlay"> | number | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     music?: XOR<MusicScalarRelationFilter, MusicWhereInput>
+    chart?: XOR<MusicChartNullableScalarRelationFilter, MusicChartWhereInput> | null
   }
 
   export type BasicBestPlayOrderByWithRelationInput = {
@@ -15157,8 +25655,10 @@ export namespace Prisma {
     updated_at?: SortOrder
     user_id?: SortOrder
     music_idx?: SortOrder
+    chart_id?: SortOrderInput | SortOrder
     user?: UserOrderByWithRelationInput
     music?: MusicOrderByWithRelationInput
+    chart?: MusicChartOrderByWithRelationInput
   }
 
   export type BasicBestPlayWhereUniqueInput = Prisma.AtLeast<{
@@ -15178,8 +25678,10 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"BasicBestPlay"> | Date | string
     user_id?: IntFilter<"BasicBestPlay"> | number
     music_idx?: StringFilter<"BasicBestPlay"> | string
+    chart_id?: IntNullableFilter<"BasicBestPlay"> | number | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     music?: XOR<MusicScalarRelationFilter, MusicWhereInput>
+    chart?: XOR<MusicChartNullableScalarRelationFilter, MusicChartWhereInput> | null
   }, "id">
 
   export type BasicBestPlayOrderByWithAggregationInput = {
@@ -15196,6 +25698,7 @@ export namespace Prisma {
     updated_at?: SortOrder
     user_id?: SortOrder
     music_idx?: SortOrder
+    chart_id?: SortOrderInput | SortOrder
     _count?: BasicBestPlayCountOrderByAggregateInput
     _avg?: BasicBestPlayAvgOrderByAggregateInput
     _max?: BasicBestPlayMaxOrderByAggregateInput
@@ -15220,6 +25723,7 @@ export namespace Prisma {
     updated_at?: DateTimeWithAggregatesFilter<"BasicBestPlay"> | Date | string
     user_id?: IntWithAggregatesFilter<"BasicBestPlay"> | number
     music_idx?: StringWithAggregatesFilter<"BasicBestPlay"> | string
+    chart_id?: IntNullableWithAggregatesFilter<"BasicBestPlay"> | number | null
   }
 
   export type RecitalBestPlayWhereInput = {
@@ -15239,8 +25743,10 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"RecitalBestPlay"> | Date | string
     user_id?: IntFilter<"RecitalBestPlay"> | number
     music_idx?: StringFilter<"RecitalBestPlay"> | string
+    chart_id?: IntNullableFilter<"RecitalBestPlay"> | number | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     music?: XOR<MusicScalarRelationFilter, MusicWhereInput>
+    chart?: XOR<MusicChartNullableScalarRelationFilter, MusicChartWhereInput> | null
   }
 
   export type RecitalBestPlayOrderByWithRelationInput = {
@@ -15257,8 +25763,10 @@ export namespace Prisma {
     updated_at?: SortOrder
     user_id?: SortOrder
     music_idx?: SortOrder
+    chart_id?: SortOrderInput | SortOrder
     user?: UserOrderByWithRelationInput
     music?: MusicOrderByWithRelationInput
+    chart?: MusicChartOrderByWithRelationInput
   }
 
   export type RecitalBestPlayWhereUniqueInput = Prisma.AtLeast<{
@@ -15278,8 +25786,10 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"RecitalBestPlay"> | Date | string
     user_id?: IntFilter<"RecitalBestPlay"> | number
     music_idx?: StringFilter<"RecitalBestPlay"> | string
+    chart_id?: IntNullableFilter<"RecitalBestPlay"> | number | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     music?: XOR<MusicScalarRelationFilter, MusicWhereInput>
+    chart?: XOR<MusicChartNullableScalarRelationFilter, MusicChartWhereInput> | null
   }, "id">
 
   export type RecitalBestPlayOrderByWithAggregationInput = {
@@ -15296,6 +25806,7 @@ export namespace Prisma {
     updated_at?: SortOrder
     user_id?: SortOrder
     music_idx?: SortOrder
+    chart_id?: SortOrderInput | SortOrder
     _count?: RecitalBestPlayCountOrderByAggregateInput
     _avg?: RecitalBestPlayAvgOrderByAggregateInput
     _max?: RecitalBestPlayMaxOrderByAggregateInput
@@ -15320,6 +25831,7 @@ export namespace Prisma {
     updated_at?: DateTimeWithAggregatesFilter<"RecitalBestPlay"> | Date | string
     user_id?: IntWithAggregatesFilter<"RecitalBestPlay"> | number
     music_idx?: StringWithAggregatesFilter<"RecitalBestPlay"> | string
+    chart_id?: IntNullableWithAggregatesFilter<"RecitalBestPlay"> | number | null
   }
 
   export type PlayDataWhereInput = {
@@ -15343,8 +25855,10 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"PlayData"> | Date | string
     user_id?: IntFilter<"PlayData"> | number
     music_idx?: StringFilter<"PlayData"> | string
+    chart_id?: IntNullableFilter<"PlayData"> | number | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     music?: XOR<MusicScalarRelationFilter, MusicWhereInput>
+    chart?: XOR<MusicChartNullableScalarRelationFilter, MusicChartWhereInput> | null
   }
 
   export type PlayDataOrderByWithRelationInput = {
@@ -15365,8 +25879,10 @@ export namespace Prisma {
     updated_at?: SortOrder
     user_id?: SortOrder
     music_idx?: SortOrder
+    chart_id?: SortOrderInput | SortOrder
     user?: UserOrderByWithRelationInput
     music?: MusicOrderByWithRelationInput
+    chart?: MusicChartOrderByWithRelationInput
   }
 
   export type PlayDataWhereUniqueInput = Prisma.AtLeast<{
@@ -15390,8 +25906,10 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"PlayData"> | Date | string
     user_id?: IntFilter<"PlayData"> | number
     music_idx?: StringFilter<"PlayData"> | string
+    chart_id?: IntNullableFilter<"PlayData"> | number | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     music?: XOR<MusicScalarRelationFilter, MusicWhereInput>
+    chart?: XOR<MusicChartNullableScalarRelationFilter, MusicChartWhereInput> | null
   }, "id">
 
   export type PlayDataOrderByWithAggregationInput = {
@@ -15412,6 +25930,7 @@ export namespace Prisma {
     updated_at?: SortOrder
     user_id?: SortOrder
     music_idx?: SortOrder
+    chart_id?: SortOrderInput | SortOrder
     _count?: PlayDataCountOrderByAggregateInput
     _avg?: PlayDataAvgOrderByAggregateInput
     _max?: PlayDataMaxOrderByAggregateInput
@@ -15440,6 +25959,7 @@ export namespace Prisma {
     updated_at?: DateTimeWithAggregatesFilter<"PlayData"> | Date | string
     user_id?: IntWithAggregatesFilter<"PlayData"> | number
     music_idx?: StringWithAggregatesFilter<"PlayData"> | string
+    chart_id?: IntNullableWithAggregatesFilter<"PlayData"> | number | null
   }
 
   export type BingoWhereInput = {
@@ -15662,6 +26182,11 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeCreateNestedManyWithoutUserInput
     userBingoCellData?: userBingoCellDataCreateNestedManyWithoutUserInput
+    chartEvaluations?: ChartEvaluationCreateNestedManyWithoutUserInput
+    chartReactions?: ChartEvaluationReactionCreateNestedManyWithoutUserInput
+    dataSyncs?: DataSyncCreateNestedManyWithoutUserInput
+    chartPlayHistory?: ChartPlayHistoryCreateNestedManyWithoutUserInput
+    chartRecordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -15697,6 +26222,11 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeUncheckedCreateNestedManyWithoutUserInput
     userBingoCellData?: userBingoCellDataUncheckedCreateNestedManyWithoutUserInput
+    chartEvaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutUserInput
+    chartReactions?: ChartEvaluationReactionUncheckedCreateNestedManyWithoutUserInput
+    dataSyncs?: DataSyncUncheckedCreateNestedManyWithoutUserInput
+    chartPlayHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutUserInput
+    chartRecordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -15731,6 +26261,11 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUpdateManyWithoutUserNestedInput
     userBingoCellData?: userBingoCellDataUpdateManyWithoutUserNestedInput
+    chartEvaluations?: ChartEvaluationUpdateManyWithoutUserNestedInput
+    chartReactions?: ChartEvaluationReactionUpdateManyWithoutUserNestedInput
+    dataSyncs?: DataSyncUpdateManyWithoutUserNestedInput
+    chartPlayHistory?: ChartPlayHistoryUpdateManyWithoutUserNestedInput
+    chartRecordSnapshots?: ChartRecordSnapshotUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -15766,6 +26301,11 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUncheckedUpdateManyWithoutUserNestedInput
     userBingoCellData?: userBingoCellDataUncheckedUpdateManyWithoutUserNestedInput
+    chartEvaluations?: ChartEvaluationUncheckedUpdateManyWithoutUserNestedInput
+    chartReactions?: ChartEvaluationReactionUncheckedUpdateManyWithoutUserNestedInput
+    dataSyncs?: DataSyncUncheckedUpdateManyWithoutUserNestedInput
+    chartPlayHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutUserNestedInput
+    chartRecordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -15878,6 +26418,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutMusicInput
     Bingo?: BingoCreateNestedManyWithoutMusicInput
     BingoCell?: BingoCellCreateNestedManyWithoutMusicInput
+    charts?: MusicChartCreateNestedManyWithoutMusicInput
   }
 
   export type MusicUncheckedCreateInput = {
@@ -15905,6 +26446,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutMusicInput
     Bingo?: BingoUncheckedCreateNestedManyWithoutMusicInput
     BingoCell?: BingoCellUncheckedCreateNestedManyWithoutMusicInput
+    charts?: MusicChartUncheckedCreateNestedManyWithoutMusicInput
   }
 
   export type MusicUpdateInput = {
@@ -15931,6 +26473,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutMusicNestedInput
     Bingo?: BingoUpdateManyWithoutMusicNestedInput
     BingoCell?: BingoCellUpdateManyWithoutMusicNestedInput
+    charts?: MusicChartUpdateManyWithoutMusicNestedInput
   }
 
   export type MusicUncheckedUpdateInput = {
@@ -15958,6 +26501,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutMusicNestedInput
     Bingo?: BingoUncheckedUpdateManyWithoutMusicNestedInput
     BingoCell?: BingoCellUncheckedUpdateManyWithoutMusicNestedInput
+    charts?: MusicChartUncheckedUpdateManyWithoutMusicNestedInput
   }
 
   export type MusicCreateManyInput = {
@@ -16022,6 +26566,618 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type MusicChartCreateInput = {
+    difficulty: string
+    level: number
+    level_constant?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    music: MusicCreateNestedOneWithoutChartsInput
+    constantHistory?: ChartConstantHistoryCreateNestedManyWithoutChartInput
+    evaluations?: ChartEvaluationCreateNestedManyWithoutChartInput
+    RecentPlay?: RecentPlayCreateNestedManyWithoutChartInput
+    PlayData?: PlayDataCreateNestedManyWithoutChartInput
+    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutChartInput
+    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutChartInput
+    playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
+    recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
+  }
+
+  export type MusicChartUncheckedCreateInput = {
+    id?: number
+    difficulty: string
+    level: number
+    level_constant?: number | null
+    music_idx: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    constantHistory?: ChartConstantHistoryUncheckedCreateNestedManyWithoutChartInput
+    evaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutChartInput
+    RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutChartInput
+    PlayData?: PlayDataUncheckedCreateNestedManyWithoutChartInput
+    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutChartInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutChartInput
+    playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
+    recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
+  }
+
+  export type MusicChartUpdateInput = {
+    difficulty?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    music?: MusicUpdateOneRequiredWithoutChartsNestedInput
+    constantHistory?: ChartConstantHistoryUpdateManyWithoutChartNestedInput
+    evaluations?: ChartEvaluationUpdateManyWithoutChartNestedInput
+    RecentPlay?: RecentPlayUpdateManyWithoutChartNestedInput
+    PlayData?: PlayDataUpdateManyWithoutChartNestedInput
+    BasicBestPlay?: BasicBestPlayUpdateManyWithoutChartNestedInput
+    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutChartNestedInput
+    playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
+    recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
+  }
+
+  export type MusicChartUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    difficulty?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    music_idx?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    constantHistory?: ChartConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
+    evaluations?: ChartEvaluationUncheckedUpdateManyWithoutChartNestedInput
+    RecentPlay?: RecentPlayUncheckedUpdateManyWithoutChartNestedInput
+    PlayData?: PlayDataUncheckedUpdateManyWithoutChartNestedInput
+    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutChartNestedInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutChartNestedInput
+    playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
+    recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
+  }
+
+  export type MusicChartCreateManyInput = {
+    id?: number
+    difficulty: string
+    level: number
+    level_constant?: number | null
+    music_idx: string
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type MusicChartUpdateManyMutationInput = {
+    difficulty?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MusicChartUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    difficulty?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    music_idx?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DataSyncCreateInput = {
+    status?: string
+    received_plays?: number
+    inserted_plays?: number
+    changed_records?: number
+    error_message?: string | null
+    started_at?: Date | string
+    completed_at?: Date | string | null
+    user: UserCreateNestedOneWithoutDataSyncsInput
+    playHistory?: ChartPlayHistoryCreateNestedManyWithoutFirstSyncInput
+    recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutSyncInput
+  }
+
+  export type DataSyncUncheckedCreateInput = {
+    id?: number
+    status?: string
+    received_plays?: number
+    inserted_plays?: number
+    changed_records?: number
+    error_message?: string | null
+    user_id: number
+    started_at?: Date | string
+    completed_at?: Date | string | null
+    playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutFirstSyncInput
+    recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutSyncInput
+  }
+
+  export type DataSyncUpdateInput = {
+    status?: StringFieldUpdateOperationsInput | string
+    received_plays?: IntFieldUpdateOperationsInput | number
+    inserted_plays?: IntFieldUpdateOperationsInput | number
+    changed_records?: IntFieldUpdateOperationsInput | number
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    started_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    user?: UserUpdateOneRequiredWithoutDataSyncsNestedInput
+    playHistory?: ChartPlayHistoryUpdateManyWithoutFirstSyncNestedInput
+    recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutSyncNestedInput
+  }
+
+  export type DataSyncUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    received_plays?: IntFieldUpdateOperationsInput | number
+    inserted_plays?: IntFieldUpdateOperationsInput | number
+    changed_records?: IntFieldUpdateOperationsInput | number
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    user_id?: IntFieldUpdateOperationsInput | number
+    started_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutFirstSyncNestedInput
+    recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutSyncNestedInput
+  }
+
+  export type DataSyncCreateManyInput = {
+    id?: number
+    status?: string
+    received_plays?: number
+    inserted_plays?: number
+    changed_records?: number
+    error_message?: string | null
+    user_id: number
+    started_at?: Date | string
+    completed_at?: Date | string | null
+  }
+
+  export type DataSyncUpdateManyMutationInput = {
+    status?: StringFieldUpdateOperationsInput | string
+    received_plays?: IntFieldUpdateOperationsInput | number
+    inserted_plays?: IntFieldUpdateOperationsInput | number
+    changed_records?: IntFieldUpdateOperationsInput | number
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    started_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type DataSyncUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    received_plays?: IntFieldUpdateOperationsInput | number
+    inserted_plays?: IntFieldUpdateOperationsInput | number
+    changed_records?: IntFieldUpdateOperationsInput | number
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    user_id?: IntFieldUpdateOperationsInput | number
+    started_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type ChartPlayHistoryCreateInput = {
+    score: number
+    max_combo: number
+    rank: string
+    grade_basic: number
+    source_play_time: string
+    created_at?: Date | string
+    chart: MusicChartCreateNestedOneWithoutPlayHistoryInput
+    user: UserCreateNestedOneWithoutChartPlayHistoryInput
+    firstSync?: DataSyncCreateNestedOneWithoutPlayHistoryInput
+  }
+
+  export type ChartPlayHistoryUncheckedCreateInput = {
+    id?: number
+    score: number
+    max_combo: number
+    rank: string
+    grade_basic: number
+    source_play_time: string
+    chart_id: number
+    user_id: number
+    first_sync_id?: number | null
+    created_at?: Date | string
+  }
+
+  export type ChartPlayHistoryUpdateInput = {
+    score?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    source_play_time?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    chart?: MusicChartUpdateOneRequiredWithoutPlayHistoryNestedInput
+    user?: UserUpdateOneRequiredWithoutChartPlayHistoryNestedInput
+    firstSync?: DataSyncUpdateOneWithoutPlayHistoryNestedInput
+  }
+
+  export type ChartPlayHistoryUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    score?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    source_play_time?: StringFieldUpdateOperationsInput | string
+    chart_id?: IntFieldUpdateOperationsInput | number
+    user_id?: IntFieldUpdateOperationsInput | number
+    first_sync_id?: NullableIntFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChartPlayHistoryCreateManyInput = {
+    id?: number
+    score: number
+    max_combo: number
+    rank: string
+    grade_basic: number
+    source_play_time: string
+    chart_id: number
+    user_id: number
+    first_sync_id?: number | null
+    created_at?: Date | string
+  }
+
+  export type ChartPlayHistoryUpdateManyMutationInput = {
+    score?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    source_play_time?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChartPlayHistoryUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    score?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    source_play_time?: StringFieldUpdateOperationsInput | string
+    chart_id?: IntFieldUpdateOperationsInput | number
+    user_id?: IntFieldUpdateOperationsInput | number
+    first_sync_id?: NullableIntFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChartRecordSnapshotCreateInput = {
+    level: number
+    score: number
+    rank: string
+    fc_type: number
+    play_count: number
+    fullcombo_count: number
+    pianistic_count: number
+    max_combo: number
+    grade_basic: number
+    grade_recital: number
+    besttime: string
+    created_at?: Date | string
+    chart: MusicChartCreateNestedOneWithoutRecordSnapshotsInput
+    user: UserCreateNestedOneWithoutChartRecordSnapshotsInput
+    sync: DataSyncCreateNestedOneWithoutRecordSnapshotsInput
+  }
+
+  export type ChartRecordSnapshotUncheckedCreateInput = {
+    id?: number
+    level: number
+    score: number
+    rank: string
+    fc_type: number
+    play_count: number
+    fullcombo_count: number
+    pianistic_count: number
+    max_combo: number
+    grade_basic: number
+    grade_recital: number
+    besttime: string
+    chart_id: number
+    user_id: number
+    sync_id: number
+    created_at?: Date | string
+  }
+
+  export type ChartRecordSnapshotUpdateInput = {
+    level?: IntFieldUpdateOperationsInput | number
+    score?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    fc_type?: IntFieldUpdateOperationsInput | number
+    play_count?: IntFieldUpdateOperationsInput | number
+    fullcombo_count?: IntFieldUpdateOperationsInput | number
+    pianistic_count?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    grade_recital?: IntFieldUpdateOperationsInput | number
+    besttime?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    chart?: MusicChartUpdateOneRequiredWithoutRecordSnapshotsNestedInput
+    user?: UserUpdateOneRequiredWithoutChartRecordSnapshotsNestedInput
+    sync?: DataSyncUpdateOneRequiredWithoutRecordSnapshotsNestedInput
+  }
+
+  export type ChartRecordSnapshotUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    level?: IntFieldUpdateOperationsInput | number
+    score?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    fc_type?: IntFieldUpdateOperationsInput | number
+    play_count?: IntFieldUpdateOperationsInput | number
+    fullcombo_count?: IntFieldUpdateOperationsInput | number
+    pianistic_count?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    grade_recital?: IntFieldUpdateOperationsInput | number
+    besttime?: StringFieldUpdateOperationsInput | string
+    chart_id?: IntFieldUpdateOperationsInput | number
+    user_id?: IntFieldUpdateOperationsInput | number
+    sync_id?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChartRecordSnapshotCreateManyInput = {
+    id?: number
+    level: number
+    score: number
+    rank: string
+    fc_type: number
+    play_count: number
+    fullcombo_count: number
+    pianistic_count: number
+    max_combo: number
+    grade_basic: number
+    grade_recital: number
+    besttime: string
+    chart_id: number
+    user_id: number
+    sync_id: number
+    created_at?: Date | string
+  }
+
+  export type ChartRecordSnapshotUpdateManyMutationInput = {
+    level?: IntFieldUpdateOperationsInput | number
+    score?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    fc_type?: IntFieldUpdateOperationsInput | number
+    play_count?: IntFieldUpdateOperationsInput | number
+    fullcombo_count?: IntFieldUpdateOperationsInput | number
+    pianistic_count?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    grade_recital?: IntFieldUpdateOperationsInput | number
+    besttime?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChartRecordSnapshotUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    level?: IntFieldUpdateOperationsInput | number
+    score?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    fc_type?: IntFieldUpdateOperationsInput | number
+    play_count?: IntFieldUpdateOperationsInput | number
+    fullcombo_count?: IntFieldUpdateOperationsInput | number
+    pianistic_count?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    grade_recital?: IntFieldUpdateOperationsInput | number
+    besttime?: StringFieldUpdateOperationsInput | string
+    chart_id?: IntFieldUpdateOperationsInput | number
+    user_id?: IntFieldUpdateOperationsInput | number
+    sync_id?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChartConstantHistoryCreateInput = {
+    value: number
+    effective_at?: Date | string
+    created_at?: Date | string
+    chart: MusicChartCreateNestedOneWithoutConstantHistoryInput
+  }
+
+  export type ChartConstantHistoryUncheckedCreateInput = {
+    id?: number
+    value: number
+    effective_at?: Date | string
+    chart_id: number
+    created_at?: Date | string
+  }
+
+  export type ChartConstantHistoryUpdateInput = {
+    value?: FloatFieldUpdateOperationsInput | number
+    effective_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    chart?: MusicChartUpdateOneRequiredWithoutConstantHistoryNestedInput
+  }
+
+  export type ChartConstantHistoryUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    value?: FloatFieldUpdateOperationsInput | number
+    effective_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    chart_id?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChartConstantHistoryCreateManyInput = {
+    id?: number
+    value: number
+    effective_at?: Date | string
+    chart_id: number
+    created_at?: Date | string
+  }
+
+  export type ChartConstantHistoryUpdateManyMutationInput = {
+    value?: FloatFieldUpdateOperationsInput | number
+    effective_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChartConstantHistoryUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    value?: FloatFieldUpdateOperationsInput | number
+    effective_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    chart_id?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChartEvaluationCreateInput = {
+    perceived_constant: number
+    stairs: number
+    chord: number
+    trill: number
+    glissando: number
+    repetition: number
+    comment?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    chart: MusicChartCreateNestedOneWithoutEvaluationsInput
+    user: UserCreateNestedOneWithoutChartEvaluationsInput
+    reactions?: ChartEvaluationReactionCreateNestedManyWithoutEvaluationInput
+  }
+
+  export type ChartEvaluationUncheckedCreateInput = {
+    id?: number
+    perceived_constant: number
+    stairs: number
+    chord: number
+    trill: number
+    glissando: number
+    repetition: number
+    comment?: string | null
+    chart_id: number
+    user_id: number
+    created_at?: Date | string
+    updated_at?: Date | string
+    reactions?: ChartEvaluationReactionUncheckedCreateNestedManyWithoutEvaluationInput
+  }
+
+  export type ChartEvaluationUpdateInput = {
+    perceived_constant?: FloatFieldUpdateOperationsInput | number
+    stairs?: IntFieldUpdateOperationsInput | number
+    chord?: IntFieldUpdateOperationsInput | number
+    trill?: IntFieldUpdateOperationsInput | number
+    glissando?: IntFieldUpdateOperationsInput | number
+    repetition?: IntFieldUpdateOperationsInput | number
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    chart?: MusicChartUpdateOneRequiredWithoutEvaluationsNestedInput
+    user?: UserUpdateOneRequiredWithoutChartEvaluationsNestedInput
+    reactions?: ChartEvaluationReactionUpdateManyWithoutEvaluationNestedInput
+  }
+
+  export type ChartEvaluationUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    perceived_constant?: FloatFieldUpdateOperationsInput | number
+    stairs?: IntFieldUpdateOperationsInput | number
+    chord?: IntFieldUpdateOperationsInput | number
+    trill?: IntFieldUpdateOperationsInput | number
+    glissando?: IntFieldUpdateOperationsInput | number
+    repetition?: IntFieldUpdateOperationsInput | number
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    chart_id?: IntFieldUpdateOperationsInput | number
+    user_id?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    reactions?: ChartEvaluationReactionUncheckedUpdateManyWithoutEvaluationNestedInput
+  }
+
+  export type ChartEvaluationCreateManyInput = {
+    id?: number
+    perceived_constant: number
+    stairs: number
+    chord: number
+    trill: number
+    glissando: number
+    repetition: number
+    comment?: string | null
+    chart_id: number
+    user_id: number
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type ChartEvaluationUpdateManyMutationInput = {
+    perceived_constant?: FloatFieldUpdateOperationsInput | number
+    stairs?: IntFieldUpdateOperationsInput | number
+    chord?: IntFieldUpdateOperationsInput | number
+    trill?: IntFieldUpdateOperationsInput | number
+    glissando?: IntFieldUpdateOperationsInput | number
+    repetition?: IntFieldUpdateOperationsInput | number
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChartEvaluationUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    perceived_constant?: FloatFieldUpdateOperationsInput | number
+    stairs?: IntFieldUpdateOperationsInput | number
+    chord?: IntFieldUpdateOperationsInput | number
+    trill?: IntFieldUpdateOperationsInput | number
+    glissando?: IntFieldUpdateOperationsInput | number
+    repetition?: IntFieldUpdateOperationsInput | number
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    chart_id?: IntFieldUpdateOperationsInput | number
+    user_id?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChartEvaluationReactionCreateInput = {
+    value: number
+    created_at?: Date | string
+    updated_at?: Date | string
+    evaluation: ChartEvaluationCreateNestedOneWithoutReactionsInput
+    user: UserCreateNestedOneWithoutChartReactionsInput
+  }
+
+  export type ChartEvaluationReactionUncheckedCreateInput = {
+    id?: number
+    value: number
+    evaluation_id: number
+    user_id: number
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type ChartEvaluationReactionUpdateInput = {
+    value?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    evaluation?: ChartEvaluationUpdateOneRequiredWithoutReactionsNestedInput
+    user?: UserUpdateOneRequiredWithoutChartReactionsNestedInput
+  }
+
+  export type ChartEvaluationReactionUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    value?: IntFieldUpdateOperationsInput | number
+    evaluation_id?: IntFieldUpdateOperationsInput | number
+    user_id?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChartEvaluationReactionCreateManyInput = {
+    id?: number
+    value: number
+    evaluation_id: number
+    user_id: number
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type ChartEvaluationReactionUpdateManyMutationInput = {
+    value?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChartEvaluationReactionUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    value?: IntFieldUpdateOperationsInput | number
+    evaluation_id?: IntFieldUpdateOperationsInput | number
+    user_id?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type RecentPlayCreateInput = {
     difficulty: string
     level: number
@@ -16034,6 +27190,7 @@ export namespace Prisma {
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutPlayHistoryInput
     music: MusicCreateNestedOneWithoutRecentPlayInput
+    chart?: MusicChartCreateNestedOneWithoutRecentPlayInput
   }
 
   export type RecentPlayUncheckedCreateInput = {
@@ -16049,6 +27206,7 @@ export namespace Prisma {
     updated_at?: Date | string
     user_id: number
     music_idx: string
+    chart_id?: number | null
   }
 
   export type RecentPlayUpdateInput = {
@@ -16063,6 +27221,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutPlayHistoryNestedInput
     music?: MusicUpdateOneRequiredWithoutRecentPlayNestedInput
+    chart?: MusicChartUpdateOneWithoutRecentPlayNestedInput
   }
 
   export type RecentPlayUncheckedUpdateInput = {
@@ -16078,6 +27237,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user_id?: IntFieldUpdateOperationsInput | number
     music_idx?: StringFieldUpdateOperationsInput | string
+    chart_id?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type RecentPlayCreateManyInput = {
@@ -16093,6 +27253,7 @@ export namespace Prisma {
     updated_at?: Date | string
     user_id: number
     music_idx: string
+    chart_id?: number | null
   }
 
   export type RecentPlayUpdateManyMutationInput = {
@@ -16120,6 +27281,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user_id?: IntFieldUpdateOperationsInput | number
     music_idx?: StringFieldUpdateOperationsInput | string
+    chart_id?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type UserBestGradeCreateInput = {
@@ -16201,6 +27363,7 @@ export namespace Prisma {
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutBasicBestPlayInput
     music: MusicCreateNestedOneWithoutBasicBestPlayInput
+    chart?: MusicChartCreateNestedOneWithoutBasicBestPlayInput
   }
 
   export type BasicBestPlayUncheckedCreateInput = {
@@ -16217,6 +27380,7 @@ export namespace Prisma {
     updated_at?: Date | string
     user_id: number
     music_idx: string
+    chart_id?: number | null
   }
 
   export type BasicBestPlayUpdateInput = {
@@ -16232,6 +27396,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutBasicBestPlayNestedInput
     music?: MusicUpdateOneRequiredWithoutBasicBestPlayNestedInput
+    chart?: MusicChartUpdateOneWithoutBasicBestPlayNestedInput
   }
 
   export type BasicBestPlayUncheckedUpdateInput = {
@@ -16248,6 +27413,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user_id?: IntFieldUpdateOperationsInput | number
     music_idx?: StringFieldUpdateOperationsInput | string
+    chart_id?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type BasicBestPlayCreateManyInput = {
@@ -16264,6 +27430,7 @@ export namespace Prisma {
     updated_at?: Date | string
     user_id: number
     music_idx: string
+    chart_id?: number | null
   }
 
   export type BasicBestPlayUpdateManyMutationInput = {
@@ -16293,6 +27460,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user_id?: IntFieldUpdateOperationsInput | number
     music_idx?: StringFieldUpdateOperationsInput | string
+    chart_id?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type RecitalBestPlayCreateInput = {
@@ -16308,6 +27476,7 @@ export namespace Prisma {
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutRecitalBestPlayInput
     music: MusicCreateNestedOneWithoutRecitalBestPlayInput
+    chart?: MusicChartCreateNestedOneWithoutRecitalBestPlayInput
   }
 
   export type RecitalBestPlayUncheckedCreateInput = {
@@ -16324,6 +27493,7 @@ export namespace Prisma {
     updated_at?: Date | string
     user_id: number
     music_idx: string
+    chart_id?: number | null
   }
 
   export type RecitalBestPlayUpdateInput = {
@@ -16339,6 +27509,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutRecitalBestPlayNestedInput
     music?: MusicUpdateOneRequiredWithoutRecitalBestPlayNestedInput
+    chart?: MusicChartUpdateOneWithoutRecitalBestPlayNestedInput
   }
 
   export type RecitalBestPlayUncheckedUpdateInput = {
@@ -16355,6 +27526,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user_id?: IntFieldUpdateOperationsInput | number
     music_idx?: StringFieldUpdateOperationsInput | string
+    chart_id?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type RecitalBestPlayCreateManyInput = {
@@ -16371,6 +27543,7 @@ export namespace Prisma {
     updated_at?: Date | string
     user_id: number
     music_idx: string
+    chart_id?: number | null
   }
 
   export type RecitalBestPlayUpdateManyMutationInput = {
@@ -16400,6 +27573,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user_id?: IntFieldUpdateOperationsInput | number
     music_idx?: StringFieldUpdateOperationsInput | string
+    chart_id?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type PlayDataCreateInput = {
@@ -16419,6 +27593,7 @@ export namespace Prisma {
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutPlayDataInput
     music: MusicCreateNestedOneWithoutPlayDataInput
+    chart?: MusicChartCreateNestedOneWithoutPlayDataInput
   }
 
   export type PlayDataUncheckedCreateInput = {
@@ -16439,6 +27614,7 @@ export namespace Prisma {
     updated_at?: Date | string
     user_id: number
     music_idx: string
+    chart_id?: number | null
   }
 
   export type PlayDataUpdateInput = {
@@ -16458,6 +27634,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutPlayDataNestedInput
     music?: MusicUpdateOneRequiredWithoutPlayDataNestedInput
+    chart?: MusicChartUpdateOneWithoutPlayDataNestedInput
   }
 
   export type PlayDataUncheckedUpdateInput = {
@@ -16478,6 +27655,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user_id?: IntFieldUpdateOperationsInput | number
     music_idx?: StringFieldUpdateOperationsInput | string
+    chart_id?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type PlayDataCreateManyInput = {
@@ -16498,6 +27676,7 @@ export namespace Prisma {
     updated_at?: Date | string
     user_id: number
     music_idx: string
+    chart_id?: number | null
   }
 
   export type PlayDataUpdateManyMutationInput = {
@@ -16535,6 +27714,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user_id?: IntFieldUpdateOperationsInput | number
     music_idx?: StringFieldUpdateOperationsInput | string
+    chart_id?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type BingoCreateInput = {
@@ -16814,6 +27994,36 @@ export namespace Prisma {
     none?: userBingoCellDataWhereInput
   }
 
+  export type ChartEvaluationListRelationFilter = {
+    every?: ChartEvaluationWhereInput
+    some?: ChartEvaluationWhereInput
+    none?: ChartEvaluationWhereInput
+  }
+
+  export type ChartEvaluationReactionListRelationFilter = {
+    every?: ChartEvaluationReactionWhereInput
+    some?: ChartEvaluationReactionWhereInput
+    none?: ChartEvaluationReactionWhereInput
+  }
+
+  export type DataSyncListRelationFilter = {
+    every?: DataSyncWhereInput
+    some?: DataSyncWhereInput
+    none?: DataSyncWhereInput
+  }
+
+  export type ChartPlayHistoryListRelationFilter = {
+    every?: ChartPlayHistoryWhereInput
+    some?: ChartPlayHistoryWhereInput
+    none?: ChartPlayHistoryWhereInput
+  }
+
+  export type ChartRecordSnapshotListRelationFilter = {
+    every?: ChartRecordSnapshotWhereInput
+    some?: ChartRecordSnapshotWhereInput
+    none?: ChartRecordSnapshotWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -16840,6 +28050,26 @@ export namespace Prisma {
   }
 
   export type userBingoCellDataOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ChartEvaluationOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ChartEvaluationReactionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DataSyncOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ChartPlayHistoryOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ChartRecordSnapshotOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -17080,11 +28310,21 @@ export namespace Prisma {
     none?: BingoCellWhereInput
   }
 
+  export type MusicChartListRelationFilter = {
+    every?: MusicChartWhereInput
+    some?: MusicChartWhereInput
+    none?: MusicChartWhereInput
+  }
+
   export type BingoOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
   export type BingoCellOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type MusicChartOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -17169,14 +28409,545 @@ export namespace Prisma {
     real?: SortOrder
   }
 
-  export type UserScalarRelationFilter = {
-    is?: UserWhereInput
-    isNot?: UserWhereInput
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
   export type MusicScalarRelationFilter = {
     is?: MusicWhereInput
     isNot?: MusicWhereInput
+  }
+
+  export type ChartConstantHistoryListRelationFilter = {
+    every?: ChartConstantHistoryWhereInput
+    some?: ChartConstantHistoryWhereInput
+    none?: ChartConstantHistoryWhereInput
+  }
+
+  export type ChartConstantHistoryOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type MusicChartMusic_idxDifficultyCompoundUniqueInput = {
+    music_idx: string
+    difficulty: string
+  }
+
+  export type MusicChartCountOrderByAggregateInput = {
+    id?: SortOrder
+    difficulty?: SortOrder
+    level?: SortOrder
+    level_constant?: SortOrder
+    music_idx?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type MusicChartAvgOrderByAggregateInput = {
+    id?: SortOrder
+    level?: SortOrder
+    level_constant?: SortOrder
+  }
+
+  export type MusicChartMaxOrderByAggregateInput = {
+    id?: SortOrder
+    difficulty?: SortOrder
+    level?: SortOrder
+    level_constant?: SortOrder
+    music_idx?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type MusicChartMinOrderByAggregateInput = {
+    id?: SortOrder
+    difficulty?: SortOrder
+    level?: SortOrder
+    level_constant?: SortOrder
+    music_idx?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type MusicChartSumOrderByAggregateInput = {
+    id?: SortOrder
+    level?: SortOrder
+    level_constant?: SortOrder
+  }
+
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type UserScalarRelationFilter = {
+    is?: UserWhereInput
+    isNot?: UserWhereInput
+  }
+
+  export type DataSyncCountOrderByAggregateInput = {
+    id?: SortOrder
+    status?: SortOrder
+    received_plays?: SortOrder
+    inserted_plays?: SortOrder
+    changed_records?: SortOrder
+    error_message?: SortOrder
+    user_id?: SortOrder
+    started_at?: SortOrder
+    completed_at?: SortOrder
+  }
+
+  export type DataSyncAvgOrderByAggregateInput = {
+    id?: SortOrder
+    received_plays?: SortOrder
+    inserted_plays?: SortOrder
+    changed_records?: SortOrder
+    user_id?: SortOrder
+  }
+
+  export type DataSyncMaxOrderByAggregateInput = {
+    id?: SortOrder
+    status?: SortOrder
+    received_plays?: SortOrder
+    inserted_plays?: SortOrder
+    changed_records?: SortOrder
+    error_message?: SortOrder
+    user_id?: SortOrder
+    started_at?: SortOrder
+    completed_at?: SortOrder
+  }
+
+  export type DataSyncMinOrderByAggregateInput = {
+    id?: SortOrder
+    status?: SortOrder
+    received_plays?: SortOrder
+    inserted_plays?: SortOrder
+    changed_records?: SortOrder
+    error_message?: SortOrder
+    user_id?: SortOrder
+    started_at?: SortOrder
+    completed_at?: SortOrder
+  }
+
+  export type DataSyncSumOrderByAggregateInput = {
+    id?: SortOrder
+    received_plays?: SortOrder
+    inserted_plays?: SortOrder
+    changed_records?: SortOrder
+    user_id?: SortOrder
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type MusicChartScalarRelationFilter = {
+    is?: MusicChartWhereInput
+    isNot?: MusicChartWhereInput
+  }
+
+  export type DataSyncNullableScalarRelationFilter = {
+    is?: DataSyncWhereInput | null
+    isNot?: DataSyncWhereInput | null
+  }
+
+  export type ChartPlayHistoryUser_idChart_idSource_play_timeScoreMax_comboRankCompoundUniqueInput = {
+    user_id: number
+    chart_id: number
+    source_play_time: string
+    score: number
+    max_combo: number
+    rank: string
+  }
+
+  export type ChartPlayHistoryCountOrderByAggregateInput = {
+    id?: SortOrder
+    score?: SortOrder
+    max_combo?: SortOrder
+    rank?: SortOrder
+    grade_basic?: SortOrder
+    source_play_time?: SortOrder
+    chart_id?: SortOrder
+    user_id?: SortOrder
+    first_sync_id?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type ChartPlayHistoryAvgOrderByAggregateInput = {
+    id?: SortOrder
+    score?: SortOrder
+    max_combo?: SortOrder
+    grade_basic?: SortOrder
+    chart_id?: SortOrder
+    user_id?: SortOrder
+    first_sync_id?: SortOrder
+  }
+
+  export type ChartPlayHistoryMaxOrderByAggregateInput = {
+    id?: SortOrder
+    score?: SortOrder
+    max_combo?: SortOrder
+    rank?: SortOrder
+    grade_basic?: SortOrder
+    source_play_time?: SortOrder
+    chart_id?: SortOrder
+    user_id?: SortOrder
+    first_sync_id?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type ChartPlayHistoryMinOrderByAggregateInput = {
+    id?: SortOrder
+    score?: SortOrder
+    max_combo?: SortOrder
+    rank?: SortOrder
+    grade_basic?: SortOrder
+    source_play_time?: SortOrder
+    chart_id?: SortOrder
+    user_id?: SortOrder
+    first_sync_id?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type ChartPlayHistorySumOrderByAggregateInput = {
+    id?: SortOrder
+    score?: SortOrder
+    max_combo?: SortOrder
+    grade_basic?: SortOrder
+    chart_id?: SortOrder
+    user_id?: SortOrder
+    first_sync_id?: SortOrder
+  }
+
+  export type DataSyncScalarRelationFilter = {
+    is?: DataSyncWhereInput
+    isNot?: DataSyncWhereInput
+  }
+
+  export type ChartRecordSnapshotSync_idChart_idCompoundUniqueInput = {
+    sync_id: number
+    chart_id: number
+  }
+
+  export type ChartRecordSnapshotCountOrderByAggregateInput = {
+    id?: SortOrder
+    level?: SortOrder
+    score?: SortOrder
+    rank?: SortOrder
+    fc_type?: SortOrder
+    play_count?: SortOrder
+    fullcombo_count?: SortOrder
+    pianistic_count?: SortOrder
+    max_combo?: SortOrder
+    grade_basic?: SortOrder
+    grade_recital?: SortOrder
+    besttime?: SortOrder
+    chart_id?: SortOrder
+    user_id?: SortOrder
+    sync_id?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type ChartRecordSnapshotAvgOrderByAggregateInput = {
+    id?: SortOrder
+    level?: SortOrder
+    score?: SortOrder
+    fc_type?: SortOrder
+    play_count?: SortOrder
+    fullcombo_count?: SortOrder
+    pianistic_count?: SortOrder
+    max_combo?: SortOrder
+    grade_basic?: SortOrder
+    grade_recital?: SortOrder
+    chart_id?: SortOrder
+    user_id?: SortOrder
+    sync_id?: SortOrder
+  }
+
+  export type ChartRecordSnapshotMaxOrderByAggregateInput = {
+    id?: SortOrder
+    level?: SortOrder
+    score?: SortOrder
+    rank?: SortOrder
+    fc_type?: SortOrder
+    play_count?: SortOrder
+    fullcombo_count?: SortOrder
+    pianistic_count?: SortOrder
+    max_combo?: SortOrder
+    grade_basic?: SortOrder
+    grade_recital?: SortOrder
+    besttime?: SortOrder
+    chart_id?: SortOrder
+    user_id?: SortOrder
+    sync_id?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type ChartRecordSnapshotMinOrderByAggregateInput = {
+    id?: SortOrder
+    level?: SortOrder
+    score?: SortOrder
+    rank?: SortOrder
+    fc_type?: SortOrder
+    play_count?: SortOrder
+    fullcombo_count?: SortOrder
+    pianistic_count?: SortOrder
+    max_combo?: SortOrder
+    grade_basic?: SortOrder
+    grade_recital?: SortOrder
+    besttime?: SortOrder
+    chart_id?: SortOrder
+    user_id?: SortOrder
+    sync_id?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type ChartRecordSnapshotSumOrderByAggregateInput = {
+    id?: SortOrder
+    level?: SortOrder
+    score?: SortOrder
+    fc_type?: SortOrder
+    play_count?: SortOrder
+    fullcombo_count?: SortOrder
+    pianistic_count?: SortOrder
+    max_combo?: SortOrder
+    grade_basic?: SortOrder
+    grade_recital?: SortOrder
+    chart_id?: SortOrder
+    user_id?: SortOrder
+    sync_id?: SortOrder
+  }
+
+  export type FloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[]
+    notIn?: number[]
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type ChartConstantHistoryCountOrderByAggregateInput = {
+    id?: SortOrder
+    value?: SortOrder
+    effective_at?: SortOrder
+    chart_id?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type ChartConstantHistoryAvgOrderByAggregateInput = {
+    id?: SortOrder
+    value?: SortOrder
+    chart_id?: SortOrder
+  }
+
+  export type ChartConstantHistoryMaxOrderByAggregateInput = {
+    id?: SortOrder
+    value?: SortOrder
+    effective_at?: SortOrder
+    chart_id?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type ChartConstantHistoryMinOrderByAggregateInput = {
+    id?: SortOrder
+    value?: SortOrder
+    effective_at?: SortOrder
+    chart_id?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type ChartConstantHistorySumOrderByAggregateInput = {
+    id?: SortOrder
+    value?: SortOrder
+    chart_id?: SortOrder
+  }
+
+  export type FloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[]
+    notIn?: number[]
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
+  }
+
+  export type ChartEvaluationChart_idUser_idCompoundUniqueInput = {
+    chart_id: number
+    user_id: number
+  }
+
+  export type ChartEvaluationCountOrderByAggregateInput = {
+    id?: SortOrder
+    perceived_constant?: SortOrder
+    stairs?: SortOrder
+    chord?: SortOrder
+    trill?: SortOrder
+    glissando?: SortOrder
+    repetition?: SortOrder
+    comment?: SortOrder
+    chart_id?: SortOrder
+    user_id?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type ChartEvaluationAvgOrderByAggregateInput = {
+    id?: SortOrder
+    perceived_constant?: SortOrder
+    stairs?: SortOrder
+    chord?: SortOrder
+    trill?: SortOrder
+    glissando?: SortOrder
+    repetition?: SortOrder
+    chart_id?: SortOrder
+    user_id?: SortOrder
+  }
+
+  export type ChartEvaluationMaxOrderByAggregateInput = {
+    id?: SortOrder
+    perceived_constant?: SortOrder
+    stairs?: SortOrder
+    chord?: SortOrder
+    trill?: SortOrder
+    glissando?: SortOrder
+    repetition?: SortOrder
+    comment?: SortOrder
+    chart_id?: SortOrder
+    user_id?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type ChartEvaluationMinOrderByAggregateInput = {
+    id?: SortOrder
+    perceived_constant?: SortOrder
+    stairs?: SortOrder
+    chord?: SortOrder
+    trill?: SortOrder
+    glissando?: SortOrder
+    repetition?: SortOrder
+    comment?: SortOrder
+    chart_id?: SortOrder
+    user_id?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type ChartEvaluationSumOrderByAggregateInput = {
+    id?: SortOrder
+    perceived_constant?: SortOrder
+    stairs?: SortOrder
+    chord?: SortOrder
+    trill?: SortOrder
+    glissando?: SortOrder
+    repetition?: SortOrder
+    chart_id?: SortOrder
+    user_id?: SortOrder
+  }
+
+  export type ChartEvaluationScalarRelationFilter = {
+    is?: ChartEvaluationWhereInput
+    isNot?: ChartEvaluationWhereInput
+  }
+
+  export type ChartEvaluationReactionEvaluation_idUser_idCompoundUniqueInput = {
+    evaluation_id: number
+    user_id: number
+  }
+
+  export type ChartEvaluationReactionCountOrderByAggregateInput = {
+    id?: SortOrder
+    value?: SortOrder
+    evaluation_id?: SortOrder
+    user_id?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type ChartEvaluationReactionAvgOrderByAggregateInput = {
+    id?: SortOrder
+    value?: SortOrder
+    evaluation_id?: SortOrder
+    user_id?: SortOrder
+  }
+
+  export type ChartEvaluationReactionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    value?: SortOrder
+    evaluation_id?: SortOrder
+    user_id?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type ChartEvaluationReactionMinOrderByAggregateInput = {
+    id?: SortOrder
+    value?: SortOrder
+    evaluation_id?: SortOrder
+    user_id?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type ChartEvaluationReactionSumOrderByAggregateInput = {
+    id?: SortOrder
+    value?: SortOrder
+    evaluation_id?: SortOrder
+    user_id?: SortOrder
+  }
+
+  export type MusicChartNullableScalarRelationFilter = {
+    is?: MusicChartWhereInput | null
+    isNot?: MusicChartWhereInput | null
   }
 
   export type RecentPlayCountOrderByAggregateInput = {
@@ -17192,6 +28963,7 @@ export namespace Prisma {
     updated_at?: SortOrder
     user_id?: SortOrder
     music_idx?: SortOrder
+    chart_id?: SortOrder
   }
 
   export type RecentPlayAvgOrderByAggregateInput = {
@@ -17201,6 +28973,7 @@ export namespace Prisma {
     max_combo?: SortOrder
     grade_basic?: SortOrder
     user_id?: SortOrder
+    chart_id?: SortOrder
   }
 
   export type RecentPlayMaxOrderByAggregateInput = {
@@ -17216,6 +28989,7 @@ export namespace Prisma {
     updated_at?: SortOrder
     user_id?: SortOrder
     music_idx?: SortOrder
+    chart_id?: SortOrder
   }
 
   export type RecentPlayMinOrderByAggregateInput = {
@@ -17231,6 +29005,7 @@ export namespace Prisma {
     updated_at?: SortOrder
     user_id?: SortOrder
     music_idx?: SortOrder
+    chart_id?: SortOrder
   }
 
   export type RecentPlaySumOrderByAggregateInput = {
@@ -17240,6 +29015,7 @@ export namespace Prisma {
     max_combo?: SortOrder
     grade_basic?: SortOrder
     user_id?: SortOrder
+    chart_id?: SortOrder
   }
 
   export type UserBestGradeCountOrderByAggregateInput = {
@@ -17300,6 +29076,7 @@ export namespace Prisma {
     updated_at?: SortOrder
     user_id?: SortOrder
     music_idx?: SortOrder
+    chart_id?: SortOrder
   }
 
   export type BasicBestPlayAvgOrderByAggregateInput = {
@@ -17310,6 +29087,7 @@ export namespace Prisma {
     grade_basic?: SortOrder
     fc_type?: SortOrder
     user_id?: SortOrder
+    chart_id?: SortOrder
   }
 
   export type BasicBestPlayMaxOrderByAggregateInput = {
@@ -17326,6 +29104,7 @@ export namespace Prisma {
     updated_at?: SortOrder
     user_id?: SortOrder
     music_idx?: SortOrder
+    chart_id?: SortOrder
   }
 
   export type BasicBestPlayMinOrderByAggregateInput = {
@@ -17342,6 +29121,7 @@ export namespace Prisma {
     updated_at?: SortOrder
     user_id?: SortOrder
     music_idx?: SortOrder
+    chart_id?: SortOrder
   }
 
   export type BasicBestPlaySumOrderByAggregateInput = {
@@ -17352,6 +29132,7 @@ export namespace Prisma {
     grade_basic?: SortOrder
     fc_type?: SortOrder
     user_id?: SortOrder
+    chart_id?: SortOrder
   }
 
   export type RecitalBestPlayCountOrderByAggregateInput = {
@@ -17368,6 +29149,7 @@ export namespace Prisma {
     updated_at?: SortOrder
     user_id?: SortOrder
     music_idx?: SortOrder
+    chart_id?: SortOrder
   }
 
   export type RecitalBestPlayAvgOrderByAggregateInput = {
@@ -17378,6 +29160,7 @@ export namespace Prisma {
     grade_recital?: SortOrder
     fc_type?: SortOrder
     user_id?: SortOrder
+    chart_id?: SortOrder
   }
 
   export type RecitalBestPlayMaxOrderByAggregateInput = {
@@ -17394,6 +29177,7 @@ export namespace Prisma {
     updated_at?: SortOrder
     user_id?: SortOrder
     music_idx?: SortOrder
+    chart_id?: SortOrder
   }
 
   export type RecitalBestPlayMinOrderByAggregateInput = {
@@ -17410,6 +29194,7 @@ export namespace Prisma {
     updated_at?: SortOrder
     user_id?: SortOrder
     music_idx?: SortOrder
+    chart_id?: SortOrder
   }
 
   export type RecitalBestPlaySumOrderByAggregateInput = {
@@ -17420,6 +29205,7 @@ export namespace Prisma {
     grade_recital?: SortOrder
     fc_type?: SortOrder
     user_id?: SortOrder
+    chart_id?: SortOrder
   }
 
   export type PlayDataCountOrderByAggregateInput = {
@@ -17440,6 +29226,7 @@ export namespace Prisma {
     updated_at?: SortOrder
     user_id?: SortOrder
     music_idx?: SortOrder
+    chart_id?: SortOrder
   }
 
   export type PlayDataAvgOrderByAggregateInput = {
@@ -17454,6 +29241,7 @@ export namespace Prisma {
     grade_basic?: SortOrder
     grade_recital?: SortOrder
     user_id?: SortOrder
+    chart_id?: SortOrder
   }
 
   export type PlayDataMaxOrderByAggregateInput = {
@@ -17474,6 +29262,7 @@ export namespace Prisma {
     updated_at?: SortOrder
     user_id?: SortOrder
     music_idx?: SortOrder
+    chart_id?: SortOrder
   }
 
   export type PlayDataMinOrderByAggregateInput = {
@@ -17494,6 +29283,7 @@ export namespace Prisma {
     updated_at?: SortOrder
     user_id?: SortOrder
     music_idx?: SortOrder
+    chart_id?: SortOrder
   }
 
   export type PlayDataSumOrderByAggregateInput = {
@@ -17508,6 +29298,7 @@ export namespace Prisma {
     grade_basic?: SortOrder
     grade_recital?: SortOrder
     user_id?: SortOrder
+    chart_id?: SortOrder
   }
 
   export type BingoCountOrderByAggregateInput = {
@@ -17691,6 +29482,41 @@ export namespace Prisma {
     connect?: userBingoCellDataWhereUniqueInput | userBingoCellDataWhereUniqueInput[]
   }
 
+  export type ChartEvaluationCreateNestedManyWithoutUserInput = {
+    create?: XOR<ChartEvaluationCreateWithoutUserInput, ChartEvaluationUncheckedCreateWithoutUserInput> | ChartEvaluationCreateWithoutUserInput[] | ChartEvaluationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ChartEvaluationCreateOrConnectWithoutUserInput | ChartEvaluationCreateOrConnectWithoutUserInput[]
+    createMany?: ChartEvaluationCreateManyUserInputEnvelope
+    connect?: ChartEvaluationWhereUniqueInput | ChartEvaluationWhereUniqueInput[]
+  }
+
+  export type ChartEvaluationReactionCreateNestedManyWithoutUserInput = {
+    create?: XOR<ChartEvaluationReactionCreateWithoutUserInput, ChartEvaluationReactionUncheckedCreateWithoutUserInput> | ChartEvaluationReactionCreateWithoutUserInput[] | ChartEvaluationReactionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ChartEvaluationReactionCreateOrConnectWithoutUserInput | ChartEvaluationReactionCreateOrConnectWithoutUserInput[]
+    createMany?: ChartEvaluationReactionCreateManyUserInputEnvelope
+    connect?: ChartEvaluationReactionWhereUniqueInput | ChartEvaluationReactionWhereUniqueInput[]
+  }
+
+  export type DataSyncCreateNestedManyWithoutUserInput = {
+    create?: XOR<DataSyncCreateWithoutUserInput, DataSyncUncheckedCreateWithoutUserInput> | DataSyncCreateWithoutUserInput[] | DataSyncUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: DataSyncCreateOrConnectWithoutUserInput | DataSyncCreateOrConnectWithoutUserInput[]
+    createMany?: DataSyncCreateManyUserInputEnvelope
+    connect?: DataSyncWhereUniqueInput | DataSyncWhereUniqueInput[]
+  }
+
+  export type ChartPlayHistoryCreateNestedManyWithoutUserInput = {
+    create?: XOR<ChartPlayHistoryCreateWithoutUserInput, ChartPlayHistoryUncheckedCreateWithoutUserInput> | ChartPlayHistoryCreateWithoutUserInput[] | ChartPlayHistoryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ChartPlayHistoryCreateOrConnectWithoutUserInput | ChartPlayHistoryCreateOrConnectWithoutUserInput[]
+    createMany?: ChartPlayHistoryCreateManyUserInputEnvelope
+    connect?: ChartPlayHistoryWhereUniqueInput | ChartPlayHistoryWhereUniqueInput[]
+  }
+
+  export type ChartRecordSnapshotCreateNestedManyWithoutUserInput = {
+    create?: XOR<ChartRecordSnapshotCreateWithoutUserInput, ChartRecordSnapshotUncheckedCreateWithoutUserInput> | ChartRecordSnapshotCreateWithoutUserInput[] | ChartRecordSnapshotUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ChartRecordSnapshotCreateOrConnectWithoutUserInput | ChartRecordSnapshotCreateOrConnectWithoutUserInput[]
+    createMany?: ChartRecordSnapshotCreateManyUserInputEnvelope
+    connect?: ChartRecordSnapshotWhereUniqueInput | ChartRecordSnapshotWhereUniqueInput[]
+  }
+
   export type RecentPlayUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<RecentPlayCreateWithoutUserInput, RecentPlayUncheckedCreateWithoutUserInput> | RecentPlayCreateWithoutUserInput[] | RecentPlayUncheckedCreateWithoutUserInput[]
     connectOrCreate?: RecentPlayCreateOrConnectWithoutUserInput | RecentPlayCreateOrConnectWithoutUserInput[]
@@ -17731,6 +29557,41 @@ export namespace Prisma {
     connectOrCreate?: userBingoCellDataCreateOrConnectWithoutUserInput | userBingoCellDataCreateOrConnectWithoutUserInput[]
     createMany?: userBingoCellDataCreateManyUserInputEnvelope
     connect?: userBingoCellDataWhereUniqueInput | userBingoCellDataWhereUniqueInput[]
+  }
+
+  export type ChartEvaluationUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<ChartEvaluationCreateWithoutUserInput, ChartEvaluationUncheckedCreateWithoutUserInput> | ChartEvaluationCreateWithoutUserInput[] | ChartEvaluationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ChartEvaluationCreateOrConnectWithoutUserInput | ChartEvaluationCreateOrConnectWithoutUserInput[]
+    createMany?: ChartEvaluationCreateManyUserInputEnvelope
+    connect?: ChartEvaluationWhereUniqueInput | ChartEvaluationWhereUniqueInput[]
+  }
+
+  export type ChartEvaluationReactionUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<ChartEvaluationReactionCreateWithoutUserInput, ChartEvaluationReactionUncheckedCreateWithoutUserInput> | ChartEvaluationReactionCreateWithoutUserInput[] | ChartEvaluationReactionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ChartEvaluationReactionCreateOrConnectWithoutUserInput | ChartEvaluationReactionCreateOrConnectWithoutUserInput[]
+    createMany?: ChartEvaluationReactionCreateManyUserInputEnvelope
+    connect?: ChartEvaluationReactionWhereUniqueInput | ChartEvaluationReactionWhereUniqueInput[]
+  }
+
+  export type DataSyncUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<DataSyncCreateWithoutUserInput, DataSyncUncheckedCreateWithoutUserInput> | DataSyncCreateWithoutUserInput[] | DataSyncUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: DataSyncCreateOrConnectWithoutUserInput | DataSyncCreateOrConnectWithoutUserInput[]
+    createMany?: DataSyncCreateManyUserInputEnvelope
+    connect?: DataSyncWhereUniqueInput | DataSyncWhereUniqueInput[]
+  }
+
+  export type ChartPlayHistoryUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<ChartPlayHistoryCreateWithoutUserInput, ChartPlayHistoryUncheckedCreateWithoutUserInput> | ChartPlayHistoryCreateWithoutUserInput[] | ChartPlayHistoryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ChartPlayHistoryCreateOrConnectWithoutUserInput | ChartPlayHistoryCreateOrConnectWithoutUserInput[]
+    createMany?: ChartPlayHistoryCreateManyUserInputEnvelope
+    connect?: ChartPlayHistoryWhereUniqueInput | ChartPlayHistoryWhereUniqueInput[]
+  }
+
+  export type ChartRecordSnapshotUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<ChartRecordSnapshotCreateWithoutUserInput, ChartRecordSnapshotUncheckedCreateWithoutUserInput> | ChartRecordSnapshotCreateWithoutUserInput[] | ChartRecordSnapshotUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ChartRecordSnapshotCreateOrConnectWithoutUserInput | ChartRecordSnapshotCreateOrConnectWithoutUserInput[]
+    createMany?: ChartRecordSnapshotCreateManyUserInputEnvelope
+    connect?: ChartRecordSnapshotWhereUniqueInput | ChartRecordSnapshotWhereUniqueInput[]
   }
 
   export type NullableStringFieldUpdateOperationsInput = {
@@ -17845,6 +29706,76 @@ export namespace Prisma {
     deleteMany?: userBingoCellDataScalarWhereInput | userBingoCellDataScalarWhereInput[]
   }
 
+  export type ChartEvaluationUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ChartEvaluationCreateWithoutUserInput, ChartEvaluationUncheckedCreateWithoutUserInput> | ChartEvaluationCreateWithoutUserInput[] | ChartEvaluationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ChartEvaluationCreateOrConnectWithoutUserInput | ChartEvaluationCreateOrConnectWithoutUserInput[]
+    upsert?: ChartEvaluationUpsertWithWhereUniqueWithoutUserInput | ChartEvaluationUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ChartEvaluationCreateManyUserInputEnvelope
+    set?: ChartEvaluationWhereUniqueInput | ChartEvaluationWhereUniqueInput[]
+    disconnect?: ChartEvaluationWhereUniqueInput | ChartEvaluationWhereUniqueInput[]
+    delete?: ChartEvaluationWhereUniqueInput | ChartEvaluationWhereUniqueInput[]
+    connect?: ChartEvaluationWhereUniqueInput | ChartEvaluationWhereUniqueInput[]
+    update?: ChartEvaluationUpdateWithWhereUniqueWithoutUserInput | ChartEvaluationUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ChartEvaluationUpdateManyWithWhereWithoutUserInput | ChartEvaluationUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ChartEvaluationScalarWhereInput | ChartEvaluationScalarWhereInput[]
+  }
+
+  export type ChartEvaluationReactionUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ChartEvaluationReactionCreateWithoutUserInput, ChartEvaluationReactionUncheckedCreateWithoutUserInput> | ChartEvaluationReactionCreateWithoutUserInput[] | ChartEvaluationReactionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ChartEvaluationReactionCreateOrConnectWithoutUserInput | ChartEvaluationReactionCreateOrConnectWithoutUserInput[]
+    upsert?: ChartEvaluationReactionUpsertWithWhereUniqueWithoutUserInput | ChartEvaluationReactionUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ChartEvaluationReactionCreateManyUserInputEnvelope
+    set?: ChartEvaluationReactionWhereUniqueInput | ChartEvaluationReactionWhereUniqueInput[]
+    disconnect?: ChartEvaluationReactionWhereUniqueInput | ChartEvaluationReactionWhereUniqueInput[]
+    delete?: ChartEvaluationReactionWhereUniqueInput | ChartEvaluationReactionWhereUniqueInput[]
+    connect?: ChartEvaluationReactionWhereUniqueInput | ChartEvaluationReactionWhereUniqueInput[]
+    update?: ChartEvaluationReactionUpdateWithWhereUniqueWithoutUserInput | ChartEvaluationReactionUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ChartEvaluationReactionUpdateManyWithWhereWithoutUserInput | ChartEvaluationReactionUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ChartEvaluationReactionScalarWhereInput | ChartEvaluationReactionScalarWhereInput[]
+  }
+
+  export type DataSyncUpdateManyWithoutUserNestedInput = {
+    create?: XOR<DataSyncCreateWithoutUserInput, DataSyncUncheckedCreateWithoutUserInput> | DataSyncCreateWithoutUserInput[] | DataSyncUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: DataSyncCreateOrConnectWithoutUserInput | DataSyncCreateOrConnectWithoutUserInput[]
+    upsert?: DataSyncUpsertWithWhereUniqueWithoutUserInput | DataSyncUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: DataSyncCreateManyUserInputEnvelope
+    set?: DataSyncWhereUniqueInput | DataSyncWhereUniqueInput[]
+    disconnect?: DataSyncWhereUniqueInput | DataSyncWhereUniqueInput[]
+    delete?: DataSyncWhereUniqueInput | DataSyncWhereUniqueInput[]
+    connect?: DataSyncWhereUniqueInput | DataSyncWhereUniqueInput[]
+    update?: DataSyncUpdateWithWhereUniqueWithoutUserInput | DataSyncUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: DataSyncUpdateManyWithWhereWithoutUserInput | DataSyncUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: DataSyncScalarWhereInput | DataSyncScalarWhereInput[]
+  }
+
+  export type ChartPlayHistoryUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ChartPlayHistoryCreateWithoutUserInput, ChartPlayHistoryUncheckedCreateWithoutUserInput> | ChartPlayHistoryCreateWithoutUserInput[] | ChartPlayHistoryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ChartPlayHistoryCreateOrConnectWithoutUserInput | ChartPlayHistoryCreateOrConnectWithoutUserInput[]
+    upsert?: ChartPlayHistoryUpsertWithWhereUniqueWithoutUserInput | ChartPlayHistoryUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ChartPlayHistoryCreateManyUserInputEnvelope
+    set?: ChartPlayHistoryWhereUniqueInput | ChartPlayHistoryWhereUniqueInput[]
+    disconnect?: ChartPlayHistoryWhereUniqueInput | ChartPlayHistoryWhereUniqueInput[]
+    delete?: ChartPlayHistoryWhereUniqueInput | ChartPlayHistoryWhereUniqueInput[]
+    connect?: ChartPlayHistoryWhereUniqueInput | ChartPlayHistoryWhereUniqueInput[]
+    update?: ChartPlayHistoryUpdateWithWhereUniqueWithoutUserInput | ChartPlayHistoryUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ChartPlayHistoryUpdateManyWithWhereWithoutUserInput | ChartPlayHistoryUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ChartPlayHistoryScalarWhereInput | ChartPlayHistoryScalarWhereInput[]
+  }
+
+  export type ChartRecordSnapshotUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ChartRecordSnapshotCreateWithoutUserInput, ChartRecordSnapshotUncheckedCreateWithoutUserInput> | ChartRecordSnapshotCreateWithoutUserInput[] | ChartRecordSnapshotUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ChartRecordSnapshotCreateOrConnectWithoutUserInput | ChartRecordSnapshotCreateOrConnectWithoutUserInput[]
+    upsert?: ChartRecordSnapshotUpsertWithWhereUniqueWithoutUserInput | ChartRecordSnapshotUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ChartRecordSnapshotCreateManyUserInputEnvelope
+    set?: ChartRecordSnapshotWhereUniqueInput | ChartRecordSnapshotWhereUniqueInput[]
+    disconnect?: ChartRecordSnapshotWhereUniqueInput | ChartRecordSnapshotWhereUniqueInput[]
+    delete?: ChartRecordSnapshotWhereUniqueInput | ChartRecordSnapshotWhereUniqueInput[]
+    connect?: ChartRecordSnapshotWhereUniqueInput | ChartRecordSnapshotWhereUniqueInput[]
+    update?: ChartRecordSnapshotUpdateWithWhereUniqueWithoutUserInput | ChartRecordSnapshotUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ChartRecordSnapshotUpdateManyWithWhereWithoutUserInput | ChartRecordSnapshotUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ChartRecordSnapshotScalarWhereInput | ChartRecordSnapshotScalarWhereInput[]
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -17937,6 +29868,76 @@ export namespace Prisma {
     deleteMany?: userBingoCellDataScalarWhereInput | userBingoCellDataScalarWhereInput[]
   }
 
+  export type ChartEvaluationUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ChartEvaluationCreateWithoutUserInput, ChartEvaluationUncheckedCreateWithoutUserInput> | ChartEvaluationCreateWithoutUserInput[] | ChartEvaluationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ChartEvaluationCreateOrConnectWithoutUserInput | ChartEvaluationCreateOrConnectWithoutUserInput[]
+    upsert?: ChartEvaluationUpsertWithWhereUniqueWithoutUserInput | ChartEvaluationUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ChartEvaluationCreateManyUserInputEnvelope
+    set?: ChartEvaluationWhereUniqueInput | ChartEvaluationWhereUniqueInput[]
+    disconnect?: ChartEvaluationWhereUniqueInput | ChartEvaluationWhereUniqueInput[]
+    delete?: ChartEvaluationWhereUniqueInput | ChartEvaluationWhereUniqueInput[]
+    connect?: ChartEvaluationWhereUniqueInput | ChartEvaluationWhereUniqueInput[]
+    update?: ChartEvaluationUpdateWithWhereUniqueWithoutUserInput | ChartEvaluationUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ChartEvaluationUpdateManyWithWhereWithoutUserInput | ChartEvaluationUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ChartEvaluationScalarWhereInput | ChartEvaluationScalarWhereInput[]
+  }
+
+  export type ChartEvaluationReactionUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ChartEvaluationReactionCreateWithoutUserInput, ChartEvaluationReactionUncheckedCreateWithoutUserInput> | ChartEvaluationReactionCreateWithoutUserInput[] | ChartEvaluationReactionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ChartEvaluationReactionCreateOrConnectWithoutUserInput | ChartEvaluationReactionCreateOrConnectWithoutUserInput[]
+    upsert?: ChartEvaluationReactionUpsertWithWhereUniqueWithoutUserInput | ChartEvaluationReactionUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ChartEvaluationReactionCreateManyUserInputEnvelope
+    set?: ChartEvaluationReactionWhereUniqueInput | ChartEvaluationReactionWhereUniqueInput[]
+    disconnect?: ChartEvaluationReactionWhereUniqueInput | ChartEvaluationReactionWhereUniqueInput[]
+    delete?: ChartEvaluationReactionWhereUniqueInput | ChartEvaluationReactionWhereUniqueInput[]
+    connect?: ChartEvaluationReactionWhereUniqueInput | ChartEvaluationReactionWhereUniqueInput[]
+    update?: ChartEvaluationReactionUpdateWithWhereUniqueWithoutUserInput | ChartEvaluationReactionUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ChartEvaluationReactionUpdateManyWithWhereWithoutUserInput | ChartEvaluationReactionUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ChartEvaluationReactionScalarWhereInput | ChartEvaluationReactionScalarWhereInput[]
+  }
+
+  export type DataSyncUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<DataSyncCreateWithoutUserInput, DataSyncUncheckedCreateWithoutUserInput> | DataSyncCreateWithoutUserInput[] | DataSyncUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: DataSyncCreateOrConnectWithoutUserInput | DataSyncCreateOrConnectWithoutUserInput[]
+    upsert?: DataSyncUpsertWithWhereUniqueWithoutUserInput | DataSyncUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: DataSyncCreateManyUserInputEnvelope
+    set?: DataSyncWhereUniqueInput | DataSyncWhereUniqueInput[]
+    disconnect?: DataSyncWhereUniqueInput | DataSyncWhereUniqueInput[]
+    delete?: DataSyncWhereUniqueInput | DataSyncWhereUniqueInput[]
+    connect?: DataSyncWhereUniqueInput | DataSyncWhereUniqueInput[]
+    update?: DataSyncUpdateWithWhereUniqueWithoutUserInput | DataSyncUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: DataSyncUpdateManyWithWhereWithoutUserInput | DataSyncUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: DataSyncScalarWhereInput | DataSyncScalarWhereInput[]
+  }
+
+  export type ChartPlayHistoryUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ChartPlayHistoryCreateWithoutUserInput, ChartPlayHistoryUncheckedCreateWithoutUserInput> | ChartPlayHistoryCreateWithoutUserInput[] | ChartPlayHistoryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ChartPlayHistoryCreateOrConnectWithoutUserInput | ChartPlayHistoryCreateOrConnectWithoutUserInput[]
+    upsert?: ChartPlayHistoryUpsertWithWhereUniqueWithoutUserInput | ChartPlayHistoryUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ChartPlayHistoryCreateManyUserInputEnvelope
+    set?: ChartPlayHistoryWhereUniqueInput | ChartPlayHistoryWhereUniqueInput[]
+    disconnect?: ChartPlayHistoryWhereUniqueInput | ChartPlayHistoryWhereUniqueInput[]
+    delete?: ChartPlayHistoryWhereUniqueInput | ChartPlayHistoryWhereUniqueInput[]
+    connect?: ChartPlayHistoryWhereUniqueInput | ChartPlayHistoryWhereUniqueInput[]
+    update?: ChartPlayHistoryUpdateWithWhereUniqueWithoutUserInput | ChartPlayHistoryUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ChartPlayHistoryUpdateManyWithWhereWithoutUserInput | ChartPlayHistoryUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ChartPlayHistoryScalarWhereInput | ChartPlayHistoryScalarWhereInput[]
+  }
+
+  export type ChartRecordSnapshotUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ChartRecordSnapshotCreateWithoutUserInput, ChartRecordSnapshotUncheckedCreateWithoutUserInput> | ChartRecordSnapshotCreateWithoutUserInput[] | ChartRecordSnapshotUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ChartRecordSnapshotCreateOrConnectWithoutUserInput | ChartRecordSnapshotCreateOrConnectWithoutUserInput[]
+    upsert?: ChartRecordSnapshotUpsertWithWhereUniqueWithoutUserInput | ChartRecordSnapshotUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ChartRecordSnapshotCreateManyUserInputEnvelope
+    set?: ChartRecordSnapshotWhereUniqueInput | ChartRecordSnapshotWhereUniqueInput[]
+    disconnect?: ChartRecordSnapshotWhereUniqueInput | ChartRecordSnapshotWhereUniqueInput[]
+    delete?: ChartRecordSnapshotWhereUniqueInput | ChartRecordSnapshotWhereUniqueInput[]
+    connect?: ChartRecordSnapshotWhereUniqueInput | ChartRecordSnapshotWhereUniqueInput[]
+    update?: ChartRecordSnapshotUpdateWithWhereUniqueWithoutUserInput | ChartRecordSnapshotUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ChartRecordSnapshotUpdateManyWithWhereWithoutUserInput | ChartRecordSnapshotUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ChartRecordSnapshotScalarWhereInput | ChartRecordSnapshotScalarWhereInput[]
+  }
+
   export type RecentPlayCreateNestedManyWithoutMusicInput = {
     create?: XOR<RecentPlayCreateWithoutMusicInput, RecentPlayUncheckedCreateWithoutMusicInput> | RecentPlayCreateWithoutMusicInput[] | RecentPlayUncheckedCreateWithoutMusicInput[]
     connectOrCreate?: RecentPlayCreateOrConnectWithoutMusicInput | RecentPlayCreateOrConnectWithoutMusicInput[]
@@ -17979,6 +29980,13 @@ export namespace Prisma {
     connect?: BingoCellWhereUniqueInput | BingoCellWhereUniqueInput[]
   }
 
+  export type MusicChartCreateNestedManyWithoutMusicInput = {
+    create?: XOR<MusicChartCreateWithoutMusicInput, MusicChartUncheckedCreateWithoutMusicInput> | MusicChartCreateWithoutMusicInput[] | MusicChartUncheckedCreateWithoutMusicInput[]
+    connectOrCreate?: MusicChartCreateOrConnectWithoutMusicInput | MusicChartCreateOrConnectWithoutMusicInput[]
+    createMany?: MusicChartCreateManyMusicInputEnvelope
+    connect?: MusicChartWhereUniqueInput | MusicChartWhereUniqueInput[]
+  }
+
   export type RecentPlayUncheckedCreateNestedManyWithoutMusicInput = {
     create?: XOR<RecentPlayCreateWithoutMusicInput, RecentPlayUncheckedCreateWithoutMusicInput> | RecentPlayCreateWithoutMusicInput[] | RecentPlayUncheckedCreateWithoutMusicInput[]
     connectOrCreate?: RecentPlayCreateOrConnectWithoutMusicInput | RecentPlayCreateOrConnectWithoutMusicInput[]
@@ -18019,6 +30027,13 @@ export namespace Prisma {
     connectOrCreate?: BingoCellCreateOrConnectWithoutMusicInput | BingoCellCreateOrConnectWithoutMusicInput[]
     createMany?: BingoCellCreateManyMusicInputEnvelope
     connect?: BingoCellWhereUniqueInput | BingoCellWhereUniqueInput[]
+  }
+
+  export type MusicChartUncheckedCreateNestedManyWithoutMusicInput = {
+    create?: XOR<MusicChartCreateWithoutMusicInput, MusicChartUncheckedCreateWithoutMusicInput> | MusicChartCreateWithoutMusicInput[] | MusicChartUncheckedCreateWithoutMusicInput[]
+    connectOrCreate?: MusicChartCreateOrConnectWithoutMusicInput | MusicChartCreateOrConnectWithoutMusicInput[]
+    createMany?: MusicChartCreateManyMusicInputEnvelope
+    connect?: MusicChartWhereUniqueInput | MusicChartWhereUniqueInput[]
   }
 
   export type RecentPlayUpdateManyWithoutMusicNestedInput = {
@@ -18105,6 +30120,20 @@ export namespace Prisma {
     deleteMany?: BingoCellScalarWhereInput | BingoCellScalarWhereInput[]
   }
 
+  export type MusicChartUpdateManyWithoutMusicNestedInput = {
+    create?: XOR<MusicChartCreateWithoutMusicInput, MusicChartUncheckedCreateWithoutMusicInput> | MusicChartCreateWithoutMusicInput[] | MusicChartUncheckedCreateWithoutMusicInput[]
+    connectOrCreate?: MusicChartCreateOrConnectWithoutMusicInput | MusicChartCreateOrConnectWithoutMusicInput[]
+    upsert?: MusicChartUpsertWithWhereUniqueWithoutMusicInput | MusicChartUpsertWithWhereUniqueWithoutMusicInput[]
+    createMany?: MusicChartCreateManyMusicInputEnvelope
+    set?: MusicChartWhereUniqueInput | MusicChartWhereUniqueInput[]
+    disconnect?: MusicChartWhereUniqueInput | MusicChartWhereUniqueInput[]
+    delete?: MusicChartWhereUniqueInput | MusicChartWhereUniqueInput[]
+    connect?: MusicChartWhereUniqueInput | MusicChartWhereUniqueInput[]
+    update?: MusicChartUpdateWithWhereUniqueWithoutMusicInput | MusicChartUpdateWithWhereUniqueWithoutMusicInput[]
+    updateMany?: MusicChartUpdateManyWithWhereWithoutMusicInput | MusicChartUpdateManyWithWhereWithoutMusicInput[]
+    deleteMany?: MusicChartScalarWhereInput | MusicChartScalarWhereInput[]
+  }
+
   export type RecentPlayUncheckedUpdateManyWithoutMusicNestedInput = {
     create?: XOR<RecentPlayCreateWithoutMusicInput, RecentPlayUncheckedCreateWithoutMusicInput> | RecentPlayCreateWithoutMusicInput[] | RecentPlayUncheckedCreateWithoutMusicInput[]
     connectOrCreate?: RecentPlayCreateOrConnectWithoutMusicInput | RecentPlayCreateOrConnectWithoutMusicInput[]
@@ -18189,6 +30218,686 @@ export namespace Prisma {
     deleteMany?: BingoCellScalarWhereInput | BingoCellScalarWhereInput[]
   }
 
+  export type MusicChartUncheckedUpdateManyWithoutMusicNestedInput = {
+    create?: XOR<MusicChartCreateWithoutMusicInput, MusicChartUncheckedCreateWithoutMusicInput> | MusicChartCreateWithoutMusicInput[] | MusicChartUncheckedCreateWithoutMusicInput[]
+    connectOrCreate?: MusicChartCreateOrConnectWithoutMusicInput | MusicChartCreateOrConnectWithoutMusicInput[]
+    upsert?: MusicChartUpsertWithWhereUniqueWithoutMusicInput | MusicChartUpsertWithWhereUniqueWithoutMusicInput[]
+    createMany?: MusicChartCreateManyMusicInputEnvelope
+    set?: MusicChartWhereUniqueInput | MusicChartWhereUniqueInput[]
+    disconnect?: MusicChartWhereUniqueInput | MusicChartWhereUniqueInput[]
+    delete?: MusicChartWhereUniqueInput | MusicChartWhereUniqueInput[]
+    connect?: MusicChartWhereUniqueInput | MusicChartWhereUniqueInput[]
+    update?: MusicChartUpdateWithWhereUniqueWithoutMusicInput | MusicChartUpdateWithWhereUniqueWithoutMusicInput[]
+    updateMany?: MusicChartUpdateManyWithWhereWithoutMusicInput | MusicChartUpdateManyWithWhereWithoutMusicInput[]
+    deleteMany?: MusicChartScalarWhereInput | MusicChartScalarWhereInput[]
+  }
+
+  export type MusicCreateNestedOneWithoutChartsInput = {
+    create?: XOR<MusicCreateWithoutChartsInput, MusicUncheckedCreateWithoutChartsInput>
+    connectOrCreate?: MusicCreateOrConnectWithoutChartsInput
+    connect?: MusicWhereUniqueInput
+  }
+
+  export type ChartConstantHistoryCreateNestedManyWithoutChartInput = {
+    create?: XOR<ChartConstantHistoryCreateWithoutChartInput, ChartConstantHistoryUncheckedCreateWithoutChartInput> | ChartConstantHistoryCreateWithoutChartInput[] | ChartConstantHistoryUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: ChartConstantHistoryCreateOrConnectWithoutChartInput | ChartConstantHistoryCreateOrConnectWithoutChartInput[]
+    createMany?: ChartConstantHistoryCreateManyChartInputEnvelope
+    connect?: ChartConstantHistoryWhereUniqueInput | ChartConstantHistoryWhereUniqueInput[]
+  }
+
+  export type ChartEvaluationCreateNestedManyWithoutChartInput = {
+    create?: XOR<ChartEvaluationCreateWithoutChartInput, ChartEvaluationUncheckedCreateWithoutChartInput> | ChartEvaluationCreateWithoutChartInput[] | ChartEvaluationUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: ChartEvaluationCreateOrConnectWithoutChartInput | ChartEvaluationCreateOrConnectWithoutChartInput[]
+    createMany?: ChartEvaluationCreateManyChartInputEnvelope
+    connect?: ChartEvaluationWhereUniqueInput | ChartEvaluationWhereUniqueInput[]
+  }
+
+  export type RecentPlayCreateNestedManyWithoutChartInput = {
+    create?: XOR<RecentPlayCreateWithoutChartInput, RecentPlayUncheckedCreateWithoutChartInput> | RecentPlayCreateWithoutChartInput[] | RecentPlayUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: RecentPlayCreateOrConnectWithoutChartInput | RecentPlayCreateOrConnectWithoutChartInput[]
+    createMany?: RecentPlayCreateManyChartInputEnvelope
+    connect?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
+  }
+
+  export type PlayDataCreateNestedManyWithoutChartInput = {
+    create?: XOR<PlayDataCreateWithoutChartInput, PlayDataUncheckedCreateWithoutChartInput> | PlayDataCreateWithoutChartInput[] | PlayDataUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: PlayDataCreateOrConnectWithoutChartInput | PlayDataCreateOrConnectWithoutChartInput[]
+    createMany?: PlayDataCreateManyChartInputEnvelope
+    connect?: PlayDataWhereUniqueInput | PlayDataWhereUniqueInput[]
+  }
+
+  export type BasicBestPlayCreateNestedManyWithoutChartInput = {
+    create?: XOR<BasicBestPlayCreateWithoutChartInput, BasicBestPlayUncheckedCreateWithoutChartInput> | BasicBestPlayCreateWithoutChartInput[] | BasicBestPlayUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: BasicBestPlayCreateOrConnectWithoutChartInput | BasicBestPlayCreateOrConnectWithoutChartInput[]
+    createMany?: BasicBestPlayCreateManyChartInputEnvelope
+    connect?: BasicBestPlayWhereUniqueInput | BasicBestPlayWhereUniqueInput[]
+  }
+
+  export type RecitalBestPlayCreateNestedManyWithoutChartInput = {
+    create?: XOR<RecitalBestPlayCreateWithoutChartInput, RecitalBestPlayUncheckedCreateWithoutChartInput> | RecitalBestPlayCreateWithoutChartInput[] | RecitalBestPlayUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: RecitalBestPlayCreateOrConnectWithoutChartInput | RecitalBestPlayCreateOrConnectWithoutChartInput[]
+    createMany?: RecitalBestPlayCreateManyChartInputEnvelope
+    connect?: RecitalBestPlayWhereUniqueInput | RecitalBestPlayWhereUniqueInput[]
+  }
+
+  export type ChartPlayHistoryCreateNestedManyWithoutChartInput = {
+    create?: XOR<ChartPlayHistoryCreateWithoutChartInput, ChartPlayHistoryUncheckedCreateWithoutChartInput> | ChartPlayHistoryCreateWithoutChartInput[] | ChartPlayHistoryUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: ChartPlayHistoryCreateOrConnectWithoutChartInput | ChartPlayHistoryCreateOrConnectWithoutChartInput[]
+    createMany?: ChartPlayHistoryCreateManyChartInputEnvelope
+    connect?: ChartPlayHistoryWhereUniqueInput | ChartPlayHistoryWhereUniqueInput[]
+  }
+
+  export type ChartRecordSnapshotCreateNestedManyWithoutChartInput = {
+    create?: XOR<ChartRecordSnapshotCreateWithoutChartInput, ChartRecordSnapshotUncheckedCreateWithoutChartInput> | ChartRecordSnapshotCreateWithoutChartInput[] | ChartRecordSnapshotUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: ChartRecordSnapshotCreateOrConnectWithoutChartInput | ChartRecordSnapshotCreateOrConnectWithoutChartInput[]
+    createMany?: ChartRecordSnapshotCreateManyChartInputEnvelope
+    connect?: ChartRecordSnapshotWhereUniqueInput | ChartRecordSnapshotWhereUniqueInput[]
+  }
+
+  export type ChartConstantHistoryUncheckedCreateNestedManyWithoutChartInput = {
+    create?: XOR<ChartConstantHistoryCreateWithoutChartInput, ChartConstantHistoryUncheckedCreateWithoutChartInput> | ChartConstantHistoryCreateWithoutChartInput[] | ChartConstantHistoryUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: ChartConstantHistoryCreateOrConnectWithoutChartInput | ChartConstantHistoryCreateOrConnectWithoutChartInput[]
+    createMany?: ChartConstantHistoryCreateManyChartInputEnvelope
+    connect?: ChartConstantHistoryWhereUniqueInput | ChartConstantHistoryWhereUniqueInput[]
+  }
+
+  export type ChartEvaluationUncheckedCreateNestedManyWithoutChartInput = {
+    create?: XOR<ChartEvaluationCreateWithoutChartInput, ChartEvaluationUncheckedCreateWithoutChartInput> | ChartEvaluationCreateWithoutChartInput[] | ChartEvaluationUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: ChartEvaluationCreateOrConnectWithoutChartInput | ChartEvaluationCreateOrConnectWithoutChartInput[]
+    createMany?: ChartEvaluationCreateManyChartInputEnvelope
+    connect?: ChartEvaluationWhereUniqueInput | ChartEvaluationWhereUniqueInput[]
+  }
+
+  export type RecentPlayUncheckedCreateNestedManyWithoutChartInput = {
+    create?: XOR<RecentPlayCreateWithoutChartInput, RecentPlayUncheckedCreateWithoutChartInput> | RecentPlayCreateWithoutChartInput[] | RecentPlayUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: RecentPlayCreateOrConnectWithoutChartInput | RecentPlayCreateOrConnectWithoutChartInput[]
+    createMany?: RecentPlayCreateManyChartInputEnvelope
+    connect?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
+  }
+
+  export type PlayDataUncheckedCreateNestedManyWithoutChartInput = {
+    create?: XOR<PlayDataCreateWithoutChartInput, PlayDataUncheckedCreateWithoutChartInput> | PlayDataCreateWithoutChartInput[] | PlayDataUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: PlayDataCreateOrConnectWithoutChartInput | PlayDataCreateOrConnectWithoutChartInput[]
+    createMany?: PlayDataCreateManyChartInputEnvelope
+    connect?: PlayDataWhereUniqueInput | PlayDataWhereUniqueInput[]
+  }
+
+  export type BasicBestPlayUncheckedCreateNestedManyWithoutChartInput = {
+    create?: XOR<BasicBestPlayCreateWithoutChartInput, BasicBestPlayUncheckedCreateWithoutChartInput> | BasicBestPlayCreateWithoutChartInput[] | BasicBestPlayUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: BasicBestPlayCreateOrConnectWithoutChartInput | BasicBestPlayCreateOrConnectWithoutChartInput[]
+    createMany?: BasicBestPlayCreateManyChartInputEnvelope
+    connect?: BasicBestPlayWhereUniqueInput | BasicBestPlayWhereUniqueInput[]
+  }
+
+  export type RecitalBestPlayUncheckedCreateNestedManyWithoutChartInput = {
+    create?: XOR<RecitalBestPlayCreateWithoutChartInput, RecitalBestPlayUncheckedCreateWithoutChartInput> | RecitalBestPlayCreateWithoutChartInput[] | RecitalBestPlayUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: RecitalBestPlayCreateOrConnectWithoutChartInput | RecitalBestPlayCreateOrConnectWithoutChartInput[]
+    createMany?: RecitalBestPlayCreateManyChartInputEnvelope
+    connect?: RecitalBestPlayWhereUniqueInput | RecitalBestPlayWhereUniqueInput[]
+  }
+
+  export type ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput = {
+    create?: XOR<ChartPlayHistoryCreateWithoutChartInput, ChartPlayHistoryUncheckedCreateWithoutChartInput> | ChartPlayHistoryCreateWithoutChartInput[] | ChartPlayHistoryUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: ChartPlayHistoryCreateOrConnectWithoutChartInput | ChartPlayHistoryCreateOrConnectWithoutChartInput[]
+    createMany?: ChartPlayHistoryCreateManyChartInputEnvelope
+    connect?: ChartPlayHistoryWhereUniqueInput | ChartPlayHistoryWhereUniqueInput[]
+  }
+
+  export type ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput = {
+    create?: XOR<ChartRecordSnapshotCreateWithoutChartInput, ChartRecordSnapshotUncheckedCreateWithoutChartInput> | ChartRecordSnapshotCreateWithoutChartInput[] | ChartRecordSnapshotUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: ChartRecordSnapshotCreateOrConnectWithoutChartInput | ChartRecordSnapshotCreateOrConnectWithoutChartInput[]
+    createMany?: ChartRecordSnapshotCreateManyChartInputEnvelope
+    connect?: ChartRecordSnapshotWhereUniqueInput | ChartRecordSnapshotWhereUniqueInput[]
+  }
+
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type MusicUpdateOneRequiredWithoutChartsNestedInput = {
+    create?: XOR<MusicCreateWithoutChartsInput, MusicUncheckedCreateWithoutChartsInput>
+    connectOrCreate?: MusicCreateOrConnectWithoutChartsInput
+    upsert?: MusicUpsertWithoutChartsInput
+    connect?: MusicWhereUniqueInput
+    update?: XOR<XOR<MusicUpdateToOneWithWhereWithoutChartsInput, MusicUpdateWithoutChartsInput>, MusicUncheckedUpdateWithoutChartsInput>
+  }
+
+  export type ChartConstantHistoryUpdateManyWithoutChartNestedInput = {
+    create?: XOR<ChartConstantHistoryCreateWithoutChartInput, ChartConstantHistoryUncheckedCreateWithoutChartInput> | ChartConstantHistoryCreateWithoutChartInput[] | ChartConstantHistoryUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: ChartConstantHistoryCreateOrConnectWithoutChartInput | ChartConstantHistoryCreateOrConnectWithoutChartInput[]
+    upsert?: ChartConstantHistoryUpsertWithWhereUniqueWithoutChartInput | ChartConstantHistoryUpsertWithWhereUniqueWithoutChartInput[]
+    createMany?: ChartConstantHistoryCreateManyChartInputEnvelope
+    set?: ChartConstantHistoryWhereUniqueInput | ChartConstantHistoryWhereUniqueInput[]
+    disconnect?: ChartConstantHistoryWhereUniqueInput | ChartConstantHistoryWhereUniqueInput[]
+    delete?: ChartConstantHistoryWhereUniqueInput | ChartConstantHistoryWhereUniqueInput[]
+    connect?: ChartConstantHistoryWhereUniqueInput | ChartConstantHistoryWhereUniqueInput[]
+    update?: ChartConstantHistoryUpdateWithWhereUniqueWithoutChartInput | ChartConstantHistoryUpdateWithWhereUniqueWithoutChartInput[]
+    updateMany?: ChartConstantHistoryUpdateManyWithWhereWithoutChartInput | ChartConstantHistoryUpdateManyWithWhereWithoutChartInput[]
+    deleteMany?: ChartConstantHistoryScalarWhereInput | ChartConstantHistoryScalarWhereInput[]
+  }
+
+  export type ChartEvaluationUpdateManyWithoutChartNestedInput = {
+    create?: XOR<ChartEvaluationCreateWithoutChartInput, ChartEvaluationUncheckedCreateWithoutChartInput> | ChartEvaluationCreateWithoutChartInput[] | ChartEvaluationUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: ChartEvaluationCreateOrConnectWithoutChartInput | ChartEvaluationCreateOrConnectWithoutChartInput[]
+    upsert?: ChartEvaluationUpsertWithWhereUniqueWithoutChartInput | ChartEvaluationUpsertWithWhereUniqueWithoutChartInput[]
+    createMany?: ChartEvaluationCreateManyChartInputEnvelope
+    set?: ChartEvaluationWhereUniqueInput | ChartEvaluationWhereUniqueInput[]
+    disconnect?: ChartEvaluationWhereUniqueInput | ChartEvaluationWhereUniqueInput[]
+    delete?: ChartEvaluationWhereUniqueInput | ChartEvaluationWhereUniqueInput[]
+    connect?: ChartEvaluationWhereUniqueInput | ChartEvaluationWhereUniqueInput[]
+    update?: ChartEvaluationUpdateWithWhereUniqueWithoutChartInput | ChartEvaluationUpdateWithWhereUniqueWithoutChartInput[]
+    updateMany?: ChartEvaluationUpdateManyWithWhereWithoutChartInput | ChartEvaluationUpdateManyWithWhereWithoutChartInput[]
+    deleteMany?: ChartEvaluationScalarWhereInput | ChartEvaluationScalarWhereInput[]
+  }
+
+  export type RecentPlayUpdateManyWithoutChartNestedInput = {
+    create?: XOR<RecentPlayCreateWithoutChartInput, RecentPlayUncheckedCreateWithoutChartInput> | RecentPlayCreateWithoutChartInput[] | RecentPlayUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: RecentPlayCreateOrConnectWithoutChartInput | RecentPlayCreateOrConnectWithoutChartInput[]
+    upsert?: RecentPlayUpsertWithWhereUniqueWithoutChartInput | RecentPlayUpsertWithWhereUniqueWithoutChartInput[]
+    createMany?: RecentPlayCreateManyChartInputEnvelope
+    set?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
+    disconnect?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
+    delete?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
+    connect?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
+    update?: RecentPlayUpdateWithWhereUniqueWithoutChartInput | RecentPlayUpdateWithWhereUniqueWithoutChartInput[]
+    updateMany?: RecentPlayUpdateManyWithWhereWithoutChartInput | RecentPlayUpdateManyWithWhereWithoutChartInput[]
+    deleteMany?: RecentPlayScalarWhereInput | RecentPlayScalarWhereInput[]
+  }
+
+  export type PlayDataUpdateManyWithoutChartNestedInput = {
+    create?: XOR<PlayDataCreateWithoutChartInput, PlayDataUncheckedCreateWithoutChartInput> | PlayDataCreateWithoutChartInput[] | PlayDataUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: PlayDataCreateOrConnectWithoutChartInput | PlayDataCreateOrConnectWithoutChartInput[]
+    upsert?: PlayDataUpsertWithWhereUniqueWithoutChartInput | PlayDataUpsertWithWhereUniqueWithoutChartInput[]
+    createMany?: PlayDataCreateManyChartInputEnvelope
+    set?: PlayDataWhereUniqueInput | PlayDataWhereUniqueInput[]
+    disconnect?: PlayDataWhereUniqueInput | PlayDataWhereUniqueInput[]
+    delete?: PlayDataWhereUniqueInput | PlayDataWhereUniqueInput[]
+    connect?: PlayDataWhereUniqueInput | PlayDataWhereUniqueInput[]
+    update?: PlayDataUpdateWithWhereUniqueWithoutChartInput | PlayDataUpdateWithWhereUniqueWithoutChartInput[]
+    updateMany?: PlayDataUpdateManyWithWhereWithoutChartInput | PlayDataUpdateManyWithWhereWithoutChartInput[]
+    deleteMany?: PlayDataScalarWhereInput | PlayDataScalarWhereInput[]
+  }
+
+  export type BasicBestPlayUpdateManyWithoutChartNestedInput = {
+    create?: XOR<BasicBestPlayCreateWithoutChartInput, BasicBestPlayUncheckedCreateWithoutChartInput> | BasicBestPlayCreateWithoutChartInput[] | BasicBestPlayUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: BasicBestPlayCreateOrConnectWithoutChartInput | BasicBestPlayCreateOrConnectWithoutChartInput[]
+    upsert?: BasicBestPlayUpsertWithWhereUniqueWithoutChartInput | BasicBestPlayUpsertWithWhereUniqueWithoutChartInput[]
+    createMany?: BasicBestPlayCreateManyChartInputEnvelope
+    set?: BasicBestPlayWhereUniqueInput | BasicBestPlayWhereUniqueInput[]
+    disconnect?: BasicBestPlayWhereUniqueInput | BasicBestPlayWhereUniqueInput[]
+    delete?: BasicBestPlayWhereUniqueInput | BasicBestPlayWhereUniqueInput[]
+    connect?: BasicBestPlayWhereUniqueInput | BasicBestPlayWhereUniqueInput[]
+    update?: BasicBestPlayUpdateWithWhereUniqueWithoutChartInput | BasicBestPlayUpdateWithWhereUniqueWithoutChartInput[]
+    updateMany?: BasicBestPlayUpdateManyWithWhereWithoutChartInput | BasicBestPlayUpdateManyWithWhereWithoutChartInput[]
+    deleteMany?: BasicBestPlayScalarWhereInput | BasicBestPlayScalarWhereInput[]
+  }
+
+  export type RecitalBestPlayUpdateManyWithoutChartNestedInput = {
+    create?: XOR<RecitalBestPlayCreateWithoutChartInput, RecitalBestPlayUncheckedCreateWithoutChartInput> | RecitalBestPlayCreateWithoutChartInput[] | RecitalBestPlayUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: RecitalBestPlayCreateOrConnectWithoutChartInput | RecitalBestPlayCreateOrConnectWithoutChartInput[]
+    upsert?: RecitalBestPlayUpsertWithWhereUniqueWithoutChartInput | RecitalBestPlayUpsertWithWhereUniqueWithoutChartInput[]
+    createMany?: RecitalBestPlayCreateManyChartInputEnvelope
+    set?: RecitalBestPlayWhereUniqueInput | RecitalBestPlayWhereUniqueInput[]
+    disconnect?: RecitalBestPlayWhereUniqueInput | RecitalBestPlayWhereUniqueInput[]
+    delete?: RecitalBestPlayWhereUniqueInput | RecitalBestPlayWhereUniqueInput[]
+    connect?: RecitalBestPlayWhereUniqueInput | RecitalBestPlayWhereUniqueInput[]
+    update?: RecitalBestPlayUpdateWithWhereUniqueWithoutChartInput | RecitalBestPlayUpdateWithWhereUniqueWithoutChartInput[]
+    updateMany?: RecitalBestPlayUpdateManyWithWhereWithoutChartInput | RecitalBestPlayUpdateManyWithWhereWithoutChartInput[]
+    deleteMany?: RecitalBestPlayScalarWhereInput | RecitalBestPlayScalarWhereInput[]
+  }
+
+  export type ChartPlayHistoryUpdateManyWithoutChartNestedInput = {
+    create?: XOR<ChartPlayHistoryCreateWithoutChartInput, ChartPlayHistoryUncheckedCreateWithoutChartInput> | ChartPlayHistoryCreateWithoutChartInput[] | ChartPlayHistoryUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: ChartPlayHistoryCreateOrConnectWithoutChartInput | ChartPlayHistoryCreateOrConnectWithoutChartInput[]
+    upsert?: ChartPlayHistoryUpsertWithWhereUniqueWithoutChartInput | ChartPlayHistoryUpsertWithWhereUniqueWithoutChartInput[]
+    createMany?: ChartPlayHistoryCreateManyChartInputEnvelope
+    set?: ChartPlayHistoryWhereUniqueInput | ChartPlayHistoryWhereUniqueInput[]
+    disconnect?: ChartPlayHistoryWhereUniqueInput | ChartPlayHistoryWhereUniqueInput[]
+    delete?: ChartPlayHistoryWhereUniqueInput | ChartPlayHistoryWhereUniqueInput[]
+    connect?: ChartPlayHistoryWhereUniqueInput | ChartPlayHistoryWhereUniqueInput[]
+    update?: ChartPlayHistoryUpdateWithWhereUniqueWithoutChartInput | ChartPlayHistoryUpdateWithWhereUniqueWithoutChartInput[]
+    updateMany?: ChartPlayHistoryUpdateManyWithWhereWithoutChartInput | ChartPlayHistoryUpdateManyWithWhereWithoutChartInput[]
+    deleteMany?: ChartPlayHistoryScalarWhereInput | ChartPlayHistoryScalarWhereInput[]
+  }
+
+  export type ChartRecordSnapshotUpdateManyWithoutChartNestedInput = {
+    create?: XOR<ChartRecordSnapshotCreateWithoutChartInput, ChartRecordSnapshotUncheckedCreateWithoutChartInput> | ChartRecordSnapshotCreateWithoutChartInput[] | ChartRecordSnapshotUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: ChartRecordSnapshotCreateOrConnectWithoutChartInput | ChartRecordSnapshotCreateOrConnectWithoutChartInput[]
+    upsert?: ChartRecordSnapshotUpsertWithWhereUniqueWithoutChartInput | ChartRecordSnapshotUpsertWithWhereUniqueWithoutChartInput[]
+    createMany?: ChartRecordSnapshotCreateManyChartInputEnvelope
+    set?: ChartRecordSnapshotWhereUniqueInput | ChartRecordSnapshotWhereUniqueInput[]
+    disconnect?: ChartRecordSnapshotWhereUniqueInput | ChartRecordSnapshotWhereUniqueInput[]
+    delete?: ChartRecordSnapshotWhereUniqueInput | ChartRecordSnapshotWhereUniqueInput[]
+    connect?: ChartRecordSnapshotWhereUniqueInput | ChartRecordSnapshotWhereUniqueInput[]
+    update?: ChartRecordSnapshotUpdateWithWhereUniqueWithoutChartInput | ChartRecordSnapshotUpdateWithWhereUniqueWithoutChartInput[]
+    updateMany?: ChartRecordSnapshotUpdateManyWithWhereWithoutChartInput | ChartRecordSnapshotUpdateManyWithWhereWithoutChartInput[]
+    deleteMany?: ChartRecordSnapshotScalarWhereInput | ChartRecordSnapshotScalarWhereInput[]
+  }
+
+  export type ChartConstantHistoryUncheckedUpdateManyWithoutChartNestedInput = {
+    create?: XOR<ChartConstantHistoryCreateWithoutChartInput, ChartConstantHistoryUncheckedCreateWithoutChartInput> | ChartConstantHistoryCreateWithoutChartInput[] | ChartConstantHistoryUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: ChartConstantHistoryCreateOrConnectWithoutChartInput | ChartConstantHistoryCreateOrConnectWithoutChartInput[]
+    upsert?: ChartConstantHistoryUpsertWithWhereUniqueWithoutChartInput | ChartConstantHistoryUpsertWithWhereUniqueWithoutChartInput[]
+    createMany?: ChartConstantHistoryCreateManyChartInputEnvelope
+    set?: ChartConstantHistoryWhereUniqueInput | ChartConstantHistoryWhereUniqueInput[]
+    disconnect?: ChartConstantHistoryWhereUniqueInput | ChartConstantHistoryWhereUniqueInput[]
+    delete?: ChartConstantHistoryWhereUniqueInput | ChartConstantHistoryWhereUniqueInput[]
+    connect?: ChartConstantHistoryWhereUniqueInput | ChartConstantHistoryWhereUniqueInput[]
+    update?: ChartConstantHistoryUpdateWithWhereUniqueWithoutChartInput | ChartConstantHistoryUpdateWithWhereUniqueWithoutChartInput[]
+    updateMany?: ChartConstantHistoryUpdateManyWithWhereWithoutChartInput | ChartConstantHistoryUpdateManyWithWhereWithoutChartInput[]
+    deleteMany?: ChartConstantHistoryScalarWhereInput | ChartConstantHistoryScalarWhereInput[]
+  }
+
+  export type ChartEvaluationUncheckedUpdateManyWithoutChartNestedInput = {
+    create?: XOR<ChartEvaluationCreateWithoutChartInput, ChartEvaluationUncheckedCreateWithoutChartInput> | ChartEvaluationCreateWithoutChartInput[] | ChartEvaluationUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: ChartEvaluationCreateOrConnectWithoutChartInput | ChartEvaluationCreateOrConnectWithoutChartInput[]
+    upsert?: ChartEvaluationUpsertWithWhereUniqueWithoutChartInput | ChartEvaluationUpsertWithWhereUniqueWithoutChartInput[]
+    createMany?: ChartEvaluationCreateManyChartInputEnvelope
+    set?: ChartEvaluationWhereUniqueInput | ChartEvaluationWhereUniqueInput[]
+    disconnect?: ChartEvaluationWhereUniqueInput | ChartEvaluationWhereUniqueInput[]
+    delete?: ChartEvaluationWhereUniqueInput | ChartEvaluationWhereUniqueInput[]
+    connect?: ChartEvaluationWhereUniqueInput | ChartEvaluationWhereUniqueInput[]
+    update?: ChartEvaluationUpdateWithWhereUniqueWithoutChartInput | ChartEvaluationUpdateWithWhereUniqueWithoutChartInput[]
+    updateMany?: ChartEvaluationUpdateManyWithWhereWithoutChartInput | ChartEvaluationUpdateManyWithWhereWithoutChartInput[]
+    deleteMany?: ChartEvaluationScalarWhereInput | ChartEvaluationScalarWhereInput[]
+  }
+
+  export type RecentPlayUncheckedUpdateManyWithoutChartNestedInput = {
+    create?: XOR<RecentPlayCreateWithoutChartInput, RecentPlayUncheckedCreateWithoutChartInput> | RecentPlayCreateWithoutChartInput[] | RecentPlayUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: RecentPlayCreateOrConnectWithoutChartInput | RecentPlayCreateOrConnectWithoutChartInput[]
+    upsert?: RecentPlayUpsertWithWhereUniqueWithoutChartInput | RecentPlayUpsertWithWhereUniqueWithoutChartInput[]
+    createMany?: RecentPlayCreateManyChartInputEnvelope
+    set?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
+    disconnect?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
+    delete?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
+    connect?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
+    update?: RecentPlayUpdateWithWhereUniqueWithoutChartInput | RecentPlayUpdateWithWhereUniqueWithoutChartInput[]
+    updateMany?: RecentPlayUpdateManyWithWhereWithoutChartInput | RecentPlayUpdateManyWithWhereWithoutChartInput[]
+    deleteMany?: RecentPlayScalarWhereInput | RecentPlayScalarWhereInput[]
+  }
+
+  export type PlayDataUncheckedUpdateManyWithoutChartNestedInput = {
+    create?: XOR<PlayDataCreateWithoutChartInput, PlayDataUncheckedCreateWithoutChartInput> | PlayDataCreateWithoutChartInput[] | PlayDataUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: PlayDataCreateOrConnectWithoutChartInput | PlayDataCreateOrConnectWithoutChartInput[]
+    upsert?: PlayDataUpsertWithWhereUniqueWithoutChartInput | PlayDataUpsertWithWhereUniqueWithoutChartInput[]
+    createMany?: PlayDataCreateManyChartInputEnvelope
+    set?: PlayDataWhereUniqueInput | PlayDataWhereUniqueInput[]
+    disconnect?: PlayDataWhereUniqueInput | PlayDataWhereUniqueInput[]
+    delete?: PlayDataWhereUniqueInput | PlayDataWhereUniqueInput[]
+    connect?: PlayDataWhereUniqueInput | PlayDataWhereUniqueInput[]
+    update?: PlayDataUpdateWithWhereUniqueWithoutChartInput | PlayDataUpdateWithWhereUniqueWithoutChartInput[]
+    updateMany?: PlayDataUpdateManyWithWhereWithoutChartInput | PlayDataUpdateManyWithWhereWithoutChartInput[]
+    deleteMany?: PlayDataScalarWhereInput | PlayDataScalarWhereInput[]
+  }
+
+  export type BasicBestPlayUncheckedUpdateManyWithoutChartNestedInput = {
+    create?: XOR<BasicBestPlayCreateWithoutChartInput, BasicBestPlayUncheckedCreateWithoutChartInput> | BasicBestPlayCreateWithoutChartInput[] | BasicBestPlayUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: BasicBestPlayCreateOrConnectWithoutChartInput | BasicBestPlayCreateOrConnectWithoutChartInput[]
+    upsert?: BasicBestPlayUpsertWithWhereUniqueWithoutChartInput | BasicBestPlayUpsertWithWhereUniqueWithoutChartInput[]
+    createMany?: BasicBestPlayCreateManyChartInputEnvelope
+    set?: BasicBestPlayWhereUniqueInput | BasicBestPlayWhereUniqueInput[]
+    disconnect?: BasicBestPlayWhereUniqueInput | BasicBestPlayWhereUniqueInput[]
+    delete?: BasicBestPlayWhereUniqueInput | BasicBestPlayWhereUniqueInput[]
+    connect?: BasicBestPlayWhereUniqueInput | BasicBestPlayWhereUniqueInput[]
+    update?: BasicBestPlayUpdateWithWhereUniqueWithoutChartInput | BasicBestPlayUpdateWithWhereUniqueWithoutChartInput[]
+    updateMany?: BasicBestPlayUpdateManyWithWhereWithoutChartInput | BasicBestPlayUpdateManyWithWhereWithoutChartInput[]
+    deleteMany?: BasicBestPlayScalarWhereInput | BasicBestPlayScalarWhereInput[]
+  }
+
+  export type RecitalBestPlayUncheckedUpdateManyWithoutChartNestedInput = {
+    create?: XOR<RecitalBestPlayCreateWithoutChartInput, RecitalBestPlayUncheckedCreateWithoutChartInput> | RecitalBestPlayCreateWithoutChartInput[] | RecitalBestPlayUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: RecitalBestPlayCreateOrConnectWithoutChartInput | RecitalBestPlayCreateOrConnectWithoutChartInput[]
+    upsert?: RecitalBestPlayUpsertWithWhereUniqueWithoutChartInput | RecitalBestPlayUpsertWithWhereUniqueWithoutChartInput[]
+    createMany?: RecitalBestPlayCreateManyChartInputEnvelope
+    set?: RecitalBestPlayWhereUniqueInput | RecitalBestPlayWhereUniqueInput[]
+    disconnect?: RecitalBestPlayWhereUniqueInput | RecitalBestPlayWhereUniqueInput[]
+    delete?: RecitalBestPlayWhereUniqueInput | RecitalBestPlayWhereUniqueInput[]
+    connect?: RecitalBestPlayWhereUniqueInput | RecitalBestPlayWhereUniqueInput[]
+    update?: RecitalBestPlayUpdateWithWhereUniqueWithoutChartInput | RecitalBestPlayUpdateWithWhereUniqueWithoutChartInput[]
+    updateMany?: RecitalBestPlayUpdateManyWithWhereWithoutChartInput | RecitalBestPlayUpdateManyWithWhereWithoutChartInput[]
+    deleteMany?: RecitalBestPlayScalarWhereInput | RecitalBestPlayScalarWhereInput[]
+  }
+
+  export type ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput = {
+    create?: XOR<ChartPlayHistoryCreateWithoutChartInput, ChartPlayHistoryUncheckedCreateWithoutChartInput> | ChartPlayHistoryCreateWithoutChartInput[] | ChartPlayHistoryUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: ChartPlayHistoryCreateOrConnectWithoutChartInput | ChartPlayHistoryCreateOrConnectWithoutChartInput[]
+    upsert?: ChartPlayHistoryUpsertWithWhereUniqueWithoutChartInput | ChartPlayHistoryUpsertWithWhereUniqueWithoutChartInput[]
+    createMany?: ChartPlayHistoryCreateManyChartInputEnvelope
+    set?: ChartPlayHistoryWhereUniqueInput | ChartPlayHistoryWhereUniqueInput[]
+    disconnect?: ChartPlayHistoryWhereUniqueInput | ChartPlayHistoryWhereUniqueInput[]
+    delete?: ChartPlayHistoryWhereUniqueInput | ChartPlayHistoryWhereUniqueInput[]
+    connect?: ChartPlayHistoryWhereUniqueInput | ChartPlayHistoryWhereUniqueInput[]
+    update?: ChartPlayHistoryUpdateWithWhereUniqueWithoutChartInput | ChartPlayHistoryUpdateWithWhereUniqueWithoutChartInput[]
+    updateMany?: ChartPlayHistoryUpdateManyWithWhereWithoutChartInput | ChartPlayHistoryUpdateManyWithWhereWithoutChartInput[]
+    deleteMany?: ChartPlayHistoryScalarWhereInput | ChartPlayHistoryScalarWhereInput[]
+  }
+
+  export type ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput = {
+    create?: XOR<ChartRecordSnapshotCreateWithoutChartInput, ChartRecordSnapshotUncheckedCreateWithoutChartInput> | ChartRecordSnapshotCreateWithoutChartInput[] | ChartRecordSnapshotUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: ChartRecordSnapshotCreateOrConnectWithoutChartInput | ChartRecordSnapshotCreateOrConnectWithoutChartInput[]
+    upsert?: ChartRecordSnapshotUpsertWithWhereUniqueWithoutChartInput | ChartRecordSnapshotUpsertWithWhereUniqueWithoutChartInput[]
+    createMany?: ChartRecordSnapshotCreateManyChartInputEnvelope
+    set?: ChartRecordSnapshotWhereUniqueInput | ChartRecordSnapshotWhereUniqueInput[]
+    disconnect?: ChartRecordSnapshotWhereUniqueInput | ChartRecordSnapshotWhereUniqueInput[]
+    delete?: ChartRecordSnapshotWhereUniqueInput | ChartRecordSnapshotWhereUniqueInput[]
+    connect?: ChartRecordSnapshotWhereUniqueInput | ChartRecordSnapshotWhereUniqueInput[]
+    update?: ChartRecordSnapshotUpdateWithWhereUniqueWithoutChartInput | ChartRecordSnapshotUpdateWithWhereUniqueWithoutChartInput[]
+    updateMany?: ChartRecordSnapshotUpdateManyWithWhereWithoutChartInput | ChartRecordSnapshotUpdateManyWithWhereWithoutChartInput[]
+    deleteMany?: ChartRecordSnapshotScalarWhereInput | ChartRecordSnapshotScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutDataSyncsInput = {
+    create?: XOR<UserCreateWithoutDataSyncsInput, UserUncheckedCreateWithoutDataSyncsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutDataSyncsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type ChartPlayHistoryCreateNestedManyWithoutFirstSyncInput = {
+    create?: XOR<ChartPlayHistoryCreateWithoutFirstSyncInput, ChartPlayHistoryUncheckedCreateWithoutFirstSyncInput> | ChartPlayHistoryCreateWithoutFirstSyncInput[] | ChartPlayHistoryUncheckedCreateWithoutFirstSyncInput[]
+    connectOrCreate?: ChartPlayHistoryCreateOrConnectWithoutFirstSyncInput | ChartPlayHistoryCreateOrConnectWithoutFirstSyncInput[]
+    createMany?: ChartPlayHistoryCreateManyFirstSyncInputEnvelope
+    connect?: ChartPlayHistoryWhereUniqueInput | ChartPlayHistoryWhereUniqueInput[]
+  }
+
+  export type ChartRecordSnapshotCreateNestedManyWithoutSyncInput = {
+    create?: XOR<ChartRecordSnapshotCreateWithoutSyncInput, ChartRecordSnapshotUncheckedCreateWithoutSyncInput> | ChartRecordSnapshotCreateWithoutSyncInput[] | ChartRecordSnapshotUncheckedCreateWithoutSyncInput[]
+    connectOrCreate?: ChartRecordSnapshotCreateOrConnectWithoutSyncInput | ChartRecordSnapshotCreateOrConnectWithoutSyncInput[]
+    createMany?: ChartRecordSnapshotCreateManySyncInputEnvelope
+    connect?: ChartRecordSnapshotWhereUniqueInput | ChartRecordSnapshotWhereUniqueInput[]
+  }
+
+  export type ChartPlayHistoryUncheckedCreateNestedManyWithoutFirstSyncInput = {
+    create?: XOR<ChartPlayHistoryCreateWithoutFirstSyncInput, ChartPlayHistoryUncheckedCreateWithoutFirstSyncInput> | ChartPlayHistoryCreateWithoutFirstSyncInput[] | ChartPlayHistoryUncheckedCreateWithoutFirstSyncInput[]
+    connectOrCreate?: ChartPlayHistoryCreateOrConnectWithoutFirstSyncInput | ChartPlayHistoryCreateOrConnectWithoutFirstSyncInput[]
+    createMany?: ChartPlayHistoryCreateManyFirstSyncInputEnvelope
+    connect?: ChartPlayHistoryWhereUniqueInput | ChartPlayHistoryWhereUniqueInput[]
+  }
+
+  export type ChartRecordSnapshotUncheckedCreateNestedManyWithoutSyncInput = {
+    create?: XOR<ChartRecordSnapshotCreateWithoutSyncInput, ChartRecordSnapshotUncheckedCreateWithoutSyncInput> | ChartRecordSnapshotCreateWithoutSyncInput[] | ChartRecordSnapshotUncheckedCreateWithoutSyncInput[]
+    connectOrCreate?: ChartRecordSnapshotCreateOrConnectWithoutSyncInput | ChartRecordSnapshotCreateOrConnectWithoutSyncInput[]
+    createMany?: ChartRecordSnapshotCreateManySyncInputEnvelope
+    connect?: ChartRecordSnapshotWhereUniqueInput | ChartRecordSnapshotWhereUniqueInput[]
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
+  export type UserUpdateOneRequiredWithoutDataSyncsNestedInput = {
+    create?: XOR<UserCreateWithoutDataSyncsInput, UserUncheckedCreateWithoutDataSyncsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutDataSyncsInput
+    upsert?: UserUpsertWithoutDataSyncsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutDataSyncsInput, UserUpdateWithoutDataSyncsInput>, UserUncheckedUpdateWithoutDataSyncsInput>
+  }
+
+  export type ChartPlayHistoryUpdateManyWithoutFirstSyncNestedInput = {
+    create?: XOR<ChartPlayHistoryCreateWithoutFirstSyncInput, ChartPlayHistoryUncheckedCreateWithoutFirstSyncInput> | ChartPlayHistoryCreateWithoutFirstSyncInput[] | ChartPlayHistoryUncheckedCreateWithoutFirstSyncInput[]
+    connectOrCreate?: ChartPlayHistoryCreateOrConnectWithoutFirstSyncInput | ChartPlayHistoryCreateOrConnectWithoutFirstSyncInput[]
+    upsert?: ChartPlayHistoryUpsertWithWhereUniqueWithoutFirstSyncInput | ChartPlayHistoryUpsertWithWhereUniqueWithoutFirstSyncInput[]
+    createMany?: ChartPlayHistoryCreateManyFirstSyncInputEnvelope
+    set?: ChartPlayHistoryWhereUniqueInput | ChartPlayHistoryWhereUniqueInput[]
+    disconnect?: ChartPlayHistoryWhereUniqueInput | ChartPlayHistoryWhereUniqueInput[]
+    delete?: ChartPlayHistoryWhereUniqueInput | ChartPlayHistoryWhereUniqueInput[]
+    connect?: ChartPlayHistoryWhereUniqueInput | ChartPlayHistoryWhereUniqueInput[]
+    update?: ChartPlayHistoryUpdateWithWhereUniqueWithoutFirstSyncInput | ChartPlayHistoryUpdateWithWhereUniqueWithoutFirstSyncInput[]
+    updateMany?: ChartPlayHistoryUpdateManyWithWhereWithoutFirstSyncInput | ChartPlayHistoryUpdateManyWithWhereWithoutFirstSyncInput[]
+    deleteMany?: ChartPlayHistoryScalarWhereInput | ChartPlayHistoryScalarWhereInput[]
+  }
+
+  export type ChartRecordSnapshotUpdateManyWithoutSyncNestedInput = {
+    create?: XOR<ChartRecordSnapshotCreateWithoutSyncInput, ChartRecordSnapshotUncheckedCreateWithoutSyncInput> | ChartRecordSnapshotCreateWithoutSyncInput[] | ChartRecordSnapshotUncheckedCreateWithoutSyncInput[]
+    connectOrCreate?: ChartRecordSnapshotCreateOrConnectWithoutSyncInput | ChartRecordSnapshotCreateOrConnectWithoutSyncInput[]
+    upsert?: ChartRecordSnapshotUpsertWithWhereUniqueWithoutSyncInput | ChartRecordSnapshotUpsertWithWhereUniqueWithoutSyncInput[]
+    createMany?: ChartRecordSnapshotCreateManySyncInputEnvelope
+    set?: ChartRecordSnapshotWhereUniqueInput | ChartRecordSnapshotWhereUniqueInput[]
+    disconnect?: ChartRecordSnapshotWhereUniqueInput | ChartRecordSnapshotWhereUniqueInput[]
+    delete?: ChartRecordSnapshotWhereUniqueInput | ChartRecordSnapshotWhereUniqueInput[]
+    connect?: ChartRecordSnapshotWhereUniqueInput | ChartRecordSnapshotWhereUniqueInput[]
+    update?: ChartRecordSnapshotUpdateWithWhereUniqueWithoutSyncInput | ChartRecordSnapshotUpdateWithWhereUniqueWithoutSyncInput[]
+    updateMany?: ChartRecordSnapshotUpdateManyWithWhereWithoutSyncInput | ChartRecordSnapshotUpdateManyWithWhereWithoutSyncInput[]
+    deleteMany?: ChartRecordSnapshotScalarWhereInput | ChartRecordSnapshotScalarWhereInput[]
+  }
+
+  export type ChartPlayHistoryUncheckedUpdateManyWithoutFirstSyncNestedInput = {
+    create?: XOR<ChartPlayHistoryCreateWithoutFirstSyncInput, ChartPlayHistoryUncheckedCreateWithoutFirstSyncInput> | ChartPlayHistoryCreateWithoutFirstSyncInput[] | ChartPlayHistoryUncheckedCreateWithoutFirstSyncInput[]
+    connectOrCreate?: ChartPlayHistoryCreateOrConnectWithoutFirstSyncInput | ChartPlayHistoryCreateOrConnectWithoutFirstSyncInput[]
+    upsert?: ChartPlayHistoryUpsertWithWhereUniqueWithoutFirstSyncInput | ChartPlayHistoryUpsertWithWhereUniqueWithoutFirstSyncInput[]
+    createMany?: ChartPlayHistoryCreateManyFirstSyncInputEnvelope
+    set?: ChartPlayHistoryWhereUniqueInput | ChartPlayHistoryWhereUniqueInput[]
+    disconnect?: ChartPlayHistoryWhereUniqueInput | ChartPlayHistoryWhereUniqueInput[]
+    delete?: ChartPlayHistoryWhereUniqueInput | ChartPlayHistoryWhereUniqueInput[]
+    connect?: ChartPlayHistoryWhereUniqueInput | ChartPlayHistoryWhereUniqueInput[]
+    update?: ChartPlayHistoryUpdateWithWhereUniqueWithoutFirstSyncInput | ChartPlayHistoryUpdateWithWhereUniqueWithoutFirstSyncInput[]
+    updateMany?: ChartPlayHistoryUpdateManyWithWhereWithoutFirstSyncInput | ChartPlayHistoryUpdateManyWithWhereWithoutFirstSyncInput[]
+    deleteMany?: ChartPlayHistoryScalarWhereInput | ChartPlayHistoryScalarWhereInput[]
+  }
+
+  export type ChartRecordSnapshotUncheckedUpdateManyWithoutSyncNestedInput = {
+    create?: XOR<ChartRecordSnapshotCreateWithoutSyncInput, ChartRecordSnapshotUncheckedCreateWithoutSyncInput> | ChartRecordSnapshotCreateWithoutSyncInput[] | ChartRecordSnapshotUncheckedCreateWithoutSyncInput[]
+    connectOrCreate?: ChartRecordSnapshotCreateOrConnectWithoutSyncInput | ChartRecordSnapshotCreateOrConnectWithoutSyncInput[]
+    upsert?: ChartRecordSnapshotUpsertWithWhereUniqueWithoutSyncInput | ChartRecordSnapshotUpsertWithWhereUniqueWithoutSyncInput[]
+    createMany?: ChartRecordSnapshotCreateManySyncInputEnvelope
+    set?: ChartRecordSnapshotWhereUniqueInput | ChartRecordSnapshotWhereUniqueInput[]
+    disconnect?: ChartRecordSnapshotWhereUniqueInput | ChartRecordSnapshotWhereUniqueInput[]
+    delete?: ChartRecordSnapshotWhereUniqueInput | ChartRecordSnapshotWhereUniqueInput[]
+    connect?: ChartRecordSnapshotWhereUniqueInput | ChartRecordSnapshotWhereUniqueInput[]
+    update?: ChartRecordSnapshotUpdateWithWhereUniqueWithoutSyncInput | ChartRecordSnapshotUpdateWithWhereUniqueWithoutSyncInput[]
+    updateMany?: ChartRecordSnapshotUpdateManyWithWhereWithoutSyncInput | ChartRecordSnapshotUpdateManyWithWhereWithoutSyncInput[]
+    deleteMany?: ChartRecordSnapshotScalarWhereInput | ChartRecordSnapshotScalarWhereInput[]
+  }
+
+  export type MusicChartCreateNestedOneWithoutPlayHistoryInput = {
+    create?: XOR<MusicChartCreateWithoutPlayHistoryInput, MusicChartUncheckedCreateWithoutPlayHistoryInput>
+    connectOrCreate?: MusicChartCreateOrConnectWithoutPlayHistoryInput
+    connect?: MusicChartWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutChartPlayHistoryInput = {
+    create?: XOR<UserCreateWithoutChartPlayHistoryInput, UserUncheckedCreateWithoutChartPlayHistoryInput>
+    connectOrCreate?: UserCreateOrConnectWithoutChartPlayHistoryInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type DataSyncCreateNestedOneWithoutPlayHistoryInput = {
+    create?: XOR<DataSyncCreateWithoutPlayHistoryInput, DataSyncUncheckedCreateWithoutPlayHistoryInput>
+    connectOrCreate?: DataSyncCreateOrConnectWithoutPlayHistoryInput
+    connect?: DataSyncWhereUniqueInput
+  }
+
+  export type MusicChartUpdateOneRequiredWithoutPlayHistoryNestedInput = {
+    create?: XOR<MusicChartCreateWithoutPlayHistoryInput, MusicChartUncheckedCreateWithoutPlayHistoryInput>
+    connectOrCreate?: MusicChartCreateOrConnectWithoutPlayHistoryInput
+    upsert?: MusicChartUpsertWithoutPlayHistoryInput
+    connect?: MusicChartWhereUniqueInput
+    update?: XOR<XOR<MusicChartUpdateToOneWithWhereWithoutPlayHistoryInput, MusicChartUpdateWithoutPlayHistoryInput>, MusicChartUncheckedUpdateWithoutPlayHistoryInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutChartPlayHistoryNestedInput = {
+    create?: XOR<UserCreateWithoutChartPlayHistoryInput, UserUncheckedCreateWithoutChartPlayHistoryInput>
+    connectOrCreate?: UserCreateOrConnectWithoutChartPlayHistoryInput
+    upsert?: UserUpsertWithoutChartPlayHistoryInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutChartPlayHistoryInput, UserUpdateWithoutChartPlayHistoryInput>, UserUncheckedUpdateWithoutChartPlayHistoryInput>
+  }
+
+  export type DataSyncUpdateOneWithoutPlayHistoryNestedInput = {
+    create?: XOR<DataSyncCreateWithoutPlayHistoryInput, DataSyncUncheckedCreateWithoutPlayHistoryInput>
+    connectOrCreate?: DataSyncCreateOrConnectWithoutPlayHistoryInput
+    upsert?: DataSyncUpsertWithoutPlayHistoryInput
+    disconnect?: DataSyncWhereInput | boolean
+    delete?: DataSyncWhereInput | boolean
+    connect?: DataSyncWhereUniqueInput
+    update?: XOR<XOR<DataSyncUpdateToOneWithWhereWithoutPlayHistoryInput, DataSyncUpdateWithoutPlayHistoryInput>, DataSyncUncheckedUpdateWithoutPlayHistoryInput>
+  }
+
+  export type MusicChartCreateNestedOneWithoutRecordSnapshotsInput = {
+    create?: XOR<MusicChartCreateWithoutRecordSnapshotsInput, MusicChartUncheckedCreateWithoutRecordSnapshotsInput>
+    connectOrCreate?: MusicChartCreateOrConnectWithoutRecordSnapshotsInput
+    connect?: MusicChartWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutChartRecordSnapshotsInput = {
+    create?: XOR<UserCreateWithoutChartRecordSnapshotsInput, UserUncheckedCreateWithoutChartRecordSnapshotsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutChartRecordSnapshotsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type DataSyncCreateNestedOneWithoutRecordSnapshotsInput = {
+    create?: XOR<DataSyncCreateWithoutRecordSnapshotsInput, DataSyncUncheckedCreateWithoutRecordSnapshotsInput>
+    connectOrCreate?: DataSyncCreateOrConnectWithoutRecordSnapshotsInput
+    connect?: DataSyncWhereUniqueInput
+  }
+
+  export type MusicChartUpdateOneRequiredWithoutRecordSnapshotsNestedInput = {
+    create?: XOR<MusicChartCreateWithoutRecordSnapshotsInput, MusicChartUncheckedCreateWithoutRecordSnapshotsInput>
+    connectOrCreate?: MusicChartCreateOrConnectWithoutRecordSnapshotsInput
+    upsert?: MusicChartUpsertWithoutRecordSnapshotsInput
+    connect?: MusicChartWhereUniqueInput
+    update?: XOR<XOR<MusicChartUpdateToOneWithWhereWithoutRecordSnapshotsInput, MusicChartUpdateWithoutRecordSnapshotsInput>, MusicChartUncheckedUpdateWithoutRecordSnapshotsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutChartRecordSnapshotsNestedInput = {
+    create?: XOR<UserCreateWithoutChartRecordSnapshotsInput, UserUncheckedCreateWithoutChartRecordSnapshotsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutChartRecordSnapshotsInput
+    upsert?: UserUpsertWithoutChartRecordSnapshotsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutChartRecordSnapshotsInput, UserUpdateWithoutChartRecordSnapshotsInput>, UserUncheckedUpdateWithoutChartRecordSnapshotsInput>
+  }
+
+  export type DataSyncUpdateOneRequiredWithoutRecordSnapshotsNestedInput = {
+    create?: XOR<DataSyncCreateWithoutRecordSnapshotsInput, DataSyncUncheckedCreateWithoutRecordSnapshotsInput>
+    connectOrCreate?: DataSyncCreateOrConnectWithoutRecordSnapshotsInput
+    upsert?: DataSyncUpsertWithoutRecordSnapshotsInput
+    connect?: DataSyncWhereUniqueInput
+    update?: XOR<XOR<DataSyncUpdateToOneWithWhereWithoutRecordSnapshotsInput, DataSyncUpdateWithoutRecordSnapshotsInput>, DataSyncUncheckedUpdateWithoutRecordSnapshotsInput>
+  }
+
+  export type MusicChartCreateNestedOneWithoutConstantHistoryInput = {
+    create?: XOR<MusicChartCreateWithoutConstantHistoryInput, MusicChartUncheckedCreateWithoutConstantHistoryInput>
+    connectOrCreate?: MusicChartCreateOrConnectWithoutConstantHistoryInput
+    connect?: MusicChartWhereUniqueInput
+  }
+
+  export type FloatFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type MusicChartUpdateOneRequiredWithoutConstantHistoryNestedInput = {
+    create?: XOR<MusicChartCreateWithoutConstantHistoryInput, MusicChartUncheckedCreateWithoutConstantHistoryInput>
+    connectOrCreate?: MusicChartCreateOrConnectWithoutConstantHistoryInput
+    upsert?: MusicChartUpsertWithoutConstantHistoryInput
+    connect?: MusicChartWhereUniqueInput
+    update?: XOR<XOR<MusicChartUpdateToOneWithWhereWithoutConstantHistoryInput, MusicChartUpdateWithoutConstantHistoryInput>, MusicChartUncheckedUpdateWithoutConstantHistoryInput>
+  }
+
+  export type MusicChartCreateNestedOneWithoutEvaluationsInput = {
+    create?: XOR<MusicChartCreateWithoutEvaluationsInput, MusicChartUncheckedCreateWithoutEvaluationsInput>
+    connectOrCreate?: MusicChartCreateOrConnectWithoutEvaluationsInput
+    connect?: MusicChartWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutChartEvaluationsInput = {
+    create?: XOR<UserCreateWithoutChartEvaluationsInput, UserUncheckedCreateWithoutChartEvaluationsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutChartEvaluationsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type ChartEvaluationReactionCreateNestedManyWithoutEvaluationInput = {
+    create?: XOR<ChartEvaluationReactionCreateWithoutEvaluationInput, ChartEvaluationReactionUncheckedCreateWithoutEvaluationInput> | ChartEvaluationReactionCreateWithoutEvaluationInput[] | ChartEvaluationReactionUncheckedCreateWithoutEvaluationInput[]
+    connectOrCreate?: ChartEvaluationReactionCreateOrConnectWithoutEvaluationInput | ChartEvaluationReactionCreateOrConnectWithoutEvaluationInput[]
+    createMany?: ChartEvaluationReactionCreateManyEvaluationInputEnvelope
+    connect?: ChartEvaluationReactionWhereUniqueInput | ChartEvaluationReactionWhereUniqueInput[]
+  }
+
+  export type ChartEvaluationReactionUncheckedCreateNestedManyWithoutEvaluationInput = {
+    create?: XOR<ChartEvaluationReactionCreateWithoutEvaluationInput, ChartEvaluationReactionUncheckedCreateWithoutEvaluationInput> | ChartEvaluationReactionCreateWithoutEvaluationInput[] | ChartEvaluationReactionUncheckedCreateWithoutEvaluationInput[]
+    connectOrCreate?: ChartEvaluationReactionCreateOrConnectWithoutEvaluationInput | ChartEvaluationReactionCreateOrConnectWithoutEvaluationInput[]
+    createMany?: ChartEvaluationReactionCreateManyEvaluationInputEnvelope
+    connect?: ChartEvaluationReactionWhereUniqueInput | ChartEvaluationReactionWhereUniqueInput[]
+  }
+
+  export type MusicChartUpdateOneRequiredWithoutEvaluationsNestedInput = {
+    create?: XOR<MusicChartCreateWithoutEvaluationsInput, MusicChartUncheckedCreateWithoutEvaluationsInput>
+    connectOrCreate?: MusicChartCreateOrConnectWithoutEvaluationsInput
+    upsert?: MusicChartUpsertWithoutEvaluationsInput
+    connect?: MusicChartWhereUniqueInput
+    update?: XOR<XOR<MusicChartUpdateToOneWithWhereWithoutEvaluationsInput, MusicChartUpdateWithoutEvaluationsInput>, MusicChartUncheckedUpdateWithoutEvaluationsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutChartEvaluationsNestedInput = {
+    create?: XOR<UserCreateWithoutChartEvaluationsInput, UserUncheckedCreateWithoutChartEvaluationsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutChartEvaluationsInput
+    upsert?: UserUpsertWithoutChartEvaluationsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutChartEvaluationsInput, UserUpdateWithoutChartEvaluationsInput>, UserUncheckedUpdateWithoutChartEvaluationsInput>
+  }
+
+  export type ChartEvaluationReactionUpdateManyWithoutEvaluationNestedInput = {
+    create?: XOR<ChartEvaluationReactionCreateWithoutEvaluationInput, ChartEvaluationReactionUncheckedCreateWithoutEvaluationInput> | ChartEvaluationReactionCreateWithoutEvaluationInput[] | ChartEvaluationReactionUncheckedCreateWithoutEvaluationInput[]
+    connectOrCreate?: ChartEvaluationReactionCreateOrConnectWithoutEvaluationInput | ChartEvaluationReactionCreateOrConnectWithoutEvaluationInput[]
+    upsert?: ChartEvaluationReactionUpsertWithWhereUniqueWithoutEvaluationInput | ChartEvaluationReactionUpsertWithWhereUniqueWithoutEvaluationInput[]
+    createMany?: ChartEvaluationReactionCreateManyEvaluationInputEnvelope
+    set?: ChartEvaluationReactionWhereUniqueInput | ChartEvaluationReactionWhereUniqueInput[]
+    disconnect?: ChartEvaluationReactionWhereUniqueInput | ChartEvaluationReactionWhereUniqueInput[]
+    delete?: ChartEvaluationReactionWhereUniqueInput | ChartEvaluationReactionWhereUniqueInput[]
+    connect?: ChartEvaluationReactionWhereUniqueInput | ChartEvaluationReactionWhereUniqueInput[]
+    update?: ChartEvaluationReactionUpdateWithWhereUniqueWithoutEvaluationInput | ChartEvaluationReactionUpdateWithWhereUniqueWithoutEvaluationInput[]
+    updateMany?: ChartEvaluationReactionUpdateManyWithWhereWithoutEvaluationInput | ChartEvaluationReactionUpdateManyWithWhereWithoutEvaluationInput[]
+    deleteMany?: ChartEvaluationReactionScalarWhereInput | ChartEvaluationReactionScalarWhereInput[]
+  }
+
+  export type ChartEvaluationReactionUncheckedUpdateManyWithoutEvaluationNestedInput = {
+    create?: XOR<ChartEvaluationReactionCreateWithoutEvaluationInput, ChartEvaluationReactionUncheckedCreateWithoutEvaluationInput> | ChartEvaluationReactionCreateWithoutEvaluationInput[] | ChartEvaluationReactionUncheckedCreateWithoutEvaluationInput[]
+    connectOrCreate?: ChartEvaluationReactionCreateOrConnectWithoutEvaluationInput | ChartEvaluationReactionCreateOrConnectWithoutEvaluationInput[]
+    upsert?: ChartEvaluationReactionUpsertWithWhereUniqueWithoutEvaluationInput | ChartEvaluationReactionUpsertWithWhereUniqueWithoutEvaluationInput[]
+    createMany?: ChartEvaluationReactionCreateManyEvaluationInputEnvelope
+    set?: ChartEvaluationReactionWhereUniqueInput | ChartEvaluationReactionWhereUniqueInput[]
+    disconnect?: ChartEvaluationReactionWhereUniqueInput | ChartEvaluationReactionWhereUniqueInput[]
+    delete?: ChartEvaluationReactionWhereUniqueInput | ChartEvaluationReactionWhereUniqueInput[]
+    connect?: ChartEvaluationReactionWhereUniqueInput | ChartEvaluationReactionWhereUniqueInput[]
+    update?: ChartEvaluationReactionUpdateWithWhereUniqueWithoutEvaluationInput | ChartEvaluationReactionUpdateWithWhereUniqueWithoutEvaluationInput[]
+    updateMany?: ChartEvaluationReactionUpdateManyWithWhereWithoutEvaluationInput | ChartEvaluationReactionUpdateManyWithWhereWithoutEvaluationInput[]
+    deleteMany?: ChartEvaluationReactionScalarWhereInput | ChartEvaluationReactionScalarWhereInput[]
+  }
+
+  export type ChartEvaluationCreateNestedOneWithoutReactionsInput = {
+    create?: XOR<ChartEvaluationCreateWithoutReactionsInput, ChartEvaluationUncheckedCreateWithoutReactionsInput>
+    connectOrCreate?: ChartEvaluationCreateOrConnectWithoutReactionsInput
+    connect?: ChartEvaluationWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutChartReactionsInput = {
+    create?: XOR<UserCreateWithoutChartReactionsInput, UserUncheckedCreateWithoutChartReactionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutChartReactionsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type ChartEvaluationUpdateOneRequiredWithoutReactionsNestedInput = {
+    create?: XOR<ChartEvaluationCreateWithoutReactionsInput, ChartEvaluationUncheckedCreateWithoutReactionsInput>
+    connectOrCreate?: ChartEvaluationCreateOrConnectWithoutReactionsInput
+    upsert?: ChartEvaluationUpsertWithoutReactionsInput
+    connect?: ChartEvaluationWhereUniqueInput
+    update?: XOR<XOR<ChartEvaluationUpdateToOneWithWhereWithoutReactionsInput, ChartEvaluationUpdateWithoutReactionsInput>, ChartEvaluationUncheckedUpdateWithoutReactionsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutChartReactionsNestedInput = {
+    create?: XOR<UserCreateWithoutChartReactionsInput, UserUncheckedCreateWithoutChartReactionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutChartReactionsInput
+    upsert?: UserUpsertWithoutChartReactionsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutChartReactionsInput, UserUpdateWithoutChartReactionsInput>, UserUncheckedUpdateWithoutChartReactionsInput>
+  }
+
   export type UserCreateNestedOneWithoutPlayHistoryInput = {
     create?: XOR<UserCreateWithoutPlayHistoryInput, UserUncheckedCreateWithoutPlayHistoryInput>
     connectOrCreate?: UserCreateOrConnectWithoutPlayHistoryInput
@@ -18199,6 +30908,12 @@ export namespace Prisma {
     create?: XOR<MusicCreateWithoutRecentPlayInput, MusicUncheckedCreateWithoutRecentPlayInput>
     connectOrCreate?: MusicCreateOrConnectWithoutRecentPlayInput
     connect?: MusicWhereUniqueInput
+  }
+
+  export type MusicChartCreateNestedOneWithoutRecentPlayInput = {
+    create?: XOR<MusicChartCreateWithoutRecentPlayInput, MusicChartUncheckedCreateWithoutRecentPlayInput>
+    connectOrCreate?: MusicChartCreateOrConnectWithoutRecentPlayInput
+    connect?: MusicChartWhereUniqueInput
   }
 
   export type UserUpdateOneRequiredWithoutPlayHistoryNestedInput = {
@@ -18215,6 +30930,16 @@ export namespace Prisma {
     upsert?: MusicUpsertWithoutRecentPlayInput
     connect?: MusicWhereUniqueInput
     update?: XOR<XOR<MusicUpdateToOneWithWhereWithoutRecentPlayInput, MusicUpdateWithoutRecentPlayInput>, MusicUncheckedUpdateWithoutRecentPlayInput>
+  }
+
+  export type MusicChartUpdateOneWithoutRecentPlayNestedInput = {
+    create?: XOR<MusicChartCreateWithoutRecentPlayInput, MusicChartUncheckedCreateWithoutRecentPlayInput>
+    connectOrCreate?: MusicChartCreateOrConnectWithoutRecentPlayInput
+    upsert?: MusicChartUpsertWithoutRecentPlayInput
+    disconnect?: MusicChartWhereInput | boolean
+    delete?: MusicChartWhereInput | boolean
+    connect?: MusicChartWhereUniqueInput
+    update?: XOR<XOR<MusicChartUpdateToOneWithWhereWithoutRecentPlayInput, MusicChartUpdateWithoutRecentPlayInput>, MusicChartUncheckedUpdateWithoutRecentPlayInput>
   }
 
   export type UserCreateNestedOneWithoutUserBestGradeInput = {
@@ -18243,6 +30968,12 @@ export namespace Prisma {
     connect?: MusicWhereUniqueInput
   }
 
+  export type MusicChartCreateNestedOneWithoutBasicBestPlayInput = {
+    create?: XOR<MusicChartCreateWithoutBasicBestPlayInput, MusicChartUncheckedCreateWithoutBasicBestPlayInput>
+    connectOrCreate?: MusicChartCreateOrConnectWithoutBasicBestPlayInput
+    connect?: MusicChartWhereUniqueInput
+  }
+
   export type UserUpdateOneRequiredWithoutBasicBestPlayNestedInput = {
     create?: XOR<UserCreateWithoutBasicBestPlayInput, UserUncheckedCreateWithoutBasicBestPlayInput>
     connectOrCreate?: UserCreateOrConnectWithoutBasicBestPlayInput
@@ -18259,6 +30990,16 @@ export namespace Prisma {
     update?: XOR<XOR<MusicUpdateToOneWithWhereWithoutBasicBestPlayInput, MusicUpdateWithoutBasicBestPlayInput>, MusicUncheckedUpdateWithoutBasicBestPlayInput>
   }
 
+  export type MusicChartUpdateOneWithoutBasicBestPlayNestedInput = {
+    create?: XOR<MusicChartCreateWithoutBasicBestPlayInput, MusicChartUncheckedCreateWithoutBasicBestPlayInput>
+    connectOrCreate?: MusicChartCreateOrConnectWithoutBasicBestPlayInput
+    upsert?: MusicChartUpsertWithoutBasicBestPlayInput
+    disconnect?: MusicChartWhereInput | boolean
+    delete?: MusicChartWhereInput | boolean
+    connect?: MusicChartWhereUniqueInput
+    update?: XOR<XOR<MusicChartUpdateToOneWithWhereWithoutBasicBestPlayInput, MusicChartUpdateWithoutBasicBestPlayInput>, MusicChartUncheckedUpdateWithoutBasicBestPlayInput>
+  }
+
   export type UserCreateNestedOneWithoutRecitalBestPlayInput = {
     create?: XOR<UserCreateWithoutRecitalBestPlayInput, UserUncheckedCreateWithoutRecitalBestPlayInput>
     connectOrCreate?: UserCreateOrConnectWithoutRecitalBestPlayInput
@@ -18269,6 +31010,12 @@ export namespace Prisma {
     create?: XOR<MusicCreateWithoutRecitalBestPlayInput, MusicUncheckedCreateWithoutRecitalBestPlayInput>
     connectOrCreate?: MusicCreateOrConnectWithoutRecitalBestPlayInput
     connect?: MusicWhereUniqueInput
+  }
+
+  export type MusicChartCreateNestedOneWithoutRecitalBestPlayInput = {
+    create?: XOR<MusicChartCreateWithoutRecitalBestPlayInput, MusicChartUncheckedCreateWithoutRecitalBestPlayInput>
+    connectOrCreate?: MusicChartCreateOrConnectWithoutRecitalBestPlayInput
+    connect?: MusicChartWhereUniqueInput
   }
 
   export type UserUpdateOneRequiredWithoutRecitalBestPlayNestedInput = {
@@ -18287,6 +31034,16 @@ export namespace Prisma {
     update?: XOR<XOR<MusicUpdateToOneWithWhereWithoutRecitalBestPlayInput, MusicUpdateWithoutRecitalBestPlayInput>, MusicUncheckedUpdateWithoutRecitalBestPlayInput>
   }
 
+  export type MusicChartUpdateOneWithoutRecitalBestPlayNestedInput = {
+    create?: XOR<MusicChartCreateWithoutRecitalBestPlayInput, MusicChartUncheckedCreateWithoutRecitalBestPlayInput>
+    connectOrCreate?: MusicChartCreateOrConnectWithoutRecitalBestPlayInput
+    upsert?: MusicChartUpsertWithoutRecitalBestPlayInput
+    disconnect?: MusicChartWhereInput | boolean
+    delete?: MusicChartWhereInput | boolean
+    connect?: MusicChartWhereUniqueInput
+    update?: XOR<XOR<MusicChartUpdateToOneWithWhereWithoutRecitalBestPlayInput, MusicChartUpdateWithoutRecitalBestPlayInput>, MusicChartUncheckedUpdateWithoutRecitalBestPlayInput>
+  }
+
   export type UserCreateNestedOneWithoutPlayDataInput = {
     create?: XOR<UserCreateWithoutPlayDataInput, UserUncheckedCreateWithoutPlayDataInput>
     connectOrCreate?: UserCreateOrConnectWithoutPlayDataInput
@@ -18297,6 +31054,12 @@ export namespace Prisma {
     create?: XOR<MusicCreateWithoutPlayDataInput, MusicUncheckedCreateWithoutPlayDataInput>
     connectOrCreate?: MusicCreateOrConnectWithoutPlayDataInput
     connect?: MusicWhereUniqueInput
+  }
+
+  export type MusicChartCreateNestedOneWithoutPlayDataInput = {
+    create?: XOR<MusicChartCreateWithoutPlayDataInput, MusicChartUncheckedCreateWithoutPlayDataInput>
+    connectOrCreate?: MusicChartCreateOrConnectWithoutPlayDataInput
+    connect?: MusicChartWhereUniqueInput
   }
 
   export type UserUpdateOneRequiredWithoutPlayDataNestedInput = {
@@ -18313,6 +31076,16 @@ export namespace Prisma {
     upsert?: MusicUpsertWithoutPlayDataInput
     connect?: MusicWhereUniqueInput
     update?: XOR<XOR<MusicUpdateToOneWithWhereWithoutPlayDataInput, MusicUpdateWithoutPlayDataInput>, MusicUncheckedUpdateWithoutPlayDataInput>
+  }
+
+  export type MusicChartUpdateOneWithoutPlayDataNestedInput = {
+    create?: XOR<MusicChartCreateWithoutPlayDataInput, MusicChartUncheckedCreateWithoutPlayDataInput>
+    connectOrCreate?: MusicChartCreateOrConnectWithoutPlayDataInput
+    upsert?: MusicChartUpsertWithoutPlayDataInput
+    disconnect?: MusicChartWhereInput | boolean
+    delete?: MusicChartWhereInput | boolean
+    connect?: MusicChartWhereUniqueInput
+    update?: XOR<XOR<MusicChartUpdateToOneWithWhereWithoutPlayDataInput, MusicChartUpdateWithoutPlayDataInput>, MusicChartUncheckedUpdateWithoutPlayDataInput>
   }
 
   export type MusicCreateNestedOneWithoutBingoInput = {
@@ -18665,6 +31438,63 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[]
+    notIn?: number[]
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
+  }
+
   export type NestedBoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
@@ -18689,6 +31519,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     music: MusicCreateNestedOneWithoutRecentPlayInput
+    chart?: MusicChartCreateNestedOneWithoutRecentPlayInput
   }
 
   export type RecentPlayUncheckedCreateWithoutUserInput = {
@@ -18703,6 +31534,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     music_idx: string
+    chart_id?: number | null
   }
 
   export type RecentPlayCreateOrConnectWithoutUserInput = {
@@ -18730,6 +31562,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     music: MusicCreateNestedOneWithoutPlayDataInput
+    chart?: MusicChartCreateNestedOneWithoutPlayDataInput
   }
 
   export type PlayDataUncheckedCreateWithoutUserInput = {
@@ -18749,6 +31582,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     music_idx: string
+    chart_id?: number | null
   }
 
   export type PlayDataCreateOrConnectWithoutUserInput = {
@@ -18772,6 +31606,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     music: MusicCreateNestedOneWithoutBasicBestPlayInput
+    chart?: MusicChartCreateNestedOneWithoutBasicBestPlayInput
   }
 
   export type BasicBestPlayUncheckedCreateWithoutUserInput = {
@@ -18787,6 +31622,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     music_idx: string
+    chart_id?: number | null
   }
 
   export type BasicBestPlayCreateOrConnectWithoutUserInput = {
@@ -18810,6 +31646,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     music: MusicCreateNestedOneWithoutRecitalBestPlayInput
+    chart?: MusicChartCreateNestedOneWithoutRecitalBestPlayInput
   }
 
   export type RecitalBestPlayUncheckedCreateWithoutUserInput = {
@@ -18825,6 +31662,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     music_idx: string
+    chart_id?: number | null
   }
 
   export type RecitalBestPlayCreateOrConnectWithoutUserInput = {
@@ -18882,6 +31720,178 @@ export namespace Prisma {
     data: userBingoCellDataCreateManyUserInput | userBingoCellDataCreateManyUserInput[]
   }
 
+  export type ChartEvaluationCreateWithoutUserInput = {
+    perceived_constant: number
+    stairs: number
+    chord: number
+    trill: number
+    glissando: number
+    repetition: number
+    comment?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    chart: MusicChartCreateNestedOneWithoutEvaluationsInput
+    reactions?: ChartEvaluationReactionCreateNestedManyWithoutEvaluationInput
+  }
+
+  export type ChartEvaluationUncheckedCreateWithoutUserInput = {
+    id?: number
+    perceived_constant: number
+    stairs: number
+    chord: number
+    trill: number
+    glissando: number
+    repetition: number
+    comment?: string | null
+    chart_id: number
+    created_at?: Date | string
+    updated_at?: Date | string
+    reactions?: ChartEvaluationReactionUncheckedCreateNestedManyWithoutEvaluationInput
+  }
+
+  export type ChartEvaluationCreateOrConnectWithoutUserInput = {
+    where: ChartEvaluationWhereUniqueInput
+    create: XOR<ChartEvaluationCreateWithoutUserInput, ChartEvaluationUncheckedCreateWithoutUserInput>
+  }
+
+  export type ChartEvaluationCreateManyUserInputEnvelope = {
+    data: ChartEvaluationCreateManyUserInput | ChartEvaluationCreateManyUserInput[]
+  }
+
+  export type ChartEvaluationReactionCreateWithoutUserInput = {
+    value: number
+    created_at?: Date | string
+    updated_at?: Date | string
+    evaluation: ChartEvaluationCreateNestedOneWithoutReactionsInput
+  }
+
+  export type ChartEvaluationReactionUncheckedCreateWithoutUserInput = {
+    id?: number
+    value: number
+    evaluation_id: number
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type ChartEvaluationReactionCreateOrConnectWithoutUserInput = {
+    where: ChartEvaluationReactionWhereUniqueInput
+    create: XOR<ChartEvaluationReactionCreateWithoutUserInput, ChartEvaluationReactionUncheckedCreateWithoutUserInput>
+  }
+
+  export type ChartEvaluationReactionCreateManyUserInputEnvelope = {
+    data: ChartEvaluationReactionCreateManyUserInput | ChartEvaluationReactionCreateManyUserInput[]
+  }
+
+  export type DataSyncCreateWithoutUserInput = {
+    status?: string
+    received_plays?: number
+    inserted_plays?: number
+    changed_records?: number
+    error_message?: string | null
+    started_at?: Date | string
+    completed_at?: Date | string | null
+    playHistory?: ChartPlayHistoryCreateNestedManyWithoutFirstSyncInput
+    recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutSyncInput
+  }
+
+  export type DataSyncUncheckedCreateWithoutUserInput = {
+    id?: number
+    status?: string
+    received_plays?: number
+    inserted_plays?: number
+    changed_records?: number
+    error_message?: string | null
+    started_at?: Date | string
+    completed_at?: Date | string | null
+    playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutFirstSyncInput
+    recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutSyncInput
+  }
+
+  export type DataSyncCreateOrConnectWithoutUserInput = {
+    where: DataSyncWhereUniqueInput
+    create: XOR<DataSyncCreateWithoutUserInput, DataSyncUncheckedCreateWithoutUserInput>
+  }
+
+  export type DataSyncCreateManyUserInputEnvelope = {
+    data: DataSyncCreateManyUserInput | DataSyncCreateManyUserInput[]
+  }
+
+  export type ChartPlayHistoryCreateWithoutUserInput = {
+    score: number
+    max_combo: number
+    rank: string
+    grade_basic: number
+    source_play_time: string
+    created_at?: Date | string
+    chart: MusicChartCreateNestedOneWithoutPlayHistoryInput
+    firstSync?: DataSyncCreateNestedOneWithoutPlayHistoryInput
+  }
+
+  export type ChartPlayHistoryUncheckedCreateWithoutUserInput = {
+    id?: number
+    score: number
+    max_combo: number
+    rank: string
+    grade_basic: number
+    source_play_time: string
+    chart_id: number
+    first_sync_id?: number | null
+    created_at?: Date | string
+  }
+
+  export type ChartPlayHistoryCreateOrConnectWithoutUserInput = {
+    where: ChartPlayHistoryWhereUniqueInput
+    create: XOR<ChartPlayHistoryCreateWithoutUserInput, ChartPlayHistoryUncheckedCreateWithoutUserInput>
+  }
+
+  export type ChartPlayHistoryCreateManyUserInputEnvelope = {
+    data: ChartPlayHistoryCreateManyUserInput | ChartPlayHistoryCreateManyUserInput[]
+  }
+
+  export type ChartRecordSnapshotCreateWithoutUserInput = {
+    level: number
+    score: number
+    rank: string
+    fc_type: number
+    play_count: number
+    fullcombo_count: number
+    pianistic_count: number
+    max_combo: number
+    grade_basic: number
+    grade_recital: number
+    besttime: string
+    created_at?: Date | string
+    chart: MusicChartCreateNestedOneWithoutRecordSnapshotsInput
+    sync: DataSyncCreateNestedOneWithoutRecordSnapshotsInput
+  }
+
+  export type ChartRecordSnapshotUncheckedCreateWithoutUserInput = {
+    id?: number
+    level: number
+    score: number
+    rank: string
+    fc_type: number
+    play_count: number
+    fullcombo_count: number
+    pianistic_count: number
+    max_combo: number
+    grade_basic: number
+    grade_recital: number
+    besttime: string
+    chart_id: number
+    sync_id: number
+    created_at?: Date | string
+  }
+
+  export type ChartRecordSnapshotCreateOrConnectWithoutUserInput = {
+    where: ChartRecordSnapshotWhereUniqueInput
+    create: XOR<ChartRecordSnapshotCreateWithoutUserInput, ChartRecordSnapshotUncheckedCreateWithoutUserInput>
+  }
+
+  export type ChartRecordSnapshotCreateManyUserInputEnvelope = {
+    data: ChartRecordSnapshotCreateManyUserInput | ChartRecordSnapshotCreateManyUserInput[]
+  }
+
   export type RecentPlayUpsertWithWhereUniqueWithoutUserInput = {
     where: RecentPlayWhereUniqueInput
     update: XOR<RecentPlayUpdateWithoutUserInput, RecentPlayUncheckedUpdateWithoutUserInput>
@@ -18914,6 +31924,7 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"RecentPlay"> | Date | string
     user_id?: IntFilter<"RecentPlay"> | number
     music_idx?: StringFilter<"RecentPlay"> | string
+    chart_id?: IntNullableFilter<"RecentPlay"> | number | null
   }
 
   export type PlayDataUpsertWithWhereUniqueWithoutUserInput = {
@@ -18953,6 +31964,7 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"PlayData"> | Date | string
     user_id?: IntFilter<"PlayData"> | number
     music_idx?: StringFilter<"PlayData"> | string
+    chart_id?: IntNullableFilter<"PlayData"> | number | null
   }
 
   export type BasicBestPlayUpsertWithWhereUniqueWithoutUserInput = {
@@ -18988,6 +32000,7 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"BasicBestPlay"> | Date | string
     user_id?: IntFilter<"BasicBestPlay"> | number
     music_idx?: StringFilter<"BasicBestPlay"> | string
+    chart_id?: IntNullableFilter<"BasicBestPlay"> | number | null
   }
 
   export type RecitalBestPlayUpsertWithWhereUniqueWithoutUserInput = {
@@ -19023,6 +32036,7 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"RecitalBestPlay"> | Date | string
     user_id?: IntFilter<"RecitalBestPlay"> | number
     music_idx?: StringFilter<"RecitalBestPlay"> | string
+    chart_id?: IntNullableFilter<"RecitalBestPlay"> | number | null
   }
 
   export type UserBestGradeUpsertWithWhereUniqueWithoutUserInput = {
@@ -19080,6 +32094,169 @@ export namespace Prisma {
     bingo_cell_id?: IntFilter<"userBingoCellData"> | number
   }
 
+  export type ChartEvaluationUpsertWithWhereUniqueWithoutUserInput = {
+    where: ChartEvaluationWhereUniqueInput
+    update: XOR<ChartEvaluationUpdateWithoutUserInput, ChartEvaluationUncheckedUpdateWithoutUserInput>
+    create: XOR<ChartEvaluationCreateWithoutUserInput, ChartEvaluationUncheckedCreateWithoutUserInput>
+  }
+
+  export type ChartEvaluationUpdateWithWhereUniqueWithoutUserInput = {
+    where: ChartEvaluationWhereUniqueInput
+    data: XOR<ChartEvaluationUpdateWithoutUserInput, ChartEvaluationUncheckedUpdateWithoutUserInput>
+  }
+
+  export type ChartEvaluationUpdateManyWithWhereWithoutUserInput = {
+    where: ChartEvaluationScalarWhereInput
+    data: XOR<ChartEvaluationUpdateManyMutationInput, ChartEvaluationUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type ChartEvaluationScalarWhereInput = {
+    AND?: ChartEvaluationScalarWhereInput | ChartEvaluationScalarWhereInput[]
+    OR?: ChartEvaluationScalarWhereInput[]
+    NOT?: ChartEvaluationScalarWhereInput | ChartEvaluationScalarWhereInput[]
+    id?: IntFilter<"ChartEvaluation"> | number
+    perceived_constant?: FloatFilter<"ChartEvaluation"> | number
+    stairs?: IntFilter<"ChartEvaluation"> | number
+    chord?: IntFilter<"ChartEvaluation"> | number
+    trill?: IntFilter<"ChartEvaluation"> | number
+    glissando?: IntFilter<"ChartEvaluation"> | number
+    repetition?: IntFilter<"ChartEvaluation"> | number
+    comment?: StringNullableFilter<"ChartEvaluation"> | string | null
+    chart_id?: IntFilter<"ChartEvaluation"> | number
+    user_id?: IntFilter<"ChartEvaluation"> | number
+    created_at?: DateTimeFilter<"ChartEvaluation"> | Date | string
+    updated_at?: DateTimeFilter<"ChartEvaluation"> | Date | string
+  }
+
+  export type ChartEvaluationReactionUpsertWithWhereUniqueWithoutUserInput = {
+    where: ChartEvaluationReactionWhereUniqueInput
+    update: XOR<ChartEvaluationReactionUpdateWithoutUserInput, ChartEvaluationReactionUncheckedUpdateWithoutUserInput>
+    create: XOR<ChartEvaluationReactionCreateWithoutUserInput, ChartEvaluationReactionUncheckedCreateWithoutUserInput>
+  }
+
+  export type ChartEvaluationReactionUpdateWithWhereUniqueWithoutUserInput = {
+    where: ChartEvaluationReactionWhereUniqueInput
+    data: XOR<ChartEvaluationReactionUpdateWithoutUserInput, ChartEvaluationReactionUncheckedUpdateWithoutUserInput>
+  }
+
+  export type ChartEvaluationReactionUpdateManyWithWhereWithoutUserInput = {
+    where: ChartEvaluationReactionScalarWhereInput
+    data: XOR<ChartEvaluationReactionUpdateManyMutationInput, ChartEvaluationReactionUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type ChartEvaluationReactionScalarWhereInput = {
+    AND?: ChartEvaluationReactionScalarWhereInput | ChartEvaluationReactionScalarWhereInput[]
+    OR?: ChartEvaluationReactionScalarWhereInput[]
+    NOT?: ChartEvaluationReactionScalarWhereInput | ChartEvaluationReactionScalarWhereInput[]
+    id?: IntFilter<"ChartEvaluationReaction"> | number
+    value?: IntFilter<"ChartEvaluationReaction"> | number
+    evaluation_id?: IntFilter<"ChartEvaluationReaction"> | number
+    user_id?: IntFilter<"ChartEvaluationReaction"> | number
+    created_at?: DateTimeFilter<"ChartEvaluationReaction"> | Date | string
+    updated_at?: DateTimeFilter<"ChartEvaluationReaction"> | Date | string
+  }
+
+  export type DataSyncUpsertWithWhereUniqueWithoutUserInput = {
+    where: DataSyncWhereUniqueInput
+    update: XOR<DataSyncUpdateWithoutUserInput, DataSyncUncheckedUpdateWithoutUserInput>
+    create: XOR<DataSyncCreateWithoutUserInput, DataSyncUncheckedCreateWithoutUserInput>
+  }
+
+  export type DataSyncUpdateWithWhereUniqueWithoutUserInput = {
+    where: DataSyncWhereUniqueInput
+    data: XOR<DataSyncUpdateWithoutUserInput, DataSyncUncheckedUpdateWithoutUserInput>
+  }
+
+  export type DataSyncUpdateManyWithWhereWithoutUserInput = {
+    where: DataSyncScalarWhereInput
+    data: XOR<DataSyncUpdateManyMutationInput, DataSyncUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type DataSyncScalarWhereInput = {
+    AND?: DataSyncScalarWhereInput | DataSyncScalarWhereInput[]
+    OR?: DataSyncScalarWhereInput[]
+    NOT?: DataSyncScalarWhereInput | DataSyncScalarWhereInput[]
+    id?: IntFilter<"DataSync"> | number
+    status?: StringFilter<"DataSync"> | string
+    received_plays?: IntFilter<"DataSync"> | number
+    inserted_plays?: IntFilter<"DataSync"> | number
+    changed_records?: IntFilter<"DataSync"> | number
+    error_message?: StringNullableFilter<"DataSync"> | string | null
+    user_id?: IntFilter<"DataSync"> | number
+    started_at?: DateTimeFilter<"DataSync"> | Date | string
+    completed_at?: DateTimeNullableFilter<"DataSync"> | Date | string | null
+  }
+
+  export type ChartPlayHistoryUpsertWithWhereUniqueWithoutUserInput = {
+    where: ChartPlayHistoryWhereUniqueInput
+    update: XOR<ChartPlayHistoryUpdateWithoutUserInput, ChartPlayHistoryUncheckedUpdateWithoutUserInput>
+    create: XOR<ChartPlayHistoryCreateWithoutUserInput, ChartPlayHistoryUncheckedCreateWithoutUserInput>
+  }
+
+  export type ChartPlayHistoryUpdateWithWhereUniqueWithoutUserInput = {
+    where: ChartPlayHistoryWhereUniqueInput
+    data: XOR<ChartPlayHistoryUpdateWithoutUserInput, ChartPlayHistoryUncheckedUpdateWithoutUserInput>
+  }
+
+  export type ChartPlayHistoryUpdateManyWithWhereWithoutUserInput = {
+    where: ChartPlayHistoryScalarWhereInput
+    data: XOR<ChartPlayHistoryUpdateManyMutationInput, ChartPlayHistoryUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type ChartPlayHistoryScalarWhereInput = {
+    AND?: ChartPlayHistoryScalarWhereInput | ChartPlayHistoryScalarWhereInput[]
+    OR?: ChartPlayHistoryScalarWhereInput[]
+    NOT?: ChartPlayHistoryScalarWhereInput | ChartPlayHistoryScalarWhereInput[]
+    id?: IntFilter<"ChartPlayHistory"> | number
+    score?: IntFilter<"ChartPlayHistory"> | number
+    max_combo?: IntFilter<"ChartPlayHistory"> | number
+    rank?: StringFilter<"ChartPlayHistory"> | string
+    grade_basic?: IntFilter<"ChartPlayHistory"> | number
+    source_play_time?: StringFilter<"ChartPlayHistory"> | string
+    chart_id?: IntFilter<"ChartPlayHistory"> | number
+    user_id?: IntFilter<"ChartPlayHistory"> | number
+    first_sync_id?: IntNullableFilter<"ChartPlayHistory"> | number | null
+    created_at?: DateTimeFilter<"ChartPlayHistory"> | Date | string
+  }
+
+  export type ChartRecordSnapshotUpsertWithWhereUniqueWithoutUserInput = {
+    where: ChartRecordSnapshotWhereUniqueInput
+    update: XOR<ChartRecordSnapshotUpdateWithoutUserInput, ChartRecordSnapshotUncheckedUpdateWithoutUserInput>
+    create: XOR<ChartRecordSnapshotCreateWithoutUserInput, ChartRecordSnapshotUncheckedCreateWithoutUserInput>
+  }
+
+  export type ChartRecordSnapshotUpdateWithWhereUniqueWithoutUserInput = {
+    where: ChartRecordSnapshotWhereUniqueInput
+    data: XOR<ChartRecordSnapshotUpdateWithoutUserInput, ChartRecordSnapshotUncheckedUpdateWithoutUserInput>
+  }
+
+  export type ChartRecordSnapshotUpdateManyWithWhereWithoutUserInput = {
+    where: ChartRecordSnapshotScalarWhereInput
+    data: XOR<ChartRecordSnapshotUpdateManyMutationInput, ChartRecordSnapshotUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type ChartRecordSnapshotScalarWhereInput = {
+    AND?: ChartRecordSnapshotScalarWhereInput | ChartRecordSnapshotScalarWhereInput[]
+    OR?: ChartRecordSnapshotScalarWhereInput[]
+    NOT?: ChartRecordSnapshotScalarWhereInput | ChartRecordSnapshotScalarWhereInput[]
+    id?: IntFilter<"ChartRecordSnapshot"> | number
+    level?: IntFilter<"ChartRecordSnapshot"> | number
+    score?: IntFilter<"ChartRecordSnapshot"> | number
+    rank?: StringFilter<"ChartRecordSnapshot"> | string
+    fc_type?: IntFilter<"ChartRecordSnapshot"> | number
+    play_count?: IntFilter<"ChartRecordSnapshot"> | number
+    fullcombo_count?: IntFilter<"ChartRecordSnapshot"> | number
+    pianistic_count?: IntFilter<"ChartRecordSnapshot"> | number
+    max_combo?: IntFilter<"ChartRecordSnapshot"> | number
+    grade_basic?: IntFilter<"ChartRecordSnapshot"> | number
+    grade_recital?: IntFilter<"ChartRecordSnapshot"> | number
+    besttime?: StringFilter<"ChartRecordSnapshot"> | string
+    chart_id?: IntFilter<"ChartRecordSnapshot"> | number
+    user_id?: IntFilter<"ChartRecordSnapshot"> | number
+    sync_id?: IntFilter<"ChartRecordSnapshot"> | number
+    created_at?: DateTimeFilter<"ChartRecordSnapshot"> | Date | string
+  }
+
   export type RecentPlayCreateWithoutMusicInput = {
     difficulty: string
     level: number
@@ -19091,6 +32268,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutPlayHistoryInput
+    chart?: MusicChartCreateNestedOneWithoutRecentPlayInput
   }
 
   export type RecentPlayUncheckedCreateWithoutMusicInput = {
@@ -19105,6 +32283,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     user_id: number
+    chart_id?: number | null
   }
 
   export type RecentPlayCreateOrConnectWithoutMusicInput = {
@@ -19132,6 +32311,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutPlayDataInput
+    chart?: MusicChartCreateNestedOneWithoutPlayDataInput
   }
 
   export type PlayDataUncheckedCreateWithoutMusicInput = {
@@ -19151,6 +32331,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     user_id: number
+    chart_id?: number | null
   }
 
   export type PlayDataCreateOrConnectWithoutMusicInput = {
@@ -19174,6 +32355,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutBasicBestPlayInput
+    chart?: MusicChartCreateNestedOneWithoutBasicBestPlayInput
   }
 
   export type BasicBestPlayUncheckedCreateWithoutMusicInput = {
@@ -19189,6 +32371,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     user_id: number
+    chart_id?: number | null
   }
 
   export type BasicBestPlayCreateOrConnectWithoutMusicInput = {
@@ -19212,6 +32395,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutRecitalBestPlayInput
+    chart?: MusicChartCreateNestedOneWithoutRecitalBestPlayInput
   }
 
   export type RecitalBestPlayUncheckedCreateWithoutMusicInput = {
@@ -19227,6 +32411,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     user_id: number
+    chart_id?: number | null
   }
 
   export type RecitalBestPlayCreateOrConnectWithoutMusicInput = {
@@ -19288,6 +32473,48 @@ export namespace Prisma {
 
   export type BingoCellCreateManyMusicInputEnvelope = {
     data: BingoCellCreateManyMusicInput | BingoCellCreateManyMusicInput[]
+  }
+
+  export type MusicChartCreateWithoutMusicInput = {
+    difficulty: string
+    level: number
+    level_constant?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    constantHistory?: ChartConstantHistoryCreateNestedManyWithoutChartInput
+    evaluations?: ChartEvaluationCreateNestedManyWithoutChartInput
+    RecentPlay?: RecentPlayCreateNestedManyWithoutChartInput
+    PlayData?: PlayDataCreateNestedManyWithoutChartInput
+    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutChartInput
+    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutChartInput
+    playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
+    recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
+  }
+
+  export type MusicChartUncheckedCreateWithoutMusicInput = {
+    id?: number
+    difficulty: string
+    level: number
+    level_constant?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    constantHistory?: ChartConstantHistoryUncheckedCreateNestedManyWithoutChartInput
+    evaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutChartInput
+    RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutChartInput
+    PlayData?: PlayDataUncheckedCreateNestedManyWithoutChartInput
+    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutChartInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutChartInput
+    playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
+    recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
+  }
+
+  export type MusicChartCreateOrConnectWithoutMusicInput = {
+    where: MusicChartWhereUniqueInput
+    create: XOR<MusicChartCreateWithoutMusicInput, MusicChartUncheckedCreateWithoutMusicInput>
+  }
+
+  export type MusicChartCreateManyMusicInputEnvelope = {
+    data: MusicChartCreateManyMusicInput | MusicChartCreateManyMusicInput[]
   }
 
   export type RecentPlayUpsertWithWhereUniqueWithoutMusicInput = {
@@ -19410,6 +32637,2130 @@ export namespace Prisma {
     bingo_id?: IntFilter<"BingoCell"> | number
   }
 
+  export type MusicChartUpsertWithWhereUniqueWithoutMusicInput = {
+    where: MusicChartWhereUniqueInput
+    update: XOR<MusicChartUpdateWithoutMusicInput, MusicChartUncheckedUpdateWithoutMusicInput>
+    create: XOR<MusicChartCreateWithoutMusicInput, MusicChartUncheckedCreateWithoutMusicInput>
+  }
+
+  export type MusicChartUpdateWithWhereUniqueWithoutMusicInput = {
+    where: MusicChartWhereUniqueInput
+    data: XOR<MusicChartUpdateWithoutMusicInput, MusicChartUncheckedUpdateWithoutMusicInput>
+  }
+
+  export type MusicChartUpdateManyWithWhereWithoutMusicInput = {
+    where: MusicChartScalarWhereInput
+    data: XOR<MusicChartUpdateManyMutationInput, MusicChartUncheckedUpdateManyWithoutMusicInput>
+  }
+
+  export type MusicChartScalarWhereInput = {
+    AND?: MusicChartScalarWhereInput | MusicChartScalarWhereInput[]
+    OR?: MusicChartScalarWhereInput[]
+    NOT?: MusicChartScalarWhereInput | MusicChartScalarWhereInput[]
+    id?: IntFilter<"MusicChart"> | number
+    difficulty?: StringFilter<"MusicChart"> | string
+    level?: IntFilter<"MusicChart"> | number
+    level_constant?: FloatNullableFilter<"MusicChart"> | number | null
+    music_idx?: StringFilter<"MusicChart"> | string
+    created_at?: DateTimeFilter<"MusicChart"> | Date | string
+    updated_at?: DateTimeFilter<"MusicChart"> | Date | string
+  }
+
+  export type MusicCreateWithoutChartsInput = {
+    index: string
+    title: string
+    title_kana: string
+    artist?: string | null
+    category: string
+    category_short: string
+    description?: string | null
+    background?: string | null
+    sheet_len: number
+    difficulty_levels: string
+    difficulty_name: string
+    normal: number
+    hard: number
+    expert: number
+    real?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    RecentPlay?: RecentPlayCreateNestedManyWithoutMusicInput
+    PlayData?: PlayDataCreateNestedManyWithoutMusicInput
+    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutMusicInput
+    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutMusicInput
+    Bingo?: BingoCreateNestedManyWithoutMusicInput
+    BingoCell?: BingoCellCreateNestedManyWithoutMusicInput
+  }
+
+  export type MusicUncheckedCreateWithoutChartsInput = {
+    id?: number
+    index: string
+    title: string
+    title_kana: string
+    artist?: string | null
+    category: string
+    category_short: string
+    description?: string | null
+    background?: string | null
+    sheet_len: number
+    difficulty_levels: string
+    difficulty_name: string
+    normal: number
+    hard: number
+    expert: number
+    real?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutMusicInput
+    PlayData?: PlayDataUncheckedCreateNestedManyWithoutMusicInput
+    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutMusicInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutMusicInput
+    Bingo?: BingoUncheckedCreateNestedManyWithoutMusicInput
+    BingoCell?: BingoCellUncheckedCreateNestedManyWithoutMusicInput
+  }
+
+  export type MusicCreateOrConnectWithoutChartsInput = {
+    where: MusicWhereUniqueInput
+    create: XOR<MusicCreateWithoutChartsInput, MusicUncheckedCreateWithoutChartsInput>
+  }
+
+  export type ChartConstantHistoryCreateWithoutChartInput = {
+    value: number
+    effective_at?: Date | string
+    created_at?: Date | string
+  }
+
+  export type ChartConstantHistoryUncheckedCreateWithoutChartInput = {
+    id?: number
+    value: number
+    effective_at?: Date | string
+    created_at?: Date | string
+  }
+
+  export type ChartConstantHistoryCreateOrConnectWithoutChartInput = {
+    where: ChartConstantHistoryWhereUniqueInput
+    create: XOR<ChartConstantHistoryCreateWithoutChartInput, ChartConstantHistoryUncheckedCreateWithoutChartInput>
+  }
+
+  export type ChartConstantHistoryCreateManyChartInputEnvelope = {
+    data: ChartConstantHistoryCreateManyChartInput | ChartConstantHistoryCreateManyChartInput[]
+  }
+
+  export type ChartEvaluationCreateWithoutChartInput = {
+    perceived_constant: number
+    stairs: number
+    chord: number
+    trill: number
+    glissando: number
+    repetition: number
+    comment?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    user: UserCreateNestedOneWithoutChartEvaluationsInput
+    reactions?: ChartEvaluationReactionCreateNestedManyWithoutEvaluationInput
+  }
+
+  export type ChartEvaluationUncheckedCreateWithoutChartInput = {
+    id?: number
+    perceived_constant: number
+    stairs: number
+    chord: number
+    trill: number
+    glissando: number
+    repetition: number
+    comment?: string | null
+    user_id: number
+    created_at?: Date | string
+    updated_at?: Date | string
+    reactions?: ChartEvaluationReactionUncheckedCreateNestedManyWithoutEvaluationInput
+  }
+
+  export type ChartEvaluationCreateOrConnectWithoutChartInput = {
+    where: ChartEvaluationWhereUniqueInput
+    create: XOR<ChartEvaluationCreateWithoutChartInput, ChartEvaluationUncheckedCreateWithoutChartInput>
+  }
+
+  export type ChartEvaluationCreateManyChartInputEnvelope = {
+    data: ChartEvaluationCreateManyChartInput | ChartEvaluationCreateManyChartInput[]
+  }
+
+  export type RecentPlayCreateWithoutChartInput = {
+    difficulty: string
+    level: number
+    score: number
+    max_combo: number
+    rank: string
+    play_time: string
+    grade_basic: number
+    created_at?: Date | string
+    updated_at?: Date | string
+    user: UserCreateNestedOneWithoutPlayHistoryInput
+    music: MusicCreateNestedOneWithoutRecentPlayInput
+  }
+
+  export type RecentPlayUncheckedCreateWithoutChartInput = {
+    id?: number
+    difficulty: string
+    level: number
+    score: number
+    max_combo: number
+    rank: string
+    play_time: string
+    grade_basic: number
+    created_at?: Date | string
+    updated_at?: Date | string
+    user_id: number
+    music_idx: string
+  }
+
+  export type RecentPlayCreateOrConnectWithoutChartInput = {
+    where: RecentPlayWhereUniqueInput
+    create: XOR<RecentPlayCreateWithoutChartInput, RecentPlayUncheckedCreateWithoutChartInput>
+  }
+
+  export type RecentPlayCreateManyChartInputEnvelope = {
+    data: RecentPlayCreateManyChartInput | RecentPlayCreateManyChartInput[]
+  }
+
+  export type PlayDataCreateWithoutChartInput = {
+    level: number
+    difficulty: string
+    score: number
+    rank: string
+    fc_type: number
+    play_count: number
+    fullcombo_count: number
+    pianistic_count: number
+    max_combo: number
+    grade_basic: number
+    grade_recital: number
+    besttime: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    user: UserCreateNestedOneWithoutPlayDataInput
+    music: MusicCreateNestedOneWithoutPlayDataInput
+  }
+
+  export type PlayDataUncheckedCreateWithoutChartInput = {
+    id?: number
+    level: number
+    difficulty: string
+    score: number
+    rank: string
+    fc_type: number
+    play_count: number
+    fullcombo_count: number
+    pianistic_count: number
+    max_combo: number
+    grade_basic: number
+    grade_recital: number
+    besttime: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    user_id: number
+    music_idx: string
+  }
+
+  export type PlayDataCreateOrConnectWithoutChartInput = {
+    where: PlayDataWhereUniqueInput
+    create: XOR<PlayDataCreateWithoutChartInput, PlayDataUncheckedCreateWithoutChartInput>
+  }
+
+  export type PlayDataCreateManyChartInputEnvelope = {
+    data: PlayDataCreateManyChartInput | PlayDataCreateManyChartInput[]
+  }
+
+  export type BasicBestPlayCreateWithoutChartInput = {
+    difficulty: string
+    level: number
+    score: number
+    max_combo: number
+    rank: string
+    besttime: string
+    grade_basic: number
+    fc_type: number
+    created_at?: Date | string
+    updated_at?: Date | string
+    user: UserCreateNestedOneWithoutBasicBestPlayInput
+    music: MusicCreateNestedOneWithoutBasicBestPlayInput
+  }
+
+  export type BasicBestPlayUncheckedCreateWithoutChartInput = {
+    id?: number
+    difficulty: string
+    level: number
+    score: number
+    max_combo: number
+    rank: string
+    besttime: string
+    grade_basic: number
+    fc_type: number
+    created_at?: Date | string
+    updated_at?: Date | string
+    user_id: number
+    music_idx: string
+  }
+
+  export type BasicBestPlayCreateOrConnectWithoutChartInput = {
+    where: BasicBestPlayWhereUniqueInput
+    create: XOR<BasicBestPlayCreateWithoutChartInput, BasicBestPlayUncheckedCreateWithoutChartInput>
+  }
+
+  export type BasicBestPlayCreateManyChartInputEnvelope = {
+    data: BasicBestPlayCreateManyChartInput | BasicBestPlayCreateManyChartInput[]
+  }
+
+  export type RecitalBestPlayCreateWithoutChartInput = {
+    difficulty: string
+    level: number
+    score: number
+    max_combo: number
+    rank: string
+    besttime: string
+    grade_recital: number
+    fc_type: number
+    created_at?: Date | string
+    updated_at?: Date | string
+    user: UserCreateNestedOneWithoutRecitalBestPlayInput
+    music: MusicCreateNestedOneWithoutRecitalBestPlayInput
+  }
+
+  export type RecitalBestPlayUncheckedCreateWithoutChartInput = {
+    id?: number
+    difficulty: string
+    level: number
+    score: number
+    max_combo: number
+    rank: string
+    besttime: string
+    grade_recital: number
+    fc_type: number
+    created_at?: Date | string
+    updated_at?: Date | string
+    user_id: number
+    music_idx: string
+  }
+
+  export type RecitalBestPlayCreateOrConnectWithoutChartInput = {
+    where: RecitalBestPlayWhereUniqueInput
+    create: XOR<RecitalBestPlayCreateWithoutChartInput, RecitalBestPlayUncheckedCreateWithoutChartInput>
+  }
+
+  export type RecitalBestPlayCreateManyChartInputEnvelope = {
+    data: RecitalBestPlayCreateManyChartInput | RecitalBestPlayCreateManyChartInput[]
+  }
+
+  export type ChartPlayHistoryCreateWithoutChartInput = {
+    score: number
+    max_combo: number
+    rank: string
+    grade_basic: number
+    source_play_time: string
+    created_at?: Date | string
+    user: UserCreateNestedOneWithoutChartPlayHistoryInput
+    firstSync?: DataSyncCreateNestedOneWithoutPlayHistoryInput
+  }
+
+  export type ChartPlayHistoryUncheckedCreateWithoutChartInput = {
+    id?: number
+    score: number
+    max_combo: number
+    rank: string
+    grade_basic: number
+    source_play_time: string
+    user_id: number
+    first_sync_id?: number | null
+    created_at?: Date | string
+  }
+
+  export type ChartPlayHistoryCreateOrConnectWithoutChartInput = {
+    where: ChartPlayHistoryWhereUniqueInput
+    create: XOR<ChartPlayHistoryCreateWithoutChartInput, ChartPlayHistoryUncheckedCreateWithoutChartInput>
+  }
+
+  export type ChartPlayHistoryCreateManyChartInputEnvelope = {
+    data: ChartPlayHistoryCreateManyChartInput | ChartPlayHistoryCreateManyChartInput[]
+  }
+
+  export type ChartRecordSnapshotCreateWithoutChartInput = {
+    level: number
+    score: number
+    rank: string
+    fc_type: number
+    play_count: number
+    fullcombo_count: number
+    pianistic_count: number
+    max_combo: number
+    grade_basic: number
+    grade_recital: number
+    besttime: string
+    created_at?: Date | string
+    user: UserCreateNestedOneWithoutChartRecordSnapshotsInput
+    sync: DataSyncCreateNestedOneWithoutRecordSnapshotsInput
+  }
+
+  export type ChartRecordSnapshotUncheckedCreateWithoutChartInput = {
+    id?: number
+    level: number
+    score: number
+    rank: string
+    fc_type: number
+    play_count: number
+    fullcombo_count: number
+    pianistic_count: number
+    max_combo: number
+    grade_basic: number
+    grade_recital: number
+    besttime: string
+    user_id: number
+    sync_id: number
+    created_at?: Date | string
+  }
+
+  export type ChartRecordSnapshotCreateOrConnectWithoutChartInput = {
+    where: ChartRecordSnapshotWhereUniqueInput
+    create: XOR<ChartRecordSnapshotCreateWithoutChartInput, ChartRecordSnapshotUncheckedCreateWithoutChartInput>
+  }
+
+  export type ChartRecordSnapshotCreateManyChartInputEnvelope = {
+    data: ChartRecordSnapshotCreateManyChartInput | ChartRecordSnapshotCreateManyChartInput[]
+  }
+
+  export type MusicUpsertWithoutChartsInput = {
+    update: XOR<MusicUpdateWithoutChartsInput, MusicUncheckedUpdateWithoutChartsInput>
+    create: XOR<MusicCreateWithoutChartsInput, MusicUncheckedCreateWithoutChartsInput>
+    where?: MusicWhereInput
+  }
+
+  export type MusicUpdateToOneWithWhereWithoutChartsInput = {
+    where?: MusicWhereInput
+    data: XOR<MusicUpdateWithoutChartsInput, MusicUncheckedUpdateWithoutChartsInput>
+  }
+
+  export type MusicUpdateWithoutChartsInput = {
+    index?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    title_kana?: StringFieldUpdateOperationsInput | string
+    artist?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: StringFieldUpdateOperationsInput | string
+    category_short?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    background?: NullableStringFieldUpdateOperationsInput | string | null
+    sheet_len?: IntFieldUpdateOperationsInput | number
+    difficulty_levels?: StringFieldUpdateOperationsInput | string
+    difficulty_name?: StringFieldUpdateOperationsInput | string
+    normal?: IntFieldUpdateOperationsInput | number
+    hard?: IntFieldUpdateOperationsInput | number
+    expert?: IntFieldUpdateOperationsInput | number
+    real?: NullableIntFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    RecentPlay?: RecentPlayUpdateManyWithoutMusicNestedInput
+    PlayData?: PlayDataUpdateManyWithoutMusicNestedInput
+    BasicBestPlay?: BasicBestPlayUpdateManyWithoutMusicNestedInput
+    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutMusicNestedInput
+    Bingo?: BingoUpdateManyWithoutMusicNestedInput
+    BingoCell?: BingoCellUpdateManyWithoutMusicNestedInput
+  }
+
+  export type MusicUncheckedUpdateWithoutChartsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    index?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    title_kana?: StringFieldUpdateOperationsInput | string
+    artist?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: StringFieldUpdateOperationsInput | string
+    category_short?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    background?: NullableStringFieldUpdateOperationsInput | string | null
+    sheet_len?: IntFieldUpdateOperationsInput | number
+    difficulty_levels?: StringFieldUpdateOperationsInput | string
+    difficulty_name?: StringFieldUpdateOperationsInput | string
+    normal?: IntFieldUpdateOperationsInput | number
+    hard?: IntFieldUpdateOperationsInput | number
+    expert?: IntFieldUpdateOperationsInput | number
+    real?: NullableIntFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    RecentPlay?: RecentPlayUncheckedUpdateManyWithoutMusicNestedInput
+    PlayData?: PlayDataUncheckedUpdateManyWithoutMusicNestedInput
+    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutMusicNestedInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutMusicNestedInput
+    Bingo?: BingoUncheckedUpdateManyWithoutMusicNestedInput
+    BingoCell?: BingoCellUncheckedUpdateManyWithoutMusicNestedInput
+  }
+
+  export type ChartConstantHistoryUpsertWithWhereUniqueWithoutChartInput = {
+    where: ChartConstantHistoryWhereUniqueInput
+    update: XOR<ChartConstantHistoryUpdateWithoutChartInput, ChartConstantHistoryUncheckedUpdateWithoutChartInput>
+    create: XOR<ChartConstantHistoryCreateWithoutChartInput, ChartConstantHistoryUncheckedCreateWithoutChartInput>
+  }
+
+  export type ChartConstantHistoryUpdateWithWhereUniqueWithoutChartInput = {
+    where: ChartConstantHistoryWhereUniqueInput
+    data: XOR<ChartConstantHistoryUpdateWithoutChartInput, ChartConstantHistoryUncheckedUpdateWithoutChartInput>
+  }
+
+  export type ChartConstantHistoryUpdateManyWithWhereWithoutChartInput = {
+    where: ChartConstantHistoryScalarWhereInput
+    data: XOR<ChartConstantHistoryUpdateManyMutationInput, ChartConstantHistoryUncheckedUpdateManyWithoutChartInput>
+  }
+
+  export type ChartConstantHistoryScalarWhereInput = {
+    AND?: ChartConstantHistoryScalarWhereInput | ChartConstantHistoryScalarWhereInput[]
+    OR?: ChartConstantHistoryScalarWhereInput[]
+    NOT?: ChartConstantHistoryScalarWhereInput | ChartConstantHistoryScalarWhereInput[]
+    id?: IntFilter<"ChartConstantHistory"> | number
+    value?: FloatFilter<"ChartConstantHistory"> | number
+    effective_at?: DateTimeFilter<"ChartConstantHistory"> | Date | string
+    chart_id?: IntFilter<"ChartConstantHistory"> | number
+    created_at?: DateTimeFilter<"ChartConstantHistory"> | Date | string
+  }
+
+  export type ChartEvaluationUpsertWithWhereUniqueWithoutChartInput = {
+    where: ChartEvaluationWhereUniqueInput
+    update: XOR<ChartEvaluationUpdateWithoutChartInput, ChartEvaluationUncheckedUpdateWithoutChartInput>
+    create: XOR<ChartEvaluationCreateWithoutChartInput, ChartEvaluationUncheckedCreateWithoutChartInput>
+  }
+
+  export type ChartEvaluationUpdateWithWhereUniqueWithoutChartInput = {
+    where: ChartEvaluationWhereUniqueInput
+    data: XOR<ChartEvaluationUpdateWithoutChartInput, ChartEvaluationUncheckedUpdateWithoutChartInput>
+  }
+
+  export type ChartEvaluationUpdateManyWithWhereWithoutChartInput = {
+    where: ChartEvaluationScalarWhereInput
+    data: XOR<ChartEvaluationUpdateManyMutationInput, ChartEvaluationUncheckedUpdateManyWithoutChartInput>
+  }
+
+  export type RecentPlayUpsertWithWhereUniqueWithoutChartInput = {
+    where: RecentPlayWhereUniqueInput
+    update: XOR<RecentPlayUpdateWithoutChartInput, RecentPlayUncheckedUpdateWithoutChartInput>
+    create: XOR<RecentPlayCreateWithoutChartInput, RecentPlayUncheckedCreateWithoutChartInput>
+  }
+
+  export type RecentPlayUpdateWithWhereUniqueWithoutChartInput = {
+    where: RecentPlayWhereUniqueInput
+    data: XOR<RecentPlayUpdateWithoutChartInput, RecentPlayUncheckedUpdateWithoutChartInput>
+  }
+
+  export type RecentPlayUpdateManyWithWhereWithoutChartInput = {
+    where: RecentPlayScalarWhereInput
+    data: XOR<RecentPlayUpdateManyMutationInput, RecentPlayUncheckedUpdateManyWithoutChartInput>
+  }
+
+  export type PlayDataUpsertWithWhereUniqueWithoutChartInput = {
+    where: PlayDataWhereUniqueInput
+    update: XOR<PlayDataUpdateWithoutChartInput, PlayDataUncheckedUpdateWithoutChartInput>
+    create: XOR<PlayDataCreateWithoutChartInput, PlayDataUncheckedCreateWithoutChartInput>
+  }
+
+  export type PlayDataUpdateWithWhereUniqueWithoutChartInput = {
+    where: PlayDataWhereUniqueInput
+    data: XOR<PlayDataUpdateWithoutChartInput, PlayDataUncheckedUpdateWithoutChartInput>
+  }
+
+  export type PlayDataUpdateManyWithWhereWithoutChartInput = {
+    where: PlayDataScalarWhereInput
+    data: XOR<PlayDataUpdateManyMutationInput, PlayDataUncheckedUpdateManyWithoutChartInput>
+  }
+
+  export type BasicBestPlayUpsertWithWhereUniqueWithoutChartInput = {
+    where: BasicBestPlayWhereUniqueInput
+    update: XOR<BasicBestPlayUpdateWithoutChartInput, BasicBestPlayUncheckedUpdateWithoutChartInput>
+    create: XOR<BasicBestPlayCreateWithoutChartInput, BasicBestPlayUncheckedCreateWithoutChartInput>
+  }
+
+  export type BasicBestPlayUpdateWithWhereUniqueWithoutChartInput = {
+    where: BasicBestPlayWhereUniqueInput
+    data: XOR<BasicBestPlayUpdateWithoutChartInput, BasicBestPlayUncheckedUpdateWithoutChartInput>
+  }
+
+  export type BasicBestPlayUpdateManyWithWhereWithoutChartInput = {
+    where: BasicBestPlayScalarWhereInput
+    data: XOR<BasicBestPlayUpdateManyMutationInput, BasicBestPlayUncheckedUpdateManyWithoutChartInput>
+  }
+
+  export type RecitalBestPlayUpsertWithWhereUniqueWithoutChartInput = {
+    where: RecitalBestPlayWhereUniqueInput
+    update: XOR<RecitalBestPlayUpdateWithoutChartInput, RecitalBestPlayUncheckedUpdateWithoutChartInput>
+    create: XOR<RecitalBestPlayCreateWithoutChartInput, RecitalBestPlayUncheckedCreateWithoutChartInput>
+  }
+
+  export type RecitalBestPlayUpdateWithWhereUniqueWithoutChartInput = {
+    where: RecitalBestPlayWhereUniqueInput
+    data: XOR<RecitalBestPlayUpdateWithoutChartInput, RecitalBestPlayUncheckedUpdateWithoutChartInput>
+  }
+
+  export type RecitalBestPlayUpdateManyWithWhereWithoutChartInput = {
+    where: RecitalBestPlayScalarWhereInput
+    data: XOR<RecitalBestPlayUpdateManyMutationInput, RecitalBestPlayUncheckedUpdateManyWithoutChartInput>
+  }
+
+  export type ChartPlayHistoryUpsertWithWhereUniqueWithoutChartInput = {
+    where: ChartPlayHistoryWhereUniqueInput
+    update: XOR<ChartPlayHistoryUpdateWithoutChartInput, ChartPlayHistoryUncheckedUpdateWithoutChartInput>
+    create: XOR<ChartPlayHistoryCreateWithoutChartInput, ChartPlayHistoryUncheckedCreateWithoutChartInput>
+  }
+
+  export type ChartPlayHistoryUpdateWithWhereUniqueWithoutChartInput = {
+    where: ChartPlayHistoryWhereUniqueInput
+    data: XOR<ChartPlayHistoryUpdateWithoutChartInput, ChartPlayHistoryUncheckedUpdateWithoutChartInput>
+  }
+
+  export type ChartPlayHistoryUpdateManyWithWhereWithoutChartInput = {
+    where: ChartPlayHistoryScalarWhereInput
+    data: XOR<ChartPlayHistoryUpdateManyMutationInput, ChartPlayHistoryUncheckedUpdateManyWithoutChartInput>
+  }
+
+  export type ChartRecordSnapshotUpsertWithWhereUniqueWithoutChartInput = {
+    where: ChartRecordSnapshotWhereUniqueInput
+    update: XOR<ChartRecordSnapshotUpdateWithoutChartInput, ChartRecordSnapshotUncheckedUpdateWithoutChartInput>
+    create: XOR<ChartRecordSnapshotCreateWithoutChartInput, ChartRecordSnapshotUncheckedCreateWithoutChartInput>
+  }
+
+  export type ChartRecordSnapshotUpdateWithWhereUniqueWithoutChartInput = {
+    where: ChartRecordSnapshotWhereUniqueInput
+    data: XOR<ChartRecordSnapshotUpdateWithoutChartInput, ChartRecordSnapshotUncheckedUpdateWithoutChartInput>
+  }
+
+  export type ChartRecordSnapshotUpdateManyWithWhereWithoutChartInput = {
+    where: ChartRecordSnapshotScalarWhereInput
+    data: XOR<ChartRecordSnapshotUpdateManyMutationInput, ChartRecordSnapshotUncheckedUpdateManyWithoutChartInput>
+  }
+
+  export type UserCreateWithoutDataSyncsInput = {
+    username?: string | null
+    kakao_id?: bigint | number | null
+    discord_name?: string | null
+    discord_tag?: string | null
+    avatar?: string | null
+    country?: string
+    rank_basic?: number | null
+    rank_recital?: number | null
+    rank_basic_country?: number | null
+    rank_recital_country?: number | null
+    play_count?: number | null
+    score_p?: number | null
+    score_f?: number | null
+    score_s?: number | null
+    score_a2?: number | null
+    score_a?: number | null
+    score_b2?: number | null
+    score_b?: number | null
+    score_c?: number | null
+    score_d?: number | null
+    role?: string
+    grade_basic?: number | null
+    grade_recital?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
+    PlayData?: PlayDataCreateNestedManyWithoutUserInput
+    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutUserInput
+    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutUserInput
+    UserBestGrade?: UserBestGradeCreateNestedManyWithoutUserInput
+    userBingoCellData?: userBingoCellDataCreateNestedManyWithoutUserInput
+    chartEvaluations?: ChartEvaluationCreateNestedManyWithoutUserInput
+    chartReactions?: ChartEvaluationReactionCreateNestedManyWithoutUserInput
+    chartPlayHistory?: ChartPlayHistoryCreateNestedManyWithoutUserInput
+    chartRecordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutDataSyncsInput = {
+    id?: number
+    username?: string | null
+    kakao_id?: bigint | number | null
+    discord_name?: string | null
+    discord_tag?: string | null
+    avatar?: string | null
+    country?: string
+    rank_basic?: number | null
+    rank_recital?: number | null
+    rank_basic_country?: number | null
+    rank_recital_country?: number | null
+    play_count?: number | null
+    score_p?: number | null
+    score_f?: number | null
+    score_s?: number | null
+    score_a2?: number | null
+    score_a?: number | null
+    score_b2?: number | null
+    score_b?: number | null
+    score_c?: number | null
+    score_d?: number | null
+    role?: string
+    grade_basic?: number | null
+    grade_recital?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
+    PlayData?: PlayDataUncheckedCreateNestedManyWithoutUserInput
+    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutUserInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutUserInput
+    UserBestGrade?: UserBestGradeUncheckedCreateNestedManyWithoutUserInput
+    userBingoCellData?: userBingoCellDataUncheckedCreateNestedManyWithoutUserInput
+    chartEvaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutUserInput
+    chartReactions?: ChartEvaluationReactionUncheckedCreateNestedManyWithoutUserInput
+    chartPlayHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutUserInput
+    chartRecordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutDataSyncsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutDataSyncsInput, UserUncheckedCreateWithoutDataSyncsInput>
+  }
+
+  export type ChartPlayHistoryCreateWithoutFirstSyncInput = {
+    score: number
+    max_combo: number
+    rank: string
+    grade_basic: number
+    source_play_time: string
+    created_at?: Date | string
+    chart: MusicChartCreateNestedOneWithoutPlayHistoryInput
+    user: UserCreateNestedOneWithoutChartPlayHistoryInput
+  }
+
+  export type ChartPlayHistoryUncheckedCreateWithoutFirstSyncInput = {
+    id?: number
+    score: number
+    max_combo: number
+    rank: string
+    grade_basic: number
+    source_play_time: string
+    chart_id: number
+    user_id: number
+    created_at?: Date | string
+  }
+
+  export type ChartPlayHistoryCreateOrConnectWithoutFirstSyncInput = {
+    where: ChartPlayHistoryWhereUniqueInput
+    create: XOR<ChartPlayHistoryCreateWithoutFirstSyncInput, ChartPlayHistoryUncheckedCreateWithoutFirstSyncInput>
+  }
+
+  export type ChartPlayHistoryCreateManyFirstSyncInputEnvelope = {
+    data: ChartPlayHistoryCreateManyFirstSyncInput | ChartPlayHistoryCreateManyFirstSyncInput[]
+  }
+
+  export type ChartRecordSnapshotCreateWithoutSyncInput = {
+    level: number
+    score: number
+    rank: string
+    fc_type: number
+    play_count: number
+    fullcombo_count: number
+    pianistic_count: number
+    max_combo: number
+    grade_basic: number
+    grade_recital: number
+    besttime: string
+    created_at?: Date | string
+    chart: MusicChartCreateNestedOneWithoutRecordSnapshotsInput
+    user: UserCreateNestedOneWithoutChartRecordSnapshotsInput
+  }
+
+  export type ChartRecordSnapshotUncheckedCreateWithoutSyncInput = {
+    id?: number
+    level: number
+    score: number
+    rank: string
+    fc_type: number
+    play_count: number
+    fullcombo_count: number
+    pianistic_count: number
+    max_combo: number
+    grade_basic: number
+    grade_recital: number
+    besttime: string
+    chart_id: number
+    user_id: number
+    created_at?: Date | string
+  }
+
+  export type ChartRecordSnapshotCreateOrConnectWithoutSyncInput = {
+    where: ChartRecordSnapshotWhereUniqueInput
+    create: XOR<ChartRecordSnapshotCreateWithoutSyncInput, ChartRecordSnapshotUncheckedCreateWithoutSyncInput>
+  }
+
+  export type ChartRecordSnapshotCreateManySyncInputEnvelope = {
+    data: ChartRecordSnapshotCreateManySyncInput | ChartRecordSnapshotCreateManySyncInput[]
+  }
+
+  export type UserUpsertWithoutDataSyncsInput = {
+    update: XOR<UserUpdateWithoutDataSyncsInput, UserUncheckedUpdateWithoutDataSyncsInput>
+    create: XOR<UserCreateWithoutDataSyncsInput, UserUncheckedCreateWithoutDataSyncsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutDataSyncsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutDataSyncsInput, UserUncheckedUpdateWithoutDataSyncsInput>
+  }
+
+  export type UserUpdateWithoutDataSyncsInput = {
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_name?: NullableStringFieldUpdateOperationsInput | string | null
+    discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: StringFieldUpdateOperationsInput | string
+    rank_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_basic_country?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital_country?: NullableIntFieldUpdateOperationsInput | number | null
+    play_count?: NullableIntFieldUpdateOperationsInput | number | null
+    score_p?: NullableIntFieldUpdateOperationsInput | number | null
+    score_f?: NullableIntFieldUpdateOperationsInput | number | null
+    score_s?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a2?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a?: NullableIntFieldUpdateOperationsInput | number | null
+    score_b2?: NullableIntFieldUpdateOperationsInput | number | null
+    score_b?: NullableIntFieldUpdateOperationsInput | number | null
+    score_c?: NullableIntFieldUpdateOperationsInput | number | null
+    score_d?: NullableIntFieldUpdateOperationsInput | number | null
+    role?: StringFieldUpdateOperationsInput | string
+    grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
+    PlayData?: PlayDataUpdateManyWithoutUserNestedInput
+    BasicBestPlay?: BasicBestPlayUpdateManyWithoutUserNestedInput
+    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutUserNestedInput
+    UserBestGrade?: UserBestGradeUpdateManyWithoutUserNestedInput
+    userBingoCellData?: userBingoCellDataUpdateManyWithoutUserNestedInput
+    chartEvaluations?: ChartEvaluationUpdateManyWithoutUserNestedInput
+    chartReactions?: ChartEvaluationReactionUpdateManyWithoutUserNestedInput
+    chartPlayHistory?: ChartPlayHistoryUpdateManyWithoutUserNestedInput
+    chartRecordSnapshots?: ChartRecordSnapshotUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutDataSyncsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_name?: NullableStringFieldUpdateOperationsInput | string | null
+    discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: StringFieldUpdateOperationsInput | string
+    rank_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_basic_country?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital_country?: NullableIntFieldUpdateOperationsInput | number | null
+    play_count?: NullableIntFieldUpdateOperationsInput | number | null
+    score_p?: NullableIntFieldUpdateOperationsInput | number | null
+    score_f?: NullableIntFieldUpdateOperationsInput | number | null
+    score_s?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a2?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a?: NullableIntFieldUpdateOperationsInput | number | null
+    score_b2?: NullableIntFieldUpdateOperationsInput | number | null
+    score_b?: NullableIntFieldUpdateOperationsInput | number | null
+    score_c?: NullableIntFieldUpdateOperationsInput | number | null
+    score_d?: NullableIntFieldUpdateOperationsInput | number | null
+    role?: StringFieldUpdateOperationsInput | string
+    grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
+    PlayData?: PlayDataUncheckedUpdateManyWithoutUserNestedInput
+    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutUserNestedInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutUserNestedInput
+    UserBestGrade?: UserBestGradeUncheckedUpdateManyWithoutUserNestedInput
+    userBingoCellData?: userBingoCellDataUncheckedUpdateManyWithoutUserNestedInput
+    chartEvaluations?: ChartEvaluationUncheckedUpdateManyWithoutUserNestedInput
+    chartReactions?: ChartEvaluationReactionUncheckedUpdateManyWithoutUserNestedInput
+    chartPlayHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutUserNestedInput
+    chartRecordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type ChartPlayHistoryUpsertWithWhereUniqueWithoutFirstSyncInput = {
+    where: ChartPlayHistoryWhereUniqueInput
+    update: XOR<ChartPlayHistoryUpdateWithoutFirstSyncInput, ChartPlayHistoryUncheckedUpdateWithoutFirstSyncInput>
+    create: XOR<ChartPlayHistoryCreateWithoutFirstSyncInput, ChartPlayHistoryUncheckedCreateWithoutFirstSyncInput>
+  }
+
+  export type ChartPlayHistoryUpdateWithWhereUniqueWithoutFirstSyncInput = {
+    where: ChartPlayHistoryWhereUniqueInput
+    data: XOR<ChartPlayHistoryUpdateWithoutFirstSyncInput, ChartPlayHistoryUncheckedUpdateWithoutFirstSyncInput>
+  }
+
+  export type ChartPlayHistoryUpdateManyWithWhereWithoutFirstSyncInput = {
+    where: ChartPlayHistoryScalarWhereInput
+    data: XOR<ChartPlayHistoryUpdateManyMutationInput, ChartPlayHistoryUncheckedUpdateManyWithoutFirstSyncInput>
+  }
+
+  export type ChartRecordSnapshotUpsertWithWhereUniqueWithoutSyncInput = {
+    where: ChartRecordSnapshotWhereUniqueInput
+    update: XOR<ChartRecordSnapshotUpdateWithoutSyncInput, ChartRecordSnapshotUncheckedUpdateWithoutSyncInput>
+    create: XOR<ChartRecordSnapshotCreateWithoutSyncInput, ChartRecordSnapshotUncheckedCreateWithoutSyncInput>
+  }
+
+  export type ChartRecordSnapshotUpdateWithWhereUniqueWithoutSyncInput = {
+    where: ChartRecordSnapshotWhereUniqueInput
+    data: XOR<ChartRecordSnapshotUpdateWithoutSyncInput, ChartRecordSnapshotUncheckedUpdateWithoutSyncInput>
+  }
+
+  export type ChartRecordSnapshotUpdateManyWithWhereWithoutSyncInput = {
+    where: ChartRecordSnapshotScalarWhereInput
+    data: XOR<ChartRecordSnapshotUpdateManyMutationInput, ChartRecordSnapshotUncheckedUpdateManyWithoutSyncInput>
+  }
+
+  export type MusicChartCreateWithoutPlayHistoryInput = {
+    difficulty: string
+    level: number
+    level_constant?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    music: MusicCreateNestedOneWithoutChartsInput
+    constantHistory?: ChartConstantHistoryCreateNestedManyWithoutChartInput
+    evaluations?: ChartEvaluationCreateNestedManyWithoutChartInput
+    RecentPlay?: RecentPlayCreateNestedManyWithoutChartInput
+    PlayData?: PlayDataCreateNestedManyWithoutChartInput
+    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutChartInput
+    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutChartInput
+    recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
+  }
+
+  export type MusicChartUncheckedCreateWithoutPlayHistoryInput = {
+    id?: number
+    difficulty: string
+    level: number
+    level_constant?: number | null
+    music_idx: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    constantHistory?: ChartConstantHistoryUncheckedCreateNestedManyWithoutChartInput
+    evaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutChartInput
+    RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutChartInput
+    PlayData?: PlayDataUncheckedCreateNestedManyWithoutChartInput
+    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutChartInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutChartInput
+    recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
+  }
+
+  export type MusicChartCreateOrConnectWithoutPlayHistoryInput = {
+    where: MusicChartWhereUniqueInput
+    create: XOR<MusicChartCreateWithoutPlayHistoryInput, MusicChartUncheckedCreateWithoutPlayHistoryInput>
+  }
+
+  export type UserCreateWithoutChartPlayHistoryInput = {
+    username?: string | null
+    kakao_id?: bigint | number | null
+    discord_name?: string | null
+    discord_tag?: string | null
+    avatar?: string | null
+    country?: string
+    rank_basic?: number | null
+    rank_recital?: number | null
+    rank_basic_country?: number | null
+    rank_recital_country?: number | null
+    play_count?: number | null
+    score_p?: number | null
+    score_f?: number | null
+    score_s?: number | null
+    score_a2?: number | null
+    score_a?: number | null
+    score_b2?: number | null
+    score_b?: number | null
+    score_c?: number | null
+    score_d?: number | null
+    role?: string
+    grade_basic?: number | null
+    grade_recital?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
+    PlayData?: PlayDataCreateNestedManyWithoutUserInput
+    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutUserInput
+    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutUserInput
+    UserBestGrade?: UserBestGradeCreateNestedManyWithoutUserInput
+    userBingoCellData?: userBingoCellDataCreateNestedManyWithoutUserInput
+    chartEvaluations?: ChartEvaluationCreateNestedManyWithoutUserInput
+    chartReactions?: ChartEvaluationReactionCreateNestedManyWithoutUserInput
+    dataSyncs?: DataSyncCreateNestedManyWithoutUserInput
+    chartRecordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutChartPlayHistoryInput = {
+    id?: number
+    username?: string | null
+    kakao_id?: bigint | number | null
+    discord_name?: string | null
+    discord_tag?: string | null
+    avatar?: string | null
+    country?: string
+    rank_basic?: number | null
+    rank_recital?: number | null
+    rank_basic_country?: number | null
+    rank_recital_country?: number | null
+    play_count?: number | null
+    score_p?: number | null
+    score_f?: number | null
+    score_s?: number | null
+    score_a2?: number | null
+    score_a?: number | null
+    score_b2?: number | null
+    score_b?: number | null
+    score_c?: number | null
+    score_d?: number | null
+    role?: string
+    grade_basic?: number | null
+    grade_recital?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
+    PlayData?: PlayDataUncheckedCreateNestedManyWithoutUserInput
+    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutUserInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutUserInput
+    UserBestGrade?: UserBestGradeUncheckedCreateNestedManyWithoutUserInput
+    userBingoCellData?: userBingoCellDataUncheckedCreateNestedManyWithoutUserInput
+    chartEvaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutUserInput
+    chartReactions?: ChartEvaluationReactionUncheckedCreateNestedManyWithoutUserInput
+    dataSyncs?: DataSyncUncheckedCreateNestedManyWithoutUserInput
+    chartRecordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutChartPlayHistoryInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutChartPlayHistoryInput, UserUncheckedCreateWithoutChartPlayHistoryInput>
+  }
+
+  export type DataSyncCreateWithoutPlayHistoryInput = {
+    status?: string
+    received_plays?: number
+    inserted_plays?: number
+    changed_records?: number
+    error_message?: string | null
+    started_at?: Date | string
+    completed_at?: Date | string | null
+    user: UserCreateNestedOneWithoutDataSyncsInput
+    recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutSyncInput
+  }
+
+  export type DataSyncUncheckedCreateWithoutPlayHistoryInput = {
+    id?: number
+    status?: string
+    received_plays?: number
+    inserted_plays?: number
+    changed_records?: number
+    error_message?: string | null
+    user_id: number
+    started_at?: Date | string
+    completed_at?: Date | string | null
+    recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutSyncInput
+  }
+
+  export type DataSyncCreateOrConnectWithoutPlayHistoryInput = {
+    where: DataSyncWhereUniqueInput
+    create: XOR<DataSyncCreateWithoutPlayHistoryInput, DataSyncUncheckedCreateWithoutPlayHistoryInput>
+  }
+
+  export type MusicChartUpsertWithoutPlayHistoryInput = {
+    update: XOR<MusicChartUpdateWithoutPlayHistoryInput, MusicChartUncheckedUpdateWithoutPlayHistoryInput>
+    create: XOR<MusicChartCreateWithoutPlayHistoryInput, MusicChartUncheckedCreateWithoutPlayHistoryInput>
+    where?: MusicChartWhereInput
+  }
+
+  export type MusicChartUpdateToOneWithWhereWithoutPlayHistoryInput = {
+    where?: MusicChartWhereInput
+    data: XOR<MusicChartUpdateWithoutPlayHistoryInput, MusicChartUncheckedUpdateWithoutPlayHistoryInput>
+  }
+
+  export type MusicChartUpdateWithoutPlayHistoryInput = {
+    difficulty?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    music?: MusicUpdateOneRequiredWithoutChartsNestedInput
+    constantHistory?: ChartConstantHistoryUpdateManyWithoutChartNestedInput
+    evaluations?: ChartEvaluationUpdateManyWithoutChartNestedInput
+    RecentPlay?: RecentPlayUpdateManyWithoutChartNestedInput
+    PlayData?: PlayDataUpdateManyWithoutChartNestedInput
+    BasicBestPlay?: BasicBestPlayUpdateManyWithoutChartNestedInput
+    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutChartNestedInput
+    recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
+  }
+
+  export type MusicChartUncheckedUpdateWithoutPlayHistoryInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    difficulty?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    music_idx?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    constantHistory?: ChartConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
+    evaluations?: ChartEvaluationUncheckedUpdateManyWithoutChartNestedInput
+    RecentPlay?: RecentPlayUncheckedUpdateManyWithoutChartNestedInput
+    PlayData?: PlayDataUncheckedUpdateManyWithoutChartNestedInput
+    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutChartNestedInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutChartNestedInput
+    recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
+  }
+
+  export type UserUpsertWithoutChartPlayHistoryInput = {
+    update: XOR<UserUpdateWithoutChartPlayHistoryInput, UserUncheckedUpdateWithoutChartPlayHistoryInput>
+    create: XOR<UserCreateWithoutChartPlayHistoryInput, UserUncheckedCreateWithoutChartPlayHistoryInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutChartPlayHistoryInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutChartPlayHistoryInput, UserUncheckedUpdateWithoutChartPlayHistoryInput>
+  }
+
+  export type UserUpdateWithoutChartPlayHistoryInput = {
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_name?: NullableStringFieldUpdateOperationsInput | string | null
+    discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: StringFieldUpdateOperationsInput | string
+    rank_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_basic_country?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital_country?: NullableIntFieldUpdateOperationsInput | number | null
+    play_count?: NullableIntFieldUpdateOperationsInput | number | null
+    score_p?: NullableIntFieldUpdateOperationsInput | number | null
+    score_f?: NullableIntFieldUpdateOperationsInput | number | null
+    score_s?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a2?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a?: NullableIntFieldUpdateOperationsInput | number | null
+    score_b2?: NullableIntFieldUpdateOperationsInput | number | null
+    score_b?: NullableIntFieldUpdateOperationsInput | number | null
+    score_c?: NullableIntFieldUpdateOperationsInput | number | null
+    score_d?: NullableIntFieldUpdateOperationsInput | number | null
+    role?: StringFieldUpdateOperationsInput | string
+    grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
+    PlayData?: PlayDataUpdateManyWithoutUserNestedInput
+    BasicBestPlay?: BasicBestPlayUpdateManyWithoutUserNestedInput
+    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutUserNestedInput
+    UserBestGrade?: UserBestGradeUpdateManyWithoutUserNestedInput
+    userBingoCellData?: userBingoCellDataUpdateManyWithoutUserNestedInput
+    chartEvaluations?: ChartEvaluationUpdateManyWithoutUserNestedInput
+    chartReactions?: ChartEvaluationReactionUpdateManyWithoutUserNestedInput
+    dataSyncs?: DataSyncUpdateManyWithoutUserNestedInput
+    chartRecordSnapshots?: ChartRecordSnapshotUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutChartPlayHistoryInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_name?: NullableStringFieldUpdateOperationsInput | string | null
+    discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: StringFieldUpdateOperationsInput | string
+    rank_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_basic_country?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital_country?: NullableIntFieldUpdateOperationsInput | number | null
+    play_count?: NullableIntFieldUpdateOperationsInput | number | null
+    score_p?: NullableIntFieldUpdateOperationsInput | number | null
+    score_f?: NullableIntFieldUpdateOperationsInput | number | null
+    score_s?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a2?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a?: NullableIntFieldUpdateOperationsInput | number | null
+    score_b2?: NullableIntFieldUpdateOperationsInput | number | null
+    score_b?: NullableIntFieldUpdateOperationsInput | number | null
+    score_c?: NullableIntFieldUpdateOperationsInput | number | null
+    score_d?: NullableIntFieldUpdateOperationsInput | number | null
+    role?: StringFieldUpdateOperationsInput | string
+    grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
+    PlayData?: PlayDataUncheckedUpdateManyWithoutUserNestedInput
+    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutUserNestedInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutUserNestedInput
+    UserBestGrade?: UserBestGradeUncheckedUpdateManyWithoutUserNestedInput
+    userBingoCellData?: userBingoCellDataUncheckedUpdateManyWithoutUserNestedInput
+    chartEvaluations?: ChartEvaluationUncheckedUpdateManyWithoutUserNestedInput
+    chartReactions?: ChartEvaluationReactionUncheckedUpdateManyWithoutUserNestedInput
+    dataSyncs?: DataSyncUncheckedUpdateManyWithoutUserNestedInput
+    chartRecordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type DataSyncUpsertWithoutPlayHistoryInput = {
+    update: XOR<DataSyncUpdateWithoutPlayHistoryInput, DataSyncUncheckedUpdateWithoutPlayHistoryInput>
+    create: XOR<DataSyncCreateWithoutPlayHistoryInput, DataSyncUncheckedCreateWithoutPlayHistoryInput>
+    where?: DataSyncWhereInput
+  }
+
+  export type DataSyncUpdateToOneWithWhereWithoutPlayHistoryInput = {
+    where?: DataSyncWhereInput
+    data: XOR<DataSyncUpdateWithoutPlayHistoryInput, DataSyncUncheckedUpdateWithoutPlayHistoryInput>
+  }
+
+  export type DataSyncUpdateWithoutPlayHistoryInput = {
+    status?: StringFieldUpdateOperationsInput | string
+    received_plays?: IntFieldUpdateOperationsInput | number
+    inserted_plays?: IntFieldUpdateOperationsInput | number
+    changed_records?: IntFieldUpdateOperationsInput | number
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    started_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    user?: UserUpdateOneRequiredWithoutDataSyncsNestedInput
+    recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutSyncNestedInput
+  }
+
+  export type DataSyncUncheckedUpdateWithoutPlayHistoryInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    received_plays?: IntFieldUpdateOperationsInput | number
+    inserted_plays?: IntFieldUpdateOperationsInput | number
+    changed_records?: IntFieldUpdateOperationsInput | number
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    user_id?: IntFieldUpdateOperationsInput | number
+    started_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutSyncNestedInput
+  }
+
+  export type MusicChartCreateWithoutRecordSnapshotsInput = {
+    difficulty: string
+    level: number
+    level_constant?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    music: MusicCreateNestedOneWithoutChartsInput
+    constantHistory?: ChartConstantHistoryCreateNestedManyWithoutChartInput
+    evaluations?: ChartEvaluationCreateNestedManyWithoutChartInput
+    RecentPlay?: RecentPlayCreateNestedManyWithoutChartInput
+    PlayData?: PlayDataCreateNestedManyWithoutChartInput
+    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutChartInput
+    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutChartInput
+    playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
+  }
+
+  export type MusicChartUncheckedCreateWithoutRecordSnapshotsInput = {
+    id?: number
+    difficulty: string
+    level: number
+    level_constant?: number | null
+    music_idx: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    constantHistory?: ChartConstantHistoryUncheckedCreateNestedManyWithoutChartInput
+    evaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutChartInput
+    RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutChartInput
+    PlayData?: PlayDataUncheckedCreateNestedManyWithoutChartInput
+    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutChartInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutChartInput
+    playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
+  }
+
+  export type MusicChartCreateOrConnectWithoutRecordSnapshotsInput = {
+    where: MusicChartWhereUniqueInput
+    create: XOR<MusicChartCreateWithoutRecordSnapshotsInput, MusicChartUncheckedCreateWithoutRecordSnapshotsInput>
+  }
+
+  export type UserCreateWithoutChartRecordSnapshotsInput = {
+    username?: string | null
+    kakao_id?: bigint | number | null
+    discord_name?: string | null
+    discord_tag?: string | null
+    avatar?: string | null
+    country?: string
+    rank_basic?: number | null
+    rank_recital?: number | null
+    rank_basic_country?: number | null
+    rank_recital_country?: number | null
+    play_count?: number | null
+    score_p?: number | null
+    score_f?: number | null
+    score_s?: number | null
+    score_a2?: number | null
+    score_a?: number | null
+    score_b2?: number | null
+    score_b?: number | null
+    score_c?: number | null
+    score_d?: number | null
+    role?: string
+    grade_basic?: number | null
+    grade_recital?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
+    PlayData?: PlayDataCreateNestedManyWithoutUserInput
+    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutUserInput
+    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutUserInput
+    UserBestGrade?: UserBestGradeCreateNestedManyWithoutUserInput
+    userBingoCellData?: userBingoCellDataCreateNestedManyWithoutUserInput
+    chartEvaluations?: ChartEvaluationCreateNestedManyWithoutUserInput
+    chartReactions?: ChartEvaluationReactionCreateNestedManyWithoutUserInput
+    dataSyncs?: DataSyncCreateNestedManyWithoutUserInput
+    chartPlayHistory?: ChartPlayHistoryCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutChartRecordSnapshotsInput = {
+    id?: number
+    username?: string | null
+    kakao_id?: bigint | number | null
+    discord_name?: string | null
+    discord_tag?: string | null
+    avatar?: string | null
+    country?: string
+    rank_basic?: number | null
+    rank_recital?: number | null
+    rank_basic_country?: number | null
+    rank_recital_country?: number | null
+    play_count?: number | null
+    score_p?: number | null
+    score_f?: number | null
+    score_s?: number | null
+    score_a2?: number | null
+    score_a?: number | null
+    score_b2?: number | null
+    score_b?: number | null
+    score_c?: number | null
+    score_d?: number | null
+    role?: string
+    grade_basic?: number | null
+    grade_recital?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
+    PlayData?: PlayDataUncheckedCreateNestedManyWithoutUserInput
+    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutUserInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutUserInput
+    UserBestGrade?: UserBestGradeUncheckedCreateNestedManyWithoutUserInput
+    userBingoCellData?: userBingoCellDataUncheckedCreateNestedManyWithoutUserInput
+    chartEvaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutUserInput
+    chartReactions?: ChartEvaluationReactionUncheckedCreateNestedManyWithoutUserInput
+    dataSyncs?: DataSyncUncheckedCreateNestedManyWithoutUserInput
+    chartPlayHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutChartRecordSnapshotsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutChartRecordSnapshotsInput, UserUncheckedCreateWithoutChartRecordSnapshotsInput>
+  }
+
+  export type DataSyncCreateWithoutRecordSnapshotsInput = {
+    status?: string
+    received_plays?: number
+    inserted_plays?: number
+    changed_records?: number
+    error_message?: string | null
+    started_at?: Date | string
+    completed_at?: Date | string | null
+    user: UserCreateNestedOneWithoutDataSyncsInput
+    playHistory?: ChartPlayHistoryCreateNestedManyWithoutFirstSyncInput
+  }
+
+  export type DataSyncUncheckedCreateWithoutRecordSnapshotsInput = {
+    id?: number
+    status?: string
+    received_plays?: number
+    inserted_plays?: number
+    changed_records?: number
+    error_message?: string | null
+    user_id: number
+    started_at?: Date | string
+    completed_at?: Date | string | null
+    playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutFirstSyncInput
+  }
+
+  export type DataSyncCreateOrConnectWithoutRecordSnapshotsInput = {
+    where: DataSyncWhereUniqueInput
+    create: XOR<DataSyncCreateWithoutRecordSnapshotsInput, DataSyncUncheckedCreateWithoutRecordSnapshotsInput>
+  }
+
+  export type MusicChartUpsertWithoutRecordSnapshotsInput = {
+    update: XOR<MusicChartUpdateWithoutRecordSnapshotsInput, MusicChartUncheckedUpdateWithoutRecordSnapshotsInput>
+    create: XOR<MusicChartCreateWithoutRecordSnapshotsInput, MusicChartUncheckedCreateWithoutRecordSnapshotsInput>
+    where?: MusicChartWhereInput
+  }
+
+  export type MusicChartUpdateToOneWithWhereWithoutRecordSnapshotsInput = {
+    where?: MusicChartWhereInput
+    data: XOR<MusicChartUpdateWithoutRecordSnapshotsInput, MusicChartUncheckedUpdateWithoutRecordSnapshotsInput>
+  }
+
+  export type MusicChartUpdateWithoutRecordSnapshotsInput = {
+    difficulty?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    music?: MusicUpdateOneRequiredWithoutChartsNestedInput
+    constantHistory?: ChartConstantHistoryUpdateManyWithoutChartNestedInput
+    evaluations?: ChartEvaluationUpdateManyWithoutChartNestedInput
+    RecentPlay?: RecentPlayUpdateManyWithoutChartNestedInput
+    PlayData?: PlayDataUpdateManyWithoutChartNestedInput
+    BasicBestPlay?: BasicBestPlayUpdateManyWithoutChartNestedInput
+    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutChartNestedInput
+    playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
+  }
+
+  export type MusicChartUncheckedUpdateWithoutRecordSnapshotsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    difficulty?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    music_idx?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    constantHistory?: ChartConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
+    evaluations?: ChartEvaluationUncheckedUpdateManyWithoutChartNestedInput
+    RecentPlay?: RecentPlayUncheckedUpdateManyWithoutChartNestedInput
+    PlayData?: PlayDataUncheckedUpdateManyWithoutChartNestedInput
+    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutChartNestedInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutChartNestedInput
+    playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
+  }
+
+  export type UserUpsertWithoutChartRecordSnapshotsInput = {
+    update: XOR<UserUpdateWithoutChartRecordSnapshotsInput, UserUncheckedUpdateWithoutChartRecordSnapshotsInput>
+    create: XOR<UserCreateWithoutChartRecordSnapshotsInput, UserUncheckedCreateWithoutChartRecordSnapshotsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutChartRecordSnapshotsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutChartRecordSnapshotsInput, UserUncheckedUpdateWithoutChartRecordSnapshotsInput>
+  }
+
+  export type UserUpdateWithoutChartRecordSnapshotsInput = {
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_name?: NullableStringFieldUpdateOperationsInput | string | null
+    discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: StringFieldUpdateOperationsInput | string
+    rank_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_basic_country?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital_country?: NullableIntFieldUpdateOperationsInput | number | null
+    play_count?: NullableIntFieldUpdateOperationsInput | number | null
+    score_p?: NullableIntFieldUpdateOperationsInput | number | null
+    score_f?: NullableIntFieldUpdateOperationsInput | number | null
+    score_s?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a2?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a?: NullableIntFieldUpdateOperationsInput | number | null
+    score_b2?: NullableIntFieldUpdateOperationsInput | number | null
+    score_b?: NullableIntFieldUpdateOperationsInput | number | null
+    score_c?: NullableIntFieldUpdateOperationsInput | number | null
+    score_d?: NullableIntFieldUpdateOperationsInput | number | null
+    role?: StringFieldUpdateOperationsInput | string
+    grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
+    PlayData?: PlayDataUpdateManyWithoutUserNestedInput
+    BasicBestPlay?: BasicBestPlayUpdateManyWithoutUserNestedInput
+    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutUserNestedInput
+    UserBestGrade?: UserBestGradeUpdateManyWithoutUserNestedInput
+    userBingoCellData?: userBingoCellDataUpdateManyWithoutUserNestedInput
+    chartEvaluations?: ChartEvaluationUpdateManyWithoutUserNestedInput
+    chartReactions?: ChartEvaluationReactionUpdateManyWithoutUserNestedInput
+    dataSyncs?: DataSyncUpdateManyWithoutUserNestedInput
+    chartPlayHistory?: ChartPlayHistoryUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutChartRecordSnapshotsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_name?: NullableStringFieldUpdateOperationsInput | string | null
+    discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: StringFieldUpdateOperationsInput | string
+    rank_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_basic_country?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital_country?: NullableIntFieldUpdateOperationsInput | number | null
+    play_count?: NullableIntFieldUpdateOperationsInput | number | null
+    score_p?: NullableIntFieldUpdateOperationsInput | number | null
+    score_f?: NullableIntFieldUpdateOperationsInput | number | null
+    score_s?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a2?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a?: NullableIntFieldUpdateOperationsInput | number | null
+    score_b2?: NullableIntFieldUpdateOperationsInput | number | null
+    score_b?: NullableIntFieldUpdateOperationsInput | number | null
+    score_c?: NullableIntFieldUpdateOperationsInput | number | null
+    score_d?: NullableIntFieldUpdateOperationsInput | number | null
+    role?: StringFieldUpdateOperationsInput | string
+    grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
+    PlayData?: PlayDataUncheckedUpdateManyWithoutUserNestedInput
+    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutUserNestedInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutUserNestedInput
+    UserBestGrade?: UserBestGradeUncheckedUpdateManyWithoutUserNestedInput
+    userBingoCellData?: userBingoCellDataUncheckedUpdateManyWithoutUserNestedInput
+    chartEvaluations?: ChartEvaluationUncheckedUpdateManyWithoutUserNestedInput
+    chartReactions?: ChartEvaluationReactionUncheckedUpdateManyWithoutUserNestedInput
+    dataSyncs?: DataSyncUncheckedUpdateManyWithoutUserNestedInput
+    chartPlayHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type DataSyncUpsertWithoutRecordSnapshotsInput = {
+    update: XOR<DataSyncUpdateWithoutRecordSnapshotsInput, DataSyncUncheckedUpdateWithoutRecordSnapshotsInput>
+    create: XOR<DataSyncCreateWithoutRecordSnapshotsInput, DataSyncUncheckedCreateWithoutRecordSnapshotsInput>
+    where?: DataSyncWhereInput
+  }
+
+  export type DataSyncUpdateToOneWithWhereWithoutRecordSnapshotsInput = {
+    where?: DataSyncWhereInput
+    data: XOR<DataSyncUpdateWithoutRecordSnapshotsInput, DataSyncUncheckedUpdateWithoutRecordSnapshotsInput>
+  }
+
+  export type DataSyncUpdateWithoutRecordSnapshotsInput = {
+    status?: StringFieldUpdateOperationsInput | string
+    received_plays?: IntFieldUpdateOperationsInput | number
+    inserted_plays?: IntFieldUpdateOperationsInput | number
+    changed_records?: IntFieldUpdateOperationsInput | number
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    started_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    user?: UserUpdateOneRequiredWithoutDataSyncsNestedInput
+    playHistory?: ChartPlayHistoryUpdateManyWithoutFirstSyncNestedInput
+  }
+
+  export type DataSyncUncheckedUpdateWithoutRecordSnapshotsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    received_plays?: IntFieldUpdateOperationsInput | number
+    inserted_plays?: IntFieldUpdateOperationsInput | number
+    changed_records?: IntFieldUpdateOperationsInput | number
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    user_id?: IntFieldUpdateOperationsInput | number
+    started_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutFirstSyncNestedInput
+  }
+
+  export type MusicChartCreateWithoutConstantHistoryInput = {
+    difficulty: string
+    level: number
+    level_constant?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    music: MusicCreateNestedOneWithoutChartsInput
+    evaluations?: ChartEvaluationCreateNestedManyWithoutChartInput
+    RecentPlay?: RecentPlayCreateNestedManyWithoutChartInput
+    PlayData?: PlayDataCreateNestedManyWithoutChartInput
+    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutChartInput
+    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutChartInput
+    playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
+    recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
+  }
+
+  export type MusicChartUncheckedCreateWithoutConstantHistoryInput = {
+    id?: number
+    difficulty: string
+    level: number
+    level_constant?: number | null
+    music_idx: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    evaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutChartInput
+    RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutChartInput
+    PlayData?: PlayDataUncheckedCreateNestedManyWithoutChartInput
+    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutChartInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutChartInput
+    playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
+    recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
+  }
+
+  export type MusicChartCreateOrConnectWithoutConstantHistoryInput = {
+    where: MusicChartWhereUniqueInput
+    create: XOR<MusicChartCreateWithoutConstantHistoryInput, MusicChartUncheckedCreateWithoutConstantHistoryInput>
+  }
+
+  export type MusicChartUpsertWithoutConstantHistoryInput = {
+    update: XOR<MusicChartUpdateWithoutConstantHistoryInput, MusicChartUncheckedUpdateWithoutConstantHistoryInput>
+    create: XOR<MusicChartCreateWithoutConstantHistoryInput, MusicChartUncheckedCreateWithoutConstantHistoryInput>
+    where?: MusicChartWhereInput
+  }
+
+  export type MusicChartUpdateToOneWithWhereWithoutConstantHistoryInput = {
+    where?: MusicChartWhereInput
+    data: XOR<MusicChartUpdateWithoutConstantHistoryInput, MusicChartUncheckedUpdateWithoutConstantHistoryInput>
+  }
+
+  export type MusicChartUpdateWithoutConstantHistoryInput = {
+    difficulty?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    music?: MusicUpdateOneRequiredWithoutChartsNestedInput
+    evaluations?: ChartEvaluationUpdateManyWithoutChartNestedInput
+    RecentPlay?: RecentPlayUpdateManyWithoutChartNestedInput
+    PlayData?: PlayDataUpdateManyWithoutChartNestedInput
+    BasicBestPlay?: BasicBestPlayUpdateManyWithoutChartNestedInput
+    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutChartNestedInput
+    playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
+    recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
+  }
+
+  export type MusicChartUncheckedUpdateWithoutConstantHistoryInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    difficulty?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    music_idx?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    evaluations?: ChartEvaluationUncheckedUpdateManyWithoutChartNestedInput
+    RecentPlay?: RecentPlayUncheckedUpdateManyWithoutChartNestedInput
+    PlayData?: PlayDataUncheckedUpdateManyWithoutChartNestedInput
+    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutChartNestedInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutChartNestedInput
+    playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
+    recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
+  }
+
+  export type MusicChartCreateWithoutEvaluationsInput = {
+    difficulty: string
+    level: number
+    level_constant?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    music: MusicCreateNestedOneWithoutChartsInput
+    constantHistory?: ChartConstantHistoryCreateNestedManyWithoutChartInput
+    RecentPlay?: RecentPlayCreateNestedManyWithoutChartInput
+    PlayData?: PlayDataCreateNestedManyWithoutChartInput
+    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutChartInput
+    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutChartInput
+    playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
+    recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
+  }
+
+  export type MusicChartUncheckedCreateWithoutEvaluationsInput = {
+    id?: number
+    difficulty: string
+    level: number
+    level_constant?: number | null
+    music_idx: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    constantHistory?: ChartConstantHistoryUncheckedCreateNestedManyWithoutChartInput
+    RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutChartInput
+    PlayData?: PlayDataUncheckedCreateNestedManyWithoutChartInput
+    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutChartInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutChartInput
+    playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
+    recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
+  }
+
+  export type MusicChartCreateOrConnectWithoutEvaluationsInput = {
+    where: MusicChartWhereUniqueInput
+    create: XOR<MusicChartCreateWithoutEvaluationsInput, MusicChartUncheckedCreateWithoutEvaluationsInput>
+  }
+
+  export type UserCreateWithoutChartEvaluationsInput = {
+    username?: string | null
+    kakao_id?: bigint | number | null
+    discord_name?: string | null
+    discord_tag?: string | null
+    avatar?: string | null
+    country?: string
+    rank_basic?: number | null
+    rank_recital?: number | null
+    rank_basic_country?: number | null
+    rank_recital_country?: number | null
+    play_count?: number | null
+    score_p?: number | null
+    score_f?: number | null
+    score_s?: number | null
+    score_a2?: number | null
+    score_a?: number | null
+    score_b2?: number | null
+    score_b?: number | null
+    score_c?: number | null
+    score_d?: number | null
+    role?: string
+    grade_basic?: number | null
+    grade_recital?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
+    PlayData?: PlayDataCreateNestedManyWithoutUserInput
+    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutUserInput
+    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutUserInput
+    UserBestGrade?: UserBestGradeCreateNestedManyWithoutUserInput
+    userBingoCellData?: userBingoCellDataCreateNestedManyWithoutUserInput
+    chartReactions?: ChartEvaluationReactionCreateNestedManyWithoutUserInput
+    dataSyncs?: DataSyncCreateNestedManyWithoutUserInput
+    chartPlayHistory?: ChartPlayHistoryCreateNestedManyWithoutUserInput
+    chartRecordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutChartEvaluationsInput = {
+    id?: number
+    username?: string | null
+    kakao_id?: bigint | number | null
+    discord_name?: string | null
+    discord_tag?: string | null
+    avatar?: string | null
+    country?: string
+    rank_basic?: number | null
+    rank_recital?: number | null
+    rank_basic_country?: number | null
+    rank_recital_country?: number | null
+    play_count?: number | null
+    score_p?: number | null
+    score_f?: number | null
+    score_s?: number | null
+    score_a2?: number | null
+    score_a?: number | null
+    score_b2?: number | null
+    score_b?: number | null
+    score_c?: number | null
+    score_d?: number | null
+    role?: string
+    grade_basic?: number | null
+    grade_recital?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
+    PlayData?: PlayDataUncheckedCreateNestedManyWithoutUserInput
+    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutUserInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutUserInput
+    UserBestGrade?: UserBestGradeUncheckedCreateNestedManyWithoutUserInput
+    userBingoCellData?: userBingoCellDataUncheckedCreateNestedManyWithoutUserInput
+    chartReactions?: ChartEvaluationReactionUncheckedCreateNestedManyWithoutUserInput
+    dataSyncs?: DataSyncUncheckedCreateNestedManyWithoutUserInput
+    chartPlayHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutUserInput
+    chartRecordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutChartEvaluationsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutChartEvaluationsInput, UserUncheckedCreateWithoutChartEvaluationsInput>
+  }
+
+  export type ChartEvaluationReactionCreateWithoutEvaluationInput = {
+    value: number
+    created_at?: Date | string
+    updated_at?: Date | string
+    user: UserCreateNestedOneWithoutChartReactionsInput
+  }
+
+  export type ChartEvaluationReactionUncheckedCreateWithoutEvaluationInput = {
+    id?: number
+    value: number
+    user_id: number
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type ChartEvaluationReactionCreateOrConnectWithoutEvaluationInput = {
+    where: ChartEvaluationReactionWhereUniqueInput
+    create: XOR<ChartEvaluationReactionCreateWithoutEvaluationInput, ChartEvaluationReactionUncheckedCreateWithoutEvaluationInput>
+  }
+
+  export type ChartEvaluationReactionCreateManyEvaluationInputEnvelope = {
+    data: ChartEvaluationReactionCreateManyEvaluationInput | ChartEvaluationReactionCreateManyEvaluationInput[]
+  }
+
+  export type MusicChartUpsertWithoutEvaluationsInput = {
+    update: XOR<MusicChartUpdateWithoutEvaluationsInput, MusicChartUncheckedUpdateWithoutEvaluationsInput>
+    create: XOR<MusicChartCreateWithoutEvaluationsInput, MusicChartUncheckedCreateWithoutEvaluationsInput>
+    where?: MusicChartWhereInput
+  }
+
+  export type MusicChartUpdateToOneWithWhereWithoutEvaluationsInput = {
+    where?: MusicChartWhereInput
+    data: XOR<MusicChartUpdateWithoutEvaluationsInput, MusicChartUncheckedUpdateWithoutEvaluationsInput>
+  }
+
+  export type MusicChartUpdateWithoutEvaluationsInput = {
+    difficulty?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    music?: MusicUpdateOneRequiredWithoutChartsNestedInput
+    constantHistory?: ChartConstantHistoryUpdateManyWithoutChartNestedInput
+    RecentPlay?: RecentPlayUpdateManyWithoutChartNestedInput
+    PlayData?: PlayDataUpdateManyWithoutChartNestedInput
+    BasicBestPlay?: BasicBestPlayUpdateManyWithoutChartNestedInput
+    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutChartNestedInput
+    playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
+    recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
+  }
+
+  export type MusicChartUncheckedUpdateWithoutEvaluationsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    difficulty?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    music_idx?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    constantHistory?: ChartConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
+    RecentPlay?: RecentPlayUncheckedUpdateManyWithoutChartNestedInput
+    PlayData?: PlayDataUncheckedUpdateManyWithoutChartNestedInput
+    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutChartNestedInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutChartNestedInput
+    playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
+    recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
+  }
+
+  export type UserUpsertWithoutChartEvaluationsInput = {
+    update: XOR<UserUpdateWithoutChartEvaluationsInput, UserUncheckedUpdateWithoutChartEvaluationsInput>
+    create: XOR<UserCreateWithoutChartEvaluationsInput, UserUncheckedCreateWithoutChartEvaluationsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutChartEvaluationsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutChartEvaluationsInput, UserUncheckedUpdateWithoutChartEvaluationsInput>
+  }
+
+  export type UserUpdateWithoutChartEvaluationsInput = {
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_name?: NullableStringFieldUpdateOperationsInput | string | null
+    discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: StringFieldUpdateOperationsInput | string
+    rank_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_basic_country?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital_country?: NullableIntFieldUpdateOperationsInput | number | null
+    play_count?: NullableIntFieldUpdateOperationsInput | number | null
+    score_p?: NullableIntFieldUpdateOperationsInput | number | null
+    score_f?: NullableIntFieldUpdateOperationsInput | number | null
+    score_s?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a2?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a?: NullableIntFieldUpdateOperationsInput | number | null
+    score_b2?: NullableIntFieldUpdateOperationsInput | number | null
+    score_b?: NullableIntFieldUpdateOperationsInput | number | null
+    score_c?: NullableIntFieldUpdateOperationsInput | number | null
+    score_d?: NullableIntFieldUpdateOperationsInput | number | null
+    role?: StringFieldUpdateOperationsInput | string
+    grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
+    PlayData?: PlayDataUpdateManyWithoutUserNestedInput
+    BasicBestPlay?: BasicBestPlayUpdateManyWithoutUserNestedInput
+    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutUserNestedInput
+    UserBestGrade?: UserBestGradeUpdateManyWithoutUserNestedInput
+    userBingoCellData?: userBingoCellDataUpdateManyWithoutUserNestedInput
+    chartReactions?: ChartEvaluationReactionUpdateManyWithoutUserNestedInput
+    dataSyncs?: DataSyncUpdateManyWithoutUserNestedInput
+    chartPlayHistory?: ChartPlayHistoryUpdateManyWithoutUserNestedInput
+    chartRecordSnapshots?: ChartRecordSnapshotUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutChartEvaluationsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_name?: NullableStringFieldUpdateOperationsInput | string | null
+    discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: StringFieldUpdateOperationsInput | string
+    rank_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_basic_country?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital_country?: NullableIntFieldUpdateOperationsInput | number | null
+    play_count?: NullableIntFieldUpdateOperationsInput | number | null
+    score_p?: NullableIntFieldUpdateOperationsInput | number | null
+    score_f?: NullableIntFieldUpdateOperationsInput | number | null
+    score_s?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a2?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a?: NullableIntFieldUpdateOperationsInput | number | null
+    score_b2?: NullableIntFieldUpdateOperationsInput | number | null
+    score_b?: NullableIntFieldUpdateOperationsInput | number | null
+    score_c?: NullableIntFieldUpdateOperationsInput | number | null
+    score_d?: NullableIntFieldUpdateOperationsInput | number | null
+    role?: StringFieldUpdateOperationsInput | string
+    grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
+    PlayData?: PlayDataUncheckedUpdateManyWithoutUserNestedInput
+    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutUserNestedInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutUserNestedInput
+    UserBestGrade?: UserBestGradeUncheckedUpdateManyWithoutUserNestedInput
+    userBingoCellData?: userBingoCellDataUncheckedUpdateManyWithoutUserNestedInput
+    chartReactions?: ChartEvaluationReactionUncheckedUpdateManyWithoutUserNestedInput
+    dataSyncs?: DataSyncUncheckedUpdateManyWithoutUserNestedInput
+    chartPlayHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutUserNestedInput
+    chartRecordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type ChartEvaluationReactionUpsertWithWhereUniqueWithoutEvaluationInput = {
+    where: ChartEvaluationReactionWhereUniqueInput
+    update: XOR<ChartEvaluationReactionUpdateWithoutEvaluationInput, ChartEvaluationReactionUncheckedUpdateWithoutEvaluationInput>
+    create: XOR<ChartEvaluationReactionCreateWithoutEvaluationInput, ChartEvaluationReactionUncheckedCreateWithoutEvaluationInput>
+  }
+
+  export type ChartEvaluationReactionUpdateWithWhereUniqueWithoutEvaluationInput = {
+    where: ChartEvaluationReactionWhereUniqueInput
+    data: XOR<ChartEvaluationReactionUpdateWithoutEvaluationInput, ChartEvaluationReactionUncheckedUpdateWithoutEvaluationInput>
+  }
+
+  export type ChartEvaluationReactionUpdateManyWithWhereWithoutEvaluationInput = {
+    where: ChartEvaluationReactionScalarWhereInput
+    data: XOR<ChartEvaluationReactionUpdateManyMutationInput, ChartEvaluationReactionUncheckedUpdateManyWithoutEvaluationInput>
+  }
+
+  export type ChartEvaluationCreateWithoutReactionsInput = {
+    perceived_constant: number
+    stairs: number
+    chord: number
+    trill: number
+    glissando: number
+    repetition: number
+    comment?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    chart: MusicChartCreateNestedOneWithoutEvaluationsInput
+    user: UserCreateNestedOneWithoutChartEvaluationsInput
+  }
+
+  export type ChartEvaluationUncheckedCreateWithoutReactionsInput = {
+    id?: number
+    perceived_constant: number
+    stairs: number
+    chord: number
+    trill: number
+    glissando: number
+    repetition: number
+    comment?: string | null
+    chart_id: number
+    user_id: number
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type ChartEvaluationCreateOrConnectWithoutReactionsInput = {
+    where: ChartEvaluationWhereUniqueInput
+    create: XOR<ChartEvaluationCreateWithoutReactionsInput, ChartEvaluationUncheckedCreateWithoutReactionsInput>
+  }
+
+  export type UserCreateWithoutChartReactionsInput = {
+    username?: string | null
+    kakao_id?: bigint | number | null
+    discord_name?: string | null
+    discord_tag?: string | null
+    avatar?: string | null
+    country?: string
+    rank_basic?: number | null
+    rank_recital?: number | null
+    rank_basic_country?: number | null
+    rank_recital_country?: number | null
+    play_count?: number | null
+    score_p?: number | null
+    score_f?: number | null
+    score_s?: number | null
+    score_a2?: number | null
+    score_a?: number | null
+    score_b2?: number | null
+    score_b?: number | null
+    score_c?: number | null
+    score_d?: number | null
+    role?: string
+    grade_basic?: number | null
+    grade_recital?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
+    PlayData?: PlayDataCreateNestedManyWithoutUserInput
+    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutUserInput
+    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutUserInput
+    UserBestGrade?: UserBestGradeCreateNestedManyWithoutUserInput
+    userBingoCellData?: userBingoCellDataCreateNestedManyWithoutUserInput
+    chartEvaluations?: ChartEvaluationCreateNestedManyWithoutUserInput
+    dataSyncs?: DataSyncCreateNestedManyWithoutUserInput
+    chartPlayHistory?: ChartPlayHistoryCreateNestedManyWithoutUserInput
+    chartRecordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutChartReactionsInput = {
+    id?: number
+    username?: string | null
+    kakao_id?: bigint | number | null
+    discord_name?: string | null
+    discord_tag?: string | null
+    avatar?: string | null
+    country?: string
+    rank_basic?: number | null
+    rank_recital?: number | null
+    rank_basic_country?: number | null
+    rank_recital_country?: number | null
+    play_count?: number | null
+    score_p?: number | null
+    score_f?: number | null
+    score_s?: number | null
+    score_a2?: number | null
+    score_a?: number | null
+    score_b2?: number | null
+    score_b?: number | null
+    score_c?: number | null
+    score_d?: number | null
+    role?: string
+    grade_basic?: number | null
+    grade_recital?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
+    PlayData?: PlayDataUncheckedCreateNestedManyWithoutUserInput
+    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutUserInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutUserInput
+    UserBestGrade?: UserBestGradeUncheckedCreateNestedManyWithoutUserInput
+    userBingoCellData?: userBingoCellDataUncheckedCreateNestedManyWithoutUserInput
+    chartEvaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutUserInput
+    dataSyncs?: DataSyncUncheckedCreateNestedManyWithoutUserInput
+    chartPlayHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutUserInput
+    chartRecordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutChartReactionsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutChartReactionsInput, UserUncheckedCreateWithoutChartReactionsInput>
+  }
+
+  export type ChartEvaluationUpsertWithoutReactionsInput = {
+    update: XOR<ChartEvaluationUpdateWithoutReactionsInput, ChartEvaluationUncheckedUpdateWithoutReactionsInput>
+    create: XOR<ChartEvaluationCreateWithoutReactionsInput, ChartEvaluationUncheckedCreateWithoutReactionsInput>
+    where?: ChartEvaluationWhereInput
+  }
+
+  export type ChartEvaluationUpdateToOneWithWhereWithoutReactionsInput = {
+    where?: ChartEvaluationWhereInput
+    data: XOR<ChartEvaluationUpdateWithoutReactionsInput, ChartEvaluationUncheckedUpdateWithoutReactionsInput>
+  }
+
+  export type ChartEvaluationUpdateWithoutReactionsInput = {
+    perceived_constant?: FloatFieldUpdateOperationsInput | number
+    stairs?: IntFieldUpdateOperationsInput | number
+    chord?: IntFieldUpdateOperationsInput | number
+    trill?: IntFieldUpdateOperationsInput | number
+    glissando?: IntFieldUpdateOperationsInput | number
+    repetition?: IntFieldUpdateOperationsInput | number
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    chart?: MusicChartUpdateOneRequiredWithoutEvaluationsNestedInput
+    user?: UserUpdateOneRequiredWithoutChartEvaluationsNestedInput
+  }
+
+  export type ChartEvaluationUncheckedUpdateWithoutReactionsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    perceived_constant?: FloatFieldUpdateOperationsInput | number
+    stairs?: IntFieldUpdateOperationsInput | number
+    chord?: IntFieldUpdateOperationsInput | number
+    trill?: IntFieldUpdateOperationsInput | number
+    glissando?: IntFieldUpdateOperationsInput | number
+    repetition?: IntFieldUpdateOperationsInput | number
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    chart_id?: IntFieldUpdateOperationsInput | number
+    user_id?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserUpsertWithoutChartReactionsInput = {
+    update: XOR<UserUpdateWithoutChartReactionsInput, UserUncheckedUpdateWithoutChartReactionsInput>
+    create: XOR<UserCreateWithoutChartReactionsInput, UserUncheckedCreateWithoutChartReactionsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutChartReactionsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutChartReactionsInput, UserUncheckedUpdateWithoutChartReactionsInput>
+  }
+
+  export type UserUpdateWithoutChartReactionsInput = {
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_name?: NullableStringFieldUpdateOperationsInput | string | null
+    discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: StringFieldUpdateOperationsInput | string
+    rank_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_basic_country?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital_country?: NullableIntFieldUpdateOperationsInput | number | null
+    play_count?: NullableIntFieldUpdateOperationsInput | number | null
+    score_p?: NullableIntFieldUpdateOperationsInput | number | null
+    score_f?: NullableIntFieldUpdateOperationsInput | number | null
+    score_s?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a2?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a?: NullableIntFieldUpdateOperationsInput | number | null
+    score_b2?: NullableIntFieldUpdateOperationsInput | number | null
+    score_b?: NullableIntFieldUpdateOperationsInput | number | null
+    score_c?: NullableIntFieldUpdateOperationsInput | number | null
+    score_d?: NullableIntFieldUpdateOperationsInput | number | null
+    role?: StringFieldUpdateOperationsInput | string
+    grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
+    PlayData?: PlayDataUpdateManyWithoutUserNestedInput
+    BasicBestPlay?: BasicBestPlayUpdateManyWithoutUserNestedInput
+    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutUserNestedInput
+    UserBestGrade?: UserBestGradeUpdateManyWithoutUserNestedInput
+    userBingoCellData?: userBingoCellDataUpdateManyWithoutUserNestedInput
+    chartEvaluations?: ChartEvaluationUpdateManyWithoutUserNestedInput
+    dataSyncs?: DataSyncUpdateManyWithoutUserNestedInput
+    chartPlayHistory?: ChartPlayHistoryUpdateManyWithoutUserNestedInput
+    chartRecordSnapshots?: ChartRecordSnapshotUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutChartReactionsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_name?: NullableStringFieldUpdateOperationsInput | string | null
+    discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: StringFieldUpdateOperationsInput | string
+    rank_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_basic_country?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital_country?: NullableIntFieldUpdateOperationsInput | number | null
+    play_count?: NullableIntFieldUpdateOperationsInput | number | null
+    score_p?: NullableIntFieldUpdateOperationsInput | number | null
+    score_f?: NullableIntFieldUpdateOperationsInput | number | null
+    score_s?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a2?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a?: NullableIntFieldUpdateOperationsInput | number | null
+    score_b2?: NullableIntFieldUpdateOperationsInput | number | null
+    score_b?: NullableIntFieldUpdateOperationsInput | number | null
+    score_c?: NullableIntFieldUpdateOperationsInput | number | null
+    score_d?: NullableIntFieldUpdateOperationsInput | number | null
+    role?: StringFieldUpdateOperationsInput | string
+    grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
+    PlayData?: PlayDataUncheckedUpdateManyWithoutUserNestedInput
+    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutUserNestedInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutUserNestedInput
+    UserBestGrade?: UserBestGradeUncheckedUpdateManyWithoutUserNestedInput
+    userBingoCellData?: userBingoCellDataUncheckedUpdateManyWithoutUserNestedInput
+    chartEvaluations?: ChartEvaluationUncheckedUpdateManyWithoutUserNestedInput
+    dataSyncs?: DataSyncUncheckedUpdateManyWithoutUserNestedInput
+    chartPlayHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutUserNestedInput
+    chartRecordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutUserNestedInput
+  }
+
   export type UserCreateWithoutPlayHistoryInput = {
     username?: string | null
     kakao_id?: bigint | number | null
@@ -19441,6 +34792,11 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeCreateNestedManyWithoutUserInput
     userBingoCellData?: userBingoCellDataCreateNestedManyWithoutUserInput
+    chartEvaluations?: ChartEvaluationCreateNestedManyWithoutUserInput
+    chartReactions?: ChartEvaluationReactionCreateNestedManyWithoutUserInput
+    dataSyncs?: DataSyncCreateNestedManyWithoutUserInput
+    chartPlayHistory?: ChartPlayHistoryCreateNestedManyWithoutUserInput
+    chartRecordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutPlayHistoryInput = {
@@ -19475,6 +34831,11 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeUncheckedCreateNestedManyWithoutUserInput
     userBingoCellData?: userBingoCellDataUncheckedCreateNestedManyWithoutUserInput
+    chartEvaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutUserInput
+    chartReactions?: ChartEvaluationReactionUncheckedCreateNestedManyWithoutUserInput
+    dataSyncs?: DataSyncUncheckedCreateNestedManyWithoutUserInput
+    chartPlayHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutUserInput
+    chartRecordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutPlayHistoryInput = {
@@ -19505,6 +34866,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutMusicInput
     Bingo?: BingoCreateNestedManyWithoutMusicInput
     BingoCell?: BingoCellCreateNestedManyWithoutMusicInput
+    charts?: MusicChartCreateNestedManyWithoutMusicInput
   }
 
   export type MusicUncheckedCreateWithoutRecentPlayInput = {
@@ -19531,11 +34893,50 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutMusicInput
     Bingo?: BingoUncheckedCreateNestedManyWithoutMusicInput
     BingoCell?: BingoCellUncheckedCreateNestedManyWithoutMusicInput
+    charts?: MusicChartUncheckedCreateNestedManyWithoutMusicInput
   }
 
   export type MusicCreateOrConnectWithoutRecentPlayInput = {
     where: MusicWhereUniqueInput
     create: XOR<MusicCreateWithoutRecentPlayInput, MusicUncheckedCreateWithoutRecentPlayInput>
+  }
+
+  export type MusicChartCreateWithoutRecentPlayInput = {
+    difficulty: string
+    level: number
+    level_constant?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    music: MusicCreateNestedOneWithoutChartsInput
+    constantHistory?: ChartConstantHistoryCreateNestedManyWithoutChartInput
+    evaluations?: ChartEvaluationCreateNestedManyWithoutChartInput
+    PlayData?: PlayDataCreateNestedManyWithoutChartInput
+    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutChartInput
+    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutChartInput
+    playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
+    recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
+  }
+
+  export type MusicChartUncheckedCreateWithoutRecentPlayInput = {
+    id?: number
+    difficulty: string
+    level: number
+    level_constant?: number | null
+    music_idx: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    constantHistory?: ChartConstantHistoryUncheckedCreateNestedManyWithoutChartInput
+    evaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutChartInput
+    PlayData?: PlayDataUncheckedCreateNestedManyWithoutChartInput
+    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutChartInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutChartInput
+    playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
+    recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
+  }
+
+  export type MusicChartCreateOrConnectWithoutRecentPlayInput = {
+    where: MusicChartWhereUniqueInput
+    create: XOR<MusicChartCreateWithoutRecentPlayInput, MusicChartUncheckedCreateWithoutRecentPlayInput>
   }
 
   export type UserUpsertWithoutPlayHistoryInput = {
@@ -19580,6 +34981,11 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUpdateManyWithoutUserNestedInput
     userBingoCellData?: userBingoCellDataUpdateManyWithoutUserNestedInput
+    chartEvaluations?: ChartEvaluationUpdateManyWithoutUserNestedInput
+    chartReactions?: ChartEvaluationReactionUpdateManyWithoutUserNestedInput
+    dataSyncs?: DataSyncUpdateManyWithoutUserNestedInput
+    chartPlayHistory?: ChartPlayHistoryUpdateManyWithoutUserNestedInput
+    chartRecordSnapshots?: ChartRecordSnapshotUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPlayHistoryInput = {
@@ -19614,6 +35020,11 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUncheckedUpdateManyWithoutUserNestedInput
     userBingoCellData?: userBingoCellDataUncheckedUpdateManyWithoutUserNestedInput
+    chartEvaluations?: ChartEvaluationUncheckedUpdateManyWithoutUserNestedInput
+    chartReactions?: ChartEvaluationReactionUncheckedUpdateManyWithoutUserNestedInput
+    dataSyncs?: DataSyncUncheckedUpdateManyWithoutUserNestedInput
+    chartPlayHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutUserNestedInput
+    chartRecordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type MusicUpsertWithoutRecentPlayInput = {
@@ -19650,6 +35061,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutMusicNestedInput
     Bingo?: BingoUpdateManyWithoutMusicNestedInput
     BingoCell?: BingoCellUpdateManyWithoutMusicNestedInput
+    charts?: MusicChartUpdateManyWithoutMusicNestedInput
   }
 
   export type MusicUncheckedUpdateWithoutRecentPlayInput = {
@@ -19676,6 +35088,51 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutMusicNestedInput
     Bingo?: BingoUncheckedUpdateManyWithoutMusicNestedInput
     BingoCell?: BingoCellUncheckedUpdateManyWithoutMusicNestedInput
+    charts?: MusicChartUncheckedUpdateManyWithoutMusicNestedInput
+  }
+
+  export type MusicChartUpsertWithoutRecentPlayInput = {
+    update: XOR<MusicChartUpdateWithoutRecentPlayInput, MusicChartUncheckedUpdateWithoutRecentPlayInput>
+    create: XOR<MusicChartCreateWithoutRecentPlayInput, MusicChartUncheckedCreateWithoutRecentPlayInput>
+    where?: MusicChartWhereInput
+  }
+
+  export type MusicChartUpdateToOneWithWhereWithoutRecentPlayInput = {
+    where?: MusicChartWhereInput
+    data: XOR<MusicChartUpdateWithoutRecentPlayInput, MusicChartUncheckedUpdateWithoutRecentPlayInput>
+  }
+
+  export type MusicChartUpdateWithoutRecentPlayInput = {
+    difficulty?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    music?: MusicUpdateOneRequiredWithoutChartsNestedInput
+    constantHistory?: ChartConstantHistoryUpdateManyWithoutChartNestedInput
+    evaluations?: ChartEvaluationUpdateManyWithoutChartNestedInput
+    PlayData?: PlayDataUpdateManyWithoutChartNestedInput
+    BasicBestPlay?: BasicBestPlayUpdateManyWithoutChartNestedInput
+    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutChartNestedInput
+    playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
+    recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
+  }
+
+  export type MusicChartUncheckedUpdateWithoutRecentPlayInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    difficulty?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    music_idx?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    constantHistory?: ChartConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
+    evaluations?: ChartEvaluationUncheckedUpdateManyWithoutChartNestedInput
+    PlayData?: PlayDataUncheckedUpdateManyWithoutChartNestedInput
+    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutChartNestedInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutChartNestedInput
+    playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
+    recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
   }
 
   export type UserCreateWithoutUserBestGradeInput = {
@@ -19709,6 +35166,11 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutUserInput
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutUserInput
     userBingoCellData?: userBingoCellDataCreateNestedManyWithoutUserInput
+    chartEvaluations?: ChartEvaluationCreateNestedManyWithoutUserInput
+    chartReactions?: ChartEvaluationReactionCreateNestedManyWithoutUserInput
+    dataSyncs?: DataSyncCreateNestedManyWithoutUserInput
+    chartPlayHistory?: ChartPlayHistoryCreateNestedManyWithoutUserInput
+    chartRecordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutUserBestGradeInput = {
@@ -19743,6 +35205,11 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutUserInput
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutUserInput
     userBingoCellData?: userBingoCellDataUncheckedCreateNestedManyWithoutUserInput
+    chartEvaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutUserInput
+    chartReactions?: ChartEvaluationReactionUncheckedCreateNestedManyWithoutUserInput
+    dataSyncs?: DataSyncUncheckedCreateNestedManyWithoutUserInput
+    chartPlayHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutUserInput
+    chartRecordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutUserBestGradeInput = {
@@ -19792,6 +35259,11 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUpdateManyWithoutUserNestedInput
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutUserNestedInput
     userBingoCellData?: userBingoCellDataUpdateManyWithoutUserNestedInput
+    chartEvaluations?: ChartEvaluationUpdateManyWithoutUserNestedInput
+    chartReactions?: ChartEvaluationReactionUpdateManyWithoutUserNestedInput
+    dataSyncs?: DataSyncUpdateManyWithoutUserNestedInput
+    chartPlayHistory?: ChartPlayHistoryUpdateManyWithoutUserNestedInput
+    chartRecordSnapshots?: ChartRecordSnapshotUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserBestGradeInput = {
@@ -19826,6 +35298,11 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutUserNestedInput
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutUserNestedInput
     userBingoCellData?: userBingoCellDataUncheckedUpdateManyWithoutUserNestedInput
+    chartEvaluations?: ChartEvaluationUncheckedUpdateManyWithoutUserNestedInput
+    chartReactions?: ChartEvaluationReactionUncheckedUpdateManyWithoutUserNestedInput
+    dataSyncs?: DataSyncUncheckedUpdateManyWithoutUserNestedInput
+    chartPlayHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutUserNestedInput
+    chartRecordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutBasicBestPlayInput = {
@@ -19859,6 +35336,11 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeCreateNestedManyWithoutUserInput
     userBingoCellData?: userBingoCellDataCreateNestedManyWithoutUserInput
+    chartEvaluations?: ChartEvaluationCreateNestedManyWithoutUserInput
+    chartReactions?: ChartEvaluationReactionCreateNestedManyWithoutUserInput
+    dataSyncs?: DataSyncCreateNestedManyWithoutUserInput
+    chartPlayHistory?: ChartPlayHistoryCreateNestedManyWithoutUserInput
+    chartRecordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutBasicBestPlayInput = {
@@ -19893,6 +35375,11 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeUncheckedCreateNestedManyWithoutUserInput
     userBingoCellData?: userBingoCellDataUncheckedCreateNestedManyWithoutUserInput
+    chartEvaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutUserInput
+    chartReactions?: ChartEvaluationReactionUncheckedCreateNestedManyWithoutUserInput
+    dataSyncs?: DataSyncUncheckedCreateNestedManyWithoutUserInput
+    chartPlayHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutUserInput
+    chartRecordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutBasicBestPlayInput = {
@@ -19923,6 +35410,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutMusicInput
     Bingo?: BingoCreateNestedManyWithoutMusicInput
     BingoCell?: BingoCellCreateNestedManyWithoutMusicInput
+    charts?: MusicChartCreateNestedManyWithoutMusicInput
   }
 
   export type MusicUncheckedCreateWithoutBasicBestPlayInput = {
@@ -19949,11 +35437,50 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutMusicInput
     Bingo?: BingoUncheckedCreateNestedManyWithoutMusicInput
     BingoCell?: BingoCellUncheckedCreateNestedManyWithoutMusicInput
+    charts?: MusicChartUncheckedCreateNestedManyWithoutMusicInput
   }
 
   export type MusicCreateOrConnectWithoutBasicBestPlayInput = {
     where: MusicWhereUniqueInput
     create: XOR<MusicCreateWithoutBasicBestPlayInput, MusicUncheckedCreateWithoutBasicBestPlayInput>
+  }
+
+  export type MusicChartCreateWithoutBasicBestPlayInput = {
+    difficulty: string
+    level: number
+    level_constant?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    music: MusicCreateNestedOneWithoutChartsInput
+    constantHistory?: ChartConstantHistoryCreateNestedManyWithoutChartInput
+    evaluations?: ChartEvaluationCreateNestedManyWithoutChartInput
+    RecentPlay?: RecentPlayCreateNestedManyWithoutChartInput
+    PlayData?: PlayDataCreateNestedManyWithoutChartInput
+    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutChartInput
+    playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
+    recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
+  }
+
+  export type MusicChartUncheckedCreateWithoutBasicBestPlayInput = {
+    id?: number
+    difficulty: string
+    level: number
+    level_constant?: number | null
+    music_idx: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    constantHistory?: ChartConstantHistoryUncheckedCreateNestedManyWithoutChartInput
+    evaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutChartInput
+    RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutChartInput
+    PlayData?: PlayDataUncheckedCreateNestedManyWithoutChartInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutChartInput
+    playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
+    recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
+  }
+
+  export type MusicChartCreateOrConnectWithoutBasicBestPlayInput = {
+    where: MusicChartWhereUniqueInput
+    create: XOR<MusicChartCreateWithoutBasicBestPlayInput, MusicChartUncheckedCreateWithoutBasicBestPlayInput>
   }
 
   export type UserUpsertWithoutBasicBestPlayInput = {
@@ -19998,6 +35525,11 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUpdateManyWithoutUserNestedInput
     userBingoCellData?: userBingoCellDataUpdateManyWithoutUserNestedInput
+    chartEvaluations?: ChartEvaluationUpdateManyWithoutUserNestedInput
+    chartReactions?: ChartEvaluationReactionUpdateManyWithoutUserNestedInput
+    dataSyncs?: DataSyncUpdateManyWithoutUserNestedInput
+    chartPlayHistory?: ChartPlayHistoryUpdateManyWithoutUserNestedInput
+    chartRecordSnapshots?: ChartRecordSnapshotUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBasicBestPlayInput = {
@@ -20032,6 +35564,11 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUncheckedUpdateManyWithoutUserNestedInput
     userBingoCellData?: userBingoCellDataUncheckedUpdateManyWithoutUserNestedInput
+    chartEvaluations?: ChartEvaluationUncheckedUpdateManyWithoutUserNestedInput
+    chartReactions?: ChartEvaluationReactionUncheckedUpdateManyWithoutUserNestedInput
+    dataSyncs?: DataSyncUncheckedUpdateManyWithoutUserNestedInput
+    chartPlayHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutUserNestedInput
+    chartRecordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type MusicUpsertWithoutBasicBestPlayInput = {
@@ -20068,6 +35605,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutMusicNestedInput
     Bingo?: BingoUpdateManyWithoutMusicNestedInput
     BingoCell?: BingoCellUpdateManyWithoutMusicNestedInput
+    charts?: MusicChartUpdateManyWithoutMusicNestedInput
   }
 
   export type MusicUncheckedUpdateWithoutBasicBestPlayInput = {
@@ -20094,6 +35632,51 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutMusicNestedInput
     Bingo?: BingoUncheckedUpdateManyWithoutMusicNestedInput
     BingoCell?: BingoCellUncheckedUpdateManyWithoutMusicNestedInput
+    charts?: MusicChartUncheckedUpdateManyWithoutMusicNestedInput
+  }
+
+  export type MusicChartUpsertWithoutBasicBestPlayInput = {
+    update: XOR<MusicChartUpdateWithoutBasicBestPlayInput, MusicChartUncheckedUpdateWithoutBasicBestPlayInput>
+    create: XOR<MusicChartCreateWithoutBasicBestPlayInput, MusicChartUncheckedCreateWithoutBasicBestPlayInput>
+    where?: MusicChartWhereInput
+  }
+
+  export type MusicChartUpdateToOneWithWhereWithoutBasicBestPlayInput = {
+    where?: MusicChartWhereInput
+    data: XOR<MusicChartUpdateWithoutBasicBestPlayInput, MusicChartUncheckedUpdateWithoutBasicBestPlayInput>
+  }
+
+  export type MusicChartUpdateWithoutBasicBestPlayInput = {
+    difficulty?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    music?: MusicUpdateOneRequiredWithoutChartsNestedInput
+    constantHistory?: ChartConstantHistoryUpdateManyWithoutChartNestedInput
+    evaluations?: ChartEvaluationUpdateManyWithoutChartNestedInput
+    RecentPlay?: RecentPlayUpdateManyWithoutChartNestedInput
+    PlayData?: PlayDataUpdateManyWithoutChartNestedInput
+    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutChartNestedInput
+    playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
+    recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
+  }
+
+  export type MusicChartUncheckedUpdateWithoutBasicBestPlayInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    difficulty?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    music_idx?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    constantHistory?: ChartConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
+    evaluations?: ChartEvaluationUncheckedUpdateManyWithoutChartNestedInput
+    RecentPlay?: RecentPlayUncheckedUpdateManyWithoutChartNestedInput
+    PlayData?: PlayDataUncheckedUpdateManyWithoutChartNestedInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutChartNestedInput
+    playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
+    recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
   }
 
   export type UserCreateWithoutRecitalBestPlayInput = {
@@ -20127,6 +35710,11 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeCreateNestedManyWithoutUserInput
     userBingoCellData?: userBingoCellDataCreateNestedManyWithoutUserInput
+    chartEvaluations?: ChartEvaluationCreateNestedManyWithoutUserInput
+    chartReactions?: ChartEvaluationReactionCreateNestedManyWithoutUserInput
+    dataSyncs?: DataSyncCreateNestedManyWithoutUserInput
+    chartPlayHistory?: ChartPlayHistoryCreateNestedManyWithoutUserInput
+    chartRecordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutRecitalBestPlayInput = {
@@ -20161,6 +35749,11 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeUncheckedCreateNestedManyWithoutUserInput
     userBingoCellData?: userBingoCellDataUncheckedCreateNestedManyWithoutUserInput
+    chartEvaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutUserInput
+    chartReactions?: ChartEvaluationReactionUncheckedCreateNestedManyWithoutUserInput
+    dataSyncs?: DataSyncUncheckedCreateNestedManyWithoutUserInput
+    chartPlayHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutUserInput
+    chartRecordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutRecitalBestPlayInput = {
@@ -20191,6 +35784,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutMusicInput
     Bingo?: BingoCreateNestedManyWithoutMusicInput
     BingoCell?: BingoCellCreateNestedManyWithoutMusicInput
+    charts?: MusicChartCreateNestedManyWithoutMusicInput
   }
 
   export type MusicUncheckedCreateWithoutRecitalBestPlayInput = {
@@ -20217,11 +35811,50 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutMusicInput
     Bingo?: BingoUncheckedCreateNestedManyWithoutMusicInput
     BingoCell?: BingoCellUncheckedCreateNestedManyWithoutMusicInput
+    charts?: MusicChartUncheckedCreateNestedManyWithoutMusicInput
   }
 
   export type MusicCreateOrConnectWithoutRecitalBestPlayInput = {
     where: MusicWhereUniqueInput
     create: XOR<MusicCreateWithoutRecitalBestPlayInput, MusicUncheckedCreateWithoutRecitalBestPlayInput>
+  }
+
+  export type MusicChartCreateWithoutRecitalBestPlayInput = {
+    difficulty: string
+    level: number
+    level_constant?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    music: MusicCreateNestedOneWithoutChartsInput
+    constantHistory?: ChartConstantHistoryCreateNestedManyWithoutChartInput
+    evaluations?: ChartEvaluationCreateNestedManyWithoutChartInput
+    RecentPlay?: RecentPlayCreateNestedManyWithoutChartInput
+    PlayData?: PlayDataCreateNestedManyWithoutChartInput
+    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutChartInput
+    playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
+    recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
+  }
+
+  export type MusicChartUncheckedCreateWithoutRecitalBestPlayInput = {
+    id?: number
+    difficulty: string
+    level: number
+    level_constant?: number | null
+    music_idx: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    constantHistory?: ChartConstantHistoryUncheckedCreateNestedManyWithoutChartInput
+    evaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutChartInput
+    RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutChartInput
+    PlayData?: PlayDataUncheckedCreateNestedManyWithoutChartInput
+    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutChartInput
+    playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
+    recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
+  }
+
+  export type MusicChartCreateOrConnectWithoutRecitalBestPlayInput = {
+    where: MusicChartWhereUniqueInput
+    create: XOR<MusicChartCreateWithoutRecitalBestPlayInput, MusicChartUncheckedCreateWithoutRecitalBestPlayInput>
   }
 
   export type UserUpsertWithoutRecitalBestPlayInput = {
@@ -20266,6 +35899,11 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUpdateManyWithoutUserNestedInput
     userBingoCellData?: userBingoCellDataUpdateManyWithoutUserNestedInput
+    chartEvaluations?: ChartEvaluationUpdateManyWithoutUserNestedInput
+    chartReactions?: ChartEvaluationReactionUpdateManyWithoutUserNestedInput
+    dataSyncs?: DataSyncUpdateManyWithoutUserNestedInput
+    chartPlayHistory?: ChartPlayHistoryUpdateManyWithoutUserNestedInput
+    chartRecordSnapshots?: ChartRecordSnapshotUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRecitalBestPlayInput = {
@@ -20300,6 +35938,11 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUncheckedUpdateManyWithoutUserNestedInput
     userBingoCellData?: userBingoCellDataUncheckedUpdateManyWithoutUserNestedInput
+    chartEvaluations?: ChartEvaluationUncheckedUpdateManyWithoutUserNestedInput
+    chartReactions?: ChartEvaluationReactionUncheckedUpdateManyWithoutUserNestedInput
+    dataSyncs?: DataSyncUncheckedUpdateManyWithoutUserNestedInput
+    chartPlayHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutUserNestedInput
+    chartRecordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type MusicUpsertWithoutRecitalBestPlayInput = {
@@ -20336,6 +35979,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUpdateManyWithoutMusicNestedInput
     Bingo?: BingoUpdateManyWithoutMusicNestedInput
     BingoCell?: BingoCellUpdateManyWithoutMusicNestedInput
+    charts?: MusicChartUpdateManyWithoutMusicNestedInput
   }
 
   export type MusicUncheckedUpdateWithoutRecitalBestPlayInput = {
@@ -20362,6 +36006,51 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutMusicNestedInput
     Bingo?: BingoUncheckedUpdateManyWithoutMusicNestedInput
     BingoCell?: BingoCellUncheckedUpdateManyWithoutMusicNestedInput
+    charts?: MusicChartUncheckedUpdateManyWithoutMusicNestedInput
+  }
+
+  export type MusicChartUpsertWithoutRecitalBestPlayInput = {
+    update: XOR<MusicChartUpdateWithoutRecitalBestPlayInput, MusicChartUncheckedUpdateWithoutRecitalBestPlayInput>
+    create: XOR<MusicChartCreateWithoutRecitalBestPlayInput, MusicChartUncheckedCreateWithoutRecitalBestPlayInput>
+    where?: MusicChartWhereInput
+  }
+
+  export type MusicChartUpdateToOneWithWhereWithoutRecitalBestPlayInput = {
+    where?: MusicChartWhereInput
+    data: XOR<MusicChartUpdateWithoutRecitalBestPlayInput, MusicChartUncheckedUpdateWithoutRecitalBestPlayInput>
+  }
+
+  export type MusicChartUpdateWithoutRecitalBestPlayInput = {
+    difficulty?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    music?: MusicUpdateOneRequiredWithoutChartsNestedInput
+    constantHistory?: ChartConstantHistoryUpdateManyWithoutChartNestedInput
+    evaluations?: ChartEvaluationUpdateManyWithoutChartNestedInput
+    RecentPlay?: RecentPlayUpdateManyWithoutChartNestedInput
+    PlayData?: PlayDataUpdateManyWithoutChartNestedInput
+    BasicBestPlay?: BasicBestPlayUpdateManyWithoutChartNestedInput
+    playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
+    recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
+  }
+
+  export type MusicChartUncheckedUpdateWithoutRecitalBestPlayInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    difficulty?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    music_idx?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    constantHistory?: ChartConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
+    evaluations?: ChartEvaluationUncheckedUpdateManyWithoutChartNestedInput
+    RecentPlay?: RecentPlayUncheckedUpdateManyWithoutChartNestedInput
+    PlayData?: PlayDataUncheckedUpdateManyWithoutChartNestedInput
+    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutChartNestedInput
+    playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
+    recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
   }
 
   export type UserCreateWithoutPlayDataInput = {
@@ -20395,6 +36084,11 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeCreateNestedManyWithoutUserInput
     userBingoCellData?: userBingoCellDataCreateNestedManyWithoutUserInput
+    chartEvaluations?: ChartEvaluationCreateNestedManyWithoutUserInput
+    chartReactions?: ChartEvaluationReactionCreateNestedManyWithoutUserInput
+    dataSyncs?: DataSyncCreateNestedManyWithoutUserInput
+    chartPlayHistory?: ChartPlayHistoryCreateNestedManyWithoutUserInput
+    chartRecordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutPlayDataInput = {
@@ -20429,6 +36123,11 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeUncheckedCreateNestedManyWithoutUserInput
     userBingoCellData?: userBingoCellDataUncheckedCreateNestedManyWithoutUserInput
+    chartEvaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutUserInput
+    chartReactions?: ChartEvaluationReactionUncheckedCreateNestedManyWithoutUserInput
+    dataSyncs?: DataSyncUncheckedCreateNestedManyWithoutUserInput
+    chartPlayHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutUserInput
+    chartRecordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutPlayDataInput = {
@@ -20459,6 +36158,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutMusicInput
     Bingo?: BingoCreateNestedManyWithoutMusicInput
     BingoCell?: BingoCellCreateNestedManyWithoutMusicInput
+    charts?: MusicChartCreateNestedManyWithoutMusicInput
   }
 
   export type MusicUncheckedCreateWithoutPlayDataInput = {
@@ -20485,11 +36185,50 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutMusicInput
     Bingo?: BingoUncheckedCreateNestedManyWithoutMusicInput
     BingoCell?: BingoCellUncheckedCreateNestedManyWithoutMusicInput
+    charts?: MusicChartUncheckedCreateNestedManyWithoutMusicInput
   }
 
   export type MusicCreateOrConnectWithoutPlayDataInput = {
     where: MusicWhereUniqueInput
     create: XOR<MusicCreateWithoutPlayDataInput, MusicUncheckedCreateWithoutPlayDataInput>
+  }
+
+  export type MusicChartCreateWithoutPlayDataInput = {
+    difficulty: string
+    level: number
+    level_constant?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    music: MusicCreateNestedOneWithoutChartsInput
+    constantHistory?: ChartConstantHistoryCreateNestedManyWithoutChartInput
+    evaluations?: ChartEvaluationCreateNestedManyWithoutChartInput
+    RecentPlay?: RecentPlayCreateNestedManyWithoutChartInput
+    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutChartInput
+    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutChartInput
+    playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
+    recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
+  }
+
+  export type MusicChartUncheckedCreateWithoutPlayDataInput = {
+    id?: number
+    difficulty: string
+    level: number
+    level_constant?: number | null
+    music_idx: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    constantHistory?: ChartConstantHistoryUncheckedCreateNestedManyWithoutChartInput
+    evaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutChartInput
+    RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutChartInput
+    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutChartInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutChartInput
+    playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
+    recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
+  }
+
+  export type MusicChartCreateOrConnectWithoutPlayDataInput = {
+    where: MusicChartWhereUniqueInput
+    create: XOR<MusicChartCreateWithoutPlayDataInput, MusicChartUncheckedCreateWithoutPlayDataInput>
   }
 
   export type UserUpsertWithoutPlayDataInput = {
@@ -20534,6 +36273,11 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUpdateManyWithoutUserNestedInput
     userBingoCellData?: userBingoCellDataUpdateManyWithoutUserNestedInput
+    chartEvaluations?: ChartEvaluationUpdateManyWithoutUserNestedInput
+    chartReactions?: ChartEvaluationReactionUpdateManyWithoutUserNestedInput
+    dataSyncs?: DataSyncUpdateManyWithoutUserNestedInput
+    chartPlayHistory?: ChartPlayHistoryUpdateManyWithoutUserNestedInput
+    chartRecordSnapshots?: ChartRecordSnapshotUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPlayDataInput = {
@@ -20568,6 +36312,11 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUncheckedUpdateManyWithoutUserNestedInput
     userBingoCellData?: userBingoCellDataUncheckedUpdateManyWithoutUserNestedInput
+    chartEvaluations?: ChartEvaluationUncheckedUpdateManyWithoutUserNestedInput
+    chartReactions?: ChartEvaluationReactionUncheckedUpdateManyWithoutUserNestedInput
+    dataSyncs?: DataSyncUncheckedUpdateManyWithoutUserNestedInput
+    chartPlayHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutUserNestedInput
+    chartRecordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type MusicUpsertWithoutPlayDataInput = {
@@ -20604,6 +36353,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutMusicNestedInput
     Bingo?: BingoUpdateManyWithoutMusicNestedInput
     BingoCell?: BingoCellUpdateManyWithoutMusicNestedInput
+    charts?: MusicChartUpdateManyWithoutMusicNestedInput
   }
 
   export type MusicUncheckedUpdateWithoutPlayDataInput = {
@@ -20630,6 +36380,51 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutMusicNestedInput
     Bingo?: BingoUncheckedUpdateManyWithoutMusicNestedInput
     BingoCell?: BingoCellUncheckedUpdateManyWithoutMusicNestedInput
+    charts?: MusicChartUncheckedUpdateManyWithoutMusicNestedInput
+  }
+
+  export type MusicChartUpsertWithoutPlayDataInput = {
+    update: XOR<MusicChartUpdateWithoutPlayDataInput, MusicChartUncheckedUpdateWithoutPlayDataInput>
+    create: XOR<MusicChartCreateWithoutPlayDataInput, MusicChartUncheckedCreateWithoutPlayDataInput>
+    where?: MusicChartWhereInput
+  }
+
+  export type MusicChartUpdateToOneWithWhereWithoutPlayDataInput = {
+    where?: MusicChartWhereInput
+    data: XOR<MusicChartUpdateWithoutPlayDataInput, MusicChartUncheckedUpdateWithoutPlayDataInput>
+  }
+
+  export type MusicChartUpdateWithoutPlayDataInput = {
+    difficulty?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    music?: MusicUpdateOneRequiredWithoutChartsNestedInput
+    constantHistory?: ChartConstantHistoryUpdateManyWithoutChartNestedInput
+    evaluations?: ChartEvaluationUpdateManyWithoutChartNestedInput
+    RecentPlay?: RecentPlayUpdateManyWithoutChartNestedInput
+    BasicBestPlay?: BasicBestPlayUpdateManyWithoutChartNestedInput
+    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutChartNestedInput
+    playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
+    recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
+  }
+
+  export type MusicChartUncheckedUpdateWithoutPlayDataInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    difficulty?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    music_idx?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    constantHistory?: ChartConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
+    evaluations?: ChartEvaluationUncheckedUpdateManyWithoutChartNestedInput
+    RecentPlay?: RecentPlayUncheckedUpdateManyWithoutChartNestedInput
+    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutChartNestedInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutChartNestedInput
+    playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
+    recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
   }
 
   export type MusicCreateWithoutBingoInput = {
@@ -20655,6 +36450,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutMusicInput
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutMusicInput
     BingoCell?: BingoCellCreateNestedManyWithoutMusicInput
+    charts?: MusicChartCreateNestedManyWithoutMusicInput
   }
 
   export type MusicUncheckedCreateWithoutBingoInput = {
@@ -20681,6 +36477,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutMusicInput
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutMusicInput
     BingoCell?: BingoCellUncheckedCreateNestedManyWithoutMusicInput
+    charts?: MusicChartUncheckedCreateNestedManyWithoutMusicInput
   }
 
   export type MusicCreateOrConnectWithoutBingoInput = {
@@ -20752,6 +36549,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUpdateManyWithoutMusicNestedInput
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutMusicNestedInput
     BingoCell?: BingoCellUpdateManyWithoutMusicNestedInput
+    charts?: MusicChartUpdateManyWithoutMusicNestedInput
   }
 
   export type MusicUncheckedUpdateWithoutBingoInput = {
@@ -20778,6 +36576,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutMusicNestedInput
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutMusicNestedInput
     BingoCell?: BingoCellUncheckedUpdateManyWithoutMusicNestedInput
+    charts?: MusicChartUncheckedUpdateManyWithoutMusicNestedInput
   }
 
   export type BingoCellUpsertWithWhereUniqueWithoutBingoInput = {
@@ -20819,6 +36618,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutMusicInput
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutMusicInput
     Bingo?: BingoCreateNestedManyWithoutMusicInput
+    charts?: MusicChartCreateNestedManyWithoutMusicInput
   }
 
   export type MusicUncheckedCreateWithoutBingoCellInput = {
@@ -20845,6 +36645,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutMusicInput
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutMusicInput
     Bingo?: BingoUncheckedCreateNestedManyWithoutMusicInput
+    charts?: MusicChartUncheckedCreateNestedManyWithoutMusicInput
   }
 
   export type MusicCreateOrConnectWithoutBingoCellInput = {
@@ -20924,6 +36725,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUpdateManyWithoutMusicNestedInput
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutMusicNestedInput
     Bingo?: BingoUpdateManyWithoutMusicNestedInput
+    charts?: MusicChartUpdateManyWithoutMusicNestedInput
   }
 
   export type MusicUncheckedUpdateWithoutBingoCellInput = {
@@ -20950,6 +36752,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutMusicNestedInput
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutMusicNestedInput
     Bingo?: BingoUncheckedUpdateManyWithoutMusicNestedInput
+    charts?: MusicChartUncheckedUpdateManyWithoutMusicNestedInput
   }
 
   export type BingoUpsertWithoutBingoCellInput = {
@@ -21023,6 +36826,11 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutUserInput
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeCreateNestedManyWithoutUserInput
+    chartEvaluations?: ChartEvaluationCreateNestedManyWithoutUserInput
+    chartReactions?: ChartEvaluationReactionCreateNestedManyWithoutUserInput
+    dataSyncs?: DataSyncCreateNestedManyWithoutUserInput
+    chartPlayHistory?: ChartPlayHistoryCreateNestedManyWithoutUserInput
+    chartRecordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutUserBingoCellDataInput = {
@@ -21057,6 +36865,11 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutUserInput
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeUncheckedCreateNestedManyWithoutUserInput
+    chartEvaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutUserInput
+    chartReactions?: ChartEvaluationReactionUncheckedCreateNestedManyWithoutUserInput
+    dataSyncs?: DataSyncUncheckedCreateNestedManyWithoutUserInput
+    chartPlayHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutUserInput
+    chartRecordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutUserBingoCellDataInput = {
@@ -21132,6 +36945,11 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUpdateManyWithoutUserNestedInput
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUpdateManyWithoutUserNestedInput
+    chartEvaluations?: ChartEvaluationUpdateManyWithoutUserNestedInput
+    chartReactions?: ChartEvaluationReactionUpdateManyWithoutUserNestedInput
+    dataSyncs?: DataSyncUpdateManyWithoutUserNestedInput
+    chartPlayHistory?: ChartPlayHistoryUpdateManyWithoutUserNestedInput
+    chartRecordSnapshots?: ChartRecordSnapshotUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserBingoCellDataInput = {
@@ -21166,6 +36984,11 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutUserNestedInput
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUncheckedUpdateManyWithoutUserNestedInput
+    chartEvaluations?: ChartEvaluationUncheckedUpdateManyWithoutUserNestedInput
+    chartReactions?: ChartEvaluationReactionUncheckedUpdateManyWithoutUserNestedInput
+    dataSyncs?: DataSyncUncheckedUpdateManyWithoutUserNestedInput
+    chartPlayHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutUserNestedInput
+    chartRecordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type BingoCellUpsertWithoutUserBingoDataInput = {
@@ -21212,6 +37035,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     music_idx: string
+    chart_id?: number | null
   }
 
   export type PlayDataCreateManyUserInput = {
@@ -21231,6 +37055,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     music_idx: string
+    chart_id?: number | null
   }
 
   export type BasicBestPlayCreateManyUserInput = {
@@ -21246,6 +37071,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     music_idx: string
+    chart_id?: number | null
   }
 
   export type RecitalBestPlayCreateManyUserInput = {
@@ -21261,6 +37087,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     music_idx: string
+    chart_id?: number | null
   }
 
   export type UserBestGradeCreateManyUserInput = {
@@ -21278,6 +37105,69 @@ export namespace Prisma {
     bingo_cell_id: number
   }
 
+  export type ChartEvaluationCreateManyUserInput = {
+    id?: number
+    perceived_constant: number
+    stairs: number
+    chord: number
+    trill: number
+    glissando: number
+    repetition: number
+    comment?: string | null
+    chart_id: number
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type ChartEvaluationReactionCreateManyUserInput = {
+    id?: number
+    value: number
+    evaluation_id: number
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type DataSyncCreateManyUserInput = {
+    id?: number
+    status?: string
+    received_plays?: number
+    inserted_plays?: number
+    changed_records?: number
+    error_message?: string | null
+    started_at?: Date | string
+    completed_at?: Date | string | null
+  }
+
+  export type ChartPlayHistoryCreateManyUserInput = {
+    id?: number
+    score: number
+    max_combo: number
+    rank: string
+    grade_basic: number
+    source_play_time: string
+    chart_id: number
+    first_sync_id?: number | null
+    created_at?: Date | string
+  }
+
+  export type ChartRecordSnapshotCreateManyUserInput = {
+    id?: number
+    level: number
+    score: number
+    rank: string
+    fc_type: number
+    play_count: number
+    fullcombo_count: number
+    pianistic_count: number
+    max_combo: number
+    grade_basic: number
+    grade_recital: number
+    besttime: string
+    chart_id: number
+    sync_id: number
+    created_at?: Date | string
+  }
+
   export type RecentPlayUpdateWithoutUserInput = {
     difficulty?: StringFieldUpdateOperationsInput | string
     level?: IntFieldUpdateOperationsInput | number
@@ -21289,6 +37179,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     music?: MusicUpdateOneRequiredWithoutRecentPlayNestedInput
+    chart?: MusicChartUpdateOneWithoutRecentPlayNestedInput
   }
 
   export type RecentPlayUncheckedUpdateWithoutUserInput = {
@@ -21303,6 +37194,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     music_idx?: StringFieldUpdateOperationsInput | string
+    chart_id?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type RecentPlayUncheckedUpdateManyWithoutUserInput = {
@@ -21317,6 +37209,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     music_idx?: StringFieldUpdateOperationsInput | string
+    chart_id?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type PlayDataUpdateWithoutUserInput = {
@@ -21335,6 +37228,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     music?: MusicUpdateOneRequiredWithoutPlayDataNestedInput
+    chart?: MusicChartUpdateOneWithoutPlayDataNestedInput
   }
 
   export type PlayDataUncheckedUpdateWithoutUserInput = {
@@ -21354,6 +37248,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     music_idx?: StringFieldUpdateOperationsInput | string
+    chart_id?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type PlayDataUncheckedUpdateManyWithoutUserInput = {
@@ -21373,6 +37268,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     music_idx?: StringFieldUpdateOperationsInput | string
+    chart_id?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type BasicBestPlayUpdateWithoutUserInput = {
@@ -21387,6 +37283,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     music?: MusicUpdateOneRequiredWithoutBasicBestPlayNestedInput
+    chart?: MusicChartUpdateOneWithoutBasicBestPlayNestedInput
   }
 
   export type BasicBestPlayUncheckedUpdateWithoutUserInput = {
@@ -21402,6 +37299,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     music_idx?: StringFieldUpdateOperationsInput | string
+    chart_id?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type BasicBestPlayUncheckedUpdateManyWithoutUserInput = {
@@ -21417,6 +37315,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     music_idx?: StringFieldUpdateOperationsInput | string
+    chart_id?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type RecitalBestPlayUpdateWithoutUserInput = {
@@ -21431,6 +37330,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     music?: MusicUpdateOneRequiredWithoutRecitalBestPlayNestedInput
+    chart?: MusicChartUpdateOneWithoutRecitalBestPlayNestedInput
   }
 
   export type RecitalBestPlayUncheckedUpdateWithoutUserInput = {
@@ -21446,6 +37346,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     music_idx?: StringFieldUpdateOperationsInput | string
+    chart_id?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type RecitalBestPlayUncheckedUpdateManyWithoutUserInput = {
@@ -21461,6 +37362,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     music_idx?: StringFieldUpdateOperationsInput | string
+    chart_id?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type UserBestGradeUpdateWithoutUserInput = {
@@ -21506,6 +37408,196 @@ export namespace Prisma {
     bingo_cell_id?: IntFieldUpdateOperationsInput | number
   }
 
+  export type ChartEvaluationUpdateWithoutUserInput = {
+    perceived_constant?: FloatFieldUpdateOperationsInput | number
+    stairs?: IntFieldUpdateOperationsInput | number
+    chord?: IntFieldUpdateOperationsInput | number
+    trill?: IntFieldUpdateOperationsInput | number
+    glissando?: IntFieldUpdateOperationsInput | number
+    repetition?: IntFieldUpdateOperationsInput | number
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    chart?: MusicChartUpdateOneRequiredWithoutEvaluationsNestedInput
+    reactions?: ChartEvaluationReactionUpdateManyWithoutEvaluationNestedInput
+  }
+
+  export type ChartEvaluationUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    perceived_constant?: FloatFieldUpdateOperationsInput | number
+    stairs?: IntFieldUpdateOperationsInput | number
+    chord?: IntFieldUpdateOperationsInput | number
+    trill?: IntFieldUpdateOperationsInput | number
+    glissando?: IntFieldUpdateOperationsInput | number
+    repetition?: IntFieldUpdateOperationsInput | number
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    chart_id?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    reactions?: ChartEvaluationReactionUncheckedUpdateManyWithoutEvaluationNestedInput
+  }
+
+  export type ChartEvaluationUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    perceived_constant?: FloatFieldUpdateOperationsInput | number
+    stairs?: IntFieldUpdateOperationsInput | number
+    chord?: IntFieldUpdateOperationsInput | number
+    trill?: IntFieldUpdateOperationsInput | number
+    glissando?: IntFieldUpdateOperationsInput | number
+    repetition?: IntFieldUpdateOperationsInput | number
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    chart_id?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChartEvaluationReactionUpdateWithoutUserInput = {
+    value?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    evaluation?: ChartEvaluationUpdateOneRequiredWithoutReactionsNestedInput
+  }
+
+  export type ChartEvaluationReactionUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    value?: IntFieldUpdateOperationsInput | number
+    evaluation_id?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChartEvaluationReactionUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    value?: IntFieldUpdateOperationsInput | number
+    evaluation_id?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DataSyncUpdateWithoutUserInput = {
+    status?: StringFieldUpdateOperationsInput | string
+    received_plays?: IntFieldUpdateOperationsInput | number
+    inserted_plays?: IntFieldUpdateOperationsInput | number
+    changed_records?: IntFieldUpdateOperationsInput | number
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    started_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    playHistory?: ChartPlayHistoryUpdateManyWithoutFirstSyncNestedInput
+    recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutSyncNestedInput
+  }
+
+  export type DataSyncUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    received_plays?: IntFieldUpdateOperationsInput | number
+    inserted_plays?: IntFieldUpdateOperationsInput | number
+    changed_records?: IntFieldUpdateOperationsInput | number
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    started_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutFirstSyncNestedInput
+    recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutSyncNestedInput
+  }
+
+  export type DataSyncUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    received_plays?: IntFieldUpdateOperationsInput | number
+    inserted_plays?: IntFieldUpdateOperationsInput | number
+    changed_records?: IntFieldUpdateOperationsInput | number
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    started_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type ChartPlayHistoryUpdateWithoutUserInput = {
+    score?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    source_play_time?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    chart?: MusicChartUpdateOneRequiredWithoutPlayHistoryNestedInput
+    firstSync?: DataSyncUpdateOneWithoutPlayHistoryNestedInput
+  }
+
+  export type ChartPlayHistoryUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    score?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    source_play_time?: StringFieldUpdateOperationsInput | string
+    chart_id?: IntFieldUpdateOperationsInput | number
+    first_sync_id?: NullableIntFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChartPlayHistoryUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    score?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    source_play_time?: StringFieldUpdateOperationsInput | string
+    chart_id?: IntFieldUpdateOperationsInput | number
+    first_sync_id?: NullableIntFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChartRecordSnapshotUpdateWithoutUserInput = {
+    level?: IntFieldUpdateOperationsInput | number
+    score?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    fc_type?: IntFieldUpdateOperationsInput | number
+    play_count?: IntFieldUpdateOperationsInput | number
+    fullcombo_count?: IntFieldUpdateOperationsInput | number
+    pianistic_count?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    grade_recital?: IntFieldUpdateOperationsInput | number
+    besttime?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    chart?: MusicChartUpdateOneRequiredWithoutRecordSnapshotsNestedInput
+    sync?: DataSyncUpdateOneRequiredWithoutRecordSnapshotsNestedInput
+  }
+
+  export type ChartRecordSnapshotUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    level?: IntFieldUpdateOperationsInput | number
+    score?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    fc_type?: IntFieldUpdateOperationsInput | number
+    play_count?: IntFieldUpdateOperationsInput | number
+    fullcombo_count?: IntFieldUpdateOperationsInput | number
+    pianistic_count?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    grade_recital?: IntFieldUpdateOperationsInput | number
+    besttime?: StringFieldUpdateOperationsInput | string
+    chart_id?: IntFieldUpdateOperationsInput | number
+    sync_id?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChartRecordSnapshotUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    level?: IntFieldUpdateOperationsInput | number
+    score?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    fc_type?: IntFieldUpdateOperationsInput | number
+    play_count?: IntFieldUpdateOperationsInput | number
+    fullcombo_count?: IntFieldUpdateOperationsInput | number
+    pianistic_count?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    grade_recital?: IntFieldUpdateOperationsInput | number
+    besttime?: StringFieldUpdateOperationsInput | string
+    chart_id?: IntFieldUpdateOperationsInput | number
+    sync_id?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type RecentPlayCreateManyMusicInput = {
     id?: number
     difficulty: string
@@ -21518,6 +37610,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     user_id: number
+    chart_id?: number | null
   }
 
   export type PlayDataCreateManyMusicInput = {
@@ -21537,6 +37630,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     user_id: number
+    chart_id?: number | null
   }
 
   export type BasicBestPlayCreateManyMusicInput = {
@@ -21552,6 +37646,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     user_id: number
+    chart_id?: number | null
   }
 
   export type RecitalBestPlayCreateManyMusicInput = {
@@ -21567,6 +37662,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     user_id: number
+    chart_id?: number | null
   }
 
   export type BingoCreateManyMusicInput = {
@@ -21585,6 +37681,15 @@ export namespace Prisma {
     bingo_id: number
   }
 
+  export type MusicChartCreateManyMusicInput = {
+    id?: number
+    difficulty: string
+    level: number
+    level_constant?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
   export type RecentPlayUpdateWithoutMusicInput = {
     difficulty?: StringFieldUpdateOperationsInput | string
     level?: IntFieldUpdateOperationsInput | number
@@ -21596,6 +37701,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutPlayHistoryNestedInput
+    chart?: MusicChartUpdateOneWithoutRecentPlayNestedInput
   }
 
   export type RecentPlayUncheckedUpdateWithoutMusicInput = {
@@ -21610,6 +37716,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user_id?: IntFieldUpdateOperationsInput | number
+    chart_id?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type RecentPlayUncheckedUpdateManyWithoutMusicInput = {
@@ -21624,6 +37731,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user_id?: IntFieldUpdateOperationsInput | number
+    chart_id?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type PlayDataUpdateWithoutMusicInput = {
@@ -21642,6 +37750,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutPlayDataNestedInput
+    chart?: MusicChartUpdateOneWithoutPlayDataNestedInput
   }
 
   export type PlayDataUncheckedUpdateWithoutMusicInput = {
@@ -21661,6 +37770,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user_id?: IntFieldUpdateOperationsInput | number
+    chart_id?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type PlayDataUncheckedUpdateManyWithoutMusicInput = {
@@ -21680,6 +37790,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user_id?: IntFieldUpdateOperationsInput | number
+    chart_id?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type BasicBestPlayUpdateWithoutMusicInput = {
@@ -21694,6 +37805,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutBasicBestPlayNestedInput
+    chart?: MusicChartUpdateOneWithoutBasicBestPlayNestedInput
   }
 
   export type BasicBestPlayUncheckedUpdateWithoutMusicInput = {
@@ -21709,6 +37821,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user_id?: IntFieldUpdateOperationsInput | number
+    chart_id?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type BasicBestPlayUncheckedUpdateManyWithoutMusicInput = {
@@ -21724,6 +37837,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user_id?: IntFieldUpdateOperationsInput | number
+    chart_id?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type RecitalBestPlayUpdateWithoutMusicInput = {
@@ -21738,6 +37852,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutRecitalBestPlayNestedInput
+    chart?: MusicChartUpdateOneWithoutRecitalBestPlayNestedInput
   }
 
   export type RecitalBestPlayUncheckedUpdateWithoutMusicInput = {
@@ -21753,6 +37868,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user_id?: IntFieldUpdateOperationsInput | number
+    chart_id?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type RecitalBestPlayUncheckedUpdateManyWithoutMusicInput = {
@@ -21768,6 +37884,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user_id?: IntFieldUpdateOperationsInput | number
+    chart_id?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type BingoUpdateWithoutMusicInput = {
@@ -21818,6 +37935,663 @@ export namespace Prisma {
     level?: NullableStringFieldUpdateOperationsInput | string | null
     isReal?: BoolFieldUpdateOperationsInput | boolean
     bingo_id?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type MusicChartUpdateWithoutMusicInput = {
+    difficulty?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    constantHistory?: ChartConstantHistoryUpdateManyWithoutChartNestedInput
+    evaluations?: ChartEvaluationUpdateManyWithoutChartNestedInput
+    RecentPlay?: RecentPlayUpdateManyWithoutChartNestedInput
+    PlayData?: PlayDataUpdateManyWithoutChartNestedInput
+    BasicBestPlay?: BasicBestPlayUpdateManyWithoutChartNestedInput
+    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutChartNestedInput
+    playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
+    recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
+  }
+
+  export type MusicChartUncheckedUpdateWithoutMusicInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    difficulty?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    constantHistory?: ChartConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
+    evaluations?: ChartEvaluationUncheckedUpdateManyWithoutChartNestedInput
+    RecentPlay?: RecentPlayUncheckedUpdateManyWithoutChartNestedInput
+    PlayData?: PlayDataUncheckedUpdateManyWithoutChartNestedInput
+    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutChartNestedInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutChartNestedInput
+    playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
+    recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
+  }
+
+  export type MusicChartUncheckedUpdateManyWithoutMusicInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    difficulty?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChartConstantHistoryCreateManyChartInput = {
+    id?: number
+    value: number
+    effective_at?: Date | string
+    created_at?: Date | string
+  }
+
+  export type ChartEvaluationCreateManyChartInput = {
+    id?: number
+    perceived_constant: number
+    stairs: number
+    chord: number
+    trill: number
+    glissando: number
+    repetition: number
+    comment?: string | null
+    user_id: number
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type RecentPlayCreateManyChartInput = {
+    id?: number
+    difficulty: string
+    level: number
+    score: number
+    max_combo: number
+    rank: string
+    play_time: string
+    grade_basic: number
+    created_at?: Date | string
+    updated_at?: Date | string
+    user_id: number
+    music_idx: string
+  }
+
+  export type PlayDataCreateManyChartInput = {
+    id?: number
+    level: number
+    difficulty: string
+    score: number
+    rank: string
+    fc_type: number
+    play_count: number
+    fullcombo_count: number
+    pianistic_count: number
+    max_combo: number
+    grade_basic: number
+    grade_recital: number
+    besttime: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    user_id: number
+    music_idx: string
+  }
+
+  export type BasicBestPlayCreateManyChartInput = {
+    id?: number
+    difficulty: string
+    level: number
+    score: number
+    max_combo: number
+    rank: string
+    besttime: string
+    grade_basic: number
+    fc_type: number
+    created_at?: Date | string
+    updated_at?: Date | string
+    user_id: number
+    music_idx: string
+  }
+
+  export type RecitalBestPlayCreateManyChartInput = {
+    id?: number
+    difficulty: string
+    level: number
+    score: number
+    max_combo: number
+    rank: string
+    besttime: string
+    grade_recital: number
+    fc_type: number
+    created_at?: Date | string
+    updated_at?: Date | string
+    user_id: number
+    music_idx: string
+  }
+
+  export type ChartPlayHistoryCreateManyChartInput = {
+    id?: number
+    score: number
+    max_combo: number
+    rank: string
+    grade_basic: number
+    source_play_time: string
+    user_id: number
+    first_sync_id?: number | null
+    created_at?: Date | string
+  }
+
+  export type ChartRecordSnapshotCreateManyChartInput = {
+    id?: number
+    level: number
+    score: number
+    rank: string
+    fc_type: number
+    play_count: number
+    fullcombo_count: number
+    pianistic_count: number
+    max_combo: number
+    grade_basic: number
+    grade_recital: number
+    besttime: string
+    user_id: number
+    sync_id: number
+    created_at?: Date | string
+  }
+
+  export type ChartConstantHistoryUpdateWithoutChartInput = {
+    value?: FloatFieldUpdateOperationsInput | number
+    effective_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChartConstantHistoryUncheckedUpdateWithoutChartInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    value?: FloatFieldUpdateOperationsInput | number
+    effective_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChartConstantHistoryUncheckedUpdateManyWithoutChartInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    value?: FloatFieldUpdateOperationsInput | number
+    effective_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChartEvaluationUpdateWithoutChartInput = {
+    perceived_constant?: FloatFieldUpdateOperationsInput | number
+    stairs?: IntFieldUpdateOperationsInput | number
+    chord?: IntFieldUpdateOperationsInput | number
+    trill?: IntFieldUpdateOperationsInput | number
+    glissando?: IntFieldUpdateOperationsInput | number
+    repetition?: IntFieldUpdateOperationsInput | number
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutChartEvaluationsNestedInput
+    reactions?: ChartEvaluationReactionUpdateManyWithoutEvaluationNestedInput
+  }
+
+  export type ChartEvaluationUncheckedUpdateWithoutChartInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    perceived_constant?: FloatFieldUpdateOperationsInput | number
+    stairs?: IntFieldUpdateOperationsInput | number
+    chord?: IntFieldUpdateOperationsInput | number
+    trill?: IntFieldUpdateOperationsInput | number
+    glissando?: IntFieldUpdateOperationsInput | number
+    repetition?: IntFieldUpdateOperationsInput | number
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    user_id?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    reactions?: ChartEvaluationReactionUncheckedUpdateManyWithoutEvaluationNestedInput
+  }
+
+  export type ChartEvaluationUncheckedUpdateManyWithoutChartInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    perceived_constant?: FloatFieldUpdateOperationsInput | number
+    stairs?: IntFieldUpdateOperationsInput | number
+    chord?: IntFieldUpdateOperationsInput | number
+    trill?: IntFieldUpdateOperationsInput | number
+    glissando?: IntFieldUpdateOperationsInput | number
+    repetition?: IntFieldUpdateOperationsInput | number
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    user_id?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RecentPlayUpdateWithoutChartInput = {
+    difficulty?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    score?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    play_time?: StringFieldUpdateOperationsInput | string
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutPlayHistoryNestedInput
+    music?: MusicUpdateOneRequiredWithoutRecentPlayNestedInput
+  }
+
+  export type RecentPlayUncheckedUpdateWithoutChartInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    difficulty?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    score?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    play_time?: StringFieldUpdateOperationsInput | string
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user_id?: IntFieldUpdateOperationsInput | number
+    music_idx?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type RecentPlayUncheckedUpdateManyWithoutChartInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    difficulty?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    score?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    play_time?: StringFieldUpdateOperationsInput | string
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user_id?: IntFieldUpdateOperationsInput | number
+    music_idx?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type PlayDataUpdateWithoutChartInput = {
+    level?: IntFieldUpdateOperationsInput | number
+    difficulty?: StringFieldUpdateOperationsInput | string
+    score?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    fc_type?: IntFieldUpdateOperationsInput | number
+    play_count?: IntFieldUpdateOperationsInput | number
+    fullcombo_count?: IntFieldUpdateOperationsInput | number
+    pianistic_count?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    grade_recital?: IntFieldUpdateOperationsInput | number
+    besttime?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutPlayDataNestedInput
+    music?: MusicUpdateOneRequiredWithoutPlayDataNestedInput
+  }
+
+  export type PlayDataUncheckedUpdateWithoutChartInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    level?: IntFieldUpdateOperationsInput | number
+    difficulty?: StringFieldUpdateOperationsInput | string
+    score?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    fc_type?: IntFieldUpdateOperationsInput | number
+    play_count?: IntFieldUpdateOperationsInput | number
+    fullcombo_count?: IntFieldUpdateOperationsInput | number
+    pianistic_count?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    grade_recital?: IntFieldUpdateOperationsInput | number
+    besttime?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user_id?: IntFieldUpdateOperationsInput | number
+    music_idx?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type PlayDataUncheckedUpdateManyWithoutChartInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    level?: IntFieldUpdateOperationsInput | number
+    difficulty?: StringFieldUpdateOperationsInput | string
+    score?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    fc_type?: IntFieldUpdateOperationsInput | number
+    play_count?: IntFieldUpdateOperationsInput | number
+    fullcombo_count?: IntFieldUpdateOperationsInput | number
+    pianistic_count?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    grade_recital?: IntFieldUpdateOperationsInput | number
+    besttime?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user_id?: IntFieldUpdateOperationsInput | number
+    music_idx?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type BasicBestPlayUpdateWithoutChartInput = {
+    difficulty?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    score?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    besttime?: StringFieldUpdateOperationsInput | string
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    fc_type?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutBasicBestPlayNestedInput
+    music?: MusicUpdateOneRequiredWithoutBasicBestPlayNestedInput
+  }
+
+  export type BasicBestPlayUncheckedUpdateWithoutChartInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    difficulty?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    score?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    besttime?: StringFieldUpdateOperationsInput | string
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    fc_type?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user_id?: IntFieldUpdateOperationsInput | number
+    music_idx?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type BasicBestPlayUncheckedUpdateManyWithoutChartInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    difficulty?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    score?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    besttime?: StringFieldUpdateOperationsInput | string
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    fc_type?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user_id?: IntFieldUpdateOperationsInput | number
+    music_idx?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type RecitalBestPlayUpdateWithoutChartInput = {
+    difficulty?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    score?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    besttime?: StringFieldUpdateOperationsInput | string
+    grade_recital?: IntFieldUpdateOperationsInput | number
+    fc_type?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutRecitalBestPlayNestedInput
+    music?: MusicUpdateOneRequiredWithoutRecitalBestPlayNestedInput
+  }
+
+  export type RecitalBestPlayUncheckedUpdateWithoutChartInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    difficulty?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    score?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    besttime?: StringFieldUpdateOperationsInput | string
+    grade_recital?: IntFieldUpdateOperationsInput | number
+    fc_type?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user_id?: IntFieldUpdateOperationsInput | number
+    music_idx?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type RecitalBestPlayUncheckedUpdateManyWithoutChartInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    difficulty?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    score?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    besttime?: StringFieldUpdateOperationsInput | string
+    grade_recital?: IntFieldUpdateOperationsInput | number
+    fc_type?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user_id?: IntFieldUpdateOperationsInput | number
+    music_idx?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ChartPlayHistoryUpdateWithoutChartInput = {
+    score?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    source_play_time?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutChartPlayHistoryNestedInput
+    firstSync?: DataSyncUpdateOneWithoutPlayHistoryNestedInput
+  }
+
+  export type ChartPlayHistoryUncheckedUpdateWithoutChartInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    score?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    source_play_time?: StringFieldUpdateOperationsInput | string
+    user_id?: IntFieldUpdateOperationsInput | number
+    first_sync_id?: NullableIntFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChartPlayHistoryUncheckedUpdateManyWithoutChartInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    score?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    source_play_time?: StringFieldUpdateOperationsInput | string
+    user_id?: IntFieldUpdateOperationsInput | number
+    first_sync_id?: NullableIntFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChartRecordSnapshotUpdateWithoutChartInput = {
+    level?: IntFieldUpdateOperationsInput | number
+    score?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    fc_type?: IntFieldUpdateOperationsInput | number
+    play_count?: IntFieldUpdateOperationsInput | number
+    fullcombo_count?: IntFieldUpdateOperationsInput | number
+    pianistic_count?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    grade_recital?: IntFieldUpdateOperationsInput | number
+    besttime?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutChartRecordSnapshotsNestedInput
+    sync?: DataSyncUpdateOneRequiredWithoutRecordSnapshotsNestedInput
+  }
+
+  export type ChartRecordSnapshotUncheckedUpdateWithoutChartInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    level?: IntFieldUpdateOperationsInput | number
+    score?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    fc_type?: IntFieldUpdateOperationsInput | number
+    play_count?: IntFieldUpdateOperationsInput | number
+    fullcombo_count?: IntFieldUpdateOperationsInput | number
+    pianistic_count?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    grade_recital?: IntFieldUpdateOperationsInput | number
+    besttime?: StringFieldUpdateOperationsInput | string
+    user_id?: IntFieldUpdateOperationsInput | number
+    sync_id?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChartRecordSnapshotUncheckedUpdateManyWithoutChartInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    level?: IntFieldUpdateOperationsInput | number
+    score?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    fc_type?: IntFieldUpdateOperationsInput | number
+    play_count?: IntFieldUpdateOperationsInput | number
+    fullcombo_count?: IntFieldUpdateOperationsInput | number
+    pianistic_count?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    grade_recital?: IntFieldUpdateOperationsInput | number
+    besttime?: StringFieldUpdateOperationsInput | string
+    user_id?: IntFieldUpdateOperationsInput | number
+    sync_id?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChartPlayHistoryCreateManyFirstSyncInput = {
+    id?: number
+    score: number
+    max_combo: number
+    rank: string
+    grade_basic: number
+    source_play_time: string
+    chart_id: number
+    user_id: number
+    created_at?: Date | string
+  }
+
+  export type ChartRecordSnapshotCreateManySyncInput = {
+    id?: number
+    level: number
+    score: number
+    rank: string
+    fc_type: number
+    play_count: number
+    fullcombo_count: number
+    pianistic_count: number
+    max_combo: number
+    grade_basic: number
+    grade_recital: number
+    besttime: string
+    chart_id: number
+    user_id: number
+    created_at?: Date | string
+  }
+
+  export type ChartPlayHistoryUpdateWithoutFirstSyncInput = {
+    score?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    source_play_time?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    chart?: MusicChartUpdateOneRequiredWithoutPlayHistoryNestedInput
+    user?: UserUpdateOneRequiredWithoutChartPlayHistoryNestedInput
+  }
+
+  export type ChartPlayHistoryUncheckedUpdateWithoutFirstSyncInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    score?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    source_play_time?: StringFieldUpdateOperationsInput | string
+    chart_id?: IntFieldUpdateOperationsInput | number
+    user_id?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChartPlayHistoryUncheckedUpdateManyWithoutFirstSyncInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    score?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    source_play_time?: StringFieldUpdateOperationsInput | string
+    chart_id?: IntFieldUpdateOperationsInput | number
+    user_id?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChartRecordSnapshotUpdateWithoutSyncInput = {
+    level?: IntFieldUpdateOperationsInput | number
+    score?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    fc_type?: IntFieldUpdateOperationsInput | number
+    play_count?: IntFieldUpdateOperationsInput | number
+    fullcombo_count?: IntFieldUpdateOperationsInput | number
+    pianistic_count?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    grade_recital?: IntFieldUpdateOperationsInput | number
+    besttime?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    chart?: MusicChartUpdateOneRequiredWithoutRecordSnapshotsNestedInput
+    user?: UserUpdateOneRequiredWithoutChartRecordSnapshotsNestedInput
+  }
+
+  export type ChartRecordSnapshotUncheckedUpdateWithoutSyncInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    level?: IntFieldUpdateOperationsInput | number
+    score?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    fc_type?: IntFieldUpdateOperationsInput | number
+    play_count?: IntFieldUpdateOperationsInput | number
+    fullcombo_count?: IntFieldUpdateOperationsInput | number
+    pianistic_count?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    grade_recital?: IntFieldUpdateOperationsInput | number
+    besttime?: StringFieldUpdateOperationsInput | string
+    chart_id?: IntFieldUpdateOperationsInput | number
+    user_id?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChartRecordSnapshotUncheckedUpdateManyWithoutSyncInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    level?: IntFieldUpdateOperationsInput | number
+    score?: IntFieldUpdateOperationsInput | number
+    rank?: StringFieldUpdateOperationsInput | string
+    fc_type?: IntFieldUpdateOperationsInput | number
+    play_count?: IntFieldUpdateOperationsInput | number
+    fullcombo_count?: IntFieldUpdateOperationsInput | number
+    pianistic_count?: IntFieldUpdateOperationsInput | number
+    max_combo?: IntFieldUpdateOperationsInput | number
+    grade_basic?: IntFieldUpdateOperationsInput | number
+    grade_recital?: IntFieldUpdateOperationsInput | number
+    besttime?: StringFieldUpdateOperationsInput | string
+    chart_id?: IntFieldUpdateOperationsInput | number
+    user_id?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChartEvaluationReactionCreateManyEvaluationInput = {
+    id?: number
+    value: number
+    user_id: number
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type ChartEvaluationReactionUpdateWithoutEvaluationInput = {
+    value?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutChartReactionsNestedInput
+  }
+
+  export type ChartEvaluationReactionUncheckedUpdateWithoutEvaluationInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    value?: IntFieldUpdateOperationsInput | number
+    user_id?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChartEvaluationReactionUncheckedUpdateManyWithoutEvaluationInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    value?: IntFieldUpdateOperationsInput | number
+    user_id?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type BingoCellCreateManyBingoInput = {

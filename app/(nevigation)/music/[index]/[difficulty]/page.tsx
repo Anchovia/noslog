@@ -1,103 +1,106 @@
-import MusicDetail from "@/components/music/musicDetail";
+import MusicDetail, {
+    type DetailTab,
+    type RankingMode,
+} from "@/components/music/musicDetail";
 import db from "@/lib/db";
-import { getBasicUserPlayData } from "./action";
+import { notFound } from "next/navigation";
+import { getRecentChartPlays, getUserPlayData } from "./action";
 
-export default async function BasicMusicDetail(props: {
+const difficulties = ["Normal", "Hard", "Expert", "Real"] as const;
+const tabs: DetailTab[] = ["record", "detail", "ranking", "tier"];
+
+export default async function MusicDetailPage(props: {
     params: Promise<{ index: string; difficulty: string }>;
+    searchParams: Promise<{ tab?: string; mode?: string }>;
 }) {
-    const params = await props.params;
-    const music = await db.music.findUnique({
-        where: { index: params.index },
-        select: {
-            index: true,
-            background: true,
-            title: true,
-            artist: true,
-            category: true,
-            sheet_len: true,
-            difficulty_levels: true,
-        },
-    });
+    const [{ index, difficulty }, searchParams] = await Promise.all([
+        props.params,
+        props.searchParams,
+    ]);
 
-    const basicPlayDatas = await db.playData.findMany({
-        where: {
-            music_idx: params.index,
-            difficulty: params.difficulty,
-        },
-        select: {
-            rank: true,
-            score: true,
-            user: {
-                select: {
-                    username: true,
-                    id: true,
-                },
-            },
-            max_combo: true,
-            grade_basic: true,
-            besttime: true,
-            user_id: true,
-        },
-        distinct: ["user_id"],
-        take: 50,
-        orderBy: {
-            grade_basic: "desc",
-        },
-    });
-    const recitalPlayDatas = await db.playData.findMany({
-        where: {
-            music_idx: params.index,
-            difficulty: params.difficulty,
-        },
-        select: {
-            rank: true,
-            score: true,
-            user: {
-                select: {
-                    username: true,
-                    id: true,
-                },
-            },
-            max_combo: true,
-            grade_recital: true,
-            besttime: true,
-            user_id: true,
-        },
-        distinct: ["user_id"],
-        take: 50,
-        orderBy: {
-            grade_recital: "desc",
-        },
-    });
+    if (!difficulties.includes(difficulty as (typeof difficulties)[number])) {
+        notFound();
+    }
 
-    const { grade_basic, level, score, max_combo, play_count, grade_recital } =
-        await getBasicUserPlayData({
-            index: params.index,
-            difficulty: params.difficulty,
-        });
+    const selectedDifficulty = difficulty as (typeof difficulties)[number];
+    const activeTab: DetailTab = tabs.includes(searchParams.tab as DetailTab)
+        ? (searchParams.tab as DetailTab)
+        : "record";
+    const rankingMode: RankingMode =
+        searchParams.mode === "recital" ? "recital" : "basic";
+
+    const [
+        music,
+        userPlayData,
+        recentChartPlays,
+        basicRankings,
+        recitalRankings,
+    ] = await Promise.all([
+        db.music.findUnique({
+            where: { index },
+            select: {
+                index: true,
+                background: true,
+                title: true,
+                artist: true,
+                category_short: true,
+                normal: true,
+                hard: true,
+                expert: true,
+                real: true,
+            },
+        }),
+        getUserPlayData({ index, difficulty: selectedDifficulty }),
+        getRecentChartPlays({
+            index,
+            difficulty: selectedDifficulty,
+        }),
+        db.playData.findMany({
+            where: { music_idx: index, difficulty: selectedDifficulty },
+            select: {
+                rank: true,
+                score: true,
+                max_combo: true,
+                grade_basic: true,
+                besttime: true,
+                user_id: true,
+                user: { select: { username: true, id: true } },
+            },
+            distinct: ["user_id"],
+            take: 50,
+            orderBy: { grade_basic: "desc" },
+        }),
+        db.playData.findMany({
+            where: { music_idx: index, difficulty: selectedDifficulty },
+            select: {
+                rank: true,
+                score: true,
+                max_combo: true,
+                grade_recital: true,
+                besttime: true,
+                user_id: true,
+                user: { select: { username: true, id: true } },
+            },
+            distinct: ["user_id"],
+            take: 50,
+            orderBy: { grade_recital: "desc" },
+        }),
+    ]);
+
+    if (!music) {
+        notFound();
+    }
 
     return (
-        <>
-            {music && (
-                <MusicDetail
-                    category={music.category}
-                    index={music.index}
-                    grade_basic={grade_basic}
-                    grade_recital={grade_recital}
-                    title={music.title}
-                    artist={music.artist}
-                    background={music.background}
-                    score={score}
-                    max_combo={max_combo}
-                    play_count={play_count}
-                    difficulty={params.difficulty}
-                    sheet_len={music.sheet_len}
-                    difficulty_levels={music.difficulty_levels}
-                    level={level}
-                    basicPlayDatas={basicPlayDatas}
-                    recitalPlayDatas={recitalPlayDatas}
-                />
-            )}
-        </>
+        <MusicDetail
+            music={music}
+            difficulty={selectedDifficulty}
+            activeTab={activeTab}
+            rankingMode={rankingMode}
+            userPlayData={userPlayData}
+            recentChartPlays={recentChartPlays}
+            basicRankings={basicRankings}
+            recitalRankings={recitalRankings}
+        />
     );
 }
