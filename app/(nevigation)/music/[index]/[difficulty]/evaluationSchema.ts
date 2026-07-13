@@ -17,7 +17,11 @@ export const chartEvaluationSchema = z.object({
     trill: patternScore,
     glissando: patternScore,
     repetition: patternScore,
-    comment: z.string().trim().max(120).optional(),
+    comment: z
+        .string()
+        .trim()
+        .min(1, "코멘트를 입력해 주세요.")
+        .max(120, "코멘트는 120자 이하로 입력해 주세요."),
 });
 
 export const chartEvaluationReactionSchema = z.object({
@@ -25,7 +29,14 @@ export const chartEvaluationReactionSchema = z.object({
     value: z.union([z.literal(1), z.literal(-1)]),
 });
 
+export const chartEvaluationDeleteSchema = z.object({
+    evaluationId: z.number().int().positive(),
+});
+
 export type ChartEvaluationInput = z.infer<typeof chartEvaluationSchema>;
 export type ChartEvaluationReactionInput = z.infer<
     typeof chartEvaluationReactionSchema
+>;
+export type ChartEvaluationDeleteInput = z.infer<
+    typeof chartEvaluationDeleteSchema
 >;

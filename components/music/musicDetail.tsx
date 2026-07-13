@@ -134,6 +134,7 @@ interface MusicDetailProps {
             positiveCount: number;
             negativeCount: number;
             viewerReaction: number | null;
+            canDelete: boolean;
         }[];
     };
 }
@@ -724,7 +725,10 @@ export default function MusicDetail({
 
             {activeTab === "tier" && (
                 <MusicTierVote
+                    key={chartDetail.id}
                     chartId={chartDetail.id}
+                    canVote={Boolean(userPlayData)}
+                    difficulty={difficulty}
                     level={chartDetail.level}
                     officialConstant={chartDetail.level_constant}
                     constantHistory={tier.constantHistory}

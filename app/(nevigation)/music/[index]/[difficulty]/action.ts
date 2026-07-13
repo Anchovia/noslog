@@ -4,8 +4,10 @@ import db from "@/lib/db";
 import getSession from "@/lib/session";
 import { revalidatePath } from "next/cache";
 import {
+    chartEvaluationDeleteSchema,
     chartEvaluationReactionSchema,
     chartEvaluationSchema,
+    type ChartEvaluationDeleteInput,
     type ChartEvaluationInput,
     type ChartEvaluationReactionInput,
 } from "./evaluationSchema";
@@ -18,11 +20,13 @@ interface EvaluationActionResult {
 interface GetUserPlayDataProps {
     index: string;
     difficulty: string;
+    chartId?: number;
 }
 
 export async function getUserPlayData({
     index,
     difficulty,
+    chartId,
 }: GetUserPlayDataProps) {
     const session = await getSession();
 
@@ -35,6 +39,8 @@ export async function getUserPlayData({
             music_idx: index,
             user_id: session.id,
             difficulty,
+            chart_id: chartId,
+            score: { gt: 0 },
         },
         select: {
             user_id: true,
@@ -125,6 +131,22 @@ export async function submitChartEvaluation(
         return { success: false, message: "채보 정보를 찾을 수 없습니다." };
     }
 
+    const playData = await db.playData.findFirst({
+        where: {
+            chart_id: chart.id,
+            user_id: session.id,
+            score: { gt: 0 },
+        },
+        select: { id: true },
+    });
+
+    if (!playData) {
+        return {
+            success: false,
+            message: "해당 채보의 플레이 기록 연동 후 투표할 수 있습니다.",
+        };
+    }
+
     const data = {
         perceived_constant: parsed.data.perceivedConstant,
         stairs: parsed.data.stairs,
@@ -132,7 +154,7 @@ export async function submitChartEvaluation(
         trill: parsed.data.trill,
         glissando: parsed.data.glissando,
         repetition: parsed.data.repetition,
-        comment: parsed.data.comment || null,
+        comment: parsed.data.comment,
     };
 
     await db.chartEvaluation.upsert({
@@ -219,4 +241,47 @@ export async function toggleChartEvaluationReaction(
     );
 
     return { success: true, message: "반응이 반영되었습니다." };
+}
+
+// 사용자가 제출한 체감 난이도, 패턴 투표와 의견을 함께 삭제함
+export async function deleteChartEvaluation(
+    input: ChartEvaluationDeleteInput
+): Promise<EvaluationActionResult> {
+    const session = await getSession();
+
+    if (!session.id) {
+        return { success: false, message: "로그인 후 삭제할 수 있습니다." };
+    }
+
+    const parsed = chartEvaluationDeleteSchema.safeParse(input);
+
+    if (!parsed.success) {
+        return { success: false, message: "삭제할 투표를 확인해 주세요." };
+    }
+
+    const evaluation = await db.chartEvaluation.findFirst({
+        where: {
+            id: parsed.data.evaluationId,
+            user_id: session.id,
+        },
+        select: {
+            id: true,
+            chart: { select: { music_idx: true, difficulty: true } },
+        },
+    });
+
+    if (!evaluation) {
+        return {
+            success: false,
+            message: "삭제할 수 있는 본인 투표를 찾지 못했습니다.",
+        };
+    }
+
+    await db.chartEvaluation.delete({ where: { id: evaluation.id } });
+
+    revalidatePath(
+        `/music/${evaluation.chart.music_idx}/${evaluation.chart.difficulty}`
+    );
+
+    return { success: true, message: "투표와 의견이 삭제되었습니다." };
 }

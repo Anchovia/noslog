@@ -87,7 +87,11 @@ export default async function MusicDetailPage(props: {
         opinionCount,
         chartScores,
     ] = await Promise.all([
-        getUserPlayData({ index, difficulty: selectedDifficulty }),
+        getUserPlayData({
+            index,
+            difficulty: selectedDifficulty,
+            chartId: selectedChart.id,
+        }),
         getRecentChartPlays({
             index,
             difficulty: selectedDifficulty,
@@ -331,6 +335,7 @@ export default async function MusicDetailPage(props: {
                         opinion.reactions.find(
                             (reaction) => reaction.user_id === session.id
                         )?.value ?? null,
+                    canDelete: opinion.user.id === session.id,
                 })),
             }}
         />

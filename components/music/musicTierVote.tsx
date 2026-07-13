@@ -1,13 +1,15 @@
 "use client";
 
 import {
+    deleteChartEvaluation,
     submitChartEvaluation,
     toggleChartEvaluationReaction,
 } from "@/app/(nevigation)/music/[index]/[difficulty]/action";
 import { cn } from "@/lib/utils";
-import { Check, Minus, Plus, ThumbsDown, ThumbsUp } from "lucide-react";
+import { Check, Minus, Plus, ThumbsDown, ThumbsUp, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import { useMemo, useState, useTransition } from "react";
 import {
     Line,
@@ -27,11 +29,20 @@ const patternItems = [
 ] as const;
 const patternLevels = ["없음", "낮음", "보통", "높음", "매우높음"];
 
-type PatternKey = (typeof patternItems)[number]["key"];
-type PatternValues = Record<PatternKey, number | null>;
+interface EvaluationFormValues {
+    perceivedConstant: number;
+    stairs: number | null;
+    chord: number | null;
+    trill: number | null;
+    glissando: number | null;
+    repetition: number | null;
+    comment: string;
+}
 
 interface MusicTierVoteProps {
     chartId: number;
+    canVote: boolean;
+    difficulty: "Normal" | "Hard" | "Expert" | "Real";
     level: number;
     officialConstant: number | null;
     constantHistory: {
@@ -63,6 +74,7 @@ interface MusicTierVoteProps {
         positiveCount: number;
         negativeCount: number;
         viewerReaction: number | null;
+        canDelete: boolean;
     }[];
 }
 
@@ -84,6 +96,8 @@ function formatDate(value: string) {
 // 악곡별 서열 추이와 사용자 투표 UI를 한곳에서 관리함
 export default function MusicTierVote({
     chartId,
+    canVote,
+    difficulty,
     level,
     officialConstant,
     constantHistory,
@@ -95,49 +109,79 @@ export default function MusicTierVote({
     const router = useRouter();
     const [isPending, startTransition] = useTransition();
     const [message, setMessage] = useState<string | null>(null);
+    const [isCommentExpanded, setIsCommentExpanded] = useState(false);
+    const defaultConstant = difficulty === "Real" ? level + 10 : level;
+    const fallbackConstant = Math.min(
+        14,
+        Math.max(1, officialConstant ?? defaultConstant)
+    );
     const initialConstant = Math.min(
         14,
-        Math.max(
-            1,
-            currentEvaluation?.perceived_constant ?? officialConstant ?? level
-        )
+        Math.max(1, currentEvaluation?.perceived_constant ?? fallbackConstant)
     );
-    const [perceivedInput, setPerceivedInput] = useState(
-        initialConstant.toFixed(1)
-    );
-    const [comment, setComment] = useState(currentEvaluation?.comment ?? "");
-    const [patterns, setPatterns] = useState<PatternValues>({
-        stairs: currentEvaluation?.stairs ?? null,
-        chord: currentEvaluation?.chord ?? null,
-        trill: currentEvaluation?.trill ?? null,
-        glissando: currentEvaluation?.glissando ?? null,
-        repetition: currentEvaluation?.repetition ?? null,
+    const {
+        register,
+        control,
+        handleSubmit,
+        setValue,
+        reset,
+        formState: { errors },
+    } = useForm<EvaluationFormValues>({
+        defaultValues: {
+            perceivedConstant: initialConstant,
+            stairs: currentEvaluation?.stairs ?? null,
+            chord: currentEvaluation?.chord ?? null,
+            trill: currentEvaluation?.trill ?? null,
+            glissando: currentEvaluation?.glissando ?? null,
+            repetition: currentEvaluation?.repetition ?? null,
+            comment: currentEvaluation?.comment ?? "",
+        },
+    });
+    const perceivedInput = useWatch({
+        control,
+        name: "perceivedConstant",
     });
 
     const histogram = useMemo(() => {
-        const center = Math.round(
-            (community.average ?? officialConstant ?? level) * 10
+        if (community.distribution.length === 0) return [];
+
+        const distribution = new Map(
+            community.distribution.map((item) => [
+                Math.round(item.value * 10),
+                item.count,
+            ])
         );
+        const values = [...distribution.keys()];
+        const minimum = Math.min(...values);
+        const maximum = Math.max(...values);
 
-        return [-2, -1, 0, 1, 2].map((offset) => {
-            const value = (center + offset) / 10;
-            const item = community.distribution.find(
-                (entry) => Math.round(entry.value * 10) === center + offset
-            );
+        return Array.from({ length: maximum - minimum + 1 }, (_, index) => {
+            const tick = minimum + index;
+            const value = tick / 10;
+            const count = distribution.get(tick) ?? 0;
 
-            return { value, count: item?.count ?? 0 };
+            return { value, count };
         });
-    }, [community, level, officialConstant]);
+    }, [community.distribution]);
     const maximumHistogramCount = Math.max(
         1,
         ...histogram.map((item) => item.count)
     );
+    const highlightedHistogramValue =
+        community.average === null || community.distribution.length === 0
+            ? null
+            : community.distribution.reduce((closest, item) =>
+                  Math.abs(item.value - community.average!) <
+                  Math.abs(closest.value - community.average!)
+                      ? item
+                      : closest
+              ).value;
     const constantDelta =
         constantHistory.length > 1
             ? constantHistory.at(-1)!.value - constantHistory[0].value
             : 0;
-    const allPatternsSelected = patternItems.every(
-        ({ key }) => patterns[key] !== null
+    const hasPatternError = patternItems.some(
+        ({ key }) => errors[key] !== undefined
     );
     const parsedPerceivedConstant = Number(perceivedInput);
     const isPerceivedConstantValid =
@@ -155,45 +199,28 @@ export default function MusicTierVote({
             Math.max(1, Math.round((current + amount) * 10) / 10)
         );
 
-        setPerceivedInput(next.toFixed(1));
+        setValue("perceivedConstant", next, {
+            shouldDirty: true,
+            shouldValidate: true,
+        });
     };
 
-    const normalizeConstantInput = () => {
-        if (!Number.isFinite(parsedPerceivedConstant)) {
-            setPerceivedInput(initialConstant.toFixed(1));
-            return;
-        }
-
-        const normalized = Math.min(
-            14,
-            Math.max(1, Math.round(parsedPerceivedConstant * 10) / 10)
-        );
-        setPerceivedInput(normalized.toFixed(1));
-    };
-
-    const submitVote = () => {
-        if (!isPerceivedConstantValid) {
-            setMessage(
-                "체감 난이도는 1.0부터 14.0까지 0.1 단위로 입력해 주세요."
-            );
-            return;
-        }
-
-        if (!allPatternsSelected) {
-            setMessage("다섯 패턴 항목을 모두 선택해 주세요.");
+    const submitVote = (data: EvaluationFormValues) => {
+        if (!canVote) {
+            setMessage("해당 채보의 플레이 기록 연동 후 투표할 수 있습니다.");
             return;
         }
 
         startTransition(async () => {
             const result = await submitChartEvaluation({
                 chartId,
-                perceivedConstant: parsedPerceivedConstant,
-                stairs: patterns.stairs!,
-                chord: patterns.chord!,
-                trill: patterns.trill!,
-                glissando: patterns.glissando!,
-                repetition: patterns.repetition!,
-                comment,
+                perceivedConstant: data.perceivedConstant,
+                stairs: data.stairs!,
+                chord: data.chord!,
+                trill: data.trill!,
+                glissando: data.glissando!,
+                repetition: data.repetition!,
+                comment: data.comment,
             });
 
             setMessage(result.message);
@@ -212,6 +239,55 @@ export default function MusicTierVote({
             if (result.success) router.refresh();
         });
     };
+
+    const deleteEvaluation = (evaluationId: number) => {
+        if (!window.confirm("체감 난이도, 패턴 투표와 의견을 모두 삭제할까요?"))
+            return;
+
+        startTransition(async () => {
+            const result = await deleteChartEvaluation({ evaluationId });
+
+            setMessage(result.message);
+            if (result.success) {
+                reset({
+                    perceivedConstant: fallbackConstant,
+                    stairs: null,
+                    chord: null,
+                    trill: null,
+                    glissando: null,
+                    repetition: null,
+                    comment: "",
+                });
+                setIsCommentExpanded(false);
+                router.refresh();
+            }
+        });
+    };
+
+    const perceivedConstantField = register("perceivedConstant", {
+        valueAsNumber: true,
+        required: "체감 난이도를 입력해 주세요.",
+        min: {
+            value: 1,
+            message: "체감 난이도는 1.0 이상이어야 합니다.",
+        },
+        max: {
+            value: 14,
+            message: "체감 난이도는 14.0 이하여야 합니다.",
+        },
+        validate: (value) =>
+            Number.isInteger(value * 10) ||
+            "체감 난이도는 0.1 단위로 입력해 주세요.",
+    });
+    const commentField = register("comment", {
+        required: "코멘트를 입력해 주세요.",
+        validate: (value) =>
+            value.trim().length > 0 || "코멘트를 입력해 주세요.",
+        maxLength: {
+            value: 120,
+            message: "코멘트는 120자 이하로 입력해 주세요.",
+        },
+    });
 
     return (
         <div className="flex flex-col gap-3">
@@ -320,96 +396,159 @@ export default function MusicTierVote({
                         투표 {community.count.toLocaleString("ko-KR")}
                     </span>
                 </header>
-                <div className="mt-3 grid h-14 grid-cols-5 items-end gap-1">
-                    {histogram.map((item) => (
+                {histogram.length > 0 ? (
+                    <div className="mt-3 overflow-x-auto pb-1">
                         <div
-                            key={item.value}
-                            className="flex h-full flex-col items-center justify-end gap-1"
+                            className={cn(
+                                "flex h-14 items-end gap-1",
+                                histogram.length <= 6
+                                    ? "justify-center"
+                                    : "w-max"
+                            )}
                         >
-                            <span
-                                className={cn(
-                                    "min-h-1 w-full rounded-t-sm",
-                                    community.average !== null &&
-                                        Math.round(item.value * 10) ===
-                                            Math.round(community.average * 10)
-                                        ? "bg-real"
-                                        : "bg-border"
-                                )}
-                                style={{
-                                    height: `${Math.max(
-                                        item.count > 0 ? 10 : 4,
-                                        (item.count / maximumHistogramCount) *
-                                            34
-                                    )}px`,
-                                }}
-                            />
-                            <span className="text-text-disabled text-xs tabular-nums">
-                                {item.value.toFixed(1)}
-                            </span>
+                            {histogram.map((item) => (
+                                <div
+                                    key={item.value}
+                                    className="flex h-full w-12 shrink-0 flex-col items-center justify-end gap-1"
+                                >
+                                    <span
+                                        className={cn(
+                                            "min-h-1 w-full rounded-t-sm",
+                                            highlightedHistogramValue !==
+                                                null &&
+                                                Math.round(item.value * 10) ===
+                                                    Math.round(
+                                                        highlightedHistogramValue *
+                                                            10
+                                                    )
+                                                ? "bg-real"
+                                                : "bg-border"
+                                        )}
+                                        style={{
+                                            height: `${Math.max(
+                                                item.count > 0 ? 10 : 4,
+                                                (item.count /
+                                                    maximumHistogramCount) *
+                                                    34
+                                            )}px`,
+                                        }}
+                                    />
+                                    <span className="text-text-disabled text-xs tabular-nums">
+                                        {item.value.toFixed(1)}
+                                    </span>
+                                </div>
+                            ))}
                         </div>
-                    ))}
-                </div>
+                    </div>
+                ) : (
+                    <p className="text-body-muted flex h-14 items-center justify-center">
+                        아직 등록된 체감 난이도 투표가 없습니다.
+                    </p>
+                )}
             </section>
 
             <section className="bg-surface rounded-card p-4">
                 <h2 className="text-section">체감 난이도 투표</h2>
-                <div className="mt-3 flex gap-2">
-                    <div className="border-border flex h-10 shrink-0 overflow-hidden rounded-lg border">
-                        <button
-                            type="button"
-                            aria-label="체감 난이도 0.1 낮추기"
-                            className="text-text-secondary hover:bg-surface-muted flex w-10 items-center justify-center"
-                            onClick={() => changeConstant(-0.1)}
+                {!canVote ? (
+                    <p className="bg-danger/10 text-danger mt-3 rounded-md px-3 py-2 text-xs font-medium">
+                        해당 채보의 플레이 기록 연동 후 투표할 수 있습니다.
+                    </p>
+                ) : null}
+                <div
+                    className={cn(
+                        "mt-3 gap-2",
+                        isCommentExpanded ? "block" : "flex"
+                    )}
+                >
+                    {!isCommentExpanded ? (
+                        <div
+                            className={cn(
+                                "border-border flex h-10 shrink-0 overflow-hidden rounded-lg border",
+                                errors.perceivedConstant &&
+                                    "border-danger ring-danger ring-1"
+                            )}
                         >
-                            <Minus size={16} aria-hidden />
-                        </button>
-                        <input
-                            type="number"
-                            min="1"
-                            max="14"
-                            step="0.1"
-                            inputMode="decimal"
-                            value={perceivedInput}
-                            onChange={(event) =>
-                                setPerceivedInput(event.target.value)
-                            }
-                            onBlur={normalizeConstantInput}
-                            aria-label="체감 난이도 직접 입력"
-                            className="bg-surface-muted text-text-primary h-full w-16 appearance-none px-1 text-center text-base font-extrabold tabular-nums outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                        />
-                        <button
-                            type="button"
-                            aria-label="체감 난이도 0.1 높이기"
-                            className="text-text-secondary hover:bg-surface-muted flex w-10 items-center justify-center"
-                            onClick={() => changeConstant(0.1)}
-                        >
-                            <Plus size={16} aria-hidden />
-                        </button>
-                    </div>
-                    <input
-                        value={comment}
-                        onChange={(event) => setComment(event.target.value)}
+                            <button
+                                type="button"
+                                disabled={!canVote}
+                                aria-label="체감 난이도 0.1 낮추기"
+                                className="text-text-secondary hover:bg-surface-muted flex w-10 items-center justify-center disabled:opacity-40"
+                                onClick={() => changeConstant(-0.1)}
+                            >
+                                <Minus size={16} aria-hidden />
+                            </button>
+                            <input
+                                {...perceivedConstantField}
+                                type="number"
+                                min="1"
+                                max="14"
+                                step="0.1"
+                                inputMode="decimal"
+                                disabled={!canVote}
+                                aria-label="체감 난이도 직접 입력"
+                                aria-invalid={Boolean(errors.perceivedConstant)}
+                                className="bg-surface-muted text-text-primary h-full w-16 appearance-none px-1 text-center text-base font-extrabold tabular-nums outline-none disabled:opacity-40 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                            />
+                            <button
+                                type="button"
+                                disabled={!canVote}
+                                aria-label="체감 난이도 0.1 높이기"
+                                className="text-text-secondary hover:bg-surface-muted flex w-10 items-center justify-center disabled:opacity-40"
+                                onClick={() => changeConstant(0.1)}
+                            >
+                                <Plus size={16} aria-hidden />
+                            </button>
+                        </div>
+                    ) : null}
+                    <textarea
+                        {...commentField}
+                        disabled={!canVote}
                         maxLength={120}
+                        rows={isCommentExpanded ? 4 : 1}
                         placeholder="짧은 코멘트"
                         aria-label="체감 난이도 코멘트"
-                        className="border-border bg-bg text-input placeholder:text-text-disabled focus:border-text-secondary min-w-0 flex-1 rounded-lg border border-dashed px-3 outline-none"
+                        aria-invalid={Boolean(errors.comment)}
+                        onFocus={() => setIsCommentExpanded(true)}
+                        onBlur={(event) => {
+                            commentField.onBlur(event);
+                            setIsCommentExpanded(false);
+                        }}
+                        className={cn(
+                            "border-border bg-bg text-input placeholder:text-text-disabled focus:border-text-secondary min-w-0 flex-1 resize-none rounded-lg border border-dashed px-3 py-2 transition-[height] outline-none disabled:opacity-40",
+                            isCommentExpanded
+                                ? "h-24 w-full overflow-y-auto"
+                                : "h-10 overflow-hidden",
+                            errors.comment && "border-danger ring-danger ring-1"
+                        )}
                     />
-                    <button
-                        type="button"
-                        disabled={isPending}
-                        onClick={submitVote}
-                        className="bg-text-primary text-bg flex h-10 shrink-0 items-center gap-1 rounded-lg px-3 text-sm font-bold disabled:opacity-50"
-                    >
-                        {currentEvaluation ? (
-                            <Check size={14} aria-hidden />
-                        ) : null}
-                        {isPending
-                            ? "처리 중"
-                            : currentEvaluation
-                              ? "수정"
-                              : "제출"}
-                    </button>
+                    {!isCommentExpanded ? (
+                        <button
+                            type="button"
+                            disabled={isPending || !canVote}
+                            onClick={handleSubmit(submitVote)}
+                            className="bg-text-primary text-bg flex h-10 shrink-0 items-center gap-1 rounded-lg px-3 text-sm font-bold disabled:opacity-50"
+                        >
+                            {currentEvaluation ? (
+                                <Check size={14} aria-hidden />
+                            ) : null}
+                            {isPending
+                                ? "처리 중"
+                                : currentEvaluation
+                                  ? "수정"
+                                  : "제출"}
+                        </button>
+                    ) : null}
                 </div>
+                {errors.perceivedConstant ? (
+                    <p className="text-danger mt-1 text-xs" role="alert">
+                        {errors.perceivedConstant.message}
+                    </p>
+                ) : null}
+                {errors.comment ? (
+                    <p className="text-danger mt-1 text-xs" role="alert">
+                        {errors.comment.message}
+                    </p>
+                ) : null}
 
                 <div className="border-divider mt-4 border-t pt-3">
                     <div className="flex items-baseline gap-2">
@@ -431,42 +570,72 @@ export default function MusicTierVote({
                             </span>
                         ))}
                         {patternItems.map(({ key, label }) => (
-                            <div key={key} className="contents">
-                                <span className="text-text-secondary text-sm">
-                                    {label}
-                                </span>
-                                {patternLevels.map((option, value) => (
-                                    <label
-                                        key={option}
-                                        className="flex h-9 cursor-pointer items-center justify-center"
-                                        title={`${label} ${option}`}
-                                    >
-                                        <input
-                                            type="radio"
-                                            name={key}
-                                            value={value}
-                                            checked={patterns[key] === value}
-                                            onChange={() =>
-                                                setPatterns((current) => ({
-                                                    ...current,
-                                                    [key]: value,
-                                                }))
-                                            }
-                                            className="sr-only"
-                                        />
-                                        <span
-                                            className={cn(
-                                                "size-4 rounded-full border transition-colors",
-                                                patterns[key] === value
-                                                    ? "border-chart bg-chart"
-                                                    : "border-border"
-                                            )}
-                                        />
-                                    </label>
-                                ))}
-                            </div>
+                            <Controller
+                                key={key}
+                                name={key}
+                                control={control}
+                                rules={{
+                                    validate: (value) =>
+                                        value !== null ||
+                                        "다섯 패턴 항목을 모두 선택해 주세요.",
+                                }}
+                                render={({ field }) => (
+                                    <div className="contents">
+                                        <span className="text-text-secondary text-sm">
+                                            {label}
+                                        </span>
+                                        {patternLevels.map((option, value) => (
+                                            <label
+                                                key={option}
+                                                className={cn(
+                                                    "flex h-9 items-center justify-center",
+                                                    canVote
+                                                        ? "cursor-pointer"
+                                                        : "cursor-not-allowed opacity-40"
+                                                )}
+                                                title={`${label} ${option}`}
+                                            >
+                                                <input
+                                                    ref={
+                                                        value === 0
+                                                            ? field.ref
+                                                            : undefined
+                                                    }
+                                                    type="radio"
+                                                    name={field.name}
+                                                    value={value}
+                                                    checked={
+                                                        field.value === value
+                                                    }
+                                                    disabled={!canVote}
+                                                    onBlur={field.onBlur}
+                                                    onChange={() =>
+                                                        field.onChange(value)
+                                                    }
+                                                    className="sr-only"
+                                                />
+                                                <span
+                                                    className={cn(
+                                                        "size-4 rounded-full border transition-colors",
+                                                        field.value === value
+                                                            ? "border-chart bg-chart"
+                                                            : "border-border",
+                                                        errors[key] &&
+                                                            "border-danger"
+                                                    )}
+                                                />
+                                            </label>
+                                        ))}
+                                    </div>
+                                )}
+                            />
                         ))}
                     </div>
+                    {hasPatternError ? (
+                        <p className="text-danger mt-2 text-xs" role="alert">
+                            다섯 패턴 항목을 모두 선택해 주세요.
+                        </p>
+                    ) : null}
                 </div>
                 {message ? (
                     <p
@@ -514,7 +683,7 @@ export default function MusicTierVote({
                                 <p className="text-body mt-1">
                                     {opinion.comment}
                                 </p>
-                                <div className="mt-2 flex gap-1">
+                                <div className="mt-2 flex items-center gap-1">
                                     <button
                                         type="button"
                                         disabled={isPending}
@@ -549,6 +718,20 @@ export default function MusicTierVote({
                                         <ThumbsDown size={14} aria-hidden />
                                         {opinion.negativeCount}
                                     </button>
+                                    {opinion.canDelete ? (
+                                        <button
+                                            type="button"
+                                            disabled={isPending}
+                                            onClick={() =>
+                                                deleteEvaluation(opinion.id)
+                                            }
+                                            aria-label="내 투표와 의견 삭제"
+                                            title="내 투표와 의견 삭제"
+                                            className="text-text-secondary hover:bg-danger/15 hover:text-danger ml-auto flex size-8 items-center justify-center rounded-md disabled:opacity-50"
+                                        >
+                                            <Trash2 size={14} aria-hidden />
+                                        </button>
+                                    ) : null}
                                 </div>
                             </li>
                         ))}
