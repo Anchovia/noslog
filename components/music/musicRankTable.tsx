@@ -103,7 +103,7 @@ export default function MusicRankTable({
         (_, index) => firstVisiblePage + index
     );
     const pageHref = (targetPage: number) =>
-        `/music/${musicIndex}/${difficulty}?tab=ranking&page=${targetPage}`;
+        `/music/${musicIndex}/${difficulty.toLowerCase()}?tab=ranking&page=${targetPage}`;
 
     return (
         <div className="flex flex-col gap-3">

@@ -84,7 +84,7 @@ export default function MusicCard(props: MusicCardProps) {
 
     return (
         <Link
-            href={`/music/${index}/${defaultDifficulty}`}
+            href={`/music/${index}/${defaultDifficulty.toLowerCase()}`}
             className="bg-surface rounded-card hover:bg-surface-muted flex min-h-16 w-full overflow-hidden transition-colors"
         >
             <div

@@ -78,7 +78,7 @@ export default function BingoPlate({
                         )}
                         {/* 빙고 데이터 */}
                         {cell.music_idx ? (
-                            <Link href={`/music/${cell.music_idx}/Normal`}>
+                            <Link href={`/music/${cell.music_idx}/normal`}>
                                 {cell.challenge}
                             </Link>
                         ) : cell.category_short ? (

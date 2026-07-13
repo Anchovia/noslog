@@ -16,11 +16,22 @@ export default async function MusicDetailPage(props: {
         props.searchParams,
     ]);
 
-    if (!difficulties.includes(difficulty as (typeof difficulties)[number])) {
-        notFound();
-    }
+    const normalizedDifficulty = difficulty.toLowerCase();
+    const selectedDifficulty = difficulties.find(
+        (item) => item.toLowerCase() === normalizedDifficulty
+    );
 
-    const selectedDifficulty = difficulty as (typeof difficulties)[number];
+    if (!selectedDifficulty) notFound();
+
+    if (difficulty !== normalizedDifficulty) {
+        const query = new URLSearchParams();
+        if (searchParams.tab) query.set("tab", searchParams.tab);
+        if (searchParams.page) query.set("page", searchParams.page);
+        const queryString = query.toString();
+        redirect(
+            `/music/${index}/${normalizedDifficulty}${queryString ? `?${queryString}` : ""}`
+        );
+    }
     const activeTab: DetailTab = tabs.includes(searchParams.tab as DetailTab)
         ? (searchParams.tab as DetailTab)
         : "record";
@@ -254,7 +265,7 @@ export default async function MusicDetailPage(props: {
 
     if (activeTab === "ranking" && rankingPage > rankingPageCount) {
         redirect(
-            `/music/${index}/${selectedDifficulty}?tab=ranking&page=${rankingPageCount}`
+            `/music/${index}/${normalizedDifficulty}?tab=ranking&page=${rankingPageCount}`
         );
     }
 

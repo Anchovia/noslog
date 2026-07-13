@@ -216,7 +216,7 @@ export default function MusicDetail({
     );
 
     return (
-        <main className="mx-auto flex min-h-screen max-w-(--breakpoint-sm) flex-col gap-3 px-4 py-4">
+        <div className="mx-auto flex min-h-screen max-w-(--breakpoint-sm) flex-col gap-3 px-4 py-4">
             <section className="flex min-w-0 items-center gap-3">
                 <div
                     className="bg-surface-muted rounded-card size-24 shrink-0 bg-cover bg-center"
@@ -279,7 +279,7 @@ export default function MusicDetail({
                     return (
                         <Link
                             key={item}
-                            href={`/music/${music.index}/${item}?tab=${activeTab}`}
+                            href={`/music/${music.index}/${item.toLowerCase()}?tab=${activeTab}`}
                             className={cn(
                                 "bg-surface rounded-card flex h-14 flex-col items-center justify-center gap-1 border",
                                 isActive
@@ -314,7 +314,7 @@ export default function MusicDetail({
                 {tabItems.map((tab) => (
                     <Link
                         key={tab.value}
-                        href={`/music/${music.index}/${difficulty}?tab=${tab.value}`}
+                        href={`/music/${music.index}/${difficulty.toLowerCase()}?tab=${tab.value}`}
                         className={cn(
                             "rounded-card shrink-0 px-3 py-2 text-sm font-semibold",
                             activeTab === tab.value
@@ -600,7 +600,7 @@ export default function MusicDetail({
                         )}
 
                         <Link
-                            href={`/music/${music.index}/${difficulty}?tab=tier`}
+                            href={`/music/${music.index}/${difficulty.toLowerCase()}?tab=tier`}
                             className="text-text-secondary mt-2 block text-right text-xs font-semibold"
                         >
                             패턴 투표 →
@@ -738,6 +738,6 @@ export default function MusicDetail({
                     opinions={tier.opinions}
                 />
             )}
-        </main>
+        </div>
     );
 }

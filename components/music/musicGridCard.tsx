@@ -52,7 +52,7 @@ export default function MusicGridCard(props: MusicItem) {
 
     return (
         <Link
-            href={`/music/${index}/${defaultDifficulty}`}
+            href={`/music/${index}/${defaultDifficulty.toLowerCase()}`}
             className="bg-surface rounded-card hover:bg-surface-muted min-w-0 overflow-hidden transition-colors"
         >
             <div

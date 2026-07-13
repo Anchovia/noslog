@@ -5,7 +5,6 @@ import { updateMusic } from "@/lib/services/music/updateMusic";
 import { updateGrade } from "@/lib/services/user/updateGrade";
 import { updatePlayCount } from "@/lib/services/user/updatePlayCount";
 import { updatePlayData } from "@/lib/services/user/updatePlayData";
-import { updateRank } from "@/lib/services/user/updateRank";
 import { updateRecentPlay } from "@/lib/services/user/updateRecentPlay";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
@@ -125,7 +124,6 @@ export async function POST(request: NextRequest) {
         if (music) {
             changedRecords = await updatePlayData(user.id, music, sync.id);
             await updateGrade(user.id);
-            await updateRank();
             await updateDummy();
         }
 

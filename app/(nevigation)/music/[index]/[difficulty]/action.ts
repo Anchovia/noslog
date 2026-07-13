@@ -172,7 +172,9 @@ export async function submitChartEvaluation(
         update: data,
     });
 
-    revalidatePath(`/music/${chart.music_idx}/${chart.difficulty}`);
+    revalidatePath(
+        `/music/${chart.music_idx}/${chart.difficulty.toLowerCase()}`
+    );
 
     return { success: true, message: "투표가 반영되었습니다." };
 }
@@ -237,7 +239,7 @@ export async function toggleChartEvaluationReaction(
     }
 
     revalidatePath(
-        `/music/${evaluation.chart.music_idx}/${evaluation.chart.difficulty}`
+        `/music/${evaluation.chart.music_idx}/${evaluation.chart.difficulty.toLowerCase()}`
     );
 
     return { success: true, message: "반응이 반영되었습니다." };
@@ -280,7 +282,7 @@ export async function deleteChartEvaluation(
     await db.chartEvaluation.delete({ where: { id: evaluation.id } });
 
     revalidatePath(
-        `/music/${evaluation.chart.music_idx}/${evaluation.chart.difficulty}`
+        `/music/${evaluation.chart.music_idx}/${evaluation.chart.difficulty.toLowerCase()}`
     );
 
     return { success: true, message: "투표와 의견이 삭제되었습니다." };

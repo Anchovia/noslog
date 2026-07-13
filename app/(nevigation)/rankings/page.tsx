@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import db from "@/lib/db";
 import { getUser } from "@/lib/user";
 import type { Prisma } from "@/lib/generated/prisma";
+import { getUserRankingPosition } from "@/lib/rankings";
 import { Globe2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -141,28 +142,16 @@ export default async function Rankings({ searchParams }: RankingsPageProps) {
                 user.country !== "ja-JP"));
 
     if (user && userGrade > 0 && userMatchesRegion) {
-        const higherUserCount = await db.user.count({
-            where: {
-                AND: [
-                    where,
-                    {
-                        OR: [
-                            { [gradeField]: { gt: userGrade } },
-                            {
-                                AND: [
-                                    { [gradeField]: userGrade },
-                                    { id: { lt: user.id } },
-                                ],
-                            },
-                        ],
-                    },
-                ],
-            },
+        const userRank = await getUserRankingPosition({
+            userId: user.id,
+            grade: userGrade,
+            mode,
+            scope: regionWhere(region),
         });
 
         currentUser = {
             id: user.id,
-            rank: higherUserCount + 1,
+            rank: userRank!,
             username: user.username,
             avatar: user.avatar,
             country: user.country,
