@@ -2780,6 +2780,8 @@ export namespace Prisma {
     score_d: number | null
     grade_basic: number | null
     grade_recital: number | null
+    exam_basic: number | null
+    exam_recital: number | null
   }
 
   export type UserSumAggregateOutputType = {
@@ -2801,6 +2803,8 @@ export namespace Prisma {
     score_d: number | null
     grade_basic: number | null
     grade_recital: number | null
+    exam_basic: number | null
+    exam_recital: number | null
   }
 
   export type UserMinAggregateOutputType = {
@@ -2828,6 +2832,8 @@ export namespace Prisma {
     role: string | null
     grade_basic: number | null
     grade_recital: number | null
+    exam_basic: number | null
+    exam_recital: number | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -2857,6 +2863,8 @@ export namespace Prisma {
     role: string | null
     grade_basic: number | null
     grade_recital: number | null
+    exam_basic: number | null
+    exam_recital: number | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -2886,6 +2894,8 @@ export namespace Prisma {
     role: number
     grade_basic: number
     grade_recital: number
+    exam_basic: number
+    exam_recital: number
     created_at: number
     updated_at: number
     _all: number
@@ -2911,6 +2921,8 @@ export namespace Prisma {
     score_d?: true
     grade_basic?: true
     grade_recital?: true
+    exam_basic?: true
+    exam_recital?: true
   }
 
   export type UserSumAggregateInputType = {
@@ -2932,6 +2944,8 @@ export namespace Prisma {
     score_d?: true
     grade_basic?: true
     grade_recital?: true
+    exam_basic?: true
+    exam_recital?: true
   }
 
   export type UserMinAggregateInputType = {
@@ -2959,6 +2973,8 @@ export namespace Prisma {
     role?: true
     grade_basic?: true
     grade_recital?: true
+    exam_basic?: true
+    exam_recital?: true
     created_at?: true
     updated_at?: true
   }
@@ -2988,6 +3004,8 @@ export namespace Prisma {
     role?: true
     grade_basic?: true
     grade_recital?: true
+    exam_basic?: true
+    exam_recital?: true
     created_at?: true
     updated_at?: true
   }
@@ -3017,6 +3035,8 @@ export namespace Prisma {
     role?: true
     grade_basic?: true
     grade_recital?: true
+    exam_basic?: true
+    exam_recital?: true
     created_at?: true
     updated_at?: true
     _all?: true
@@ -3133,6 +3153,8 @@ export namespace Prisma {
     role: string
     grade_basic: number | null
     grade_recital: number | null
+    exam_basic: number | null
+    exam_recital: number | null
     created_at: Date
     updated_at: Date
     _count: UserCountAggregateOutputType | null
@@ -3181,6 +3203,8 @@ export namespace Prisma {
     role?: boolean
     grade_basic?: boolean
     grade_recital?: boolean
+    exam_basic?: boolean
+    exam_recital?: boolean
     created_at?: boolean
     updated_at?: boolean
     PlayHistory?: boolean | User$PlayHistoryArgs<ExtArgs>
@@ -3222,6 +3246,8 @@ export namespace Prisma {
     role?: boolean
     grade_basic?: boolean
     grade_recital?: boolean
+    exam_basic?: boolean
+    exam_recital?: boolean
     created_at?: boolean
     updated_at?: boolean
   }, ExtArgs["result"]["user"]>
@@ -3251,6 +3277,8 @@ export namespace Prisma {
     role?: boolean
     grade_basic?: boolean
     grade_recital?: boolean
+    exam_basic?: boolean
+    exam_recital?: boolean
     created_at?: boolean
     updated_at?: boolean
   }, ExtArgs["result"]["user"]>
@@ -3280,11 +3308,13 @@ export namespace Prisma {
     role?: boolean
     grade_basic?: boolean
     grade_recital?: boolean
+    exam_basic?: boolean
+    exam_recital?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "kakao_id" | "discord_name" | "discord_tag" | "avatar" | "country" | "rank_basic" | "rank_recital" | "rank_basic_country" | "rank_recital_country" | "play_count" | "score_p" | "score_f" | "score_s" | "score_a2" | "score_a" | "score_b2" | "score_b" | "score_c" | "score_d" | "role" | "grade_basic" | "grade_recital" | "created_at" | "updated_at", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "kakao_id" | "discord_name" | "discord_tag" | "avatar" | "country" | "rank_basic" | "rank_recital" | "rank_basic_country" | "rank_recital_country" | "play_count" | "score_p" | "score_f" | "score_s" | "score_a2" | "score_a" | "score_b2" | "score_b" | "score_c" | "score_d" | "role" | "grade_basic" | "grade_recital" | "exam_basic" | "exam_recital" | "created_at" | "updated_at", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     PlayHistory?: boolean | User$PlayHistoryArgs<ExtArgs>
     PlayData?: boolean | User$PlayDataArgs<ExtArgs>
@@ -3342,6 +3372,8 @@ export namespace Prisma {
       role: string
       grade_basic: number | null
       grade_recital: number | null
+      exam_basic: number | null
+      exam_recital: number | null
       created_at: Date
       updated_at: Date
     }, ExtArgs["result"]["user"]>
@@ -3802,6 +3834,8 @@ export namespace Prisma {
     readonly role: FieldRef<"User", 'String'>
     readonly grade_basic: FieldRef<"User", 'Int'>
     readonly grade_recital: FieldRef<"User", 'Int'>
+    readonly exam_basic: FieldRef<"User", 'Int'>
+    readonly exam_recital: FieldRef<"User", 'Int'>
     readonly created_at: FieldRef<"User", 'DateTime'>
     readonly updated_at: FieldRef<"User", 'DateTime'>
   }
@@ -24297,6 +24331,8 @@ export namespace Prisma {
     role: 'role',
     grade_basic: 'grade_basic',
     grade_recital: 'grade_recital',
+    exam_basic: 'exam_basic',
+    exam_recital: 'exam_recital',
     created_at: 'created_at',
     updated_at: 'updated_at'
   };
@@ -24667,6 +24703,8 @@ export namespace Prisma {
     role?: StringFilter<"User"> | string
     grade_basic?: IntNullableFilter<"User"> | number | null
     grade_recital?: IntNullableFilter<"User"> | number | null
+    exam_basic?: IntNullableFilter<"User"> | number | null
+    exam_recital?: IntNullableFilter<"User"> | number | null
     created_at?: DateTimeFilter<"User"> | Date | string
     updated_at?: DateTimeFilter<"User"> | Date | string
     PlayHistory?: RecentPlayListRelationFilter
@@ -24707,6 +24745,8 @@ export namespace Prisma {
     role?: SortOrder
     grade_basic?: SortOrderInput | SortOrder
     grade_recital?: SortOrderInput | SortOrder
+    exam_basic?: SortOrderInput | SortOrder
+    exam_recital?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     PlayHistory?: RecentPlayOrderByRelationAggregateInput
@@ -24750,6 +24790,8 @@ export namespace Prisma {
     role?: StringFilter<"User"> | string
     grade_basic?: IntNullableFilter<"User"> | number | null
     grade_recital?: IntNullableFilter<"User"> | number | null
+    exam_basic?: IntNullableFilter<"User"> | number | null
+    exam_recital?: IntNullableFilter<"User"> | number | null
     created_at?: DateTimeFilter<"User"> | Date | string
     updated_at?: DateTimeFilter<"User"> | Date | string
     PlayHistory?: RecentPlayListRelationFilter
@@ -24790,6 +24832,8 @@ export namespace Prisma {
     role?: SortOrder
     grade_basic?: SortOrderInput | SortOrder
     grade_recital?: SortOrderInput | SortOrder
+    exam_basic?: SortOrderInput | SortOrder
+    exam_recital?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     _count?: UserCountOrderByAggregateInput
@@ -24827,6 +24871,8 @@ export namespace Prisma {
     role?: StringWithAggregatesFilter<"User"> | string
     grade_basic?: IntNullableWithAggregatesFilter<"User"> | number | null
     grade_recital?: IntNullableWithAggregatesFilter<"User"> | number | null
+    exam_basic?: IntNullableWithAggregatesFilter<"User"> | number | null
+    exam_recital?: IntNullableWithAggregatesFilter<"User"> | number | null
     created_at?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
@@ -26342,6 +26388,8 @@ export namespace Prisma {
     role?: string
     grade_basic?: number | null
     grade_recital?: number | null
+    exam_basic?: number | null
+    exam_recital?: number | null
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
@@ -26382,6 +26430,8 @@ export namespace Prisma {
     role?: string
     grade_basic?: number | null
     grade_recital?: number | null
+    exam_basic?: number | null
+    exam_recital?: number | null
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
@@ -26421,6 +26471,8 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
@@ -26461,6 +26513,8 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
@@ -26501,6 +26555,8 @@ export namespace Prisma {
     role?: string
     grade_basic?: number | null
     grade_recital?: number | null
+    exam_basic?: number | null
+    exam_recital?: number | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -26529,6 +26585,8 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -26558,6 +26616,8 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -28322,6 +28382,8 @@ export namespace Prisma {
     role?: SortOrder
     grade_basic?: SortOrder
     grade_recital?: SortOrder
+    exam_basic?: SortOrder
+    exam_recital?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -28345,6 +28407,8 @@ export namespace Prisma {
     score_d?: SortOrder
     grade_basic?: SortOrder
     grade_recital?: SortOrder
+    exam_basic?: SortOrder
+    exam_recital?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -28372,6 +28436,8 @@ export namespace Prisma {
     role?: SortOrder
     grade_basic?: SortOrder
     grade_recital?: SortOrder
+    exam_basic?: SortOrder
+    exam_recital?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -28401,6 +28467,8 @@ export namespace Prisma {
     role?: SortOrder
     grade_basic?: SortOrder
     grade_recital?: SortOrder
+    exam_basic?: SortOrder
+    exam_recital?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -28424,6 +28492,8 @@ export namespace Prisma {
     score_d?: SortOrder
     grade_basic?: SortOrder
     grade_recital?: SortOrder
+    exam_basic?: SortOrder
+    exam_recital?: SortOrder
   }
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -33533,6 +33603,8 @@ export namespace Prisma {
     role?: string
     grade_basic?: number | null
     grade_recital?: number | null
+    exam_basic?: number | null
+    exam_recital?: number | null
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
@@ -33572,6 +33644,8 @@ export namespace Prisma {
     role?: string
     grade_basic?: number | null
     grade_recital?: number | null
+    exam_basic?: number | null
+    exam_recital?: number | null
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
@@ -33702,6 +33776,8 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
@@ -33741,6 +33817,8 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
@@ -33865,6 +33943,8 @@ export namespace Prisma {
     role?: string
     grade_basic?: number | null
     grade_recital?: number | null
+    exam_basic?: number | null
+    exam_recital?: number | null
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
@@ -33904,6 +33984,8 @@ export namespace Prisma {
     role?: string
     grade_basic?: number | null
     grade_recital?: number | null
+    exam_basic?: number | null
+    exam_recital?: number | null
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
@@ -34048,6 +34130,8 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
@@ -34087,6 +34171,8 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
@@ -34215,6 +34301,8 @@ export namespace Prisma {
     role?: string
     grade_basic?: number | null
     grade_recital?: number | null
+    exam_basic?: number | null
+    exam_recital?: number | null
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
@@ -34254,6 +34342,8 @@ export namespace Prisma {
     role?: string
     grade_basic?: number | null
     grade_recital?: number | null
+    exam_basic?: number | null
+    exam_recital?: number | null
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
@@ -34398,6 +34488,8 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
@@ -34437,6 +34529,8 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
@@ -34679,6 +34773,8 @@ export namespace Prisma {
     role?: string
     grade_basic?: number | null
     grade_recital?: number | null
+    exam_basic?: number | null
+    exam_recital?: number | null
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
@@ -34718,6 +34814,8 @@ export namespace Prisma {
     role?: string
     grade_basic?: number | null
     grade_recital?: number | null
+    exam_basic?: number | null
+    exam_recital?: number | null
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
@@ -34856,6 +34954,8 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
@@ -34895,6 +34995,8 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
@@ -34983,6 +35085,8 @@ export namespace Prisma {
     role?: string
     grade_basic?: number | null
     grade_recital?: number | null
+    exam_basic?: number | null
+    exam_recital?: number | null
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
@@ -35022,6 +35126,8 @@ export namespace Prisma {
     role?: string
     grade_basic?: number | null
     grade_recital?: number | null
+    exam_basic?: number | null
+    exam_recital?: number | null
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
@@ -35116,6 +35222,8 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
@@ -35155,6 +35263,8 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
@@ -35193,6 +35303,8 @@ export namespace Prisma {
     role?: string
     grade_basic?: number | null
     grade_recital?: number | null
+    exam_basic?: number | null
+    exam_recital?: number | null
     created_at?: Date | string
     updated_at?: Date | string
     PlayData?: PlayDataCreateNestedManyWithoutUserInput
@@ -35232,6 +35344,8 @@ export namespace Prisma {
     role?: string
     grade_basic?: number | null
     grade_recital?: number | null
+    exam_basic?: number | null
+    exam_recital?: number | null
     created_at?: Date | string
     updated_at?: Date | string
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutUserInput
@@ -35398,6 +35512,8 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayData?: PlayDataUpdateManyWithoutUserNestedInput
@@ -35437,6 +35553,8 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayData?: PlayDataUncheckedUpdateManyWithoutUserNestedInput
@@ -35599,6 +35717,8 @@ export namespace Prisma {
     role?: string
     grade_basic?: number | null
     grade_recital?: number | null
+    exam_basic?: number | null
+    exam_recital?: number | null
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
@@ -35638,6 +35758,8 @@ export namespace Prisma {
     role?: string
     grade_basic?: number | null
     grade_recital?: number | null
+    exam_basic?: number | null
+    exam_recital?: number | null
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
@@ -35692,6 +35814,8 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
@@ -35731,6 +35855,8 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
@@ -35769,6 +35895,8 @@ export namespace Prisma {
     role?: string
     grade_basic?: number | null
     grade_recital?: number | null
+    exam_basic?: number | null
+    exam_recital?: number | null
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
@@ -35808,6 +35936,8 @@ export namespace Prisma {
     role?: string
     grade_basic?: number | null
     grade_recital?: number | null
+    exam_basic?: number | null
+    exam_recital?: number | null
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
@@ -35974,6 +36104,8 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
@@ -36013,6 +36145,8 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
@@ -36175,6 +36309,8 @@ export namespace Prisma {
     role?: string
     grade_basic?: number | null
     grade_recital?: number | null
+    exam_basic?: number | null
+    exam_recital?: number | null
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
@@ -36214,6 +36350,8 @@ export namespace Prisma {
     role?: string
     grade_basic?: number | null
     grade_recital?: number | null
+    exam_basic?: number | null
+    exam_recital?: number | null
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
@@ -36380,6 +36518,8 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
@@ -36419,6 +36559,8 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
@@ -36581,6 +36723,8 @@ export namespace Prisma {
     role?: string
     grade_basic?: number | null
     grade_recital?: number | null
+    exam_basic?: number | null
+    exam_recital?: number | null
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
@@ -36620,6 +36764,8 @@ export namespace Prisma {
     role?: string
     grade_basic?: number | null
     grade_recital?: number | null
+    exam_basic?: number | null
+    exam_recital?: number | null
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
@@ -36786,6 +36932,8 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
@@ -36825,6 +36973,8 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
@@ -37355,6 +37505,8 @@ export namespace Prisma {
     role?: string
     grade_basic?: number | null
     grade_recital?: number | null
+    exam_basic?: number | null
+    exam_recital?: number | null
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
@@ -37394,6 +37546,8 @@ export namespace Prisma {
     role?: string
     grade_basic?: number | null
     grade_recital?: number | null
+    exam_basic?: number | null
+    exam_recital?: number | null
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
@@ -37474,6 +37628,8 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
@@ -37513,6 +37669,8 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput

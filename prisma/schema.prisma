@@ -34,6 +34,8 @@ model User {
   role                 String                    @default("user")
   grade_basic          Int?
   grade_recital        Int?
+  exam_basic           Int?
+  exam_recital         Int?
   created_at           DateTime                  @default(now())
   updated_at           DateTime                  @updatedAt
   PlayHistory          RecentPlay[]
