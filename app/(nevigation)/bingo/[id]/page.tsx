@@ -1,169 +1,138 @@
-import BingoPlate from "@/components/bingo/bingoPlate";
+import { notFound } from "next/navigation";
+
+import BingoPlate, { type BingoCellItem } from "@/components/bingo/bingoPlate";
+import { getBingoJacketUrl, getBingoProgress } from "@/lib/bingo";
 import db from "@/lib/db";
 import getSession from "@/lib/session";
+import { formatToComma } from "@/lib/utils";
 
-export default async function BingoDetail(props: {
+export default async function BingoDetailPage({
+    params,
+}: {
     params: Promise<{ id: string }>;
 }) {
-    const params = await props.params;
-    const cells = await db.bingoCell.findMany({
+    const { id } = await params;
+    const bingoId = Number(id);
+
+    if (!Number.isInteger(bingoId)) notFound();
+
+    const session = await getSession();
+    const now = new Date();
+    const bingo = await db.bingo.findFirst({
         where: {
-            bingo_id: Number(params.id),
+            id: bingoId,
+            status: "published",
+            AND: [
+                { OR: [{ startsAt: null }, { startsAt: { lte: now } }] },
+                { OR: [{ endsAt: null }, { endsAt: { gte: now } }] },
+            ],
         },
         select: {
             id: true,
-            challenge: true,
-            music_idx: true,
-            position: true,
-            category_short: true,
-            level: true,
-        },
-        orderBy: {
-            position: "asc",
-        },
-    });
-
-    const session = await getSession();
-    const userClear = await db.userBingoCellData.findMany({
-        where: {
-            user_id: session.id,
-        },
-        select: {
-            bingo_cell_id: true,
-            isCompleted: true,
-        },
-        orderBy: {
-            bingo_cell_id: "asc",
-        },
-    });
-
-    const bingo = await db.bingo.findUnique({
-        where: {
-            id: Number(params.id),
-        },
-        select: {
-            music_idx: true,
-            line: true,
-            nos: true,
-            music: {
+            title: true,
+            description: true,
+            coverMusicIndex: true,
+            requiredLines: true,
+            rewardNos: true,
+            coverMusic: {
                 select: {
                     title: true,
                     background: true,
                     description: true,
                 },
             },
+            cells: {
+                select: {
+                    id: true,
+                    title: true,
+                    missionType: true,
+                    musicIndex: true,
+                    position: true,
+                    categoryShort: true,
+                    progress: {
+                        where: { userId: session.id ?? -1 },
+                        select: { isCompleted: true },
+                    },
+                },
+                orderBy: { position: "asc" },
+            },
         },
     });
 
-    // userClear를 Map으로 변환
-    const userClearMap = new Map(
-        userClear.map((clear) => [clear.bingo_cell_id, clear.isCompleted])
+    if (!bingo) notFound();
+
+    const cells: BingoCellItem[] = bingo.cells.map((cell) => ({
+        id: cell.id,
+        challenge: cell.title,
+        missionType: cell.missionType,
+        musicIndex: cell.musicIndex,
+        position: cell.position,
+        categoryShort: cell.categoryShort,
+    }));
+    const completedCellIds = bingo.cells
+        .filter((cell) => cell.progress.some((data) => data.isCompleted))
+        .map((cell) => cell.id);
+    const progress = getBingoProgress(
+        bingo.cells.map((cell) => ({
+            id: cell.id,
+            position: cell.position,
+            isCompleted: completedCellIds.includes(cell.id),
+        }))
     );
 
-    // 빙고 라인 수 계산 함수
-    const calculateBingoLines = (
-        cells: any[],
-        userClearMap: Map<number, boolean>
-    ) => {
-        // 5x5 그리드로 정렬 (position 기준)
-        const grid = Array(5)
-            .fill(null)
-            .map(() => Array(5).fill(false));
-
-        cells.forEach((cell) => {
-            const row = Math.floor((cell.position - 1) / 5);
-            const col = (cell.position - 1) % 5;
-            grid[row][col] = userClearMap.get(cell.id) === true;
-        });
-
-        let lineCount = 0;
-
-        // 가로 라인 체크 (5줄)
-        for (let row = 0; row < 5; row++) {
-            if (grid[row].every((cell) => cell === true)) {
-                lineCount++;
-            }
-        }
-
-        // 세로 라인 체크 (5줄)
-        for (let col = 0; col < 5; col++) {
-            if (grid.every((row) => row[col] === true)) {
-                lineCount++;
-            }
-        }
-
-        // 대각선 라인 체크 (좌상->우하)
-        if (
-            grid[0][0] &&
-            grid[1][1] &&
-            grid[2][2] &&
-            grid[3][3] &&
-            grid[4][4]
-        ) {
-            lineCount++;
-        }
-
-        // 대각선 라인 체크 (우상->좌하)
-        if (
-            grid[0][4] &&
-            grid[1][3] &&
-            grid[2][2] &&
-            grid[3][1] &&
-            grid[4][0]
-        ) {
-            lineCount++;
-        }
-
-        return lineCount;
-    };
-
-    const currentLines = calculateBingoLines(cells, userClearMap);
-
     return (
-        <main className="mx-auto flex max-w-(--breakpoint-sm) flex-col items-center justify-center p-8">
-            <section className="w-full">
+        <div className="flex flex-col gap-4 px-4 py-4">
+            <section className="flex items-center gap-3">
                 <div
+                    className="bg-surface-muted size-12 shrink-0 rounded-md bg-cover bg-center"
                     style={{
-                        backgroundImage: `${
-                            bingo?.music.background
-                                ? `url(${bingo.music.background})`
-                                : `url(https://p.eagate.573.jp/game/nostalgia/op3/img/jacket.html?c=${bingo?.music_idx})`
-                        }`,
-                        backgroundSize: "cover",
-                        backgroundPosition: "center",
+                        backgroundImage: `url(${getBingoJacketUrl(bingo.coverMusicIndex, bingo.coverMusic.background)})`,
                     }}
-                    className="relative flex h-32 w-full items-center justify-center"
-                >
-                    <div className="absolute h-full w-full bg-black/50 backdrop-blur-xs" />
-                    <div className="absolute flex h-full w-full flex-col items-center justify-center">
-                        <h1 className="text-primary w-full bg-black/30 py-3 text-center">
-                            {bingo?.music.title}
-                        </h1>
-                    </div>
+                />
+                <div className="min-w-0 flex-1">
+                    <h1 className="text-section truncate font-bold">
+                        {bingo.title || bingo.coverMusic.title}
+                    </h1>
+                    <p className="text-caption mt-1 truncate">
+                        {bingo.description ||
+                            bingo.coverMusic.description ||
+                            `${bingo.requiredLines}줄 완성 시 보상 획득`}
+                    </p>
                 </div>
-                <div className="bg-dark-secondary border-dark-tertiary flex flex-col gap-4 border-b p-4">
-                    <div className="flex flex-col gap-1">
-                        <span className="text-quinary">Description</span>
-                        <span className="text-secondary">
-                            {bingo?.music.description}
-                        </span>
-                    </div>
-                    <div className="flex items-end justify-between">
-                        <span className="text-tertiary">
-                            보상: {bingo?.nos}nos
-                        </span>
-                        <div className="text-quaternary flex flex-col text-right">
-                            <span>필요 줄 수: {bingo?.line}</span>
-                            <span>현재 줄 수: {currentLines}</span>
-                        </div>
-                    </div>
+                <div className="text-caption shrink-0 text-right">
+                    <p>줄</p>
+                    <p>
+                        <strong className="text-text-primary">
+                            {progress.completedLines}
+                        </strong>{" "}
+                        / {bingo.requiredLines}
+                    </p>
                 </div>
             </section>
+
+            <section>
+                <div className="bg-surface-muted h-1 overflow-hidden rounded-full">
+                    <div
+                        className="bg-chart h-full rounded-full transition-[width]"
+                        style={{ width: `${progress.progressPercent}%` }}
+                    />
+                </div>
+                <div className="text-caption mt-2 flex items-center justify-between">
+                    <span>
+                        줄 {progress.completedLines}/{bingo.requiredLines} · 칸{" "}
+                        {progress.completedCells}/25
+                    </span>
+                    <span className="text-score">
+                        보상 {formatToComma(bingo.rewardNos)}nos
+                    </span>
+                </div>
+            </section>
+
             <BingoPlate
                 cells={cells}
-                userClearMap={userClearMap}
-                user_id={session.id}
+                initialCompletedCellIds={completedCellIds}
+                canEdit={Boolean(session.id)}
             />
-        </main>
+        </div>
     );
 }

@@ -2,18 +2,9 @@ interface MusicBG {
     [key: string]: string;
 }
 
-export const rankImg: any = {
+export const rankImg: Record<string, string> = {
     fc: "https://p.eagate.573.jp/game/nostalgia/op3/img/pdata/music_data/grade/grade_fc_bg.png",
 };
-
-const bingoCell: any = [
-    {
-        position: 1,
-        challenge: "",
-        music_idx: "",
-        bingo_id: "",
-    },
-];
 
 export const musicBG: MusicBG = {
     "818b48940c2d17325904fbab68689046":

@@ -112,9 +112,9 @@ Prisma schema 기준 주요 모델은 다음과 같습니다.
 | `BasicBestPlay`     | Basic 모드 베스트 플레이       |
 | `RecitalBestPlay`   | Recital 모드 베스트 플레이     |
 | `UserBestGrade`     | 사용자 최고 grade 기록         |
-| `Bingo`             | 빙고 판 정보                   |
-| `BingoCell`         | 빙고 칸 조건                   |
-| `userBingoCellData` | 유저별 빙고 달성 여부          |
+| `Bingo`             | 빙고판 공개 상태, 기간, 보상   |
+| `BingoCell`         | 빙고 미션 종류와 달성 조건     |
+| `BingoCellProgress` | 유저별 빙고 미션 달성 상태     |
 
 현재 DB는 SQLite 기반입니다. PostgreSQL 전환, 난이도 배열 정규화, 필드명 정리는 추후 개선 대상으로 둡니다.
 

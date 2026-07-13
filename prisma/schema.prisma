@@ -45,7 +45,7 @@ model User {
   BasicBestPlay        BasicBestPlay[]
   RecitalBestPlay      RecitalBestPlay[]
   UserBestGrade        UserBestGrade[]
-  userBingoCellData    userBingoCellData[]
+  bingoProgress        BingoCellProgress[]
   chartEvaluations     ChartEvaluation[]
   chartReactions       ChartEvaluationReaction[]
   dataSyncs            DataSync[]
@@ -76,8 +76,8 @@ model Music {
   PlayData          PlayData[]
   BasicBestPlay     BasicBestPlay[]
   RecitalBestPlay   RecitalBestPlay[]
-  Bingo             Bingo[]
-  BingoCell         BingoCell[]
+  bingoCovers       Bingo[]           @relation("BingoCoverMusic")
+  bingoMissions     BingoCell[]       @relation("BingoMissionMusic")
   charts            MusicChart[]
 }
 
@@ -323,33 +323,59 @@ model PlayData {
 }
 
 model Bingo {
-  id        Int         @id @default(autoincrement())
-  nos       Int
-  line      Int
-  music_idx String      @unique
-  music     Music       @relation(fields: [music_idx], references: [index])
-  BingoCell BingoCell[]
+  id              Int         @id @default(autoincrement())
+  title           String?
+  description     String?
+  rewardNos       Int         @map("nos")
+  requiredLines   Int         @map("line")
+  status          String      @default("draft")
+  startsAt        DateTime?   @map("starts_at")
+  endsAt          DateTime?   @map("ends_at")
+  createdAt       DateTime    @default(now()) @map("created_at")
+  updatedAt       DateTime    @updatedAt @map("updated_at")
+  coverMusicIndex String      @map("music_idx")
+  coverMusic      Music       @relation("BingoCoverMusic", fields: [coverMusicIndex], references: [index])
+  cells           BingoCell[]
+
+  @@index([status, startsAt, endsAt])
 }
 
 model BingoCell {
-  id             Int                 @id @default(autoincrement())
-  position       Int // 칸 위치(1~25)
-  challenge      String
-  category_short String?
-  level          String?
-  isReal         Boolean             @default(false)
-  music_idx      String?             @unique
-  music          Music?              @relation(fields: [music_idx], references: [index])
-  bingo_id       Int
-  bingo          Bingo               @relation(fields: [bingo_id], references: [id])
-  userBingoData  userBingoCellData[]
+  id               Int                 @id @default(autoincrement())
+  position         Int // 칸 위치(1~25)
+  title            String              @map("challenge")
+  missionType      String              @default("record") @map("mission_type")
+  ruleType         String              @default("manual") @map("rule_type")
+  ruleConfig       Json?               @map("rule_config")
+  categoryShort    String?             @map("category_short")
+  targetDifficulty String?             @map("target_difficulty")
+  targetLevel      Int?                @map("target_level")
+  musicIndex       String?             @map("music_idx")
+  music            Music?              @relation("BingoMissionMusic", fields: [musicIndex], references: [index], onDelete: SetNull)
+  bingoId          Int                 @map("bingo_id")
+  bingo            Bingo               @relation(fields: [bingoId], references: [id], onDelete: Cascade)
+  progress         BingoCellProgress[]
+  createdAt        DateTime            @default(now()) @map("created_at")
+  updatedAt        DateTime            @updatedAt @map("updated_at")
+
+  @@unique([bingoId, position])
+  @@index([missionType])
+  @@index([musicIndex])
 }
 
-model userBingoCellData {
-  id            Int       @id @default(autoincrement())
-  isCompleted   Boolean   @default(false)
-  user_id       Int
-  user          User      @relation(fields: [user_id], references: [id])
-  bingo_cell_id Int
-  bingo         BingoCell @relation(fields: [bingo_cell_id], references: [id])
+model BingoCellProgress {
+  id               Int       @id @default(autoincrement())
+  isCompleted      Boolean   @default(false) @map("isCompleted")
+  completionSource String    @default("manual") @map("completion_source")
+  completedAt      DateTime? @map("completed_at")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+  userId           Int       @map("user_id")
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bingoCellId      Int       @map("bingo_cell_id")
+  cell             BingoCell @relation(fields: [bingoCellId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, bingoCellId])
+  @@index([bingoCellId])
+  @@map("userBingoCellData")
 }
