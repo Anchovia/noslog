@@ -1,9 +1,6 @@
-import MusicDetail, {
-    type DetailTab,
-    type RankingMode,
-} from "@/components/music/musicDetail";
+import MusicDetail, { type DetailTab } from "@/components/music/musicDetail";
 import db from "@/lib/db";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { getRecentChartPlays, getUserPlayData } from "./action";
 
 const difficulties = ["Normal", "Hard", "Expert", "Real"] as const;
@@ -11,7 +8,7 @@ const tabs: DetailTab[] = ["record", "detail", "ranking", "tier"];
 
 export default async function MusicDetailPage(props: {
     params: Promise<{ index: string; difficulty: string }>;
-    searchParams: Promise<{ tab?: string; mode?: string }>;
+    searchParams: Promise<{ tab?: string; page?: string }>;
 }) {
     const [{ index, difficulty }, searchParams] = await Promise.all([
         props.params,
@@ -26,8 +23,10 @@ export default async function MusicDetailPage(props: {
     const activeTab: DetailTab = tabs.includes(searchParams.tab as DetailTab)
         ? (searchParams.tab as DetailTab)
         : "record";
-    const rankingMode: RankingMode =
-        searchParams.mode === "recital" ? "recital" : "basic";
+    const requestedPage = Number.parseInt(searchParams.page ?? "1", 10);
+    const rankingPage =
+        Number.isFinite(requestedPage) && requestedPage > 0 ? requestedPage : 1;
+    const rankingPageSize = 7;
 
     const [music, selectedChart] = await Promise.all([
         db.music.findUnique({
@@ -74,8 +73,8 @@ export default async function MusicDetailPage(props: {
     const [
         userPlayData,
         recentChartPlays,
-        basicRankings,
-        recitalRankings,
+        rankingRows,
+        rankingCount,
         evaluations,
         chartScores,
     ] = await Promise.all([
@@ -85,34 +84,22 @@ export default async function MusicDetailPage(props: {
             difficulty: selectedDifficulty,
         }),
         db.playData.findMany({
-            where: { chart_id: selectedChart.id },
+            where: { chart_id: selectedChart.id, score: { gt: 0 } },
             select: {
                 rank: true,
                 score: true,
-                max_combo: true,
-                grade_basic: true,
-                besttime: true,
+                fc_type: true,
                 user_id: true,
-                user: { select: { username: true, id: true } },
+                user: {
+                    select: { username: true, id: true, avatar: true },
+                },
             },
-            distinct: ["user_id"],
-            take: 50,
-            orderBy: { grade_basic: "desc" },
+            skip: (rankingPage - 1) * rankingPageSize,
+            take: rankingPageSize,
+            orderBy: [{ score: "desc" }, { user_id: "asc" }],
         }),
-        db.playData.findMany({
-            where: { chart_id: selectedChart.id },
-            select: {
-                rank: true,
-                score: true,
-                max_combo: true,
-                grade_recital: true,
-                besttime: true,
-                user_id: true,
-                user: { select: { username: true, id: true } },
-            },
-            distinct: ["user_id"],
-            take: 50,
-            orderBy: { grade_recital: "desc" },
+        db.playData.count({
+            where: { chart_id: selectedChart.id, score: { gt: 0 } },
         }),
         db.chartEvaluation.findMany({
             where: { chart_id: selectedChart.id },
@@ -125,7 +112,7 @@ export default async function MusicDetailPage(props: {
             },
         }),
         db.playData.findMany({
-            where: { chart_id: selectedChart.id },
+            where: { chart_id: selectedChart.id, score: { gt: 0 } },
             select: { score: true, fc_type: true },
         }),
     ]);
@@ -168,10 +155,11 @@ export default async function MusicDetailPage(props: {
         scoreDistribution[index].count++;
     }
 
-    const higherScores = userPlayData
-        ? chartScores.filter((record) => record.score > userPlayData.score)
-              .length
-        : null;
+    const higherScores =
+        userPlayData && userPlayData.score > 0
+            ? chartScores.filter((record) => record.score > userPlayData.score)
+                  .length
+            : null;
     const userTopPercent =
         higherScores !== null && chartScores.length > 0
             ? Math.max(
@@ -179,13 +167,39 @@ export default async function MusicDetailPage(props: {
                   Math.ceil(((higherScores + 1) / chartScores.length) * 100)
               )
             : null;
+    const rankingPageCount = Math.max(
+        1,
+        Math.ceil(rankingCount / rankingPageSize)
+    );
+
+    if (activeTab === "ranking" && rankingPage > rankingPageCount) {
+        redirect(
+            `/music/${index}/${selectedDifficulty}?tab=ranking&page=${rankingPageCount}`
+        );
+    }
+
+    const userRanking =
+        userPlayData && userPlayData.score > 0
+            ? (await db.playData.count({
+                  where: {
+                      chart_id: selectedChart.id,
+                      score: { gt: 0 },
+                      OR: [
+                          { score: { gt: userPlayData.score } },
+                          {
+                              score: userPlayData.score,
+                              user_id: { lt: userPlayData.user_id },
+                          },
+                      ],
+                  },
+              })) + 1
+            : null;
 
     return (
         <MusicDetail
             music={music}
             difficulty={selectedDifficulty}
             activeTab={activeTab}
-            rankingMode={rankingMode}
             userPlayData={userPlayData}
             recentChartPlays={recentChartPlays}
             chartDetail={{
@@ -197,8 +211,13 @@ export default async function MusicDetailPage(props: {
                 playerCount: chartScores.length,
                 userTopPercent,
             }}
-            basicRankings={basicRankings}
-            recitalRankings={recitalRankings}
+            ranking={{
+                rows: rankingRows,
+                page: rankingPage,
+                pageSize: rankingPageSize,
+                totalCount: rankingCount,
+                userRank: userRanking,
+            }}
         />
     );
 }

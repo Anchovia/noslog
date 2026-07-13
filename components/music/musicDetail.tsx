@@ -8,7 +8,6 @@ import ScoreTrend from "./scoreTrend";
 
 type Difficulty = "Normal" | "Hard" | "Expert" | "Real";
 export type DetailTab = "record" | "detail" | "ranking" | "tier";
-export type RankingMode = "basic" | "recital";
 
 interface MusicInfo {
     index: string;
@@ -23,6 +22,12 @@ interface MusicInfo {
 }
 
 interface UserPlayData {
+    user_id: number;
+    user: {
+        id: number;
+        username: string | null;
+        avatar: string | null;
+    };
     rank: string;
     fc_type: number;
     grade_basic: number;
@@ -39,12 +44,13 @@ interface UserPlayData {
 interface RankingRow {
     rank: string;
     score: number;
-    max_combo: number;
-    besttime: string;
+    fc_type: number;
     user_id: number;
-    user: { username: string | null; id: number };
-    grade_basic?: number;
-    grade_recital?: number;
+    user: {
+        username: string | null;
+        id: number;
+        avatar: string | null;
+    };
 }
 
 interface RecentChartPlay {
@@ -87,12 +93,16 @@ interface MusicDetailProps {
     music: MusicInfo;
     difficulty: Difficulty;
     activeTab: DetailTab;
-    rankingMode: RankingMode;
     userPlayData: UserPlayData | null;
     recentChartPlays: RecentChartPlay[];
     chartDetail: ChartDetail;
-    basicRankings: RankingRow[];
-    recitalRankings: RankingRow[];
+    ranking: {
+        rows: RankingRow[];
+        page: number;
+        pageSize: number;
+        totalCount: number;
+        userRank: number | null;
+    };
 }
 
 const difficultyStyles: Record<Difficulty, string> = {
@@ -126,12 +136,10 @@ export default function MusicDetail({
     music,
     difficulty,
     activeTab,
-    rankingMode,
     userPlayData,
     recentChartPlays,
     chartDetail,
-    basicRankings,
-    recitalRankings,
+    ranking,
 }: MusicDetailProps) {
     const jacketImageUrl =
         music.background ||
@@ -662,9 +670,21 @@ export default function MusicDetail({
                 <MusicRankTable
                     musicIndex={music.index}
                     difficulty={difficulty}
-                    mode={rankingMode}
-                    basicPlayDatas={basicRankings}
-                    recitalPlayDatas={recitalRankings}
+                    rows={ranking.rows}
+                    page={ranking.page}
+                    pageSize={ranking.pageSize}
+                    totalCount={ranking.totalCount}
+                    currentUser={
+                        userPlayData && userPlayData.score > 0
+                            ? {
+                                  rank: ranking.userRank,
+                                  score: userPlayData.score,
+                                  clearRank: userPlayData.rank,
+                                  fcType: userPlayData.fc_type,
+                                  user: userPlayData.user,
+                              }
+                            : null
+                    }
                 />
             )}
 

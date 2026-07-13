@@ -23,6 +23,14 @@ export async function getUserPlayData({
             difficulty,
         },
         select: {
+            user_id: true,
+            user: {
+                select: {
+                    id: true,
+                    username: true,
+                    avatar: true,
+                },
+            },
             rank: true,
             fc_type: true,
             grade_basic: true,
