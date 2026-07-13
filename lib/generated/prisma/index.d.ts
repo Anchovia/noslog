@@ -44,10 +44,30 @@ export type ChartPlayHistory = $Result.DefaultSelection<Prisma.$ChartPlayHistory
  */
 export type ChartRecordSnapshot = $Result.DefaultSelection<Prisma.$ChartRecordSnapshotPayload>
 /**
- * Model ChartConstantHistory
+ * Model ChartLevelConstantHistory
  * 
  */
-export type ChartConstantHistory = $Result.DefaultSelection<Prisma.$ChartConstantHistoryPayload>
+export type ChartLevelConstantHistory = $Result.DefaultSelection<Prisma.$ChartLevelConstantHistoryPayload>
+/**
+ * Model TierList
+ * 
+ */
+export type TierList = $Result.DefaultSelection<Prisma.$TierListPayload>
+/**
+ * Model TierBand
+ * 
+ */
+export type TierBand = $Result.DefaultSelection<Prisma.$TierBandPayload>
+/**
+ * Model TierEntry
+ * 
+ */
+export type TierEntry = $Result.DefaultSelection<Prisma.$TierEntryPayload>
+/**
+ * Model TierPlacementHistory
+ * 
+ */
+export type TierPlacementHistory = $Result.DefaultSelection<Prisma.$TierPlacementHistoryPayload>
 /**
  * Model ChartEvaluation
  * 
@@ -308,14 +328,54 @@ export class PrismaClient<
   get chartRecordSnapshot(): Prisma.ChartRecordSnapshotDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.chartConstantHistory`: Exposes CRUD operations for the **ChartConstantHistory** model.
+   * `prisma.chartLevelConstantHistory`: Exposes CRUD operations for the **ChartLevelConstantHistory** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more ChartConstantHistories
-    * const chartConstantHistories = await prisma.chartConstantHistory.findMany()
+    * // Fetch zero or more ChartLevelConstantHistories
+    * const chartLevelConstantHistories = await prisma.chartLevelConstantHistory.findMany()
     * ```
     */
-  get chartConstantHistory(): Prisma.ChartConstantHistoryDelegate<ExtArgs, ClientOptions>;
+  get chartLevelConstantHistory(): Prisma.ChartLevelConstantHistoryDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.tierList`: Exposes CRUD operations for the **TierList** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TierLists
+    * const tierLists = await prisma.tierList.findMany()
+    * ```
+    */
+  get tierList(): Prisma.TierListDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.tierBand`: Exposes CRUD operations for the **TierBand** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TierBands
+    * const tierBands = await prisma.tierBand.findMany()
+    * ```
+    */
+  get tierBand(): Prisma.TierBandDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.tierEntry`: Exposes CRUD operations for the **TierEntry** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TierEntries
+    * const tierEntries = await prisma.tierEntry.findMany()
+    * ```
+    */
+  get tierEntry(): Prisma.TierEntryDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.tierPlacementHistory`: Exposes CRUD operations for the **TierPlacementHistory** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TierPlacementHistories
+    * const tierPlacementHistories = await prisma.tierPlacementHistory.findMany()
+    * ```
+    */
+  get tierPlacementHistory(): Prisma.TierPlacementHistoryDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.chartEvaluation`: Exposes CRUD operations for the **ChartEvaluation** model.
@@ -923,7 +983,11 @@ export namespace Prisma {
     DataSync: 'DataSync',
     ChartPlayHistory: 'ChartPlayHistory',
     ChartRecordSnapshot: 'ChartRecordSnapshot',
-    ChartConstantHistory: 'ChartConstantHistory',
+    ChartLevelConstantHistory: 'ChartLevelConstantHistory',
+    TierList: 'TierList',
+    TierBand: 'TierBand',
+    TierEntry: 'TierEntry',
+    TierPlacementHistory: 'TierPlacementHistory',
     ChartEvaluation: 'ChartEvaluation',
     ChartEvaluationReaction: 'ChartEvaluationReaction',
     RecentPlay: 'RecentPlay',
@@ -958,7 +1022,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "music" | "musicChart" | "dataSync" | "chartPlayHistory" | "chartRecordSnapshot" | "chartConstantHistory" | "chartEvaluation" | "chartEvaluationReaction" | "recentPlay" | "userBestGrade" | "basicBestPlay" | "recitalBestPlay" | "playData" | "bingo" | "bingoCell" | "bingoCellProgress" | "exam" | "examStage" | "examStageChart" | "examReward" | "examSubmission" | "examAchievement"
+      modelProps: "user" | "music" | "musicChart" | "dataSync" | "chartPlayHistory" | "chartRecordSnapshot" | "chartLevelConstantHistory" | "tierList" | "tierBand" | "tierEntry" | "tierPlacementHistory" | "chartEvaluation" | "chartEvaluationReaction" | "recentPlay" | "userBestGrade" | "basicBestPlay" | "recitalBestPlay" | "playData" | "bingo" | "bingoCell" | "bingoCellProgress" | "exam" | "examStage" | "examStageChart" | "examReward" | "examSubmission" | "examAchievement"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1406,77 +1470,373 @@ export namespace Prisma {
           }
         }
       }
-      ChartConstantHistory: {
-        payload: Prisma.$ChartConstantHistoryPayload<ExtArgs>
-        fields: Prisma.ChartConstantHistoryFieldRefs
+      ChartLevelConstantHistory: {
+        payload: Prisma.$ChartLevelConstantHistoryPayload<ExtArgs>
+        fields: Prisma.ChartLevelConstantHistoryFieldRefs
         operations: {
           findUnique: {
-            args: Prisma.ChartConstantHistoryFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ChartConstantHistoryPayload> | null
+            args: Prisma.ChartLevelConstantHistoryFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartLevelConstantHistoryPayload> | null
           }
           findUniqueOrThrow: {
-            args: Prisma.ChartConstantHistoryFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ChartConstantHistoryPayload>
+            args: Prisma.ChartLevelConstantHistoryFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartLevelConstantHistoryPayload>
           }
           findFirst: {
-            args: Prisma.ChartConstantHistoryFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ChartConstantHistoryPayload> | null
+            args: Prisma.ChartLevelConstantHistoryFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartLevelConstantHistoryPayload> | null
           }
           findFirstOrThrow: {
-            args: Prisma.ChartConstantHistoryFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ChartConstantHistoryPayload>
+            args: Prisma.ChartLevelConstantHistoryFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartLevelConstantHistoryPayload>
           }
           findMany: {
-            args: Prisma.ChartConstantHistoryFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ChartConstantHistoryPayload>[]
+            args: Prisma.ChartLevelConstantHistoryFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartLevelConstantHistoryPayload>[]
           }
           create: {
-            args: Prisma.ChartConstantHistoryCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ChartConstantHistoryPayload>
+            args: Prisma.ChartLevelConstantHistoryCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartLevelConstantHistoryPayload>
           }
           createMany: {
-            args: Prisma.ChartConstantHistoryCreateManyArgs<ExtArgs>
+            args: Prisma.ChartLevelConstantHistoryCreateManyArgs<ExtArgs>
             result: BatchPayload
           }
           createManyAndReturn: {
-            args: Prisma.ChartConstantHistoryCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ChartConstantHistoryPayload>[]
+            args: Prisma.ChartLevelConstantHistoryCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartLevelConstantHistoryPayload>[]
           }
           delete: {
-            args: Prisma.ChartConstantHistoryDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ChartConstantHistoryPayload>
+            args: Prisma.ChartLevelConstantHistoryDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartLevelConstantHistoryPayload>
           }
           update: {
-            args: Prisma.ChartConstantHistoryUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ChartConstantHistoryPayload>
+            args: Prisma.ChartLevelConstantHistoryUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartLevelConstantHistoryPayload>
           }
           deleteMany: {
-            args: Prisma.ChartConstantHistoryDeleteManyArgs<ExtArgs>
+            args: Prisma.ChartLevelConstantHistoryDeleteManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateMany: {
-            args: Prisma.ChartConstantHistoryUpdateManyArgs<ExtArgs>
+            args: Prisma.ChartLevelConstantHistoryUpdateManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateManyAndReturn: {
-            args: Prisma.ChartConstantHistoryUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ChartConstantHistoryPayload>[]
+            args: Prisma.ChartLevelConstantHistoryUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartLevelConstantHistoryPayload>[]
           }
           upsert: {
-            args: Prisma.ChartConstantHistoryUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ChartConstantHistoryPayload>
+            args: Prisma.ChartLevelConstantHistoryUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChartLevelConstantHistoryPayload>
           }
           aggregate: {
-            args: Prisma.ChartConstantHistoryAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateChartConstantHistory>
+            args: Prisma.ChartLevelConstantHistoryAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateChartLevelConstantHistory>
           }
           groupBy: {
-            args: Prisma.ChartConstantHistoryGroupByArgs<ExtArgs>
-            result: $Utils.Optional<ChartConstantHistoryGroupByOutputType>[]
+            args: Prisma.ChartLevelConstantHistoryGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ChartLevelConstantHistoryGroupByOutputType>[]
           }
           count: {
-            args: Prisma.ChartConstantHistoryCountArgs<ExtArgs>
-            result: $Utils.Optional<ChartConstantHistoryCountAggregateOutputType> | number
+            args: Prisma.ChartLevelConstantHistoryCountArgs<ExtArgs>
+            result: $Utils.Optional<ChartLevelConstantHistoryCountAggregateOutputType> | number
+          }
+        }
+      }
+      TierList: {
+        payload: Prisma.$TierListPayload<ExtArgs>
+        fields: Prisma.TierListFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TierListFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierListPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TierListFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierListPayload>
+          }
+          findFirst: {
+            args: Prisma.TierListFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierListPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TierListFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierListPayload>
+          }
+          findMany: {
+            args: Prisma.TierListFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierListPayload>[]
+          }
+          create: {
+            args: Prisma.TierListCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierListPayload>
+          }
+          createMany: {
+            args: Prisma.TierListCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TierListCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierListPayload>[]
+          }
+          delete: {
+            args: Prisma.TierListDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierListPayload>
+          }
+          update: {
+            args: Prisma.TierListUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierListPayload>
+          }
+          deleteMany: {
+            args: Prisma.TierListDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TierListUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.TierListUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierListPayload>[]
+          }
+          upsert: {
+            args: Prisma.TierListUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierListPayload>
+          }
+          aggregate: {
+            args: Prisma.TierListAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTierList>
+          }
+          groupBy: {
+            args: Prisma.TierListGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TierListGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TierListCountArgs<ExtArgs>
+            result: $Utils.Optional<TierListCountAggregateOutputType> | number
+          }
+        }
+      }
+      TierBand: {
+        payload: Prisma.$TierBandPayload<ExtArgs>
+        fields: Prisma.TierBandFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TierBandFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierBandPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TierBandFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierBandPayload>
+          }
+          findFirst: {
+            args: Prisma.TierBandFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierBandPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TierBandFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierBandPayload>
+          }
+          findMany: {
+            args: Prisma.TierBandFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierBandPayload>[]
+          }
+          create: {
+            args: Prisma.TierBandCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierBandPayload>
+          }
+          createMany: {
+            args: Prisma.TierBandCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TierBandCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierBandPayload>[]
+          }
+          delete: {
+            args: Prisma.TierBandDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierBandPayload>
+          }
+          update: {
+            args: Prisma.TierBandUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierBandPayload>
+          }
+          deleteMany: {
+            args: Prisma.TierBandDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TierBandUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.TierBandUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierBandPayload>[]
+          }
+          upsert: {
+            args: Prisma.TierBandUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierBandPayload>
+          }
+          aggregate: {
+            args: Prisma.TierBandAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTierBand>
+          }
+          groupBy: {
+            args: Prisma.TierBandGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TierBandGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TierBandCountArgs<ExtArgs>
+            result: $Utils.Optional<TierBandCountAggregateOutputType> | number
+          }
+        }
+      }
+      TierEntry: {
+        payload: Prisma.$TierEntryPayload<ExtArgs>
+        fields: Prisma.TierEntryFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TierEntryFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierEntryPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TierEntryFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierEntryPayload>
+          }
+          findFirst: {
+            args: Prisma.TierEntryFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierEntryPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TierEntryFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierEntryPayload>
+          }
+          findMany: {
+            args: Prisma.TierEntryFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierEntryPayload>[]
+          }
+          create: {
+            args: Prisma.TierEntryCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierEntryPayload>
+          }
+          createMany: {
+            args: Prisma.TierEntryCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TierEntryCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierEntryPayload>[]
+          }
+          delete: {
+            args: Prisma.TierEntryDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierEntryPayload>
+          }
+          update: {
+            args: Prisma.TierEntryUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierEntryPayload>
+          }
+          deleteMany: {
+            args: Prisma.TierEntryDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TierEntryUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.TierEntryUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierEntryPayload>[]
+          }
+          upsert: {
+            args: Prisma.TierEntryUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierEntryPayload>
+          }
+          aggregate: {
+            args: Prisma.TierEntryAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTierEntry>
+          }
+          groupBy: {
+            args: Prisma.TierEntryGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TierEntryGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TierEntryCountArgs<ExtArgs>
+            result: $Utils.Optional<TierEntryCountAggregateOutputType> | number
+          }
+        }
+      }
+      TierPlacementHistory: {
+        payload: Prisma.$TierPlacementHistoryPayload<ExtArgs>
+        fields: Prisma.TierPlacementHistoryFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TierPlacementHistoryFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierPlacementHistoryPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TierPlacementHistoryFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierPlacementHistoryPayload>
+          }
+          findFirst: {
+            args: Prisma.TierPlacementHistoryFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierPlacementHistoryPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TierPlacementHistoryFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierPlacementHistoryPayload>
+          }
+          findMany: {
+            args: Prisma.TierPlacementHistoryFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierPlacementHistoryPayload>[]
+          }
+          create: {
+            args: Prisma.TierPlacementHistoryCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierPlacementHistoryPayload>
+          }
+          createMany: {
+            args: Prisma.TierPlacementHistoryCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TierPlacementHistoryCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierPlacementHistoryPayload>[]
+          }
+          delete: {
+            args: Prisma.TierPlacementHistoryDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierPlacementHistoryPayload>
+          }
+          update: {
+            args: Prisma.TierPlacementHistoryUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierPlacementHistoryPayload>
+          }
+          deleteMany: {
+            args: Prisma.TierPlacementHistoryDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TierPlacementHistoryUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.TierPlacementHistoryUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierPlacementHistoryPayload>[]
+          }
+          upsert: {
+            args: Prisma.TierPlacementHistoryUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierPlacementHistoryPayload>
+          }
+          aggregate: {
+            args: Prisma.TierPlacementHistoryAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTierPlacementHistory>
+          }
+          groupBy: {
+            args: Prisma.TierPlacementHistoryGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TierPlacementHistoryGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TierPlacementHistoryCountArgs<ExtArgs>
+            result: $Utils.Optional<TierPlacementHistoryCountAggregateOutputType> | number
           }
         }
       }
@@ -2766,7 +3126,11 @@ export namespace Prisma {
     dataSync?: DataSyncOmit
     chartPlayHistory?: ChartPlayHistoryOmit
     chartRecordSnapshot?: ChartRecordSnapshotOmit
-    chartConstantHistory?: ChartConstantHistoryOmit
+    chartLevelConstantHistory?: ChartLevelConstantHistoryOmit
+    tierList?: TierListOmit
+    tierBand?: TierBandOmit
+    tierEntry?: TierEntryOmit
+    tierPlacementHistory?: TierPlacementHistoryOmit
     chartEvaluation?: ChartEvaluationOmit
     chartEvaluationReaction?: ChartEvaluationReactionOmit
     recentPlay?: RecentPlayOmit
@@ -3105,7 +3469,7 @@ export namespace Prisma {
    */
 
   export type MusicChartCountOutputType = {
-    constantHistory: number
+    levelConstantHistory: number
     evaluations: number
     RecentPlay: number
     PlayData: number
@@ -3114,10 +3478,12 @@ export namespace Prisma {
     playHistory: number
     recordSnapshots: number
     examStageOptions: number
+    tierEntries: number
+    tierPlacementHistory: number
   }
 
   export type MusicChartCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    constantHistory?: boolean | MusicChartCountOutputTypeCountConstantHistoryArgs
+    levelConstantHistory?: boolean | MusicChartCountOutputTypeCountLevelConstantHistoryArgs
     evaluations?: boolean | MusicChartCountOutputTypeCountEvaluationsArgs
     RecentPlay?: boolean | MusicChartCountOutputTypeCountRecentPlayArgs
     PlayData?: boolean | MusicChartCountOutputTypeCountPlayDataArgs
@@ -3126,6 +3492,8 @@ export namespace Prisma {
     playHistory?: boolean | MusicChartCountOutputTypeCountPlayHistoryArgs
     recordSnapshots?: boolean | MusicChartCountOutputTypeCountRecordSnapshotsArgs
     examStageOptions?: boolean | MusicChartCountOutputTypeCountExamStageOptionsArgs
+    tierEntries?: boolean | MusicChartCountOutputTypeCountTierEntriesArgs
+    tierPlacementHistory?: boolean | MusicChartCountOutputTypeCountTierPlacementHistoryArgs
   }
 
   // Custom InputTypes
@@ -3142,8 +3510,8 @@ export namespace Prisma {
   /**
    * MusicChartCountOutputType without action
    */
-  export type MusicChartCountOutputTypeCountConstantHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ChartConstantHistoryWhereInput
+  export type MusicChartCountOutputTypeCountLevelConstantHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ChartLevelConstantHistoryWhereInput
   }
 
   /**
@@ -3202,6 +3570,20 @@ export namespace Prisma {
     where?: ExamStageChartWhereInput
   }
 
+  /**
+   * MusicChartCountOutputType without action
+   */
+  export type MusicChartCountOutputTypeCountTierEntriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TierEntryWhereInput
+  }
+
+  /**
+   * MusicChartCountOutputType without action
+   */
+  export type MusicChartCountOutputTypeCountTierPlacementHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TierPlacementHistoryWhereInput
+  }
+
 
   /**
    * Count Type DataSyncCountOutputType
@@ -3240,6 +3622,86 @@ export namespace Prisma {
    */
   export type DataSyncCountOutputTypeCountRecordSnapshotsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ChartRecordSnapshotWhereInput
+  }
+
+
+  /**
+   * Count Type TierListCountOutputType
+   */
+
+  export type TierListCountOutputType = {
+    bands: number
+    entries: number
+    history: number
+  }
+
+  export type TierListCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    bands?: boolean | TierListCountOutputTypeCountBandsArgs
+    entries?: boolean | TierListCountOutputTypeCountEntriesArgs
+    history?: boolean | TierListCountOutputTypeCountHistoryArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * TierListCountOutputType without action
+   */
+  export type TierListCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierListCountOutputType
+     */
+    select?: TierListCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * TierListCountOutputType without action
+   */
+  export type TierListCountOutputTypeCountBandsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TierBandWhereInput
+  }
+
+  /**
+   * TierListCountOutputType without action
+   */
+  export type TierListCountOutputTypeCountEntriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TierEntryWhereInput
+  }
+
+  /**
+   * TierListCountOutputType without action
+   */
+  export type TierListCountOutputTypeCountHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TierPlacementHistoryWhereInput
+  }
+
+
+  /**
+   * Count Type TierBandCountOutputType
+   */
+
+  export type TierBandCountOutputType = {
+    entries: number
+  }
+
+  export type TierBandCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    entries?: boolean | TierBandCountOutputTypeCountEntriesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * TierBandCountOutputType without action
+   */
+  export type TierBandCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierBandCountOutputType
+     */
+    select?: TierBandCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * TierBandCountOutputType without action
+   */
+  export type TierBandCountOutputTypeCountEntriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TierEntryWhereInput
   }
 
 
@@ -7090,7 +7552,7 @@ export namespace Prisma {
     created_at?: boolean
     updated_at?: boolean
     music?: boolean | MusicDefaultArgs<ExtArgs>
-    constantHistory?: boolean | MusicChart$constantHistoryArgs<ExtArgs>
+    levelConstantHistory?: boolean | MusicChart$levelConstantHistoryArgs<ExtArgs>
     evaluations?: boolean | MusicChart$evaluationsArgs<ExtArgs>
     RecentPlay?: boolean | MusicChart$RecentPlayArgs<ExtArgs>
     PlayData?: boolean | MusicChart$PlayDataArgs<ExtArgs>
@@ -7099,6 +7561,8 @@ export namespace Prisma {
     playHistory?: boolean | MusicChart$playHistoryArgs<ExtArgs>
     recordSnapshots?: boolean | MusicChart$recordSnapshotsArgs<ExtArgs>
     examStageOptions?: boolean | MusicChart$examStageOptionsArgs<ExtArgs>
+    tierEntries?: boolean | MusicChart$tierEntriesArgs<ExtArgs>
+    tierPlacementHistory?: boolean | MusicChart$tierPlacementHistoryArgs<ExtArgs>
     _count?: boolean | MusicChartCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["musicChart"]>
 
@@ -7161,7 +7625,7 @@ export namespace Prisma {
   export type MusicChartOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "difficulty" | "level" | "level_constant" | "bpm_min" | "bpm_max" | "note_count" | "duration_seconds" | "released_at" | "unlock_condition" | "play_video_url" | "chart_preview_url" | "music_idx" | "created_at" | "updated_at", ExtArgs["result"]["musicChart"]>
   export type MusicChartInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     music?: boolean | MusicDefaultArgs<ExtArgs>
-    constantHistory?: boolean | MusicChart$constantHistoryArgs<ExtArgs>
+    levelConstantHistory?: boolean | MusicChart$levelConstantHistoryArgs<ExtArgs>
     evaluations?: boolean | MusicChart$evaluationsArgs<ExtArgs>
     RecentPlay?: boolean | MusicChart$RecentPlayArgs<ExtArgs>
     PlayData?: boolean | MusicChart$PlayDataArgs<ExtArgs>
@@ -7170,6 +7634,8 @@ export namespace Prisma {
     playHistory?: boolean | MusicChart$playHistoryArgs<ExtArgs>
     recordSnapshots?: boolean | MusicChart$recordSnapshotsArgs<ExtArgs>
     examStageOptions?: boolean | MusicChart$examStageOptionsArgs<ExtArgs>
+    tierEntries?: boolean | MusicChart$tierEntriesArgs<ExtArgs>
+    tierPlacementHistory?: boolean | MusicChart$tierPlacementHistoryArgs<ExtArgs>
     _count?: boolean | MusicChartCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type MusicChartIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7183,7 +7649,7 @@ export namespace Prisma {
     name: "MusicChart"
     objects: {
       music: Prisma.$MusicPayload<ExtArgs>
-      constantHistory: Prisma.$ChartConstantHistoryPayload<ExtArgs>[]
+      levelConstantHistory: Prisma.$ChartLevelConstantHistoryPayload<ExtArgs>[]
       evaluations: Prisma.$ChartEvaluationPayload<ExtArgs>[]
       RecentPlay: Prisma.$RecentPlayPayload<ExtArgs>[]
       PlayData: Prisma.$PlayDataPayload<ExtArgs>[]
@@ -7192,6 +7658,8 @@ export namespace Prisma {
       playHistory: Prisma.$ChartPlayHistoryPayload<ExtArgs>[]
       recordSnapshots: Prisma.$ChartRecordSnapshotPayload<ExtArgs>[]
       examStageOptions: Prisma.$ExamStageChartPayload<ExtArgs>[]
+      tierEntries: Prisma.$TierEntryPayload<ExtArgs>[]
+      tierPlacementHistory: Prisma.$TierPlacementHistoryPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -7604,7 +8072,7 @@ export namespace Prisma {
   export interface Prisma__MusicChartClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     music<T extends MusicDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MusicDefaultArgs<ExtArgs>>): Prisma__MusicClient<$Result.GetResult<Prisma.$MusicPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    constantHistory<T extends MusicChart$constantHistoryArgs<ExtArgs> = {}>(args?: Subset<T, MusicChart$constantHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartConstantHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    levelConstantHistory<T extends MusicChart$levelConstantHistoryArgs<ExtArgs> = {}>(args?: Subset<T, MusicChart$levelConstantHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartLevelConstantHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     evaluations<T extends MusicChart$evaluationsArgs<ExtArgs> = {}>(args?: Subset<T, MusicChart$evaluationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartEvaluationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     RecentPlay<T extends MusicChart$RecentPlayArgs<ExtArgs> = {}>(args?: Subset<T, MusicChart$RecentPlayArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RecentPlayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     PlayData<T extends MusicChart$PlayDataArgs<ExtArgs> = {}>(args?: Subset<T, MusicChart$PlayDataArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlayDataPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -7613,6 +8081,8 @@ export namespace Prisma {
     playHistory<T extends MusicChart$playHistoryArgs<ExtArgs> = {}>(args?: Subset<T, MusicChart$playHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartPlayHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     recordSnapshots<T extends MusicChart$recordSnapshotsArgs<ExtArgs> = {}>(args?: Subset<T, MusicChart$recordSnapshotsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartRecordSnapshotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     examStageOptions<T extends MusicChart$examStageOptionsArgs<ExtArgs> = {}>(args?: Subset<T, MusicChart$examStageOptionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamStageChartPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    tierEntries<T extends MusicChart$tierEntriesArgs<ExtArgs> = {}>(args?: Subset<T, MusicChart$tierEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TierEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    tierPlacementHistory<T extends MusicChart$tierPlacementHistoryArgs<ExtArgs> = {}>(args?: Subset<T, MusicChart$tierPlacementHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TierPlacementHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8051,27 +8521,27 @@ export namespace Prisma {
   }
 
   /**
-   * MusicChart.constantHistory
+   * MusicChart.levelConstantHistory
    */
-  export type MusicChart$constantHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type MusicChart$levelConstantHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ChartConstantHistory
+     * Select specific fields to fetch from the ChartLevelConstantHistory
      */
-    select?: ChartConstantHistorySelect<ExtArgs> | null
+    select?: ChartLevelConstantHistorySelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ChartConstantHistory
+     * Omit specific fields from the ChartLevelConstantHistory
      */
-    omit?: ChartConstantHistoryOmit<ExtArgs> | null
+    omit?: ChartLevelConstantHistoryOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ChartConstantHistoryInclude<ExtArgs> | null
-    where?: ChartConstantHistoryWhereInput
-    orderBy?: ChartConstantHistoryOrderByWithRelationInput | ChartConstantHistoryOrderByWithRelationInput[]
-    cursor?: ChartConstantHistoryWhereUniqueInput
+    include?: ChartLevelConstantHistoryInclude<ExtArgs> | null
+    where?: ChartLevelConstantHistoryWhereInput
+    orderBy?: ChartLevelConstantHistoryOrderByWithRelationInput | ChartLevelConstantHistoryOrderByWithRelationInput[]
+    cursor?: ChartLevelConstantHistoryWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: ChartConstantHistoryScalarFieldEnum | ChartConstantHistoryScalarFieldEnum[]
+    distinct?: ChartLevelConstantHistoryScalarFieldEnum | ChartLevelConstantHistoryScalarFieldEnum[]
   }
 
   /**
@@ -8264,6 +8734,54 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ExamStageChartScalarFieldEnum | ExamStageChartScalarFieldEnum[]
+  }
+
+  /**
+   * MusicChart.tierEntries
+   */
+  export type MusicChart$tierEntriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierEntry
+     */
+    select?: TierEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierEntry
+     */
+    omit?: TierEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierEntryInclude<ExtArgs> | null
+    where?: TierEntryWhereInput
+    orderBy?: TierEntryOrderByWithRelationInput | TierEntryOrderByWithRelationInput[]
+    cursor?: TierEntryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TierEntryScalarFieldEnum | TierEntryScalarFieldEnum[]
+  }
+
+  /**
+   * MusicChart.tierPlacementHistory
+   */
+  export type MusicChart$tierPlacementHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierPlacementHistory
+     */
+    select?: TierPlacementHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierPlacementHistory
+     */
+    omit?: TierPlacementHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierPlacementHistoryInclude<ExtArgs> | null
+    where?: TierPlacementHistoryWhereInput
+    orderBy?: TierPlacementHistoryOrderByWithRelationInput | TierPlacementHistoryOrderByWithRelationInput[]
+    cursor?: TierPlacementHistoryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TierPlacementHistoryScalarFieldEnum | TierPlacementHistoryScalarFieldEnum[]
   }
 
   /**
@@ -12026,38 +12544,30 @@ export namespace Prisma {
 
 
   /**
-   * Model ChartConstantHistory
+   * Model ChartLevelConstantHistory
    */
 
-  export type AggregateChartConstantHistory = {
-    _count: ChartConstantHistoryCountAggregateOutputType | null
-    _avg: ChartConstantHistoryAvgAggregateOutputType | null
-    _sum: ChartConstantHistorySumAggregateOutputType | null
-    _min: ChartConstantHistoryMinAggregateOutputType | null
-    _max: ChartConstantHistoryMaxAggregateOutputType | null
+  export type AggregateChartLevelConstantHistory = {
+    _count: ChartLevelConstantHistoryCountAggregateOutputType | null
+    _avg: ChartLevelConstantHistoryAvgAggregateOutputType | null
+    _sum: ChartLevelConstantHistorySumAggregateOutputType | null
+    _min: ChartLevelConstantHistoryMinAggregateOutputType | null
+    _max: ChartLevelConstantHistoryMaxAggregateOutputType | null
   }
 
-  export type ChartConstantHistoryAvgAggregateOutputType = {
+  export type ChartLevelConstantHistoryAvgAggregateOutputType = {
     id: number | null
     value: number | null
     chart_id: number | null
   }
 
-  export type ChartConstantHistorySumAggregateOutputType = {
+  export type ChartLevelConstantHistorySumAggregateOutputType = {
     id: number | null
     value: number | null
     chart_id: number | null
   }
 
-  export type ChartConstantHistoryMinAggregateOutputType = {
-    id: number | null
-    value: number | null
-    effective_at: Date | null
-    chart_id: number | null
-    created_at: Date | null
-  }
-
-  export type ChartConstantHistoryMaxAggregateOutputType = {
+  export type ChartLevelConstantHistoryMinAggregateOutputType = {
     id: number | null
     value: number | null
     effective_at: Date | null
@@ -12065,7 +12575,15 @@ export namespace Prisma {
     created_at: Date | null
   }
 
-  export type ChartConstantHistoryCountAggregateOutputType = {
+  export type ChartLevelConstantHistoryMaxAggregateOutputType = {
+    id: number | null
+    value: number | null
+    effective_at: Date | null
+    chart_id: number | null
+    created_at: Date | null
+  }
+
+  export type ChartLevelConstantHistoryCountAggregateOutputType = {
     id: number
     value: number
     effective_at: number
@@ -12075,27 +12593,19 @@ export namespace Prisma {
   }
 
 
-  export type ChartConstantHistoryAvgAggregateInputType = {
+  export type ChartLevelConstantHistoryAvgAggregateInputType = {
     id?: true
     value?: true
     chart_id?: true
   }
 
-  export type ChartConstantHistorySumAggregateInputType = {
+  export type ChartLevelConstantHistorySumAggregateInputType = {
     id?: true
     value?: true
     chart_id?: true
   }
 
-  export type ChartConstantHistoryMinAggregateInputType = {
-    id?: true
-    value?: true
-    effective_at?: true
-    chart_id?: true
-    created_at?: true
-  }
-
-  export type ChartConstantHistoryMaxAggregateInputType = {
+  export type ChartLevelConstantHistoryMinAggregateInputType = {
     id?: true
     value?: true
     effective_at?: true
@@ -12103,7 +12613,15 @@ export namespace Prisma {
     created_at?: true
   }
 
-  export type ChartConstantHistoryCountAggregateInputType = {
+  export type ChartLevelConstantHistoryMaxAggregateInputType = {
+    id?: true
+    value?: true
+    effective_at?: true
+    chart_id?: true
+    created_at?: true
+  }
+
+  export type ChartLevelConstantHistoryCountAggregateInputType = {
     id?: true
     value?: true
     effective_at?: true
@@ -12112,147 +12630,147 @@ export namespace Prisma {
     _all?: true
   }
 
-  export type ChartConstantHistoryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ChartLevelConstantHistoryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which ChartConstantHistory to aggregate.
+     * Filter which ChartLevelConstantHistory to aggregate.
      */
-    where?: ChartConstantHistoryWhereInput
+    where?: ChartLevelConstantHistoryWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of ChartConstantHistories to fetch.
+     * Determine the order of ChartLevelConstantHistories to fetch.
      */
-    orderBy?: ChartConstantHistoryOrderByWithRelationInput | ChartConstantHistoryOrderByWithRelationInput[]
+    orderBy?: ChartLevelConstantHistoryOrderByWithRelationInput | ChartLevelConstantHistoryOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
      */
-    cursor?: ChartConstantHistoryWhereUniqueInput
+    cursor?: ChartLevelConstantHistoryWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` ChartConstantHistories from the position of the cursor.
+     * Take `±n` ChartLevelConstantHistories from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` ChartConstantHistories.
+     * Skip the first `n` ChartLevelConstantHistories.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Count returned ChartConstantHistories
+     * Count returned ChartLevelConstantHistories
     **/
-    _count?: true | ChartConstantHistoryCountAggregateInputType
+    _count?: true | ChartLevelConstantHistoryCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to average
     **/
-    _avg?: ChartConstantHistoryAvgAggregateInputType
+    _avg?: ChartLevelConstantHistoryAvgAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to sum
     **/
-    _sum?: ChartConstantHistorySumAggregateInputType
+    _sum?: ChartLevelConstantHistorySumAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the minimum value
     **/
-    _min?: ChartConstantHistoryMinAggregateInputType
+    _min?: ChartLevelConstantHistoryMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the maximum value
     **/
-    _max?: ChartConstantHistoryMaxAggregateInputType
+    _max?: ChartLevelConstantHistoryMaxAggregateInputType
   }
 
-  export type GetChartConstantHistoryAggregateType<T extends ChartConstantHistoryAggregateArgs> = {
-        [P in keyof T & keyof AggregateChartConstantHistory]: P extends '_count' | 'count'
+  export type GetChartLevelConstantHistoryAggregateType<T extends ChartLevelConstantHistoryAggregateArgs> = {
+        [P in keyof T & keyof AggregateChartLevelConstantHistory]: P extends '_count' | 'count'
       ? T[P] extends true
         ? number
-        : GetScalarType<T[P], AggregateChartConstantHistory[P]>
-      : GetScalarType<T[P], AggregateChartConstantHistory[P]>
+        : GetScalarType<T[P], AggregateChartLevelConstantHistory[P]>
+      : GetScalarType<T[P], AggregateChartLevelConstantHistory[P]>
   }
 
 
 
 
-  export type ChartConstantHistoryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ChartConstantHistoryWhereInput
-    orderBy?: ChartConstantHistoryOrderByWithAggregationInput | ChartConstantHistoryOrderByWithAggregationInput[]
-    by: ChartConstantHistoryScalarFieldEnum[] | ChartConstantHistoryScalarFieldEnum
-    having?: ChartConstantHistoryScalarWhereWithAggregatesInput
+  export type ChartLevelConstantHistoryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ChartLevelConstantHistoryWhereInput
+    orderBy?: ChartLevelConstantHistoryOrderByWithAggregationInput | ChartLevelConstantHistoryOrderByWithAggregationInput[]
+    by: ChartLevelConstantHistoryScalarFieldEnum[] | ChartLevelConstantHistoryScalarFieldEnum
+    having?: ChartLevelConstantHistoryScalarWhereWithAggregatesInput
     take?: number
     skip?: number
-    _count?: ChartConstantHistoryCountAggregateInputType | true
-    _avg?: ChartConstantHistoryAvgAggregateInputType
-    _sum?: ChartConstantHistorySumAggregateInputType
-    _min?: ChartConstantHistoryMinAggregateInputType
-    _max?: ChartConstantHistoryMaxAggregateInputType
+    _count?: ChartLevelConstantHistoryCountAggregateInputType | true
+    _avg?: ChartLevelConstantHistoryAvgAggregateInputType
+    _sum?: ChartLevelConstantHistorySumAggregateInputType
+    _min?: ChartLevelConstantHistoryMinAggregateInputType
+    _max?: ChartLevelConstantHistoryMaxAggregateInputType
   }
 
-  export type ChartConstantHistoryGroupByOutputType = {
+  export type ChartLevelConstantHistoryGroupByOutputType = {
     id: number
     value: number
     effective_at: Date
     chart_id: number
     created_at: Date
-    _count: ChartConstantHistoryCountAggregateOutputType | null
-    _avg: ChartConstantHistoryAvgAggregateOutputType | null
-    _sum: ChartConstantHistorySumAggregateOutputType | null
-    _min: ChartConstantHistoryMinAggregateOutputType | null
-    _max: ChartConstantHistoryMaxAggregateOutputType | null
+    _count: ChartLevelConstantHistoryCountAggregateOutputType | null
+    _avg: ChartLevelConstantHistoryAvgAggregateOutputType | null
+    _sum: ChartLevelConstantHistorySumAggregateOutputType | null
+    _min: ChartLevelConstantHistoryMinAggregateOutputType | null
+    _max: ChartLevelConstantHistoryMaxAggregateOutputType | null
   }
 
-  type GetChartConstantHistoryGroupByPayload<T extends ChartConstantHistoryGroupByArgs> = Prisma.PrismaPromise<
+  type GetChartLevelConstantHistoryGroupByPayload<T extends ChartLevelConstantHistoryGroupByArgs> = Prisma.PrismaPromise<
     Array<
-      PickEnumerable<ChartConstantHistoryGroupByOutputType, T['by']> &
+      PickEnumerable<ChartLevelConstantHistoryGroupByOutputType, T['by']> &
         {
-          [P in ((keyof T) & (keyof ChartConstantHistoryGroupByOutputType))]: P extends '_count'
+          [P in ((keyof T) & (keyof ChartLevelConstantHistoryGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
               ? number
-              : GetScalarType<T[P], ChartConstantHistoryGroupByOutputType[P]>
-            : GetScalarType<T[P], ChartConstantHistoryGroupByOutputType[P]>
+              : GetScalarType<T[P], ChartLevelConstantHistoryGroupByOutputType[P]>
+            : GetScalarType<T[P], ChartLevelConstantHistoryGroupByOutputType[P]>
         }
       >
     >
 
 
-  export type ChartConstantHistorySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type ChartLevelConstantHistorySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     value?: boolean
     effective_at?: boolean
     chart_id?: boolean
     created_at?: boolean
     chart?: boolean | MusicChartDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["chartConstantHistory"]>
+  }, ExtArgs["result"]["chartLevelConstantHistory"]>
 
-  export type ChartConstantHistorySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type ChartLevelConstantHistorySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     value?: boolean
     effective_at?: boolean
     chart_id?: boolean
     created_at?: boolean
     chart?: boolean | MusicChartDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["chartConstantHistory"]>
+  }, ExtArgs["result"]["chartLevelConstantHistory"]>
 
-  export type ChartConstantHistorySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type ChartLevelConstantHistorySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     value?: boolean
     effective_at?: boolean
     chart_id?: boolean
     created_at?: boolean
     chart?: boolean | MusicChartDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["chartConstantHistory"]>
+  }, ExtArgs["result"]["chartLevelConstantHistory"]>
 
-  export type ChartConstantHistorySelectScalar = {
+  export type ChartLevelConstantHistorySelectScalar = {
     id?: boolean
     value?: boolean
     effective_at?: boolean
@@ -12260,19 +12778,19 @@ export namespace Prisma {
     created_at?: boolean
   }
 
-  export type ChartConstantHistoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "value" | "effective_at" | "chart_id" | "created_at", ExtArgs["result"]["chartConstantHistory"]>
-  export type ChartConstantHistoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ChartLevelConstantHistoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "value" | "effective_at" | "chart_id" | "created_at", ExtArgs["result"]["chartLevelConstantHistory"]>
+  export type ChartLevelConstantHistoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     chart?: boolean | MusicChartDefaultArgs<ExtArgs>
   }
-  export type ChartConstantHistoryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ChartLevelConstantHistoryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     chart?: boolean | MusicChartDefaultArgs<ExtArgs>
   }
-  export type ChartConstantHistoryIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ChartLevelConstantHistoryIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     chart?: boolean | MusicChartDefaultArgs<ExtArgs>
   }
 
-  export type $ChartConstantHistoryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "ChartConstantHistory"
+  export type $ChartLevelConstantHistoryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ChartLevelConstantHistory"
     objects: {
       chart: Prisma.$MusicChartPayload<ExtArgs>
     }
@@ -12282,136 +12800,136 @@ export namespace Prisma {
       effective_at: Date
       chart_id: number
       created_at: Date
-    }, ExtArgs["result"]["chartConstantHistory"]>
+    }, ExtArgs["result"]["chartLevelConstantHistory"]>
     composites: {}
   }
 
-  type ChartConstantHistoryGetPayload<S extends boolean | null | undefined | ChartConstantHistoryDefaultArgs> = $Result.GetResult<Prisma.$ChartConstantHistoryPayload, S>
+  type ChartLevelConstantHistoryGetPayload<S extends boolean | null | undefined | ChartLevelConstantHistoryDefaultArgs> = $Result.GetResult<Prisma.$ChartLevelConstantHistoryPayload, S>
 
-  type ChartConstantHistoryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<ChartConstantHistoryFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: ChartConstantHistoryCountAggregateInputType | true
+  type ChartLevelConstantHistoryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ChartLevelConstantHistoryFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ChartLevelConstantHistoryCountAggregateInputType | true
     }
 
-  export interface ChartConstantHistoryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ChartConstantHistory'], meta: { name: 'ChartConstantHistory' } }
+  export interface ChartLevelConstantHistoryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ChartLevelConstantHistory'], meta: { name: 'ChartLevelConstantHistory' } }
     /**
-     * Find zero or one ChartConstantHistory that matches the filter.
-     * @param {ChartConstantHistoryFindUniqueArgs} args - Arguments to find a ChartConstantHistory
+     * Find zero or one ChartLevelConstantHistory that matches the filter.
+     * @param {ChartLevelConstantHistoryFindUniqueArgs} args - Arguments to find a ChartLevelConstantHistory
      * @example
-     * // Get one ChartConstantHistory
-     * const chartConstantHistory = await prisma.chartConstantHistory.findUnique({
+     * // Get one ChartLevelConstantHistory
+     * const chartLevelConstantHistory = await prisma.chartLevelConstantHistory.findUnique({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUnique<T extends ChartConstantHistoryFindUniqueArgs>(args: SelectSubset<T, ChartConstantHistoryFindUniqueArgs<ExtArgs>>): Prisma__ChartConstantHistoryClient<$Result.GetResult<Prisma.$ChartConstantHistoryPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findUnique<T extends ChartLevelConstantHistoryFindUniqueArgs>(args: SelectSubset<T, ChartLevelConstantHistoryFindUniqueArgs<ExtArgs>>): Prisma__ChartLevelConstantHistoryClient<$Result.GetResult<Prisma.$ChartLevelConstantHistoryPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find one ChartConstantHistory that matches the filter or throw an error with `error.code='P2025'`
+     * Find one ChartLevelConstantHistory that matches the filter or throw an error with `error.code='P2025'`
      * if no matches were found.
-     * @param {ChartConstantHistoryFindUniqueOrThrowArgs} args - Arguments to find a ChartConstantHistory
+     * @param {ChartLevelConstantHistoryFindUniqueOrThrowArgs} args - Arguments to find a ChartLevelConstantHistory
      * @example
-     * // Get one ChartConstantHistory
-     * const chartConstantHistory = await prisma.chartConstantHistory.findUniqueOrThrow({
+     * // Get one ChartLevelConstantHistory
+     * const chartLevelConstantHistory = await prisma.chartLevelConstantHistory.findUniqueOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUniqueOrThrow<T extends ChartConstantHistoryFindUniqueOrThrowArgs>(args: SelectSubset<T, ChartConstantHistoryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ChartConstantHistoryClient<$Result.GetResult<Prisma.$ChartConstantHistoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findUniqueOrThrow<T extends ChartLevelConstantHistoryFindUniqueOrThrowArgs>(args: SelectSubset<T, ChartLevelConstantHistoryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ChartLevelConstantHistoryClient<$Result.GetResult<Prisma.$ChartLevelConstantHistoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first ChartConstantHistory that matches the filter.
+     * Find the first ChartLevelConstantHistory that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ChartConstantHistoryFindFirstArgs} args - Arguments to find a ChartConstantHistory
+     * @param {ChartLevelConstantHistoryFindFirstArgs} args - Arguments to find a ChartLevelConstantHistory
      * @example
-     * // Get one ChartConstantHistory
-     * const chartConstantHistory = await prisma.chartConstantHistory.findFirst({
+     * // Get one ChartLevelConstantHistory
+     * const chartLevelConstantHistory = await prisma.chartLevelConstantHistory.findFirst({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirst<T extends ChartConstantHistoryFindFirstArgs>(args?: SelectSubset<T, ChartConstantHistoryFindFirstArgs<ExtArgs>>): Prisma__ChartConstantHistoryClient<$Result.GetResult<Prisma.$ChartConstantHistoryPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findFirst<T extends ChartLevelConstantHistoryFindFirstArgs>(args?: SelectSubset<T, ChartLevelConstantHistoryFindFirstArgs<ExtArgs>>): Prisma__ChartLevelConstantHistoryClient<$Result.GetResult<Prisma.$ChartLevelConstantHistoryPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first ChartConstantHistory that matches the filter or
+     * Find the first ChartLevelConstantHistory that matches the filter or
      * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ChartConstantHistoryFindFirstOrThrowArgs} args - Arguments to find a ChartConstantHistory
+     * @param {ChartLevelConstantHistoryFindFirstOrThrowArgs} args - Arguments to find a ChartLevelConstantHistory
      * @example
-     * // Get one ChartConstantHistory
-     * const chartConstantHistory = await prisma.chartConstantHistory.findFirstOrThrow({
+     * // Get one ChartLevelConstantHistory
+     * const chartLevelConstantHistory = await prisma.chartLevelConstantHistory.findFirstOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirstOrThrow<T extends ChartConstantHistoryFindFirstOrThrowArgs>(args?: SelectSubset<T, ChartConstantHistoryFindFirstOrThrowArgs<ExtArgs>>): Prisma__ChartConstantHistoryClient<$Result.GetResult<Prisma.$ChartConstantHistoryPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findFirstOrThrow<T extends ChartLevelConstantHistoryFindFirstOrThrowArgs>(args?: SelectSubset<T, ChartLevelConstantHistoryFindFirstOrThrowArgs<ExtArgs>>): Prisma__ChartLevelConstantHistoryClient<$Result.GetResult<Prisma.$ChartLevelConstantHistoryPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find zero or more ChartConstantHistories that matches the filter.
+     * Find zero or more ChartLevelConstantHistories that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ChartConstantHistoryFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @param {ChartLevelConstantHistoryFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
-     * // Get all ChartConstantHistories
-     * const chartConstantHistories = await prisma.chartConstantHistory.findMany()
+     * // Get all ChartLevelConstantHistories
+     * const chartLevelConstantHistories = await prisma.chartLevelConstantHistory.findMany()
      * 
-     * // Get first 10 ChartConstantHistories
-     * const chartConstantHistories = await prisma.chartConstantHistory.findMany({ take: 10 })
+     * // Get first 10 ChartLevelConstantHistories
+     * const chartLevelConstantHistories = await prisma.chartLevelConstantHistory.findMany({ take: 10 })
      * 
      * // Only select the `id`
-     * const chartConstantHistoryWithIdOnly = await prisma.chartConstantHistory.findMany({ select: { id: true } })
+     * const chartLevelConstantHistoryWithIdOnly = await prisma.chartLevelConstantHistory.findMany({ select: { id: true } })
      * 
      */
-    findMany<T extends ChartConstantHistoryFindManyArgs>(args?: SelectSubset<T, ChartConstantHistoryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartConstantHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+    findMany<T extends ChartLevelConstantHistoryFindManyArgs>(args?: SelectSubset<T, ChartLevelConstantHistoryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartLevelConstantHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
     /**
-     * Create a ChartConstantHistory.
-     * @param {ChartConstantHistoryCreateArgs} args - Arguments to create a ChartConstantHistory.
+     * Create a ChartLevelConstantHistory.
+     * @param {ChartLevelConstantHistoryCreateArgs} args - Arguments to create a ChartLevelConstantHistory.
      * @example
-     * // Create one ChartConstantHistory
-     * const ChartConstantHistory = await prisma.chartConstantHistory.create({
+     * // Create one ChartLevelConstantHistory
+     * const ChartLevelConstantHistory = await prisma.chartLevelConstantHistory.create({
      *   data: {
-     *     // ... data to create a ChartConstantHistory
+     *     // ... data to create a ChartLevelConstantHistory
      *   }
      * })
      * 
      */
-    create<T extends ChartConstantHistoryCreateArgs>(args: SelectSubset<T, ChartConstantHistoryCreateArgs<ExtArgs>>): Prisma__ChartConstantHistoryClient<$Result.GetResult<Prisma.$ChartConstantHistoryPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    create<T extends ChartLevelConstantHistoryCreateArgs>(args: SelectSubset<T, ChartLevelConstantHistoryCreateArgs<ExtArgs>>): Prisma__ChartLevelConstantHistoryClient<$Result.GetResult<Prisma.$ChartLevelConstantHistoryPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Create many ChartConstantHistories.
-     * @param {ChartConstantHistoryCreateManyArgs} args - Arguments to create many ChartConstantHistories.
+     * Create many ChartLevelConstantHistories.
+     * @param {ChartLevelConstantHistoryCreateManyArgs} args - Arguments to create many ChartLevelConstantHistories.
      * @example
-     * // Create many ChartConstantHistories
-     * const chartConstantHistory = await prisma.chartConstantHistory.createMany({
+     * // Create many ChartLevelConstantHistories
+     * const chartLevelConstantHistory = await prisma.chartLevelConstantHistory.createMany({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      *     
      */
-    createMany<T extends ChartConstantHistoryCreateManyArgs>(args?: SelectSubset<T, ChartConstantHistoryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    createMany<T extends ChartLevelConstantHistoryCreateManyArgs>(args?: SelectSubset<T, ChartLevelConstantHistoryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Create many ChartConstantHistories and returns the data saved in the database.
-     * @param {ChartConstantHistoryCreateManyAndReturnArgs} args - Arguments to create many ChartConstantHistories.
+     * Create many ChartLevelConstantHistories and returns the data saved in the database.
+     * @param {ChartLevelConstantHistoryCreateManyAndReturnArgs} args - Arguments to create many ChartLevelConstantHistories.
      * @example
-     * // Create many ChartConstantHistories
-     * const chartConstantHistory = await prisma.chartConstantHistory.createManyAndReturn({
+     * // Create many ChartLevelConstantHistories
+     * const chartLevelConstantHistory = await prisma.chartLevelConstantHistory.createManyAndReturn({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      * 
-     * // Create many ChartConstantHistories and only return the `id`
-     * const chartConstantHistoryWithIdOnly = await prisma.chartConstantHistory.createManyAndReturn({
+     * // Create many ChartLevelConstantHistories and only return the `id`
+     * const chartLevelConstantHistoryWithIdOnly = await prisma.chartLevelConstantHistory.createManyAndReturn({
      *   select: { id: true },
      *   data: [
      *     // ... provide data here
@@ -12421,28 +12939,28 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    createManyAndReturn<T extends ChartConstantHistoryCreateManyAndReturnArgs>(args?: SelectSubset<T, ChartConstantHistoryCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartConstantHistoryPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+    createManyAndReturn<T extends ChartLevelConstantHistoryCreateManyAndReturnArgs>(args?: SelectSubset<T, ChartLevelConstantHistoryCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartLevelConstantHistoryPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Delete a ChartConstantHistory.
-     * @param {ChartConstantHistoryDeleteArgs} args - Arguments to delete one ChartConstantHistory.
+     * Delete a ChartLevelConstantHistory.
+     * @param {ChartLevelConstantHistoryDeleteArgs} args - Arguments to delete one ChartLevelConstantHistory.
      * @example
-     * // Delete one ChartConstantHistory
-     * const ChartConstantHistory = await prisma.chartConstantHistory.delete({
+     * // Delete one ChartLevelConstantHistory
+     * const ChartLevelConstantHistory = await prisma.chartLevelConstantHistory.delete({
      *   where: {
-     *     // ... filter to delete one ChartConstantHistory
+     *     // ... filter to delete one ChartLevelConstantHistory
      *   }
      * })
      * 
      */
-    delete<T extends ChartConstantHistoryDeleteArgs>(args: SelectSubset<T, ChartConstantHistoryDeleteArgs<ExtArgs>>): Prisma__ChartConstantHistoryClient<$Result.GetResult<Prisma.$ChartConstantHistoryPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    delete<T extends ChartLevelConstantHistoryDeleteArgs>(args: SelectSubset<T, ChartLevelConstantHistoryDeleteArgs<ExtArgs>>): Prisma__ChartLevelConstantHistoryClient<$Result.GetResult<Prisma.$ChartLevelConstantHistoryPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Update one ChartConstantHistory.
-     * @param {ChartConstantHistoryUpdateArgs} args - Arguments to update one ChartConstantHistory.
+     * Update one ChartLevelConstantHistory.
+     * @param {ChartLevelConstantHistoryUpdateArgs} args - Arguments to update one ChartLevelConstantHistory.
      * @example
-     * // Update one ChartConstantHistory
-     * const chartConstantHistory = await prisma.chartConstantHistory.update({
+     * // Update one ChartLevelConstantHistory
+     * const chartLevelConstantHistory = await prisma.chartLevelConstantHistory.update({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -12452,30 +12970,30 @@ export namespace Prisma {
      * })
      * 
      */
-    update<T extends ChartConstantHistoryUpdateArgs>(args: SelectSubset<T, ChartConstantHistoryUpdateArgs<ExtArgs>>): Prisma__ChartConstantHistoryClient<$Result.GetResult<Prisma.$ChartConstantHistoryPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    update<T extends ChartLevelConstantHistoryUpdateArgs>(args: SelectSubset<T, ChartLevelConstantHistoryUpdateArgs<ExtArgs>>): Prisma__ChartLevelConstantHistoryClient<$Result.GetResult<Prisma.$ChartLevelConstantHistoryPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Delete zero or more ChartConstantHistories.
-     * @param {ChartConstantHistoryDeleteManyArgs} args - Arguments to filter ChartConstantHistories to delete.
+     * Delete zero or more ChartLevelConstantHistories.
+     * @param {ChartLevelConstantHistoryDeleteManyArgs} args - Arguments to filter ChartLevelConstantHistories to delete.
      * @example
-     * // Delete a few ChartConstantHistories
-     * const { count } = await prisma.chartConstantHistory.deleteMany({
+     * // Delete a few ChartLevelConstantHistories
+     * const { count } = await prisma.chartLevelConstantHistory.deleteMany({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      * 
      */
-    deleteMany<T extends ChartConstantHistoryDeleteManyArgs>(args?: SelectSubset<T, ChartConstantHistoryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    deleteMany<T extends ChartLevelConstantHistoryDeleteManyArgs>(args?: SelectSubset<T, ChartLevelConstantHistoryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more ChartConstantHistories.
+     * Update zero or more ChartLevelConstantHistories.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ChartConstantHistoryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @param {ChartLevelConstantHistoryUpdateManyArgs} args - Arguments to update one or more rows.
      * @example
-     * // Update many ChartConstantHistories
-     * const chartConstantHistory = await prisma.chartConstantHistory.updateMany({
+     * // Update many ChartLevelConstantHistories
+     * const chartLevelConstantHistory = await prisma.chartLevelConstantHistory.updateMany({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -12485,14 +13003,14 @@ export namespace Prisma {
      * })
      * 
      */
-    updateMany<T extends ChartConstantHistoryUpdateManyArgs>(args: SelectSubset<T, ChartConstantHistoryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    updateMany<T extends ChartLevelConstantHistoryUpdateManyArgs>(args: SelectSubset<T, ChartLevelConstantHistoryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more ChartConstantHistories and returns the data updated in the database.
-     * @param {ChartConstantHistoryUpdateManyAndReturnArgs} args - Arguments to update many ChartConstantHistories.
+     * Update zero or more ChartLevelConstantHistories and returns the data updated in the database.
+     * @param {ChartLevelConstantHistoryUpdateManyAndReturnArgs} args - Arguments to update many ChartLevelConstantHistories.
      * @example
-     * // Update many ChartConstantHistories
-     * const chartConstantHistory = await prisma.chartConstantHistory.updateManyAndReturn({
+     * // Update many ChartLevelConstantHistories
+     * const chartLevelConstantHistory = await prisma.chartLevelConstantHistory.updateManyAndReturn({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -12501,8 +13019,8 @@ export namespace Prisma {
      *   ]
      * })
      * 
-     * // Update zero or more ChartConstantHistories and only return the `id`
-     * const chartConstantHistoryWithIdOnly = await prisma.chartConstantHistory.updateManyAndReturn({
+     * // Update zero or more ChartLevelConstantHistories and only return the `id`
+     * const chartLevelConstantHistoryWithIdOnly = await prisma.chartLevelConstantHistory.updateManyAndReturn({
      *   select: { id: true },
      *   where: {
      *     // ... provide filter here
@@ -12515,56 +13033,56 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    updateManyAndReturn<T extends ChartConstantHistoryUpdateManyAndReturnArgs>(args: SelectSubset<T, ChartConstantHistoryUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartConstantHistoryPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+    updateManyAndReturn<T extends ChartLevelConstantHistoryUpdateManyAndReturnArgs>(args: SelectSubset<T, ChartLevelConstantHistoryUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartLevelConstantHistoryPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Create or update one ChartConstantHistory.
-     * @param {ChartConstantHistoryUpsertArgs} args - Arguments to update or create a ChartConstantHistory.
+     * Create or update one ChartLevelConstantHistory.
+     * @param {ChartLevelConstantHistoryUpsertArgs} args - Arguments to update or create a ChartLevelConstantHistory.
      * @example
-     * // Update or create a ChartConstantHistory
-     * const chartConstantHistory = await prisma.chartConstantHistory.upsert({
+     * // Update or create a ChartLevelConstantHistory
+     * const chartLevelConstantHistory = await prisma.chartLevelConstantHistory.upsert({
      *   create: {
-     *     // ... data to create a ChartConstantHistory
+     *     // ... data to create a ChartLevelConstantHistory
      *   },
      *   update: {
      *     // ... in case it already exists, update
      *   },
      *   where: {
-     *     // ... the filter for the ChartConstantHistory we want to update
+     *     // ... the filter for the ChartLevelConstantHistory we want to update
      *   }
      * })
      */
-    upsert<T extends ChartConstantHistoryUpsertArgs>(args: SelectSubset<T, ChartConstantHistoryUpsertArgs<ExtArgs>>): Prisma__ChartConstantHistoryClient<$Result.GetResult<Prisma.$ChartConstantHistoryPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    upsert<T extends ChartLevelConstantHistoryUpsertArgs>(args: SelectSubset<T, ChartLevelConstantHistoryUpsertArgs<ExtArgs>>): Prisma__ChartLevelConstantHistoryClient<$Result.GetResult<Prisma.$ChartLevelConstantHistoryPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
     /**
-     * Count the number of ChartConstantHistories.
+     * Count the number of ChartLevelConstantHistories.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ChartConstantHistoryCountArgs} args - Arguments to filter ChartConstantHistories to count.
+     * @param {ChartLevelConstantHistoryCountArgs} args - Arguments to filter ChartLevelConstantHistories to count.
      * @example
-     * // Count the number of ChartConstantHistories
-     * const count = await prisma.chartConstantHistory.count({
+     * // Count the number of ChartLevelConstantHistories
+     * const count = await prisma.chartLevelConstantHistory.count({
      *   where: {
-     *     // ... the filter for the ChartConstantHistories we want to count
+     *     // ... the filter for the ChartLevelConstantHistories we want to count
      *   }
      * })
     **/
-    count<T extends ChartConstantHistoryCountArgs>(
-      args?: Subset<T, ChartConstantHistoryCountArgs>,
+    count<T extends ChartLevelConstantHistoryCountArgs>(
+      args?: Subset<T, ChartLevelConstantHistoryCountArgs>,
     ): Prisma.PrismaPromise<
       T extends $Utils.Record<'select', any>
         ? T['select'] extends true
           ? number
-          : GetScalarType<T['select'], ChartConstantHistoryCountAggregateOutputType>
+          : GetScalarType<T['select'], ChartLevelConstantHistoryCountAggregateOutputType>
         : number
     >
 
     /**
-     * Allows you to perform aggregations operations on a ChartConstantHistory.
+     * Allows you to perform aggregations operations on a ChartLevelConstantHistory.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ChartConstantHistoryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @param {ChartLevelConstantHistoryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
      * @example
      * // Ordered by age ascending
      * // Where email contains prisma.io
@@ -12584,13 +13102,13 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends ChartConstantHistoryAggregateArgs>(args: Subset<T, ChartConstantHistoryAggregateArgs>): Prisma.PrismaPromise<GetChartConstantHistoryAggregateType<T>>
+    aggregate<T extends ChartLevelConstantHistoryAggregateArgs>(args: Subset<T, ChartLevelConstantHistoryAggregateArgs>): Prisma.PrismaPromise<GetChartLevelConstantHistoryAggregateType<T>>
 
     /**
-     * Group by ChartConstantHistory.
+     * Group by ChartLevelConstantHistory.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ChartConstantHistoryGroupByArgs} args - Group by arguments.
+     * @param {ChartLevelConstantHistoryGroupByArgs} args - Group by arguments.
      * @example
      * // Group by city, order by createdAt, get count
      * const result = await prisma.user.groupBy({
@@ -12605,14 +13123,14 @@ export namespace Prisma {
      * 
     **/
     groupBy<
-      T extends ChartConstantHistoryGroupByArgs,
+      T extends ChartLevelConstantHistoryGroupByArgs,
       HasSelectOrTake extends Or<
         Extends<'skip', Keys<T>>,
         Extends<'take', Keys<T>>
       >,
       OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: ChartConstantHistoryGroupByArgs['orderBy'] }
-        : { orderBy?: ChartConstantHistoryGroupByArgs['orderBy'] },
+        ? { orderBy: ChartLevelConstantHistoryGroupByArgs['orderBy'] }
+        : { orderBy?: ChartLevelConstantHistoryGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
       ByFields extends MaybeTupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
@@ -12661,20 +13179,20 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, ChartConstantHistoryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetChartConstantHistoryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, ChartLevelConstantHistoryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetChartLevelConstantHistoryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
   /**
-   * Fields of the ChartConstantHistory model
+   * Fields of the ChartLevelConstantHistory model
    */
-  readonly fields: ChartConstantHistoryFieldRefs;
+  readonly fields: ChartLevelConstantHistoryFieldRefs;
   }
 
   /**
-   * The delegate class that acts as a "Promise-like" for ChartConstantHistory.
+   * The delegate class that acts as a "Promise-like" for ChartLevelConstantHistory.
    * Why is this prefixed with `Prisma__`?
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export interface Prisma__ChartConstantHistoryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+  export interface Prisma__ChartLevelConstantHistoryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     chart<T extends MusicChartDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MusicChartDefaultArgs<ExtArgs>>): Prisma__MusicChartClient<$Result.GetResult<Prisma.$MusicChartPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
@@ -12703,423 +13221,5036 @@ export namespace Prisma {
 
 
   /**
-   * Fields of the ChartConstantHistory model
+   * Fields of the ChartLevelConstantHistory model
    */
-  interface ChartConstantHistoryFieldRefs {
-    readonly id: FieldRef<"ChartConstantHistory", 'Int'>
-    readonly value: FieldRef<"ChartConstantHistory", 'Float'>
-    readonly effective_at: FieldRef<"ChartConstantHistory", 'DateTime'>
-    readonly chart_id: FieldRef<"ChartConstantHistory", 'Int'>
-    readonly created_at: FieldRef<"ChartConstantHistory", 'DateTime'>
+  interface ChartLevelConstantHistoryFieldRefs {
+    readonly id: FieldRef<"ChartLevelConstantHistory", 'Int'>
+    readonly value: FieldRef<"ChartLevelConstantHistory", 'Float'>
+    readonly effective_at: FieldRef<"ChartLevelConstantHistory", 'DateTime'>
+    readonly chart_id: FieldRef<"ChartLevelConstantHistory", 'Int'>
+    readonly created_at: FieldRef<"ChartLevelConstantHistory", 'DateTime'>
   }
     
 
   // Custom InputTypes
   /**
-   * ChartConstantHistory findUnique
+   * ChartLevelConstantHistory findUnique
    */
-  export type ChartConstantHistoryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ChartLevelConstantHistoryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ChartConstantHistory
+     * Select specific fields to fetch from the ChartLevelConstantHistory
      */
-    select?: ChartConstantHistorySelect<ExtArgs> | null
+    select?: ChartLevelConstantHistorySelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ChartConstantHistory
+     * Omit specific fields from the ChartLevelConstantHistory
      */
-    omit?: ChartConstantHistoryOmit<ExtArgs> | null
+    omit?: ChartLevelConstantHistoryOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ChartConstantHistoryInclude<ExtArgs> | null
+    include?: ChartLevelConstantHistoryInclude<ExtArgs> | null
     /**
-     * Filter, which ChartConstantHistory to fetch.
+     * Filter, which ChartLevelConstantHistory to fetch.
      */
-    where: ChartConstantHistoryWhereUniqueInput
+    where: ChartLevelConstantHistoryWhereUniqueInput
   }
 
   /**
-   * ChartConstantHistory findUniqueOrThrow
+   * ChartLevelConstantHistory findUniqueOrThrow
    */
-  export type ChartConstantHistoryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ChartLevelConstantHistoryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ChartConstantHistory
+     * Select specific fields to fetch from the ChartLevelConstantHistory
      */
-    select?: ChartConstantHistorySelect<ExtArgs> | null
+    select?: ChartLevelConstantHistorySelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ChartConstantHistory
+     * Omit specific fields from the ChartLevelConstantHistory
      */
-    omit?: ChartConstantHistoryOmit<ExtArgs> | null
+    omit?: ChartLevelConstantHistoryOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ChartConstantHistoryInclude<ExtArgs> | null
+    include?: ChartLevelConstantHistoryInclude<ExtArgs> | null
     /**
-     * Filter, which ChartConstantHistory to fetch.
+     * Filter, which ChartLevelConstantHistory to fetch.
      */
-    where: ChartConstantHistoryWhereUniqueInput
+    where: ChartLevelConstantHistoryWhereUniqueInput
   }
 
   /**
-   * ChartConstantHistory findFirst
+   * ChartLevelConstantHistory findFirst
    */
-  export type ChartConstantHistoryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ChartLevelConstantHistoryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ChartConstantHistory
+     * Select specific fields to fetch from the ChartLevelConstantHistory
      */
-    select?: ChartConstantHistorySelect<ExtArgs> | null
+    select?: ChartLevelConstantHistorySelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ChartConstantHistory
+     * Omit specific fields from the ChartLevelConstantHistory
      */
-    omit?: ChartConstantHistoryOmit<ExtArgs> | null
+    omit?: ChartLevelConstantHistoryOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ChartConstantHistoryInclude<ExtArgs> | null
+    include?: ChartLevelConstantHistoryInclude<ExtArgs> | null
     /**
-     * Filter, which ChartConstantHistory to fetch.
+     * Filter, which ChartLevelConstantHistory to fetch.
      */
-    where?: ChartConstantHistoryWhereInput
+    where?: ChartLevelConstantHistoryWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of ChartConstantHistories to fetch.
+     * Determine the order of ChartLevelConstantHistories to fetch.
      */
-    orderBy?: ChartConstantHistoryOrderByWithRelationInput | ChartConstantHistoryOrderByWithRelationInput[]
+    orderBy?: ChartLevelConstantHistoryOrderByWithRelationInput | ChartLevelConstantHistoryOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for ChartConstantHistories.
+     * Sets the position for searching for ChartLevelConstantHistories.
      */
-    cursor?: ChartConstantHistoryWhereUniqueInput
+    cursor?: ChartLevelConstantHistoryWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` ChartConstantHistories from the position of the cursor.
+     * Take `±n` ChartLevelConstantHistories from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` ChartConstantHistories.
+     * Skip the first `n` ChartLevelConstantHistories.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of ChartConstantHistories.
+     * Filter by unique combinations of ChartLevelConstantHistories.
      */
-    distinct?: ChartConstantHistoryScalarFieldEnum | ChartConstantHistoryScalarFieldEnum[]
+    distinct?: ChartLevelConstantHistoryScalarFieldEnum | ChartLevelConstantHistoryScalarFieldEnum[]
   }
 
   /**
-   * ChartConstantHistory findFirstOrThrow
+   * ChartLevelConstantHistory findFirstOrThrow
    */
-  export type ChartConstantHistoryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ChartLevelConstantHistoryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ChartConstantHistory
+     * Select specific fields to fetch from the ChartLevelConstantHistory
      */
-    select?: ChartConstantHistorySelect<ExtArgs> | null
+    select?: ChartLevelConstantHistorySelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ChartConstantHistory
+     * Omit specific fields from the ChartLevelConstantHistory
      */
-    omit?: ChartConstantHistoryOmit<ExtArgs> | null
+    omit?: ChartLevelConstantHistoryOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ChartConstantHistoryInclude<ExtArgs> | null
+    include?: ChartLevelConstantHistoryInclude<ExtArgs> | null
     /**
-     * Filter, which ChartConstantHistory to fetch.
+     * Filter, which ChartLevelConstantHistory to fetch.
      */
-    where?: ChartConstantHistoryWhereInput
+    where?: ChartLevelConstantHistoryWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of ChartConstantHistories to fetch.
+     * Determine the order of ChartLevelConstantHistories to fetch.
      */
-    orderBy?: ChartConstantHistoryOrderByWithRelationInput | ChartConstantHistoryOrderByWithRelationInput[]
+    orderBy?: ChartLevelConstantHistoryOrderByWithRelationInput | ChartLevelConstantHistoryOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for ChartConstantHistories.
+     * Sets the position for searching for ChartLevelConstantHistories.
      */
-    cursor?: ChartConstantHistoryWhereUniqueInput
+    cursor?: ChartLevelConstantHistoryWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` ChartConstantHistories from the position of the cursor.
+     * Take `±n` ChartLevelConstantHistories from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` ChartConstantHistories.
+     * Skip the first `n` ChartLevelConstantHistories.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of ChartConstantHistories.
+     * Filter by unique combinations of ChartLevelConstantHistories.
      */
-    distinct?: ChartConstantHistoryScalarFieldEnum | ChartConstantHistoryScalarFieldEnum[]
+    distinct?: ChartLevelConstantHistoryScalarFieldEnum | ChartLevelConstantHistoryScalarFieldEnum[]
   }
 
   /**
-   * ChartConstantHistory findMany
+   * ChartLevelConstantHistory findMany
    */
-  export type ChartConstantHistoryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ChartLevelConstantHistoryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ChartConstantHistory
+     * Select specific fields to fetch from the ChartLevelConstantHistory
      */
-    select?: ChartConstantHistorySelect<ExtArgs> | null
+    select?: ChartLevelConstantHistorySelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ChartConstantHistory
+     * Omit specific fields from the ChartLevelConstantHistory
      */
-    omit?: ChartConstantHistoryOmit<ExtArgs> | null
+    omit?: ChartLevelConstantHistoryOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ChartConstantHistoryInclude<ExtArgs> | null
+    include?: ChartLevelConstantHistoryInclude<ExtArgs> | null
     /**
-     * Filter, which ChartConstantHistories to fetch.
+     * Filter, which ChartLevelConstantHistories to fetch.
      */
-    where?: ChartConstantHistoryWhereInput
+    where?: ChartLevelConstantHistoryWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of ChartConstantHistories to fetch.
+     * Determine the order of ChartLevelConstantHistories to fetch.
      */
-    orderBy?: ChartConstantHistoryOrderByWithRelationInput | ChartConstantHistoryOrderByWithRelationInput[]
+    orderBy?: ChartLevelConstantHistoryOrderByWithRelationInput | ChartLevelConstantHistoryOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for listing ChartConstantHistories.
+     * Sets the position for listing ChartLevelConstantHistories.
      */
-    cursor?: ChartConstantHistoryWhereUniqueInput
+    cursor?: ChartLevelConstantHistoryWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` ChartConstantHistories from the position of the cursor.
+     * Take `±n` ChartLevelConstantHistories from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` ChartConstantHistories.
+     * Skip the first `n` ChartLevelConstantHistories.
      */
     skip?: number
-    distinct?: ChartConstantHistoryScalarFieldEnum | ChartConstantHistoryScalarFieldEnum[]
+    distinct?: ChartLevelConstantHistoryScalarFieldEnum | ChartLevelConstantHistoryScalarFieldEnum[]
   }
 
   /**
-   * ChartConstantHistory create
+   * ChartLevelConstantHistory create
    */
-  export type ChartConstantHistoryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ChartLevelConstantHistoryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ChartConstantHistory
+     * Select specific fields to fetch from the ChartLevelConstantHistory
      */
-    select?: ChartConstantHistorySelect<ExtArgs> | null
+    select?: ChartLevelConstantHistorySelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ChartConstantHistory
+     * Omit specific fields from the ChartLevelConstantHistory
      */
-    omit?: ChartConstantHistoryOmit<ExtArgs> | null
+    omit?: ChartLevelConstantHistoryOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ChartConstantHistoryInclude<ExtArgs> | null
+    include?: ChartLevelConstantHistoryInclude<ExtArgs> | null
     /**
-     * The data needed to create a ChartConstantHistory.
+     * The data needed to create a ChartLevelConstantHistory.
      */
-    data: XOR<ChartConstantHistoryCreateInput, ChartConstantHistoryUncheckedCreateInput>
+    data: XOR<ChartLevelConstantHistoryCreateInput, ChartLevelConstantHistoryUncheckedCreateInput>
   }
 
   /**
-   * ChartConstantHistory createMany
+   * ChartLevelConstantHistory createMany
    */
-  export type ChartConstantHistoryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ChartLevelConstantHistoryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to create many ChartConstantHistories.
+     * The data used to create many ChartLevelConstantHistories.
      */
-    data: ChartConstantHistoryCreateManyInput | ChartConstantHistoryCreateManyInput[]
+    data: ChartLevelConstantHistoryCreateManyInput | ChartLevelConstantHistoryCreateManyInput[]
   }
 
   /**
-   * ChartConstantHistory createManyAndReturn
+   * ChartLevelConstantHistory createManyAndReturn
    */
-  export type ChartConstantHistoryCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ChartLevelConstantHistoryCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ChartConstantHistory
+     * Select specific fields to fetch from the ChartLevelConstantHistory
      */
-    select?: ChartConstantHistorySelectCreateManyAndReturn<ExtArgs> | null
+    select?: ChartLevelConstantHistorySelectCreateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the ChartConstantHistory
+     * Omit specific fields from the ChartLevelConstantHistory
      */
-    omit?: ChartConstantHistoryOmit<ExtArgs> | null
+    omit?: ChartLevelConstantHistoryOmit<ExtArgs> | null
     /**
-     * The data used to create many ChartConstantHistories.
+     * The data used to create many ChartLevelConstantHistories.
      */
-    data: ChartConstantHistoryCreateManyInput | ChartConstantHistoryCreateManyInput[]
+    data: ChartLevelConstantHistoryCreateManyInput | ChartLevelConstantHistoryCreateManyInput[]
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ChartConstantHistoryIncludeCreateManyAndReturn<ExtArgs> | null
+    include?: ChartLevelConstantHistoryIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * ChartConstantHistory update
+   * ChartLevelConstantHistory update
    */
-  export type ChartConstantHistoryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ChartLevelConstantHistoryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ChartConstantHistory
+     * Select specific fields to fetch from the ChartLevelConstantHistory
      */
-    select?: ChartConstantHistorySelect<ExtArgs> | null
+    select?: ChartLevelConstantHistorySelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ChartConstantHistory
+     * Omit specific fields from the ChartLevelConstantHistory
      */
-    omit?: ChartConstantHistoryOmit<ExtArgs> | null
+    omit?: ChartLevelConstantHistoryOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ChartConstantHistoryInclude<ExtArgs> | null
+    include?: ChartLevelConstantHistoryInclude<ExtArgs> | null
     /**
-     * The data needed to update a ChartConstantHistory.
+     * The data needed to update a ChartLevelConstantHistory.
      */
-    data: XOR<ChartConstantHistoryUpdateInput, ChartConstantHistoryUncheckedUpdateInput>
+    data: XOR<ChartLevelConstantHistoryUpdateInput, ChartLevelConstantHistoryUncheckedUpdateInput>
     /**
-     * Choose, which ChartConstantHistory to update.
+     * Choose, which ChartLevelConstantHistory to update.
      */
-    where: ChartConstantHistoryWhereUniqueInput
+    where: ChartLevelConstantHistoryWhereUniqueInput
   }
 
   /**
-   * ChartConstantHistory updateMany
+   * ChartLevelConstantHistory updateMany
    */
-  export type ChartConstantHistoryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ChartLevelConstantHistoryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to update ChartConstantHistories.
+     * The data used to update ChartLevelConstantHistories.
      */
-    data: XOR<ChartConstantHistoryUpdateManyMutationInput, ChartConstantHistoryUncheckedUpdateManyInput>
+    data: XOR<ChartLevelConstantHistoryUpdateManyMutationInput, ChartLevelConstantHistoryUncheckedUpdateManyInput>
     /**
-     * Filter which ChartConstantHistories to update
+     * Filter which ChartLevelConstantHistories to update
      */
-    where?: ChartConstantHistoryWhereInput
+    where?: ChartLevelConstantHistoryWhereInput
     /**
-     * Limit how many ChartConstantHistories to update.
+     * Limit how many ChartLevelConstantHistories to update.
      */
     limit?: number
   }
 
   /**
-   * ChartConstantHistory updateManyAndReturn
+   * ChartLevelConstantHistory updateManyAndReturn
    */
-  export type ChartConstantHistoryUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ChartLevelConstantHistoryUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ChartConstantHistory
+     * Select specific fields to fetch from the ChartLevelConstantHistory
      */
-    select?: ChartConstantHistorySelectUpdateManyAndReturn<ExtArgs> | null
+    select?: ChartLevelConstantHistorySelectUpdateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the ChartConstantHistory
+     * Omit specific fields from the ChartLevelConstantHistory
      */
-    omit?: ChartConstantHistoryOmit<ExtArgs> | null
+    omit?: ChartLevelConstantHistoryOmit<ExtArgs> | null
     /**
-     * The data used to update ChartConstantHistories.
+     * The data used to update ChartLevelConstantHistories.
      */
-    data: XOR<ChartConstantHistoryUpdateManyMutationInput, ChartConstantHistoryUncheckedUpdateManyInput>
+    data: XOR<ChartLevelConstantHistoryUpdateManyMutationInput, ChartLevelConstantHistoryUncheckedUpdateManyInput>
     /**
-     * Filter which ChartConstantHistories to update
+     * Filter which ChartLevelConstantHistories to update
      */
-    where?: ChartConstantHistoryWhereInput
+    where?: ChartLevelConstantHistoryWhereInput
     /**
-     * Limit how many ChartConstantHistories to update.
+     * Limit how many ChartLevelConstantHistories to update.
      */
     limit?: number
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ChartConstantHistoryIncludeUpdateManyAndReturn<ExtArgs> | null
+    include?: ChartLevelConstantHistoryIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * ChartConstantHistory upsert
+   * ChartLevelConstantHistory upsert
    */
-  export type ChartConstantHistoryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ChartLevelConstantHistoryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ChartConstantHistory
+     * Select specific fields to fetch from the ChartLevelConstantHistory
      */
-    select?: ChartConstantHistorySelect<ExtArgs> | null
+    select?: ChartLevelConstantHistorySelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ChartConstantHistory
+     * Omit specific fields from the ChartLevelConstantHistory
      */
-    omit?: ChartConstantHistoryOmit<ExtArgs> | null
+    omit?: ChartLevelConstantHistoryOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ChartConstantHistoryInclude<ExtArgs> | null
+    include?: ChartLevelConstantHistoryInclude<ExtArgs> | null
     /**
-     * The filter to search for the ChartConstantHistory to update in case it exists.
+     * The filter to search for the ChartLevelConstantHistory to update in case it exists.
      */
-    where: ChartConstantHistoryWhereUniqueInput
+    where: ChartLevelConstantHistoryWhereUniqueInput
     /**
-     * In case the ChartConstantHistory found by the `where` argument doesn't exist, create a new ChartConstantHistory with this data.
+     * In case the ChartLevelConstantHistory found by the `where` argument doesn't exist, create a new ChartLevelConstantHistory with this data.
      */
-    create: XOR<ChartConstantHistoryCreateInput, ChartConstantHistoryUncheckedCreateInput>
+    create: XOR<ChartLevelConstantHistoryCreateInput, ChartLevelConstantHistoryUncheckedCreateInput>
     /**
-     * In case the ChartConstantHistory was found with the provided `where` argument, update it with this data.
+     * In case the ChartLevelConstantHistory was found with the provided `where` argument, update it with this data.
      */
-    update: XOR<ChartConstantHistoryUpdateInput, ChartConstantHistoryUncheckedUpdateInput>
+    update: XOR<ChartLevelConstantHistoryUpdateInput, ChartLevelConstantHistoryUncheckedUpdateInput>
   }
 
   /**
-   * ChartConstantHistory delete
+   * ChartLevelConstantHistory delete
    */
-  export type ChartConstantHistoryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ChartLevelConstantHistoryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ChartConstantHistory
+     * Select specific fields to fetch from the ChartLevelConstantHistory
      */
-    select?: ChartConstantHistorySelect<ExtArgs> | null
+    select?: ChartLevelConstantHistorySelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ChartConstantHistory
+     * Omit specific fields from the ChartLevelConstantHistory
      */
-    omit?: ChartConstantHistoryOmit<ExtArgs> | null
+    omit?: ChartLevelConstantHistoryOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ChartConstantHistoryInclude<ExtArgs> | null
+    include?: ChartLevelConstantHistoryInclude<ExtArgs> | null
     /**
-     * Filter which ChartConstantHistory to delete.
+     * Filter which ChartLevelConstantHistory to delete.
      */
-    where: ChartConstantHistoryWhereUniqueInput
+    where: ChartLevelConstantHistoryWhereUniqueInput
   }
 
   /**
-   * ChartConstantHistory deleteMany
+   * ChartLevelConstantHistory deleteMany
    */
-  export type ChartConstantHistoryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ChartLevelConstantHistoryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which ChartConstantHistories to delete
+     * Filter which ChartLevelConstantHistories to delete
      */
-    where?: ChartConstantHistoryWhereInput
+    where?: ChartLevelConstantHistoryWhereInput
     /**
-     * Limit how many ChartConstantHistories to delete.
+     * Limit how many ChartLevelConstantHistories to delete.
      */
     limit?: number
   }
 
   /**
-   * ChartConstantHistory without action
+   * ChartLevelConstantHistory without action
    */
-  export type ChartConstantHistoryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ChartLevelConstantHistoryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ChartConstantHistory
+     * Select specific fields to fetch from the ChartLevelConstantHistory
      */
-    select?: ChartConstantHistorySelect<ExtArgs> | null
+    select?: ChartLevelConstantHistorySelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ChartConstantHistory
+     * Omit specific fields from the ChartLevelConstantHistory
      */
-    omit?: ChartConstantHistoryOmit<ExtArgs> | null
+    omit?: ChartLevelConstantHistoryOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ChartConstantHistoryInclude<ExtArgs> | null
+    include?: ChartLevelConstantHistoryInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model TierList
+   */
+
+  export type AggregateTierList = {
+    _count: TierListCountAggregateOutputType | null
+    _avg: TierListAvgAggregateOutputType | null
+    _sum: TierListSumAggregateOutputType | null
+    _min: TierListMinAggregateOutputType | null
+    _max: TierListMaxAggregateOutputType | null
+  }
+
+  export type TierListAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type TierListSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type TierListMinAggregateOutputType = {
+    id: number | null
+    slug: string | null
+    title: string | null
+    mode: string | null
+    description: string | null
+    status: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TierListMaxAggregateOutputType = {
+    id: number | null
+    slug: string | null
+    title: string | null
+    mode: string | null
+    description: string | null
+    status: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TierListCountAggregateOutputType = {
+    id: number
+    slug: number
+    title: number
+    mode: number
+    description: number
+    status: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type TierListAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type TierListSumAggregateInputType = {
+    id?: true
+  }
+
+  export type TierListMinAggregateInputType = {
+    id?: true
+    slug?: true
+    title?: true
+    mode?: true
+    description?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TierListMaxAggregateInputType = {
+    id?: true
+    slug?: true
+    title?: true
+    mode?: true
+    description?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TierListCountAggregateInputType = {
+    id?: true
+    slug?: true
+    title?: true
+    mode?: true
+    description?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type TierListAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TierList to aggregate.
+     */
+    where?: TierListWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TierLists to fetch.
+     */
+    orderBy?: TierListOrderByWithRelationInput | TierListOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TierListWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TierLists from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TierLists.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TierLists
+    **/
+    _count?: true | TierListCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: TierListAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: TierListSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TierListMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TierListMaxAggregateInputType
+  }
+
+  export type GetTierListAggregateType<T extends TierListAggregateArgs> = {
+        [P in keyof T & keyof AggregateTierList]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTierList[P]>
+      : GetScalarType<T[P], AggregateTierList[P]>
+  }
+
+
+
+
+  export type TierListGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TierListWhereInput
+    orderBy?: TierListOrderByWithAggregationInput | TierListOrderByWithAggregationInput[]
+    by: TierListScalarFieldEnum[] | TierListScalarFieldEnum
+    having?: TierListScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TierListCountAggregateInputType | true
+    _avg?: TierListAvgAggregateInputType
+    _sum?: TierListSumAggregateInputType
+    _min?: TierListMinAggregateInputType
+    _max?: TierListMaxAggregateInputType
+  }
+
+  export type TierListGroupByOutputType = {
+    id: number
+    slug: string
+    title: string
+    mode: string
+    description: string | null
+    status: string
+    createdAt: Date
+    updatedAt: Date
+    _count: TierListCountAggregateOutputType | null
+    _avg: TierListAvgAggregateOutputType | null
+    _sum: TierListSumAggregateOutputType | null
+    _min: TierListMinAggregateOutputType | null
+    _max: TierListMaxAggregateOutputType | null
+  }
+
+  type GetTierListGroupByPayload<T extends TierListGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TierListGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TierListGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TierListGroupByOutputType[P]>
+            : GetScalarType<T[P], TierListGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TierListSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    slug?: boolean
+    title?: boolean
+    mode?: boolean
+    description?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    bands?: boolean | TierList$bandsArgs<ExtArgs>
+    entries?: boolean | TierList$entriesArgs<ExtArgs>
+    history?: boolean | TierList$historyArgs<ExtArgs>
+    _count?: boolean | TierListCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["tierList"]>
+
+  export type TierListSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    slug?: boolean
+    title?: boolean
+    mode?: boolean
+    description?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["tierList"]>
+
+  export type TierListSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    slug?: boolean
+    title?: boolean
+    mode?: boolean
+    description?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["tierList"]>
+
+  export type TierListSelectScalar = {
+    id?: boolean
+    slug?: boolean
+    title?: boolean
+    mode?: boolean
+    description?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type TierListOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "slug" | "title" | "mode" | "description" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["tierList"]>
+  export type TierListInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    bands?: boolean | TierList$bandsArgs<ExtArgs>
+    entries?: boolean | TierList$entriesArgs<ExtArgs>
+    history?: boolean | TierList$historyArgs<ExtArgs>
+    _count?: boolean | TierListCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type TierListIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type TierListIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $TierListPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TierList"
+    objects: {
+      bands: Prisma.$TierBandPayload<ExtArgs>[]
+      entries: Prisma.$TierEntryPayload<ExtArgs>[]
+      history: Prisma.$TierPlacementHistoryPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      slug: string
+      title: string
+      mode: string
+      description: string | null
+      status: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["tierList"]>
+    composites: {}
+  }
+
+  type TierListGetPayload<S extends boolean | null | undefined | TierListDefaultArgs> = $Result.GetResult<Prisma.$TierListPayload, S>
+
+  type TierListCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TierListFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TierListCountAggregateInputType | true
+    }
+
+  export interface TierListDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TierList'], meta: { name: 'TierList' } }
+    /**
+     * Find zero or one TierList that matches the filter.
+     * @param {TierListFindUniqueArgs} args - Arguments to find a TierList
+     * @example
+     * // Get one TierList
+     * const tierList = await prisma.tierList.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TierListFindUniqueArgs>(args: SelectSubset<T, TierListFindUniqueArgs<ExtArgs>>): Prisma__TierListClient<$Result.GetResult<Prisma.$TierListPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one TierList that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TierListFindUniqueOrThrowArgs} args - Arguments to find a TierList
+     * @example
+     * // Get one TierList
+     * const tierList = await prisma.tierList.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TierListFindUniqueOrThrowArgs>(args: SelectSubset<T, TierListFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TierListClient<$Result.GetResult<Prisma.$TierListPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TierList that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierListFindFirstArgs} args - Arguments to find a TierList
+     * @example
+     * // Get one TierList
+     * const tierList = await prisma.tierList.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TierListFindFirstArgs>(args?: SelectSubset<T, TierListFindFirstArgs<ExtArgs>>): Prisma__TierListClient<$Result.GetResult<Prisma.$TierListPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TierList that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierListFindFirstOrThrowArgs} args - Arguments to find a TierList
+     * @example
+     * // Get one TierList
+     * const tierList = await prisma.tierList.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TierListFindFirstOrThrowArgs>(args?: SelectSubset<T, TierListFindFirstOrThrowArgs<ExtArgs>>): Prisma__TierListClient<$Result.GetResult<Prisma.$TierListPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more TierLists that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierListFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TierLists
+     * const tierLists = await prisma.tierList.findMany()
+     * 
+     * // Get first 10 TierLists
+     * const tierLists = await prisma.tierList.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const tierListWithIdOnly = await prisma.tierList.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TierListFindManyArgs>(args?: SelectSubset<T, TierListFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TierListPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a TierList.
+     * @param {TierListCreateArgs} args - Arguments to create a TierList.
+     * @example
+     * // Create one TierList
+     * const TierList = await prisma.tierList.create({
+     *   data: {
+     *     // ... data to create a TierList
+     *   }
+     * })
+     * 
+     */
+    create<T extends TierListCreateArgs>(args: SelectSubset<T, TierListCreateArgs<ExtArgs>>): Prisma__TierListClient<$Result.GetResult<Prisma.$TierListPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many TierLists.
+     * @param {TierListCreateManyArgs} args - Arguments to create many TierLists.
+     * @example
+     * // Create many TierLists
+     * const tierList = await prisma.tierList.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TierListCreateManyArgs>(args?: SelectSubset<T, TierListCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many TierLists and returns the data saved in the database.
+     * @param {TierListCreateManyAndReturnArgs} args - Arguments to create many TierLists.
+     * @example
+     * // Create many TierLists
+     * const tierList = await prisma.tierList.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many TierLists and only return the `id`
+     * const tierListWithIdOnly = await prisma.tierList.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TierListCreateManyAndReturnArgs>(args?: SelectSubset<T, TierListCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TierListPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a TierList.
+     * @param {TierListDeleteArgs} args - Arguments to delete one TierList.
+     * @example
+     * // Delete one TierList
+     * const TierList = await prisma.tierList.delete({
+     *   where: {
+     *     // ... filter to delete one TierList
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TierListDeleteArgs>(args: SelectSubset<T, TierListDeleteArgs<ExtArgs>>): Prisma__TierListClient<$Result.GetResult<Prisma.$TierListPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one TierList.
+     * @param {TierListUpdateArgs} args - Arguments to update one TierList.
+     * @example
+     * // Update one TierList
+     * const tierList = await prisma.tierList.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TierListUpdateArgs>(args: SelectSubset<T, TierListUpdateArgs<ExtArgs>>): Prisma__TierListClient<$Result.GetResult<Prisma.$TierListPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more TierLists.
+     * @param {TierListDeleteManyArgs} args - Arguments to filter TierLists to delete.
+     * @example
+     * // Delete a few TierLists
+     * const { count } = await prisma.tierList.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TierListDeleteManyArgs>(args?: SelectSubset<T, TierListDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TierLists.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierListUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TierLists
+     * const tierList = await prisma.tierList.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TierListUpdateManyArgs>(args: SelectSubset<T, TierListUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TierLists and returns the data updated in the database.
+     * @param {TierListUpdateManyAndReturnArgs} args - Arguments to update many TierLists.
+     * @example
+     * // Update many TierLists
+     * const tierList = await prisma.tierList.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more TierLists and only return the `id`
+     * const tierListWithIdOnly = await prisma.tierList.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends TierListUpdateManyAndReturnArgs>(args: SelectSubset<T, TierListUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TierListPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one TierList.
+     * @param {TierListUpsertArgs} args - Arguments to update or create a TierList.
+     * @example
+     * // Update or create a TierList
+     * const tierList = await prisma.tierList.upsert({
+     *   create: {
+     *     // ... data to create a TierList
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TierList we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TierListUpsertArgs>(args: SelectSubset<T, TierListUpsertArgs<ExtArgs>>): Prisma__TierListClient<$Result.GetResult<Prisma.$TierListPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of TierLists.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierListCountArgs} args - Arguments to filter TierLists to count.
+     * @example
+     * // Count the number of TierLists
+     * const count = await prisma.tierList.count({
+     *   where: {
+     *     // ... the filter for the TierLists we want to count
+     *   }
+     * })
+    **/
+    count<T extends TierListCountArgs>(
+      args?: Subset<T, TierListCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TierListCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TierList.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierListAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TierListAggregateArgs>(args: Subset<T, TierListAggregateArgs>): Prisma.PrismaPromise<GetTierListAggregateType<T>>
+
+    /**
+     * Group by TierList.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierListGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TierListGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TierListGroupByArgs['orderBy'] }
+        : { orderBy?: TierListGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TierListGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTierListGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TierList model
+   */
+  readonly fields: TierListFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TierList.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TierListClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    bands<T extends TierList$bandsArgs<ExtArgs> = {}>(args?: Subset<T, TierList$bandsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TierBandPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    entries<T extends TierList$entriesArgs<ExtArgs> = {}>(args?: Subset<T, TierList$entriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TierEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    history<T extends TierList$historyArgs<ExtArgs> = {}>(args?: Subset<T, TierList$historyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TierPlacementHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the TierList model
+   */
+  interface TierListFieldRefs {
+    readonly id: FieldRef<"TierList", 'Int'>
+    readonly slug: FieldRef<"TierList", 'String'>
+    readonly title: FieldRef<"TierList", 'String'>
+    readonly mode: FieldRef<"TierList", 'String'>
+    readonly description: FieldRef<"TierList", 'String'>
+    readonly status: FieldRef<"TierList", 'String'>
+    readonly createdAt: FieldRef<"TierList", 'DateTime'>
+    readonly updatedAt: FieldRef<"TierList", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * TierList findUnique
+   */
+  export type TierListFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierList
+     */
+    select?: TierListSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierList
+     */
+    omit?: TierListOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierListInclude<ExtArgs> | null
+    /**
+     * Filter, which TierList to fetch.
+     */
+    where: TierListWhereUniqueInput
+  }
+
+  /**
+   * TierList findUniqueOrThrow
+   */
+  export type TierListFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierList
+     */
+    select?: TierListSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierList
+     */
+    omit?: TierListOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierListInclude<ExtArgs> | null
+    /**
+     * Filter, which TierList to fetch.
+     */
+    where: TierListWhereUniqueInput
+  }
+
+  /**
+   * TierList findFirst
+   */
+  export type TierListFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierList
+     */
+    select?: TierListSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierList
+     */
+    omit?: TierListOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierListInclude<ExtArgs> | null
+    /**
+     * Filter, which TierList to fetch.
+     */
+    where?: TierListWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TierLists to fetch.
+     */
+    orderBy?: TierListOrderByWithRelationInput | TierListOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TierLists.
+     */
+    cursor?: TierListWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TierLists from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TierLists.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TierLists.
+     */
+    distinct?: TierListScalarFieldEnum | TierListScalarFieldEnum[]
+  }
+
+  /**
+   * TierList findFirstOrThrow
+   */
+  export type TierListFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierList
+     */
+    select?: TierListSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierList
+     */
+    omit?: TierListOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierListInclude<ExtArgs> | null
+    /**
+     * Filter, which TierList to fetch.
+     */
+    where?: TierListWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TierLists to fetch.
+     */
+    orderBy?: TierListOrderByWithRelationInput | TierListOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TierLists.
+     */
+    cursor?: TierListWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TierLists from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TierLists.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TierLists.
+     */
+    distinct?: TierListScalarFieldEnum | TierListScalarFieldEnum[]
+  }
+
+  /**
+   * TierList findMany
+   */
+  export type TierListFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierList
+     */
+    select?: TierListSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierList
+     */
+    omit?: TierListOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierListInclude<ExtArgs> | null
+    /**
+     * Filter, which TierLists to fetch.
+     */
+    where?: TierListWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TierLists to fetch.
+     */
+    orderBy?: TierListOrderByWithRelationInput | TierListOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TierLists.
+     */
+    cursor?: TierListWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TierLists from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TierLists.
+     */
+    skip?: number
+    distinct?: TierListScalarFieldEnum | TierListScalarFieldEnum[]
+  }
+
+  /**
+   * TierList create
+   */
+  export type TierListCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierList
+     */
+    select?: TierListSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierList
+     */
+    omit?: TierListOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierListInclude<ExtArgs> | null
+    /**
+     * The data needed to create a TierList.
+     */
+    data: XOR<TierListCreateInput, TierListUncheckedCreateInput>
+  }
+
+  /**
+   * TierList createMany
+   */
+  export type TierListCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TierLists.
+     */
+    data: TierListCreateManyInput | TierListCreateManyInput[]
+  }
+
+  /**
+   * TierList createManyAndReturn
+   */
+  export type TierListCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierList
+     */
+    select?: TierListSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierList
+     */
+    omit?: TierListOmit<ExtArgs> | null
+    /**
+     * The data used to create many TierLists.
+     */
+    data: TierListCreateManyInput | TierListCreateManyInput[]
+  }
+
+  /**
+   * TierList update
+   */
+  export type TierListUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierList
+     */
+    select?: TierListSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierList
+     */
+    omit?: TierListOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierListInclude<ExtArgs> | null
+    /**
+     * The data needed to update a TierList.
+     */
+    data: XOR<TierListUpdateInput, TierListUncheckedUpdateInput>
+    /**
+     * Choose, which TierList to update.
+     */
+    where: TierListWhereUniqueInput
+  }
+
+  /**
+   * TierList updateMany
+   */
+  export type TierListUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TierLists.
+     */
+    data: XOR<TierListUpdateManyMutationInput, TierListUncheckedUpdateManyInput>
+    /**
+     * Filter which TierLists to update
+     */
+    where?: TierListWhereInput
+    /**
+     * Limit how many TierLists to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * TierList updateManyAndReturn
+   */
+  export type TierListUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierList
+     */
+    select?: TierListSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierList
+     */
+    omit?: TierListOmit<ExtArgs> | null
+    /**
+     * The data used to update TierLists.
+     */
+    data: XOR<TierListUpdateManyMutationInput, TierListUncheckedUpdateManyInput>
+    /**
+     * Filter which TierLists to update
+     */
+    where?: TierListWhereInput
+    /**
+     * Limit how many TierLists to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * TierList upsert
+   */
+  export type TierListUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierList
+     */
+    select?: TierListSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierList
+     */
+    omit?: TierListOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierListInclude<ExtArgs> | null
+    /**
+     * The filter to search for the TierList to update in case it exists.
+     */
+    where: TierListWhereUniqueInput
+    /**
+     * In case the TierList found by the `where` argument doesn't exist, create a new TierList with this data.
+     */
+    create: XOR<TierListCreateInput, TierListUncheckedCreateInput>
+    /**
+     * In case the TierList was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TierListUpdateInput, TierListUncheckedUpdateInput>
+  }
+
+  /**
+   * TierList delete
+   */
+  export type TierListDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierList
+     */
+    select?: TierListSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierList
+     */
+    omit?: TierListOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierListInclude<ExtArgs> | null
+    /**
+     * Filter which TierList to delete.
+     */
+    where: TierListWhereUniqueInput
+  }
+
+  /**
+   * TierList deleteMany
+   */
+  export type TierListDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TierLists to delete
+     */
+    where?: TierListWhereInput
+    /**
+     * Limit how many TierLists to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * TierList.bands
+   */
+  export type TierList$bandsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierBand
+     */
+    select?: TierBandSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierBand
+     */
+    omit?: TierBandOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierBandInclude<ExtArgs> | null
+    where?: TierBandWhereInput
+    orderBy?: TierBandOrderByWithRelationInput | TierBandOrderByWithRelationInput[]
+    cursor?: TierBandWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TierBandScalarFieldEnum | TierBandScalarFieldEnum[]
+  }
+
+  /**
+   * TierList.entries
+   */
+  export type TierList$entriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierEntry
+     */
+    select?: TierEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierEntry
+     */
+    omit?: TierEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierEntryInclude<ExtArgs> | null
+    where?: TierEntryWhereInput
+    orderBy?: TierEntryOrderByWithRelationInput | TierEntryOrderByWithRelationInput[]
+    cursor?: TierEntryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TierEntryScalarFieldEnum | TierEntryScalarFieldEnum[]
+  }
+
+  /**
+   * TierList.history
+   */
+  export type TierList$historyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierPlacementHistory
+     */
+    select?: TierPlacementHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierPlacementHistory
+     */
+    omit?: TierPlacementHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierPlacementHistoryInclude<ExtArgs> | null
+    where?: TierPlacementHistoryWhereInput
+    orderBy?: TierPlacementHistoryOrderByWithRelationInput | TierPlacementHistoryOrderByWithRelationInput[]
+    cursor?: TierPlacementHistoryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TierPlacementHistoryScalarFieldEnum | TierPlacementHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * TierList without action
+   */
+  export type TierListDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierList
+     */
+    select?: TierListSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierList
+     */
+    omit?: TierListOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierListInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model TierBand
+   */
+
+  export type AggregateTierBand = {
+    _count: TierBandCountAggregateOutputType | null
+    _avg: TierBandAvgAggregateOutputType | null
+    _sum: TierBandSumAggregateOutputType | null
+    _min: TierBandMinAggregateOutputType | null
+    _max: TierBandMaxAggregateOutputType | null
+  }
+
+  export type TierBandAvgAggregateOutputType = {
+    id: number | null
+    value: number | null
+    position: number | null
+    tierListId: number | null
+  }
+
+  export type TierBandSumAggregateOutputType = {
+    id: number | null
+    value: number | null
+    position: number | null
+    tierListId: number | null
+  }
+
+  export type TierBandMinAggregateOutputType = {
+    id: number | null
+    value: number | null
+    position: number | null
+    tierListId: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TierBandMaxAggregateOutputType = {
+    id: number | null
+    value: number | null
+    position: number | null
+    tierListId: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TierBandCountAggregateOutputType = {
+    id: number
+    value: number
+    position: number
+    tierListId: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type TierBandAvgAggregateInputType = {
+    id?: true
+    value?: true
+    position?: true
+    tierListId?: true
+  }
+
+  export type TierBandSumAggregateInputType = {
+    id?: true
+    value?: true
+    position?: true
+    tierListId?: true
+  }
+
+  export type TierBandMinAggregateInputType = {
+    id?: true
+    value?: true
+    position?: true
+    tierListId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TierBandMaxAggregateInputType = {
+    id?: true
+    value?: true
+    position?: true
+    tierListId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TierBandCountAggregateInputType = {
+    id?: true
+    value?: true
+    position?: true
+    tierListId?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type TierBandAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TierBand to aggregate.
+     */
+    where?: TierBandWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TierBands to fetch.
+     */
+    orderBy?: TierBandOrderByWithRelationInput | TierBandOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TierBandWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TierBands from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TierBands.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TierBands
+    **/
+    _count?: true | TierBandCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: TierBandAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: TierBandSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TierBandMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TierBandMaxAggregateInputType
+  }
+
+  export type GetTierBandAggregateType<T extends TierBandAggregateArgs> = {
+        [P in keyof T & keyof AggregateTierBand]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTierBand[P]>
+      : GetScalarType<T[P], AggregateTierBand[P]>
+  }
+
+
+
+
+  export type TierBandGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TierBandWhereInput
+    orderBy?: TierBandOrderByWithAggregationInput | TierBandOrderByWithAggregationInput[]
+    by: TierBandScalarFieldEnum[] | TierBandScalarFieldEnum
+    having?: TierBandScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TierBandCountAggregateInputType | true
+    _avg?: TierBandAvgAggregateInputType
+    _sum?: TierBandSumAggregateInputType
+    _min?: TierBandMinAggregateInputType
+    _max?: TierBandMaxAggregateInputType
+  }
+
+  export type TierBandGroupByOutputType = {
+    id: number
+    value: number
+    position: number
+    tierListId: number
+    createdAt: Date
+    updatedAt: Date
+    _count: TierBandCountAggregateOutputType | null
+    _avg: TierBandAvgAggregateOutputType | null
+    _sum: TierBandSumAggregateOutputType | null
+    _min: TierBandMinAggregateOutputType | null
+    _max: TierBandMaxAggregateOutputType | null
+  }
+
+  type GetTierBandGroupByPayload<T extends TierBandGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TierBandGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TierBandGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TierBandGroupByOutputType[P]>
+            : GetScalarType<T[P], TierBandGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TierBandSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    value?: boolean
+    position?: boolean
+    tierListId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    tierList?: boolean | TierListDefaultArgs<ExtArgs>
+    entries?: boolean | TierBand$entriesArgs<ExtArgs>
+    _count?: boolean | TierBandCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["tierBand"]>
+
+  export type TierBandSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    value?: boolean
+    position?: boolean
+    tierListId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    tierList?: boolean | TierListDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["tierBand"]>
+
+  export type TierBandSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    value?: boolean
+    position?: boolean
+    tierListId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    tierList?: boolean | TierListDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["tierBand"]>
+
+  export type TierBandSelectScalar = {
+    id?: boolean
+    value?: boolean
+    position?: boolean
+    tierListId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type TierBandOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "value" | "position" | "tierListId" | "createdAt" | "updatedAt", ExtArgs["result"]["tierBand"]>
+  export type TierBandInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    tierList?: boolean | TierListDefaultArgs<ExtArgs>
+    entries?: boolean | TierBand$entriesArgs<ExtArgs>
+    _count?: boolean | TierBandCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type TierBandIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    tierList?: boolean | TierListDefaultArgs<ExtArgs>
+  }
+  export type TierBandIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    tierList?: boolean | TierListDefaultArgs<ExtArgs>
+  }
+
+  export type $TierBandPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TierBand"
+    objects: {
+      tierList: Prisma.$TierListPayload<ExtArgs>
+      entries: Prisma.$TierEntryPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      value: number
+      position: number
+      tierListId: number
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["tierBand"]>
+    composites: {}
+  }
+
+  type TierBandGetPayload<S extends boolean | null | undefined | TierBandDefaultArgs> = $Result.GetResult<Prisma.$TierBandPayload, S>
+
+  type TierBandCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TierBandFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TierBandCountAggregateInputType | true
+    }
+
+  export interface TierBandDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TierBand'], meta: { name: 'TierBand' } }
+    /**
+     * Find zero or one TierBand that matches the filter.
+     * @param {TierBandFindUniqueArgs} args - Arguments to find a TierBand
+     * @example
+     * // Get one TierBand
+     * const tierBand = await prisma.tierBand.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TierBandFindUniqueArgs>(args: SelectSubset<T, TierBandFindUniqueArgs<ExtArgs>>): Prisma__TierBandClient<$Result.GetResult<Prisma.$TierBandPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one TierBand that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TierBandFindUniqueOrThrowArgs} args - Arguments to find a TierBand
+     * @example
+     * // Get one TierBand
+     * const tierBand = await prisma.tierBand.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TierBandFindUniqueOrThrowArgs>(args: SelectSubset<T, TierBandFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TierBandClient<$Result.GetResult<Prisma.$TierBandPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TierBand that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierBandFindFirstArgs} args - Arguments to find a TierBand
+     * @example
+     * // Get one TierBand
+     * const tierBand = await prisma.tierBand.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TierBandFindFirstArgs>(args?: SelectSubset<T, TierBandFindFirstArgs<ExtArgs>>): Prisma__TierBandClient<$Result.GetResult<Prisma.$TierBandPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TierBand that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierBandFindFirstOrThrowArgs} args - Arguments to find a TierBand
+     * @example
+     * // Get one TierBand
+     * const tierBand = await prisma.tierBand.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TierBandFindFirstOrThrowArgs>(args?: SelectSubset<T, TierBandFindFirstOrThrowArgs<ExtArgs>>): Prisma__TierBandClient<$Result.GetResult<Prisma.$TierBandPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more TierBands that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierBandFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TierBands
+     * const tierBands = await prisma.tierBand.findMany()
+     * 
+     * // Get first 10 TierBands
+     * const tierBands = await prisma.tierBand.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const tierBandWithIdOnly = await prisma.tierBand.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TierBandFindManyArgs>(args?: SelectSubset<T, TierBandFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TierBandPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a TierBand.
+     * @param {TierBandCreateArgs} args - Arguments to create a TierBand.
+     * @example
+     * // Create one TierBand
+     * const TierBand = await prisma.tierBand.create({
+     *   data: {
+     *     // ... data to create a TierBand
+     *   }
+     * })
+     * 
+     */
+    create<T extends TierBandCreateArgs>(args: SelectSubset<T, TierBandCreateArgs<ExtArgs>>): Prisma__TierBandClient<$Result.GetResult<Prisma.$TierBandPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many TierBands.
+     * @param {TierBandCreateManyArgs} args - Arguments to create many TierBands.
+     * @example
+     * // Create many TierBands
+     * const tierBand = await prisma.tierBand.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TierBandCreateManyArgs>(args?: SelectSubset<T, TierBandCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many TierBands and returns the data saved in the database.
+     * @param {TierBandCreateManyAndReturnArgs} args - Arguments to create many TierBands.
+     * @example
+     * // Create many TierBands
+     * const tierBand = await prisma.tierBand.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many TierBands and only return the `id`
+     * const tierBandWithIdOnly = await prisma.tierBand.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TierBandCreateManyAndReturnArgs>(args?: SelectSubset<T, TierBandCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TierBandPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a TierBand.
+     * @param {TierBandDeleteArgs} args - Arguments to delete one TierBand.
+     * @example
+     * // Delete one TierBand
+     * const TierBand = await prisma.tierBand.delete({
+     *   where: {
+     *     // ... filter to delete one TierBand
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TierBandDeleteArgs>(args: SelectSubset<T, TierBandDeleteArgs<ExtArgs>>): Prisma__TierBandClient<$Result.GetResult<Prisma.$TierBandPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one TierBand.
+     * @param {TierBandUpdateArgs} args - Arguments to update one TierBand.
+     * @example
+     * // Update one TierBand
+     * const tierBand = await prisma.tierBand.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TierBandUpdateArgs>(args: SelectSubset<T, TierBandUpdateArgs<ExtArgs>>): Prisma__TierBandClient<$Result.GetResult<Prisma.$TierBandPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more TierBands.
+     * @param {TierBandDeleteManyArgs} args - Arguments to filter TierBands to delete.
+     * @example
+     * // Delete a few TierBands
+     * const { count } = await prisma.tierBand.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TierBandDeleteManyArgs>(args?: SelectSubset<T, TierBandDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TierBands.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierBandUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TierBands
+     * const tierBand = await prisma.tierBand.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TierBandUpdateManyArgs>(args: SelectSubset<T, TierBandUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TierBands and returns the data updated in the database.
+     * @param {TierBandUpdateManyAndReturnArgs} args - Arguments to update many TierBands.
+     * @example
+     * // Update many TierBands
+     * const tierBand = await prisma.tierBand.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more TierBands and only return the `id`
+     * const tierBandWithIdOnly = await prisma.tierBand.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends TierBandUpdateManyAndReturnArgs>(args: SelectSubset<T, TierBandUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TierBandPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one TierBand.
+     * @param {TierBandUpsertArgs} args - Arguments to update or create a TierBand.
+     * @example
+     * // Update or create a TierBand
+     * const tierBand = await prisma.tierBand.upsert({
+     *   create: {
+     *     // ... data to create a TierBand
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TierBand we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TierBandUpsertArgs>(args: SelectSubset<T, TierBandUpsertArgs<ExtArgs>>): Prisma__TierBandClient<$Result.GetResult<Prisma.$TierBandPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of TierBands.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierBandCountArgs} args - Arguments to filter TierBands to count.
+     * @example
+     * // Count the number of TierBands
+     * const count = await prisma.tierBand.count({
+     *   where: {
+     *     // ... the filter for the TierBands we want to count
+     *   }
+     * })
+    **/
+    count<T extends TierBandCountArgs>(
+      args?: Subset<T, TierBandCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TierBandCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TierBand.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierBandAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TierBandAggregateArgs>(args: Subset<T, TierBandAggregateArgs>): Prisma.PrismaPromise<GetTierBandAggregateType<T>>
+
+    /**
+     * Group by TierBand.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierBandGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TierBandGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TierBandGroupByArgs['orderBy'] }
+        : { orderBy?: TierBandGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TierBandGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTierBandGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TierBand model
+   */
+  readonly fields: TierBandFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TierBand.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TierBandClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    tierList<T extends TierListDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TierListDefaultArgs<ExtArgs>>): Prisma__TierListClient<$Result.GetResult<Prisma.$TierListPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    entries<T extends TierBand$entriesArgs<ExtArgs> = {}>(args?: Subset<T, TierBand$entriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TierEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the TierBand model
+   */
+  interface TierBandFieldRefs {
+    readonly id: FieldRef<"TierBand", 'Int'>
+    readonly value: FieldRef<"TierBand", 'Float'>
+    readonly position: FieldRef<"TierBand", 'Int'>
+    readonly tierListId: FieldRef<"TierBand", 'Int'>
+    readonly createdAt: FieldRef<"TierBand", 'DateTime'>
+    readonly updatedAt: FieldRef<"TierBand", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * TierBand findUnique
+   */
+  export type TierBandFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierBand
+     */
+    select?: TierBandSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierBand
+     */
+    omit?: TierBandOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierBandInclude<ExtArgs> | null
+    /**
+     * Filter, which TierBand to fetch.
+     */
+    where: TierBandWhereUniqueInput
+  }
+
+  /**
+   * TierBand findUniqueOrThrow
+   */
+  export type TierBandFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierBand
+     */
+    select?: TierBandSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierBand
+     */
+    omit?: TierBandOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierBandInclude<ExtArgs> | null
+    /**
+     * Filter, which TierBand to fetch.
+     */
+    where: TierBandWhereUniqueInput
+  }
+
+  /**
+   * TierBand findFirst
+   */
+  export type TierBandFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierBand
+     */
+    select?: TierBandSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierBand
+     */
+    omit?: TierBandOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierBandInclude<ExtArgs> | null
+    /**
+     * Filter, which TierBand to fetch.
+     */
+    where?: TierBandWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TierBands to fetch.
+     */
+    orderBy?: TierBandOrderByWithRelationInput | TierBandOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TierBands.
+     */
+    cursor?: TierBandWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TierBands from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TierBands.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TierBands.
+     */
+    distinct?: TierBandScalarFieldEnum | TierBandScalarFieldEnum[]
+  }
+
+  /**
+   * TierBand findFirstOrThrow
+   */
+  export type TierBandFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierBand
+     */
+    select?: TierBandSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierBand
+     */
+    omit?: TierBandOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierBandInclude<ExtArgs> | null
+    /**
+     * Filter, which TierBand to fetch.
+     */
+    where?: TierBandWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TierBands to fetch.
+     */
+    orderBy?: TierBandOrderByWithRelationInput | TierBandOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TierBands.
+     */
+    cursor?: TierBandWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TierBands from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TierBands.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TierBands.
+     */
+    distinct?: TierBandScalarFieldEnum | TierBandScalarFieldEnum[]
+  }
+
+  /**
+   * TierBand findMany
+   */
+  export type TierBandFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierBand
+     */
+    select?: TierBandSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierBand
+     */
+    omit?: TierBandOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierBandInclude<ExtArgs> | null
+    /**
+     * Filter, which TierBands to fetch.
+     */
+    where?: TierBandWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TierBands to fetch.
+     */
+    orderBy?: TierBandOrderByWithRelationInput | TierBandOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TierBands.
+     */
+    cursor?: TierBandWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TierBands from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TierBands.
+     */
+    skip?: number
+    distinct?: TierBandScalarFieldEnum | TierBandScalarFieldEnum[]
+  }
+
+  /**
+   * TierBand create
+   */
+  export type TierBandCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierBand
+     */
+    select?: TierBandSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierBand
+     */
+    omit?: TierBandOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierBandInclude<ExtArgs> | null
+    /**
+     * The data needed to create a TierBand.
+     */
+    data: XOR<TierBandCreateInput, TierBandUncheckedCreateInput>
+  }
+
+  /**
+   * TierBand createMany
+   */
+  export type TierBandCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TierBands.
+     */
+    data: TierBandCreateManyInput | TierBandCreateManyInput[]
+  }
+
+  /**
+   * TierBand createManyAndReturn
+   */
+  export type TierBandCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierBand
+     */
+    select?: TierBandSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierBand
+     */
+    omit?: TierBandOmit<ExtArgs> | null
+    /**
+     * The data used to create many TierBands.
+     */
+    data: TierBandCreateManyInput | TierBandCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierBandIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TierBand update
+   */
+  export type TierBandUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierBand
+     */
+    select?: TierBandSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierBand
+     */
+    omit?: TierBandOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierBandInclude<ExtArgs> | null
+    /**
+     * The data needed to update a TierBand.
+     */
+    data: XOR<TierBandUpdateInput, TierBandUncheckedUpdateInput>
+    /**
+     * Choose, which TierBand to update.
+     */
+    where: TierBandWhereUniqueInput
+  }
+
+  /**
+   * TierBand updateMany
+   */
+  export type TierBandUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TierBands.
+     */
+    data: XOR<TierBandUpdateManyMutationInput, TierBandUncheckedUpdateManyInput>
+    /**
+     * Filter which TierBands to update
+     */
+    where?: TierBandWhereInput
+    /**
+     * Limit how many TierBands to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * TierBand updateManyAndReturn
+   */
+  export type TierBandUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierBand
+     */
+    select?: TierBandSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierBand
+     */
+    omit?: TierBandOmit<ExtArgs> | null
+    /**
+     * The data used to update TierBands.
+     */
+    data: XOR<TierBandUpdateManyMutationInput, TierBandUncheckedUpdateManyInput>
+    /**
+     * Filter which TierBands to update
+     */
+    where?: TierBandWhereInput
+    /**
+     * Limit how many TierBands to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierBandIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TierBand upsert
+   */
+  export type TierBandUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierBand
+     */
+    select?: TierBandSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierBand
+     */
+    omit?: TierBandOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierBandInclude<ExtArgs> | null
+    /**
+     * The filter to search for the TierBand to update in case it exists.
+     */
+    where: TierBandWhereUniqueInput
+    /**
+     * In case the TierBand found by the `where` argument doesn't exist, create a new TierBand with this data.
+     */
+    create: XOR<TierBandCreateInput, TierBandUncheckedCreateInput>
+    /**
+     * In case the TierBand was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TierBandUpdateInput, TierBandUncheckedUpdateInput>
+  }
+
+  /**
+   * TierBand delete
+   */
+  export type TierBandDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierBand
+     */
+    select?: TierBandSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierBand
+     */
+    omit?: TierBandOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierBandInclude<ExtArgs> | null
+    /**
+     * Filter which TierBand to delete.
+     */
+    where: TierBandWhereUniqueInput
+  }
+
+  /**
+   * TierBand deleteMany
+   */
+  export type TierBandDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TierBands to delete
+     */
+    where?: TierBandWhereInput
+    /**
+     * Limit how many TierBands to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * TierBand.entries
+   */
+  export type TierBand$entriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierEntry
+     */
+    select?: TierEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierEntry
+     */
+    omit?: TierEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierEntryInclude<ExtArgs> | null
+    where?: TierEntryWhereInput
+    orderBy?: TierEntryOrderByWithRelationInput | TierEntryOrderByWithRelationInput[]
+    cursor?: TierEntryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TierEntryScalarFieldEnum | TierEntryScalarFieldEnum[]
+  }
+
+  /**
+   * TierBand without action
+   */
+  export type TierBandDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierBand
+     */
+    select?: TierBandSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierBand
+     */
+    omit?: TierBandOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierBandInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model TierEntry
+   */
+
+  export type AggregateTierEntry = {
+    _count: TierEntryCountAggregateOutputType | null
+    _avg: TierEntryAvgAggregateOutputType | null
+    _sum: TierEntrySumAggregateOutputType | null
+    _min: TierEntryMinAggregateOutputType | null
+    _max: TierEntryMaxAggregateOutputType | null
+  }
+
+  export type TierEntryAvgAggregateOutputType = {
+    id: number | null
+    position: number | null
+    tierListId: number | null
+    tierBandId: number | null
+    chartId: number | null
+  }
+
+  export type TierEntrySumAggregateOutputType = {
+    id: number | null
+    position: number | null
+    tierListId: number | null
+    tierBandId: number | null
+    chartId: number | null
+  }
+
+  export type TierEntryMinAggregateOutputType = {
+    id: number | null
+    position: number | null
+    tierListId: number | null
+    tierBandId: number | null
+    chartId: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TierEntryMaxAggregateOutputType = {
+    id: number | null
+    position: number | null
+    tierListId: number | null
+    tierBandId: number | null
+    chartId: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TierEntryCountAggregateOutputType = {
+    id: number
+    position: number
+    tierListId: number
+    tierBandId: number
+    chartId: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type TierEntryAvgAggregateInputType = {
+    id?: true
+    position?: true
+    tierListId?: true
+    tierBandId?: true
+    chartId?: true
+  }
+
+  export type TierEntrySumAggregateInputType = {
+    id?: true
+    position?: true
+    tierListId?: true
+    tierBandId?: true
+    chartId?: true
+  }
+
+  export type TierEntryMinAggregateInputType = {
+    id?: true
+    position?: true
+    tierListId?: true
+    tierBandId?: true
+    chartId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TierEntryMaxAggregateInputType = {
+    id?: true
+    position?: true
+    tierListId?: true
+    tierBandId?: true
+    chartId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TierEntryCountAggregateInputType = {
+    id?: true
+    position?: true
+    tierListId?: true
+    tierBandId?: true
+    chartId?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type TierEntryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TierEntry to aggregate.
+     */
+    where?: TierEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TierEntries to fetch.
+     */
+    orderBy?: TierEntryOrderByWithRelationInput | TierEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TierEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TierEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TierEntries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TierEntries
+    **/
+    _count?: true | TierEntryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: TierEntryAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: TierEntrySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TierEntryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TierEntryMaxAggregateInputType
+  }
+
+  export type GetTierEntryAggregateType<T extends TierEntryAggregateArgs> = {
+        [P in keyof T & keyof AggregateTierEntry]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTierEntry[P]>
+      : GetScalarType<T[P], AggregateTierEntry[P]>
+  }
+
+
+
+
+  export type TierEntryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TierEntryWhereInput
+    orderBy?: TierEntryOrderByWithAggregationInput | TierEntryOrderByWithAggregationInput[]
+    by: TierEntryScalarFieldEnum[] | TierEntryScalarFieldEnum
+    having?: TierEntryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TierEntryCountAggregateInputType | true
+    _avg?: TierEntryAvgAggregateInputType
+    _sum?: TierEntrySumAggregateInputType
+    _min?: TierEntryMinAggregateInputType
+    _max?: TierEntryMaxAggregateInputType
+  }
+
+  export type TierEntryGroupByOutputType = {
+    id: number
+    position: number
+    tierListId: number
+    tierBandId: number
+    chartId: number
+    createdAt: Date
+    updatedAt: Date
+    _count: TierEntryCountAggregateOutputType | null
+    _avg: TierEntryAvgAggregateOutputType | null
+    _sum: TierEntrySumAggregateOutputType | null
+    _min: TierEntryMinAggregateOutputType | null
+    _max: TierEntryMaxAggregateOutputType | null
+  }
+
+  type GetTierEntryGroupByPayload<T extends TierEntryGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TierEntryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TierEntryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TierEntryGroupByOutputType[P]>
+            : GetScalarType<T[P], TierEntryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TierEntrySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    position?: boolean
+    tierListId?: boolean
+    tierBandId?: boolean
+    chartId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    tierList?: boolean | TierListDefaultArgs<ExtArgs>
+    tierBand?: boolean | TierBandDefaultArgs<ExtArgs>
+    chart?: boolean | MusicChartDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["tierEntry"]>
+
+  export type TierEntrySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    position?: boolean
+    tierListId?: boolean
+    tierBandId?: boolean
+    chartId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    tierList?: boolean | TierListDefaultArgs<ExtArgs>
+    tierBand?: boolean | TierBandDefaultArgs<ExtArgs>
+    chart?: boolean | MusicChartDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["tierEntry"]>
+
+  export type TierEntrySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    position?: boolean
+    tierListId?: boolean
+    tierBandId?: boolean
+    chartId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    tierList?: boolean | TierListDefaultArgs<ExtArgs>
+    tierBand?: boolean | TierBandDefaultArgs<ExtArgs>
+    chart?: boolean | MusicChartDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["tierEntry"]>
+
+  export type TierEntrySelectScalar = {
+    id?: boolean
+    position?: boolean
+    tierListId?: boolean
+    tierBandId?: boolean
+    chartId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type TierEntryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "position" | "tierListId" | "tierBandId" | "chartId" | "createdAt" | "updatedAt", ExtArgs["result"]["tierEntry"]>
+  export type TierEntryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    tierList?: boolean | TierListDefaultArgs<ExtArgs>
+    tierBand?: boolean | TierBandDefaultArgs<ExtArgs>
+    chart?: boolean | MusicChartDefaultArgs<ExtArgs>
+  }
+  export type TierEntryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    tierList?: boolean | TierListDefaultArgs<ExtArgs>
+    tierBand?: boolean | TierBandDefaultArgs<ExtArgs>
+    chart?: boolean | MusicChartDefaultArgs<ExtArgs>
+  }
+  export type TierEntryIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    tierList?: boolean | TierListDefaultArgs<ExtArgs>
+    tierBand?: boolean | TierBandDefaultArgs<ExtArgs>
+    chart?: boolean | MusicChartDefaultArgs<ExtArgs>
+  }
+
+  export type $TierEntryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TierEntry"
+    objects: {
+      tierList: Prisma.$TierListPayload<ExtArgs>
+      tierBand: Prisma.$TierBandPayload<ExtArgs>
+      chart: Prisma.$MusicChartPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      position: number
+      tierListId: number
+      tierBandId: number
+      chartId: number
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["tierEntry"]>
+    composites: {}
+  }
+
+  type TierEntryGetPayload<S extends boolean | null | undefined | TierEntryDefaultArgs> = $Result.GetResult<Prisma.$TierEntryPayload, S>
+
+  type TierEntryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TierEntryFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TierEntryCountAggregateInputType | true
+    }
+
+  export interface TierEntryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TierEntry'], meta: { name: 'TierEntry' } }
+    /**
+     * Find zero or one TierEntry that matches the filter.
+     * @param {TierEntryFindUniqueArgs} args - Arguments to find a TierEntry
+     * @example
+     * // Get one TierEntry
+     * const tierEntry = await prisma.tierEntry.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TierEntryFindUniqueArgs>(args: SelectSubset<T, TierEntryFindUniqueArgs<ExtArgs>>): Prisma__TierEntryClient<$Result.GetResult<Prisma.$TierEntryPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one TierEntry that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TierEntryFindUniqueOrThrowArgs} args - Arguments to find a TierEntry
+     * @example
+     * // Get one TierEntry
+     * const tierEntry = await prisma.tierEntry.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TierEntryFindUniqueOrThrowArgs>(args: SelectSubset<T, TierEntryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TierEntryClient<$Result.GetResult<Prisma.$TierEntryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TierEntry that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierEntryFindFirstArgs} args - Arguments to find a TierEntry
+     * @example
+     * // Get one TierEntry
+     * const tierEntry = await prisma.tierEntry.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TierEntryFindFirstArgs>(args?: SelectSubset<T, TierEntryFindFirstArgs<ExtArgs>>): Prisma__TierEntryClient<$Result.GetResult<Prisma.$TierEntryPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TierEntry that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierEntryFindFirstOrThrowArgs} args - Arguments to find a TierEntry
+     * @example
+     * // Get one TierEntry
+     * const tierEntry = await prisma.tierEntry.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TierEntryFindFirstOrThrowArgs>(args?: SelectSubset<T, TierEntryFindFirstOrThrowArgs<ExtArgs>>): Prisma__TierEntryClient<$Result.GetResult<Prisma.$TierEntryPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more TierEntries that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierEntryFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TierEntries
+     * const tierEntries = await prisma.tierEntry.findMany()
+     * 
+     * // Get first 10 TierEntries
+     * const tierEntries = await prisma.tierEntry.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const tierEntryWithIdOnly = await prisma.tierEntry.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TierEntryFindManyArgs>(args?: SelectSubset<T, TierEntryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TierEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a TierEntry.
+     * @param {TierEntryCreateArgs} args - Arguments to create a TierEntry.
+     * @example
+     * // Create one TierEntry
+     * const TierEntry = await prisma.tierEntry.create({
+     *   data: {
+     *     // ... data to create a TierEntry
+     *   }
+     * })
+     * 
+     */
+    create<T extends TierEntryCreateArgs>(args: SelectSubset<T, TierEntryCreateArgs<ExtArgs>>): Prisma__TierEntryClient<$Result.GetResult<Prisma.$TierEntryPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many TierEntries.
+     * @param {TierEntryCreateManyArgs} args - Arguments to create many TierEntries.
+     * @example
+     * // Create many TierEntries
+     * const tierEntry = await prisma.tierEntry.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TierEntryCreateManyArgs>(args?: SelectSubset<T, TierEntryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many TierEntries and returns the data saved in the database.
+     * @param {TierEntryCreateManyAndReturnArgs} args - Arguments to create many TierEntries.
+     * @example
+     * // Create many TierEntries
+     * const tierEntry = await prisma.tierEntry.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many TierEntries and only return the `id`
+     * const tierEntryWithIdOnly = await prisma.tierEntry.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TierEntryCreateManyAndReturnArgs>(args?: SelectSubset<T, TierEntryCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TierEntryPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a TierEntry.
+     * @param {TierEntryDeleteArgs} args - Arguments to delete one TierEntry.
+     * @example
+     * // Delete one TierEntry
+     * const TierEntry = await prisma.tierEntry.delete({
+     *   where: {
+     *     // ... filter to delete one TierEntry
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TierEntryDeleteArgs>(args: SelectSubset<T, TierEntryDeleteArgs<ExtArgs>>): Prisma__TierEntryClient<$Result.GetResult<Prisma.$TierEntryPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one TierEntry.
+     * @param {TierEntryUpdateArgs} args - Arguments to update one TierEntry.
+     * @example
+     * // Update one TierEntry
+     * const tierEntry = await prisma.tierEntry.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TierEntryUpdateArgs>(args: SelectSubset<T, TierEntryUpdateArgs<ExtArgs>>): Prisma__TierEntryClient<$Result.GetResult<Prisma.$TierEntryPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more TierEntries.
+     * @param {TierEntryDeleteManyArgs} args - Arguments to filter TierEntries to delete.
+     * @example
+     * // Delete a few TierEntries
+     * const { count } = await prisma.tierEntry.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TierEntryDeleteManyArgs>(args?: SelectSubset<T, TierEntryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TierEntries.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierEntryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TierEntries
+     * const tierEntry = await prisma.tierEntry.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TierEntryUpdateManyArgs>(args: SelectSubset<T, TierEntryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TierEntries and returns the data updated in the database.
+     * @param {TierEntryUpdateManyAndReturnArgs} args - Arguments to update many TierEntries.
+     * @example
+     * // Update many TierEntries
+     * const tierEntry = await prisma.tierEntry.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more TierEntries and only return the `id`
+     * const tierEntryWithIdOnly = await prisma.tierEntry.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends TierEntryUpdateManyAndReturnArgs>(args: SelectSubset<T, TierEntryUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TierEntryPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one TierEntry.
+     * @param {TierEntryUpsertArgs} args - Arguments to update or create a TierEntry.
+     * @example
+     * // Update or create a TierEntry
+     * const tierEntry = await prisma.tierEntry.upsert({
+     *   create: {
+     *     // ... data to create a TierEntry
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TierEntry we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TierEntryUpsertArgs>(args: SelectSubset<T, TierEntryUpsertArgs<ExtArgs>>): Prisma__TierEntryClient<$Result.GetResult<Prisma.$TierEntryPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of TierEntries.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierEntryCountArgs} args - Arguments to filter TierEntries to count.
+     * @example
+     * // Count the number of TierEntries
+     * const count = await prisma.tierEntry.count({
+     *   where: {
+     *     // ... the filter for the TierEntries we want to count
+     *   }
+     * })
+    **/
+    count<T extends TierEntryCountArgs>(
+      args?: Subset<T, TierEntryCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TierEntryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TierEntry.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierEntryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TierEntryAggregateArgs>(args: Subset<T, TierEntryAggregateArgs>): Prisma.PrismaPromise<GetTierEntryAggregateType<T>>
+
+    /**
+     * Group by TierEntry.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierEntryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TierEntryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TierEntryGroupByArgs['orderBy'] }
+        : { orderBy?: TierEntryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TierEntryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTierEntryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TierEntry model
+   */
+  readonly fields: TierEntryFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TierEntry.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TierEntryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    tierList<T extends TierListDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TierListDefaultArgs<ExtArgs>>): Prisma__TierListClient<$Result.GetResult<Prisma.$TierListPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    tierBand<T extends TierBandDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TierBandDefaultArgs<ExtArgs>>): Prisma__TierBandClient<$Result.GetResult<Prisma.$TierBandPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    chart<T extends MusicChartDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MusicChartDefaultArgs<ExtArgs>>): Prisma__MusicChartClient<$Result.GetResult<Prisma.$MusicChartPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the TierEntry model
+   */
+  interface TierEntryFieldRefs {
+    readonly id: FieldRef<"TierEntry", 'Int'>
+    readonly position: FieldRef<"TierEntry", 'Int'>
+    readonly tierListId: FieldRef<"TierEntry", 'Int'>
+    readonly tierBandId: FieldRef<"TierEntry", 'Int'>
+    readonly chartId: FieldRef<"TierEntry", 'Int'>
+    readonly createdAt: FieldRef<"TierEntry", 'DateTime'>
+    readonly updatedAt: FieldRef<"TierEntry", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * TierEntry findUnique
+   */
+  export type TierEntryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierEntry
+     */
+    select?: TierEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierEntry
+     */
+    omit?: TierEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierEntryInclude<ExtArgs> | null
+    /**
+     * Filter, which TierEntry to fetch.
+     */
+    where: TierEntryWhereUniqueInput
+  }
+
+  /**
+   * TierEntry findUniqueOrThrow
+   */
+  export type TierEntryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierEntry
+     */
+    select?: TierEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierEntry
+     */
+    omit?: TierEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierEntryInclude<ExtArgs> | null
+    /**
+     * Filter, which TierEntry to fetch.
+     */
+    where: TierEntryWhereUniqueInput
+  }
+
+  /**
+   * TierEntry findFirst
+   */
+  export type TierEntryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierEntry
+     */
+    select?: TierEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierEntry
+     */
+    omit?: TierEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierEntryInclude<ExtArgs> | null
+    /**
+     * Filter, which TierEntry to fetch.
+     */
+    where?: TierEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TierEntries to fetch.
+     */
+    orderBy?: TierEntryOrderByWithRelationInput | TierEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TierEntries.
+     */
+    cursor?: TierEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TierEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TierEntries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TierEntries.
+     */
+    distinct?: TierEntryScalarFieldEnum | TierEntryScalarFieldEnum[]
+  }
+
+  /**
+   * TierEntry findFirstOrThrow
+   */
+  export type TierEntryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierEntry
+     */
+    select?: TierEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierEntry
+     */
+    omit?: TierEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierEntryInclude<ExtArgs> | null
+    /**
+     * Filter, which TierEntry to fetch.
+     */
+    where?: TierEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TierEntries to fetch.
+     */
+    orderBy?: TierEntryOrderByWithRelationInput | TierEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TierEntries.
+     */
+    cursor?: TierEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TierEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TierEntries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TierEntries.
+     */
+    distinct?: TierEntryScalarFieldEnum | TierEntryScalarFieldEnum[]
+  }
+
+  /**
+   * TierEntry findMany
+   */
+  export type TierEntryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierEntry
+     */
+    select?: TierEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierEntry
+     */
+    omit?: TierEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierEntryInclude<ExtArgs> | null
+    /**
+     * Filter, which TierEntries to fetch.
+     */
+    where?: TierEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TierEntries to fetch.
+     */
+    orderBy?: TierEntryOrderByWithRelationInput | TierEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TierEntries.
+     */
+    cursor?: TierEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TierEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TierEntries.
+     */
+    skip?: number
+    distinct?: TierEntryScalarFieldEnum | TierEntryScalarFieldEnum[]
+  }
+
+  /**
+   * TierEntry create
+   */
+  export type TierEntryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierEntry
+     */
+    select?: TierEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierEntry
+     */
+    omit?: TierEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierEntryInclude<ExtArgs> | null
+    /**
+     * The data needed to create a TierEntry.
+     */
+    data: XOR<TierEntryCreateInput, TierEntryUncheckedCreateInput>
+  }
+
+  /**
+   * TierEntry createMany
+   */
+  export type TierEntryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TierEntries.
+     */
+    data: TierEntryCreateManyInput | TierEntryCreateManyInput[]
+  }
+
+  /**
+   * TierEntry createManyAndReturn
+   */
+  export type TierEntryCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierEntry
+     */
+    select?: TierEntrySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierEntry
+     */
+    omit?: TierEntryOmit<ExtArgs> | null
+    /**
+     * The data used to create many TierEntries.
+     */
+    data: TierEntryCreateManyInput | TierEntryCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierEntryIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TierEntry update
+   */
+  export type TierEntryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierEntry
+     */
+    select?: TierEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierEntry
+     */
+    omit?: TierEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierEntryInclude<ExtArgs> | null
+    /**
+     * The data needed to update a TierEntry.
+     */
+    data: XOR<TierEntryUpdateInput, TierEntryUncheckedUpdateInput>
+    /**
+     * Choose, which TierEntry to update.
+     */
+    where: TierEntryWhereUniqueInput
+  }
+
+  /**
+   * TierEntry updateMany
+   */
+  export type TierEntryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TierEntries.
+     */
+    data: XOR<TierEntryUpdateManyMutationInput, TierEntryUncheckedUpdateManyInput>
+    /**
+     * Filter which TierEntries to update
+     */
+    where?: TierEntryWhereInput
+    /**
+     * Limit how many TierEntries to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * TierEntry updateManyAndReturn
+   */
+  export type TierEntryUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierEntry
+     */
+    select?: TierEntrySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierEntry
+     */
+    omit?: TierEntryOmit<ExtArgs> | null
+    /**
+     * The data used to update TierEntries.
+     */
+    data: XOR<TierEntryUpdateManyMutationInput, TierEntryUncheckedUpdateManyInput>
+    /**
+     * Filter which TierEntries to update
+     */
+    where?: TierEntryWhereInput
+    /**
+     * Limit how many TierEntries to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierEntryIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TierEntry upsert
+   */
+  export type TierEntryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierEntry
+     */
+    select?: TierEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierEntry
+     */
+    omit?: TierEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierEntryInclude<ExtArgs> | null
+    /**
+     * The filter to search for the TierEntry to update in case it exists.
+     */
+    where: TierEntryWhereUniqueInput
+    /**
+     * In case the TierEntry found by the `where` argument doesn't exist, create a new TierEntry with this data.
+     */
+    create: XOR<TierEntryCreateInput, TierEntryUncheckedCreateInput>
+    /**
+     * In case the TierEntry was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TierEntryUpdateInput, TierEntryUncheckedUpdateInput>
+  }
+
+  /**
+   * TierEntry delete
+   */
+  export type TierEntryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierEntry
+     */
+    select?: TierEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierEntry
+     */
+    omit?: TierEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierEntryInclude<ExtArgs> | null
+    /**
+     * Filter which TierEntry to delete.
+     */
+    where: TierEntryWhereUniqueInput
+  }
+
+  /**
+   * TierEntry deleteMany
+   */
+  export type TierEntryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TierEntries to delete
+     */
+    where?: TierEntryWhereInput
+    /**
+     * Limit how many TierEntries to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * TierEntry without action
+   */
+  export type TierEntryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierEntry
+     */
+    select?: TierEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierEntry
+     */
+    omit?: TierEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierEntryInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model TierPlacementHistory
+   */
+
+  export type AggregateTierPlacementHistory = {
+    _count: TierPlacementHistoryCountAggregateOutputType | null
+    _avg: TierPlacementHistoryAvgAggregateOutputType | null
+    _sum: TierPlacementHistorySumAggregateOutputType | null
+    _min: TierPlacementHistoryMinAggregateOutputType | null
+    _max: TierPlacementHistoryMaxAggregateOutputType | null
+  }
+
+  export type TierPlacementHistoryAvgAggregateOutputType = {
+    id: number | null
+    bandValue: number | null
+    tierListId: number | null
+    chartId: number | null
+  }
+
+  export type TierPlacementHistorySumAggregateOutputType = {
+    id: number | null
+    bandValue: number | null
+    tierListId: number | null
+    chartId: number | null
+  }
+
+  export type TierPlacementHistoryMinAggregateOutputType = {
+    id: number | null
+    bandValue: number | null
+    effectiveAt: Date | null
+    tierListId: number | null
+    chartId: number | null
+    createdAt: Date | null
+  }
+
+  export type TierPlacementHistoryMaxAggregateOutputType = {
+    id: number | null
+    bandValue: number | null
+    effectiveAt: Date | null
+    tierListId: number | null
+    chartId: number | null
+    createdAt: Date | null
+  }
+
+  export type TierPlacementHistoryCountAggregateOutputType = {
+    id: number
+    bandValue: number
+    effectiveAt: number
+    tierListId: number
+    chartId: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type TierPlacementHistoryAvgAggregateInputType = {
+    id?: true
+    bandValue?: true
+    tierListId?: true
+    chartId?: true
+  }
+
+  export type TierPlacementHistorySumAggregateInputType = {
+    id?: true
+    bandValue?: true
+    tierListId?: true
+    chartId?: true
+  }
+
+  export type TierPlacementHistoryMinAggregateInputType = {
+    id?: true
+    bandValue?: true
+    effectiveAt?: true
+    tierListId?: true
+    chartId?: true
+    createdAt?: true
+  }
+
+  export type TierPlacementHistoryMaxAggregateInputType = {
+    id?: true
+    bandValue?: true
+    effectiveAt?: true
+    tierListId?: true
+    chartId?: true
+    createdAt?: true
+  }
+
+  export type TierPlacementHistoryCountAggregateInputType = {
+    id?: true
+    bandValue?: true
+    effectiveAt?: true
+    tierListId?: true
+    chartId?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type TierPlacementHistoryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TierPlacementHistory to aggregate.
+     */
+    where?: TierPlacementHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TierPlacementHistories to fetch.
+     */
+    orderBy?: TierPlacementHistoryOrderByWithRelationInput | TierPlacementHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TierPlacementHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TierPlacementHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TierPlacementHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TierPlacementHistories
+    **/
+    _count?: true | TierPlacementHistoryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: TierPlacementHistoryAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: TierPlacementHistorySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TierPlacementHistoryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TierPlacementHistoryMaxAggregateInputType
+  }
+
+  export type GetTierPlacementHistoryAggregateType<T extends TierPlacementHistoryAggregateArgs> = {
+        [P in keyof T & keyof AggregateTierPlacementHistory]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTierPlacementHistory[P]>
+      : GetScalarType<T[P], AggregateTierPlacementHistory[P]>
+  }
+
+
+
+
+  export type TierPlacementHistoryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TierPlacementHistoryWhereInput
+    orderBy?: TierPlacementHistoryOrderByWithAggregationInput | TierPlacementHistoryOrderByWithAggregationInput[]
+    by: TierPlacementHistoryScalarFieldEnum[] | TierPlacementHistoryScalarFieldEnum
+    having?: TierPlacementHistoryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TierPlacementHistoryCountAggregateInputType | true
+    _avg?: TierPlacementHistoryAvgAggregateInputType
+    _sum?: TierPlacementHistorySumAggregateInputType
+    _min?: TierPlacementHistoryMinAggregateInputType
+    _max?: TierPlacementHistoryMaxAggregateInputType
+  }
+
+  export type TierPlacementHistoryGroupByOutputType = {
+    id: number
+    bandValue: number | null
+    effectiveAt: Date
+    tierListId: number
+    chartId: number
+    createdAt: Date
+    _count: TierPlacementHistoryCountAggregateOutputType | null
+    _avg: TierPlacementHistoryAvgAggregateOutputType | null
+    _sum: TierPlacementHistorySumAggregateOutputType | null
+    _min: TierPlacementHistoryMinAggregateOutputType | null
+    _max: TierPlacementHistoryMaxAggregateOutputType | null
+  }
+
+  type GetTierPlacementHistoryGroupByPayload<T extends TierPlacementHistoryGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TierPlacementHistoryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TierPlacementHistoryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TierPlacementHistoryGroupByOutputType[P]>
+            : GetScalarType<T[P], TierPlacementHistoryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TierPlacementHistorySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    bandValue?: boolean
+    effectiveAt?: boolean
+    tierListId?: boolean
+    chartId?: boolean
+    createdAt?: boolean
+    tierList?: boolean | TierListDefaultArgs<ExtArgs>
+    chart?: boolean | MusicChartDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["tierPlacementHistory"]>
+
+  export type TierPlacementHistorySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    bandValue?: boolean
+    effectiveAt?: boolean
+    tierListId?: boolean
+    chartId?: boolean
+    createdAt?: boolean
+    tierList?: boolean | TierListDefaultArgs<ExtArgs>
+    chart?: boolean | MusicChartDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["tierPlacementHistory"]>
+
+  export type TierPlacementHistorySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    bandValue?: boolean
+    effectiveAt?: boolean
+    tierListId?: boolean
+    chartId?: boolean
+    createdAt?: boolean
+    tierList?: boolean | TierListDefaultArgs<ExtArgs>
+    chart?: boolean | MusicChartDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["tierPlacementHistory"]>
+
+  export type TierPlacementHistorySelectScalar = {
+    id?: boolean
+    bandValue?: boolean
+    effectiveAt?: boolean
+    tierListId?: boolean
+    chartId?: boolean
+    createdAt?: boolean
+  }
+
+  export type TierPlacementHistoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "bandValue" | "effectiveAt" | "tierListId" | "chartId" | "createdAt", ExtArgs["result"]["tierPlacementHistory"]>
+  export type TierPlacementHistoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    tierList?: boolean | TierListDefaultArgs<ExtArgs>
+    chart?: boolean | MusicChartDefaultArgs<ExtArgs>
+  }
+  export type TierPlacementHistoryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    tierList?: boolean | TierListDefaultArgs<ExtArgs>
+    chart?: boolean | MusicChartDefaultArgs<ExtArgs>
+  }
+  export type TierPlacementHistoryIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    tierList?: boolean | TierListDefaultArgs<ExtArgs>
+    chart?: boolean | MusicChartDefaultArgs<ExtArgs>
+  }
+
+  export type $TierPlacementHistoryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TierPlacementHistory"
+    objects: {
+      tierList: Prisma.$TierListPayload<ExtArgs>
+      chart: Prisma.$MusicChartPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      bandValue: number | null
+      effectiveAt: Date
+      tierListId: number
+      chartId: number
+      createdAt: Date
+    }, ExtArgs["result"]["tierPlacementHistory"]>
+    composites: {}
+  }
+
+  type TierPlacementHistoryGetPayload<S extends boolean | null | undefined | TierPlacementHistoryDefaultArgs> = $Result.GetResult<Prisma.$TierPlacementHistoryPayload, S>
+
+  type TierPlacementHistoryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TierPlacementHistoryFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TierPlacementHistoryCountAggregateInputType | true
+    }
+
+  export interface TierPlacementHistoryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TierPlacementHistory'], meta: { name: 'TierPlacementHistory' } }
+    /**
+     * Find zero or one TierPlacementHistory that matches the filter.
+     * @param {TierPlacementHistoryFindUniqueArgs} args - Arguments to find a TierPlacementHistory
+     * @example
+     * // Get one TierPlacementHistory
+     * const tierPlacementHistory = await prisma.tierPlacementHistory.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TierPlacementHistoryFindUniqueArgs>(args: SelectSubset<T, TierPlacementHistoryFindUniqueArgs<ExtArgs>>): Prisma__TierPlacementHistoryClient<$Result.GetResult<Prisma.$TierPlacementHistoryPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one TierPlacementHistory that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TierPlacementHistoryFindUniqueOrThrowArgs} args - Arguments to find a TierPlacementHistory
+     * @example
+     * // Get one TierPlacementHistory
+     * const tierPlacementHistory = await prisma.tierPlacementHistory.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TierPlacementHistoryFindUniqueOrThrowArgs>(args: SelectSubset<T, TierPlacementHistoryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TierPlacementHistoryClient<$Result.GetResult<Prisma.$TierPlacementHistoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TierPlacementHistory that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierPlacementHistoryFindFirstArgs} args - Arguments to find a TierPlacementHistory
+     * @example
+     * // Get one TierPlacementHistory
+     * const tierPlacementHistory = await prisma.tierPlacementHistory.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TierPlacementHistoryFindFirstArgs>(args?: SelectSubset<T, TierPlacementHistoryFindFirstArgs<ExtArgs>>): Prisma__TierPlacementHistoryClient<$Result.GetResult<Prisma.$TierPlacementHistoryPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TierPlacementHistory that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierPlacementHistoryFindFirstOrThrowArgs} args - Arguments to find a TierPlacementHistory
+     * @example
+     * // Get one TierPlacementHistory
+     * const tierPlacementHistory = await prisma.tierPlacementHistory.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TierPlacementHistoryFindFirstOrThrowArgs>(args?: SelectSubset<T, TierPlacementHistoryFindFirstOrThrowArgs<ExtArgs>>): Prisma__TierPlacementHistoryClient<$Result.GetResult<Prisma.$TierPlacementHistoryPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more TierPlacementHistories that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierPlacementHistoryFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TierPlacementHistories
+     * const tierPlacementHistories = await prisma.tierPlacementHistory.findMany()
+     * 
+     * // Get first 10 TierPlacementHistories
+     * const tierPlacementHistories = await prisma.tierPlacementHistory.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const tierPlacementHistoryWithIdOnly = await prisma.tierPlacementHistory.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TierPlacementHistoryFindManyArgs>(args?: SelectSubset<T, TierPlacementHistoryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TierPlacementHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a TierPlacementHistory.
+     * @param {TierPlacementHistoryCreateArgs} args - Arguments to create a TierPlacementHistory.
+     * @example
+     * // Create one TierPlacementHistory
+     * const TierPlacementHistory = await prisma.tierPlacementHistory.create({
+     *   data: {
+     *     // ... data to create a TierPlacementHistory
+     *   }
+     * })
+     * 
+     */
+    create<T extends TierPlacementHistoryCreateArgs>(args: SelectSubset<T, TierPlacementHistoryCreateArgs<ExtArgs>>): Prisma__TierPlacementHistoryClient<$Result.GetResult<Prisma.$TierPlacementHistoryPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many TierPlacementHistories.
+     * @param {TierPlacementHistoryCreateManyArgs} args - Arguments to create many TierPlacementHistories.
+     * @example
+     * // Create many TierPlacementHistories
+     * const tierPlacementHistory = await prisma.tierPlacementHistory.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TierPlacementHistoryCreateManyArgs>(args?: SelectSubset<T, TierPlacementHistoryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many TierPlacementHistories and returns the data saved in the database.
+     * @param {TierPlacementHistoryCreateManyAndReturnArgs} args - Arguments to create many TierPlacementHistories.
+     * @example
+     * // Create many TierPlacementHistories
+     * const tierPlacementHistory = await prisma.tierPlacementHistory.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many TierPlacementHistories and only return the `id`
+     * const tierPlacementHistoryWithIdOnly = await prisma.tierPlacementHistory.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TierPlacementHistoryCreateManyAndReturnArgs>(args?: SelectSubset<T, TierPlacementHistoryCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TierPlacementHistoryPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a TierPlacementHistory.
+     * @param {TierPlacementHistoryDeleteArgs} args - Arguments to delete one TierPlacementHistory.
+     * @example
+     * // Delete one TierPlacementHistory
+     * const TierPlacementHistory = await prisma.tierPlacementHistory.delete({
+     *   where: {
+     *     // ... filter to delete one TierPlacementHistory
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TierPlacementHistoryDeleteArgs>(args: SelectSubset<T, TierPlacementHistoryDeleteArgs<ExtArgs>>): Prisma__TierPlacementHistoryClient<$Result.GetResult<Prisma.$TierPlacementHistoryPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one TierPlacementHistory.
+     * @param {TierPlacementHistoryUpdateArgs} args - Arguments to update one TierPlacementHistory.
+     * @example
+     * // Update one TierPlacementHistory
+     * const tierPlacementHistory = await prisma.tierPlacementHistory.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TierPlacementHistoryUpdateArgs>(args: SelectSubset<T, TierPlacementHistoryUpdateArgs<ExtArgs>>): Prisma__TierPlacementHistoryClient<$Result.GetResult<Prisma.$TierPlacementHistoryPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more TierPlacementHistories.
+     * @param {TierPlacementHistoryDeleteManyArgs} args - Arguments to filter TierPlacementHistories to delete.
+     * @example
+     * // Delete a few TierPlacementHistories
+     * const { count } = await prisma.tierPlacementHistory.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TierPlacementHistoryDeleteManyArgs>(args?: SelectSubset<T, TierPlacementHistoryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TierPlacementHistories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierPlacementHistoryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TierPlacementHistories
+     * const tierPlacementHistory = await prisma.tierPlacementHistory.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TierPlacementHistoryUpdateManyArgs>(args: SelectSubset<T, TierPlacementHistoryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TierPlacementHistories and returns the data updated in the database.
+     * @param {TierPlacementHistoryUpdateManyAndReturnArgs} args - Arguments to update many TierPlacementHistories.
+     * @example
+     * // Update many TierPlacementHistories
+     * const tierPlacementHistory = await prisma.tierPlacementHistory.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more TierPlacementHistories and only return the `id`
+     * const tierPlacementHistoryWithIdOnly = await prisma.tierPlacementHistory.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends TierPlacementHistoryUpdateManyAndReturnArgs>(args: SelectSubset<T, TierPlacementHistoryUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TierPlacementHistoryPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one TierPlacementHistory.
+     * @param {TierPlacementHistoryUpsertArgs} args - Arguments to update or create a TierPlacementHistory.
+     * @example
+     * // Update or create a TierPlacementHistory
+     * const tierPlacementHistory = await prisma.tierPlacementHistory.upsert({
+     *   create: {
+     *     // ... data to create a TierPlacementHistory
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TierPlacementHistory we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TierPlacementHistoryUpsertArgs>(args: SelectSubset<T, TierPlacementHistoryUpsertArgs<ExtArgs>>): Prisma__TierPlacementHistoryClient<$Result.GetResult<Prisma.$TierPlacementHistoryPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of TierPlacementHistories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierPlacementHistoryCountArgs} args - Arguments to filter TierPlacementHistories to count.
+     * @example
+     * // Count the number of TierPlacementHistories
+     * const count = await prisma.tierPlacementHistory.count({
+     *   where: {
+     *     // ... the filter for the TierPlacementHistories we want to count
+     *   }
+     * })
+    **/
+    count<T extends TierPlacementHistoryCountArgs>(
+      args?: Subset<T, TierPlacementHistoryCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TierPlacementHistoryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TierPlacementHistory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierPlacementHistoryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TierPlacementHistoryAggregateArgs>(args: Subset<T, TierPlacementHistoryAggregateArgs>): Prisma.PrismaPromise<GetTierPlacementHistoryAggregateType<T>>
+
+    /**
+     * Group by TierPlacementHistory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierPlacementHistoryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TierPlacementHistoryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TierPlacementHistoryGroupByArgs['orderBy'] }
+        : { orderBy?: TierPlacementHistoryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TierPlacementHistoryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTierPlacementHistoryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TierPlacementHistory model
+   */
+  readonly fields: TierPlacementHistoryFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TierPlacementHistory.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TierPlacementHistoryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    tierList<T extends TierListDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TierListDefaultArgs<ExtArgs>>): Prisma__TierListClient<$Result.GetResult<Prisma.$TierListPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    chart<T extends MusicChartDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MusicChartDefaultArgs<ExtArgs>>): Prisma__MusicChartClient<$Result.GetResult<Prisma.$MusicChartPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the TierPlacementHistory model
+   */
+  interface TierPlacementHistoryFieldRefs {
+    readonly id: FieldRef<"TierPlacementHistory", 'Int'>
+    readonly bandValue: FieldRef<"TierPlacementHistory", 'Float'>
+    readonly effectiveAt: FieldRef<"TierPlacementHistory", 'DateTime'>
+    readonly tierListId: FieldRef<"TierPlacementHistory", 'Int'>
+    readonly chartId: FieldRef<"TierPlacementHistory", 'Int'>
+    readonly createdAt: FieldRef<"TierPlacementHistory", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * TierPlacementHistory findUnique
+   */
+  export type TierPlacementHistoryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierPlacementHistory
+     */
+    select?: TierPlacementHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierPlacementHistory
+     */
+    omit?: TierPlacementHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierPlacementHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which TierPlacementHistory to fetch.
+     */
+    where: TierPlacementHistoryWhereUniqueInput
+  }
+
+  /**
+   * TierPlacementHistory findUniqueOrThrow
+   */
+  export type TierPlacementHistoryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierPlacementHistory
+     */
+    select?: TierPlacementHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierPlacementHistory
+     */
+    omit?: TierPlacementHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierPlacementHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which TierPlacementHistory to fetch.
+     */
+    where: TierPlacementHistoryWhereUniqueInput
+  }
+
+  /**
+   * TierPlacementHistory findFirst
+   */
+  export type TierPlacementHistoryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierPlacementHistory
+     */
+    select?: TierPlacementHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierPlacementHistory
+     */
+    omit?: TierPlacementHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierPlacementHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which TierPlacementHistory to fetch.
+     */
+    where?: TierPlacementHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TierPlacementHistories to fetch.
+     */
+    orderBy?: TierPlacementHistoryOrderByWithRelationInput | TierPlacementHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TierPlacementHistories.
+     */
+    cursor?: TierPlacementHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TierPlacementHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TierPlacementHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TierPlacementHistories.
+     */
+    distinct?: TierPlacementHistoryScalarFieldEnum | TierPlacementHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * TierPlacementHistory findFirstOrThrow
+   */
+  export type TierPlacementHistoryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierPlacementHistory
+     */
+    select?: TierPlacementHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierPlacementHistory
+     */
+    omit?: TierPlacementHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierPlacementHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which TierPlacementHistory to fetch.
+     */
+    where?: TierPlacementHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TierPlacementHistories to fetch.
+     */
+    orderBy?: TierPlacementHistoryOrderByWithRelationInput | TierPlacementHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TierPlacementHistories.
+     */
+    cursor?: TierPlacementHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TierPlacementHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TierPlacementHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TierPlacementHistories.
+     */
+    distinct?: TierPlacementHistoryScalarFieldEnum | TierPlacementHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * TierPlacementHistory findMany
+   */
+  export type TierPlacementHistoryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierPlacementHistory
+     */
+    select?: TierPlacementHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierPlacementHistory
+     */
+    omit?: TierPlacementHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierPlacementHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which TierPlacementHistories to fetch.
+     */
+    where?: TierPlacementHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TierPlacementHistories to fetch.
+     */
+    orderBy?: TierPlacementHistoryOrderByWithRelationInput | TierPlacementHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TierPlacementHistories.
+     */
+    cursor?: TierPlacementHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TierPlacementHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TierPlacementHistories.
+     */
+    skip?: number
+    distinct?: TierPlacementHistoryScalarFieldEnum | TierPlacementHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * TierPlacementHistory create
+   */
+  export type TierPlacementHistoryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierPlacementHistory
+     */
+    select?: TierPlacementHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierPlacementHistory
+     */
+    omit?: TierPlacementHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierPlacementHistoryInclude<ExtArgs> | null
+    /**
+     * The data needed to create a TierPlacementHistory.
+     */
+    data: XOR<TierPlacementHistoryCreateInput, TierPlacementHistoryUncheckedCreateInput>
+  }
+
+  /**
+   * TierPlacementHistory createMany
+   */
+  export type TierPlacementHistoryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TierPlacementHistories.
+     */
+    data: TierPlacementHistoryCreateManyInput | TierPlacementHistoryCreateManyInput[]
+  }
+
+  /**
+   * TierPlacementHistory createManyAndReturn
+   */
+  export type TierPlacementHistoryCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierPlacementHistory
+     */
+    select?: TierPlacementHistorySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierPlacementHistory
+     */
+    omit?: TierPlacementHistoryOmit<ExtArgs> | null
+    /**
+     * The data used to create many TierPlacementHistories.
+     */
+    data: TierPlacementHistoryCreateManyInput | TierPlacementHistoryCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierPlacementHistoryIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TierPlacementHistory update
+   */
+  export type TierPlacementHistoryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierPlacementHistory
+     */
+    select?: TierPlacementHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierPlacementHistory
+     */
+    omit?: TierPlacementHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierPlacementHistoryInclude<ExtArgs> | null
+    /**
+     * The data needed to update a TierPlacementHistory.
+     */
+    data: XOR<TierPlacementHistoryUpdateInput, TierPlacementHistoryUncheckedUpdateInput>
+    /**
+     * Choose, which TierPlacementHistory to update.
+     */
+    where: TierPlacementHistoryWhereUniqueInput
+  }
+
+  /**
+   * TierPlacementHistory updateMany
+   */
+  export type TierPlacementHistoryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TierPlacementHistories.
+     */
+    data: XOR<TierPlacementHistoryUpdateManyMutationInput, TierPlacementHistoryUncheckedUpdateManyInput>
+    /**
+     * Filter which TierPlacementHistories to update
+     */
+    where?: TierPlacementHistoryWhereInput
+    /**
+     * Limit how many TierPlacementHistories to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * TierPlacementHistory updateManyAndReturn
+   */
+  export type TierPlacementHistoryUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierPlacementHistory
+     */
+    select?: TierPlacementHistorySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierPlacementHistory
+     */
+    omit?: TierPlacementHistoryOmit<ExtArgs> | null
+    /**
+     * The data used to update TierPlacementHistories.
+     */
+    data: XOR<TierPlacementHistoryUpdateManyMutationInput, TierPlacementHistoryUncheckedUpdateManyInput>
+    /**
+     * Filter which TierPlacementHistories to update
+     */
+    where?: TierPlacementHistoryWhereInput
+    /**
+     * Limit how many TierPlacementHistories to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierPlacementHistoryIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TierPlacementHistory upsert
+   */
+  export type TierPlacementHistoryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierPlacementHistory
+     */
+    select?: TierPlacementHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierPlacementHistory
+     */
+    omit?: TierPlacementHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierPlacementHistoryInclude<ExtArgs> | null
+    /**
+     * The filter to search for the TierPlacementHistory to update in case it exists.
+     */
+    where: TierPlacementHistoryWhereUniqueInput
+    /**
+     * In case the TierPlacementHistory found by the `where` argument doesn't exist, create a new TierPlacementHistory with this data.
+     */
+    create: XOR<TierPlacementHistoryCreateInput, TierPlacementHistoryUncheckedCreateInput>
+    /**
+     * In case the TierPlacementHistory was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TierPlacementHistoryUpdateInput, TierPlacementHistoryUncheckedUpdateInput>
+  }
+
+  /**
+   * TierPlacementHistory delete
+   */
+  export type TierPlacementHistoryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierPlacementHistory
+     */
+    select?: TierPlacementHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierPlacementHistory
+     */
+    omit?: TierPlacementHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierPlacementHistoryInclude<ExtArgs> | null
+    /**
+     * Filter which TierPlacementHistory to delete.
+     */
+    where: TierPlacementHistoryWhereUniqueInput
+  }
+
+  /**
+   * TierPlacementHistory deleteMany
+   */
+  export type TierPlacementHistoryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TierPlacementHistories to delete
+     */
+    where?: TierPlacementHistoryWhereInput
+    /**
+     * Limit how many TierPlacementHistories to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * TierPlacementHistory without action
+   */
+  export type TierPlacementHistoryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierPlacementHistory
+     */
+    select?: TierPlacementHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierPlacementHistory
+     */
+    omit?: TierPlacementHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierPlacementHistoryInclude<ExtArgs> | null
   }
 
 
@@ -32551,7 +37682,7 @@ export namespace Prisma {
   export type ChartRecordSnapshotScalarFieldEnum = (typeof ChartRecordSnapshotScalarFieldEnum)[keyof typeof ChartRecordSnapshotScalarFieldEnum]
 
 
-  export const ChartConstantHistoryScalarFieldEnum: {
+  export const ChartLevelConstantHistoryScalarFieldEnum: {
     id: 'id',
     value: 'value',
     effective_at: 'effective_at',
@@ -32559,7 +37690,58 @@ export namespace Prisma {
     created_at: 'created_at'
   };
 
-  export type ChartConstantHistoryScalarFieldEnum = (typeof ChartConstantHistoryScalarFieldEnum)[keyof typeof ChartConstantHistoryScalarFieldEnum]
+  export type ChartLevelConstantHistoryScalarFieldEnum = (typeof ChartLevelConstantHistoryScalarFieldEnum)[keyof typeof ChartLevelConstantHistoryScalarFieldEnum]
+
+
+  export const TierListScalarFieldEnum: {
+    id: 'id',
+    slug: 'slug',
+    title: 'title',
+    mode: 'mode',
+    description: 'description',
+    status: 'status',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type TierListScalarFieldEnum = (typeof TierListScalarFieldEnum)[keyof typeof TierListScalarFieldEnum]
+
+
+  export const TierBandScalarFieldEnum: {
+    id: 'id',
+    value: 'value',
+    position: 'position',
+    tierListId: 'tierListId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type TierBandScalarFieldEnum = (typeof TierBandScalarFieldEnum)[keyof typeof TierBandScalarFieldEnum]
+
+
+  export const TierEntryScalarFieldEnum: {
+    id: 'id',
+    position: 'position',
+    tierListId: 'tierListId',
+    tierBandId: 'tierBandId',
+    chartId: 'chartId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type TierEntryScalarFieldEnum = (typeof TierEntryScalarFieldEnum)[keyof typeof TierEntryScalarFieldEnum]
+
+
+  export const TierPlacementHistoryScalarFieldEnum: {
+    id: 'id',
+    bandValue: 'bandValue',
+    effectiveAt: 'effectiveAt',
+    tierListId: 'tierListId',
+    chartId: 'chartId',
+    createdAt: 'createdAt'
+  };
+
+  export type TierPlacementHistoryScalarFieldEnum = (typeof TierPlacementHistoryScalarFieldEnum)[keyof typeof TierPlacementHistoryScalarFieldEnum]
 
 
   export const ChartEvaluationScalarFieldEnum: {
@@ -33309,7 +38491,7 @@ export namespace Prisma {
     created_at?: DateTimeFilter<"MusicChart"> | Date | string
     updated_at?: DateTimeFilter<"MusicChart"> | Date | string
     music?: XOR<MusicScalarRelationFilter, MusicWhereInput>
-    constantHistory?: ChartConstantHistoryListRelationFilter
+    levelConstantHistory?: ChartLevelConstantHistoryListRelationFilter
     evaluations?: ChartEvaluationListRelationFilter
     RecentPlay?: RecentPlayListRelationFilter
     PlayData?: PlayDataListRelationFilter
@@ -33318,6 +38500,8 @@ export namespace Prisma {
     playHistory?: ChartPlayHistoryListRelationFilter
     recordSnapshots?: ChartRecordSnapshotListRelationFilter
     examStageOptions?: ExamStageChartListRelationFilter
+    tierEntries?: TierEntryListRelationFilter
+    tierPlacementHistory?: TierPlacementHistoryListRelationFilter
   }
 
   export type MusicChartOrderByWithRelationInput = {
@@ -33337,7 +38521,7 @@ export namespace Prisma {
     created_at?: SortOrder
     updated_at?: SortOrder
     music?: MusicOrderByWithRelationInput
-    constantHistory?: ChartConstantHistoryOrderByRelationAggregateInput
+    levelConstantHistory?: ChartLevelConstantHistoryOrderByRelationAggregateInput
     evaluations?: ChartEvaluationOrderByRelationAggregateInput
     RecentPlay?: RecentPlayOrderByRelationAggregateInput
     PlayData?: PlayDataOrderByRelationAggregateInput
@@ -33346,6 +38530,8 @@ export namespace Prisma {
     playHistory?: ChartPlayHistoryOrderByRelationAggregateInput
     recordSnapshots?: ChartRecordSnapshotOrderByRelationAggregateInput
     examStageOptions?: ExamStageChartOrderByRelationAggregateInput
+    tierEntries?: TierEntryOrderByRelationAggregateInput
+    tierPlacementHistory?: TierPlacementHistoryOrderByRelationAggregateInput
   }
 
   export type MusicChartWhereUniqueInput = Prisma.AtLeast<{
@@ -33369,7 +38555,7 @@ export namespace Prisma {
     created_at?: DateTimeFilter<"MusicChart"> | Date | string
     updated_at?: DateTimeFilter<"MusicChart"> | Date | string
     music?: XOR<MusicScalarRelationFilter, MusicWhereInput>
-    constantHistory?: ChartConstantHistoryListRelationFilter
+    levelConstantHistory?: ChartLevelConstantHistoryListRelationFilter
     evaluations?: ChartEvaluationListRelationFilter
     RecentPlay?: RecentPlayListRelationFilter
     PlayData?: PlayDataListRelationFilter
@@ -33378,6 +38564,8 @@ export namespace Prisma {
     playHistory?: ChartPlayHistoryListRelationFilter
     recordSnapshots?: ChartRecordSnapshotListRelationFilter
     examStageOptions?: ExamStageChartListRelationFilter
+    tierEntries?: TierEntryListRelationFilter
+    tierPlacementHistory?: TierPlacementHistoryListRelationFilter
   }, "id" | "music_idx_difficulty">
 
   export type MusicChartOrderByWithAggregationInput = {
@@ -33720,19 +38908,19 @@ export namespace Prisma {
     created_at?: DateTimeWithAggregatesFilter<"ChartRecordSnapshot"> | Date | string
   }
 
-  export type ChartConstantHistoryWhereInput = {
-    AND?: ChartConstantHistoryWhereInput | ChartConstantHistoryWhereInput[]
-    OR?: ChartConstantHistoryWhereInput[]
-    NOT?: ChartConstantHistoryWhereInput | ChartConstantHistoryWhereInput[]
-    id?: IntFilter<"ChartConstantHistory"> | number
-    value?: FloatFilter<"ChartConstantHistory"> | number
-    effective_at?: DateTimeFilter<"ChartConstantHistory"> | Date | string
-    chart_id?: IntFilter<"ChartConstantHistory"> | number
-    created_at?: DateTimeFilter<"ChartConstantHistory"> | Date | string
+  export type ChartLevelConstantHistoryWhereInput = {
+    AND?: ChartLevelConstantHistoryWhereInput | ChartLevelConstantHistoryWhereInput[]
+    OR?: ChartLevelConstantHistoryWhereInput[]
+    NOT?: ChartLevelConstantHistoryWhereInput | ChartLevelConstantHistoryWhereInput[]
+    id?: IntFilter<"ChartLevelConstantHistory"> | number
+    value?: FloatFilter<"ChartLevelConstantHistory"> | number
+    effective_at?: DateTimeFilter<"ChartLevelConstantHistory"> | Date | string
+    chart_id?: IntFilter<"ChartLevelConstantHistory"> | number
+    created_at?: DateTimeFilter<"ChartLevelConstantHistory"> | Date | string
     chart?: XOR<MusicChartScalarRelationFilter, MusicChartWhereInput>
   }
 
-  export type ChartConstantHistoryOrderByWithRelationInput = {
+  export type ChartLevelConstantHistoryOrderByWithRelationInput = {
     id?: SortOrder
     value?: SortOrder
     effective_at?: SortOrder
@@ -33741,40 +38929,325 @@ export namespace Prisma {
     chart?: MusicChartOrderByWithRelationInput
   }
 
-  export type ChartConstantHistoryWhereUniqueInput = Prisma.AtLeast<{
+  export type ChartLevelConstantHistoryWhereUniqueInput = Prisma.AtLeast<{
     id?: number
-    AND?: ChartConstantHistoryWhereInput | ChartConstantHistoryWhereInput[]
-    OR?: ChartConstantHistoryWhereInput[]
-    NOT?: ChartConstantHistoryWhereInput | ChartConstantHistoryWhereInput[]
-    value?: FloatFilter<"ChartConstantHistory"> | number
-    effective_at?: DateTimeFilter<"ChartConstantHistory"> | Date | string
-    chart_id?: IntFilter<"ChartConstantHistory"> | number
-    created_at?: DateTimeFilter<"ChartConstantHistory"> | Date | string
+    AND?: ChartLevelConstantHistoryWhereInput | ChartLevelConstantHistoryWhereInput[]
+    OR?: ChartLevelConstantHistoryWhereInput[]
+    NOT?: ChartLevelConstantHistoryWhereInput | ChartLevelConstantHistoryWhereInput[]
+    value?: FloatFilter<"ChartLevelConstantHistory"> | number
+    effective_at?: DateTimeFilter<"ChartLevelConstantHistory"> | Date | string
+    chart_id?: IntFilter<"ChartLevelConstantHistory"> | number
+    created_at?: DateTimeFilter<"ChartLevelConstantHistory"> | Date | string
     chart?: XOR<MusicChartScalarRelationFilter, MusicChartWhereInput>
   }, "id">
 
-  export type ChartConstantHistoryOrderByWithAggregationInput = {
+  export type ChartLevelConstantHistoryOrderByWithAggregationInput = {
     id?: SortOrder
     value?: SortOrder
     effective_at?: SortOrder
     chart_id?: SortOrder
     created_at?: SortOrder
-    _count?: ChartConstantHistoryCountOrderByAggregateInput
-    _avg?: ChartConstantHistoryAvgOrderByAggregateInput
-    _max?: ChartConstantHistoryMaxOrderByAggregateInput
-    _min?: ChartConstantHistoryMinOrderByAggregateInput
-    _sum?: ChartConstantHistorySumOrderByAggregateInput
+    _count?: ChartLevelConstantHistoryCountOrderByAggregateInput
+    _avg?: ChartLevelConstantHistoryAvgOrderByAggregateInput
+    _max?: ChartLevelConstantHistoryMaxOrderByAggregateInput
+    _min?: ChartLevelConstantHistoryMinOrderByAggregateInput
+    _sum?: ChartLevelConstantHistorySumOrderByAggregateInput
   }
 
-  export type ChartConstantHistoryScalarWhereWithAggregatesInput = {
-    AND?: ChartConstantHistoryScalarWhereWithAggregatesInput | ChartConstantHistoryScalarWhereWithAggregatesInput[]
-    OR?: ChartConstantHistoryScalarWhereWithAggregatesInput[]
-    NOT?: ChartConstantHistoryScalarWhereWithAggregatesInput | ChartConstantHistoryScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"ChartConstantHistory"> | number
-    value?: FloatWithAggregatesFilter<"ChartConstantHistory"> | number
-    effective_at?: DateTimeWithAggregatesFilter<"ChartConstantHistory"> | Date | string
-    chart_id?: IntWithAggregatesFilter<"ChartConstantHistory"> | number
-    created_at?: DateTimeWithAggregatesFilter<"ChartConstantHistory"> | Date | string
+  export type ChartLevelConstantHistoryScalarWhereWithAggregatesInput = {
+    AND?: ChartLevelConstantHistoryScalarWhereWithAggregatesInput | ChartLevelConstantHistoryScalarWhereWithAggregatesInput[]
+    OR?: ChartLevelConstantHistoryScalarWhereWithAggregatesInput[]
+    NOT?: ChartLevelConstantHistoryScalarWhereWithAggregatesInput | ChartLevelConstantHistoryScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"ChartLevelConstantHistory"> | number
+    value?: FloatWithAggregatesFilter<"ChartLevelConstantHistory"> | number
+    effective_at?: DateTimeWithAggregatesFilter<"ChartLevelConstantHistory"> | Date | string
+    chart_id?: IntWithAggregatesFilter<"ChartLevelConstantHistory"> | number
+    created_at?: DateTimeWithAggregatesFilter<"ChartLevelConstantHistory"> | Date | string
+  }
+
+  export type TierListWhereInput = {
+    AND?: TierListWhereInput | TierListWhereInput[]
+    OR?: TierListWhereInput[]
+    NOT?: TierListWhereInput | TierListWhereInput[]
+    id?: IntFilter<"TierList"> | number
+    slug?: StringFilter<"TierList"> | string
+    title?: StringFilter<"TierList"> | string
+    mode?: StringFilter<"TierList"> | string
+    description?: StringNullableFilter<"TierList"> | string | null
+    status?: StringFilter<"TierList"> | string
+    createdAt?: DateTimeFilter<"TierList"> | Date | string
+    updatedAt?: DateTimeFilter<"TierList"> | Date | string
+    bands?: TierBandListRelationFilter
+    entries?: TierEntryListRelationFilter
+    history?: TierPlacementHistoryListRelationFilter
+  }
+
+  export type TierListOrderByWithRelationInput = {
+    id?: SortOrder
+    slug?: SortOrder
+    title?: SortOrder
+    mode?: SortOrder
+    description?: SortOrderInput | SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    bands?: TierBandOrderByRelationAggregateInput
+    entries?: TierEntryOrderByRelationAggregateInput
+    history?: TierPlacementHistoryOrderByRelationAggregateInput
+  }
+
+  export type TierListWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    slug?: string
+    AND?: TierListWhereInput | TierListWhereInput[]
+    OR?: TierListWhereInput[]
+    NOT?: TierListWhereInput | TierListWhereInput[]
+    title?: StringFilter<"TierList"> | string
+    mode?: StringFilter<"TierList"> | string
+    description?: StringNullableFilter<"TierList"> | string | null
+    status?: StringFilter<"TierList"> | string
+    createdAt?: DateTimeFilter<"TierList"> | Date | string
+    updatedAt?: DateTimeFilter<"TierList"> | Date | string
+    bands?: TierBandListRelationFilter
+    entries?: TierEntryListRelationFilter
+    history?: TierPlacementHistoryListRelationFilter
+  }, "id" | "slug">
+
+  export type TierListOrderByWithAggregationInput = {
+    id?: SortOrder
+    slug?: SortOrder
+    title?: SortOrder
+    mode?: SortOrder
+    description?: SortOrderInput | SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: TierListCountOrderByAggregateInput
+    _avg?: TierListAvgOrderByAggregateInput
+    _max?: TierListMaxOrderByAggregateInput
+    _min?: TierListMinOrderByAggregateInput
+    _sum?: TierListSumOrderByAggregateInput
+  }
+
+  export type TierListScalarWhereWithAggregatesInput = {
+    AND?: TierListScalarWhereWithAggregatesInput | TierListScalarWhereWithAggregatesInput[]
+    OR?: TierListScalarWhereWithAggregatesInput[]
+    NOT?: TierListScalarWhereWithAggregatesInput | TierListScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"TierList"> | number
+    slug?: StringWithAggregatesFilter<"TierList"> | string
+    title?: StringWithAggregatesFilter<"TierList"> | string
+    mode?: StringWithAggregatesFilter<"TierList"> | string
+    description?: StringNullableWithAggregatesFilter<"TierList"> | string | null
+    status?: StringWithAggregatesFilter<"TierList"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"TierList"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"TierList"> | Date | string
+  }
+
+  export type TierBandWhereInput = {
+    AND?: TierBandWhereInput | TierBandWhereInput[]
+    OR?: TierBandWhereInput[]
+    NOT?: TierBandWhereInput | TierBandWhereInput[]
+    id?: IntFilter<"TierBand"> | number
+    value?: FloatFilter<"TierBand"> | number
+    position?: IntFilter<"TierBand"> | number
+    tierListId?: IntFilter<"TierBand"> | number
+    createdAt?: DateTimeFilter<"TierBand"> | Date | string
+    updatedAt?: DateTimeFilter<"TierBand"> | Date | string
+    tierList?: XOR<TierListScalarRelationFilter, TierListWhereInput>
+    entries?: TierEntryListRelationFilter
+  }
+
+  export type TierBandOrderByWithRelationInput = {
+    id?: SortOrder
+    value?: SortOrder
+    position?: SortOrder
+    tierListId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    tierList?: TierListOrderByWithRelationInput
+    entries?: TierEntryOrderByRelationAggregateInput
+  }
+
+  export type TierBandWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    tierListId_value?: TierBandTierListIdValueCompoundUniqueInput
+    tierListId_position?: TierBandTierListIdPositionCompoundUniqueInput
+    AND?: TierBandWhereInput | TierBandWhereInput[]
+    OR?: TierBandWhereInput[]
+    NOT?: TierBandWhereInput | TierBandWhereInput[]
+    value?: FloatFilter<"TierBand"> | number
+    position?: IntFilter<"TierBand"> | number
+    tierListId?: IntFilter<"TierBand"> | number
+    createdAt?: DateTimeFilter<"TierBand"> | Date | string
+    updatedAt?: DateTimeFilter<"TierBand"> | Date | string
+    tierList?: XOR<TierListScalarRelationFilter, TierListWhereInput>
+    entries?: TierEntryListRelationFilter
+  }, "id" | "tierListId_value" | "tierListId_position">
+
+  export type TierBandOrderByWithAggregationInput = {
+    id?: SortOrder
+    value?: SortOrder
+    position?: SortOrder
+    tierListId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: TierBandCountOrderByAggregateInput
+    _avg?: TierBandAvgOrderByAggregateInput
+    _max?: TierBandMaxOrderByAggregateInput
+    _min?: TierBandMinOrderByAggregateInput
+    _sum?: TierBandSumOrderByAggregateInput
+  }
+
+  export type TierBandScalarWhereWithAggregatesInput = {
+    AND?: TierBandScalarWhereWithAggregatesInput | TierBandScalarWhereWithAggregatesInput[]
+    OR?: TierBandScalarWhereWithAggregatesInput[]
+    NOT?: TierBandScalarWhereWithAggregatesInput | TierBandScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"TierBand"> | number
+    value?: FloatWithAggregatesFilter<"TierBand"> | number
+    position?: IntWithAggregatesFilter<"TierBand"> | number
+    tierListId?: IntWithAggregatesFilter<"TierBand"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"TierBand"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"TierBand"> | Date | string
+  }
+
+  export type TierEntryWhereInput = {
+    AND?: TierEntryWhereInput | TierEntryWhereInput[]
+    OR?: TierEntryWhereInput[]
+    NOT?: TierEntryWhereInput | TierEntryWhereInput[]
+    id?: IntFilter<"TierEntry"> | number
+    position?: IntFilter<"TierEntry"> | number
+    tierListId?: IntFilter<"TierEntry"> | number
+    tierBandId?: IntFilter<"TierEntry"> | number
+    chartId?: IntFilter<"TierEntry"> | number
+    createdAt?: DateTimeFilter<"TierEntry"> | Date | string
+    updatedAt?: DateTimeFilter<"TierEntry"> | Date | string
+    tierList?: XOR<TierListScalarRelationFilter, TierListWhereInput>
+    tierBand?: XOR<TierBandScalarRelationFilter, TierBandWhereInput>
+    chart?: XOR<MusicChartScalarRelationFilter, MusicChartWhereInput>
+  }
+
+  export type TierEntryOrderByWithRelationInput = {
+    id?: SortOrder
+    position?: SortOrder
+    tierListId?: SortOrder
+    tierBandId?: SortOrder
+    chartId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    tierList?: TierListOrderByWithRelationInput
+    tierBand?: TierBandOrderByWithRelationInput
+    chart?: MusicChartOrderByWithRelationInput
+  }
+
+  export type TierEntryWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    tierListId_chartId?: TierEntryTierListIdChartIdCompoundUniqueInput
+    tierBandId_position?: TierEntryTierBandIdPositionCompoundUniqueInput
+    AND?: TierEntryWhereInput | TierEntryWhereInput[]
+    OR?: TierEntryWhereInput[]
+    NOT?: TierEntryWhereInput | TierEntryWhereInput[]
+    position?: IntFilter<"TierEntry"> | number
+    tierListId?: IntFilter<"TierEntry"> | number
+    tierBandId?: IntFilter<"TierEntry"> | number
+    chartId?: IntFilter<"TierEntry"> | number
+    createdAt?: DateTimeFilter<"TierEntry"> | Date | string
+    updatedAt?: DateTimeFilter<"TierEntry"> | Date | string
+    tierList?: XOR<TierListScalarRelationFilter, TierListWhereInput>
+    tierBand?: XOR<TierBandScalarRelationFilter, TierBandWhereInput>
+    chart?: XOR<MusicChartScalarRelationFilter, MusicChartWhereInput>
+  }, "id" | "tierListId_chartId" | "tierBandId_position">
+
+  export type TierEntryOrderByWithAggregationInput = {
+    id?: SortOrder
+    position?: SortOrder
+    tierListId?: SortOrder
+    tierBandId?: SortOrder
+    chartId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: TierEntryCountOrderByAggregateInput
+    _avg?: TierEntryAvgOrderByAggregateInput
+    _max?: TierEntryMaxOrderByAggregateInput
+    _min?: TierEntryMinOrderByAggregateInput
+    _sum?: TierEntrySumOrderByAggregateInput
+  }
+
+  export type TierEntryScalarWhereWithAggregatesInput = {
+    AND?: TierEntryScalarWhereWithAggregatesInput | TierEntryScalarWhereWithAggregatesInput[]
+    OR?: TierEntryScalarWhereWithAggregatesInput[]
+    NOT?: TierEntryScalarWhereWithAggregatesInput | TierEntryScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"TierEntry"> | number
+    position?: IntWithAggregatesFilter<"TierEntry"> | number
+    tierListId?: IntWithAggregatesFilter<"TierEntry"> | number
+    tierBandId?: IntWithAggregatesFilter<"TierEntry"> | number
+    chartId?: IntWithAggregatesFilter<"TierEntry"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"TierEntry"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"TierEntry"> | Date | string
+  }
+
+  export type TierPlacementHistoryWhereInput = {
+    AND?: TierPlacementHistoryWhereInput | TierPlacementHistoryWhereInput[]
+    OR?: TierPlacementHistoryWhereInput[]
+    NOT?: TierPlacementHistoryWhereInput | TierPlacementHistoryWhereInput[]
+    id?: IntFilter<"TierPlacementHistory"> | number
+    bandValue?: FloatNullableFilter<"TierPlacementHistory"> | number | null
+    effectiveAt?: DateTimeFilter<"TierPlacementHistory"> | Date | string
+    tierListId?: IntFilter<"TierPlacementHistory"> | number
+    chartId?: IntFilter<"TierPlacementHistory"> | number
+    createdAt?: DateTimeFilter<"TierPlacementHistory"> | Date | string
+    tierList?: XOR<TierListScalarRelationFilter, TierListWhereInput>
+    chart?: XOR<MusicChartScalarRelationFilter, MusicChartWhereInput>
+  }
+
+  export type TierPlacementHistoryOrderByWithRelationInput = {
+    id?: SortOrder
+    bandValue?: SortOrderInput | SortOrder
+    effectiveAt?: SortOrder
+    tierListId?: SortOrder
+    chartId?: SortOrder
+    createdAt?: SortOrder
+    tierList?: TierListOrderByWithRelationInput
+    chart?: MusicChartOrderByWithRelationInput
+  }
+
+  export type TierPlacementHistoryWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: TierPlacementHistoryWhereInput | TierPlacementHistoryWhereInput[]
+    OR?: TierPlacementHistoryWhereInput[]
+    NOT?: TierPlacementHistoryWhereInput | TierPlacementHistoryWhereInput[]
+    bandValue?: FloatNullableFilter<"TierPlacementHistory"> | number | null
+    effectiveAt?: DateTimeFilter<"TierPlacementHistory"> | Date | string
+    tierListId?: IntFilter<"TierPlacementHistory"> | number
+    chartId?: IntFilter<"TierPlacementHistory"> | number
+    createdAt?: DateTimeFilter<"TierPlacementHistory"> | Date | string
+    tierList?: XOR<TierListScalarRelationFilter, TierListWhereInput>
+    chart?: XOR<MusicChartScalarRelationFilter, MusicChartWhereInput>
+  }, "id">
+
+  export type TierPlacementHistoryOrderByWithAggregationInput = {
+    id?: SortOrder
+    bandValue?: SortOrderInput | SortOrder
+    effectiveAt?: SortOrder
+    tierListId?: SortOrder
+    chartId?: SortOrder
+    createdAt?: SortOrder
+    _count?: TierPlacementHistoryCountOrderByAggregateInput
+    _avg?: TierPlacementHistoryAvgOrderByAggregateInput
+    _max?: TierPlacementHistoryMaxOrderByAggregateInput
+    _min?: TierPlacementHistoryMinOrderByAggregateInput
+    _sum?: TierPlacementHistorySumOrderByAggregateInput
+  }
+
+  export type TierPlacementHistoryScalarWhereWithAggregatesInput = {
+    AND?: TierPlacementHistoryScalarWhereWithAggregatesInput | TierPlacementHistoryScalarWhereWithAggregatesInput[]
+    OR?: TierPlacementHistoryScalarWhereWithAggregatesInput[]
+    NOT?: TierPlacementHistoryScalarWhereWithAggregatesInput | TierPlacementHistoryScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"TierPlacementHistory"> | number
+    bandValue?: FloatNullableWithAggregatesFilter<"TierPlacementHistory"> | number | null
+    effectiveAt?: DateTimeWithAggregatesFilter<"TierPlacementHistory"> | Date | string
+    tierListId?: IntWithAggregatesFilter<"TierPlacementHistory"> | number
+    chartId?: IntWithAggregatesFilter<"TierPlacementHistory"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"TierPlacementHistory"> | Date | string
   }
 
   export type ChartEvaluationWhereInput = {
@@ -35661,7 +41134,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     music: MusicCreateNestedOneWithoutChartsInput
-    constantHistory?: ChartConstantHistoryCreateNestedManyWithoutChartInput
+    levelConstantHistory?: ChartLevelConstantHistoryCreateNestedManyWithoutChartInput
     evaluations?: ChartEvaluationCreateNestedManyWithoutChartInput
     RecentPlay?: RecentPlayCreateNestedManyWithoutChartInput
     PlayData?: PlayDataCreateNestedManyWithoutChartInput
@@ -35670,6 +41143,8 @@ export namespace Prisma {
     playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
     examStageOptions?: ExamStageChartCreateNestedManyWithoutChartInput
+    tierEntries?: TierEntryCreateNestedManyWithoutChartInput
+    tierPlacementHistory?: TierPlacementHistoryCreateNestedManyWithoutChartInput
   }
 
   export type MusicChartUncheckedCreateInput = {
@@ -35688,7 +41163,7 @@ export namespace Prisma {
     music_idx: string
     created_at?: Date | string
     updated_at?: Date | string
-    constantHistory?: ChartConstantHistoryUncheckedCreateNestedManyWithoutChartInput
+    levelConstantHistory?: ChartLevelConstantHistoryUncheckedCreateNestedManyWithoutChartInput
     evaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutChartInput
     RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutChartInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutChartInput
@@ -35697,6 +41172,8 @@ export namespace Prisma {
     playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
     examStageOptions?: ExamStageChartUncheckedCreateNestedManyWithoutChartInput
+    tierEntries?: TierEntryUncheckedCreateNestedManyWithoutChartInput
+    tierPlacementHistory?: TierPlacementHistoryUncheckedCreateNestedManyWithoutChartInput
   }
 
   export type MusicChartUpdateInput = {
@@ -35714,7 +41191,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     music?: MusicUpdateOneRequiredWithoutChartsNestedInput
-    constantHistory?: ChartConstantHistoryUpdateManyWithoutChartNestedInput
+    levelConstantHistory?: ChartLevelConstantHistoryUpdateManyWithoutChartNestedInput
     evaluations?: ChartEvaluationUpdateManyWithoutChartNestedInput
     RecentPlay?: RecentPlayUpdateManyWithoutChartNestedInput
     PlayData?: PlayDataUpdateManyWithoutChartNestedInput
@@ -35723,6 +41200,8 @@ export namespace Prisma {
     playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
     examStageOptions?: ExamStageChartUpdateManyWithoutChartNestedInput
+    tierEntries?: TierEntryUpdateManyWithoutChartNestedInput
+    tierPlacementHistory?: TierPlacementHistoryUpdateManyWithoutChartNestedInput
   }
 
   export type MusicChartUncheckedUpdateInput = {
@@ -35741,7 +41220,7 @@ export namespace Prisma {
     music_idx?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    constantHistory?: ChartConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
+    levelConstantHistory?: ChartLevelConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
     evaluations?: ChartEvaluationUncheckedUpdateManyWithoutChartNestedInput
     RecentPlay?: RecentPlayUncheckedUpdateManyWithoutChartNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutChartNestedInput
@@ -35750,6 +41229,8 @@ export namespace Prisma {
     playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
     examStageOptions?: ExamStageChartUncheckedUpdateManyWithoutChartNestedInput
+    tierEntries?: TierEntryUncheckedUpdateManyWithoutChartNestedInput
+    tierPlacementHistory?: TierPlacementHistoryUncheckedUpdateManyWithoutChartNestedInput
   }
 
   export type MusicChartCreateManyInput = {
@@ -36111,14 +41592,14 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type ChartConstantHistoryCreateInput = {
+  export type ChartLevelConstantHistoryCreateInput = {
     value: number
     effective_at?: Date | string
     created_at?: Date | string
-    chart: MusicChartCreateNestedOneWithoutConstantHistoryInput
+    chart: MusicChartCreateNestedOneWithoutLevelConstantHistoryInput
   }
 
-  export type ChartConstantHistoryUncheckedCreateInput = {
+  export type ChartLevelConstantHistoryUncheckedCreateInput = {
     id?: number
     value: number
     effective_at?: Date | string
@@ -36126,14 +41607,14 @@ export namespace Prisma {
     created_at?: Date | string
   }
 
-  export type ChartConstantHistoryUpdateInput = {
+  export type ChartLevelConstantHistoryUpdateInput = {
     value?: FloatFieldUpdateOperationsInput | number
     effective_at?: DateTimeFieldUpdateOperationsInput | Date | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    chart?: MusicChartUpdateOneRequiredWithoutConstantHistoryNestedInput
+    chart?: MusicChartUpdateOneRequiredWithoutLevelConstantHistoryNestedInput
   }
 
-  export type ChartConstantHistoryUncheckedUpdateInput = {
+  export type ChartLevelConstantHistoryUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     value?: FloatFieldUpdateOperationsInput | number
     effective_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -36141,7 +41622,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type ChartConstantHistoryCreateManyInput = {
+  export type ChartLevelConstantHistoryCreateManyInput = {
     id?: number
     value: number
     effective_at?: Date | string
@@ -36149,18 +41630,289 @@ export namespace Prisma {
     created_at?: Date | string
   }
 
-  export type ChartConstantHistoryUpdateManyMutationInput = {
+  export type ChartLevelConstantHistoryUpdateManyMutationInput = {
     value?: FloatFieldUpdateOperationsInput | number
     effective_at?: DateTimeFieldUpdateOperationsInput | Date | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type ChartConstantHistoryUncheckedUpdateManyInput = {
+  export type ChartLevelConstantHistoryUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     value?: FloatFieldUpdateOperationsInput | number
     effective_at?: DateTimeFieldUpdateOperationsInput | Date | string
     chart_id?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TierListCreateInput = {
+    slug: string
+    title: string
+    mode: string
+    description?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bands?: TierBandCreateNestedManyWithoutTierListInput
+    entries?: TierEntryCreateNestedManyWithoutTierListInput
+    history?: TierPlacementHistoryCreateNestedManyWithoutTierListInput
+  }
+
+  export type TierListUncheckedCreateInput = {
+    id?: number
+    slug: string
+    title: string
+    mode: string
+    description?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bands?: TierBandUncheckedCreateNestedManyWithoutTierListInput
+    entries?: TierEntryUncheckedCreateNestedManyWithoutTierListInput
+    history?: TierPlacementHistoryUncheckedCreateNestedManyWithoutTierListInput
+  }
+
+  export type TierListUpdateInput = {
+    slug?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bands?: TierBandUpdateManyWithoutTierListNestedInput
+    entries?: TierEntryUpdateManyWithoutTierListNestedInput
+    history?: TierPlacementHistoryUpdateManyWithoutTierListNestedInput
+  }
+
+  export type TierListUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    slug?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bands?: TierBandUncheckedUpdateManyWithoutTierListNestedInput
+    entries?: TierEntryUncheckedUpdateManyWithoutTierListNestedInput
+    history?: TierPlacementHistoryUncheckedUpdateManyWithoutTierListNestedInput
+  }
+
+  export type TierListCreateManyInput = {
+    id?: number
+    slug: string
+    title: string
+    mode: string
+    description?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TierListUpdateManyMutationInput = {
+    slug?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TierListUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    slug?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TierBandCreateInput = {
+    value: number
+    position: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    tierList: TierListCreateNestedOneWithoutBandsInput
+    entries?: TierEntryCreateNestedManyWithoutTierBandInput
+  }
+
+  export type TierBandUncheckedCreateInput = {
+    id?: number
+    value: number
+    position: number
+    tierListId: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    entries?: TierEntryUncheckedCreateNestedManyWithoutTierBandInput
+  }
+
+  export type TierBandUpdateInput = {
+    value?: FloatFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tierList?: TierListUpdateOneRequiredWithoutBandsNestedInput
+    entries?: TierEntryUpdateManyWithoutTierBandNestedInput
+  }
+
+  export type TierBandUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    value?: FloatFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    tierListId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    entries?: TierEntryUncheckedUpdateManyWithoutTierBandNestedInput
+  }
+
+  export type TierBandCreateManyInput = {
+    id?: number
+    value: number
+    position: number
+    tierListId: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TierBandUpdateManyMutationInput = {
+    value?: FloatFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TierBandUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    value?: FloatFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    tierListId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TierEntryCreateInput = {
+    position: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    tierList: TierListCreateNestedOneWithoutEntriesInput
+    tierBand: TierBandCreateNestedOneWithoutEntriesInput
+    chart: MusicChartCreateNestedOneWithoutTierEntriesInput
+  }
+
+  export type TierEntryUncheckedCreateInput = {
+    id?: number
+    position: number
+    tierListId: number
+    tierBandId: number
+    chartId: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TierEntryUpdateInput = {
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tierList?: TierListUpdateOneRequiredWithoutEntriesNestedInput
+    tierBand?: TierBandUpdateOneRequiredWithoutEntriesNestedInput
+    chart?: MusicChartUpdateOneRequiredWithoutTierEntriesNestedInput
+  }
+
+  export type TierEntryUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    tierListId?: IntFieldUpdateOperationsInput | number
+    tierBandId?: IntFieldUpdateOperationsInput | number
+    chartId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TierEntryCreateManyInput = {
+    id?: number
+    position: number
+    tierListId: number
+    tierBandId: number
+    chartId: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TierEntryUpdateManyMutationInput = {
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TierEntryUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    tierListId?: IntFieldUpdateOperationsInput | number
+    tierBandId?: IntFieldUpdateOperationsInput | number
+    chartId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TierPlacementHistoryCreateInput = {
+    bandValue?: number | null
+    effectiveAt?: Date | string
+    createdAt?: Date | string
+    tierList: TierListCreateNestedOneWithoutHistoryInput
+    chart: MusicChartCreateNestedOneWithoutTierPlacementHistoryInput
+  }
+
+  export type TierPlacementHistoryUncheckedCreateInput = {
+    id?: number
+    bandValue?: number | null
+    effectiveAt?: Date | string
+    tierListId: number
+    chartId: number
+    createdAt?: Date | string
+  }
+
+  export type TierPlacementHistoryUpdateInput = {
+    bandValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    effectiveAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tierList?: TierListUpdateOneRequiredWithoutHistoryNestedInput
+    chart?: MusicChartUpdateOneRequiredWithoutTierPlacementHistoryNestedInput
+  }
+
+  export type TierPlacementHistoryUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    bandValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    effectiveAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tierListId?: IntFieldUpdateOperationsInput | number
+    chartId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TierPlacementHistoryCreateManyInput = {
+    id?: number
+    bandValue?: number | null
+    effectiveAt?: Date | string
+    tierListId: number
+    chartId: number
+    createdAt?: Date | string
+  }
+
+  export type TierPlacementHistoryUpdateManyMutationInput = {
+    bandValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    effectiveAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TierPlacementHistoryUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    bandValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    effectiveAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tierListId?: IntFieldUpdateOperationsInput | number
+    chartId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ChartEvaluationCreateInput = {
@@ -38200,10 +43952,10 @@ export namespace Prisma {
     isNot?: MusicWhereInput
   }
 
-  export type ChartConstantHistoryListRelationFilter = {
-    every?: ChartConstantHistoryWhereInput
-    some?: ChartConstantHistoryWhereInput
-    none?: ChartConstantHistoryWhereInput
+  export type ChartLevelConstantHistoryListRelationFilter = {
+    every?: ChartLevelConstantHistoryWhereInput
+    some?: ChartLevelConstantHistoryWhereInput
+    none?: ChartLevelConstantHistoryWhereInput
   }
 
   export type ExamStageChartListRelationFilter = {
@@ -38212,11 +43964,31 @@ export namespace Prisma {
     none?: ExamStageChartWhereInput
   }
 
-  export type ChartConstantHistoryOrderByRelationAggregateInput = {
+  export type TierEntryListRelationFilter = {
+    every?: TierEntryWhereInput
+    some?: TierEntryWhereInput
+    none?: TierEntryWhereInput
+  }
+
+  export type TierPlacementHistoryListRelationFilter = {
+    every?: TierPlacementHistoryWhereInput
+    some?: TierPlacementHistoryWhereInput
+    none?: TierPlacementHistoryWhereInput
+  }
+
+  export type ChartLevelConstantHistoryOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
   export type ExamStageChartOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TierEntryOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TierPlacementHistoryOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -38577,7 +44349,7 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
-  export type ChartConstantHistoryCountOrderByAggregateInput = {
+  export type ChartLevelConstantHistoryCountOrderByAggregateInput = {
     id?: SortOrder
     value?: SortOrder
     effective_at?: SortOrder
@@ -38585,21 +44357,13 @@ export namespace Prisma {
     created_at?: SortOrder
   }
 
-  export type ChartConstantHistoryAvgOrderByAggregateInput = {
+  export type ChartLevelConstantHistoryAvgOrderByAggregateInput = {
     id?: SortOrder
     value?: SortOrder
     chart_id?: SortOrder
   }
 
-  export type ChartConstantHistoryMaxOrderByAggregateInput = {
-    id?: SortOrder
-    value?: SortOrder
-    effective_at?: SortOrder
-    chart_id?: SortOrder
-    created_at?: SortOrder
-  }
-
-  export type ChartConstantHistoryMinOrderByAggregateInput = {
+  export type ChartLevelConstantHistoryMaxOrderByAggregateInput = {
     id?: SortOrder
     value?: SortOrder
     effective_at?: SortOrder
@@ -38607,7 +44371,15 @@ export namespace Prisma {
     created_at?: SortOrder
   }
 
-  export type ChartConstantHistorySumOrderByAggregateInput = {
+  export type ChartLevelConstantHistoryMinOrderByAggregateInput = {
+    id?: SortOrder
+    value?: SortOrder
+    effective_at?: SortOrder
+    chart_id?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type ChartLevelConstantHistorySumOrderByAggregateInput = {
     id?: SortOrder
     value?: SortOrder
     chart_id?: SortOrder
@@ -38627,6 +44399,215 @@ export namespace Prisma {
     _sum?: NestedFloatFilter<$PrismaModel>
     _min?: NestedFloatFilter<$PrismaModel>
     _max?: NestedFloatFilter<$PrismaModel>
+  }
+
+  export type TierBandListRelationFilter = {
+    every?: TierBandWhereInput
+    some?: TierBandWhereInput
+    none?: TierBandWhereInput
+  }
+
+  export type TierBandOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TierListCountOrderByAggregateInput = {
+    id?: SortOrder
+    slug?: SortOrder
+    title?: SortOrder
+    mode?: SortOrder
+    description?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TierListAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type TierListMaxOrderByAggregateInput = {
+    id?: SortOrder
+    slug?: SortOrder
+    title?: SortOrder
+    mode?: SortOrder
+    description?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TierListMinOrderByAggregateInput = {
+    id?: SortOrder
+    slug?: SortOrder
+    title?: SortOrder
+    mode?: SortOrder
+    description?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TierListSumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type TierListScalarRelationFilter = {
+    is?: TierListWhereInput
+    isNot?: TierListWhereInput
+  }
+
+  export type TierBandTierListIdValueCompoundUniqueInput = {
+    tierListId: number
+    value: number
+  }
+
+  export type TierBandTierListIdPositionCompoundUniqueInput = {
+    tierListId: number
+    position: number
+  }
+
+  export type TierBandCountOrderByAggregateInput = {
+    id?: SortOrder
+    value?: SortOrder
+    position?: SortOrder
+    tierListId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TierBandAvgOrderByAggregateInput = {
+    id?: SortOrder
+    value?: SortOrder
+    position?: SortOrder
+    tierListId?: SortOrder
+  }
+
+  export type TierBandMaxOrderByAggregateInput = {
+    id?: SortOrder
+    value?: SortOrder
+    position?: SortOrder
+    tierListId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TierBandMinOrderByAggregateInput = {
+    id?: SortOrder
+    value?: SortOrder
+    position?: SortOrder
+    tierListId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TierBandSumOrderByAggregateInput = {
+    id?: SortOrder
+    value?: SortOrder
+    position?: SortOrder
+    tierListId?: SortOrder
+  }
+
+  export type TierBandScalarRelationFilter = {
+    is?: TierBandWhereInput
+    isNot?: TierBandWhereInput
+  }
+
+  export type TierEntryTierListIdChartIdCompoundUniqueInput = {
+    tierListId: number
+    chartId: number
+  }
+
+  export type TierEntryTierBandIdPositionCompoundUniqueInput = {
+    tierBandId: number
+    position: number
+  }
+
+  export type TierEntryCountOrderByAggregateInput = {
+    id?: SortOrder
+    position?: SortOrder
+    tierListId?: SortOrder
+    tierBandId?: SortOrder
+    chartId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TierEntryAvgOrderByAggregateInput = {
+    id?: SortOrder
+    position?: SortOrder
+    tierListId?: SortOrder
+    tierBandId?: SortOrder
+    chartId?: SortOrder
+  }
+
+  export type TierEntryMaxOrderByAggregateInput = {
+    id?: SortOrder
+    position?: SortOrder
+    tierListId?: SortOrder
+    tierBandId?: SortOrder
+    chartId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TierEntryMinOrderByAggregateInput = {
+    id?: SortOrder
+    position?: SortOrder
+    tierListId?: SortOrder
+    tierBandId?: SortOrder
+    chartId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TierEntrySumOrderByAggregateInput = {
+    id?: SortOrder
+    position?: SortOrder
+    tierListId?: SortOrder
+    tierBandId?: SortOrder
+    chartId?: SortOrder
+  }
+
+  export type TierPlacementHistoryCountOrderByAggregateInput = {
+    id?: SortOrder
+    bandValue?: SortOrder
+    effectiveAt?: SortOrder
+    tierListId?: SortOrder
+    chartId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TierPlacementHistoryAvgOrderByAggregateInput = {
+    id?: SortOrder
+    bandValue?: SortOrder
+    tierListId?: SortOrder
+    chartId?: SortOrder
+  }
+
+  export type TierPlacementHistoryMaxOrderByAggregateInput = {
+    id?: SortOrder
+    bandValue?: SortOrder
+    effectiveAt?: SortOrder
+    tierListId?: SortOrder
+    chartId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TierPlacementHistoryMinOrderByAggregateInput = {
+    id?: SortOrder
+    bandValue?: SortOrder
+    effectiveAt?: SortOrder
+    tierListId?: SortOrder
+    chartId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TierPlacementHistorySumOrderByAggregateInput = {
+    id?: SortOrder
+    bandValue?: SortOrder
+    tierListId?: SortOrder
+    chartId?: SortOrder
   }
 
   export type ChartEvaluationChart_idUser_idCompoundUniqueInput = {
@@ -40625,11 +46606,11 @@ export namespace Prisma {
     connect?: MusicWhereUniqueInput
   }
 
-  export type ChartConstantHistoryCreateNestedManyWithoutChartInput = {
-    create?: XOR<ChartConstantHistoryCreateWithoutChartInput, ChartConstantHistoryUncheckedCreateWithoutChartInput> | ChartConstantHistoryCreateWithoutChartInput[] | ChartConstantHistoryUncheckedCreateWithoutChartInput[]
-    connectOrCreate?: ChartConstantHistoryCreateOrConnectWithoutChartInput | ChartConstantHistoryCreateOrConnectWithoutChartInput[]
-    createMany?: ChartConstantHistoryCreateManyChartInputEnvelope
-    connect?: ChartConstantHistoryWhereUniqueInput | ChartConstantHistoryWhereUniqueInput[]
+  export type ChartLevelConstantHistoryCreateNestedManyWithoutChartInput = {
+    create?: XOR<ChartLevelConstantHistoryCreateWithoutChartInput, ChartLevelConstantHistoryUncheckedCreateWithoutChartInput> | ChartLevelConstantHistoryCreateWithoutChartInput[] | ChartLevelConstantHistoryUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: ChartLevelConstantHistoryCreateOrConnectWithoutChartInput | ChartLevelConstantHistoryCreateOrConnectWithoutChartInput[]
+    createMany?: ChartLevelConstantHistoryCreateManyChartInputEnvelope
+    connect?: ChartLevelConstantHistoryWhereUniqueInput | ChartLevelConstantHistoryWhereUniqueInput[]
   }
 
   export type ChartEvaluationCreateNestedManyWithoutChartInput = {
@@ -40688,11 +46669,25 @@ export namespace Prisma {
     connect?: ExamStageChartWhereUniqueInput | ExamStageChartWhereUniqueInput[]
   }
 
-  export type ChartConstantHistoryUncheckedCreateNestedManyWithoutChartInput = {
-    create?: XOR<ChartConstantHistoryCreateWithoutChartInput, ChartConstantHistoryUncheckedCreateWithoutChartInput> | ChartConstantHistoryCreateWithoutChartInput[] | ChartConstantHistoryUncheckedCreateWithoutChartInput[]
-    connectOrCreate?: ChartConstantHistoryCreateOrConnectWithoutChartInput | ChartConstantHistoryCreateOrConnectWithoutChartInput[]
-    createMany?: ChartConstantHistoryCreateManyChartInputEnvelope
-    connect?: ChartConstantHistoryWhereUniqueInput | ChartConstantHistoryWhereUniqueInput[]
+  export type TierEntryCreateNestedManyWithoutChartInput = {
+    create?: XOR<TierEntryCreateWithoutChartInput, TierEntryUncheckedCreateWithoutChartInput> | TierEntryCreateWithoutChartInput[] | TierEntryUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: TierEntryCreateOrConnectWithoutChartInput | TierEntryCreateOrConnectWithoutChartInput[]
+    createMany?: TierEntryCreateManyChartInputEnvelope
+    connect?: TierEntryWhereUniqueInput | TierEntryWhereUniqueInput[]
+  }
+
+  export type TierPlacementHistoryCreateNestedManyWithoutChartInput = {
+    create?: XOR<TierPlacementHistoryCreateWithoutChartInput, TierPlacementHistoryUncheckedCreateWithoutChartInput> | TierPlacementHistoryCreateWithoutChartInput[] | TierPlacementHistoryUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: TierPlacementHistoryCreateOrConnectWithoutChartInput | TierPlacementHistoryCreateOrConnectWithoutChartInput[]
+    createMany?: TierPlacementHistoryCreateManyChartInputEnvelope
+    connect?: TierPlacementHistoryWhereUniqueInput | TierPlacementHistoryWhereUniqueInput[]
+  }
+
+  export type ChartLevelConstantHistoryUncheckedCreateNestedManyWithoutChartInput = {
+    create?: XOR<ChartLevelConstantHistoryCreateWithoutChartInput, ChartLevelConstantHistoryUncheckedCreateWithoutChartInput> | ChartLevelConstantHistoryCreateWithoutChartInput[] | ChartLevelConstantHistoryUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: ChartLevelConstantHistoryCreateOrConnectWithoutChartInput | ChartLevelConstantHistoryCreateOrConnectWithoutChartInput[]
+    createMany?: ChartLevelConstantHistoryCreateManyChartInputEnvelope
+    connect?: ChartLevelConstantHistoryWhereUniqueInput | ChartLevelConstantHistoryWhereUniqueInput[]
   }
 
   export type ChartEvaluationUncheckedCreateNestedManyWithoutChartInput = {
@@ -40751,6 +46746,20 @@ export namespace Prisma {
     connect?: ExamStageChartWhereUniqueInput | ExamStageChartWhereUniqueInput[]
   }
 
+  export type TierEntryUncheckedCreateNestedManyWithoutChartInput = {
+    create?: XOR<TierEntryCreateWithoutChartInput, TierEntryUncheckedCreateWithoutChartInput> | TierEntryCreateWithoutChartInput[] | TierEntryUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: TierEntryCreateOrConnectWithoutChartInput | TierEntryCreateOrConnectWithoutChartInput[]
+    createMany?: TierEntryCreateManyChartInputEnvelope
+    connect?: TierEntryWhereUniqueInput | TierEntryWhereUniqueInput[]
+  }
+
+  export type TierPlacementHistoryUncheckedCreateNestedManyWithoutChartInput = {
+    create?: XOR<TierPlacementHistoryCreateWithoutChartInput, TierPlacementHistoryUncheckedCreateWithoutChartInput> | TierPlacementHistoryCreateWithoutChartInput[] | TierPlacementHistoryUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: TierPlacementHistoryCreateOrConnectWithoutChartInput | TierPlacementHistoryCreateOrConnectWithoutChartInput[]
+    createMany?: TierPlacementHistoryCreateManyChartInputEnvelope
+    connect?: TierPlacementHistoryWhereUniqueInput | TierPlacementHistoryWhereUniqueInput[]
+  }
+
   export type NullableFloatFieldUpdateOperationsInput = {
     set?: number | null
     increment?: number
@@ -40771,18 +46780,18 @@ export namespace Prisma {
     update?: XOR<XOR<MusicUpdateToOneWithWhereWithoutChartsInput, MusicUpdateWithoutChartsInput>, MusicUncheckedUpdateWithoutChartsInput>
   }
 
-  export type ChartConstantHistoryUpdateManyWithoutChartNestedInput = {
-    create?: XOR<ChartConstantHistoryCreateWithoutChartInput, ChartConstantHistoryUncheckedCreateWithoutChartInput> | ChartConstantHistoryCreateWithoutChartInput[] | ChartConstantHistoryUncheckedCreateWithoutChartInput[]
-    connectOrCreate?: ChartConstantHistoryCreateOrConnectWithoutChartInput | ChartConstantHistoryCreateOrConnectWithoutChartInput[]
-    upsert?: ChartConstantHistoryUpsertWithWhereUniqueWithoutChartInput | ChartConstantHistoryUpsertWithWhereUniqueWithoutChartInput[]
-    createMany?: ChartConstantHistoryCreateManyChartInputEnvelope
-    set?: ChartConstantHistoryWhereUniqueInput | ChartConstantHistoryWhereUniqueInput[]
-    disconnect?: ChartConstantHistoryWhereUniqueInput | ChartConstantHistoryWhereUniqueInput[]
-    delete?: ChartConstantHistoryWhereUniqueInput | ChartConstantHistoryWhereUniqueInput[]
-    connect?: ChartConstantHistoryWhereUniqueInput | ChartConstantHistoryWhereUniqueInput[]
-    update?: ChartConstantHistoryUpdateWithWhereUniqueWithoutChartInput | ChartConstantHistoryUpdateWithWhereUniqueWithoutChartInput[]
-    updateMany?: ChartConstantHistoryUpdateManyWithWhereWithoutChartInput | ChartConstantHistoryUpdateManyWithWhereWithoutChartInput[]
-    deleteMany?: ChartConstantHistoryScalarWhereInput | ChartConstantHistoryScalarWhereInput[]
+  export type ChartLevelConstantHistoryUpdateManyWithoutChartNestedInput = {
+    create?: XOR<ChartLevelConstantHistoryCreateWithoutChartInput, ChartLevelConstantHistoryUncheckedCreateWithoutChartInput> | ChartLevelConstantHistoryCreateWithoutChartInput[] | ChartLevelConstantHistoryUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: ChartLevelConstantHistoryCreateOrConnectWithoutChartInput | ChartLevelConstantHistoryCreateOrConnectWithoutChartInput[]
+    upsert?: ChartLevelConstantHistoryUpsertWithWhereUniqueWithoutChartInput | ChartLevelConstantHistoryUpsertWithWhereUniqueWithoutChartInput[]
+    createMany?: ChartLevelConstantHistoryCreateManyChartInputEnvelope
+    set?: ChartLevelConstantHistoryWhereUniqueInput | ChartLevelConstantHistoryWhereUniqueInput[]
+    disconnect?: ChartLevelConstantHistoryWhereUniqueInput | ChartLevelConstantHistoryWhereUniqueInput[]
+    delete?: ChartLevelConstantHistoryWhereUniqueInput | ChartLevelConstantHistoryWhereUniqueInput[]
+    connect?: ChartLevelConstantHistoryWhereUniqueInput | ChartLevelConstantHistoryWhereUniqueInput[]
+    update?: ChartLevelConstantHistoryUpdateWithWhereUniqueWithoutChartInput | ChartLevelConstantHistoryUpdateWithWhereUniqueWithoutChartInput[]
+    updateMany?: ChartLevelConstantHistoryUpdateManyWithWhereWithoutChartInput | ChartLevelConstantHistoryUpdateManyWithWhereWithoutChartInput[]
+    deleteMany?: ChartLevelConstantHistoryScalarWhereInput | ChartLevelConstantHistoryScalarWhereInput[]
   }
 
   export type ChartEvaluationUpdateManyWithoutChartNestedInput = {
@@ -40897,18 +46906,46 @@ export namespace Prisma {
     deleteMany?: ExamStageChartScalarWhereInput | ExamStageChartScalarWhereInput[]
   }
 
-  export type ChartConstantHistoryUncheckedUpdateManyWithoutChartNestedInput = {
-    create?: XOR<ChartConstantHistoryCreateWithoutChartInput, ChartConstantHistoryUncheckedCreateWithoutChartInput> | ChartConstantHistoryCreateWithoutChartInput[] | ChartConstantHistoryUncheckedCreateWithoutChartInput[]
-    connectOrCreate?: ChartConstantHistoryCreateOrConnectWithoutChartInput | ChartConstantHistoryCreateOrConnectWithoutChartInput[]
-    upsert?: ChartConstantHistoryUpsertWithWhereUniqueWithoutChartInput | ChartConstantHistoryUpsertWithWhereUniqueWithoutChartInput[]
-    createMany?: ChartConstantHistoryCreateManyChartInputEnvelope
-    set?: ChartConstantHistoryWhereUniqueInput | ChartConstantHistoryWhereUniqueInput[]
-    disconnect?: ChartConstantHistoryWhereUniqueInput | ChartConstantHistoryWhereUniqueInput[]
-    delete?: ChartConstantHistoryWhereUniqueInput | ChartConstantHistoryWhereUniqueInput[]
-    connect?: ChartConstantHistoryWhereUniqueInput | ChartConstantHistoryWhereUniqueInput[]
-    update?: ChartConstantHistoryUpdateWithWhereUniqueWithoutChartInput | ChartConstantHistoryUpdateWithWhereUniqueWithoutChartInput[]
-    updateMany?: ChartConstantHistoryUpdateManyWithWhereWithoutChartInput | ChartConstantHistoryUpdateManyWithWhereWithoutChartInput[]
-    deleteMany?: ChartConstantHistoryScalarWhereInput | ChartConstantHistoryScalarWhereInput[]
+  export type TierEntryUpdateManyWithoutChartNestedInput = {
+    create?: XOR<TierEntryCreateWithoutChartInput, TierEntryUncheckedCreateWithoutChartInput> | TierEntryCreateWithoutChartInput[] | TierEntryUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: TierEntryCreateOrConnectWithoutChartInput | TierEntryCreateOrConnectWithoutChartInput[]
+    upsert?: TierEntryUpsertWithWhereUniqueWithoutChartInput | TierEntryUpsertWithWhereUniqueWithoutChartInput[]
+    createMany?: TierEntryCreateManyChartInputEnvelope
+    set?: TierEntryWhereUniqueInput | TierEntryWhereUniqueInput[]
+    disconnect?: TierEntryWhereUniqueInput | TierEntryWhereUniqueInput[]
+    delete?: TierEntryWhereUniqueInput | TierEntryWhereUniqueInput[]
+    connect?: TierEntryWhereUniqueInput | TierEntryWhereUniqueInput[]
+    update?: TierEntryUpdateWithWhereUniqueWithoutChartInput | TierEntryUpdateWithWhereUniqueWithoutChartInput[]
+    updateMany?: TierEntryUpdateManyWithWhereWithoutChartInput | TierEntryUpdateManyWithWhereWithoutChartInput[]
+    deleteMany?: TierEntryScalarWhereInput | TierEntryScalarWhereInput[]
+  }
+
+  export type TierPlacementHistoryUpdateManyWithoutChartNestedInput = {
+    create?: XOR<TierPlacementHistoryCreateWithoutChartInput, TierPlacementHistoryUncheckedCreateWithoutChartInput> | TierPlacementHistoryCreateWithoutChartInput[] | TierPlacementHistoryUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: TierPlacementHistoryCreateOrConnectWithoutChartInput | TierPlacementHistoryCreateOrConnectWithoutChartInput[]
+    upsert?: TierPlacementHistoryUpsertWithWhereUniqueWithoutChartInput | TierPlacementHistoryUpsertWithWhereUniqueWithoutChartInput[]
+    createMany?: TierPlacementHistoryCreateManyChartInputEnvelope
+    set?: TierPlacementHistoryWhereUniqueInput | TierPlacementHistoryWhereUniqueInput[]
+    disconnect?: TierPlacementHistoryWhereUniqueInput | TierPlacementHistoryWhereUniqueInput[]
+    delete?: TierPlacementHistoryWhereUniqueInput | TierPlacementHistoryWhereUniqueInput[]
+    connect?: TierPlacementHistoryWhereUniqueInput | TierPlacementHistoryWhereUniqueInput[]
+    update?: TierPlacementHistoryUpdateWithWhereUniqueWithoutChartInput | TierPlacementHistoryUpdateWithWhereUniqueWithoutChartInput[]
+    updateMany?: TierPlacementHistoryUpdateManyWithWhereWithoutChartInput | TierPlacementHistoryUpdateManyWithWhereWithoutChartInput[]
+    deleteMany?: TierPlacementHistoryScalarWhereInput | TierPlacementHistoryScalarWhereInput[]
+  }
+
+  export type ChartLevelConstantHistoryUncheckedUpdateManyWithoutChartNestedInput = {
+    create?: XOR<ChartLevelConstantHistoryCreateWithoutChartInput, ChartLevelConstantHistoryUncheckedCreateWithoutChartInput> | ChartLevelConstantHistoryCreateWithoutChartInput[] | ChartLevelConstantHistoryUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: ChartLevelConstantHistoryCreateOrConnectWithoutChartInput | ChartLevelConstantHistoryCreateOrConnectWithoutChartInput[]
+    upsert?: ChartLevelConstantHistoryUpsertWithWhereUniqueWithoutChartInput | ChartLevelConstantHistoryUpsertWithWhereUniqueWithoutChartInput[]
+    createMany?: ChartLevelConstantHistoryCreateManyChartInputEnvelope
+    set?: ChartLevelConstantHistoryWhereUniqueInput | ChartLevelConstantHistoryWhereUniqueInput[]
+    disconnect?: ChartLevelConstantHistoryWhereUniqueInput | ChartLevelConstantHistoryWhereUniqueInput[]
+    delete?: ChartLevelConstantHistoryWhereUniqueInput | ChartLevelConstantHistoryWhereUniqueInput[]
+    connect?: ChartLevelConstantHistoryWhereUniqueInput | ChartLevelConstantHistoryWhereUniqueInput[]
+    update?: ChartLevelConstantHistoryUpdateWithWhereUniqueWithoutChartInput | ChartLevelConstantHistoryUpdateWithWhereUniqueWithoutChartInput[]
+    updateMany?: ChartLevelConstantHistoryUpdateManyWithWhereWithoutChartInput | ChartLevelConstantHistoryUpdateManyWithWhereWithoutChartInput[]
+    deleteMany?: ChartLevelConstantHistoryScalarWhereInput | ChartLevelConstantHistoryScalarWhereInput[]
   }
 
   export type ChartEvaluationUncheckedUpdateManyWithoutChartNestedInput = {
@@ -41021,6 +47058,34 @@ export namespace Prisma {
     update?: ExamStageChartUpdateWithWhereUniqueWithoutChartInput | ExamStageChartUpdateWithWhereUniqueWithoutChartInput[]
     updateMany?: ExamStageChartUpdateManyWithWhereWithoutChartInput | ExamStageChartUpdateManyWithWhereWithoutChartInput[]
     deleteMany?: ExamStageChartScalarWhereInput | ExamStageChartScalarWhereInput[]
+  }
+
+  export type TierEntryUncheckedUpdateManyWithoutChartNestedInput = {
+    create?: XOR<TierEntryCreateWithoutChartInput, TierEntryUncheckedCreateWithoutChartInput> | TierEntryCreateWithoutChartInput[] | TierEntryUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: TierEntryCreateOrConnectWithoutChartInput | TierEntryCreateOrConnectWithoutChartInput[]
+    upsert?: TierEntryUpsertWithWhereUniqueWithoutChartInput | TierEntryUpsertWithWhereUniqueWithoutChartInput[]
+    createMany?: TierEntryCreateManyChartInputEnvelope
+    set?: TierEntryWhereUniqueInput | TierEntryWhereUniqueInput[]
+    disconnect?: TierEntryWhereUniqueInput | TierEntryWhereUniqueInput[]
+    delete?: TierEntryWhereUniqueInput | TierEntryWhereUniqueInput[]
+    connect?: TierEntryWhereUniqueInput | TierEntryWhereUniqueInput[]
+    update?: TierEntryUpdateWithWhereUniqueWithoutChartInput | TierEntryUpdateWithWhereUniqueWithoutChartInput[]
+    updateMany?: TierEntryUpdateManyWithWhereWithoutChartInput | TierEntryUpdateManyWithWhereWithoutChartInput[]
+    deleteMany?: TierEntryScalarWhereInput | TierEntryScalarWhereInput[]
+  }
+
+  export type TierPlacementHistoryUncheckedUpdateManyWithoutChartNestedInput = {
+    create?: XOR<TierPlacementHistoryCreateWithoutChartInput, TierPlacementHistoryUncheckedCreateWithoutChartInput> | TierPlacementHistoryCreateWithoutChartInput[] | TierPlacementHistoryUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: TierPlacementHistoryCreateOrConnectWithoutChartInput | TierPlacementHistoryCreateOrConnectWithoutChartInput[]
+    upsert?: TierPlacementHistoryUpsertWithWhereUniqueWithoutChartInput | TierPlacementHistoryUpsertWithWhereUniqueWithoutChartInput[]
+    createMany?: TierPlacementHistoryCreateManyChartInputEnvelope
+    set?: TierPlacementHistoryWhereUniqueInput | TierPlacementHistoryWhereUniqueInput[]
+    disconnect?: TierPlacementHistoryWhereUniqueInput | TierPlacementHistoryWhereUniqueInput[]
+    delete?: TierPlacementHistoryWhereUniqueInput | TierPlacementHistoryWhereUniqueInput[]
+    connect?: TierPlacementHistoryWhereUniqueInput | TierPlacementHistoryWhereUniqueInput[]
+    update?: TierPlacementHistoryUpdateWithWhereUniqueWithoutChartInput | TierPlacementHistoryUpdateWithWhereUniqueWithoutChartInput[]
+    updateMany?: TierPlacementHistoryUpdateManyWithWhereWithoutChartInput | TierPlacementHistoryUpdateManyWithWhereWithoutChartInput[]
+    deleteMany?: TierPlacementHistoryScalarWhereInput | TierPlacementHistoryScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutDataSyncsInput = {
@@ -41207,9 +47272,9 @@ export namespace Prisma {
     update?: XOR<XOR<DataSyncUpdateToOneWithWhereWithoutRecordSnapshotsInput, DataSyncUpdateWithoutRecordSnapshotsInput>, DataSyncUncheckedUpdateWithoutRecordSnapshotsInput>
   }
 
-  export type MusicChartCreateNestedOneWithoutConstantHistoryInput = {
-    create?: XOR<MusicChartCreateWithoutConstantHistoryInput, MusicChartUncheckedCreateWithoutConstantHistoryInput>
-    connectOrCreate?: MusicChartCreateOrConnectWithoutConstantHistoryInput
+  export type MusicChartCreateNestedOneWithoutLevelConstantHistoryInput = {
+    create?: XOR<MusicChartCreateWithoutLevelConstantHistoryInput, MusicChartUncheckedCreateWithoutLevelConstantHistoryInput>
+    connectOrCreate?: MusicChartCreateOrConnectWithoutLevelConstantHistoryInput
     connect?: MusicChartWhereUniqueInput
   }
 
@@ -41221,12 +47286,264 @@ export namespace Prisma {
     divide?: number
   }
 
-  export type MusicChartUpdateOneRequiredWithoutConstantHistoryNestedInput = {
-    create?: XOR<MusicChartCreateWithoutConstantHistoryInput, MusicChartUncheckedCreateWithoutConstantHistoryInput>
-    connectOrCreate?: MusicChartCreateOrConnectWithoutConstantHistoryInput
-    upsert?: MusicChartUpsertWithoutConstantHistoryInput
+  export type MusicChartUpdateOneRequiredWithoutLevelConstantHistoryNestedInput = {
+    create?: XOR<MusicChartCreateWithoutLevelConstantHistoryInput, MusicChartUncheckedCreateWithoutLevelConstantHistoryInput>
+    connectOrCreate?: MusicChartCreateOrConnectWithoutLevelConstantHistoryInput
+    upsert?: MusicChartUpsertWithoutLevelConstantHistoryInput
     connect?: MusicChartWhereUniqueInput
-    update?: XOR<XOR<MusicChartUpdateToOneWithWhereWithoutConstantHistoryInput, MusicChartUpdateWithoutConstantHistoryInput>, MusicChartUncheckedUpdateWithoutConstantHistoryInput>
+    update?: XOR<XOR<MusicChartUpdateToOneWithWhereWithoutLevelConstantHistoryInput, MusicChartUpdateWithoutLevelConstantHistoryInput>, MusicChartUncheckedUpdateWithoutLevelConstantHistoryInput>
+  }
+
+  export type TierBandCreateNestedManyWithoutTierListInput = {
+    create?: XOR<TierBandCreateWithoutTierListInput, TierBandUncheckedCreateWithoutTierListInput> | TierBandCreateWithoutTierListInput[] | TierBandUncheckedCreateWithoutTierListInput[]
+    connectOrCreate?: TierBandCreateOrConnectWithoutTierListInput | TierBandCreateOrConnectWithoutTierListInput[]
+    createMany?: TierBandCreateManyTierListInputEnvelope
+    connect?: TierBandWhereUniqueInput | TierBandWhereUniqueInput[]
+  }
+
+  export type TierEntryCreateNestedManyWithoutTierListInput = {
+    create?: XOR<TierEntryCreateWithoutTierListInput, TierEntryUncheckedCreateWithoutTierListInput> | TierEntryCreateWithoutTierListInput[] | TierEntryUncheckedCreateWithoutTierListInput[]
+    connectOrCreate?: TierEntryCreateOrConnectWithoutTierListInput | TierEntryCreateOrConnectWithoutTierListInput[]
+    createMany?: TierEntryCreateManyTierListInputEnvelope
+    connect?: TierEntryWhereUniqueInput | TierEntryWhereUniqueInput[]
+  }
+
+  export type TierPlacementHistoryCreateNestedManyWithoutTierListInput = {
+    create?: XOR<TierPlacementHistoryCreateWithoutTierListInput, TierPlacementHistoryUncheckedCreateWithoutTierListInput> | TierPlacementHistoryCreateWithoutTierListInput[] | TierPlacementHistoryUncheckedCreateWithoutTierListInput[]
+    connectOrCreate?: TierPlacementHistoryCreateOrConnectWithoutTierListInput | TierPlacementHistoryCreateOrConnectWithoutTierListInput[]
+    createMany?: TierPlacementHistoryCreateManyTierListInputEnvelope
+    connect?: TierPlacementHistoryWhereUniqueInput | TierPlacementHistoryWhereUniqueInput[]
+  }
+
+  export type TierBandUncheckedCreateNestedManyWithoutTierListInput = {
+    create?: XOR<TierBandCreateWithoutTierListInput, TierBandUncheckedCreateWithoutTierListInput> | TierBandCreateWithoutTierListInput[] | TierBandUncheckedCreateWithoutTierListInput[]
+    connectOrCreate?: TierBandCreateOrConnectWithoutTierListInput | TierBandCreateOrConnectWithoutTierListInput[]
+    createMany?: TierBandCreateManyTierListInputEnvelope
+    connect?: TierBandWhereUniqueInput | TierBandWhereUniqueInput[]
+  }
+
+  export type TierEntryUncheckedCreateNestedManyWithoutTierListInput = {
+    create?: XOR<TierEntryCreateWithoutTierListInput, TierEntryUncheckedCreateWithoutTierListInput> | TierEntryCreateWithoutTierListInput[] | TierEntryUncheckedCreateWithoutTierListInput[]
+    connectOrCreate?: TierEntryCreateOrConnectWithoutTierListInput | TierEntryCreateOrConnectWithoutTierListInput[]
+    createMany?: TierEntryCreateManyTierListInputEnvelope
+    connect?: TierEntryWhereUniqueInput | TierEntryWhereUniqueInput[]
+  }
+
+  export type TierPlacementHistoryUncheckedCreateNestedManyWithoutTierListInput = {
+    create?: XOR<TierPlacementHistoryCreateWithoutTierListInput, TierPlacementHistoryUncheckedCreateWithoutTierListInput> | TierPlacementHistoryCreateWithoutTierListInput[] | TierPlacementHistoryUncheckedCreateWithoutTierListInput[]
+    connectOrCreate?: TierPlacementHistoryCreateOrConnectWithoutTierListInput | TierPlacementHistoryCreateOrConnectWithoutTierListInput[]
+    createMany?: TierPlacementHistoryCreateManyTierListInputEnvelope
+    connect?: TierPlacementHistoryWhereUniqueInput | TierPlacementHistoryWhereUniqueInput[]
+  }
+
+  export type TierBandUpdateManyWithoutTierListNestedInput = {
+    create?: XOR<TierBandCreateWithoutTierListInput, TierBandUncheckedCreateWithoutTierListInput> | TierBandCreateWithoutTierListInput[] | TierBandUncheckedCreateWithoutTierListInput[]
+    connectOrCreate?: TierBandCreateOrConnectWithoutTierListInput | TierBandCreateOrConnectWithoutTierListInput[]
+    upsert?: TierBandUpsertWithWhereUniqueWithoutTierListInput | TierBandUpsertWithWhereUniqueWithoutTierListInput[]
+    createMany?: TierBandCreateManyTierListInputEnvelope
+    set?: TierBandWhereUniqueInput | TierBandWhereUniqueInput[]
+    disconnect?: TierBandWhereUniqueInput | TierBandWhereUniqueInput[]
+    delete?: TierBandWhereUniqueInput | TierBandWhereUniqueInput[]
+    connect?: TierBandWhereUniqueInput | TierBandWhereUniqueInput[]
+    update?: TierBandUpdateWithWhereUniqueWithoutTierListInput | TierBandUpdateWithWhereUniqueWithoutTierListInput[]
+    updateMany?: TierBandUpdateManyWithWhereWithoutTierListInput | TierBandUpdateManyWithWhereWithoutTierListInput[]
+    deleteMany?: TierBandScalarWhereInput | TierBandScalarWhereInput[]
+  }
+
+  export type TierEntryUpdateManyWithoutTierListNestedInput = {
+    create?: XOR<TierEntryCreateWithoutTierListInput, TierEntryUncheckedCreateWithoutTierListInput> | TierEntryCreateWithoutTierListInput[] | TierEntryUncheckedCreateWithoutTierListInput[]
+    connectOrCreate?: TierEntryCreateOrConnectWithoutTierListInput | TierEntryCreateOrConnectWithoutTierListInput[]
+    upsert?: TierEntryUpsertWithWhereUniqueWithoutTierListInput | TierEntryUpsertWithWhereUniqueWithoutTierListInput[]
+    createMany?: TierEntryCreateManyTierListInputEnvelope
+    set?: TierEntryWhereUniqueInput | TierEntryWhereUniqueInput[]
+    disconnect?: TierEntryWhereUniqueInput | TierEntryWhereUniqueInput[]
+    delete?: TierEntryWhereUniqueInput | TierEntryWhereUniqueInput[]
+    connect?: TierEntryWhereUniqueInput | TierEntryWhereUniqueInput[]
+    update?: TierEntryUpdateWithWhereUniqueWithoutTierListInput | TierEntryUpdateWithWhereUniqueWithoutTierListInput[]
+    updateMany?: TierEntryUpdateManyWithWhereWithoutTierListInput | TierEntryUpdateManyWithWhereWithoutTierListInput[]
+    deleteMany?: TierEntryScalarWhereInput | TierEntryScalarWhereInput[]
+  }
+
+  export type TierPlacementHistoryUpdateManyWithoutTierListNestedInput = {
+    create?: XOR<TierPlacementHistoryCreateWithoutTierListInput, TierPlacementHistoryUncheckedCreateWithoutTierListInput> | TierPlacementHistoryCreateWithoutTierListInput[] | TierPlacementHistoryUncheckedCreateWithoutTierListInput[]
+    connectOrCreate?: TierPlacementHistoryCreateOrConnectWithoutTierListInput | TierPlacementHistoryCreateOrConnectWithoutTierListInput[]
+    upsert?: TierPlacementHistoryUpsertWithWhereUniqueWithoutTierListInput | TierPlacementHistoryUpsertWithWhereUniqueWithoutTierListInput[]
+    createMany?: TierPlacementHistoryCreateManyTierListInputEnvelope
+    set?: TierPlacementHistoryWhereUniqueInput | TierPlacementHistoryWhereUniqueInput[]
+    disconnect?: TierPlacementHistoryWhereUniqueInput | TierPlacementHistoryWhereUniqueInput[]
+    delete?: TierPlacementHistoryWhereUniqueInput | TierPlacementHistoryWhereUniqueInput[]
+    connect?: TierPlacementHistoryWhereUniqueInput | TierPlacementHistoryWhereUniqueInput[]
+    update?: TierPlacementHistoryUpdateWithWhereUniqueWithoutTierListInput | TierPlacementHistoryUpdateWithWhereUniqueWithoutTierListInput[]
+    updateMany?: TierPlacementHistoryUpdateManyWithWhereWithoutTierListInput | TierPlacementHistoryUpdateManyWithWhereWithoutTierListInput[]
+    deleteMany?: TierPlacementHistoryScalarWhereInput | TierPlacementHistoryScalarWhereInput[]
+  }
+
+  export type TierBandUncheckedUpdateManyWithoutTierListNestedInput = {
+    create?: XOR<TierBandCreateWithoutTierListInput, TierBandUncheckedCreateWithoutTierListInput> | TierBandCreateWithoutTierListInput[] | TierBandUncheckedCreateWithoutTierListInput[]
+    connectOrCreate?: TierBandCreateOrConnectWithoutTierListInput | TierBandCreateOrConnectWithoutTierListInput[]
+    upsert?: TierBandUpsertWithWhereUniqueWithoutTierListInput | TierBandUpsertWithWhereUniqueWithoutTierListInput[]
+    createMany?: TierBandCreateManyTierListInputEnvelope
+    set?: TierBandWhereUniqueInput | TierBandWhereUniqueInput[]
+    disconnect?: TierBandWhereUniqueInput | TierBandWhereUniqueInput[]
+    delete?: TierBandWhereUniqueInput | TierBandWhereUniqueInput[]
+    connect?: TierBandWhereUniqueInput | TierBandWhereUniqueInput[]
+    update?: TierBandUpdateWithWhereUniqueWithoutTierListInput | TierBandUpdateWithWhereUniqueWithoutTierListInput[]
+    updateMany?: TierBandUpdateManyWithWhereWithoutTierListInput | TierBandUpdateManyWithWhereWithoutTierListInput[]
+    deleteMany?: TierBandScalarWhereInput | TierBandScalarWhereInput[]
+  }
+
+  export type TierEntryUncheckedUpdateManyWithoutTierListNestedInput = {
+    create?: XOR<TierEntryCreateWithoutTierListInput, TierEntryUncheckedCreateWithoutTierListInput> | TierEntryCreateWithoutTierListInput[] | TierEntryUncheckedCreateWithoutTierListInput[]
+    connectOrCreate?: TierEntryCreateOrConnectWithoutTierListInput | TierEntryCreateOrConnectWithoutTierListInput[]
+    upsert?: TierEntryUpsertWithWhereUniqueWithoutTierListInput | TierEntryUpsertWithWhereUniqueWithoutTierListInput[]
+    createMany?: TierEntryCreateManyTierListInputEnvelope
+    set?: TierEntryWhereUniqueInput | TierEntryWhereUniqueInput[]
+    disconnect?: TierEntryWhereUniqueInput | TierEntryWhereUniqueInput[]
+    delete?: TierEntryWhereUniqueInput | TierEntryWhereUniqueInput[]
+    connect?: TierEntryWhereUniqueInput | TierEntryWhereUniqueInput[]
+    update?: TierEntryUpdateWithWhereUniqueWithoutTierListInput | TierEntryUpdateWithWhereUniqueWithoutTierListInput[]
+    updateMany?: TierEntryUpdateManyWithWhereWithoutTierListInput | TierEntryUpdateManyWithWhereWithoutTierListInput[]
+    deleteMany?: TierEntryScalarWhereInput | TierEntryScalarWhereInput[]
+  }
+
+  export type TierPlacementHistoryUncheckedUpdateManyWithoutTierListNestedInput = {
+    create?: XOR<TierPlacementHistoryCreateWithoutTierListInput, TierPlacementHistoryUncheckedCreateWithoutTierListInput> | TierPlacementHistoryCreateWithoutTierListInput[] | TierPlacementHistoryUncheckedCreateWithoutTierListInput[]
+    connectOrCreate?: TierPlacementHistoryCreateOrConnectWithoutTierListInput | TierPlacementHistoryCreateOrConnectWithoutTierListInput[]
+    upsert?: TierPlacementHistoryUpsertWithWhereUniqueWithoutTierListInput | TierPlacementHistoryUpsertWithWhereUniqueWithoutTierListInput[]
+    createMany?: TierPlacementHistoryCreateManyTierListInputEnvelope
+    set?: TierPlacementHistoryWhereUniqueInput | TierPlacementHistoryWhereUniqueInput[]
+    disconnect?: TierPlacementHistoryWhereUniqueInput | TierPlacementHistoryWhereUniqueInput[]
+    delete?: TierPlacementHistoryWhereUniqueInput | TierPlacementHistoryWhereUniqueInput[]
+    connect?: TierPlacementHistoryWhereUniqueInput | TierPlacementHistoryWhereUniqueInput[]
+    update?: TierPlacementHistoryUpdateWithWhereUniqueWithoutTierListInput | TierPlacementHistoryUpdateWithWhereUniqueWithoutTierListInput[]
+    updateMany?: TierPlacementHistoryUpdateManyWithWhereWithoutTierListInput | TierPlacementHistoryUpdateManyWithWhereWithoutTierListInput[]
+    deleteMany?: TierPlacementHistoryScalarWhereInput | TierPlacementHistoryScalarWhereInput[]
+  }
+
+  export type TierListCreateNestedOneWithoutBandsInput = {
+    create?: XOR<TierListCreateWithoutBandsInput, TierListUncheckedCreateWithoutBandsInput>
+    connectOrCreate?: TierListCreateOrConnectWithoutBandsInput
+    connect?: TierListWhereUniqueInput
+  }
+
+  export type TierEntryCreateNestedManyWithoutTierBandInput = {
+    create?: XOR<TierEntryCreateWithoutTierBandInput, TierEntryUncheckedCreateWithoutTierBandInput> | TierEntryCreateWithoutTierBandInput[] | TierEntryUncheckedCreateWithoutTierBandInput[]
+    connectOrCreate?: TierEntryCreateOrConnectWithoutTierBandInput | TierEntryCreateOrConnectWithoutTierBandInput[]
+    createMany?: TierEntryCreateManyTierBandInputEnvelope
+    connect?: TierEntryWhereUniqueInput | TierEntryWhereUniqueInput[]
+  }
+
+  export type TierEntryUncheckedCreateNestedManyWithoutTierBandInput = {
+    create?: XOR<TierEntryCreateWithoutTierBandInput, TierEntryUncheckedCreateWithoutTierBandInput> | TierEntryCreateWithoutTierBandInput[] | TierEntryUncheckedCreateWithoutTierBandInput[]
+    connectOrCreate?: TierEntryCreateOrConnectWithoutTierBandInput | TierEntryCreateOrConnectWithoutTierBandInput[]
+    createMany?: TierEntryCreateManyTierBandInputEnvelope
+    connect?: TierEntryWhereUniqueInput | TierEntryWhereUniqueInput[]
+  }
+
+  export type TierListUpdateOneRequiredWithoutBandsNestedInput = {
+    create?: XOR<TierListCreateWithoutBandsInput, TierListUncheckedCreateWithoutBandsInput>
+    connectOrCreate?: TierListCreateOrConnectWithoutBandsInput
+    upsert?: TierListUpsertWithoutBandsInput
+    connect?: TierListWhereUniqueInput
+    update?: XOR<XOR<TierListUpdateToOneWithWhereWithoutBandsInput, TierListUpdateWithoutBandsInput>, TierListUncheckedUpdateWithoutBandsInput>
+  }
+
+  export type TierEntryUpdateManyWithoutTierBandNestedInput = {
+    create?: XOR<TierEntryCreateWithoutTierBandInput, TierEntryUncheckedCreateWithoutTierBandInput> | TierEntryCreateWithoutTierBandInput[] | TierEntryUncheckedCreateWithoutTierBandInput[]
+    connectOrCreate?: TierEntryCreateOrConnectWithoutTierBandInput | TierEntryCreateOrConnectWithoutTierBandInput[]
+    upsert?: TierEntryUpsertWithWhereUniqueWithoutTierBandInput | TierEntryUpsertWithWhereUniqueWithoutTierBandInput[]
+    createMany?: TierEntryCreateManyTierBandInputEnvelope
+    set?: TierEntryWhereUniqueInput | TierEntryWhereUniqueInput[]
+    disconnect?: TierEntryWhereUniqueInput | TierEntryWhereUniqueInput[]
+    delete?: TierEntryWhereUniqueInput | TierEntryWhereUniqueInput[]
+    connect?: TierEntryWhereUniqueInput | TierEntryWhereUniqueInput[]
+    update?: TierEntryUpdateWithWhereUniqueWithoutTierBandInput | TierEntryUpdateWithWhereUniqueWithoutTierBandInput[]
+    updateMany?: TierEntryUpdateManyWithWhereWithoutTierBandInput | TierEntryUpdateManyWithWhereWithoutTierBandInput[]
+    deleteMany?: TierEntryScalarWhereInput | TierEntryScalarWhereInput[]
+  }
+
+  export type TierEntryUncheckedUpdateManyWithoutTierBandNestedInput = {
+    create?: XOR<TierEntryCreateWithoutTierBandInput, TierEntryUncheckedCreateWithoutTierBandInput> | TierEntryCreateWithoutTierBandInput[] | TierEntryUncheckedCreateWithoutTierBandInput[]
+    connectOrCreate?: TierEntryCreateOrConnectWithoutTierBandInput | TierEntryCreateOrConnectWithoutTierBandInput[]
+    upsert?: TierEntryUpsertWithWhereUniqueWithoutTierBandInput | TierEntryUpsertWithWhereUniqueWithoutTierBandInput[]
+    createMany?: TierEntryCreateManyTierBandInputEnvelope
+    set?: TierEntryWhereUniqueInput | TierEntryWhereUniqueInput[]
+    disconnect?: TierEntryWhereUniqueInput | TierEntryWhereUniqueInput[]
+    delete?: TierEntryWhereUniqueInput | TierEntryWhereUniqueInput[]
+    connect?: TierEntryWhereUniqueInput | TierEntryWhereUniqueInput[]
+    update?: TierEntryUpdateWithWhereUniqueWithoutTierBandInput | TierEntryUpdateWithWhereUniqueWithoutTierBandInput[]
+    updateMany?: TierEntryUpdateManyWithWhereWithoutTierBandInput | TierEntryUpdateManyWithWhereWithoutTierBandInput[]
+    deleteMany?: TierEntryScalarWhereInput | TierEntryScalarWhereInput[]
+  }
+
+  export type TierListCreateNestedOneWithoutEntriesInput = {
+    create?: XOR<TierListCreateWithoutEntriesInput, TierListUncheckedCreateWithoutEntriesInput>
+    connectOrCreate?: TierListCreateOrConnectWithoutEntriesInput
+    connect?: TierListWhereUniqueInput
+  }
+
+  export type TierBandCreateNestedOneWithoutEntriesInput = {
+    create?: XOR<TierBandCreateWithoutEntriesInput, TierBandUncheckedCreateWithoutEntriesInput>
+    connectOrCreate?: TierBandCreateOrConnectWithoutEntriesInput
+    connect?: TierBandWhereUniqueInput
+  }
+
+  export type MusicChartCreateNestedOneWithoutTierEntriesInput = {
+    create?: XOR<MusicChartCreateWithoutTierEntriesInput, MusicChartUncheckedCreateWithoutTierEntriesInput>
+    connectOrCreate?: MusicChartCreateOrConnectWithoutTierEntriesInput
+    connect?: MusicChartWhereUniqueInput
+  }
+
+  export type TierListUpdateOneRequiredWithoutEntriesNestedInput = {
+    create?: XOR<TierListCreateWithoutEntriesInput, TierListUncheckedCreateWithoutEntriesInput>
+    connectOrCreate?: TierListCreateOrConnectWithoutEntriesInput
+    upsert?: TierListUpsertWithoutEntriesInput
+    connect?: TierListWhereUniqueInput
+    update?: XOR<XOR<TierListUpdateToOneWithWhereWithoutEntriesInput, TierListUpdateWithoutEntriesInput>, TierListUncheckedUpdateWithoutEntriesInput>
+  }
+
+  export type TierBandUpdateOneRequiredWithoutEntriesNestedInput = {
+    create?: XOR<TierBandCreateWithoutEntriesInput, TierBandUncheckedCreateWithoutEntriesInput>
+    connectOrCreate?: TierBandCreateOrConnectWithoutEntriesInput
+    upsert?: TierBandUpsertWithoutEntriesInput
+    connect?: TierBandWhereUniqueInput
+    update?: XOR<XOR<TierBandUpdateToOneWithWhereWithoutEntriesInput, TierBandUpdateWithoutEntriesInput>, TierBandUncheckedUpdateWithoutEntriesInput>
+  }
+
+  export type MusicChartUpdateOneRequiredWithoutTierEntriesNestedInput = {
+    create?: XOR<MusicChartCreateWithoutTierEntriesInput, MusicChartUncheckedCreateWithoutTierEntriesInput>
+    connectOrCreate?: MusicChartCreateOrConnectWithoutTierEntriesInput
+    upsert?: MusicChartUpsertWithoutTierEntriesInput
+    connect?: MusicChartWhereUniqueInput
+    update?: XOR<XOR<MusicChartUpdateToOneWithWhereWithoutTierEntriesInput, MusicChartUpdateWithoutTierEntriesInput>, MusicChartUncheckedUpdateWithoutTierEntriesInput>
+  }
+
+  export type TierListCreateNestedOneWithoutHistoryInput = {
+    create?: XOR<TierListCreateWithoutHistoryInput, TierListUncheckedCreateWithoutHistoryInput>
+    connectOrCreate?: TierListCreateOrConnectWithoutHistoryInput
+    connect?: TierListWhereUniqueInput
+  }
+
+  export type MusicChartCreateNestedOneWithoutTierPlacementHistoryInput = {
+    create?: XOR<MusicChartCreateWithoutTierPlacementHistoryInput, MusicChartUncheckedCreateWithoutTierPlacementHistoryInput>
+    connectOrCreate?: MusicChartCreateOrConnectWithoutTierPlacementHistoryInput
+    connect?: MusicChartWhereUniqueInput
+  }
+
+  export type TierListUpdateOneRequiredWithoutHistoryNestedInput = {
+    create?: XOR<TierListCreateWithoutHistoryInput, TierListUncheckedCreateWithoutHistoryInput>
+    connectOrCreate?: TierListCreateOrConnectWithoutHistoryInput
+    upsert?: TierListUpsertWithoutHistoryInput
+    connect?: TierListWhereUniqueInput
+    update?: XOR<XOR<TierListUpdateToOneWithWhereWithoutHistoryInput, TierListUpdateWithoutHistoryInput>, TierListUncheckedUpdateWithoutHistoryInput>
+  }
+
+  export type MusicChartUpdateOneRequiredWithoutTierPlacementHistoryNestedInput = {
+    create?: XOR<MusicChartCreateWithoutTierPlacementHistoryInput, MusicChartUncheckedCreateWithoutTierPlacementHistoryInput>
+    connectOrCreate?: MusicChartCreateOrConnectWithoutTierPlacementHistoryInput
+    upsert?: MusicChartUpsertWithoutTierPlacementHistoryInput
+    connect?: MusicChartWhereUniqueInput
+    update?: XOR<XOR<MusicChartUpdateToOneWithWhereWithoutTierPlacementHistoryInput, MusicChartUpdateWithoutTierPlacementHistoryInput>, MusicChartUncheckedUpdateWithoutTierPlacementHistoryInput>
   }
 
   export type MusicChartCreateNestedOneWithoutEvaluationsInput = {
@@ -43493,7 +49810,7 @@ export namespace Prisma {
     chart_preview_url?: string | null
     created_at?: Date | string
     updated_at?: Date | string
-    constantHistory?: ChartConstantHistoryCreateNestedManyWithoutChartInput
+    levelConstantHistory?: ChartLevelConstantHistoryCreateNestedManyWithoutChartInput
     evaluations?: ChartEvaluationCreateNestedManyWithoutChartInput
     RecentPlay?: RecentPlayCreateNestedManyWithoutChartInput
     PlayData?: PlayDataCreateNestedManyWithoutChartInput
@@ -43502,6 +49819,8 @@ export namespace Prisma {
     playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
     examStageOptions?: ExamStageChartCreateNestedManyWithoutChartInput
+    tierEntries?: TierEntryCreateNestedManyWithoutChartInput
+    tierPlacementHistory?: TierPlacementHistoryCreateNestedManyWithoutChartInput
   }
 
   export type MusicChartUncheckedCreateWithoutMusicInput = {
@@ -43519,7 +49838,7 @@ export namespace Prisma {
     chart_preview_url?: string | null
     created_at?: Date | string
     updated_at?: Date | string
-    constantHistory?: ChartConstantHistoryUncheckedCreateNestedManyWithoutChartInput
+    levelConstantHistory?: ChartLevelConstantHistoryUncheckedCreateNestedManyWithoutChartInput
     evaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutChartInput
     RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutChartInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutChartInput
@@ -43528,6 +49847,8 @@ export namespace Prisma {
     playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
     examStageOptions?: ExamStageChartUncheckedCreateNestedManyWithoutChartInput
+    tierEntries?: TierEntryUncheckedCreateNestedManyWithoutChartInput
+    tierPlacementHistory?: TierPlacementHistoryUncheckedCreateNestedManyWithoutChartInput
   }
 
   export type MusicChartCreateOrConnectWithoutMusicInput = {
@@ -43885,26 +50206,26 @@ export namespace Prisma {
     create: XOR<MusicCreateWithoutChartsInput, MusicUncheckedCreateWithoutChartsInput>
   }
 
-  export type ChartConstantHistoryCreateWithoutChartInput = {
+  export type ChartLevelConstantHistoryCreateWithoutChartInput = {
     value: number
     effective_at?: Date | string
     created_at?: Date | string
   }
 
-  export type ChartConstantHistoryUncheckedCreateWithoutChartInput = {
+  export type ChartLevelConstantHistoryUncheckedCreateWithoutChartInput = {
     id?: number
     value: number
     effective_at?: Date | string
     created_at?: Date | string
   }
 
-  export type ChartConstantHistoryCreateOrConnectWithoutChartInput = {
-    where: ChartConstantHistoryWhereUniqueInput
-    create: XOR<ChartConstantHistoryCreateWithoutChartInput, ChartConstantHistoryUncheckedCreateWithoutChartInput>
+  export type ChartLevelConstantHistoryCreateOrConnectWithoutChartInput = {
+    where: ChartLevelConstantHistoryWhereUniqueInput
+    create: XOR<ChartLevelConstantHistoryCreateWithoutChartInput, ChartLevelConstantHistoryUncheckedCreateWithoutChartInput>
   }
 
-  export type ChartConstantHistoryCreateManyChartInputEnvelope = {
-    data: ChartConstantHistoryCreateManyChartInput | ChartConstantHistoryCreateManyChartInput[]
+  export type ChartLevelConstantHistoryCreateManyChartInputEnvelope = {
+    data: ChartLevelConstantHistoryCreateManyChartInput | ChartLevelConstantHistoryCreateManyChartInput[]
   }
 
   export type ChartEvaluationCreateWithoutChartInput = {
@@ -44204,6 +50525,56 @@ export namespace Prisma {
     data: ExamStageChartCreateManyChartInput | ExamStageChartCreateManyChartInput[]
   }
 
+  export type TierEntryCreateWithoutChartInput = {
+    position: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    tierList: TierListCreateNestedOneWithoutEntriesInput
+    tierBand: TierBandCreateNestedOneWithoutEntriesInput
+  }
+
+  export type TierEntryUncheckedCreateWithoutChartInput = {
+    id?: number
+    position: number
+    tierListId: number
+    tierBandId: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TierEntryCreateOrConnectWithoutChartInput = {
+    where: TierEntryWhereUniqueInput
+    create: XOR<TierEntryCreateWithoutChartInput, TierEntryUncheckedCreateWithoutChartInput>
+  }
+
+  export type TierEntryCreateManyChartInputEnvelope = {
+    data: TierEntryCreateManyChartInput | TierEntryCreateManyChartInput[]
+  }
+
+  export type TierPlacementHistoryCreateWithoutChartInput = {
+    bandValue?: number | null
+    effectiveAt?: Date | string
+    createdAt?: Date | string
+    tierList: TierListCreateNestedOneWithoutHistoryInput
+  }
+
+  export type TierPlacementHistoryUncheckedCreateWithoutChartInput = {
+    id?: number
+    bandValue?: number | null
+    effectiveAt?: Date | string
+    tierListId: number
+    createdAt?: Date | string
+  }
+
+  export type TierPlacementHistoryCreateOrConnectWithoutChartInput = {
+    where: TierPlacementHistoryWhereUniqueInput
+    create: XOR<TierPlacementHistoryCreateWithoutChartInput, TierPlacementHistoryUncheckedCreateWithoutChartInput>
+  }
+
+  export type TierPlacementHistoryCreateManyChartInputEnvelope = {
+    data: TierPlacementHistoryCreateManyChartInput | TierPlacementHistoryCreateManyChartInput[]
+  }
+
   export type MusicUpsertWithoutChartsInput = {
     update: XOR<MusicUpdateWithoutChartsInput, MusicUncheckedUpdateWithoutChartsInput>
     create: XOR<MusicCreateWithoutChartsInput, MusicUncheckedCreateWithoutChartsInput>
@@ -44272,31 +50643,31 @@ export namespace Prisma {
     examRewards?: ExamRewardUncheckedUpdateManyWithoutMusicNestedInput
   }
 
-  export type ChartConstantHistoryUpsertWithWhereUniqueWithoutChartInput = {
-    where: ChartConstantHistoryWhereUniqueInput
-    update: XOR<ChartConstantHistoryUpdateWithoutChartInput, ChartConstantHistoryUncheckedUpdateWithoutChartInput>
-    create: XOR<ChartConstantHistoryCreateWithoutChartInput, ChartConstantHistoryUncheckedCreateWithoutChartInput>
+  export type ChartLevelConstantHistoryUpsertWithWhereUniqueWithoutChartInput = {
+    where: ChartLevelConstantHistoryWhereUniqueInput
+    update: XOR<ChartLevelConstantHistoryUpdateWithoutChartInput, ChartLevelConstantHistoryUncheckedUpdateWithoutChartInput>
+    create: XOR<ChartLevelConstantHistoryCreateWithoutChartInput, ChartLevelConstantHistoryUncheckedCreateWithoutChartInput>
   }
 
-  export type ChartConstantHistoryUpdateWithWhereUniqueWithoutChartInput = {
-    where: ChartConstantHistoryWhereUniqueInput
-    data: XOR<ChartConstantHistoryUpdateWithoutChartInput, ChartConstantHistoryUncheckedUpdateWithoutChartInput>
+  export type ChartLevelConstantHistoryUpdateWithWhereUniqueWithoutChartInput = {
+    where: ChartLevelConstantHistoryWhereUniqueInput
+    data: XOR<ChartLevelConstantHistoryUpdateWithoutChartInput, ChartLevelConstantHistoryUncheckedUpdateWithoutChartInput>
   }
 
-  export type ChartConstantHistoryUpdateManyWithWhereWithoutChartInput = {
-    where: ChartConstantHistoryScalarWhereInput
-    data: XOR<ChartConstantHistoryUpdateManyMutationInput, ChartConstantHistoryUncheckedUpdateManyWithoutChartInput>
+  export type ChartLevelConstantHistoryUpdateManyWithWhereWithoutChartInput = {
+    where: ChartLevelConstantHistoryScalarWhereInput
+    data: XOR<ChartLevelConstantHistoryUpdateManyMutationInput, ChartLevelConstantHistoryUncheckedUpdateManyWithoutChartInput>
   }
 
-  export type ChartConstantHistoryScalarWhereInput = {
-    AND?: ChartConstantHistoryScalarWhereInput | ChartConstantHistoryScalarWhereInput[]
-    OR?: ChartConstantHistoryScalarWhereInput[]
-    NOT?: ChartConstantHistoryScalarWhereInput | ChartConstantHistoryScalarWhereInput[]
-    id?: IntFilter<"ChartConstantHistory"> | number
-    value?: FloatFilter<"ChartConstantHistory"> | number
-    effective_at?: DateTimeFilter<"ChartConstantHistory"> | Date | string
-    chart_id?: IntFilter<"ChartConstantHistory"> | number
-    created_at?: DateTimeFilter<"ChartConstantHistory"> | Date | string
+  export type ChartLevelConstantHistoryScalarWhereInput = {
+    AND?: ChartLevelConstantHistoryScalarWhereInput | ChartLevelConstantHistoryScalarWhereInput[]
+    OR?: ChartLevelConstantHistoryScalarWhereInput[]
+    NOT?: ChartLevelConstantHistoryScalarWhereInput | ChartLevelConstantHistoryScalarWhereInput[]
+    id?: IntFilter<"ChartLevelConstantHistory"> | number
+    value?: FloatFilter<"ChartLevelConstantHistory"> | number
+    effective_at?: DateTimeFilter<"ChartLevelConstantHistory"> | Date | string
+    chart_id?: IntFilter<"ChartLevelConstantHistory"> | number
+    created_at?: DateTimeFilter<"ChartLevelConstantHistory"> | Date | string
   }
 
   export type ChartEvaluationUpsertWithWhereUniqueWithoutChartInput = {
@@ -44433,6 +50804,63 @@ export namespace Prisma {
     NOT?: ExamStageChartScalarWhereInput | ExamStageChartScalarWhereInput[]
     stageId?: IntFilter<"ExamStageChart"> | number
     chartId?: IntFilter<"ExamStageChart"> | number
+  }
+
+  export type TierEntryUpsertWithWhereUniqueWithoutChartInput = {
+    where: TierEntryWhereUniqueInput
+    update: XOR<TierEntryUpdateWithoutChartInput, TierEntryUncheckedUpdateWithoutChartInput>
+    create: XOR<TierEntryCreateWithoutChartInput, TierEntryUncheckedCreateWithoutChartInput>
+  }
+
+  export type TierEntryUpdateWithWhereUniqueWithoutChartInput = {
+    where: TierEntryWhereUniqueInput
+    data: XOR<TierEntryUpdateWithoutChartInput, TierEntryUncheckedUpdateWithoutChartInput>
+  }
+
+  export type TierEntryUpdateManyWithWhereWithoutChartInput = {
+    where: TierEntryScalarWhereInput
+    data: XOR<TierEntryUpdateManyMutationInput, TierEntryUncheckedUpdateManyWithoutChartInput>
+  }
+
+  export type TierEntryScalarWhereInput = {
+    AND?: TierEntryScalarWhereInput | TierEntryScalarWhereInput[]
+    OR?: TierEntryScalarWhereInput[]
+    NOT?: TierEntryScalarWhereInput | TierEntryScalarWhereInput[]
+    id?: IntFilter<"TierEntry"> | number
+    position?: IntFilter<"TierEntry"> | number
+    tierListId?: IntFilter<"TierEntry"> | number
+    tierBandId?: IntFilter<"TierEntry"> | number
+    chartId?: IntFilter<"TierEntry"> | number
+    createdAt?: DateTimeFilter<"TierEntry"> | Date | string
+    updatedAt?: DateTimeFilter<"TierEntry"> | Date | string
+  }
+
+  export type TierPlacementHistoryUpsertWithWhereUniqueWithoutChartInput = {
+    where: TierPlacementHistoryWhereUniqueInput
+    update: XOR<TierPlacementHistoryUpdateWithoutChartInput, TierPlacementHistoryUncheckedUpdateWithoutChartInput>
+    create: XOR<TierPlacementHistoryCreateWithoutChartInput, TierPlacementHistoryUncheckedCreateWithoutChartInput>
+  }
+
+  export type TierPlacementHistoryUpdateWithWhereUniqueWithoutChartInput = {
+    where: TierPlacementHistoryWhereUniqueInput
+    data: XOR<TierPlacementHistoryUpdateWithoutChartInput, TierPlacementHistoryUncheckedUpdateWithoutChartInput>
+  }
+
+  export type TierPlacementHistoryUpdateManyWithWhereWithoutChartInput = {
+    where: TierPlacementHistoryScalarWhereInput
+    data: XOR<TierPlacementHistoryUpdateManyMutationInput, TierPlacementHistoryUncheckedUpdateManyWithoutChartInput>
+  }
+
+  export type TierPlacementHistoryScalarWhereInput = {
+    AND?: TierPlacementHistoryScalarWhereInput | TierPlacementHistoryScalarWhereInput[]
+    OR?: TierPlacementHistoryScalarWhereInput[]
+    NOT?: TierPlacementHistoryScalarWhereInput | TierPlacementHistoryScalarWhereInput[]
+    id?: IntFilter<"TierPlacementHistory"> | number
+    bandValue?: FloatNullableFilter<"TierPlacementHistory"> | number | null
+    effectiveAt?: DateTimeFilter<"TierPlacementHistory"> | Date | string
+    tierListId?: IntFilter<"TierPlacementHistory"> | number
+    chartId?: IntFilter<"TierPlacementHistory"> | number
+    createdAt?: DateTimeFilter<"TierPlacementHistory"> | Date | string
   }
 
   export type UserCreateWithoutDataSyncsInput = {
@@ -44752,7 +51180,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     music: MusicCreateNestedOneWithoutChartsInput
-    constantHistory?: ChartConstantHistoryCreateNestedManyWithoutChartInput
+    levelConstantHistory?: ChartLevelConstantHistoryCreateNestedManyWithoutChartInput
     evaluations?: ChartEvaluationCreateNestedManyWithoutChartInput
     RecentPlay?: RecentPlayCreateNestedManyWithoutChartInput
     PlayData?: PlayDataCreateNestedManyWithoutChartInput
@@ -44760,6 +51188,8 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
     examStageOptions?: ExamStageChartCreateNestedManyWithoutChartInput
+    tierEntries?: TierEntryCreateNestedManyWithoutChartInput
+    tierPlacementHistory?: TierPlacementHistoryCreateNestedManyWithoutChartInput
   }
 
   export type MusicChartUncheckedCreateWithoutPlayHistoryInput = {
@@ -44778,7 +51208,7 @@ export namespace Prisma {
     music_idx: string
     created_at?: Date | string
     updated_at?: Date | string
-    constantHistory?: ChartConstantHistoryUncheckedCreateNestedManyWithoutChartInput
+    levelConstantHistory?: ChartLevelConstantHistoryUncheckedCreateNestedManyWithoutChartInput
     evaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutChartInput
     RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutChartInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutChartInput
@@ -44786,6 +51216,8 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
     examStageOptions?: ExamStageChartUncheckedCreateNestedManyWithoutChartInput
+    tierEntries?: TierEntryUncheckedCreateNestedManyWithoutChartInput
+    tierPlacementHistory?: TierPlacementHistoryUncheckedCreateNestedManyWithoutChartInput
   }
 
   export type MusicChartCreateOrConnectWithoutPlayHistoryInput = {
@@ -44945,7 +51377,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     music?: MusicUpdateOneRequiredWithoutChartsNestedInput
-    constantHistory?: ChartConstantHistoryUpdateManyWithoutChartNestedInput
+    levelConstantHistory?: ChartLevelConstantHistoryUpdateManyWithoutChartNestedInput
     evaluations?: ChartEvaluationUpdateManyWithoutChartNestedInput
     RecentPlay?: RecentPlayUpdateManyWithoutChartNestedInput
     PlayData?: PlayDataUpdateManyWithoutChartNestedInput
@@ -44953,6 +51385,8 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
     examStageOptions?: ExamStageChartUpdateManyWithoutChartNestedInput
+    tierEntries?: TierEntryUpdateManyWithoutChartNestedInput
+    tierPlacementHistory?: TierPlacementHistoryUpdateManyWithoutChartNestedInput
   }
 
   export type MusicChartUncheckedUpdateWithoutPlayHistoryInput = {
@@ -44971,7 +51405,7 @@ export namespace Prisma {
     music_idx?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    constantHistory?: ChartConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
+    levelConstantHistory?: ChartLevelConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
     evaluations?: ChartEvaluationUncheckedUpdateManyWithoutChartNestedInput
     RecentPlay?: RecentPlayUncheckedUpdateManyWithoutChartNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutChartNestedInput
@@ -44979,6 +51413,8 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
     examStageOptions?: ExamStageChartUncheckedUpdateManyWithoutChartNestedInput
+    tierEntries?: TierEntryUncheckedUpdateManyWithoutChartNestedInput
+    tierPlacementHistory?: TierPlacementHistoryUncheckedUpdateManyWithoutChartNestedInput
   }
 
   export type UserUpsertWithoutChartPlayHistoryInput = {
@@ -45134,7 +51570,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     music: MusicCreateNestedOneWithoutChartsInput
-    constantHistory?: ChartConstantHistoryCreateNestedManyWithoutChartInput
+    levelConstantHistory?: ChartLevelConstantHistoryCreateNestedManyWithoutChartInput
     evaluations?: ChartEvaluationCreateNestedManyWithoutChartInput
     RecentPlay?: RecentPlayCreateNestedManyWithoutChartInput
     PlayData?: PlayDataCreateNestedManyWithoutChartInput
@@ -45142,6 +51578,8 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutChartInput
     playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
     examStageOptions?: ExamStageChartCreateNestedManyWithoutChartInput
+    tierEntries?: TierEntryCreateNestedManyWithoutChartInput
+    tierPlacementHistory?: TierPlacementHistoryCreateNestedManyWithoutChartInput
   }
 
   export type MusicChartUncheckedCreateWithoutRecordSnapshotsInput = {
@@ -45160,7 +51598,7 @@ export namespace Prisma {
     music_idx: string
     created_at?: Date | string
     updated_at?: Date | string
-    constantHistory?: ChartConstantHistoryUncheckedCreateNestedManyWithoutChartInput
+    levelConstantHistory?: ChartLevelConstantHistoryUncheckedCreateNestedManyWithoutChartInput
     evaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutChartInput
     RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutChartInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutChartInput
@@ -45168,6 +51606,8 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutChartInput
     playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
     examStageOptions?: ExamStageChartUncheckedCreateNestedManyWithoutChartInput
+    tierEntries?: TierEntryUncheckedCreateNestedManyWithoutChartInput
+    tierPlacementHistory?: TierPlacementHistoryUncheckedCreateNestedManyWithoutChartInput
   }
 
   export type MusicChartCreateOrConnectWithoutRecordSnapshotsInput = {
@@ -45327,7 +51767,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     music?: MusicUpdateOneRequiredWithoutChartsNestedInput
-    constantHistory?: ChartConstantHistoryUpdateManyWithoutChartNestedInput
+    levelConstantHistory?: ChartLevelConstantHistoryUpdateManyWithoutChartNestedInput
     evaluations?: ChartEvaluationUpdateManyWithoutChartNestedInput
     RecentPlay?: RecentPlayUpdateManyWithoutChartNestedInput
     PlayData?: PlayDataUpdateManyWithoutChartNestedInput
@@ -45335,6 +51775,8 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutChartNestedInput
     playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
     examStageOptions?: ExamStageChartUpdateManyWithoutChartNestedInput
+    tierEntries?: TierEntryUpdateManyWithoutChartNestedInput
+    tierPlacementHistory?: TierPlacementHistoryUpdateManyWithoutChartNestedInput
   }
 
   export type MusicChartUncheckedUpdateWithoutRecordSnapshotsInput = {
@@ -45353,7 +51795,7 @@ export namespace Prisma {
     music_idx?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    constantHistory?: ChartConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
+    levelConstantHistory?: ChartLevelConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
     evaluations?: ChartEvaluationUncheckedUpdateManyWithoutChartNestedInput
     RecentPlay?: RecentPlayUncheckedUpdateManyWithoutChartNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutChartNestedInput
@@ -45361,6 +51803,8 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutChartNestedInput
     playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
     examStageOptions?: ExamStageChartUncheckedUpdateManyWithoutChartNestedInput
+    tierEntries?: TierEntryUncheckedUpdateManyWithoutChartNestedInput
+    tierPlacementHistory?: TierPlacementHistoryUncheckedUpdateManyWithoutChartNestedInput
   }
 
   export type UserUpsertWithoutChartRecordSnapshotsInput = {
@@ -45501,7 +51945,7 @@ export namespace Prisma {
     playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutFirstSyncNestedInput
   }
 
-  export type MusicChartCreateWithoutConstantHistoryInput = {
+  export type MusicChartCreateWithoutLevelConstantHistoryInput = {
     difficulty: string
     level: number
     level_constant?: number | null
@@ -45524,9 +51968,11 @@ export namespace Prisma {
     playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
     examStageOptions?: ExamStageChartCreateNestedManyWithoutChartInput
+    tierEntries?: TierEntryCreateNestedManyWithoutChartInput
+    tierPlacementHistory?: TierPlacementHistoryCreateNestedManyWithoutChartInput
   }
 
-  export type MusicChartUncheckedCreateWithoutConstantHistoryInput = {
+  export type MusicChartUncheckedCreateWithoutLevelConstantHistoryInput = {
     id?: number
     difficulty: string
     level: number
@@ -45550,25 +51996,27 @@ export namespace Prisma {
     playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
     examStageOptions?: ExamStageChartUncheckedCreateNestedManyWithoutChartInput
+    tierEntries?: TierEntryUncheckedCreateNestedManyWithoutChartInput
+    tierPlacementHistory?: TierPlacementHistoryUncheckedCreateNestedManyWithoutChartInput
   }
 
-  export type MusicChartCreateOrConnectWithoutConstantHistoryInput = {
+  export type MusicChartCreateOrConnectWithoutLevelConstantHistoryInput = {
     where: MusicChartWhereUniqueInput
-    create: XOR<MusicChartCreateWithoutConstantHistoryInput, MusicChartUncheckedCreateWithoutConstantHistoryInput>
+    create: XOR<MusicChartCreateWithoutLevelConstantHistoryInput, MusicChartUncheckedCreateWithoutLevelConstantHistoryInput>
   }
 
-  export type MusicChartUpsertWithoutConstantHistoryInput = {
-    update: XOR<MusicChartUpdateWithoutConstantHistoryInput, MusicChartUncheckedUpdateWithoutConstantHistoryInput>
-    create: XOR<MusicChartCreateWithoutConstantHistoryInput, MusicChartUncheckedCreateWithoutConstantHistoryInput>
+  export type MusicChartUpsertWithoutLevelConstantHistoryInput = {
+    update: XOR<MusicChartUpdateWithoutLevelConstantHistoryInput, MusicChartUncheckedUpdateWithoutLevelConstantHistoryInput>
+    create: XOR<MusicChartCreateWithoutLevelConstantHistoryInput, MusicChartUncheckedCreateWithoutLevelConstantHistoryInput>
     where?: MusicChartWhereInput
   }
 
-  export type MusicChartUpdateToOneWithWhereWithoutConstantHistoryInput = {
+  export type MusicChartUpdateToOneWithWhereWithoutLevelConstantHistoryInput = {
     where?: MusicChartWhereInput
-    data: XOR<MusicChartUpdateWithoutConstantHistoryInput, MusicChartUncheckedUpdateWithoutConstantHistoryInput>
+    data: XOR<MusicChartUpdateWithoutLevelConstantHistoryInput, MusicChartUncheckedUpdateWithoutLevelConstantHistoryInput>
   }
 
-  export type MusicChartUpdateWithoutConstantHistoryInput = {
+  export type MusicChartUpdateWithoutLevelConstantHistoryInput = {
     difficulty?: StringFieldUpdateOperationsInput | string
     level?: IntFieldUpdateOperationsInput | number
     level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -45591,9 +52039,11 @@ export namespace Prisma {
     playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
     examStageOptions?: ExamStageChartUpdateManyWithoutChartNestedInput
+    tierEntries?: TierEntryUpdateManyWithoutChartNestedInput
+    tierPlacementHistory?: TierPlacementHistoryUpdateManyWithoutChartNestedInput
   }
 
-  export type MusicChartUncheckedUpdateWithoutConstantHistoryInput = {
+  export type MusicChartUncheckedUpdateWithoutLevelConstantHistoryInput = {
     id?: IntFieldUpdateOperationsInput | number
     difficulty?: StringFieldUpdateOperationsInput | string
     level?: IntFieldUpdateOperationsInput | number
@@ -45617,6 +52067,686 @@ export namespace Prisma {
     playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
     examStageOptions?: ExamStageChartUncheckedUpdateManyWithoutChartNestedInput
+    tierEntries?: TierEntryUncheckedUpdateManyWithoutChartNestedInput
+    tierPlacementHistory?: TierPlacementHistoryUncheckedUpdateManyWithoutChartNestedInput
+  }
+
+  export type TierBandCreateWithoutTierListInput = {
+    value: number
+    position: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    entries?: TierEntryCreateNestedManyWithoutTierBandInput
+  }
+
+  export type TierBandUncheckedCreateWithoutTierListInput = {
+    id?: number
+    value: number
+    position: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    entries?: TierEntryUncheckedCreateNestedManyWithoutTierBandInput
+  }
+
+  export type TierBandCreateOrConnectWithoutTierListInput = {
+    where: TierBandWhereUniqueInput
+    create: XOR<TierBandCreateWithoutTierListInput, TierBandUncheckedCreateWithoutTierListInput>
+  }
+
+  export type TierBandCreateManyTierListInputEnvelope = {
+    data: TierBandCreateManyTierListInput | TierBandCreateManyTierListInput[]
+  }
+
+  export type TierEntryCreateWithoutTierListInput = {
+    position: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    tierBand: TierBandCreateNestedOneWithoutEntriesInput
+    chart: MusicChartCreateNestedOneWithoutTierEntriesInput
+  }
+
+  export type TierEntryUncheckedCreateWithoutTierListInput = {
+    id?: number
+    position: number
+    tierBandId: number
+    chartId: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TierEntryCreateOrConnectWithoutTierListInput = {
+    where: TierEntryWhereUniqueInput
+    create: XOR<TierEntryCreateWithoutTierListInput, TierEntryUncheckedCreateWithoutTierListInput>
+  }
+
+  export type TierEntryCreateManyTierListInputEnvelope = {
+    data: TierEntryCreateManyTierListInput | TierEntryCreateManyTierListInput[]
+  }
+
+  export type TierPlacementHistoryCreateWithoutTierListInput = {
+    bandValue?: number | null
+    effectiveAt?: Date | string
+    createdAt?: Date | string
+    chart: MusicChartCreateNestedOneWithoutTierPlacementHistoryInput
+  }
+
+  export type TierPlacementHistoryUncheckedCreateWithoutTierListInput = {
+    id?: number
+    bandValue?: number | null
+    effectiveAt?: Date | string
+    chartId: number
+    createdAt?: Date | string
+  }
+
+  export type TierPlacementHistoryCreateOrConnectWithoutTierListInput = {
+    where: TierPlacementHistoryWhereUniqueInput
+    create: XOR<TierPlacementHistoryCreateWithoutTierListInput, TierPlacementHistoryUncheckedCreateWithoutTierListInput>
+  }
+
+  export type TierPlacementHistoryCreateManyTierListInputEnvelope = {
+    data: TierPlacementHistoryCreateManyTierListInput | TierPlacementHistoryCreateManyTierListInput[]
+  }
+
+  export type TierBandUpsertWithWhereUniqueWithoutTierListInput = {
+    where: TierBandWhereUniqueInput
+    update: XOR<TierBandUpdateWithoutTierListInput, TierBandUncheckedUpdateWithoutTierListInput>
+    create: XOR<TierBandCreateWithoutTierListInput, TierBandUncheckedCreateWithoutTierListInput>
+  }
+
+  export type TierBandUpdateWithWhereUniqueWithoutTierListInput = {
+    where: TierBandWhereUniqueInput
+    data: XOR<TierBandUpdateWithoutTierListInput, TierBandUncheckedUpdateWithoutTierListInput>
+  }
+
+  export type TierBandUpdateManyWithWhereWithoutTierListInput = {
+    where: TierBandScalarWhereInput
+    data: XOR<TierBandUpdateManyMutationInput, TierBandUncheckedUpdateManyWithoutTierListInput>
+  }
+
+  export type TierBandScalarWhereInput = {
+    AND?: TierBandScalarWhereInput | TierBandScalarWhereInput[]
+    OR?: TierBandScalarWhereInput[]
+    NOT?: TierBandScalarWhereInput | TierBandScalarWhereInput[]
+    id?: IntFilter<"TierBand"> | number
+    value?: FloatFilter<"TierBand"> | number
+    position?: IntFilter<"TierBand"> | number
+    tierListId?: IntFilter<"TierBand"> | number
+    createdAt?: DateTimeFilter<"TierBand"> | Date | string
+    updatedAt?: DateTimeFilter<"TierBand"> | Date | string
+  }
+
+  export type TierEntryUpsertWithWhereUniqueWithoutTierListInput = {
+    where: TierEntryWhereUniqueInput
+    update: XOR<TierEntryUpdateWithoutTierListInput, TierEntryUncheckedUpdateWithoutTierListInput>
+    create: XOR<TierEntryCreateWithoutTierListInput, TierEntryUncheckedCreateWithoutTierListInput>
+  }
+
+  export type TierEntryUpdateWithWhereUniqueWithoutTierListInput = {
+    where: TierEntryWhereUniqueInput
+    data: XOR<TierEntryUpdateWithoutTierListInput, TierEntryUncheckedUpdateWithoutTierListInput>
+  }
+
+  export type TierEntryUpdateManyWithWhereWithoutTierListInput = {
+    where: TierEntryScalarWhereInput
+    data: XOR<TierEntryUpdateManyMutationInput, TierEntryUncheckedUpdateManyWithoutTierListInput>
+  }
+
+  export type TierPlacementHistoryUpsertWithWhereUniqueWithoutTierListInput = {
+    where: TierPlacementHistoryWhereUniqueInput
+    update: XOR<TierPlacementHistoryUpdateWithoutTierListInput, TierPlacementHistoryUncheckedUpdateWithoutTierListInput>
+    create: XOR<TierPlacementHistoryCreateWithoutTierListInput, TierPlacementHistoryUncheckedCreateWithoutTierListInput>
+  }
+
+  export type TierPlacementHistoryUpdateWithWhereUniqueWithoutTierListInput = {
+    where: TierPlacementHistoryWhereUniqueInput
+    data: XOR<TierPlacementHistoryUpdateWithoutTierListInput, TierPlacementHistoryUncheckedUpdateWithoutTierListInput>
+  }
+
+  export type TierPlacementHistoryUpdateManyWithWhereWithoutTierListInput = {
+    where: TierPlacementHistoryScalarWhereInput
+    data: XOR<TierPlacementHistoryUpdateManyMutationInput, TierPlacementHistoryUncheckedUpdateManyWithoutTierListInput>
+  }
+
+  export type TierListCreateWithoutBandsInput = {
+    slug: string
+    title: string
+    mode: string
+    description?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    entries?: TierEntryCreateNestedManyWithoutTierListInput
+    history?: TierPlacementHistoryCreateNestedManyWithoutTierListInput
+  }
+
+  export type TierListUncheckedCreateWithoutBandsInput = {
+    id?: number
+    slug: string
+    title: string
+    mode: string
+    description?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    entries?: TierEntryUncheckedCreateNestedManyWithoutTierListInput
+    history?: TierPlacementHistoryUncheckedCreateNestedManyWithoutTierListInput
+  }
+
+  export type TierListCreateOrConnectWithoutBandsInput = {
+    where: TierListWhereUniqueInput
+    create: XOR<TierListCreateWithoutBandsInput, TierListUncheckedCreateWithoutBandsInput>
+  }
+
+  export type TierEntryCreateWithoutTierBandInput = {
+    position: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    tierList: TierListCreateNestedOneWithoutEntriesInput
+    chart: MusicChartCreateNestedOneWithoutTierEntriesInput
+  }
+
+  export type TierEntryUncheckedCreateWithoutTierBandInput = {
+    id?: number
+    position: number
+    tierListId: number
+    chartId: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TierEntryCreateOrConnectWithoutTierBandInput = {
+    where: TierEntryWhereUniqueInput
+    create: XOR<TierEntryCreateWithoutTierBandInput, TierEntryUncheckedCreateWithoutTierBandInput>
+  }
+
+  export type TierEntryCreateManyTierBandInputEnvelope = {
+    data: TierEntryCreateManyTierBandInput | TierEntryCreateManyTierBandInput[]
+  }
+
+  export type TierListUpsertWithoutBandsInput = {
+    update: XOR<TierListUpdateWithoutBandsInput, TierListUncheckedUpdateWithoutBandsInput>
+    create: XOR<TierListCreateWithoutBandsInput, TierListUncheckedCreateWithoutBandsInput>
+    where?: TierListWhereInput
+  }
+
+  export type TierListUpdateToOneWithWhereWithoutBandsInput = {
+    where?: TierListWhereInput
+    data: XOR<TierListUpdateWithoutBandsInput, TierListUncheckedUpdateWithoutBandsInput>
+  }
+
+  export type TierListUpdateWithoutBandsInput = {
+    slug?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    entries?: TierEntryUpdateManyWithoutTierListNestedInput
+    history?: TierPlacementHistoryUpdateManyWithoutTierListNestedInput
+  }
+
+  export type TierListUncheckedUpdateWithoutBandsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    slug?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    entries?: TierEntryUncheckedUpdateManyWithoutTierListNestedInput
+    history?: TierPlacementHistoryUncheckedUpdateManyWithoutTierListNestedInput
+  }
+
+  export type TierEntryUpsertWithWhereUniqueWithoutTierBandInput = {
+    where: TierEntryWhereUniqueInput
+    update: XOR<TierEntryUpdateWithoutTierBandInput, TierEntryUncheckedUpdateWithoutTierBandInput>
+    create: XOR<TierEntryCreateWithoutTierBandInput, TierEntryUncheckedCreateWithoutTierBandInput>
+  }
+
+  export type TierEntryUpdateWithWhereUniqueWithoutTierBandInput = {
+    where: TierEntryWhereUniqueInput
+    data: XOR<TierEntryUpdateWithoutTierBandInput, TierEntryUncheckedUpdateWithoutTierBandInput>
+  }
+
+  export type TierEntryUpdateManyWithWhereWithoutTierBandInput = {
+    where: TierEntryScalarWhereInput
+    data: XOR<TierEntryUpdateManyMutationInput, TierEntryUncheckedUpdateManyWithoutTierBandInput>
+  }
+
+  export type TierListCreateWithoutEntriesInput = {
+    slug: string
+    title: string
+    mode: string
+    description?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bands?: TierBandCreateNestedManyWithoutTierListInput
+    history?: TierPlacementHistoryCreateNestedManyWithoutTierListInput
+  }
+
+  export type TierListUncheckedCreateWithoutEntriesInput = {
+    id?: number
+    slug: string
+    title: string
+    mode: string
+    description?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bands?: TierBandUncheckedCreateNestedManyWithoutTierListInput
+    history?: TierPlacementHistoryUncheckedCreateNestedManyWithoutTierListInput
+  }
+
+  export type TierListCreateOrConnectWithoutEntriesInput = {
+    where: TierListWhereUniqueInput
+    create: XOR<TierListCreateWithoutEntriesInput, TierListUncheckedCreateWithoutEntriesInput>
+  }
+
+  export type TierBandCreateWithoutEntriesInput = {
+    value: number
+    position: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    tierList: TierListCreateNestedOneWithoutBandsInput
+  }
+
+  export type TierBandUncheckedCreateWithoutEntriesInput = {
+    id?: number
+    value: number
+    position: number
+    tierListId: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TierBandCreateOrConnectWithoutEntriesInput = {
+    where: TierBandWhereUniqueInput
+    create: XOR<TierBandCreateWithoutEntriesInput, TierBandUncheckedCreateWithoutEntriesInput>
+  }
+
+  export type MusicChartCreateWithoutTierEntriesInput = {
+    difficulty: string
+    level: number
+    level_constant?: number | null
+    bpm_min?: number | null
+    bpm_max?: number | null
+    note_count?: number | null
+    duration_seconds?: number | null
+    released_at?: Date | string | null
+    unlock_condition?: string | null
+    play_video_url?: string | null
+    chart_preview_url?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    music: MusicCreateNestedOneWithoutChartsInput
+    levelConstantHistory?: ChartLevelConstantHistoryCreateNestedManyWithoutChartInput
+    evaluations?: ChartEvaluationCreateNestedManyWithoutChartInput
+    RecentPlay?: RecentPlayCreateNestedManyWithoutChartInput
+    PlayData?: PlayDataCreateNestedManyWithoutChartInput
+    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutChartInput
+    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutChartInput
+    playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
+    recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
+    examStageOptions?: ExamStageChartCreateNestedManyWithoutChartInput
+    tierPlacementHistory?: TierPlacementHistoryCreateNestedManyWithoutChartInput
+  }
+
+  export type MusicChartUncheckedCreateWithoutTierEntriesInput = {
+    id?: number
+    difficulty: string
+    level: number
+    level_constant?: number | null
+    bpm_min?: number | null
+    bpm_max?: number | null
+    note_count?: number | null
+    duration_seconds?: number | null
+    released_at?: Date | string | null
+    unlock_condition?: string | null
+    play_video_url?: string | null
+    chart_preview_url?: string | null
+    music_idx: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    levelConstantHistory?: ChartLevelConstantHistoryUncheckedCreateNestedManyWithoutChartInput
+    evaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutChartInput
+    RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutChartInput
+    PlayData?: PlayDataUncheckedCreateNestedManyWithoutChartInput
+    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutChartInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutChartInput
+    playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
+    recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
+    examStageOptions?: ExamStageChartUncheckedCreateNestedManyWithoutChartInput
+    tierPlacementHistory?: TierPlacementHistoryUncheckedCreateNestedManyWithoutChartInput
+  }
+
+  export type MusicChartCreateOrConnectWithoutTierEntriesInput = {
+    where: MusicChartWhereUniqueInput
+    create: XOR<MusicChartCreateWithoutTierEntriesInput, MusicChartUncheckedCreateWithoutTierEntriesInput>
+  }
+
+  export type TierListUpsertWithoutEntriesInput = {
+    update: XOR<TierListUpdateWithoutEntriesInput, TierListUncheckedUpdateWithoutEntriesInput>
+    create: XOR<TierListCreateWithoutEntriesInput, TierListUncheckedCreateWithoutEntriesInput>
+    where?: TierListWhereInput
+  }
+
+  export type TierListUpdateToOneWithWhereWithoutEntriesInput = {
+    where?: TierListWhereInput
+    data: XOR<TierListUpdateWithoutEntriesInput, TierListUncheckedUpdateWithoutEntriesInput>
+  }
+
+  export type TierListUpdateWithoutEntriesInput = {
+    slug?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bands?: TierBandUpdateManyWithoutTierListNestedInput
+    history?: TierPlacementHistoryUpdateManyWithoutTierListNestedInput
+  }
+
+  export type TierListUncheckedUpdateWithoutEntriesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    slug?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bands?: TierBandUncheckedUpdateManyWithoutTierListNestedInput
+    history?: TierPlacementHistoryUncheckedUpdateManyWithoutTierListNestedInput
+  }
+
+  export type TierBandUpsertWithoutEntriesInput = {
+    update: XOR<TierBandUpdateWithoutEntriesInput, TierBandUncheckedUpdateWithoutEntriesInput>
+    create: XOR<TierBandCreateWithoutEntriesInput, TierBandUncheckedCreateWithoutEntriesInput>
+    where?: TierBandWhereInput
+  }
+
+  export type TierBandUpdateToOneWithWhereWithoutEntriesInput = {
+    where?: TierBandWhereInput
+    data: XOR<TierBandUpdateWithoutEntriesInput, TierBandUncheckedUpdateWithoutEntriesInput>
+  }
+
+  export type TierBandUpdateWithoutEntriesInput = {
+    value?: FloatFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tierList?: TierListUpdateOneRequiredWithoutBandsNestedInput
+  }
+
+  export type TierBandUncheckedUpdateWithoutEntriesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    value?: FloatFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    tierListId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MusicChartUpsertWithoutTierEntriesInput = {
+    update: XOR<MusicChartUpdateWithoutTierEntriesInput, MusicChartUncheckedUpdateWithoutTierEntriesInput>
+    create: XOR<MusicChartCreateWithoutTierEntriesInput, MusicChartUncheckedCreateWithoutTierEntriesInput>
+    where?: MusicChartWhereInput
+  }
+
+  export type MusicChartUpdateToOneWithWhereWithoutTierEntriesInput = {
+    where?: MusicChartWhereInput
+    data: XOR<MusicChartUpdateWithoutTierEntriesInput, MusicChartUncheckedUpdateWithoutTierEntriesInput>
+  }
+
+  export type MusicChartUpdateWithoutTierEntriesInput = {
+    difficulty?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    bpm_min?: NullableIntFieldUpdateOperationsInput | number | null
+    bpm_max?: NullableIntFieldUpdateOperationsInput | number | null
+    note_count?: NullableIntFieldUpdateOperationsInput | number | null
+    duration_seconds?: NullableIntFieldUpdateOperationsInput | number | null
+    released_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unlock_condition?: NullableStringFieldUpdateOperationsInput | string | null
+    play_video_url?: NullableStringFieldUpdateOperationsInput | string | null
+    chart_preview_url?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    music?: MusicUpdateOneRequiredWithoutChartsNestedInput
+    levelConstantHistory?: ChartLevelConstantHistoryUpdateManyWithoutChartNestedInput
+    evaluations?: ChartEvaluationUpdateManyWithoutChartNestedInput
+    RecentPlay?: RecentPlayUpdateManyWithoutChartNestedInput
+    PlayData?: PlayDataUpdateManyWithoutChartNestedInput
+    BasicBestPlay?: BasicBestPlayUpdateManyWithoutChartNestedInput
+    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutChartNestedInput
+    playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
+    recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
+    examStageOptions?: ExamStageChartUpdateManyWithoutChartNestedInput
+    tierPlacementHistory?: TierPlacementHistoryUpdateManyWithoutChartNestedInput
+  }
+
+  export type MusicChartUncheckedUpdateWithoutTierEntriesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    difficulty?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    bpm_min?: NullableIntFieldUpdateOperationsInput | number | null
+    bpm_max?: NullableIntFieldUpdateOperationsInput | number | null
+    note_count?: NullableIntFieldUpdateOperationsInput | number | null
+    duration_seconds?: NullableIntFieldUpdateOperationsInput | number | null
+    released_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unlock_condition?: NullableStringFieldUpdateOperationsInput | string | null
+    play_video_url?: NullableStringFieldUpdateOperationsInput | string | null
+    chart_preview_url?: NullableStringFieldUpdateOperationsInput | string | null
+    music_idx?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    levelConstantHistory?: ChartLevelConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
+    evaluations?: ChartEvaluationUncheckedUpdateManyWithoutChartNestedInput
+    RecentPlay?: RecentPlayUncheckedUpdateManyWithoutChartNestedInput
+    PlayData?: PlayDataUncheckedUpdateManyWithoutChartNestedInput
+    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutChartNestedInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutChartNestedInput
+    playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
+    recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
+    examStageOptions?: ExamStageChartUncheckedUpdateManyWithoutChartNestedInput
+    tierPlacementHistory?: TierPlacementHistoryUncheckedUpdateManyWithoutChartNestedInput
+  }
+
+  export type TierListCreateWithoutHistoryInput = {
+    slug: string
+    title: string
+    mode: string
+    description?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bands?: TierBandCreateNestedManyWithoutTierListInput
+    entries?: TierEntryCreateNestedManyWithoutTierListInput
+  }
+
+  export type TierListUncheckedCreateWithoutHistoryInput = {
+    id?: number
+    slug: string
+    title: string
+    mode: string
+    description?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bands?: TierBandUncheckedCreateNestedManyWithoutTierListInput
+    entries?: TierEntryUncheckedCreateNestedManyWithoutTierListInput
+  }
+
+  export type TierListCreateOrConnectWithoutHistoryInput = {
+    where: TierListWhereUniqueInput
+    create: XOR<TierListCreateWithoutHistoryInput, TierListUncheckedCreateWithoutHistoryInput>
+  }
+
+  export type MusicChartCreateWithoutTierPlacementHistoryInput = {
+    difficulty: string
+    level: number
+    level_constant?: number | null
+    bpm_min?: number | null
+    bpm_max?: number | null
+    note_count?: number | null
+    duration_seconds?: number | null
+    released_at?: Date | string | null
+    unlock_condition?: string | null
+    play_video_url?: string | null
+    chart_preview_url?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    music: MusicCreateNestedOneWithoutChartsInput
+    levelConstantHistory?: ChartLevelConstantHistoryCreateNestedManyWithoutChartInput
+    evaluations?: ChartEvaluationCreateNestedManyWithoutChartInput
+    RecentPlay?: RecentPlayCreateNestedManyWithoutChartInput
+    PlayData?: PlayDataCreateNestedManyWithoutChartInput
+    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutChartInput
+    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutChartInput
+    playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
+    recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
+    examStageOptions?: ExamStageChartCreateNestedManyWithoutChartInput
+    tierEntries?: TierEntryCreateNestedManyWithoutChartInput
+  }
+
+  export type MusicChartUncheckedCreateWithoutTierPlacementHistoryInput = {
+    id?: number
+    difficulty: string
+    level: number
+    level_constant?: number | null
+    bpm_min?: number | null
+    bpm_max?: number | null
+    note_count?: number | null
+    duration_seconds?: number | null
+    released_at?: Date | string | null
+    unlock_condition?: string | null
+    play_video_url?: string | null
+    chart_preview_url?: string | null
+    music_idx: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    levelConstantHistory?: ChartLevelConstantHistoryUncheckedCreateNestedManyWithoutChartInput
+    evaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutChartInput
+    RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutChartInput
+    PlayData?: PlayDataUncheckedCreateNestedManyWithoutChartInput
+    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutChartInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutChartInput
+    playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
+    recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
+    examStageOptions?: ExamStageChartUncheckedCreateNestedManyWithoutChartInput
+    tierEntries?: TierEntryUncheckedCreateNestedManyWithoutChartInput
+  }
+
+  export type MusicChartCreateOrConnectWithoutTierPlacementHistoryInput = {
+    where: MusicChartWhereUniqueInput
+    create: XOR<MusicChartCreateWithoutTierPlacementHistoryInput, MusicChartUncheckedCreateWithoutTierPlacementHistoryInput>
+  }
+
+  export type TierListUpsertWithoutHistoryInput = {
+    update: XOR<TierListUpdateWithoutHistoryInput, TierListUncheckedUpdateWithoutHistoryInput>
+    create: XOR<TierListCreateWithoutHistoryInput, TierListUncheckedCreateWithoutHistoryInput>
+    where?: TierListWhereInput
+  }
+
+  export type TierListUpdateToOneWithWhereWithoutHistoryInput = {
+    where?: TierListWhereInput
+    data: XOR<TierListUpdateWithoutHistoryInput, TierListUncheckedUpdateWithoutHistoryInput>
+  }
+
+  export type TierListUpdateWithoutHistoryInput = {
+    slug?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bands?: TierBandUpdateManyWithoutTierListNestedInput
+    entries?: TierEntryUpdateManyWithoutTierListNestedInput
+  }
+
+  export type TierListUncheckedUpdateWithoutHistoryInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    slug?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bands?: TierBandUncheckedUpdateManyWithoutTierListNestedInput
+    entries?: TierEntryUncheckedUpdateManyWithoutTierListNestedInput
+  }
+
+  export type MusicChartUpsertWithoutTierPlacementHistoryInput = {
+    update: XOR<MusicChartUpdateWithoutTierPlacementHistoryInput, MusicChartUncheckedUpdateWithoutTierPlacementHistoryInput>
+    create: XOR<MusicChartCreateWithoutTierPlacementHistoryInput, MusicChartUncheckedCreateWithoutTierPlacementHistoryInput>
+    where?: MusicChartWhereInput
+  }
+
+  export type MusicChartUpdateToOneWithWhereWithoutTierPlacementHistoryInput = {
+    where?: MusicChartWhereInput
+    data: XOR<MusicChartUpdateWithoutTierPlacementHistoryInput, MusicChartUncheckedUpdateWithoutTierPlacementHistoryInput>
+  }
+
+  export type MusicChartUpdateWithoutTierPlacementHistoryInput = {
+    difficulty?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    bpm_min?: NullableIntFieldUpdateOperationsInput | number | null
+    bpm_max?: NullableIntFieldUpdateOperationsInput | number | null
+    note_count?: NullableIntFieldUpdateOperationsInput | number | null
+    duration_seconds?: NullableIntFieldUpdateOperationsInput | number | null
+    released_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unlock_condition?: NullableStringFieldUpdateOperationsInput | string | null
+    play_video_url?: NullableStringFieldUpdateOperationsInput | string | null
+    chart_preview_url?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    music?: MusicUpdateOneRequiredWithoutChartsNestedInput
+    levelConstantHistory?: ChartLevelConstantHistoryUpdateManyWithoutChartNestedInput
+    evaluations?: ChartEvaluationUpdateManyWithoutChartNestedInput
+    RecentPlay?: RecentPlayUpdateManyWithoutChartNestedInput
+    PlayData?: PlayDataUpdateManyWithoutChartNestedInput
+    BasicBestPlay?: BasicBestPlayUpdateManyWithoutChartNestedInput
+    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutChartNestedInput
+    playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
+    recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
+    examStageOptions?: ExamStageChartUpdateManyWithoutChartNestedInput
+    tierEntries?: TierEntryUpdateManyWithoutChartNestedInput
+  }
+
+  export type MusicChartUncheckedUpdateWithoutTierPlacementHistoryInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    difficulty?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    bpm_min?: NullableIntFieldUpdateOperationsInput | number | null
+    bpm_max?: NullableIntFieldUpdateOperationsInput | number | null
+    note_count?: NullableIntFieldUpdateOperationsInput | number | null
+    duration_seconds?: NullableIntFieldUpdateOperationsInput | number | null
+    released_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unlock_condition?: NullableStringFieldUpdateOperationsInput | string | null
+    play_video_url?: NullableStringFieldUpdateOperationsInput | string | null
+    chart_preview_url?: NullableStringFieldUpdateOperationsInput | string | null
+    music_idx?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    levelConstantHistory?: ChartLevelConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
+    evaluations?: ChartEvaluationUncheckedUpdateManyWithoutChartNestedInput
+    RecentPlay?: RecentPlayUncheckedUpdateManyWithoutChartNestedInput
+    PlayData?: PlayDataUncheckedUpdateManyWithoutChartNestedInput
+    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutChartNestedInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutChartNestedInput
+    playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
+    recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
+    examStageOptions?: ExamStageChartUncheckedUpdateManyWithoutChartNestedInput
+    tierEntries?: TierEntryUncheckedUpdateManyWithoutChartNestedInput
   }
 
   export type MusicChartCreateWithoutEvaluationsInput = {
@@ -45634,7 +52764,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     music: MusicCreateNestedOneWithoutChartsInput
-    constantHistory?: ChartConstantHistoryCreateNestedManyWithoutChartInput
+    levelConstantHistory?: ChartLevelConstantHistoryCreateNestedManyWithoutChartInput
     RecentPlay?: RecentPlayCreateNestedManyWithoutChartInput
     PlayData?: PlayDataCreateNestedManyWithoutChartInput
     BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutChartInput
@@ -45642,6 +52772,8 @@ export namespace Prisma {
     playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
     examStageOptions?: ExamStageChartCreateNestedManyWithoutChartInput
+    tierEntries?: TierEntryCreateNestedManyWithoutChartInput
+    tierPlacementHistory?: TierPlacementHistoryCreateNestedManyWithoutChartInput
   }
 
   export type MusicChartUncheckedCreateWithoutEvaluationsInput = {
@@ -45660,7 +52792,7 @@ export namespace Prisma {
     music_idx: string
     created_at?: Date | string
     updated_at?: Date | string
-    constantHistory?: ChartConstantHistoryUncheckedCreateNestedManyWithoutChartInput
+    levelConstantHistory?: ChartLevelConstantHistoryUncheckedCreateNestedManyWithoutChartInput
     RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutChartInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutChartInput
     BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutChartInput
@@ -45668,6 +52800,8 @@ export namespace Prisma {
     playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
     examStageOptions?: ExamStageChartUncheckedCreateNestedManyWithoutChartInput
+    tierEntries?: TierEntryUncheckedCreateNestedManyWithoutChartInput
+    tierPlacementHistory?: TierPlacementHistoryUncheckedCreateNestedManyWithoutChartInput
   }
 
   export type MusicChartCreateOrConnectWithoutEvaluationsInput = {
@@ -45819,7 +52953,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     music?: MusicUpdateOneRequiredWithoutChartsNestedInput
-    constantHistory?: ChartConstantHistoryUpdateManyWithoutChartNestedInput
+    levelConstantHistory?: ChartLevelConstantHistoryUpdateManyWithoutChartNestedInput
     RecentPlay?: RecentPlayUpdateManyWithoutChartNestedInput
     PlayData?: PlayDataUpdateManyWithoutChartNestedInput
     BasicBestPlay?: BasicBestPlayUpdateManyWithoutChartNestedInput
@@ -45827,6 +52961,8 @@ export namespace Prisma {
     playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
     examStageOptions?: ExamStageChartUpdateManyWithoutChartNestedInput
+    tierEntries?: TierEntryUpdateManyWithoutChartNestedInput
+    tierPlacementHistory?: TierPlacementHistoryUpdateManyWithoutChartNestedInput
   }
 
   export type MusicChartUncheckedUpdateWithoutEvaluationsInput = {
@@ -45845,7 +52981,7 @@ export namespace Prisma {
     music_idx?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    constantHistory?: ChartConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
+    levelConstantHistory?: ChartLevelConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
     RecentPlay?: RecentPlayUncheckedUpdateManyWithoutChartNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutChartNestedInput
     BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutChartNestedInput
@@ -45853,6 +52989,8 @@ export namespace Prisma {
     playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
     examStageOptions?: ExamStageChartUncheckedUpdateManyWithoutChartNestedInput
+    tierEntries?: TierEntryUncheckedUpdateManyWithoutChartNestedInput
+    tierPlacementHistory?: TierPlacementHistoryUncheckedUpdateManyWithoutChartNestedInput
   }
 
   export type UserUpsertWithoutChartEvaluationsInput = {
@@ -46410,7 +53548,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     music: MusicCreateNestedOneWithoutChartsInput
-    constantHistory?: ChartConstantHistoryCreateNestedManyWithoutChartInput
+    levelConstantHistory?: ChartLevelConstantHistoryCreateNestedManyWithoutChartInput
     evaluations?: ChartEvaluationCreateNestedManyWithoutChartInput
     PlayData?: PlayDataCreateNestedManyWithoutChartInput
     BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutChartInput
@@ -46418,6 +53556,8 @@ export namespace Prisma {
     playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
     examStageOptions?: ExamStageChartCreateNestedManyWithoutChartInput
+    tierEntries?: TierEntryCreateNestedManyWithoutChartInput
+    tierPlacementHistory?: TierPlacementHistoryCreateNestedManyWithoutChartInput
   }
 
   export type MusicChartUncheckedCreateWithoutRecentPlayInput = {
@@ -46436,7 +53576,7 @@ export namespace Prisma {
     music_idx: string
     created_at?: Date | string
     updated_at?: Date | string
-    constantHistory?: ChartConstantHistoryUncheckedCreateNestedManyWithoutChartInput
+    levelConstantHistory?: ChartLevelConstantHistoryUncheckedCreateNestedManyWithoutChartInput
     evaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutChartInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutChartInput
     BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutChartInput
@@ -46444,6 +53584,8 @@ export namespace Prisma {
     playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
     examStageOptions?: ExamStageChartUncheckedCreateNestedManyWithoutChartInput
+    tierEntries?: TierEntryUncheckedCreateNestedManyWithoutChartInput
+    tierPlacementHistory?: TierPlacementHistoryUncheckedCreateNestedManyWithoutChartInput
   }
 
   export type MusicChartCreateOrConnectWithoutRecentPlayInput = {
@@ -46645,7 +53787,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     music?: MusicUpdateOneRequiredWithoutChartsNestedInput
-    constantHistory?: ChartConstantHistoryUpdateManyWithoutChartNestedInput
+    levelConstantHistory?: ChartLevelConstantHistoryUpdateManyWithoutChartNestedInput
     evaluations?: ChartEvaluationUpdateManyWithoutChartNestedInput
     PlayData?: PlayDataUpdateManyWithoutChartNestedInput
     BasicBestPlay?: BasicBestPlayUpdateManyWithoutChartNestedInput
@@ -46653,6 +53795,8 @@ export namespace Prisma {
     playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
     examStageOptions?: ExamStageChartUpdateManyWithoutChartNestedInput
+    tierEntries?: TierEntryUpdateManyWithoutChartNestedInput
+    tierPlacementHistory?: TierPlacementHistoryUpdateManyWithoutChartNestedInput
   }
 
   export type MusicChartUncheckedUpdateWithoutRecentPlayInput = {
@@ -46671,7 +53815,7 @@ export namespace Prisma {
     music_idx?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    constantHistory?: ChartConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
+    levelConstantHistory?: ChartLevelConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
     evaluations?: ChartEvaluationUncheckedUpdateManyWithoutChartNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutChartNestedInput
     BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutChartNestedInput
@@ -46679,6 +53823,8 @@ export namespace Prisma {
     playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
     examStageOptions?: ExamStageChartUncheckedUpdateManyWithoutChartNestedInput
+    tierEntries?: TierEntryUncheckedUpdateManyWithoutChartNestedInput
+    tierPlacementHistory?: TierPlacementHistoryUncheckedUpdateManyWithoutChartNestedInput
   }
 
   export type UserCreateWithoutUserBestGradeInput = {
@@ -47046,7 +54192,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     music: MusicCreateNestedOneWithoutChartsInput
-    constantHistory?: ChartConstantHistoryCreateNestedManyWithoutChartInput
+    levelConstantHistory?: ChartLevelConstantHistoryCreateNestedManyWithoutChartInput
     evaluations?: ChartEvaluationCreateNestedManyWithoutChartInput
     RecentPlay?: RecentPlayCreateNestedManyWithoutChartInput
     PlayData?: PlayDataCreateNestedManyWithoutChartInput
@@ -47054,6 +54200,8 @@ export namespace Prisma {
     playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
     examStageOptions?: ExamStageChartCreateNestedManyWithoutChartInput
+    tierEntries?: TierEntryCreateNestedManyWithoutChartInput
+    tierPlacementHistory?: TierPlacementHistoryCreateNestedManyWithoutChartInput
   }
 
   export type MusicChartUncheckedCreateWithoutBasicBestPlayInput = {
@@ -47072,7 +54220,7 @@ export namespace Prisma {
     music_idx: string
     created_at?: Date | string
     updated_at?: Date | string
-    constantHistory?: ChartConstantHistoryUncheckedCreateNestedManyWithoutChartInput
+    levelConstantHistory?: ChartLevelConstantHistoryUncheckedCreateNestedManyWithoutChartInput
     evaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutChartInput
     RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutChartInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutChartInput
@@ -47080,6 +54228,8 @@ export namespace Prisma {
     playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
     examStageOptions?: ExamStageChartUncheckedCreateNestedManyWithoutChartInput
+    tierEntries?: TierEntryUncheckedCreateNestedManyWithoutChartInput
+    tierPlacementHistory?: TierPlacementHistoryUncheckedCreateNestedManyWithoutChartInput
   }
 
   export type MusicChartCreateOrConnectWithoutBasicBestPlayInput = {
@@ -47281,7 +54431,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     music?: MusicUpdateOneRequiredWithoutChartsNestedInput
-    constantHistory?: ChartConstantHistoryUpdateManyWithoutChartNestedInput
+    levelConstantHistory?: ChartLevelConstantHistoryUpdateManyWithoutChartNestedInput
     evaluations?: ChartEvaluationUpdateManyWithoutChartNestedInput
     RecentPlay?: RecentPlayUpdateManyWithoutChartNestedInput
     PlayData?: PlayDataUpdateManyWithoutChartNestedInput
@@ -47289,6 +54439,8 @@ export namespace Prisma {
     playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
     examStageOptions?: ExamStageChartUpdateManyWithoutChartNestedInput
+    tierEntries?: TierEntryUpdateManyWithoutChartNestedInput
+    tierPlacementHistory?: TierPlacementHistoryUpdateManyWithoutChartNestedInput
   }
 
   export type MusicChartUncheckedUpdateWithoutBasicBestPlayInput = {
@@ -47307,7 +54459,7 @@ export namespace Prisma {
     music_idx?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    constantHistory?: ChartConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
+    levelConstantHistory?: ChartLevelConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
     evaluations?: ChartEvaluationUncheckedUpdateManyWithoutChartNestedInput
     RecentPlay?: RecentPlayUncheckedUpdateManyWithoutChartNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutChartNestedInput
@@ -47315,6 +54467,8 @@ export namespace Prisma {
     playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
     examStageOptions?: ExamStageChartUncheckedUpdateManyWithoutChartNestedInput
+    tierEntries?: TierEntryUncheckedUpdateManyWithoutChartNestedInput
+    tierPlacementHistory?: TierPlacementHistoryUncheckedUpdateManyWithoutChartNestedInput
   }
 
   export type UserCreateWithoutRecitalBestPlayInput = {
@@ -47488,7 +54642,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     music: MusicCreateNestedOneWithoutChartsInput
-    constantHistory?: ChartConstantHistoryCreateNestedManyWithoutChartInput
+    levelConstantHistory?: ChartLevelConstantHistoryCreateNestedManyWithoutChartInput
     evaluations?: ChartEvaluationCreateNestedManyWithoutChartInput
     RecentPlay?: RecentPlayCreateNestedManyWithoutChartInput
     PlayData?: PlayDataCreateNestedManyWithoutChartInput
@@ -47496,6 +54650,8 @@ export namespace Prisma {
     playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
     examStageOptions?: ExamStageChartCreateNestedManyWithoutChartInput
+    tierEntries?: TierEntryCreateNestedManyWithoutChartInput
+    tierPlacementHistory?: TierPlacementHistoryCreateNestedManyWithoutChartInput
   }
 
   export type MusicChartUncheckedCreateWithoutRecitalBestPlayInput = {
@@ -47514,7 +54670,7 @@ export namespace Prisma {
     music_idx: string
     created_at?: Date | string
     updated_at?: Date | string
-    constantHistory?: ChartConstantHistoryUncheckedCreateNestedManyWithoutChartInput
+    levelConstantHistory?: ChartLevelConstantHistoryUncheckedCreateNestedManyWithoutChartInput
     evaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutChartInput
     RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutChartInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutChartInput
@@ -47522,6 +54678,8 @@ export namespace Prisma {
     playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
     examStageOptions?: ExamStageChartUncheckedCreateNestedManyWithoutChartInput
+    tierEntries?: TierEntryUncheckedCreateNestedManyWithoutChartInput
+    tierPlacementHistory?: TierPlacementHistoryUncheckedCreateNestedManyWithoutChartInput
   }
 
   export type MusicChartCreateOrConnectWithoutRecitalBestPlayInput = {
@@ -47723,7 +54881,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     music?: MusicUpdateOneRequiredWithoutChartsNestedInput
-    constantHistory?: ChartConstantHistoryUpdateManyWithoutChartNestedInput
+    levelConstantHistory?: ChartLevelConstantHistoryUpdateManyWithoutChartNestedInput
     evaluations?: ChartEvaluationUpdateManyWithoutChartNestedInput
     RecentPlay?: RecentPlayUpdateManyWithoutChartNestedInput
     PlayData?: PlayDataUpdateManyWithoutChartNestedInput
@@ -47731,6 +54889,8 @@ export namespace Prisma {
     playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
     examStageOptions?: ExamStageChartUpdateManyWithoutChartNestedInput
+    tierEntries?: TierEntryUpdateManyWithoutChartNestedInput
+    tierPlacementHistory?: TierPlacementHistoryUpdateManyWithoutChartNestedInput
   }
 
   export type MusicChartUncheckedUpdateWithoutRecitalBestPlayInput = {
@@ -47749,7 +54909,7 @@ export namespace Prisma {
     music_idx?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    constantHistory?: ChartConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
+    levelConstantHistory?: ChartLevelConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
     evaluations?: ChartEvaluationUncheckedUpdateManyWithoutChartNestedInput
     RecentPlay?: RecentPlayUncheckedUpdateManyWithoutChartNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutChartNestedInput
@@ -47757,6 +54917,8 @@ export namespace Prisma {
     playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
     examStageOptions?: ExamStageChartUncheckedUpdateManyWithoutChartNestedInput
+    tierEntries?: TierEntryUncheckedUpdateManyWithoutChartNestedInput
+    tierPlacementHistory?: TierPlacementHistoryUncheckedUpdateManyWithoutChartNestedInput
   }
 
   export type UserCreateWithoutPlayDataInput = {
@@ -47930,7 +55092,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     music: MusicCreateNestedOneWithoutChartsInput
-    constantHistory?: ChartConstantHistoryCreateNestedManyWithoutChartInput
+    levelConstantHistory?: ChartLevelConstantHistoryCreateNestedManyWithoutChartInput
     evaluations?: ChartEvaluationCreateNestedManyWithoutChartInput
     RecentPlay?: RecentPlayCreateNestedManyWithoutChartInput
     BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutChartInput
@@ -47938,6 +55100,8 @@ export namespace Prisma {
     playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
     examStageOptions?: ExamStageChartCreateNestedManyWithoutChartInput
+    tierEntries?: TierEntryCreateNestedManyWithoutChartInput
+    tierPlacementHistory?: TierPlacementHistoryCreateNestedManyWithoutChartInput
   }
 
   export type MusicChartUncheckedCreateWithoutPlayDataInput = {
@@ -47956,7 +55120,7 @@ export namespace Prisma {
     music_idx: string
     created_at?: Date | string
     updated_at?: Date | string
-    constantHistory?: ChartConstantHistoryUncheckedCreateNestedManyWithoutChartInput
+    levelConstantHistory?: ChartLevelConstantHistoryUncheckedCreateNestedManyWithoutChartInput
     evaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutChartInput
     RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutChartInput
     BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutChartInput
@@ -47964,6 +55128,8 @@ export namespace Prisma {
     playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
     examStageOptions?: ExamStageChartUncheckedCreateNestedManyWithoutChartInput
+    tierEntries?: TierEntryUncheckedCreateNestedManyWithoutChartInput
+    tierPlacementHistory?: TierPlacementHistoryUncheckedCreateNestedManyWithoutChartInput
   }
 
   export type MusicChartCreateOrConnectWithoutPlayDataInput = {
@@ -48165,7 +55331,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     music?: MusicUpdateOneRequiredWithoutChartsNestedInput
-    constantHistory?: ChartConstantHistoryUpdateManyWithoutChartNestedInput
+    levelConstantHistory?: ChartLevelConstantHistoryUpdateManyWithoutChartNestedInput
     evaluations?: ChartEvaluationUpdateManyWithoutChartNestedInput
     RecentPlay?: RecentPlayUpdateManyWithoutChartNestedInput
     BasicBestPlay?: BasicBestPlayUpdateManyWithoutChartNestedInput
@@ -48173,6 +55339,8 @@ export namespace Prisma {
     playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
     examStageOptions?: ExamStageChartUpdateManyWithoutChartNestedInput
+    tierEntries?: TierEntryUpdateManyWithoutChartNestedInput
+    tierPlacementHistory?: TierPlacementHistoryUpdateManyWithoutChartNestedInput
   }
 
   export type MusicChartUncheckedUpdateWithoutPlayDataInput = {
@@ -48191,7 +55359,7 @@ export namespace Prisma {
     music_idx?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    constantHistory?: ChartConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
+    levelConstantHistory?: ChartLevelConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
     evaluations?: ChartEvaluationUncheckedUpdateManyWithoutChartNestedInput
     RecentPlay?: RecentPlayUncheckedUpdateManyWithoutChartNestedInput
     BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutChartNestedInput
@@ -48199,6 +55367,8 @@ export namespace Prisma {
     playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
     examStageOptions?: ExamStageChartUncheckedUpdateManyWithoutChartNestedInput
+    tierEntries?: TierEntryUncheckedUpdateManyWithoutChartNestedInput
+    tierPlacementHistory?: TierPlacementHistoryUncheckedUpdateManyWithoutChartNestedInput
   }
 
   export type MusicCreateWithoutBingoCoversInput = {
@@ -49377,7 +56547,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     music: MusicCreateNestedOneWithoutChartsInput
-    constantHistory?: ChartConstantHistoryCreateNestedManyWithoutChartInput
+    levelConstantHistory?: ChartLevelConstantHistoryCreateNestedManyWithoutChartInput
     evaluations?: ChartEvaluationCreateNestedManyWithoutChartInput
     RecentPlay?: RecentPlayCreateNestedManyWithoutChartInput
     PlayData?: PlayDataCreateNestedManyWithoutChartInput
@@ -49385,6 +56555,8 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutChartInput
     playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
+    tierEntries?: TierEntryCreateNestedManyWithoutChartInput
+    tierPlacementHistory?: TierPlacementHistoryCreateNestedManyWithoutChartInput
   }
 
   export type MusicChartUncheckedCreateWithoutExamStageOptionsInput = {
@@ -49403,7 +56575,7 @@ export namespace Prisma {
     music_idx: string
     created_at?: Date | string
     updated_at?: Date | string
-    constantHistory?: ChartConstantHistoryUncheckedCreateNestedManyWithoutChartInput
+    levelConstantHistory?: ChartLevelConstantHistoryUncheckedCreateNestedManyWithoutChartInput
     evaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutChartInput
     RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutChartInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutChartInput
@@ -49411,6 +56583,8 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutChartInput
     playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
+    tierEntries?: TierEntryUncheckedCreateNestedManyWithoutChartInput
+    tierPlacementHistory?: TierPlacementHistoryUncheckedCreateNestedManyWithoutChartInput
   }
 
   export type MusicChartCreateOrConnectWithoutExamStageOptionsInput = {
@@ -49478,7 +56652,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     music?: MusicUpdateOneRequiredWithoutChartsNestedInput
-    constantHistory?: ChartConstantHistoryUpdateManyWithoutChartNestedInput
+    levelConstantHistory?: ChartLevelConstantHistoryUpdateManyWithoutChartNestedInput
     evaluations?: ChartEvaluationUpdateManyWithoutChartNestedInput
     RecentPlay?: RecentPlayUpdateManyWithoutChartNestedInput
     PlayData?: PlayDataUpdateManyWithoutChartNestedInput
@@ -49486,6 +56660,8 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutChartNestedInput
     playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
+    tierEntries?: TierEntryUpdateManyWithoutChartNestedInput
+    tierPlacementHistory?: TierPlacementHistoryUpdateManyWithoutChartNestedInput
   }
 
   export type MusicChartUncheckedUpdateWithoutExamStageOptionsInput = {
@@ -49504,7 +56680,7 @@ export namespace Prisma {
     music_idx?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    constantHistory?: ChartConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
+    levelConstantHistory?: ChartLevelConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
     evaluations?: ChartEvaluationUncheckedUpdateManyWithoutChartNestedInput
     RecentPlay?: RecentPlayUncheckedUpdateManyWithoutChartNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutChartNestedInput
@@ -49512,6 +56688,8 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutChartNestedInput
     playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
+    tierEntries?: TierEntryUncheckedUpdateManyWithoutChartNestedInput
+    tierPlacementHistory?: TierPlacementHistoryUncheckedUpdateManyWithoutChartNestedInput
   }
 
   export type ExamCreateWithoutRewardsInput = {
@@ -51517,7 +58695,7 @@ export namespace Prisma {
     chart_preview_url?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    constantHistory?: ChartConstantHistoryUpdateManyWithoutChartNestedInput
+    levelConstantHistory?: ChartLevelConstantHistoryUpdateManyWithoutChartNestedInput
     evaluations?: ChartEvaluationUpdateManyWithoutChartNestedInput
     RecentPlay?: RecentPlayUpdateManyWithoutChartNestedInput
     PlayData?: PlayDataUpdateManyWithoutChartNestedInput
@@ -51526,6 +58704,8 @@ export namespace Prisma {
     playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
     examStageOptions?: ExamStageChartUpdateManyWithoutChartNestedInput
+    tierEntries?: TierEntryUpdateManyWithoutChartNestedInput
+    tierPlacementHistory?: TierPlacementHistoryUpdateManyWithoutChartNestedInput
   }
 
   export type MusicChartUncheckedUpdateWithoutMusicInput = {
@@ -51543,7 +58723,7 @@ export namespace Prisma {
     chart_preview_url?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    constantHistory?: ChartConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
+    levelConstantHistory?: ChartLevelConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
     evaluations?: ChartEvaluationUncheckedUpdateManyWithoutChartNestedInput
     RecentPlay?: RecentPlayUncheckedUpdateManyWithoutChartNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutChartNestedInput
@@ -51552,6 +58732,8 @@ export namespace Prisma {
     playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
     examStageOptions?: ExamStageChartUncheckedUpdateManyWithoutChartNestedInput
+    tierEntries?: TierEntryUncheckedUpdateManyWithoutChartNestedInput
+    tierPlacementHistory?: TierPlacementHistoryUncheckedUpdateManyWithoutChartNestedInput
   }
 
   export type MusicChartUncheckedUpdateManyWithoutMusicInput = {
@@ -51628,7 +58810,7 @@ export namespace Prisma {
     examId?: IntFieldUpdateOperationsInput | number
   }
 
-  export type ChartConstantHistoryCreateManyChartInput = {
+  export type ChartLevelConstantHistoryCreateManyChartInput = {
     id?: number
     value: number
     effective_at?: Date | string
@@ -51750,20 +58932,37 @@ export namespace Prisma {
     stageId: number
   }
 
-  export type ChartConstantHistoryUpdateWithoutChartInput = {
+  export type TierEntryCreateManyChartInput = {
+    id?: number
+    position: number
+    tierListId: number
+    tierBandId: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TierPlacementHistoryCreateManyChartInput = {
+    id?: number
+    bandValue?: number | null
+    effectiveAt?: Date | string
+    tierListId: number
+    createdAt?: Date | string
+  }
+
+  export type ChartLevelConstantHistoryUpdateWithoutChartInput = {
     value?: FloatFieldUpdateOperationsInput | number
     effective_at?: DateTimeFieldUpdateOperationsInput | Date | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type ChartConstantHistoryUncheckedUpdateWithoutChartInput = {
+  export type ChartLevelConstantHistoryUncheckedUpdateWithoutChartInput = {
     id?: IntFieldUpdateOperationsInput | number
     value?: FloatFieldUpdateOperationsInput | number
     effective_at?: DateTimeFieldUpdateOperationsInput | Date | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type ChartConstantHistoryUncheckedUpdateManyWithoutChartInput = {
+  export type ChartLevelConstantHistoryUncheckedUpdateManyWithoutChartInput = {
     id?: IntFieldUpdateOperationsInput | number
     value?: FloatFieldUpdateOperationsInput | number
     effective_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -52110,6 +59309,55 @@ export namespace Prisma {
     stageId?: IntFieldUpdateOperationsInput | number
   }
 
+  export type TierEntryUpdateWithoutChartInput = {
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tierList?: TierListUpdateOneRequiredWithoutEntriesNestedInput
+    tierBand?: TierBandUpdateOneRequiredWithoutEntriesNestedInput
+  }
+
+  export type TierEntryUncheckedUpdateWithoutChartInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    tierListId?: IntFieldUpdateOperationsInput | number
+    tierBandId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TierEntryUncheckedUpdateManyWithoutChartInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    tierListId?: IntFieldUpdateOperationsInput | number
+    tierBandId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TierPlacementHistoryUpdateWithoutChartInput = {
+    bandValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    effectiveAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tierList?: TierListUpdateOneRequiredWithoutHistoryNestedInput
+  }
+
+  export type TierPlacementHistoryUncheckedUpdateWithoutChartInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    bandValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    effectiveAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tierListId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TierPlacementHistoryUncheckedUpdateManyWithoutChartInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    bandValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    effectiveAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tierListId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ChartPlayHistoryCreateManyFirstSyncInput = {
     id?: number
     score: number
@@ -52226,6 +59474,140 @@ export namespace Prisma {
     chart_id?: IntFieldUpdateOperationsInput | number
     user_id?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TierBandCreateManyTierListInput = {
+    id?: number
+    value: number
+    position: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TierEntryCreateManyTierListInput = {
+    id?: number
+    position: number
+    tierBandId: number
+    chartId: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TierPlacementHistoryCreateManyTierListInput = {
+    id?: number
+    bandValue?: number | null
+    effectiveAt?: Date | string
+    chartId: number
+    createdAt?: Date | string
+  }
+
+  export type TierBandUpdateWithoutTierListInput = {
+    value?: FloatFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    entries?: TierEntryUpdateManyWithoutTierBandNestedInput
+  }
+
+  export type TierBandUncheckedUpdateWithoutTierListInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    value?: FloatFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    entries?: TierEntryUncheckedUpdateManyWithoutTierBandNestedInput
+  }
+
+  export type TierBandUncheckedUpdateManyWithoutTierListInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    value?: FloatFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TierEntryUpdateWithoutTierListInput = {
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tierBand?: TierBandUpdateOneRequiredWithoutEntriesNestedInput
+    chart?: MusicChartUpdateOneRequiredWithoutTierEntriesNestedInput
+  }
+
+  export type TierEntryUncheckedUpdateWithoutTierListInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    tierBandId?: IntFieldUpdateOperationsInput | number
+    chartId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TierEntryUncheckedUpdateManyWithoutTierListInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    tierBandId?: IntFieldUpdateOperationsInput | number
+    chartId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TierPlacementHistoryUpdateWithoutTierListInput = {
+    bandValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    effectiveAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    chart?: MusicChartUpdateOneRequiredWithoutTierPlacementHistoryNestedInput
+  }
+
+  export type TierPlacementHistoryUncheckedUpdateWithoutTierListInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    bandValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    effectiveAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    chartId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TierPlacementHistoryUncheckedUpdateManyWithoutTierListInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    bandValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    effectiveAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    chartId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TierEntryCreateManyTierBandInput = {
+    id?: number
+    position: number
+    tierListId: number
+    chartId: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TierEntryUpdateWithoutTierBandInput = {
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tierList?: TierListUpdateOneRequiredWithoutEntriesNestedInput
+    chart?: MusicChartUpdateOneRequiredWithoutTierEntriesNestedInput
+  }
+
+  export type TierEntryUncheckedUpdateWithoutTierBandInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    tierListId?: IntFieldUpdateOperationsInput | number
+    chartId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TierEntryUncheckedUpdateManyWithoutTierBandInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    tierListId?: IntFieldUpdateOperationsInput | number
+    chartId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ChartEvaluationReactionCreateManyEvaluationInput = {

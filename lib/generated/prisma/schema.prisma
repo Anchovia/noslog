@@ -104,15 +104,17 @@ model MusicChart {
   created_at        DateTime  @default(now())
   updated_at        DateTime  @updatedAt
 
-  constantHistory  ChartConstantHistory[]
-  evaluations      ChartEvaluation[]
-  RecentPlay       RecentPlay[]
-  PlayData         PlayData[]
-  BasicBestPlay    BasicBestPlay[]
-  RecitalBestPlay  RecitalBestPlay[]
-  playHistory      ChartPlayHistory[]
-  recordSnapshots  ChartRecordSnapshot[]
-  examStageOptions ExamStageChart[]
+  levelConstantHistory ChartLevelConstantHistory[]
+  evaluations          ChartEvaluation[]
+  RecentPlay           RecentPlay[]
+  PlayData             PlayData[]
+  BasicBestPlay        BasicBestPlay[]
+  RecitalBestPlay      RecitalBestPlay[]
+  playHistory          ChartPlayHistory[]
+  recordSnapshots      ChartRecordSnapshot[]
+  examStageOptions     ExamStageChart[]
+  tierEntries          TierEntry[]
+  tierPlacementHistory TierPlacementHistory[]
 
   @@unique([music_idx, difficulty])
   @@index([level])
@@ -184,8 +186,8 @@ model ChartRecordSnapshot {
   @@index([user_id, chart_id, created_at])
 }
 
-// 레벨 상수 변경 이력을 시점별로 관리함
-model ChartConstantHistory {
+// 공식 레벨 상수 변경 이력을 시점별로 관리함
+model ChartLevelConstantHistory {
   id           Int        @id @default(autoincrement())
   value        Float
   effective_at DateTime   @default(now())
@@ -194,6 +196,74 @@ model ChartConstantHistory {
   created_at   DateTime   @default(now())
 
   @@index([chart_id, effective_at])
+  @@map("ChartConstantHistory")
+}
+
+// Basic/Recital 등 독립된 서열표의 공개 상태와 범위를 관리함
+model TierList {
+  id          Int                    @id @default(autoincrement())
+  slug        String                 @unique
+  title       String
+  mode        String
+  description String?
+  status      String                 @default("draft")
+  createdAt   DateTime               @default(now()) @map("created_at")
+  updatedAt   DateTime               @updatedAt @map("updated_at")
+  bands       TierBand[]
+  entries     TierEntry[]
+  history     TierPlacementHistory[]
+
+  @@index([mode, status, updatedAt])
+}
+
+// 서열표 안의 12.9, 12.8 같은 상수 구간을 관리함
+model TierBand {
+  id         Int         @id @default(autoincrement())
+  value      Float
+  position   Int
+  tierListId Int         @map("tier_list_id")
+  tierList   TierList    @relation(fields: [tierListId], references: [id], onDelete: Cascade)
+  entries    TierEntry[]
+  createdAt  DateTime    @default(now()) @map("created_at")
+  updatedAt  DateTime    @updatedAt @map("updated_at")
+
+  @@unique([tierListId, value])
+  @@unique([tierListId, position])
+  @@index([tierListId, value])
+}
+
+// 채보가 어느 서열표 구간의 몇 번째에 배치되는지 관리함
+model TierEntry {
+  id         Int        @id @default(autoincrement())
+  position   Int
+  tierListId Int        @map("tier_list_id")
+  tierList   TierList   @relation(fields: [tierListId], references: [id], onDelete: Cascade)
+  tierBandId Int        @map("tier_band_id")
+  tierBand   TierBand   @relation(fields: [tierBandId], references: [id], onDelete: Cascade)
+  chartId    Int        @map("chart_id")
+  chart      MusicChart @relation(fields: [chartId], references: [id], onDelete: Restrict)
+  createdAt  DateTime   @default(now()) @map("created_at")
+  updatedAt  DateTime   @updatedAt @map("updated_at")
+
+  @@unique([tierListId, chartId])
+  @@unique([tierBandId, position])
+  @@index([tierListId, tierBandId])
+  @@index([chartId])
+}
+
+// 채보의 서열표 구간 이동과 제거 이력을 보존함
+model TierPlacementHistory {
+  id          Int        @id @default(autoincrement())
+  bandValue   Float?     @map("band_value")
+  effectiveAt DateTime   @default(now()) @map("effective_at")
+  tierListId  Int        @map("tier_list_id")
+  tierList    TierList   @relation(fields: [tierListId], references: [id], onDelete: Cascade)
+  chartId     Int        @map("chart_id")
+  chart       MusicChart @relation(fields: [chartId], references: [id], onDelete: Cascade)
+  createdAt   DateTime   @default(now()) @map("created_at")
+
+  @@index([tierListId, chartId, effectiveAt])
+  @@index([chartId, effectiveAt])
 }
 
 // 사용자의 체감 상수·패턴 평가·짧은 의견을 한 행에서 관리함

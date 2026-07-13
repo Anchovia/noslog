@@ -92,7 +92,7 @@ export default async function MusicDetailPage(props: {
         rankingCount,
         evaluationSummary,
         perceivedDistribution,
-        constantHistory,
+        tierPlacement,
         currentEvaluation,
         evaluationOpinions,
         opinionCount,
@@ -143,10 +143,32 @@ export default async function MusicDetailPage(props: {
             _count: { _all: true },
             orderBy: { perceived_constant: "asc" },
         }),
-        db.chartConstantHistory.findMany({
-            where: { chart_id: selectedChart.id },
-            select: { id: true, value: true, effective_at: true },
-            orderBy: { effective_at: "asc" },
+        db.tierEntry.findFirst({
+            where: {
+                chartId: selectedChart.id,
+                tierList: { status: "published" },
+            },
+            select: {
+                updatedAt: true,
+                tierBand: { select: { value: true } },
+                tierList: {
+                    select: {
+                        history: {
+                            where: {
+                                chartId: selectedChart.id,
+                                bandValue: { not: null },
+                            },
+                            select: {
+                                id: true,
+                                bandValue: true,
+                                effectiveAt: true,
+                            },
+                            orderBy: { effectiveAt: "asc" },
+                        },
+                    },
+                },
+            },
+            orderBy: { tierList: { updatedAt: "desc" } },
         }),
         session.id
             ? db.chartEvaluation.findUnique({
@@ -207,21 +229,21 @@ export default async function MusicDetailPage(props: {
         repetition: evaluationSummary._avg.repetition ?? 0,
     };
 
-    const constantPoints = constantHistory.map((item) => ({
-        id: item.id,
-        value: item.value,
-        effectiveAt: item.effective_at.toISOString(),
-    }));
+    const constantPoints = (tierPlacement?.tierList.history ?? []).map(
+        (item) => ({
+            id: item.id,
+            value: item.bandValue!,
+            effectiveAt: item.effectiveAt.toISOString(),
+        })
+    );
     const lastConstant = constantPoints.at(-1)?.value;
+    const currentTierConstant = tierPlacement?.tierBand.value ?? null;
 
-    if (
-        selectedChart.level_constant !== null &&
-        lastConstant !== selectedChart.level_constant
-    ) {
+    if (currentTierConstant !== null && lastConstant !== currentTierConstant) {
         constantPoints.push({
             id: -1,
-            value: selectedChart.level_constant,
-            effectiveAt: selectedChart.updated_at.toISOString(),
+            value: currentTierConstant,
+            effectiveAt: tierPlacement!.updatedAt.toISOString(),
         });
     }
 
@@ -319,6 +341,7 @@ export default async function MusicDetailPage(props: {
                 userRank: userRanking,
             }}
             tier={{
+                currentConstant: currentTierConstant,
                 constantHistory: constantPoints,
                 community: {
                     average: evaluationSummary._avg.perceived_constant ?? null,

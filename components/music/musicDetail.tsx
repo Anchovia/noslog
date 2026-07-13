@@ -105,6 +105,7 @@ interface MusicDetailProps {
         userRank: number | null;
     };
     tier: {
+        currentConstant: number | null;
         constantHistory: {
             id: number;
             value: number;
@@ -731,6 +732,7 @@ export default function MusicDetail({
                     difficulty={difficulty}
                     level={chartDetail.level}
                     officialConstant={chartDetail.level_constant}
+                    tierConstant={tier.currentConstant}
                     constantHistory={tier.constantHistory}
                     community={tier.community}
                     currentEvaluation={tier.currentEvaluation}

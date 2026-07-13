@@ -45,6 +45,7 @@ interface MusicTierVoteProps {
     difficulty: "Normal" | "Hard" | "Expert" | "Real";
     level: number;
     officialConstant: number | null;
+    tierConstant: number | null;
     constantHistory: {
         id: number;
         value: number;
@@ -100,6 +101,7 @@ export default function MusicTierVote({
     difficulty,
     level,
     officialConstant,
+    tierConstant,
     constantHistory,
     community,
     currentEvaluation,
@@ -294,9 +296,9 @@ export default function MusicTierVote({
             <section className="bg-surface rounded-card p-4">
                 <header className="flex items-center gap-2">
                     <h2 className="text-section">서열 상수 변동</h2>
-                    {officialConstant !== null ? (
+                    {tierConstant !== null ? (
                         <strong className="text-text-primary text-base tabular-nums">
-                            {officialConstant.toFixed(1)}
+                            {tierConstant.toFixed(1)}
                         </strong>
                     ) : null}
                     {constantDelta !== 0 ? (
