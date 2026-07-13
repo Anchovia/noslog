@@ -11,6 +11,7 @@ datasource db {
 model User {
   id                   Int                       @id @default(autoincrement())
   username             String?                   @unique
+  nostalgia_name       String?
   kakao_id             BigInt?                   @unique
   discord_name         String?
   discord_tag          String?                   @unique
@@ -36,6 +37,7 @@ model User {
   grade_recital        Int?
   exam_basic           Int?
   exam_recital         Int?
+  sync_token_version   Int                       @default(0)
   created_at           DateTime                  @default(now())
   updated_at           DateTime                  @updatedAt
   PlayHistory          RecentPlay[]
@@ -116,6 +118,7 @@ model MusicChart {
 model DataSync {
   id              Int                   @id @default(autoincrement())
   status          String                @default("processing")
+  sync_scope      String                @default("full")
   received_plays  Int                   @default(0)
   inserted_plays  Int                   @default(0)
   changed_records Int                   @default(0)

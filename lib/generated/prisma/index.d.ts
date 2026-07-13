@@ -2782,6 +2782,7 @@ export namespace Prisma {
     grade_recital: number | null
     exam_basic: number | null
     exam_recital: number | null
+    sync_token_version: number | null
   }
 
   export type UserSumAggregateOutputType = {
@@ -2805,11 +2806,13 @@ export namespace Prisma {
     grade_recital: number | null
     exam_basic: number | null
     exam_recital: number | null
+    sync_token_version: number | null
   }
 
   export type UserMinAggregateOutputType = {
     id: number | null
     username: string | null
+    nostalgia_name: string | null
     kakao_id: bigint | null
     discord_name: string | null
     discord_tag: string | null
@@ -2834,6 +2837,7 @@ export namespace Prisma {
     grade_recital: number | null
     exam_basic: number | null
     exam_recital: number | null
+    sync_token_version: number | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -2841,6 +2845,7 @@ export namespace Prisma {
   export type UserMaxAggregateOutputType = {
     id: number | null
     username: string | null
+    nostalgia_name: string | null
     kakao_id: bigint | null
     discord_name: string | null
     discord_tag: string | null
@@ -2865,6 +2870,7 @@ export namespace Prisma {
     grade_recital: number | null
     exam_basic: number | null
     exam_recital: number | null
+    sync_token_version: number | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -2872,6 +2878,7 @@ export namespace Prisma {
   export type UserCountAggregateOutputType = {
     id: number
     username: number
+    nostalgia_name: number
     kakao_id: number
     discord_name: number
     discord_tag: number
@@ -2896,6 +2903,7 @@ export namespace Prisma {
     grade_recital: number
     exam_basic: number
     exam_recital: number
+    sync_token_version: number
     created_at: number
     updated_at: number
     _all: number
@@ -2923,6 +2931,7 @@ export namespace Prisma {
     grade_recital?: true
     exam_basic?: true
     exam_recital?: true
+    sync_token_version?: true
   }
 
   export type UserSumAggregateInputType = {
@@ -2946,11 +2955,13 @@ export namespace Prisma {
     grade_recital?: true
     exam_basic?: true
     exam_recital?: true
+    sync_token_version?: true
   }
 
   export type UserMinAggregateInputType = {
     id?: true
     username?: true
+    nostalgia_name?: true
     kakao_id?: true
     discord_name?: true
     discord_tag?: true
@@ -2975,6 +2986,7 @@ export namespace Prisma {
     grade_recital?: true
     exam_basic?: true
     exam_recital?: true
+    sync_token_version?: true
     created_at?: true
     updated_at?: true
   }
@@ -2982,6 +2994,7 @@ export namespace Prisma {
   export type UserMaxAggregateInputType = {
     id?: true
     username?: true
+    nostalgia_name?: true
     kakao_id?: true
     discord_name?: true
     discord_tag?: true
@@ -3006,6 +3019,7 @@ export namespace Prisma {
     grade_recital?: true
     exam_basic?: true
     exam_recital?: true
+    sync_token_version?: true
     created_at?: true
     updated_at?: true
   }
@@ -3013,6 +3027,7 @@ export namespace Prisma {
   export type UserCountAggregateInputType = {
     id?: true
     username?: true
+    nostalgia_name?: true
     kakao_id?: true
     discord_name?: true
     discord_tag?: true
@@ -3037,6 +3052,7 @@ export namespace Prisma {
     grade_recital?: true
     exam_basic?: true
     exam_recital?: true
+    sync_token_version?: true
     created_at?: true
     updated_at?: true
     _all?: true
@@ -3131,6 +3147,7 @@ export namespace Prisma {
   export type UserGroupByOutputType = {
     id: number
     username: string | null
+    nostalgia_name: string | null
     kakao_id: bigint | null
     discord_name: string | null
     discord_tag: string | null
@@ -3155,6 +3172,7 @@ export namespace Prisma {
     grade_recital: number | null
     exam_basic: number | null
     exam_recital: number | null
+    sync_token_version: number
     created_at: Date
     updated_at: Date
     _count: UserCountAggregateOutputType | null
@@ -3181,6 +3199,7 @@ export namespace Prisma {
   export type UserSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     username?: boolean
+    nostalgia_name?: boolean
     kakao_id?: boolean
     discord_name?: boolean
     discord_tag?: boolean
@@ -3205,6 +3224,7 @@ export namespace Prisma {
     grade_recital?: boolean
     exam_basic?: boolean
     exam_recital?: boolean
+    sync_token_version?: boolean
     created_at?: boolean
     updated_at?: boolean
     PlayHistory?: boolean | User$PlayHistoryArgs<ExtArgs>
@@ -3224,6 +3244,7 @@ export namespace Prisma {
   export type UserSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     username?: boolean
+    nostalgia_name?: boolean
     kakao_id?: boolean
     discord_name?: boolean
     discord_tag?: boolean
@@ -3248,6 +3269,7 @@ export namespace Prisma {
     grade_recital?: boolean
     exam_basic?: boolean
     exam_recital?: boolean
+    sync_token_version?: boolean
     created_at?: boolean
     updated_at?: boolean
   }, ExtArgs["result"]["user"]>
@@ -3255,6 +3277,7 @@ export namespace Prisma {
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     username?: boolean
+    nostalgia_name?: boolean
     kakao_id?: boolean
     discord_name?: boolean
     discord_tag?: boolean
@@ -3279,6 +3302,7 @@ export namespace Prisma {
     grade_recital?: boolean
     exam_basic?: boolean
     exam_recital?: boolean
+    sync_token_version?: boolean
     created_at?: boolean
     updated_at?: boolean
   }, ExtArgs["result"]["user"]>
@@ -3286,6 +3310,7 @@ export namespace Prisma {
   export type UserSelectScalar = {
     id?: boolean
     username?: boolean
+    nostalgia_name?: boolean
     kakao_id?: boolean
     discord_name?: boolean
     discord_tag?: boolean
@@ -3310,11 +3335,12 @@ export namespace Prisma {
     grade_recital?: boolean
     exam_basic?: boolean
     exam_recital?: boolean
+    sync_token_version?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "kakao_id" | "discord_name" | "discord_tag" | "avatar" | "country" | "rank_basic" | "rank_recital" | "rank_basic_country" | "rank_recital_country" | "play_count" | "score_p" | "score_f" | "score_s" | "score_a2" | "score_a" | "score_b2" | "score_b" | "score_c" | "score_d" | "role" | "grade_basic" | "grade_recital" | "exam_basic" | "exam_recital" | "created_at" | "updated_at", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "nostalgia_name" | "kakao_id" | "discord_name" | "discord_tag" | "avatar" | "country" | "rank_basic" | "rank_recital" | "rank_basic_country" | "rank_recital_country" | "play_count" | "score_p" | "score_f" | "score_s" | "score_a2" | "score_a" | "score_b2" | "score_b" | "score_c" | "score_d" | "role" | "grade_basic" | "grade_recital" | "exam_basic" | "exam_recital" | "sync_token_version" | "created_at" | "updated_at", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     PlayHistory?: boolean | User$PlayHistoryArgs<ExtArgs>
     PlayData?: boolean | User$PlayDataArgs<ExtArgs>
@@ -3350,6 +3376,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: number
       username: string | null
+      nostalgia_name: string | null
       kakao_id: bigint | null
       discord_name: string | null
       discord_tag: string | null
@@ -3374,6 +3401,7 @@ export namespace Prisma {
       grade_recital: number | null
       exam_basic: number | null
       exam_recital: number | null
+      sync_token_version: number
       created_at: Date
       updated_at: Date
     }, ExtArgs["result"]["user"]>
@@ -3812,6 +3840,7 @@ export namespace Prisma {
   interface UserFieldRefs {
     readonly id: FieldRef<"User", 'Int'>
     readonly username: FieldRef<"User", 'String'>
+    readonly nostalgia_name: FieldRef<"User", 'String'>
     readonly kakao_id: FieldRef<"User", 'BigInt'>
     readonly discord_name: FieldRef<"User", 'String'>
     readonly discord_tag: FieldRef<"User", 'String'>
@@ -3836,6 +3865,7 @@ export namespace Prisma {
     readonly grade_recital: FieldRef<"User", 'Int'>
     readonly exam_basic: FieldRef<"User", 'Int'>
     readonly exam_recital: FieldRef<"User", 'Int'>
+    readonly sync_token_version: FieldRef<"User", 'Int'>
     readonly created_at: FieldRef<"User", 'DateTime'>
     readonly updated_at: FieldRef<"User", 'DateTime'>
   }
@@ -7466,6 +7496,7 @@ export namespace Prisma {
   export type DataSyncMinAggregateOutputType = {
     id: number | null
     status: string | null
+    sync_scope: string | null
     received_plays: number | null
     inserted_plays: number | null
     changed_records: number | null
@@ -7478,6 +7509,7 @@ export namespace Prisma {
   export type DataSyncMaxAggregateOutputType = {
     id: number | null
     status: string | null
+    sync_scope: string | null
     received_plays: number | null
     inserted_plays: number | null
     changed_records: number | null
@@ -7490,6 +7522,7 @@ export namespace Prisma {
   export type DataSyncCountAggregateOutputType = {
     id: number
     status: number
+    sync_scope: number
     received_plays: number
     inserted_plays: number
     changed_records: number
@@ -7520,6 +7553,7 @@ export namespace Prisma {
   export type DataSyncMinAggregateInputType = {
     id?: true
     status?: true
+    sync_scope?: true
     received_plays?: true
     inserted_plays?: true
     changed_records?: true
@@ -7532,6 +7566,7 @@ export namespace Prisma {
   export type DataSyncMaxAggregateInputType = {
     id?: true
     status?: true
+    sync_scope?: true
     received_plays?: true
     inserted_plays?: true
     changed_records?: true
@@ -7544,6 +7579,7 @@ export namespace Prisma {
   export type DataSyncCountAggregateInputType = {
     id?: true
     status?: true
+    sync_scope?: true
     received_plays?: true
     inserted_plays?: true
     changed_records?: true
@@ -7643,6 +7679,7 @@ export namespace Prisma {
   export type DataSyncGroupByOutputType = {
     id: number
     status: string
+    sync_scope: string
     received_plays: number
     inserted_plays: number
     changed_records: number
@@ -7674,6 +7711,7 @@ export namespace Prisma {
   export type DataSyncSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     status?: boolean
+    sync_scope?: boolean
     received_plays?: boolean
     inserted_plays?: boolean
     changed_records?: boolean
@@ -7690,6 +7728,7 @@ export namespace Prisma {
   export type DataSyncSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     status?: boolean
+    sync_scope?: boolean
     received_plays?: boolean
     inserted_plays?: boolean
     changed_records?: boolean
@@ -7703,6 +7742,7 @@ export namespace Prisma {
   export type DataSyncSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     status?: boolean
+    sync_scope?: boolean
     received_plays?: boolean
     inserted_plays?: boolean
     changed_records?: boolean
@@ -7716,6 +7756,7 @@ export namespace Prisma {
   export type DataSyncSelectScalar = {
     id?: boolean
     status?: boolean
+    sync_scope?: boolean
     received_plays?: boolean
     inserted_plays?: boolean
     changed_records?: boolean
@@ -7725,7 +7766,7 @@ export namespace Prisma {
     completed_at?: boolean
   }
 
-  export type DataSyncOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "status" | "received_plays" | "inserted_plays" | "changed_records" | "error_message" | "user_id" | "started_at" | "completed_at", ExtArgs["result"]["dataSync"]>
+  export type DataSyncOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "status" | "sync_scope" | "received_plays" | "inserted_plays" | "changed_records" | "error_message" | "user_id" | "started_at" | "completed_at", ExtArgs["result"]["dataSync"]>
   export type DataSyncInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     playHistory?: boolean | DataSync$playHistoryArgs<ExtArgs>
@@ -7749,6 +7790,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: number
       status: string
+      sync_scope: string
       received_plays: number
       inserted_plays: number
       changed_records: number
@@ -8184,6 +8226,7 @@ export namespace Prisma {
   interface DataSyncFieldRefs {
     readonly id: FieldRef<"DataSync", 'Int'>
     readonly status: FieldRef<"DataSync", 'String'>
+    readonly sync_scope: FieldRef<"DataSync", 'String'>
     readonly received_plays: FieldRef<"DataSync", 'Int'>
     readonly inserted_plays: FieldRef<"DataSync", 'Int'>
     readonly changed_records: FieldRef<"DataSync", 'Int'>
@@ -24309,6 +24352,7 @@ export namespace Prisma {
   export const UserScalarFieldEnum: {
     id: 'id',
     username: 'username',
+    nostalgia_name: 'nostalgia_name',
     kakao_id: 'kakao_id',
     discord_name: 'discord_name',
     discord_tag: 'discord_tag',
@@ -24333,6 +24377,7 @@ export namespace Prisma {
     grade_recital: 'grade_recital',
     exam_basic: 'exam_basic',
     exam_recital: 'exam_recital',
+    sync_token_version: 'sync_token_version',
     created_at: 'created_at',
     updated_at: 'updated_at'
   };
@@ -24388,6 +24433,7 @@ export namespace Prisma {
   export const DataSyncScalarFieldEnum: {
     id: 'id',
     status: 'status',
+    sync_scope: 'sync_scope',
     received_plays: 'received_plays',
     inserted_plays: 'inserted_plays',
     changed_records: 'changed_records',
@@ -24681,6 +24727,7 @@ export namespace Prisma {
     NOT?: UserWhereInput | UserWhereInput[]
     id?: IntFilter<"User"> | number
     username?: StringNullableFilter<"User"> | string | null
+    nostalgia_name?: StringNullableFilter<"User"> | string | null
     kakao_id?: BigIntNullableFilter<"User"> | bigint | number | null
     discord_name?: StringNullableFilter<"User"> | string | null
     discord_tag?: StringNullableFilter<"User"> | string | null
@@ -24705,6 +24752,7 @@ export namespace Prisma {
     grade_recital?: IntNullableFilter<"User"> | number | null
     exam_basic?: IntNullableFilter<"User"> | number | null
     exam_recital?: IntNullableFilter<"User"> | number | null
+    sync_token_version?: IntFilter<"User"> | number
     created_at?: DateTimeFilter<"User"> | Date | string
     updated_at?: DateTimeFilter<"User"> | Date | string
     PlayHistory?: RecentPlayListRelationFilter
@@ -24723,6 +24771,7 @@ export namespace Prisma {
   export type UserOrderByWithRelationInput = {
     id?: SortOrder
     username?: SortOrderInput | SortOrder
+    nostalgia_name?: SortOrderInput | SortOrder
     kakao_id?: SortOrderInput | SortOrder
     discord_name?: SortOrderInput | SortOrder
     discord_tag?: SortOrderInput | SortOrder
@@ -24747,6 +24796,7 @@ export namespace Prisma {
     grade_recital?: SortOrderInput | SortOrder
     exam_basic?: SortOrderInput | SortOrder
     exam_recital?: SortOrderInput | SortOrder
+    sync_token_version?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     PlayHistory?: RecentPlayOrderByRelationAggregateInput
@@ -24770,6 +24820,7 @@ export namespace Prisma {
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
+    nostalgia_name?: StringNullableFilter<"User"> | string | null
     discord_name?: StringNullableFilter<"User"> | string | null
     avatar?: StringNullableFilter<"User"> | string | null
     country?: StringFilter<"User"> | string
@@ -24792,6 +24843,7 @@ export namespace Prisma {
     grade_recital?: IntNullableFilter<"User"> | number | null
     exam_basic?: IntNullableFilter<"User"> | number | null
     exam_recital?: IntNullableFilter<"User"> | number | null
+    sync_token_version?: IntFilter<"User"> | number
     created_at?: DateTimeFilter<"User"> | Date | string
     updated_at?: DateTimeFilter<"User"> | Date | string
     PlayHistory?: RecentPlayListRelationFilter
@@ -24810,6 +24862,7 @@ export namespace Prisma {
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
     username?: SortOrderInput | SortOrder
+    nostalgia_name?: SortOrderInput | SortOrder
     kakao_id?: SortOrderInput | SortOrder
     discord_name?: SortOrderInput | SortOrder
     discord_tag?: SortOrderInput | SortOrder
@@ -24834,6 +24887,7 @@ export namespace Prisma {
     grade_recital?: SortOrderInput | SortOrder
     exam_basic?: SortOrderInput | SortOrder
     exam_recital?: SortOrderInput | SortOrder
+    sync_token_version?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     _count?: UserCountOrderByAggregateInput
@@ -24849,6 +24903,7 @@ export namespace Prisma {
     NOT?: UserScalarWhereWithAggregatesInput | UserScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"User"> | number
     username?: StringNullableWithAggregatesFilter<"User"> | string | null
+    nostalgia_name?: StringNullableWithAggregatesFilter<"User"> | string | null
     kakao_id?: BigIntNullableWithAggregatesFilter<"User"> | bigint | number | null
     discord_name?: StringNullableWithAggregatesFilter<"User"> | string | null
     discord_tag?: StringNullableWithAggregatesFilter<"User"> | string | null
@@ -24873,6 +24928,7 @@ export namespace Prisma {
     grade_recital?: IntNullableWithAggregatesFilter<"User"> | number | null
     exam_basic?: IntNullableWithAggregatesFilter<"User"> | number | null
     exam_recital?: IntNullableWithAggregatesFilter<"User"> | number | null
+    sync_token_version?: IntWithAggregatesFilter<"User"> | number
     created_at?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
@@ -25155,6 +25211,7 @@ export namespace Prisma {
     NOT?: DataSyncWhereInput | DataSyncWhereInput[]
     id?: IntFilter<"DataSync"> | number
     status?: StringFilter<"DataSync"> | string
+    sync_scope?: StringFilter<"DataSync"> | string
     received_plays?: IntFilter<"DataSync"> | number
     inserted_plays?: IntFilter<"DataSync"> | number
     changed_records?: IntFilter<"DataSync"> | number
@@ -25170,6 +25227,7 @@ export namespace Prisma {
   export type DataSyncOrderByWithRelationInput = {
     id?: SortOrder
     status?: SortOrder
+    sync_scope?: SortOrder
     received_plays?: SortOrder
     inserted_plays?: SortOrder
     changed_records?: SortOrder
@@ -25188,6 +25246,7 @@ export namespace Prisma {
     OR?: DataSyncWhereInput[]
     NOT?: DataSyncWhereInput | DataSyncWhereInput[]
     status?: StringFilter<"DataSync"> | string
+    sync_scope?: StringFilter<"DataSync"> | string
     received_plays?: IntFilter<"DataSync"> | number
     inserted_plays?: IntFilter<"DataSync"> | number
     changed_records?: IntFilter<"DataSync"> | number
@@ -25203,6 +25262,7 @@ export namespace Prisma {
   export type DataSyncOrderByWithAggregationInput = {
     id?: SortOrder
     status?: SortOrder
+    sync_scope?: SortOrder
     received_plays?: SortOrder
     inserted_plays?: SortOrder
     changed_records?: SortOrder
@@ -25223,6 +25283,7 @@ export namespace Prisma {
     NOT?: DataSyncScalarWhereWithAggregatesInput | DataSyncScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"DataSync"> | number
     status?: StringWithAggregatesFilter<"DataSync"> | string
+    sync_scope?: StringWithAggregatesFilter<"DataSync"> | string
     received_plays?: IntWithAggregatesFilter<"DataSync"> | number
     inserted_plays?: IntWithAggregatesFilter<"DataSync"> | number
     changed_records?: IntWithAggregatesFilter<"DataSync"> | number
@@ -26366,6 +26427,7 @@ export namespace Prisma {
 
   export type UserCreateInput = {
     username?: string | null
+    nostalgia_name?: string | null
     kakao_id?: bigint | number | null
     discord_name?: string | null
     discord_tag?: string | null
@@ -26390,6 +26452,7 @@ export namespace Prisma {
     grade_recital?: number | null
     exam_basic?: number | null
     exam_recital?: number | null
+    sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
@@ -26408,6 +26471,7 @@ export namespace Prisma {
   export type UserUncheckedCreateInput = {
     id?: number
     username?: string | null
+    nostalgia_name?: string | null
     kakao_id?: bigint | number | null
     discord_name?: string | null
     discord_tag?: string | null
@@ -26432,6 +26496,7 @@ export namespace Prisma {
     grade_recital?: number | null
     exam_basic?: number | null
     exam_recital?: number | null
+    sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
@@ -26449,6 +26514,7 @@ export namespace Prisma {
 
   export type UserUpdateInput = {
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
@@ -26473,6 +26539,7 @@ export namespace Prisma {
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
     exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
     exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
@@ -26491,6 +26558,7 @@ export namespace Prisma {
   export type UserUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
@@ -26515,6 +26583,7 @@ export namespace Prisma {
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
     exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
     exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
@@ -26533,6 +26602,7 @@ export namespace Prisma {
   export type UserCreateManyInput = {
     id?: number
     username?: string | null
+    nostalgia_name?: string | null
     kakao_id?: bigint | number | null
     discord_name?: string | null
     discord_tag?: string | null
@@ -26557,12 +26627,14 @@ export namespace Prisma {
     grade_recital?: number | null
     exam_basic?: number | null
     exam_recital?: number | null
+    sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
   }
 
   export type UserUpdateManyMutationInput = {
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
@@ -26587,6 +26659,7 @@ export namespace Prisma {
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
     exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
     exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -26594,6 +26667,7 @@ export namespace Prisma {
   export type UserUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
@@ -26618,6 +26692,7 @@ export namespace Prisma {
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
     exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
     exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -26950,6 +27025,7 @@ export namespace Prisma {
 
   export type DataSyncCreateInput = {
     status?: string
+    sync_scope?: string
     received_plays?: number
     inserted_plays?: number
     changed_records?: number
@@ -26964,6 +27040,7 @@ export namespace Prisma {
   export type DataSyncUncheckedCreateInput = {
     id?: number
     status?: string
+    sync_scope?: string
     received_plays?: number
     inserted_plays?: number
     changed_records?: number
@@ -26977,6 +27054,7 @@ export namespace Prisma {
 
   export type DataSyncUpdateInput = {
     status?: StringFieldUpdateOperationsInput | string
+    sync_scope?: StringFieldUpdateOperationsInput | string
     received_plays?: IntFieldUpdateOperationsInput | number
     inserted_plays?: IntFieldUpdateOperationsInput | number
     changed_records?: IntFieldUpdateOperationsInput | number
@@ -26991,6 +27069,7 @@ export namespace Prisma {
   export type DataSyncUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
+    sync_scope?: StringFieldUpdateOperationsInput | string
     received_plays?: IntFieldUpdateOperationsInput | number
     inserted_plays?: IntFieldUpdateOperationsInput | number
     changed_records?: IntFieldUpdateOperationsInput | number
@@ -27005,6 +27084,7 @@ export namespace Prisma {
   export type DataSyncCreateManyInput = {
     id?: number
     status?: string
+    sync_scope?: string
     received_plays?: number
     inserted_plays?: number
     changed_records?: number
@@ -27016,6 +27096,7 @@ export namespace Prisma {
 
   export type DataSyncUpdateManyMutationInput = {
     status?: StringFieldUpdateOperationsInput | string
+    sync_scope?: StringFieldUpdateOperationsInput | string
     received_plays?: IntFieldUpdateOperationsInput | number
     inserted_plays?: IntFieldUpdateOperationsInput | number
     changed_records?: IntFieldUpdateOperationsInput | number
@@ -27027,6 +27108,7 @@ export namespace Prisma {
   export type DataSyncUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
+    sync_scope?: StringFieldUpdateOperationsInput | string
     received_plays?: IntFieldUpdateOperationsInput | number
     inserted_plays?: IntFieldUpdateOperationsInput | number
     changed_records?: IntFieldUpdateOperationsInput | number
@@ -28360,6 +28442,7 @@ export namespace Prisma {
   export type UserCountOrderByAggregateInput = {
     id?: SortOrder
     username?: SortOrder
+    nostalgia_name?: SortOrder
     kakao_id?: SortOrder
     discord_name?: SortOrder
     discord_tag?: SortOrder
@@ -28384,6 +28467,7 @@ export namespace Prisma {
     grade_recital?: SortOrder
     exam_basic?: SortOrder
     exam_recital?: SortOrder
+    sync_token_version?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -28409,11 +28493,13 @@ export namespace Prisma {
     grade_recital?: SortOrder
     exam_basic?: SortOrder
     exam_recital?: SortOrder
+    sync_token_version?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
     id?: SortOrder
     username?: SortOrder
+    nostalgia_name?: SortOrder
     kakao_id?: SortOrder
     discord_name?: SortOrder
     discord_tag?: SortOrder
@@ -28438,6 +28524,7 @@ export namespace Prisma {
     grade_recital?: SortOrder
     exam_basic?: SortOrder
     exam_recital?: SortOrder
+    sync_token_version?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -28445,6 +28532,7 @@ export namespace Prisma {
   export type UserMinOrderByAggregateInput = {
     id?: SortOrder
     username?: SortOrder
+    nostalgia_name?: SortOrder
     kakao_id?: SortOrder
     discord_name?: SortOrder
     discord_tag?: SortOrder
@@ -28469,6 +28557,7 @@ export namespace Prisma {
     grade_recital?: SortOrder
     exam_basic?: SortOrder
     exam_recital?: SortOrder
+    sync_token_version?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -28494,6 +28583,7 @@ export namespace Prisma {
     grade_recital?: SortOrder
     exam_basic?: SortOrder
     exam_recital?: SortOrder
+    sync_token_version?: SortOrder
   }
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -28857,6 +28947,7 @@ export namespace Prisma {
   export type DataSyncCountOrderByAggregateInput = {
     id?: SortOrder
     status?: SortOrder
+    sync_scope?: SortOrder
     received_plays?: SortOrder
     inserted_plays?: SortOrder
     changed_records?: SortOrder
@@ -28877,6 +28968,7 @@ export namespace Prisma {
   export type DataSyncMaxOrderByAggregateInput = {
     id?: SortOrder
     status?: SortOrder
+    sync_scope?: SortOrder
     received_plays?: SortOrder
     inserted_plays?: SortOrder
     changed_records?: SortOrder
@@ -28889,6 +28981,7 @@ export namespace Prisma {
   export type DataSyncMinOrderByAggregateInput = {
     id?: SortOrder
     status?: SortOrder
+    sync_scope?: SortOrder
     received_plays?: SortOrder
     inserted_plays?: SortOrder
     changed_records?: SortOrder
@@ -29944,6 +30037,14 @@ export namespace Prisma {
     divide?: number
   }
 
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
   }
@@ -30100,14 +30201,6 @@ export namespace Prisma {
     update?: ChartRecordSnapshotUpdateWithWhereUniqueWithoutUserInput | ChartRecordSnapshotUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: ChartRecordSnapshotUpdateManyWithWhereWithoutUserInput | ChartRecordSnapshotUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: ChartRecordSnapshotScalarWhereInput | ChartRecordSnapshotScalarWhereInput[]
-  }
-
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type RecentPlayUncheckedUpdateManyWithoutUserNestedInput = {
@@ -32110,6 +32203,7 @@ export namespace Prisma {
 
   export type DataSyncCreateWithoutUserInput = {
     status?: string
+    sync_scope?: string
     received_plays?: number
     inserted_plays?: number
     changed_records?: number
@@ -32123,6 +32217,7 @@ export namespace Prisma {
   export type DataSyncUncheckedCreateWithoutUserInput = {
     id?: number
     status?: string
+    sync_scope?: string
     received_plays?: number
     inserted_plays?: number
     changed_records?: number
@@ -32504,6 +32599,7 @@ export namespace Prisma {
     NOT?: DataSyncScalarWhereInput | DataSyncScalarWhereInput[]
     id?: IntFilter<"DataSync"> | number
     status?: StringFilter<"DataSync"> | string
+    sync_scope?: StringFilter<"DataSync"> | string
     received_plays?: IntFilter<"DataSync"> | number
     inserted_plays?: IntFilter<"DataSync"> | number
     changed_records?: IntFilter<"DataSync"> | number
@@ -33581,6 +33677,7 @@ export namespace Prisma {
 
   export type UserCreateWithoutDataSyncsInput = {
     username?: string | null
+    nostalgia_name?: string | null
     kakao_id?: bigint | number | null
     discord_name?: string | null
     discord_tag?: string | null
@@ -33605,6 +33702,7 @@ export namespace Prisma {
     grade_recital?: number | null
     exam_basic?: number | null
     exam_recital?: number | null
+    sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
@@ -33622,6 +33720,7 @@ export namespace Prisma {
   export type UserUncheckedCreateWithoutDataSyncsInput = {
     id?: number
     username?: string | null
+    nostalgia_name?: string | null
     kakao_id?: bigint | number | null
     discord_name?: string | null
     discord_tag?: string | null
@@ -33646,6 +33745,7 @@ export namespace Prisma {
     grade_recital?: number | null
     exam_basic?: number | null
     exam_recital?: number | null
+    sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
@@ -33754,6 +33854,7 @@ export namespace Prisma {
 
   export type UserUpdateWithoutDataSyncsInput = {
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33778,6 +33879,7 @@ export namespace Prisma {
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
     exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
     exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
@@ -33795,6 +33897,7 @@ export namespace Prisma {
   export type UserUncheckedUpdateWithoutDataSyncsInput = {
     id?: IntFieldUpdateOperationsInput | number
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33819,6 +33922,7 @@ export namespace Prisma {
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
     exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
     exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
@@ -33921,6 +34025,7 @@ export namespace Prisma {
 
   export type UserCreateWithoutChartPlayHistoryInput = {
     username?: string | null
+    nostalgia_name?: string | null
     kakao_id?: bigint | number | null
     discord_name?: string | null
     discord_tag?: string | null
@@ -33945,6 +34050,7 @@ export namespace Prisma {
     grade_recital?: number | null
     exam_basic?: number | null
     exam_recital?: number | null
+    sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
@@ -33962,6 +34068,7 @@ export namespace Prisma {
   export type UserUncheckedCreateWithoutChartPlayHistoryInput = {
     id?: number
     username?: string | null
+    nostalgia_name?: string | null
     kakao_id?: bigint | number | null
     discord_name?: string | null
     discord_tag?: string | null
@@ -33986,6 +34093,7 @@ export namespace Prisma {
     grade_recital?: number | null
     exam_basic?: number | null
     exam_recital?: number | null
+    sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
@@ -34007,6 +34115,7 @@ export namespace Prisma {
 
   export type DataSyncCreateWithoutPlayHistoryInput = {
     status?: string
+    sync_scope?: string
     received_plays?: number
     inserted_plays?: number
     changed_records?: number
@@ -34020,6 +34129,7 @@ export namespace Prisma {
   export type DataSyncUncheckedCreateWithoutPlayHistoryInput = {
     id?: number
     status?: string
+    sync_scope?: string
     received_plays?: number
     inserted_plays?: number
     changed_records?: number
@@ -34108,6 +34218,7 @@ export namespace Prisma {
 
   export type UserUpdateWithoutChartPlayHistoryInput = {
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
@@ -34132,6 +34243,7 @@ export namespace Prisma {
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
     exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
     exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
@@ -34149,6 +34261,7 @@ export namespace Prisma {
   export type UserUncheckedUpdateWithoutChartPlayHistoryInput = {
     id?: IntFieldUpdateOperationsInput | number
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
@@ -34173,6 +34286,7 @@ export namespace Prisma {
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
     exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
     exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
@@ -34200,6 +34314,7 @@ export namespace Prisma {
 
   export type DataSyncUpdateWithoutPlayHistoryInput = {
     status?: StringFieldUpdateOperationsInput | string
+    sync_scope?: StringFieldUpdateOperationsInput | string
     received_plays?: IntFieldUpdateOperationsInput | number
     inserted_plays?: IntFieldUpdateOperationsInput | number
     changed_records?: IntFieldUpdateOperationsInput | number
@@ -34213,6 +34328,7 @@ export namespace Prisma {
   export type DataSyncUncheckedUpdateWithoutPlayHistoryInput = {
     id?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
+    sync_scope?: StringFieldUpdateOperationsInput | string
     received_plays?: IntFieldUpdateOperationsInput | number
     inserted_plays?: IntFieldUpdateOperationsInput | number
     changed_records?: IntFieldUpdateOperationsInput | number
@@ -34279,6 +34395,7 @@ export namespace Prisma {
 
   export type UserCreateWithoutChartRecordSnapshotsInput = {
     username?: string | null
+    nostalgia_name?: string | null
     kakao_id?: bigint | number | null
     discord_name?: string | null
     discord_tag?: string | null
@@ -34303,6 +34420,7 @@ export namespace Prisma {
     grade_recital?: number | null
     exam_basic?: number | null
     exam_recital?: number | null
+    sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
@@ -34320,6 +34438,7 @@ export namespace Prisma {
   export type UserUncheckedCreateWithoutChartRecordSnapshotsInput = {
     id?: number
     username?: string | null
+    nostalgia_name?: string | null
     kakao_id?: bigint | number | null
     discord_name?: string | null
     discord_tag?: string | null
@@ -34344,6 +34463,7 @@ export namespace Prisma {
     grade_recital?: number | null
     exam_basic?: number | null
     exam_recital?: number | null
+    sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
@@ -34365,6 +34485,7 @@ export namespace Prisma {
 
   export type DataSyncCreateWithoutRecordSnapshotsInput = {
     status?: string
+    sync_scope?: string
     received_plays?: number
     inserted_plays?: number
     changed_records?: number
@@ -34378,6 +34499,7 @@ export namespace Prisma {
   export type DataSyncUncheckedCreateWithoutRecordSnapshotsInput = {
     id?: number
     status?: string
+    sync_scope?: string
     received_plays?: number
     inserted_plays?: number
     changed_records?: number
@@ -34466,6 +34588,7 @@ export namespace Prisma {
 
   export type UserUpdateWithoutChartRecordSnapshotsInput = {
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
@@ -34490,6 +34613,7 @@ export namespace Prisma {
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
     exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
     exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
@@ -34507,6 +34631,7 @@ export namespace Prisma {
   export type UserUncheckedUpdateWithoutChartRecordSnapshotsInput = {
     id?: IntFieldUpdateOperationsInput | number
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
@@ -34531,6 +34656,7 @@ export namespace Prisma {
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
     exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
     exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
@@ -34558,6 +34684,7 @@ export namespace Prisma {
 
   export type DataSyncUpdateWithoutRecordSnapshotsInput = {
     status?: StringFieldUpdateOperationsInput | string
+    sync_scope?: StringFieldUpdateOperationsInput | string
     received_plays?: IntFieldUpdateOperationsInput | number
     inserted_plays?: IntFieldUpdateOperationsInput | number
     changed_records?: IntFieldUpdateOperationsInput | number
@@ -34571,6 +34698,7 @@ export namespace Prisma {
   export type DataSyncUncheckedUpdateWithoutRecordSnapshotsInput = {
     id?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
+    sync_scope?: StringFieldUpdateOperationsInput | string
     received_plays?: IntFieldUpdateOperationsInput | number
     inserted_plays?: IntFieldUpdateOperationsInput | number
     changed_records?: IntFieldUpdateOperationsInput | number
@@ -34751,6 +34879,7 @@ export namespace Prisma {
 
   export type UserCreateWithoutChartEvaluationsInput = {
     username?: string | null
+    nostalgia_name?: string | null
     kakao_id?: bigint | number | null
     discord_name?: string | null
     discord_tag?: string | null
@@ -34775,6 +34904,7 @@ export namespace Prisma {
     grade_recital?: number | null
     exam_basic?: number | null
     exam_recital?: number | null
+    sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
@@ -34792,6 +34922,7 @@ export namespace Prisma {
   export type UserUncheckedCreateWithoutChartEvaluationsInput = {
     id?: number
     username?: string | null
+    nostalgia_name?: string | null
     kakao_id?: bigint | number | null
     discord_name?: string | null
     discord_tag?: string | null
@@ -34816,6 +34947,7 @@ export namespace Prisma {
     grade_recital?: number | null
     exam_basic?: number | null
     exam_recital?: number | null
+    sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
@@ -34932,6 +35064,7 @@ export namespace Prisma {
 
   export type UserUpdateWithoutChartEvaluationsInput = {
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
@@ -34956,6 +35089,7 @@ export namespace Prisma {
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
     exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
     exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
@@ -34973,6 +35107,7 @@ export namespace Prisma {
   export type UserUncheckedUpdateWithoutChartEvaluationsInput = {
     id?: IntFieldUpdateOperationsInput | number
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
@@ -34997,6 +35132,7 @@ export namespace Prisma {
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
     exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
     exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
@@ -35063,6 +35199,7 @@ export namespace Prisma {
 
   export type UserCreateWithoutChartReactionsInput = {
     username?: string | null
+    nostalgia_name?: string | null
     kakao_id?: bigint | number | null
     discord_name?: string | null
     discord_tag?: string | null
@@ -35087,6 +35224,7 @@ export namespace Prisma {
     grade_recital?: number | null
     exam_basic?: number | null
     exam_recital?: number | null
+    sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
@@ -35104,6 +35242,7 @@ export namespace Prisma {
   export type UserUncheckedCreateWithoutChartReactionsInput = {
     id?: number
     username?: string | null
+    nostalgia_name?: string | null
     kakao_id?: bigint | number | null
     discord_name?: string | null
     discord_tag?: string | null
@@ -35128,6 +35267,7 @@ export namespace Prisma {
     grade_recital?: number | null
     exam_basic?: number | null
     exam_recital?: number | null
+    sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
@@ -35200,6 +35340,7 @@ export namespace Prisma {
 
   export type UserUpdateWithoutChartReactionsInput = {
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
@@ -35224,6 +35365,7 @@ export namespace Prisma {
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
     exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
     exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
@@ -35241,6 +35383,7 @@ export namespace Prisma {
   export type UserUncheckedUpdateWithoutChartReactionsInput = {
     id?: IntFieldUpdateOperationsInput | number
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
@@ -35265,6 +35408,7 @@ export namespace Prisma {
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
     exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
     exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
@@ -35281,6 +35425,7 @@ export namespace Prisma {
 
   export type UserCreateWithoutPlayHistoryInput = {
     username?: string | null
+    nostalgia_name?: string | null
     kakao_id?: bigint | number | null
     discord_name?: string | null
     discord_tag?: string | null
@@ -35305,6 +35450,7 @@ export namespace Prisma {
     grade_recital?: number | null
     exam_basic?: number | null
     exam_recital?: number | null
+    sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
     PlayData?: PlayDataCreateNestedManyWithoutUserInput
@@ -35322,6 +35468,7 @@ export namespace Prisma {
   export type UserUncheckedCreateWithoutPlayHistoryInput = {
     id?: number
     username?: string | null
+    nostalgia_name?: string | null
     kakao_id?: bigint | number | null
     discord_name?: string | null
     discord_tag?: string | null
@@ -35346,6 +35493,7 @@ export namespace Prisma {
     grade_recital?: number | null
     exam_basic?: number | null
     exam_recital?: number | null
+    sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutUserInput
@@ -35490,6 +35638,7 @@ export namespace Prisma {
 
   export type UserUpdateWithoutPlayHistoryInput = {
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
@@ -35514,6 +35663,7 @@ export namespace Prisma {
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
     exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
     exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayData?: PlayDataUpdateManyWithoutUserNestedInput
@@ -35531,6 +35681,7 @@ export namespace Prisma {
   export type UserUncheckedUpdateWithoutPlayHistoryInput = {
     id?: IntFieldUpdateOperationsInput | number
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
@@ -35555,6 +35706,7 @@ export namespace Prisma {
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
     exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
     exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayData?: PlayDataUncheckedUpdateManyWithoutUserNestedInput
@@ -35695,6 +35847,7 @@ export namespace Prisma {
 
   export type UserCreateWithoutUserBestGradeInput = {
     username?: string | null
+    nostalgia_name?: string | null
     kakao_id?: bigint | number | null
     discord_name?: string | null
     discord_tag?: string | null
@@ -35719,6 +35872,7 @@ export namespace Prisma {
     grade_recital?: number | null
     exam_basic?: number | null
     exam_recital?: number | null
+    sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
@@ -35736,6 +35890,7 @@ export namespace Prisma {
   export type UserUncheckedCreateWithoutUserBestGradeInput = {
     id?: number
     username?: string | null
+    nostalgia_name?: string | null
     kakao_id?: bigint | number | null
     discord_name?: string | null
     discord_tag?: string | null
@@ -35760,6 +35915,7 @@ export namespace Prisma {
     grade_recital?: number | null
     exam_basic?: number | null
     exam_recital?: number | null
+    sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
@@ -35792,6 +35948,7 @@ export namespace Prisma {
 
   export type UserUpdateWithoutUserBestGradeInput = {
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
@@ -35816,6 +35973,7 @@ export namespace Prisma {
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
     exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
     exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
@@ -35833,6 +35991,7 @@ export namespace Prisma {
   export type UserUncheckedUpdateWithoutUserBestGradeInput = {
     id?: IntFieldUpdateOperationsInput | number
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
@@ -35857,6 +36016,7 @@ export namespace Prisma {
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
     exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
     exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
@@ -35873,6 +36033,7 @@ export namespace Prisma {
 
   export type UserCreateWithoutBasicBestPlayInput = {
     username?: string | null
+    nostalgia_name?: string | null
     kakao_id?: bigint | number | null
     discord_name?: string | null
     discord_tag?: string | null
@@ -35897,6 +36058,7 @@ export namespace Prisma {
     grade_recital?: number | null
     exam_basic?: number | null
     exam_recital?: number | null
+    sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
@@ -35914,6 +36076,7 @@ export namespace Prisma {
   export type UserUncheckedCreateWithoutBasicBestPlayInput = {
     id?: number
     username?: string | null
+    nostalgia_name?: string | null
     kakao_id?: bigint | number | null
     discord_name?: string | null
     discord_tag?: string | null
@@ -35938,6 +36101,7 @@ export namespace Prisma {
     grade_recital?: number | null
     exam_basic?: number | null
     exam_recital?: number | null
+    sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
@@ -36082,6 +36246,7 @@ export namespace Prisma {
 
   export type UserUpdateWithoutBasicBestPlayInput = {
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
@@ -36106,6 +36271,7 @@ export namespace Prisma {
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
     exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
     exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
@@ -36123,6 +36289,7 @@ export namespace Prisma {
   export type UserUncheckedUpdateWithoutBasicBestPlayInput = {
     id?: IntFieldUpdateOperationsInput | number
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
@@ -36147,6 +36314,7 @@ export namespace Prisma {
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
     exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
     exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
@@ -36287,6 +36455,7 @@ export namespace Prisma {
 
   export type UserCreateWithoutRecitalBestPlayInput = {
     username?: string | null
+    nostalgia_name?: string | null
     kakao_id?: bigint | number | null
     discord_name?: string | null
     discord_tag?: string | null
@@ -36311,6 +36480,7 @@ export namespace Prisma {
     grade_recital?: number | null
     exam_basic?: number | null
     exam_recital?: number | null
+    sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
@@ -36328,6 +36498,7 @@ export namespace Prisma {
   export type UserUncheckedCreateWithoutRecitalBestPlayInput = {
     id?: number
     username?: string | null
+    nostalgia_name?: string | null
     kakao_id?: bigint | number | null
     discord_name?: string | null
     discord_tag?: string | null
@@ -36352,6 +36523,7 @@ export namespace Prisma {
     grade_recital?: number | null
     exam_basic?: number | null
     exam_recital?: number | null
+    sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
@@ -36496,6 +36668,7 @@ export namespace Prisma {
 
   export type UserUpdateWithoutRecitalBestPlayInput = {
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
@@ -36520,6 +36693,7 @@ export namespace Prisma {
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
     exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
     exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
@@ -36537,6 +36711,7 @@ export namespace Prisma {
   export type UserUncheckedUpdateWithoutRecitalBestPlayInput = {
     id?: IntFieldUpdateOperationsInput | number
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
@@ -36561,6 +36736,7 @@ export namespace Prisma {
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
     exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
     exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
@@ -36701,6 +36877,7 @@ export namespace Prisma {
 
   export type UserCreateWithoutPlayDataInput = {
     username?: string | null
+    nostalgia_name?: string | null
     kakao_id?: bigint | number | null
     discord_name?: string | null
     discord_tag?: string | null
@@ -36725,6 +36902,7 @@ export namespace Prisma {
     grade_recital?: number | null
     exam_basic?: number | null
     exam_recital?: number | null
+    sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
@@ -36742,6 +36920,7 @@ export namespace Prisma {
   export type UserUncheckedCreateWithoutPlayDataInput = {
     id?: number
     username?: string | null
+    nostalgia_name?: string | null
     kakao_id?: bigint | number | null
     discord_name?: string | null
     discord_tag?: string | null
@@ -36766,6 +36945,7 @@ export namespace Prisma {
     grade_recital?: number | null
     exam_basic?: number | null
     exam_recital?: number | null
+    sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
@@ -36910,6 +37090,7 @@ export namespace Prisma {
 
   export type UserUpdateWithoutPlayDataInput = {
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
@@ -36934,6 +37115,7 @@ export namespace Prisma {
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
     exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
     exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
@@ -36951,6 +37133,7 @@ export namespace Prisma {
   export type UserUncheckedUpdateWithoutPlayDataInput = {
     id?: IntFieldUpdateOperationsInput | number
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
@@ -36975,6 +37158,7 @@ export namespace Prisma {
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
     exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
     exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
@@ -37483,6 +37667,7 @@ export namespace Prisma {
 
   export type UserCreateWithoutUserBingoCellDataInput = {
     username?: string | null
+    nostalgia_name?: string | null
     kakao_id?: bigint | number | null
     discord_name?: string | null
     discord_tag?: string | null
@@ -37507,6 +37692,7 @@ export namespace Prisma {
     grade_recital?: number | null
     exam_basic?: number | null
     exam_recital?: number | null
+    sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
@@ -37524,6 +37710,7 @@ export namespace Prisma {
   export type UserUncheckedCreateWithoutUserBingoCellDataInput = {
     id?: number
     username?: string | null
+    nostalgia_name?: string | null
     kakao_id?: bigint | number | null
     discord_name?: string | null
     discord_tag?: string | null
@@ -37548,6 +37735,7 @@ export namespace Prisma {
     grade_recital?: number | null
     exam_basic?: number | null
     exam_recital?: number | null
+    sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
     PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
@@ -37606,6 +37794,7 @@ export namespace Prisma {
 
   export type UserUpdateWithoutUserBingoCellDataInput = {
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
@@ -37630,6 +37819,7 @@ export namespace Prisma {
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
     exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
     exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
@@ -37647,6 +37837,7 @@ export namespace Prisma {
   export type UserUncheckedUpdateWithoutUserBingoCellDataInput = {
     id?: IntFieldUpdateOperationsInput | number
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
@@ -37671,6 +37862,7 @@ export namespace Prisma {
     grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
     exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
     exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
@@ -37824,6 +38016,7 @@ export namespace Prisma {
   export type DataSyncCreateManyUserInput = {
     id?: number
     status?: string
+    sync_scope?: string
     received_plays?: number
     inserted_plays?: number
     changed_records?: number
@@ -38170,6 +38363,7 @@ export namespace Prisma {
 
   export type DataSyncUpdateWithoutUserInput = {
     status?: StringFieldUpdateOperationsInput | string
+    sync_scope?: StringFieldUpdateOperationsInput | string
     received_plays?: IntFieldUpdateOperationsInput | number
     inserted_plays?: IntFieldUpdateOperationsInput | number
     changed_records?: IntFieldUpdateOperationsInput | number
@@ -38183,6 +38377,7 @@ export namespace Prisma {
   export type DataSyncUncheckedUpdateWithoutUserInput = {
     id?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
+    sync_scope?: StringFieldUpdateOperationsInput | string
     received_plays?: IntFieldUpdateOperationsInput | number
     inserted_plays?: IntFieldUpdateOperationsInput | number
     changed_records?: IntFieldUpdateOperationsInput | number
@@ -38196,6 +38391,7 @@ export namespace Prisma {
   export type DataSyncUncheckedUpdateManyWithoutUserInput = {
     id?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
+    sync_scope?: StringFieldUpdateOperationsInput | string
     received_plays?: IntFieldUpdateOperationsInput | number
     inserted_plays?: IntFieldUpdateOperationsInput | number
     changed_records?: IntFieldUpdateOperationsInput | number

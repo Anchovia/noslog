@@ -1,15 +1,20 @@
 import db from "@/lib/db";
 
-export async function updatePlayCount(name: string, play_count: number) {
+export async function updatePlayCount(
+    userId: number,
+    nostalgiaName: string,
+    playCount: number
+) {
     const startTime = Date.now(); // 시작 시간
 
     // 유저 데이터에 플레이 횟수 업데이트
     const user = await db.user.update({
         where: {
-            username: name,
+            id: userId,
         },
         data: {
-            play_count: play_count,
+            nostalgia_name: nostalgiaName,
+            play_count: playCount,
         },
         select: {
             id: true,
