@@ -310,79 +310,86 @@ export async function addTierEntry(formData: FormData) {
     revalidateTierList(tierListId);
 }
 
-export async function moveTierEntry(formData: FormData) {
+export async function moveTierEntryByDrop(
+    entryId: number,
+    targetBandId: number,
+    targetIndex: number
+) {
     await requireAdmin();
-    const id = Number(formData.get("id"));
-    const targetBandId = Number(formData.get("tierBandId"));
-    if (!Number.isInteger(id) || !Number.isInteger(targetBandId)) return;
+    if (
+        !Number.isInteger(entryId) ||
+        !Number.isInteger(targetBandId) ||
+        !Number.isInteger(targetIndex)
+    )
+        return;
 
-    const entry = await db.tierEntry.findUnique({ where: { id } });
-    if (!entry || entry.tierBandId === targetBandId) return;
+    const entry = await db.tierEntry.findUnique({ where: { id: entryId } });
+    if (!entry) return;
+
     const targetBand = await db.tierBand.findFirst({
         where: { id: targetBandId, tierListId: entry.tierListId },
         select: { value: true },
     });
     if (!targetBand) return;
 
+    const affectedBandIds = [...new Set([entry.tierBandId, targetBandId])];
+    const affectedEntries = await db.tierEntry.findMany({
+        where: { tierBandId: { in: affectedBandIds } },
+        select: { id: true, tierBandId: true },
+        orderBy: { position: "asc" },
+    });
+    const sourceIds = affectedEntries
+        .filter(
+            (item) =>
+                item.tierBandId === entry.tierBandId && item.id !== entryId
+        )
+        .map((item) => item.id);
+    const targetIds = affectedEntries
+        .filter(
+            (item) => item.tierBandId === targetBandId && item.id !== entryId
+        )
+        .map((item) => item.id);
+    const insertAt = Math.max(0, Math.min(targetIndex, targetIds.length));
+    targetIds.splice(insertAt, 0, entryId);
+
     await db.$transaction(async (transaction) => {
-        const lastEntry = await transaction.tierEntry.findFirst({
-            where: { tierBandId: targetBandId },
-            select: { position: true },
-            orderBy: { position: "desc" },
-        });
-        await transaction.tierEntry.update({
-            where: { id },
-            data: {
-                tierBandId: targetBandId,
-                position: (lastEntry?.position ?? 0) + 1,
-            },
-        });
-        await normalizeEntryPositions(transaction, entry.tierBandId);
-        await transaction.tierPlacementHistory.create({
-            data: {
-                tierListId: entry.tierListId,
-                chartId: entry.chartId,
-                bandValue: targetBand.value,
-            },
-        });
+        for (const [index, item] of affectedEntries.entries()) {
+            await transaction.tierEntry.update({
+                where: { id: item.id },
+                data: { position: -(index + 1) },
+            });
+        }
+
+        if (entry.tierBandId !== targetBandId) {
+            for (const [index, id] of sourceIds.entries()) {
+                await transaction.tierEntry.update({
+                    where: { id },
+                    data: {
+                        tierBandId: entry.tierBandId,
+                        position: index + 1,
+                    },
+                });
+            }
+        }
+
+        for (const [index, id] of targetIds.entries()) {
+            await transaction.tierEntry.update({
+                where: { id },
+                data: { tierBandId: targetBandId, position: index + 1 },
+            });
+        }
+
+        if (entry.tierBandId !== targetBandId) {
+            await transaction.tierPlacementHistory.create({
+                data: {
+                    tierListId: entry.tierListId,
+                    chartId: entry.chartId,
+                    bandValue: targetBand.value,
+                },
+            });
+        }
     });
-    revalidateTierList(entry.tierListId);
-}
 
-export async function moveTierEntryOrder(formData: FormData) {
-    await requireAdmin();
-    const id = Number(formData.get("id"));
-    const direction = String(formData.get("direction"));
-    if (!Number.isInteger(id) || !["up", "down"].includes(direction)) return;
-
-    const entry = await db.tierEntry.findUnique({ where: { id } });
-    if (!entry) return;
-    const neighbor = await db.tierEntry.findFirst({
-        where: {
-            tierBandId: entry.tierBandId,
-            position:
-                direction === "up"
-                    ? { lt: entry.position }
-                    : { gt: entry.position },
-        },
-        orderBy: { position: direction === "up" ? "desc" : "asc" },
-    });
-    if (!neighbor) return;
-
-    await db.$transaction([
-        db.tierEntry.update({
-            where: { id: entry.id },
-            data: { position: -1 },
-        }),
-        db.tierEntry.update({
-            where: { id: neighbor.id },
-            data: { position: entry.position },
-        }),
-        db.tierEntry.update({
-            where: { id: entry.id },
-            data: { position: neighbor.position },
-        }),
-    ]);
     revalidateTierList(entry.tierListId);
 }
 
