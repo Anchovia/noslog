@@ -98,6 +98,36 @@ export type BingoCell = $Result.DefaultSelection<Prisma.$BingoCellPayload>
  * 
  */
 export type BingoCellProgress = $Result.DefaultSelection<Prisma.$BingoCellProgressPayload>
+/**
+ * Model Exam
+ * 
+ */
+export type Exam = $Result.DefaultSelection<Prisma.$ExamPayload>
+/**
+ * Model ExamStage
+ * 
+ */
+export type ExamStage = $Result.DefaultSelection<Prisma.$ExamStagePayload>
+/**
+ * Model ExamStageChart
+ * 
+ */
+export type ExamStageChart = $Result.DefaultSelection<Prisma.$ExamStageChartPayload>
+/**
+ * Model ExamReward
+ * 
+ */
+export type ExamReward = $Result.DefaultSelection<Prisma.$ExamRewardPayload>
+/**
+ * Model ExamSubmission
+ * 
+ */
+export type ExamSubmission = $Result.DefaultSelection<Prisma.$ExamSubmissionPayload>
+/**
+ * Model ExamAchievement
+ * 
+ */
+export type ExamAchievement = $Result.DefaultSelection<Prisma.$ExamAchievementPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -386,6 +416,66 @@ export class PrismaClient<
     * ```
     */
   get bingoCellProgress(): Prisma.BingoCellProgressDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.exam`: Exposes CRUD operations for the **Exam** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Exams
+    * const exams = await prisma.exam.findMany()
+    * ```
+    */
+  get exam(): Prisma.ExamDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.examStage`: Exposes CRUD operations for the **ExamStage** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ExamStages
+    * const examStages = await prisma.examStage.findMany()
+    * ```
+    */
+  get examStage(): Prisma.ExamStageDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.examStageChart`: Exposes CRUD operations for the **ExamStageChart** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ExamStageCharts
+    * const examStageCharts = await prisma.examStageChart.findMany()
+    * ```
+    */
+  get examStageChart(): Prisma.ExamStageChartDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.examReward`: Exposes CRUD operations for the **ExamReward** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ExamRewards
+    * const examRewards = await prisma.examReward.findMany()
+    * ```
+    */
+  get examReward(): Prisma.ExamRewardDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.examSubmission`: Exposes CRUD operations for the **ExamSubmission** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ExamSubmissions
+    * const examSubmissions = await prisma.examSubmission.findMany()
+    * ```
+    */
+  get examSubmission(): Prisma.ExamSubmissionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.examAchievement`: Exposes CRUD operations for the **ExamAchievement** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ExamAchievements
+    * const examAchievements = await prisma.examAchievement.findMany()
+    * ```
+    */
+  get examAchievement(): Prisma.ExamAchievementDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -843,7 +933,13 @@ export namespace Prisma {
     PlayData: 'PlayData',
     Bingo: 'Bingo',
     BingoCell: 'BingoCell',
-    BingoCellProgress: 'BingoCellProgress'
+    BingoCellProgress: 'BingoCellProgress',
+    Exam: 'Exam',
+    ExamStage: 'ExamStage',
+    ExamStageChart: 'ExamStageChart',
+    ExamReward: 'ExamReward',
+    ExamSubmission: 'ExamSubmission',
+    ExamAchievement: 'ExamAchievement'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -862,7 +958,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "music" | "musicChart" | "dataSync" | "chartPlayHistory" | "chartRecordSnapshot" | "chartConstantHistory" | "chartEvaluation" | "chartEvaluationReaction" | "recentPlay" | "userBestGrade" | "basicBestPlay" | "recitalBestPlay" | "playData" | "bingo" | "bingoCell" | "bingoCellProgress"
+      modelProps: "user" | "music" | "musicChart" | "dataSync" | "chartPlayHistory" | "chartRecordSnapshot" | "chartConstantHistory" | "chartEvaluation" | "chartEvaluationReaction" | "recentPlay" | "userBestGrade" | "basicBestPlay" | "recitalBestPlay" | "playData" | "bingo" | "bingoCell" | "bingoCellProgress" | "exam" | "examStage" | "examStageChart" | "examReward" | "examSubmission" | "examAchievement"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2124,6 +2220,450 @@ export namespace Prisma {
           }
         }
       }
+      Exam: {
+        payload: Prisma.$ExamPayload<ExtArgs>
+        fields: Prisma.ExamFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ExamFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ExamFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamPayload>
+          }
+          findFirst: {
+            args: Prisma.ExamFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ExamFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamPayload>
+          }
+          findMany: {
+            args: Prisma.ExamFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamPayload>[]
+          }
+          create: {
+            args: Prisma.ExamCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamPayload>
+          }
+          createMany: {
+            args: Prisma.ExamCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ExamCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamPayload>[]
+          }
+          delete: {
+            args: Prisma.ExamDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamPayload>
+          }
+          update: {
+            args: Prisma.ExamUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamPayload>
+          }
+          deleteMany: {
+            args: Prisma.ExamDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ExamUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ExamUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamPayload>[]
+          }
+          upsert: {
+            args: Prisma.ExamUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamPayload>
+          }
+          aggregate: {
+            args: Prisma.ExamAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateExam>
+          }
+          groupBy: {
+            args: Prisma.ExamGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ExamGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ExamCountArgs<ExtArgs>
+            result: $Utils.Optional<ExamCountAggregateOutputType> | number
+          }
+        }
+      }
+      ExamStage: {
+        payload: Prisma.$ExamStagePayload<ExtArgs>
+        fields: Prisma.ExamStageFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ExamStageFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamStagePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ExamStageFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamStagePayload>
+          }
+          findFirst: {
+            args: Prisma.ExamStageFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamStagePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ExamStageFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamStagePayload>
+          }
+          findMany: {
+            args: Prisma.ExamStageFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamStagePayload>[]
+          }
+          create: {
+            args: Prisma.ExamStageCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamStagePayload>
+          }
+          createMany: {
+            args: Prisma.ExamStageCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ExamStageCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamStagePayload>[]
+          }
+          delete: {
+            args: Prisma.ExamStageDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamStagePayload>
+          }
+          update: {
+            args: Prisma.ExamStageUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamStagePayload>
+          }
+          deleteMany: {
+            args: Prisma.ExamStageDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ExamStageUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ExamStageUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamStagePayload>[]
+          }
+          upsert: {
+            args: Prisma.ExamStageUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamStagePayload>
+          }
+          aggregate: {
+            args: Prisma.ExamStageAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateExamStage>
+          }
+          groupBy: {
+            args: Prisma.ExamStageGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ExamStageGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ExamStageCountArgs<ExtArgs>
+            result: $Utils.Optional<ExamStageCountAggregateOutputType> | number
+          }
+        }
+      }
+      ExamStageChart: {
+        payload: Prisma.$ExamStageChartPayload<ExtArgs>
+        fields: Prisma.ExamStageChartFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ExamStageChartFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamStageChartPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ExamStageChartFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamStageChartPayload>
+          }
+          findFirst: {
+            args: Prisma.ExamStageChartFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamStageChartPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ExamStageChartFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamStageChartPayload>
+          }
+          findMany: {
+            args: Prisma.ExamStageChartFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamStageChartPayload>[]
+          }
+          create: {
+            args: Prisma.ExamStageChartCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamStageChartPayload>
+          }
+          createMany: {
+            args: Prisma.ExamStageChartCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ExamStageChartCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamStageChartPayload>[]
+          }
+          delete: {
+            args: Prisma.ExamStageChartDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamStageChartPayload>
+          }
+          update: {
+            args: Prisma.ExamStageChartUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamStageChartPayload>
+          }
+          deleteMany: {
+            args: Prisma.ExamStageChartDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ExamStageChartUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ExamStageChartUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamStageChartPayload>[]
+          }
+          upsert: {
+            args: Prisma.ExamStageChartUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamStageChartPayload>
+          }
+          aggregate: {
+            args: Prisma.ExamStageChartAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateExamStageChart>
+          }
+          groupBy: {
+            args: Prisma.ExamStageChartGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ExamStageChartGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ExamStageChartCountArgs<ExtArgs>
+            result: $Utils.Optional<ExamStageChartCountAggregateOutputType> | number
+          }
+        }
+      }
+      ExamReward: {
+        payload: Prisma.$ExamRewardPayload<ExtArgs>
+        fields: Prisma.ExamRewardFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ExamRewardFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamRewardPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ExamRewardFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamRewardPayload>
+          }
+          findFirst: {
+            args: Prisma.ExamRewardFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamRewardPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ExamRewardFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamRewardPayload>
+          }
+          findMany: {
+            args: Prisma.ExamRewardFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamRewardPayload>[]
+          }
+          create: {
+            args: Prisma.ExamRewardCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamRewardPayload>
+          }
+          createMany: {
+            args: Prisma.ExamRewardCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ExamRewardCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamRewardPayload>[]
+          }
+          delete: {
+            args: Prisma.ExamRewardDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamRewardPayload>
+          }
+          update: {
+            args: Prisma.ExamRewardUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamRewardPayload>
+          }
+          deleteMany: {
+            args: Prisma.ExamRewardDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ExamRewardUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ExamRewardUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamRewardPayload>[]
+          }
+          upsert: {
+            args: Prisma.ExamRewardUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamRewardPayload>
+          }
+          aggregate: {
+            args: Prisma.ExamRewardAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateExamReward>
+          }
+          groupBy: {
+            args: Prisma.ExamRewardGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ExamRewardGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ExamRewardCountArgs<ExtArgs>
+            result: $Utils.Optional<ExamRewardCountAggregateOutputType> | number
+          }
+        }
+      }
+      ExamSubmission: {
+        payload: Prisma.$ExamSubmissionPayload<ExtArgs>
+        fields: Prisma.ExamSubmissionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ExamSubmissionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamSubmissionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ExamSubmissionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamSubmissionPayload>
+          }
+          findFirst: {
+            args: Prisma.ExamSubmissionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamSubmissionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ExamSubmissionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamSubmissionPayload>
+          }
+          findMany: {
+            args: Prisma.ExamSubmissionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamSubmissionPayload>[]
+          }
+          create: {
+            args: Prisma.ExamSubmissionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamSubmissionPayload>
+          }
+          createMany: {
+            args: Prisma.ExamSubmissionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ExamSubmissionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamSubmissionPayload>[]
+          }
+          delete: {
+            args: Prisma.ExamSubmissionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamSubmissionPayload>
+          }
+          update: {
+            args: Prisma.ExamSubmissionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamSubmissionPayload>
+          }
+          deleteMany: {
+            args: Prisma.ExamSubmissionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ExamSubmissionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ExamSubmissionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamSubmissionPayload>[]
+          }
+          upsert: {
+            args: Prisma.ExamSubmissionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamSubmissionPayload>
+          }
+          aggregate: {
+            args: Prisma.ExamSubmissionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateExamSubmission>
+          }
+          groupBy: {
+            args: Prisma.ExamSubmissionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ExamSubmissionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ExamSubmissionCountArgs<ExtArgs>
+            result: $Utils.Optional<ExamSubmissionCountAggregateOutputType> | number
+          }
+        }
+      }
+      ExamAchievement: {
+        payload: Prisma.$ExamAchievementPayload<ExtArgs>
+        fields: Prisma.ExamAchievementFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ExamAchievementFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamAchievementPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ExamAchievementFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamAchievementPayload>
+          }
+          findFirst: {
+            args: Prisma.ExamAchievementFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamAchievementPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ExamAchievementFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamAchievementPayload>
+          }
+          findMany: {
+            args: Prisma.ExamAchievementFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamAchievementPayload>[]
+          }
+          create: {
+            args: Prisma.ExamAchievementCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamAchievementPayload>
+          }
+          createMany: {
+            args: Prisma.ExamAchievementCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ExamAchievementCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamAchievementPayload>[]
+          }
+          delete: {
+            args: Prisma.ExamAchievementDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamAchievementPayload>
+          }
+          update: {
+            args: Prisma.ExamAchievementUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamAchievementPayload>
+          }
+          deleteMany: {
+            args: Prisma.ExamAchievementDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ExamAchievementUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ExamAchievementUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamAchievementPayload>[]
+          }
+          upsert: {
+            args: Prisma.ExamAchievementUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamAchievementPayload>
+          }
+          aggregate: {
+            args: Prisma.ExamAchievementAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateExamAchievement>
+          }
+          groupBy: {
+            args: Prisma.ExamAchievementGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ExamAchievementGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ExamAchievementCountArgs<ExtArgs>
+            result: $Utils.Optional<ExamAchievementCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2237,6 +2777,12 @@ export namespace Prisma {
     bingo?: BingoOmit
     bingoCell?: BingoCellOmit
     bingoCellProgress?: BingoCellProgressOmit
+    exam?: ExamOmit
+    examStage?: ExamStageOmit
+    examStageChart?: ExamStageChartOmit
+    examReward?: ExamRewardOmit
+    examSubmission?: ExamSubmissionOmit
+    examAchievement?: ExamAchievementOmit
   }
 
   /* Types for Logging */
@@ -2328,6 +2874,8 @@ export namespace Prisma {
     dataSyncs: number
     chartPlayHistory: number
     chartRecordSnapshots: number
+    examSubmissions: number
+    examAchievements: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2342,6 +2890,8 @@ export namespace Prisma {
     dataSyncs?: boolean | UserCountOutputTypeCountDataSyncsArgs
     chartPlayHistory?: boolean | UserCountOutputTypeCountChartPlayHistoryArgs
     chartRecordSnapshots?: boolean | UserCountOutputTypeCountChartRecordSnapshotsArgs
+    examSubmissions?: boolean | UserCountOutputTypeCountExamSubmissionsArgs
+    examAchievements?: boolean | UserCountOutputTypeCountExamAchievementsArgs
   }
 
   // Custom InputTypes
@@ -2432,6 +2982,20 @@ export namespace Prisma {
     where?: ChartRecordSnapshotWhereInput
   }
 
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountExamSubmissionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ExamSubmissionWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountExamAchievementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ExamAchievementWhereInput
+  }
+
 
   /**
    * Count Type MusicCountOutputType
@@ -2445,6 +3009,8 @@ export namespace Prisma {
     bingoCovers: number
     bingoMissions: number
     charts: number
+    examStages: number
+    examRewards: number
   }
 
   export type MusicCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2455,6 +3021,8 @@ export namespace Prisma {
     bingoCovers?: boolean | MusicCountOutputTypeCountBingoCoversArgs
     bingoMissions?: boolean | MusicCountOutputTypeCountBingoMissionsArgs
     charts?: boolean | MusicCountOutputTypeCountChartsArgs
+    examStages?: boolean | MusicCountOutputTypeCountExamStagesArgs
+    examRewards?: boolean | MusicCountOutputTypeCountExamRewardsArgs
   }
 
   // Custom InputTypes
@@ -2517,6 +3085,20 @@ export namespace Prisma {
     where?: MusicChartWhereInput
   }
 
+  /**
+   * MusicCountOutputType without action
+   */
+  export type MusicCountOutputTypeCountExamStagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ExamStageWhereInput
+  }
+
+  /**
+   * MusicCountOutputType without action
+   */
+  export type MusicCountOutputTypeCountExamRewardsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ExamRewardWhereInput
+  }
+
 
   /**
    * Count Type MusicChartCountOutputType
@@ -2531,6 +3113,7 @@ export namespace Prisma {
     RecitalBestPlay: number
     playHistory: number
     recordSnapshots: number
+    examStageOptions: number
   }
 
   export type MusicChartCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2542,6 +3125,7 @@ export namespace Prisma {
     RecitalBestPlay?: boolean | MusicChartCountOutputTypeCountRecitalBestPlayArgs
     playHistory?: boolean | MusicChartCountOutputTypeCountPlayHistoryArgs
     recordSnapshots?: boolean | MusicChartCountOutputTypeCountRecordSnapshotsArgs
+    examStageOptions?: boolean | MusicChartCountOutputTypeCountExamStageOptionsArgs
   }
 
   // Custom InputTypes
@@ -2609,6 +3193,13 @@ export namespace Prisma {
    */
   export type MusicChartCountOutputTypeCountRecordSnapshotsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ChartRecordSnapshotWhereInput
+  }
+
+  /**
+   * MusicChartCountOutputType without action
+   */
+  export type MusicChartCountOutputTypeCountExamStageOptionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ExamStageChartWhereInput
   }
 
 
@@ -2742,6 +3333,95 @@ export namespace Prisma {
    */
   export type BingoCellCountOutputTypeCountProgressArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: BingoCellProgressWhereInput
+  }
+
+
+  /**
+   * Count Type ExamCountOutputType
+   */
+
+  export type ExamCountOutputType = {
+    stages: number
+    rewards: number
+    submissions: number
+    achievements: number
+  }
+
+  export type ExamCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    stages?: boolean | ExamCountOutputTypeCountStagesArgs
+    rewards?: boolean | ExamCountOutputTypeCountRewardsArgs
+    submissions?: boolean | ExamCountOutputTypeCountSubmissionsArgs
+    achievements?: boolean | ExamCountOutputTypeCountAchievementsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ExamCountOutputType without action
+   */
+  export type ExamCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamCountOutputType
+     */
+    select?: ExamCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ExamCountOutputType without action
+   */
+  export type ExamCountOutputTypeCountStagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ExamStageWhereInput
+  }
+
+  /**
+   * ExamCountOutputType without action
+   */
+  export type ExamCountOutputTypeCountRewardsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ExamRewardWhereInput
+  }
+
+  /**
+   * ExamCountOutputType without action
+   */
+  export type ExamCountOutputTypeCountSubmissionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ExamSubmissionWhereInput
+  }
+
+  /**
+   * ExamCountOutputType without action
+   */
+  export type ExamCountOutputTypeCountAchievementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ExamAchievementWhereInput
+  }
+
+
+  /**
+   * Count Type ExamStageCountOutputType
+   */
+
+  export type ExamStageCountOutputType = {
+    allowedCharts: number
+  }
+
+  export type ExamStageCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    allowedCharts?: boolean | ExamStageCountOutputTypeCountAllowedChartsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ExamStageCountOutputType without action
+   */
+  export type ExamStageCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamStageCountOutputType
+     */
+    select?: ExamStageCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ExamStageCountOutputType without action
+   */
+  export type ExamStageCountOutputTypeCountAllowedChartsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ExamStageChartWhereInput
   }
 
 
@@ -3238,6 +3918,8 @@ export namespace Prisma {
     dataSyncs?: boolean | User$dataSyncsArgs<ExtArgs>
     chartPlayHistory?: boolean | User$chartPlayHistoryArgs<ExtArgs>
     chartRecordSnapshots?: boolean | User$chartRecordSnapshotsArgs<ExtArgs>
+    examSubmissions?: boolean | User$examSubmissionsArgs<ExtArgs>
+    examAchievements?: boolean | User$examAchievementsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -3353,6 +4035,8 @@ export namespace Prisma {
     dataSyncs?: boolean | User$dataSyncsArgs<ExtArgs>
     chartPlayHistory?: boolean | User$chartPlayHistoryArgs<ExtArgs>
     chartRecordSnapshots?: boolean | User$chartRecordSnapshotsArgs<ExtArgs>
+    examSubmissions?: boolean | User$examSubmissionsArgs<ExtArgs>
+    examAchievements?: boolean | User$examAchievementsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -3372,6 +4056,8 @@ export namespace Prisma {
       dataSyncs: Prisma.$DataSyncPayload<ExtArgs>[]
       chartPlayHistory: Prisma.$ChartPlayHistoryPayload<ExtArgs>[]
       chartRecordSnapshots: Prisma.$ChartRecordSnapshotPayload<ExtArgs>[]
+      examSubmissions: Prisma.$ExamSubmissionPayload<ExtArgs>[]
+      examAchievements: Prisma.$ExamAchievementPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -3809,6 +4495,8 @@ export namespace Prisma {
     dataSyncs<T extends User$dataSyncsArgs<ExtArgs> = {}>(args?: Subset<T, User$dataSyncsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DataSyncPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     chartPlayHistory<T extends User$chartPlayHistoryArgs<ExtArgs> = {}>(args?: Subset<T, User$chartPlayHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartPlayHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     chartRecordSnapshots<T extends User$chartRecordSnapshotsArgs<ExtArgs> = {}>(args?: Subset<T, User$chartRecordSnapshotsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartRecordSnapshotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    examSubmissions<T extends User$examSubmissionsArgs<ExtArgs> = {}>(args?: Subset<T, User$examSubmissionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamSubmissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    examAchievements<T extends User$examAchievementsArgs<ExtArgs> = {}>(args?: Subset<T, User$examAchievementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamAchievementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4518,6 +5206,54 @@ export namespace Prisma {
   }
 
   /**
+   * User.examSubmissions
+   */
+  export type User$examSubmissionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamSubmission
+     */
+    select?: ExamSubmissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamSubmission
+     */
+    omit?: ExamSubmissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamSubmissionInclude<ExtArgs> | null
+    where?: ExamSubmissionWhereInput
+    orderBy?: ExamSubmissionOrderByWithRelationInput | ExamSubmissionOrderByWithRelationInput[]
+    cursor?: ExamSubmissionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ExamSubmissionScalarFieldEnum | ExamSubmissionScalarFieldEnum[]
+  }
+
+  /**
+   * User.examAchievements
+   */
+  export type User$examAchievementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamAchievement
+     */
+    select?: ExamAchievementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamAchievement
+     */
+    omit?: ExamAchievementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamAchievementInclude<ExtArgs> | null
+    where?: ExamAchievementWhereInput
+    orderBy?: ExamAchievementOrderByWithRelationInput | ExamAchievementOrderByWithRelationInput[]
+    cursor?: ExamAchievementWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ExamAchievementScalarFieldEnum | ExamAchievementScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4865,6 +5601,8 @@ export namespace Prisma {
     bingoCovers?: boolean | Music$bingoCoversArgs<ExtArgs>
     bingoMissions?: boolean | Music$bingoMissionsArgs<ExtArgs>
     charts?: boolean | Music$chartsArgs<ExtArgs>
+    examStages?: boolean | Music$examStagesArgs<ExtArgs>
+    examRewards?: boolean | Music$examRewardsArgs<ExtArgs>
     _count?: boolean | MusicCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["music"]>
 
@@ -4940,6 +5678,8 @@ export namespace Prisma {
     bingoCovers?: boolean | Music$bingoCoversArgs<ExtArgs>
     bingoMissions?: boolean | Music$bingoMissionsArgs<ExtArgs>
     charts?: boolean | Music$chartsArgs<ExtArgs>
+    examStages?: boolean | Music$examStagesArgs<ExtArgs>
+    examRewards?: boolean | Music$examRewardsArgs<ExtArgs>
     _count?: boolean | MusicCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type MusicIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -4955,6 +5695,8 @@ export namespace Prisma {
       bingoCovers: Prisma.$BingoPayload<ExtArgs>[]
       bingoMissions: Prisma.$BingoCellPayload<ExtArgs>[]
       charts: Prisma.$MusicChartPayload<ExtArgs>[]
+      examStages: Prisma.$ExamStagePayload<ExtArgs>[]
+      examRewards: Prisma.$ExamRewardPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -5376,6 +6118,8 @@ export namespace Prisma {
     bingoCovers<T extends Music$bingoCoversArgs<ExtArgs> = {}>(args?: Subset<T, Music$bingoCoversArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BingoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     bingoMissions<T extends Music$bingoMissionsArgs<ExtArgs> = {}>(args?: Subset<T, Music$bingoMissionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BingoCellPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     charts<T extends Music$chartsArgs<ExtArgs> = {}>(args?: Subset<T, Music$chartsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MusicChartPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    examStages<T extends Music$examStagesArgs<ExtArgs> = {}>(args?: Subset<T, Music$examStagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamStagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    examRewards<T extends Music$examRewardsArgs<ExtArgs> = {}>(args?: Subset<T, Music$examRewardsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamRewardPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5977,6 +6721,54 @@ export namespace Prisma {
   }
 
   /**
+   * Music.examStages
+   */
+  export type Music$examStagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamStage
+     */
+    select?: ExamStageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamStage
+     */
+    omit?: ExamStageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamStageInclude<ExtArgs> | null
+    where?: ExamStageWhereInput
+    orderBy?: ExamStageOrderByWithRelationInput | ExamStageOrderByWithRelationInput[]
+    cursor?: ExamStageWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ExamStageScalarFieldEnum | ExamStageScalarFieldEnum[]
+  }
+
+  /**
+   * Music.examRewards
+   */
+  export type Music$examRewardsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamReward
+     */
+    select?: ExamRewardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamReward
+     */
+    omit?: ExamRewardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamRewardInclude<ExtArgs> | null
+    where?: ExamRewardWhereInput
+    orderBy?: ExamRewardOrderByWithRelationInput | ExamRewardOrderByWithRelationInput[]
+    cursor?: ExamRewardWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ExamRewardScalarFieldEnum | ExamRewardScalarFieldEnum[]
+  }
+
+  /**
    * Music without action
    */
   export type MusicDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6306,6 +7098,7 @@ export namespace Prisma {
     RecitalBestPlay?: boolean | MusicChart$RecitalBestPlayArgs<ExtArgs>
     playHistory?: boolean | MusicChart$playHistoryArgs<ExtArgs>
     recordSnapshots?: boolean | MusicChart$recordSnapshotsArgs<ExtArgs>
+    examStageOptions?: boolean | MusicChart$examStageOptionsArgs<ExtArgs>
     _count?: boolean | MusicChartCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["musicChart"]>
 
@@ -6376,6 +7169,7 @@ export namespace Prisma {
     RecitalBestPlay?: boolean | MusicChart$RecitalBestPlayArgs<ExtArgs>
     playHistory?: boolean | MusicChart$playHistoryArgs<ExtArgs>
     recordSnapshots?: boolean | MusicChart$recordSnapshotsArgs<ExtArgs>
+    examStageOptions?: boolean | MusicChart$examStageOptionsArgs<ExtArgs>
     _count?: boolean | MusicChartCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type MusicChartIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6397,6 +7191,7 @@ export namespace Prisma {
       RecitalBestPlay: Prisma.$RecitalBestPlayPayload<ExtArgs>[]
       playHistory: Prisma.$ChartPlayHistoryPayload<ExtArgs>[]
       recordSnapshots: Prisma.$ChartRecordSnapshotPayload<ExtArgs>[]
+      examStageOptions: Prisma.$ExamStageChartPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -6817,6 +7612,7 @@ export namespace Prisma {
     RecitalBestPlay<T extends MusicChart$RecitalBestPlayArgs<ExtArgs> = {}>(args?: Subset<T, MusicChart$RecitalBestPlayArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RecitalBestPlayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     playHistory<T extends MusicChart$playHistoryArgs<ExtArgs> = {}>(args?: Subset<T, MusicChart$playHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartPlayHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     recordSnapshots<T extends MusicChart$recordSnapshotsArgs<ExtArgs> = {}>(args?: Subset<T, MusicChart$recordSnapshotsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartRecordSnapshotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    examStageOptions<T extends MusicChart$examStageOptionsArgs<ExtArgs> = {}>(args?: Subset<T, MusicChart$examStageOptionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamStageChartPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7444,6 +8240,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ChartRecordSnapshotScalarFieldEnum | ChartRecordSnapshotScalarFieldEnum[]
+  }
+
+  /**
+   * MusicChart.examStageOptions
+   */
+  export type MusicChart$examStageOptionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamStageChart
+     */
+    select?: ExamStageChartSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamStageChart
+     */
+    omit?: ExamStageChartOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamStageChartInclude<ExtArgs> | null
+    where?: ExamStageChartWhereInput
+    orderBy?: ExamStageChartOrderByWithRelationInput | ExamStageChartOrderByWithRelationInput[]
+    cursor?: ExamStageChartWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ExamStageChartScalarFieldEnum | ExamStageChartScalarFieldEnum[]
   }
 
   /**
@@ -24547,6 +25367,7045 @@ export namespace Prisma {
 
 
   /**
+   * Model Exam
+   */
+
+  export type AggregateExam = {
+    _count: ExamCountAggregateOutputType | null
+    _avg: ExamAvgAggregateOutputType | null
+    _sum: ExamSumAggregateOutputType | null
+    _min: ExamMinAggregateOutputType | null
+    _max: ExamMaxAggregateOutputType | null
+  }
+
+  export type ExamAvgAggregateOutputType = {
+    id: number | null
+    grade: number | null
+    feeNos: number | null
+    requiredGrade: number | null
+  }
+
+  export type ExamSumAggregateOutputType = {
+    id: number | null
+    grade: number | null
+    feeNos: number | null
+    requiredGrade: number | null
+  }
+
+  export type ExamMinAggregateOutputType = {
+    id: number | null
+    slug: string | null
+    mode: string | null
+    shortLabel: string | null
+    scoringType: string | null
+    grade: number | null
+    title: string | null
+    description: string | null
+    feeNos: number | null
+    requiredGrade: number | null
+    status: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ExamMaxAggregateOutputType = {
+    id: number | null
+    slug: string | null
+    mode: string | null
+    shortLabel: string | null
+    scoringType: string | null
+    grade: number | null
+    title: string | null
+    description: string | null
+    feeNos: number | null
+    requiredGrade: number | null
+    status: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ExamCountAggregateOutputType = {
+    id: number
+    slug: number
+    mode: number
+    shortLabel: number
+    scoringType: number
+    grade: number
+    title: number
+    description: number
+    feeNos: number
+    requiredGrade: number
+    status: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ExamAvgAggregateInputType = {
+    id?: true
+    grade?: true
+    feeNos?: true
+    requiredGrade?: true
+  }
+
+  export type ExamSumAggregateInputType = {
+    id?: true
+    grade?: true
+    feeNos?: true
+    requiredGrade?: true
+  }
+
+  export type ExamMinAggregateInputType = {
+    id?: true
+    slug?: true
+    mode?: true
+    shortLabel?: true
+    scoringType?: true
+    grade?: true
+    title?: true
+    description?: true
+    feeNos?: true
+    requiredGrade?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ExamMaxAggregateInputType = {
+    id?: true
+    slug?: true
+    mode?: true
+    shortLabel?: true
+    scoringType?: true
+    grade?: true
+    title?: true
+    description?: true
+    feeNos?: true
+    requiredGrade?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ExamCountAggregateInputType = {
+    id?: true
+    slug?: true
+    mode?: true
+    shortLabel?: true
+    scoringType?: true
+    grade?: true
+    title?: true
+    description?: true
+    feeNos?: true
+    requiredGrade?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ExamAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Exam to aggregate.
+     */
+    where?: ExamWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Exams to fetch.
+     */
+    orderBy?: ExamOrderByWithRelationInput | ExamOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ExamWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Exams from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Exams.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Exams
+    **/
+    _count?: true | ExamCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ExamAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ExamSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ExamMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ExamMaxAggregateInputType
+  }
+
+  export type GetExamAggregateType<T extends ExamAggregateArgs> = {
+        [P in keyof T & keyof AggregateExam]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateExam[P]>
+      : GetScalarType<T[P], AggregateExam[P]>
+  }
+
+
+
+
+  export type ExamGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ExamWhereInput
+    orderBy?: ExamOrderByWithAggregationInput | ExamOrderByWithAggregationInput[]
+    by: ExamScalarFieldEnum[] | ExamScalarFieldEnum
+    having?: ExamScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ExamCountAggregateInputType | true
+    _avg?: ExamAvgAggregateInputType
+    _sum?: ExamSumAggregateInputType
+    _min?: ExamMinAggregateInputType
+    _max?: ExamMaxAggregateInputType
+  }
+
+  export type ExamGroupByOutputType = {
+    id: number
+    slug: string
+    mode: string
+    shortLabel: string
+    scoringType: string
+    grade: number | null
+    title: string
+    description: string | null
+    feeNos: number
+    requiredGrade: number
+    status: string
+    createdAt: Date
+    updatedAt: Date
+    _count: ExamCountAggregateOutputType | null
+    _avg: ExamAvgAggregateOutputType | null
+    _sum: ExamSumAggregateOutputType | null
+    _min: ExamMinAggregateOutputType | null
+    _max: ExamMaxAggregateOutputType | null
+  }
+
+  type GetExamGroupByPayload<T extends ExamGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ExamGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ExamGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ExamGroupByOutputType[P]>
+            : GetScalarType<T[P], ExamGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ExamSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    slug?: boolean
+    mode?: boolean
+    shortLabel?: boolean
+    scoringType?: boolean
+    grade?: boolean
+    title?: boolean
+    description?: boolean
+    feeNos?: boolean
+    requiredGrade?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    stages?: boolean | Exam$stagesArgs<ExtArgs>
+    rewards?: boolean | Exam$rewardsArgs<ExtArgs>
+    submissions?: boolean | Exam$submissionsArgs<ExtArgs>
+    achievements?: boolean | Exam$achievementsArgs<ExtArgs>
+    _count?: boolean | ExamCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["exam"]>
+
+  export type ExamSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    slug?: boolean
+    mode?: boolean
+    shortLabel?: boolean
+    scoringType?: boolean
+    grade?: boolean
+    title?: boolean
+    description?: boolean
+    feeNos?: boolean
+    requiredGrade?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["exam"]>
+
+  export type ExamSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    slug?: boolean
+    mode?: boolean
+    shortLabel?: boolean
+    scoringType?: boolean
+    grade?: boolean
+    title?: boolean
+    description?: boolean
+    feeNos?: boolean
+    requiredGrade?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["exam"]>
+
+  export type ExamSelectScalar = {
+    id?: boolean
+    slug?: boolean
+    mode?: boolean
+    shortLabel?: boolean
+    scoringType?: boolean
+    grade?: boolean
+    title?: boolean
+    description?: boolean
+    feeNos?: boolean
+    requiredGrade?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ExamOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "slug" | "mode" | "shortLabel" | "scoringType" | "grade" | "title" | "description" | "feeNos" | "requiredGrade" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["exam"]>
+  export type ExamInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    stages?: boolean | Exam$stagesArgs<ExtArgs>
+    rewards?: boolean | Exam$rewardsArgs<ExtArgs>
+    submissions?: boolean | Exam$submissionsArgs<ExtArgs>
+    achievements?: boolean | Exam$achievementsArgs<ExtArgs>
+    _count?: boolean | ExamCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type ExamIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type ExamIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $ExamPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Exam"
+    objects: {
+      stages: Prisma.$ExamStagePayload<ExtArgs>[]
+      rewards: Prisma.$ExamRewardPayload<ExtArgs>[]
+      submissions: Prisma.$ExamSubmissionPayload<ExtArgs>[]
+      achievements: Prisma.$ExamAchievementPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      slug: string
+      mode: string
+      shortLabel: string
+      scoringType: string
+      grade: number | null
+      title: string
+      description: string | null
+      feeNos: number
+      requiredGrade: number
+      status: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["exam"]>
+    composites: {}
+  }
+
+  type ExamGetPayload<S extends boolean | null | undefined | ExamDefaultArgs> = $Result.GetResult<Prisma.$ExamPayload, S>
+
+  type ExamCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ExamFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ExamCountAggregateInputType | true
+    }
+
+  export interface ExamDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Exam'], meta: { name: 'Exam' } }
+    /**
+     * Find zero or one Exam that matches the filter.
+     * @param {ExamFindUniqueArgs} args - Arguments to find a Exam
+     * @example
+     * // Get one Exam
+     * const exam = await prisma.exam.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ExamFindUniqueArgs>(args: SelectSubset<T, ExamFindUniqueArgs<ExtArgs>>): Prisma__ExamClient<$Result.GetResult<Prisma.$ExamPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Exam that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ExamFindUniqueOrThrowArgs} args - Arguments to find a Exam
+     * @example
+     * // Get one Exam
+     * const exam = await prisma.exam.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ExamFindUniqueOrThrowArgs>(args: SelectSubset<T, ExamFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ExamClient<$Result.GetResult<Prisma.$ExamPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Exam that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamFindFirstArgs} args - Arguments to find a Exam
+     * @example
+     * // Get one Exam
+     * const exam = await prisma.exam.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ExamFindFirstArgs>(args?: SelectSubset<T, ExamFindFirstArgs<ExtArgs>>): Prisma__ExamClient<$Result.GetResult<Prisma.$ExamPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Exam that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamFindFirstOrThrowArgs} args - Arguments to find a Exam
+     * @example
+     * // Get one Exam
+     * const exam = await prisma.exam.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ExamFindFirstOrThrowArgs>(args?: SelectSubset<T, ExamFindFirstOrThrowArgs<ExtArgs>>): Prisma__ExamClient<$Result.GetResult<Prisma.$ExamPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Exams that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Exams
+     * const exams = await prisma.exam.findMany()
+     * 
+     * // Get first 10 Exams
+     * const exams = await prisma.exam.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const examWithIdOnly = await prisma.exam.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ExamFindManyArgs>(args?: SelectSubset<T, ExamFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Exam.
+     * @param {ExamCreateArgs} args - Arguments to create a Exam.
+     * @example
+     * // Create one Exam
+     * const Exam = await prisma.exam.create({
+     *   data: {
+     *     // ... data to create a Exam
+     *   }
+     * })
+     * 
+     */
+    create<T extends ExamCreateArgs>(args: SelectSubset<T, ExamCreateArgs<ExtArgs>>): Prisma__ExamClient<$Result.GetResult<Prisma.$ExamPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Exams.
+     * @param {ExamCreateManyArgs} args - Arguments to create many Exams.
+     * @example
+     * // Create many Exams
+     * const exam = await prisma.exam.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ExamCreateManyArgs>(args?: SelectSubset<T, ExamCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Exams and returns the data saved in the database.
+     * @param {ExamCreateManyAndReturnArgs} args - Arguments to create many Exams.
+     * @example
+     * // Create many Exams
+     * const exam = await prisma.exam.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Exams and only return the `id`
+     * const examWithIdOnly = await prisma.exam.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ExamCreateManyAndReturnArgs>(args?: SelectSubset<T, ExamCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Exam.
+     * @param {ExamDeleteArgs} args - Arguments to delete one Exam.
+     * @example
+     * // Delete one Exam
+     * const Exam = await prisma.exam.delete({
+     *   where: {
+     *     // ... filter to delete one Exam
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ExamDeleteArgs>(args: SelectSubset<T, ExamDeleteArgs<ExtArgs>>): Prisma__ExamClient<$Result.GetResult<Prisma.$ExamPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Exam.
+     * @param {ExamUpdateArgs} args - Arguments to update one Exam.
+     * @example
+     * // Update one Exam
+     * const exam = await prisma.exam.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ExamUpdateArgs>(args: SelectSubset<T, ExamUpdateArgs<ExtArgs>>): Prisma__ExamClient<$Result.GetResult<Prisma.$ExamPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Exams.
+     * @param {ExamDeleteManyArgs} args - Arguments to filter Exams to delete.
+     * @example
+     * // Delete a few Exams
+     * const { count } = await prisma.exam.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ExamDeleteManyArgs>(args?: SelectSubset<T, ExamDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Exams.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Exams
+     * const exam = await prisma.exam.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ExamUpdateManyArgs>(args: SelectSubset<T, ExamUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Exams and returns the data updated in the database.
+     * @param {ExamUpdateManyAndReturnArgs} args - Arguments to update many Exams.
+     * @example
+     * // Update many Exams
+     * const exam = await prisma.exam.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Exams and only return the `id`
+     * const examWithIdOnly = await prisma.exam.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ExamUpdateManyAndReturnArgs>(args: SelectSubset<T, ExamUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Exam.
+     * @param {ExamUpsertArgs} args - Arguments to update or create a Exam.
+     * @example
+     * // Update or create a Exam
+     * const exam = await prisma.exam.upsert({
+     *   create: {
+     *     // ... data to create a Exam
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Exam we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ExamUpsertArgs>(args: SelectSubset<T, ExamUpsertArgs<ExtArgs>>): Prisma__ExamClient<$Result.GetResult<Prisma.$ExamPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Exams.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamCountArgs} args - Arguments to filter Exams to count.
+     * @example
+     * // Count the number of Exams
+     * const count = await prisma.exam.count({
+     *   where: {
+     *     // ... the filter for the Exams we want to count
+     *   }
+     * })
+    **/
+    count<T extends ExamCountArgs>(
+      args?: Subset<T, ExamCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ExamCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Exam.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ExamAggregateArgs>(args: Subset<T, ExamAggregateArgs>): Prisma.PrismaPromise<GetExamAggregateType<T>>
+
+    /**
+     * Group by Exam.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ExamGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ExamGroupByArgs['orderBy'] }
+        : { orderBy?: ExamGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ExamGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetExamGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Exam model
+   */
+  readonly fields: ExamFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Exam.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ExamClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    stages<T extends Exam$stagesArgs<ExtArgs> = {}>(args?: Subset<T, Exam$stagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamStagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    rewards<T extends Exam$rewardsArgs<ExtArgs> = {}>(args?: Subset<T, Exam$rewardsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamRewardPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    submissions<T extends Exam$submissionsArgs<ExtArgs> = {}>(args?: Subset<T, Exam$submissionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamSubmissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    achievements<T extends Exam$achievementsArgs<ExtArgs> = {}>(args?: Subset<T, Exam$achievementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamAchievementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Exam model
+   */
+  interface ExamFieldRefs {
+    readonly id: FieldRef<"Exam", 'Int'>
+    readonly slug: FieldRef<"Exam", 'String'>
+    readonly mode: FieldRef<"Exam", 'String'>
+    readonly shortLabel: FieldRef<"Exam", 'String'>
+    readonly scoringType: FieldRef<"Exam", 'String'>
+    readonly grade: FieldRef<"Exam", 'Int'>
+    readonly title: FieldRef<"Exam", 'String'>
+    readonly description: FieldRef<"Exam", 'String'>
+    readonly feeNos: FieldRef<"Exam", 'Int'>
+    readonly requiredGrade: FieldRef<"Exam", 'Int'>
+    readonly status: FieldRef<"Exam", 'String'>
+    readonly createdAt: FieldRef<"Exam", 'DateTime'>
+    readonly updatedAt: FieldRef<"Exam", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Exam findUnique
+   */
+  export type ExamFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Exam
+     */
+    select?: ExamSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Exam
+     */
+    omit?: ExamOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamInclude<ExtArgs> | null
+    /**
+     * Filter, which Exam to fetch.
+     */
+    where: ExamWhereUniqueInput
+  }
+
+  /**
+   * Exam findUniqueOrThrow
+   */
+  export type ExamFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Exam
+     */
+    select?: ExamSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Exam
+     */
+    omit?: ExamOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamInclude<ExtArgs> | null
+    /**
+     * Filter, which Exam to fetch.
+     */
+    where: ExamWhereUniqueInput
+  }
+
+  /**
+   * Exam findFirst
+   */
+  export type ExamFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Exam
+     */
+    select?: ExamSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Exam
+     */
+    omit?: ExamOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamInclude<ExtArgs> | null
+    /**
+     * Filter, which Exam to fetch.
+     */
+    where?: ExamWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Exams to fetch.
+     */
+    orderBy?: ExamOrderByWithRelationInput | ExamOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Exams.
+     */
+    cursor?: ExamWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Exams from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Exams.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Exams.
+     */
+    distinct?: ExamScalarFieldEnum | ExamScalarFieldEnum[]
+  }
+
+  /**
+   * Exam findFirstOrThrow
+   */
+  export type ExamFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Exam
+     */
+    select?: ExamSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Exam
+     */
+    omit?: ExamOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamInclude<ExtArgs> | null
+    /**
+     * Filter, which Exam to fetch.
+     */
+    where?: ExamWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Exams to fetch.
+     */
+    orderBy?: ExamOrderByWithRelationInput | ExamOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Exams.
+     */
+    cursor?: ExamWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Exams from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Exams.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Exams.
+     */
+    distinct?: ExamScalarFieldEnum | ExamScalarFieldEnum[]
+  }
+
+  /**
+   * Exam findMany
+   */
+  export type ExamFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Exam
+     */
+    select?: ExamSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Exam
+     */
+    omit?: ExamOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamInclude<ExtArgs> | null
+    /**
+     * Filter, which Exams to fetch.
+     */
+    where?: ExamWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Exams to fetch.
+     */
+    orderBy?: ExamOrderByWithRelationInput | ExamOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Exams.
+     */
+    cursor?: ExamWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Exams from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Exams.
+     */
+    skip?: number
+    distinct?: ExamScalarFieldEnum | ExamScalarFieldEnum[]
+  }
+
+  /**
+   * Exam create
+   */
+  export type ExamCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Exam
+     */
+    select?: ExamSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Exam
+     */
+    omit?: ExamOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Exam.
+     */
+    data: XOR<ExamCreateInput, ExamUncheckedCreateInput>
+  }
+
+  /**
+   * Exam createMany
+   */
+  export type ExamCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Exams.
+     */
+    data: ExamCreateManyInput | ExamCreateManyInput[]
+  }
+
+  /**
+   * Exam createManyAndReturn
+   */
+  export type ExamCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Exam
+     */
+    select?: ExamSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Exam
+     */
+    omit?: ExamOmit<ExtArgs> | null
+    /**
+     * The data used to create many Exams.
+     */
+    data: ExamCreateManyInput | ExamCreateManyInput[]
+  }
+
+  /**
+   * Exam update
+   */
+  export type ExamUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Exam
+     */
+    select?: ExamSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Exam
+     */
+    omit?: ExamOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Exam.
+     */
+    data: XOR<ExamUpdateInput, ExamUncheckedUpdateInput>
+    /**
+     * Choose, which Exam to update.
+     */
+    where: ExamWhereUniqueInput
+  }
+
+  /**
+   * Exam updateMany
+   */
+  export type ExamUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Exams.
+     */
+    data: XOR<ExamUpdateManyMutationInput, ExamUncheckedUpdateManyInput>
+    /**
+     * Filter which Exams to update
+     */
+    where?: ExamWhereInput
+    /**
+     * Limit how many Exams to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Exam updateManyAndReturn
+   */
+  export type ExamUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Exam
+     */
+    select?: ExamSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Exam
+     */
+    omit?: ExamOmit<ExtArgs> | null
+    /**
+     * The data used to update Exams.
+     */
+    data: XOR<ExamUpdateManyMutationInput, ExamUncheckedUpdateManyInput>
+    /**
+     * Filter which Exams to update
+     */
+    where?: ExamWhereInput
+    /**
+     * Limit how many Exams to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Exam upsert
+   */
+  export type ExamUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Exam
+     */
+    select?: ExamSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Exam
+     */
+    omit?: ExamOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Exam to update in case it exists.
+     */
+    where: ExamWhereUniqueInput
+    /**
+     * In case the Exam found by the `where` argument doesn't exist, create a new Exam with this data.
+     */
+    create: XOR<ExamCreateInput, ExamUncheckedCreateInput>
+    /**
+     * In case the Exam was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ExamUpdateInput, ExamUncheckedUpdateInput>
+  }
+
+  /**
+   * Exam delete
+   */
+  export type ExamDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Exam
+     */
+    select?: ExamSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Exam
+     */
+    omit?: ExamOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamInclude<ExtArgs> | null
+    /**
+     * Filter which Exam to delete.
+     */
+    where: ExamWhereUniqueInput
+  }
+
+  /**
+   * Exam deleteMany
+   */
+  export type ExamDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Exams to delete
+     */
+    where?: ExamWhereInput
+    /**
+     * Limit how many Exams to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Exam.stages
+   */
+  export type Exam$stagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamStage
+     */
+    select?: ExamStageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamStage
+     */
+    omit?: ExamStageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamStageInclude<ExtArgs> | null
+    where?: ExamStageWhereInput
+    orderBy?: ExamStageOrderByWithRelationInput | ExamStageOrderByWithRelationInput[]
+    cursor?: ExamStageWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ExamStageScalarFieldEnum | ExamStageScalarFieldEnum[]
+  }
+
+  /**
+   * Exam.rewards
+   */
+  export type Exam$rewardsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamReward
+     */
+    select?: ExamRewardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamReward
+     */
+    omit?: ExamRewardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamRewardInclude<ExtArgs> | null
+    where?: ExamRewardWhereInput
+    orderBy?: ExamRewardOrderByWithRelationInput | ExamRewardOrderByWithRelationInput[]
+    cursor?: ExamRewardWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ExamRewardScalarFieldEnum | ExamRewardScalarFieldEnum[]
+  }
+
+  /**
+   * Exam.submissions
+   */
+  export type Exam$submissionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamSubmission
+     */
+    select?: ExamSubmissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamSubmission
+     */
+    omit?: ExamSubmissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamSubmissionInclude<ExtArgs> | null
+    where?: ExamSubmissionWhereInput
+    orderBy?: ExamSubmissionOrderByWithRelationInput | ExamSubmissionOrderByWithRelationInput[]
+    cursor?: ExamSubmissionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ExamSubmissionScalarFieldEnum | ExamSubmissionScalarFieldEnum[]
+  }
+
+  /**
+   * Exam.achievements
+   */
+  export type Exam$achievementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamAchievement
+     */
+    select?: ExamAchievementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamAchievement
+     */
+    omit?: ExamAchievementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamAchievementInclude<ExtArgs> | null
+    where?: ExamAchievementWhereInput
+    orderBy?: ExamAchievementOrderByWithRelationInput | ExamAchievementOrderByWithRelationInput[]
+    cursor?: ExamAchievementWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ExamAchievementScalarFieldEnum | ExamAchievementScalarFieldEnum[]
+  }
+
+  /**
+   * Exam without action
+   */
+  export type ExamDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Exam
+     */
+    select?: ExamSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Exam
+     */
+    omit?: ExamOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ExamStage
+   */
+
+  export type AggregateExamStage = {
+    _count: ExamStageCountAggregateOutputType | null
+    _avg: ExamStageAvgAggregateOutputType | null
+    _sum: ExamStageSumAggregateOutputType | null
+    _min: ExamStageMinAggregateOutputType | null
+    _max: ExamStageMaxAggregateOutputType | null
+  }
+
+  export type ExamStageAvgAggregateOutputType = {
+    id: number | null
+    position: number | null
+    requiredValue: number | null
+    examId: number | null
+  }
+
+  export type ExamStageSumAggregateOutputType = {
+    id: number | null
+    position: number | null
+    requiredValue: number | null
+    examId: number | null
+  }
+
+  export type ExamStageMinAggregateOutputType = {
+    id: number | null
+    position: number | null
+    label: string | null
+    requirementType: string | null
+    requiredValue: number | null
+    examId: number | null
+    musicIndex: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ExamStageMaxAggregateOutputType = {
+    id: number | null
+    position: number | null
+    label: string | null
+    requirementType: string | null
+    requiredValue: number | null
+    examId: number | null
+    musicIndex: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ExamStageCountAggregateOutputType = {
+    id: number
+    position: number
+    label: number
+    requirementType: number
+    requiredValue: number
+    examId: number
+    musicIndex: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ExamStageAvgAggregateInputType = {
+    id?: true
+    position?: true
+    requiredValue?: true
+    examId?: true
+  }
+
+  export type ExamStageSumAggregateInputType = {
+    id?: true
+    position?: true
+    requiredValue?: true
+    examId?: true
+  }
+
+  export type ExamStageMinAggregateInputType = {
+    id?: true
+    position?: true
+    label?: true
+    requirementType?: true
+    requiredValue?: true
+    examId?: true
+    musicIndex?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ExamStageMaxAggregateInputType = {
+    id?: true
+    position?: true
+    label?: true
+    requirementType?: true
+    requiredValue?: true
+    examId?: true
+    musicIndex?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ExamStageCountAggregateInputType = {
+    id?: true
+    position?: true
+    label?: true
+    requirementType?: true
+    requiredValue?: true
+    examId?: true
+    musicIndex?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ExamStageAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ExamStage to aggregate.
+     */
+    where?: ExamStageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExamStages to fetch.
+     */
+    orderBy?: ExamStageOrderByWithRelationInput | ExamStageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ExamStageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExamStages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExamStages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ExamStages
+    **/
+    _count?: true | ExamStageCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ExamStageAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ExamStageSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ExamStageMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ExamStageMaxAggregateInputType
+  }
+
+  export type GetExamStageAggregateType<T extends ExamStageAggregateArgs> = {
+        [P in keyof T & keyof AggregateExamStage]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateExamStage[P]>
+      : GetScalarType<T[P], AggregateExamStage[P]>
+  }
+
+
+
+
+  export type ExamStageGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ExamStageWhereInput
+    orderBy?: ExamStageOrderByWithAggregationInput | ExamStageOrderByWithAggregationInput[]
+    by: ExamStageScalarFieldEnum[] | ExamStageScalarFieldEnum
+    having?: ExamStageScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ExamStageCountAggregateInputType | true
+    _avg?: ExamStageAvgAggregateInputType
+    _sum?: ExamStageSumAggregateInputType
+    _min?: ExamStageMinAggregateInputType
+    _max?: ExamStageMaxAggregateInputType
+  }
+
+  export type ExamStageGroupByOutputType = {
+    id: number
+    position: number
+    label: string | null
+    requirementType: string
+    requiredValue: number
+    examId: number
+    musicIndex: string
+    createdAt: Date
+    updatedAt: Date
+    _count: ExamStageCountAggregateOutputType | null
+    _avg: ExamStageAvgAggregateOutputType | null
+    _sum: ExamStageSumAggregateOutputType | null
+    _min: ExamStageMinAggregateOutputType | null
+    _max: ExamStageMaxAggregateOutputType | null
+  }
+
+  type GetExamStageGroupByPayload<T extends ExamStageGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ExamStageGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ExamStageGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ExamStageGroupByOutputType[P]>
+            : GetScalarType<T[P], ExamStageGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ExamStageSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    position?: boolean
+    label?: boolean
+    requirementType?: boolean
+    requiredValue?: boolean
+    examId?: boolean
+    musicIndex?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    exam?: boolean | ExamDefaultArgs<ExtArgs>
+    music?: boolean | MusicDefaultArgs<ExtArgs>
+    allowedCharts?: boolean | ExamStage$allowedChartsArgs<ExtArgs>
+    _count?: boolean | ExamStageCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["examStage"]>
+
+  export type ExamStageSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    position?: boolean
+    label?: boolean
+    requirementType?: boolean
+    requiredValue?: boolean
+    examId?: boolean
+    musicIndex?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    exam?: boolean | ExamDefaultArgs<ExtArgs>
+    music?: boolean | MusicDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["examStage"]>
+
+  export type ExamStageSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    position?: boolean
+    label?: boolean
+    requirementType?: boolean
+    requiredValue?: boolean
+    examId?: boolean
+    musicIndex?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    exam?: boolean | ExamDefaultArgs<ExtArgs>
+    music?: boolean | MusicDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["examStage"]>
+
+  export type ExamStageSelectScalar = {
+    id?: boolean
+    position?: boolean
+    label?: boolean
+    requirementType?: boolean
+    requiredValue?: boolean
+    examId?: boolean
+    musicIndex?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ExamStageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "position" | "label" | "requirementType" | "requiredValue" | "examId" | "musicIndex" | "createdAt" | "updatedAt", ExtArgs["result"]["examStage"]>
+  export type ExamStageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    exam?: boolean | ExamDefaultArgs<ExtArgs>
+    music?: boolean | MusicDefaultArgs<ExtArgs>
+    allowedCharts?: boolean | ExamStage$allowedChartsArgs<ExtArgs>
+    _count?: boolean | ExamStageCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type ExamStageIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    exam?: boolean | ExamDefaultArgs<ExtArgs>
+    music?: boolean | MusicDefaultArgs<ExtArgs>
+  }
+  export type ExamStageIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    exam?: boolean | ExamDefaultArgs<ExtArgs>
+    music?: boolean | MusicDefaultArgs<ExtArgs>
+  }
+
+  export type $ExamStagePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ExamStage"
+    objects: {
+      exam: Prisma.$ExamPayload<ExtArgs>
+      music: Prisma.$MusicPayload<ExtArgs>
+      allowedCharts: Prisma.$ExamStageChartPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      position: number
+      label: string | null
+      requirementType: string
+      requiredValue: number
+      examId: number
+      musicIndex: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["examStage"]>
+    composites: {}
+  }
+
+  type ExamStageGetPayload<S extends boolean | null | undefined | ExamStageDefaultArgs> = $Result.GetResult<Prisma.$ExamStagePayload, S>
+
+  type ExamStageCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ExamStageFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ExamStageCountAggregateInputType | true
+    }
+
+  export interface ExamStageDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ExamStage'], meta: { name: 'ExamStage' } }
+    /**
+     * Find zero or one ExamStage that matches the filter.
+     * @param {ExamStageFindUniqueArgs} args - Arguments to find a ExamStage
+     * @example
+     * // Get one ExamStage
+     * const examStage = await prisma.examStage.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ExamStageFindUniqueArgs>(args: SelectSubset<T, ExamStageFindUniqueArgs<ExtArgs>>): Prisma__ExamStageClient<$Result.GetResult<Prisma.$ExamStagePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ExamStage that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ExamStageFindUniqueOrThrowArgs} args - Arguments to find a ExamStage
+     * @example
+     * // Get one ExamStage
+     * const examStage = await prisma.examStage.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ExamStageFindUniqueOrThrowArgs>(args: SelectSubset<T, ExamStageFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ExamStageClient<$Result.GetResult<Prisma.$ExamStagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ExamStage that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamStageFindFirstArgs} args - Arguments to find a ExamStage
+     * @example
+     * // Get one ExamStage
+     * const examStage = await prisma.examStage.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ExamStageFindFirstArgs>(args?: SelectSubset<T, ExamStageFindFirstArgs<ExtArgs>>): Prisma__ExamStageClient<$Result.GetResult<Prisma.$ExamStagePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ExamStage that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamStageFindFirstOrThrowArgs} args - Arguments to find a ExamStage
+     * @example
+     * // Get one ExamStage
+     * const examStage = await prisma.examStage.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ExamStageFindFirstOrThrowArgs>(args?: SelectSubset<T, ExamStageFindFirstOrThrowArgs<ExtArgs>>): Prisma__ExamStageClient<$Result.GetResult<Prisma.$ExamStagePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ExamStages that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamStageFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ExamStages
+     * const examStages = await prisma.examStage.findMany()
+     * 
+     * // Get first 10 ExamStages
+     * const examStages = await prisma.examStage.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const examStageWithIdOnly = await prisma.examStage.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ExamStageFindManyArgs>(args?: SelectSubset<T, ExamStageFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamStagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ExamStage.
+     * @param {ExamStageCreateArgs} args - Arguments to create a ExamStage.
+     * @example
+     * // Create one ExamStage
+     * const ExamStage = await prisma.examStage.create({
+     *   data: {
+     *     // ... data to create a ExamStage
+     *   }
+     * })
+     * 
+     */
+    create<T extends ExamStageCreateArgs>(args: SelectSubset<T, ExamStageCreateArgs<ExtArgs>>): Prisma__ExamStageClient<$Result.GetResult<Prisma.$ExamStagePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ExamStages.
+     * @param {ExamStageCreateManyArgs} args - Arguments to create many ExamStages.
+     * @example
+     * // Create many ExamStages
+     * const examStage = await prisma.examStage.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ExamStageCreateManyArgs>(args?: SelectSubset<T, ExamStageCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ExamStages and returns the data saved in the database.
+     * @param {ExamStageCreateManyAndReturnArgs} args - Arguments to create many ExamStages.
+     * @example
+     * // Create many ExamStages
+     * const examStage = await prisma.examStage.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ExamStages and only return the `id`
+     * const examStageWithIdOnly = await prisma.examStage.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ExamStageCreateManyAndReturnArgs>(args?: SelectSubset<T, ExamStageCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamStagePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ExamStage.
+     * @param {ExamStageDeleteArgs} args - Arguments to delete one ExamStage.
+     * @example
+     * // Delete one ExamStage
+     * const ExamStage = await prisma.examStage.delete({
+     *   where: {
+     *     // ... filter to delete one ExamStage
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ExamStageDeleteArgs>(args: SelectSubset<T, ExamStageDeleteArgs<ExtArgs>>): Prisma__ExamStageClient<$Result.GetResult<Prisma.$ExamStagePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ExamStage.
+     * @param {ExamStageUpdateArgs} args - Arguments to update one ExamStage.
+     * @example
+     * // Update one ExamStage
+     * const examStage = await prisma.examStage.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ExamStageUpdateArgs>(args: SelectSubset<T, ExamStageUpdateArgs<ExtArgs>>): Prisma__ExamStageClient<$Result.GetResult<Prisma.$ExamStagePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ExamStages.
+     * @param {ExamStageDeleteManyArgs} args - Arguments to filter ExamStages to delete.
+     * @example
+     * // Delete a few ExamStages
+     * const { count } = await prisma.examStage.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ExamStageDeleteManyArgs>(args?: SelectSubset<T, ExamStageDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ExamStages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamStageUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ExamStages
+     * const examStage = await prisma.examStage.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ExamStageUpdateManyArgs>(args: SelectSubset<T, ExamStageUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ExamStages and returns the data updated in the database.
+     * @param {ExamStageUpdateManyAndReturnArgs} args - Arguments to update many ExamStages.
+     * @example
+     * // Update many ExamStages
+     * const examStage = await prisma.examStage.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ExamStages and only return the `id`
+     * const examStageWithIdOnly = await prisma.examStage.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ExamStageUpdateManyAndReturnArgs>(args: SelectSubset<T, ExamStageUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamStagePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ExamStage.
+     * @param {ExamStageUpsertArgs} args - Arguments to update or create a ExamStage.
+     * @example
+     * // Update or create a ExamStage
+     * const examStage = await prisma.examStage.upsert({
+     *   create: {
+     *     // ... data to create a ExamStage
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ExamStage we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ExamStageUpsertArgs>(args: SelectSubset<T, ExamStageUpsertArgs<ExtArgs>>): Prisma__ExamStageClient<$Result.GetResult<Prisma.$ExamStagePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ExamStages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamStageCountArgs} args - Arguments to filter ExamStages to count.
+     * @example
+     * // Count the number of ExamStages
+     * const count = await prisma.examStage.count({
+     *   where: {
+     *     // ... the filter for the ExamStages we want to count
+     *   }
+     * })
+    **/
+    count<T extends ExamStageCountArgs>(
+      args?: Subset<T, ExamStageCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ExamStageCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ExamStage.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamStageAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ExamStageAggregateArgs>(args: Subset<T, ExamStageAggregateArgs>): Prisma.PrismaPromise<GetExamStageAggregateType<T>>
+
+    /**
+     * Group by ExamStage.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamStageGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ExamStageGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ExamStageGroupByArgs['orderBy'] }
+        : { orderBy?: ExamStageGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ExamStageGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetExamStageGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ExamStage model
+   */
+  readonly fields: ExamStageFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ExamStage.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ExamStageClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    exam<T extends ExamDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ExamDefaultArgs<ExtArgs>>): Prisma__ExamClient<$Result.GetResult<Prisma.$ExamPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    music<T extends MusicDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MusicDefaultArgs<ExtArgs>>): Prisma__MusicClient<$Result.GetResult<Prisma.$MusicPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    allowedCharts<T extends ExamStage$allowedChartsArgs<ExtArgs> = {}>(args?: Subset<T, ExamStage$allowedChartsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamStageChartPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ExamStage model
+   */
+  interface ExamStageFieldRefs {
+    readonly id: FieldRef<"ExamStage", 'Int'>
+    readonly position: FieldRef<"ExamStage", 'Int'>
+    readonly label: FieldRef<"ExamStage", 'String'>
+    readonly requirementType: FieldRef<"ExamStage", 'String'>
+    readonly requiredValue: FieldRef<"ExamStage", 'Float'>
+    readonly examId: FieldRef<"ExamStage", 'Int'>
+    readonly musicIndex: FieldRef<"ExamStage", 'String'>
+    readonly createdAt: FieldRef<"ExamStage", 'DateTime'>
+    readonly updatedAt: FieldRef<"ExamStage", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ExamStage findUnique
+   */
+  export type ExamStageFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamStage
+     */
+    select?: ExamStageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamStage
+     */
+    omit?: ExamStageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamStageInclude<ExtArgs> | null
+    /**
+     * Filter, which ExamStage to fetch.
+     */
+    where: ExamStageWhereUniqueInput
+  }
+
+  /**
+   * ExamStage findUniqueOrThrow
+   */
+  export type ExamStageFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamStage
+     */
+    select?: ExamStageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamStage
+     */
+    omit?: ExamStageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamStageInclude<ExtArgs> | null
+    /**
+     * Filter, which ExamStage to fetch.
+     */
+    where: ExamStageWhereUniqueInput
+  }
+
+  /**
+   * ExamStage findFirst
+   */
+  export type ExamStageFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamStage
+     */
+    select?: ExamStageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamStage
+     */
+    omit?: ExamStageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamStageInclude<ExtArgs> | null
+    /**
+     * Filter, which ExamStage to fetch.
+     */
+    where?: ExamStageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExamStages to fetch.
+     */
+    orderBy?: ExamStageOrderByWithRelationInput | ExamStageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ExamStages.
+     */
+    cursor?: ExamStageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExamStages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExamStages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ExamStages.
+     */
+    distinct?: ExamStageScalarFieldEnum | ExamStageScalarFieldEnum[]
+  }
+
+  /**
+   * ExamStage findFirstOrThrow
+   */
+  export type ExamStageFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamStage
+     */
+    select?: ExamStageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamStage
+     */
+    omit?: ExamStageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamStageInclude<ExtArgs> | null
+    /**
+     * Filter, which ExamStage to fetch.
+     */
+    where?: ExamStageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExamStages to fetch.
+     */
+    orderBy?: ExamStageOrderByWithRelationInput | ExamStageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ExamStages.
+     */
+    cursor?: ExamStageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExamStages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExamStages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ExamStages.
+     */
+    distinct?: ExamStageScalarFieldEnum | ExamStageScalarFieldEnum[]
+  }
+
+  /**
+   * ExamStage findMany
+   */
+  export type ExamStageFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamStage
+     */
+    select?: ExamStageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamStage
+     */
+    omit?: ExamStageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamStageInclude<ExtArgs> | null
+    /**
+     * Filter, which ExamStages to fetch.
+     */
+    where?: ExamStageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExamStages to fetch.
+     */
+    orderBy?: ExamStageOrderByWithRelationInput | ExamStageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ExamStages.
+     */
+    cursor?: ExamStageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExamStages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExamStages.
+     */
+    skip?: number
+    distinct?: ExamStageScalarFieldEnum | ExamStageScalarFieldEnum[]
+  }
+
+  /**
+   * ExamStage create
+   */
+  export type ExamStageCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamStage
+     */
+    select?: ExamStageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamStage
+     */
+    omit?: ExamStageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamStageInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ExamStage.
+     */
+    data: XOR<ExamStageCreateInput, ExamStageUncheckedCreateInput>
+  }
+
+  /**
+   * ExamStage createMany
+   */
+  export type ExamStageCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ExamStages.
+     */
+    data: ExamStageCreateManyInput | ExamStageCreateManyInput[]
+  }
+
+  /**
+   * ExamStage createManyAndReturn
+   */
+  export type ExamStageCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamStage
+     */
+    select?: ExamStageSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamStage
+     */
+    omit?: ExamStageOmit<ExtArgs> | null
+    /**
+     * The data used to create many ExamStages.
+     */
+    data: ExamStageCreateManyInput | ExamStageCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamStageIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ExamStage update
+   */
+  export type ExamStageUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamStage
+     */
+    select?: ExamStageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamStage
+     */
+    omit?: ExamStageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamStageInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ExamStage.
+     */
+    data: XOR<ExamStageUpdateInput, ExamStageUncheckedUpdateInput>
+    /**
+     * Choose, which ExamStage to update.
+     */
+    where: ExamStageWhereUniqueInput
+  }
+
+  /**
+   * ExamStage updateMany
+   */
+  export type ExamStageUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ExamStages.
+     */
+    data: XOR<ExamStageUpdateManyMutationInput, ExamStageUncheckedUpdateManyInput>
+    /**
+     * Filter which ExamStages to update
+     */
+    where?: ExamStageWhereInput
+    /**
+     * Limit how many ExamStages to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ExamStage updateManyAndReturn
+   */
+  export type ExamStageUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamStage
+     */
+    select?: ExamStageSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamStage
+     */
+    omit?: ExamStageOmit<ExtArgs> | null
+    /**
+     * The data used to update ExamStages.
+     */
+    data: XOR<ExamStageUpdateManyMutationInput, ExamStageUncheckedUpdateManyInput>
+    /**
+     * Filter which ExamStages to update
+     */
+    where?: ExamStageWhereInput
+    /**
+     * Limit how many ExamStages to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamStageIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ExamStage upsert
+   */
+  export type ExamStageUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamStage
+     */
+    select?: ExamStageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamStage
+     */
+    omit?: ExamStageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamStageInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ExamStage to update in case it exists.
+     */
+    where: ExamStageWhereUniqueInput
+    /**
+     * In case the ExamStage found by the `where` argument doesn't exist, create a new ExamStage with this data.
+     */
+    create: XOR<ExamStageCreateInput, ExamStageUncheckedCreateInput>
+    /**
+     * In case the ExamStage was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ExamStageUpdateInput, ExamStageUncheckedUpdateInput>
+  }
+
+  /**
+   * ExamStage delete
+   */
+  export type ExamStageDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamStage
+     */
+    select?: ExamStageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamStage
+     */
+    omit?: ExamStageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamStageInclude<ExtArgs> | null
+    /**
+     * Filter which ExamStage to delete.
+     */
+    where: ExamStageWhereUniqueInput
+  }
+
+  /**
+   * ExamStage deleteMany
+   */
+  export type ExamStageDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ExamStages to delete
+     */
+    where?: ExamStageWhereInput
+    /**
+     * Limit how many ExamStages to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ExamStage.allowedCharts
+   */
+  export type ExamStage$allowedChartsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamStageChart
+     */
+    select?: ExamStageChartSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamStageChart
+     */
+    omit?: ExamStageChartOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamStageChartInclude<ExtArgs> | null
+    where?: ExamStageChartWhereInput
+    orderBy?: ExamStageChartOrderByWithRelationInput | ExamStageChartOrderByWithRelationInput[]
+    cursor?: ExamStageChartWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ExamStageChartScalarFieldEnum | ExamStageChartScalarFieldEnum[]
+  }
+
+  /**
+   * ExamStage without action
+   */
+  export type ExamStageDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamStage
+     */
+    select?: ExamStageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamStage
+     */
+    omit?: ExamStageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamStageInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ExamStageChart
+   */
+
+  export type AggregateExamStageChart = {
+    _count: ExamStageChartCountAggregateOutputType | null
+    _avg: ExamStageChartAvgAggregateOutputType | null
+    _sum: ExamStageChartSumAggregateOutputType | null
+    _min: ExamStageChartMinAggregateOutputType | null
+    _max: ExamStageChartMaxAggregateOutputType | null
+  }
+
+  export type ExamStageChartAvgAggregateOutputType = {
+    stageId: number | null
+    chartId: number | null
+  }
+
+  export type ExamStageChartSumAggregateOutputType = {
+    stageId: number | null
+    chartId: number | null
+  }
+
+  export type ExamStageChartMinAggregateOutputType = {
+    stageId: number | null
+    chartId: number | null
+  }
+
+  export type ExamStageChartMaxAggregateOutputType = {
+    stageId: number | null
+    chartId: number | null
+  }
+
+  export type ExamStageChartCountAggregateOutputType = {
+    stageId: number
+    chartId: number
+    _all: number
+  }
+
+
+  export type ExamStageChartAvgAggregateInputType = {
+    stageId?: true
+    chartId?: true
+  }
+
+  export type ExamStageChartSumAggregateInputType = {
+    stageId?: true
+    chartId?: true
+  }
+
+  export type ExamStageChartMinAggregateInputType = {
+    stageId?: true
+    chartId?: true
+  }
+
+  export type ExamStageChartMaxAggregateInputType = {
+    stageId?: true
+    chartId?: true
+  }
+
+  export type ExamStageChartCountAggregateInputType = {
+    stageId?: true
+    chartId?: true
+    _all?: true
+  }
+
+  export type ExamStageChartAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ExamStageChart to aggregate.
+     */
+    where?: ExamStageChartWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExamStageCharts to fetch.
+     */
+    orderBy?: ExamStageChartOrderByWithRelationInput | ExamStageChartOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ExamStageChartWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExamStageCharts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExamStageCharts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ExamStageCharts
+    **/
+    _count?: true | ExamStageChartCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ExamStageChartAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ExamStageChartSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ExamStageChartMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ExamStageChartMaxAggregateInputType
+  }
+
+  export type GetExamStageChartAggregateType<T extends ExamStageChartAggregateArgs> = {
+        [P in keyof T & keyof AggregateExamStageChart]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateExamStageChart[P]>
+      : GetScalarType<T[P], AggregateExamStageChart[P]>
+  }
+
+
+
+
+  export type ExamStageChartGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ExamStageChartWhereInput
+    orderBy?: ExamStageChartOrderByWithAggregationInput | ExamStageChartOrderByWithAggregationInput[]
+    by: ExamStageChartScalarFieldEnum[] | ExamStageChartScalarFieldEnum
+    having?: ExamStageChartScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ExamStageChartCountAggregateInputType | true
+    _avg?: ExamStageChartAvgAggregateInputType
+    _sum?: ExamStageChartSumAggregateInputType
+    _min?: ExamStageChartMinAggregateInputType
+    _max?: ExamStageChartMaxAggregateInputType
+  }
+
+  export type ExamStageChartGroupByOutputType = {
+    stageId: number
+    chartId: number
+    _count: ExamStageChartCountAggregateOutputType | null
+    _avg: ExamStageChartAvgAggregateOutputType | null
+    _sum: ExamStageChartSumAggregateOutputType | null
+    _min: ExamStageChartMinAggregateOutputType | null
+    _max: ExamStageChartMaxAggregateOutputType | null
+  }
+
+  type GetExamStageChartGroupByPayload<T extends ExamStageChartGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ExamStageChartGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ExamStageChartGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ExamStageChartGroupByOutputType[P]>
+            : GetScalarType<T[P], ExamStageChartGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ExamStageChartSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    stageId?: boolean
+    chartId?: boolean
+    stage?: boolean | ExamStageDefaultArgs<ExtArgs>
+    chart?: boolean | MusicChartDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["examStageChart"]>
+
+  export type ExamStageChartSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    stageId?: boolean
+    chartId?: boolean
+    stage?: boolean | ExamStageDefaultArgs<ExtArgs>
+    chart?: boolean | MusicChartDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["examStageChart"]>
+
+  export type ExamStageChartSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    stageId?: boolean
+    chartId?: boolean
+    stage?: boolean | ExamStageDefaultArgs<ExtArgs>
+    chart?: boolean | MusicChartDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["examStageChart"]>
+
+  export type ExamStageChartSelectScalar = {
+    stageId?: boolean
+    chartId?: boolean
+  }
+
+  export type ExamStageChartOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"stageId" | "chartId", ExtArgs["result"]["examStageChart"]>
+  export type ExamStageChartInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    stage?: boolean | ExamStageDefaultArgs<ExtArgs>
+    chart?: boolean | MusicChartDefaultArgs<ExtArgs>
+  }
+  export type ExamStageChartIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    stage?: boolean | ExamStageDefaultArgs<ExtArgs>
+    chart?: boolean | MusicChartDefaultArgs<ExtArgs>
+  }
+  export type ExamStageChartIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    stage?: boolean | ExamStageDefaultArgs<ExtArgs>
+    chart?: boolean | MusicChartDefaultArgs<ExtArgs>
+  }
+
+  export type $ExamStageChartPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ExamStageChart"
+    objects: {
+      stage: Prisma.$ExamStagePayload<ExtArgs>
+      chart: Prisma.$MusicChartPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      stageId: number
+      chartId: number
+    }, ExtArgs["result"]["examStageChart"]>
+    composites: {}
+  }
+
+  type ExamStageChartGetPayload<S extends boolean | null | undefined | ExamStageChartDefaultArgs> = $Result.GetResult<Prisma.$ExamStageChartPayload, S>
+
+  type ExamStageChartCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ExamStageChartFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ExamStageChartCountAggregateInputType | true
+    }
+
+  export interface ExamStageChartDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ExamStageChart'], meta: { name: 'ExamStageChart' } }
+    /**
+     * Find zero or one ExamStageChart that matches the filter.
+     * @param {ExamStageChartFindUniqueArgs} args - Arguments to find a ExamStageChart
+     * @example
+     * // Get one ExamStageChart
+     * const examStageChart = await prisma.examStageChart.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ExamStageChartFindUniqueArgs>(args: SelectSubset<T, ExamStageChartFindUniqueArgs<ExtArgs>>): Prisma__ExamStageChartClient<$Result.GetResult<Prisma.$ExamStageChartPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ExamStageChart that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ExamStageChartFindUniqueOrThrowArgs} args - Arguments to find a ExamStageChart
+     * @example
+     * // Get one ExamStageChart
+     * const examStageChart = await prisma.examStageChart.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ExamStageChartFindUniqueOrThrowArgs>(args: SelectSubset<T, ExamStageChartFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ExamStageChartClient<$Result.GetResult<Prisma.$ExamStageChartPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ExamStageChart that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamStageChartFindFirstArgs} args - Arguments to find a ExamStageChart
+     * @example
+     * // Get one ExamStageChart
+     * const examStageChart = await prisma.examStageChart.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ExamStageChartFindFirstArgs>(args?: SelectSubset<T, ExamStageChartFindFirstArgs<ExtArgs>>): Prisma__ExamStageChartClient<$Result.GetResult<Prisma.$ExamStageChartPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ExamStageChart that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamStageChartFindFirstOrThrowArgs} args - Arguments to find a ExamStageChart
+     * @example
+     * // Get one ExamStageChart
+     * const examStageChart = await prisma.examStageChart.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ExamStageChartFindFirstOrThrowArgs>(args?: SelectSubset<T, ExamStageChartFindFirstOrThrowArgs<ExtArgs>>): Prisma__ExamStageChartClient<$Result.GetResult<Prisma.$ExamStageChartPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ExamStageCharts that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamStageChartFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ExamStageCharts
+     * const examStageCharts = await prisma.examStageChart.findMany()
+     * 
+     * // Get first 10 ExamStageCharts
+     * const examStageCharts = await prisma.examStageChart.findMany({ take: 10 })
+     * 
+     * // Only select the `stageId`
+     * const examStageChartWithStageIdOnly = await prisma.examStageChart.findMany({ select: { stageId: true } })
+     * 
+     */
+    findMany<T extends ExamStageChartFindManyArgs>(args?: SelectSubset<T, ExamStageChartFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamStageChartPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ExamStageChart.
+     * @param {ExamStageChartCreateArgs} args - Arguments to create a ExamStageChart.
+     * @example
+     * // Create one ExamStageChart
+     * const ExamStageChart = await prisma.examStageChart.create({
+     *   data: {
+     *     // ... data to create a ExamStageChart
+     *   }
+     * })
+     * 
+     */
+    create<T extends ExamStageChartCreateArgs>(args: SelectSubset<T, ExamStageChartCreateArgs<ExtArgs>>): Prisma__ExamStageChartClient<$Result.GetResult<Prisma.$ExamStageChartPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ExamStageCharts.
+     * @param {ExamStageChartCreateManyArgs} args - Arguments to create many ExamStageCharts.
+     * @example
+     * // Create many ExamStageCharts
+     * const examStageChart = await prisma.examStageChart.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ExamStageChartCreateManyArgs>(args?: SelectSubset<T, ExamStageChartCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ExamStageCharts and returns the data saved in the database.
+     * @param {ExamStageChartCreateManyAndReturnArgs} args - Arguments to create many ExamStageCharts.
+     * @example
+     * // Create many ExamStageCharts
+     * const examStageChart = await prisma.examStageChart.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ExamStageCharts and only return the `stageId`
+     * const examStageChartWithStageIdOnly = await prisma.examStageChart.createManyAndReturn({
+     *   select: { stageId: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ExamStageChartCreateManyAndReturnArgs>(args?: SelectSubset<T, ExamStageChartCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamStageChartPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ExamStageChart.
+     * @param {ExamStageChartDeleteArgs} args - Arguments to delete one ExamStageChart.
+     * @example
+     * // Delete one ExamStageChart
+     * const ExamStageChart = await prisma.examStageChart.delete({
+     *   where: {
+     *     // ... filter to delete one ExamStageChart
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ExamStageChartDeleteArgs>(args: SelectSubset<T, ExamStageChartDeleteArgs<ExtArgs>>): Prisma__ExamStageChartClient<$Result.GetResult<Prisma.$ExamStageChartPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ExamStageChart.
+     * @param {ExamStageChartUpdateArgs} args - Arguments to update one ExamStageChart.
+     * @example
+     * // Update one ExamStageChart
+     * const examStageChart = await prisma.examStageChart.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ExamStageChartUpdateArgs>(args: SelectSubset<T, ExamStageChartUpdateArgs<ExtArgs>>): Prisma__ExamStageChartClient<$Result.GetResult<Prisma.$ExamStageChartPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ExamStageCharts.
+     * @param {ExamStageChartDeleteManyArgs} args - Arguments to filter ExamStageCharts to delete.
+     * @example
+     * // Delete a few ExamStageCharts
+     * const { count } = await prisma.examStageChart.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ExamStageChartDeleteManyArgs>(args?: SelectSubset<T, ExamStageChartDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ExamStageCharts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamStageChartUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ExamStageCharts
+     * const examStageChart = await prisma.examStageChart.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ExamStageChartUpdateManyArgs>(args: SelectSubset<T, ExamStageChartUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ExamStageCharts and returns the data updated in the database.
+     * @param {ExamStageChartUpdateManyAndReturnArgs} args - Arguments to update many ExamStageCharts.
+     * @example
+     * // Update many ExamStageCharts
+     * const examStageChart = await prisma.examStageChart.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ExamStageCharts and only return the `stageId`
+     * const examStageChartWithStageIdOnly = await prisma.examStageChart.updateManyAndReturn({
+     *   select: { stageId: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ExamStageChartUpdateManyAndReturnArgs>(args: SelectSubset<T, ExamStageChartUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamStageChartPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ExamStageChart.
+     * @param {ExamStageChartUpsertArgs} args - Arguments to update or create a ExamStageChart.
+     * @example
+     * // Update or create a ExamStageChart
+     * const examStageChart = await prisma.examStageChart.upsert({
+     *   create: {
+     *     // ... data to create a ExamStageChart
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ExamStageChart we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ExamStageChartUpsertArgs>(args: SelectSubset<T, ExamStageChartUpsertArgs<ExtArgs>>): Prisma__ExamStageChartClient<$Result.GetResult<Prisma.$ExamStageChartPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ExamStageCharts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamStageChartCountArgs} args - Arguments to filter ExamStageCharts to count.
+     * @example
+     * // Count the number of ExamStageCharts
+     * const count = await prisma.examStageChart.count({
+     *   where: {
+     *     // ... the filter for the ExamStageCharts we want to count
+     *   }
+     * })
+    **/
+    count<T extends ExamStageChartCountArgs>(
+      args?: Subset<T, ExamStageChartCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ExamStageChartCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ExamStageChart.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamStageChartAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ExamStageChartAggregateArgs>(args: Subset<T, ExamStageChartAggregateArgs>): Prisma.PrismaPromise<GetExamStageChartAggregateType<T>>
+
+    /**
+     * Group by ExamStageChart.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamStageChartGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ExamStageChartGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ExamStageChartGroupByArgs['orderBy'] }
+        : { orderBy?: ExamStageChartGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ExamStageChartGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetExamStageChartGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ExamStageChart model
+   */
+  readonly fields: ExamStageChartFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ExamStageChart.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ExamStageChartClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    stage<T extends ExamStageDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ExamStageDefaultArgs<ExtArgs>>): Prisma__ExamStageClient<$Result.GetResult<Prisma.$ExamStagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    chart<T extends MusicChartDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MusicChartDefaultArgs<ExtArgs>>): Prisma__MusicChartClient<$Result.GetResult<Prisma.$MusicChartPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ExamStageChart model
+   */
+  interface ExamStageChartFieldRefs {
+    readonly stageId: FieldRef<"ExamStageChart", 'Int'>
+    readonly chartId: FieldRef<"ExamStageChart", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ExamStageChart findUnique
+   */
+  export type ExamStageChartFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamStageChart
+     */
+    select?: ExamStageChartSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamStageChart
+     */
+    omit?: ExamStageChartOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamStageChartInclude<ExtArgs> | null
+    /**
+     * Filter, which ExamStageChart to fetch.
+     */
+    where: ExamStageChartWhereUniqueInput
+  }
+
+  /**
+   * ExamStageChart findUniqueOrThrow
+   */
+  export type ExamStageChartFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamStageChart
+     */
+    select?: ExamStageChartSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamStageChart
+     */
+    omit?: ExamStageChartOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamStageChartInclude<ExtArgs> | null
+    /**
+     * Filter, which ExamStageChart to fetch.
+     */
+    where: ExamStageChartWhereUniqueInput
+  }
+
+  /**
+   * ExamStageChart findFirst
+   */
+  export type ExamStageChartFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamStageChart
+     */
+    select?: ExamStageChartSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamStageChart
+     */
+    omit?: ExamStageChartOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamStageChartInclude<ExtArgs> | null
+    /**
+     * Filter, which ExamStageChart to fetch.
+     */
+    where?: ExamStageChartWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExamStageCharts to fetch.
+     */
+    orderBy?: ExamStageChartOrderByWithRelationInput | ExamStageChartOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ExamStageCharts.
+     */
+    cursor?: ExamStageChartWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExamStageCharts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExamStageCharts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ExamStageCharts.
+     */
+    distinct?: ExamStageChartScalarFieldEnum | ExamStageChartScalarFieldEnum[]
+  }
+
+  /**
+   * ExamStageChart findFirstOrThrow
+   */
+  export type ExamStageChartFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamStageChart
+     */
+    select?: ExamStageChartSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamStageChart
+     */
+    omit?: ExamStageChartOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamStageChartInclude<ExtArgs> | null
+    /**
+     * Filter, which ExamStageChart to fetch.
+     */
+    where?: ExamStageChartWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExamStageCharts to fetch.
+     */
+    orderBy?: ExamStageChartOrderByWithRelationInput | ExamStageChartOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ExamStageCharts.
+     */
+    cursor?: ExamStageChartWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExamStageCharts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExamStageCharts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ExamStageCharts.
+     */
+    distinct?: ExamStageChartScalarFieldEnum | ExamStageChartScalarFieldEnum[]
+  }
+
+  /**
+   * ExamStageChart findMany
+   */
+  export type ExamStageChartFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamStageChart
+     */
+    select?: ExamStageChartSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamStageChart
+     */
+    omit?: ExamStageChartOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamStageChartInclude<ExtArgs> | null
+    /**
+     * Filter, which ExamStageCharts to fetch.
+     */
+    where?: ExamStageChartWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExamStageCharts to fetch.
+     */
+    orderBy?: ExamStageChartOrderByWithRelationInput | ExamStageChartOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ExamStageCharts.
+     */
+    cursor?: ExamStageChartWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExamStageCharts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExamStageCharts.
+     */
+    skip?: number
+    distinct?: ExamStageChartScalarFieldEnum | ExamStageChartScalarFieldEnum[]
+  }
+
+  /**
+   * ExamStageChart create
+   */
+  export type ExamStageChartCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamStageChart
+     */
+    select?: ExamStageChartSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamStageChart
+     */
+    omit?: ExamStageChartOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamStageChartInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ExamStageChart.
+     */
+    data: XOR<ExamStageChartCreateInput, ExamStageChartUncheckedCreateInput>
+  }
+
+  /**
+   * ExamStageChart createMany
+   */
+  export type ExamStageChartCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ExamStageCharts.
+     */
+    data: ExamStageChartCreateManyInput | ExamStageChartCreateManyInput[]
+  }
+
+  /**
+   * ExamStageChart createManyAndReturn
+   */
+  export type ExamStageChartCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamStageChart
+     */
+    select?: ExamStageChartSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamStageChart
+     */
+    omit?: ExamStageChartOmit<ExtArgs> | null
+    /**
+     * The data used to create many ExamStageCharts.
+     */
+    data: ExamStageChartCreateManyInput | ExamStageChartCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamStageChartIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ExamStageChart update
+   */
+  export type ExamStageChartUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamStageChart
+     */
+    select?: ExamStageChartSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamStageChart
+     */
+    omit?: ExamStageChartOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamStageChartInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ExamStageChart.
+     */
+    data: XOR<ExamStageChartUpdateInput, ExamStageChartUncheckedUpdateInput>
+    /**
+     * Choose, which ExamStageChart to update.
+     */
+    where: ExamStageChartWhereUniqueInput
+  }
+
+  /**
+   * ExamStageChart updateMany
+   */
+  export type ExamStageChartUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ExamStageCharts.
+     */
+    data: XOR<ExamStageChartUpdateManyMutationInput, ExamStageChartUncheckedUpdateManyInput>
+    /**
+     * Filter which ExamStageCharts to update
+     */
+    where?: ExamStageChartWhereInput
+    /**
+     * Limit how many ExamStageCharts to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ExamStageChart updateManyAndReturn
+   */
+  export type ExamStageChartUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamStageChart
+     */
+    select?: ExamStageChartSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamStageChart
+     */
+    omit?: ExamStageChartOmit<ExtArgs> | null
+    /**
+     * The data used to update ExamStageCharts.
+     */
+    data: XOR<ExamStageChartUpdateManyMutationInput, ExamStageChartUncheckedUpdateManyInput>
+    /**
+     * Filter which ExamStageCharts to update
+     */
+    where?: ExamStageChartWhereInput
+    /**
+     * Limit how many ExamStageCharts to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamStageChartIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ExamStageChart upsert
+   */
+  export type ExamStageChartUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamStageChart
+     */
+    select?: ExamStageChartSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamStageChart
+     */
+    omit?: ExamStageChartOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamStageChartInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ExamStageChart to update in case it exists.
+     */
+    where: ExamStageChartWhereUniqueInput
+    /**
+     * In case the ExamStageChart found by the `where` argument doesn't exist, create a new ExamStageChart with this data.
+     */
+    create: XOR<ExamStageChartCreateInput, ExamStageChartUncheckedCreateInput>
+    /**
+     * In case the ExamStageChart was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ExamStageChartUpdateInput, ExamStageChartUncheckedUpdateInput>
+  }
+
+  /**
+   * ExamStageChart delete
+   */
+  export type ExamStageChartDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamStageChart
+     */
+    select?: ExamStageChartSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamStageChart
+     */
+    omit?: ExamStageChartOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamStageChartInclude<ExtArgs> | null
+    /**
+     * Filter which ExamStageChart to delete.
+     */
+    where: ExamStageChartWhereUniqueInput
+  }
+
+  /**
+   * ExamStageChart deleteMany
+   */
+  export type ExamStageChartDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ExamStageCharts to delete
+     */
+    where?: ExamStageChartWhereInput
+    /**
+     * Limit how many ExamStageCharts to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ExamStageChart without action
+   */
+  export type ExamStageChartDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamStageChart
+     */
+    select?: ExamStageChartSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamStageChart
+     */
+    omit?: ExamStageChartOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamStageChartInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ExamReward
+   */
+
+  export type AggregateExamReward = {
+    _count: ExamRewardCountAggregateOutputType | null
+    _avg: ExamRewardAvgAggregateOutputType | null
+    _sum: ExamRewardSumAggregateOutputType | null
+    _min: ExamRewardMinAggregateOutputType | null
+    _max: ExamRewardMaxAggregateOutputType | null
+  }
+
+  export type ExamRewardAvgAggregateOutputType = {
+    id: number | null
+    position: number | null
+    examId: number | null
+  }
+
+  export type ExamRewardSumAggregateOutputType = {
+    id: number | null
+    position: number | null
+    examId: number | null
+  }
+
+  export type ExamRewardMinAggregateOutputType = {
+    id: number | null
+    position: number | null
+    type: string | null
+    label: string | null
+    examId: number | null
+    musicIndex: string | null
+  }
+
+  export type ExamRewardMaxAggregateOutputType = {
+    id: number | null
+    position: number | null
+    type: string | null
+    label: string | null
+    examId: number | null
+    musicIndex: string | null
+  }
+
+  export type ExamRewardCountAggregateOutputType = {
+    id: number
+    position: number
+    type: number
+    label: number
+    examId: number
+    musicIndex: number
+    _all: number
+  }
+
+
+  export type ExamRewardAvgAggregateInputType = {
+    id?: true
+    position?: true
+    examId?: true
+  }
+
+  export type ExamRewardSumAggregateInputType = {
+    id?: true
+    position?: true
+    examId?: true
+  }
+
+  export type ExamRewardMinAggregateInputType = {
+    id?: true
+    position?: true
+    type?: true
+    label?: true
+    examId?: true
+    musicIndex?: true
+  }
+
+  export type ExamRewardMaxAggregateInputType = {
+    id?: true
+    position?: true
+    type?: true
+    label?: true
+    examId?: true
+    musicIndex?: true
+  }
+
+  export type ExamRewardCountAggregateInputType = {
+    id?: true
+    position?: true
+    type?: true
+    label?: true
+    examId?: true
+    musicIndex?: true
+    _all?: true
+  }
+
+  export type ExamRewardAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ExamReward to aggregate.
+     */
+    where?: ExamRewardWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExamRewards to fetch.
+     */
+    orderBy?: ExamRewardOrderByWithRelationInput | ExamRewardOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ExamRewardWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExamRewards from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExamRewards.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ExamRewards
+    **/
+    _count?: true | ExamRewardCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ExamRewardAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ExamRewardSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ExamRewardMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ExamRewardMaxAggregateInputType
+  }
+
+  export type GetExamRewardAggregateType<T extends ExamRewardAggregateArgs> = {
+        [P in keyof T & keyof AggregateExamReward]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateExamReward[P]>
+      : GetScalarType<T[P], AggregateExamReward[P]>
+  }
+
+
+
+
+  export type ExamRewardGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ExamRewardWhereInput
+    orderBy?: ExamRewardOrderByWithAggregationInput | ExamRewardOrderByWithAggregationInput[]
+    by: ExamRewardScalarFieldEnum[] | ExamRewardScalarFieldEnum
+    having?: ExamRewardScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ExamRewardCountAggregateInputType | true
+    _avg?: ExamRewardAvgAggregateInputType
+    _sum?: ExamRewardSumAggregateInputType
+    _min?: ExamRewardMinAggregateInputType
+    _max?: ExamRewardMaxAggregateInputType
+  }
+
+  export type ExamRewardGroupByOutputType = {
+    id: number
+    position: number
+    type: string
+    label: string | null
+    examId: number
+    musicIndex: string | null
+    _count: ExamRewardCountAggregateOutputType | null
+    _avg: ExamRewardAvgAggregateOutputType | null
+    _sum: ExamRewardSumAggregateOutputType | null
+    _min: ExamRewardMinAggregateOutputType | null
+    _max: ExamRewardMaxAggregateOutputType | null
+  }
+
+  type GetExamRewardGroupByPayload<T extends ExamRewardGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ExamRewardGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ExamRewardGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ExamRewardGroupByOutputType[P]>
+            : GetScalarType<T[P], ExamRewardGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ExamRewardSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    position?: boolean
+    type?: boolean
+    label?: boolean
+    examId?: boolean
+    musicIndex?: boolean
+    exam?: boolean | ExamDefaultArgs<ExtArgs>
+    music?: boolean | ExamReward$musicArgs<ExtArgs>
+  }, ExtArgs["result"]["examReward"]>
+
+  export type ExamRewardSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    position?: boolean
+    type?: boolean
+    label?: boolean
+    examId?: boolean
+    musicIndex?: boolean
+    exam?: boolean | ExamDefaultArgs<ExtArgs>
+    music?: boolean | ExamReward$musicArgs<ExtArgs>
+  }, ExtArgs["result"]["examReward"]>
+
+  export type ExamRewardSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    position?: boolean
+    type?: boolean
+    label?: boolean
+    examId?: boolean
+    musicIndex?: boolean
+    exam?: boolean | ExamDefaultArgs<ExtArgs>
+    music?: boolean | ExamReward$musicArgs<ExtArgs>
+  }, ExtArgs["result"]["examReward"]>
+
+  export type ExamRewardSelectScalar = {
+    id?: boolean
+    position?: boolean
+    type?: boolean
+    label?: boolean
+    examId?: boolean
+    musicIndex?: boolean
+  }
+
+  export type ExamRewardOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "position" | "type" | "label" | "examId" | "musicIndex", ExtArgs["result"]["examReward"]>
+  export type ExamRewardInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    exam?: boolean | ExamDefaultArgs<ExtArgs>
+    music?: boolean | ExamReward$musicArgs<ExtArgs>
+  }
+  export type ExamRewardIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    exam?: boolean | ExamDefaultArgs<ExtArgs>
+    music?: boolean | ExamReward$musicArgs<ExtArgs>
+  }
+  export type ExamRewardIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    exam?: boolean | ExamDefaultArgs<ExtArgs>
+    music?: boolean | ExamReward$musicArgs<ExtArgs>
+  }
+
+  export type $ExamRewardPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ExamReward"
+    objects: {
+      exam: Prisma.$ExamPayload<ExtArgs>
+      music: Prisma.$MusicPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      position: number
+      type: string
+      label: string | null
+      examId: number
+      musicIndex: string | null
+    }, ExtArgs["result"]["examReward"]>
+    composites: {}
+  }
+
+  type ExamRewardGetPayload<S extends boolean | null | undefined | ExamRewardDefaultArgs> = $Result.GetResult<Prisma.$ExamRewardPayload, S>
+
+  type ExamRewardCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ExamRewardFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ExamRewardCountAggregateInputType | true
+    }
+
+  export interface ExamRewardDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ExamReward'], meta: { name: 'ExamReward' } }
+    /**
+     * Find zero or one ExamReward that matches the filter.
+     * @param {ExamRewardFindUniqueArgs} args - Arguments to find a ExamReward
+     * @example
+     * // Get one ExamReward
+     * const examReward = await prisma.examReward.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ExamRewardFindUniqueArgs>(args: SelectSubset<T, ExamRewardFindUniqueArgs<ExtArgs>>): Prisma__ExamRewardClient<$Result.GetResult<Prisma.$ExamRewardPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ExamReward that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ExamRewardFindUniqueOrThrowArgs} args - Arguments to find a ExamReward
+     * @example
+     * // Get one ExamReward
+     * const examReward = await prisma.examReward.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ExamRewardFindUniqueOrThrowArgs>(args: SelectSubset<T, ExamRewardFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ExamRewardClient<$Result.GetResult<Prisma.$ExamRewardPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ExamReward that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamRewardFindFirstArgs} args - Arguments to find a ExamReward
+     * @example
+     * // Get one ExamReward
+     * const examReward = await prisma.examReward.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ExamRewardFindFirstArgs>(args?: SelectSubset<T, ExamRewardFindFirstArgs<ExtArgs>>): Prisma__ExamRewardClient<$Result.GetResult<Prisma.$ExamRewardPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ExamReward that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamRewardFindFirstOrThrowArgs} args - Arguments to find a ExamReward
+     * @example
+     * // Get one ExamReward
+     * const examReward = await prisma.examReward.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ExamRewardFindFirstOrThrowArgs>(args?: SelectSubset<T, ExamRewardFindFirstOrThrowArgs<ExtArgs>>): Prisma__ExamRewardClient<$Result.GetResult<Prisma.$ExamRewardPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ExamRewards that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamRewardFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ExamRewards
+     * const examRewards = await prisma.examReward.findMany()
+     * 
+     * // Get first 10 ExamRewards
+     * const examRewards = await prisma.examReward.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const examRewardWithIdOnly = await prisma.examReward.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ExamRewardFindManyArgs>(args?: SelectSubset<T, ExamRewardFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamRewardPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ExamReward.
+     * @param {ExamRewardCreateArgs} args - Arguments to create a ExamReward.
+     * @example
+     * // Create one ExamReward
+     * const ExamReward = await prisma.examReward.create({
+     *   data: {
+     *     // ... data to create a ExamReward
+     *   }
+     * })
+     * 
+     */
+    create<T extends ExamRewardCreateArgs>(args: SelectSubset<T, ExamRewardCreateArgs<ExtArgs>>): Prisma__ExamRewardClient<$Result.GetResult<Prisma.$ExamRewardPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ExamRewards.
+     * @param {ExamRewardCreateManyArgs} args - Arguments to create many ExamRewards.
+     * @example
+     * // Create many ExamRewards
+     * const examReward = await prisma.examReward.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ExamRewardCreateManyArgs>(args?: SelectSubset<T, ExamRewardCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ExamRewards and returns the data saved in the database.
+     * @param {ExamRewardCreateManyAndReturnArgs} args - Arguments to create many ExamRewards.
+     * @example
+     * // Create many ExamRewards
+     * const examReward = await prisma.examReward.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ExamRewards and only return the `id`
+     * const examRewardWithIdOnly = await prisma.examReward.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ExamRewardCreateManyAndReturnArgs>(args?: SelectSubset<T, ExamRewardCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamRewardPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ExamReward.
+     * @param {ExamRewardDeleteArgs} args - Arguments to delete one ExamReward.
+     * @example
+     * // Delete one ExamReward
+     * const ExamReward = await prisma.examReward.delete({
+     *   where: {
+     *     // ... filter to delete one ExamReward
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ExamRewardDeleteArgs>(args: SelectSubset<T, ExamRewardDeleteArgs<ExtArgs>>): Prisma__ExamRewardClient<$Result.GetResult<Prisma.$ExamRewardPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ExamReward.
+     * @param {ExamRewardUpdateArgs} args - Arguments to update one ExamReward.
+     * @example
+     * // Update one ExamReward
+     * const examReward = await prisma.examReward.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ExamRewardUpdateArgs>(args: SelectSubset<T, ExamRewardUpdateArgs<ExtArgs>>): Prisma__ExamRewardClient<$Result.GetResult<Prisma.$ExamRewardPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ExamRewards.
+     * @param {ExamRewardDeleteManyArgs} args - Arguments to filter ExamRewards to delete.
+     * @example
+     * // Delete a few ExamRewards
+     * const { count } = await prisma.examReward.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ExamRewardDeleteManyArgs>(args?: SelectSubset<T, ExamRewardDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ExamRewards.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamRewardUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ExamRewards
+     * const examReward = await prisma.examReward.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ExamRewardUpdateManyArgs>(args: SelectSubset<T, ExamRewardUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ExamRewards and returns the data updated in the database.
+     * @param {ExamRewardUpdateManyAndReturnArgs} args - Arguments to update many ExamRewards.
+     * @example
+     * // Update many ExamRewards
+     * const examReward = await prisma.examReward.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ExamRewards and only return the `id`
+     * const examRewardWithIdOnly = await prisma.examReward.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ExamRewardUpdateManyAndReturnArgs>(args: SelectSubset<T, ExamRewardUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamRewardPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ExamReward.
+     * @param {ExamRewardUpsertArgs} args - Arguments to update or create a ExamReward.
+     * @example
+     * // Update or create a ExamReward
+     * const examReward = await prisma.examReward.upsert({
+     *   create: {
+     *     // ... data to create a ExamReward
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ExamReward we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ExamRewardUpsertArgs>(args: SelectSubset<T, ExamRewardUpsertArgs<ExtArgs>>): Prisma__ExamRewardClient<$Result.GetResult<Prisma.$ExamRewardPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ExamRewards.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamRewardCountArgs} args - Arguments to filter ExamRewards to count.
+     * @example
+     * // Count the number of ExamRewards
+     * const count = await prisma.examReward.count({
+     *   where: {
+     *     // ... the filter for the ExamRewards we want to count
+     *   }
+     * })
+    **/
+    count<T extends ExamRewardCountArgs>(
+      args?: Subset<T, ExamRewardCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ExamRewardCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ExamReward.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamRewardAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ExamRewardAggregateArgs>(args: Subset<T, ExamRewardAggregateArgs>): Prisma.PrismaPromise<GetExamRewardAggregateType<T>>
+
+    /**
+     * Group by ExamReward.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamRewardGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ExamRewardGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ExamRewardGroupByArgs['orderBy'] }
+        : { orderBy?: ExamRewardGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ExamRewardGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetExamRewardGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ExamReward model
+   */
+  readonly fields: ExamRewardFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ExamReward.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ExamRewardClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    exam<T extends ExamDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ExamDefaultArgs<ExtArgs>>): Prisma__ExamClient<$Result.GetResult<Prisma.$ExamPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    music<T extends ExamReward$musicArgs<ExtArgs> = {}>(args?: Subset<T, ExamReward$musicArgs<ExtArgs>>): Prisma__MusicClient<$Result.GetResult<Prisma.$MusicPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ExamReward model
+   */
+  interface ExamRewardFieldRefs {
+    readonly id: FieldRef<"ExamReward", 'Int'>
+    readonly position: FieldRef<"ExamReward", 'Int'>
+    readonly type: FieldRef<"ExamReward", 'String'>
+    readonly label: FieldRef<"ExamReward", 'String'>
+    readonly examId: FieldRef<"ExamReward", 'Int'>
+    readonly musicIndex: FieldRef<"ExamReward", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ExamReward findUnique
+   */
+  export type ExamRewardFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamReward
+     */
+    select?: ExamRewardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamReward
+     */
+    omit?: ExamRewardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamRewardInclude<ExtArgs> | null
+    /**
+     * Filter, which ExamReward to fetch.
+     */
+    where: ExamRewardWhereUniqueInput
+  }
+
+  /**
+   * ExamReward findUniqueOrThrow
+   */
+  export type ExamRewardFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamReward
+     */
+    select?: ExamRewardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamReward
+     */
+    omit?: ExamRewardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamRewardInclude<ExtArgs> | null
+    /**
+     * Filter, which ExamReward to fetch.
+     */
+    where: ExamRewardWhereUniqueInput
+  }
+
+  /**
+   * ExamReward findFirst
+   */
+  export type ExamRewardFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamReward
+     */
+    select?: ExamRewardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamReward
+     */
+    omit?: ExamRewardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamRewardInclude<ExtArgs> | null
+    /**
+     * Filter, which ExamReward to fetch.
+     */
+    where?: ExamRewardWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExamRewards to fetch.
+     */
+    orderBy?: ExamRewardOrderByWithRelationInput | ExamRewardOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ExamRewards.
+     */
+    cursor?: ExamRewardWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExamRewards from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExamRewards.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ExamRewards.
+     */
+    distinct?: ExamRewardScalarFieldEnum | ExamRewardScalarFieldEnum[]
+  }
+
+  /**
+   * ExamReward findFirstOrThrow
+   */
+  export type ExamRewardFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamReward
+     */
+    select?: ExamRewardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamReward
+     */
+    omit?: ExamRewardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamRewardInclude<ExtArgs> | null
+    /**
+     * Filter, which ExamReward to fetch.
+     */
+    where?: ExamRewardWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExamRewards to fetch.
+     */
+    orderBy?: ExamRewardOrderByWithRelationInput | ExamRewardOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ExamRewards.
+     */
+    cursor?: ExamRewardWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExamRewards from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExamRewards.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ExamRewards.
+     */
+    distinct?: ExamRewardScalarFieldEnum | ExamRewardScalarFieldEnum[]
+  }
+
+  /**
+   * ExamReward findMany
+   */
+  export type ExamRewardFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamReward
+     */
+    select?: ExamRewardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamReward
+     */
+    omit?: ExamRewardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamRewardInclude<ExtArgs> | null
+    /**
+     * Filter, which ExamRewards to fetch.
+     */
+    where?: ExamRewardWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExamRewards to fetch.
+     */
+    orderBy?: ExamRewardOrderByWithRelationInput | ExamRewardOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ExamRewards.
+     */
+    cursor?: ExamRewardWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExamRewards from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExamRewards.
+     */
+    skip?: number
+    distinct?: ExamRewardScalarFieldEnum | ExamRewardScalarFieldEnum[]
+  }
+
+  /**
+   * ExamReward create
+   */
+  export type ExamRewardCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamReward
+     */
+    select?: ExamRewardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamReward
+     */
+    omit?: ExamRewardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamRewardInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ExamReward.
+     */
+    data: XOR<ExamRewardCreateInput, ExamRewardUncheckedCreateInput>
+  }
+
+  /**
+   * ExamReward createMany
+   */
+  export type ExamRewardCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ExamRewards.
+     */
+    data: ExamRewardCreateManyInput | ExamRewardCreateManyInput[]
+  }
+
+  /**
+   * ExamReward createManyAndReturn
+   */
+  export type ExamRewardCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamReward
+     */
+    select?: ExamRewardSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamReward
+     */
+    omit?: ExamRewardOmit<ExtArgs> | null
+    /**
+     * The data used to create many ExamRewards.
+     */
+    data: ExamRewardCreateManyInput | ExamRewardCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamRewardIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ExamReward update
+   */
+  export type ExamRewardUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamReward
+     */
+    select?: ExamRewardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamReward
+     */
+    omit?: ExamRewardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamRewardInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ExamReward.
+     */
+    data: XOR<ExamRewardUpdateInput, ExamRewardUncheckedUpdateInput>
+    /**
+     * Choose, which ExamReward to update.
+     */
+    where: ExamRewardWhereUniqueInput
+  }
+
+  /**
+   * ExamReward updateMany
+   */
+  export type ExamRewardUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ExamRewards.
+     */
+    data: XOR<ExamRewardUpdateManyMutationInput, ExamRewardUncheckedUpdateManyInput>
+    /**
+     * Filter which ExamRewards to update
+     */
+    where?: ExamRewardWhereInput
+    /**
+     * Limit how many ExamRewards to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ExamReward updateManyAndReturn
+   */
+  export type ExamRewardUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamReward
+     */
+    select?: ExamRewardSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamReward
+     */
+    omit?: ExamRewardOmit<ExtArgs> | null
+    /**
+     * The data used to update ExamRewards.
+     */
+    data: XOR<ExamRewardUpdateManyMutationInput, ExamRewardUncheckedUpdateManyInput>
+    /**
+     * Filter which ExamRewards to update
+     */
+    where?: ExamRewardWhereInput
+    /**
+     * Limit how many ExamRewards to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamRewardIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ExamReward upsert
+   */
+  export type ExamRewardUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamReward
+     */
+    select?: ExamRewardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamReward
+     */
+    omit?: ExamRewardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamRewardInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ExamReward to update in case it exists.
+     */
+    where: ExamRewardWhereUniqueInput
+    /**
+     * In case the ExamReward found by the `where` argument doesn't exist, create a new ExamReward with this data.
+     */
+    create: XOR<ExamRewardCreateInput, ExamRewardUncheckedCreateInput>
+    /**
+     * In case the ExamReward was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ExamRewardUpdateInput, ExamRewardUncheckedUpdateInput>
+  }
+
+  /**
+   * ExamReward delete
+   */
+  export type ExamRewardDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamReward
+     */
+    select?: ExamRewardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamReward
+     */
+    omit?: ExamRewardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamRewardInclude<ExtArgs> | null
+    /**
+     * Filter which ExamReward to delete.
+     */
+    where: ExamRewardWhereUniqueInput
+  }
+
+  /**
+   * ExamReward deleteMany
+   */
+  export type ExamRewardDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ExamRewards to delete
+     */
+    where?: ExamRewardWhereInput
+    /**
+     * Limit how many ExamRewards to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ExamReward.music
+   */
+  export type ExamReward$musicArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Music
+     */
+    select?: MusicSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Music
+     */
+    omit?: MusicOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MusicInclude<ExtArgs> | null
+    where?: MusicWhereInput
+  }
+
+  /**
+   * ExamReward without action
+   */
+  export type ExamRewardDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamReward
+     */
+    select?: ExamRewardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamReward
+     */
+    omit?: ExamRewardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamRewardInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ExamSubmission
+   */
+
+  export type AggregateExamSubmission = {
+    _count: ExamSubmissionCountAggregateOutputType | null
+    _avg: ExamSubmissionAvgAggregateOutputType | null
+    _sum: ExamSubmissionSumAggregateOutputType | null
+    _min: ExamSubmissionMinAggregateOutputType | null
+    _max: ExamSubmissionMaxAggregateOutputType | null
+  }
+
+  export type ExamSubmissionAvgAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    examId: number | null
+  }
+
+  export type ExamSubmissionSumAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    examId: number | null
+  }
+
+  export type ExamSubmissionMinAggregateOutputType = {
+    id: number | null
+    proofImageUrl: string | null
+    status: string | null
+    reviewerNote: string | null
+    submittedAt: Date | null
+    reviewedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    userId: number | null
+    examId: number | null
+  }
+
+  export type ExamSubmissionMaxAggregateOutputType = {
+    id: number | null
+    proofImageUrl: string | null
+    status: string | null
+    reviewerNote: string | null
+    submittedAt: Date | null
+    reviewedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    userId: number | null
+    examId: number | null
+  }
+
+  export type ExamSubmissionCountAggregateOutputType = {
+    id: number
+    proofImageUrl: number
+    status: number
+    reviewerNote: number
+    submittedAt: number
+    reviewedAt: number
+    createdAt: number
+    updatedAt: number
+    userId: number
+    examId: number
+    _all: number
+  }
+
+
+  export type ExamSubmissionAvgAggregateInputType = {
+    id?: true
+    userId?: true
+    examId?: true
+  }
+
+  export type ExamSubmissionSumAggregateInputType = {
+    id?: true
+    userId?: true
+    examId?: true
+  }
+
+  export type ExamSubmissionMinAggregateInputType = {
+    id?: true
+    proofImageUrl?: true
+    status?: true
+    reviewerNote?: true
+    submittedAt?: true
+    reviewedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    userId?: true
+    examId?: true
+  }
+
+  export type ExamSubmissionMaxAggregateInputType = {
+    id?: true
+    proofImageUrl?: true
+    status?: true
+    reviewerNote?: true
+    submittedAt?: true
+    reviewedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    userId?: true
+    examId?: true
+  }
+
+  export type ExamSubmissionCountAggregateInputType = {
+    id?: true
+    proofImageUrl?: true
+    status?: true
+    reviewerNote?: true
+    submittedAt?: true
+    reviewedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    userId?: true
+    examId?: true
+    _all?: true
+  }
+
+  export type ExamSubmissionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ExamSubmission to aggregate.
+     */
+    where?: ExamSubmissionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExamSubmissions to fetch.
+     */
+    orderBy?: ExamSubmissionOrderByWithRelationInput | ExamSubmissionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ExamSubmissionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExamSubmissions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExamSubmissions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ExamSubmissions
+    **/
+    _count?: true | ExamSubmissionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ExamSubmissionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ExamSubmissionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ExamSubmissionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ExamSubmissionMaxAggregateInputType
+  }
+
+  export type GetExamSubmissionAggregateType<T extends ExamSubmissionAggregateArgs> = {
+        [P in keyof T & keyof AggregateExamSubmission]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateExamSubmission[P]>
+      : GetScalarType<T[P], AggregateExamSubmission[P]>
+  }
+
+
+
+
+  export type ExamSubmissionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ExamSubmissionWhereInput
+    orderBy?: ExamSubmissionOrderByWithAggregationInput | ExamSubmissionOrderByWithAggregationInput[]
+    by: ExamSubmissionScalarFieldEnum[] | ExamSubmissionScalarFieldEnum
+    having?: ExamSubmissionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ExamSubmissionCountAggregateInputType | true
+    _avg?: ExamSubmissionAvgAggregateInputType
+    _sum?: ExamSubmissionSumAggregateInputType
+    _min?: ExamSubmissionMinAggregateInputType
+    _max?: ExamSubmissionMaxAggregateInputType
+  }
+
+  export type ExamSubmissionGroupByOutputType = {
+    id: number
+    proofImageUrl: string
+    status: string
+    reviewerNote: string | null
+    submittedAt: Date
+    reviewedAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    userId: number
+    examId: number
+    _count: ExamSubmissionCountAggregateOutputType | null
+    _avg: ExamSubmissionAvgAggregateOutputType | null
+    _sum: ExamSubmissionSumAggregateOutputType | null
+    _min: ExamSubmissionMinAggregateOutputType | null
+    _max: ExamSubmissionMaxAggregateOutputType | null
+  }
+
+  type GetExamSubmissionGroupByPayload<T extends ExamSubmissionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ExamSubmissionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ExamSubmissionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ExamSubmissionGroupByOutputType[P]>
+            : GetScalarType<T[P], ExamSubmissionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ExamSubmissionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    proofImageUrl?: boolean
+    status?: boolean
+    reviewerNote?: boolean
+    submittedAt?: boolean
+    reviewedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    userId?: boolean
+    examId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    exam?: boolean | ExamDefaultArgs<ExtArgs>
+    achievement?: boolean | ExamSubmission$achievementArgs<ExtArgs>
+  }, ExtArgs["result"]["examSubmission"]>
+
+  export type ExamSubmissionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    proofImageUrl?: boolean
+    status?: boolean
+    reviewerNote?: boolean
+    submittedAt?: boolean
+    reviewedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    userId?: boolean
+    examId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    exam?: boolean | ExamDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["examSubmission"]>
+
+  export type ExamSubmissionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    proofImageUrl?: boolean
+    status?: boolean
+    reviewerNote?: boolean
+    submittedAt?: boolean
+    reviewedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    userId?: boolean
+    examId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    exam?: boolean | ExamDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["examSubmission"]>
+
+  export type ExamSubmissionSelectScalar = {
+    id?: boolean
+    proofImageUrl?: boolean
+    status?: boolean
+    reviewerNote?: boolean
+    submittedAt?: boolean
+    reviewedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    userId?: boolean
+    examId?: boolean
+  }
+
+  export type ExamSubmissionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "proofImageUrl" | "status" | "reviewerNote" | "submittedAt" | "reviewedAt" | "createdAt" | "updatedAt" | "userId" | "examId", ExtArgs["result"]["examSubmission"]>
+  export type ExamSubmissionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    exam?: boolean | ExamDefaultArgs<ExtArgs>
+    achievement?: boolean | ExamSubmission$achievementArgs<ExtArgs>
+  }
+  export type ExamSubmissionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    exam?: boolean | ExamDefaultArgs<ExtArgs>
+  }
+  export type ExamSubmissionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    exam?: boolean | ExamDefaultArgs<ExtArgs>
+  }
+
+  export type $ExamSubmissionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ExamSubmission"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      exam: Prisma.$ExamPayload<ExtArgs>
+      achievement: Prisma.$ExamAchievementPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      proofImageUrl: string
+      status: string
+      reviewerNote: string | null
+      submittedAt: Date
+      reviewedAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+      userId: number
+      examId: number
+    }, ExtArgs["result"]["examSubmission"]>
+    composites: {}
+  }
+
+  type ExamSubmissionGetPayload<S extends boolean | null | undefined | ExamSubmissionDefaultArgs> = $Result.GetResult<Prisma.$ExamSubmissionPayload, S>
+
+  type ExamSubmissionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ExamSubmissionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ExamSubmissionCountAggregateInputType | true
+    }
+
+  export interface ExamSubmissionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ExamSubmission'], meta: { name: 'ExamSubmission' } }
+    /**
+     * Find zero or one ExamSubmission that matches the filter.
+     * @param {ExamSubmissionFindUniqueArgs} args - Arguments to find a ExamSubmission
+     * @example
+     * // Get one ExamSubmission
+     * const examSubmission = await prisma.examSubmission.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ExamSubmissionFindUniqueArgs>(args: SelectSubset<T, ExamSubmissionFindUniqueArgs<ExtArgs>>): Prisma__ExamSubmissionClient<$Result.GetResult<Prisma.$ExamSubmissionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ExamSubmission that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ExamSubmissionFindUniqueOrThrowArgs} args - Arguments to find a ExamSubmission
+     * @example
+     * // Get one ExamSubmission
+     * const examSubmission = await prisma.examSubmission.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ExamSubmissionFindUniqueOrThrowArgs>(args: SelectSubset<T, ExamSubmissionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ExamSubmissionClient<$Result.GetResult<Prisma.$ExamSubmissionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ExamSubmission that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamSubmissionFindFirstArgs} args - Arguments to find a ExamSubmission
+     * @example
+     * // Get one ExamSubmission
+     * const examSubmission = await prisma.examSubmission.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ExamSubmissionFindFirstArgs>(args?: SelectSubset<T, ExamSubmissionFindFirstArgs<ExtArgs>>): Prisma__ExamSubmissionClient<$Result.GetResult<Prisma.$ExamSubmissionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ExamSubmission that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamSubmissionFindFirstOrThrowArgs} args - Arguments to find a ExamSubmission
+     * @example
+     * // Get one ExamSubmission
+     * const examSubmission = await prisma.examSubmission.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ExamSubmissionFindFirstOrThrowArgs>(args?: SelectSubset<T, ExamSubmissionFindFirstOrThrowArgs<ExtArgs>>): Prisma__ExamSubmissionClient<$Result.GetResult<Prisma.$ExamSubmissionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ExamSubmissions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamSubmissionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ExamSubmissions
+     * const examSubmissions = await prisma.examSubmission.findMany()
+     * 
+     * // Get first 10 ExamSubmissions
+     * const examSubmissions = await prisma.examSubmission.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const examSubmissionWithIdOnly = await prisma.examSubmission.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ExamSubmissionFindManyArgs>(args?: SelectSubset<T, ExamSubmissionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamSubmissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ExamSubmission.
+     * @param {ExamSubmissionCreateArgs} args - Arguments to create a ExamSubmission.
+     * @example
+     * // Create one ExamSubmission
+     * const ExamSubmission = await prisma.examSubmission.create({
+     *   data: {
+     *     // ... data to create a ExamSubmission
+     *   }
+     * })
+     * 
+     */
+    create<T extends ExamSubmissionCreateArgs>(args: SelectSubset<T, ExamSubmissionCreateArgs<ExtArgs>>): Prisma__ExamSubmissionClient<$Result.GetResult<Prisma.$ExamSubmissionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ExamSubmissions.
+     * @param {ExamSubmissionCreateManyArgs} args - Arguments to create many ExamSubmissions.
+     * @example
+     * // Create many ExamSubmissions
+     * const examSubmission = await prisma.examSubmission.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ExamSubmissionCreateManyArgs>(args?: SelectSubset<T, ExamSubmissionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ExamSubmissions and returns the data saved in the database.
+     * @param {ExamSubmissionCreateManyAndReturnArgs} args - Arguments to create many ExamSubmissions.
+     * @example
+     * // Create many ExamSubmissions
+     * const examSubmission = await prisma.examSubmission.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ExamSubmissions and only return the `id`
+     * const examSubmissionWithIdOnly = await prisma.examSubmission.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ExamSubmissionCreateManyAndReturnArgs>(args?: SelectSubset<T, ExamSubmissionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamSubmissionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ExamSubmission.
+     * @param {ExamSubmissionDeleteArgs} args - Arguments to delete one ExamSubmission.
+     * @example
+     * // Delete one ExamSubmission
+     * const ExamSubmission = await prisma.examSubmission.delete({
+     *   where: {
+     *     // ... filter to delete one ExamSubmission
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ExamSubmissionDeleteArgs>(args: SelectSubset<T, ExamSubmissionDeleteArgs<ExtArgs>>): Prisma__ExamSubmissionClient<$Result.GetResult<Prisma.$ExamSubmissionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ExamSubmission.
+     * @param {ExamSubmissionUpdateArgs} args - Arguments to update one ExamSubmission.
+     * @example
+     * // Update one ExamSubmission
+     * const examSubmission = await prisma.examSubmission.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ExamSubmissionUpdateArgs>(args: SelectSubset<T, ExamSubmissionUpdateArgs<ExtArgs>>): Prisma__ExamSubmissionClient<$Result.GetResult<Prisma.$ExamSubmissionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ExamSubmissions.
+     * @param {ExamSubmissionDeleteManyArgs} args - Arguments to filter ExamSubmissions to delete.
+     * @example
+     * // Delete a few ExamSubmissions
+     * const { count } = await prisma.examSubmission.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ExamSubmissionDeleteManyArgs>(args?: SelectSubset<T, ExamSubmissionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ExamSubmissions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamSubmissionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ExamSubmissions
+     * const examSubmission = await prisma.examSubmission.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ExamSubmissionUpdateManyArgs>(args: SelectSubset<T, ExamSubmissionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ExamSubmissions and returns the data updated in the database.
+     * @param {ExamSubmissionUpdateManyAndReturnArgs} args - Arguments to update many ExamSubmissions.
+     * @example
+     * // Update many ExamSubmissions
+     * const examSubmission = await prisma.examSubmission.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ExamSubmissions and only return the `id`
+     * const examSubmissionWithIdOnly = await prisma.examSubmission.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ExamSubmissionUpdateManyAndReturnArgs>(args: SelectSubset<T, ExamSubmissionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamSubmissionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ExamSubmission.
+     * @param {ExamSubmissionUpsertArgs} args - Arguments to update or create a ExamSubmission.
+     * @example
+     * // Update or create a ExamSubmission
+     * const examSubmission = await prisma.examSubmission.upsert({
+     *   create: {
+     *     // ... data to create a ExamSubmission
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ExamSubmission we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ExamSubmissionUpsertArgs>(args: SelectSubset<T, ExamSubmissionUpsertArgs<ExtArgs>>): Prisma__ExamSubmissionClient<$Result.GetResult<Prisma.$ExamSubmissionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ExamSubmissions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamSubmissionCountArgs} args - Arguments to filter ExamSubmissions to count.
+     * @example
+     * // Count the number of ExamSubmissions
+     * const count = await prisma.examSubmission.count({
+     *   where: {
+     *     // ... the filter for the ExamSubmissions we want to count
+     *   }
+     * })
+    **/
+    count<T extends ExamSubmissionCountArgs>(
+      args?: Subset<T, ExamSubmissionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ExamSubmissionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ExamSubmission.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamSubmissionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ExamSubmissionAggregateArgs>(args: Subset<T, ExamSubmissionAggregateArgs>): Prisma.PrismaPromise<GetExamSubmissionAggregateType<T>>
+
+    /**
+     * Group by ExamSubmission.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamSubmissionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ExamSubmissionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ExamSubmissionGroupByArgs['orderBy'] }
+        : { orderBy?: ExamSubmissionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ExamSubmissionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetExamSubmissionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ExamSubmission model
+   */
+  readonly fields: ExamSubmissionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ExamSubmission.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ExamSubmissionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    exam<T extends ExamDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ExamDefaultArgs<ExtArgs>>): Prisma__ExamClient<$Result.GetResult<Prisma.$ExamPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    achievement<T extends ExamSubmission$achievementArgs<ExtArgs> = {}>(args?: Subset<T, ExamSubmission$achievementArgs<ExtArgs>>): Prisma__ExamAchievementClient<$Result.GetResult<Prisma.$ExamAchievementPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ExamSubmission model
+   */
+  interface ExamSubmissionFieldRefs {
+    readonly id: FieldRef<"ExamSubmission", 'Int'>
+    readonly proofImageUrl: FieldRef<"ExamSubmission", 'String'>
+    readonly status: FieldRef<"ExamSubmission", 'String'>
+    readonly reviewerNote: FieldRef<"ExamSubmission", 'String'>
+    readonly submittedAt: FieldRef<"ExamSubmission", 'DateTime'>
+    readonly reviewedAt: FieldRef<"ExamSubmission", 'DateTime'>
+    readonly createdAt: FieldRef<"ExamSubmission", 'DateTime'>
+    readonly updatedAt: FieldRef<"ExamSubmission", 'DateTime'>
+    readonly userId: FieldRef<"ExamSubmission", 'Int'>
+    readonly examId: FieldRef<"ExamSubmission", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ExamSubmission findUnique
+   */
+  export type ExamSubmissionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamSubmission
+     */
+    select?: ExamSubmissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamSubmission
+     */
+    omit?: ExamSubmissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamSubmissionInclude<ExtArgs> | null
+    /**
+     * Filter, which ExamSubmission to fetch.
+     */
+    where: ExamSubmissionWhereUniqueInput
+  }
+
+  /**
+   * ExamSubmission findUniqueOrThrow
+   */
+  export type ExamSubmissionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamSubmission
+     */
+    select?: ExamSubmissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamSubmission
+     */
+    omit?: ExamSubmissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamSubmissionInclude<ExtArgs> | null
+    /**
+     * Filter, which ExamSubmission to fetch.
+     */
+    where: ExamSubmissionWhereUniqueInput
+  }
+
+  /**
+   * ExamSubmission findFirst
+   */
+  export type ExamSubmissionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamSubmission
+     */
+    select?: ExamSubmissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamSubmission
+     */
+    omit?: ExamSubmissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamSubmissionInclude<ExtArgs> | null
+    /**
+     * Filter, which ExamSubmission to fetch.
+     */
+    where?: ExamSubmissionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExamSubmissions to fetch.
+     */
+    orderBy?: ExamSubmissionOrderByWithRelationInput | ExamSubmissionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ExamSubmissions.
+     */
+    cursor?: ExamSubmissionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExamSubmissions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExamSubmissions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ExamSubmissions.
+     */
+    distinct?: ExamSubmissionScalarFieldEnum | ExamSubmissionScalarFieldEnum[]
+  }
+
+  /**
+   * ExamSubmission findFirstOrThrow
+   */
+  export type ExamSubmissionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamSubmission
+     */
+    select?: ExamSubmissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamSubmission
+     */
+    omit?: ExamSubmissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamSubmissionInclude<ExtArgs> | null
+    /**
+     * Filter, which ExamSubmission to fetch.
+     */
+    where?: ExamSubmissionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExamSubmissions to fetch.
+     */
+    orderBy?: ExamSubmissionOrderByWithRelationInput | ExamSubmissionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ExamSubmissions.
+     */
+    cursor?: ExamSubmissionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExamSubmissions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExamSubmissions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ExamSubmissions.
+     */
+    distinct?: ExamSubmissionScalarFieldEnum | ExamSubmissionScalarFieldEnum[]
+  }
+
+  /**
+   * ExamSubmission findMany
+   */
+  export type ExamSubmissionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamSubmission
+     */
+    select?: ExamSubmissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamSubmission
+     */
+    omit?: ExamSubmissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamSubmissionInclude<ExtArgs> | null
+    /**
+     * Filter, which ExamSubmissions to fetch.
+     */
+    where?: ExamSubmissionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExamSubmissions to fetch.
+     */
+    orderBy?: ExamSubmissionOrderByWithRelationInput | ExamSubmissionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ExamSubmissions.
+     */
+    cursor?: ExamSubmissionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExamSubmissions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExamSubmissions.
+     */
+    skip?: number
+    distinct?: ExamSubmissionScalarFieldEnum | ExamSubmissionScalarFieldEnum[]
+  }
+
+  /**
+   * ExamSubmission create
+   */
+  export type ExamSubmissionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamSubmission
+     */
+    select?: ExamSubmissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamSubmission
+     */
+    omit?: ExamSubmissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamSubmissionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ExamSubmission.
+     */
+    data: XOR<ExamSubmissionCreateInput, ExamSubmissionUncheckedCreateInput>
+  }
+
+  /**
+   * ExamSubmission createMany
+   */
+  export type ExamSubmissionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ExamSubmissions.
+     */
+    data: ExamSubmissionCreateManyInput | ExamSubmissionCreateManyInput[]
+  }
+
+  /**
+   * ExamSubmission createManyAndReturn
+   */
+  export type ExamSubmissionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamSubmission
+     */
+    select?: ExamSubmissionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamSubmission
+     */
+    omit?: ExamSubmissionOmit<ExtArgs> | null
+    /**
+     * The data used to create many ExamSubmissions.
+     */
+    data: ExamSubmissionCreateManyInput | ExamSubmissionCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamSubmissionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ExamSubmission update
+   */
+  export type ExamSubmissionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamSubmission
+     */
+    select?: ExamSubmissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamSubmission
+     */
+    omit?: ExamSubmissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamSubmissionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ExamSubmission.
+     */
+    data: XOR<ExamSubmissionUpdateInput, ExamSubmissionUncheckedUpdateInput>
+    /**
+     * Choose, which ExamSubmission to update.
+     */
+    where: ExamSubmissionWhereUniqueInput
+  }
+
+  /**
+   * ExamSubmission updateMany
+   */
+  export type ExamSubmissionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ExamSubmissions.
+     */
+    data: XOR<ExamSubmissionUpdateManyMutationInput, ExamSubmissionUncheckedUpdateManyInput>
+    /**
+     * Filter which ExamSubmissions to update
+     */
+    where?: ExamSubmissionWhereInput
+    /**
+     * Limit how many ExamSubmissions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ExamSubmission updateManyAndReturn
+   */
+  export type ExamSubmissionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamSubmission
+     */
+    select?: ExamSubmissionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamSubmission
+     */
+    omit?: ExamSubmissionOmit<ExtArgs> | null
+    /**
+     * The data used to update ExamSubmissions.
+     */
+    data: XOR<ExamSubmissionUpdateManyMutationInput, ExamSubmissionUncheckedUpdateManyInput>
+    /**
+     * Filter which ExamSubmissions to update
+     */
+    where?: ExamSubmissionWhereInput
+    /**
+     * Limit how many ExamSubmissions to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamSubmissionIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ExamSubmission upsert
+   */
+  export type ExamSubmissionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamSubmission
+     */
+    select?: ExamSubmissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamSubmission
+     */
+    omit?: ExamSubmissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamSubmissionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ExamSubmission to update in case it exists.
+     */
+    where: ExamSubmissionWhereUniqueInput
+    /**
+     * In case the ExamSubmission found by the `where` argument doesn't exist, create a new ExamSubmission with this data.
+     */
+    create: XOR<ExamSubmissionCreateInput, ExamSubmissionUncheckedCreateInput>
+    /**
+     * In case the ExamSubmission was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ExamSubmissionUpdateInput, ExamSubmissionUncheckedUpdateInput>
+  }
+
+  /**
+   * ExamSubmission delete
+   */
+  export type ExamSubmissionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamSubmission
+     */
+    select?: ExamSubmissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamSubmission
+     */
+    omit?: ExamSubmissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamSubmissionInclude<ExtArgs> | null
+    /**
+     * Filter which ExamSubmission to delete.
+     */
+    where: ExamSubmissionWhereUniqueInput
+  }
+
+  /**
+   * ExamSubmission deleteMany
+   */
+  export type ExamSubmissionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ExamSubmissions to delete
+     */
+    where?: ExamSubmissionWhereInput
+    /**
+     * Limit how many ExamSubmissions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ExamSubmission.achievement
+   */
+  export type ExamSubmission$achievementArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamAchievement
+     */
+    select?: ExamAchievementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamAchievement
+     */
+    omit?: ExamAchievementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamAchievementInclude<ExtArgs> | null
+    where?: ExamAchievementWhereInput
+  }
+
+  /**
+   * ExamSubmission without action
+   */
+  export type ExamSubmissionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamSubmission
+     */
+    select?: ExamSubmissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamSubmission
+     */
+    omit?: ExamSubmissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamSubmissionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ExamAchievement
+   */
+
+  export type AggregateExamAchievement = {
+    _count: ExamAchievementCountAggregateOutputType | null
+    _avg: ExamAchievementAvgAggregateOutputType | null
+    _sum: ExamAchievementSumAggregateOutputType | null
+    _min: ExamAchievementMinAggregateOutputType | null
+    _max: ExamAchievementMaxAggregateOutputType | null
+  }
+
+  export type ExamAchievementAvgAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    examId: number | null
+    submissionId: number | null
+  }
+
+  export type ExamAchievementSumAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    examId: number | null
+    submissionId: number | null
+  }
+
+  export type ExamAchievementMinAggregateOutputType = {
+    id: number | null
+    achievedAt: Date | null
+    createdAt: Date | null
+    userId: number | null
+    examId: number | null
+    submissionId: number | null
+  }
+
+  export type ExamAchievementMaxAggregateOutputType = {
+    id: number | null
+    achievedAt: Date | null
+    createdAt: Date | null
+    userId: number | null
+    examId: number | null
+    submissionId: number | null
+  }
+
+  export type ExamAchievementCountAggregateOutputType = {
+    id: number
+    achievedAt: number
+    createdAt: number
+    userId: number
+    examId: number
+    submissionId: number
+    _all: number
+  }
+
+
+  export type ExamAchievementAvgAggregateInputType = {
+    id?: true
+    userId?: true
+    examId?: true
+    submissionId?: true
+  }
+
+  export type ExamAchievementSumAggregateInputType = {
+    id?: true
+    userId?: true
+    examId?: true
+    submissionId?: true
+  }
+
+  export type ExamAchievementMinAggregateInputType = {
+    id?: true
+    achievedAt?: true
+    createdAt?: true
+    userId?: true
+    examId?: true
+    submissionId?: true
+  }
+
+  export type ExamAchievementMaxAggregateInputType = {
+    id?: true
+    achievedAt?: true
+    createdAt?: true
+    userId?: true
+    examId?: true
+    submissionId?: true
+  }
+
+  export type ExamAchievementCountAggregateInputType = {
+    id?: true
+    achievedAt?: true
+    createdAt?: true
+    userId?: true
+    examId?: true
+    submissionId?: true
+    _all?: true
+  }
+
+  export type ExamAchievementAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ExamAchievement to aggregate.
+     */
+    where?: ExamAchievementWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExamAchievements to fetch.
+     */
+    orderBy?: ExamAchievementOrderByWithRelationInput | ExamAchievementOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ExamAchievementWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExamAchievements from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExamAchievements.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ExamAchievements
+    **/
+    _count?: true | ExamAchievementCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ExamAchievementAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ExamAchievementSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ExamAchievementMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ExamAchievementMaxAggregateInputType
+  }
+
+  export type GetExamAchievementAggregateType<T extends ExamAchievementAggregateArgs> = {
+        [P in keyof T & keyof AggregateExamAchievement]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateExamAchievement[P]>
+      : GetScalarType<T[P], AggregateExamAchievement[P]>
+  }
+
+
+
+
+  export type ExamAchievementGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ExamAchievementWhereInput
+    orderBy?: ExamAchievementOrderByWithAggregationInput | ExamAchievementOrderByWithAggregationInput[]
+    by: ExamAchievementScalarFieldEnum[] | ExamAchievementScalarFieldEnum
+    having?: ExamAchievementScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ExamAchievementCountAggregateInputType | true
+    _avg?: ExamAchievementAvgAggregateInputType
+    _sum?: ExamAchievementSumAggregateInputType
+    _min?: ExamAchievementMinAggregateInputType
+    _max?: ExamAchievementMaxAggregateInputType
+  }
+
+  export type ExamAchievementGroupByOutputType = {
+    id: number
+    achievedAt: Date
+    createdAt: Date
+    userId: number
+    examId: number
+    submissionId: number | null
+    _count: ExamAchievementCountAggregateOutputType | null
+    _avg: ExamAchievementAvgAggregateOutputType | null
+    _sum: ExamAchievementSumAggregateOutputType | null
+    _min: ExamAchievementMinAggregateOutputType | null
+    _max: ExamAchievementMaxAggregateOutputType | null
+  }
+
+  type GetExamAchievementGroupByPayload<T extends ExamAchievementGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ExamAchievementGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ExamAchievementGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ExamAchievementGroupByOutputType[P]>
+            : GetScalarType<T[P], ExamAchievementGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ExamAchievementSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    achievedAt?: boolean
+    createdAt?: boolean
+    userId?: boolean
+    examId?: boolean
+    submissionId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    exam?: boolean | ExamDefaultArgs<ExtArgs>
+    submission?: boolean | ExamAchievement$submissionArgs<ExtArgs>
+  }, ExtArgs["result"]["examAchievement"]>
+
+  export type ExamAchievementSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    achievedAt?: boolean
+    createdAt?: boolean
+    userId?: boolean
+    examId?: boolean
+    submissionId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    exam?: boolean | ExamDefaultArgs<ExtArgs>
+    submission?: boolean | ExamAchievement$submissionArgs<ExtArgs>
+  }, ExtArgs["result"]["examAchievement"]>
+
+  export type ExamAchievementSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    achievedAt?: boolean
+    createdAt?: boolean
+    userId?: boolean
+    examId?: boolean
+    submissionId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    exam?: boolean | ExamDefaultArgs<ExtArgs>
+    submission?: boolean | ExamAchievement$submissionArgs<ExtArgs>
+  }, ExtArgs["result"]["examAchievement"]>
+
+  export type ExamAchievementSelectScalar = {
+    id?: boolean
+    achievedAt?: boolean
+    createdAt?: boolean
+    userId?: boolean
+    examId?: boolean
+    submissionId?: boolean
+  }
+
+  export type ExamAchievementOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "achievedAt" | "createdAt" | "userId" | "examId" | "submissionId", ExtArgs["result"]["examAchievement"]>
+  export type ExamAchievementInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    exam?: boolean | ExamDefaultArgs<ExtArgs>
+    submission?: boolean | ExamAchievement$submissionArgs<ExtArgs>
+  }
+  export type ExamAchievementIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    exam?: boolean | ExamDefaultArgs<ExtArgs>
+    submission?: boolean | ExamAchievement$submissionArgs<ExtArgs>
+  }
+  export type ExamAchievementIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    exam?: boolean | ExamDefaultArgs<ExtArgs>
+    submission?: boolean | ExamAchievement$submissionArgs<ExtArgs>
+  }
+
+  export type $ExamAchievementPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ExamAchievement"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      exam: Prisma.$ExamPayload<ExtArgs>
+      submission: Prisma.$ExamSubmissionPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      achievedAt: Date
+      createdAt: Date
+      userId: number
+      examId: number
+      submissionId: number | null
+    }, ExtArgs["result"]["examAchievement"]>
+    composites: {}
+  }
+
+  type ExamAchievementGetPayload<S extends boolean | null | undefined | ExamAchievementDefaultArgs> = $Result.GetResult<Prisma.$ExamAchievementPayload, S>
+
+  type ExamAchievementCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ExamAchievementFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ExamAchievementCountAggregateInputType | true
+    }
+
+  export interface ExamAchievementDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ExamAchievement'], meta: { name: 'ExamAchievement' } }
+    /**
+     * Find zero or one ExamAchievement that matches the filter.
+     * @param {ExamAchievementFindUniqueArgs} args - Arguments to find a ExamAchievement
+     * @example
+     * // Get one ExamAchievement
+     * const examAchievement = await prisma.examAchievement.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ExamAchievementFindUniqueArgs>(args: SelectSubset<T, ExamAchievementFindUniqueArgs<ExtArgs>>): Prisma__ExamAchievementClient<$Result.GetResult<Prisma.$ExamAchievementPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ExamAchievement that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ExamAchievementFindUniqueOrThrowArgs} args - Arguments to find a ExamAchievement
+     * @example
+     * // Get one ExamAchievement
+     * const examAchievement = await prisma.examAchievement.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ExamAchievementFindUniqueOrThrowArgs>(args: SelectSubset<T, ExamAchievementFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ExamAchievementClient<$Result.GetResult<Prisma.$ExamAchievementPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ExamAchievement that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamAchievementFindFirstArgs} args - Arguments to find a ExamAchievement
+     * @example
+     * // Get one ExamAchievement
+     * const examAchievement = await prisma.examAchievement.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ExamAchievementFindFirstArgs>(args?: SelectSubset<T, ExamAchievementFindFirstArgs<ExtArgs>>): Prisma__ExamAchievementClient<$Result.GetResult<Prisma.$ExamAchievementPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ExamAchievement that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamAchievementFindFirstOrThrowArgs} args - Arguments to find a ExamAchievement
+     * @example
+     * // Get one ExamAchievement
+     * const examAchievement = await prisma.examAchievement.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ExamAchievementFindFirstOrThrowArgs>(args?: SelectSubset<T, ExamAchievementFindFirstOrThrowArgs<ExtArgs>>): Prisma__ExamAchievementClient<$Result.GetResult<Prisma.$ExamAchievementPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ExamAchievements that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamAchievementFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ExamAchievements
+     * const examAchievements = await prisma.examAchievement.findMany()
+     * 
+     * // Get first 10 ExamAchievements
+     * const examAchievements = await prisma.examAchievement.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const examAchievementWithIdOnly = await prisma.examAchievement.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ExamAchievementFindManyArgs>(args?: SelectSubset<T, ExamAchievementFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamAchievementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ExamAchievement.
+     * @param {ExamAchievementCreateArgs} args - Arguments to create a ExamAchievement.
+     * @example
+     * // Create one ExamAchievement
+     * const ExamAchievement = await prisma.examAchievement.create({
+     *   data: {
+     *     // ... data to create a ExamAchievement
+     *   }
+     * })
+     * 
+     */
+    create<T extends ExamAchievementCreateArgs>(args: SelectSubset<T, ExamAchievementCreateArgs<ExtArgs>>): Prisma__ExamAchievementClient<$Result.GetResult<Prisma.$ExamAchievementPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ExamAchievements.
+     * @param {ExamAchievementCreateManyArgs} args - Arguments to create many ExamAchievements.
+     * @example
+     * // Create many ExamAchievements
+     * const examAchievement = await prisma.examAchievement.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ExamAchievementCreateManyArgs>(args?: SelectSubset<T, ExamAchievementCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ExamAchievements and returns the data saved in the database.
+     * @param {ExamAchievementCreateManyAndReturnArgs} args - Arguments to create many ExamAchievements.
+     * @example
+     * // Create many ExamAchievements
+     * const examAchievement = await prisma.examAchievement.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ExamAchievements and only return the `id`
+     * const examAchievementWithIdOnly = await prisma.examAchievement.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ExamAchievementCreateManyAndReturnArgs>(args?: SelectSubset<T, ExamAchievementCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamAchievementPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ExamAchievement.
+     * @param {ExamAchievementDeleteArgs} args - Arguments to delete one ExamAchievement.
+     * @example
+     * // Delete one ExamAchievement
+     * const ExamAchievement = await prisma.examAchievement.delete({
+     *   where: {
+     *     // ... filter to delete one ExamAchievement
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ExamAchievementDeleteArgs>(args: SelectSubset<T, ExamAchievementDeleteArgs<ExtArgs>>): Prisma__ExamAchievementClient<$Result.GetResult<Prisma.$ExamAchievementPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ExamAchievement.
+     * @param {ExamAchievementUpdateArgs} args - Arguments to update one ExamAchievement.
+     * @example
+     * // Update one ExamAchievement
+     * const examAchievement = await prisma.examAchievement.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ExamAchievementUpdateArgs>(args: SelectSubset<T, ExamAchievementUpdateArgs<ExtArgs>>): Prisma__ExamAchievementClient<$Result.GetResult<Prisma.$ExamAchievementPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ExamAchievements.
+     * @param {ExamAchievementDeleteManyArgs} args - Arguments to filter ExamAchievements to delete.
+     * @example
+     * // Delete a few ExamAchievements
+     * const { count } = await prisma.examAchievement.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ExamAchievementDeleteManyArgs>(args?: SelectSubset<T, ExamAchievementDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ExamAchievements.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamAchievementUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ExamAchievements
+     * const examAchievement = await prisma.examAchievement.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ExamAchievementUpdateManyArgs>(args: SelectSubset<T, ExamAchievementUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ExamAchievements and returns the data updated in the database.
+     * @param {ExamAchievementUpdateManyAndReturnArgs} args - Arguments to update many ExamAchievements.
+     * @example
+     * // Update many ExamAchievements
+     * const examAchievement = await prisma.examAchievement.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ExamAchievements and only return the `id`
+     * const examAchievementWithIdOnly = await prisma.examAchievement.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ExamAchievementUpdateManyAndReturnArgs>(args: SelectSubset<T, ExamAchievementUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamAchievementPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ExamAchievement.
+     * @param {ExamAchievementUpsertArgs} args - Arguments to update or create a ExamAchievement.
+     * @example
+     * // Update or create a ExamAchievement
+     * const examAchievement = await prisma.examAchievement.upsert({
+     *   create: {
+     *     // ... data to create a ExamAchievement
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ExamAchievement we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ExamAchievementUpsertArgs>(args: SelectSubset<T, ExamAchievementUpsertArgs<ExtArgs>>): Prisma__ExamAchievementClient<$Result.GetResult<Prisma.$ExamAchievementPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ExamAchievements.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamAchievementCountArgs} args - Arguments to filter ExamAchievements to count.
+     * @example
+     * // Count the number of ExamAchievements
+     * const count = await prisma.examAchievement.count({
+     *   where: {
+     *     // ... the filter for the ExamAchievements we want to count
+     *   }
+     * })
+    **/
+    count<T extends ExamAchievementCountArgs>(
+      args?: Subset<T, ExamAchievementCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ExamAchievementCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ExamAchievement.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamAchievementAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ExamAchievementAggregateArgs>(args: Subset<T, ExamAchievementAggregateArgs>): Prisma.PrismaPromise<GetExamAchievementAggregateType<T>>
+
+    /**
+     * Group by ExamAchievement.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamAchievementGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ExamAchievementGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ExamAchievementGroupByArgs['orderBy'] }
+        : { orderBy?: ExamAchievementGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ExamAchievementGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetExamAchievementGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ExamAchievement model
+   */
+  readonly fields: ExamAchievementFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ExamAchievement.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ExamAchievementClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    exam<T extends ExamDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ExamDefaultArgs<ExtArgs>>): Prisma__ExamClient<$Result.GetResult<Prisma.$ExamPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    submission<T extends ExamAchievement$submissionArgs<ExtArgs> = {}>(args?: Subset<T, ExamAchievement$submissionArgs<ExtArgs>>): Prisma__ExamSubmissionClient<$Result.GetResult<Prisma.$ExamSubmissionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ExamAchievement model
+   */
+  interface ExamAchievementFieldRefs {
+    readonly id: FieldRef<"ExamAchievement", 'Int'>
+    readonly achievedAt: FieldRef<"ExamAchievement", 'DateTime'>
+    readonly createdAt: FieldRef<"ExamAchievement", 'DateTime'>
+    readonly userId: FieldRef<"ExamAchievement", 'Int'>
+    readonly examId: FieldRef<"ExamAchievement", 'Int'>
+    readonly submissionId: FieldRef<"ExamAchievement", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ExamAchievement findUnique
+   */
+  export type ExamAchievementFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamAchievement
+     */
+    select?: ExamAchievementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamAchievement
+     */
+    omit?: ExamAchievementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamAchievementInclude<ExtArgs> | null
+    /**
+     * Filter, which ExamAchievement to fetch.
+     */
+    where: ExamAchievementWhereUniqueInput
+  }
+
+  /**
+   * ExamAchievement findUniqueOrThrow
+   */
+  export type ExamAchievementFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamAchievement
+     */
+    select?: ExamAchievementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamAchievement
+     */
+    omit?: ExamAchievementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamAchievementInclude<ExtArgs> | null
+    /**
+     * Filter, which ExamAchievement to fetch.
+     */
+    where: ExamAchievementWhereUniqueInput
+  }
+
+  /**
+   * ExamAchievement findFirst
+   */
+  export type ExamAchievementFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamAchievement
+     */
+    select?: ExamAchievementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamAchievement
+     */
+    omit?: ExamAchievementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamAchievementInclude<ExtArgs> | null
+    /**
+     * Filter, which ExamAchievement to fetch.
+     */
+    where?: ExamAchievementWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExamAchievements to fetch.
+     */
+    orderBy?: ExamAchievementOrderByWithRelationInput | ExamAchievementOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ExamAchievements.
+     */
+    cursor?: ExamAchievementWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExamAchievements from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExamAchievements.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ExamAchievements.
+     */
+    distinct?: ExamAchievementScalarFieldEnum | ExamAchievementScalarFieldEnum[]
+  }
+
+  /**
+   * ExamAchievement findFirstOrThrow
+   */
+  export type ExamAchievementFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamAchievement
+     */
+    select?: ExamAchievementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamAchievement
+     */
+    omit?: ExamAchievementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamAchievementInclude<ExtArgs> | null
+    /**
+     * Filter, which ExamAchievement to fetch.
+     */
+    where?: ExamAchievementWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExamAchievements to fetch.
+     */
+    orderBy?: ExamAchievementOrderByWithRelationInput | ExamAchievementOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ExamAchievements.
+     */
+    cursor?: ExamAchievementWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExamAchievements from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExamAchievements.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ExamAchievements.
+     */
+    distinct?: ExamAchievementScalarFieldEnum | ExamAchievementScalarFieldEnum[]
+  }
+
+  /**
+   * ExamAchievement findMany
+   */
+  export type ExamAchievementFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamAchievement
+     */
+    select?: ExamAchievementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamAchievement
+     */
+    omit?: ExamAchievementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamAchievementInclude<ExtArgs> | null
+    /**
+     * Filter, which ExamAchievements to fetch.
+     */
+    where?: ExamAchievementWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExamAchievements to fetch.
+     */
+    orderBy?: ExamAchievementOrderByWithRelationInput | ExamAchievementOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ExamAchievements.
+     */
+    cursor?: ExamAchievementWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExamAchievements from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExamAchievements.
+     */
+    skip?: number
+    distinct?: ExamAchievementScalarFieldEnum | ExamAchievementScalarFieldEnum[]
+  }
+
+  /**
+   * ExamAchievement create
+   */
+  export type ExamAchievementCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamAchievement
+     */
+    select?: ExamAchievementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamAchievement
+     */
+    omit?: ExamAchievementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamAchievementInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ExamAchievement.
+     */
+    data: XOR<ExamAchievementCreateInput, ExamAchievementUncheckedCreateInput>
+  }
+
+  /**
+   * ExamAchievement createMany
+   */
+  export type ExamAchievementCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ExamAchievements.
+     */
+    data: ExamAchievementCreateManyInput | ExamAchievementCreateManyInput[]
+  }
+
+  /**
+   * ExamAchievement createManyAndReturn
+   */
+  export type ExamAchievementCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamAchievement
+     */
+    select?: ExamAchievementSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamAchievement
+     */
+    omit?: ExamAchievementOmit<ExtArgs> | null
+    /**
+     * The data used to create many ExamAchievements.
+     */
+    data: ExamAchievementCreateManyInput | ExamAchievementCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamAchievementIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ExamAchievement update
+   */
+  export type ExamAchievementUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamAchievement
+     */
+    select?: ExamAchievementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamAchievement
+     */
+    omit?: ExamAchievementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamAchievementInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ExamAchievement.
+     */
+    data: XOR<ExamAchievementUpdateInput, ExamAchievementUncheckedUpdateInput>
+    /**
+     * Choose, which ExamAchievement to update.
+     */
+    where: ExamAchievementWhereUniqueInput
+  }
+
+  /**
+   * ExamAchievement updateMany
+   */
+  export type ExamAchievementUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ExamAchievements.
+     */
+    data: XOR<ExamAchievementUpdateManyMutationInput, ExamAchievementUncheckedUpdateManyInput>
+    /**
+     * Filter which ExamAchievements to update
+     */
+    where?: ExamAchievementWhereInput
+    /**
+     * Limit how many ExamAchievements to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ExamAchievement updateManyAndReturn
+   */
+  export type ExamAchievementUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamAchievement
+     */
+    select?: ExamAchievementSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamAchievement
+     */
+    omit?: ExamAchievementOmit<ExtArgs> | null
+    /**
+     * The data used to update ExamAchievements.
+     */
+    data: XOR<ExamAchievementUpdateManyMutationInput, ExamAchievementUncheckedUpdateManyInput>
+    /**
+     * Filter which ExamAchievements to update
+     */
+    where?: ExamAchievementWhereInput
+    /**
+     * Limit how many ExamAchievements to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamAchievementIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ExamAchievement upsert
+   */
+  export type ExamAchievementUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamAchievement
+     */
+    select?: ExamAchievementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamAchievement
+     */
+    omit?: ExamAchievementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamAchievementInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ExamAchievement to update in case it exists.
+     */
+    where: ExamAchievementWhereUniqueInput
+    /**
+     * In case the ExamAchievement found by the `where` argument doesn't exist, create a new ExamAchievement with this data.
+     */
+    create: XOR<ExamAchievementCreateInput, ExamAchievementUncheckedCreateInput>
+    /**
+     * In case the ExamAchievement was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ExamAchievementUpdateInput, ExamAchievementUncheckedUpdateInput>
+  }
+
+  /**
+   * ExamAchievement delete
+   */
+  export type ExamAchievementDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamAchievement
+     */
+    select?: ExamAchievementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamAchievement
+     */
+    omit?: ExamAchievementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamAchievementInclude<ExtArgs> | null
+    /**
+     * Filter which ExamAchievement to delete.
+     */
+    where: ExamAchievementWhereUniqueInput
+  }
+
+  /**
+   * ExamAchievement deleteMany
+   */
+  export type ExamAchievementDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ExamAchievements to delete
+     */
+    where?: ExamAchievementWhereInput
+    /**
+     * Limit how many ExamAchievements to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ExamAchievement.submission
+   */
+  export type ExamAchievement$submissionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamSubmission
+     */
+    select?: ExamSubmissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamSubmission
+     */
+    omit?: ExamSubmissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamSubmissionInclude<ExtArgs> | null
+    where?: ExamSubmissionWhereInput
+  }
+
+  /**
+   * ExamAchievement without action
+   */
+  export type ExamAchievementDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamAchievement
+     */
+    select?: ExamAchievementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamAchievement
+     */
+    omit?: ExamAchievementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamAchievementInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -24879,6 +32738,88 @@ export namespace Prisma {
   export type BingoCellProgressScalarFieldEnum = (typeof BingoCellProgressScalarFieldEnum)[keyof typeof BingoCellProgressScalarFieldEnum]
 
 
+  export const ExamScalarFieldEnum: {
+    id: 'id',
+    slug: 'slug',
+    mode: 'mode',
+    shortLabel: 'shortLabel',
+    scoringType: 'scoringType',
+    grade: 'grade',
+    title: 'title',
+    description: 'description',
+    feeNos: 'feeNos',
+    requiredGrade: 'requiredGrade',
+    status: 'status',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ExamScalarFieldEnum = (typeof ExamScalarFieldEnum)[keyof typeof ExamScalarFieldEnum]
+
+
+  export const ExamStageScalarFieldEnum: {
+    id: 'id',
+    position: 'position',
+    label: 'label',
+    requirementType: 'requirementType',
+    requiredValue: 'requiredValue',
+    examId: 'examId',
+    musicIndex: 'musicIndex',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ExamStageScalarFieldEnum = (typeof ExamStageScalarFieldEnum)[keyof typeof ExamStageScalarFieldEnum]
+
+
+  export const ExamStageChartScalarFieldEnum: {
+    stageId: 'stageId',
+    chartId: 'chartId'
+  };
+
+  export type ExamStageChartScalarFieldEnum = (typeof ExamStageChartScalarFieldEnum)[keyof typeof ExamStageChartScalarFieldEnum]
+
+
+  export const ExamRewardScalarFieldEnum: {
+    id: 'id',
+    position: 'position',
+    type: 'type',
+    label: 'label',
+    examId: 'examId',
+    musicIndex: 'musicIndex'
+  };
+
+  export type ExamRewardScalarFieldEnum = (typeof ExamRewardScalarFieldEnum)[keyof typeof ExamRewardScalarFieldEnum]
+
+
+  export const ExamSubmissionScalarFieldEnum: {
+    id: 'id',
+    proofImageUrl: 'proofImageUrl',
+    status: 'status',
+    reviewerNote: 'reviewerNote',
+    submittedAt: 'submittedAt',
+    reviewedAt: 'reviewedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    userId: 'userId',
+    examId: 'examId'
+  };
+
+  export type ExamSubmissionScalarFieldEnum = (typeof ExamSubmissionScalarFieldEnum)[keyof typeof ExamSubmissionScalarFieldEnum]
+
+
+  export const ExamAchievementScalarFieldEnum: {
+    id: 'id',
+    achievedAt: 'achievedAt',
+    createdAt: 'createdAt',
+    userId: 'userId',
+    examId: 'examId',
+    submissionId: 'submissionId'
+  };
+
+  export type ExamAchievementScalarFieldEnum = (typeof ExamAchievementScalarFieldEnum)[keyof typeof ExamAchievementScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -25029,6 +32970,8 @@ export namespace Prisma {
     dataSyncs?: DataSyncListRelationFilter
     chartPlayHistory?: ChartPlayHistoryListRelationFilter
     chartRecordSnapshots?: ChartRecordSnapshotListRelationFilter
+    examSubmissions?: ExamSubmissionListRelationFilter
+    examAchievements?: ExamAchievementListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -25073,6 +33016,8 @@ export namespace Prisma {
     dataSyncs?: DataSyncOrderByRelationAggregateInput
     chartPlayHistory?: ChartPlayHistoryOrderByRelationAggregateInput
     chartRecordSnapshots?: ChartRecordSnapshotOrderByRelationAggregateInput
+    examSubmissions?: ExamSubmissionOrderByRelationAggregateInput
+    examAchievements?: ExamAchievementOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -25120,6 +33065,8 @@ export namespace Prisma {
     dataSyncs?: DataSyncListRelationFilter
     chartPlayHistory?: ChartPlayHistoryListRelationFilter
     chartRecordSnapshots?: ChartRecordSnapshotListRelationFilter
+    examSubmissions?: ExamSubmissionListRelationFilter
+    examAchievements?: ExamAchievementListRelationFilter
   }, "id" | "username" | "kakao_id" | "discord_tag">
 
   export type UserOrderByWithAggregationInput = {
@@ -25225,6 +33172,8 @@ export namespace Prisma {
     bingoCovers?: BingoListRelationFilter
     bingoMissions?: BingoCellListRelationFilter
     charts?: MusicChartListRelationFilter
+    examStages?: ExamStageListRelationFilter
+    examRewards?: ExamRewardListRelationFilter
   }
 
   export type MusicOrderByWithRelationInput = {
@@ -25253,6 +33202,8 @@ export namespace Prisma {
     bingoCovers?: BingoOrderByRelationAggregateInput
     bingoMissions?: BingoCellOrderByRelationAggregateInput
     charts?: MusicChartOrderByRelationAggregateInput
+    examStages?: ExamStageOrderByRelationAggregateInput
+    examRewards?: ExamRewardOrderByRelationAggregateInput
   }
 
   export type MusicWhereUniqueInput = Prisma.AtLeast<{
@@ -25284,6 +33235,8 @@ export namespace Prisma {
     bingoCovers?: BingoListRelationFilter
     bingoMissions?: BingoCellListRelationFilter
     charts?: MusicChartListRelationFilter
+    examStages?: ExamStageListRelationFilter
+    examRewards?: ExamRewardListRelationFilter
   }, "id" | "index">
 
   export type MusicOrderByWithAggregationInput = {
@@ -25364,6 +33317,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayListRelationFilter
     playHistory?: ChartPlayHistoryListRelationFilter
     recordSnapshots?: ChartRecordSnapshotListRelationFilter
+    examStageOptions?: ExamStageChartListRelationFilter
   }
 
   export type MusicChartOrderByWithRelationInput = {
@@ -25391,6 +33345,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayOrderByRelationAggregateInput
     playHistory?: ChartPlayHistoryOrderByRelationAggregateInput
     recordSnapshots?: ChartRecordSnapshotOrderByRelationAggregateInput
+    examStageOptions?: ExamStageChartOrderByRelationAggregateInput
   }
 
   export type MusicChartWhereUniqueInput = Prisma.AtLeast<{
@@ -25422,6 +33377,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayListRelationFilter
     playHistory?: ChartPlayHistoryListRelationFilter
     recordSnapshots?: ChartRecordSnapshotListRelationFilter
+    examStageOptions?: ExamStageChartListRelationFilter
   }, "id" | "music_idx_difficulty">
 
   export type MusicChartOrderByWithAggregationInput = {
@@ -26770,6 +34726,466 @@ export namespace Prisma {
     bingoCellId?: IntWithAggregatesFilter<"BingoCellProgress"> | number
   }
 
+  export type ExamWhereInput = {
+    AND?: ExamWhereInput | ExamWhereInput[]
+    OR?: ExamWhereInput[]
+    NOT?: ExamWhereInput | ExamWhereInput[]
+    id?: IntFilter<"Exam"> | number
+    slug?: StringFilter<"Exam"> | string
+    mode?: StringFilter<"Exam"> | string
+    shortLabel?: StringFilter<"Exam"> | string
+    scoringType?: StringFilter<"Exam"> | string
+    grade?: IntNullableFilter<"Exam"> | number | null
+    title?: StringFilter<"Exam"> | string
+    description?: StringNullableFilter<"Exam"> | string | null
+    feeNos?: IntFilter<"Exam"> | number
+    requiredGrade?: IntFilter<"Exam"> | number
+    status?: StringFilter<"Exam"> | string
+    createdAt?: DateTimeFilter<"Exam"> | Date | string
+    updatedAt?: DateTimeFilter<"Exam"> | Date | string
+    stages?: ExamStageListRelationFilter
+    rewards?: ExamRewardListRelationFilter
+    submissions?: ExamSubmissionListRelationFilter
+    achievements?: ExamAchievementListRelationFilter
+  }
+
+  export type ExamOrderByWithRelationInput = {
+    id?: SortOrder
+    slug?: SortOrder
+    mode?: SortOrder
+    shortLabel?: SortOrder
+    scoringType?: SortOrder
+    grade?: SortOrderInput | SortOrder
+    title?: SortOrder
+    description?: SortOrderInput | SortOrder
+    feeNos?: SortOrder
+    requiredGrade?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    stages?: ExamStageOrderByRelationAggregateInput
+    rewards?: ExamRewardOrderByRelationAggregateInput
+    submissions?: ExamSubmissionOrderByRelationAggregateInput
+    achievements?: ExamAchievementOrderByRelationAggregateInput
+  }
+
+  export type ExamWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    slug?: string
+    mode_grade?: ExamModeGradeCompoundUniqueInput
+    AND?: ExamWhereInput | ExamWhereInput[]
+    OR?: ExamWhereInput[]
+    NOT?: ExamWhereInput | ExamWhereInput[]
+    mode?: StringFilter<"Exam"> | string
+    shortLabel?: StringFilter<"Exam"> | string
+    scoringType?: StringFilter<"Exam"> | string
+    grade?: IntNullableFilter<"Exam"> | number | null
+    title?: StringFilter<"Exam"> | string
+    description?: StringNullableFilter<"Exam"> | string | null
+    feeNos?: IntFilter<"Exam"> | number
+    requiredGrade?: IntFilter<"Exam"> | number
+    status?: StringFilter<"Exam"> | string
+    createdAt?: DateTimeFilter<"Exam"> | Date | string
+    updatedAt?: DateTimeFilter<"Exam"> | Date | string
+    stages?: ExamStageListRelationFilter
+    rewards?: ExamRewardListRelationFilter
+    submissions?: ExamSubmissionListRelationFilter
+    achievements?: ExamAchievementListRelationFilter
+  }, "id" | "slug" | "mode_grade">
+
+  export type ExamOrderByWithAggregationInput = {
+    id?: SortOrder
+    slug?: SortOrder
+    mode?: SortOrder
+    shortLabel?: SortOrder
+    scoringType?: SortOrder
+    grade?: SortOrderInput | SortOrder
+    title?: SortOrder
+    description?: SortOrderInput | SortOrder
+    feeNos?: SortOrder
+    requiredGrade?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ExamCountOrderByAggregateInput
+    _avg?: ExamAvgOrderByAggregateInput
+    _max?: ExamMaxOrderByAggregateInput
+    _min?: ExamMinOrderByAggregateInput
+    _sum?: ExamSumOrderByAggregateInput
+  }
+
+  export type ExamScalarWhereWithAggregatesInput = {
+    AND?: ExamScalarWhereWithAggregatesInput | ExamScalarWhereWithAggregatesInput[]
+    OR?: ExamScalarWhereWithAggregatesInput[]
+    NOT?: ExamScalarWhereWithAggregatesInput | ExamScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"Exam"> | number
+    slug?: StringWithAggregatesFilter<"Exam"> | string
+    mode?: StringWithAggregatesFilter<"Exam"> | string
+    shortLabel?: StringWithAggregatesFilter<"Exam"> | string
+    scoringType?: StringWithAggregatesFilter<"Exam"> | string
+    grade?: IntNullableWithAggregatesFilter<"Exam"> | number | null
+    title?: StringWithAggregatesFilter<"Exam"> | string
+    description?: StringNullableWithAggregatesFilter<"Exam"> | string | null
+    feeNos?: IntWithAggregatesFilter<"Exam"> | number
+    requiredGrade?: IntWithAggregatesFilter<"Exam"> | number
+    status?: StringWithAggregatesFilter<"Exam"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Exam"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Exam"> | Date | string
+  }
+
+  export type ExamStageWhereInput = {
+    AND?: ExamStageWhereInput | ExamStageWhereInput[]
+    OR?: ExamStageWhereInput[]
+    NOT?: ExamStageWhereInput | ExamStageWhereInput[]
+    id?: IntFilter<"ExamStage"> | number
+    position?: IntFilter<"ExamStage"> | number
+    label?: StringNullableFilter<"ExamStage"> | string | null
+    requirementType?: StringFilter<"ExamStage"> | string
+    requiredValue?: FloatFilter<"ExamStage"> | number
+    examId?: IntFilter<"ExamStage"> | number
+    musicIndex?: StringFilter<"ExamStage"> | string
+    createdAt?: DateTimeFilter<"ExamStage"> | Date | string
+    updatedAt?: DateTimeFilter<"ExamStage"> | Date | string
+    exam?: XOR<ExamScalarRelationFilter, ExamWhereInput>
+    music?: XOR<MusicScalarRelationFilter, MusicWhereInput>
+    allowedCharts?: ExamStageChartListRelationFilter
+  }
+
+  export type ExamStageOrderByWithRelationInput = {
+    id?: SortOrder
+    position?: SortOrder
+    label?: SortOrderInput | SortOrder
+    requirementType?: SortOrder
+    requiredValue?: SortOrder
+    examId?: SortOrder
+    musicIndex?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    exam?: ExamOrderByWithRelationInput
+    music?: MusicOrderByWithRelationInput
+    allowedCharts?: ExamStageChartOrderByRelationAggregateInput
+  }
+
+  export type ExamStageWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    examId_position?: ExamStageExamIdPositionCompoundUniqueInput
+    AND?: ExamStageWhereInput | ExamStageWhereInput[]
+    OR?: ExamStageWhereInput[]
+    NOT?: ExamStageWhereInput | ExamStageWhereInput[]
+    position?: IntFilter<"ExamStage"> | number
+    label?: StringNullableFilter<"ExamStage"> | string | null
+    requirementType?: StringFilter<"ExamStage"> | string
+    requiredValue?: FloatFilter<"ExamStage"> | number
+    examId?: IntFilter<"ExamStage"> | number
+    musicIndex?: StringFilter<"ExamStage"> | string
+    createdAt?: DateTimeFilter<"ExamStage"> | Date | string
+    updatedAt?: DateTimeFilter<"ExamStage"> | Date | string
+    exam?: XOR<ExamScalarRelationFilter, ExamWhereInput>
+    music?: XOR<MusicScalarRelationFilter, MusicWhereInput>
+    allowedCharts?: ExamStageChartListRelationFilter
+  }, "id" | "examId_position">
+
+  export type ExamStageOrderByWithAggregationInput = {
+    id?: SortOrder
+    position?: SortOrder
+    label?: SortOrderInput | SortOrder
+    requirementType?: SortOrder
+    requiredValue?: SortOrder
+    examId?: SortOrder
+    musicIndex?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ExamStageCountOrderByAggregateInput
+    _avg?: ExamStageAvgOrderByAggregateInput
+    _max?: ExamStageMaxOrderByAggregateInput
+    _min?: ExamStageMinOrderByAggregateInput
+    _sum?: ExamStageSumOrderByAggregateInput
+  }
+
+  export type ExamStageScalarWhereWithAggregatesInput = {
+    AND?: ExamStageScalarWhereWithAggregatesInput | ExamStageScalarWhereWithAggregatesInput[]
+    OR?: ExamStageScalarWhereWithAggregatesInput[]
+    NOT?: ExamStageScalarWhereWithAggregatesInput | ExamStageScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"ExamStage"> | number
+    position?: IntWithAggregatesFilter<"ExamStage"> | number
+    label?: StringNullableWithAggregatesFilter<"ExamStage"> | string | null
+    requirementType?: StringWithAggregatesFilter<"ExamStage"> | string
+    requiredValue?: FloatWithAggregatesFilter<"ExamStage"> | number
+    examId?: IntWithAggregatesFilter<"ExamStage"> | number
+    musicIndex?: StringWithAggregatesFilter<"ExamStage"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"ExamStage"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ExamStage"> | Date | string
+  }
+
+  export type ExamStageChartWhereInput = {
+    AND?: ExamStageChartWhereInput | ExamStageChartWhereInput[]
+    OR?: ExamStageChartWhereInput[]
+    NOT?: ExamStageChartWhereInput | ExamStageChartWhereInput[]
+    stageId?: IntFilter<"ExamStageChart"> | number
+    chartId?: IntFilter<"ExamStageChart"> | number
+    stage?: XOR<ExamStageScalarRelationFilter, ExamStageWhereInput>
+    chart?: XOR<MusicChartScalarRelationFilter, MusicChartWhereInput>
+  }
+
+  export type ExamStageChartOrderByWithRelationInput = {
+    stageId?: SortOrder
+    chartId?: SortOrder
+    stage?: ExamStageOrderByWithRelationInput
+    chart?: MusicChartOrderByWithRelationInput
+  }
+
+  export type ExamStageChartWhereUniqueInput = Prisma.AtLeast<{
+    stageId_chartId?: ExamStageChartStageIdChartIdCompoundUniqueInput
+    AND?: ExamStageChartWhereInput | ExamStageChartWhereInput[]
+    OR?: ExamStageChartWhereInput[]
+    NOT?: ExamStageChartWhereInput | ExamStageChartWhereInput[]
+    stageId?: IntFilter<"ExamStageChart"> | number
+    chartId?: IntFilter<"ExamStageChart"> | number
+    stage?: XOR<ExamStageScalarRelationFilter, ExamStageWhereInput>
+    chart?: XOR<MusicChartScalarRelationFilter, MusicChartWhereInput>
+  }, "stageId_chartId">
+
+  export type ExamStageChartOrderByWithAggregationInput = {
+    stageId?: SortOrder
+    chartId?: SortOrder
+    _count?: ExamStageChartCountOrderByAggregateInput
+    _avg?: ExamStageChartAvgOrderByAggregateInput
+    _max?: ExamStageChartMaxOrderByAggregateInput
+    _min?: ExamStageChartMinOrderByAggregateInput
+    _sum?: ExamStageChartSumOrderByAggregateInput
+  }
+
+  export type ExamStageChartScalarWhereWithAggregatesInput = {
+    AND?: ExamStageChartScalarWhereWithAggregatesInput | ExamStageChartScalarWhereWithAggregatesInput[]
+    OR?: ExamStageChartScalarWhereWithAggregatesInput[]
+    NOT?: ExamStageChartScalarWhereWithAggregatesInput | ExamStageChartScalarWhereWithAggregatesInput[]
+    stageId?: IntWithAggregatesFilter<"ExamStageChart"> | number
+    chartId?: IntWithAggregatesFilter<"ExamStageChart"> | number
+  }
+
+  export type ExamRewardWhereInput = {
+    AND?: ExamRewardWhereInput | ExamRewardWhereInput[]
+    OR?: ExamRewardWhereInput[]
+    NOT?: ExamRewardWhereInput | ExamRewardWhereInput[]
+    id?: IntFilter<"ExamReward"> | number
+    position?: IntFilter<"ExamReward"> | number
+    type?: StringFilter<"ExamReward"> | string
+    label?: StringNullableFilter<"ExamReward"> | string | null
+    examId?: IntFilter<"ExamReward"> | number
+    musicIndex?: StringNullableFilter<"ExamReward"> | string | null
+    exam?: XOR<ExamScalarRelationFilter, ExamWhereInput>
+    music?: XOR<MusicNullableScalarRelationFilter, MusicWhereInput> | null
+  }
+
+  export type ExamRewardOrderByWithRelationInput = {
+    id?: SortOrder
+    position?: SortOrder
+    type?: SortOrder
+    label?: SortOrderInput | SortOrder
+    examId?: SortOrder
+    musicIndex?: SortOrderInput | SortOrder
+    exam?: ExamOrderByWithRelationInput
+    music?: MusicOrderByWithRelationInput
+  }
+
+  export type ExamRewardWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    examId_position?: ExamRewardExamIdPositionCompoundUniqueInput
+    AND?: ExamRewardWhereInput | ExamRewardWhereInput[]
+    OR?: ExamRewardWhereInput[]
+    NOT?: ExamRewardWhereInput | ExamRewardWhereInput[]
+    position?: IntFilter<"ExamReward"> | number
+    type?: StringFilter<"ExamReward"> | string
+    label?: StringNullableFilter<"ExamReward"> | string | null
+    examId?: IntFilter<"ExamReward"> | number
+    musicIndex?: StringNullableFilter<"ExamReward"> | string | null
+    exam?: XOR<ExamScalarRelationFilter, ExamWhereInput>
+    music?: XOR<MusicNullableScalarRelationFilter, MusicWhereInput> | null
+  }, "id" | "examId_position">
+
+  export type ExamRewardOrderByWithAggregationInput = {
+    id?: SortOrder
+    position?: SortOrder
+    type?: SortOrder
+    label?: SortOrderInput | SortOrder
+    examId?: SortOrder
+    musicIndex?: SortOrderInput | SortOrder
+    _count?: ExamRewardCountOrderByAggregateInput
+    _avg?: ExamRewardAvgOrderByAggregateInput
+    _max?: ExamRewardMaxOrderByAggregateInput
+    _min?: ExamRewardMinOrderByAggregateInput
+    _sum?: ExamRewardSumOrderByAggregateInput
+  }
+
+  export type ExamRewardScalarWhereWithAggregatesInput = {
+    AND?: ExamRewardScalarWhereWithAggregatesInput | ExamRewardScalarWhereWithAggregatesInput[]
+    OR?: ExamRewardScalarWhereWithAggregatesInput[]
+    NOT?: ExamRewardScalarWhereWithAggregatesInput | ExamRewardScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"ExamReward"> | number
+    position?: IntWithAggregatesFilter<"ExamReward"> | number
+    type?: StringWithAggregatesFilter<"ExamReward"> | string
+    label?: StringNullableWithAggregatesFilter<"ExamReward"> | string | null
+    examId?: IntWithAggregatesFilter<"ExamReward"> | number
+    musicIndex?: StringNullableWithAggregatesFilter<"ExamReward"> | string | null
+  }
+
+  export type ExamSubmissionWhereInput = {
+    AND?: ExamSubmissionWhereInput | ExamSubmissionWhereInput[]
+    OR?: ExamSubmissionWhereInput[]
+    NOT?: ExamSubmissionWhereInput | ExamSubmissionWhereInput[]
+    id?: IntFilter<"ExamSubmission"> | number
+    proofImageUrl?: StringFilter<"ExamSubmission"> | string
+    status?: StringFilter<"ExamSubmission"> | string
+    reviewerNote?: StringNullableFilter<"ExamSubmission"> | string | null
+    submittedAt?: DateTimeFilter<"ExamSubmission"> | Date | string
+    reviewedAt?: DateTimeNullableFilter<"ExamSubmission"> | Date | string | null
+    createdAt?: DateTimeFilter<"ExamSubmission"> | Date | string
+    updatedAt?: DateTimeFilter<"ExamSubmission"> | Date | string
+    userId?: IntFilter<"ExamSubmission"> | number
+    examId?: IntFilter<"ExamSubmission"> | number
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    exam?: XOR<ExamScalarRelationFilter, ExamWhereInput>
+    achievement?: XOR<ExamAchievementNullableScalarRelationFilter, ExamAchievementWhereInput> | null
+  }
+
+  export type ExamSubmissionOrderByWithRelationInput = {
+    id?: SortOrder
+    proofImageUrl?: SortOrder
+    status?: SortOrder
+    reviewerNote?: SortOrderInput | SortOrder
+    submittedAt?: SortOrder
+    reviewedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    userId?: SortOrder
+    examId?: SortOrder
+    user?: UserOrderByWithRelationInput
+    exam?: ExamOrderByWithRelationInput
+    achievement?: ExamAchievementOrderByWithRelationInput
+  }
+
+  export type ExamSubmissionWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: ExamSubmissionWhereInput | ExamSubmissionWhereInput[]
+    OR?: ExamSubmissionWhereInput[]
+    NOT?: ExamSubmissionWhereInput | ExamSubmissionWhereInput[]
+    proofImageUrl?: StringFilter<"ExamSubmission"> | string
+    status?: StringFilter<"ExamSubmission"> | string
+    reviewerNote?: StringNullableFilter<"ExamSubmission"> | string | null
+    submittedAt?: DateTimeFilter<"ExamSubmission"> | Date | string
+    reviewedAt?: DateTimeNullableFilter<"ExamSubmission"> | Date | string | null
+    createdAt?: DateTimeFilter<"ExamSubmission"> | Date | string
+    updatedAt?: DateTimeFilter<"ExamSubmission"> | Date | string
+    userId?: IntFilter<"ExamSubmission"> | number
+    examId?: IntFilter<"ExamSubmission"> | number
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    exam?: XOR<ExamScalarRelationFilter, ExamWhereInput>
+    achievement?: XOR<ExamAchievementNullableScalarRelationFilter, ExamAchievementWhereInput> | null
+  }, "id">
+
+  export type ExamSubmissionOrderByWithAggregationInput = {
+    id?: SortOrder
+    proofImageUrl?: SortOrder
+    status?: SortOrder
+    reviewerNote?: SortOrderInput | SortOrder
+    submittedAt?: SortOrder
+    reviewedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    userId?: SortOrder
+    examId?: SortOrder
+    _count?: ExamSubmissionCountOrderByAggregateInput
+    _avg?: ExamSubmissionAvgOrderByAggregateInput
+    _max?: ExamSubmissionMaxOrderByAggregateInput
+    _min?: ExamSubmissionMinOrderByAggregateInput
+    _sum?: ExamSubmissionSumOrderByAggregateInput
+  }
+
+  export type ExamSubmissionScalarWhereWithAggregatesInput = {
+    AND?: ExamSubmissionScalarWhereWithAggregatesInput | ExamSubmissionScalarWhereWithAggregatesInput[]
+    OR?: ExamSubmissionScalarWhereWithAggregatesInput[]
+    NOT?: ExamSubmissionScalarWhereWithAggregatesInput | ExamSubmissionScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"ExamSubmission"> | number
+    proofImageUrl?: StringWithAggregatesFilter<"ExamSubmission"> | string
+    status?: StringWithAggregatesFilter<"ExamSubmission"> | string
+    reviewerNote?: StringNullableWithAggregatesFilter<"ExamSubmission"> | string | null
+    submittedAt?: DateTimeWithAggregatesFilter<"ExamSubmission"> | Date | string
+    reviewedAt?: DateTimeNullableWithAggregatesFilter<"ExamSubmission"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"ExamSubmission"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ExamSubmission"> | Date | string
+    userId?: IntWithAggregatesFilter<"ExamSubmission"> | number
+    examId?: IntWithAggregatesFilter<"ExamSubmission"> | number
+  }
+
+  export type ExamAchievementWhereInput = {
+    AND?: ExamAchievementWhereInput | ExamAchievementWhereInput[]
+    OR?: ExamAchievementWhereInput[]
+    NOT?: ExamAchievementWhereInput | ExamAchievementWhereInput[]
+    id?: IntFilter<"ExamAchievement"> | number
+    achievedAt?: DateTimeFilter<"ExamAchievement"> | Date | string
+    createdAt?: DateTimeFilter<"ExamAchievement"> | Date | string
+    userId?: IntFilter<"ExamAchievement"> | number
+    examId?: IntFilter<"ExamAchievement"> | number
+    submissionId?: IntNullableFilter<"ExamAchievement"> | number | null
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    exam?: XOR<ExamScalarRelationFilter, ExamWhereInput>
+    submission?: XOR<ExamSubmissionNullableScalarRelationFilter, ExamSubmissionWhereInput> | null
+  }
+
+  export type ExamAchievementOrderByWithRelationInput = {
+    id?: SortOrder
+    achievedAt?: SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrder
+    examId?: SortOrder
+    submissionId?: SortOrderInput | SortOrder
+    user?: UserOrderByWithRelationInput
+    exam?: ExamOrderByWithRelationInput
+    submission?: ExamSubmissionOrderByWithRelationInput
+  }
+
+  export type ExamAchievementWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    submissionId?: number
+    userId_examId?: ExamAchievementUserIdExamIdCompoundUniqueInput
+    AND?: ExamAchievementWhereInput | ExamAchievementWhereInput[]
+    OR?: ExamAchievementWhereInput[]
+    NOT?: ExamAchievementWhereInput | ExamAchievementWhereInput[]
+    achievedAt?: DateTimeFilter<"ExamAchievement"> | Date | string
+    createdAt?: DateTimeFilter<"ExamAchievement"> | Date | string
+    userId?: IntFilter<"ExamAchievement"> | number
+    examId?: IntFilter<"ExamAchievement"> | number
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    exam?: XOR<ExamScalarRelationFilter, ExamWhereInput>
+    submission?: XOR<ExamSubmissionNullableScalarRelationFilter, ExamSubmissionWhereInput> | null
+  }, "id" | "submissionId" | "userId_examId">
+
+  export type ExamAchievementOrderByWithAggregationInput = {
+    id?: SortOrder
+    achievedAt?: SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrder
+    examId?: SortOrder
+    submissionId?: SortOrderInput | SortOrder
+    _count?: ExamAchievementCountOrderByAggregateInput
+    _avg?: ExamAchievementAvgOrderByAggregateInput
+    _max?: ExamAchievementMaxOrderByAggregateInput
+    _min?: ExamAchievementMinOrderByAggregateInput
+    _sum?: ExamAchievementSumOrderByAggregateInput
+  }
+
+  export type ExamAchievementScalarWhereWithAggregatesInput = {
+    AND?: ExamAchievementScalarWhereWithAggregatesInput | ExamAchievementScalarWhereWithAggregatesInput[]
+    OR?: ExamAchievementScalarWhereWithAggregatesInput[]
+    NOT?: ExamAchievementScalarWhereWithAggregatesInput | ExamAchievementScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"ExamAchievement"> | number
+    achievedAt?: DateTimeWithAggregatesFilter<"ExamAchievement"> | Date | string
+    createdAt?: DateTimeWithAggregatesFilter<"ExamAchievement"> | Date | string
+    userId?: IntWithAggregatesFilter<"ExamAchievement"> | number
+    examId?: IntWithAggregatesFilter<"ExamAchievement"> | number
+    submissionId?: IntNullableWithAggregatesFilter<"ExamAchievement"> | number | null
+  }
+
   export type UserCreateInput = {
     username?: string | null
     nostalgia_name?: string | null
@@ -26811,6 +35227,8 @@ export namespace Prisma {
     dataSyncs?: DataSyncCreateNestedManyWithoutUserInput
     chartPlayHistory?: ChartPlayHistoryCreateNestedManyWithoutUserInput
     chartRecordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutUserInput
+    examSubmissions?: ExamSubmissionCreateNestedManyWithoutUserInput
+    examAchievements?: ExamAchievementCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -26855,6 +35273,8 @@ export namespace Prisma {
     dataSyncs?: DataSyncUncheckedCreateNestedManyWithoutUserInput
     chartPlayHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutUserInput
     chartRecordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutUserInput
+    examSubmissions?: ExamSubmissionUncheckedCreateNestedManyWithoutUserInput
+    examAchievements?: ExamAchievementUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -26898,6 +35318,8 @@ export namespace Prisma {
     dataSyncs?: DataSyncUpdateManyWithoutUserNestedInput
     chartPlayHistory?: ChartPlayHistoryUpdateManyWithoutUserNestedInput
     chartRecordSnapshots?: ChartRecordSnapshotUpdateManyWithoutUserNestedInput
+    examSubmissions?: ExamSubmissionUpdateManyWithoutUserNestedInput
+    examAchievements?: ExamAchievementUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -26942,6 +35364,8 @@ export namespace Prisma {
     dataSyncs?: DataSyncUncheckedUpdateManyWithoutUserNestedInput
     chartPlayHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutUserNestedInput
     chartRecordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutUserNestedInput
+    examSubmissions?: ExamSubmissionUncheckedUpdateManyWithoutUserNestedInput
+    examAchievements?: ExamAchievementUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -27067,6 +35491,8 @@ export namespace Prisma {
     bingoCovers?: BingoCreateNestedManyWithoutCoverMusicInput
     bingoMissions?: BingoCellCreateNestedManyWithoutMusicInput
     charts?: MusicChartCreateNestedManyWithoutMusicInput
+    examStages?: ExamStageCreateNestedManyWithoutMusicInput
+    examRewards?: ExamRewardCreateNestedManyWithoutMusicInput
   }
 
   export type MusicUncheckedCreateInput = {
@@ -27095,6 +35521,8 @@ export namespace Prisma {
     bingoCovers?: BingoUncheckedCreateNestedManyWithoutCoverMusicInput
     bingoMissions?: BingoCellUncheckedCreateNestedManyWithoutMusicInput
     charts?: MusicChartUncheckedCreateNestedManyWithoutMusicInput
+    examStages?: ExamStageUncheckedCreateNestedManyWithoutMusicInput
+    examRewards?: ExamRewardUncheckedCreateNestedManyWithoutMusicInput
   }
 
   export type MusicUpdateInput = {
@@ -27122,6 +35550,8 @@ export namespace Prisma {
     bingoCovers?: BingoUpdateManyWithoutCoverMusicNestedInput
     bingoMissions?: BingoCellUpdateManyWithoutMusicNestedInput
     charts?: MusicChartUpdateManyWithoutMusicNestedInput
+    examStages?: ExamStageUpdateManyWithoutMusicNestedInput
+    examRewards?: ExamRewardUpdateManyWithoutMusicNestedInput
   }
 
   export type MusicUncheckedUpdateInput = {
@@ -27150,6 +35580,8 @@ export namespace Prisma {
     bingoCovers?: BingoUncheckedUpdateManyWithoutCoverMusicNestedInput
     bingoMissions?: BingoCellUncheckedUpdateManyWithoutMusicNestedInput
     charts?: MusicChartUncheckedUpdateManyWithoutMusicNestedInput
+    examStages?: ExamStageUncheckedUpdateManyWithoutMusicNestedInput
+    examRewards?: ExamRewardUncheckedUpdateManyWithoutMusicNestedInput
   }
 
   export type MusicCreateManyInput = {
@@ -27237,6 +35669,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutChartInput
     playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
+    examStageOptions?: ExamStageChartCreateNestedManyWithoutChartInput
   }
 
   export type MusicChartUncheckedCreateInput = {
@@ -27263,6 +35696,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutChartInput
     playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
+    examStageOptions?: ExamStageChartUncheckedCreateNestedManyWithoutChartInput
   }
 
   export type MusicChartUpdateInput = {
@@ -27288,6 +35722,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutChartNestedInput
     playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
+    examStageOptions?: ExamStageChartUpdateManyWithoutChartNestedInput
   }
 
   export type MusicChartUncheckedUpdateInput = {
@@ -27314,6 +35749,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutChartNestedInput
     playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
+    examStageOptions?: ExamStageChartUncheckedUpdateManyWithoutChartNestedInput
   }
 
   export type MusicChartCreateManyInput = {
@@ -28709,6 +37145,453 @@ export namespace Prisma {
     bingoCellId?: IntFieldUpdateOperationsInput | number
   }
 
+  export type ExamCreateInput = {
+    slug: string
+    mode: string
+    shortLabel: string
+    scoringType?: string
+    grade?: number | null
+    title: string
+    description?: string | null
+    feeNos?: number
+    requiredGrade?: number
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    stages?: ExamStageCreateNestedManyWithoutExamInput
+    rewards?: ExamRewardCreateNestedManyWithoutExamInput
+    submissions?: ExamSubmissionCreateNestedManyWithoutExamInput
+    achievements?: ExamAchievementCreateNestedManyWithoutExamInput
+  }
+
+  export type ExamUncheckedCreateInput = {
+    id?: number
+    slug: string
+    mode: string
+    shortLabel: string
+    scoringType?: string
+    grade?: number | null
+    title: string
+    description?: string | null
+    feeNos?: number
+    requiredGrade?: number
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    stages?: ExamStageUncheckedCreateNestedManyWithoutExamInput
+    rewards?: ExamRewardUncheckedCreateNestedManyWithoutExamInput
+    submissions?: ExamSubmissionUncheckedCreateNestedManyWithoutExamInput
+    achievements?: ExamAchievementUncheckedCreateNestedManyWithoutExamInput
+  }
+
+  export type ExamUpdateInput = {
+    slug?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    shortLabel?: StringFieldUpdateOperationsInput | string
+    scoringType?: StringFieldUpdateOperationsInput | string
+    grade?: NullableIntFieldUpdateOperationsInput | number | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    feeNos?: IntFieldUpdateOperationsInput | number
+    requiredGrade?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stages?: ExamStageUpdateManyWithoutExamNestedInput
+    rewards?: ExamRewardUpdateManyWithoutExamNestedInput
+    submissions?: ExamSubmissionUpdateManyWithoutExamNestedInput
+    achievements?: ExamAchievementUpdateManyWithoutExamNestedInput
+  }
+
+  export type ExamUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    slug?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    shortLabel?: StringFieldUpdateOperationsInput | string
+    scoringType?: StringFieldUpdateOperationsInput | string
+    grade?: NullableIntFieldUpdateOperationsInput | number | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    feeNos?: IntFieldUpdateOperationsInput | number
+    requiredGrade?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stages?: ExamStageUncheckedUpdateManyWithoutExamNestedInput
+    rewards?: ExamRewardUncheckedUpdateManyWithoutExamNestedInput
+    submissions?: ExamSubmissionUncheckedUpdateManyWithoutExamNestedInput
+    achievements?: ExamAchievementUncheckedUpdateManyWithoutExamNestedInput
+  }
+
+  export type ExamCreateManyInput = {
+    id?: number
+    slug: string
+    mode: string
+    shortLabel: string
+    scoringType?: string
+    grade?: number | null
+    title: string
+    description?: string | null
+    feeNos?: number
+    requiredGrade?: number
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ExamUpdateManyMutationInput = {
+    slug?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    shortLabel?: StringFieldUpdateOperationsInput | string
+    scoringType?: StringFieldUpdateOperationsInput | string
+    grade?: NullableIntFieldUpdateOperationsInput | number | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    feeNos?: IntFieldUpdateOperationsInput | number
+    requiredGrade?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ExamUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    slug?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    shortLabel?: StringFieldUpdateOperationsInput | string
+    scoringType?: StringFieldUpdateOperationsInput | string
+    grade?: NullableIntFieldUpdateOperationsInput | number | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    feeNos?: IntFieldUpdateOperationsInput | number
+    requiredGrade?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ExamStageCreateInput = {
+    position: number
+    label?: string | null
+    requirementType?: string
+    requiredValue: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    exam: ExamCreateNestedOneWithoutStagesInput
+    music: MusicCreateNestedOneWithoutExamStagesInput
+    allowedCharts?: ExamStageChartCreateNestedManyWithoutStageInput
+  }
+
+  export type ExamStageUncheckedCreateInput = {
+    id?: number
+    position: number
+    label?: string | null
+    requirementType?: string
+    requiredValue: number
+    examId: number
+    musicIndex: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    allowedCharts?: ExamStageChartUncheckedCreateNestedManyWithoutStageInput
+  }
+
+  export type ExamStageUpdateInput = {
+    position?: IntFieldUpdateOperationsInput | number
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    requirementType?: StringFieldUpdateOperationsInput | string
+    requiredValue?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    exam?: ExamUpdateOneRequiredWithoutStagesNestedInput
+    music?: MusicUpdateOneRequiredWithoutExamStagesNestedInput
+    allowedCharts?: ExamStageChartUpdateManyWithoutStageNestedInput
+  }
+
+  export type ExamStageUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    requirementType?: StringFieldUpdateOperationsInput | string
+    requiredValue?: FloatFieldUpdateOperationsInput | number
+    examId?: IntFieldUpdateOperationsInput | number
+    musicIndex?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    allowedCharts?: ExamStageChartUncheckedUpdateManyWithoutStageNestedInput
+  }
+
+  export type ExamStageCreateManyInput = {
+    id?: number
+    position: number
+    label?: string | null
+    requirementType?: string
+    requiredValue: number
+    examId: number
+    musicIndex: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ExamStageUpdateManyMutationInput = {
+    position?: IntFieldUpdateOperationsInput | number
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    requirementType?: StringFieldUpdateOperationsInput | string
+    requiredValue?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ExamStageUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    requirementType?: StringFieldUpdateOperationsInput | string
+    requiredValue?: FloatFieldUpdateOperationsInput | number
+    examId?: IntFieldUpdateOperationsInput | number
+    musicIndex?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ExamStageChartCreateInput = {
+    stage: ExamStageCreateNestedOneWithoutAllowedChartsInput
+    chart: MusicChartCreateNestedOneWithoutExamStageOptionsInput
+  }
+
+  export type ExamStageChartUncheckedCreateInput = {
+    stageId: number
+    chartId: number
+  }
+
+  export type ExamStageChartUpdateInput = {
+    stage?: ExamStageUpdateOneRequiredWithoutAllowedChartsNestedInput
+    chart?: MusicChartUpdateOneRequiredWithoutExamStageOptionsNestedInput
+  }
+
+  export type ExamStageChartUncheckedUpdateInput = {
+    stageId?: IntFieldUpdateOperationsInput | number
+    chartId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ExamStageChartCreateManyInput = {
+    stageId: number
+    chartId: number
+  }
+
+  export type ExamStageChartUpdateManyMutationInput = {
+
+  }
+
+  export type ExamStageChartUncheckedUpdateManyInput = {
+    stageId?: IntFieldUpdateOperationsInput | number
+    chartId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ExamRewardCreateInput = {
+    position: number
+    type: string
+    label?: string | null
+    exam: ExamCreateNestedOneWithoutRewardsInput
+    music?: MusicCreateNestedOneWithoutExamRewardsInput
+  }
+
+  export type ExamRewardUncheckedCreateInput = {
+    id?: number
+    position: number
+    type: string
+    label?: string | null
+    examId: number
+    musicIndex?: string | null
+  }
+
+  export type ExamRewardUpdateInput = {
+    position?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    exam?: ExamUpdateOneRequiredWithoutRewardsNestedInput
+    music?: MusicUpdateOneWithoutExamRewardsNestedInput
+  }
+
+  export type ExamRewardUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    examId?: IntFieldUpdateOperationsInput | number
+    musicIndex?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ExamRewardCreateManyInput = {
+    id?: number
+    position: number
+    type: string
+    label?: string | null
+    examId: number
+    musicIndex?: string | null
+  }
+
+  export type ExamRewardUpdateManyMutationInput = {
+    position?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ExamRewardUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    examId?: IntFieldUpdateOperationsInput | number
+    musicIndex?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ExamSubmissionCreateInput = {
+    proofImageUrl: string
+    status?: string
+    reviewerNote?: string | null
+    submittedAt?: Date | string
+    reviewedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutExamSubmissionsInput
+    exam: ExamCreateNestedOneWithoutSubmissionsInput
+    achievement?: ExamAchievementCreateNestedOneWithoutSubmissionInput
+  }
+
+  export type ExamSubmissionUncheckedCreateInput = {
+    id?: number
+    proofImageUrl: string
+    status?: string
+    reviewerNote?: string | null
+    submittedAt?: Date | string
+    reviewedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    userId: number
+    examId: number
+    achievement?: ExamAchievementUncheckedCreateNestedOneWithoutSubmissionInput
+  }
+
+  export type ExamSubmissionUpdateInput = {
+    proofImageUrl?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    reviewerNote?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutExamSubmissionsNestedInput
+    exam?: ExamUpdateOneRequiredWithoutSubmissionsNestedInput
+    achievement?: ExamAchievementUpdateOneWithoutSubmissionNestedInput
+  }
+
+  export type ExamSubmissionUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    proofImageUrl?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    reviewerNote?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: IntFieldUpdateOperationsInput | number
+    examId?: IntFieldUpdateOperationsInput | number
+    achievement?: ExamAchievementUncheckedUpdateOneWithoutSubmissionNestedInput
+  }
+
+  export type ExamSubmissionCreateManyInput = {
+    id?: number
+    proofImageUrl: string
+    status?: string
+    reviewerNote?: string | null
+    submittedAt?: Date | string
+    reviewedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    userId: number
+    examId: number
+  }
+
+  export type ExamSubmissionUpdateManyMutationInput = {
+    proofImageUrl?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    reviewerNote?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ExamSubmissionUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    proofImageUrl?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    reviewerNote?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: IntFieldUpdateOperationsInput | number
+    examId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ExamAchievementCreateInput = {
+    achievedAt?: Date | string
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutExamAchievementsInput
+    exam: ExamCreateNestedOneWithoutAchievementsInput
+    submission?: ExamSubmissionCreateNestedOneWithoutAchievementInput
+  }
+
+  export type ExamAchievementUncheckedCreateInput = {
+    id?: number
+    achievedAt?: Date | string
+    createdAt?: Date | string
+    userId: number
+    examId: number
+    submissionId?: number | null
+  }
+
+  export type ExamAchievementUpdateInput = {
+    achievedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutExamAchievementsNestedInput
+    exam?: ExamUpdateOneRequiredWithoutAchievementsNestedInput
+    submission?: ExamSubmissionUpdateOneWithoutAchievementNestedInput
+  }
+
+  export type ExamAchievementUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    achievedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: IntFieldUpdateOperationsInput | number
+    examId?: IntFieldUpdateOperationsInput | number
+    submissionId?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type ExamAchievementCreateManyInput = {
+    id?: number
+    achievedAt?: Date | string
+    createdAt?: Date | string
+    userId: number
+    examId: number
+    submissionId?: number | null
+  }
+
+  export type ExamAchievementUpdateManyMutationInput = {
+    achievedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ExamAchievementUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    achievedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: IntFieldUpdateOperationsInput | number
+    examId?: IntFieldUpdateOperationsInput | number
+    submissionId?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[]
@@ -28847,6 +37730,18 @@ export namespace Prisma {
     none?: ChartRecordSnapshotWhereInput
   }
 
+  export type ExamSubmissionListRelationFilter = {
+    every?: ExamSubmissionWhereInput
+    some?: ExamSubmissionWhereInput
+    none?: ExamSubmissionWhereInput
+  }
+
+  export type ExamAchievementListRelationFilter = {
+    every?: ExamAchievementWhereInput
+    some?: ExamAchievementWhereInput
+    none?: ExamAchievementWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -28893,6 +37788,14 @@ export namespace Prisma {
   }
 
   export type ChartRecordSnapshotOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ExamSubmissionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ExamAchievementOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -29157,6 +38060,18 @@ export namespace Prisma {
     none?: MusicChartWhereInput
   }
 
+  export type ExamStageListRelationFilter = {
+    every?: ExamStageWhereInput
+    some?: ExamStageWhereInput
+    none?: ExamStageWhereInput
+  }
+
+  export type ExamRewardListRelationFilter = {
+    every?: ExamRewardWhereInput
+    some?: ExamRewardWhereInput
+    none?: ExamRewardWhereInput
+  }
+
   export type BingoOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -29166,6 +38081,14 @@ export namespace Prisma {
   }
 
   export type MusicChartOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ExamStageOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ExamRewardOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -29283,7 +38206,17 @@ export namespace Prisma {
     none?: ChartConstantHistoryWhereInput
   }
 
+  export type ExamStageChartListRelationFilter = {
+    every?: ExamStageChartWhereInput
+    some?: ExamStageChartWhereInput
+    none?: ExamStageChartWhereInput
+  }
+
   export type ChartConstantHistoryOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ExamStageChartOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -30413,6 +39346,319 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
+  export type ExamModeGradeCompoundUniqueInput = {
+    mode: string
+    grade: number
+  }
+
+  export type ExamCountOrderByAggregateInput = {
+    id?: SortOrder
+    slug?: SortOrder
+    mode?: SortOrder
+    shortLabel?: SortOrder
+    scoringType?: SortOrder
+    grade?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    feeNos?: SortOrder
+    requiredGrade?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ExamAvgOrderByAggregateInput = {
+    id?: SortOrder
+    grade?: SortOrder
+    feeNos?: SortOrder
+    requiredGrade?: SortOrder
+  }
+
+  export type ExamMaxOrderByAggregateInput = {
+    id?: SortOrder
+    slug?: SortOrder
+    mode?: SortOrder
+    shortLabel?: SortOrder
+    scoringType?: SortOrder
+    grade?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    feeNos?: SortOrder
+    requiredGrade?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ExamMinOrderByAggregateInput = {
+    id?: SortOrder
+    slug?: SortOrder
+    mode?: SortOrder
+    shortLabel?: SortOrder
+    scoringType?: SortOrder
+    grade?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    feeNos?: SortOrder
+    requiredGrade?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ExamSumOrderByAggregateInput = {
+    id?: SortOrder
+    grade?: SortOrder
+    feeNos?: SortOrder
+    requiredGrade?: SortOrder
+  }
+
+  export type ExamScalarRelationFilter = {
+    is?: ExamWhereInput
+    isNot?: ExamWhereInput
+  }
+
+  export type ExamStageExamIdPositionCompoundUniqueInput = {
+    examId: number
+    position: number
+  }
+
+  export type ExamStageCountOrderByAggregateInput = {
+    id?: SortOrder
+    position?: SortOrder
+    label?: SortOrder
+    requirementType?: SortOrder
+    requiredValue?: SortOrder
+    examId?: SortOrder
+    musicIndex?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ExamStageAvgOrderByAggregateInput = {
+    id?: SortOrder
+    position?: SortOrder
+    requiredValue?: SortOrder
+    examId?: SortOrder
+  }
+
+  export type ExamStageMaxOrderByAggregateInput = {
+    id?: SortOrder
+    position?: SortOrder
+    label?: SortOrder
+    requirementType?: SortOrder
+    requiredValue?: SortOrder
+    examId?: SortOrder
+    musicIndex?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ExamStageMinOrderByAggregateInput = {
+    id?: SortOrder
+    position?: SortOrder
+    label?: SortOrder
+    requirementType?: SortOrder
+    requiredValue?: SortOrder
+    examId?: SortOrder
+    musicIndex?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ExamStageSumOrderByAggregateInput = {
+    id?: SortOrder
+    position?: SortOrder
+    requiredValue?: SortOrder
+    examId?: SortOrder
+  }
+
+  export type ExamStageScalarRelationFilter = {
+    is?: ExamStageWhereInput
+    isNot?: ExamStageWhereInput
+  }
+
+  export type ExamStageChartStageIdChartIdCompoundUniqueInput = {
+    stageId: number
+    chartId: number
+  }
+
+  export type ExamStageChartCountOrderByAggregateInput = {
+    stageId?: SortOrder
+    chartId?: SortOrder
+  }
+
+  export type ExamStageChartAvgOrderByAggregateInput = {
+    stageId?: SortOrder
+    chartId?: SortOrder
+  }
+
+  export type ExamStageChartMaxOrderByAggregateInput = {
+    stageId?: SortOrder
+    chartId?: SortOrder
+  }
+
+  export type ExamStageChartMinOrderByAggregateInput = {
+    stageId?: SortOrder
+    chartId?: SortOrder
+  }
+
+  export type ExamStageChartSumOrderByAggregateInput = {
+    stageId?: SortOrder
+    chartId?: SortOrder
+  }
+
+  export type ExamRewardExamIdPositionCompoundUniqueInput = {
+    examId: number
+    position: number
+  }
+
+  export type ExamRewardCountOrderByAggregateInput = {
+    id?: SortOrder
+    position?: SortOrder
+    type?: SortOrder
+    label?: SortOrder
+    examId?: SortOrder
+    musicIndex?: SortOrder
+  }
+
+  export type ExamRewardAvgOrderByAggregateInput = {
+    id?: SortOrder
+    position?: SortOrder
+    examId?: SortOrder
+  }
+
+  export type ExamRewardMaxOrderByAggregateInput = {
+    id?: SortOrder
+    position?: SortOrder
+    type?: SortOrder
+    label?: SortOrder
+    examId?: SortOrder
+    musicIndex?: SortOrder
+  }
+
+  export type ExamRewardMinOrderByAggregateInput = {
+    id?: SortOrder
+    position?: SortOrder
+    type?: SortOrder
+    label?: SortOrder
+    examId?: SortOrder
+    musicIndex?: SortOrder
+  }
+
+  export type ExamRewardSumOrderByAggregateInput = {
+    id?: SortOrder
+    position?: SortOrder
+    examId?: SortOrder
+  }
+
+  export type ExamAchievementNullableScalarRelationFilter = {
+    is?: ExamAchievementWhereInput | null
+    isNot?: ExamAchievementWhereInput | null
+  }
+
+  export type ExamSubmissionCountOrderByAggregateInput = {
+    id?: SortOrder
+    proofImageUrl?: SortOrder
+    status?: SortOrder
+    reviewerNote?: SortOrder
+    submittedAt?: SortOrder
+    reviewedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    userId?: SortOrder
+    examId?: SortOrder
+  }
+
+  export type ExamSubmissionAvgOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    examId?: SortOrder
+  }
+
+  export type ExamSubmissionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    proofImageUrl?: SortOrder
+    status?: SortOrder
+    reviewerNote?: SortOrder
+    submittedAt?: SortOrder
+    reviewedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    userId?: SortOrder
+    examId?: SortOrder
+  }
+
+  export type ExamSubmissionMinOrderByAggregateInput = {
+    id?: SortOrder
+    proofImageUrl?: SortOrder
+    status?: SortOrder
+    reviewerNote?: SortOrder
+    submittedAt?: SortOrder
+    reviewedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    userId?: SortOrder
+    examId?: SortOrder
+  }
+
+  export type ExamSubmissionSumOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    examId?: SortOrder
+  }
+
+  export type ExamSubmissionNullableScalarRelationFilter = {
+    is?: ExamSubmissionWhereInput | null
+    isNot?: ExamSubmissionWhereInput | null
+  }
+
+  export type ExamAchievementUserIdExamIdCompoundUniqueInput = {
+    userId: number
+    examId: number
+  }
+
+  export type ExamAchievementCountOrderByAggregateInput = {
+    id?: SortOrder
+    achievedAt?: SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrder
+    examId?: SortOrder
+    submissionId?: SortOrder
+  }
+
+  export type ExamAchievementAvgOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    examId?: SortOrder
+    submissionId?: SortOrder
+  }
+
+  export type ExamAchievementMaxOrderByAggregateInput = {
+    id?: SortOrder
+    achievedAt?: SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrder
+    examId?: SortOrder
+    submissionId?: SortOrder
+  }
+
+  export type ExamAchievementMinOrderByAggregateInput = {
+    id?: SortOrder
+    achievedAt?: SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrder
+    examId?: SortOrder
+    submissionId?: SortOrder
+  }
+
+  export type ExamAchievementSumOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    examId?: SortOrder
+    submissionId?: SortOrder
+  }
+
   export type RecentPlayCreateNestedManyWithoutUserInput = {
     create?: XOR<RecentPlayCreateWithoutUserInput, RecentPlayUncheckedCreateWithoutUserInput> | RecentPlayCreateWithoutUserInput[] | RecentPlayUncheckedCreateWithoutUserInput[]
     connectOrCreate?: RecentPlayCreateOrConnectWithoutUserInput | RecentPlayCreateOrConnectWithoutUserInput[]
@@ -30490,6 +39736,20 @@ export namespace Prisma {
     connect?: ChartRecordSnapshotWhereUniqueInput | ChartRecordSnapshotWhereUniqueInput[]
   }
 
+  export type ExamSubmissionCreateNestedManyWithoutUserInput = {
+    create?: XOR<ExamSubmissionCreateWithoutUserInput, ExamSubmissionUncheckedCreateWithoutUserInput> | ExamSubmissionCreateWithoutUserInput[] | ExamSubmissionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ExamSubmissionCreateOrConnectWithoutUserInput | ExamSubmissionCreateOrConnectWithoutUserInput[]
+    createMany?: ExamSubmissionCreateManyUserInputEnvelope
+    connect?: ExamSubmissionWhereUniqueInput | ExamSubmissionWhereUniqueInput[]
+  }
+
+  export type ExamAchievementCreateNestedManyWithoutUserInput = {
+    create?: XOR<ExamAchievementCreateWithoutUserInput, ExamAchievementUncheckedCreateWithoutUserInput> | ExamAchievementCreateWithoutUserInput[] | ExamAchievementUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ExamAchievementCreateOrConnectWithoutUserInput | ExamAchievementCreateOrConnectWithoutUserInput[]
+    createMany?: ExamAchievementCreateManyUserInputEnvelope
+    connect?: ExamAchievementWhereUniqueInput | ExamAchievementWhereUniqueInput[]
+  }
+
   export type RecentPlayUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<RecentPlayCreateWithoutUserInput, RecentPlayUncheckedCreateWithoutUserInput> | RecentPlayCreateWithoutUserInput[] | RecentPlayUncheckedCreateWithoutUserInput[]
     connectOrCreate?: RecentPlayCreateOrConnectWithoutUserInput | RecentPlayCreateOrConnectWithoutUserInput[]
@@ -30565,6 +39825,20 @@ export namespace Prisma {
     connectOrCreate?: ChartRecordSnapshotCreateOrConnectWithoutUserInput | ChartRecordSnapshotCreateOrConnectWithoutUserInput[]
     createMany?: ChartRecordSnapshotCreateManyUserInputEnvelope
     connect?: ChartRecordSnapshotWhereUniqueInput | ChartRecordSnapshotWhereUniqueInput[]
+  }
+
+  export type ExamSubmissionUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<ExamSubmissionCreateWithoutUserInput, ExamSubmissionUncheckedCreateWithoutUserInput> | ExamSubmissionCreateWithoutUserInput[] | ExamSubmissionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ExamSubmissionCreateOrConnectWithoutUserInput | ExamSubmissionCreateOrConnectWithoutUserInput[]
+    createMany?: ExamSubmissionCreateManyUserInputEnvelope
+    connect?: ExamSubmissionWhereUniqueInput | ExamSubmissionWhereUniqueInput[]
+  }
+
+  export type ExamAchievementUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<ExamAchievementCreateWithoutUserInput, ExamAchievementUncheckedCreateWithoutUserInput> | ExamAchievementCreateWithoutUserInput[] | ExamAchievementUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ExamAchievementCreateOrConnectWithoutUserInput | ExamAchievementCreateOrConnectWithoutUserInput[]
+    createMany?: ExamAchievementCreateManyUserInputEnvelope
+    connect?: ExamAchievementWhereUniqueInput | ExamAchievementWhereUniqueInput[]
   }
 
   export type NullableStringFieldUpdateOperationsInput = {
@@ -30757,6 +40031,34 @@ export namespace Prisma {
     deleteMany?: ChartRecordSnapshotScalarWhereInput | ChartRecordSnapshotScalarWhereInput[]
   }
 
+  export type ExamSubmissionUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ExamSubmissionCreateWithoutUserInput, ExamSubmissionUncheckedCreateWithoutUserInput> | ExamSubmissionCreateWithoutUserInput[] | ExamSubmissionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ExamSubmissionCreateOrConnectWithoutUserInput | ExamSubmissionCreateOrConnectWithoutUserInput[]
+    upsert?: ExamSubmissionUpsertWithWhereUniqueWithoutUserInput | ExamSubmissionUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ExamSubmissionCreateManyUserInputEnvelope
+    set?: ExamSubmissionWhereUniqueInput | ExamSubmissionWhereUniqueInput[]
+    disconnect?: ExamSubmissionWhereUniqueInput | ExamSubmissionWhereUniqueInput[]
+    delete?: ExamSubmissionWhereUniqueInput | ExamSubmissionWhereUniqueInput[]
+    connect?: ExamSubmissionWhereUniqueInput | ExamSubmissionWhereUniqueInput[]
+    update?: ExamSubmissionUpdateWithWhereUniqueWithoutUserInput | ExamSubmissionUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ExamSubmissionUpdateManyWithWhereWithoutUserInput | ExamSubmissionUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ExamSubmissionScalarWhereInput | ExamSubmissionScalarWhereInput[]
+  }
+
+  export type ExamAchievementUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ExamAchievementCreateWithoutUserInput, ExamAchievementUncheckedCreateWithoutUserInput> | ExamAchievementCreateWithoutUserInput[] | ExamAchievementUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ExamAchievementCreateOrConnectWithoutUserInput | ExamAchievementCreateOrConnectWithoutUserInput[]
+    upsert?: ExamAchievementUpsertWithWhereUniqueWithoutUserInput | ExamAchievementUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ExamAchievementCreateManyUserInputEnvelope
+    set?: ExamAchievementWhereUniqueInput | ExamAchievementWhereUniqueInput[]
+    disconnect?: ExamAchievementWhereUniqueInput | ExamAchievementWhereUniqueInput[]
+    delete?: ExamAchievementWhereUniqueInput | ExamAchievementWhereUniqueInput[]
+    connect?: ExamAchievementWhereUniqueInput | ExamAchievementWhereUniqueInput[]
+    update?: ExamAchievementUpdateWithWhereUniqueWithoutUserInput | ExamAchievementUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ExamAchievementUpdateManyWithWhereWithoutUserInput | ExamAchievementUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ExamAchievementScalarWhereInput | ExamAchievementScalarWhereInput[]
+  }
+
   export type RecentPlayUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<RecentPlayCreateWithoutUserInput, RecentPlayUncheckedCreateWithoutUserInput> | RecentPlayCreateWithoutUserInput[] | RecentPlayUncheckedCreateWithoutUserInput[]
     connectOrCreate?: RecentPlayCreateOrConnectWithoutUserInput | RecentPlayCreateOrConnectWithoutUserInput[]
@@ -30911,6 +40213,34 @@ export namespace Prisma {
     deleteMany?: ChartRecordSnapshotScalarWhereInput | ChartRecordSnapshotScalarWhereInput[]
   }
 
+  export type ExamSubmissionUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ExamSubmissionCreateWithoutUserInput, ExamSubmissionUncheckedCreateWithoutUserInput> | ExamSubmissionCreateWithoutUserInput[] | ExamSubmissionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ExamSubmissionCreateOrConnectWithoutUserInput | ExamSubmissionCreateOrConnectWithoutUserInput[]
+    upsert?: ExamSubmissionUpsertWithWhereUniqueWithoutUserInput | ExamSubmissionUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ExamSubmissionCreateManyUserInputEnvelope
+    set?: ExamSubmissionWhereUniqueInput | ExamSubmissionWhereUniqueInput[]
+    disconnect?: ExamSubmissionWhereUniqueInput | ExamSubmissionWhereUniqueInput[]
+    delete?: ExamSubmissionWhereUniqueInput | ExamSubmissionWhereUniqueInput[]
+    connect?: ExamSubmissionWhereUniqueInput | ExamSubmissionWhereUniqueInput[]
+    update?: ExamSubmissionUpdateWithWhereUniqueWithoutUserInput | ExamSubmissionUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ExamSubmissionUpdateManyWithWhereWithoutUserInput | ExamSubmissionUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ExamSubmissionScalarWhereInput | ExamSubmissionScalarWhereInput[]
+  }
+
+  export type ExamAchievementUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ExamAchievementCreateWithoutUserInput, ExamAchievementUncheckedCreateWithoutUserInput> | ExamAchievementCreateWithoutUserInput[] | ExamAchievementUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ExamAchievementCreateOrConnectWithoutUserInput | ExamAchievementCreateOrConnectWithoutUserInput[]
+    upsert?: ExamAchievementUpsertWithWhereUniqueWithoutUserInput | ExamAchievementUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ExamAchievementCreateManyUserInputEnvelope
+    set?: ExamAchievementWhereUniqueInput | ExamAchievementWhereUniqueInput[]
+    disconnect?: ExamAchievementWhereUniqueInput | ExamAchievementWhereUniqueInput[]
+    delete?: ExamAchievementWhereUniqueInput | ExamAchievementWhereUniqueInput[]
+    connect?: ExamAchievementWhereUniqueInput | ExamAchievementWhereUniqueInput[]
+    update?: ExamAchievementUpdateWithWhereUniqueWithoutUserInput | ExamAchievementUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ExamAchievementUpdateManyWithWhereWithoutUserInput | ExamAchievementUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ExamAchievementScalarWhereInput | ExamAchievementScalarWhereInput[]
+  }
+
   export type RecentPlayCreateNestedManyWithoutMusicInput = {
     create?: XOR<RecentPlayCreateWithoutMusicInput, RecentPlayUncheckedCreateWithoutMusicInput> | RecentPlayCreateWithoutMusicInput[] | RecentPlayUncheckedCreateWithoutMusicInput[]
     connectOrCreate?: RecentPlayCreateOrConnectWithoutMusicInput | RecentPlayCreateOrConnectWithoutMusicInput[]
@@ -30960,6 +40290,20 @@ export namespace Prisma {
     connect?: MusicChartWhereUniqueInput | MusicChartWhereUniqueInput[]
   }
 
+  export type ExamStageCreateNestedManyWithoutMusicInput = {
+    create?: XOR<ExamStageCreateWithoutMusicInput, ExamStageUncheckedCreateWithoutMusicInput> | ExamStageCreateWithoutMusicInput[] | ExamStageUncheckedCreateWithoutMusicInput[]
+    connectOrCreate?: ExamStageCreateOrConnectWithoutMusicInput | ExamStageCreateOrConnectWithoutMusicInput[]
+    createMany?: ExamStageCreateManyMusicInputEnvelope
+    connect?: ExamStageWhereUniqueInput | ExamStageWhereUniqueInput[]
+  }
+
+  export type ExamRewardCreateNestedManyWithoutMusicInput = {
+    create?: XOR<ExamRewardCreateWithoutMusicInput, ExamRewardUncheckedCreateWithoutMusicInput> | ExamRewardCreateWithoutMusicInput[] | ExamRewardUncheckedCreateWithoutMusicInput[]
+    connectOrCreate?: ExamRewardCreateOrConnectWithoutMusicInput | ExamRewardCreateOrConnectWithoutMusicInput[]
+    createMany?: ExamRewardCreateManyMusicInputEnvelope
+    connect?: ExamRewardWhereUniqueInput | ExamRewardWhereUniqueInput[]
+  }
+
   export type RecentPlayUncheckedCreateNestedManyWithoutMusicInput = {
     create?: XOR<RecentPlayCreateWithoutMusicInput, RecentPlayUncheckedCreateWithoutMusicInput> | RecentPlayCreateWithoutMusicInput[] | RecentPlayUncheckedCreateWithoutMusicInput[]
     connectOrCreate?: RecentPlayCreateOrConnectWithoutMusicInput | RecentPlayCreateOrConnectWithoutMusicInput[]
@@ -31007,6 +40351,20 @@ export namespace Prisma {
     connectOrCreate?: MusicChartCreateOrConnectWithoutMusicInput | MusicChartCreateOrConnectWithoutMusicInput[]
     createMany?: MusicChartCreateManyMusicInputEnvelope
     connect?: MusicChartWhereUniqueInput | MusicChartWhereUniqueInput[]
+  }
+
+  export type ExamStageUncheckedCreateNestedManyWithoutMusicInput = {
+    create?: XOR<ExamStageCreateWithoutMusicInput, ExamStageUncheckedCreateWithoutMusicInput> | ExamStageCreateWithoutMusicInput[] | ExamStageUncheckedCreateWithoutMusicInput[]
+    connectOrCreate?: ExamStageCreateOrConnectWithoutMusicInput | ExamStageCreateOrConnectWithoutMusicInput[]
+    createMany?: ExamStageCreateManyMusicInputEnvelope
+    connect?: ExamStageWhereUniqueInput | ExamStageWhereUniqueInput[]
+  }
+
+  export type ExamRewardUncheckedCreateNestedManyWithoutMusicInput = {
+    create?: XOR<ExamRewardCreateWithoutMusicInput, ExamRewardUncheckedCreateWithoutMusicInput> | ExamRewardCreateWithoutMusicInput[] | ExamRewardUncheckedCreateWithoutMusicInput[]
+    connectOrCreate?: ExamRewardCreateOrConnectWithoutMusicInput | ExamRewardCreateOrConnectWithoutMusicInput[]
+    createMany?: ExamRewardCreateManyMusicInputEnvelope
+    connect?: ExamRewardWhereUniqueInput | ExamRewardWhereUniqueInput[]
   }
 
   export type RecentPlayUpdateManyWithoutMusicNestedInput = {
@@ -31107,6 +40465,34 @@ export namespace Prisma {
     deleteMany?: MusicChartScalarWhereInput | MusicChartScalarWhereInput[]
   }
 
+  export type ExamStageUpdateManyWithoutMusicNestedInput = {
+    create?: XOR<ExamStageCreateWithoutMusicInput, ExamStageUncheckedCreateWithoutMusicInput> | ExamStageCreateWithoutMusicInput[] | ExamStageUncheckedCreateWithoutMusicInput[]
+    connectOrCreate?: ExamStageCreateOrConnectWithoutMusicInput | ExamStageCreateOrConnectWithoutMusicInput[]
+    upsert?: ExamStageUpsertWithWhereUniqueWithoutMusicInput | ExamStageUpsertWithWhereUniqueWithoutMusicInput[]
+    createMany?: ExamStageCreateManyMusicInputEnvelope
+    set?: ExamStageWhereUniqueInput | ExamStageWhereUniqueInput[]
+    disconnect?: ExamStageWhereUniqueInput | ExamStageWhereUniqueInput[]
+    delete?: ExamStageWhereUniqueInput | ExamStageWhereUniqueInput[]
+    connect?: ExamStageWhereUniqueInput | ExamStageWhereUniqueInput[]
+    update?: ExamStageUpdateWithWhereUniqueWithoutMusicInput | ExamStageUpdateWithWhereUniqueWithoutMusicInput[]
+    updateMany?: ExamStageUpdateManyWithWhereWithoutMusicInput | ExamStageUpdateManyWithWhereWithoutMusicInput[]
+    deleteMany?: ExamStageScalarWhereInput | ExamStageScalarWhereInput[]
+  }
+
+  export type ExamRewardUpdateManyWithoutMusicNestedInput = {
+    create?: XOR<ExamRewardCreateWithoutMusicInput, ExamRewardUncheckedCreateWithoutMusicInput> | ExamRewardCreateWithoutMusicInput[] | ExamRewardUncheckedCreateWithoutMusicInput[]
+    connectOrCreate?: ExamRewardCreateOrConnectWithoutMusicInput | ExamRewardCreateOrConnectWithoutMusicInput[]
+    upsert?: ExamRewardUpsertWithWhereUniqueWithoutMusicInput | ExamRewardUpsertWithWhereUniqueWithoutMusicInput[]
+    createMany?: ExamRewardCreateManyMusicInputEnvelope
+    set?: ExamRewardWhereUniqueInput | ExamRewardWhereUniqueInput[]
+    disconnect?: ExamRewardWhereUniqueInput | ExamRewardWhereUniqueInput[]
+    delete?: ExamRewardWhereUniqueInput | ExamRewardWhereUniqueInput[]
+    connect?: ExamRewardWhereUniqueInput | ExamRewardWhereUniqueInput[]
+    update?: ExamRewardUpdateWithWhereUniqueWithoutMusicInput | ExamRewardUpdateWithWhereUniqueWithoutMusicInput[]
+    updateMany?: ExamRewardUpdateManyWithWhereWithoutMusicInput | ExamRewardUpdateManyWithWhereWithoutMusicInput[]
+    deleteMany?: ExamRewardScalarWhereInput | ExamRewardScalarWhereInput[]
+  }
+
   export type RecentPlayUncheckedUpdateManyWithoutMusicNestedInput = {
     create?: XOR<RecentPlayCreateWithoutMusicInput, RecentPlayUncheckedCreateWithoutMusicInput> | RecentPlayCreateWithoutMusicInput[] | RecentPlayUncheckedCreateWithoutMusicInput[]
     connectOrCreate?: RecentPlayCreateOrConnectWithoutMusicInput | RecentPlayCreateOrConnectWithoutMusicInput[]
@@ -31205,6 +40591,34 @@ export namespace Prisma {
     deleteMany?: MusicChartScalarWhereInput | MusicChartScalarWhereInput[]
   }
 
+  export type ExamStageUncheckedUpdateManyWithoutMusicNestedInput = {
+    create?: XOR<ExamStageCreateWithoutMusicInput, ExamStageUncheckedCreateWithoutMusicInput> | ExamStageCreateWithoutMusicInput[] | ExamStageUncheckedCreateWithoutMusicInput[]
+    connectOrCreate?: ExamStageCreateOrConnectWithoutMusicInput | ExamStageCreateOrConnectWithoutMusicInput[]
+    upsert?: ExamStageUpsertWithWhereUniqueWithoutMusicInput | ExamStageUpsertWithWhereUniqueWithoutMusicInput[]
+    createMany?: ExamStageCreateManyMusicInputEnvelope
+    set?: ExamStageWhereUniqueInput | ExamStageWhereUniqueInput[]
+    disconnect?: ExamStageWhereUniqueInput | ExamStageWhereUniqueInput[]
+    delete?: ExamStageWhereUniqueInput | ExamStageWhereUniqueInput[]
+    connect?: ExamStageWhereUniqueInput | ExamStageWhereUniqueInput[]
+    update?: ExamStageUpdateWithWhereUniqueWithoutMusicInput | ExamStageUpdateWithWhereUniqueWithoutMusicInput[]
+    updateMany?: ExamStageUpdateManyWithWhereWithoutMusicInput | ExamStageUpdateManyWithWhereWithoutMusicInput[]
+    deleteMany?: ExamStageScalarWhereInput | ExamStageScalarWhereInput[]
+  }
+
+  export type ExamRewardUncheckedUpdateManyWithoutMusicNestedInput = {
+    create?: XOR<ExamRewardCreateWithoutMusicInput, ExamRewardUncheckedCreateWithoutMusicInput> | ExamRewardCreateWithoutMusicInput[] | ExamRewardUncheckedCreateWithoutMusicInput[]
+    connectOrCreate?: ExamRewardCreateOrConnectWithoutMusicInput | ExamRewardCreateOrConnectWithoutMusicInput[]
+    upsert?: ExamRewardUpsertWithWhereUniqueWithoutMusicInput | ExamRewardUpsertWithWhereUniqueWithoutMusicInput[]
+    createMany?: ExamRewardCreateManyMusicInputEnvelope
+    set?: ExamRewardWhereUniqueInput | ExamRewardWhereUniqueInput[]
+    disconnect?: ExamRewardWhereUniqueInput | ExamRewardWhereUniqueInput[]
+    delete?: ExamRewardWhereUniqueInput | ExamRewardWhereUniqueInput[]
+    connect?: ExamRewardWhereUniqueInput | ExamRewardWhereUniqueInput[]
+    update?: ExamRewardUpdateWithWhereUniqueWithoutMusicInput | ExamRewardUpdateWithWhereUniqueWithoutMusicInput[]
+    updateMany?: ExamRewardUpdateManyWithWhereWithoutMusicInput | ExamRewardUpdateManyWithWhereWithoutMusicInput[]
+    deleteMany?: ExamRewardScalarWhereInput | ExamRewardScalarWhereInput[]
+  }
+
   export type MusicCreateNestedOneWithoutChartsInput = {
     create?: XOR<MusicCreateWithoutChartsInput, MusicUncheckedCreateWithoutChartsInput>
     connectOrCreate?: MusicCreateOrConnectWithoutChartsInput
@@ -31267,6 +40681,13 @@ export namespace Prisma {
     connect?: ChartRecordSnapshotWhereUniqueInput | ChartRecordSnapshotWhereUniqueInput[]
   }
 
+  export type ExamStageChartCreateNestedManyWithoutChartInput = {
+    create?: XOR<ExamStageChartCreateWithoutChartInput, ExamStageChartUncheckedCreateWithoutChartInput> | ExamStageChartCreateWithoutChartInput[] | ExamStageChartUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: ExamStageChartCreateOrConnectWithoutChartInput | ExamStageChartCreateOrConnectWithoutChartInput[]
+    createMany?: ExamStageChartCreateManyChartInputEnvelope
+    connect?: ExamStageChartWhereUniqueInput | ExamStageChartWhereUniqueInput[]
+  }
+
   export type ChartConstantHistoryUncheckedCreateNestedManyWithoutChartInput = {
     create?: XOR<ChartConstantHistoryCreateWithoutChartInput, ChartConstantHistoryUncheckedCreateWithoutChartInput> | ChartConstantHistoryCreateWithoutChartInput[] | ChartConstantHistoryUncheckedCreateWithoutChartInput[]
     connectOrCreate?: ChartConstantHistoryCreateOrConnectWithoutChartInput | ChartConstantHistoryCreateOrConnectWithoutChartInput[]
@@ -31321,6 +40742,13 @@ export namespace Prisma {
     connectOrCreate?: ChartRecordSnapshotCreateOrConnectWithoutChartInput | ChartRecordSnapshotCreateOrConnectWithoutChartInput[]
     createMany?: ChartRecordSnapshotCreateManyChartInputEnvelope
     connect?: ChartRecordSnapshotWhereUniqueInput | ChartRecordSnapshotWhereUniqueInput[]
+  }
+
+  export type ExamStageChartUncheckedCreateNestedManyWithoutChartInput = {
+    create?: XOR<ExamStageChartCreateWithoutChartInput, ExamStageChartUncheckedCreateWithoutChartInput> | ExamStageChartCreateWithoutChartInput[] | ExamStageChartUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: ExamStageChartCreateOrConnectWithoutChartInput | ExamStageChartCreateOrConnectWithoutChartInput[]
+    createMany?: ExamStageChartCreateManyChartInputEnvelope
+    connect?: ExamStageChartWhereUniqueInput | ExamStageChartWhereUniqueInput[]
   }
 
   export type NullableFloatFieldUpdateOperationsInput = {
@@ -31455,6 +40883,20 @@ export namespace Prisma {
     deleteMany?: ChartRecordSnapshotScalarWhereInput | ChartRecordSnapshotScalarWhereInput[]
   }
 
+  export type ExamStageChartUpdateManyWithoutChartNestedInput = {
+    create?: XOR<ExamStageChartCreateWithoutChartInput, ExamStageChartUncheckedCreateWithoutChartInput> | ExamStageChartCreateWithoutChartInput[] | ExamStageChartUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: ExamStageChartCreateOrConnectWithoutChartInput | ExamStageChartCreateOrConnectWithoutChartInput[]
+    upsert?: ExamStageChartUpsertWithWhereUniqueWithoutChartInput | ExamStageChartUpsertWithWhereUniqueWithoutChartInput[]
+    createMany?: ExamStageChartCreateManyChartInputEnvelope
+    set?: ExamStageChartWhereUniqueInput | ExamStageChartWhereUniqueInput[]
+    disconnect?: ExamStageChartWhereUniqueInput | ExamStageChartWhereUniqueInput[]
+    delete?: ExamStageChartWhereUniqueInput | ExamStageChartWhereUniqueInput[]
+    connect?: ExamStageChartWhereUniqueInput | ExamStageChartWhereUniqueInput[]
+    update?: ExamStageChartUpdateWithWhereUniqueWithoutChartInput | ExamStageChartUpdateWithWhereUniqueWithoutChartInput[]
+    updateMany?: ExamStageChartUpdateManyWithWhereWithoutChartInput | ExamStageChartUpdateManyWithWhereWithoutChartInput[]
+    deleteMany?: ExamStageChartScalarWhereInput | ExamStageChartScalarWhereInput[]
+  }
+
   export type ChartConstantHistoryUncheckedUpdateManyWithoutChartNestedInput = {
     create?: XOR<ChartConstantHistoryCreateWithoutChartInput, ChartConstantHistoryUncheckedCreateWithoutChartInput> | ChartConstantHistoryCreateWithoutChartInput[] | ChartConstantHistoryUncheckedCreateWithoutChartInput[]
     connectOrCreate?: ChartConstantHistoryCreateOrConnectWithoutChartInput | ChartConstantHistoryCreateOrConnectWithoutChartInput[]
@@ -31565,6 +41007,20 @@ export namespace Prisma {
     update?: ChartRecordSnapshotUpdateWithWhereUniqueWithoutChartInput | ChartRecordSnapshotUpdateWithWhereUniqueWithoutChartInput[]
     updateMany?: ChartRecordSnapshotUpdateManyWithWhereWithoutChartInput | ChartRecordSnapshotUpdateManyWithWhereWithoutChartInput[]
     deleteMany?: ChartRecordSnapshotScalarWhereInput | ChartRecordSnapshotScalarWhereInput[]
+  }
+
+  export type ExamStageChartUncheckedUpdateManyWithoutChartNestedInput = {
+    create?: XOR<ExamStageChartCreateWithoutChartInput, ExamStageChartUncheckedCreateWithoutChartInput> | ExamStageChartCreateWithoutChartInput[] | ExamStageChartUncheckedCreateWithoutChartInput[]
+    connectOrCreate?: ExamStageChartCreateOrConnectWithoutChartInput | ExamStageChartCreateOrConnectWithoutChartInput[]
+    upsert?: ExamStageChartUpsertWithWhereUniqueWithoutChartInput | ExamStageChartUpsertWithWhereUniqueWithoutChartInput[]
+    createMany?: ExamStageChartCreateManyChartInputEnvelope
+    set?: ExamStageChartWhereUniqueInput | ExamStageChartWhereUniqueInput[]
+    disconnect?: ExamStageChartWhereUniqueInput | ExamStageChartWhereUniqueInput[]
+    delete?: ExamStageChartWhereUniqueInput | ExamStageChartWhereUniqueInput[]
+    connect?: ExamStageChartWhereUniqueInput | ExamStageChartWhereUniqueInput[]
+    update?: ExamStageChartUpdateWithWhereUniqueWithoutChartInput | ExamStageChartUpdateWithWhereUniqueWithoutChartInput[]
+    updateMany?: ExamStageChartUpdateManyWithWhereWithoutChartInput | ExamStageChartUpdateManyWithWhereWithoutChartInput[]
+    deleteMany?: ExamStageChartScalarWhereInput | ExamStageChartScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutDataSyncsInput = {
@@ -32219,6 +41675,406 @@ export namespace Prisma {
     upsert?: BingoCellUpsertWithoutProgressInput
     connect?: BingoCellWhereUniqueInput
     update?: XOR<XOR<BingoCellUpdateToOneWithWhereWithoutProgressInput, BingoCellUpdateWithoutProgressInput>, BingoCellUncheckedUpdateWithoutProgressInput>
+  }
+
+  export type ExamStageCreateNestedManyWithoutExamInput = {
+    create?: XOR<ExamStageCreateWithoutExamInput, ExamStageUncheckedCreateWithoutExamInput> | ExamStageCreateWithoutExamInput[] | ExamStageUncheckedCreateWithoutExamInput[]
+    connectOrCreate?: ExamStageCreateOrConnectWithoutExamInput | ExamStageCreateOrConnectWithoutExamInput[]
+    createMany?: ExamStageCreateManyExamInputEnvelope
+    connect?: ExamStageWhereUniqueInput | ExamStageWhereUniqueInput[]
+  }
+
+  export type ExamRewardCreateNestedManyWithoutExamInput = {
+    create?: XOR<ExamRewardCreateWithoutExamInput, ExamRewardUncheckedCreateWithoutExamInput> | ExamRewardCreateWithoutExamInput[] | ExamRewardUncheckedCreateWithoutExamInput[]
+    connectOrCreate?: ExamRewardCreateOrConnectWithoutExamInput | ExamRewardCreateOrConnectWithoutExamInput[]
+    createMany?: ExamRewardCreateManyExamInputEnvelope
+    connect?: ExamRewardWhereUniqueInput | ExamRewardWhereUniqueInput[]
+  }
+
+  export type ExamSubmissionCreateNestedManyWithoutExamInput = {
+    create?: XOR<ExamSubmissionCreateWithoutExamInput, ExamSubmissionUncheckedCreateWithoutExamInput> | ExamSubmissionCreateWithoutExamInput[] | ExamSubmissionUncheckedCreateWithoutExamInput[]
+    connectOrCreate?: ExamSubmissionCreateOrConnectWithoutExamInput | ExamSubmissionCreateOrConnectWithoutExamInput[]
+    createMany?: ExamSubmissionCreateManyExamInputEnvelope
+    connect?: ExamSubmissionWhereUniqueInput | ExamSubmissionWhereUniqueInput[]
+  }
+
+  export type ExamAchievementCreateNestedManyWithoutExamInput = {
+    create?: XOR<ExamAchievementCreateWithoutExamInput, ExamAchievementUncheckedCreateWithoutExamInput> | ExamAchievementCreateWithoutExamInput[] | ExamAchievementUncheckedCreateWithoutExamInput[]
+    connectOrCreate?: ExamAchievementCreateOrConnectWithoutExamInput | ExamAchievementCreateOrConnectWithoutExamInput[]
+    createMany?: ExamAchievementCreateManyExamInputEnvelope
+    connect?: ExamAchievementWhereUniqueInput | ExamAchievementWhereUniqueInput[]
+  }
+
+  export type ExamStageUncheckedCreateNestedManyWithoutExamInput = {
+    create?: XOR<ExamStageCreateWithoutExamInput, ExamStageUncheckedCreateWithoutExamInput> | ExamStageCreateWithoutExamInput[] | ExamStageUncheckedCreateWithoutExamInput[]
+    connectOrCreate?: ExamStageCreateOrConnectWithoutExamInput | ExamStageCreateOrConnectWithoutExamInput[]
+    createMany?: ExamStageCreateManyExamInputEnvelope
+    connect?: ExamStageWhereUniqueInput | ExamStageWhereUniqueInput[]
+  }
+
+  export type ExamRewardUncheckedCreateNestedManyWithoutExamInput = {
+    create?: XOR<ExamRewardCreateWithoutExamInput, ExamRewardUncheckedCreateWithoutExamInput> | ExamRewardCreateWithoutExamInput[] | ExamRewardUncheckedCreateWithoutExamInput[]
+    connectOrCreate?: ExamRewardCreateOrConnectWithoutExamInput | ExamRewardCreateOrConnectWithoutExamInput[]
+    createMany?: ExamRewardCreateManyExamInputEnvelope
+    connect?: ExamRewardWhereUniqueInput | ExamRewardWhereUniqueInput[]
+  }
+
+  export type ExamSubmissionUncheckedCreateNestedManyWithoutExamInput = {
+    create?: XOR<ExamSubmissionCreateWithoutExamInput, ExamSubmissionUncheckedCreateWithoutExamInput> | ExamSubmissionCreateWithoutExamInput[] | ExamSubmissionUncheckedCreateWithoutExamInput[]
+    connectOrCreate?: ExamSubmissionCreateOrConnectWithoutExamInput | ExamSubmissionCreateOrConnectWithoutExamInput[]
+    createMany?: ExamSubmissionCreateManyExamInputEnvelope
+    connect?: ExamSubmissionWhereUniqueInput | ExamSubmissionWhereUniqueInput[]
+  }
+
+  export type ExamAchievementUncheckedCreateNestedManyWithoutExamInput = {
+    create?: XOR<ExamAchievementCreateWithoutExamInput, ExamAchievementUncheckedCreateWithoutExamInput> | ExamAchievementCreateWithoutExamInput[] | ExamAchievementUncheckedCreateWithoutExamInput[]
+    connectOrCreate?: ExamAchievementCreateOrConnectWithoutExamInput | ExamAchievementCreateOrConnectWithoutExamInput[]
+    createMany?: ExamAchievementCreateManyExamInputEnvelope
+    connect?: ExamAchievementWhereUniqueInput | ExamAchievementWhereUniqueInput[]
+  }
+
+  export type ExamStageUpdateManyWithoutExamNestedInput = {
+    create?: XOR<ExamStageCreateWithoutExamInput, ExamStageUncheckedCreateWithoutExamInput> | ExamStageCreateWithoutExamInput[] | ExamStageUncheckedCreateWithoutExamInput[]
+    connectOrCreate?: ExamStageCreateOrConnectWithoutExamInput | ExamStageCreateOrConnectWithoutExamInput[]
+    upsert?: ExamStageUpsertWithWhereUniqueWithoutExamInput | ExamStageUpsertWithWhereUniqueWithoutExamInput[]
+    createMany?: ExamStageCreateManyExamInputEnvelope
+    set?: ExamStageWhereUniqueInput | ExamStageWhereUniqueInput[]
+    disconnect?: ExamStageWhereUniqueInput | ExamStageWhereUniqueInput[]
+    delete?: ExamStageWhereUniqueInput | ExamStageWhereUniqueInput[]
+    connect?: ExamStageWhereUniqueInput | ExamStageWhereUniqueInput[]
+    update?: ExamStageUpdateWithWhereUniqueWithoutExamInput | ExamStageUpdateWithWhereUniqueWithoutExamInput[]
+    updateMany?: ExamStageUpdateManyWithWhereWithoutExamInput | ExamStageUpdateManyWithWhereWithoutExamInput[]
+    deleteMany?: ExamStageScalarWhereInput | ExamStageScalarWhereInput[]
+  }
+
+  export type ExamRewardUpdateManyWithoutExamNestedInput = {
+    create?: XOR<ExamRewardCreateWithoutExamInput, ExamRewardUncheckedCreateWithoutExamInput> | ExamRewardCreateWithoutExamInput[] | ExamRewardUncheckedCreateWithoutExamInput[]
+    connectOrCreate?: ExamRewardCreateOrConnectWithoutExamInput | ExamRewardCreateOrConnectWithoutExamInput[]
+    upsert?: ExamRewardUpsertWithWhereUniqueWithoutExamInput | ExamRewardUpsertWithWhereUniqueWithoutExamInput[]
+    createMany?: ExamRewardCreateManyExamInputEnvelope
+    set?: ExamRewardWhereUniqueInput | ExamRewardWhereUniqueInput[]
+    disconnect?: ExamRewardWhereUniqueInput | ExamRewardWhereUniqueInput[]
+    delete?: ExamRewardWhereUniqueInput | ExamRewardWhereUniqueInput[]
+    connect?: ExamRewardWhereUniqueInput | ExamRewardWhereUniqueInput[]
+    update?: ExamRewardUpdateWithWhereUniqueWithoutExamInput | ExamRewardUpdateWithWhereUniqueWithoutExamInput[]
+    updateMany?: ExamRewardUpdateManyWithWhereWithoutExamInput | ExamRewardUpdateManyWithWhereWithoutExamInput[]
+    deleteMany?: ExamRewardScalarWhereInput | ExamRewardScalarWhereInput[]
+  }
+
+  export type ExamSubmissionUpdateManyWithoutExamNestedInput = {
+    create?: XOR<ExamSubmissionCreateWithoutExamInput, ExamSubmissionUncheckedCreateWithoutExamInput> | ExamSubmissionCreateWithoutExamInput[] | ExamSubmissionUncheckedCreateWithoutExamInput[]
+    connectOrCreate?: ExamSubmissionCreateOrConnectWithoutExamInput | ExamSubmissionCreateOrConnectWithoutExamInput[]
+    upsert?: ExamSubmissionUpsertWithWhereUniqueWithoutExamInput | ExamSubmissionUpsertWithWhereUniqueWithoutExamInput[]
+    createMany?: ExamSubmissionCreateManyExamInputEnvelope
+    set?: ExamSubmissionWhereUniqueInput | ExamSubmissionWhereUniqueInput[]
+    disconnect?: ExamSubmissionWhereUniqueInput | ExamSubmissionWhereUniqueInput[]
+    delete?: ExamSubmissionWhereUniqueInput | ExamSubmissionWhereUniqueInput[]
+    connect?: ExamSubmissionWhereUniqueInput | ExamSubmissionWhereUniqueInput[]
+    update?: ExamSubmissionUpdateWithWhereUniqueWithoutExamInput | ExamSubmissionUpdateWithWhereUniqueWithoutExamInput[]
+    updateMany?: ExamSubmissionUpdateManyWithWhereWithoutExamInput | ExamSubmissionUpdateManyWithWhereWithoutExamInput[]
+    deleteMany?: ExamSubmissionScalarWhereInput | ExamSubmissionScalarWhereInput[]
+  }
+
+  export type ExamAchievementUpdateManyWithoutExamNestedInput = {
+    create?: XOR<ExamAchievementCreateWithoutExamInput, ExamAchievementUncheckedCreateWithoutExamInput> | ExamAchievementCreateWithoutExamInput[] | ExamAchievementUncheckedCreateWithoutExamInput[]
+    connectOrCreate?: ExamAchievementCreateOrConnectWithoutExamInput | ExamAchievementCreateOrConnectWithoutExamInput[]
+    upsert?: ExamAchievementUpsertWithWhereUniqueWithoutExamInput | ExamAchievementUpsertWithWhereUniqueWithoutExamInput[]
+    createMany?: ExamAchievementCreateManyExamInputEnvelope
+    set?: ExamAchievementWhereUniqueInput | ExamAchievementWhereUniqueInput[]
+    disconnect?: ExamAchievementWhereUniqueInput | ExamAchievementWhereUniqueInput[]
+    delete?: ExamAchievementWhereUniqueInput | ExamAchievementWhereUniqueInput[]
+    connect?: ExamAchievementWhereUniqueInput | ExamAchievementWhereUniqueInput[]
+    update?: ExamAchievementUpdateWithWhereUniqueWithoutExamInput | ExamAchievementUpdateWithWhereUniqueWithoutExamInput[]
+    updateMany?: ExamAchievementUpdateManyWithWhereWithoutExamInput | ExamAchievementUpdateManyWithWhereWithoutExamInput[]
+    deleteMany?: ExamAchievementScalarWhereInput | ExamAchievementScalarWhereInput[]
+  }
+
+  export type ExamStageUncheckedUpdateManyWithoutExamNestedInput = {
+    create?: XOR<ExamStageCreateWithoutExamInput, ExamStageUncheckedCreateWithoutExamInput> | ExamStageCreateWithoutExamInput[] | ExamStageUncheckedCreateWithoutExamInput[]
+    connectOrCreate?: ExamStageCreateOrConnectWithoutExamInput | ExamStageCreateOrConnectWithoutExamInput[]
+    upsert?: ExamStageUpsertWithWhereUniqueWithoutExamInput | ExamStageUpsertWithWhereUniqueWithoutExamInput[]
+    createMany?: ExamStageCreateManyExamInputEnvelope
+    set?: ExamStageWhereUniqueInput | ExamStageWhereUniqueInput[]
+    disconnect?: ExamStageWhereUniqueInput | ExamStageWhereUniqueInput[]
+    delete?: ExamStageWhereUniqueInput | ExamStageWhereUniqueInput[]
+    connect?: ExamStageWhereUniqueInput | ExamStageWhereUniqueInput[]
+    update?: ExamStageUpdateWithWhereUniqueWithoutExamInput | ExamStageUpdateWithWhereUniqueWithoutExamInput[]
+    updateMany?: ExamStageUpdateManyWithWhereWithoutExamInput | ExamStageUpdateManyWithWhereWithoutExamInput[]
+    deleteMany?: ExamStageScalarWhereInput | ExamStageScalarWhereInput[]
+  }
+
+  export type ExamRewardUncheckedUpdateManyWithoutExamNestedInput = {
+    create?: XOR<ExamRewardCreateWithoutExamInput, ExamRewardUncheckedCreateWithoutExamInput> | ExamRewardCreateWithoutExamInput[] | ExamRewardUncheckedCreateWithoutExamInput[]
+    connectOrCreate?: ExamRewardCreateOrConnectWithoutExamInput | ExamRewardCreateOrConnectWithoutExamInput[]
+    upsert?: ExamRewardUpsertWithWhereUniqueWithoutExamInput | ExamRewardUpsertWithWhereUniqueWithoutExamInput[]
+    createMany?: ExamRewardCreateManyExamInputEnvelope
+    set?: ExamRewardWhereUniqueInput | ExamRewardWhereUniqueInput[]
+    disconnect?: ExamRewardWhereUniqueInput | ExamRewardWhereUniqueInput[]
+    delete?: ExamRewardWhereUniqueInput | ExamRewardWhereUniqueInput[]
+    connect?: ExamRewardWhereUniqueInput | ExamRewardWhereUniqueInput[]
+    update?: ExamRewardUpdateWithWhereUniqueWithoutExamInput | ExamRewardUpdateWithWhereUniqueWithoutExamInput[]
+    updateMany?: ExamRewardUpdateManyWithWhereWithoutExamInput | ExamRewardUpdateManyWithWhereWithoutExamInput[]
+    deleteMany?: ExamRewardScalarWhereInput | ExamRewardScalarWhereInput[]
+  }
+
+  export type ExamSubmissionUncheckedUpdateManyWithoutExamNestedInput = {
+    create?: XOR<ExamSubmissionCreateWithoutExamInput, ExamSubmissionUncheckedCreateWithoutExamInput> | ExamSubmissionCreateWithoutExamInput[] | ExamSubmissionUncheckedCreateWithoutExamInput[]
+    connectOrCreate?: ExamSubmissionCreateOrConnectWithoutExamInput | ExamSubmissionCreateOrConnectWithoutExamInput[]
+    upsert?: ExamSubmissionUpsertWithWhereUniqueWithoutExamInput | ExamSubmissionUpsertWithWhereUniqueWithoutExamInput[]
+    createMany?: ExamSubmissionCreateManyExamInputEnvelope
+    set?: ExamSubmissionWhereUniqueInput | ExamSubmissionWhereUniqueInput[]
+    disconnect?: ExamSubmissionWhereUniqueInput | ExamSubmissionWhereUniqueInput[]
+    delete?: ExamSubmissionWhereUniqueInput | ExamSubmissionWhereUniqueInput[]
+    connect?: ExamSubmissionWhereUniqueInput | ExamSubmissionWhereUniqueInput[]
+    update?: ExamSubmissionUpdateWithWhereUniqueWithoutExamInput | ExamSubmissionUpdateWithWhereUniqueWithoutExamInput[]
+    updateMany?: ExamSubmissionUpdateManyWithWhereWithoutExamInput | ExamSubmissionUpdateManyWithWhereWithoutExamInput[]
+    deleteMany?: ExamSubmissionScalarWhereInput | ExamSubmissionScalarWhereInput[]
+  }
+
+  export type ExamAchievementUncheckedUpdateManyWithoutExamNestedInput = {
+    create?: XOR<ExamAchievementCreateWithoutExamInput, ExamAchievementUncheckedCreateWithoutExamInput> | ExamAchievementCreateWithoutExamInput[] | ExamAchievementUncheckedCreateWithoutExamInput[]
+    connectOrCreate?: ExamAchievementCreateOrConnectWithoutExamInput | ExamAchievementCreateOrConnectWithoutExamInput[]
+    upsert?: ExamAchievementUpsertWithWhereUniqueWithoutExamInput | ExamAchievementUpsertWithWhereUniqueWithoutExamInput[]
+    createMany?: ExamAchievementCreateManyExamInputEnvelope
+    set?: ExamAchievementWhereUniqueInput | ExamAchievementWhereUniqueInput[]
+    disconnect?: ExamAchievementWhereUniqueInput | ExamAchievementWhereUniqueInput[]
+    delete?: ExamAchievementWhereUniqueInput | ExamAchievementWhereUniqueInput[]
+    connect?: ExamAchievementWhereUniqueInput | ExamAchievementWhereUniqueInput[]
+    update?: ExamAchievementUpdateWithWhereUniqueWithoutExamInput | ExamAchievementUpdateWithWhereUniqueWithoutExamInput[]
+    updateMany?: ExamAchievementUpdateManyWithWhereWithoutExamInput | ExamAchievementUpdateManyWithWhereWithoutExamInput[]
+    deleteMany?: ExamAchievementScalarWhereInput | ExamAchievementScalarWhereInput[]
+  }
+
+  export type ExamCreateNestedOneWithoutStagesInput = {
+    create?: XOR<ExamCreateWithoutStagesInput, ExamUncheckedCreateWithoutStagesInput>
+    connectOrCreate?: ExamCreateOrConnectWithoutStagesInput
+    connect?: ExamWhereUniqueInput
+  }
+
+  export type MusicCreateNestedOneWithoutExamStagesInput = {
+    create?: XOR<MusicCreateWithoutExamStagesInput, MusicUncheckedCreateWithoutExamStagesInput>
+    connectOrCreate?: MusicCreateOrConnectWithoutExamStagesInput
+    connect?: MusicWhereUniqueInput
+  }
+
+  export type ExamStageChartCreateNestedManyWithoutStageInput = {
+    create?: XOR<ExamStageChartCreateWithoutStageInput, ExamStageChartUncheckedCreateWithoutStageInput> | ExamStageChartCreateWithoutStageInput[] | ExamStageChartUncheckedCreateWithoutStageInput[]
+    connectOrCreate?: ExamStageChartCreateOrConnectWithoutStageInput | ExamStageChartCreateOrConnectWithoutStageInput[]
+    createMany?: ExamStageChartCreateManyStageInputEnvelope
+    connect?: ExamStageChartWhereUniqueInput | ExamStageChartWhereUniqueInput[]
+  }
+
+  export type ExamStageChartUncheckedCreateNestedManyWithoutStageInput = {
+    create?: XOR<ExamStageChartCreateWithoutStageInput, ExamStageChartUncheckedCreateWithoutStageInput> | ExamStageChartCreateWithoutStageInput[] | ExamStageChartUncheckedCreateWithoutStageInput[]
+    connectOrCreate?: ExamStageChartCreateOrConnectWithoutStageInput | ExamStageChartCreateOrConnectWithoutStageInput[]
+    createMany?: ExamStageChartCreateManyStageInputEnvelope
+    connect?: ExamStageChartWhereUniqueInput | ExamStageChartWhereUniqueInput[]
+  }
+
+  export type ExamUpdateOneRequiredWithoutStagesNestedInput = {
+    create?: XOR<ExamCreateWithoutStagesInput, ExamUncheckedCreateWithoutStagesInput>
+    connectOrCreate?: ExamCreateOrConnectWithoutStagesInput
+    upsert?: ExamUpsertWithoutStagesInput
+    connect?: ExamWhereUniqueInput
+    update?: XOR<XOR<ExamUpdateToOneWithWhereWithoutStagesInput, ExamUpdateWithoutStagesInput>, ExamUncheckedUpdateWithoutStagesInput>
+  }
+
+  export type MusicUpdateOneRequiredWithoutExamStagesNestedInput = {
+    create?: XOR<MusicCreateWithoutExamStagesInput, MusicUncheckedCreateWithoutExamStagesInput>
+    connectOrCreate?: MusicCreateOrConnectWithoutExamStagesInput
+    upsert?: MusicUpsertWithoutExamStagesInput
+    connect?: MusicWhereUniqueInput
+    update?: XOR<XOR<MusicUpdateToOneWithWhereWithoutExamStagesInput, MusicUpdateWithoutExamStagesInput>, MusicUncheckedUpdateWithoutExamStagesInput>
+  }
+
+  export type ExamStageChartUpdateManyWithoutStageNestedInput = {
+    create?: XOR<ExamStageChartCreateWithoutStageInput, ExamStageChartUncheckedCreateWithoutStageInput> | ExamStageChartCreateWithoutStageInput[] | ExamStageChartUncheckedCreateWithoutStageInput[]
+    connectOrCreate?: ExamStageChartCreateOrConnectWithoutStageInput | ExamStageChartCreateOrConnectWithoutStageInput[]
+    upsert?: ExamStageChartUpsertWithWhereUniqueWithoutStageInput | ExamStageChartUpsertWithWhereUniqueWithoutStageInput[]
+    createMany?: ExamStageChartCreateManyStageInputEnvelope
+    set?: ExamStageChartWhereUniqueInput | ExamStageChartWhereUniqueInput[]
+    disconnect?: ExamStageChartWhereUniqueInput | ExamStageChartWhereUniqueInput[]
+    delete?: ExamStageChartWhereUniqueInput | ExamStageChartWhereUniqueInput[]
+    connect?: ExamStageChartWhereUniqueInput | ExamStageChartWhereUniqueInput[]
+    update?: ExamStageChartUpdateWithWhereUniqueWithoutStageInput | ExamStageChartUpdateWithWhereUniqueWithoutStageInput[]
+    updateMany?: ExamStageChartUpdateManyWithWhereWithoutStageInput | ExamStageChartUpdateManyWithWhereWithoutStageInput[]
+    deleteMany?: ExamStageChartScalarWhereInput | ExamStageChartScalarWhereInput[]
+  }
+
+  export type ExamStageChartUncheckedUpdateManyWithoutStageNestedInput = {
+    create?: XOR<ExamStageChartCreateWithoutStageInput, ExamStageChartUncheckedCreateWithoutStageInput> | ExamStageChartCreateWithoutStageInput[] | ExamStageChartUncheckedCreateWithoutStageInput[]
+    connectOrCreate?: ExamStageChartCreateOrConnectWithoutStageInput | ExamStageChartCreateOrConnectWithoutStageInput[]
+    upsert?: ExamStageChartUpsertWithWhereUniqueWithoutStageInput | ExamStageChartUpsertWithWhereUniqueWithoutStageInput[]
+    createMany?: ExamStageChartCreateManyStageInputEnvelope
+    set?: ExamStageChartWhereUniqueInput | ExamStageChartWhereUniqueInput[]
+    disconnect?: ExamStageChartWhereUniqueInput | ExamStageChartWhereUniqueInput[]
+    delete?: ExamStageChartWhereUniqueInput | ExamStageChartWhereUniqueInput[]
+    connect?: ExamStageChartWhereUniqueInput | ExamStageChartWhereUniqueInput[]
+    update?: ExamStageChartUpdateWithWhereUniqueWithoutStageInput | ExamStageChartUpdateWithWhereUniqueWithoutStageInput[]
+    updateMany?: ExamStageChartUpdateManyWithWhereWithoutStageInput | ExamStageChartUpdateManyWithWhereWithoutStageInput[]
+    deleteMany?: ExamStageChartScalarWhereInput | ExamStageChartScalarWhereInput[]
+  }
+
+  export type ExamStageCreateNestedOneWithoutAllowedChartsInput = {
+    create?: XOR<ExamStageCreateWithoutAllowedChartsInput, ExamStageUncheckedCreateWithoutAllowedChartsInput>
+    connectOrCreate?: ExamStageCreateOrConnectWithoutAllowedChartsInput
+    connect?: ExamStageWhereUniqueInput
+  }
+
+  export type MusicChartCreateNestedOneWithoutExamStageOptionsInput = {
+    create?: XOR<MusicChartCreateWithoutExamStageOptionsInput, MusicChartUncheckedCreateWithoutExamStageOptionsInput>
+    connectOrCreate?: MusicChartCreateOrConnectWithoutExamStageOptionsInput
+    connect?: MusicChartWhereUniqueInput
+  }
+
+  export type ExamStageUpdateOneRequiredWithoutAllowedChartsNestedInput = {
+    create?: XOR<ExamStageCreateWithoutAllowedChartsInput, ExamStageUncheckedCreateWithoutAllowedChartsInput>
+    connectOrCreate?: ExamStageCreateOrConnectWithoutAllowedChartsInput
+    upsert?: ExamStageUpsertWithoutAllowedChartsInput
+    connect?: ExamStageWhereUniqueInput
+    update?: XOR<XOR<ExamStageUpdateToOneWithWhereWithoutAllowedChartsInput, ExamStageUpdateWithoutAllowedChartsInput>, ExamStageUncheckedUpdateWithoutAllowedChartsInput>
+  }
+
+  export type MusicChartUpdateOneRequiredWithoutExamStageOptionsNestedInput = {
+    create?: XOR<MusicChartCreateWithoutExamStageOptionsInput, MusicChartUncheckedCreateWithoutExamStageOptionsInput>
+    connectOrCreate?: MusicChartCreateOrConnectWithoutExamStageOptionsInput
+    upsert?: MusicChartUpsertWithoutExamStageOptionsInput
+    connect?: MusicChartWhereUniqueInput
+    update?: XOR<XOR<MusicChartUpdateToOneWithWhereWithoutExamStageOptionsInput, MusicChartUpdateWithoutExamStageOptionsInput>, MusicChartUncheckedUpdateWithoutExamStageOptionsInput>
+  }
+
+  export type ExamCreateNestedOneWithoutRewardsInput = {
+    create?: XOR<ExamCreateWithoutRewardsInput, ExamUncheckedCreateWithoutRewardsInput>
+    connectOrCreate?: ExamCreateOrConnectWithoutRewardsInput
+    connect?: ExamWhereUniqueInput
+  }
+
+  export type MusicCreateNestedOneWithoutExamRewardsInput = {
+    create?: XOR<MusicCreateWithoutExamRewardsInput, MusicUncheckedCreateWithoutExamRewardsInput>
+    connectOrCreate?: MusicCreateOrConnectWithoutExamRewardsInput
+    connect?: MusicWhereUniqueInput
+  }
+
+  export type ExamUpdateOneRequiredWithoutRewardsNestedInput = {
+    create?: XOR<ExamCreateWithoutRewardsInput, ExamUncheckedCreateWithoutRewardsInput>
+    connectOrCreate?: ExamCreateOrConnectWithoutRewardsInput
+    upsert?: ExamUpsertWithoutRewardsInput
+    connect?: ExamWhereUniqueInput
+    update?: XOR<XOR<ExamUpdateToOneWithWhereWithoutRewardsInput, ExamUpdateWithoutRewardsInput>, ExamUncheckedUpdateWithoutRewardsInput>
+  }
+
+  export type MusicUpdateOneWithoutExamRewardsNestedInput = {
+    create?: XOR<MusicCreateWithoutExamRewardsInput, MusicUncheckedCreateWithoutExamRewardsInput>
+    connectOrCreate?: MusicCreateOrConnectWithoutExamRewardsInput
+    upsert?: MusicUpsertWithoutExamRewardsInput
+    disconnect?: MusicWhereInput | boolean
+    delete?: MusicWhereInput | boolean
+    connect?: MusicWhereUniqueInput
+    update?: XOR<XOR<MusicUpdateToOneWithWhereWithoutExamRewardsInput, MusicUpdateWithoutExamRewardsInput>, MusicUncheckedUpdateWithoutExamRewardsInput>
+  }
+
+  export type UserCreateNestedOneWithoutExamSubmissionsInput = {
+    create?: XOR<UserCreateWithoutExamSubmissionsInput, UserUncheckedCreateWithoutExamSubmissionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutExamSubmissionsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type ExamCreateNestedOneWithoutSubmissionsInput = {
+    create?: XOR<ExamCreateWithoutSubmissionsInput, ExamUncheckedCreateWithoutSubmissionsInput>
+    connectOrCreate?: ExamCreateOrConnectWithoutSubmissionsInput
+    connect?: ExamWhereUniqueInput
+  }
+
+  export type ExamAchievementCreateNestedOneWithoutSubmissionInput = {
+    create?: XOR<ExamAchievementCreateWithoutSubmissionInput, ExamAchievementUncheckedCreateWithoutSubmissionInput>
+    connectOrCreate?: ExamAchievementCreateOrConnectWithoutSubmissionInput
+    connect?: ExamAchievementWhereUniqueInput
+  }
+
+  export type ExamAchievementUncheckedCreateNestedOneWithoutSubmissionInput = {
+    create?: XOR<ExamAchievementCreateWithoutSubmissionInput, ExamAchievementUncheckedCreateWithoutSubmissionInput>
+    connectOrCreate?: ExamAchievementCreateOrConnectWithoutSubmissionInput
+    connect?: ExamAchievementWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutExamSubmissionsNestedInput = {
+    create?: XOR<UserCreateWithoutExamSubmissionsInput, UserUncheckedCreateWithoutExamSubmissionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutExamSubmissionsInput
+    upsert?: UserUpsertWithoutExamSubmissionsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutExamSubmissionsInput, UserUpdateWithoutExamSubmissionsInput>, UserUncheckedUpdateWithoutExamSubmissionsInput>
+  }
+
+  export type ExamUpdateOneRequiredWithoutSubmissionsNestedInput = {
+    create?: XOR<ExamCreateWithoutSubmissionsInput, ExamUncheckedCreateWithoutSubmissionsInput>
+    connectOrCreate?: ExamCreateOrConnectWithoutSubmissionsInput
+    upsert?: ExamUpsertWithoutSubmissionsInput
+    connect?: ExamWhereUniqueInput
+    update?: XOR<XOR<ExamUpdateToOneWithWhereWithoutSubmissionsInput, ExamUpdateWithoutSubmissionsInput>, ExamUncheckedUpdateWithoutSubmissionsInput>
+  }
+
+  export type ExamAchievementUpdateOneWithoutSubmissionNestedInput = {
+    create?: XOR<ExamAchievementCreateWithoutSubmissionInput, ExamAchievementUncheckedCreateWithoutSubmissionInput>
+    connectOrCreate?: ExamAchievementCreateOrConnectWithoutSubmissionInput
+    upsert?: ExamAchievementUpsertWithoutSubmissionInput
+    disconnect?: ExamAchievementWhereInput | boolean
+    delete?: ExamAchievementWhereInput | boolean
+    connect?: ExamAchievementWhereUniqueInput
+    update?: XOR<XOR<ExamAchievementUpdateToOneWithWhereWithoutSubmissionInput, ExamAchievementUpdateWithoutSubmissionInput>, ExamAchievementUncheckedUpdateWithoutSubmissionInput>
+  }
+
+  export type ExamAchievementUncheckedUpdateOneWithoutSubmissionNestedInput = {
+    create?: XOR<ExamAchievementCreateWithoutSubmissionInput, ExamAchievementUncheckedCreateWithoutSubmissionInput>
+    connectOrCreate?: ExamAchievementCreateOrConnectWithoutSubmissionInput
+    upsert?: ExamAchievementUpsertWithoutSubmissionInput
+    disconnect?: ExamAchievementWhereInput | boolean
+    delete?: ExamAchievementWhereInput | boolean
+    connect?: ExamAchievementWhereUniqueInput
+    update?: XOR<XOR<ExamAchievementUpdateToOneWithWhereWithoutSubmissionInput, ExamAchievementUpdateWithoutSubmissionInput>, ExamAchievementUncheckedUpdateWithoutSubmissionInput>
+  }
+
+  export type UserCreateNestedOneWithoutExamAchievementsInput = {
+    create?: XOR<UserCreateWithoutExamAchievementsInput, UserUncheckedCreateWithoutExamAchievementsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutExamAchievementsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type ExamCreateNestedOneWithoutAchievementsInput = {
+    create?: XOR<ExamCreateWithoutAchievementsInput, ExamUncheckedCreateWithoutAchievementsInput>
+    connectOrCreate?: ExamCreateOrConnectWithoutAchievementsInput
+    connect?: ExamWhereUniqueInput
+  }
+
+  export type ExamSubmissionCreateNestedOneWithoutAchievementInput = {
+    create?: XOR<ExamSubmissionCreateWithoutAchievementInput, ExamSubmissionUncheckedCreateWithoutAchievementInput>
+    connectOrCreate?: ExamSubmissionCreateOrConnectWithoutAchievementInput
+    connect?: ExamSubmissionWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutExamAchievementsNestedInput = {
+    create?: XOR<UserCreateWithoutExamAchievementsInput, UserUncheckedCreateWithoutExamAchievementsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutExamAchievementsInput
+    upsert?: UserUpsertWithoutExamAchievementsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutExamAchievementsInput, UserUpdateWithoutExamAchievementsInput>, UserUncheckedUpdateWithoutExamAchievementsInput>
+  }
+
+  export type ExamUpdateOneRequiredWithoutAchievementsNestedInput = {
+    create?: XOR<ExamCreateWithoutAchievementsInput, ExamUncheckedCreateWithoutAchievementsInput>
+    connectOrCreate?: ExamCreateOrConnectWithoutAchievementsInput
+    upsert?: ExamUpsertWithoutAchievementsInput
+    connect?: ExamWhereUniqueInput
+    update?: XOR<XOR<ExamUpdateToOneWithWhereWithoutAchievementsInput, ExamUpdateWithoutAchievementsInput>, ExamUncheckedUpdateWithoutAchievementsInput>
+  }
+
+  export type ExamSubmissionUpdateOneWithoutAchievementNestedInput = {
+    create?: XOR<ExamSubmissionCreateWithoutAchievementInput, ExamSubmissionUncheckedCreateWithoutAchievementInput>
+    connectOrCreate?: ExamSubmissionCreateOrConnectWithoutAchievementInput
+    upsert?: ExamSubmissionUpsertWithoutAchievementInput
+    disconnect?: ExamSubmissionWhereInput | boolean
+    delete?: ExamSubmissionWhereInput | boolean
+    connect?: ExamSubmissionWhereUniqueInput
+    update?: XOR<XOR<ExamSubmissionUpdateToOneWithWhereWithoutAchievementInput, ExamSubmissionUpdateWithoutAchievementInput>, ExamSubmissionUncheckedUpdateWithoutAchievementInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -32893,6 +42749,64 @@ export namespace Prisma {
     data: ChartRecordSnapshotCreateManyUserInput | ChartRecordSnapshotCreateManyUserInput[]
   }
 
+  export type ExamSubmissionCreateWithoutUserInput = {
+    proofImageUrl: string
+    status?: string
+    reviewerNote?: string | null
+    submittedAt?: Date | string
+    reviewedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    exam: ExamCreateNestedOneWithoutSubmissionsInput
+    achievement?: ExamAchievementCreateNestedOneWithoutSubmissionInput
+  }
+
+  export type ExamSubmissionUncheckedCreateWithoutUserInput = {
+    id?: number
+    proofImageUrl: string
+    status?: string
+    reviewerNote?: string | null
+    submittedAt?: Date | string
+    reviewedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    examId: number
+    achievement?: ExamAchievementUncheckedCreateNestedOneWithoutSubmissionInput
+  }
+
+  export type ExamSubmissionCreateOrConnectWithoutUserInput = {
+    where: ExamSubmissionWhereUniqueInput
+    create: XOR<ExamSubmissionCreateWithoutUserInput, ExamSubmissionUncheckedCreateWithoutUserInput>
+  }
+
+  export type ExamSubmissionCreateManyUserInputEnvelope = {
+    data: ExamSubmissionCreateManyUserInput | ExamSubmissionCreateManyUserInput[]
+  }
+
+  export type ExamAchievementCreateWithoutUserInput = {
+    achievedAt?: Date | string
+    createdAt?: Date | string
+    exam: ExamCreateNestedOneWithoutAchievementsInput
+    submission?: ExamSubmissionCreateNestedOneWithoutAchievementInput
+  }
+
+  export type ExamAchievementUncheckedCreateWithoutUserInput = {
+    id?: number
+    achievedAt?: Date | string
+    createdAt?: Date | string
+    examId: number
+    submissionId?: number | null
+  }
+
+  export type ExamAchievementCreateOrConnectWithoutUserInput = {
+    where: ExamAchievementWhereUniqueInput
+    create: XOR<ExamAchievementCreateWithoutUserInput, ExamAchievementUncheckedCreateWithoutUserInput>
+  }
+
+  export type ExamAchievementCreateManyUserInputEnvelope = {
+    data: ExamAchievementCreateManyUserInput | ExamAchievementCreateManyUserInput[]
+  }
+
   export type RecentPlayUpsertWithWhereUniqueWithoutUserInput = {
     where: RecentPlayWhereUniqueInput
     update: XOR<RecentPlayUpdateWithoutUserInput, RecentPlayUncheckedUpdateWithoutUserInput>
@@ -33263,6 +43177,66 @@ export namespace Prisma {
     created_at?: DateTimeFilter<"ChartRecordSnapshot"> | Date | string
   }
 
+  export type ExamSubmissionUpsertWithWhereUniqueWithoutUserInput = {
+    where: ExamSubmissionWhereUniqueInput
+    update: XOR<ExamSubmissionUpdateWithoutUserInput, ExamSubmissionUncheckedUpdateWithoutUserInput>
+    create: XOR<ExamSubmissionCreateWithoutUserInput, ExamSubmissionUncheckedCreateWithoutUserInput>
+  }
+
+  export type ExamSubmissionUpdateWithWhereUniqueWithoutUserInput = {
+    where: ExamSubmissionWhereUniqueInput
+    data: XOR<ExamSubmissionUpdateWithoutUserInput, ExamSubmissionUncheckedUpdateWithoutUserInput>
+  }
+
+  export type ExamSubmissionUpdateManyWithWhereWithoutUserInput = {
+    where: ExamSubmissionScalarWhereInput
+    data: XOR<ExamSubmissionUpdateManyMutationInput, ExamSubmissionUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type ExamSubmissionScalarWhereInput = {
+    AND?: ExamSubmissionScalarWhereInput | ExamSubmissionScalarWhereInput[]
+    OR?: ExamSubmissionScalarWhereInput[]
+    NOT?: ExamSubmissionScalarWhereInput | ExamSubmissionScalarWhereInput[]
+    id?: IntFilter<"ExamSubmission"> | number
+    proofImageUrl?: StringFilter<"ExamSubmission"> | string
+    status?: StringFilter<"ExamSubmission"> | string
+    reviewerNote?: StringNullableFilter<"ExamSubmission"> | string | null
+    submittedAt?: DateTimeFilter<"ExamSubmission"> | Date | string
+    reviewedAt?: DateTimeNullableFilter<"ExamSubmission"> | Date | string | null
+    createdAt?: DateTimeFilter<"ExamSubmission"> | Date | string
+    updatedAt?: DateTimeFilter<"ExamSubmission"> | Date | string
+    userId?: IntFilter<"ExamSubmission"> | number
+    examId?: IntFilter<"ExamSubmission"> | number
+  }
+
+  export type ExamAchievementUpsertWithWhereUniqueWithoutUserInput = {
+    where: ExamAchievementWhereUniqueInput
+    update: XOR<ExamAchievementUpdateWithoutUserInput, ExamAchievementUncheckedUpdateWithoutUserInput>
+    create: XOR<ExamAchievementCreateWithoutUserInput, ExamAchievementUncheckedCreateWithoutUserInput>
+  }
+
+  export type ExamAchievementUpdateWithWhereUniqueWithoutUserInput = {
+    where: ExamAchievementWhereUniqueInput
+    data: XOR<ExamAchievementUpdateWithoutUserInput, ExamAchievementUncheckedUpdateWithoutUserInput>
+  }
+
+  export type ExamAchievementUpdateManyWithWhereWithoutUserInput = {
+    where: ExamAchievementScalarWhereInput
+    data: XOR<ExamAchievementUpdateManyMutationInput, ExamAchievementUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type ExamAchievementScalarWhereInput = {
+    AND?: ExamAchievementScalarWhereInput | ExamAchievementScalarWhereInput[]
+    OR?: ExamAchievementScalarWhereInput[]
+    NOT?: ExamAchievementScalarWhereInput | ExamAchievementScalarWhereInput[]
+    id?: IntFilter<"ExamAchievement"> | number
+    achievedAt?: DateTimeFilter<"ExamAchievement"> | Date | string
+    createdAt?: DateTimeFilter<"ExamAchievement"> | Date | string
+    userId?: IntFilter<"ExamAchievement"> | number
+    examId?: IntFilter<"ExamAchievement"> | number
+    submissionId?: IntNullableFilter<"ExamAchievement"> | number | null
+  }
+
   export type RecentPlayCreateWithoutMusicInput = {
     difficulty: string
     level: number
@@ -33527,6 +43501,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutChartInput
     playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
+    examStageOptions?: ExamStageChartCreateNestedManyWithoutChartInput
   }
 
   export type MusicChartUncheckedCreateWithoutMusicInput = {
@@ -33552,6 +43527,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutChartInput
     playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
+    examStageOptions?: ExamStageChartUncheckedCreateNestedManyWithoutChartInput
   }
 
   export type MusicChartCreateOrConnectWithoutMusicInput = {
@@ -33561,6 +43537,62 @@ export namespace Prisma {
 
   export type MusicChartCreateManyMusicInputEnvelope = {
     data: MusicChartCreateManyMusicInput | MusicChartCreateManyMusicInput[]
+  }
+
+  export type ExamStageCreateWithoutMusicInput = {
+    position: number
+    label?: string | null
+    requirementType?: string
+    requiredValue: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    exam: ExamCreateNestedOneWithoutStagesInput
+    allowedCharts?: ExamStageChartCreateNestedManyWithoutStageInput
+  }
+
+  export type ExamStageUncheckedCreateWithoutMusicInput = {
+    id?: number
+    position: number
+    label?: string | null
+    requirementType?: string
+    requiredValue: number
+    examId: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    allowedCharts?: ExamStageChartUncheckedCreateNestedManyWithoutStageInput
+  }
+
+  export type ExamStageCreateOrConnectWithoutMusicInput = {
+    where: ExamStageWhereUniqueInput
+    create: XOR<ExamStageCreateWithoutMusicInput, ExamStageUncheckedCreateWithoutMusicInput>
+  }
+
+  export type ExamStageCreateManyMusicInputEnvelope = {
+    data: ExamStageCreateManyMusicInput | ExamStageCreateManyMusicInput[]
+  }
+
+  export type ExamRewardCreateWithoutMusicInput = {
+    position: number
+    type: string
+    label?: string | null
+    exam: ExamCreateNestedOneWithoutRewardsInput
+  }
+
+  export type ExamRewardUncheckedCreateWithoutMusicInput = {
+    id?: number
+    position: number
+    type: string
+    label?: string | null
+    examId: number
+  }
+
+  export type ExamRewardCreateOrConnectWithoutMusicInput = {
+    where: ExamRewardWhereUniqueInput
+    create: XOR<ExamRewardCreateWithoutMusicInput, ExamRewardUncheckedCreateWithoutMusicInput>
+  }
+
+  export type ExamRewardCreateManyMusicInputEnvelope = {
+    data: ExamRewardCreateManyMusicInput | ExamRewardCreateManyMusicInput[]
   }
 
   export type RecentPlayUpsertWithWhereUniqueWithoutMusicInput = {
@@ -33732,6 +43764,65 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"MusicChart"> | Date | string
   }
 
+  export type ExamStageUpsertWithWhereUniqueWithoutMusicInput = {
+    where: ExamStageWhereUniqueInput
+    update: XOR<ExamStageUpdateWithoutMusicInput, ExamStageUncheckedUpdateWithoutMusicInput>
+    create: XOR<ExamStageCreateWithoutMusicInput, ExamStageUncheckedCreateWithoutMusicInput>
+  }
+
+  export type ExamStageUpdateWithWhereUniqueWithoutMusicInput = {
+    where: ExamStageWhereUniqueInput
+    data: XOR<ExamStageUpdateWithoutMusicInput, ExamStageUncheckedUpdateWithoutMusicInput>
+  }
+
+  export type ExamStageUpdateManyWithWhereWithoutMusicInput = {
+    where: ExamStageScalarWhereInput
+    data: XOR<ExamStageUpdateManyMutationInput, ExamStageUncheckedUpdateManyWithoutMusicInput>
+  }
+
+  export type ExamStageScalarWhereInput = {
+    AND?: ExamStageScalarWhereInput | ExamStageScalarWhereInput[]
+    OR?: ExamStageScalarWhereInput[]
+    NOT?: ExamStageScalarWhereInput | ExamStageScalarWhereInput[]
+    id?: IntFilter<"ExamStage"> | number
+    position?: IntFilter<"ExamStage"> | number
+    label?: StringNullableFilter<"ExamStage"> | string | null
+    requirementType?: StringFilter<"ExamStage"> | string
+    requiredValue?: FloatFilter<"ExamStage"> | number
+    examId?: IntFilter<"ExamStage"> | number
+    musicIndex?: StringFilter<"ExamStage"> | string
+    createdAt?: DateTimeFilter<"ExamStage"> | Date | string
+    updatedAt?: DateTimeFilter<"ExamStage"> | Date | string
+  }
+
+  export type ExamRewardUpsertWithWhereUniqueWithoutMusicInput = {
+    where: ExamRewardWhereUniqueInput
+    update: XOR<ExamRewardUpdateWithoutMusicInput, ExamRewardUncheckedUpdateWithoutMusicInput>
+    create: XOR<ExamRewardCreateWithoutMusicInput, ExamRewardUncheckedCreateWithoutMusicInput>
+  }
+
+  export type ExamRewardUpdateWithWhereUniqueWithoutMusicInput = {
+    where: ExamRewardWhereUniqueInput
+    data: XOR<ExamRewardUpdateWithoutMusicInput, ExamRewardUncheckedUpdateWithoutMusicInput>
+  }
+
+  export type ExamRewardUpdateManyWithWhereWithoutMusicInput = {
+    where: ExamRewardScalarWhereInput
+    data: XOR<ExamRewardUpdateManyMutationInput, ExamRewardUncheckedUpdateManyWithoutMusicInput>
+  }
+
+  export type ExamRewardScalarWhereInput = {
+    AND?: ExamRewardScalarWhereInput | ExamRewardScalarWhereInput[]
+    OR?: ExamRewardScalarWhereInput[]
+    NOT?: ExamRewardScalarWhereInput | ExamRewardScalarWhereInput[]
+    id?: IntFilter<"ExamReward"> | number
+    position?: IntFilter<"ExamReward"> | number
+    type?: StringFilter<"ExamReward"> | string
+    label?: StringNullableFilter<"ExamReward"> | string | null
+    examId?: IntFilter<"ExamReward"> | number
+    musicIndex?: StringNullableFilter<"ExamReward"> | string | null
+  }
+
   export type MusicCreateWithoutChartsInput = {
     index: string
     title: string
@@ -33756,6 +43847,8 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutMusicInput
     bingoCovers?: BingoCreateNestedManyWithoutCoverMusicInput
     bingoMissions?: BingoCellCreateNestedManyWithoutMusicInput
+    examStages?: ExamStageCreateNestedManyWithoutMusicInput
+    examRewards?: ExamRewardCreateNestedManyWithoutMusicInput
   }
 
   export type MusicUncheckedCreateWithoutChartsInput = {
@@ -33783,6 +43876,8 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutMusicInput
     bingoCovers?: BingoUncheckedCreateNestedManyWithoutCoverMusicInput
     bingoMissions?: BingoCellUncheckedCreateNestedManyWithoutMusicInput
+    examStages?: ExamStageUncheckedCreateNestedManyWithoutMusicInput
+    examRewards?: ExamRewardUncheckedCreateNestedManyWithoutMusicInput
   }
 
   export type MusicCreateOrConnectWithoutChartsInput = {
@@ -34092,6 +44187,23 @@ export namespace Prisma {
     data: ChartRecordSnapshotCreateManyChartInput | ChartRecordSnapshotCreateManyChartInput[]
   }
 
+  export type ExamStageChartCreateWithoutChartInput = {
+    stage: ExamStageCreateNestedOneWithoutAllowedChartsInput
+  }
+
+  export type ExamStageChartUncheckedCreateWithoutChartInput = {
+    stageId: number
+  }
+
+  export type ExamStageChartCreateOrConnectWithoutChartInput = {
+    where: ExamStageChartWhereUniqueInput
+    create: XOR<ExamStageChartCreateWithoutChartInput, ExamStageChartUncheckedCreateWithoutChartInput>
+  }
+
+  export type ExamStageChartCreateManyChartInputEnvelope = {
+    data: ExamStageChartCreateManyChartInput | ExamStageChartCreateManyChartInput[]
+  }
+
   export type MusicUpsertWithoutChartsInput = {
     update: XOR<MusicUpdateWithoutChartsInput, MusicUncheckedUpdateWithoutChartsInput>
     create: XOR<MusicCreateWithoutChartsInput, MusicUncheckedCreateWithoutChartsInput>
@@ -34127,6 +44239,8 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutMusicNestedInput
     bingoCovers?: BingoUpdateManyWithoutCoverMusicNestedInput
     bingoMissions?: BingoCellUpdateManyWithoutMusicNestedInput
+    examStages?: ExamStageUpdateManyWithoutMusicNestedInput
+    examRewards?: ExamRewardUpdateManyWithoutMusicNestedInput
   }
 
   export type MusicUncheckedUpdateWithoutChartsInput = {
@@ -34154,6 +44268,8 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutMusicNestedInput
     bingoCovers?: BingoUncheckedUpdateManyWithoutCoverMusicNestedInput
     bingoMissions?: BingoCellUncheckedUpdateManyWithoutMusicNestedInput
+    examStages?: ExamStageUncheckedUpdateManyWithoutMusicNestedInput
+    examRewards?: ExamRewardUncheckedUpdateManyWithoutMusicNestedInput
   }
 
   export type ChartConstantHistoryUpsertWithWhereUniqueWithoutChartInput = {
@@ -34295,6 +44411,30 @@ export namespace Prisma {
     data: XOR<ChartRecordSnapshotUpdateManyMutationInput, ChartRecordSnapshotUncheckedUpdateManyWithoutChartInput>
   }
 
+  export type ExamStageChartUpsertWithWhereUniqueWithoutChartInput = {
+    where: ExamStageChartWhereUniqueInput
+    update: XOR<ExamStageChartUpdateWithoutChartInput, ExamStageChartUncheckedUpdateWithoutChartInput>
+    create: XOR<ExamStageChartCreateWithoutChartInput, ExamStageChartUncheckedCreateWithoutChartInput>
+  }
+
+  export type ExamStageChartUpdateWithWhereUniqueWithoutChartInput = {
+    where: ExamStageChartWhereUniqueInput
+    data: XOR<ExamStageChartUpdateWithoutChartInput, ExamStageChartUncheckedUpdateWithoutChartInput>
+  }
+
+  export type ExamStageChartUpdateManyWithWhereWithoutChartInput = {
+    where: ExamStageChartScalarWhereInput
+    data: XOR<ExamStageChartUpdateManyMutationInput, ExamStageChartUncheckedUpdateManyWithoutChartInput>
+  }
+
+  export type ExamStageChartScalarWhereInput = {
+    AND?: ExamStageChartScalarWhereInput | ExamStageChartScalarWhereInput[]
+    OR?: ExamStageChartScalarWhereInput[]
+    NOT?: ExamStageChartScalarWhereInput | ExamStageChartScalarWhereInput[]
+    stageId?: IntFilter<"ExamStageChart"> | number
+    chartId?: IntFilter<"ExamStageChart"> | number
+  }
+
   export type UserCreateWithoutDataSyncsInput = {
     username?: string | null
     nostalgia_name?: string | null
@@ -34335,6 +44475,8 @@ export namespace Prisma {
     chartReactions?: ChartEvaluationReactionCreateNestedManyWithoutUserInput
     chartPlayHistory?: ChartPlayHistoryCreateNestedManyWithoutUserInput
     chartRecordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutUserInput
+    examSubmissions?: ExamSubmissionCreateNestedManyWithoutUserInput
+    examAchievements?: ExamAchievementCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutDataSyncsInput = {
@@ -34378,6 +44520,8 @@ export namespace Prisma {
     chartReactions?: ChartEvaluationReactionUncheckedCreateNestedManyWithoutUserInput
     chartPlayHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutUserInput
     chartRecordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutUserInput
+    examSubmissions?: ExamSubmissionUncheckedCreateNestedManyWithoutUserInput
+    examAchievements?: ExamAchievementUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutDataSyncsInput = {
@@ -34512,6 +44656,8 @@ export namespace Prisma {
     chartReactions?: ChartEvaluationReactionUpdateManyWithoutUserNestedInput
     chartPlayHistory?: ChartPlayHistoryUpdateManyWithoutUserNestedInput
     chartRecordSnapshots?: ChartRecordSnapshotUpdateManyWithoutUserNestedInput
+    examSubmissions?: ExamSubmissionUpdateManyWithoutUserNestedInput
+    examAchievements?: ExamAchievementUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDataSyncsInput = {
@@ -34555,6 +44701,8 @@ export namespace Prisma {
     chartReactions?: ChartEvaluationReactionUncheckedUpdateManyWithoutUserNestedInput
     chartPlayHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutUserNestedInput
     chartRecordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutUserNestedInput
+    examSubmissions?: ExamSubmissionUncheckedUpdateManyWithoutUserNestedInput
+    examAchievements?: ExamAchievementUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ChartPlayHistoryUpsertWithWhereUniqueWithoutFirstSyncInput = {
@@ -34611,6 +44759,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutChartInput
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
+    examStageOptions?: ExamStageChartCreateNestedManyWithoutChartInput
   }
 
   export type MusicChartUncheckedCreateWithoutPlayHistoryInput = {
@@ -34636,6 +44785,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutChartInput
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
+    examStageOptions?: ExamStageChartUncheckedCreateNestedManyWithoutChartInput
   }
 
   export type MusicChartCreateOrConnectWithoutPlayHistoryInput = {
@@ -34683,6 +44833,8 @@ export namespace Prisma {
     chartReactions?: ChartEvaluationReactionCreateNestedManyWithoutUserInput
     dataSyncs?: DataSyncCreateNestedManyWithoutUserInput
     chartRecordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutUserInput
+    examSubmissions?: ExamSubmissionCreateNestedManyWithoutUserInput
+    examAchievements?: ExamAchievementCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutChartPlayHistoryInput = {
@@ -34726,6 +44878,8 @@ export namespace Prisma {
     chartReactions?: ChartEvaluationReactionUncheckedCreateNestedManyWithoutUserInput
     dataSyncs?: DataSyncUncheckedCreateNestedManyWithoutUserInput
     chartRecordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutUserInput
+    examSubmissions?: ExamSubmissionUncheckedCreateNestedManyWithoutUserInput
+    examAchievements?: ExamAchievementUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutChartPlayHistoryInput = {
@@ -34798,6 +44952,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUpdateManyWithoutChartNestedInput
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
+    examStageOptions?: ExamStageChartUpdateManyWithoutChartNestedInput
   }
 
   export type MusicChartUncheckedUpdateWithoutPlayHistoryInput = {
@@ -34823,6 +44978,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutChartNestedInput
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
+    examStageOptions?: ExamStageChartUncheckedUpdateManyWithoutChartNestedInput
   }
 
   export type UserUpsertWithoutChartPlayHistoryInput = {
@@ -34876,6 +45032,8 @@ export namespace Prisma {
     chartReactions?: ChartEvaluationReactionUpdateManyWithoutUserNestedInput
     dataSyncs?: DataSyncUpdateManyWithoutUserNestedInput
     chartRecordSnapshots?: ChartRecordSnapshotUpdateManyWithoutUserNestedInput
+    examSubmissions?: ExamSubmissionUpdateManyWithoutUserNestedInput
+    examAchievements?: ExamAchievementUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutChartPlayHistoryInput = {
@@ -34919,6 +45077,8 @@ export namespace Prisma {
     chartReactions?: ChartEvaluationReactionUncheckedUpdateManyWithoutUserNestedInput
     dataSyncs?: DataSyncUncheckedUpdateManyWithoutUserNestedInput
     chartRecordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutUserNestedInput
+    examSubmissions?: ExamSubmissionUncheckedUpdateManyWithoutUserNestedInput
+    examAchievements?: ExamAchievementUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type DataSyncUpsertWithoutPlayHistoryInput = {
@@ -34981,6 +45141,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutChartInput
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutChartInput
     playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
+    examStageOptions?: ExamStageChartCreateNestedManyWithoutChartInput
   }
 
   export type MusicChartUncheckedCreateWithoutRecordSnapshotsInput = {
@@ -35006,6 +45167,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutChartInput
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutChartInput
     playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
+    examStageOptions?: ExamStageChartUncheckedCreateNestedManyWithoutChartInput
   }
 
   export type MusicChartCreateOrConnectWithoutRecordSnapshotsInput = {
@@ -35053,6 +45215,8 @@ export namespace Prisma {
     chartReactions?: ChartEvaluationReactionCreateNestedManyWithoutUserInput
     dataSyncs?: DataSyncCreateNestedManyWithoutUserInput
     chartPlayHistory?: ChartPlayHistoryCreateNestedManyWithoutUserInput
+    examSubmissions?: ExamSubmissionCreateNestedManyWithoutUserInput
+    examAchievements?: ExamAchievementCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutChartRecordSnapshotsInput = {
@@ -35096,6 +45260,8 @@ export namespace Prisma {
     chartReactions?: ChartEvaluationReactionUncheckedCreateNestedManyWithoutUserInput
     dataSyncs?: DataSyncUncheckedCreateNestedManyWithoutUserInput
     chartPlayHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutUserInput
+    examSubmissions?: ExamSubmissionUncheckedCreateNestedManyWithoutUserInput
+    examAchievements?: ExamAchievementUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutChartRecordSnapshotsInput = {
@@ -35168,6 +45334,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUpdateManyWithoutChartNestedInput
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutChartNestedInput
     playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
+    examStageOptions?: ExamStageChartUpdateManyWithoutChartNestedInput
   }
 
   export type MusicChartUncheckedUpdateWithoutRecordSnapshotsInput = {
@@ -35193,6 +45360,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutChartNestedInput
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutChartNestedInput
     playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
+    examStageOptions?: ExamStageChartUncheckedUpdateManyWithoutChartNestedInput
   }
 
   export type UserUpsertWithoutChartRecordSnapshotsInput = {
@@ -35246,6 +45414,8 @@ export namespace Prisma {
     chartReactions?: ChartEvaluationReactionUpdateManyWithoutUserNestedInput
     dataSyncs?: DataSyncUpdateManyWithoutUserNestedInput
     chartPlayHistory?: ChartPlayHistoryUpdateManyWithoutUserNestedInput
+    examSubmissions?: ExamSubmissionUpdateManyWithoutUserNestedInput
+    examAchievements?: ExamAchievementUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutChartRecordSnapshotsInput = {
@@ -35289,6 +45459,8 @@ export namespace Prisma {
     chartReactions?: ChartEvaluationReactionUncheckedUpdateManyWithoutUserNestedInput
     dataSyncs?: DataSyncUncheckedUpdateManyWithoutUserNestedInput
     chartPlayHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutUserNestedInput
+    examSubmissions?: ExamSubmissionUncheckedUpdateManyWithoutUserNestedInput
+    examAchievements?: ExamAchievementUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type DataSyncUpsertWithoutRecordSnapshotsInput = {
@@ -35351,6 +45523,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutChartInput
     playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
+    examStageOptions?: ExamStageChartCreateNestedManyWithoutChartInput
   }
 
   export type MusicChartUncheckedCreateWithoutConstantHistoryInput = {
@@ -35376,6 +45549,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutChartInput
     playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
+    examStageOptions?: ExamStageChartUncheckedCreateNestedManyWithoutChartInput
   }
 
   export type MusicChartCreateOrConnectWithoutConstantHistoryInput = {
@@ -35416,6 +45590,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutChartNestedInput
     playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
+    examStageOptions?: ExamStageChartUpdateManyWithoutChartNestedInput
   }
 
   export type MusicChartUncheckedUpdateWithoutConstantHistoryInput = {
@@ -35441,6 +45616,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutChartNestedInput
     playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
+    examStageOptions?: ExamStageChartUncheckedUpdateManyWithoutChartNestedInput
   }
 
   export type MusicChartCreateWithoutEvaluationsInput = {
@@ -35465,6 +45641,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutChartInput
     playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
+    examStageOptions?: ExamStageChartCreateNestedManyWithoutChartInput
   }
 
   export type MusicChartUncheckedCreateWithoutEvaluationsInput = {
@@ -35490,6 +45667,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutChartInput
     playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
+    examStageOptions?: ExamStageChartUncheckedCreateNestedManyWithoutChartInput
   }
 
   export type MusicChartCreateOrConnectWithoutEvaluationsInput = {
@@ -35537,6 +45715,8 @@ export namespace Prisma {
     dataSyncs?: DataSyncCreateNestedManyWithoutUserInput
     chartPlayHistory?: ChartPlayHistoryCreateNestedManyWithoutUserInput
     chartRecordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutUserInput
+    examSubmissions?: ExamSubmissionCreateNestedManyWithoutUserInput
+    examAchievements?: ExamAchievementCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutChartEvaluationsInput = {
@@ -35580,6 +45760,8 @@ export namespace Prisma {
     dataSyncs?: DataSyncUncheckedCreateNestedManyWithoutUserInput
     chartPlayHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutUserInput
     chartRecordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutUserInput
+    examSubmissions?: ExamSubmissionUncheckedCreateNestedManyWithoutUserInput
+    examAchievements?: ExamAchievementUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutChartEvaluationsInput = {
@@ -35644,6 +45826,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutChartNestedInput
     playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
+    examStageOptions?: ExamStageChartUpdateManyWithoutChartNestedInput
   }
 
   export type MusicChartUncheckedUpdateWithoutEvaluationsInput = {
@@ -35669,6 +45852,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutChartNestedInput
     playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
+    examStageOptions?: ExamStageChartUncheckedUpdateManyWithoutChartNestedInput
   }
 
   export type UserUpsertWithoutChartEvaluationsInput = {
@@ -35722,6 +45906,8 @@ export namespace Prisma {
     dataSyncs?: DataSyncUpdateManyWithoutUserNestedInput
     chartPlayHistory?: ChartPlayHistoryUpdateManyWithoutUserNestedInput
     chartRecordSnapshots?: ChartRecordSnapshotUpdateManyWithoutUserNestedInput
+    examSubmissions?: ExamSubmissionUpdateManyWithoutUserNestedInput
+    examAchievements?: ExamAchievementUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutChartEvaluationsInput = {
@@ -35765,6 +45951,8 @@ export namespace Prisma {
     dataSyncs?: DataSyncUncheckedUpdateManyWithoutUserNestedInput
     chartPlayHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutUserNestedInput
     chartRecordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutUserNestedInput
+    examSubmissions?: ExamSubmissionUncheckedUpdateManyWithoutUserNestedInput
+    examAchievements?: ExamAchievementUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ChartEvaluationReactionUpsertWithWhereUniqueWithoutEvaluationInput = {
@@ -35857,6 +46045,8 @@ export namespace Prisma {
     dataSyncs?: DataSyncCreateNestedManyWithoutUserInput
     chartPlayHistory?: ChartPlayHistoryCreateNestedManyWithoutUserInput
     chartRecordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutUserInput
+    examSubmissions?: ExamSubmissionCreateNestedManyWithoutUserInput
+    examAchievements?: ExamAchievementCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutChartReactionsInput = {
@@ -35900,6 +46090,8 @@ export namespace Prisma {
     dataSyncs?: DataSyncUncheckedCreateNestedManyWithoutUserInput
     chartPlayHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutUserInput
     chartRecordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutUserInput
+    examSubmissions?: ExamSubmissionUncheckedCreateNestedManyWithoutUserInput
+    examAchievements?: ExamAchievementUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutChartReactionsInput = {
@@ -35998,6 +46190,8 @@ export namespace Prisma {
     dataSyncs?: DataSyncUpdateManyWithoutUserNestedInput
     chartPlayHistory?: ChartPlayHistoryUpdateManyWithoutUserNestedInput
     chartRecordSnapshots?: ChartRecordSnapshotUpdateManyWithoutUserNestedInput
+    examSubmissions?: ExamSubmissionUpdateManyWithoutUserNestedInput
+    examAchievements?: ExamAchievementUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutChartReactionsInput = {
@@ -36041,6 +46235,8 @@ export namespace Prisma {
     dataSyncs?: DataSyncUncheckedUpdateManyWithoutUserNestedInput
     chartPlayHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutUserNestedInput
     chartRecordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutUserNestedInput
+    examSubmissions?: ExamSubmissionUncheckedUpdateManyWithoutUserNestedInput
+    examAchievements?: ExamAchievementUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutPlayHistoryInput = {
@@ -36083,6 +46279,8 @@ export namespace Prisma {
     dataSyncs?: DataSyncCreateNestedManyWithoutUserInput
     chartPlayHistory?: ChartPlayHistoryCreateNestedManyWithoutUserInput
     chartRecordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutUserInput
+    examSubmissions?: ExamSubmissionCreateNestedManyWithoutUserInput
+    examAchievements?: ExamAchievementCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutPlayHistoryInput = {
@@ -36126,6 +46324,8 @@ export namespace Prisma {
     dataSyncs?: DataSyncUncheckedCreateNestedManyWithoutUserInput
     chartPlayHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutUserInput
     chartRecordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutUserInput
+    examSubmissions?: ExamSubmissionUncheckedCreateNestedManyWithoutUserInput
+    examAchievements?: ExamAchievementUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutPlayHistoryInput = {
@@ -36157,6 +46357,8 @@ export namespace Prisma {
     bingoCovers?: BingoCreateNestedManyWithoutCoverMusicInput
     bingoMissions?: BingoCellCreateNestedManyWithoutMusicInput
     charts?: MusicChartCreateNestedManyWithoutMusicInput
+    examStages?: ExamStageCreateNestedManyWithoutMusicInput
+    examRewards?: ExamRewardCreateNestedManyWithoutMusicInput
   }
 
   export type MusicUncheckedCreateWithoutRecentPlayInput = {
@@ -36184,6 +46386,8 @@ export namespace Prisma {
     bingoCovers?: BingoUncheckedCreateNestedManyWithoutCoverMusicInput
     bingoMissions?: BingoCellUncheckedCreateNestedManyWithoutMusicInput
     charts?: MusicChartUncheckedCreateNestedManyWithoutMusicInput
+    examStages?: ExamStageUncheckedCreateNestedManyWithoutMusicInput
+    examRewards?: ExamRewardUncheckedCreateNestedManyWithoutMusicInput
   }
 
   export type MusicCreateOrConnectWithoutRecentPlayInput = {
@@ -36213,6 +46417,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutChartInput
     playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
+    examStageOptions?: ExamStageChartCreateNestedManyWithoutChartInput
   }
 
   export type MusicChartUncheckedCreateWithoutRecentPlayInput = {
@@ -36238,6 +46443,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutChartInput
     playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
+    examStageOptions?: ExamStageChartUncheckedCreateNestedManyWithoutChartInput
   }
 
   export type MusicChartCreateOrConnectWithoutRecentPlayInput = {
@@ -36296,6 +46502,8 @@ export namespace Prisma {
     dataSyncs?: DataSyncUpdateManyWithoutUserNestedInput
     chartPlayHistory?: ChartPlayHistoryUpdateManyWithoutUserNestedInput
     chartRecordSnapshots?: ChartRecordSnapshotUpdateManyWithoutUserNestedInput
+    examSubmissions?: ExamSubmissionUpdateManyWithoutUserNestedInput
+    examAchievements?: ExamAchievementUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPlayHistoryInput = {
@@ -36339,6 +46547,8 @@ export namespace Prisma {
     dataSyncs?: DataSyncUncheckedUpdateManyWithoutUserNestedInput
     chartPlayHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutUserNestedInput
     chartRecordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutUserNestedInput
+    examSubmissions?: ExamSubmissionUncheckedUpdateManyWithoutUserNestedInput
+    examAchievements?: ExamAchievementUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type MusicUpsertWithoutRecentPlayInput = {
@@ -36376,6 +46586,8 @@ export namespace Prisma {
     bingoCovers?: BingoUpdateManyWithoutCoverMusicNestedInput
     bingoMissions?: BingoCellUpdateManyWithoutMusicNestedInput
     charts?: MusicChartUpdateManyWithoutMusicNestedInput
+    examStages?: ExamStageUpdateManyWithoutMusicNestedInput
+    examRewards?: ExamRewardUpdateManyWithoutMusicNestedInput
   }
 
   export type MusicUncheckedUpdateWithoutRecentPlayInput = {
@@ -36403,6 +46615,8 @@ export namespace Prisma {
     bingoCovers?: BingoUncheckedUpdateManyWithoutCoverMusicNestedInput
     bingoMissions?: BingoCellUncheckedUpdateManyWithoutMusicNestedInput
     charts?: MusicChartUncheckedUpdateManyWithoutMusicNestedInput
+    examStages?: ExamStageUncheckedUpdateManyWithoutMusicNestedInput
+    examRewards?: ExamRewardUncheckedUpdateManyWithoutMusicNestedInput
   }
 
   export type MusicChartUpsertWithoutRecentPlayInput = {
@@ -36438,6 +46652,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutChartNestedInput
     playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
+    examStageOptions?: ExamStageChartUpdateManyWithoutChartNestedInput
   }
 
   export type MusicChartUncheckedUpdateWithoutRecentPlayInput = {
@@ -36463,6 +46678,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutChartNestedInput
     playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
+    examStageOptions?: ExamStageChartUncheckedUpdateManyWithoutChartNestedInput
   }
 
   export type UserCreateWithoutUserBestGradeInput = {
@@ -36505,6 +46721,8 @@ export namespace Prisma {
     dataSyncs?: DataSyncCreateNestedManyWithoutUserInput
     chartPlayHistory?: ChartPlayHistoryCreateNestedManyWithoutUserInput
     chartRecordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutUserInput
+    examSubmissions?: ExamSubmissionCreateNestedManyWithoutUserInput
+    examAchievements?: ExamAchievementCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutUserBestGradeInput = {
@@ -36548,6 +46766,8 @@ export namespace Prisma {
     dataSyncs?: DataSyncUncheckedCreateNestedManyWithoutUserInput
     chartPlayHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutUserInput
     chartRecordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutUserInput
+    examSubmissions?: ExamSubmissionUncheckedCreateNestedManyWithoutUserInput
+    examAchievements?: ExamAchievementUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutUserBestGradeInput = {
@@ -36606,6 +46826,8 @@ export namespace Prisma {
     dataSyncs?: DataSyncUpdateManyWithoutUserNestedInput
     chartPlayHistory?: ChartPlayHistoryUpdateManyWithoutUserNestedInput
     chartRecordSnapshots?: ChartRecordSnapshotUpdateManyWithoutUserNestedInput
+    examSubmissions?: ExamSubmissionUpdateManyWithoutUserNestedInput
+    examAchievements?: ExamAchievementUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserBestGradeInput = {
@@ -36649,6 +46871,8 @@ export namespace Prisma {
     dataSyncs?: DataSyncUncheckedUpdateManyWithoutUserNestedInput
     chartPlayHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutUserNestedInput
     chartRecordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutUserNestedInput
+    examSubmissions?: ExamSubmissionUncheckedUpdateManyWithoutUserNestedInput
+    examAchievements?: ExamAchievementUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutBasicBestPlayInput = {
@@ -36691,6 +46915,8 @@ export namespace Prisma {
     dataSyncs?: DataSyncCreateNestedManyWithoutUserInput
     chartPlayHistory?: ChartPlayHistoryCreateNestedManyWithoutUserInput
     chartRecordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutUserInput
+    examSubmissions?: ExamSubmissionCreateNestedManyWithoutUserInput
+    examAchievements?: ExamAchievementCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutBasicBestPlayInput = {
@@ -36734,6 +46960,8 @@ export namespace Prisma {
     dataSyncs?: DataSyncUncheckedCreateNestedManyWithoutUserInput
     chartPlayHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutUserInput
     chartRecordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutUserInput
+    examSubmissions?: ExamSubmissionUncheckedCreateNestedManyWithoutUserInput
+    examAchievements?: ExamAchievementUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutBasicBestPlayInput = {
@@ -36765,6 +46993,8 @@ export namespace Prisma {
     bingoCovers?: BingoCreateNestedManyWithoutCoverMusicInput
     bingoMissions?: BingoCellCreateNestedManyWithoutMusicInput
     charts?: MusicChartCreateNestedManyWithoutMusicInput
+    examStages?: ExamStageCreateNestedManyWithoutMusicInput
+    examRewards?: ExamRewardCreateNestedManyWithoutMusicInput
   }
 
   export type MusicUncheckedCreateWithoutBasicBestPlayInput = {
@@ -36792,6 +47022,8 @@ export namespace Prisma {
     bingoCovers?: BingoUncheckedCreateNestedManyWithoutCoverMusicInput
     bingoMissions?: BingoCellUncheckedCreateNestedManyWithoutMusicInput
     charts?: MusicChartUncheckedCreateNestedManyWithoutMusicInput
+    examStages?: ExamStageUncheckedCreateNestedManyWithoutMusicInput
+    examRewards?: ExamRewardUncheckedCreateNestedManyWithoutMusicInput
   }
 
   export type MusicCreateOrConnectWithoutBasicBestPlayInput = {
@@ -36821,6 +47053,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutChartInput
     playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
+    examStageOptions?: ExamStageChartCreateNestedManyWithoutChartInput
   }
 
   export type MusicChartUncheckedCreateWithoutBasicBestPlayInput = {
@@ -36846,6 +47079,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutChartInput
     playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
+    examStageOptions?: ExamStageChartUncheckedCreateNestedManyWithoutChartInput
   }
 
   export type MusicChartCreateOrConnectWithoutBasicBestPlayInput = {
@@ -36904,6 +47138,8 @@ export namespace Prisma {
     dataSyncs?: DataSyncUpdateManyWithoutUserNestedInput
     chartPlayHistory?: ChartPlayHistoryUpdateManyWithoutUserNestedInput
     chartRecordSnapshots?: ChartRecordSnapshotUpdateManyWithoutUserNestedInput
+    examSubmissions?: ExamSubmissionUpdateManyWithoutUserNestedInput
+    examAchievements?: ExamAchievementUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBasicBestPlayInput = {
@@ -36947,6 +47183,8 @@ export namespace Prisma {
     dataSyncs?: DataSyncUncheckedUpdateManyWithoutUserNestedInput
     chartPlayHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutUserNestedInput
     chartRecordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutUserNestedInput
+    examSubmissions?: ExamSubmissionUncheckedUpdateManyWithoutUserNestedInput
+    examAchievements?: ExamAchievementUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type MusicUpsertWithoutBasicBestPlayInput = {
@@ -36984,6 +47222,8 @@ export namespace Prisma {
     bingoCovers?: BingoUpdateManyWithoutCoverMusicNestedInput
     bingoMissions?: BingoCellUpdateManyWithoutMusicNestedInput
     charts?: MusicChartUpdateManyWithoutMusicNestedInput
+    examStages?: ExamStageUpdateManyWithoutMusicNestedInput
+    examRewards?: ExamRewardUpdateManyWithoutMusicNestedInput
   }
 
   export type MusicUncheckedUpdateWithoutBasicBestPlayInput = {
@@ -37011,6 +47251,8 @@ export namespace Prisma {
     bingoCovers?: BingoUncheckedUpdateManyWithoutCoverMusicNestedInput
     bingoMissions?: BingoCellUncheckedUpdateManyWithoutMusicNestedInput
     charts?: MusicChartUncheckedUpdateManyWithoutMusicNestedInput
+    examStages?: ExamStageUncheckedUpdateManyWithoutMusicNestedInput
+    examRewards?: ExamRewardUncheckedUpdateManyWithoutMusicNestedInput
   }
 
   export type MusicChartUpsertWithoutBasicBestPlayInput = {
@@ -37046,6 +47288,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutChartNestedInput
     playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
+    examStageOptions?: ExamStageChartUpdateManyWithoutChartNestedInput
   }
 
   export type MusicChartUncheckedUpdateWithoutBasicBestPlayInput = {
@@ -37071,6 +47314,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutChartNestedInput
     playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
+    examStageOptions?: ExamStageChartUncheckedUpdateManyWithoutChartNestedInput
   }
 
   export type UserCreateWithoutRecitalBestPlayInput = {
@@ -37113,6 +47357,8 @@ export namespace Prisma {
     dataSyncs?: DataSyncCreateNestedManyWithoutUserInput
     chartPlayHistory?: ChartPlayHistoryCreateNestedManyWithoutUserInput
     chartRecordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutUserInput
+    examSubmissions?: ExamSubmissionCreateNestedManyWithoutUserInput
+    examAchievements?: ExamAchievementCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutRecitalBestPlayInput = {
@@ -37156,6 +47402,8 @@ export namespace Prisma {
     dataSyncs?: DataSyncUncheckedCreateNestedManyWithoutUserInput
     chartPlayHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutUserInput
     chartRecordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutUserInput
+    examSubmissions?: ExamSubmissionUncheckedCreateNestedManyWithoutUserInput
+    examAchievements?: ExamAchievementUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutRecitalBestPlayInput = {
@@ -37187,6 +47435,8 @@ export namespace Prisma {
     bingoCovers?: BingoCreateNestedManyWithoutCoverMusicInput
     bingoMissions?: BingoCellCreateNestedManyWithoutMusicInput
     charts?: MusicChartCreateNestedManyWithoutMusicInput
+    examStages?: ExamStageCreateNestedManyWithoutMusicInput
+    examRewards?: ExamRewardCreateNestedManyWithoutMusicInput
   }
 
   export type MusicUncheckedCreateWithoutRecitalBestPlayInput = {
@@ -37214,6 +47464,8 @@ export namespace Prisma {
     bingoCovers?: BingoUncheckedCreateNestedManyWithoutCoverMusicInput
     bingoMissions?: BingoCellUncheckedCreateNestedManyWithoutMusicInput
     charts?: MusicChartUncheckedCreateNestedManyWithoutMusicInput
+    examStages?: ExamStageUncheckedCreateNestedManyWithoutMusicInput
+    examRewards?: ExamRewardUncheckedCreateNestedManyWithoutMusicInput
   }
 
   export type MusicCreateOrConnectWithoutRecitalBestPlayInput = {
@@ -37243,6 +47495,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutChartInput
     playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
+    examStageOptions?: ExamStageChartCreateNestedManyWithoutChartInput
   }
 
   export type MusicChartUncheckedCreateWithoutRecitalBestPlayInput = {
@@ -37268,6 +47521,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutChartInput
     playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
+    examStageOptions?: ExamStageChartUncheckedCreateNestedManyWithoutChartInput
   }
 
   export type MusicChartCreateOrConnectWithoutRecitalBestPlayInput = {
@@ -37326,6 +47580,8 @@ export namespace Prisma {
     dataSyncs?: DataSyncUpdateManyWithoutUserNestedInput
     chartPlayHistory?: ChartPlayHistoryUpdateManyWithoutUserNestedInput
     chartRecordSnapshots?: ChartRecordSnapshotUpdateManyWithoutUserNestedInput
+    examSubmissions?: ExamSubmissionUpdateManyWithoutUserNestedInput
+    examAchievements?: ExamAchievementUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRecitalBestPlayInput = {
@@ -37369,6 +47625,8 @@ export namespace Prisma {
     dataSyncs?: DataSyncUncheckedUpdateManyWithoutUserNestedInput
     chartPlayHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutUserNestedInput
     chartRecordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutUserNestedInput
+    examSubmissions?: ExamSubmissionUncheckedUpdateManyWithoutUserNestedInput
+    examAchievements?: ExamAchievementUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type MusicUpsertWithoutRecitalBestPlayInput = {
@@ -37406,6 +47664,8 @@ export namespace Prisma {
     bingoCovers?: BingoUpdateManyWithoutCoverMusicNestedInput
     bingoMissions?: BingoCellUpdateManyWithoutMusicNestedInput
     charts?: MusicChartUpdateManyWithoutMusicNestedInput
+    examStages?: ExamStageUpdateManyWithoutMusicNestedInput
+    examRewards?: ExamRewardUpdateManyWithoutMusicNestedInput
   }
 
   export type MusicUncheckedUpdateWithoutRecitalBestPlayInput = {
@@ -37433,6 +47693,8 @@ export namespace Prisma {
     bingoCovers?: BingoUncheckedUpdateManyWithoutCoverMusicNestedInput
     bingoMissions?: BingoCellUncheckedUpdateManyWithoutMusicNestedInput
     charts?: MusicChartUncheckedUpdateManyWithoutMusicNestedInput
+    examStages?: ExamStageUncheckedUpdateManyWithoutMusicNestedInput
+    examRewards?: ExamRewardUncheckedUpdateManyWithoutMusicNestedInput
   }
 
   export type MusicChartUpsertWithoutRecitalBestPlayInput = {
@@ -37468,6 +47730,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUpdateManyWithoutChartNestedInput
     playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
+    examStageOptions?: ExamStageChartUpdateManyWithoutChartNestedInput
   }
 
   export type MusicChartUncheckedUpdateWithoutRecitalBestPlayInput = {
@@ -37493,6 +47756,7 @@ export namespace Prisma {
     BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutChartNestedInput
     playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
+    examStageOptions?: ExamStageChartUncheckedUpdateManyWithoutChartNestedInput
   }
 
   export type UserCreateWithoutPlayDataInput = {
@@ -37535,6 +47799,8 @@ export namespace Prisma {
     dataSyncs?: DataSyncCreateNestedManyWithoutUserInput
     chartPlayHistory?: ChartPlayHistoryCreateNestedManyWithoutUserInput
     chartRecordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutUserInput
+    examSubmissions?: ExamSubmissionCreateNestedManyWithoutUserInput
+    examAchievements?: ExamAchievementCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutPlayDataInput = {
@@ -37578,6 +47844,8 @@ export namespace Prisma {
     dataSyncs?: DataSyncUncheckedCreateNestedManyWithoutUserInput
     chartPlayHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutUserInput
     chartRecordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutUserInput
+    examSubmissions?: ExamSubmissionUncheckedCreateNestedManyWithoutUserInput
+    examAchievements?: ExamAchievementUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutPlayDataInput = {
@@ -37609,6 +47877,8 @@ export namespace Prisma {
     bingoCovers?: BingoCreateNestedManyWithoutCoverMusicInput
     bingoMissions?: BingoCellCreateNestedManyWithoutMusicInput
     charts?: MusicChartCreateNestedManyWithoutMusicInput
+    examStages?: ExamStageCreateNestedManyWithoutMusicInput
+    examRewards?: ExamRewardCreateNestedManyWithoutMusicInput
   }
 
   export type MusicUncheckedCreateWithoutPlayDataInput = {
@@ -37636,6 +47906,8 @@ export namespace Prisma {
     bingoCovers?: BingoUncheckedCreateNestedManyWithoutCoverMusicInput
     bingoMissions?: BingoCellUncheckedCreateNestedManyWithoutMusicInput
     charts?: MusicChartUncheckedCreateNestedManyWithoutMusicInput
+    examStages?: ExamStageUncheckedCreateNestedManyWithoutMusicInput
+    examRewards?: ExamRewardUncheckedCreateNestedManyWithoutMusicInput
   }
 
   export type MusicCreateOrConnectWithoutPlayDataInput = {
@@ -37665,6 +47937,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutChartInput
     playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
+    examStageOptions?: ExamStageChartCreateNestedManyWithoutChartInput
   }
 
   export type MusicChartUncheckedCreateWithoutPlayDataInput = {
@@ -37690,6 +47963,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutChartInput
     playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
+    examStageOptions?: ExamStageChartUncheckedCreateNestedManyWithoutChartInput
   }
 
   export type MusicChartCreateOrConnectWithoutPlayDataInput = {
@@ -37748,6 +48022,8 @@ export namespace Prisma {
     dataSyncs?: DataSyncUpdateManyWithoutUserNestedInput
     chartPlayHistory?: ChartPlayHistoryUpdateManyWithoutUserNestedInput
     chartRecordSnapshots?: ChartRecordSnapshotUpdateManyWithoutUserNestedInput
+    examSubmissions?: ExamSubmissionUpdateManyWithoutUserNestedInput
+    examAchievements?: ExamAchievementUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPlayDataInput = {
@@ -37791,6 +48067,8 @@ export namespace Prisma {
     dataSyncs?: DataSyncUncheckedUpdateManyWithoutUserNestedInput
     chartPlayHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutUserNestedInput
     chartRecordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutUserNestedInput
+    examSubmissions?: ExamSubmissionUncheckedUpdateManyWithoutUserNestedInput
+    examAchievements?: ExamAchievementUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type MusicUpsertWithoutPlayDataInput = {
@@ -37828,6 +48106,8 @@ export namespace Prisma {
     bingoCovers?: BingoUpdateManyWithoutCoverMusicNestedInput
     bingoMissions?: BingoCellUpdateManyWithoutMusicNestedInput
     charts?: MusicChartUpdateManyWithoutMusicNestedInput
+    examStages?: ExamStageUpdateManyWithoutMusicNestedInput
+    examRewards?: ExamRewardUpdateManyWithoutMusicNestedInput
   }
 
   export type MusicUncheckedUpdateWithoutPlayDataInput = {
@@ -37855,6 +48135,8 @@ export namespace Prisma {
     bingoCovers?: BingoUncheckedUpdateManyWithoutCoverMusicNestedInput
     bingoMissions?: BingoCellUncheckedUpdateManyWithoutMusicNestedInput
     charts?: MusicChartUncheckedUpdateManyWithoutMusicNestedInput
+    examStages?: ExamStageUncheckedUpdateManyWithoutMusicNestedInput
+    examRewards?: ExamRewardUncheckedUpdateManyWithoutMusicNestedInput
   }
 
   export type MusicChartUpsertWithoutPlayDataInput = {
@@ -37890,6 +48172,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutChartNestedInput
     playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
+    examStageOptions?: ExamStageChartUpdateManyWithoutChartNestedInput
   }
 
   export type MusicChartUncheckedUpdateWithoutPlayDataInput = {
@@ -37915,6 +48198,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutChartNestedInput
     playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
+    examStageOptions?: ExamStageChartUncheckedUpdateManyWithoutChartNestedInput
   }
 
   export type MusicCreateWithoutBingoCoversInput = {
@@ -37941,6 +48225,8 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutMusicInput
     bingoMissions?: BingoCellCreateNestedManyWithoutMusicInput
     charts?: MusicChartCreateNestedManyWithoutMusicInput
+    examStages?: ExamStageCreateNestedManyWithoutMusicInput
+    examRewards?: ExamRewardCreateNestedManyWithoutMusicInput
   }
 
   export type MusicUncheckedCreateWithoutBingoCoversInput = {
@@ -37968,6 +48254,8 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutMusicInput
     bingoMissions?: BingoCellUncheckedCreateNestedManyWithoutMusicInput
     charts?: MusicChartUncheckedCreateNestedManyWithoutMusicInput
+    examStages?: ExamStageUncheckedCreateNestedManyWithoutMusicInput
+    examRewards?: ExamRewardUncheckedCreateNestedManyWithoutMusicInput
   }
 
   export type MusicCreateOrConnectWithoutBingoCoversInput = {
@@ -38050,6 +48338,8 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutMusicNestedInput
     bingoMissions?: BingoCellUpdateManyWithoutMusicNestedInput
     charts?: MusicChartUpdateManyWithoutMusicNestedInput
+    examStages?: ExamStageUpdateManyWithoutMusicNestedInput
+    examRewards?: ExamRewardUpdateManyWithoutMusicNestedInput
   }
 
   export type MusicUncheckedUpdateWithoutBingoCoversInput = {
@@ -38077,6 +48367,8 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutMusicNestedInput
     bingoMissions?: BingoCellUncheckedUpdateManyWithoutMusicNestedInput
     charts?: MusicChartUncheckedUpdateManyWithoutMusicNestedInput
+    examStages?: ExamStageUncheckedUpdateManyWithoutMusicNestedInput
+    examRewards?: ExamRewardUncheckedUpdateManyWithoutMusicNestedInput
   }
 
   export type BingoCellUpsertWithWhereUniqueWithoutBingoInput = {
@@ -38119,6 +48411,8 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutMusicInput
     bingoCovers?: BingoCreateNestedManyWithoutCoverMusicInput
     charts?: MusicChartCreateNestedManyWithoutMusicInput
+    examStages?: ExamStageCreateNestedManyWithoutMusicInput
+    examRewards?: ExamRewardCreateNestedManyWithoutMusicInput
   }
 
   export type MusicUncheckedCreateWithoutBingoMissionsInput = {
@@ -38146,6 +48440,8 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutMusicInput
     bingoCovers?: BingoUncheckedCreateNestedManyWithoutCoverMusicInput
     charts?: MusicChartUncheckedCreateNestedManyWithoutMusicInput
+    examStages?: ExamStageUncheckedCreateNestedManyWithoutMusicInput
+    examRewards?: ExamRewardUncheckedCreateNestedManyWithoutMusicInput
   }
 
   export type MusicCreateOrConnectWithoutBingoMissionsInput = {
@@ -38248,6 +48544,8 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutMusicNestedInput
     bingoCovers?: BingoUpdateManyWithoutCoverMusicNestedInput
     charts?: MusicChartUpdateManyWithoutMusicNestedInput
+    examStages?: ExamStageUpdateManyWithoutMusicNestedInput
+    examRewards?: ExamRewardUpdateManyWithoutMusicNestedInput
   }
 
   export type MusicUncheckedUpdateWithoutBingoMissionsInput = {
@@ -38275,6 +48573,8 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutMusicNestedInput
     bingoCovers?: BingoUncheckedUpdateManyWithoutCoverMusicNestedInput
     charts?: MusicChartUncheckedUpdateManyWithoutMusicNestedInput
+    examStages?: ExamStageUncheckedUpdateManyWithoutMusicNestedInput
+    examRewards?: ExamRewardUncheckedUpdateManyWithoutMusicNestedInput
   }
 
   export type BingoUpsertWithoutCellsInput = {
@@ -38371,6 +48671,8 @@ export namespace Prisma {
     dataSyncs?: DataSyncCreateNestedManyWithoutUserInput
     chartPlayHistory?: ChartPlayHistoryCreateNestedManyWithoutUserInput
     chartRecordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutUserInput
+    examSubmissions?: ExamSubmissionCreateNestedManyWithoutUserInput
+    examAchievements?: ExamAchievementCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutBingoProgressInput = {
@@ -38414,6 +48716,8 @@ export namespace Prisma {
     dataSyncs?: DataSyncUncheckedCreateNestedManyWithoutUserInput
     chartPlayHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutUserInput
     chartRecordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutUserInput
+    examSubmissions?: ExamSubmissionUncheckedCreateNestedManyWithoutUserInput
+    examAchievements?: ExamAchievementUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutBingoProgressInput = {
@@ -38508,6 +48812,8 @@ export namespace Prisma {
     dataSyncs?: DataSyncUpdateManyWithoutUserNestedInput
     chartPlayHistory?: ChartPlayHistoryUpdateManyWithoutUserNestedInput
     chartRecordSnapshots?: ChartRecordSnapshotUpdateManyWithoutUserNestedInput
+    examSubmissions?: ExamSubmissionUpdateManyWithoutUserNestedInput
+    examAchievements?: ExamAchievementUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBingoProgressInput = {
@@ -38551,6 +48857,8 @@ export namespace Prisma {
     dataSyncs?: DataSyncUncheckedUpdateManyWithoutUserNestedInput
     chartPlayHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutUserNestedInput
     chartRecordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutUserNestedInput
+    examSubmissions?: ExamSubmissionUncheckedUpdateManyWithoutUserNestedInput
+    examAchievements?: ExamAchievementUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type BingoCellUpsertWithoutProgressInput = {
@@ -38593,6 +48901,1517 @@ export namespace Prisma {
     bingoId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ExamStageCreateWithoutExamInput = {
+    position: number
+    label?: string | null
+    requirementType?: string
+    requiredValue: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    music: MusicCreateNestedOneWithoutExamStagesInput
+    allowedCharts?: ExamStageChartCreateNestedManyWithoutStageInput
+  }
+
+  export type ExamStageUncheckedCreateWithoutExamInput = {
+    id?: number
+    position: number
+    label?: string | null
+    requirementType?: string
+    requiredValue: number
+    musicIndex: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    allowedCharts?: ExamStageChartUncheckedCreateNestedManyWithoutStageInput
+  }
+
+  export type ExamStageCreateOrConnectWithoutExamInput = {
+    where: ExamStageWhereUniqueInput
+    create: XOR<ExamStageCreateWithoutExamInput, ExamStageUncheckedCreateWithoutExamInput>
+  }
+
+  export type ExamStageCreateManyExamInputEnvelope = {
+    data: ExamStageCreateManyExamInput | ExamStageCreateManyExamInput[]
+  }
+
+  export type ExamRewardCreateWithoutExamInput = {
+    position: number
+    type: string
+    label?: string | null
+    music?: MusicCreateNestedOneWithoutExamRewardsInput
+  }
+
+  export type ExamRewardUncheckedCreateWithoutExamInput = {
+    id?: number
+    position: number
+    type: string
+    label?: string | null
+    musicIndex?: string | null
+  }
+
+  export type ExamRewardCreateOrConnectWithoutExamInput = {
+    where: ExamRewardWhereUniqueInput
+    create: XOR<ExamRewardCreateWithoutExamInput, ExamRewardUncheckedCreateWithoutExamInput>
+  }
+
+  export type ExamRewardCreateManyExamInputEnvelope = {
+    data: ExamRewardCreateManyExamInput | ExamRewardCreateManyExamInput[]
+  }
+
+  export type ExamSubmissionCreateWithoutExamInput = {
+    proofImageUrl: string
+    status?: string
+    reviewerNote?: string | null
+    submittedAt?: Date | string
+    reviewedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutExamSubmissionsInput
+    achievement?: ExamAchievementCreateNestedOneWithoutSubmissionInput
+  }
+
+  export type ExamSubmissionUncheckedCreateWithoutExamInput = {
+    id?: number
+    proofImageUrl: string
+    status?: string
+    reviewerNote?: string | null
+    submittedAt?: Date | string
+    reviewedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    userId: number
+    achievement?: ExamAchievementUncheckedCreateNestedOneWithoutSubmissionInput
+  }
+
+  export type ExamSubmissionCreateOrConnectWithoutExamInput = {
+    where: ExamSubmissionWhereUniqueInput
+    create: XOR<ExamSubmissionCreateWithoutExamInput, ExamSubmissionUncheckedCreateWithoutExamInput>
+  }
+
+  export type ExamSubmissionCreateManyExamInputEnvelope = {
+    data: ExamSubmissionCreateManyExamInput | ExamSubmissionCreateManyExamInput[]
+  }
+
+  export type ExamAchievementCreateWithoutExamInput = {
+    achievedAt?: Date | string
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutExamAchievementsInput
+    submission?: ExamSubmissionCreateNestedOneWithoutAchievementInput
+  }
+
+  export type ExamAchievementUncheckedCreateWithoutExamInput = {
+    id?: number
+    achievedAt?: Date | string
+    createdAt?: Date | string
+    userId: number
+    submissionId?: number | null
+  }
+
+  export type ExamAchievementCreateOrConnectWithoutExamInput = {
+    where: ExamAchievementWhereUniqueInput
+    create: XOR<ExamAchievementCreateWithoutExamInput, ExamAchievementUncheckedCreateWithoutExamInput>
+  }
+
+  export type ExamAchievementCreateManyExamInputEnvelope = {
+    data: ExamAchievementCreateManyExamInput | ExamAchievementCreateManyExamInput[]
+  }
+
+  export type ExamStageUpsertWithWhereUniqueWithoutExamInput = {
+    where: ExamStageWhereUniqueInput
+    update: XOR<ExamStageUpdateWithoutExamInput, ExamStageUncheckedUpdateWithoutExamInput>
+    create: XOR<ExamStageCreateWithoutExamInput, ExamStageUncheckedCreateWithoutExamInput>
+  }
+
+  export type ExamStageUpdateWithWhereUniqueWithoutExamInput = {
+    where: ExamStageWhereUniqueInput
+    data: XOR<ExamStageUpdateWithoutExamInput, ExamStageUncheckedUpdateWithoutExamInput>
+  }
+
+  export type ExamStageUpdateManyWithWhereWithoutExamInput = {
+    where: ExamStageScalarWhereInput
+    data: XOR<ExamStageUpdateManyMutationInput, ExamStageUncheckedUpdateManyWithoutExamInput>
+  }
+
+  export type ExamRewardUpsertWithWhereUniqueWithoutExamInput = {
+    where: ExamRewardWhereUniqueInput
+    update: XOR<ExamRewardUpdateWithoutExamInput, ExamRewardUncheckedUpdateWithoutExamInput>
+    create: XOR<ExamRewardCreateWithoutExamInput, ExamRewardUncheckedCreateWithoutExamInput>
+  }
+
+  export type ExamRewardUpdateWithWhereUniqueWithoutExamInput = {
+    where: ExamRewardWhereUniqueInput
+    data: XOR<ExamRewardUpdateWithoutExamInput, ExamRewardUncheckedUpdateWithoutExamInput>
+  }
+
+  export type ExamRewardUpdateManyWithWhereWithoutExamInput = {
+    where: ExamRewardScalarWhereInput
+    data: XOR<ExamRewardUpdateManyMutationInput, ExamRewardUncheckedUpdateManyWithoutExamInput>
+  }
+
+  export type ExamSubmissionUpsertWithWhereUniqueWithoutExamInput = {
+    where: ExamSubmissionWhereUniqueInput
+    update: XOR<ExamSubmissionUpdateWithoutExamInput, ExamSubmissionUncheckedUpdateWithoutExamInput>
+    create: XOR<ExamSubmissionCreateWithoutExamInput, ExamSubmissionUncheckedCreateWithoutExamInput>
+  }
+
+  export type ExamSubmissionUpdateWithWhereUniqueWithoutExamInput = {
+    where: ExamSubmissionWhereUniqueInput
+    data: XOR<ExamSubmissionUpdateWithoutExamInput, ExamSubmissionUncheckedUpdateWithoutExamInput>
+  }
+
+  export type ExamSubmissionUpdateManyWithWhereWithoutExamInput = {
+    where: ExamSubmissionScalarWhereInput
+    data: XOR<ExamSubmissionUpdateManyMutationInput, ExamSubmissionUncheckedUpdateManyWithoutExamInput>
+  }
+
+  export type ExamAchievementUpsertWithWhereUniqueWithoutExamInput = {
+    where: ExamAchievementWhereUniqueInput
+    update: XOR<ExamAchievementUpdateWithoutExamInput, ExamAchievementUncheckedUpdateWithoutExamInput>
+    create: XOR<ExamAchievementCreateWithoutExamInput, ExamAchievementUncheckedCreateWithoutExamInput>
+  }
+
+  export type ExamAchievementUpdateWithWhereUniqueWithoutExamInput = {
+    where: ExamAchievementWhereUniqueInput
+    data: XOR<ExamAchievementUpdateWithoutExamInput, ExamAchievementUncheckedUpdateWithoutExamInput>
+  }
+
+  export type ExamAchievementUpdateManyWithWhereWithoutExamInput = {
+    where: ExamAchievementScalarWhereInput
+    data: XOR<ExamAchievementUpdateManyMutationInput, ExamAchievementUncheckedUpdateManyWithoutExamInput>
+  }
+
+  export type ExamCreateWithoutStagesInput = {
+    slug: string
+    mode: string
+    shortLabel: string
+    scoringType?: string
+    grade?: number | null
+    title: string
+    description?: string | null
+    feeNos?: number
+    requiredGrade?: number
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    rewards?: ExamRewardCreateNestedManyWithoutExamInput
+    submissions?: ExamSubmissionCreateNestedManyWithoutExamInput
+    achievements?: ExamAchievementCreateNestedManyWithoutExamInput
+  }
+
+  export type ExamUncheckedCreateWithoutStagesInput = {
+    id?: number
+    slug: string
+    mode: string
+    shortLabel: string
+    scoringType?: string
+    grade?: number | null
+    title: string
+    description?: string | null
+    feeNos?: number
+    requiredGrade?: number
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    rewards?: ExamRewardUncheckedCreateNestedManyWithoutExamInput
+    submissions?: ExamSubmissionUncheckedCreateNestedManyWithoutExamInput
+    achievements?: ExamAchievementUncheckedCreateNestedManyWithoutExamInput
+  }
+
+  export type ExamCreateOrConnectWithoutStagesInput = {
+    where: ExamWhereUniqueInput
+    create: XOR<ExamCreateWithoutStagesInput, ExamUncheckedCreateWithoutStagesInput>
+  }
+
+  export type MusicCreateWithoutExamStagesInput = {
+    index: string
+    title: string
+    title_kana: string
+    artist?: string | null
+    category: string
+    category_short: string
+    description?: string | null
+    background?: string | null
+    sheet_len: number
+    difficulty_levels: string
+    difficulty_name: string
+    normal: number
+    hard: number
+    expert: number
+    real?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    RecentPlay?: RecentPlayCreateNestedManyWithoutMusicInput
+    PlayData?: PlayDataCreateNestedManyWithoutMusicInput
+    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutMusicInput
+    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutMusicInput
+    bingoCovers?: BingoCreateNestedManyWithoutCoverMusicInput
+    bingoMissions?: BingoCellCreateNestedManyWithoutMusicInput
+    charts?: MusicChartCreateNestedManyWithoutMusicInput
+    examRewards?: ExamRewardCreateNestedManyWithoutMusicInput
+  }
+
+  export type MusicUncheckedCreateWithoutExamStagesInput = {
+    id?: number
+    index: string
+    title: string
+    title_kana: string
+    artist?: string | null
+    category: string
+    category_short: string
+    description?: string | null
+    background?: string | null
+    sheet_len: number
+    difficulty_levels: string
+    difficulty_name: string
+    normal: number
+    hard: number
+    expert: number
+    real?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutMusicInput
+    PlayData?: PlayDataUncheckedCreateNestedManyWithoutMusicInput
+    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutMusicInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutMusicInput
+    bingoCovers?: BingoUncheckedCreateNestedManyWithoutCoverMusicInput
+    bingoMissions?: BingoCellUncheckedCreateNestedManyWithoutMusicInput
+    charts?: MusicChartUncheckedCreateNestedManyWithoutMusicInput
+    examRewards?: ExamRewardUncheckedCreateNestedManyWithoutMusicInput
+  }
+
+  export type MusicCreateOrConnectWithoutExamStagesInput = {
+    where: MusicWhereUniqueInput
+    create: XOR<MusicCreateWithoutExamStagesInput, MusicUncheckedCreateWithoutExamStagesInput>
+  }
+
+  export type ExamStageChartCreateWithoutStageInput = {
+    chart: MusicChartCreateNestedOneWithoutExamStageOptionsInput
+  }
+
+  export type ExamStageChartUncheckedCreateWithoutStageInput = {
+    chartId: number
+  }
+
+  export type ExamStageChartCreateOrConnectWithoutStageInput = {
+    where: ExamStageChartWhereUniqueInput
+    create: XOR<ExamStageChartCreateWithoutStageInput, ExamStageChartUncheckedCreateWithoutStageInput>
+  }
+
+  export type ExamStageChartCreateManyStageInputEnvelope = {
+    data: ExamStageChartCreateManyStageInput | ExamStageChartCreateManyStageInput[]
+  }
+
+  export type ExamUpsertWithoutStagesInput = {
+    update: XOR<ExamUpdateWithoutStagesInput, ExamUncheckedUpdateWithoutStagesInput>
+    create: XOR<ExamCreateWithoutStagesInput, ExamUncheckedCreateWithoutStagesInput>
+    where?: ExamWhereInput
+  }
+
+  export type ExamUpdateToOneWithWhereWithoutStagesInput = {
+    where?: ExamWhereInput
+    data: XOR<ExamUpdateWithoutStagesInput, ExamUncheckedUpdateWithoutStagesInput>
+  }
+
+  export type ExamUpdateWithoutStagesInput = {
+    slug?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    shortLabel?: StringFieldUpdateOperationsInput | string
+    scoringType?: StringFieldUpdateOperationsInput | string
+    grade?: NullableIntFieldUpdateOperationsInput | number | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    feeNos?: IntFieldUpdateOperationsInput | number
+    requiredGrade?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rewards?: ExamRewardUpdateManyWithoutExamNestedInput
+    submissions?: ExamSubmissionUpdateManyWithoutExamNestedInput
+    achievements?: ExamAchievementUpdateManyWithoutExamNestedInput
+  }
+
+  export type ExamUncheckedUpdateWithoutStagesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    slug?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    shortLabel?: StringFieldUpdateOperationsInput | string
+    scoringType?: StringFieldUpdateOperationsInput | string
+    grade?: NullableIntFieldUpdateOperationsInput | number | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    feeNos?: IntFieldUpdateOperationsInput | number
+    requiredGrade?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rewards?: ExamRewardUncheckedUpdateManyWithoutExamNestedInput
+    submissions?: ExamSubmissionUncheckedUpdateManyWithoutExamNestedInput
+    achievements?: ExamAchievementUncheckedUpdateManyWithoutExamNestedInput
+  }
+
+  export type MusicUpsertWithoutExamStagesInput = {
+    update: XOR<MusicUpdateWithoutExamStagesInput, MusicUncheckedUpdateWithoutExamStagesInput>
+    create: XOR<MusicCreateWithoutExamStagesInput, MusicUncheckedCreateWithoutExamStagesInput>
+    where?: MusicWhereInput
+  }
+
+  export type MusicUpdateToOneWithWhereWithoutExamStagesInput = {
+    where?: MusicWhereInput
+    data: XOR<MusicUpdateWithoutExamStagesInput, MusicUncheckedUpdateWithoutExamStagesInput>
+  }
+
+  export type MusicUpdateWithoutExamStagesInput = {
+    index?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    title_kana?: StringFieldUpdateOperationsInput | string
+    artist?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: StringFieldUpdateOperationsInput | string
+    category_short?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    background?: NullableStringFieldUpdateOperationsInput | string | null
+    sheet_len?: IntFieldUpdateOperationsInput | number
+    difficulty_levels?: StringFieldUpdateOperationsInput | string
+    difficulty_name?: StringFieldUpdateOperationsInput | string
+    normal?: IntFieldUpdateOperationsInput | number
+    hard?: IntFieldUpdateOperationsInput | number
+    expert?: IntFieldUpdateOperationsInput | number
+    real?: NullableIntFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    RecentPlay?: RecentPlayUpdateManyWithoutMusicNestedInput
+    PlayData?: PlayDataUpdateManyWithoutMusicNestedInput
+    BasicBestPlay?: BasicBestPlayUpdateManyWithoutMusicNestedInput
+    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutMusicNestedInput
+    bingoCovers?: BingoUpdateManyWithoutCoverMusicNestedInput
+    bingoMissions?: BingoCellUpdateManyWithoutMusicNestedInput
+    charts?: MusicChartUpdateManyWithoutMusicNestedInput
+    examRewards?: ExamRewardUpdateManyWithoutMusicNestedInput
+  }
+
+  export type MusicUncheckedUpdateWithoutExamStagesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    index?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    title_kana?: StringFieldUpdateOperationsInput | string
+    artist?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: StringFieldUpdateOperationsInput | string
+    category_short?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    background?: NullableStringFieldUpdateOperationsInput | string | null
+    sheet_len?: IntFieldUpdateOperationsInput | number
+    difficulty_levels?: StringFieldUpdateOperationsInput | string
+    difficulty_name?: StringFieldUpdateOperationsInput | string
+    normal?: IntFieldUpdateOperationsInput | number
+    hard?: IntFieldUpdateOperationsInput | number
+    expert?: IntFieldUpdateOperationsInput | number
+    real?: NullableIntFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    RecentPlay?: RecentPlayUncheckedUpdateManyWithoutMusicNestedInput
+    PlayData?: PlayDataUncheckedUpdateManyWithoutMusicNestedInput
+    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutMusicNestedInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutMusicNestedInput
+    bingoCovers?: BingoUncheckedUpdateManyWithoutCoverMusicNestedInput
+    bingoMissions?: BingoCellUncheckedUpdateManyWithoutMusicNestedInput
+    charts?: MusicChartUncheckedUpdateManyWithoutMusicNestedInput
+    examRewards?: ExamRewardUncheckedUpdateManyWithoutMusicNestedInput
+  }
+
+  export type ExamStageChartUpsertWithWhereUniqueWithoutStageInput = {
+    where: ExamStageChartWhereUniqueInput
+    update: XOR<ExamStageChartUpdateWithoutStageInput, ExamStageChartUncheckedUpdateWithoutStageInput>
+    create: XOR<ExamStageChartCreateWithoutStageInput, ExamStageChartUncheckedCreateWithoutStageInput>
+  }
+
+  export type ExamStageChartUpdateWithWhereUniqueWithoutStageInput = {
+    where: ExamStageChartWhereUniqueInput
+    data: XOR<ExamStageChartUpdateWithoutStageInput, ExamStageChartUncheckedUpdateWithoutStageInput>
+  }
+
+  export type ExamStageChartUpdateManyWithWhereWithoutStageInput = {
+    where: ExamStageChartScalarWhereInput
+    data: XOR<ExamStageChartUpdateManyMutationInput, ExamStageChartUncheckedUpdateManyWithoutStageInput>
+  }
+
+  export type ExamStageCreateWithoutAllowedChartsInput = {
+    position: number
+    label?: string | null
+    requirementType?: string
+    requiredValue: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    exam: ExamCreateNestedOneWithoutStagesInput
+    music: MusicCreateNestedOneWithoutExamStagesInput
+  }
+
+  export type ExamStageUncheckedCreateWithoutAllowedChartsInput = {
+    id?: number
+    position: number
+    label?: string | null
+    requirementType?: string
+    requiredValue: number
+    examId: number
+    musicIndex: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ExamStageCreateOrConnectWithoutAllowedChartsInput = {
+    where: ExamStageWhereUniqueInput
+    create: XOR<ExamStageCreateWithoutAllowedChartsInput, ExamStageUncheckedCreateWithoutAllowedChartsInput>
+  }
+
+  export type MusicChartCreateWithoutExamStageOptionsInput = {
+    difficulty: string
+    level: number
+    level_constant?: number | null
+    bpm_min?: number | null
+    bpm_max?: number | null
+    note_count?: number | null
+    duration_seconds?: number | null
+    released_at?: Date | string | null
+    unlock_condition?: string | null
+    play_video_url?: string | null
+    chart_preview_url?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    music: MusicCreateNestedOneWithoutChartsInput
+    constantHistory?: ChartConstantHistoryCreateNestedManyWithoutChartInput
+    evaluations?: ChartEvaluationCreateNestedManyWithoutChartInput
+    RecentPlay?: RecentPlayCreateNestedManyWithoutChartInput
+    PlayData?: PlayDataCreateNestedManyWithoutChartInput
+    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutChartInput
+    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutChartInput
+    playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
+    recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
+  }
+
+  export type MusicChartUncheckedCreateWithoutExamStageOptionsInput = {
+    id?: number
+    difficulty: string
+    level: number
+    level_constant?: number | null
+    bpm_min?: number | null
+    bpm_max?: number | null
+    note_count?: number | null
+    duration_seconds?: number | null
+    released_at?: Date | string | null
+    unlock_condition?: string | null
+    play_video_url?: string | null
+    chart_preview_url?: string | null
+    music_idx: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    constantHistory?: ChartConstantHistoryUncheckedCreateNestedManyWithoutChartInput
+    evaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutChartInput
+    RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutChartInput
+    PlayData?: PlayDataUncheckedCreateNestedManyWithoutChartInput
+    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutChartInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutChartInput
+    playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
+    recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
+  }
+
+  export type MusicChartCreateOrConnectWithoutExamStageOptionsInput = {
+    where: MusicChartWhereUniqueInput
+    create: XOR<MusicChartCreateWithoutExamStageOptionsInput, MusicChartUncheckedCreateWithoutExamStageOptionsInput>
+  }
+
+  export type ExamStageUpsertWithoutAllowedChartsInput = {
+    update: XOR<ExamStageUpdateWithoutAllowedChartsInput, ExamStageUncheckedUpdateWithoutAllowedChartsInput>
+    create: XOR<ExamStageCreateWithoutAllowedChartsInput, ExamStageUncheckedCreateWithoutAllowedChartsInput>
+    where?: ExamStageWhereInput
+  }
+
+  export type ExamStageUpdateToOneWithWhereWithoutAllowedChartsInput = {
+    where?: ExamStageWhereInput
+    data: XOR<ExamStageUpdateWithoutAllowedChartsInput, ExamStageUncheckedUpdateWithoutAllowedChartsInput>
+  }
+
+  export type ExamStageUpdateWithoutAllowedChartsInput = {
+    position?: IntFieldUpdateOperationsInput | number
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    requirementType?: StringFieldUpdateOperationsInput | string
+    requiredValue?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    exam?: ExamUpdateOneRequiredWithoutStagesNestedInput
+    music?: MusicUpdateOneRequiredWithoutExamStagesNestedInput
+  }
+
+  export type ExamStageUncheckedUpdateWithoutAllowedChartsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    requirementType?: StringFieldUpdateOperationsInput | string
+    requiredValue?: FloatFieldUpdateOperationsInput | number
+    examId?: IntFieldUpdateOperationsInput | number
+    musicIndex?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MusicChartUpsertWithoutExamStageOptionsInput = {
+    update: XOR<MusicChartUpdateWithoutExamStageOptionsInput, MusicChartUncheckedUpdateWithoutExamStageOptionsInput>
+    create: XOR<MusicChartCreateWithoutExamStageOptionsInput, MusicChartUncheckedCreateWithoutExamStageOptionsInput>
+    where?: MusicChartWhereInput
+  }
+
+  export type MusicChartUpdateToOneWithWhereWithoutExamStageOptionsInput = {
+    where?: MusicChartWhereInput
+    data: XOR<MusicChartUpdateWithoutExamStageOptionsInput, MusicChartUncheckedUpdateWithoutExamStageOptionsInput>
+  }
+
+  export type MusicChartUpdateWithoutExamStageOptionsInput = {
+    difficulty?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    bpm_min?: NullableIntFieldUpdateOperationsInput | number | null
+    bpm_max?: NullableIntFieldUpdateOperationsInput | number | null
+    note_count?: NullableIntFieldUpdateOperationsInput | number | null
+    duration_seconds?: NullableIntFieldUpdateOperationsInput | number | null
+    released_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unlock_condition?: NullableStringFieldUpdateOperationsInput | string | null
+    play_video_url?: NullableStringFieldUpdateOperationsInput | string | null
+    chart_preview_url?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    music?: MusicUpdateOneRequiredWithoutChartsNestedInput
+    constantHistory?: ChartConstantHistoryUpdateManyWithoutChartNestedInput
+    evaluations?: ChartEvaluationUpdateManyWithoutChartNestedInput
+    RecentPlay?: RecentPlayUpdateManyWithoutChartNestedInput
+    PlayData?: PlayDataUpdateManyWithoutChartNestedInput
+    BasicBestPlay?: BasicBestPlayUpdateManyWithoutChartNestedInput
+    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutChartNestedInput
+    playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
+    recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
+  }
+
+  export type MusicChartUncheckedUpdateWithoutExamStageOptionsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    difficulty?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    bpm_min?: NullableIntFieldUpdateOperationsInput | number | null
+    bpm_max?: NullableIntFieldUpdateOperationsInput | number | null
+    note_count?: NullableIntFieldUpdateOperationsInput | number | null
+    duration_seconds?: NullableIntFieldUpdateOperationsInput | number | null
+    released_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unlock_condition?: NullableStringFieldUpdateOperationsInput | string | null
+    play_video_url?: NullableStringFieldUpdateOperationsInput | string | null
+    chart_preview_url?: NullableStringFieldUpdateOperationsInput | string | null
+    music_idx?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    constantHistory?: ChartConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
+    evaluations?: ChartEvaluationUncheckedUpdateManyWithoutChartNestedInput
+    RecentPlay?: RecentPlayUncheckedUpdateManyWithoutChartNestedInput
+    PlayData?: PlayDataUncheckedUpdateManyWithoutChartNestedInput
+    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutChartNestedInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutChartNestedInput
+    playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
+    recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
+  }
+
+  export type ExamCreateWithoutRewardsInput = {
+    slug: string
+    mode: string
+    shortLabel: string
+    scoringType?: string
+    grade?: number | null
+    title: string
+    description?: string | null
+    feeNos?: number
+    requiredGrade?: number
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    stages?: ExamStageCreateNestedManyWithoutExamInput
+    submissions?: ExamSubmissionCreateNestedManyWithoutExamInput
+    achievements?: ExamAchievementCreateNestedManyWithoutExamInput
+  }
+
+  export type ExamUncheckedCreateWithoutRewardsInput = {
+    id?: number
+    slug: string
+    mode: string
+    shortLabel: string
+    scoringType?: string
+    grade?: number | null
+    title: string
+    description?: string | null
+    feeNos?: number
+    requiredGrade?: number
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    stages?: ExamStageUncheckedCreateNestedManyWithoutExamInput
+    submissions?: ExamSubmissionUncheckedCreateNestedManyWithoutExamInput
+    achievements?: ExamAchievementUncheckedCreateNestedManyWithoutExamInput
+  }
+
+  export type ExamCreateOrConnectWithoutRewardsInput = {
+    where: ExamWhereUniqueInput
+    create: XOR<ExamCreateWithoutRewardsInput, ExamUncheckedCreateWithoutRewardsInput>
+  }
+
+  export type MusicCreateWithoutExamRewardsInput = {
+    index: string
+    title: string
+    title_kana: string
+    artist?: string | null
+    category: string
+    category_short: string
+    description?: string | null
+    background?: string | null
+    sheet_len: number
+    difficulty_levels: string
+    difficulty_name: string
+    normal: number
+    hard: number
+    expert: number
+    real?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    RecentPlay?: RecentPlayCreateNestedManyWithoutMusicInput
+    PlayData?: PlayDataCreateNestedManyWithoutMusicInput
+    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutMusicInput
+    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutMusicInput
+    bingoCovers?: BingoCreateNestedManyWithoutCoverMusicInput
+    bingoMissions?: BingoCellCreateNestedManyWithoutMusicInput
+    charts?: MusicChartCreateNestedManyWithoutMusicInput
+    examStages?: ExamStageCreateNestedManyWithoutMusicInput
+  }
+
+  export type MusicUncheckedCreateWithoutExamRewardsInput = {
+    id?: number
+    index: string
+    title: string
+    title_kana: string
+    artist?: string | null
+    category: string
+    category_short: string
+    description?: string | null
+    background?: string | null
+    sheet_len: number
+    difficulty_levels: string
+    difficulty_name: string
+    normal: number
+    hard: number
+    expert: number
+    real?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutMusicInput
+    PlayData?: PlayDataUncheckedCreateNestedManyWithoutMusicInput
+    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutMusicInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutMusicInput
+    bingoCovers?: BingoUncheckedCreateNestedManyWithoutCoverMusicInput
+    bingoMissions?: BingoCellUncheckedCreateNestedManyWithoutMusicInput
+    charts?: MusicChartUncheckedCreateNestedManyWithoutMusicInput
+    examStages?: ExamStageUncheckedCreateNestedManyWithoutMusicInput
+  }
+
+  export type MusicCreateOrConnectWithoutExamRewardsInput = {
+    where: MusicWhereUniqueInput
+    create: XOR<MusicCreateWithoutExamRewardsInput, MusicUncheckedCreateWithoutExamRewardsInput>
+  }
+
+  export type ExamUpsertWithoutRewardsInput = {
+    update: XOR<ExamUpdateWithoutRewardsInput, ExamUncheckedUpdateWithoutRewardsInput>
+    create: XOR<ExamCreateWithoutRewardsInput, ExamUncheckedCreateWithoutRewardsInput>
+    where?: ExamWhereInput
+  }
+
+  export type ExamUpdateToOneWithWhereWithoutRewardsInput = {
+    where?: ExamWhereInput
+    data: XOR<ExamUpdateWithoutRewardsInput, ExamUncheckedUpdateWithoutRewardsInput>
+  }
+
+  export type ExamUpdateWithoutRewardsInput = {
+    slug?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    shortLabel?: StringFieldUpdateOperationsInput | string
+    scoringType?: StringFieldUpdateOperationsInput | string
+    grade?: NullableIntFieldUpdateOperationsInput | number | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    feeNos?: IntFieldUpdateOperationsInput | number
+    requiredGrade?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stages?: ExamStageUpdateManyWithoutExamNestedInput
+    submissions?: ExamSubmissionUpdateManyWithoutExamNestedInput
+    achievements?: ExamAchievementUpdateManyWithoutExamNestedInput
+  }
+
+  export type ExamUncheckedUpdateWithoutRewardsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    slug?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    shortLabel?: StringFieldUpdateOperationsInput | string
+    scoringType?: StringFieldUpdateOperationsInput | string
+    grade?: NullableIntFieldUpdateOperationsInput | number | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    feeNos?: IntFieldUpdateOperationsInput | number
+    requiredGrade?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stages?: ExamStageUncheckedUpdateManyWithoutExamNestedInput
+    submissions?: ExamSubmissionUncheckedUpdateManyWithoutExamNestedInput
+    achievements?: ExamAchievementUncheckedUpdateManyWithoutExamNestedInput
+  }
+
+  export type MusicUpsertWithoutExamRewardsInput = {
+    update: XOR<MusicUpdateWithoutExamRewardsInput, MusicUncheckedUpdateWithoutExamRewardsInput>
+    create: XOR<MusicCreateWithoutExamRewardsInput, MusicUncheckedCreateWithoutExamRewardsInput>
+    where?: MusicWhereInput
+  }
+
+  export type MusicUpdateToOneWithWhereWithoutExamRewardsInput = {
+    where?: MusicWhereInput
+    data: XOR<MusicUpdateWithoutExamRewardsInput, MusicUncheckedUpdateWithoutExamRewardsInput>
+  }
+
+  export type MusicUpdateWithoutExamRewardsInput = {
+    index?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    title_kana?: StringFieldUpdateOperationsInput | string
+    artist?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: StringFieldUpdateOperationsInput | string
+    category_short?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    background?: NullableStringFieldUpdateOperationsInput | string | null
+    sheet_len?: IntFieldUpdateOperationsInput | number
+    difficulty_levels?: StringFieldUpdateOperationsInput | string
+    difficulty_name?: StringFieldUpdateOperationsInput | string
+    normal?: IntFieldUpdateOperationsInput | number
+    hard?: IntFieldUpdateOperationsInput | number
+    expert?: IntFieldUpdateOperationsInput | number
+    real?: NullableIntFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    RecentPlay?: RecentPlayUpdateManyWithoutMusicNestedInput
+    PlayData?: PlayDataUpdateManyWithoutMusicNestedInput
+    BasicBestPlay?: BasicBestPlayUpdateManyWithoutMusicNestedInput
+    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutMusicNestedInput
+    bingoCovers?: BingoUpdateManyWithoutCoverMusicNestedInput
+    bingoMissions?: BingoCellUpdateManyWithoutMusicNestedInput
+    charts?: MusicChartUpdateManyWithoutMusicNestedInput
+    examStages?: ExamStageUpdateManyWithoutMusicNestedInput
+  }
+
+  export type MusicUncheckedUpdateWithoutExamRewardsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    index?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    title_kana?: StringFieldUpdateOperationsInput | string
+    artist?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: StringFieldUpdateOperationsInput | string
+    category_short?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    background?: NullableStringFieldUpdateOperationsInput | string | null
+    sheet_len?: IntFieldUpdateOperationsInput | number
+    difficulty_levels?: StringFieldUpdateOperationsInput | string
+    difficulty_name?: StringFieldUpdateOperationsInput | string
+    normal?: IntFieldUpdateOperationsInput | number
+    hard?: IntFieldUpdateOperationsInput | number
+    expert?: IntFieldUpdateOperationsInput | number
+    real?: NullableIntFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    RecentPlay?: RecentPlayUncheckedUpdateManyWithoutMusicNestedInput
+    PlayData?: PlayDataUncheckedUpdateManyWithoutMusicNestedInput
+    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutMusicNestedInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutMusicNestedInput
+    bingoCovers?: BingoUncheckedUpdateManyWithoutCoverMusicNestedInput
+    bingoMissions?: BingoCellUncheckedUpdateManyWithoutMusicNestedInput
+    charts?: MusicChartUncheckedUpdateManyWithoutMusicNestedInput
+    examStages?: ExamStageUncheckedUpdateManyWithoutMusicNestedInput
+  }
+
+  export type UserCreateWithoutExamSubmissionsInput = {
+    username?: string | null
+    nostalgia_name?: string | null
+    kakao_id?: bigint | number | null
+    discord_name?: string | null
+    discord_tag?: string | null
+    avatar?: string | null
+    country?: string
+    rank_basic?: number | null
+    rank_recital?: number | null
+    rank_basic_country?: number | null
+    rank_recital_country?: number | null
+    play_count?: number | null
+    score_p?: number | null
+    score_f?: number | null
+    score_s?: number | null
+    score_a2?: number | null
+    score_a?: number | null
+    score_b2?: number | null
+    score_b?: number | null
+    score_c?: number | null
+    score_d?: number | null
+    role?: string
+    grade_basic?: number | null
+    grade_recital?: number | null
+    exam_basic?: number | null
+    exam_recital?: number | null
+    sync_token_version?: number
+    created_at?: Date | string
+    updated_at?: Date | string
+    PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
+    PlayData?: PlayDataCreateNestedManyWithoutUserInput
+    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutUserInput
+    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutUserInput
+    UserBestGrade?: UserBestGradeCreateNestedManyWithoutUserInput
+    bingoProgress?: BingoCellProgressCreateNestedManyWithoutUserInput
+    chartEvaluations?: ChartEvaluationCreateNestedManyWithoutUserInput
+    chartReactions?: ChartEvaluationReactionCreateNestedManyWithoutUserInput
+    dataSyncs?: DataSyncCreateNestedManyWithoutUserInput
+    chartPlayHistory?: ChartPlayHistoryCreateNestedManyWithoutUserInput
+    chartRecordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutUserInput
+    examAchievements?: ExamAchievementCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutExamSubmissionsInput = {
+    id?: number
+    username?: string | null
+    nostalgia_name?: string | null
+    kakao_id?: bigint | number | null
+    discord_name?: string | null
+    discord_tag?: string | null
+    avatar?: string | null
+    country?: string
+    rank_basic?: number | null
+    rank_recital?: number | null
+    rank_basic_country?: number | null
+    rank_recital_country?: number | null
+    play_count?: number | null
+    score_p?: number | null
+    score_f?: number | null
+    score_s?: number | null
+    score_a2?: number | null
+    score_a?: number | null
+    score_b2?: number | null
+    score_b?: number | null
+    score_c?: number | null
+    score_d?: number | null
+    role?: string
+    grade_basic?: number | null
+    grade_recital?: number | null
+    exam_basic?: number | null
+    exam_recital?: number | null
+    sync_token_version?: number
+    created_at?: Date | string
+    updated_at?: Date | string
+    PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
+    PlayData?: PlayDataUncheckedCreateNestedManyWithoutUserInput
+    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutUserInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutUserInput
+    UserBestGrade?: UserBestGradeUncheckedCreateNestedManyWithoutUserInput
+    bingoProgress?: BingoCellProgressUncheckedCreateNestedManyWithoutUserInput
+    chartEvaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutUserInput
+    chartReactions?: ChartEvaluationReactionUncheckedCreateNestedManyWithoutUserInput
+    dataSyncs?: DataSyncUncheckedCreateNestedManyWithoutUserInput
+    chartPlayHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutUserInput
+    chartRecordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutUserInput
+    examAchievements?: ExamAchievementUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutExamSubmissionsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutExamSubmissionsInput, UserUncheckedCreateWithoutExamSubmissionsInput>
+  }
+
+  export type ExamCreateWithoutSubmissionsInput = {
+    slug: string
+    mode: string
+    shortLabel: string
+    scoringType?: string
+    grade?: number | null
+    title: string
+    description?: string | null
+    feeNos?: number
+    requiredGrade?: number
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    stages?: ExamStageCreateNestedManyWithoutExamInput
+    rewards?: ExamRewardCreateNestedManyWithoutExamInput
+    achievements?: ExamAchievementCreateNestedManyWithoutExamInput
+  }
+
+  export type ExamUncheckedCreateWithoutSubmissionsInput = {
+    id?: number
+    slug: string
+    mode: string
+    shortLabel: string
+    scoringType?: string
+    grade?: number | null
+    title: string
+    description?: string | null
+    feeNos?: number
+    requiredGrade?: number
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    stages?: ExamStageUncheckedCreateNestedManyWithoutExamInput
+    rewards?: ExamRewardUncheckedCreateNestedManyWithoutExamInput
+    achievements?: ExamAchievementUncheckedCreateNestedManyWithoutExamInput
+  }
+
+  export type ExamCreateOrConnectWithoutSubmissionsInput = {
+    where: ExamWhereUniqueInput
+    create: XOR<ExamCreateWithoutSubmissionsInput, ExamUncheckedCreateWithoutSubmissionsInput>
+  }
+
+  export type ExamAchievementCreateWithoutSubmissionInput = {
+    achievedAt?: Date | string
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutExamAchievementsInput
+    exam: ExamCreateNestedOneWithoutAchievementsInput
+  }
+
+  export type ExamAchievementUncheckedCreateWithoutSubmissionInput = {
+    id?: number
+    achievedAt?: Date | string
+    createdAt?: Date | string
+    userId: number
+    examId: number
+  }
+
+  export type ExamAchievementCreateOrConnectWithoutSubmissionInput = {
+    where: ExamAchievementWhereUniqueInput
+    create: XOR<ExamAchievementCreateWithoutSubmissionInput, ExamAchievementUncheckedCreateWithoutSubmissionInput>
+  }
+
+  export type UserUpsertWithoutExamSubmissionsInput = {
+    update: XOR<UserUpdateWithoutExamSubmissionsInput, UserUncheckedUpdateWithoutExamSubmissionsInput>
+    create: XOR<UserCreateWithoutExamSubmissionsInput, UserUncheckedCreateWithoutExamSubmissionsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutExamSubmissionsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutExamSubmissionsInput, UserUncheckedUpdateWithoutExamSubmissionsInput>
+  }
+
+  export type UserUpdateWithoutExamSubmissionsInput = {
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
+    kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_name?: NullableStringFieldUpdateOperationsInput | string | null
+    discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: StringFieldUpdateOperationsInput | string
+    rank_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_basic_country?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital_country?: NullableIntFieldUpdateOperationsInput | number | null
+    play_count?: NullableIntFieldUpdateOperationsInput | number | null
+    score_p?: NullableIntFieldUpdateOperationsInput | number | null
+    score_f?: NullableIntFieldUpdateOperationsInput | number | null
+    score_s?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a2?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a?: NullableIntFieldUpdateOperationsInput | number | null
+    score_b2?: NullableIntFieldUpdateOperationsInput | number | null
+    score_b?: NullableIntFieldUpdateOperationsInput | number | null
+    score_c?: NullableIntFieldUpdateOperationsInput | number | null
+    score_d?: NullableIntFieldUpdateOperationsInput | number | null
+    role?: StringFieldUpdateOperationsInput | string
+    grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    sync_token_version?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
+    PlayData?: PlayDataUpdateManyWithoutUserNestedInput
+    BasicBestPlay?: BasicBestPlayUpdateManyWithoutUserNestedInput
+    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutUserNestedInput
+    UserBestGrade?: UserBestGradeUpdateManyWithoutUserNestedInput
+    bingoProgress?: BingoCellProgressUpdateManyWithoutUserNestedInput
+    chartEvaluations?: ChartEvaluationUpdateManyWithoutUserNestedInput
+    chartReactions?: ChartEvaluationReactionUpdateManyWithoutUserNestedInput
+    dataSyncs?: DataSyncUpdateManyWithoutUserNestedInput
+    chartPlayHistory?: ChartPlayHistoryUpdateManyWithoutUserNestedInput
+    chartRecordSnapshots?: ChartRecordSnapshotUpdateManyWithoutUserNestedInput
+    examAchievements?: ExamAchievementUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutExamSubmissionsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
+    kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_name?: NullableStringFieldUpdateOperationsInput | string | null
+    discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: StringFieldUpdateOperationsInput | string
+    rank_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_basic_country?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital_country?: NullableIntFieldUpdateOperationsInput | number | null
+    play_count?: NullableIntFieldUpdateOperationsInput | number | null
+    score_p?: NullableIntFieldUpdateOperationsInput | number | null
+    score_f?: NullableIntFieldUpdateOperationsInput | number | null
+    score_s?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a2?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a?: NullableIntFieldUpdateOperationsInput | number | null
+    score_b2?: NullableIntFieldUpdateOperationsInput | number | null
+    score_b?: NullableIntFieldUpdateOperationsInput | number | null
+    score_c?: NullableIntFieldUpdateOperationsInput | number | null
+    score_d?: NullableIntFieldUpdateOperationsInput | number | null
+    role?: StringFieldUpdateOperationsInput | string
+    grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    sync_token_version?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
+    PlayData?: PlayDataUncheckedUpdateManyWithoutUserNestedInput
+    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutUserNestedInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutUserNestedInput
+    UserBestGrade?: UserBestGradeUncheckedUpdateManyWithoutUserNestedInput
+    bingoProgress?: BingoCellProgressUncheckedUpdateManyWithoutUserNestedInput
+    chartEvaluations?: ChartEvaluationUncheckedUpdateManyWithoutUserNestedInput
+    chartReactions?: ChartEvaluationReactionUncheckedUpdateManyWithoutUserNestedInput
+    dataSyncs?: DataSyncUncheckedUpdateManyWithoutUserNestedInput
+    chartPlayHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutUserNestedInput
+    chartRecordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutUserNestedInput
+    examAchievements?: ExamAchievementUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type ExamUpsertWithoutSubmissionsInput = {
+    update: XOR<ExamUpdateWithoutSubmissionsInput, ExamUncheckedUpdateWithoutSubmissionsInput>
+    create: XOR<ExamCreateWithoutSubmissionsInput, ExamUncheckedCreateWithoutSubmissionsInput>
+    where?: ExamWhereInput
+  }
+
+  export type ExamUpdateToOneWithWhereWithoutSubmissionsInput = {
+    where?: ExamWhereInput
+    data: XOR<ExamUpdateWithoutSubmissionsInput, ExamUncheckedUpdateWithoutSubmissionsInput>
+  }
+
+  export type ExamUpdateWithoutSubmissionsInput = {
+    slug?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    shortLabel?: StringFieldUpdateOperationsInput | string
+    scoringType?: StringFieldUpdateOperationsInput | string
+    grade?: NullableIntFieldUpdateOperationsInput | number | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    feeNos?: IntFieldUpdateOperationsInput | number
+    requiredGrade?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stages?: ExamStageUpdateManyWithoutExamNestedInput
+    rewards?: ExamRewardUpdateManyWithoutExamNestedInput
+    achievements?: ExamAchievementUpdateManyWithoutExamNestedInput
+  }
+
+  export type ExamUncheckedUpdateWithoutSubmissionsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    slug?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    shortLabel?: StringFieldUpdateOperationsInput | string
+    scoringType?: StringFieldUpdateOperationsInput | string
+    grade?: NullableIntFieldUpdateOperationsInput | number | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    feeNos?: IntFieldUpdateOperationsInput | number
+    requiredGrade?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stages?: ExamStageUncheckedUpdateManyWithoutExamNestedInput
+    rewards?: ExamRewardUncheckedUpdateManyWithoutExamNestedInput
+    achievements?: ExamAchievementUncheckedUpdateManyWithoutExamNestedInput
+  }
+
+  export type ExamAchievementUpsertWithoutSubmissionInput = {
+    update: XOR<ExamAchievementUpdateWithoutSubmissionInput, ExamAchievementUncheckedUpdateWithoutSubmissionInput>
+    create: XOR<ExamAchievementCreateWithoutSubmissionInput, ExamAchievementUncheckedCreateWithoutSubmissionInput>
+    where?: ExamAchievementWhereInput
+  }
+
+  export type ExamAchievementUpdateToOneWithWhereWithoutSubmissionInput = {
+    where?: ExamAchievementWhereInput
+    data: XOR<ExamAchievementUpdateWithoutSubmissionInput, ExamAchievementUncheckedUpdateWithoutSubmissionInput>
+  }
+
+  export type ExamAchievementUpdateWithoutSubmissionInput = {
+    achievedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutExamAchievementsNestedInput
+    exam?: ExamUpdateOneRequiredWithoutAchievementsNestedInput
+  }
+
+  export type ExamAchievementUncheckedUpdateWithoutSubmissionInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    achievedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: IntFieldUpdateOperationsInput | number
+    examId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type UserCreateWithoutExamAchievementsInput = {
+    username?: string | null
+    nostalgia_name?: string | null
+    kakao_id?: bigint | number | null
+    discord_name?: string | null
+    discord_tag?: string | null
+    avatar?: string | null
+    country?: string
+    rank_basic?: number | null
+    rank_recital?: number | null
+    rank_basic_country?: number | null
+    rank_recital_country?: number | null
+    play_count?: number | null
+    score_p?: number | null
+    score_f?: number | null
+    score_s?: number | null
+    score_a2?: number | null
+    score_a?: number | null
+    score_b2?: number | null
+    score_b?: number | null
+    score_c?: number | null
+    score_d?: number | null
+    role?: string
+    grade_basic?: number | null
+    grade_recital?: number | null
+    exam_basic?: number | null
+    exam_recital?: number | null
+    sync_token_version?: number
+    created_at?: Date | string
+    updated_at?: Date | string
+    PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
+    PlayData?: PlayDataCreateNestedManyWithoutUserInput
+    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutUserInput
+    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutUserInput
+    UserBestGrade?: UserBestGradeCreateNestedManyWithoutUserInput
+    bingoProgress?: BingoCellProgressCreateNestedManyWithoutUserInput
+    chartEvaluations?: ChartEvaluationCreateNestedManyWithoutUserInput
+    chartReactions?: ChartEvaluationReactionCreateNestedManyWithoutUserInput
+    dataSyncs?: DataSyncCreateNestedManyWithoutUserInput
+    chartPlayHistory?: ChartPlayHistoryCreateNestedManyWithoutUserInput
+    chartRecordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutUserInput
+    examSubmissions?: ExamSubmissionCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutExamAchievementsInput = {
+    id?: number
+    username?: string | null
+    nostalgia_name?: string | null
+    kakao_id?: bigint | number | null
+    discord_name?: string | null
+    discord_tag?: string | null
+    avatar?: string | null
+    country?: string
+    rank_basic?: number | null
+    rank_recital?: number | null
+    rank_basic_country?: number | null
+    rank_recital_country?: number | null
+    play_count?: number | null
+    score_p?: number | null
+    score_f?: number | null
+    score_s?: number | null
+    score_a2?: number | null
+    score_a?: number | null
+    score_b2?: number | null
+    score_b?: number | null
+    score_c?: number | null
+    score_d?: number | null
+    role?: string
+    grade_basic?: number | null
+    grade_recital?: number | null
+    exam_basic?: number | null
+    exam_recital?: number | null
+    sync_token_version?: number
+    created_at?: Date | string
+    updated_at?: Date | string
+    PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
+    PlayData?: PlayDataUncheckedCreateNestedManyWithoutUserInput
+    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutUserInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutUserInput
+    UserBestGrade?: UserBestGradeUncheckedCreateNestedManyWithoutUserInput
+    bingoProgress?: BingoCellProgressUncheckedCreateNestedManyWithoutUserInput
+    chartEvaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutUserInput
+    chartReactions?: ChartEvaluationReactionUncheckedCreateNestedManyWithoutUserInput
+    dataSyncs?: DataSyncUncheckedCreateNestedManyWithoutUserInput
+    chartPlayHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutUserInput
+    chartRecordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutUserInput
+    examSubmissions?: ExamSubmissionUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutExamAchievementsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutExamAchievementsInput, UserUncheckedCreateWithoutExamAchievementsInput>
+  }
+
+  export type ExamCreateWithoutAchievementsInput = {
+    slug: string
+    mode: string
+    shortLabel: string
+    scoringType?: string
+    grade?: number | null
+    title: string
+    description?: string | null
+    feeNos?: number
+    requiredGrade?: number
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    stages?: ExamStageCreateNestedManyWithoutExamInput
+    rewards?: ExamRewardCreateNestedManyWithoutExamInput
+    submissions?: ExamSubmissionCreateNestedManyWithoutExamInput
+  }
+
+  export type ExamUncheckedCreateWithoutAchievementsInput = {
+    id?: number
+    slug: string
+    mode: string
+    shortLabel: string
+    scoringType?: string
+    grade?: number | null
+    title: string
+    description?: string | null
+    feeNos?: number
+    requiredGrade?: number
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    stages?: ExamStageUncheckedCreateNestedManyWithoutExamInput
+    rewards?: ExamRewardUncheckedCreateNestedManyWithoutExamInput
+    submissions?: ExamSubmissionUncheckedCreateNestedManyWithoutExamInput
+  }
+
+  export type ExamCreateOrConnectWithoutAchievementsInput = {
+    where: ExamWhereUniqueInput
+    create: XOR<ExamCreateWithoutAchievementsInput, ExamUncheckedCreateWithoutAchievementsInput>
+  }
+
+  export type ExamSubmissionCreateWithoutAchievementInput = {
+    proofImageUrl: string
+    status?: string
+    reviewerNote?: string | null
+    submittedAt?: Date | string
+    reviewedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutExamSubmissionsInput
+    exam: ExamCreateNestedOneWithoutSubmissionsInput
+  }
+
+  export type ExamSubmissionUncheckedCreateWithoutAchievementInput = {
+    id?: number
+    proofImageUrl: string
+    status?: string
+    reviewerNote?: string | null
+    submittedAt?: Date | string
+    reviewedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    userId: number
+    examId: number
+  }
+
+  export type ExamSubmissionCreateOrConnectWithoutAchievementInput = {
+    where: ExamSubmissionWhereUniqueInput
+    create: XOR<ExamSubmissionCreateWithoutAchievementInput, ExamSubmissionUncheckedCreateWithoutAchievementInput>
+  }
+
+  export type UserUpsertWithoutExamAchievementsInput = {
+    update: XOR<UserUpdateWithoutExamAchievementsInput, UserUncheckedUpdateWithoutExamAchievementsInput>
+    create: XOR<UserCreateWithoutExamAchievementsInput, UserUncheckedCreateWithoutExamAchievementsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutExamAchievementsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutExamAchievementsInput, UserUncheckedUpdateWithoutExamAchievementsInput>
+  }
+
+  export type UserUpdateWithoutExamAchievementsInput = {
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
+    kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_name?: NullableStringFieldUpdateOperationsInput | string | null
+    discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: StringFieldUpdateOperationsInput | string
+    rank_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_basic_country?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital_country?: NullableIntFieldUpdateOperationsInput | number | null
+    play_count?: NullableIntFieldUpdateOperationsInput | number | null
+    score_p?: NullableIntFieldUpdateOperationsInput | number | null
+    score_f?: NullableIntFieldUpdateOperationsInput | number | null
+    score_s?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a2?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a?: NullableIntFieldUpdateOperationsInput | number | null
+    score_b2?: NullableIntFieldUpdateOperationsInput | number | null
+    score_b?: NullableIntFieldUpdateOperationsInput | number | null
+    score_c?: NullableIntFieldUpdateOperationsInput | number | null
+    score_d?: NullableIntFieldUpdateOperationsInput | number | null
+    role?: StringFieldUpdateOperationsInput | string
+    grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    sync_token_version?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
+    PlayData?: PlayDataUpdateManyWithoutUserNestedInput
+    BasicBestPlay?: BasicBestPlayUpdateManyWithoutUserNestedInput
+    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutUserNestedInput
+    UserBestGrade?: UserBestGradeUpdateManyWithoutUserNestedInput
+    bingoProgress?: BingoCellProgressUpdateManyWithoutUserNestedInput
+    chartEvaluations?: ChartEvaluationUpdateManyWithoutUserNestedInput
+    chartReactions?: ChartEvaluationReactionUpdateManyWithoutUserNestedInput
+    dataSyncs?: DataSyncUpdateManyWithoutUserNestedInput
+    chartPlayHistory?: ChartPlayHistoryUpdateManyWithoutUserNestedInput
+    chartRecordSnapshots?: ChartRecordSnapshotUpdateManyWithoutUserNestedInput
+    examSubmissions?: ExamSubmissionUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutExamAchievementsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
+    kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_name?: NullableStringFieldUpdateOperationsInput | string | null
+    discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: StringFieldUpdateOperationsInput | string
+    rank_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_basic_country?: NullableIntFieldUpdateOperationsInput | number | null
+    rank_recital_country?: NullableIntFieldUpdateOperationsInput | number | null
+    play_count?: NullableIntFieldUpdateOperationsInput | number | null
+    score_p?: NullableIntFieldUpdateOperationsInput | number | null
+    score_f?: NullableIntFieldUpdateOperationsInput | number | null
+    score_s?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a2?: NullableIntFieldUpdateOperationsInput | number | null
+    score_a?: NullableIntFieldUpdateOperationsInput | number | null
+    score_b2?: NullableIntFieldUpdateOperationsInput | number | null
+    score_b?: NullableIntFieldUpdateOperationsInput | number | null
+    score_c?: NullableIntFieldUpdateOperationsInput | number | null
+    score_d?: NullableIntFieldUpdateOperationsInput | number | null
+    role?: StringFieldUpdateOperationsInput | string
+    grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
+    exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
+    sync_token_version?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
+    PlayData?: PlayDataUncheckedUpdateManyWithoutUserNestedInput
+    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutUserNestedInput
+    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutUserNestedInput
+    UserBestGrade?: UserBestGradeUncheckedUpdateManyWithoutUserNestedInput
+    bingoProgress?: BingoCellProgressUncheckedUpdateManyWithoutUserNestedInput
+    chartEvaluations?: ChartEvaluationUncheckedUpdateManyWithoutUserNestedInput
+    chartReactions?: ChartEvaluationReactionUncheckedUpdateManyWithoutUserNestedInput
+    dataSyncs?: DataSyncUncheckedUpdateManyWithoutUserNestedInput
+    chartPlayHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutUserNestedInput
+    chartRecordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutUserNestedInput
+    examSubmissions?: ExamSubmissionUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type ExamUpsertWithoutAchievementsInput = {
+    update: XOR<ExamUpdateWithoutAchievementsInput, ExamUncheckedUpdateWithoutAchievementsInput>
+    create: XOR<ExamCreateWithoutAchievementsInput, ExamUncheckedCreateWithoutAchievementsInput>
+    where?: ExamWhereInput
+  }
+
+  export type ExamUpdateToOneWithWhereWithoutAchievementsInput = {
+    where?: ExamWhereInput
+    data: XOR<ExamUpdateWithoutAchievementsInput, ExamUncheckedUpdateWithoutAchievementsInput>
+  }
+
+  export type ExamUpdateWithoutAchievementsInput = {
+    slug?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    shortLabel?: StringFieldUpdateOperationsInput | string
+    scoringType?: StringFieldUpdateOperationsInput | string
+    grade?: NullableIntFieldUpdateOperationsInput | number | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    feeNos?: IntFieldUpdateOperationsInput | number
+    requiredGrade?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stages?: ExamStageUpdateManyWithoutExamNestedInput
+    rewards?: ExamRewardUpdateManyWithoutExamNestedInput
+    submissions?: ExamSubmissionUpdateManyWithoutExamNestedInput
+  }
+
+  export type ExamUncheckedUpdateWithoutAchievementsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    slug?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    shortLabel?: StringFieldUpdateOperationsInput | string
+    scoringType?: StringFieldUpdateOperationsInput | string
+    grade?: NullableIntFieldUpdateOperationsInput | number | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    feeNos?: IntFieldUpdateOperationsInput | number
+    requiredGrade?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stages?: ExamStageUncheckedUpdateManyWithoutExamNestedInput
+    rewards?: ExamRewardUncheckedUpdateManyWithoutExamNestedInput
+    submissions?: ExamSubmissionUncheckedUpdateManyWithoutExamNestedInput
+  }
+
+  export type ExamSubmissionUpsertWithoutAchievementInput = {
+    update: XOR<ExamSubmissionUpdateWithoutAchievementInput, ExamSubmissionUncheckedUpdateWithoutAchievementInput>
+    create: XOR<ExamSubmissionCreateWithoutAchievementInput, ExamSubmissionUncheckedCreateWithoutAchievementInput>
+    where?: ExamSubmissionWhereInput
+  }
+
+  export type ExamSubmissionUpdateToOneWithWhereWithoutAchievementInput = {
+    where?: ExamSubmissionWhereInput
+    data: XOR<ExamSubmissionUpdateWithoutAchievementInput, ExamSubmissionUncheckedUpdateWithoutAchievementInput>
+  }
+
+  export type ExamSubmissionUpdateWithoutAchievementInput = {
+    proofImageUrl?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    reviewerNote?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutExamSubmissionsNestedInput
+    exam?: ExamUpdateOneRequiredWithoutSubmissionsNestedInput
+  }
+
+  export type ExamSubmissionUncheckedUpdateWithoutAchievementInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    proofImageUrl?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    reviewerNote?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: IntFieldUpdateOperationsInput | number
+    examId?: IntFieldUpdateOperationsInput | number
   }
 
   export type RecentPlayCreateManyUserInput = {
@@ -38743,6 +50562,26 @@ export namespace Prisma {
     chart_id: number
     sync_id: number
     created_at?: Date | string
+  }
+
+  export type ExamSubmissionCreateManyUserInput = {
+    id?: number
+    proofImageUrl: string
+    status?: string
+    reviewerNote?: string | null
+    submittedAt?: Date | string
+    reviewedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    examId: number
+  }
+
+  export type ExamAchievementCreateManyUserInput = {
+    id?: number
+    achievedAt?: Date | string
+    createdAt?: Date | string
+    examId: number
+    submissionId?: number | null
   }
 
   export type RecentPlayUpdateWithoutUserInput = {
@@ -39190,6 +51029,66 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ExamSubmissionUpdateWithoutUserInput = {
+    proofImageUrl?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    reviewerNote?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    exam?: ExamUpdateOneRequiredWithoutSubmissionsNestedInput
+    achievement?: ExamAchievementUpdateOneWithoutSubmissionNestedInput
+  }
+
+  export type ExamSubmissionUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    proofImageUrl?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    reviewerNote?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    examId?: IntFieldUpdateOperationsInput | number
+    achievement?: ExamAchievementUncheckedUpdateOneWithoutSubmissionNestedInput
+  }
+
+  export type ExamSubmissionUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    proofImageUrl?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    reviewerNote?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    examId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ExamAchievementUpdateWithoutUserInput = {
+    achievedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    exam?: ExamUpdateOneRequiredWithoutAchievementsNestedInput
+    submission?: ExamSubmissionUpdateOneWithoutAchievementNestedInput
+  }
+
+  export type ExamAchievementUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    achievedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    examId?: IntFieldUpdateOperationsInput | number
+    submissionId?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type ExamAchievementUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    achievedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    examId?: IntFieldUpdateOperationsInput | number
+    submissionId?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
   export type RecentPlayCreateManyMusicInput = {
     id?: number
     difficulty: string
@@ -39300,6 +51199,25 @@ export namespace Prisma {
     chart_preview_url?: string | null
     created_at?: Date | string
     updated_at?: Date | string
+  }
+
+  export type ExamStageCreateManyMusicInput = {
+    id?: number
+    position: number
+    label?: string | null
+    requirementType?: string
+    requiredValue: number
+    examId: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ExamRewardCreateManyMusicInput = {
+    id?: number
+    position: number
+    type: string
+    label?: string | null
+    examId: number
   }
 
   export type RecentPlayUpdateWithoutMusicInput = {
@@ -39607,6 +51525,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutChartNestedInput
     playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
+    examStageOptions?: ExamStageChartUpdateManyWithoutChartNestedInput
   }
 
   export type MusicChartUncheckedUpdateWithoutMusicInput = {
@@ -39632,6 +51551,7 @@ export namespace Prisma {
     RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutChartNestedInput
     playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
+    examStageOptions?: ExamStageChartUncheckedUpdateManyWithoutChartNestedInput
   }
 
   export type MusicChartUncheckedUpdateManyWithoutMusicInput = {
@@ -39649,6 +51569,63 @@ export namespace Prisma {
     chart_preview_url?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ExamStageUpdateWithoutMusicInput = {
+    position?: IntFieldUpdateOperationsInput | number
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    requirementType?: StringFieldUpdateOperationsInput | string
+    requiredValue?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    exam?: ExamUpdateOneRequiredWithoutStagesNestedInput
+    allowedCharts?: ExamStageChartUpdateManyWithoutStageNestedInput
+  }
+
+  export type ExamStageUncheckedUpdateWithoutMusicInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    requirementType?: StringFieldUpdateOperationsInput | string
+    requiredValue?: FloatFieldUpdateOperationsInput | number
+    examId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    allowedCharts?: ExamStageChartUncheckedUpdateManyWithoutStageNestedInput
+  }
+
+  export type ExamStageUncheckedUpdateManyWithoutMusicInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    requirementType?: StringFieldUpdateOperationsInput | string
+    requiredValue?: FloatFieldUpdateOperationsInput | number
+    examId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ExamRewardUpdateWithoutMusicInput = {
+    position?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    exam?: ExamUpdateOneRequiredWithoutRewardsNestedInput
+  }
+
+  export type ExamRewardUncheckedUpdateWithoutMusicInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    examId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ExamRewardUncheckedUpdateManyWithoutMusicInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    examId?: IntFieldUpdateOperationsInput | number
   }
 
   export type ChartConstantHistoryCreateManyChartInput = {
@@ -39767,6 +51744,10 @@ export namespace Prisma {
     user_id: number
     sync_id: number
     created_at?: Date | string
+  }
+
+  export type ExamStageChartCreateManyChartInput = {
+    stageId: number
   }
 
   export type ChartConstantHistoryUpdateWithoutChartInput = {
@@ -40117,6 +52098,18 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ExamStageChartUpdateWithoutChartInput = {
+    stage?: ExamStageUpdateOneRequiredWithoutAllowedChartsNestedInput
+  }
+
+  export type ExamStageChartUncheckedUpdateWithoutChartInput = {
+    stageId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ExamStageChartUncheckedUpdateManyWithoutChartInput = {
+    stageId?: IntFieldUpdateOperationsInput | number
+  }
+
   export type ChartPlayHistoryCreateManyFirstSyncInput = {
     id?: number
     score: number
@@ -40364,6 +52357,178 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ExamStageCreateManyExamInput = {
+    id?: number
+    position: number
+    label?: string | null
+    requirementType?: string
+    requiredValue: number
+    musicIndex: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ExamRewardCreateManyExamInput = {
+    id?: number
+    position: number
+    type: string
+    label?: string | null
+    musicIndex?: string | null
+  }
+
+  export type ExamSubmissionCreateManyExamInput = {
+    id?: number
+    proofImageUrl: string
+    status?: string
+    reviewerNote?: string | null
+    submittedAt?: Date | string
+    reviewedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    userId: number
+  }
+
+  export type ExamAchievementCreateManyExamInput = {
+    id?: number
+    achievedAt?: Date | string
+    createdAt?: Date | string
+    userId: number
+    submissionId?: number | null
+  }
+
+  export type ExamStageUpdateWithoutExamInput = {
+    position?: IntFieldUpdateOperationsInput | number
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    requirementType?: StringFieldUpdateOperationsInput | string
+    requiredValue?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    music?: MusicUpdateOneRequiredWithoutExamStagesNestedInput
+    allowedCharts?: ExamStageChartUpdateManyWithoutStageNestedInput
+  }
+
+  export type ExamStageUncheckedUpdateWithoutExamInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    requirementType?: StringFieldUpdateOperationsInput | string
+    requiredValue?: FloatFieldUpdateOperationsInput | number
+    musicIndex?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    allowedCharts?: ExamStageChartUncheckedUpdateManyWithoutStageNestedInput
+  }
+
+  export type ExamStageUncheckedUpdateManyWithoutExamInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    requirementType?: StringFieldUpdateOperationsInput | string
+    requiredValue?: FloatFieldUpdateOperationsInput | number
+    musicIndex?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ExamRewardUpdateWithoutExamInput = {
+    position?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    music?: MusicUpdateOneWithoutExamRewardsNestedInput
+  }
+
+  export type ExamRewardUncheckedUpdateWithoutExamInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    musicIndex?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ExamRewardUncheckedUpdateManyWithoutExamInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    position?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    musicIndex?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ExamSubmissionUpdateWithoutExamInput = {
+    proofImageUrl?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    reviewerNote?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutExamSubmissionsNestedInput
+    achievement?: ExamAchievementUpdateOneWithoutSubmissionNestedInput
+  }
+
+  export type ExamSubmissionUncheckedUpdateWithoutExamInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    proofImageUrl?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    reviewerNote?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: IntFieldUpdateOperationsInput | number
+    achievement?: ExamAchievementUncheckedUpdateOneWithoutSubmissionNestedInput
+  }
+
+  export type ExamSubmissionUncheckedUpdateManyWithoutExamInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    proofImageUrl?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    reviewerNote?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ExamAchievementUpdateWithoutExamInput = {
+    achievedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutExamAchievementsNestedInput
+    submission?: ExamSubmissionUpdateOneWithoutAchievementNestedInput
+  }
+
+  export type ExamAchievementUncheckedUpdateWithoutExamInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    achievedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: IntFieldUpdateOperationsInput | number
+    submissionId?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type ExamAchievementUncheckedUpdateManyWithoutExamInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    achievedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: IntFieldUpdateOperationsInput | number
+    submissionId?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type ExamStageChartCreateManyStageInput = {
+    chartId: number
+  }
+
+  export type ExamStageChartUpdateWithoutStageInput = {
+    chart?: MusicChartUpdateOneRequiredWithoutExamStageOptionsNestedInput
+  }
+
+  export type ExamStageChartUncheckedUpdateWithoutStageInput = {
+    chartId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ExamStageChartUncheckedUpdateManyWithoutStageInput = {
+    chartId?: IntFieldUpdateOperationsInput | number
   }
 
 

@@ -51,6 +51,8 @@ model User {
   dataSyncs            DataSync[]
   chartPlayHistory     ChartPlayHistory[]
   chartRecordSnapshots ChartRecordSnapshot[]
+  examSubmissions      ExamSubmission[]
+  examAchievements     ExamAchievement[]
 }
 
 model Music {
@@ -79,6 +81,8 @@ model Music {
   bingoCovers       Bingo[]           @relation("BingoCoverMusic")
   bingoMissions     BingoCell[]       @relation("BingoMissionMusic")
   charts            MusicChart[]
+  examStages        ExamStage[]
+  examRewards       ExamReward[]
 }
 
 // 악곡별 채보 정보를 난이도 컬럼과 분리해 관리함
@@ -100,14 +104,15 @@ model MusicChart {
   created_at        DateTime  @default(now())
   updated_at        DateTime  @updatedAt
 
-  constantHistory ChartConstantHistory[]
-  evaluations     ChartEvaluation[]
-  RecentPlay      RecentPlay[]
-  PlayData        PlayData[]
-  BasicBestPlay   BasicBestPlay[]
-  RecitalBestPlay RecitalBestPlay[]
-  playHistory     ChartPlayHistory[]
-  recordSnapshots ChartRecordSnapshot[]
+  constantHistory  ChartConstantHistory[]
+  evaluations      ChartEvaluation[]
+  RecentPlay       RecentPlay[]
+  PlayData         PlayData[]
+  BasicBestPlay    BasicBestPlay[]
+  RecitalBestPlay  RecitalBestPlay[]
+  playHistory      ChartPlayHistory[]
+  recordSnapshots  ChartRecordSnapshot[]
+  examStageOptions ExamStageChart[]
 
   @@unique([music_idx, difficulty])
   @@index([level])
@@ -378,4 +383,109 @@ model BingoCellProgress {
   @@unique([userId, bingoCellId])
   @@index([bingoCellId])
   @@map("userBingoCellData")
+}
+
+// 검정 모드별 급수와 응시 조건을 관리함
+model Exam {
+  id            Int               @id @default(autoincrement())
+  slug          String            @unique
+  mode          String
+  shortLabel    String            @map("short_label")
+  scoringType   String            @default("score") @map("scoring_type")
+  grade         Int?
+  title         String
+  description   String?
+  feeNos        Int               @default(0) @map("fee_nos")
+  requiredGrade Int               @default(0) @map("required_grade")
+  status        String            @default("draft")
+  createdAt     DateTime          @default(now()) @map("created_at")
+  updatedAt     DateTime          @updatedAt @map("updated_at")
+  stages        ExamStage[]
+  rewards       ExamReward[]
+  submissions   ExamSubmission[]
+  achievements  ExamAchievement[]
+
+  @@unique([mode, grade])
+  @@index([status])
+}
+
+// 검정의 과제곡과 단계별 통과 조건을 관리함
+model ExamStage {
+  id              Int              @id @default(autoincrement())
+  position        Int
+  label           String?
+  requirementType String           @default("single") @map("requirement_type")
+  requiredValue   Float            @map("required_value")
+  examId          Int              @map("exam_id")
+  exam            Exam             @relation(fields: [examId], references: [id], onDelete: Cascade)
+  musicIndex      String           @map("music_idx")
+  music           Music            @relation(fields: [musicIndex], references: [index], onDelete: Restrict)
+  allowedCharts   ExamStageChart[]
+  createdAt       DateTime         @default(now()) @map("created_at")
+  updatedAt       DateTime         @updatedAt @map("updated_at")
+
+  @@unique([examId, position])
+  @@index([musicIndex])
+}
+
+// 이벤트 검정 등에서 한 과제곡에 허용되는 여러 난이도 채보를 관리함
+model ExamStageChart {
+  stageId Int        @map("stage_id")
+  stage   ExamStage  @relation(fields: [stageId], references: [id], onDelete: Cascade)
+  chartId Int        @map("chart_id")
+  chart   MusicChart @relation(fields: [chartId], references: [id], onDelete: Restrict)
+
+  @@id([stageId, chartId])
+  @@index([chartId])
+}
+
+// 검정 합격 보상을 복수 악곡까지 지원하도록 관리함
+model ExamReward {
+  id         Int     @id @default(autoincrement())
+  position   Int
+  type       String
+  label      String?
+  examId     Int     @map("exam_id")
+  exam       Exam    @relation(fields: [examId], references: [id], onDelete: Cascade)
+  musicIndex String? @map("music_idx")
+  music      Music?  @relation(fields: [musicIndex], references: [index], onDelete: Restrict)
+
+  @@unique([examId, position])
+  @@index([musicIndex])
+}
+
+// 사용자가 제출한 합격 증빙과 심사 상태를 관리함
+model ExamSubmission {
+  id            Int              @id @default(autoincrement())
+  proofImageUrl String           @map("proof_image_url")
+  status        String           @default("pending")
+  reviewerNote  String?          @map("reviewer_note")
+  submittedAt   DateTime         @default(now()) @map("submitted_at")
+  reviewedAt    DateTime?        @map("reviewed_at")
+  createdAt     DateTime         @default(now()) @map("created_at")
+  updatedAt     DateTime         @updatedAt @map("updated_at")
+  userId        Int              @map("user_id")
+  user          User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  examId        Int              @map("exam_id")
+  exam          Exam             @relation(fields: [examId], references: [id], onDelete: Cascade)
+  achievement   ExamAchievement?
+
+  @@index([userId, examId, submittedAt])
+  @@index([status, submittedAt])
+}
+
+// 승인된 검정 급수를 사용자별로 정규화해 보관함
+model ExamAchievement {
+  id           Int             @id @default(autoincrement())
+  achievedAt   DateTime        @default(now()) @map("achieved_at")
+  createdAt    DateTime        @default(now()) @map("created_at")
+  userId       Int             @map("user_id")
+  user         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  examId       Int             @map("exam_id")
+  exam         Exam            @relation(fields: [examId], references: [id], onDelete: Cascade)
+  submissionId Int?            @unique @map("submission_id")
+  submission   ExamSubmission? @relation(fields: [submissionId], references: [id], onDelete: SetNull)
+
+  @@unique([userId, examId])
+  @@index([examId, achievedAt])
 }

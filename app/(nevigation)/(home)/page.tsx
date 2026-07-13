@@ -40,7 +40,7 @@ export default async function Home() {
                 )}
             </section>
             {/* 히어로 + 검색 */}
-            <section className="flex flex-col items-center gap-4 py-2 text-center">
+            <section className="flex flex-col items-center gap-8 text-center">
                 <div className="flex flex-col items-center gap-3">
                     <div className="border-text-primary text-text-primary flex size-11 items-center justify-center rounded-full border-2 text-lg font-bold">
                         N

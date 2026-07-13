@@ -91,11 +91,20 @@ Figma는 픽셀 단위의 최종 시안이 아니라 레이아웃과 정보 구�
 - Basic / Recital 베스트 플레이
 - 프로필 설정 페이지
 
-### 랭킹 / 빙고
+### 랭킹 / 빙고 / 검정
 
 - 사용자 기록 기반 랭킹 페이지
 - 빙고 목록 및 상세 페이지
 - 유저별 빙고 진행 데이터 구조
+- 검정 급수, 과제곡, 합격 시뮬레이션
+- 검정 합격 증빙 제출 및 승인 데이터 구조
+
+### 관리자
+
+- `admin` 역할 기반 서버 접근 제한
+- 검정 목록 검색 및 상태 필터
+- 검정 급수, 과제곡, 통과 조건 생성·수정·삭제
+- 공개 기간과 합격 보상 설정
 
 ---
 
@@ -115,6 +124,10 @@ Prisma schema 기준 주요 모델은 다음과 같습니다.
 | `Bingo`             | 빙고판 공개 상태, 기간, 보상   |
 | `BingoCell`         | 빙고 미션 종류와 달성 조건     |
 | `BingoCellProgress` | 유저별 빙고 미션 달성 상태     |
+| `Exam`              | 검정 모드별 급수와 응시 조건   |
+| `ExamStage`         | 검정 과제곡과 단계별 통과 조건 |
+| `ExamSubmission`    | 사용자의 합격 증빙과 심사 상태 |
+| `ExamAchievement`   | 승인된 사용자 검정 급수        |
 
 현재 DB는 SQLite 기반입니다. PostgreSQL 전환, 난이도 배열 정규화, 필드명 정리는 추후 개선 대상으로 둡니다.
 
@@ -132,9 +145,12 @@ noslog
 │  │  ├─ (home)
 │  │  ├─ bingo
 │  │  ├─ bookmarklet
+│  │  ├─ exams
 │  │  ├─ music
 │  │  ├─ profile
 │  │  └─ rankings
+│  ├─ admin
+│  │  └─ exams
 │  ├─ api
 │  │  ├─ receivePlayerData
 │  │  └─ getPlayerData.js
@@ -142,7 +158,9 @@ noslog
 │  ├─ globals.css
 │  └─ layout.tsx
 ├─ components
+│  ├─ admin
 │  ├─ bingo
+│  ├─ exams
 │  ├─ button
 │  ├─ input
 │  ├─ layout
