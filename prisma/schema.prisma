@@ -79,14 +79,22 @@ model Music {
 
 // 악곡별 채보 정보를 난이도 컬럼과 분리해 관리함
 model MusicChart {
-  id             Int      @id @default(autoincrement())
-  difficulty     String
-  level          Int
-  level_constant Float?
-  music_idx      String
-  music          Music    @relation(fields: [music_idx], references: [index], onDelete: Cascade)
-  created_at     DateTime @default(now())
-  updated_at     DateTime @updatedAt
+  id                Int       @id @default(autoincrement())
+  difficulty        String
+  level             Int
+  level_constant    Float?
+  bpm_min           Int?
+  bpm_max           Int?
+  note_count        Int?
+  duration_seconds  Int?
+  released_at       DateTime?
+  unlock_condition  String?
+  play_video_url    String?
+  chart_preview_url String?
+  music_idx         String
+  music             Music     @relation(fields: [music_idx], references: [index], onDelete: Cascade)
+  created_at        DateTime  @default(now())
+  updated_at        DateTime  @updatedAt
 
   constantHistory ChartConstantHistory[]
   evaluations     ChartEvaluation[]

@@ -1,7 +1,9 @@
 import { cn, formatToComma, formatToGrade } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
+import { Play, ScanSearch } from "lucide-react";
 import MusicRankTable from "./musicRankTable";
+import PatternProfileChart from "./patternProfileChart";
 import ScoreTrend from "./scoreTrend";
 
 type Difficulty = "Normal" | "Hard" | "Expert" | "Real";
@@ -52,6 +54,35 @@ interface RecentChartPlay {
     play_time: string;
 }
 
+interface ChartDetail {
+    id: number;
+    level: number;
+    level_constant: number | null;
+    bpm_min: number | null;
+    bpm_max: number | null;
+    note_count: number | null;
+    duration_seconds: number | null;
+    released_at: string | null;
+    unlock_condition: string | null;
+    play_video_url: string | null;
+    chart_preview_url: string | null;
+    evaluationCount: number;
+    patternAverages: {
+        stairs: number;
+        chord: number;
+        trill: number;
+        glissando: number;
+        repetition: number;
+    };
+    scoreDistribution: {
+        key: string;
+        label: string;
+        count: number;
+    }[];
+    playerCount: number;
+    userTopPercent: number | null;
+}
+
 interface MusicDetailProps {
     music: MusicInfo;
     difficulty: Difficulty;
@@ -59,6 +90,7 @@ interface MusicDetailProps {
     rankingMode: RankingMode;
     userPlayData: UserPlayData | null;
     recentChartPlays: RecentChartPlay[];
+    chartDetail: ChartDetail;
     basicRankings: RankingRow[];
     recitalRankings: RankingRow[];
 }
@@ -97,6 +129,7 @@ export default function MusicDetail({
     rankingMode,
     userPlayData,
     recentChartPlays,
+    chartDetail,
     basicRankings,
     recitalRankings,
 }: MusicDetailProps) {
@@ -118,6 +151,26 @@ export default function MusicDetail({
     const scoreToPerfect = userPlayData
         ? Math.max(0, 1000000 - userPlayData.score)
         : null;
+    const bpm =
+        chartDetail.bpm_min === null
+            ? "-"
+            : chartDetail.bpm_max !== null &&
+                chartDetail.bpm_max !== chartDetail.bpm_min
+              ? `${chartDetail.bpm_min}-${chartDetail.bpm_max}`
+              : String(chartDetail.bpm_min);
+    const duration =
+        chartDetail.duration_seconds === null
+            ? "-"
+            : `${Math.floor(chartDetail.duration_seconds / 60)}:${String(
+                  chartDetail.duration_seconds % 60
+              ).padStart(2, "0")}`;
+    const releasedAt = chartDetail.released_at
+        ? chartDetail.released_at.slice(0, 10).replaceAll("-", ".")
+        : "-";
+    const maxDistributionCount = Math.max(
+        1,
+        ...chartDetail.scoreDistribution.map((item) => item.count)
+    );
 
     return (
         <main className="mx-auto flex min-h-screen max-w-(--breakpoint-sm) flex-col gap-3 px-4 py-4">
@@ -138,6 +191,18 @@ export default function MusicDetail({
                     <p className="text-text-secondary truncate text-sm">
                         {music.artist || "아티스트 미상"}
                     </p>
+                </div>
+
+                <div className="shrink-0 text-right">
+                    <p className="text-text-disabled text-[10px]">레벨 상수</p>
+                    <strong
+                        className={cn(
+                            "text-xl font-black tabular-nums",
+                            difficultyStyles[difficulty]
+                        )}
+                    >
+                        {chartDetail.level_constant?.toFixed(1) ?? "-"}
+                    </strong>
                 </div>
             </section>
 
@@ -396,28 +461,201 @@ export default function MusicDetail({
             )}
 
             {activeTab === "detail" && (
-                <section className="bg-surface rounded-card p-4">
-                    <h2 className="text-section">악곡 상세</h2>
-                    <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">
-                        <div>
-                            <dt className="text-caption">선택 난이도</dt>
-                            <dd
-                                className={cn(
-                                    "mt-1 font-bold",
-                                    difficultyStyles[difficulty]
-                                )}
+                <div className="flex flex-col gap-3">
+                    <dl className="bg-surface rounded-card overflow-hidden text-sm">
+                        {[
+                            ["BPM", bpm],
+                            [
+                                "노트 수",
+                                chartDetail.note_count === null
+                                    ? "-"
+                                    : formatToComma(chartDetail.note_count),
+                            ],
+                            ["곡 길이", duration],
+                            ["수록일", releasedAt],
+                            ["언락 조건", chartDetail.unlock_condition || "-"],
+                        ].map(([label, value]) => (
+                            <div
+                                key={label}
+                                className="border-divider flex min-h-10 items-center justify-between gap-4 border-t px-4 first:border-t-0"
                             >
-                                {difficulty}
-                            </dd>
-                        </div>
-                        <div>
-                            <dt className="text-caption">레벨</dt>
-                            <dd className="text-text-primary mt-1 font-bold">
-                                {difficultyLevels[difficulty]}
-                            </dd>
-                        </div>
+                                <dt className="text-text-secondary shrink-0">
+                                    {label}
+                                </dt>
+                                <dd className="text-text-primary min-w-0 text-right">
+                                    {value}
+                                </dd>
+                            </div>
+                        ))}
                     </dl>
-                </section>
+
+                    <section className="bg-surface rounded-card p-4">
+                        <header className="flex items-center justify-between gap-3">
+                            <h2 className="text-sm font-bold">패턴 경향</h2>
+                            <span className="text-caption">
+                                {difficulty} · 투표{" "}
+                                {chartDetail.evaluationCount}
+                            </span>
+                        </header>
+
+                        {chartDetail.evaluationCount > 0 ? (
+                            <div className="mt-2 flex items-center gap-3">
+                                <PatternProfileChart
+                                    values={chartDetail.patternAverages}
+                                />
+                                <dl className="flex w-1/2 flex-col gap-2">
+                                    {[
+                                        [
+                                            "계단",
+                                            chartDetail.patternAverages.stairs,
+                                        ],
+                                        [
+                                            "동치",
+                                            chartDetail.patternAverages.chord,
+                                        ],
+                                        [
+                                            "트릴",
+                                            chartDetail.patternAverages.trill,
+                                        ],
+                                        [
+                                            "글리산도",
+                                            chartDetail.patternAverages
+                                                .glissando,
+                                        ],
+                                        [
+                                            "연타",
+                                            chartDetail.patternAverages
+                                                .repetition,
+                                        ],
+                                    ].map(([label, value]) => (
+                                        <div
+                                            key={label}
+                                            className="flex items-center gap-2 text-xs"
+                                        >
+                                            <dt className="text-text-secondary w-12 shrink-0">
+                                                {label}
+                                            </dt>
+                                            <div className="bg-surface-muted h-1.5 min-w-0 flex-1 overflow-hidden rounded-full">
+                                                <div
+                                                    className="bg-chart h-full rounded-full"
+                                                    style={{
+                                                        width: `${(Number(value) / 4) * 100}%`,
+                                                    }}
+                                                />
+                                            </div>
+                                            <dd className="text-text-primary w-6 text-right tabular-nums">
+                                                {Number(value).toFixed(1)}
+                                            </dd>
+                                        </div>
+                                    ))}
+                                </dl>
+                            </div>
+                        ) : (
+                            <div className="text-text-disabled flex h-32 items-center justify-center text-sm">
+                                아직 등록된 패턴 투표가 없습니다.
+                            </div>
+                        )}
+
+                        <Link
+                            href={`/music/${music.index}/${difficulty}?tab=tier`}
+                            className="text-text-secondary mt-2 block text-right text-xs font-semibold"
+                        >
+                            패턴 투표 →
+                        </Link>
+                    </section>
+
+                    <section className="bg-surface rounded-card p-4">
+                        <header className="flex items-center justify-between gap-3">
+                            <h2 className="text-sm font-bold">점수 분포</h2>
+                            <span className="text-caption">
+                                {difficulty} · 전체 {chartDetail.playerCount}명
+                            </span>
+                        </header>
+
+                        {chartDetail.playerCount > 0 ? (
+                            <>
+                                <div className="mt-4 grid h-20 grid-cols-7 items-end gap-1">
+                                    {chartDetail.scoreDistribution.map(
+                                        (item) => (
+                                            <div
+                                                key={item.key}
+                                                className="flex h-full min-w-0 flex-col justify-end"
+                                            >
+                                                <div
+                                                    className={cn(
+                                                        "mx-auto w-full max-w-10 rounded-t-sm",
+                                                        item.key === "pianist"
+                                                            ? "bg-score"
+                                                            : item.key === "990"
+                                                              ? "bg-real"
+                                                              : "bg-border"
+                                                    )}
+                                                    style={{
+                                                        height:
+                                                            item.count === 0
+                                                                ? 0
+                                                                : `${Math.max(4, (item.count / maxDistributionCount) * 56)}px`,
+                                                    }}
+                                                    title={`${item.label}: ${item.count}명`}
+                                                />
+                                                <span
+                                                    className={cn(
+                                                        "mt-1 truncate text-center text-[9px]",
+                                                        item.key === "pianist"
+                                                            ? "text-score"
+                                                            : "text-text-disabled"
+                                                    )}
+                                                >
+                                                    {item.label}
+                                                </span>
+                                            </div>
+                                        )
+                                    )}
+                                </div>
+                                <p className="text-caption mt-3">
+                                    {chartDetail.userTopPercent === null
+                                        ? "로그인 후 내 위치를 확인할 수 있습니다."
+                                        : `내 기록 기준 상위 ${chartDetail.userTopPercent}%`}
+                                </p>
+                            </>
+                        ) : (
+                            <div className="text-text-disabled flex h-24 items-center justify-center text-sm">
+                                집계할 플레이 기록이 없습니다.
+                            </div>
+                        )}
+                    </section>
+
+                    <div className="grid grid-cols-2 gap-2">
+                        {chartDetail.play_video_url ? (
+                            <a
+                                href={chartDetail.play_video_url}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="border-border rounded-card flex h-10 items-center justify-center gap-2 border text-sm font-semibold"
+                            >
+                                <Play size={15} aria-hidden /> 플레이 영상
+                            </a>
+                        ) : (
+                            <span className="border-border text-text-disabled rounded-card flex h-10 items-center justify-center gap-2 border text-sm font-semibold opacity-60">
+                                <Play size={15} aria-hidden /> 플레이 영상
+                            </span>
+                        )}
+                        {chartDetail.chart_preview_url ? (
+                            <a
+                                href={chartDetail.chart_preview_url}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="border-border rounded-card flex h-10 items-center justify-center gap-2 border text-sm font-semibold"
+                            >
+                                <ScanSearch size={15} aria-hidden /> 채보 프리뷰
+                            </a>
+                        ) : (
+                            <span className="border-border text-text-disabled rounded-card flex h-10 items-center justify-center gap-2 border text-sm font-semibold opacity-60">
+                                <ScanSearch size={15} aria-hidden /> 채보 프리뷰
+                            </span>
+                        )}
+                    </div>
+                </div>
             )}
 
             {activeTab === "ranking" && (

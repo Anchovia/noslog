@@ -5947,12 +5947,20 @@ export namespace Prisma {
     id: number | null
     level: number | null
     level_constant: number | null
+    bpm_min: number | null
+    bpm_max: number | null
+    note_count: number | null
+    duration_seconds: number | null
   }
 
   export type MusicChartSumAggregateOutputType = {
     id: number | null
     level: number | null
     level_constant: number | null
+    bpm_min: number | null
+    bpm_max: number | null
+    note_count: number | null
+    duration_seconds: number | null
   }
 
   export type MusicChartMinAggregateOutputType = {
@@ -5960,6 +5968,14 @@ export namespace Prisma {
     difficulty: string | null
     level: number | null
     level_constant: number | null
+    bpm_min: number | null
+    bpm_max: number | null
+    note_count: number | null
+    duration_seconds: number | null
+    released_at: Date | null
+    unlock_condition: string | null
+    play_video_url: string | null
+    chart_preview_url: string | null
     music_idx: string | null
     created_at: Date | null
     updated_at: Date | null
@@ -5970,6 +5986,14 @@ export namespace Prisma {
     difficulty: string | null
     level: number | null
     level_constant: number | null
+    bpm_min: number | null
+    bpm_max: number | null
+    note_count: number | null
+    duration_seconds: number | null
+    released_at: Date | null
+    unlock_condition: string | null
+    play_video_url: string | null
+    chart_preview_url: string | null
     music_idx: string | null
     created_at: Date | null
     updated_at: Date | null
@@ -5980,6 +6004,14 @@ export namespace Prisma {
     difficulty: number
     level: number
     level_constant: number
+    bpm_min: number
+    bpm_max: number
+    note_count: number
+    duration_seconds: number
+    released_at: number
+    unlock_condition: number
+    play_video_url: number
+    chart_preview_url: number
     music_idx: number
     created_at: number
     updated_at: number
@@ -5991,12 +6023,20 @@ export namespace Prisma {
     id?: true
     level?: true
     level_constant?: true
+    bpm_min?: true
+    bpm_max?: true
+    note_count?: true
+    duration_seconds?: true
   }
 
   export type MusicChartSumAggregateInputType = {
     id?: true
     level?: true
     level_constant?: true
+    bpm_min?: true
+    bpm_max?: true
+    note_count?: true
+    duration_seconds?: true
   }
 
   export type MusicChartMinAggregateInputType = {
@@ -6004,6 +6044,14 @@ export namespace Prisma {
     difficulty?: true
     level?: true
     level_constant?: true
+    bpm_min?: true
+    bpm_max?: true
+    note_count?: true
+    duration_seconds?: true
+    released_at?: true
+    unlock_condition?: true
+    play_video_url?: true
+    chart_preview_url?: true
     music_idx?: true
     created_at?: true
     updated_at?: true
@@ -6014,6 +6062,14 @@ export namespace Prisma {
     difficulty?: true
     level?: true
     level_constant?: true
+    bpm_min?: true
+    bpm_max?: true
+    note_count?: true
+    duration_seconds?: true
+    released_at?: true
+    unlock_condition?: true
+    play_video_url?: true
+    chart_preview_url?: true
     music_idx?: true
     created_at?: true
     updated_at?: true
@@ -6024,6 +6080,14 @@ export namespace Prisma {
     difficulty?: true
     level?: true
     level_constant?: true
+    bpm_min?: true
+    bpm_max?: true
+    note_count?: true
+    duration_seconds?: true
+    released_at?: true
+    unlock_condition?: true
+    play_video_url?: true
+    chart_preview_url?: true
     music_idx?: true
     created_at?: true
     updated_at?: true
@@ -6121,6 +6185,14 @@ export namespace Prisma {
     difficulty: string
     level: number
     level_constant: number | null
+    bpm_min: number | null
+    bpm_max: number | null
+    note_count: number | null
+    duration_seconds: number | null
+    released_at: Date | null
+    unlock_condition: string | null
+    play_video_url: string | null
+    chart_preview_url: string | null
     music_idx: string
     created_at: Date
     updated_at: Date
@@ -6150,6 +6222,14 @@ export namespace Prisma {
     difficulty?: boolean
     level?: boolean
     level_constant?: boolean
+    bpm_min?: boolean
+    bpm_max?: boolean
+    note_count?: boolean
+    duration_seconds?: boolean
+    released_at?: boolean
+    unlock_condition?: boolean
+    play_video_url?: boolean
+    chart_preview_url?: boolean
     music_idx?: boolean
     created_at?: boolean
     updated_at?: boolean
@@ -6170,6 +6250,14 @@ export namespace Prisma {
     difficulty?: boolean
     level?: boolean
     level_constant?: boolean
+    bpm_min?: boolean
+    bpm_max?: boolean
+    note_count?: boolean
+    duration_seconds?: boolean
+    released_at?: boolean
+    unlock_condition?: boolean
+    play_video_url?: boolean
+    chart_preview_url?: boolean
     music_idx?: boolean
     created_at?: boolean
     updated_at?: boolean
@@ -6181,6 +6269,14 @@ export namespace Prisma {
     difficulty?: boolean
     level?: boolean
     level_constant?: boolean
+    bpm_min?: boolean
+    bpm_max?: boolean
+    note_count?: boolean
+    duration_seconds?: boolean
+    released_at?: boolean
+    unlock_condition?: boolean
+    play_video_url?: boolean
+    chart_preview_url?: boolean
     music_idx?: boolean
     created_at?: boolean
     updated_at?: boolean
@@ -6192,12 +6288,20 @@ export namespace Prisma {
     difficulty?: boolean
     level?: boolean
     level_constant?: boolean
+    bpm_min?: boolean
+    bpm_max?: boolean
+    note_count?: boolean
+    duration_seconds?: boolean
+    released_at?: boolean
+    unlock_condition?: boolean
+    play_video_url?: boolean
+    chart_preview_url?: boolean
     music_idx?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type MusicChartOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "difficulty" | "level" | "level_constant" | "music_idx" | "created_at" | "updated_at", ExtArgs["result"]["musicChart"]>
+  export type MusicChartOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "difficulty" | "level" | "level_constant" | "bpm_min" | "bpm_max" | "note_count" | "duration_seconds" | "released_at" | "unlock_condition" | "play_video_url" | "chart_preview_url" | "music_idx" | "created_at" | "updated_at", ExtArgs["result"]["musicChart"]>
   export type MusicChartInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     music?: boolean | MusicDefaultArgs<ExtArgs>
     constantHistory?: boolean | MusicChart$constantHistoryArgs<ExtArgs>
@@ -6235,6 +6339,14 @@ export namespace Prisma {
       difficulty: string
       level: number
       level_constant: number | null
+      bpm_min: number | null
+      bpm_max: number | null
+      note_count: number | null
+      duration_seconds: number | null
+      released_at: Date | null
+      unlock_condition: string | null
+      play_video_url: string | null
+      chart_preview_url: string | null
       music_idx: string
       created_at: Date
       updated_at: Date
@@ -6674,6 +6786,14 @@ export namespace Prisma {
     readonly difficulty: FieldRef<"MusicChart", 'String'>
     readonly level: FieldRef<"MusicChart", 'Int'>
     readonly level_constant: FieldRef<"MusicChart", 'Float'>
+    readonly bpm_min: FieldRef<"MusicChart", 'Int'>
+    readonly bpm_max: FieldRef<"MusicChart", 'Int'>
+    readonly note_count: FieldRef<"MusicChart", 'Int'>
+    readonly duration_seconds: FieldRef<"MusicChart", 'Int'>
+    readonly released_at: FieldRef<"MusicChart", 'DateTime'>
+    readonly unlock_condition: FieldRef<"MusicChart", 'String'>
+    readonly play_video_url: FieldRef<"MusicChart", 'String'>
+    readonly chart_preview_url: FieldRef<"MusicChart", 'String'>
     readonly music_idx: FieldRef<"MusicChart", 'String'>
     readonly created_at: FieldRef<"MusicChart", 'DateTime'>
     readonly updated_at: FieldRef<"MusicChart", 'DateTime'>
@@ -24213,6 +24333,14 @@ export namespace Prisma {
     difficulty: 'difficulty',
     level: 'level',
     level_constant: 'level_constant',
+    bpm_min: 'bpm_min',
+    bpm_max: 'bpm_max',
+    note_count: 'note_count',
+    duration_seconds: 'duration_seconds',
+    released_at: 'released_at',
+    unlock_condition: 'unlock_condition',
+    play_video_url: 'play_video_url',
+    chart_preview_url: 'chart_preview_url',
     music_idx: 'music_idx',
     created_at: 'created_at',
     updated_at: 'updated_at'
@@ -24851,6 +24979,14 @@ export namespace Prisma {
     difficulty?: StringFilter<"MusicChart"> | string
     level?: IntFilter<"MusicChart"> | number
     level_constant?: FloatNullableFilter<"MusicChart"> | number | null
+    bpm_min?: IntNullableFilter<"MusicChart"> | number | null
+    bpm_max?: IntNullableFilter<"MusicChart"> | number | null
+    note_count?: IntNullableFilter<"MusicChart"> | number | null
+    duration_seconds?: IntNullableFilter<"MusicChart"> | number | null
+    released_at?: DateTimeNullableFilter<"MusicChart"> | Date | string | null
+    unlock_condition?: StringNullableFilter<"MusicChart"> | string | null
+    play_video_url?: StringNullableFilter<"MusicChart"> | string | null
+    chart_preview_url?: StringNullableFilter<"MusicChart"> | string | null
     music_idx?: StringFilter<"MusicChart"> | string
     created_at?: DateTimeFilter<"MusicChart"> | Date | string
     updated_at?: DateTimeFilter<"MusicChart"> | Date | string
@@ -24870,6 +25006,14 @@ export namespace Prisma {
     difficulty?: SortOrder
     level?: SortOrder
     level_constant?: SortOrderInput | SortOrder
+    bpm_min?: SortOrderInput | SortOrder
+    bpm_max?: SortOrderInput | SortOrder
+    note_count?: SortOrderInput | SortOrder
+    duration_seconds?: SortOrderInput | SortOrder
+    released_at?: SortOrderInput | SortOrder
+    unlock_condition?: SortOrderInput | SortOrder
+    play_video_url?: SortOrderInput | SortOrder
+    chart_preview_url?: SortOrderInput | SortOrder
     music_idx?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -24893,6 +25037,14 @@ export namespace Prisma {
     difficulty?: StringFilter<"MusicChart"> | string
     level?: IntFilter<"MusicChart"> | number
     level_constant?: FloatNullableFilter<"MusicChart"> | number | null
+    bpm_min?: IntNullableFilter<"MusicChart"> | number | null
+    bpm_max?: IntNullableFilter<"MusicChart"> | number | null
+    note_count?: IntNullableFilter<"MusicChart"> | number | null
+    duration_seconds?: IntNullableFilter<"MusicChart"> | number | null
+    released_at?: DateTimeNullableFilter<"MusicChart"> | Date | string | null
+    unlock_condition?: StringNullableFilter<"MusicChart"> | string | null
+    play_video_url?: StringNullableFilter<"MusicChart"> | string | null
+    chart_preview_url?: StringNullableFilter<"MusicChart"> | string | null
     music_idx?: StringFilter<"MusicChart"> | string
     created_at?: DateTimeFilter<"MusicChart"> | Date | string
     updated_at?: DateTimeFilter<"MusicChart"> | Date | string
@@ -24912,6 +25064,14 @@ export namespace Prisma {
     difficulty?: SortOrder
     level?: SortOrder
     level_constant?: SortOrderInput | SortOrder
+    bpm_min?: SortOrderInput | SortOrder
+    bpm_max?: SortOrderInput | SortOrder
+    note_count?: SortOrderInput | SortOrder
+    duration_seconds?: SortOrderInput | SortOrder
+    released_at?: SortOrderInput | SortOrder
+    unlock_condition?: SortOrderInput | SortOrder
+    play_video_url?: SortOrderInput | SortOrder
+    chart_preview_url?: SortOrderInput | SortOrder
     music_idx?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -24930,6 +25090,14 @@ export namespace Prisma {
     difficulty?: StringWithAggregatesFilter<"MusicChart"> | string
     level?: IntWithAggregatesFilter<"MusicChart"> | number
     level_constant?: FloatNullableWithAggregatesFilter<"MusicChart"> | number | null
+    bpm_min?: IntNullableWithAggregatesFilter<"MusicChart"> | number | null
+    bpm_max?: IntNullableWithAggregatesFilter<"MusicChart"> | number | null
+    note_count?: IntNullableWithAggregatesFilter<"MusicChart"> | number | null
+    duration_seconds?: IntNullableWithAggregatesFilter<"MusicChart"> | number | null
+    released_at?: DateTimeNullableWithAggregatesFilter<"MusicChart"> | Date | string | null
+    unlock_condition?: StringNullableWithAggregatesFilter<"MusicChart"> | string | null
+    play_video_url?: StringNullableWithAggregatesFilter<"MusicChart"> | string | null
+    chart_preview_url?: StringNullableWithAggregatesFilter<"MusicChart"> | string | null
     music_idx?: StringWithAggregatesFilter<"MusicChart"> | string
     created_at?: DateTimeWithAggregatesFilter<"MusicChart"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"MusicChart"> | Date | string
@@ -26570,6 +26738,14 @@ export namespace Prisma {
     difficulty: string
     level: number
     level_constant?: number | null
+    bpm_min?: number | null
+    bpm_max?: number | null
+    note_count?: number | null
+    duration_seconds?: number | null
+    released_at?: Date | string | null
+    unlock_condition?: string | null
+    play_video_url?: string | null
+    chart_preview_url?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     music: MusicCreateNestedOneWithoutChartsInput
@@ -26588,6 +26764,14 @@ export namespace Prisma {
     difficulty: string
     level: number
     level_constant?: number | null
+    bpm_min?: number | null
+    bpm_max?: number | null
+    note_count?: number | null
+    duration_seconds?: number | null
+    released_at?: Date | string | null
+    unlock_condition?: string | null
+    play_video_url?: string | null
+    chart_preview_url?: string | null
     music_idx: string
     created_at?: Date | string
     updated_at?: Date | string
@@ -26605,6 +26789,14 @@ export namespace Prisma {
     difficulty?: StringFieldUpdateOperationsInput | string
     level?: IntFieldUpdateOperationsInput | number
     level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    bpm_min?: NullableIntFieldUpdateOperationsInput | number | null
+    bpm_max?: NullableIntFieldUpdateOperationsInput | number | null
+    note_count?: NullableIntFieldUpdateOperationsInput | number | null
+    duration_seconds?: NullableIntFieldUpdateOperationsInput | number | null
+    released_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unlock_condition?: NullableStringFieldUpdateOperationsInput | string | null
+    play_video_url?: NullableStringFieldUpdateOperationsInput | string | null
+    chart_preview_url?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     music?: MusicUpdateOneRequiredWithoutChartsNestedInput
@@ -26623,6 +26815,14 @@ export namespace Prisma {
     difficulty?: StringFieldUpdateOperationsInput | string
     level?: IntFieldUpdateOperationsInput | number
     level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    bpm_min?: NullableIntFieldUpdateOperationsInput | number | null
+    bpm_max?: NullableIntFieldUpdateOperationsInput | number | null
+    note_count?: NullableIntFieldUpdateOperationsInput | number | null
+    duration_seconds?: NullableIntFieldUpdateOperationsInput | number | null
+    released_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unlock_condition?: NullableStringFieldUpdateOperationsInput | string | null
+    play_video_url?: NullableStringFieldUpdateOperationsInput | string | null
+    chart_preview_url?: NullableStringFieldUpdateOperationsInput | string | null
     music_idx?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26641,6 +26841,14 @@ export namespace Prisma {
     difficulty: string
     level: number
     level_constant?: number | null
+    bpm_min?: number | null
+    bpm_max?: number | null
+    note_count?: number | null
+    duration_seconds?: number | null
+    released_at?: Date | string | null
+    unlock_condition?: string | null
+    play_video_url?: string | null
+    chart_preview_url?: string | null
     music_idx: string
     created_at?: Date | string
     updated_at?: Date | string
@@ -26650,6 +26858,14 @@ export namespace Prisma {
     difficulty?: StringFieldUpdateOperationsInput | string
     level?: IntFieldUpdateOperationsInput | number
     level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    bpm_min?: NullableIntFieldUpdateOperationsInput | number | null
+    bpm_max?: NullableIntFieldUpdateOperationsInput | number | null
+    note_count?: NullableIntFieldUpdateOperationsInput | number | null
+    duration_seconds?: NullableIntFieldUpdateOperationsInput | number | null
+    released_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unlock_condition?: NullableStringFieldUpdateOperationsInput | string | null
+    play_video_url?: NullableStringFieldUpdateOperationsInput | string | null
+    chart_preview_url?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -26659,6 +26875,14 @@ export namespace Prisma {
     difficulty?: StringFieldUpdateOperationsInput | string
     level?: IntFieldUpdateOperationsInput | number
     level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    bpm_min?: NullableIntFieldUpdateOperationsInput | number | null
+    bpm_max?: NullableIntFieldUpdateOperationsInput | number | null
+    note_count?: NullableIntFieldUpdateOperationsInput | number | null
+    duration_seconds?: NullableIntFieldUpdateOperationsInput | number | null
+    released_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unlock_condition?: NullableStringFieldUpdateOperationsInput | string | null
+    play_video_url?: NullableStringFieldUpdateOperationsInput | string | null
+    chart_preview_url?: NullableStringFieldUpdateOperationsInput | string | null
     music_idx?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28420,6 +28644,17 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type MusicScalarRelationFilter = {
     is?: MusicWhereInput
     isNot?: MusicWhereInput
@@ -28445,6 +28680,14 @@ export namespace Prisma {
     difficulty?: SortOrder
     level?: SortOrder
     level_constant?: SortOrder
+    bpm_min?: SortOrder
+    bpm_max?: SortOrder
+    note_count?: SortOrder
+    duration_seconds?: SortOrder
+    released_at?: SortOrder
+    unlock_condition?: SortOrder
+    play_video_url?: SortOrder
+    chart_preview_url?: SortOrder
     music_idx?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -28454,6 +28697,10 @@ export namespace Prisma {
     id?: SortOrder
     level?: SortOrder
     level_constant?: SortOrder
+    bpm_min?: SortOrder
+    bpm_max?: SortOrder
+    note_count?: SortOrder
+    duration_seconds?: SortOrder
   }
 
   export type MusicChartMaxOrderByAggregateInput = {
@@ -28461,6 +28708,14 @@ export namespace Prisma {
     difficulty?: SortOrder
     level?: SortOrder
     level_constant?: SortOrder
+    bpm_min?: SortOrder
+    bpm_max?: SortOrder
+    note_count?: SortOrder
+    duration_seconds?: SortOrder
+    released_at?: SortOrder
+    unlock_condition?: SortOrder
+    play_video_url?: SortOrder
+    chart_preview_url?: SortOrder
     music_idx?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -28471,6 +28726,14 @@ export namespace Prisma {
     difficulty?: SortOrder
     level?: SortOrder
     level_constant?: SortOrder
+    bpm_min?: SortOrder
+    bpm_max?: SortOrder
+    note_count?: SortOrder
+    duration_seconds?: SortOrder
+    released_at?: SortOrder
+    unlock_condition?: SortOrder
+    play_video_url?: SortOrder
+    chart_preview_url?: SortOrder
     music_idx?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -28480,6 +28743,10 @@ export namespace Prisma {
     id?: SortOrder
     level?: SortOrder
     level_constant?: SortOrder
+    bpm_min?: SortOrder
+    bpm_max?: SortOrder
+    note_count?: SortOrder
+    duration_seconds?: SortOrder
   }
 
   export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -28498,7 +28765,7 @@ export namespace Prisma {
     _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
-  export type DateTimeNullableFilter<$PrismaModel = never> = {
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | null
     notIn?: Date[] | string[] | null
@@ -28506,7 +28773,10 @@ export namespace Prisma {
     lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type UserScalarRelationFilter = {
@@ -28564,20 +28834,6 @@ export namespace Prisma {
     inserted_plays?: SortOrder
     changed_records?: SortOrder
     user_id?: SortOrder
-  }
-
-  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type MusicChartScalarRelationFilter = {
@@ -30358,6 +30614,10 @@ export namespace Prisma {
     divide?: number
   }
 
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
   export type MusicUpdateOneRequiredWithoutChartsNestedInput = {
     create?: XOR<MusicCreateWithoutChartsInput, MusicUncheckedCreateWithoutChartsInput>
     connectOrCreate?: MusicCreateOrConnectWithoutChartsInput
@@ -30622,10 +30882,6 @@ export namespace Prisma {
     connectOrCreate?: ChartRecordSnapshotCreateOrConnectWithoutSyncInput | ChartRecordSnapshotCreateOrConnectWithoutSyncInput[]
     createMany?: ChartRecordSnapshotCreateManySyncInputEnvelope
     connect?: ChartRecordSnapshotWhereUniqueInput | ChartRecordSnapshotWhereUniqueInput[]
-  }
-
-  export type NullableDateTimeFieldUpdateOperationsInput = {
-    set?: Date | string | null
   }
 
   export type UserUpdateOneRequiredWithoutDataSyncsNestedInput = {
@@ -31438,6 +31694,17 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel> | null
     in?: number[] | null
@@ -31452,17 +31719,6 @@ export namespace Prisma {
     _sum?: NestedFloatNullableFilter<$PrismaModel>
     _min?: NestedFloatNullableFilter<$PrismaModel>
     _max?: NestedFloatNullableFilter<$PrismaModel>
-  }
-
-  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
   export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -32479,6 +32735,14 @@ export namespace Prisma {
     difficulty: string
     level: number
     level_constant?: number | null
+    bpm_min?: number | null
+    bpm_max?: number | null
+    note_count?: number | null
+    duration_seconds?: number | null
+    released_at?: Date | string | null
+    unlock_condition?: string | null
+    play_video_url?: string | null
+    chart_preview_url?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     constantHistory?: ChartConstantHistoryCreateNestedManyWithoutChartInput
@@ -32496,6 +32760,14 @@ export namespace Prisma {
     difficulty: string
     level: number
     level_constant?: number | null
+    bpm_min?: number | null
+    bpm_max?: number | null
+    note_count?: number | null
+    duration_seconds?: number | null
+    released_at?: Date | string | null
+    unlock_condition?: string | null
+    play_video_url?: string | null
+    chart_preview_url?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     constantHistory?: ChartConstantHistoryUncheckedCreateNestedManyWithoutChartInput
@@ -32661,6 +32933,14 @@ export namespace Prisma {
     difficulty?: StringFilter<"MusicChart"> | string
     level?: IntFilter<"MusicChart"> | number
     level_constant?: FloatNullableFilter<"MusicChart"> | number | null
+    bpm_min?: IntNullableFilter<"MusicChart"> | number | null
+    bpm_max?: IntNullableFilter<"MusicChart"> | number | null
+    note_count?: IntNullableFilter<"MusicChart"> | number | null
+    duration_seconds?: IntNullableFilter<"MusicChart"> | number | null
+    released_at?: DateTimeNullableFilter<"MusicChart"> | Date | string | null
+    unlock_condition?: StringNullableFilter<"MusicChart"> | string | null
+    play_video_url?: StringNullableFilter<"MusicChart"> | string | null
+    chart_preview_url?: StringNullableFilter<"MusicChart"> | string | null
     music_idx?: StringFilter<"MusicChart"> | string
     created_at?: DateTimeFilter<"MusicChart"> | Date | string
     updated_at?: DateTimeFilter<"MusicChart"> | Date | string
@@ -33511,6 +33791,14 @@ export namespace Prisma {
     difficulty: string
     level: number
     level_constant?: number | null
+    bpm_min?: number | null
+    bpm_max?: number | null
+    note_count?: number | null
+    duration_seconds?: number | null
+    released_at?: Date | string | null
+    unlock_condition?: string | null
+    play_video_url?: string | null
+    chart_preview_url?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     music: MusicCreateNestedOneWithoutChartsInput
@@ -33528,6 +33816,14 @@ export namespace Prisma {
     difficulty: string
     level: number
     level_constant?: number | null
+    bpm_min?: number | null
+    bpm_max?: number | null
+    note_count?: number | null
+    duration_seconds?: number | null
+    released_at?: Date | string | null
+    unlock_condition?: string | null
+    play_video_url?: string | null
+    chart_preview_url?: string | null
     music_idx: string
     created_at?: Date | string
     updated_at?: Date | string
@@ -33672,6 +33968,14 @@ export namespace Prisma {
     difficulty?: StringFieldUpdateOperationsInput | string
     level?: IntFieldUpdateOperationsInput | number
     level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    bpm_min?: NullableIntFieldUpdateOperationsInput | number | null
+    bpm_max?: NullableIntFieldUpdateOperationsInput | number | null
+    note_count?: NullableIntFieldUpdateOperationsInput | number | null
+    duration_seconds?: NullableIntFieldUpdateOperationsInput | number | null
+    released_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unlock_condition?: NullableStringFieldUpdateOperationsInput | string | null
+    play_video_url?: NullableStringFieldUpdateOperationsInput | string | null
+    chart_preview_url?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     music?: MusicUpdateOneRequiredWithoutChartsNestedInput
@@ -33689,6 +33993,14 @@ export namespace Prisma {
     difficulty?: StringFieldUpdateOperationsInput | string
     level?: IntFieldUpdateOperationsInput | number
     level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    bpm_min?: NullableIntFieldUpdateOperationsInput | number | null
+    bpm_max?: NullableIntFieldUpdateOperationsInput | number | null
+    note_count?: NullableIntFieldUpdateOperationsInput | number | null
+    duration_seconds?: NullableIntFieldUpdateOperationsInput | number | null
+    released_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unlock_condition?: NullableStringFieldUpdateOperationsInput | string | null
+    play_video_url?: NullableStringFieldUpdateOperationsInput | string | null
+    chart_preview_url?: NullableStringFieldUpdateOperationsInput | string | null
     music_idx?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33829,6 +34141,14 @@ export namespace Prisma {
     difficulty: string
     level: number
     level_constant?: number | null
+    bpm_min?: number | null
+    bpm_max?: number | null
+    note_count?: number | null
+    duration_seconds?: number | null
+    released_at?: Date | string | null
+    unlock_condition?: string | null
+    play_video_url?: string | null
+    chart_preview_url?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     music: MusicCreateNestedOneWithoutChartsInput
@@ -33846,6 +34166,14 @@ export namespace Prisma {
     difficulty: string
     level: number
     level_constant?: number | null
+    bpm_min?: number | null
+    bpm_max?: number | null
+    note_count?: number | null
+    duration_seconds?: number | null
+    released_at?: Date | string | null
+    unlock_condition?: string | null
+    play_video_url?: string | null
+    chart_preview_url?: string | null
     music_idx: string
     created_at?: Date | string
     updated_at?: Date | string
@@ -33990,6 +34318,14 @@ export namespace Prisma {
     difficulty?: StringFieldUpdateOperationsInput | string
     level?: IntFieldUpdateOperationsInput | number
     level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    bpm_min?: NullableIntFieldUpdateOperationsInput | number | null
+    bpm_max?: NullableIntFieldUpdateOperationsInput | number | null
+    note_count?: NullableIntFieldUpdateOperationsInput | number | null
+    duration_seconds?: NullableIntFieldUpdateOperationsInput | number | null
+    released_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unlock_condition?: NullableStringFieldUpdateOperationsInput | string | null
+    play_video_url?: NullableStringFieldUpdateOperationsInput | string | null
+    chart_preview_url?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     music?: MusicUpdateOneRequiredWithoutChartsNestedInput
@@ -34007,6 +34343,14 @@ export namespace Prisma {
     difficulty?: StringFieldUpdateOperationsInput | string
     level?: IntFieldUpdateOperationsInput | number
     level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    bpm_min?: NullableIntFieldUpdateOperationsInput | number | null
+    bpm_max?: NullableIntFieldUpdateOperationsInput | number | null
+    note_count?: NullableIntFieldUpdateOperationsInput | number | null
+    duration_seconds?: NullableIntFieldUpdateOperationsInput | number | null
+    released_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unlock_condition?: NullableStringFieldUpdateOperationsInput | string | null
+    play_video_url?: NullableStringFieldUpdateOperationsInput | string | null
+    chart_preview_url?: NullableStringFieldUpdateOperationsInput | string | null
     music_idx?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34147,6 +34491,14 @@ export namespace Prisma {
     difficulty: string
     level: number
     level_constant?: number | null
+    bpm_min?: number | null
+    bpm_max?: number | null
+    note_count?: number | null
+    duration_seconds?: number | null
+    released_at?: Date | string | null
+    unlock_condition?: string | null
+    play_video_url?: string | null
+    chart_preview_url?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     music: MusicCreateNestedOneWithoutChartsInput
@@ -34164,6 +34516,14 @@ export namespace Prisma {
     difficulty: string
     level: number
     level_constant?: number | null
+    bpm_min?: number | null
+    bpm_max?: number | null
+    note_count?: number | null
+    duration_seconds?: number | null
+    released_at?: Date | string | null
+    unlock_condition?: string | null
+    play_video_url?: string | null
+    chart_preview_url?: string | null
     music_idx: string
     created_at?: Date | string
     updated_at?: Date | string
@@ -34196,6 +34556,14 @@ export namespace Prisma {
     difficulty?: StringFieldUpdateOperationsInput | string
     level?: IntFieldUpdateOperationsInput | number
     level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    bpm_min?: NullableIntFieldUpdateOperationsInput | number | null
+    bpm_max?: NullableIntFieldUpdateOperationsInput | number | null
+    note_count?: NullableIntFieldUpdateOperationsInput | number | null
+    duration_seconds?: NullableIntFieldUpdateOperationsInput | number | null
+    released_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unlock_condition?: NullableStringFieldUpdateOperationsInput | string | null
+    play_video_url?: NullableStringFieldUpdateOperationsInput | string | null
+    chart_preview_url?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     music?: MusicUpdateOneRequiredWithoutChartsNestedInput
@@ -34213,6 +34581,14 @@ export namespace Prisma {
     difficulty?: StringFieldUpdateOperationsInput | string
     level?: IntFieldUpdateOperationsInput | number
     level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    bpm_min?: NullableIntFieldUpdateOperationsInput | number | null
+    bpm_max?: NullableIntFieldUpdateOperationsInput | number | null
+    note_count?: NullableIntFieldUpdateOperationsInput | number | null
+    duration_seconds?: NullableIntFieldUpdateOperationsInput | number | null
+    released_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unlock_condition?: NullableStringFieldUpdateOperationsInput | string | null
+    play_video_url?: NullableStringFieldUpdateOperationsInput | string | null
+    chart_preview_url?: NullableStringFieldUpdateOperationsInput | string | null
     music_idx?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34229,6 +34605,14 @@ export namespace Prisma {
     difficulty: string
     level: number
     level_constant?: number | null
+    bpm_min?: number | null
+    bpm_max?: number | null
+    note_count?: number | null
+    duration_seconds?: number | null
+    released_at?: Date | string | null
+    unlock_condition?: string | null
+    play_video_url?: string | null
+    chart_preview_url?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     music: MusicCreateNestedOneWithoutChartsInput
@@ -34246,6 +34630,14 @@ export namespace Prisma {
     difficulty: string
     level: number
     level_constant?: number | null
+    bpm_min?: number | null
+    bpm_max?: number | null
+    note_count?: number | null
+    duration_seconds?: number | null
+    released_at?: Date | string | null
+    unlock_condition?: string | null
+    play_video_url?: string | null
+    chart_preview_url?: string | null
     music_idx: string
     created_at?: Date | string
     updated_at?: Date | string
@@ -34384,6 +34776,14 @@ export namespace Prisma {
     difficulty?: StringFieldUpdateOperationsInput | string
     level?: IntFieldUpdateOperationsInput | number
     level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    bpm_min?: NullableIntFieldUpdateOperationsInput | number | null
+    bpm_max?: NullableIntFieldUpdateOperationsInput | number | null
+    note_count?: NullableIntFieldUpdateOperationsInput | number | null
+    duration_seconds?: NullableIntFieldUpdateOperationsInput | number | null
+    released_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unlock_condition?: NullableStringFieldUpdateOperationsInput | string | null
+    play_video_url?: NullableStringFieldUpdateOperationsInput | string | null
+    chart_preview_url?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     music?: MusicUpdateOneRequiredWithoutChartsNestedInput
@@ -34401,6 +34801,14 @@ export namespace Prisma {
     difficulty?: StringFieldUpdateOperationsInput | string
     level?: IntFieldUpdateOperationsInput | number
     level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    bpm_min?: NullableIntFieldUpdateOperationsInput | number | null
+    bpm_max?: NullableIntFieldUpdateOperationsInput | number | null
+    note_count?: NullableIntFieldUpdateOperationsInput | number | null
+    duration_seconds?: NullableIntFieldUpdateOperationsInput | number | null
+    released_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unlock_condition?: NullableStringFieldUpdateOperationsInput | string | null
+    play_video_url?: NullableStringFieldUpdateOperationsInput | string | null
+    chart_preview_url?: NullableStringFieldUpdateOperationsInput | string | null
     music_idx?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34905,6 +35313,14 @@ export namespace Prisma {
     difficulty: string
     level: number
     level_constant?: number | null
+    bpm_min?: number | null
+    bpm_max?: number | null
+    note_count?: number | null
+    duration_seconds?: number | null
+    released_at?: Date | string | null
+    unlock_condition?: string | null
+    play_video_url?: string | null
+    chart_preview_url?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     music: MusicCreateNestedOneWithoutChartsInput
@@ -34922,6 +35338,14 @@ export namespace Prisma {
     difficulty: string
     level: number
     level_constant?: number | null
+    bpm_min?: number | null
+    bpm_max?: number | null
+    note_count?: number | null
+    duration_seconds?: number | null
+    released_at?: Date | string | null
+    unlock_condition?: string | null
+    play_video_url?: string | null
+    chart_preview_url?: string | null
     music_idx: string
     created_at?: Date | string
     updated_at?: Date | string
@@ -35106,6 +35530,14 @@ export namespace Prisma {
     difficulty?: StringFieldUpdateOperationsInput | string
     level?: IntFieldUpdateOperationsInput | number
     level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    bpm_min?: NullableIntFieldUpdateOperationsInput | number | null
+    bpm_max?: NullableIntFieldUpdateOperationsInput | number | null
+    note_count?: NullableIntFieldUpdateOperationsInput | number | null
+    duration_seconds?: NullableIntFieldUpdateOperationsInput | number | null
+    released_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unlock_condition?: NullableStringFieldUpdateOperationsInput | string | null
+    play_video_url?: NullableStringFieldUpdateOperationsInput | string | null
+    chart_preview_url?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     music?: MusicUpdateOneRequiredWithoutChartsNestedInput
@@ -35123,6 +35555,14 @@ export namespace Prisma {
     difficulty?: StringFieldUpdateOperationsInput | string
     level?: IntFieldUpdateOperationsInput | number
     level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    bpm_min?: NullableIntFieldUpdateOperationsInput | number | null
+    bpm_max?: NullableIntFieldUpdateOperationsInput | number | null
+    note_count?: NullableIntFieldUpdateOperationsInput | number | null
+    duration_seconds?: NullableIntFieldUpdateOperationsInput | number | null
+    released_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unlock_condition?: NullableStringFieldUpdateOperationsInput | string | null
+    play_video_url?: NullableStringFieldUpdateOperationsInput | string | null
+    chart_preview_url?: NullableStringFieldUpdateOperationsInput | string | null
     music_idx?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -35449,6 +35889,14 @@ export namespace Prisma {
     difficulty: string
     level: number
     level_constant?: number | null
+    bpm_min?: number | null
+    bpm_max?: number | null
+    note_count?: number | null
+    duration_seconds?: number | null
+    released_at?: Date | string | null
+    unlock_condition?: string | null
+    play_video_url?: string | null
+    chart_preview_url?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     music: MusicCreateNestedOneWithoutChartsInput
@@ -35466,6 +35914,14 @@ export namespace Prisma {
     difficulty: string
     level: number
     level_constant?: number | null
+    bpm_min?: number | null
+    bpm_max?: number | null
+    note_count?: number | null
+    duration_seconds?: number | null
+    released_at?: Date | string | null
+    unlock_condition?: string | null
+    play_video_url?: string | null
+    chart_preview_url?: string | null
     music_idx: string
     created_at?: Date | string
     updated_at?: Date | string
@@ -35650,6 +36106,14 @@ export namespace Prisma {
     difficulty?: StringFieldUpdateOperationsInput | string
     level?: IntFieldUpdateOperationsInput | number
     level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    bpm_min?: NullableIntFieldUpdateOperationsInput | number | null
+    bpm_max?: NullableIntFieldUpdateOperationsInput | number | null
+    note_count?: NullableIntFieldUpdateOperationsInput | number | null
+    duration_seconds?: NullableIntFieldUpdateOperationsInput | number | null
+    released_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unlock_condition?: NullableStringFieldUpdateOperationsInput | string | null
+    play_video_url?: NullableStringFieldUpdateOperationsInput | string | null
+    chart_preview_url?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     music?: MusicUpdateOneRequiredWithoutChartsNestedInput
@@ -35667,6 +36131,14 @@ export namespace Prisma {
     difficulty?: StringFieldUpdateOperationsInput | string
     level?: IntFieldUpdateOperationsInput | number
     level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    bpm_min?: NullableIntFieldUpdateOperationsInput | number | null
+    bpm_max?: NullableIntFieldUpdateOperationsInput | number | null
+    note_count?: NullableIntFieldUpdateOperationsInput | number | null
+    duration_seconds?: NullableIntFieldUpdateOperationsInput | number | null
+    released_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unlock_condition?: NullableStringFieldUpdateOperationsInput | string | null
+    play_video_url?: NullableStringFieldUpdateOperationsInput | string | null
+    chart_preview_url?: NullableStringFieldUpdateOperationsInput | string | null
     music_idx?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -35823,6 +36295,14 @@ export namespace Prisma {
     difficulty: string
     level: number
     level_constant?: number | null
+    bpm_min?: number | null
+    bpm_max?: number | null
+    note_count?: number | null
+    duration_seconds?: number | null
+    released_at?: Date | string | null
+    unlock_condition?: string | null
+    play_video_url?: string | null
+    chart_preview_url?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     music: MusicCreateNestedOneWithoutChartsInput
@@ -35840,6 +36320,14 @@ export namespace Prisma {
     difficulty: string
     level: number
     level_constant?: number | null
+    bpm_min?: number | null
+    bpm_max?: number | null
+    note_count?: number | null
+    duration_seconds?: number | null
+    released_at?: Date | string | null
+    unlock_condition?: string | null
+    play_video_url?: string | null
+    chart_preview_url?: string | null
     music_idx: string
     created_at?: Date | string
     updated_at?: Date | string
@@ -36024,6 +36512,14 @@ export namespace Prisma {
     difficulty?: StringFieldUpdateOperationsInput | string
     level?: IntFieldUpdateOperationsInput | number
     level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    bpm_min?: NullableIntFieldUpdateOperationsInput | number | null
+    bpm_max?: NullableIntFieldUpdateOperationsInput | number | null
+    note_count?: NullableIntFieldUpdateOperationsInput | number | null
+    duration_seconds?: NullableIntFieldUpdateOperationsInput | number | null
+    released_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unlock_condition?: NullableStringFieldUpdateOperationsInput | string | null
+    play_video_url?: NullableStringFieldUpdateOperationsInput | string | null
+    chart_preview_url?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     music?: MusicUpdateOneRequiredWithoutChartsNestedInput
@@ -36041,6 +36537,14 @@ export namespace Prisma {
     difficulty?: StringFieldUpdateOperationsInput | string
     level?: IntFieldUpdateOperationsInput | number
     level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    bpm_min?: NullableIntFieldUpdateOperationsInput | number | null
+    bpm_max?: NullableIntFieldUpdateOperationsInput | number | null
+    note_count?: NullableIntFieldUpdateOperationsInput | number | null
+    duration_seconds?: NullableIntFieldUpdateOperationsInput | number | null
+    released_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unlock_condition?: NullableStringFieldUpdateOperationsInput | string | null
+    play_video_url?: NullableStringFieldUpdateOperationsInput | string | null
+    chart_preview_url?: NullableStringFieldUpdateOperationsInput | string | null
     music_idx?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -36197,6 +36701,14 @@ export namespace Prisma {
     difficulty: string
     level: number
     level_constant?: number | null
+    bpm_min?: number | null
+    bpm_max?: number | null
+    note_count?: number | null
+    duration_seconds?: number | null
+    released_at?: Date | string | null
+    unlock_condition?: string | null
+    play_video_url?: string | null
+    chart_preview_url?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     music: MusicCreateNestedOneWithoutChartsInput
@@ -36214,6 +36726,14 @@ export namespace Prisma {
     difficulty: string
     level: number
     level_constant?: number | null
+    bpm_min?: number | null
+    bpm_max?: number | null
+    note_count?: number | null
+    duration_seconds?: number | null
+    released_at?: Date | string | null
+    unlock_condition?: string | null
+    play_video_url?: string | null
+    chart_preview_url?: string | null
     music_idx: string
     created_at?: Date | string
     updated_at?: Date | string
@@ -36398,6 +36918,14 @@ export namespace Prisma {
     difficulty?: StringFieldUpdateOperationsInput | string
     level?: IntFieldUpdateOperationsInput | number
     level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    bpm_min?: NullableIntFieldUpdateOperationsInput | number | null
+    bpm_max?: NullableIntFieldUpdateOperationsInput | number | null
+    note_count?: NullableIntFieldUpdateOperationsInput | number | null
+    duration_seconds?: NullableIntFieldUpdateOperationsInput | number | null
+    released_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unlock_condition?: NullableStringFieldUpdateOperationsInput | string | null
+    play_video_url?: NullableStringFieldUpdateOperationsInput | string | null
+    chart_preview_url?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     music?: MusicUpdateOneRequiredWithoutChartsNestedInput
@@ -36415,6 +36943,14 @@ export namespace Prisma {
     difficulty?: StringFieldUpdateOperationsInput | string
     level?: IntFieldUpdateOperationsInput | number
     level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    bpm_min?: NullableIntFieldUpdateOperationsInput | number | null
+    bpm_max?: NullableIntFieldUpdateOperationsInput | number | null
+    note_count?: NullableIntFieldUpdateOperationsInput | number | null
+    duration_seconds?: NullableIntFieldUpdateOperationsInput | number | null
+    released_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unlock_condition?: NullableStringFieldUpdateOperationsInput | string | null
+    play_video_url?: NullableStringFieldUpdateOperationsInput | string | null
+    chart_preview_url?: NullableStringFieldUpdateOperationsInput | string | null
     music_idx?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -37686,6 +38222,14 @@ export namespace Prisma {
     difficulty: string
     level: number
     level_constant?: number | null
+    bpm_min?: number | null
+    bpm_max?: number | null
+    note_count?: number | null
+    duration_seconds?: number | null
+    released_at?: Date | string | null
+    unlock_condition?: string | null
+    play_video_url?: string | null
+    chart_preview_url?: string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -37941,6 +38485,14 @@ export namespace Prisma {
     difficulty?: StringFieldUpdateOperationsInput | string
     level?: IntFieldUpdateOperationsInput | number
     level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    bpm_min?: NullableIntFieldUpdateOperationsInput | number | null
+    bpm_max?: NullableIntFieldUpdateOperationsInput | number | null
+    note_count?: NullableIntFieldUpdateOperationsInput | number | null
+    duration_seconds?: NullableIntFieldUpdateOperationsInput | number | null
+    released_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unlock_condition?: NullableStringFieldUpdateOperationsInput | string | null
+    play_video_url?: NullableStringFieldUpdateOperationsInput | string | null
+    chart_preview_url?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     constantHistory?: ChartConstantHistoryUpdateManyWithoutChartNestedInput
@@ -37958,6 +38510,14 @@ export namespace Prisma {
     difficulty?: StringFieldUpdateOperationsInput | string
     level?: IntFieldUpdateOperationsInput | number
     level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    bpm_min?: NullableIntFieldUpdateOperationsInput | number | null
+    bpm_max?: NullableIntFieldUpdateOperationsInput | number | null
+    note_count?: NullableIntFieldUpdateOperationsInput | number | null
+    duration_seconds?: NullableIntFieldUpdateOperationsInput | number | null
+    released_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unlock_condition?: NullableStringFieldUpdateOperationsInput | string | null
+    play_video_url?: NullableStringFieldUpdateOperationsInput | string | null
+    chart_preview_url?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     constantHistory?: ChartConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
@@ -37975,6 +38535,14 @@ export namespace Prisma {
     difficulty?: StringFieldUpdateOperationsInput | string
     level?: IntFieldUpdateOperationsInput | number
     level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
+    bpm_min?: NullableIntFieldUpdateOperationsInput | number | null
+    bpm_max?: NullableIntFieldUpdateOperationsInput | number | null
+    note_count?: NullableIntFieldUpdateOperationsInput | number | null
+    duration_seconds?: NullableIntFieldUpdateOperationsInput | number | null
+    released_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unlock_condition?: NullableStringFieldUpdateOperationsInput | string | null
+    play_video_url?: NullableStringFieldUpdateOperationsInput | string | null
+    chart_preview_url?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
