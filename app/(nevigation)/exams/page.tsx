@@ -3,6 +3,7 @@ import ExamDashboard, {
 } from "@/components/exams/examDashboard";
 import db from "@/lib/db";
 import getSession from "@/lib/session";
+import { normalizeStoredGrade } from "@/lib/utils";
 
 export default async function ExamsPage() {
     const session = await getSession();
@@ -137,8 +138,8 @@ export default async function ExamsPage() {
             submissionStatus: exam.submissions[0]?.status ?? null,
             playerGrade:
                 exam.mode === "recital"
-                    ? (user?.grade_recital ?? null)
-                    : (user?.grade_basic ?? null),
+                    ? normalizeStoredGrade(user?.grade_recital)
+                    : normalizeStoredGrade(user?.grade_basic),
             stages: exam.stages.map((stage) => ({
                 id: stage.id,
                 position: stage.position,

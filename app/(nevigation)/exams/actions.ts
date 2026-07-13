@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 
 import db from "@/lib/db";
 import getSession from "@/lib/session";
+import { normalizeStoredGrade } from "@/lib/utils";
 
 interface CloudflareUploadResponse {
     success: boolean;
@@ -42,10 +43,11 @@ async function getAvailableExam(examId: number, userId: number) {
         where: { id: userId },
         select: { grade_basic: true, grade_recital: true },
     });
-    const playerGrade =
+    const storedGrade =
         exam.mode === "recital"
             ? (user?.grade_recital ?? null)
             : (user?.grade_basic ?? null);
+    const playerGrade = normalizeStoredGrade(storedGrade);
 
     return playerGrade !== null && playerGrade >= exam.requiredGrade
         ? exam

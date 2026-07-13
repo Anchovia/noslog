@@ -15,12 +15,14 @@ export function formatToComma(number: number | null): string {
     }
 }
 
+export function normalizeStoredGrade(
+    grade: number | null | undefined
+): number | null {
+    return grade == null ? null : Math.round(grade / 100);
+}
+
 export function formatToGrade(grade: number | null): string {
-    if (grade) {
-        return (grade / 100).toFixed(0);
-    } else {
-        return "0";
-    }
+    return String(normalizeStoredGrade(grade) ?? 0);
 }
 
 export default function formatToTimeAgo(date: string): string {
