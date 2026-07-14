@@ -1,5 +1,10 @@
 "use client";
 
+import { Camera, Save } from "lucide-react";
+import Link from "next/link";
+import { ChangeEvent, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+
 import {
     getImageUploadUrl,
     uploadUserSetting,
@@ -8,157 +13,229 @@ import {
     SettingType,
     settingSchema,
 } from "@/app/(nevigation)/profile/settings/schema";
-import Button from "@/components/button/formButton";
-import Input from "@/components/input/formInput";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 
 interface ProfileSettingCardProps {
-    avatar: string | null | undefined;
+    user: {
+        id: number;
+        avatar: string | null;
+        username: string | null;
+        discord_name: string | null;
+        discord_tag: string | null;
+    };
 }
 
-export default function ProfileSettingCard({
-    avatar,
-}: ProfileSettingCardProps) {
-    const [preview, setPreview] = useState(avatar);
-    const [uploadUrl, setUploadUrl] = useState("");
+const inputClass =
+    "border-border bg-bg text-input placeholder:text-text-disabled focus:border-text-secondary focus:ring-text-secondary/20 h-11 w-full rounded-card border px-3 outline-none transition focus:ring-2";
 
+function FieldError({ message }: { message?: string }) {
+    return message ? (
+        <p className="text-danger mt-1 text-xs">{message}</p>
+    ) : null;
+}
+
+// 프로필 이미지와 공개 정보를 한 화면에서 수정함
+export default function ProfileSettingCard({ user }: ProfileSettingCardProps) {
+    const [preview, setPreview] = useState(user.avatar ?? "");
     const [file, setFile] = useState<File | null>(null);
+    const [fileError, setFileError] = useState("");
+    const [submitError, setSubmitError] = useState("");
     const {
         register,
         handleSubmit,
-        setValue,
-        formState: { errors },
+        setError,
+        formState: { errors, isSubmitting },
     } = useForm<SettingType>({
         resolver: zodResolver(settingSchema),
+        defaultValues: {
+            avatar: user.avatar ?? "",
+            username: user.username ?? "",
+            discord_name: user.discord_name ?? "",
+            discord_tag: user.discord_tag ?? "",
+        },
     });
-
-    // 이미지만 업로드 했는지 확인 필요
-    // 파일 최대 사이즈 제한 필요(3 ~ 4mb)
-    const onImageChange = async (
-        event: React.ChangeEvent<HTMLInputElement>
-    ) => {
-        const {
-            target: { files },
-        } = event;
-        if (!files) {
-            return;
-        }
-        const file = files[0];
-        const url = URL.createObjectURL(file);
-        setPreview(url);
-        setFile(file);
-        const { success, result } = await getImageUploadUrl();
-        if (success) {
-            const { id, uploadURL } = result;
-            setUploadUrl(uploadURL);
-            setValue(
-                "avatar",
-                `https://imagedelivery.net/zAwkQO6bEReNpmM7QzHHXA/${id}`
-            );
-        }
-    };
-    const onSubmit = handleSubmit(async (data: SettingType) => {
-        const formData = new FormData();
-
-        if (file) {
-            const cloudflareForm = new FormData();
-            cloudflareForm.append("file", file);
-            const response = await fetch(uploadUrl, {
-                method: "POST",
-                body: cloudflareForm,
-            });
-            if (response.status !== 200) {
-                return;
-            }
-            formData.append("avatar", data.avatar);
-        } else if (preview) {
-            formData.append("avatar", preview);
-        }
-        formData.append("username", data.username);
-        if (data.discord_name) {
-            formData.append("discord_name", data.discord_name);
-        }
-        if (data.discord_tag) {
-            formData.append("discord_tag", data.discord_tag);
-        }
-        await uploadUserSetting(formData);
-    });
-    const onValid = async () => {
-        await onSubmit();
-    };
 
     useEffect(() => {
-        setValue("avatar", avatar ? avatar : "");
-    }, []);
+        return () => {
+            if (preview.startsWith("blob:")) URL.revokeObjectURL(preview);
+        };
+    }, [preview]);
+
+    const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const selectedFile = event.target.files?.[0];
+        if (!selectedFile) return;
+
+        if (
+            !(["image/jpeg", "image/png", "image/webp"] as string[]).includes(
+                selectedFile.type
+            )
+        ) {
+            setFileError("JPG, PNG, WebP 이미지만 사용할 수 있습니다.");
+            event.target.value = "";
+            return;
+        }
+        if (selectedFile.size > 4 * 1024 * 1024) {
+            setFileError("이미지는 4MB 이하로 선택해주세요.");
+            event.target.value = "";
+            return;
+        }
+
+        setFileError("");
+        setFile(selectedFile);
+        setPreview(URL.createObjectURL(selectedFile));
+    };
+
+    const submit = handleSubmit(async (data) => {
+        setSubmitError("");
+        let avatar = data.avatar;
+
+        if (file) {
+            const upload = await getImageUploadUrl();
+            if (!upload.success) {
+                setSubmitError(upload.message);
+                return;
+            }
+
+            const uploadFormData = new FormData();
+            uploadFormData.append("file", file);
+            const uploadResponse = await fetch(upload.result.uploadURL, {
+                method: "POST",
+                body: uploadFormData,
+            });
+            if (!uploadResponse.ok) {
+                setSubmitError("프로필 이미지 업로드에 실패했습니다.");
+                return;
+            }
+
+            avatar = `https://imagedelivery.net/zAwkQO6bEReNpmM7QzHHXA/${upload.result.id}`;
+        }
+
+        const formData = new FormData();
+        formData.set("avatar", avatar);
+        formData.set("username", data.username);
+        formData.set("discord_name", data.discord_name);
+        formData.set("discord_tag", data.discord_tag);
+
+        const result = await uploadUserSetting(formData);
+        if (result?.fieldErrors) {
+            for (const [field, messages] of Object.entries(
+                result.fieldErrors
+            )) {
+                const message = messages?.[0];
+                if (message && field in data) {
+                    setError(field as keyof SettingType, { message });
+                }
+            }
+        }
+        if (result) setSubmitError(result.message);
+    });
 
     return (
-        <main className="flex min-h-screen w-screen items-center justify-center py-14">
-            <form
-                action={onValid}
-                className="bg-dark-secondary/40 flex max-w-sm flex-col items-center justify-center gap-2 rounded-2xl p-8"
-            >
-                {/* 아바타 업로드 */}
-                <label
-                    className="border-dark-tertiary size-24 rounded-full border"
-                    htmlFor="avatar"
+        <form onSubmit={submit} className="flex flex-col gap-4">
+            <section className="bg-surface rounded-card flex items-center gap-4 p-4">
+                <span
+                    className="border-border bg-surface-muted flex size-18 shrink-0 items-center justify-center rounded-full border bg-cover bg-center text-xl font-bold"
                     style={{
-                        backgroundImage: `url(${preview})`,
-                        backgroundSize: "cover",
-                        backgroundPosition: "center",
-                        backgroundRepeat: "no-repeat",
+                        backgroundImage: preview
+                            ? `url(${preview})`
+                            : undefined,
                     }}
+                    aria-label="프로필 이미지 미리보기"
                 >
-                    {preview === "" ? (
-                        <>
-                            <div className="border-dark-tertiary size-24 rounded-full border" />
-                        </>
-                    ) : null}
-                </label>
-                <input
-                    onChange={onImageChange}
-                    type="file"
-                    id="avatar"
-                    name="avatar"
-                    className="hidden"
-                />
-                {/* 닉네임 */}
-                <div className="flex flex-col gap-1">
-                    <label className="text-sm" htmlFor="username">
-                        닉네임
+                    {!preview ? (user.username?.charAt(0) ?? "N") : null}
+                </span>
+                <div className="min-w-0 flex-1">
+                    <h2 className="text-section">프로필 이미지</h2>
+                    <p className="text-caption mt-1">
+                        JPG, PNG, WebP · 최대 4MB
+                    </p>
+                    <label className="border-border text-text-primary rounded-card mt-3 inline-flex h-9 cursor-pointer items-center gap-2 border px-3 text-xs font-semibold">
+                        <Camera className="size-4" aria-hidden />
+                        사진 변경
+                        <input
+                            type="file"
+                            accept="image/jpeg,image/png,image/webp"
+                            onChange={handleImageChange}
+                            className="sr-only"
+                        />
                     </label>
-                    <Input
+                    <FieldError message={fileError} />
+                </div>
+            </section>
+
+            <section className="bg-surface rounded-card flex flex-col gap-4 p-4">
+                <div>
+                    <h2 className="text-section">기본 정보</h2>
+                    <p className="text-caption mt-1">
+                        닉네임은 프로필과 랭킹에 표시됩니다.
+                    </p>
+                </div>
+                <label className="text-text-secondary text-xs font-semibold">
+                    닉네임
+                    <input
+                        type="text"
+                        autoComplete="nickname"
                         placeholder="닉네임"
-                        type="text"
-                        required
+                        className={`${inputClass} mt-1.5`}
                         {...register("username")}
-                        errors={[errors.username?.message ?? ""]}
                     />
+                    <FieldError message={errors.username?.message} />
+                </label>
+            </section>
+
+            <section className="bg-surface rounded-card flex flex-col gap-4 p-4">
+                <div>
+                    <h2 className="text-section">Discord</h2>
+                    <p className="text-caption mt-1">
+                        입력한 정보는 프로필에 표시됩니다.
+                    </p>
                 </div>
-                {/* 디스코드 이름, 태그 */}
-                <div className="flex flex-col gap-1">
-                    <label className="text-sm" htmlFor="discord_name">
-                        디스코드 이름
-                    </label>
-                    <Input
-                        placeholder="디스코드 이름"
+                <label className="text-text-secondary text-xs font-semibold">
+                    Discord 이름
+                    <input
                         type="text"
+                        autoComplete="off"
+                        placeholder="Discord 이름"
+                        className={`${inputClass} mt-1.5`}
                         {...register("discord_name")}
-                        errors={[errors.discord_name?.message ?? ""]}
                     />
-                    <label className="text-sm" htmlFor="discord_tag">
-                        디스코드 태그
-                    </label>
-                    <Input
-                        placeholder="디스코드 태그"
+                    <FieldError message={errors.discord_name?.message} />
+                </label>
+                <label className="text-text-secondary text-xs font-semibold">
+                    Discord 태그
+                    <input
                         type="text"
+                        autoComplete="off"
+                        placeholder="Discord 태그"
+                        className={`${inputClass} mt-1.5`}
                         {...register("discord_tag")}
-                        errors={[errors.discord_tag?.message ?? ""]}
                     />
-                </div>
-                <Button text="업데이트" />
-            </form>
-        </main>
+                    <FieldError message={errors.discord_tag?.message} />
+                </label>
+            </section>
+
+            {submitError ? (
+                <p className="border-danger/40 bg-danger/10 text-danger rounded-card border px-3 py-2 text-sm">
+                    {submitError}
+                </p>
+            ) : null}
+
+            <div className="grid grid-cols-2 gap-2">
+                <Link
+                    href={`/profile/${user.id}`}
+                    className="border-border text-text-secondary rounded-card flex h-11 items-center justify-center border text-sm font-semibold"
+                >
+                    취소
+                </Link>
+                <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="bg-text-primary text-bg rounded-card flex h-11 cursor-pointer items-center justify-center gap-2 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                    <Save className="size-4" aria-hidden />
+                    {isSubmitting ? "저장 중" : "저장"}
+                </button>
+            </div>
+        </form>
     );
 }
