@@ -4,7 +4,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -199,7 +199,7 @@ model ChartLevelConstantHistory {
   @@map("ChartConstantHistory")
 }
 
-// Basic/Recital 등 독립된 서열표의 공개 상태와 범위를 관리함
+// Basic/Recital 등 독립된 서열표의 공개 상태와 구성을 관리함
 model TierList {
   id          Int                    @id @default(autoincrement())
   slug        String                 @unique
