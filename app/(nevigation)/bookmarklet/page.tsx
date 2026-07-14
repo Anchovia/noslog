@@ -6,13 +6,7 @@ import db from "@/lib/db";
 import { getUser } from "@/lib/user";
 import { formatDistanceToNow } from "date-fns";
 import { ko } from "date-fns/locale";
-import {
-    Bookmark,
-    CircleCheck,
-    Database,
-    LogIn,
-    RefreshCw,
-} from "lucide-react";
+import { Bookmark, CircleCheck, LogIn, RefreshCw } from "lucide-react";
 import { headers } from "next/headers";
 import Link from "next/link";
 
@@ -134,23 +128,6 @@ export default async function BookmarkletPage() {
                         진행 상태가 표시되고 완료 후 프로필 갱신
                     </li>
                 </ol>
-
-                <div className="border-border rounded-card flex min-h-20 items-center gap-3 border border-dashed px-4">
-                    <Database
-                        size={24}
-                        className="text-chart shrink-0"
-                        aria-hidden
-                    />
-                    <div>
-                        <p className="text-text-primary text-sm font-semibold">
-                            NOSTALGIA 페이지에서 진행 상태 확인
-                        </p>
-                        <p className="text-caption mt-1">
-                            정보 수집부터 NosLog 전송 완료까지 단계별로
-                            표시됩니다.
-                        </p>
-                    </div>
-                </div>
             </section>
 
             <section className="border-border rounded-card flex min-h-15 items-center gap-3 border px-4">

@@ -313,6 +313,7 @@ export default async function MusicDetailPage(props: {
             music={music}
             difficulty={selectedDifficulty}
             activeTab={activeTab}
+            isLoggedIn={Boolean(session.id)}
             userPlayData={userPlayData}
             recentChartPlays={recentChartPlays}
             chartDetail={{

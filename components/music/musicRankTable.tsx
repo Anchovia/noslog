@@ -28,6 +28,7 @@ interface CurrentUserRanking {
 interface MusicRankTableProps {
     musicIndex: string;
     difficulty: string;
+    isLoggedIn: boolean;
     rows: RankingRow[];
     page: number;
     pageSize: number;
@@ -87,6 +88,7 @@ function UserAvatar({ user, size = 28 }: { user: RankingUser; size?: number }) {
 export default function MusicRankTable({
     musicIndex,
     difficulty,
+    isLoggedIn,
     rows,
     page,
     pageSize,
@@ -107,7 +109,19 @@ export default function MusicRankTable({
 
     return (
         <div className="flex flex-col gap-3">
-            {currentUser && currentUser.rank ? (
+            {!isLoggedIn ? (
+                <section className="border-border bg-surface-muted rounded-card flex min-h-14 items-center justify-between gap-3 border px-3">
+                    <p className="text-text-secondary text-sm">
+                        로그인 후 내 랭킹을 확인할 수 있습니다.
+                    </p>
+                    <Link
+                        href="/login"
+                        className="bg-text-primary text-bg rounded-card flex h-8 shrink-0 items-center justify-center px-3 text-xs font-bold"
+                    >
+                        로그인
+                    </Link>
+                </section>
+            ) : currentUser && currentUser.rank ? (
                 <section className="border-text-disabled/40 rounded-card flex h-14 items-center gap-3 border px-3">
                     <strong className="text-text-primary w-9 shrink-0 text-sm tabular-nums">
                         #{currentUser.rank}
