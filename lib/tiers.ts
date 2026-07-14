@@ -11,6 +11,28 @@ export const tierModeStyles: Record<string, string> = {
     recital: "bg-recital/15 text-recital",
 };
 
+const MIN_TIER_VALUE = 1;
+const MAX_TIER_VALUE = 14;
+
+// 게임의 Grd 원본 값을 서열표 추천 중심과 범위로 변환함
+export function getTierRecommendation(rawGrade: number | null | undefined) {
+    if (!rawGrade || rawGrade <= 0) return null;
+
+    const displayGrade = Math.round(rawGrade / 100);
+    const unclampedTarget = displayGrade / 1000 + 6.5;
+    const target = Math.min(
+        MAX_TIER_VALUE,
+        Math.max(MIN_TIER_VALUE, Math.round(unclampedTarget * 10) / 10)
+    );
+
+    return {
+        displayGrade,
+        target,
+        min: Math.max(MIN_TIER_VALUE, Math.round((target - 0.2) * 10) / 10),
+        max: Math.min(MAX_TIER_VALUE, Math.round((target + 0.2) * 10) / 10),
+    };
+}
+
 export function getTierRecordStatus(
     record: TierRecord | null | undefined
 ): TierRecordStatus {
