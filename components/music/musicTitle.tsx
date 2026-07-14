@@ -22,7 +22,7 @@ export default function MusicTitle({
     isRecital,
 }: MusicTitleProps) {
     return (
-        <section className="flex justify-between items-center gap-6">
+        <section className="flex items-center justify-between gap-6">
             {/* 자켓, 제목, 아티스트 */}
             <article className="flex items-center gap-6">
                 <div
@@ -34,11 +34,11 @@ export default function MusicTitle({
                         }`,
                         backgroundSize: "cover",
                     }}
-                    className="size-24 aspect-square border border-white/50"
+                    className="aspect-square size-24 border border-white/50"
                 />
                 <div className="flex flex-col">
-                    <h1 className="font-bold text-2xl">{title}</h1>
-                    <h2 className="font-normal text-xl text-white/80">
+                    <h1 className="text-2xl font-bold">{title}</h1>
+                    <h2 className="text-xl font-normal text-white/80">
                         {artist}
                     </h2>
                 </div>

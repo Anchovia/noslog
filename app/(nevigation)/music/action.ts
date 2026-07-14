@@ -1,73 +1,11 @@
 "use server";
 
-import db from "@/lib/db";
-
-interface SearchParamsProps {
-    qurry?: string;
-    normal?: string;
-    hard?: string;
-    expert?: string;
-    real?: string;
-}
+import { getMusicPage } from "./data";
+import type { MusicSearchParams } from "./query";
 
 export async function getMoreMusics(
     page: number,
-    { qurry, normal, hard, expert, real }: SearchParamsProps
+    searchParams: MusicSearchParams
 ) {
-    const musics = await db.music.findMany({
-        where: {
-            AND: [
-                qurry
-                    ? {
-                          OR: [
-                              { title: { contains: qurry } },
-                              { artist: { contains: qurry } },
-                          ],
-                      }
-                    : {},
-                normal
-                    ? {
-                          normal: {
-                              equals: parseInt(normal),
-                          },
-                      }
-                    : {},
-                hard
-                    ? {
-                          hard: {
-                              equals: parseInt(hard),
-                          },
-                      }
-                    : {},
-                expert
-                    ? {
-                          expert: {
-                              equals: parseInt(expert),
-                          },
-                      }
-                    : {},
-
-                real
-                    ? {
-                          real: {
-                              equals: parseInt(real),
-                              not: null,
-                          },
-                      }
-                    : {},
-            ],
-        },
-        select: {
-            index: true,
-            title: true,
-            artist: true,
-            category_short: true,
-            background: true,
-            sheet_len: true,
-            difficulty_levels: true,
-        },
-        skip: page * 20,
-        take: 20,
-    });
-    return musics;
+    return getMusicPage(searchParams, page);
 }

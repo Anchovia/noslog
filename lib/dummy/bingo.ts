@@ -5,10 +5,40 @@ export async function updateDummy() {
 
     if (!bingoSession) {
         await db.bingo.createMany({
-            data: bingo,
+            data: bingo.map((item) => ({
+                id: item.id,
+                rewardNos: item.nos,
+                requiredLines: item.line,
+                coverMusicIndex: item.music_idx,
+                status: "published",
+            })),
         });
         await db.bingoCell.createMany({
-            data: bingoCell,
+            data: bingoCell.map((cell) => {
+                const musicIndex =
+                    "music_idx" in cell ? cell.music_idx : undefined;
+                const categoryShort =
+                    "category_short" in cell ? cell.category_short : undefined;
+
+                return {
+                    id: cell.id,
+                    position: cell.position,
+                    bingoId: cell.bingo_id,
+                    title: cell.challenge,
+                    musicIndex,
+                    categoryShort,
+                    missionType: musicIndex
+                        ? "music"
+                        : categoryShort
+                          ? "category"
+                          : "record",
+                    ruleType: musicIndex
+                        ? "play_music"
+                        : categoryShort
+                          ? "play_category"
+                          : "manual",
+                };
+            }),
         });
     }
 }

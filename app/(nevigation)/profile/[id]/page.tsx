@@ -1,47 +1,29 @@
-import ProfileDetail from "@/components/profile/profile";
-import db from "@/lib/db";
+import ProfileDashboard from "@/components/profile/profile";
 import getSession from "@/lib/session";
 import { notFound } from "next/navigation";
-import {
-    getInitialBasicBestPlays,
-    getInitialRecentPlays,
-    getInitialRecitalBestPlays,
-    getUserData,
-} from "./actions";
+import { getProfileData } from "./actions";
 
-export default async function Profile({ params }: { params: { id: string } }) {
-    // params에 id가 아닌 값 들어왔을 때 예외 처리
-    const id = Number(params.id);
-    if (isNaN(id)) {
-        return notFound();
-    }
-    const userData = await getUserData(id);
-    const initialRecentPlays = await getInitialRecentPlays(id);
-    const initialBasicBestPlays = await getInitialBasicBestPlays(id);
-    const initialRecitalBestPlays = await getInitialRecitalBestPlays(id);
-    const userBestGrades: any = await db.userBestGrade.findMany({
-        where: { user_id: id },
-        select: {
-            besttime: true,
-            grade_basic: true,
-            grade_recital: true,
-        },
-        orderBy: { besttime: "asc" },
-    });
-    const session = await getSession();
+export default async function ProfilePage({
+    params,
+}: {
+    params: Promise<{ id: string }>;
+}) {
+    const { id: rawId } = await params;
+    const id = Number(rawId);
+
+    if (!Number.isInteger(id) || id < 1) notFound();
+
+    const [profileData, session] = await Promise.all([
+        getProfileData(id),
+        getSession(),
+    ]);
+
+    if (!profileData) notFound();
 
     return (
-        <>
-            {userData && (
-                <ProfileDetail
-                    userData={userData}
-                    initialRecentPlays={initialRecentPlays}
-                    initialBasicBestPlays={initialBasicBestPlays}
-                    initialRecitalBestPlays={initialRecitalBestPlays}
-                    userBestGrades={userBestGrades}
-                    sessionId={session.id}
-                />
-            )}
-        </>
+        <ProfileDashboard
+            {...profileData}
+            isOwner={session.id === profileData.user.id}
+        />
     );
 }

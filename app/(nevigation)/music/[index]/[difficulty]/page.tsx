@@ -1,104 +1,378 @@
-import MusicDetail from "@/components/music/musicDetail";
+import MusicDetail, { type DetailTab } from "@/components/music/musicDetail";
 import db from "@/lib/db";
-import { getBasicUserPlayData } from "./action";
+import getSession from "@/lib/session";
+import { notFound, redirect } from "next/navigation";
+import { getRecentChartPlays, getUserPlayData } from "./action";
 
-export default async function BasicMusicDetail({
-    params,
-}: {
-    params: { index: string; difficulty: string };
+const difficulties = ["Normal", "Hard", "Expert", "Real"] as const;
+const tabs: DetailTab[] = ["record", "detail", "ranking", "tier"];
+
+export default async function MusicDetailPage(props: {
+    params: Promise<{ index: string; difficulty: string }>;
+    searchParams: Promise<{ tab?: string; page?: string }>;
 }) {
-    const music = await db.music.findUnique({
-        where: { index: params.index },
-        select: {
-            index: true,
-            background: true,
-            title: true,
-            artist: true,
-            category: true,
-            sheet_len: true,
-            difficulty_levels: true,
-        },
-    });
+    const [{ index, difficulty }, searchParams] = await Promise.all([
+        props.params,
+        props.searchParams,
+    ]);
 
-    const basicPlayDatas = await db.playData.findMany({
-        where: {
-            music_idx: params.index,
-            difficulty: params.difficulty,
-        },
-        select: {
-            rank: true,
-            score: true,
-            user: {
-                select: {
-                    username: true,
-                    id: true,
+    const normalizedDifficulty = difficulty.toLowerCase();
+    const selectedDifficulty = difficulties.find(
+        (item) => item.toLowerCase() === normalizedDifficulty
+    );
+
+    if (!selectedDifficulty) notFound();
+
+    if (difficulty !== normalizedDifficulty) {
+        const query = new URLSearchParams();
+        if (searchParams.tab) query.set("tab", searchParams.tab);
+        if (searchParams.page) query.set("page", searchParams.page);
+        const queryString = query.toString();
+        redirect(
+            `/music/${index}/${normalizedDifficulty}${queryString ? `?${queryString}` : ""}`
+        );
+    }
+    const activeTab: DetailTab = tabs.includes(searchParams.tab as DetailTab)
+        ? (searchParams.tab as DetailTab)
+        : "record";
+    const requestedPage = Number.parseInt(searchParams.page ?? "1", 10);
+    const rankingPage =
+        Number.isFinite(requestedPage) && requestedPage > 0 ? requestedPage : 1;
+    const rankingPageSize = 7;
+
+    const [music, selectedChart] = await Promise.all([
+        db.music.findUnique({
+            where: { index },
+            select: {
+                index: true,
+                background: true,
+                title: true,
+                artist: true,
+                category_short: true,
+                normal: true,
+                hard: true,
+                expert: true,
+                real: true,
+            },
+        }),
+        db.musicChart.findUnique({
+            where: {
+                music_idx_difficulty: {
+                    music_idx: index,
+                    difficulty: selectedDifficulty,
                 },
             },
-            max_combo: true,
-            grade_basic: true,
-            besttime: true,
-            user_id: true,
-        },
-        distinct: ["user_id"],
-        take: 50,
-        orderBy: {
-            grade_basic: "desc",
-        },
-    });
-    const recitalPlayDatas = await db.playData.findMany({
-        where: {
-            music_idx: params.index,
-            difficulty: params.difficulty,
-        },
-        select: {
-            rank: true,
-            score: true,
-            user: {
-                select: {
-                    username: true,
-                    id: true,
+            select: {
+                id: true,
+                level: true,
+                level_constant: true,
+                bpm_min: true,
+                bpm_max: true,
+                note_count: true,
+                duration_seconds: true,
+                released_at: true,
+                unlock_condition: true,
+                play_video_url: true,
+                chart_preview_url: true,
+                updated_at: true,
+            },
+        }),
+    ]);
+
+    if (!music || !selectedChart) {
+        notFound();
+    }
+
+    const session = await getSession();
+
+    const [
+        userPlayData,
+        recentChartPlays,
+        rankingRows,
+        rankingCount,
+        evaluationSummary,
+        perceivedDistribution,
+        tierPlacement,
+        currentEvaluation,
+        evaluationOpinions,
+        opinionCount,
+        chartScores,
+    ] = await Promise.all([
+        getUserPlayData({
+            index,
+            difficulty: selectedDifficulty,
+            chartId: selectedChart.id,
+        }),
+        getRecentChartPlays({
+            index,
+            difficulty: selectedDifficulty,
+        }),
+        db.playData.findMany({
+            where: { chart_id: selectedChart.id, score: { gt: 0 } },
+            select: {
+                rank: true,
+                score: true,
+                fc_type: true,
+                user_id: true,
+                user: {
+                    select: { username: true, id: true, avatar: true },
                 },
             },
-            max_combo: true,
-            grade_recital: true,
-            besttime: true,
-            user_id: true,
-        },
-        distinct: ["user_id"],
-        take: 50,
-        orderBy: {
-            grade_recital: "desc",
-        },
-    });
+            skip: (rankingPage - 1) * rankingPageSize,
+            take: rankingPageSize,
+            orderBy: [{ score: "desc" }, { user_id: "asc" }],
+        }),
+        db.playData.count({
+            where: { chart_id: selectedChart.id, score: { gt: 0 } },
+        }),
+        db.chartEvaluation.aggregate({
+            where: { chart_id: selectedChart.id },
+            _count: { _all: true },
+            _avg: {
+                perceived_constant: true,
+                stairs: true,
+                chord: true,
+                trill: true,
+                glissando: true,
+                repetition: true,
+            },
+        }),
+        db.chartEvaluation.groupBy({
+            by: ["perceived_constant"],
+            where: { chart_id: selectedChart.id },
+            _count: { _all: true },
+            orderBy: { perceived_constant: "asc" },
+        }),
+        db.tierEntry.findFirst({
+            where: {
+                chartId: selectedChart.id,
+                tierList: { status: "published" },
+            },
+            select: {
+                updatedAt: true,
+                tierBand: { select: { value: true } },
+                tierList: {
+                    select: {
+                        history: {
+                            where: {
+                                chartId: selectedChart.id,
+                                bandValue: { not: null },
+                            },
+                            select: {
+                                id: true,
+                                bandValue: true,
+                                effectiveAt: true,
+                            },
+                            orderBy: { effectiveAt: "asc" },
+                        },
+                    },
+                },
+            },
+            orderBy: { tierList: { updatedAt: "desc" } },
+        }),
+        session.id
+            ? db.chartEvaluation.findUnique({
+                  where: {
+                      chart_id_user_id: {
+                          chart_id: selectedChart.id,
+                          user_id: session.id,
+                      },
+                  },
+                  select: {
+                      perceived_constant: true,
+                      stairs: true,
+                      chord: true,
+                      trill: true,
+                      glissando: true,
+                      repetition: true,
+                      comment: true,
+                  },
+              })
+            : Promise.resolve(null),
+        db.chartEvaluation.findMany({
+            where: {
+                chart_id: selectedChart.id,
+                comment: { not: null },
+            },
+            select: {
+                id: true,
+                perceived_constant: true,
+                comment: true,
+                updated_at: true,
+                user: {
+                    select: { id: true, username: true },
+                },
+                reactions: {
+                    select: { user_id: true, value: true },
+                },
+            },
+            orderBy: { updated_at: "desc" },
+            take: 20,
+        }),
+        db.chartEvaluation.count({
+            where: {
+                chart_id: selectedChart.id,
+                comment: { not: null },
+            },
+        }),
+        db.playData.findMany({
+            where: { chart_id: selectedChart.id, score: { gt: 0 } },
+            select: { score: true, fc_type: true },
+        }),
+    ]);
 
-    const { grade_basic, level, score, max_combo, play_count, grade_recital } =
-        await getBasicUserPlayData({
-            index: params.index,
-            difficulty: params.difficulty,
+    const patternAverages = {
+        stairs: evaluationSummary._avg.stairs ?? 0,
+        chord: evaluationSummary._avg.chord ?? 0,
+        trill: evaluationSummary._avg.trill ?? 0,
+        glissando: evaluationSummary._avg.glissando ?? 0,
+        repetition: evaluationSummary._avg.repetition ?? 0,
+    };
+
+    const constantPoints = (tierPlacement?.tierList.history ?? []).map(
+        (item) => ({
+            id: item.id,
+            value: item.bandValue!,
+            effectiveAt: item.effectiveAt.toISOString(),
+        })
+    );
+    const lastConstant = constantPoints.at(-1)?.value;
+    const currentTierConstant = tierPlacement?.tierBand.value ?? null;
+
+    if (currentTierConstant !== null && lastConstant !== currentTierConstant) {
+        constantPoints.push({
+            id: -1,
+            value: currentTierConstant,
+            effectiveAt: tierPlacement!.updatedAt.toISOString(),
         });
+    }
+
+    const scoreDistribution = [
+        { key: "under950", label: "<950k", count: 0 },
+        { key: "950", label: "950k", count: 0 },
+        { key: "960", label: "960k", count: 0 },
+        { key: "970", label: "970k", count: 0 },
+        { key: "980", label: "980k", count: 0 },
+        { key: "990", label: "990k", count: 0 },
+        { key: "pianist", label: "Pianist", count: 0 },
+    ];
+
+    for (const record of chartScores) {
+        let index = 0;
+        if (record.fc_type === 3 || record.score >= 1000000) index = 6;
+        else if (record.score >= 990000) index = 5;
+        else if (record.score >= 980000) index = 4;
+        else if (record.score >= 970000) index = 3;
+        else if (record.score >= 960000) index = 2;
+        else if (record.score >= 950000) index = 1;
+        scoreDistribution[index].count++;
+    }
+
+    const higherScores =
+        userPlayData && userPlayData.score > 0
+            ? chartScores.filter((record) => record.score > userPlayData.score)
+                  .length
+            : null;
+    const userTopPercent =
+        higherScores !== null && chartScores.length > 0
+            ? Math.max(
+                  1,
+                  Math.ceil(((higherScores + 1) / chartScores.length) * 100)
+              )
+            : null;
+    const rankingPageCount = Math.max(
+        1,
+        Math.ceil(rankingCount / rankingPageSize)
+    );
+
+    if (activeTab === "ranking" && rankingPage > rankingPageCount) {
+        redirect(
+            `/music/${index}/${normalizedDifficulty}?tab=ranking&page=${rankingPageCount}`
+        );
+    }
+
+    const userRanking =
+        userPlayData && userPlayData.score > 0
+            ? (await db.playData.count({
+                  where: {
+                      chart_id: selectedChart.id,
+                      score: { gt: 0 },
+                      OR: [
+                          { score: { gt: userPlayData.score } },
+                          {
+                              score: userPlayData.score,
+                              user_id: { lt: userPlayData.user_id },
+                          },
+                      ],
+                  },
+              })) + 1
+            : null;
 
     return (
-        <>
-            {music && (
-                <MusicDetail
-                    category={music.category}
-                    index={music.index}
-                    grade_basic={grade_basic}
-                    grade_recital={grade_recital}
-                    title={music.title}
-                    artist={music.artist}
-                    background={music.background}
-                    score={score}
-                    max_combo={max_combo}
-                    play_count={play_count}
-                    difficulty={params.difficulty}
-                    sheet_len={music.sheet_len}
-                    difficulty_levels={music.difficulty_levels}
-                    level={level}
-                    basicPlayDatas={basicPlayDatas}
-                    recitalPlayDatas={recitalPlayDatas}
-                />
-            )}
-        </>
+        <MusicDetail
+            music={music}
+            difficulty={selectedDifficulty}
+            activeTab={activeTab}
+            isLoggedIn={Boolean(session.id)}
+            userPlayData={userPlayData}
+            recentChartPlays={recentChartPlays}
+            chartDetail={{
+                id: selectedChart.id,
+                level: selectedChart.level,
+                level_constant: selectedChart.level_constant,
+                bpm_min: selectedChart.bpm_min,
+                bpm_max: selectedChart.bpm_max,
+                note_count: selectedChart.note_count,
+                duration_seconds: selectedChart.duration_seconds,
+                released_at: selectedChart.released_at?.toISOString() ?? null,
+                unlock_condition: selectedChart.unlock_condition,
+                play_video_url: selectedChart.play_video_url,
+                chart_preview_url: selectedChart.chart_preview_url,
+                evaluationCount: evaluationSummary._count._all,
+                patternAverages,
+                scoreDistribution,
+                playerCount: chartScores.length,
+                userTopPercent,
+            }}
+            ranking={{
+                rows: rankingRows,
+                page: rankingPage,
+                pageSize: rankingPageSize,
+                totalCount: rankingCount,
+                userRank: userRanking,
+            }}
+            tier={{
+                currentConstant: currentTierConstant,
+                constantHistory: constantPoints,
+                community: {
+                    average: evaluationSummary._avg.perceived_constant ?? null,
+                    count: evaluationSummary._count._all,
+                    distribution: perceivedDistribution.map((item) => ({
+                        value: item.perceived_constant,
+                        count: item._count._all,
+                    })),
+                },
+                currentEvaluation,
+                opinionCount,
+                opinions: evaluationOpinions.map((opinion) => ({
+                    id: opinion.id,
+                    perceivedConstant: opinion.perceived_constant,
+                    comment: opinion.comment ?? "",
+                    updatedAt: opinion.updated_at.toISOString(),
+                    user: opinion.user,
+                    positiveCount: opinion.reactions.filter(
+                        (reaction) => reaction.value === 1
+                    ).length,
+                    negativeCount: opinion.reactions.filter(
+                        (reaction) => reaction.value === -1
+                    ).length,
+                    viewerReaction:
+                        opinion.reactions.find(
+                            (reaction) => reaction.user_id === session.id
+                        )?.value ?? null,
+                    canDelete: opinion.user.id === session.id,
+                })),
+            }}
+        />
     );
 }

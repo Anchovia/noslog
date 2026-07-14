@@ -9,13 +9,14 @@ datasource db {
 }
 
 model User {
-  id                   Int                 @id @default(autoincrement())
-  username             String?             @unique
-  kakao_id             BigInt?             @unique
+  id                   Int                       @id @default(autoincrement())
+  username             String?                   @unique
+  nostalgia_name       String?
+  kakao_id             BigInt?                   @unique
   discord_name         String?
-  discord_tag          String?             @unique
+  discord_tag          String?                   @unique
   avatar               String?
-  country              String              @default("ko-KR")
+  country              String                    @default("ko-KR")
   rank_basic           Int?
   rank_recital         Int?
   rank_basic_country   Int?
@@ -31,17 +32,27 @@ model User {
   score_b              Int?
   score_c              Int?
   score_d              Int?
-  role                 String              @default("user")
+  role                 String                    @default("user")
   grade_basic          Int?
   grade_recital        Int?
-  created_at           DateTime            @default(now())
-  updated_at           DateTime            @updatedAt
+  exam_basic           Int?
+  exam_recital         Int?
+  sync_token_version   Int                       @default(0)
+  created_at           DateTime                  @default(now())
+  updated_at           DateTime                  @updatedAt
   PlayHistory          RecentPlay[]
   PlayData             PlayData[]
   BasicBestPlay        BasicBestPlay[]
   RecitalBestPlay      RecitalBestPlay[]
   UserBestGrade        UserBestGrade[]
-  userBingoCellData    userBingoCellData[]
+  bingoProgress        BingoCellProgress[]
+  chartEvaluations     ChartEvaluation[]
+  chartReactions       ChartEvaluationReaction[]
+  dataSyncs            DataSync[]
+  chartPlayHistory     ChartPlayHistory[]
+  chartRecordSnapshots ChartRecordSnapshot[]
+  examSubmissions      ExamSubmission[]
+  examAchievements     ExamAchievement[]
 }
 
 model Music {
@@ -67,12 +78,233 @@ model Music {
   PlayData          PlayData[]
   BasicBestPlay     BasicBestPlay[]
   RecitalBestPlay   RecitalBestPlay[]
-  Bingo             Bingo[]
-  BingoCell         BingoCell[]
+  bingoCovers       Bingo[]           @relation("BingoCoverMusic")
+  bingoMissions     BingoCell[]       @relation("BingoMissionMusic")
+  charts            MusicChart[]
+  examStages        ExamStage[]
+  examRewards       ExamReward[]
+}
+
+// 악곡별 채보 정보를 난이도 컬럼과 분리해 관리함
+model MusicChart {
+  id                Int       @id @default(autoincrement())
+  difficulty        String
+  level             Int
+  level_constant    Float?
+  bpm_min           Int?
+  bpm_max           Int?
+  note_count        Int?
+  duration_seconds  Int?
+  released_at       DateTime?
+  unlock_condition  String?
+  play_video_url    String?
+  chart_preview_url String?
+  music_idx         String
+  music             Music     @relation(fields: [music_idx], references: [index], onDelete: Cascade)
+  created_at        DateTime  @default(now())
+  updated_at        DateTime  @updatedAt
+
+  levelConstantHistory ChartLevelConstantHistory[]
+  evaluations          ChartEvaluation[]
+  RecentPlay           RecentPlay[]
+  PlayData             PlayData[]
+  BasicBestPlay        BasicBestPlay[]
+  RecitalBestPlay      RecitalBestPlay[]
+  playHistory          ChartPlayHistory[]
+  recordSnapshots      ChartRecordSnapshot[]
+  examStageOptions     ExamStageChart[]
+  tierEntries          TierEntry[]
+  tierPlacementHistory TierPlacementHistory[]
+
+  @@unique([music_idx, difficulty])
+  @@index([level])
+  @@index([level_constant])
+}
+
+// 유저의 데이터 연동 실행 단위와 처리 결과를 관리함
+model DataSync {
+  id              Int                   @id @default(autoincrement())
+  status          String                @default("processing")
+  sync_scope      String                @default("full")
+  received_plays  Int                   @default(0)
+  inserted_plays  Int                   @default(0)
+  changed_records Int                   @default(0)
+  error_message   String?
+  user_id         Int
+  user            User                  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  started_at      DateTime              @default(now())
+  completed_at    DateTime?
+  playHistory     ChartPlayHistory[]
+  recordSnapshots ChartRecordSnapshot[]
+
+  @@index([user_id, started_at])
+}
+
+// 공식 최근 플레이 응답을 중복 없이 누적해 점수 추이에 사용함
+model ChartPlayHistory {
+  id               Int        @id @default(autoincrement())
+  score            Int
+  max_combo        Int
+  rank             String
+  grade_basic      Int
+  source_play_time String
+  chart_id         Int
+  chart            MusicChart @relation(fields: [chart_id], references: [id], onDelete: Cascade)
+  user_id          Int
+  user             User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  first_sync_id    Int?
+  firstSync        DataSync?  @relation(fields: [first_sync_id], references: [id], onDelete: SetNull)
+  created_at       DateTime   @default(now())
+
+  @@unique([user_id, chart_id, source_play_time, score, max_combo, rank])
+  @@index([user_id, chart_id, source_play_time])
+}
+
+// 전체 플레이 데이터에서 실제 최고 기록이 변경된 시점만 저장함
+model ChartRecordSnapshot {
+  id              Int        @id @default(autoincrement())
+  level           Int
+  score           Int
+  rank            String
+  fc_type         Int
+  play_count      Int
+  fullcombo_count Int
+  pianistic_count Int
+  max_combo       Int
+  grade_basic     Int
+  grade_recital   Int
+  besttime        String
+  chart_id        Int
+  chart           MusicChart @relation(fields: [chart_id], references: [id], onDelete: Cascade)
+  user_id         Int
+  user            User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  sync_id         Int
+  sync            DataSync   @relation(fields: [sync_id], references: [id], onDelete: Cascade)
+  created_at      DateTime   @default(now())
+
+  @@unique([sync_id, chart_id])
+  @@index([user_id, chart_id, created_at])
+}
+
+// 공식 레벨 상수 변경 이력을 시점별로 관리함
+model ChartLevelConstantHistory {
+  id           Int        @id @default(autoincrement())
+  value        Float
+  effective_at DateTime   @default(now())
+  chart_id     Int
+  chart        MusicChart @relation(fields: [chart_id], references: [id], onDelete: Cascade)
+  created_at   DateTime   @default(now())
+
+  @@index([chart_id, effective_at])
+  @@map("ChartConstantHistory")
+}
+
+// Basic/Recital 등 독립된 서열표의 공개 상태와 범위를 관리함
+model TierList {
+  id          Int                    @id @default(autoincrement())
+  slug        String                 @unique
+  title       String
+  mode        String
+  description String?
+  status      String                 @default("draft")
+  createdAt   DateTime               @default(now()) @map("created_at")
+  updatedAt   DateTime               @updatedAt @map("updated_at")
+  bands       TierBand[]
+  entries     TierEntry[]
+  history     TierPlacementHistory[]
+
+  @@index([mode, status, updatedAt])
+}
+
+// 서열표 안의 12.9, 12.8 같은 상수 구간을 관리함
+model TierBand {
+  id         Int         @id @default(autoincrement())
+  value      Float
+  position   Int
+  tierListId Int         @map("tier_list_id")
+  tierList   TierList    @relation(fields: [tierListId], references: [id], onDelete: Cascade)
+  entries    TierEntry[]
+  createdAt  DateTime    @default(now()) @map("created_at")
+  updatedAt  DateTime    @updatedAt @map("updated_at")
+
+  @@unique([tierListId, value])
+  @@unique([tierListId, position])
+  @@index([tierListId, value])
+}
+
+// 채보가 어느 서열표 구간의 몇 번째에 배치되는지 관리함
+model TierEntry {
+  id         Int        @id @default(autoincrement())
+  position   Int
+  tierListId Int        @map("tier_list_id")
+  tierList   TierList   @relation(fields: [tierListId], references: [id], onDelete: Cascade)
+  tierBandId Int        @map("tier_band_id")
+  tierBand   TierBand   @relation(fields: [tierBandId], references: [id], onDelete: Cascade)
+  chartId    Int        @map("chart_id")
+  chart      MusicChart @relation(fields: [chartId], references: [id], onDelete: Restrict)
+  createdAt  DateTime   @default(now()) @map("created_at")
+  updatedAt  DateTime   @updatedAt @map("updated_at")
+
+  @@unique([tierListId, chartId])
+  @@unique([tierBandId, position])
+  @@index([tierListId, tierBandId])
+  @@index([chartId])
+}
+
+// 채보의 서열표 구간 이동과 제거 이력을 보존함
+model TierPlacementHistory {
+  id          Int        @id @default(autoincrement())
+  bandValue   Float?     @map("band_value")
+  effectiveAt DateTime   @default(now()) @map("effective_at")
+  tierListId  Int        @map("tier_list_id")
+  tierList    TierList   @relation(fields: [tierListId], references: [id], onDelete: Cascade)
+  chartId     Int        @map("chart_id")
+  chart       MusicChart @relation(fields: [chartId], references: [id], onDelete: Cascade)
+  createdAt   DateTime   @default(now()) @map("created_at")
+
+  @@index([tierListId, chartId, effectiveAt])
+  @@index([chartId, effectiveAt])
+}
+
+// 사용자의 체감 상수·패턴 평가·짧은 의견을 한 행에서 관리함
+model ChartEvaluation {
+  id                 Int                       @id @default(autoincrement())
+  perceived_constant Float
+  stairs             Int
+  chord              Int
+  trill              Int
+  glissando          Int
+  repetition         Int
+  comment            String?
+  chart_id           Int
+  chart              MusicChart                @relation(fields: [chart_id], references: [id], onDelete: Cascade)
+  user_id            Int
+  user               User                      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  created_at         DateTime                  @default(now())
+  updated_at         DateTime                  @updatedAt
+  reactions          ChartEvaluationReaction[]
+
+  @@unique([chart_id, user_id])
+  @@index([chart_id, perceived_constant])
+}
+
+// 의견의 추천·비추천을 사용자별 한 건으로 제한함
+model ChartEvaluationReaction {
+  id            Int             @id @default(autoincrement())
+  value         Int
+  evaluation_id Int
+  evaluation    ChartEvaluation @relation(fields: [evaluation_id], references: [id], onDelete: Cascade)
+  user_id       Int
+  user          User            @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  created_at    DateTime        @default(now())
+  updated_at    DateTime        @updatedAt
+
+  @@unique([evaluation_id, user_id])
+  @@index([evaluation_id, value])
 }
 
 model RecentPlay {
-  id          Int      @id @default(autoincrement())
+  id          Int         @id @default(autoincrement())
   difficulty  String
   level       Int
   score       Int
@@ -80,12 +312,14 @@ model RecentPlay {
   rank        String
   play_time   String
   grade_basic Int
-  created_at  DateTime @default(now())
-  updated_at  DateTime @updatedAt
+  created_at  DateTime    @default(now())
+  updated_at  DateTime    @updatedAt
   user_id     Int
-  user        User     @relation(fields: [user_id], references: [id])
+  user        User        @relation(fields: [user_id], references: [id])
   music_idx   String
-  music       Music    @relation(fields: [music_idx], references: [index])
+  music       Music       @relation(fields: [music_idx], references: [index])
+  chart_id    Int?
+  chart       MusicChart? @relation(fields: [chart_id], references: [id], onDelete: SetNull)
 }
 
 model UserBestGrade {
@@ -100,7 +334,7 @@ model UserBestGrade {
 }
 
 model BasicBestPlay {
-  id          Int      @id @default(autoincrement())
+  id          Int         @id @default(autoincrement())
   difficulty  String
   level       Int
   score       Int
@@ -109,16 +343,18 @@ model BasicBestPlay {
   besttime    String
   grade_basic Int
   fc_type     Int
-  created_at  DateTime @default(now())
-  updated_at  DateTime @updatedAt
+  created_at  DateTime    @default(now())
+  updated_at  DateTime    @updatedAt
   user_id     Int
-  user        User     @relation(fields: [user_id], references: [id])
+  user        User        @relation(fields: [user_id], references: [id])
   music_idx   String
-  music       Music    @relation(fields: [music_idx], references: [index])
+  music       Music       @relation(fields: [music_idx], references: [index])
+  chart_id    Int?
+  chart       MusicChart? @relation(fields: [chart_id], references: [id], onDelete: SetNull)
 }
 
 model RecitalBestPlay {
-  id            Int      @id @default(autoincrement())
+  id            Int         @id @default(autoincrement())
   difficulty    String
   level         Int
   score         Int
@@ -127,16 +363,18 @@ model RecitalBestPlay {
   besttime      String
   grade_recital Int
   fc_type       Int
-  created_at    DateTime @default(now())
-  updated_at    DateTime @updatedAt
+  created_at    DateTime    @default(now())
+  updated_at    DateTime    @updatedAt
   user_id       Int
-  user          User     @relation(fields: [user_id], references: [id])
+  user          User        @relation(fields: [user_id], references: [id])
   music_idx     String
-  music         Music    @relation(fields: [music_idx], references: [index])
+  music         Music       @relation(fields: [music_idx], references: [index])
+  chart_id      Int?
+  chart         MusicChart? @relation(fields: [chart_id], references: [id], onDelete: SetNull)
 }
 
 model PlayData {
-  id              Int      @id @default(autoincrement())
+  id              Int         @id @default(autoincrement())
   level           Int
   difficulty      String
   score           Int
@@ -149,42 +387,175 @@ model PlayData {
   grade_basic     Int
   grade_recital   Int
   besttime        String
-  created_at      DateTime @default(now())
-  updated_at      DateTime @updatedAt
+  created_at      DateTime    @default(now())
+  updated_at      DateTime    @updatedAt
   user_id         Int
-  user            User     @relation(fields: [user_id], references: [id])
+  user            User        @relation(fields: [user_id], references: [id])
   music_idx       String
-  music           Music    @relation(fields: [music_idx], references: [index])
+  music           Music       @relation(fields: [music_idx], references: [index])
+  chart_id        Int?
+  chart           MusicChart? @relation(fields: [chart_id], references: [id], onDelete: SetNull)
 }
 
 model Bingo {
-  id        Int         @id @default(autoincrement())
-  nos       Int
-  line      Int
-  music_idx String      @unique
-  music     Music       @relation(fields: [music_idx], references: [index])
-  BingoCell BingoCell[]
+  id              Int         @id @default(autoincrement())
+  title           String?
+  description     String?
+  rewardNos       Int         @map("nos")
+  requiredLines   Int         @map("line")
+  status          String      @default("draft")
+  startsAt        DateTime?   @map("starts_at")
+  endsAt          DateTime?   @map("ends_at")
+  createdAt       DateTime    @default(now()) @map("created_at")
+  updatedAt       DateTime    @updatedAt @map("updated_at")
+  coverMusicIndex String      @map("music_idx")
+  coverMusic      Music       @relation("BingoCoverMusic", fields: [coverMusicIndex], references: [index])
+  cells           BingoCell[]
+
+  @@index([status, startsAt, endsAt])
 }
 
 model BingoCell {
-  id             Int                 @id @default(autoincrement())
-  position       Int // 칸 위치(1~25)
-  challenge      String
-  category_short String?
-  level          String?
-  isReal         Boolean             @default(false)
-  music_idx      String?             @unique
-  music          Music?              @relation(fields: [music_idx], references: [index])
-  bingo_id       Int
-  bingo          Bingo               @relation(fields: [bingo_id], references: [id])
-  userBingoData  userBingoCellData[]
+  id               Int                 @id @default(autoincrement())
+  position         Int // 칸 위치(1~25)
+  title            String              @map("challenge")
+  missionType      String              @default("record") @map("mission_type")
+  ruleType         String              @default("manual") @map("rule_type")
+  ruleConfig       Json?               @map("rule_config")
+  categoryShort    String?             @map("category_short")
+  targetDifficulty String?             @map("target_difficulty")
+  targetLevel      Int?                @map("target_level")
+  musicIndex       String?             @map("music_idx")
+  music            Music?              @relation("BingoMissionMusic", fields: [musicIndex], references: [index], onDelete: SetNull)
+  bingoId          Int                 @map("bingo_id")
+  bingo            Bingo               @relation(fields: [bingoId], references: [id], onDelete: Cascade)
+  progress         BingoCellProgress[]
+  createdAt        DateTime            @default(now()) @map("created_at")
+  updatedAt        DateTime            @updatedAt @map("updated_at")
+
+  @@unique([bingoId, position])
+  @@index([missionType])
+  @@index([musicIndex])
 }
 
-model userBingoCellData {
-  id            Int       @id @default(autoincrement())
-  isCompleted   Boolean   @default(false)
-  user_id       Int
-  user          User      @relation(fields: [user_id], references: [id])
-  bingo_cell_id Int
-  bingo         BingoCell @relation(fields: [bingo_cell_id], references: [id])
+model BingoCellProgress {
+  id               Int       @id @default(autoincrement())
+  isCompleted      Boolean   @default(false) @map("isCompleted")
+  completionSource String    @default("manual") @map("completion_source")
+  completedAt      DateTime? @map("completed_at")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+  userId           Int       @map("user_id")
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bingoCellId      Int       @map("bingo_cell_id")
+  cell             BingoCell @relation(fields: [bingoCellId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, bingoCellId])
+  @@index([bingoCellId])
+  @@map("userBingoCellData")
+}
+
+// 검정 모드별 급수와 응시 조건을 관리함
+model Exam {
+  id            Int               @id @default(autoincrement())
+  slug          String            @unique
+  mode          String
+  shortLabel    String            @map("short_label")
+  scoringType   String            @default("score") @map("scoring_type")
+  grade         Int?
+  title         String
+  description   String?
+  feeNos        Int               @default(0) @map("fee_nos")
+  requiredGrade Int               @default(0) @map("required_grade")
+  status        String            @default("draft")
+  createdAt     DateTime          @default(now()) @map("created_at")
+  updatedAt     DateTime          @updatedAt @map("updated_at")
+  stages        ExamStage[]
+  rewards       ExamReward[]
+  submissions   ExamSubmission[]
+  achievements  ExamAchievement[]
+
+  @@unique([mode, grade])
+  @@index([status])
+}
+
+// 검정의 과제곡과 단계별 통과 조건을 관리함
+model ExamStage {
+  id              Int              @id @default(autoincrement())
+  position        Int
+  label           String?
+  requirementType String           @default("single") @map("requirement_type")
+  requiredValue   Float            @map("required_value")
+  examId          Int              @map("exam_id")
+  exam            Exam             @relation(fields: [examId], references: [id], onDelete: Cascade)
+  musicIndex      String           @map("music_idx")
+  music           Music            @relation(fields: [musicIndex], references: [index], onDelete: Restrict)
+  allowedCharts   ExamStageChart[]
+  createdAt       DateTime         @default(now()) @map("created_at")
+  updatedAt       DateTime         @updatedAt @map("updated_at")
+
+  @@unique([examId, position])
+  @@index([musicIndex])
+}
+
+// 이벤트 검정 등에서 한 과제곡에 허용되는 여러 난이도 채보를 관리함
+model ExamStageChart {
+  stageId Int        @map("stage_id")
+  stage   ExamStage  @relation(fields: [stageId], references: [id], onDelete: Cascade)
+  chartId Int        @map("chart_id")
+  chart   MusicChart @relation(fields: [chartId], references: [id], onDelete: Restrict)
+
+  @@id([stageId, chartId])
+  @@index([chartId])
+}
+
+// 검정 합격 보상을 복수 악곡까지 지원하도록 관리함
+model ExamReward {
+  id         Int     @id @default(autoincrement())
+  position   Int
+  type       String
+  label      String?
+  examId     Int     @map("exam_id")
+  exam       Exam    @relation(fields: [examId], references: [id], onDelete: Cascade)
+  musicIndex String? @map("music_idx")
+  music      Music?  @relation(fields: [musicIndex], references: [index], onDelete: Restrict)
+
+  @@unique([examId, position])
+  @@index([musicIndex])
+}
+
+// 사용자가 제출한 합격 증빙과 심사 상태를 관리함
+model ExamSubmission {
+  id            Int              @id @default(autoincrement())
+  proofImageUrl String           @map("proof_image_url")
+  status        String           @default("pending")
+  reviewerNote  String?          @map("reviewer_note")
+  submittedAt   DateTime         @default(now()) @map("submitted_at")
+  reviewedAt    DateTime?        @map("reviewed_at")
+  createdAt     DateTime         @default(now()) @map("created_at")
+  updatedAt     DateTime         @updatedAt @map("updated_at")
+  userId        Int              @map("user_id")
+  user          User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  examId        Int              @map("exam_id")
+  exam          Exam             @relation(fields: [examId], references: [id], onDelete: Cascade)
+  achievement   ExamAchievement?
+
+  @@index([userId, examId, submittedAt])
+  @@index([status, submittedAt])
+}
+
+// 승인된 검정 급수를 사용자별로 정규화해 보관함
+model ExamAchievement {
+  id           Int             @id @default(autoincrement())
+  achievedAt   DateTime        @default(now()) @map("achieved_at")
+  createdAt    DateTime        @default(now()) @map("created_at")
+  userId       Int             @map("user_id")
+  user         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  examId       Int             @map("exam_id")
+  exam         Exam            @relation(fields: [examId], references: [id], onDelete: Cascade)
+  submissionId Int?            @unique @map("submission_id")
+  submission   ExamSubmission? @relation(fields: [submissionId], references: [id], onDelete: SetNull)
+
+  @@unique([userId, examId])
+  @@index([examId, achievedAt])
 }

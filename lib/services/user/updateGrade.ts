@@ -1,6 +1,15 @@
 import db from "@/lib/db";
 import { formatToGrade } from "@/lib/utils";
 
+function getKoreanDate() {
+    return new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Asia/Seoul",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+    }).format(new Date());
+}
+
 export async function updateGrade(user_id: number) {
     const startTime = Date.now(); // 시작 시간
 
@@ -17,6 +26,7 @@ export async function updateGrade(user_id: number) {
             level: true,
             rank: true,
             music_idx: true,
+            chart_id: true,
             user_id: true,
             fc_type: true,
         },
@@ -46,6 +56,7 @@ export async function updateGrade(user_id: number) {
             level: true,
             rank: true,
             music_idx: true,
+            chart_id: true,
             user_id: true,
             fc_type: true,
         },
@@ -61,27 +72,10 @@ export async function updateGrade(user_id: number) {
     );
     console.info("(4)리사이틀 그레이드 합산 완료");
 
-    // 유저 베스트 그레이드 가져오기
-    const userBestGrade = await db.userBestGrade.findMany({
-        where: {
-            user_id,
-        },
-        select: { id: true, besttime: true },
-    });
-    // 30개 초과시 가장 오래된 데이터 삭제
-    if (userBestGrade.length === 30) {
-        if (
-            userBestGrade[0].besttime.split(" ")[0] !==
-            new Date().toISOString().split("T")[0]
-        ) {
-            await db.userBestGrade.delete({
-                where: { id: userBestGrade[0].id },
-            });
-        }
-    }
-
     // 트랜잭션으로 모든 DB 작업을 원자적으로 처리
     await db.$transaction(async (tx) => {
+        const today = getKoreanDate();
+
         // 그레이드 업데이트
         await tx.user.update({
             where: { id: user_id },
@@ -93,31 +87,57 @@ export async function updateGrade(user_id: number) {
         console.info("(5)유저 그레이드 업데이트 완료");
 
         // 유저 베스트 그레이드 생성 및 같은 날짜 데이터인 경우 높은값으로 처리
-        if (
-            // 가장 최근 데이터가 오늘과 같은 날인 경우
-            userBestGrade.length > 0 &&
-            userBestGrade[userBestGrade.length - 1].besttime ===
-                new Date().toISOString().split("T")[0]
-        ) {
-            // create가 아닌 해당 날짜 데이터 update
+        const gradeHistory = await tx.userBestGrade.findMany({
+            where: { user_id },
+            select: { id: true, besttime: true },
+            orderBy: [{ besttime: "asc" }, { id: "asc" }],
+        });
+        const todayHistory = gradeHistory.filter(
+            (history) => history.besttime.split(" ")[0] === today
+        );
+        const latestTodayHistory = todayHistory.at(-1);
+
+        if (latestTodayHistory) {
             await tx.userBestGrade.update({
-                where: {
-                    id: userBestGrade[userBestGrade.length - 1].id,
-                },
+                where: { id: latestTodayHistory.id },
                 data: {
+                    besttime: today,
                     grade_basic: Number(formatToGrade(basicGrade)),
                     grade_recital: Number(formatToGrade(recitalGrade)),
                 },
             });
+
+            const duplicateIds = todayHistory
+                .filter((history) => history.id !== latestTodayHistory.id)
+                .map((history) => history.id);
+            if (duplicateIds.length > 0) {
+                await tx.userBestGrade.deleteMany({
+                    where: { id: { in: duplicateIds } },
+                });
+            }
         } else {
-            // 아닌경우 create
             await tx.userBestGrade.create({
                 data: {
                     user_id,
-                    besttime: new Date().toISOString().split("T")[0],
+                    besttime: today,
                     grade_basic: Number(formatToGrade(basicGrade)),
                     grade_recital: Number(formatToGrade(recitalGrade)),
                 },
+            });
+        }
+
+        const historyAfterUpdate = await tx.userBestGrade.findMany({
+            where: { user_id },
+            select: { id: true },
+            orderBy: [{ besttime: "asc" }, { id: "asc" }],
+        });
+        const expiredHistory = historyAfterUpdate.slice(
+            0,
+            Math.max(0, historyAfterUpdate.length - 30)
+        );
+        if (expiredHistory.length > 0) {
+            await tx.userBestGrade.deleteMany({
+                where: { id: { in: expiredHistory.map(({ id }) => id) } },
             });
         }
 

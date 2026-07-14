@@ -1,96 +1,26 @@
-import MusicList from "@/components/music/musicList";
+import MusicResults from "@/components/music/musicResults";
 import MusicSearch from "@/components/music/musicSearch";
-import db from "@/lib/db";
-import { revalidatePath } from "next/cache";
+import { getMusicPage } from "./data";
+import type { MusicSearchParams } from "./query";
 
-interface SearchParamsProps {
-    qurry?: string;
-    normal?: string;
-    hard?: string;
-    expert?: string;
-    real?: string;
-}
-
-async function getInitialMusics({
-    qurry,
-    normal,
-    hard,
-    expert,
-    real,
-}: SearchParamsProps) {
-    // 문자열을 숫자로 변환
-    const initialMusics = await db.music.findMany({
-        where: {
-            AND: [
-                qurry
-                    ? {
-                          OR: [
-                              { title: { contains: qurry } },
-                              { artist: { contains: qurry } },
-                          ],
-                      }
-                    : {},
-                normal
-                    ? {
-                          normal: {
-                              equals: parseInt(normal),
-                          },
-                      }
-                    : {},
-                hard
-                    ? {
-                          hard: {
-                              equals: parseInt(hard),
-                          },
-                      }
-                    : {},
-                expert
-                    ? {
-                          expert: {
-                              equals: parseInt(expert),
-                          },
-                      }
-                    : {},
-
-                real
-                    ? {
-                          real: {
-                              equals: parseInt(real),
-                              not: null,
-                          },
-                      }
-                    : {},
-            ],
-        },
-        select: {
-            index: true,
-            title: true,
-            artist: true,
-            category_short: true,
-            background: true,
-            sheet_len: true,
-            difficulty_levels: true,
-        },
-        take: 20,
-    });
-    revalidatePath("/music");
-    return initialMusics;
-}
-
-export default async function Music({
-    searchParams,
-}: {
-    searchParams: SearchParamsProps;
+export default async function Music(props: {
+    searchParams: Promise<MusicSearchParams>;
 }) {
-    const initialMusics = await getInitialMusics(searchParams);
+    const searchParams = await props.searchParams;
+    const initialMusics = await getMusicPage(searchParams, 0);
+    const searchKey = JSON.stringify(searchParams);
 
     return (
-        <main className="max-w-screen-sm mx-auto h-full flex flex-col gap-4 min-h-screen">
-            <MusicSearch />
-            <MusicList
+        <div className="mx-auto flex h-full min-h-screen max-w-(--breakpoint-sm) flex-col gap-4 px-4 py-4">
+            <header className="flex items-center justify-between">
+                <h1 className="text-title">악곡</h1>
+            </header>
+            <MusicSearch searchParams={searchParams} />
+            <MusicResults
+                key={`results-${searchKey}`}
                 initialMusics={initialMusics}
                 searchParams={searchParams}
             />
-        </main>
+        </div>
     );
 }

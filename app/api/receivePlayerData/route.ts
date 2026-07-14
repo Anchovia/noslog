@@ -1,80 +1,175 @@
+import { verifySyncToken } from "@/lib/bookmarklet";
+import db from "@/lib/db";
 import { updateDummy } from "@/lib/dummy/bingo";
-import { updateMusic } from "@/lib/services/music/updateMusic";
+import {
+    type SyncMusicInput,
+    updateMusic,
+} from "@/lib/services/music/updateMusic";
 import { updateGrade } from "@/lib/services/user/updateGrade";
 import { updatePlayCount } from "@/lib/services/user/updatePlayCount";
 import { updatePlayData } from "@/lib/services/user/updatePlayData";
-import { updateRank } from "@/lib/services/user/updateRank";
 import { updateRecentPlay } from "@/lib/services/user/updateRecentPlay";
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 
-// POST 요청 처리
-export async function POST(request: NextRequest) {
-    // CORS 헤더 설정
-    const headers = new Headers();
-    headers.set("Access-Control-Allow-Origin", "https://p.eagate.573.jp");
-    headers.set("Access-Control-Allow-Methods", "POST, OPTIONS");
-    headers.set("Access-Control-Allow-Headers", "Content-Type");
+const EAGATE_ORIGIN = "https://p.eagate.573.jp";
+const syncRequestSchema = z.object({
+    token: z.string().min(1),
+    playerData: z.object({
+        status: z.number(),
+        data: z.object({
+            player: z.object({
+                name: z.string().min(1),
+                play_count: z.number().int().nonnegative(),
+            }),
+        }),
+    }),
+    recentData: z.object({
+        status: z.number(),
+        data: z.object({
+            player: z.object({
+                history_list: z.object({
+                    history: z.array(z.unknown()),
+                }),
+            }),
+        }),
+    }),
+    totalData: z
+        .object({
+            status: z.number(),
+            data: z.object({
+                music: z.array(z.unknown()),
+            }),
+        })
+        .nullable(),
+});
 
-    // 요청 받은 Body 데이터 파싱
-    const { playerData, recentData, totalData } = await request.json();
-    const {
-        data: {
-            player: { name, play_count },
-        },
-    } = playerData;
-    const {
-        data: {
-            player: {
-                history_list: { history },
-            },
-        },
-    } = recentData;
-    const {
-        data: { music },
-    } = totalData;
-    if (
-        playerData.status === 0 &&
-        recentData.status === 0 &&
-        totalData.status === 0
-    ) {
-        console.info("===[BEMANI 데이터 수신 완료]===");
-    } else {
-        return new NextResponse(
-            JSON.stringify({ message: "[BEMANI 데이터 수신 실패]" }),
-            {
-                status: 400,
-                headers,
-            }
-        );
-    }
+function corsHeaders() {
+    return {
+        "Access-Control-Allow-Origin": EAGATE_ORIGIN,
+        "Access-Control-Allow-Methods": "POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Max-Age": "86400",
+        Vary: "Origin",
+    };
+}
 
-    // db 업데이트
-    await updateMusic(music); // music 데이터 업데이트
-    const user = await updatePlayCount(name, play_count); // 유저 플레이 카운트 업데이트[user 객체(id 포함) 반환]
-    await updateRecentPlay(user.id, history); // 최근 플레이 히스토리 업데이트
-    await updatePlayData(user.id, music); // 플레이 데이터 업데이트
-    await updateGrade(user.id); // 유저 그레이드 및 베스트 플레이 데이터 업데이트
-    await updateRank(); // 랭킹 업데이트
-
-    await updateDummy(); // 더미데이터 업데이트
-
-    // 성공
-    return new NextResponse(
-        JSON.stringify({ message: "BEMANI 데이터 처리 성공" }),
-        {
-            status: 200,
-            headers,
-        }
+function json(
+    message: string,
+    status: number,
+    data: Record<string, unknown> = {}
+) {
+    return NextResponse.json(
+        { message, ...data },
+        { status, headers: corsHeaders() }
     );
 }
 
-// Preflight 요청 처리
-export async function OPTIONS() {
-    // CORS Preflight 요청 처리
-    const headers = new Headers();
-    headers.set("Access-Control-Allow-Origin", "https://p.eagate.573.jp");
-    headers.set("Access-Control-Allow-Methods", "POST, OPTIONS");
-    headers.set("Access-Control-Allow-Headers", "Content-Type");
+export async function POST(request: NextRequest) {
+    if (request.headers.get("origin") !== EAGATE_ORIGIN) {
+        return json("허용되지 않은 요청입니다.", 403);
+    }
 
-    return new NextResponse(null, { status: 200, headers });
+    const body = await request.json().catch(() => null);
+    const parsed = syncRequestSchema.safeParse(body);
+    if (!parsed.success) {
+        return json("전송된 데이터 형식이 올바르지 않습니다.", 400);
+    }
+
+    const tokenPayload = verifySyncToken(parsed.data.token);
+    if (!tokenPayload) {
+        return json("연동 토큰이 올바르지 않습니다.", 401);
+    }
+
+    const user = await db.user.findUnique({
+        where: { id: tokenPayload.userId },
+        select: { id: true, sync_token_version: true },
+    });
+    if (!user || user.sync_token_version !== tokenPayload.version) {
+        return json("연동 토큰이 만료되었습니다. 다시 등록해주세요.", 401);
+    }
+
+    const { playerData, recentData, totalData } = parsed.data;
+    if (
+        playerData.status !== 0 ||
+        recentData.status !== 0 ||
+        (totalData && totalData.status !== 0)
+    ) {
+        return json("NOSTALGIA 로그인 상태를 확인해주세요.", 400);
+    }
+
+    const { name, play_count: playCount } = playerData.data.player;
+    const history = recentData.data.player.history_list.history as Parameters<
+        typeof updateRecentPlay
+    >[1];
+    const music = totalData ? (totalData.data.music as SyncMusicInput[]) : null;
+    let syncId: number | null = null;
+
+    try {
+        if (music) {
+            await updateMusic(music);
+        }
+        await updatePlayCount(user.id, name, playCount);
+
+        const sync = await db.dataSync.create({
+            data: {
+                user_id: user.id,
+                sync_scope: music ? "full" : "recent",
+                received_plays: history.length,
+            },
+        });
+        syncId = sync.id;
+
+        const insertedPlays = await updateRecentPlay(user.id, history, sync.id);
+        let changedRecords = 0;
+        if (music) {
+            changedRecords = await updatePlayData(user.id, music, sync.id);
+            await updateGrade(user.id);
+            await updateDummy();
+        }
+
+        await db.dataSync.update({
+            where: { id: sync.id },
+            data: {
+                status: "completed",
+                inserted_plays: insertedPlays,
+                changed_records: changedRecords,
+                completed_at: new Date(),
+            },
+        });
+
+        return json(
+            music
+                ? "전체 기록 동기화가 완료되었습니다."
+                : "최근 기록 동기화가 완료되었습니다.",
+            200,
+            { syncScope: music ? "full" : "recent" }
+        );
+    } catch (error) {
+        console.error("BEMANI data synchronization failed", error);
+
+        if (syncId) {
+            await db.dataSync.update({
+                where: { id: syncId },
+                data: {
+                    status: "failed",
+                    error_message:
+                        error instanceof Error
+                            ? error.message
+                            : "Unknown error",
+                    completed_at: new Date(),
+                },
+            });
+        }
+
+        return json("데이터 처리 중 오류가 발생했습니다.", 500);
+    }
+}
+
+export async function OPTIONS(request: NextRequest) {
+    if (request.headers.get("origin") !== EAGATE_ORIGIN) {
+        return new NextResponse(null, { status: 403 });
+    }
+
+    return new NextResponse(null, { status: 204, headers: corsHeaders() });
 }

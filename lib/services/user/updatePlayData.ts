@@ -1,14 +1,67 @@
 import db from "@/lib/db";
+import type { Prisma } from "@/lib/generated/prisma";
 
-export async function updatePlayData(user_id: number, music: any) {
+interface PlayerSheetData {
+    level: number;
+    difficulty: string;
+    score: number;
+    rank: string;
+    fc_type: number;
+    play_count: number;
+    fullcombo_count: number;
+    pianistic_count: number;
+    max_combo: number;
+    grade_basic: number;
+    grade_recital: number;
+    besttime: string;
+}
+
+interface PlayerMusicData {
+    "@index": string;
+    sheet: PlayerSheetData[];
+}
+
+export async function updatePlayData(
+    user_id: number,
+    music: PlayerMusicData[],
+    sync_id: number
+) {
     const startTime = Date.now(); // 시작 시간
-    // 전체 playData 삭제
-    const deleteResult = await db.playData.deleteMany({
-        where: { user_id },
+    const charts = await db.musicChart.findMany({
+        select: { id: true, music_idx: true, difficulty: true },
     });
-    if (deleteResult) {
+    const chartIds = new Map(
+        charts.map((chart) => [
+            `${chart.music_idx}:${chart.difficulty}`,
+            chart.id,
+        ])
+    );
+    const previousRecords = await db.playData.findMany({
+        where: { user_id, chart_id: { not: null } },
+        select: {
+            chart_id: true,
+            level: true,
+            score: true,
+            rank: true,
+            fc_type: true,
+            play_count: true,
+            fullcombo_count: true,
+            pianistic_count: true,
+            max_combo: true,
+            grade_basic: true,
+            grade_recital: true,
+            besttime: true,
+        },
+    });
+    const previousByChart = new Map(
+        previousRecords.map((record) => [record.chart_id, record])
+    );
+
+    const changedSnapshots: Prisma.ChartRecordSnapshotCreateManyInput[] = [];
+
+    {
         console.info("(1)기존 플레이 데이터 삭제 완료");
-        const newPlayData: any = []; // 새로 생성할 playData 배열
+        const newPlayData: Prisma.PlayDataCreateManyInput[] = []; // 새로 생성할 playData 배열
         const score = {
             P: 0,
             F: 0,
@@ -21,21 +74,23 @@ export async function updatePlayData(user_id: number, music: any) {
             D: 0,
         }; // 클리어 랭크 저장 변수
 
-        const isFC: { [key: string]: string } = { 2: "F" };
-
         for (const data of music) {
             for (const sheet of data.sheet) {
                 // 클리어 랭크 변수에 값 ++
                 if (sheet.rank in score) {
                     score[sheet.rank as keyof typeof score]++;
                 }
-                if (isFC[sheet.fc_type as keyof typeof score] in score) {
+                if (sheet.fc_type === 2) {
                     score["F"]++;
                 }
                 // 새 playData 객체 생성 및 배열에 push
-                newPlayData.push({
+                const chart_id =
+                    chartIds.get(`${data["@index"]}:${sheet.difficulty}`) ??
+                    null;
+                const record = {
                     user_id,
                     music_idx: data["@index"],
+                    chart_id,
                     level: sheet.level,
                     difficulty: sheet.difficulty,
                     score: sheet.score,
@@ -48,13 +103,58 @@ export async function updatePlayData(user_id: number, music: any) {
                     grade_basic: sheet.grade_basic,
                     grade_recital: sheet.grade_recital,
                     besttime: sheet.besttime,
-                });
+                };
+                newPlayData.push(record);
+
+                if (chart_id) {
+                    const previous = previousByChart.get(chart_id);
+                    const changed =
+                        !previous ||
+                        previous.level !== record.level ||
+                        previous.score !== record.score ||
+                        previous.rank !== record.rank ||
+                        previous.fc_type !== record.fc_type ||
+                        previous.play_count !== record.play_count ||
+                        previous.fullcombo_count !== record.fullcombo_count ||
+                        previous.pianistic_count !== record.pianistic_count ||
+                        previous.max_combo !== record.max_combo ||
+                        previous.grade_basic !== record.grade_basic ||
+                        previous.grade_recital !== record.grade_recital ||
+                        previous.besttime !== record.besttime;
+
+                    if (changed) {
+                        changedSnapshots.push({
+                            level: record.level,
+                            score: record.score,
+                            rank: record.rank,
+                            fc_type: record.fc_type,
+                            play_count: record.play_count,
+                            fullcombo_count: record.fullcombo_count,
+                            pianistic_count: record.pianistic_count,
+                            max_combo: record.max_combo,
+                            grade_basic: record.grade_basic,
+                            grade_recital: record.grade_recital,
+                            besttime: record.besttime,
+                            chart_id,
+                            user_id,
+                            sync_id,
+                        });
+                    }
+                }
             }
         }
-        // playData 생성(createMany)
-        await db.playData.createMany({
-            data: newPlayData,
-        });
+
+        await db.$transaction([
+            db.playData.deleteMany({ where: { user_id } }),
+            db.playData.createMany({ data: newPlayData }),
+            ...(changedSnapshots.length > 0
+                ? [
+                      db.chartRecordSnapshot.createMany({
+                          data: changedSnapshots,
+                      }),
+                  ]
+                : []),
+        ]);
         console.info(`(2)새 플레이 데이터 생성 완료(${newPlayData.length}개)`);
         // 클리어 랭크 유저 데이터 업데이트
         await db.user.update({
@@ -74,7 +174,6 @@ export async function updatePlayData(user_id: number, music: any) {
 
         const duration = Date.now() - startTime; // 종료 시간
         console.info(`===[플레이 데이터 업데이트 성공(${duration}ms)]===`);
-    } else {
-        console.error("기존 플레이 데이터 삭제 실패");
+        return changedSnapshots.length;
     }
 }

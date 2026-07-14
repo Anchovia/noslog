@@ -1,24 +1,116 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-@layer utilities {
-    .text-primary {
-        @apply text-2xl font-semibold text-white-primary;
+@theme {
+    /* 폰트 */
+    --font-sans:
+        var(--font-pretendard), "Pretendard Variable", Pretendard, system-ui,
+        -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+    /* 배경 / 표면 */
+    --color-bg: #0b0b10;
+    --color-surface: #121218;
+    --color-surface-muted: #1a1a22;
+    --color-divider: #20202a;
+    --color-border: #2a2a35;
+
+    /* 텍스트 */
+    --color-text-primary: #f2f2f5;
+    --color-text-secondary: #a0a0aa;
+    --color-text-disabled: #666674;
+
+    /* 상태 / 데이터 */
+    --color-success: #22c55e;
+    --color-danger: #ef4444;
+    --color-chart: #38bdf8;
+    --color-score: #facc15;
+    --color-bronze: #b87333;
+
+    /* 랭크 */
+    --color-rank-p-start: #f5d98b;
+    --color-rank-p-end: #e8a9c9;
+    --color-rank-fc: #a3e635;
+    --color-rank-s: #d8b54f;
+    --color-rank-a-plus: #c97b72;
+    --color-rank-a: #b06565;
+
+    /* 난이도 */
+    --color-normal: #6e9a7c;
+    --color-hard: #b08a5e;
+    --color-expert: #b06565;
+    --color-real: #8f7fb8;
+
+    /* 검정 */
+    --color-basic: #7c9cc6;
+    --color-recital: #c98fb0;
+
+    /* 장르 */
+    --color-genre-pops: #b06565;
+    --color-genre-anime: #b0708f;
+    --color-genre-bm: #6e87b0;
+    --color-genre-original: #b08165;
+    --color-genre-classic-jazz: #b09365;
+    --color-genre-variety: #6e9a7c;
+
+    /* 브랜드 */
+    --color-discord: #5865f2;
+
+    /* 모서리 */
+    --radius-card: 0.5rem;
+}
+
+@layer base {
+    /* 기본 테두리 색상을 디자인 토큰과 맞춤 */
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-border);
     }
-    .text-secondary {
-        @apply text-xl font-medium text-white-primary/95;
+
+    /* 앱 전체에 다크 테마와 기본 폰트를 적용 */
+    html,
+    body {
+        min-height: 100vh;
+        background: var(--color-bg);
+        color: var(--color-text-primary);
+        font-family: var(--font-sans);
     }
-    .text-tertiary {
-        @apply text-lg font-normal text-white-primary/90;
+
+    /* 폼 요소가 앱 기본 타이포그래피를 상속하도록 맞춤 */
+    button,
+    input,
+    textarea,
+    select {
+        font: inherit;
     }
-    .text-quaternary {
-        @apply text-base font-light text-white-primary/85;
-    }
-    .text-quinary {
-        @apply text-sm font-extralight text-white-primary/80;
-    }
-    .text-senary {
-        @apply text-xs font-thin text-white-primary/75;
-    }
+}
+
+/* Figma 스타일 가이드 기준 타이포그래피 유틸리티 */
+@utility text-display {
+    @apply text-text-primary text-2xl leading-tight font-bold;
+}
+
+@utility text-title {
+    @apply text-text-primary text-xl leading-snug font-bold;
+}
+
+@utility text-section {
+    @apply text-text-primary text-base leading-snug font-semibold;
+}
+
+@utility text-body {
+    @apply text-text-primary text-sm leading-relaxed font-medium;
+}
+
+@utility text-caption {
+    @apply text-text-secondary text-xs leading-normal font-normal;
+}
+
+@utility text-badge {
+    @apply text-xs leading-none font-extrabold;
+}
+
+@utility text-input {
+    @apply text-text-primary text-base leading-normal font-medium;
 }
