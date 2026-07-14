@@ -11,7 +11,7 @@ export default async function Music(props: {
     const searchKey = JSON.stringify(searchParams);
 
     return (
-        <main className="mx-auto flex h-full min-h-screen max-w-(--breakpoint-sm) flex-col gap-4 px-4 py-4">
+        <div className="mx-auto flex h-full min-h-screen max-w-(--breakpoint-sm) flex-col gap-4 px-4 py-4">
             <header className="flex items-center justify-between">
                 <h1 className="text-title">악곡</h1>
             </header>
@@ -21,6 +21,6 @@ export default async function Music(props: {
                 initialMusics={initialMusics}
                 searchParams={searchParams}
             />
-        </main>
+        </div>
     );
 }

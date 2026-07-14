@@ -76,7 +76,7 @@ export default async function BookmarkletPage() {
               })}`;
 
     return (
-        <main className="flex flex-col gap-3 px-4 py-5">
+        <div className="flex flex-col gap-3 px-4 py-5">
             <header>
                 <h1 className="text-title">데이터 연동</h1>
                 <p className="text-body-muted mt-2">
@@ -172,6 +172,6 @@ export default async function BookmarkletPage() {
                     />
                 )}
             </section>
-        </main>
+        </div>
     );
 }

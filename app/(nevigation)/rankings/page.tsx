@@ -164,7 +164,7 @@ export default async function Rankings({ searchParams }: RankingsPageProps) {
         `/rankings?mode=${nextMode}&region=${nextRegion}&page=1`;
 
     return (
-        <main className="flex flex-col gap-4 px-4 py-5">
+        <div className="flex flex-col gap-4 px-4 py-5">
             <h1 className="text-title">유저 랭킹</h1>
 
             <nav
@@ -221,6 +221,6 @@ export default async function Rankings({ searchParams }: RankingsPageProps) {
                 rows={rows}
                 currentUser={currentUser}
             />
-        </main>
+        </div>
     );
 }

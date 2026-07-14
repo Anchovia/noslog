@@ -1,7 +1,10 @@
 import { verifySyncToken } from "@/lib/bookmarklet";
 import db from "@/lib/db";
 import { updateDummy } from "@/lib/dummy/bingo";
-import { updateMusic } from "@/lib/services/music/updateMusic";
+import {
+    type SyncMusicInput,
+    updateMusic,
+} from "@/lib/services/music/updateMusic";
 import { updateGrade } from "@/lib/services/user/updateGrade";
 import { updatePlayCount } from "@/lib/services/user/updatePlayCount";
 import { updatePlayData } from "@/lib/services/user/updatePlayData";
@@ -99,9 +102,7 @@ export async function POST(request: NextRequest) {
     const history = recentData.data.player.history_list.history as Parameters<
         typeof updateRecentPlay
     >[1];
-    const music = totalData
-        ? (totalData.data.music as Parameters<typeof updatePlayData>[1])
-        : null;
+    const music = totalData ? (totalData.data.music as SyncMusicInput[]) : null;
     let syncId: number | null = null;
 
     try {

@@ -1,14 +1,41 @@
 import { musicBG } from "../../constants";
 import db from "../../db";
+import type { Prisma } from "../../generated/prisma";
 
-export async function updateMusic(music: any) {
+interface SyncMusicSheet {
+    difficulty: string;
+    level: number;
+    score: number;
+    rank: string;
+    fc_type: number;
+    play_count: number;
+    fullcombo_count: number;
+    pianistic_count: number;
+    max_combo: number;
+    grade_basic: number;
+    grade_recital: number;
+    besttime: string;
+}
+
+export interface SyncMusicInput {
+    "@index": string;
+    artist: string | null;
+    category: string;
+    category_short: string;
+    description: string | null;
+    title: string;
+    title_kana: string;
+    sheet: SyncMusicSheet[];
+}
+
+export async function updateMusic(music: SyncMusicInput[]) {
     const startTime = Date.now(); // 시작 시간
 
     // 기존 악곡 데이터 조회
     const existingMusic = await db.music.findMany({
         where: {
             index: {
-                in: music.map((data: any) => data["@index"]),
+                in: music.map((data) => data["@index"]),
             },
         },
         select: { index: true, background: true },
@@ -21,8 +48,8 @@ export async function updateMusic(music: any) {
             .map((music) => music.index)
     ); // 기존 악곡 중 배경 없는 악곡 인덱스 set
 
-    const newMusicData: any[] = []; // 새로 생성할 음악 데이터 list
-    const bgUpdatePromises: Promise<any>[] = []; // 배경 업데이트 프로미스 list
+    const newMusicData: Prisma.MusicCreateManyInput[] = []; // 새로 생성할 음악 데이터 list
+    const bgUpdatePromises: Promise<unknown>[] = []; // 배경 업데이트 프로미스 list
     console.info(`(1)기존 악곡 데이터 조회 성공(${existingMusic.length}개)`);
 
     for (const data of music) {
@@ -34,9 +61,7 @@ export async function updateMusic(music: any) {
             console.warn(`(2)새 악곡 데이터 감지: ${data.title}`);
 
             // 난이도 레벨 배열 생성
-            const difficulty_levels = data.sheet.map(
-                (sheet: any) => sheet.level
-            );
+            const difficulty_levels = data.sheet.map((sheet) => sheet.level);
 
             // 신규 music data 배열에 추가
             if (difficulty_levels.length < 4) {
@@ -97,18 +122,18 @@ export async function updateMusic(music: any) {
     console.info("(4)악곡 데이터 처리 완료");
 
     // music 데이터 생성 및 BG 업데이트 병렬 실행
-    await Promise.allSettled([
+    await Promise.all([
         // 새 음악 생성(createMany)
         newMusicData.length > 0
             ? db.music.createMany({ data: newMusicData })
-            : Promise.resolve(),
+            : Promise.resolve(null),
 
         ...bgUpdatePromises, // BG 업데이트 (병렬)
     ]);
 
     // 악곡의 난이도별 채보를 정규화 테이블과 동기화
-    const chartUpserts = music.flatMap((data: any) =>
-        data.sheet.map((sheet: any) =>
+    const chartUpserts = music.flatMap((data) =>
+        data.sheet.map((sheet) =>
             db.musicChart.upsert({
                 where: {
                     music_idx_difficulty: {

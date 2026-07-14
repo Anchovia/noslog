@@ -13,6 +13,26 @@ type SettingActionResult = {
     fieldErrors?: Record<string, string[]>;
 };
 
+const CLOUDFLARE_DELIVERY_ACCOUNT = "zAwkQO6bEReNpmM7QzHHXA";
+
+function isCloudflareDeliveryUrl(url: string) {
+    try {
+        const parsed = new URL(url);
+        const path = parsed.pathname.split("/").filter(Boolean);
+
+        return (
+            parsed.protocol === "https:" &&
+            parsed.hostname === "imagedelivery.net" &&
+            path.length === 2 &&
+            path[0] === CLOUDFLARE_DELIVERY_ACCOUNT &&
+            !parsed.search &&
+            !parsed.hash
+        );
+    } catch {
+        return false;
+    }
+}
+
 function cloudflareImageId(url: string | null) {
     if (!url) return null;
 
@@ -62,6 +82,12 @@ export async function uploadUserSetting(
         currentUser.avatar?.replace(/\/profile$/, "") ?? "";
     const avatarChanged =
         submittedAvatar.length > 0 && submittedAvatar !== currentAvatarBase;
+    if (avatarChanged && !isCloudflareDeliveryUrl(submittedAvatar)) {
+        return {
+            success: false,
+            message: "허용되지 않은 프로필 이미지 주소입니다.",
+        };
+    }
     const nextAvatar = avatarChanged
         ? `${submittedAvatar}/profile`
         : currentUser.avatar;
@@ -137,8 +163,8 @@ export async function getImageUploadUrl() {
         return {
             success: true as const,
             result: {
-                id: String(data.result.id),
                 uploadURL: String(data.result.uploadURL),
+                deliveryURL: `https://imagedelivery.net/${CLOUDFLARE_DELIVERY_ACCOUNT}/${String(data.result.id)}`,
             },
         };
     } catch {

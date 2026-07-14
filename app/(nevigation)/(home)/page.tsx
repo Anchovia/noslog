@@ -24,7 +24,7 @@ export default async function Home() {
     });
 
     return (
-        <main className="flex flex-col gap-4 px-4 py-4">
+        <div className="flex flex-col gap-4 px-4 py-4">
             {/* 상단 로그인/프로필 카드 */}
             <section className="bg-surface rounded-card flex items-center justify-between p-4">
                 <p className="text-section">내 NOSTALGIA 기록 모아보기</p>
@@ -187,6 +187,6 @@ export default async function Home() {
                     ))}
                 </div>
             </section>
-        </main>
+        </div>
     );
 }

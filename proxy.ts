@@ -31,7 +31,7 @@ export async function proxy(request: NextRequest) {
     // 비로그인 상태에서 private route 접근시
     else {
         if (routes.privateOnly[pathname]) {
-            return NextResponse.redirect(new URL("/", request.url));
+            return NextResponse.redirect(new URL("/login", request.url));
         }
     }
 }

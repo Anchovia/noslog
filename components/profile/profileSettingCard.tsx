@@ -107,7 +107,7 @@ export default function ProfileSettingCard({ user }: ProfileSettingCardProps) {
                 return;
             }
 
-            avatar = `https://imagedelivery.net/zAwkQO6bEReNpmM7QzHHXA/${upload.result.id}`;
+            avatar = upload.result.deliveryURL;
         }
 
         const formData = new FormData();
