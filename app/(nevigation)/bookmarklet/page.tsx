@@ -60,8 +60,12 @@ export default async function BookmarkletPage() {
               version: user.sync_token_version,
           })
         : null;
+    const protectionBypassSecret =
+        process.env.VERCEL_ENV === "preview"
+            ? process.env.VERCEL_AUTOMATION_BYPASS_SECRET
+            : undefined;
     const bookmarkletHref = token
-        ? createBookmarkletHref(appOrigin, token)
+        ? createBookmarkletHref(appOrigin, token, protectionBypassSecret)
         : null;
     const syncDate = latestSync?.completed_at ?? latestSync?.started_at;
     const syncLabel = !latestSync
