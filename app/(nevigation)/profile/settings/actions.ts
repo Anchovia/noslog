@@ -57,8 +57,6 @@ export async function uploadUserSetting(
     const result = settingSchema.safeParse({
         avatar: String(formData.get("avatar") ?? ""),
         username: String(formData.get("username") ?? ""),
-        discord_name: String(formData.get("discord_name") ?? ""),
-        discord_tag: String(formData.get("discord_tag") ?? ""),
     });
 
     if (!result.success) {
@@ -97,8 +95,6 @@ export async function uploadUserSetting(
             where: { id: session.id },
             data: {
                 username: result.data.username,
-                discord_name: result.data.discord_name || null,
-                discord_tag: result.data.discord_tag || null,
                 avatar: nextAvatar,
             },
         });
@@ -111,7 +107,7 @@ export async function uploadUserSetting(
         if (code === "P2002") {
             return {
                 success: false,
-                message: "이미 사용 중인 닉네임 또는 Discord 태그입니다.",
+                message: "이미 사용 중인 닉네임입니다.",
             };
         }
         return { success: false, message: "프로필 저장에 실패했습니다." };

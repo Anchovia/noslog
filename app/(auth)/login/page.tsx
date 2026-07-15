@@ -1,12 +1,27 @@
-import Image from "next/image";
+import { MessageCircle } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { getUser } from "@/lib/user";
 
-export default async function LoginPage() {
+const errorMessages: Record<string, string> = {
+    invalid_state: "로그인 요청이 만료되었습니다. 다시 시도해주세요.",
+    oauth_config: "Discord 로그인 설정을 확인해주세요.",
+    token_exchange: "Discord 인증 처리에 실패했습니다.",
+    profile_fetch: "Discord 사용자 정보를 가져오지 못했습니다.",
+    already_linked: "이미 다른 NosLog 계정에 연결된 Discord 계정입니다.",
+    user_missing: "연결할 NosLog 계정을 찾지 못했습니다.",
+    account_update: "Discord 계정 연결에 실패했습니다.",
+};
+
+export default async function LoginPage({
+    searchParams,
+}: {
+    searchParams: Promise<{ error?: string }>;
+}) {
     const user = await getUser();
     if (user) redirect("/");
+    const { error } = await searchParams;
 
     return (
         <main className="mx-auto flex min-h-dvh w-full max-w-97.5 flex-col px-6 py-8">
@@ -26,18 +41,19 @@ export default async function LoginPage() {
 
                 <div className="mt-10 flex w-full flex-col items-center">
                     <Link
-                        href="/kakao/start"
-                        className="rounded-card flex h-12 w-full items-center justify-center bg-[#fee500] transition-opacity hover:opacity-90 active:opacity-80"
+                        href="/discord/start"
+                        className="bg-discord text-text-primary rounded-card flex h-12 w-full items-center justify-center gap-2 text-sm font-bold transition-opacity hover:opacity-90 active:opacity-80"
                     >
-                        <Image
-                            src="/kakao_login_large_narrow.png"
-                            alt="카카오로 계속하기"
-                            width={366}
-                            height={90}
-                            priority
-                            className="h-10 w-auto"
-                        />
+                        <MessageCircle className="size-5" aria-hidden />
+                        Discord로 계속하기
                     </Link>
+
+                    {error ? (
+                        <p className="border-danger/40 bg-danger/10 text-danger rounded-card mt-3 w-full border px-3 py-2 text-xs">
+                            {errorMessages[error] ??
+                                "로그인 중 오류가 발생했습니다."}
+                        </p>
+                    ) : null}
 
                     <p className="text-text-disabled mt-4 text-xs leading-relaxed">
                         로그인하면 서비스 약관 및 개인정보 처리방침에 동의하게

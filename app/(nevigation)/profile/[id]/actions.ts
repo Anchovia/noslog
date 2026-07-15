@@ -33,7 +33,6 @@ export async function getProfileData(id: number) {
                     username: true,
                     nostalgia_name: true,
                     discord_name: true,
-                    discord_tag: true,
                     avatar: true,
                     country: true,
                     grade_basic: true,
