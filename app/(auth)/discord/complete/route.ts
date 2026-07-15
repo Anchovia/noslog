@@ -37,9 +37,7 @@ function shouldUseDiscordAvatar(currentAvatar: string | null) {
 
     try {
         const hostname = new URL(currentAvatar).hostname;
-        return (
-            hostname === "k.kakaocdn.net" || hostname === "cdn.discordapp.com"
-        );
+        return hostname === "cdn.discordapp.com";
     } catch {
         return false;
     }

@@ -12,10 +12,8 @@ model User {
   id                   Int                       @id @default(autoincrement())
   username             String?                   @unique
   nostalgia_name       String?
-  kakao_id             BigInt?                   @unique
   discord_id           String?                   @unique
   discord_name         String?
-  discord_tag          String?                   @unique
   avatar               String?
   country              String                    @default("ko-KR")
   rank_basic           Int?
