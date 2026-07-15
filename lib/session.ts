@@ -3,6 +3,8 @@ import { cookies } from "next/headers";
 
 interface SessionContent {
     id?: number;
+    discordOAuthState?: string;
+    discordOAuthReturnTo?: string;
 }
 
 export default async function getSession() {

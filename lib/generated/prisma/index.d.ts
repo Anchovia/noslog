@@ -3956,6 +3956,7 @@ export namespace Prisma {
     username: string | null
     nostalgia_name: string | null
     kakao_id: bigint | null
+    discord_id: string | null
     discord_name: string | null
     discord_tag: string | null
     avatar: string | null
@@ -3989,6 +3990,7 @@ export namespace Prisma {
     username: string | null
     nostalgia_name: string | null
     kakao_id: bigint | null
+    discord_id: string | null
     discord_name: string | null
     discord_tag: string | null
     avatar: string | null
@@ -4022,6 +4024,7 @@ export namespace Prisma {
     username: number
     nostalgia_name: number
     kakao_id: number
+    discord_id: number
     discord_name: number
     discord_tag: number
     avatar: number
@@ -4105,6 +4108,7 @@ export namespace Prisma {
     username?: true
     nostalgia_name?: true
     kakao_id?: true
+    discord_id?: true
     discord_name?: true
     discord_tag?: true
     avatar?: true
@@ -4138,6 +4142,7 @@ export namespace Prisma {
     username?: true
     nostalgia_name?: true
     kakao_id?: true
+    discord_id?: true
     discord_name?: true
     discord_tag?: true
     avatar?: true
@@ -4171,6 +4176,7 @@ export namespace Prisma {
     username?: true
     nostalgia_name?: true
     kakao_id?: true
+    discord_id?: true
     discord_name?: true
     discord_tag?: true
     avatar?: true
@@ -4291,6 +4297,7 @@ export namespace Prisma {
     username: string | null
     nostalgia_name: string | null
     kakao_id: bigint | null
+    discord_id: string | null
     discord_name: string | null
     discord_tag: string | null
     avatar: string | null
@@ -4343,6 +4350,7 @@ export namespace Prisma {
     username?: boolean
     nostalgia_name?: boolean
     kakao_id?: boolean
+    discord_id?: boolean
     discord_name?: boolean
     discord_tag?: boolean
     avatar?: boolean
@@ -4390,6 +4398,7 @@ export namespace Prisma {
     username?: boolean
     nostalgia_name?: boolean
     kakao_id?: boolean
+    discord_id?: boolean
     discord_name?: boolean
     discord_tag?: boolean
     avatar?: boolean
@@ -4423,6 +4432,7 @@ export namespace Prisma {
     username?: boolean
     nostalgia_name?: boolean
     kakao_id?: boolean
+    discord_id?: boolean
     discord_name?: boolean
     discord_tag?: boolean
     avatar?: boolean
@@ -4456,6 +4466,7 @@ export namespace Prisma {
     username?: boolean
     nostalgia_name?: boolean
     kakao_id?: boolean
+    discord_id?: boolean
     discord_name?: boolean
     discord_tag?: boolean
     avatar?: boolean
@@ -4484,7 +4495,7 @@ export namespace Prisma {
     updated_at?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "nostalgia_name" | "kakao_id" | "discord_name" | "discord_tag" | "avatar" | "country" | "rank_basic" | "rank_recital" | "rank_basic_country" | "rank_recital_country" | "play_count" | "score_p" | "score_f" | "score_s" | "score_a2" | "score_a" | "score_b2" | "score_b" | "score_c" | "score_d" | "role" | "grade_basic" | "grade_recital" | "exam_basic" | "exam_recital" | "sync_token_version" | "created_at" | "updated_at", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "nostalgia_name" | "kakao_id" | "discord_id" | "discord_name" | "discord_tag" | "avatar" | "country" | "rank_basic" | "rank_recital" | "rank_basic_country" | "rank_recital_country" | "play_count" | "score_p" | "score_f" | "score_s" | "score_a2" | "score_a" | "score_b2" | "score_b" | "score_c" | "score_d" | "role" | "grade_basic" | "grade_recital" | "exam_basic" | "exam_recital" | "sync_token_version" | "created_at" | "updated_at", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     PlayHistory?: boolean | User$PlayHistoryArgs<ExtArgs>
     PlayData?: boolean | User$PlayDataArgs<ExtArgs>
@@ -4526,6 +4537,7 @@ export namespace Prisma {
       username: string | null
       nostalgia_name: string | null
       kakao_id: bigint | null
+      discord_id: string | null
       discord_name: string | null
       discord_tag: string | null
       avatar: string | null
@@ -4992,6 +5004,7 @@ export namespace Prisma {
     readonly username: FieldRef<"User", 'String'>
     readonly nostalgia_name: FieldRef<"User", 'String'>
     readonly kakao_id: FieldRef<"User", 'BigInt'>
+    readonly discord_id: FieldRef<"User", 'String'>
     readonly discord_name: FieldRef<"User", 'String'>
     readonly discord_tag: FieldRef<"User", 'String'>
     readonly avatar: FieldRef<"User", 'String'>
@@ -37609,6 +37622,7 @@ export namespace Prisma {
     username: 'username',
     nostalgia_name: 'nostalgia_name',
     kakao_id: 'kakao_id',
+    discord_id: 'discord_id',
     discord_name: 'discord_name',
     discord_tag: 'discord_tag',
     avatar: 'avatar',
@@ -38207,6 +38221,7 @@ export namespace Prisma {
     username?: StringNullableFilter<"User"> | string | null
     nostalgia_name?: StringNullableFilter<"User"> | string | null
     kakao_id?: BigIntNullableFilter<"User"> | bigint | number | null
+    discord_id?: StringNullableFilter<"User"> | string | null
     discord_name?: StringNullableFilter<"User"> | string | null
     discord_tag?: StringNullableFilter<"User"> | string | null
     avatar?: StringNullableFilter<"User"> | string | null
@@ -38253,6 +38268,7 @@ export namespace Prisma {
     username?: SortOrderInput | SortOrder
     nostalgia_name?: SortOrderInput | SortOrder
     kakao_id?: SortOrderInput | SortOrder
+    discord_id?: SortOrderInput | SortOrder
     discord_name?: SortOrderInput | SortOrder
     discord_tag?: SortOrderInput | SortOrder
     avatar?: SortOrderInput | SortOrder
@@ -38298,6 +38314,7 @@ export namespace Prisma {
     id?: number
     username?: string
     kakao_id?: bigint | number
+    discord_id?: string
     discord_tag?: string
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
@@ -38341,13 +38358,14 @@ export namespace Prisma {
     chartRecordSnapshots?: ChartRecordSnapshotListRelationFilter
     examSubmissions?: ExamSubmissionListRelationFilter
     examAchievements?: ExamAchievementListRelationFilter
-  }, "id" | "username" | "kakao_id" | "discord_tag">
+  }, "id" | "username" | "kakao_id" | "discord_id" | "discord_tag">
 
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
     username?: SortOrderInput | SortOrder
     nostalgia_name?: SortOrderInput | SortOrder
     kakao_id?: SortOrderInput | SortOrder
+    discord_id?: SortOrderInput | SortOrder
     discord_name?: SortOrderInput | SortOrder
     discord_tag?: SortOrderInput | SortOrder
     avatar?: SortOrderInput | SortOrder
@@ -38389,6 +38407,7 @@ export namespace Prisma {
     username?: StringNullableWithAggregatesFilter<"User"> | string | null
     nostalgia_name?: StringNullableWithAggregatesFilter<"User"> | string | null
     kakao_id?: BigIntNullableWithAggregatesFilter<"User"> | bigint | number | null
+    discord_id?: StringNullableWithAggregatesFilter<"User"> | string | null
     discord_name?: StringNullableWithAggregatesFilter<"User"> | string | null
     discord_tag?: StringNullableWithAggregatesFilter<"User"> | string | null
     avatar?: StringNullableWithAggregatesFilter<"User"> | string | null
@@ -40755,6 +40774,7 @@ export namespace Prisma {
     username?: string | null
     nostalgia_name?: string | null
     kakao_id?: bigint | number | null
+    discord_id?: string | null
     discord_name?: string | null
     discord_tag?: string | null
     avatar?: string | null
@@ -40801,6 +40821,7 @@ export namespace Prisma {
     username?: string | null
     nostalgia_name?: string | null
     kakao_id?: bigint | number | null
+    discord_id?: string | null
     discord_name?: string | null
     discord_tag?: string | null
     avatar?: string | null
@@ -40846,6 +40867,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_id?: NullableStringFieldUpdateOperationsInput | string | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
@@ -40892,6 +40914,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_id?: NullableStringFieldUpdateOperationsInput | string | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
@@ -40938,6 +40961,7 @@ export namespace Prisma {
     username?: string | null
     nostalgia_name?: string | null
     kakao_id?: bigint | number | null
+    discord_id?: string | null
     discord_name?: string | null
     discord_tag?: string | null
     avatar?: string | null
@@ -40970,6 +40994,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_id?: NullableStringFieldUpdateOperationsInput | string | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
@@ -41003,6 +41028,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_id?: NullableStringFieldUpdateOperationsInput | string | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
@@ -43650,6 +43676,7 @@ export namespace Prisma {
     username?: SortOrder
     nostalgia_name?: SortOrder
     kakao_id?: SortOrder
+    discord_id?: SortOrder
     discord_name?: SortOrder
     discord_tag?: SortOrder
     avatar?: SortOrder
@@ -43707,6 +43734,7 @@ export namespace Prisma {
     username?: SortOrder
     nostalgia_name?: SortOrder
     kakao_id?: SortOrder
+    discord_id?: SortOrder
     discord_name?: SortOrder
     discord_tag?: SortOrder
     avatar?: SortOrder
@@ -43740,6 +43768,7 @@ export namespace Prisma {
     username?: SortOrder
     nostalgia_name?: SortOrder
     kakao_id?: SortOrder
+    discord_id?: SortOrder
     discord_name?: SortOrder
     discord_tag?: SortOrder
     avatar?: SortOrder
@@ -51011,6 +51040,7 @@ export namespace Prisma {
     username?: string | null
     nostalgia_name?: string | null
     kakao_id?: bigint | number | null
+    discord_id?: string | null
     discord_name?: string | null
     discord_tag?: string | null
     avatar?: string | null
@@ -51056,6 +51086,7 @@ export namespace Prisma {
     username?: string | null
     nostalgia_name?: string | null
     kakao_id?: bigint | number | null
+    discord_id?: string | null
     discord_name?: string | null
     discord_tag?: string | null
     avatar?: string | null
@@ -51194,6 +51225,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_id?: NullableStringFieldUpdateOperationsInput | string | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
@@ -51239,6 +51271,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_id?: NullableStringFieldUpdateOperationsInput | string | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
@@ -51375,6 +51408,7 @@ export namespace Prisma {
     username?: string | null
     nostalgia_name?: string | null
     kakao_id?: bigint | number | null
+    discord_id?: string | null
     discord_name?: string | null
     discord_tag?: string | null
     avatar?: string | null
@@ -51420,6 +51454,7 @@ export namespace Prisma {
     username?: string | null
     nostalgia_name?: string | null
     kakao_id?: bigint | number | null
+    discord_id?: string | null
     discord_name?: string | null
     discord_tag?: string | null
     avatar?: string | null
@@ -51578,6 +51613,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_id?: NullableStringFieldUpdateOperationsInput | string | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
@@ -51623,6 +51659,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_id?: NullableStringFieldUpdateOperationsInput | string | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
@@ -51765,6 +51802,7 @@ export namespace Prisma {
     username?: string | null
     nostalgia_name?: string | null
     kakao_id?: bigint | number | null
+    discord_id?: string | null
     discord_name?: string | null
     discord_tag?: string | null
     avatar?: string | null
@@ -51810,6 +51848,7 @@ export namespace Prisma {
     username?: string | null
     nostalgia_name?: string | null
     kakao_id?: bigint | number | null
+    discord_id?: string | null
     discord_name?: string | null
     discord_tag?: string | null
     avatar?: string | null
@@ -51968,6 +52007,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_id?: NullableStringFieldUpdateOperationsInput | string | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
@@ -52013,6 +52053,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_id?: NullableStringFieldUpdateOperationsInput | string | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
@@ -52963,6 +53004,7 @@ export namespace Prisma {
     username?: string | null
     nostalgia_name?: string | null
     kakao_id?: bigint | number | null
+    discord_id?: string | null
     discord_name?: string | null
     discord_tag?: string | null
     avatar?: string | null
@@ -53008,6 +53050,7 @@ export namespace Prisma {
     username?: string | null
     nostalgia_name?: string | null
     kakao_id?: bigint | number | null
+    discord_id?: string | null
     discord_name?: string | null
     discord_tag?: string | null
     avatar?: string | null
@@ -53159,6 +53202,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_id?: NullableStringFieldUpdateOperationsInput | string | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
@@ -53204,6 +53248,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_id?: NullableStringFieldUpdateOperationsInput | string | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
@@ -53298,6 +53343,7 @@ export namespace Prisma {
     username?: string | null
     nostalgia_name?: string | null
     kakao_id?: bigint | number | null
+    discord_id?: string | null
     discord_name?: string | null
     discord_tag?: string | null
     avatar?: string | null
@@ -53343,6 +53389,7 @@ export namespace Prisma {
     username?: string | null
     nostalgia_name?: string | null
     kakao_id?: bigint | number | null
+    discord_id?: string | null
     discord_name?: string | null
     discord_tag?: string | null
     avatar?: string | null
@@ -53443,6 +53490,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_id?: NullableStringFieldUpdateOperationsInput | string | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
@@ -53488,6 +53536,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_id?: NullableStringFieldUpdateOperationsInput | string | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
@@ -53532,6 +53581,7 @@ export namespace Prisma {
     username?: string | null
     nostalgia_name?: string | null
     kakao_id?: bigint | number | null
+    discord_id?: string | null
     discord_name?: string | null
     discord_tag?: string | null
     avatar?: string | null
@@ -53577,6 +53627,7 @@ export namespace Prisma {
     username?: string | null
     nostalgia_name?: string | null
     kakao_id?: bigint | number | null
+    discord_id?: string | null
     discord_name?: string | null
     discord_tag?: string | null
     avatar?: string | null
@@ -53759,6 +53810,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_id?: NullableStringFieldUpdateOperationsInput | string | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
@@ -53804,6 +53856,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_id?: NullableStringFieldUpdateOperationsInput | string | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
@@ -53982,6 +54035,7 @@ export namespace Prisma {
     username?: string | null
     nostalgia_name?: string | null
     kakao_id?: bigint | number | null
+    discord_id?: string | null
     discord_name?: string | null
     discord_tag?: string | null
     avatar?: string | null
@@ -54027,6 +54081,7 @@ export namespace Prisma {
     username?: string | null
     nostalgia_name?: string | null
     kakao_id?: bigint | number | null
+    discord_id?: string | null
     discord_name?: string | null
     discord_tag?: string | null
     avatar?: string | null
@@ -54087,6 +54142,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_id?: NullableStringFieldUpdateOperationsInput | string | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
@@ -54132,6 +54188,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_id?: NullableStringFieldUpdateOperationsInput | string | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
@@ -54176,6 +54233,7 @@ export namespace Prisma {
     username?: string | null
     nostalgia_name?: string | null
     kakao_id?: bigint | number | null
+    discord_id?: string | null
     discord_name?: string | null
     discord_tag?: string | null
     avatar?: string | null
@@ -54221,6 +54279,7 @@ export namespace Prisma {
     username?: string | null
     nostalgia_name?: string | null
     kakao_id?: bigint | number | null
+    discord_id?: string | null
     discord_name?: string | null
     discord_tag?: string | null
     avatar?: string | null
@@ -54403,6 +54462,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_id?: NullableStringFieldUpdateOperationsInput | string | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
@@ -54448,6 +54508,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_id?: NullableStringFieldUpdateOperationsInput | string | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
@@ -54626,6 +54687,7 @@ export namespace Prisma {
     username?: string | null
     nostalgia_name?: string | null
     kakao_id?: bigint | number | null
+    discord_id?: string | null
     discord_name?: string | null
     discord_tag?: string | null
     avatar?: string | null
@@ -54671,6 +54733,7 @@ export namespace Prisma {
     username?: string | null
     nostalgia_name?: string | null
     kakao_id?: bigint | number | null
+    discord_id?: string | null
     discord_name?: string | null
     discord_tag?: string | null
     avatar?: string | null
@@ -54853,6 +54916,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_id?: NullableStringFieldUpdateOperationsInput | string | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
@@ -54898,6 +54962,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_id?: NullableStringFieldUpdateOperationsInput | string | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
@@ -55076,6 +55141,7 @@ export namespace Prisma {
     username?: string | null
     nostalgia_name?: string | null
     kakao_id?: bigint | number | null
+    discord_id?: string | null
     discord_name?: string | null
     discord_tag?: string | null
     avatar?: string | null
@@ -55121,6 +55187,7 @@ export namespace Prisma {
     username?: string | null
     nostalgia_name?: string | null
     kakao_id?: bigint | number | null
+    discord_id?: string | null
     discord_name?: string | null
     discord_tag?: string | null
     avatar?: string | null
@@ -55303,6 +55370,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_id?: NullableStringFieldUpdateOperationsInput | string | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
@@ -55348,6 +55416,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_id?: NullableStringFieldUpdateOperationsInput | string | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
@@ -55958,6 +56027,7 @@ export namespace Prisma {
     username?: string | null
     nostalgia_name?: string | null
     kakao_id?: bigint | number | null
+    discord_id?: string | null
     discord_name?: string | null
     discord_tag?: string | null
     avatar?: string | null
@@ -56003,6 +56073,7 @@ export namespace Prisma {
     username?: string | null
     nostalgia_name?: string | null
     kakao_id?: bigint | number | null
+    discord_id?: string | null
     discord_name?: string | null
     discord_tag?: string | null
     avatar?: string | null
@@ -56099,6 +56170,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_id?: NullableStringFieldUpdateOperationsInput | string | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
@@ -56144,6 +56216,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_id?: NullableStringFieldUpdateOperationsInput | string | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
@@ -57074,6 +57147,7 @@ export namespace Prisma {
     username?: string | null
     nostalgia_name?: string | null
     kakao_id?: bigint | number | null
+    discord_id?: string | null
     discord_name?: string | null
     discord_tag?: string | null
     avatar?: string | null
@@ -57119,6 +57193,7 @@ export namespace Prisma {
     username?: string | null
     nostalgia_name?: string | null
     kakao_id?: bigint | number | null
+    discord_id?: string | null
     discord_name?: string | null
     discord_tag?: string | null
     avatar?: string | null
@@ -57241,6 +57316,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_id?: NullableStringFieldUpdateOperationsInput | string | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
@@ -57286,6 +57362,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_id?: NullableStringFieldUpdateOperationsInput | string | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
@@ -57404,6 +57481,7 @@ export namespace Prisma {
     username?: string | null
     nostalgia_name?: string | null
     kakao_id?: bigint | number | null
+    discord_id?: string | null
     discord_name?: string | null
     discord_tag?: string | null
     avatar?: string | null
@@ -57449,6 +57527,7 @@ export namespace Prisma {
     username?: string | null
     nostalgia_name?: string | null
     kakao_id?: bigint | number | null
+    discord_id?: string | null
     discord_name?: string | null
     discord_tag?: string | null
     avatar?: string | null
@@ -57581,6 +57660,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_id?: NullableStringFieldUpdateOperationsInput | string | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
@@ -57626,6 +57706,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
     kakao_id?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    discord_id?: NullableStringFieldUpdateOperationsInput | string | null
     discord_name?: NullableStringFieldUpdateOperationsInput | string | null
     discord_tag?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null

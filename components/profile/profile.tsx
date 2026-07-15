@@ -21,7 +21,6 @@ interface ProfileUser {
     username: string | null;
     nostalgia_name: string | null;
     discord_name: string | null;
-    discord_tag: string | null;
     avatar: string | null;
     country: string;
     rank_basic: number | null;
@@ -267,7 +266,6 @@ export default function ProfileDashboard({
                 {user.discord_name ? (
                     <span className="bg-surface text-caption rounded-md px-2.5 py-1.5">
                         {user.discord_name}
-                        {user.discord_tag ? `#${user.discord_tag}` : ""}
                     </span>
                 ) : null}
                 {user.nostalgia_name &&

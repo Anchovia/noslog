@@ -42,19 +42,19 @@ Figma는 픽셀 단위의 최종 시안이 아니라 레이아웃과 정보 구�
 
 ## 기술 스택
 
-| 영역              | 기술                      |
-| ----------------- | ------------------------- |
-| Framework         | Next.js 16 App Router     |
-| Language          | TypeScript 5              |
-| UI                | React 19, Tailwind CSS 4  |
-| Database          | Prisma 6, SQLite          |
-| Auth / Session    | Kakao OAuth, iron-session |
-| Form / Validation | react-hook-form, zod      |
-| UI Primitives     | Radix UI                  |
-| State             | Zustand                   |
-| Chart             | Recharts                  |
-| HTTP Client       | axios, fetch              |
-| Tooling           | ESLint, Prettier, Husky   |
+| 영역              | 기술                        |
+| ----------------- | --------------------------- |
+| Framework         | Next.js 16 App Router       |
+| Language          | TypeScript 5                |
+| UI                | React 19, Tailwind CSS 4    |
+| Database          | Prisma 6, PostgreSQL        |
+| Auth / Session    | Discord OAuth, iron-session |
+| Form / Validation | react-hook-form, zod        |
+| UI Primitives     | Radix UI                    |
+| State             | Zustand                     |
+| Chart             | Recharts                    |
+| HTTP Client       | axios, fetch                |
+| Tooling           | ESLint, Prettier, Husky     |
 
 ---
 
@@ -62,11 +62,9 @@ Figma는 픽셀 단위의 최종 시안이 아니라 레이아웃과 정보 구�
 
 ### 인증 / 세션
 
-- Kakao OAuth 기반 로그인
+- Discord OAuth 기반 로그인 및 기존 계정 연결
 - iron-session 기반 세션 관리
 - 로그인 후 프로필 및 개인 기능 접근
-
-> 향후 Discord OAuth 전환을 검토 중입니다. 현재 README에서는 실제 구현 상태를 우선 기록합니다.
 
 ### 데이터 수집
 
@@ -129,7 +127,7 @@ Prisma schema 기준 주요 모델은 다음과 같습니다.
 | `ExamSubmission`    | 사용자의 합격 증빙과 심사 상태 |
 | `ExamAchievement`   | 승인된 사용자 검정 급수        |
 
-현재 DB는 SQLite 기반입니다. PostgreSQL 전환, 난이도 배열 정규화, 필드명 정리는 추후 개선 대상으로 둡니다.
+현재 운영 DB는 Neon PostgreSQL을 사용합니다. 기존 SQLite 마이그레이션은 `prisma/migrations-sqlite`에 보관합니다.
 
 ---
 
@@ -139,7 +137,7 @@ Prisma schema 기준 주요 모델은 다음과 같습니다.
 noslog
 ├─ app
 │  ├─ (auth)
-│  │  ├─ kakao
+│  │  ├─ discord
 │  │  └─ login
 │  ├─ (nevigation)
 │  │  ├─ (home)
@@ -205,16 +203,16 @@ cp .env.example .env
 주요 환경변수:
 
 ```env
-DATABASE_URL="file:./database.db"
+DATABASE_URL="postgresql://USER:PASSWORD@HOST/DATABASE?sslmode=require"
 COOKIE_PASSWORD="iron_session_password"
 
-KAKAO_CLIENT_SECRET="kakao_client_secret"
-KAKAO_REST_API_KEY="kakao_rest_api_key"
-KAKAO_REDIRECT_URI="kakao_login_redirect_url"
+DISCORD_CLIENT_ID="discord_client_id"
+DISCORD_CLIENT_SECRET="discord_client_secret"
+DISCORD_REDIRECT_URI="http://localhost:3000/discord/complete"
 
 CLOUDFLARE_API_KEY="cloudflare_api_key"
 CLOUDFLARE_ACCOUNT_ID="cloudflare_account_id"
-CLOUDFLARE_ACCOUNT_HASH="cloudflare_account_hash"
+CLOUDFLARE_IMAGES_DELIVERY_HASH="cloudflare_images_delivery_hash"
 ```
 
 > [!WARNING]
@@ -287,8 +285,7 @@ http://localhost:3000
 
 ### P3. 확장
 
-- Discord OAuth 전환 검토
-- PostgreSQL 전환 검토
+- 카카오 레거시 식별자 제거
 - 목표 설정 기능
 - 라이벌 / 친구 비교
 - 공유용 프로필 카드

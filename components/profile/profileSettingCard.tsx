@@ -1,6 +1,6 @@
 "use client";
 
-import { Camera, Save } from "lucide-react";
+import { Camera, MessageCircle, Save } from "lucide-react";
 import Link from "next/link";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -20,8 +20,8 @@ interface ProfileSettingCardProps {
         id: number;
         avatar: string | null;
         username: string | null;
+        discord_id: string | null;
         discord_name: string | null;
-        discord_tag: string | null;
     };
 }
 
@@ -50,8 +50,6 @@ export default function ProfileSettingCard({ user }: ProfileSettingCardProps) {
         defaultValues: {
             avatar: user.avatar ?? "",
             username: user.username ?? "",
-            discord_name: user.discord_name ?? "",
-            discord_tag: user.discord_tag ?? "",
         },
     });
 
@@ -113,8 +111,6 @@ export default function ProfileSettingCard({ user }: ProfileSettingCardProps) {
         const formData = new FormData();
         formData.set("avatar", avatar);
         formData.set("username", data.username);
-        formData.set("discord_name", data.discord_name);
-        formData.set("discord_tag", data.discord_tag);
 
         const result = await uploadUserSetting(formData);
         if (result?.fieldErrors) {
@@ -187,31 +183,32 @@ export default function ProfileSettingCard({ user }: ProfileSettingCardProps) {
                 <div>
                     <h2 className="text-section">Discord</h2>
                     <p className="text-caption mt-1">
-                        입력한 정보는 프로필에 표시됩니다.
+                        로그인에 사용할 Discord 계정을 연결합니다.
                     </p>
                 </div>
-                <label className="text-text-secondary text-xs font-semibold">
-                    Discord 이름
-                    <input
-                        type="text"
-                        autoComplete="off"
-                        placeholder="Discord 이름"
-                        className={`${inputClass} mt-1.5`}
-                        {...register("discord_name")}
-                    />
-                    <FieldError message={errors.discord_name?.message} />
-                </label>
-                <label className="text-text-secondary text-xs font-semibold">
-                    Discord 태그
-                    <input
-                        type="text"
-                        autoComplete="off"
-                        placeholder="Discord 태그"
-                        className={`${inputClass} mt-1.5`}
-                        {...register("discord_tag")}
-                    />
-                    <FieldError message={errors.discord_tag?.message} />
-                </label>
+                <div className="border-border bg-bg rounded-card flex items-center gap-3 border p-3">
+                    <span className="bg-discord/15 text-discord flex size-9 shrink-0 items-center justify-center rounded-full">
+                        <MessageCircle className="size-4" aria-hidden />
+                    </span>
+                    <div className="min-w-0 flex-1">
+                        <p className="text-body truncate text-sm font-semibold">
+                            {user.discord_id
+                                ? (user.discord_name ?? "Discord 연결됨")
+                                : "Discord 연결 필요"}
+                        </p>
+                        <p className="text-caption mt-0.5">
+                            {user.discord_id
+                                ? "로그인 계정으로 연결되어 있습니다."
+                                : "현재 NosLog 계정을 유지한 채 연결됩니다."}
+                        </p>
+                    </div>
+                    <Link
+                        href="/discord/start?returnTo=/profile/settings"
+                        className="border-border text-text-primary rounded-card flex h-9 shrink-0 items-center border px-3 text-xs font-bold"
+                    >
+                        {user.discord_id ? "다시 연결" : "연결"}
+                    </Link>
+                </div>
             </section>
 
             {submitError ? (

@@ -3,7 +3,7 @@ const nextConfig = {
     images: {
         remotePatterns: [
             {
-                hostname: "k.kakaocdn.net",
+                hostname: "cdn.discordapp.com",
             },
 
             {
