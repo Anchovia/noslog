@@ -1,8 +1,9 @@
 "use server";
 
 import db from "@/lib/db";
+import { CACHE_TAGS } from "@/lib/cacheTags";
 import getSession from "@/lib/session";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import {
     chartEvaluationDeleteSchema,
     chartEvaluationReactionSchema,
@@ -15,91 +16,6 @@ import {
 interface EvaluationActionResult {
     success: boolean;
     message: string;
-}
-
-interface GetUserPlayDataProps {
-    index: string;
-    difficulty: string;
-    chartId?: number;
-}
-
-export async function getUserPlayData({
-    index,
-    difficulty,
-    chartId,
-}: GetUserPlayDataProps) {
-    const session = await getSession();
-
-    if (!session.id) {
-        return null;
-    }
-
-    return db.playData.findFirst({
-        where: {
-            music_idx: index,
-            user_id: session.id,
-            difficulty,
-            chart_id: chartId,
-            score: { gt: 0 },
-        },
-        select: {
-            user_id: true,
-            user: {
-                select: {
-                    id: true,
-                    username: true,
-                    avatar: true,
-                },
-            },
-            rank: true,
-            fc_type: true,
-            grade_basic: true,
-            grade_recital: true,
-            level: true,
-            score: true,
-            max_combo: true,
-            play_count: true,
-            fullcombo_count: true,
-            pianistic_count: true,
-            besttime: true,
-        },
-    });
-}
-
-export async function getRecentChartPlays({
-    index,
-    difficulty,
-}: GetUserPlayDataProps) {
-    const session = await getSession();
-
-    if (!session.id) {
-        return [];
-    }
-
-    const plays = await db.chartPlayHistory.findMany({
-        where: {
-            user_id: session.id,
-            chart: {
-                music_idx: index,
-                difficulty,
-            },
-        },
-        select: {
-            id: true,
-            score: true,
-            rank: true,
-            source_play_time: true,
-        },
-        orderBy: [{ source_play_time: "desc" }, { id: "desc" }],
-        take: 4,
-    });
-
-    return plays.reverse().map((play) => ({
-        id: play.id,
-        score: play.score,
-        rank: play.rank,
-        play_time: play.source_play_time,
-    }));
 }
 
 // 사용자별 채보 투표를 최초 등록하거나 기존 값으로 갱신함
@@ -172,6 +88,7 @@ export async function submitChartEvaluation(
         update: data,
     });
 
+    updateTag(CACHE_TAGS.chartEvaluations);
     revalidatePath(
         `/music/${chart.music_idx}/${chart.difficulty.toLowerCase()}`
     );
@@ -238,6 +155,7 @@ export async function toggleChartEvaluationReaction(
         });
     }
 
+    updateTag(CACHE_TAGS.chartEvaluations);
     revalidatePath(
         `/music/${evaluation.chart.music_idx}/${evaluation.chart.difficulty.toLowerCase()}`
     );
@@ -281,6 +199,7 @@ export async function deleteChartEvaluation(
 
     await db.chartEvaluation.delete({ where: { id: evaluation.id } });
 
+    updateTag(CACHE_TAGS.chartEvaluations);
     revalidatePath(
         `/music/${evaluation.chart.music_idx}/${evaluation.chart.difficulty.toLowerCase()}`
     );

@@ -1,8 +1,9 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 
 import { requireAdmin } from "@/lib/admin";
+import { CACHE_TAGS } from "@/lib/cacheTags";
 import db from "@/lib/db";
 
 function optionalNumber(value: FormDataEntryValue | null) {
@@ -45,6 +46,8 @@ export async function saveMusicMetadata(formData: FormData) {
             },
         }),
     ]);
+    updateTag(CACHE_TAGS.musicCatalog);
+    updateTag(CACHE_TAGS.musicDetails);
     revalidatePath(`/music/${musicIndex}`);
 }
 
@@ -98,5 +101,7 @@ export async function saveChartMetadata(formData: FormData) {
         }
     });
 
+    updateTag(CACHE_TAGS.musicCatalog);
+    updateTag(CACHE_TAGS.musicDetails);
     revalidatePath(`/music/${musicIndex}/${current.difficulty.toLowerCase()}`);
 }

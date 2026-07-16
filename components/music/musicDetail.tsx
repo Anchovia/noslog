@@ -90,7 +90,7 @@ interface ChartDetail {
     userTopPercent: number | null;
 }
 
-interface MusicDetailProps {
+export interface MusicDetailProps {
     music: MusicInfo;
     difficulty: Difficulty;
     activeTab: DetailTab;

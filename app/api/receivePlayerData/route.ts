@@ -177,6 +177,8 @@ export async function POST(request: NextRequest) {
 
         if (music) {
             revalidateTag(CACHE_TAGS.musicCatalog, "max");
+            revalidateTag(CACHE_TAGS.musicDetails, "max");
+            revalidateTag(CACHE_TAGS.chartRankings, "max");
         }
 
         return json(

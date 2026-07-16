@@ -1,8 +1,9 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 
 import { requireAdmin } from "@/lib/admin";
+import { CACHE_TAGS } from "@/lib/cacheTags";
 import db from "@/lib/db";
 
 export async function deleteEvaluation(formData: FormData) {
@@ -11,5 +12,6 @@ export async function deleteEvaluation(formData: FormData) {
     if (!Number.isInteger(evaluationId)) return;
 
     await db.chartEvaluation.delete({ where: { id: evaluationId } });
+    updateTag(CACHE_TAGS.chartEvaluations);
     revalidatePath("/admin/community");
 }
