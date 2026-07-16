@@ -166,7 +166,6 @@ noslog
 │  ├─ music
 │  └─ profile
 ├─ lib
-│  ├─ generated/prisma
 │  ├─ services
 │  ├─ db.ts
 │  ├─ session.ts

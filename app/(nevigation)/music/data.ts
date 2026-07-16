@@ -2,7 +2,7 @@ import "server-only";
 
 import { CACHE_TAGS } from "@/lib/cacheTags";
 import db from "@/lib/db";
-import { Prisma } from "@/lib/generated/prisma";
+import { Prisma } from "@prisma/client";
 import { unstable_cache } from "next/cache";
 import {
     normalizeMusicQuery,

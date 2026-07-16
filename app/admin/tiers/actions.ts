@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/admin";
 import { CACHE_TAGS } from "@/lib/cacheTags";
 import db from "@/lib/db";
-import type { Prisma } from "@/lib/generated/prisma";
+import type { Prisma } from "@prisma/client";
 
 const tierModes = new Set(["basic", "recital"]);
 const tierStatuses = new Set(["draft", "published", "archived"]);

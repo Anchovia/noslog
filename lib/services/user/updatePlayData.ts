@@ -1,5 +1,5 @@
 import db from "@/lib/db";
-import type { Prisma } from "@/lib/generated/prisma";
+import type { Prisma } from "@prisma/client";
 
 interface PlayerSheetData {
     level: number;

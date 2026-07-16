@@ -48,6 +48,3 @@ pnpm-debug.log*
 .env
 .env.*
 !.env.example
-
-# prisma generated temp files
-lib/generated/prisma/*.tmp*
