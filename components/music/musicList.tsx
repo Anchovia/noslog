@@ -14,8 +14,6 @@ export interface MusicItem {
     artist: string | null;
     category_short: string;
     background: string | null;
-    sheet_len: number;
-    difficulty_levels: string;
     normal: number;
     hard: number;
     expert: number;
@@ -23,26 +21,28 @@ export interface MusicItem {
 }
 
 interface MusicListProps {
-    initialMusics: MusicItem[];
+    initialPage: {
+        items: MusicItem[];
+        nextCursor: string | null;
+    };
     searchParams: MusicSearchParams;
     viewMode: ViewMode;
 }
 
 export default function MusicList({
-    initialMusics,
+    initialPage,
     searchParams,
     viewMode,
 }: MusicListProps) {
-    const [musics, setMusics] = useState<MusicItem[]>(initialMusics);
-    const [page, setPage] = useState(0);
+    const [musics, setMusics] = useState<MusicItem[]>(initialPage.items);
+    const [cursor, setCursor] = useState<string | null>(initialPage.nextCursor);
     const [isLoading, setIsLoading] = useState(false);
-    const [isLastPage, setIsLastPage] = useState(false);
     const trigger = useRef<HTMLSpanElement>(null);
 
     useEffect(() => {
         const triggerElement = trigger.current;
 
-        if (!triggerElement || isLoading || isLastPage) {
+        if (!triggerElement || !cursor || isLoading) {
             return;
         }
 
@@ -57,14 +57,10 @@ export default function MusicList({
                 observer.unobserve(triggerElement);
                 setIsLoading(true);
 
-                void getMoreMusics(page + 1, searchParams)
-                    .then((newMusics) => {
-                        if (newMusics.length !== 0) {
-                            setMusics((prev) => [...prev, ...newMusics]);
-                            setPage((prev) => prev + 1);
-                        } else {
-                            setIsLastPage(true);
-                        }
+                void getMoreMusics(cursor, searchParams)
+                    .then((nextPage) => {
+                        setMusics((prev) => [...prev, ...nextPage.items]);
+                        setCursor(nextPage.nextCursor);
                     })
                     .finally(() => {
                         setIsLoading(false);
@@ -80,7 +76,7 @@ export default function MusicList({
         return () => {
             observer.disconnect();
         };
-    }, [page, searchParams, isLoading, isLastPage]);
+    }, [cursor, searchParams, isLoading]);
 
     return (
         <section
@@ -99,7 +95,7 @@ export default function MusicList({
                 )
             )}
 
-            {!isLastPage && (
+            {cursor && (
                 <span
                     ref={trigger}
                     className={cn(

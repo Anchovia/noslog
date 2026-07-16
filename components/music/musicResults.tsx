@@ -12,13 +12,16 @@ import MusicToolbar, {
 } from "./musicToolbar";
 
 interface MusicResultsProps {
-    initialMusics: MusicItem[];
+    initialPage: {
+        items: MusicItem[];
+        nextCursor: string | null;
+    };
     searchParams: MusicSearchParams;
 }
 
 // 악곡 결과의 정렬과 보기 상태를 한곳에서 관리함
 export default function MusicResults({
-    initialMusics,
+    initialPage,
     searchParams,
 }: MusicResultsProps) {
     const router = useRouter();
@@ -76,7 +79,7 @@ export default function MusicResults({
                 onViewModeChange={handleViewModeChange}
             />
             <MusicList
-                initialMusics={initialMusics}
+                initialPage={initialPage}
                 searchParams={searchParams}
                 viewMode={viewMode}
             />

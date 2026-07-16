@@ -22,8 +22,6 @@ function StepTitle({ number, children }: { number: number; children: string }) {
 }
 
 async function requestOrigin() {
-    if (process.env.APP_URL) return process.env.APP_URL.replace(/\/$/, "");
-
     const requestHeaders = await headers();
     const host =
         requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host");
@@ -33,8 +31,10 @@ async function requestOrigin() {
             ? "http"
             : "https");
 
-    if (!host) throw new Error("Application origin could not be resolved");
-    return `${protocol}://${host}`;
+    if (host) return `${protocol}://${host}`;
+    if (process.env.APP_URL) return process.env.APP_URL.replace(/\/$/, "");
+
+    throw new Error("Application origin could not be resolved");
 }
 
 export default async function BookmarkletPage() {
@@ -60,8 +60,12 @@ export default async function BookmarkletPage() {
               version: user.sync_token_version,
           })
         : null;
+    const protectionBypassSecret =
+        process.env.VERCEL_ENV === "preview"
+            ? process.env.VERCEL_AUTOMATION_BYPASS_SECRET
+            : undefined;
     const bookmarkletHref = token
-        ? createBookmarkletHref(appOrigin, token)
+        ? createBookmarkletHref(appOrigin, token, protectionBypassSecret)
         : null;
     const syncDate = latestSync?.completed_at ?? latestSync?.started_at;
     const syncLabel = !latestSync

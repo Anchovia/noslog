@@ -63,8 +63,20 @@ export function verifySyncToken(token: string): SyncTokenPayload | null {
     }
 }
 
-export function createBookmarkletHref(appOrigin: string, token: string) {
-    const receiveUrl = `${appOrigin}/api/receivePlayerData`;
+export function createBookmarkletHref(
+    appOrigin: string,
+    token: string,
+    protectionBypassSecret?: string
+) {
+    const receiveUrl = new URL("/api/receivePlayerData", `${appOrigin}/`);
+    if (protectionBypassSecret) {
+        receiveUrl.searchParams.set(
+            "x-vercel-protection-bypass",
+            protectionBypassSecret
+        );
+    }
+
+    const receiveUrlString = receiveUrl.toString();
     const nostalgiaUrl = "https://p.eagate.573.jp/";
     const code = `
         (async()=>{
@@ -139,7 +151,7 @@ export function createBookmarkletHref(appOrigin: string, token: string) {
                 const totalData=await load("music_data","전체 기록",true);
                 setStatus(totalData?"NosLog로 전체 기록을 전송하는 중...":"Basic Pass 미가입: 최근 기록만 전송하는 중...");
 
-                const response=await fetch(${JSON.stringify(receiveUrl)}, {
+                const response=await fetch(${JSON.stringify(receiveUrlString)}, {
                     method:"POST",
                     headers:{"Content-Type":"application/json"},
                     body:JSON.stringify({token:${JSON.stringify(token)},playerData,recentData,totalData})

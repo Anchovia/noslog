@@ -2,46 +2,39 @@ import { Plus } from "lucide-react";
 import Link from "next/link";
 
 import { cn } from "@/lib/utils";
-import db from "@/lib/db";
 import {
     formatTierDate,
     getTierRecordStatus,
     tierModeStyles,
 } from "@/lib/tiers";
 import { getUser } from "@/lib/user";
+import {
+    getCachedTierLists,
+    getUserTierRecords,
+    type PublicTierMode,
+} from "./data";
 
 interface TiersPageProps {
     searchParams: Promise<{ mode?: string }>;
 }
 
-type TierMode = "all" | "basic" | "recital";
-
-const modes: { value: TierMode; label: string }[] = [
+const modes: { value: PublicTierMode; label: string }[] = [
     { value: "all", label: "전체" },
     { value: "basic", label: "Basic" },
     { value: "recital", label: "Recital" },
 ];
 
-function normalizeMode(value?: string): TierMode {
+function normalizeMode(value?: string): PublicTierMode {
     return value === "basic" || value === "recital" ? value : "all";
 }
 
 export default async function TiersPage({ searchParams }: TiersPageProps) {
     const { mode: requestedMode } = await searchParams;
     const mode = normalizeMode(requestedMode);
-    const user = await getUser();
-    const tierLists = await db.tierList.findMany({
-        where: {
-            status: "published",
-            ...(mode === "all" ? {} : { mode }),
-        },
-        include: {
-            entries: {
-                select: { chartId: true },
-            },
-        },
-        orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
-    });
+    const [user, tierLists] = await Promise.all([
+        getUser(),
+        getCachedTierLists(mode),
+    ]);
 
     const chartIds = [
         ...new Set(
@@ -50,17 +43,7 @@ export default async function TiersPage({ searchParams }: TiersPageProps) {
             )
         ),
     ];
-    const records = user
-        ? await db.playData.findMany({
-              where: { user_id: user.id, chart_id: { in: chartIds } },
-              select: {
-                  chart_id: true,
-                  score: true,
-                  rank: true,
-                  fc_type: true,
-              },
-          })
-        : [];
+    const records = user ? await getUserTierRecords(user.id, chartIds) : [];
     const recordByChartId = new Map(
         records.flatMap((record) =>
             record.chart_id === null ? [] : [[record.chart_id, record] as const]

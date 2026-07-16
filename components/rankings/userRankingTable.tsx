@@ -1,25 +1,17 @@
 import Badge from "@/components/ui/Badge";
+import type {
+    UserRankingMode,
+    UserRankingRegion,
+    UserRankingRow,
+} from "@/lib/rankings";
 import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight, Globe2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-export type RankingMode = "basic" | "recital";
-export type RankingRegion = "all" | "kr" | "jp" | "global";
-
-export interface UserRankingRow {
-    id: number;
-    rank: number;
-    username: string | null;
-    avatar: string | null;
-    country: string;
-    grade: number;
-    exam: number | null;
-}
-
 interface UserRankingTableProps {
-    mode: RankingMode;
-    region: RankingRegion;
+    mode: UserRankingMode;
+    region: UserRankingRegion;
     page: number;
     pageSize: number;
     totalCount: number;
@@ -80,7 +72,13 @@ function CountryMark({ country }: { country: string }) {
     return <Globe2 size={14} aria-label="글로벌" />;
 }
 
-function ExamBadge({ mode, exam }: { mode: RankingMode; exam: number | null }) {
+function ExamBadge({
+    mode,
+    exam,
+}: {
+    mode: UserRankingMode;
+    exam: number | null;
+}) {
     if (!exam) return null;
 
     return (

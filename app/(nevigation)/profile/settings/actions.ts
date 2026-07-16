@@ -3,7 +3,9 @@
 import { redirect } from "next/navigation";
 
 import db from "@/lib/db";
+import { CACHE_TAGS } from "@/lib/cacheTags";
 import getSession from "@/lib/session";
+import { updateTag } from "next/cache";
 
 import { settingSchema } from "./schema";
 
@@ -98,6 +100,7 @@ export async function uploadUserSetting(
                 avatar: nextAvatar,
             },
         });
+        updateTag(CACHE_TAGS.userRankings);
     } catch (error) {
         const code =
             typeof error === "object" && error !== null && "code" in error

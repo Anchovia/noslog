@@ -1,9 +1,10 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { requireAdmin } from "@/lib/admin";
+import { CACHE_TAGS } from "@/lib/cacheTags";
 import db from "@/lib/db";
 import type { Prisma } from "@/lib/generated/prisma";
 
@@ -69,6 +70,7 @@ function tierListData(formData: FormData) {
 }
 
 function revalidateTierList(id: number) {
+    updateTag(CACHE_TAGS.tierLists);
     revalidatePath("/admin");
     revalidatePath("/admin/tiers");
     revalidatePath(`/admin/tiers/${id}`);
@@ -154,6 +156,7 @@ export async function deleteTierList(formData: FormData) {
     if (!Number.isInteger(id)) return;
 
     await db.tierList.delete({ where: { id } });
+    updateTag(CACHE_TAGS.tierLists);
     revalidatePath("/admin");
     revalidatePath("/admin/tiers");
     revalidatePath("/tiers");

@@ -2,6 +2,7 @@
 
 import { logout } from "@/app/(nevigation)/profile/[id]/actions";
 import Badge from "@/components/ui/Badge";
+import { getJacketUrl } from "@/lib/tiers";
 import { cn, formatToComma } from "@/lib/utils";
 import {
     ChevronDown,
@@ -129,9 +130,11 @@ function countryCode(country: string) {
 }
 
 function Jacket({
+    index,
     background,
     title,
 }: {
+    index: string;
     background: string | null;
     title: string;
 }) {
@@ -139,7 +142,7 @@ function Jacket({
         <span
             className="bg-surface-muted size-10 shrink-0 rounded-md bg-cover bg-center"
             style={{
-                backgroundImage: background ? `url(${background})` : undefined,
+                backgroundImage: `url(${getJacketUrl(index, background)})`,
             }}
             aria-label={`${title} 자켓`}
         />
@@ -459,6 +462,7 @@ export default function ProfileDashboard({
                                             {index + 1}
                                         </span>
                                         <Jacket
+                                            index={play.music_idx}
                                             background={play.music.background}
                                             title={play.music.title}
                                         />
@@ -538,6 +542,7 @@ export default function ProfileDashboard({
                                     className="flex min-h-14 items-center gap-3 px-3 py-2"
                                 >
                                     <Jacket
+                                        index={play.music_idx}
                                         background={play.music.background}
                                         title={play.music.title}
                                     />

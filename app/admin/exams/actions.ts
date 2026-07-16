@@ -1,9 +1,10 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 
 import { examEditorSchema } from "@/app/admin/exams/schema";
 import { requireAdmin } from "@/lib/admin";
+import { CACHE_TAGS } from "@/lib/cacheTags";
 import db from "@/lib/db";
 
 function getStageSignature(
@@ -259,6 +260,7 @@ export async function saveExam(input: unknown) {
         return { id: examId };
     });
 
+    updateTag(CACHE_TAGS.exams);
     revalidatePath("/admin");
     revalidatePath("/admin/exams");
     revalidatePath("/exams");
@@ -285,6 +287,7 @@ export async function deleteExam(examId: number) {
         };
     }
     await db.exam.delete({ where: { id: examId } });
+    updateTag(CACHE_TAGS.exams);
     revalidatePath("/admin");
     revalidatePath("/admin/exams");
     revalidatePath("/exams");

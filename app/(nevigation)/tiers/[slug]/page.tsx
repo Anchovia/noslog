@@ -2,7 +2,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import TierChartCard from "@/components/tiers/tierChartCard";
-import db from "@/lib/db";
 import {
     formatTierDate,
     getTierRecordStatus,
@@ -11,6 +10,7 @@ import {
 } from "@/lib/tiers";
 import { cn } from "@/lib/utils";
 import { getUser } from "@/lib/user";
+import { getCachedTierDetail, getUserTierRecords } from "../data";
 
 interface TierDetailPageProps {
     params: Promise<{ slug: string }>;
@@ -36,55 +36,20 @@ export default async function TierDetailPage({
     params,
     searchParams,
 }: TierDetailPageProps) {
-    const [
-        { slug },
-        { status: requestedStatus, recommend: requestedRecommendation },
-        user,
-    ] = await Promise.all([params, searchParams, getUser()]);
+    const [{ slug }, query] = await Promise.all([params, searchParams]);
+    const [tierList, user] = await Promise.all([
+        getCachedTierDetail(slug),
+        getUser(),
+    ]);
+    const { status: requestedStatus, recommend: requestedRecommendation } =
+        query;
     const status = normalizeFilter(requestedStatus);
     const recommendationEnabled = requestedRecommendation === "1";
-    const tierList = await db.tierList.findFirst({
-        where: { slug, status: "published" },
-        include: {
-            bands: {
-                orderBy: { position: "asc" },
-                include: {
-                    entries: {
-                        orderBy: { position: "asc" },
-                        include: {
-                            chart: {
-                                include: {
-                                    music: {
-                                        select: {
-                                            index: true,
-                                            title: true,
-                                            background: true,
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
-            },
-        },
-    });
-
     if (!tierList) notFound();
 
     const entries = tierList.bands.flatMap((band) => band.entries);
     const chartIds = entries.map((entry) => entry.chartId);
-    const records = user
-        ? await db.playData.findMany({
-              where: { user_id: user.id, chart_id: { in: chartIds } },
-              select: {
-                  chart_id: true,
-                  score: true,
-                  rank: true,
-                  fc_type: true,
-              },
-          })
-        : [];
+    const records = user ? await getUserTierRecords(user.id, chartIds) : [];
     const recordByChartId = new Map(
         records.flatMap((record) =>
             record.chart_id === null ? [] : [[record.chart_id, record] as const]

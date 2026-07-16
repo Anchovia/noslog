@@ -1,13 +1,14 @@
-import UserRankingTable, {
-    type RankingMode,
-    type RankingRegion,
-    type UserRankingRow,
-} from "@/components/rankings/userRankingTable";
+import UserRankingTable from "@/components/rankings/userRankingTable";
 import { cn } from "@/lib/utils";
-import db from "@/lib/db";
 import { getUser } from "@/lib/user";
-import type { Prisma } from "@/lib/generated/prisma";
-import { getUserRankingPosition } from "@/lib/rankings";
+import {
+    getCachedUserRankingPage,
+    getRankingRegionWhere,
+    getUserRankingPosition,
+    type UserRankingMode,
+    type UserRankingRegion,
+    type UserRankingRow,
+} from "@/lib/rankings";
 import { Globe2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -22,12 +23,12 @@ interface RankingsPageProps {
 }
 
 const PAGE_SIZE = 7;
-const rankingModes: { value: RankingMode; label: string }[] = [
+const rankingModes: { value: UserRankingMode; label: string }[] = [
     { value: "basic", label: "Basic" },
     { value: "recital", label: "Recital" },
 ];
 const rankingRegions: {
-    value: RankingRegion;
+    value: UserRankingRegion;
     label: string;
     icon?: "kr" | "jp" | "global";
 }[] = [
@@ -37,23 +38,14 @@ const rankingRegions: {
     { value: "global", label: "GLO", icon: "global" },
 ];
 
-function normalizeMode(value?: string): RankingMode {
+function normalizeMode(value?: string): UserRankingMode {
     return value === "recital" ? "recital" : "basic";
 }
 
-function normalizeRegion(value?: string): RankingRegion {
+function normalizeRegion(value?: string): UserRankingRegion {
     return value === "kr" || value === "jp" || value === "global"
         ? value
         : "all";
-}
-
-function regionWhere(region: RankingRegion): Prisma.UserWhereInput {
-    if (region === "kr") return { country: "ko-KR" };
-    if (region === "jp") return { country: "ja-JP" };
-    if (region === "global") {
-        return { country: { notIn: ["ko-KR", "ja-JP"] } };
-    }
-    return {};
 }
 
 function RegionIcon({ icon }: { icon?: "kr" | "jp" | "global" }) {
@@ -89,29 +81,8 @@ export default async function Rankings({ searchParams }: RankingsPageProps) {
         : 1;
     const gradeField = mode === "basic" ? "grade_basic" : "grade_recital";
     const examField = mode === "basic" ? "exam_basic" : "exam_recital";
-    const where: Prisma.UserWhereInput = {
-        ...regionWhere(region),
-        [gradeField]: { gt: 0 },
-    };
-
-    const [totalCount, users, user] = await Promise.all([
-        db.user.count({ where }),
-        db.user.findMany({
-            where,
-            select: {
-                id: true,
-                username: true,
-                avatar: true,
-                country: true,
-                grade_basic: true,
-                grade_recital: true,
-                exam_basic: true,
-                exam_recital: true,
-            },
-            orderBy: [{ [gradeField]: "desc" }, { id: "asc" }],
-            skip: (page - 1) * PAGE_SIZE,
-            take: PAGE_SIZE,
-        }),
+    const [{ totalCount, rows }, user] = await Promise.all([
+        getCachedUserRankingPage(mode, region, page, PAGE_SIZE),
         getUser(),
     ]);
 
@@ -119,16 +90,6 @@ export default async function Rankings({ searchParams }: RankingsPageProps) {
     if (page > totalPages) {
         redirect(`/rankings?mode=${mode}&region=${region}&page=${totalPages}`);
     }
-
-    const rows: UserRankingRow[] = users.map((rankingUser, index) => ({
-        id: rankingUser.id,
-        rank: (page - 1) * PAGE_SIZE + index + 1,
-        username: rankingUser.username,
-        avatar: rankingUser.avatar,
-        country: rankingUser.country,
-        grade: rankingUser[gradeField] ?? 0,
-        exam: rankingUser[examField],
-    }));
 
     let currentUser: UserRankingRow | null = null;
     const userGrade = user?.[gradeField] ?? 0;
@@ -146,7 +107,7 @@ export default async function Rankings({ searchParams }: RankingsPageProps) {
             userId: user.id,
             grade: userGrade,
             mode,
-            scope: regionWhere(region),
+            scope: getRankingRegionWhere(region),
         });
 
         currentUser = {
@@ -160,8 +121,10 @@ export default async function Rankings({ searchParams }: RankingsPageProps) {
         };
     }
 
-    const filterHref = (nextMode: RankingMode, nextRegion: RankingRegion) =>
-        `/rankings?mode=${nextMode}&region=${nextRegion}&page=1`;
+    const filterHref = (
+        nextMode: UserRankingMode,
+        nextRegion: UserRankingRegion
+    ) => `/rankings?mode=${nextMode}&region=${nextRegion}&page=1`;
 
     return (
         <div className="flex flex-col gap-4 px-4 py-5">

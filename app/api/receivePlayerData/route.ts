@@ -1,4 +1,5 @@
 import { verifySyncToken } from "@/lib/bookmarklet";
+import { CACHE_TAGS } from "@/lib/cacheTags";
 import db from "@/lib/db";
 import { updateDummy } from "@/lib/dummy/bingo";
 import {
@@ -10,9 +11,45 @@ import { updatePlayCount } from "@/lib/services/user/updatePlayCount";
 import { updatePlayData } from "@/lib/services/user/updatePlayData";
 import { updateRecentPlay } from "@/lib/services/user/updateRecentPlay";
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { z } from "zod";
 
 const EAGATE_ORIGIN = "https://p.eagate.573.jp";
+const difficultySchema = z.enum(["Normal", "Hard", "Expert", "Real"]);
+const recentHistorySchema = z.object({
+    difficulty: difficultySchema,
+    level: z.number().int().positive(),
+    score: z.number().int().nonnegative(),
+    max_combo: z.number().int().nonnegative(),
+    rank: z.string().min(1),
+    play_time: z.string().min(1),
+    music: z.string().min(1),
+    grade_basic: z.number().int().nonnegative(),
+});
+const musicSheetSchema = z.object({
+    difficulty: difficultySchema,
+    level: z.number().int().positive(),
+    score: z.number().int().nonnegative(),
+    rank: z.string().min(1),
+    fc_type: z.number().int().nonnegative(),
+    play_count: z.number().int().nonnegative(),
+    fullcombo_count: z.number().int().nonnegative(),
+    pianistic_count: z.number().int().nonnegative(),
+    max_combo: z.number().int().nonnegative(),
+    grade_basic: z.number().int().nonnegative(),
+    grade_recital: z.number().int().nonnegative(),
+    besttime: z.string(),
+});
+const musicSchema = z.object({
+    "@index": z.string().min(1),
+    artist: z.string().nullable(),
+    category: z.string().min(1),
+    category_short: z.string().min(1),
+    description: z.string().nullable(),
+    title: z.string().min(1),
+    title_kana: z.string(),
+    sheet: z.array(musicSheetSchema).min(3).max(4),
+});
 const syncRequestSchema = z.object({
     token: z.string().min(1),
     playerData: z.object({
@@ -29,7 +66,7 @@ const syncRequestSchema = z.object({
         data: z.object({
             player: z.object({
                 history_list: z.object({
-                    history: z.array(z.unknown()),
+                    history: z.array(recentHistorySchema),
                 }),
             }),
         }),
@@ -38,7 +75,7 @@ const syncRequestSchema = z.object({
         .object({
             status: z.number(),
             data: z.object({
-                music: z.array(z.unknown()),
+                music: z.array(musicSchema),
             }),
         })
         .nullable(),
@@ -99,10 +136,10 @@ export async function POST(request: NextRequest) {
     }
 
     const { name, play_count: playCount } = playerData.data.player;
-    const history = recentData.data.player.history_list.history as Parameters<
-        typeof updateRecentPlay
-    >[1];
-    const music = totalData ? (totalData.data.music as SyncMusicInput[]) : null;
+    const history = recentData.data.player.history_list.history;
+    const music: SyncMusicInput[] | null = totalData
+        ? totalData.data.music
+        : null;
     let syncId: number | null = null;
 
     try {
@@ -137,6 +174,13 @@ export async function POST(request: NextRequest) {
                 completed_at: new Date(),
             },
         });
+
+        if (music) {
+            revalidateTag(CACHE_TAGS.musicCatalog, "max");
+            revalidateTag(CACHE_TAGS.musicDetails, "max");
+            revalidateTag(CACHE_TAGS.chartRankings, "max");
+            revalidateTag(CACHE_TAGS.userRankings, "max");
+        }
 
         return json(
             music
