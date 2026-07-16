@@ -1,27 +1,13 @@
-import db from "@/lib/db";
+import { getCachedUserRankingPage } from "@/lib/rankings";
 import { getUser } from "@/lib/user";
 import { formatToGrade } from "@/lib/utils";
 import Link from "next/link";
 
 export default async function Home() {
-    const user = await getUser();
-
-    const rankingUsers = await db.user.findMany({
-        select: {
-            id: true,
-            username: true,
-            grade_basic: true,
-        },
-        where: {
-            grade_basic: {
-                not: null,
-            },
-        },
-        orderBy: {
-            grade_basic: "desc",
-        },
-        take: 5,
-    });
+    const [user, { rows: rankingUsers }] = await Promise.all([
+        getUser(),
+        getCachedUserRankingPage("basic", "all", 1, 5),
+    ]);
 
     return (
         <div className="flex flex-col gap-4 px-4 py-4">
@@ -181,7 +167,7 @@ export default async function Home() {
                             </span>
 
                             <span className="text-caption text-text-primary tabular-nums">
-                                Grd {formatToGrade(rankingUser.grade_basic)}
+                                Grd {formatToGrade(rankingUser.grade)}
                             </span>
                         </Link>
                     ))}
