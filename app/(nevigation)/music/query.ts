@@ -1,5 +1,3 @@
-import type { Prisma } from "@/lib/generated/prisma";
-
 export interface MusicSearchParams {
     q?: string;
     categories?: string;
@@ -20,196 +18,85 @@ export interface MusicSearchParams {
     view?: "list" | "grid";
 }
 
-type DifficultyKey = "normal" | "hard" | "expert" | "real";
+export type DifficultyKey = "normal" | "hard" | "expert" | "real";
 
-interface SortableMusic {
-    index: string;
-    title: string;
-    normal: number;
-    hard: number;
-    expert: number;
-    real: number | null;
+export interface MusicDifficultyFilter {
+    difficulty: "Normal" | "Hard" | "Expert" | "Real";
+    min: number;
+    max: number;
 }
 
-function parseEnabled(value: string | undefined, fallback = false) {
-    if (value === undefined) {
-        return fallback;
-    }
+export interface NormalizedMusicQuery {
+    q: string;
+    categories: string[];
+    difficulties: MusicDifficultyFilter[];
+    sort: "name" | "level";
+    order: "asc" | "desc";
+}
 
-    return value === "true";
+const difficulties: DifficultyKey[] = ["normal", "hard", "expert", "real"];
+const difficultyConfig: Record<
+    DifficultyKey,
+    {
+        label: MusicDifficultyFilter["difficulty"];
+        defaultMin: number;
+        defaultMax: number;
+    }
+> = {
+    normal: { label: "Normal", defaultMin: 1, defaultMax: 12 },
+    hard: { label: "Hard", defaultMin: 1, defaultMax: 12 },
+    expert: { label: "Expert", defaultMin: 8, defaultMax: 12 },
+    real: { label: "Real", defaultMin: 1, defaultMax: 3 },
+};
+
+function parseEnabled(value: string | undefined, fallback = false) {
+    return value === undefined ? fallback : value === "true";
 }
 
 function parseNumber(value: string | undefined, fallback: number) {
     const parsed = Number(value);
-
     return Number.isFinite(parsed) ? parsed : fallback;
 }
 
-function getSelectedDifficulties(
+export function normalizeMusicQuery(
     searchParams: MusicSearchParams
-): DifficultyKey[] {
-    const difficulties: DifficultyKey[] = ["normal", "hard", "expert", "real"];
-    const hasExplicitSelection = difficulties.some(
+): NormalizedMusicQuery {
+    const hasExplicitDifficulty = difficulties.some(
         (difficulty) => searchParams[difficulty] !== undefined
     );
-
-    if (!hasExplicitSelection) {
-        return ["expert"];
-    }
-
-    return difficulties.filter((difficulty) =>
-        parseEnabled(searchParams[difficulty])
+    const selectedDifficulties = difficulties.filter((difficulty) =>
+        parseEnabled(
+            searchParams[difficulty],
+            !hasExplicitDifficulty && difficulty === "expert"
+        )
     );
-}
-
-function getRepresentativeLevel(
-    music: SortableMusic,
-    difficulties: DifficultyKey[]
-) {
-    const levels = difficulties
-        .map((difficulty) => music[difficulty])
-        .filter((level): level is number => level !== null);
-
-    return levels.length > 0 ? Math.max(...levels) : -1;
-}
-
-// 필터된 전체 악곡을 동일한 기준으로 정렬함
-export function sortMusics<T extends SortableMusic>(
-    musics: T[],
-    searchParams: MusicSearchParams
-) {
-    const sortMode = searchParams.sort === "level" ? "level" : "name";
-    const sortOrder =
-        searchParams.order === "asc" || searchParams.order === "desc"
-            ? searchParams.order
-            : sortMode === "level"
-              ? "desc"
-              : "asc";
-    const direction = sortOrder === "asc" ? 1 : -1;
-    const selectedDifficulties = getSelectedDifficulties(searchParams);
-
-    return [...musics].sort((a, b) => {
-        if (sortMode === "level") {
-            const levelDifference =
-                getRepresentativeLevel(a, selectedDifficulties) -
-                getRepresentativeLevel(b, selectedDifficulties);
-
-            if (levelDifference !== 0) {
-                return levelDifference * direction;
-            }
-        }
-
-        const titleDifference = a.title.localeCompare(b.title, "ja", {
-            numeric: true,
-            sensitivity: "base",
-        });
-
-        if (titleDifference !== 0) {
-            return titleDifference * (sortMode === "name" ? direction : 1);
-        }
-
-        return a.index.localeCompare(b.index, "en", { numeric: true });
-    });
-}
-
-export function buildMusicWhere({
-    q,
-    categories,
-    normal,
-    hard,
-    expert,
-    real,
-    normalMin,
-    normalMax,
-    hardMin,
-    hardMax,
-    expertMin,
-    expertMax,
-    realMin,
-    realMax,
-}: MusicSearchParams): Prisma.MusicWhereInput {
-    const selectedCategories = categories
-        ? categories.split(",").filter(Boolean)
-        : [];
-
-    const difficultyFilters: Prisma.MusicWhereInput[] = [];
-    const selectedDifficulties = getSelectedDifficulties({
-        normal,
-        hard,
-        expert,
-        real,
-    });
-
-    if (selectedDifficulties.includes("normal")) {
-        difficultyFilters.push({
-            charts: {
-                some: {
-                    difficulty: "Normal",
-                    level: {
-                        gte: parseNumber(normalMin, 1),
-                        lte: parseNumber(normalMax, 12),
-                    },
-                },
-            },
-        });
-    }
-
-    if (selectedDifficulties.includes("hard")) {
-        difficultyFilters.push({
-            charts: {
-                some: {
-                    difficulty: "Hard",
-                    level: {
-                        gte: parseNumber(hardMin, 1),
-                        lte: parseNumber(hardMax, 12),
-                    },
-                },
-            },
-        });
-    }
-
-    if (selectedDifficulties.includes("expert")) {
-        difficultyFilters.push({
-            charts: {
-                some: {
-                    difficulty: "Expert",
-                    level: {
-                        gte: parseNumber(expertMin, 8),
-                        lte: parseNumber(expertMax, 12),
-                    },
-                },
-            },
-        });
-    }
-
-    if (selectedDifficulties.includes("real")) {
-        difficultyFilters.push({
-            charts: {
-                some: {
-                    difficulty: "Real",
-                    level: {
-                        gte: parseNumber(realMin, 1),
-                        lte: parseNumber(realMax, 3),
-                    },
-                },
-            },
-        });
-    }
+    const sort = searchParams.sort === "level" ? "level" : "name";
 
     return {
-        AND: [
-            q
-                ? {
-                      OR: [
-                          { title: { contains: q, mode: "insensitive" } },
-                          { artist: { contains: q, mode: "insensitive" } },
-                      ],
-                  }
-                : {},
-            selectedCategories.length > 0
-                ? { category_short: { in: selectedCategories } }
-                : {},
-            difficultyFilters.length > 0 ? { OR: difficultyFilters } : {},
-        ],
+        q: searchParams.q?.trim() ?? "",
+        categories: searchParams.categories
+            ? searchParams.categories.split(",").filter(Boolean)
+            : [],
+        difficulties: selectedDifficulties.map((difficulty) => {
+            const config = difficultyConfig[difficulty];
+            return {
+                difficulty: config.label,
+                min: parseNumber(
+                    searchParams[`${difficulty}Min`],
+                    config.defaultMin
+                ),
+                max: parseNumber(
+                    searchParams[`${difficulty}Max`],
+                    config.defaultMax
+                ),
+            };
+        }),
+        sort,
+        order:
+            searchParams.order === "asc" || searchParams.order === "desc"
+                ? searchParams.order
+                : sort === "level"
+                  ? "desc"
+                  : "asc",
     };
 }

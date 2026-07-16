@@ -4,8 +4,8 @@ import { getMusicPage } from "./data";
 import type { MusicSearchParams } from "./query";
 
 export async function getMoreMusics(
-    page: number,
+    cursor: string,
     searchParams: MusicSearchParams
 ) {
-    return getMusicPage(searchParams, page);
+    return getMusicPage(searchParams, cursor);
 }

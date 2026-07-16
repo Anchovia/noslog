@@ -7,7 +7,7 @@ export default async function Music(props: {
     searchParams: Promise<MusicSearchParams>;
 }) {
     const searchParams = await props.searchParams;
-    const initialMusics = await getMusicPage(searchParams, 0);
+    const initialPage = await getMusicPage(searchParams);
     const searchKey = JSON.stringify(searchParams);
 
     return (
@@ -18,7 +18,7 @@ export default async function Music(props: {
             <MusicSearch searchParams={searchParams} />
             <MusicResults
                 key={`results-${searchKey}`}
-                initialMusics={initialMusics}
+                initialPage={initialPage}
                 searchParams={searchParams}
             />
         </div>

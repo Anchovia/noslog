@@ -1,4 +1,5 @@
 import { verifySyncToken } from "@/lib/bookmarklet";
+import { CACHE_TAGS } from "@/lib/cacheTags";
 import db from "@/lib/db";
 import { updateDummy } from "@/lib/dummy/bingo";
 import {
@@ -10,6 +11,7 @@ import { updatePlayCount } from "@/lib/services/user/updatePlayCount";
 import { updatePlayData } from "@/lib/services/user/updatePlayData";
 import { updateRecentPlay } from "@/lib/services/user/updateRecentPlay";
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { z } from "zod";
 
 const EAGATE_ORIGIN = "https://p.eagate.573.jp";
@@ -172,6 +174,10 @@ export async function POST(request: NextRequest) {
                 completed_at: new Date(),
             },
         });
+
+        if (music) {
+            revalidateTag(CACHE_TAGS.musicCatalog, "max");
+        }
 
         return json(
             music
