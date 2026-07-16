@@ -1,0 +1,53 @@
+import { cn } from "@/lib/utils";
+import { difficultyStyles } from "./musicDetailConfig";
+import type { Difficulty, MusicInfo } from "./musicDetailTypes";
+
+interface MusicDetailHeaderProps {
+    music: MusicInfo;
+    difficulty: Difficulty;
+    levelConstant: number | null;
+}
+
+export default function MusicDetailHeader({
+    music,
+    difficulty,
+    levelConstant,
+}: MusicDetailHeaderProps) {
+    const jacketImageUrl =
+        music.background ||
+        `https://p.eagate.573.jp/game/nostalgia/op3/img/jacket.html?c=${music.index}`;
+
+    return (
+        <section className="flex min-w-0 items-center gap-3">
+            <div
+                className="bg-surface-muted rounded-card size-24 shrink-0 bg-cover bg-center"
+                style={{ backgroundImage: `url(${jacketImageUrl})` }}
+                aria-hidden="true"
+            />
+
+            <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+                <span className="bg-surface-muted text-text-secondary w-fit rounded px-2 py-1 text-xs font-bold">
+                    {music.category_short}
+                </span>
+                <h1 className="text-text-primary truncate text-xl font-extrabold">
+                    {music.title}
+                </h1>
+                <p className="text-text-secondary truncate text-sm">
+                    {music.artist || "아티스트 미상"}
+                </p>
+            </div>
+
+            <div className="shrink-0 text-right">
+                <p className="text-text-disabled text-[10px]">레벨 상수</p>
+                <strong
+                    className={cn(
+                        "text-xl font-black tabular-nums",
+                        difficultyStyles[difficulty]
+                    )}
+                >
+                    {levelConstant?.toFixed(1) ?? "-"}
+                </strong>
+            </div>
+        </section>
+    );
+}
