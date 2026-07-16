@@ -5,4 +5,5 @@ export const CACHE_TAGS = {
     chartEvaluations: "chart-evaluations",
     tierLists: "tier-lists",
     userRankings: "user-rankings",
+    exams: "exams",
 } as const;

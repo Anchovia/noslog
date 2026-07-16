@@ -1,84 +1,15 @@
 import ExamDashboard, {
     type ExamDashboardItem,
 } from "@/components/exams/examDashboard";
-import db from "@/lib/db";
 import getSession from "@/lib/session";
 import { normalizeStoredGrade } from "@/lib/utils";
+import { getCachedPublishedExams, getUserExamState } from "./data";
 
 export default async function ExamsPage() {
-    const session = await getSession();
-    const exams = await db.exam.findMany({
-        where: { status: "published" },
-        select: {
-            id: true,
-            slug: true,
-            mode: true,
-            scoringType: true,
-            grade: true,
-            shortLabel: true,
-            title: true,
-            description: true,
-            feeNos: true,
-            requiredGrade: true,
-            rewards: {
-                select: {
-                    id: true,
-                    type: true,
-                    label: true,
-                    music: { select: { index: true, title: true } },
-                },
-                orderBy: { position: "asc" },
-            },
-            stages: {
-                select: {
-                    id: true,
-                    position: true,
-                    label: true,
-                    requirementType: true,
-                    requiredValue: true,
-                    music: {
-                        select: { index: true, title: true, artist: true },
-                    },
-                    allowedCharts: {
-                        select: {
-                            chart: {
-                                select: {
-                                    id: true,
-                                    difficulty: true,
-                                    level: true,
-                                },
-                            },
-                        },
-                    },
-                },
-                orderBy: { position: "asc" },
-            },
-            achievements: {
-                where: { userId: session.id ?? -1 },
-                select: { id: true },
-                take: 1,
-            },
-            submissions: {
-                where: { userId: session.id ?? -1 },
-                select: { status: true },
-                orderBy: { submittedAt: "desc" },
-                take: 1,
-            },
-        },
-        orderBy: [{ mode: "asc" }, { grade: "desc" }, { id: "asc" }],
-    });
-
-    const user = session.id
-        ? await db.user.findUnique({
-              where: { id: session.id },
-              select: {
-                  grade_basic: true,
-                  grade_recital: true,
-                  exam_basic: true,
-                  exam_recital: true,
-              },
-          })
-        : null;
+    const [session, exams] = await Promise.all([
+        getSession(),
+        getCachedPublishedExams(),
+    ]);
     const chartIds = [
         ...new Set(
             exams.flatMap((exam) =>
@@ -88,13 +19,24 @@ export default async function ExamsPage() {
             )
         ),
     ];
-    const records =
-        session.id && chartIds.length > 0
-            ? await db.playData.findMany({
-                  where: { user_id: session.id, chart_id: { in: chartIds } },
-                  select: { chart_id: true, score: true },
-              })
-            : [];
+    const userState = session.id
+        ? await getUserExamState(
+              session.id,
+              exams.map((exam) => exam.id),
+              chartIds
+          )
+        : null;
+    const user = userState?.user ?? null;
+    const records = userState?.records ?? [];
+    const achievedExamIds = new Set(
+        userState?.achievements.map((item) => item.examId) ?? []
+    );
+    const latestSubmissionByExam = new Map<number, string>();
+    for (const submission of userState?.submissions ?? []) {
+        if (!latestSubmissionByExam.has(submission.examId)) {
+            latestSubmissionByExam.set(submission.examId, submission.status);
+        }
+    }
     const bestScoreByChart = new Map<number, number>();
     for (const record of records) {
         if (!record.chart_id) continue;
@@ -134,8 +76,8 @@ export default async function ExamsPage() {
                 label: reward.label ?? reward.music?.title ?? "보상",
                 musicIndex: reward.music?.index ?? null,
             })),
-            isAchieved: exam.achievements.length > 0 || isLegacyAchievement,
-            submissionStatus: exam.submissions[0]?.status ?? null,
+            isAchieved: achievedExamIds.has(exam.id) || isLegacyAchievement,
+            submissionStatus: latestSubmissionByExam.get(exam.id) ?? null,
             playerGrade:
                 exam.mode === "recital"
                     ? normalizeStoredGrade(user?.grade_recital)
