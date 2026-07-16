@@ -2,9 +2,13 @@ import { notFound } from "next/navigation";
 
 import BingoPlate, { type BingoCellItem } from "@/components/bingo/bingoPlate";
 import { getBingoJacketUrl, getBingoProgress } from "@/lib/bingo";
-import db from "@/lib/db";
 import getSession from "@/lib/session";
 import { formatToComma } from "@/lib/utils";
+import {
+    getCachedBingoDetail,
+    getUserCompletedBingoCellIds,
+    isBingoAvailable,
+} from "../data";
 
 export default async function BingoDetailPage({
     params,
@@ -16,50 +20,12 @@ export default async function BingoDetailPage({
 
     if (!Number.isInteger(bingoId)) notFound();
 
-    const session = await getSession();
-    const now = new Date();
-    const bingo = await db.bingo.findFirst({
-        where: {
-            id: bingoId,
-            status: "published",
-            AND: [
-                { OR: [{ startsAt: null }, { startsAt: { lte: now } }] },
-                { OR: [{ endsAt: null }, { endsAt: { gte: now } }] },
-            ],
-        },
-        select: {
-            id: true,
-            title: true,
-            description: true,
-            coverMusicIndex: true,
-            requiredLines: true,
-            rewardNos: true,
-            coverMusic: {
-                select: {
-                    title: true,
-                    background: true,
-                    description: true,
-                },
-            },
-            cells: {
-                select: {
-                    id: true,
-                    title: true,
-                    missionType: true,
-                    musicIndex: true,
-                    position: true,
-                    categoryShort: true,
-                    progress: {
-                        where: { userId: session.id ?? -1 },
-                        select: { isCompleted: true },
-                    },
-                },
-                orderBy: { position: "asc" },
-            },
-        },
-    });
+    const [session, bingo] = await Promise.all([
+        getSession(),
+        getCachedBingoDetail(bingoId),
+    ]);
 
-    if (!bingo) notFound();
+    if (!bingo || !isBingoAvailable(bingo)) notFound();
 
     const cells: BingoCellItem[] = bingo.cells.map((cell) => ({
         id: cell.id,
@@ -69,14 +35,18 @@ export default async function BingoDetailPage({
         position: cell.position,
         categoryShort: cell.categoryShort,
     }));
-    const completedCellIds = bingo.cells
-        .filter((cell) => cell.progress.some((data) => data.isCompleted))
-        .map((cell) => cell.id);
+    const completedCellIds = session.id
+        ? await getUserCompletedBingoCellIds(
+              session.id,
+              bingo.cells.map((cell) => cell.id)
+          )
+        : [];
+    const completedCellIdSet = new Set(completedCellIds);
     const progress = getBingoProgress(
         bingo.cells.map((cell) => ({
             id: cell.id,
             position: cell.position,
-            isCompleted: completedCellIds.includes(cell.id),
+            isCompleted: completedCellIdSet.has(cell.id),
         }))
     );
 

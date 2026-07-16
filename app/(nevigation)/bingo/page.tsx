@@ -1,50 +1,31 @@
 import BingoList, { type BingoListItem } from "@/components/bingo/bingoList";
 import { getBingoProgress } from "@/lib/bingo";
-import db from "@/lib/db";
 import getSession from "@/lib/session";
+import {
+    getCachedPublishedBingos,
+    getUserCompletedBingoCellIds,
+    isBingoAvailable,
+} from "./data";
 
 export default async function BingoPage() {
-    const session = await getSession();
-    const now = new Date();
-    const bingos = await db.bingo.findMany({
-        where: {
-            status: "published",
-            AND: [
-                { OR: [{ startsAt: null }, { startsAt: { lte: now } }] },
-                { OR: [{ endsAt: null }, { endsAt: { gte: now } }] },
-            ],
-        },
-        select: {
-            id: true,
-            title: true,
-            coverMusicIndex: true,
-            rewardNos: true,
-            requiredLines: true,
-            coverMusic: {
-                select: {
-                    title: true,
-                    background: true,
-                },
-            },
-            cells: {
-                select: {
-                    id: true,
-                    position: true,
-                    progress: {
-                        where: { userId: session.id ?? -1 },
-                        select: { isCompleted: true },
-                    },
-                },
-            },
-        },
-        orderBy: { id: "asc" },
-    });
+    const [session, publishedBingos] = await Promise.all([
+        getSession(),
+        getCachedPublishedBingos(),
+    ]);
+    const bingos = publishedBingos.filter((bingo) => isBingoAvailable(bingo));
+    const cellIds = bingos.flatMap((bingo) =>
+        bingo.cells.map((cell) => cell.id)
+    );
+    const completedCellIds = session.id
+        ? await getUserCompletedBingoCellIds(session.id, cellIds)
+        : [];
+    const completedCellIdSet = new Set(completedCellIds);
 
     const items: BingoListItem[] = bingos.map((bingo) => {
         const cells = bingo.cells.map((cell) => ({
             id: cell.id,
             position: cell.position,
-            isCompleted: cell.progress.some((data) => data.isCompleted),
+            isCompleted: completedCellIdSet.has(cell.id),
         }));
         const progress = getBingoProgress(cells);
 

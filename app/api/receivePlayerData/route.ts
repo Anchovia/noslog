@@ -180,6 +180,7 @@ export async function POST(request: NextRequest) {
             revalidateTag(CACHE_TAGS.musicDetails, "max");
             revalidateTag(CACHE_TAGS.chartRankings, "max");
             revalidateTag(CACHE_TAGS.userRankings, "max");
+            revalidateTag(CACHE_TAGS.bingos, "max");
         }
 
         return json(
