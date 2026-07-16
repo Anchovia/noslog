@@ -8,6 +8,8 @@
         "start": "next start",
         "postinstall": "prisma generate",
         "db:migrate:deploy": "prisma migrate deploy",
+        "test": "vitest run",
+        "test:watch": "vitest",
         "lint": "eslint .",
         "format": "prettier --write .",
         "format:check": "prettier --check .",
@@ -62,7 +64,8 @@
         "prettier": "^3.9.5",
         "prettier-plugin-tailwindcss": "^0.8.0",
         "tailwindcss": "^4.3.2",
-        "typescript": "~5.9.3"
+        "typescript": "~5.9.3",
+        "vitest": "^4.1.10"
     },
     "overrides": {
         "@types/react": "19.2.17",
