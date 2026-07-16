@@ -1,5 +1,5 @@
 import { verifySyncToken } from "@/lib/bookmarklet";
-import { CACHE_TAGS } from "@/lib/cacheTags";
+import { CACHE_TAGS, getUserProfileTag } from "@/lib/cacheTags";
 import db from "@/lib/db";
 import { updateDummy } from "@/lib/dummy/bingo";
 import {
@@ -175,12 +175,15 @@ export async function POST(request: NextRequest) {
             },
         });
 
+        revalidateTag(getUserProfileTag(user.id), "max");
+
         if (music) {
             revalidateTag(CACHE_TAGS.musicCatalog, "max");
             revalidateTag(CACHE_TAGS.musicDetails, "max");
             revalidateTag(CACHE_TAGS.chartRankings, "max");
             revalidateTag(CACHE_TAGS.userRankings, "max");
             revalidateTag(CACHE_TAGS.bingos, "max");
+            revalidateTag(CACHE_TAGS.userProfiles, "max");
         }
 
         return json(

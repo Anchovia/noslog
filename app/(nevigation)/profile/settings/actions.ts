@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 
 import db from "@/lib/db";
-import { CACHE_TAGS } from "@/lib/cacheTags";
+import { CACHE_TAGS, getUserProfileTag } from "@/lib/cacheTags";
 import getSession from "@/lib/session";
 import { updateTag } from "next/cache";
 
@@ -101,6 +101,7 @@ export async function uploadUserSetting(
             },
         });
         updateTag(CACHE_TAGS.userRankings);
+        updateTag(getUserProfileTag(session.id));
     } catch (error) {
         const code =
             typeof error === "object" && error !== null && "code" in error

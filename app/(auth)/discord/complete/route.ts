@@ -1,5 +1,7 @@
 import db from "@/lib/db";
+import { CACHE_TAGS, getUserProfileTag } from "@/lib/cacheTags";
 import getSession from "@/lib/session";
+import { revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
 interface DiscordTokenResponse {
@@ -140,6 +142,8 @@ export async function GET(request: NextRequest) {
                             : currentUser.avatar,
                 },
             });
+            revalidateTag(getUserProfileTag(currentUser.id), "max");
+            revalidateTag(CACHE_TAGS.userRankings, "max");
             return NextResponse.redirect(new URL(returnTo, request.url));
         }
 
@@ -164,6 +168,8 @@ export async function GET(request: NextRequest) {
                   select: { id: true },
               });
 
+        revalidateTag(getUserProfileTag(user.id), "max");
+        revalidateTag(CACHE_TAGS.userRankings, "max");
         session.id = user.id;
         await session.save();
         return NextResponse.redirect(new URL(returnTo, request.url));
