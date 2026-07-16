@@ -79,25 +79,10 @@ export type ChartEvaluation = $Result.DefaultSelection<Prisma.$ChartEvaluationPa
  */
 export type ChartEvaluationReaction = $Result.DefaultSelection<Prisma.$ChartEvaluationReactionPayload>
 /**
- * Model RecentPlay
- * 
- */
-export type RecentPlay = $Result.DefaultSelection<Prisma.$RecentPlayPayload>
-/**
  * Model UserBestGrade
  * 
  */
 export type UserBestGrade = $Result.DefaultSelection<Prisma.$UserBestGradePayload>
-/**
- * Model BasicBestPlay
- * 
- */
-export type BasicBestPlay = $Result.DefaultSelection<Prisma.$BasicBestPlayPayload>
-/**
- * Model RecitalBestPlay
- * 
- */
-export type RecitalBestPlay = $Result.DefaultSelection<Prisma.$RecitalBestPlayPayload>
 /**
  * Model PlayData
  * 
@@ -398,16 +383,6 @@ export class PrismaClient<
   get chartEvaluationReaction(): Prisma.ChartEvaluationReactionDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.recentPlay`: Exposes CRUD operations for the **RecentPlay** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more RecentPlays
-    * const recentPlays = await prisma.recentPlay.findMany()
-    * ```
-    */
-  get recentPlay(): Prisma.RecentPlayDelegate<ExtArgs, ClientOptions>;
-
-  /**
    * `prisma.userBestGrade`: Exposes CRUD operations for the **UserBestGrade** model.
     * Example usage:
     * ```ts
@@ -416,26 +391,6 @@ export class PrismaClient<
     * ```
     */
   get userBestGrade(): Prisma.UserBestGradeDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.basicBestPlay`: Exposes CRUD operations for the **BasicBestPlay** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more BasicBestPlays
-    * const basicBestPlays = await prisma.basicBestPlay.findMany()
-    * ```
-    */
-  get basicBestPlay(): Prisma.BasicBestPlayDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.recitalBestPlay`: Exposes CRUD operations for the **RecitalBestPlay** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more RecitalBestPlays
-    * const recitalBestPlays = await prisma.recitalBestPlay.findMany()
-    * ```
-    */
-  get recitalBestPlay(): Prisma.RecitalBestPlayDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.playData`: Exposes CRUD operations for the **PlayData** model.
@@ -990,10 +945,7 @@ export namespace Prisma {
     TierPlacementHistory: 'TierPlacementHistory',
     ChartEvaluation: 'ChartEvaluation',
     ChartEvaluationReaction: 'ChartEvaluationReaction',
-    RecentPlay: 'RecentPlay',
     UserBestGrade: 'UserBestGrade',
-    BasicBestPlay: 'BasicBestPlay',
-    RecitalBestPlay: 'RecitalBestPlay',
     PlayData: 'PlayData',
     Bingo: 'Bingo',
     BingoCell: 'BingoCell',
@@ -1022,7 +974,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "music" | "musicChart" | "dataSync" | "chartPlayHistory" | "chartRecordSnapshot" | "chartLevelConstantHistory" | "tierList" | "tierBand" | "tierEntry" | "tierPlacementHistory" | "chartEvaluation" | "chartEvaluationReaction" | "recentPlay" | "userBestGrade" | "basicBestPlay" | "recitalBestPlay" | "playData" | "bingo" | "bingoCell" | "bingoCellProgress" | "exam" | "examStage" | "examStageChart" | "examReward" | "examSubmission" | "examAchievement"
+      modelProps: "user" | "music" | "musicChart" | "dataSync" | "chartPlayHistory" | "chartRecordSnapshot" | "chartLevelConstantHistory" | "tierList" | "tierBand" | "tierEntry" | "tierPlacementHistory" | "chartEvaluation" | "chartEvaluationReaction" | "userBestGrade" | "playData" | "bingo" | "bingoCell" | "bingoCellProgress" | "exam" | "examStage" | "examStageChart" | "examReward" | "examSubmission" | "examAchievement"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1988,80 +1940,6 @@ export namespace Prisma {
           }
         }
       }
-      RecentPlay: {
-        payload: Prisma.$RecentPlayPayload<ExtArgs>
-        fields: Prisma.RecentPlayFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.RecentPlayFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RecentPlayPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.RecentPlayFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RecentPlayPayload>
-          }
-          findFirst: {
-            args: Prisma.RecentPlayFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RecentPlayPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.RecentPlayFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RecentPlayPayload>
-          }
-          findMany: {
-            args: Prisma.RecentPlayFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RecentPlayPayload>[]
-          }
-          create: {
-            args: Prisma.RecentPlayCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RecentPlayPayload>
-          }
-          createMany: {
-            args: Prisma.RecentPlayCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.RecentPlayCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RecentPlayPayload>[]
-          }
-          delete: {
-            args: Prisma.RecentPlayDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RecentPlayPayload>
-          }
-          update: {
-            args: Prisma.RecentPlayUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RecentPlayPayload>
-          }
-          deleteMany: {
-            args: Prisma.RecentPlayDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.RecentPlayUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.RecentPlayUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RecentPlayPayload>[]
-          }
-          upsert: {
-            args: Prisma.RecentPlayUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RecentPlayPayload>
-          }
-          aggregate: {
-            args: Prisma.RecentPlayAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateRecentPlay>
-          }
-          groupBy: {
-            args: Prisma.RecentPlayGroupByArgs<ExtArgs>
-            result: $Utils.Optional<RecentPlayGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.RecentPlayCountArgs<ExtArgs>
-            result: $Utils.Optional<RecentPlayCountAggregateOutputType> | number
-          }
-        }
-      }
       UserBestGrade: {
         payload: Prisma.$UserBestGradePayload<ExtArgs>
         fields: Prisma.UserBestGradeFieldRefs
@@ -2133,154 +2011,6 @@ export namespace Prisma {
           count: {
             args: Prisma.UserBestGradeCountArgs<ExtArgs>
             result: $Utils.Optional<UserBestGradeCountAggregateOutputType> | number
-          }
-        }
-      }
-      BasicBestPlay: {
-        payload: Prisma.$BasicBestPlayPayload<ExtArgs>
-        fields: Prisma.BasicBestPlayFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.BasicBestPlayFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BasicBestPlayPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.BasicBestPlayFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BasicBestPlayPayload>
-          }
-          findFirst: {
-            args: Prisma.BasicBestPlayFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BasicBestPlayPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.BasicBestPlayFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BasicBestPlayPayload>
-          }
-          findMany: {
-            args: Prisma.BasicBestPlayFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BasicBestPlayPayload>[]
-          }
-          create: {
-            args: Prisma.BasicBestPlayCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BasicBestPlayPayload>
-          }
-          createMany: {
-            args: Prisma.BasicBestPlayCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.BasicBestPlayCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BasicBestPlayPayload>[]
-          }
-          delete: {
-            args: Prisma.BasicBestPlayDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BasicBestPlayPayload>
-          }
-          update: {
-            args: Prisma.BasicBestPlayUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BasicBestPlayPayload>
-          }
-          deleteMany: {
-            args: Prisma.BasicBestPlayDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.BasicBestPlayUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.BasicBestPlayUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BasicBestPlayPayload>[]
-          }
-          upsert: {
-            args: Prisma.BasicBestPlayUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BasicBestPlayPayload>
-          }
-          aggregate: {
-            args: Prisma.BasicBestPlayAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateBasicBestPlay>
-          }
-          groupBy: {
-            args: Prisma.BasicBestPlayGroupByArgs<ExtArgs>
-            result: $Utils.Optional<BasicBestPlayGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.BasicBestPlayCountArgs<ExtArgs>
-            result: $Utils.Optional<BasicBestPlayCountAggregateOutputType> | number
-          }
-        }
-      }
-      RecitalBestPlay: {
-        payload: Prisma.$RecitalBestPlayPayload<ExtArgs>
-        fields: Prisma.RecitalBestPlayFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.RecitalBestPlayFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RecitalBestPlayPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.RecitalBestPlayFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RecitalBestPlayPayload>
-          }
-          findFirst: {
-            args: Prisma.RecitalBestPlayFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RecitalBestPlayPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.RecitalBestPlayFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RecitalBestPlayPayload>
-          }
-          findMany: {
-            args: Prisma.RecitalBestPlayFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RecitalBestPlayPayload>[]
-          }
-          create: {
-            args: Prisma.RecitalBestPlayCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RecitalBestPlayPayload>
-          }
-          createMany: {
-            args: Prisma.RecitalBestPlayCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.RecitalBestPlayCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RecitalBestPlayPayload>[]
-          }
-          delete: {
-            args: Prisma.RecitalBestPlayDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RecitalBestPlayPayload>
-          }
-          update: {
-            args: Prisma.RecitalBestPlayUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RecitalBestPlayPayload>
-          }
-          deleteMany: {
-            args: Prisma.RecitalBestPlayDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.RecitalBestPlayUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.RecitalBestPlayUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RecitalBestPlayPayload>[]
-          }
-          upsert: {
-            args: Prisma.RecitalBestPlayUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RecitalBestPlayPayload>
-          }
-          aggregate: {
-            args: Prisma.RecitalBestPlayAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateRecitalBestPlay>
-          }
-          groupBy: {
-            args: Prisma.RecitalBestPlayGroupByArgs<ExtArgs>
-            result: $Utils.Optional<RecitalBestPlayGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.RecitalBestPlayCountArgs<ExtArgs>
-            result: $Utils.Optional<RecitalBestPlayCountAggregateOutputType> | number
           }
         }
       }
@@ -3133,10 +2863,7 @@ export namespace Prisma {
     tierPlacementHistory?: TierPlacementHistoryOmit
     chartEvaluation?: ChartEvaluationOmit
     chartEvaluationReaction?: ChartEvaluationReactionOmit
-    recentPlay?: RecentPlayOmit
     userBestGrade?: UserBestGradeOmit
-    basicBestPlay?: BasicBestPlayOmit
-    recitalBestPlay?: RecitalBestPlayOmit
     playData?: PlayDataOmit
     bingo?: BingoOmit
     bingoCell?: BingoCellOmit
@@ -3227,10 +2954,7 @@ export namespace Prisma {
    */
 
   export type UserCountOutputType = {
-    PlayHistory: number
     PlayData: number
-    BasicBestPlay: number
-    RecitalBestPlay: number
     UserBestGrade: number
     bingoProgress: number
     chartEvaluations: number
@@ -3243,10 +2967,7 @@ export namespace Prisma {
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    PlayHistory?: boolean | UserCountOutputTypeCountPlayHistoryArgs
     PlayData?: boolean | UserCountOutputTypeCountPlayDataArgs
-    BasicBestPlay?: boolean | UserCountOutputTypeCountBasicBestPlayArgs
-    RecitalBestPlay?: boolean | UserCountOutputTypeCountRecitalBestPlayArgs
     UserBestGrade?: boolean | UserCountOutputTypeCountUserBestGradeArgs
     bingoProgress?: boolean | UserCountOutputTypeCountBingoProgressArgs
     chartEvaluations?: boolean | UserCountOutputTypeCountChartEvaluationsArgs
@@ -3272,29 +2993,8 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeCountPlayHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: RecentPlayWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
   export type UserCountOutputTypeCountPlayDataArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PlayDataWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountBasicBestPlayArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: BasicBestPlayWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountRecitalBestPlayArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: RecitalBestPlayWhereInput
   }
 
   /**
@@ -3366,10 +3066,7 @@ export namespace Prisma {
    */
 
   export type MusicCountOutputType = {
-    RecentPlay: number
     PlayData: number
-    BasicBestPlay: number
-    RecitalBestPlay: number
     bingoCovers: number
     bingoMissions: number
     charts: number
@@ -3378,10 +3075,7 @@ export namespace Prisma {
   }
 
   export type MusicCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    RecentPlay?: boolean | MusicCountOutputTypeCountRecentPlayArgs
     PlayData?: boolean | MusicCountOutputTypeCountPlayDataArgs
-    BasicBestPlay?: boolean | MusicCountOutputTypeCountBasicBestPlayArgs
-    RecitalBestPlay?: boolean | MusicCountOutputTypeCountRecitalBestPlayArgs
     bingoCovers?: boolean | MusicCountOutputTypeCountBingoCoversArgs
     bingoMissions?: boolean | MusicCountOutputTypeCountBingoMissionsArgs
     charts?: boolean | MusicCountOutputTypeCountChartsArgs
@@ -3403,29 +3097,8 @@ export namespace Prisma {
   /**
    * MusicCountOutputType without action
    */
-  export type MusicCountOutputTypeCountRecentPlayArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: RecentPlayWhereInput
-  }
-
-  /**
-   * MusicCountOutputType without action
-   */
   export type MusicCountOutputTypeCountPlayDataArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PlayDataWhereInput
-  }
-
-  /**
-   * MusicCountOutputType without action
-   */
-  export type MusicCountOutputTypeCountBasicBestPlayArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: BasicBestPlayWhereInput
-  }
-
-  /**
-   * MusicCountOutputType without action
-   */
-  export type MusicCountOutputTypeCountRecitalBestPlayArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: RecitalBestPlayWhereInput
   }
 
   /**
@@ -3471,10 +3144,7 @@ export namespace Prisma {
   export type MusicChartCountOutputType = {
     levelConstantHistory: number
     evaluations: number
-    RecentPlay: number
     PlayData: number
-    BasicBestPlay: number
-    RecitalBestPlay: number
     playHistory: number
     recordSnapshots: number
     examStageOptions: number
@@ -3485,10 +3155,7 @@ export namespace Prisma {
   export type MusicChartCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     levelConstantHistory?: boolean | MusicChartCountOutputTypeCountLevelConstantHistoryArgs
     evaluations?: boolean | MusicChartCountOutputTypeCountEvaluationsArgs
-    RecentPlay?: boolean | MusicChartCountOutputTypeCountRecentPlayArgs
     PlayData?: boolean | MusicChartCountOutputTypeCountPlayDataArgs
-    BasicBestPlay?: boolean | MusicChartCountOutputTypeCountBasicBestPlayArgs
-    RecitalBestPlay?: boolean | MusicChartCountOutputTypeCountRecitalBestPlayArgs
     playHistory?: boolean | MusicChartCountOutputTypeCountPlayHistoryArgs
     recordSnapshots?: boolean | MusicChartCountOutputTypeCountRecordSnapshotsArgs
     examStageOptions?: boolean | MusicChartCountOutputTypeCountExamStageOptionsArgs
@@ -3524,29 +3191,8 @@ export namespace Prisma {
   /**
    * MusicChartCountOutputType without action
    */
-  export type MusicChartCountOutputTypeCountRecentPlayArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: RecentPlayWhereInput
-  }
-
-  /**
-   * MusicChartCountOutputType without action
-   */
   export type MusicChartCountOutputTypeCountPlayDataArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PlayDataWhereInput
-  }
-
-  /**
-   * MusicChartCountOutputType without action
-   */
-  export type MusicChartCountOutputTypeCountBasicBestPlayArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: BasicBestPlayWhereInput
-  }
-
-  /**
-   * MusicChartCountOutputType without action
-   */
-  export type MusicChartCountOutputTypeCountRecitalBestPlayArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: RecitalBestPlayWhereInput
   }
 
   /**
@@ -4357,10 +4003,7 @@ export namespace Prisma {
     sync_token_version?: boolean
     created_at?: boolean
     updated_at?: boolean
-    PlayHistory?: boolean | User$PlayHistoryArgs<ExtArgs>
     PlayData?: boolean | User$PlayDataArgs<ExtArgs>
-    BasicBestPlay?: boolean | User$BasicBestPlayArgs<ExtArgs>
-    RecitalBestPlay?: boolean | User$RecitalBestPlayArgs<ExtArgs>
     UserBestGrade?: boolean | User$UserBestGradeArgs<ExtArgs>
     bingoProgress?: boolean | User$bingoProgressArgs<ExtArgs>
     chartEvaluations?: boolean | User$chartEvaluationsArgs<ExtArgs>
@@ -4471,10 +4114,7 @@ export namespace Prisma {
 
   export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "nostalgia_name" | "discord_id" | "discord_name" | "avatar" | "country" | "rank_basic" | "rank_recital" | "rank_basic_country" | "rank_recital_country" | "play_count" | "score_p" | "score_f" | "score_s" | "score_a2" | "score_a" | "score_b2" | "score_b" | "score_c" | "score_d" | "role" | "grade_basic" | "grade_recital" | "exam_basic" | "exam_recital" | "sync_token_version" | "created_at" | "updated_at", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    PlayHistory?: boolean | User$PlayHistoryArgs<ExtArgs>
     PlayData?: boolean | User$PlayDataArgs<ExtArgs>
-    BasicBestPlay?: boolean | User$BasicBestPlayArgs<ExtArgs>
-    RecitalBestPlay?: boolean | User$RecitalBestPlayArgs<ExtArgs>
     UserBestGrade?: boolean | User$UserBestGradeArgs<ExtArgs>
     bingoProgress?: boolean | User$bingoProgressArgs<ExtArgs>
     chartEvaluations?: boolean | User$chartEvaluationsArgs<ExtArgs>
@@ -4492,10 +4132,7 @@ export namespace Prisma {
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
     objects: {
-      PlayHistory: Prisma.$RecentPlayPayload<ExtArgs>[]
       PlayData: Prisma.$PlayDataPayload<ExtArgs>[]
-      BasicBestPlay: Prisma.$BasicBestPlayPayload<ExtArgs>[]
-      RecitalBestPlay: Prisma.$RecitalBestPlayPayload<ExtArgs>[]
       UserBestGrade: Prisma.$UserBestGradePayload<ExtArgs>[]
       bingoProgress: Prisma.$BingoCellProgressPayload<ExtArgs>[]
       chartEvaluations: Prisma.$ChartEvaluationPayload<ExtArgs>[]
@@ -4930,10 +4567,7 @@ export namespace Prisma {
    */
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    PlayHistory<T extends User$PlayHistoryArgs<ExtArgs> = {}>(args?: Subset<T, User$PlayHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RecentPlayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     PlayData<T extends User$PlayDataArgs<ExtArgs> = {}>(args?: Subset<T, User$PlayDataArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlayDataPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    BasicBestPlay<T extends User$BasicBestPlayArgs<ExtArgs> = {}>(args?: Subset<T, User$BasicBestPlayArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BasicBestPlayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    RecitalBestPlay<T extends User$RecitalBestPlayArgs<ExtArgs> = {}>(args?: Subset<T, User$RecitalBestPlayArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RecitalBestPlayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     UserBestGrade<T extends User$UserBestGradeArgs<ExtArgs> = {}>(args?: Subset<T, User$UserBestGradeArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserBestGradePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     bingoProgress<T extends User$bingoProgressArgs<ExtArgs> = {}>(args?: Subset<T, User$bingoProgressArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BingoCellProgressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     chartEvaluations<T extends User$chartEvaluationsArgs<ExtArgs> = {}>(args?: Subset<T, User$chartEvaluationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartEvaluationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -5389,30 +5023,6 @@ export namespace Prisma {
   }
 
   /**
-   * User.PlayHistory
-   */
-  export type User$PlayHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RecentPlay
-     */
-    select?: RecentPlaySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RecentPlay
-     */
-    omit?: RecentPlayOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RecentPlayInclude<ExtArgs> | null
-    where?: RecentPlayWhereInput
-    orderBy?: RecentPlayOrderByWithRelationInput | RecentPlayOrderByWithRelationInput[]
-    cursor?: RecentPlayWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: RecentPlayScalarFieldEnum | RecentPlayScalarFieldEnum[]
-  }
-
-  /**
    * User.PlayData
    */
   export type User$PlayDataArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5434,54 +5044,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: PlayDataScalarFieldEnum | PlayDataScalarFieldEnum[]
-  }
-
-  /**
-   * User.BasicBestPlay
-   */
-  export type User$BasicBestPlayArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BasicBestPlay
-     */
-    select?: BasicBestPlaySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the BasicBestPlay
-     */
-    omit?: BasicBestPlayOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BasicBestPlayInclude<ExtArgs> | null
-    where?: BasicBestPlayWhereInput
-    orderBy?: BasicBestPlayOrderByWithRelationInput | BasicBestPlayOrderByWithRelationInput[]
-    cursor?: BasicBestPlayWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: BasicBestPlayScalarFieldEnum | BasicBestPlayScalarFieldEnum[]
-  }
-
-  /**
-   * User.RecitalBestPlay
-   */
-  export type User$RecitalBestPlayArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RecitalBestPlay
-     */
-    select?: RecitalBestPlaySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RecitalBestPlay
-     */
-    omit?: RecitalBestPlayOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RecitalBestPlayInclude<ExtArgs> | null
-    where?: RecitalBestPlayWhereInput
-    orderBy?: RecitalBestPlayOrderByWithRelationInput | RecitalBestPlayOrderByWithRelationInput[]
-    cursor?: RecitalBestPlayWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: RecitalBestPlayScalarFieldEnum | RecitalBestPlayScalarFieldEnum[]
   }
 
   /**
@@ -5733,20 +5295,10 @@ export namespace Prisma {
 
   export type MusicAvgAggregateOutputType = {
     id: number | null
-    sheet_len: number | null
-    normal: number | null
-    hard: number | null
-    expert: number | null
-    real: number | null
   }
 
   export type MusicSumAggregateOutputType = {
     id: number | null
-    sheet_len: number | null
-    normal: number | null
-    hard: number | null
-    expert: number | null
-    real: number | null
   }
 
   export type MusicMinAggregateOutputType = {
@@ -5759,13 +5311,6 @@ export namespace Prisma {
     category_short: string | null
     description: string | null
     background: string | null
-    sheet_len: number | null
-    difficulty_levels: string | null
-    difficulty_name: string | null
-    normal: number | null
-    hard: number | null
-    expert: number | null
-    real: number | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -5780,13 +5325,6 @@ export namespace Prisma {
     category_short: string | null
     description: string | null
     background: string | null
-    sheet_len: number | null
-    difficulty_levels: string | null
-    difficulty_name: string | null
-    normal: number | null
-    hard: number | null
-    expert: number | null
-    real: number | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -5801,13 +5339,6 @@ export namespace Prisma {
     category_short: number
     description: number
     background: number
-    sheet_len: number
-    difficulty_levels: number
-    difficulty_name: number
-    normal: number
-    hard: number
-    expert: number
-    real: number
     created_at: number
     updated_at: number
     _all: number
@@ -5816,20 +5347,10 @@ export namespace Prisma {
 
   export type MusicAvgAggregateInputType = {
     id?: true
-    sheet_len?: true
-    normal?: true
-    hard?: true
-    expert?: true
-    real?: true
   }
 
   export type MusicSumAggregateInputType = {
     id?: true
-    sheet_len?: true
-    normal?: true
-    hard?: true
-    expert?: true
-    real?: true
   }
 
   export type MusicMinAggregateInputType = {
@@ -5842,13 +5363,6 @@ export namespace Prisma {
     category_short?: true
     description?: true
     background?: true
-    sheet_len?: true
-    difficulty_levels?: true
-    difficulty_name?: true
-    normal?: true
-    hard?: true
-    expert?: true
-    real?: true
     created_at?: true
     updated_at?: true
   }
@@ -5863,13 +5377,6 @@ export namespace Prisma {
     category_short?: true
     description?: true
     background?: true
-    sheet_len?: true
-    difficulty_levels?: true
-    difficulty_name?: true
-    normal?: true
-    hard?: true
-    expert?: true
-    real?: true
     created_at?: true
     updated_at?: true
   }
@@ -5884,13 +5391,6 @@ export namespace Prisma {
     category_short?: true
     description?: true
     background?: true
-    sheet_len?: true
-    difficulty_levels?: true
-    difficulty_name?: true
-    normal?: true
-    hard?: true
-    expert?: true
-    real?: true
     created_at?: true
     updated_at?: true
     _all?: true
@@ -5992,13 +5492,6 @@ export namespace Prisma {
     category_short: string
     description: string | null
     background: string | null
-    sheet_len: number
-    difficulty_levels: string
-    difficulty_name: string
-    normal: number
-    hard: number
-    expert: number
-    real: number | null
     created_at: Date
     updated_at: Date
     _count: MusicCountAggregateOutputType | null
@@ -6032,19 +5525,9 @@ export namespace Prisma {
     category_short?: boolean
     description?: boolean
     background?: boolean
-    sheet_len?: boolean
-    difficulty_levels?: boolean
-    difficulty_name?: boolean
-    normal?: boolean
-    hard?: boolean
-    expert?: boolean
-    real?: boolean
     created_at?: boolean
     updated_at?: boolean
-    RecentPlay?: boolean | Music$RecentPlayArgs<ExtArgs>
     PlayData?: boolean | Music$PlayDataArgs<ExtArgs>
-    BasicBestPlay?: boolean | Music$BasicBestPlayArgs<ExtArgs>
-    RecitalBestPlay?: boolean | Music$RecitalBestPlayArgs<ExtArgs>
     bingoCovers?: boolean | Music$bingoCoversArgs<ExtArgs>
     bingoMissions?: boolean | Music$bingoMissionsArgs<ExtArgs>
     charts?: boolean | Music$chartsArgs<ExtArgs>
@@ -6063,13 +5546,6 @@ export namespace Prisma {
     category_short?: boolean
     description?: boolean
     background?: boolean
-    sheet_len?: boolean
-    difficulty_levels?: boolean
-    difficulty_name?: boolean
-    normal?: boolean
-    hard?: boolean
-    expert?: boolean
-    real?: boolean
     created_at?: boolean
     updated_at?: boolean
   }, ExtArgs["result"]["music"]>
@@ -6084,13 +5560,6 @@ export namespace Prisma {
     category_short?: boolean
     description?: boolean
     background?: boolean
-    sheet_len?: boolean
-    difficulty_levels?: boolean
-    difficulty_name?: boolean
-    normal?: boolean
-    hard?: boolean
-    expert?: boolean
-    real?: boolean
     created_at?: boolean
     updated_at?: boolean
   }, ExtArgs["result"]["music"]>
@@ -6105,23 +5574,13 @@ export namespace Prisma {
     category_short?: boolean
     description?: boolean
     background?: boolean
-    sheet_len?: boolean
-    difficulty_levels?: boolean
-    difficulty_name?: boolean
-    normal?: boolean
-    hard?: boolean
-    expert?: boolean
-    real?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type MusicOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "index" | "title" | "title_kana" | "artist" | "category" | "category_short" | "description" | "background" | "sheet_len" | "difficulty_levels" | "difficulty_name" | "normal" | "hard" | "expert" | "real" | "created_at" | "updated_at", ExtArgs["result"]["music"]>
+  export type MusicOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "index" | "title" | "title_kana" | "artist" | "category" | "category_short" | "description" | "background" | "created_at" | "updated_at", ExtArgs["result"]["music"]>
   export type MusicInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    RecentPlay?: boolean | Music$RecentPlayArgs<ExtArgs>
     PlayData?: boolean | Music$PlayDataArgs<ExtArgs>
-    BasicBestPlay?: boolean | Music$BasicBestPlayArgs<ExtArgs>
-    RecitalBestPlay?: boolean | Music$RecitalBestPlayArgs<ExtArgs>
     bingoCovers?: boolean | Music$bingoCoversArgs<ExtArgs>
     bingoMissions?: boolean | Music$bingoMissionsArgs<ExtArgs>
     charts?: boolean | Music$chartsArgs<ExtArgs>
@@ -6135,10 +5594,7 @@ export namespace Prisma {
   export type $MusicPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Music"
     objects: {
-      RecentPlay: Prisma.$RecentPlayPayload<ExtArgs>[]
       PlayData: Prisma.$PlayDataPayload<ExtArgs>[]
-      BasicBestPlay: Prisma.$BasicBestPlayPayload<ExtArgs>[]
-      RecitalBestPlay: Prisma.$RecitalBestPlayPayload<ExtArgs>[]
       bingoCovers: Prisma.$BingoPayload<ExtArgs>[]
       bingoMissions: Prisma.$BingoCellPayload<ExtArgs>[]
       charts: Prisma.$MusicChartPayload<ExtArgs>[]
@@ -6155,13 +5611,6 @@ export namespace Prisma {
       category_short: string
       description: string | null
       background: string | null
-      sheet_len: number
-      difficulty_levels: string
-      difficulty_name: string
-      normal: number
-      hard: number
-      expert: number
-      real: number | null
       created_at: Date
       updated_at: Date
     }, ExtArgs["result"]["music"]>
@@ -6558,10 +6007,7 @@ export namespace Prisma {
    */
   export interface Prisma__MusicClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    RecentPlay<T extends Music$RecentPlayArgs<ExtArgs> = {}>(args?: Subset<T, Music$RecentPlayArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RecentPlayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     PlayData<T extends Music$PlayDataArgs<ExtArgs> = {}>(args?: Subset<T, Music$PlayDataArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlayDataPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    BasicBestPlay<T extends Music$BasicBestPlayArgs<ExtArgs> = {}>(args?: Subset<T, Music$BasicBestPlayArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BasicBestPlayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    RecitalBestPlay<T extends Music$RecitalBestPlayArgs<ExtArgs> = {}>(args?: Subset<T, Music$RecitalBestPlayArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RecitalBestPlayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     bingoCovers<T extends Music$bingoCoversArgs<ExtArgs> = {}>(args?: Subset<T, Music$bingoCoversArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BingoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     bingoMissions<T extends Music$bingoMissionsArgs<ExtArgs> = {}>(args?: Subset<T, Music$bingoMissionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BingoCellPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     charts<T extends Music$chartsArgs<ExtArgs> = {}>(args?: Subset<T, Music$chartsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MusicChartPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -6605,13 +6051,6 @@ export namespace Prisma {
     readonly category_short: FieldRef<"Music", 'String'>
     readonly description: FieldRef<"Music", 'String'>
     readonly background: FieldRef<"Music", 'String'>
-    readonly sheet_len: FieldRef<"Music", 'Int'>
-    readonly difficulty_levels: FieldRef<"Music", 'String'>
-    readonly difficulty_name: FieldRef<"Music", 'String'>
-    readonly normal: FieldRef<"Music", 'Int'>
-    readonly hard: FieldRef<"Music", 'Int'>
-    readonly expert: FieldRef<"Music", 'Int'>
-    readonly real: FieldRef<"Music", 'Int'>
     readonly created_at: FieldRef<"Music", 'DateTime'>
     readonly updated_at: FieldRef<"Music", 'DateTime'>
   }
@@ -7002,30 +6441,6 @@ export namespace Prisma {
   }
 
   /**
-   * Music.RecentPlay
-   */
-  export type Music$RecentPlayArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RecentPlay
-     */
-    select?: RecentPlaySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RecentPlay
-     */
-    omit?: RecentPlayOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RecentPlayInclude<ExtArgs> | null
-    where?: RecentPlayWhereInput
-    orderBy?: RecentPlayOrderByWithRelationInput | RecentPlayOrderByWithRelationInput[]
-    cursor?: RecentPlayWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: RecentPlayScalarFieldEnum | RecentPlayScalarFieldEnum[]
-  }
-
-  /**
    * Music.PlayData
    */
   export type Music$PlayDataArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7047,54 +6462,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: PlayDataScalarFieldEnum | PlayDataScalarFieldEnum[]
-  }
-
-  /**
-   * Music.BasicBestPlay
-   */
-  export type Music$BasicBestPlayArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BasicBestPlay
-     */
-    select?: BasicBestPlaySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the BasicBestPlay
-     */
-    omit?: BasicBestPlayOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BasicBestPlayInclude<ExtArgs> | null
-    where?: BasicBestPlayWhereInput
-    orderBy?: BasicBestPlayOrderByWithRelationInput | BasicBestPlayOrderByWithRelationInput[]
-    cursor?: BasicBestPlayWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: BasicBestPlayScalarFieldEnum | BasicBestPlayScalarFieldEnum[]
-  }
-
-  /**
-   * Music.RecitalBestPlay
-   */
-  export type Music$RecitalBestPlayArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RecitalBestPlay
-     */
-    select?: RecitalBestPlaySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RecitalBestPlay
-     */
-    omit?: RecitalBestPlayOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RecitalBestPlayInclude<ExtArgs> | null
-    where?: RecitalBestPlayWhereInput
-    orderBy?: RecitalBestPlayOrderByWithRelationInput | RecitalBestPlayOrderByWithRelationInput[]
-    cursor?: RecitalBestPlayWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: RecitalBestPlayScalarFieldEnum | RecitalBestPlayScalarFieldEnum[]
   }
 
   /**
@@ -7541,10 +6908,7 @@ export namespace Prisma {
     music?: boolean | MusicDefaultArgs<ExtArgs>
     levelConstantHistory?: boolean | MusicChart$levelConstantHistoryArgs<ExtArgs>
     evaluations?: boolean | MusicChart$evaluationsArgs<ExtArgs>
-    RecentPlay?: boolean | MusicChart$RecentPlayArgs<ExtArgs>
     PlayData?: boolean | MusicChart$PlayDataArgs<ExtArgs>
-    BasicBestPlay?: boolean | MusicChart$BasicBestPlayArgs<ExtArgs>
-    RecitalBestPlay?: boolean | MusicChart$RecitalBestPlayArgs<ExtArgs>
     playHistory?: boolean | MusicChart$playHistoryArgs<ExtArgs>
     recordSnapshots?: boolean | MusicChart$recordSnapshotsArgs<ExtArgs>
     examStageOptions?: boolean | MusicChart$examStageOptionsArgs<ExtArgs>
@@ -7614,10 +6978,7 @@ export namespace Prisma {
     music?: boolean | MusicDefaultArgs<ExtArgs>
     levelConstantHistory?: boolean | MusicChart$levelConstantHistoryArgs<ExtArgs>
     evaluations?: boolean | MusicChart$evaluationsArgs<ExtArgs>
-    RecentPlay?: boolean | MusicChart$RecentPlayArgs<ExtArgs>
     PlayData?: boolean | MusicChart$PlayDataArgs<ExtArgs>
-    BasicBestPlay?: boolean | MusicChart$BasicBestPlayArgs<ExtArgs>
-    RecitalBestPlay?: boolean | MusicChart$RecitalBestPlayArgs<ExtArgs>
     playHistory?: boolean | MusicChart$playHistoryArgs<ExtArgs>
     recordSnapshots?: boolean | MusicChart$recordSnapshotsArgs<ExtArgs>
     examStageOptions?: boolean | MusicChart$examStageOptionsArgs<ExtArgs>
@@ -7638,10 +6999,7 @@ export namespace Prisma {
       music: Prisma.$MusicPayload<ExtArgs>
       levelConstantHistory: Prisma.$ChartLevelConstantHistoryPayload<ExtArgs>[]
       evaluations: Prisma.$ChartEvaluationPayload<ExtArgs>[]
-      RecentPlay: Prisma.$RecentPlayPayload<ExtArgs>[]
       PlayData: Prisma.$PlayDataPayload<ExtArgs>[]
-      BasicBestPlay: Prisma.$BasicBestPlayPayload<ExtArgs>[]
-      RecitalBestPlay: Prisma.$RecitalBestPlayPayload<ExtArgs>[]
       playHistory: Prisma.$ChartPlayHistoryPayload<ExtArgs>[]
       recordSnapshots: Prisma.$ChartRecordSnapshotPayload<ExtArgs>[]
       examStageOptions: Prisma.$ExamStageChartPayload<ExtArgs>[]
@@ -8061,10 +7419,7 @@ export namespace Prisma {
     music<T extends MusicDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MusicDefaultArgs<ExtArgs>>): Prisma__MusicClient<$Result.GetResult<Prisma.$MusicPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     levelConstantHistory<T extends MusicChart$levelConstantHistoryArgs<ExtArgs> = {}>(args?: Subset<T, MusicChart$levelConstantHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartLevelConstantHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     evaluations<T extends MusicChart$evaluationsArgs<ExtArgs> = {}>(args?: Subset<T, MusicChart$evaluationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartEvaluationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    RecentPlay<T extends MusicChart$RecentPlayArgs<ExtArgs> = {}>(args?: Subset<T, MusicChart$RecentPlayArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RecentPlayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     PlayData<T extends MusicChart$PlayDataArgs<ExtArgs> = {}>(args?: Subset<T, MusicChart$PlayDataArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlayDataPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    BasicBestPlay<T extends MusicChart$BasicBestPlayArgs<ExtArgs> = {}>(args?: Subset<T, MusicChart$BasicBestPlayArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BasicBestPlayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    RecitalBestPlay<T extends MusicChart$RecitalBestPlayArgs<ExtArgs> = {}>(args?: Subset<T, MusicChart$RecitalBestPlayArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RecitalBestPlayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     playHistory<T extends MusicChart$playHistoryArgs<ExtArgs> = {}>(args?: Subset<T, MusicChart$playHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartPlayHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     recordSnapshots<T extends MusicChart$recordSnapshotsArgs<ExtArgs> = {}>(args?: Subset<T, MusicChart$recordSnapshotsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChartRecordSnapshotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     examStageOptions<T extends MusicChart$examStageOptionsArgs<ExtArgs> = {}>(args?: Subset<T, MusicChart$examStageOptionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamStageChartPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -8558,30 +7913,6 @@ export namespace Prisma {
   }
 
   /**
-   * MusicChart.RecentPlay
-   */
-  export type MusicChart$RecentPlayArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RecentPlay
-     */
-    select?: RecentPlaySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RecentPlay
-     */
-    omit?: RecentPlayOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RecentPlayInclude<ExtArgs> | null
-    where?: RecentPlayWhereInput
-    orderBy?: RecentPlayOrderByWithRelationInput | RecentPlayOrderByWithRelationInput[]
-    cursor?: RecentPlayWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: RecentPlayScalarFieldEnum | RecentPlayScalarFieldEnum[]
-  }
-
-  /**
    * MusicChart.PlayData
    */
   export type MusicChart$PlayDataArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8603,54 +7934,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: PlayDataScalarFieldEnum | PlayDataScalarFieldEnum[]
-  }
-
-  /**
-   * MusicChart.BasicBestPlay
-   */
-  export type MusicChart$BasicBestPlayArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BasicBestPlay
-     */
-    select?: BasicBestPlaySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the BasicBestPlay
-     */
-    omit?: BasicBestPlayOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BasicBestPlayInclude<ExtArgs> | null
-    where?: BasicBestPlayWhereInput
-    orderBy?: BasicBestPlayOrderByWithRelationInput | BasicBestPlayOrderByWithRelationInput[]
-    cursor?: BasicBestPlayWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: BasicBestPlayScalarFieldEnum | BasicBestPlayScalarFieldEnum[]
-  }
-
-  /**
-   * MusicChart.RecitalBestPlay
-   */
-  export type MusicChart$RecitalBestPlayArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RecitalBestPlay
-     */
-    select?: RecitalBestPlaySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RecitalBestPlay
-     */
-    omit?: RecitalBestPlayOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RecitalBestPlayInclude<ExtArgs> | null
-    where?: RecitalBestPlayWhereInput
-    orderBy?: RecitalBestPlayOrderByWithRelationInput | RecitalBestPlayOrderByWithRelationInput[]
-    cursor?: RecitalBestPlayWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: RecitalBestPlayScalarFieldEnum | RecitalBestPlayScalarFieldEnum[]
   }
 
   /**
@@ -20638,1261 +19921,6 @@ export namespace Prisma {
 
 
   /**
-   * Model RecentPlay
-   */
-
-  export type AggregateRecentPlay = {
-    _count: RecentPlayCountAggregateOutputType | null
-    _avg: RecentPlayAvgAggregateOutputType | null
-    _sum: RecentPlaySumAggregateOutputType | null
-    _min: RecentPlayMinAggregateOutputType | null
-    _max: RecentPlayMaxAggregateOutputType | null
-  }
-
-  export type RecentPlayAvgAggregateOutputType = {
-    id: number | null
-    level: number | null
-    score: number | null
-    max_combo: number | null
-    grade_basic: number | null
-    user_id: number | null
-    chart_id: number | null
-  }
-
-  export type RecentPlaySumAggregateOutputType = {
-    id: number | null
-    level: number | null
-    score: number | null
-    max_combo: number | null
-    grade_basic: number | null
-    user_id: number | null
-    chart_id: number | null
-  }
-
-  export type RecentPlayMinAggregateOutputType = {
-    id: number | null
-    difficulty: string | null
-    level: number | null
-    score: number | null
-    max_combo: number | null
-    rank: string | null
-    play_time: string | null
-    grade_basic: number | null
-    created_at: Date | null
-    updated_at: Date | null
-    user_id: number | null
-    music_idx: string | null
-    chart_id: number | null
-  }
-
-  export type RecentPlayMaxAggregateOutputType = {
-    id: number | null
-    difficulty: string | null
-    level: number | null
-    score: number | null
-    max_combo: number | null
-    rank: string | null
-    play_time: string | null
-    grade_basic: number | null
-    created_at: Date | null
-    updated_at: Date | null
-    user_id: number | null
-    music_idx: string | null
-    chart_id: number | null
-  }
-
-  export type RecentPlayCountAggregateOutputType = {
-    id: number
-    difficulty: number
-    level: number
-    score: number
-    max_combo: number
-    rank: number
-    play_time: number
-    grade_basic: number
-    created_at: number
-    updated_at: number
-    user_id: number
-    music_idx: number
-    chart_id: number
-    _all: number
-  }
-
-
-  export type RecentPlayAvgAggregateInputType = {
-    id?: true
-    level?: true
-    score?: true
-    max_combo?: true
-    grade_basic?: true
-    user_id?: true
-    chart_id?: true
-  }
-
-  export type RecentPlaySumAggregateInputType = {
-    id?: true
-    level?: true
-    score?: true
-    max_combo?: true
-    grade_basic?: true
-    user_id?: true
-    chart_id?: true
-  }
-
-  export type RecentPlayMinAggregateInputType = {
-    id?: true
-    difficulty?: true
-    level?: true
-    score?: true
-    max_combo?: true
-    rank?: true
-    play_time?: true
-    grade_basic?: true
-    created_at?: true
-    updated_at?: true
-    user_id?: true
-    music_idx?: true
-    chart_id?: true
-  }
-
-  export type RecentPlayMaxAggregateInputType = {
-    id?: true
-    difficulty?: true
-    level?: true
-    score?: true
-    max_combo?: true
-    rank?: true
-    play_time?: true
-    grade_basic?: true
-    created_at?: true
-    updated_at?: true
-    user_id?: true
-    music_idx?: true
-    chart_id?: true
-  }
-
-  export type RecentPlayCountAggregateInputType = {
-    id?: true
-    difficulty?: true
-    level?: true
-    score?: true
-    max_combo?: true
-    rank?: true
-    play_time?: true
-    grade_basic?: true
-    created_at?: true
-    updated_at?: true
-    user_id?: true
-    music_idx?: true
-    chart_id?: true
-    _all?: true
-  }
-
-  export type RecentPlayAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which RecentPlay to aggregate.
-     */
-    where?: RecentPlayWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of RecentPlays to fetch.
-     */
-    orderBy?: RecentPlayOrderByWithRelationInput | RecentPlayOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: RecentPlayWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` RecentPlays from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` RecentPlays.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned RecentPlays
-    **/
-    _count?: true | RecentPlayCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: RecentPlayAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: RecentPlaySumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: RecentPlayMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: RecentPlayMaxAggregateInputType
-  }
-
-  export type GetRecentPlayAggregateType<T extends RecentPlayAggregateArgs> = {
-        [P in keyof T & keyof AggregateRecentPlay]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateRecentPlay[P]>
-      : GetScalarType<T[P], AggregateRecentPlay[P]>
-  }
-
-
-
-
-  export type RecentPlayGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: RecentPlayWhereInput
-    orderBy?: RecentPlayOrderByWithAggregationInput | RecentPlayOrderByWithAggregationInput[]
-    by: RecentPlayScalarFieldEnum[] | RecentPlayScalarFieldEnum
-    having?: RecentPlayScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: RecentPlayCountAggregateInputType | true
-    _avg?: RecentPlayAvgAggregateInputType
-    _sum?: RecentPlaySumAggregateInputType
-    _min?: RecentPlayMinAggregateInputType
-    _max?: RecentPlayMaxAggregateInputType
-  }
-
-  export type RecentPlayGroupByOutputType = {
-    id: number
-    difficulty: string
-    level: number
-    score: number
-    max_combo: number
-    rank: string
-    play_time: string
-    grade_basic: number
-    created_at: Date
-    updated_at: Date
-    user_id: number
-    music_idx: string
-    chart_id: number | null
-    _count: RecentPlayCountAggregateOutputType | null
-    _avg: RecentPlayAvgAggregateOutputType | null
-    _sum: RecentPlaySumAggregateOutputType | null
-    _min: RecentPlayMinAggregateOutputType | null
-    _max: RecentPlayMaxAggregateOutputType | null
-  }
-
-  type GetRecentPlayGroupByPayload<T extends RecentPlayGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<RecentPlayGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof RecentPlayGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], RecentPlayGroupByOutputType[P]>
-            : GetScalarType<T[P], RecentPlayGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type RecentPlaySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    difficulty?: boolean
-    level?: boolean
-    score?: boolean
-    max_combo?: boolean
-    rank?: boolean
-    play_time?: boolean
-    grade_basic?: boolean
-    created_at?: boolean
-    updated_at?: boolean
-    user_id?: boolean
-    music_idx?: boolean
-    chart_id?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    music?: boolean | MusicDefaultArgs<ExtArgs>
-    chart?: boolean | RecentPlay$chartArgs<ExtArgs>
-  }, ExtArgs["result"]["recentPlay"]>
-
-  export type RecentPlaySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    difficulty?: boolean
-    level?: boolean
-    score?: boolean
-    max_combo?: boolean
-    rank?: boolean
-    play_time?: boolean
-    grade_basic?: boolean
-    created_at?: boolean
-    updated_at?: boolean
-    user_id?: boolean
-    music_idx?: boolean
-    chart_id?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    music?: boolean | MusicDefaultArgs<ExtArgs>
-    chart?: boolean | RecentPlay$chartArgs<ExtArgs>
-  }, ExtArgs["result"]["recentPlay"]>
-
-  export type RecentPlaySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    difficulty?: boolean
-    level?: boolean
-    score?: boolean
-    max_combo?: boolean
-    rank?: boolean
-    play_time?: boolean
-    grade_basic?: boolean
-    created_at?: boolean
-    updated_at?: boolean
-    user_id?: boolean
-    music_idx?: boolean
-    chart_id?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    music?: boolean | MusicDefaultArgs<ExtArgs>
-    chart?: boolean | RecentPlay$chartArgs<ExtArgs>
-  }, ExtArgs["result"]["recentPlay"]>
-
-  export type RecentPlaySelectScalar = {
-    id?: boolean
-    difficulty?: boolean
-    level?: boolean
-    score?: boolean
-    max_combo?: boolean
-    rank?: boolean
-    play_time?: boolean
-    grade_basic?: boolean
-    created_at?: boolean
-    updated_at?: boolean
-    user_id?: boolean
-    music_idx?: boolean
-    chart_id?: boolean
-  }
-
-  export type RecentPlayOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "difficulty" | "level" | "score" | "max_combo" | "rank" | "play_time" | "grade_basic" | "created_at" | "updated_at" | "user_id" | "music_idx" | "chart_id", ExtArgs["result"]["recentPlay"]>
-  export type RecentPlayInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    music?: boolean | MusicDefaultArgs<ExtArgs>
-    chart?: boolean | RecentPlay$chartArgs<ExtArgs>
-  }
-  export type RecentPlayIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    music?: boolean | MusicDefaultArgs<ExtArgs>
-    chart?: boolean | RecentPlay$chartArgs<ExtArgs>
-  }
-  export type RecentPlayIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    music?: boolean | MusicDefaultArgs<ExtArgs>
-    chart?: boolean | RecentPlay$chartArgs<ExtArgs>
-  }
-
-  export type $RecentPlayPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "RecentPlay"
-    objects: {
-      user: Prisma.$UserPayload<ExtArgs>
-      music: Prisma.$MusicPayload<ExtArgs>
-      chart: Prisma.$MusicChartPayload<ExtArgs> | null
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: number
-      difficulty: string
-      level: number
-      score: number
-      max_combo: number
-      rank: string
-      play_time: string
-      grade_basic: number
-      created_at: Date
-      updated_at: Date
-      user_id: number
-      music_idx: string
-      chart_id: number | null
-    }, ExtArgs["result"]["recentPlay"]>
-    composites: {}
-  }
-
-  type RecentPlayGetPayload<S extends boolean | null | undefined | RecentPlayDefaultArgs> = $Result.GetResult<Prisma.$RecentPlayPayload, S>
-
-  type RecentPlayCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<RecentPlayFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: RecentPlayCountAggregateInputType | true
-    }
-
-  export interface RecentPlayDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['RecentPlay'], meta: { name: 'RecentPlay' } }
-    /**
-     * Find zero or one RecentPlay that matches the filter.
-     * @param {RecentPlayFindUniqueArgs} args - Arguments to find a RecentPlay
-     * @example
-     * // Get one RecentPlay
-     * const recentPlay = await prisma.recentPlay.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends RecentPlayFindUniqueArgs>(args: SelectSubset<T, RecentPlayFindUniqueArgs<ExtArgs>>): Prisma__RecentPlayClient<$Result.GetResult<Prisma.$RecentPlayPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one RecentPlay that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {RecentPlayFindUniqueOrThrowArgs} args - Arguments to find a RecentPlay
-     * @example
-     * // Get one RecentPlay
-     * const recentPlay = await prisma.recentPlay.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends RecentPlayFindUniqueOrThrowArgs>(args: SelectSubset<T, RecentPlayFindUniqueOrThrowArgs<ExtArgs>>): Prisma__RecentPlayClient<$Result.GetResult<Prisma.$RecentPlayPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first RecentPlay that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {RecentPlayFindFirstArgs} args - Arguments to find a RecentPlay
-     * @example
-     * // Get one RecentPlay
-     * const recentPlay = await prisma.recentPlay.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends RecentPlayFindFirstArgs>(args?: SelectSubset<T, RecentPlayFindFirstArgs<ExtArgs>>): Prisma__RecentPlayClient<$Result.GetResult<Prisma.$RecentPlayPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first RecentPlay that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {RecentPlayFindFirstOrThrowArgs} args - Arguments to find a RecentPlay
-     * @example
-     * // Get one RecentPlay
-     * const recentPlay = await prisma.recentPlay.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends RecentPlayFindFirstOrThrowArgs>(args?: SelectSubset<T, RecentPlayFindFirstOrThrowArgs<ExtArgs>>): Prisma__RecentPlayClient<$Result.GetResult<Prisma.$RecentPlayPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more RecentPlays that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {RecentPlayFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all RecentPlays
-     * const recentPlays = await prisma.recentPlay.findMany()
-     * 
-     * // Get first 10 RecentPlays
-     * const recentPlays = await prisma.recentPlay.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const recentPlayWithIdOnly = await prisma.recentPlay.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends RecentPlayFindManyArgs>(args?: SelectSubset<T, RecentPlayFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RecentPlayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a RecentPlay.
-     * @param {RecentPlayCreateArgs} args - Arguments to create a RecentPlay.
-     * @example
-     * // Create one RecentPlay
-     * const RecentPlay = await prisma.recentPlay.create({
-     *   data: {
-     *     // ... data to create a RecentPlay
-     *   }
-     * })
-     * 
-     */
-    create<T extends RecentPlayCreateArgs>(args: SelectSubset<T, RecentPlayCreateArgs<ExtArgs>>): Prisma__RecentPlayClient<$Result.GetResult<Prisma.$RecentPlayPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many RecentPlays.
-     * @param {RecentPlayCreateManyArgs} args - Arguments to create many RecentPlays.
-     * @example
-     * // Create many RecentPlays
-     * const recentPlay = await prisma.recentPlay.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends RecentPlayCreateManyArgs>(args?: SelectSubset<T, RecentPlayCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many RecentPlays and returns the data saved in the database.
-     * @param {RecentPlayCreateManyAndReturnArgs} args - Arguments to create many RecentPlays.
-     * @example
-     * // Create many RecentPlays
-     * const recentPlay = await prisma.recentPlay.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many RecentPlays and only return the `id`
-     * const recentPlayWithIdOnly = await prisma.recentPlay.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends RecentPlayCreateManyAndReturnArgs>(args?: SelectSubset<T, RecentPlayCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RecentPlayPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a RecentPlay.
-     * @param {RecentPlayDeleteArgs} args - Arguments to delete one RecentPlay.
-     * @example
-     * // Delete one RecentPlay
-     * const RecentPlay = await prisma.recentPlay.delete({
-     *   where: {
-     *     // ... filter to delete one RecentPlay
-     *   }
-     * })
-     * 
-     */
-    delete<T extends RecentPlayDeleteArgs>(args: SelectSubset<T, RecentPlayDeleteArgs<ExtArgs>>): Prisma__RecentPlayClient<$Result.GetResult<Prisma.$RecentPlayPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one RecentPlay.
-     * @param {RecentPlayUpdateArgs} args - Arguments to update one RecentPlay.
-     * @example
-     * // Update one RecentPlay
-     * const recentPlay = await prisma.recentPlay.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends RecentPlayUpdateArgs>(args: SelectSubset<T, RecentPlayUpdateArgs<ExtArgs>>): Prisma__RecentPlayClient<$Result.GetResult<Prisma.$RecentPlayPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more RecentPlays.
-     * @param {RecentPlayDeleteManyArgs} args - Arguments to filter RecentPlays to delete.
-     * @example
-     * // Delete a few RecentPlays
-     * const { count } = await prisma.recentPlay.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends RecentPlayDeleteManyArgs>(args?: SelectSubset<T, RecentPlayDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more RecentPlays.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {RecentPlayUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many RecentPlays
-     * const recentPlay = await prisma.recentPlay.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends RecentPlayUpdateManyArgs>(args: SelectSubset<T, RecentPlayUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more RecentPlays and returns the data updated in the database.
-     * @param {RecentPlayUpdateManyAndReturnArgs} args - Arguments to update many RecentPlays.
-     * @example
-     * // Update many RecentPlays
-     * const recentPlay = await prisma.recentPlay.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more RecentPlays and only return the `id`
-     * const recentPlayWithIdOnly = await prisma.recentPlay.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends RecentPlayUpdateManyAndReturnArgs>(args: SelectSubset<T, RecentPlayUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RecentPlayPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one RecentPlay.
-     * @param {RecentPlayUpsertArgs} args - Arguments to update or create a RecentPlay.
-     * @example
-     * // Update or create a RecentPlay
-     * const recentPlay = await prisma.recentPlay.upsert({
-     *   create: {
-     *     // ... data to create a RecentPlay
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the RecentPlay we want to update
-     *   }
-     * })
-     */
-    upsert<T extends RecentPlayUpsertArgs>(args: SelectSubset<T, RecentPlayUpsertArgs<ExtArgs>>): Prisma__RecentPlayClient<$Result.GetResult<Prisma.$RecentPlayPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of RecentPlays.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {RecentPlayCountArgs} args - Arguments to filter RecentPlays to count.
-     * @example
-     * // Count the number of RecentPlays
-     * const count = await prisma.recentPlay.count({
-     *   where: {
-     *     // ... the filter for the RecentPlays we want to count
-     *   }
-     * })
-    **/
-    count<T extends RecentPlayCountArgs>(
-      args?: Subset<T, RecentPlayCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], RecentPlayCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a RecentPlay.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {RecentPlayAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends RecentPlayAggregateArgs>(args: Subset<T, RecentPlayAggregateArgs>): Prisma.PrismaPromise<GetRecentPlayAggregateType<T>>
-
-    /**
-     * Group by RecentPlay.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {RecentPlayGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends RecentPlayGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: RecentPlayGroupByArgs['orderBy'] }
-        : { orderBy?: RecentPlayGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, RecentPlayGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRecentPlayGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the RecentPlay model
-   */
-  readonly fields: RecentPlayFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for RecentPlay.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__RecentPlayClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    music<T extends MusicDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MusicDefaultArgs<ExtArgs>>): Prisma__MusicClient<$Result.GetResult<Prisma.$MusicPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    chart<T extends RecentPlay$chartArgs<ExtArgs> = {}>(args?: Subset<T, RecentPlay$chartArgs<ExtArgs>>): Prisma__MusicChartClient<$Result.GetResult<Prisma.$MusicChartPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the RecentPlay model
-   */
-  interface RecentPlayFieldRefs {
-    readonly id: FieldRef<"RecentPlay", 'Int'>
-    readonly difficulty: FieldRef<"RecentPlay", 'String'>
-    readonly level: FieldRef<"RecentPlay", 'Int'>
-    readonly score: FieldRef<"RecentPlay", 'Int'>
-    readonly max_combo: FieldRef<"RecentPlay", 'Int'>
-    readonly rank: FieldRef<"RecentPlay", 'String'>
-    readonly play_time: FieldRef<"RecentPlay", 'String'>
-    readonly grade_basic: FieldRef<"RecentPlay", 'Int'>
-    readonly created_at: FieldRef<"RecentPlay", 'DateTime'>
-    readonly updated_at: FieldRef<"RecentPlay", 'DateTime'>
-    readonly user_id: FieldRef<"RecentPlay", 'Int'>
-    readonly music_idx: FieldRef<"RecentPlay", 'String'>
-    readonly chart_id: FieldRef<"RecentPlay", 'Int'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * RecentPlay findUnique
-   */
-  export type RecentPlayFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RecentPlay
-     */
-    select?: RecentPlaySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RecentPlay
-     */
-    omit?: RecentPlayOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RecentPlayInclude<ExtArgs> | null
-    /**
-     * Filter, which RecentPlay to fetch.
-     */
-    where: RecentPlayWhereUniqueInput
-  }
-
-  /**
-   * RecentPlay findUniqueOrThrow
-   */
-  export type RecentPlayFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RecentPlay
-     */
-    select?: RecentPlaySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RecentPlay
-     */
-    omit?: RecentPlayOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RecentPlayInclude<ExtArgs> | null
-    /**
-     * Filter, which RecentPlay to fetch.
-     */
-    where: RecentPlayWhereUniqueInput
-  }
-
-  /**
-   * RecentPlay findFirst
-   */
-  export type RecentPlayFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RecentPlay
-     */
-    select?: RecentPlaySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RecentPlay
-     */
-    omit?: RecentPlayOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RecentPlayInclude<ExtArgs> | null
-    /**
-     * Filter, which RecentPlay to fetch.
-     */
-    where?: RecentPlayWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of RecentPlays to fetch.
-     */
-    orderBy?: RecentPlayOrderByWithRelationInput | RecentPlayOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for RecentPlays.
-     */
-    cursor?: RecentPlayWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` RecentPlays from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` RecentPlays.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of RecentPlays.
-     */
-    distinct?: RecentPlayScalarFieldEnum | RecentPlayScalarFieldEnum[]
-  }
-
-  /**
-   * RecentPlay findFirstOrThrow
-   */
-  export type RecentPlayFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RecentPlay
-     */
-    select?: RecentPlaySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RecentPlay
-     */
-    omit?: RecentPlayOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RecentPlayInclude<ExtArgs> | null
-    /**
-     * Filter, which RecentPlay to fetch.
-     */
-    where?: RecentPlayWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of RecentPlays to fetch.
-     */
-    orderBy?: RecentPlayOrderByWithRelationInput | RecentPlayOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for RecentPlays.
-     */
-    cursor?: RecentPlayWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` RecentPlays from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` RecentPlays.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of RecentPlays.
-     */
-    distinct?: RecentPlayScalarFieldEnum | RecentPlayScalarFieldEnum[]
-  }
-
-  /**
-   * RecentPlay findMany
-   */
-  export type RecentPlayFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RecentPlay
-     */
-    select?: RecentPlaySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RecentPlay
-     */
-    omit?: RecentPlayOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RecentPlayInclude<ExtArgs> | null
-    /**
-     * Filter, which RecentPlays to fetch.
-     */
-    where?: RecentPlayWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of RecentPlays to fetch.
-     */
-    orderBy?: RecentPlayOrderByWithRelationInput | RecentPlayOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing RecentPlays.
-     */
-    cursor?: RecentPlayWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` RecentPlays from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` RecentPlays.
-     */
-    skip?: number
-    distinct?: RecentPlayScalarFieldEnum | RecentPlayScalarFieldEnum[]
-  }
-
-  /**
-   * RecentPlay create
-   */
-  export type RecentPlayCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RecentPlay
-     */
-    select?: RecentPlaySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RecentPlay
-     */
-    omit?: RecentPlayOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RecentPlayInclude<ExtArgs> | null
-    /**
-     * The data needed to create a RecentPlay.
-     */
-    data: XOR<RecentPlayCreateInput, RecentPlayUncheckedCreateInput>
-  }
-
-  /**
-   * RecentPlay createMany
-   */
-  export type RecentPlayCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many RecentPlays.
-     */
-    data: RecentPlayCreateManyInput | RecentPlayCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * RecentPlay createManyAndReturn
-   */
-  export type RecentPlayCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RecentPlay
-     */
-    select?: RecentPlaySelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the RecentPlay
-     */
-    omit?: RecentPlayOmit<ExtArgs> | null
-    /**
-     * The data used to create many RecentPlays.
-     */
-    data: RecentPlayCreateManyInput | RecentPlayCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RecentPlayIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * RecentPlay update
-   */
-  export type RecentPlayUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RecentPlay
-     */
-    select?: RecentPlaySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RecentPlay
-     */
-    omit?: RecentPlayOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RecentPlayInclude<ExtArgs> | null
-    /**
-     * The data needed to update a RecentPlay.
-     */
-    data: XOR<RecentPlayUpdateInput, RecentPlayUncheckedUpdateInput>
-    /**
-     * Choose, which RecentPlay to update.
-     */
-    where: RecentPlayWhereUniqueInput
-  }
-
-  /**
-   * RecentPlay updateMany
-   */
-  export type RecentPlayUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update RecentPlays.
-     */
-    data: XOR<RecentPlayUpdateManyMutationInput, RecentPlayUncheckedUpdateManyInput>
-    /**
-     * Filter which RecentPlays to update
-     */
-    where?: RecentPlayWhereInput
-    /**
-     * Limit how many RecentPlays to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * RecentPlay updateManyAndReturn
-   */
-  export type RecentPlayUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RecentPlay
-     */
-    select?: RecentPlaySelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the RecentPlay
-     */
-    omit?: RecentPlayOmit<ExtArgs> | null
-    /**
-     * The data used to update RecentPlays.
-     */
-    data: XOR<RecentPlayUpdateManyMutationInput, RecentPlayUncheckedUpdateManyInput>
-    /**
-     * Filter which RecentPlays to update
-     */
-    where?: RecentPlayWhereInput
-    /**
-     * Limit how many RecentPlays to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RecentPlayIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * RecentPlay upsert
-   */
-  export type RecentPlayUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RecentPlay
-     */
-    select?: RecentPlaySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RecentPlay
-     */
-    omit?: RecentPlayOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RecentPlayInclude<ExtArgs> | null
-    /**
-     * The filter to search for the RecentPlay to update in case it exists.
-     */
-    where: RecentPlayWhereUniqueInput
-    /**
-     * In case the RecentPlay found by the `where` argument doesn't exist, create a new RecentPlay with this data.
-     */
-    create: XOR<RecentPlayCreateInput, RecentPlayUncheckedCreateInput>
-    /**
-     * In case the RecentPlay was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<RecentPlayUpdateInput, RecentPlayUncheckedUpdateInput>
-  }
-
-  /**
-   * RecentPlay delete
-   */
-  export type RecentPlayDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RecentPlay
-     */
-    select?: RecentPlaySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RecentPlay
-     */
-    omit?: RecentPlayOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RecentPlayInclude<ExtArgs> | null
-    /**
-     * Filter which RecentPlay to delete.
-     */
-    where: RecentPlayWhereUniqueInput
-  }
-
-  /**
-   * RecentPlay deleteMany
-   */
-  export type RecentPlayDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which RecentPlays to delete
-     */
-    where?: RecentPlayWhereInput
-    /**
-     * Limit how many RecentPlays to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * RecentPlay.chart
-   */
-  export type RecentPlay$chartArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MusicChart
-     */
-    select?: MusicChartSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the MusicChart
-     */
-    omit?: MusicChartOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MusicChartInclude<ExtArgs> | null
-    where?: MusicChartWhereInput
-  }
-
-  /**
-   * RecentPlay without action
-   */
-  export type RecentPlayDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RecentPlay
-     */
-    select?: RecentPlaySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RecentPlay
-     */
-    omit?: RecentPlayOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RecentPlayInclude<ExtArgs> | null
-  }
-
-
-  /**
    * Model UserBestGrade
    */
 
@@ -23019,2550 +21047,6 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: UserBestGradeInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model BasicBestPlay
-   */
-
-  export type AggregateBasicBestPlay = {
-    _count: BasicBestPlayCountAggregateOutputType | null
-    _avg: BasicBestPlayAvgAggregateOutputType | null
-    _sum: BasicBestPlaySumAggregateOutputType | null
-    _min: BasicBestPlayMinAggregateOutputType | null
-    _max: BasicBestPlayMaxAggregateOutputType | null
-  }
-
-  export type BasicBestPlayAvgAggregateOutputType = {
-    id: number | null
-    level: number | null
-    score: number | null
-    max_combo: number | null
-    grade_basic: number | null
-    fc_type: number | null
-    user_id: number | null
-    chart_id: number | null
-  }
-
-  export type BasicBestPlaySumAggregateOutputType = {
-    id: number | null
-    level: number | null
-    score: number | null
-    max_combo: number | null
-    grade_basic: number | null
-    fc_type: number | null
-    user_id: number | null
-    chart_id: number | null
-  }
-
-  export type BasicBestPlayMinAggregateOutputType = {
-    id: number | null
-    difficulty: string | null
-    level: number | null
-    score: number | null
-    max_combo: number | null
-    rank: string | null
-    besttime: string | null
-    grade_basic: number | null
-    fc_type: number | null
-    created_at: Date | null
-    updated_at: Date | null
-    user_id: number | null
-    music_idx: string | null
-    chart_id: number | null
-  }
-
-  export type BasicBestPlayMaxAggregateOutputType = {
-    id: number | null
-    difficulty: string | null
-    level: number | null
-    score: number | null
-    max_combo: number | null
-    rank: string | null
-    besttime: string | null
-    grade_basic: number | null
-    fc_type: number | null
-    created_at: Date | null
-    updated_at: Date | null
-    user_id: number | null
-    music_idx: string | null
-    chart_id: number | null
-  }
-
-  export type BasicBestPlayCountAggregateOutputType = {
-    id: number
-    difficulty: number
-    level: number
-    score: number
-    max_combo: number
-    rank: number
-    besttime: number
-    grade_basic: number
-    fc_type: number
-    created_at: number
-    updated_at: number
-    user_id: number
-    music_idx: number
-    chart_id: number
-    _all: number
-  }
-
-
-  export type BasicBestPlayAvgAggregateInputType = {
-    id?: true
-    level?: true
-    score?: true
-    max_combo?: true
-    grade_basic?: true
-    fc_type?: true
-    user_id?: true
-    chart_id?: true
-  }
-
-  export type BasicBestPlaySumAggregateInputType = {
-    id?: true
-    level?: true
-    score?: true
-    max_combo?: true
-    grade_basic?: true
-    fc_type?: true
-    user_id?: true
-    chart_id?: true
-  }
-
-  export type BasicBestPlayMinAggregateInputType = {
-    id?: true
-    difficulty?: true
-    level?: true
-    score?: true
-    max_combo?: true
-    rank?: true
-    besttime?: true
-    grade_basic?: true
-    fc_type?: true
-    created_at?: true
-    updated_at?: true
-    user_id?: true
-    music_idx?: true
-    chart_id?: true
-  }
-
-  export type BasicBestPlayMaxAggregateInputType = {
-    id?: true
-    difficulty?: true
-    level?: true
-    score?: true
-    max_combo?: true
-    rank?: true
-    besttime?: true
-    grade_basic?: true
-    fc_type?: true
-    created_at?: true
-    updated_at?: true
-    user_id?: true
-    music_idx?: true
-    chart_id?: true
-  }
-
-  export type BasicBestPlayCountAggregateInputType = {
-    id?: true
-    difficulty?: true
-    level?: true
-    score?: true
-    max_combo?: true
-    rank?: true
-    besttime?: true
-    grade_basic?: true
-    fc_type?: true
-    created_at?: true
-    updated_at?: true
-    user_id?: true
-    music_idx?: true
-    chart_id?: true
-    _all?: true
-  }
-
-  export type BasicBestPlayAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which BasicBestPlay to aggregate.
-     */
-    where?: BasicBestPlayWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of BasicBestPlays to fetch.
-     */
-    orderBy?: BasicBestPlayOrderByWithRelationInput | BasicBestPlayOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: BasicBestPlayWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` BasicBestPlays from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` BasicBestPlays.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned BasicBestPlays
-    **/
-    _count?: true | BasicBestPlayCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: BasicBestPlayAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: BasicBestPlaySumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: BasicBestPlayMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: BasicBestPlayMaxAggregateInputType
-  }
-
-  export type GetBasicBestPlayAggregateType<T extends BasicBestPlayAggregateArgs> = {
-        [P in keyof T & keyof AggregateBasicBestPlay]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateBasicBestPlay[P]>
-      : GetScalarType<T[P], AggregateBasicBestPlay[P]>
-  }
-
-
-
-
-  export type BasicBestPlayGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: BasicBestPlayWhereInput
-    orderBy?: BasicBestPlayOrderByWithAggregationInput | BasicBestPlayOrderByWithAggregationInput[]
-    by: BasicBestPlayScalarFieldEnum[] | BasicBestPlayScalarFieldEnum
-    having?: BasicBestPlayScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: BasicBestPlayCountAggregateInputType | true
-    _avg?: BasicBestPlayAvgAggregateInputType
-    _sum?: BasicBestPlaySumAggregateInputType
-    _min?: BasicBestPlayMinAggregateInputType
-    _max?: BasicBestPlayMaxAggregateInputType
-  }
-
-  export type BasicBestPlayGroupByOutputType = {
-    id: number
-    difficulty: string
-    level: number
-    score: number
-    max_combo: number
-    rank: string
-    besttime: string
-    grade_basic: number
-    fc_type: number
-    created_at: Date
-    updated_at: Date
-    user_id: number
-    music_idx: string
-    chart_id: number | null
-    _count: BasicBestPlayCountAggregateOutputType | null
-    _avg: BasicBestPlayAvgAggregateOutputType | null
-    _sum: BasicBestPlaySumAggregateOutputType | null
-    _min: BasicBestPlayMinAggregateOutputType | null
-    _max: BasicBestPlayMaxAggregateOutputType | null
-  }
-
-  type GetBasicBestPlayGroupByPayload<T extends BasicBestPlayGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<BasicBestPlayGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof BasicBestPlayGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], BasicBestPlayGroupByOutputType[P]>
-            : GetScalarType<T[P], BasicBestPlayGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type BasicBestPlaySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    difficulty?: boolean
-    level?: boolean
-    score?: boolean
-    max_combo?: boolean
-    rank?: boolean
-    besttime?: boolean
-    grade_basic?: boolean
-    fc_type?: boolean
-    created_at?: boolean
-    updated_at?: boolean
-    user_id?: boolean
-    music_idx?: boolean
-    chart_id?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    music?: boolean | MusicDefaultArgs<ExtArgs>
-    chart?: boolean | BasicBestPlay$chartArgs<ExtArgs>
-  }, ExtArgs["result"]["basicBestPlay"]>
-
-  export type BasicBestPlaySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    difficulty?: boolean
-    level?: boolean
-    score?: boolean
-    max_combo?: boolean
-    rank?: boolean
-    besttime?: boolean
-    grade_basic?: boolean
-    fc_type?: boolean
-    created_at?: boolean
-    updated_at?: boolean
-    user_id?: boolean
-    music_idx?: boolean
-    chart_id?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    music?: boolean | MusicDefaultArgs<ExtArgs>
-    chart?: boolean | BasicBestPlay$chartArgs<ExtArgs>
-  }, ExtArgs["result"]["basicBestPlay"]>
-
-  export type BasicBestPlaySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    difficulty?: boolean
-    level?: boolean
-    score?: boolean
-    max_combo?: boolean
-    rank?: boolean
-    besttime?: boolean
-    grade_basic?: boolean
-    fc_type?: boolean
-    created_at?: boolean
-    updated_at?: boolean
-    user_id?: boolean
-    music_idx?: boolean
-    chart_id?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    music?: boolean | MusicDefaultArgs<ExtArgs>
-    chart?: boolean | BasicBestPlay$chartArgs<ExtArgs>
-  }, ExtArgs["result"]["basicBestPlay"]>
-
-  export type BasicBestPlaySelectScalar = {
-    id?: boolean
-    difficulty?: boolean
-    level?: boolean
-    score?: boolean
-    max_combo?: boolean
-    rank?: boolean
-    besttime?: boolean
-    grade_basic?: boolean
-    fc_type?: boolean
-    created_at?: boolean
-    updated_at?: boolean
-    user_id?: boolean
-    music_idx?: boolean
-    chart_id?: boolean
-  }
-
-  export type BasicBestPlayOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "difficulty" | "level" | "score" | "max_combo" | "rank" | "besttime" | "grade_basic" | "fc_type" | "created_at" | "updated_at" | "user_id" | "music_idx" | "chart_id", ExtArgs["result"]["basicBestPlay"]>
-  export type BasicBestPlayInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    music?: boolean | MusicDefaultArgs<ExtArgs>
-    chart?: boolean | BasicBestPlay$chartArgs<ExtArgs>
-  }
-  export type BasicBestPlayIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    music?: boolean | MusicDefaultArgs<ExtArgs>
-    chart?: boolean | BasicBestPlay$chartArgs<ExtArgs>
-  }
-  export type BasicBestPlayIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    music?: boolean | MusicDefaultArgs<ExtArgs>
-    chart?: boolean | BasicBestPlay$chartArgs<ExtArgs>
-  }
-
-  export type $BasicBestPlayPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "BasicBestPlay"
-    objects: {
-      user: Prisma.$UserPayload<ExtArgs>
-      music: Prisma.$MusicPayload<ExtArgs>
-      chart: Prisma.$MusicChartPayload<ExtArgs> | null
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: number
-      difficulty: string
-      level: number
-      score: number
-      max_combo: number
-      rank: string
-      besttime: string
-      grade_basic: number
-      fc_type: number
-      created_at: Date
-      updated_at: Date
-      user_id: number
-      music_idx: string
-      chart_id: number | null
-    }, ExtArgs["result"]["basicBestPlay"]>
-    composites: {}
-  }
-
-  type BasicBestPlayGetPayload<S extends boolean | null | undefined | BasicBestPlayDefaultArgs> = $Result.GetResult<Prisma.$BasicBestPlayPayload, S>
-
-  type BasicBestPlayCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<BasicBestPlayFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: BasicBestPlayCountAggregateInputType | true
-    }
-
-  export interface BasicBestPlayDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['BasicBestPlay'], meta: { name: 'BasicBestPlay' } }
-    /**
-     * Find zero or one BasicBestPlay that matches the filter.
-     * @param {BasicBestPlayFindUniqueArgs} args - Arguments to find a BasicBestPlay
-     * @example
-     * // Get one BasicBestPlay
-     * const basicBestPlay = await prisma.basicBestPlay.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends BasicBestPlayFindUniqueArgs>(args: SelectSubset<T, BasicBestPlayFindUniqueArgs<ExtArgs>>): Prisma__BasicBestPlayClient<$Result.GetResult<Prisma.$BasicBestPlayPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one BasicBestPlay that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {BasicBestPlayFindUniqueOrThrowArgs} args - Arguments to find a BasicBestPlay
-     * @example
-     * // Get one BasicBestPlay
-     * const basicBestPlay = await prisma.basicBestPlay.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends BasicBestPlayFindUniqueOrThrowArgs>(args: SelectSubset<T, BasicBestPlayFindUniqueOrThrowArgs<ExtArgs>>): Prisma__BasicBestPlayClient<$Result.GetResult<Prisma.$BasicBestPlayPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first BasicBestPlay that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {BasicBestPlayFindFirstArgs} args - Arguments to find a BasicBestPlay
-     * @example
-     * // Get one BasicBestPlay
-     * const basicBestPlay = await prisma.basicBestPlay.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends BasicBestPlayFindFirstArgs>(args?: SelectSubset<T, BasicBestPlayFindFirstArgs<ExtArgs>>): Prisma__BasicBestPlayClient<$Result.GetResult<Prisma.$BasicBestPlayPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first BasicBestPlay that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {BasicBestPlayFindFirstOrThrowArgs} args - Arguments to find a BasicBestPlay
-     * @example
-     * // Get one BasicBestPlay
-     * const basicBestPlay = await prisma.basicBestPlay.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends BasicBestPlayFindFirstOrThrowArgs>(args?: SelectSubset<T, BasicBestPlayFindFirstOrThrowArgs<ExtArgs>>): Prisma__BasicBestPlayClient<$Result.GetResult<Prisma.$BasicBestPlayPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more BasicBestPlays that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {BasicBestPlayFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all BasicBestPlays
-     * const basicBestPlays = await prisma.basicBestPlay.findMany()
-     * 
-     * // Get first 10 BasicBestPlays
-     * const basicBestPlays = await prisma.basicBestPlay.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const basicBestPlayWithIdOnly = await prisma.basicBestPlay.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends BasicBestPlayFindManyArgs>(args?: SelectSubset<T, BasicBestPlayFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BasicBestPlayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a BasicBestPlay.
-     * @param {BasicBestPlayCreateArgs} args - Arguments to create a BasicBestPlay.
-     * @example
-     * // Create one BasicBestPlay
-     * const BasicBestPlay = await prisma.basicBestPlay.create({
-     *   data: {
-     *     // ... data to create a BasicBestPlay
-     *   }
-     * })
-     * 
-     */
-    create<T extends BasicBestPlayCreateArgs>(args: SelectSubset<T, BasicBestPlayCreateArgs<ExtArgs>>): Prisma__BasicBestPlayClient<$Result.GetResult<Prisma.$BasicBestPlayPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many BasicBestPlays.
-     * @param {BasicBestPlayCreateManyArgs} args - Arguments to create many BasicBestPlays.
-     * @example
-     * // Create many BasicBestPlays
-     * const basicBestPlay = await prisma.basicBestPlay.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends BasicBestPlayCreateManyArgs>(args?: SelectSubset<T, BasicBestPlayCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many BasicBestPlays and returns the data saved in the database.
-     * @param {BasicBestPlayCreateManyAndReturnArgs} args - Arguments to create many BasicBestPlays.
-     * @example
-     * // Create many BasicBestPlays
-     * const basicBestPlay = await prisma.basicBestPlay.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many BasicBestPlays and only return the `id`
-     * const basicBestPlayWithIdOnly = await prisma.basicBestPlay.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends BasicBestPlayCreateManyAndReturnArgs>(args?: SelectSubset<T, BasicBestPlayCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BasicBestPlayPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a BasicBestPlay.
-     * @param {BasicBestPlayDeleteArgs} args - Arguments to delete one BasicBestPlay.
-     * @example
-     * // Delete one BasicBestPlay
-     * const BasicBestPlay = await prisma.basicBestPlay.delete({
-     *   where: {
-     *     // ... filter to delete one BasicBestPlay
-     *   }
-     * })
-     * 
-     */
-    delete<T extends BasicBestPlayDeleteArgs>(args: SelectSubset<T, BasicBestPlayDeleteArgs<ExtArgs>>): Prisma__BasicBestPlayClient<$Result.GetResult<Prisma.$BasicBestPlayPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one BasicBestPlay.
-     * @param {BasicBestPlayUpdateArgs} args - Arguments to update one BasicBestPlay.
-     * @example
-     * // Update one BasicBestPlay
-     * const basicBestPlay = await prisma.basicBestPlay.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends BasicBestPlayUpdateArgs>(args: SelectSubset<T, BasicBestPlayUpdateArgs<ExtArgs>>): Prisma__BasicBestPlayClient<$Result.GetResult<Prisma.$BasicBestPlayPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more BasicBestPlays.
-     * @param {BasicBestPlayDeleteManyArgs} args - Arguments to filter BasicBestPlays to delete.
-     * @example
-     * // Delete a few BasicBestPlays
-     * const { count } = await prisma.basicBestPlay.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends BasicBestPlayDeleteManyArgs>(args?: SelectSubset<T, BasicBestPlayDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more BasicBestPlays.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {BasicBestPlayUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many BasicBestPlays
-     * const basicBestPlay = await prisma.basicBestPlay.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends BasicBestPlayUpdateManyArgs>(args: SelectSubset<T, BasicBestPlayUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more BasicBestPlays and returns the data updated in the database.
-     * @param {BasicBestPlayUpdateManyAndReturnArgs} args - Arguments to update many BasicBestPlays.
-     * @example
-     * // Update many BasicBestPlays
-     * const basicBestPlay = await prisma.basicBestPlay.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more BasicBestPlays and only return the `id`
-     * const basicBestPlayWithIdOnly = await prisma.basicBestPlay.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends BasicBestPlayUpdateManyAndReturnArgs>(args: SelectSubset<T, BasicBestPlayUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BasicBestPlayPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one BasicBestPlay.
-     * @param {BasicBestPlayUpsertArgs} args - Arguments to update or create a BasicBestPlay.
-     * @example
-     * // Update or create a BasicBestPlay
-     * const basicBestPlay = await prisma.basicBestPlay.upsert({
-     *   create: {
-     *     // ... data to create a BasicBestPlay
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the BasicBestPlay we want to update
-     *   }
-     * })
-     */
-    upsert<T extends BasicBestPlayUpsertArgs>(args: SelectSubset<T, BasicBestPlayUpsertArgs<ExtArgs>>): Prisma__BasicBestPlayClient<$Result.GetResult<Prisma.$BasicBestPlayPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of BasicBestPlays.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {BasicBestPlayCountArgs} args - Arguments to filter BasicBestPlays to count.
-     * @example
-     * // Count the number of BasicBestPlays
-     * const count = await prisma.basicBestPlay.count({
-     *   where: {
-     *     // ... the filter for the BasicBestPlays we want to count
-     *   }
-     * })
-    **/
-    count<T extends BasicBestPlayCountArgs>(
-      args?: Subset<T, BasicBestPlayCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], BasicBestPlayCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a BasicBestPlay.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {BasicBestPlayAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends BasicBestPlayAggregateArgs>(args: Subset<T, BasicBestPlayAggregateArgs>): Prisma.PrismaPromise<GetBasicBestPlayAggregateType<T>>
-
-    /**
-     * Group by BasicBestPlay.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {BasicBestPlayGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends BasicBestPlayGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: BasicBestPlayGroupByArgs['orderBy'] }
-        : { orderBy?: BasicBestPlayGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, BasicBestPlayGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetBasicBestPlayGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the BasicBestPlay model
-   */
-  readonly fields: BasicBestPlayFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for BasicBestPlay.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__BasicBestPlayClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    music<T extends MusicDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MusicDefaultArgs<ExtArgs>>): Prisma__MusicClient<$Result.GetResult<Prisma.$MusicPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    chart<T extends BasicBestPlay$chartArgs<ExtArgs> = {}>(args?: Subset<T, BasicBestPlay$chartArgs<ExtArgs>>): Prisma__MusicChartClient<$Result.GetResult<Prisma.$MusicChartPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the BasicBestPlay model
-   */
-  interface BasicBestPlayFieldRefs {
-    readonly id: FieldRef<"BasicBestPlay", 'Int'>
-    readonly difficulty: FieldRef<"BasicBestPlay", 'String'>
-    readonly level: FieldRef<"BasicBestPlay", 'Int'>
-    readonly score: FieldRef<"BasicBestPlay", 'Int'>
-    readonly max_combo: FieldRef<"BasicBestPlay", 'Int'>
-    readonly rank: FieldRef<"BasicBestPlay", 'String'>
-    readonly besttime: FieldRef<"BasicBestPlay", 'String'>
-    readonly grade_basic: FieldRef<"BasicBestPlay", 'Int'>
-    readonly fc_type: FieldRef<"BasicBestPlay", 'Int'>
-    readonly created_at: FieldRef<"BasicBestPlay", 'DateTime'>
-    readonly updated_at: FieldRef<"BasicBestPlay", 'DateTime'>
-    readonly user_id: FieldRef<"BasicBestPlay", 'Int'>
-    readonly music_idx: FieldRef<"BasicBestPlay", 'String'>
-    readonly chart_id: FieldRef<"BasicBestPlay", 'Int'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * BasicBestPlay findUnique
-   */
-  export type BasicBestPlayFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BasicBestPlay
-     */
-    select?: BasicBestPlaySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the BasicBestPlay
-     */
-    omit?: BasicBestPlayOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BasicBestPlayInclude<ExtArgs> | null
-    /**
-     * Filter, which BasicBestPlay to fetch.
-     */
-    where: BasicBestPlayWhereUniqueInput
-  }
-
-  /**
-   * BasicBestPlay findUniqueOrThrow
-   */
-  export type BasicBestPlayFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BasicBestPlay
-     */
-    select?: BasicBestPlaySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the BasicBestPlay
-     */
-    omit?: BasicBestPlayOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BasicBestPlayInclude<ExtArgs> | null
-    /**
-     * Filter, which BasicBestPlay to fetch.
-     */
-    where: BasicBestPlayWhereUniqueInput
-  }
-
-  /**
-   * BasicBestPlay findFirst
-   */
-  export type BasicBestPlayFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BasicBestPlay
-     */
-    select?: BasicBestPlaySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the BasicBestPlay
-     */
-    omit?: BasicBestPlayOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BasicBestPlayInclude<ExtArgs> | null
-    /**
-     * Filter, which BasicBestPlay to fetch.
-     */
-    where?: BasicBestPlayWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of BasicBestPlays to fetch.
-     */
-    orderBy?: BasicBestPlayOrderByWithRelationInput | BasicBestPlayOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for BasicBestPlays.
-     */
-    cursor?: BasicBestPlayWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` BasicBestPlays from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` BasicBestPlays.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of BasicBestPlays.
-     */
-    distinct?: BasicBestPlayScalarFieldEnum | BasicBestPlayScalarFieldEnum[]
-  }
-
-  /**
-   * BasicBestPlay findFirstOrThrow
-   */
-  export type BasicBestPlayFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BasicBestPlay
-     */
-    select?: BasicBestPlaySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the BasicBestPlay
-     */
-    omit?: BasicBestPlayOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BasicBestPlayInclude<ExtArgs> | null
-    /**
-     * Filter, which BasicBestPlay to fetch.
-     */
-    where?: BasicBestPlayWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of BasicBestPlays to fetch.
-     */
-    orderBy?: BasicBestPlayOrderByWithRelationInput | BasicBestPlayOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for BasicBestPlays.
-     */
-    cursor?: BasicBestPlayWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` BasicBestPlays from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` BasicBestPlays.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of BasicBestPlays.
-     */
-    distinct?: BasicBestPlayScalarFieldEnum | BasicBestPlayScalarFieldEnum[]
-  }
-
-  /**
-   * BasicBestPlay findMany
-   */
-  export type BasicBestPlayFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BasicBestPlay
-     */
-    select?: BasicBestPlaySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the BasicBestPlay
-     */
-    omit?: BasicBestPlayOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BasicBestPlayInclude<ExtArgs> | null
-    /**
-     * Filter, which BasicBestPlays to fetch.
-     */
-    where?: BasicBestPlayWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of BasicBestPlays to fetch.
-     */
-    orderBy?: BasicBestPlayOrderByWithRelationInput | BasicBestPlayOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing BasicBestPlays.
-     */
-    cursor?: BasicBestPlayWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` BasicBestPlays from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` BasicBestPlays.
-     */
-    skip?: number
-    distinct?: BasicBestPlayScalarFieldEnum | BasicBestPlayScalarFieldEnum[]
-  }
-
-  /**
-   * BasicBestPlay create
-   */
-  export type BasicBestPlayCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BasicBestPlay
-     */
-    select?: BasicBestPlaySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the BasicBestPlay
-     */
-    omit?: BasicBestPlayOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BasicBestPlayInclude<ExtArgs> | null
-    /**
-     * The data needed to create a BasicBestPlay.
-     */
-    data: XOR<BasicBestPlayCreateInput, BasicBestPlayUncheckedCreateInput>
-  }
-
-  /**
-   * BasicBestPlay createMany
-   */
-  export type BasicBestPlayCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many BasicBestPlays.
-     */
-    data: BasicBestPlayCreateManyInput | BasicBestPlayCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * BasicBestPlay createManyAndReturn
-   */
-  export type BasicBestPlayCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BasicBestPlay
-     */
-    select?: BasicBestPlaySelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the BasicBestPlay
-     */
-    omit?: BasicBestPlayOmit<ExtArgs> | null
-    /**
-     * The data used to create many BasicBestPlays.
-     */
-    data: BasicBestPlayCreateManyInput | BasicBestPlayCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BasicBestPlayIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * BasicBestPlay update
-   */
-  export type BasicBestPlayUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BasicBestPlay
-     */
-    select?: BasicBestPlaySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the BasicBestPlay
-     */
-    omit?: BasicBestPlayOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BasicBestPlayInclude<ExtArgs> | null
-    /**
-     * The data needed to update a BasicBestPlay.
-     */
-    data: XOR<BasicBestPlayUpdateInput, BasicBestPlayUncheckedUpdateInput>
-    /**
-     * Choose, which BasicBestPlay to update.
-     */
-    where: BasicBestPlayWhereUniqueInput
-  }
-
-  /**
-   * BasicBestPlay updateMany
-   */
-  export type BasicBestPlayUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update BasicBestPlays.
-     */
-    data: XOR<BasicBestPlayUpdateManyMutationInput, BasicBestPlayUncheckedUpdateManyInput>
-    /**
-     * Filter which BasicBestPlays to update
-     */
-    where?: BasicBestPlayWhereInput
-    /**
-     * Limit how many BasicBestPlays to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * BasicBestPlay updateManyAndReturn
-   */
-  export type BasicBestPlayUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BasicBestPlay
-     */
-    select?: BasicBestPlaySelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the BasicBestPlay
-     */
-    omit?: BasicBestPlayOmit<ExtArgs> | null
-    /**
-     * The data used to update BasicBestPlays.
-     */
-    data: XOR<BasicBestPlayUpdateManyMutationInput, BasicBestPlayUncheckedUpdateManyInput>
-    /**
-     * Filter which BasicBestPlays to update
-     */
-    where?: BasicBestPlayWhereInput
-    /**
-     * Limit how many BasicBestPlays to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BasicBestPlayIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * BasicBestPlay upsert
-   */
-  export type BasicBestPlayUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BasicBestPlay
-     */
-    select?: BasicBestPlaySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the BasicBestPlay
-     */
-    omit?: BasicBestPlayOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BasicBestPlayInclude<ExtArgs> | null
-    /**
-     * The filter to search for the BasicBestPlay to update in case it exists.
-     */
-    where: BasicBestPlayWhereUniqueInput
-    /**
-     * In case the BasicBestPlay found by the `where` argument doesn't exist, create a new BasicBestPlay with this data.
-     */
-    create: XOR<BasicBestPlayCreateInput, BasicBestPlayUncheckedCreateInput>
-    /**
-     * In case the BasicBestPlay was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<BasicBestPlayUpdateInput, BasicBestPlayUncheckedUpdateInput>
-  }
-
-  /**
-   * BasicBestPlay delete
-   */
-  export type BasicBestPlayDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BasicBestPlay
-     */
-    select?: BasicBestPlaySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the BasicBestPlay
-     */
-    omit?: BasicBestPlayOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BasicBestPlayInclude<ExtArgs> | null
-    /**
-     * Filter which BasicBestPlay to delete.
-     */
-    where: BasicBestPlayWhereUniqueInput
-  }
-
-  /**
-   * BasicBestPlay deleteMany
-   */
-  export type BasicBestPlayDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which BasicBestPlays to delete
-     */
-    where?: BasicBestPlayWhereInput
-    /**
-     * Limit how many BasicBestPlays to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * BasicBestPlay.chart
-   */
-  export type BasicBestPlay$chartArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MusicChart
-     */
-    select?: MusicChartSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the MusicChart
-     */
-    omit?: MusicChartOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MusicChartInclude<ExtArgs> | null
-    where?: MusicChartWhereInput
-  }
-
-  /**
-   * BasicBestPlay without action
-   */
-  export type BasicBestPlayDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BasicBestPlay
-     */
-    select?: BasicBestPlaySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the BasicBestPlay
-     */
-    omit?: BasicBestPlayOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BasicBestPlayInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model RecitalBestPlay
-   */
-
-  export type AggregateRecitalBestPlay = {
-    _count: RecitalBestPlayCountAggregateOutputType | null
-    _avg: RecitalBestPlayAvgAggregateOutputType | null
-    _sum: RecitalBestPlaySumAggregateOutputType | null
-    _min: RecitalBestPlayMinAggregateOutputType | null
-    _max: RecitalBestPlayMaxAggregateOutputType | null
-  }
-
-  export type RecitalBestPlayAvgAggregateOutputType = {
-    id: number | null
-    level: number | null
-    score: number | null
-    max_combo: number | null
-    grade_recital: number | null
-    fc_type: number | null
-    user_id: number | null
-    chart_id: number | null
-  }
-
-  export type RecitalBestPlaySumAggregateOutputType = {
-    id: number | null
-    level: number | null
-    score: number | null
-    max_combo: number | null
-    grade_recital: number | null
-    fc_type: number | null
-    user_id: number | null
-    chart_id: number | null
-  }
-
-  export type RecitalBestPlayMinAggregateOutputType = {
-    id: number | null
-    difficulty: string | null
-    level: number | null
-    score: number | null
-    max_combo: number | null
-    rank: string | null
-    besttime: string | null
-    grade_recital: number | null
-    fc_type: number | null
-    created_at: Date | null
-    updated_at: Date | null
-    user_id: number | null
-    music_idx: string | null
-    chart_id: number | null
-  }
-
-  export type RecitalBestPlayMaxAggregateOutputType = {
-    id: number | null
-    difficulty: string | null
-    level: number | null
-    score: number | null
-    max_combo: number | null
-    rank: string | null
-    besttime: string | null
-    grade_recital: number | null
-    fc_type: number | null
-    created_at: Date | null
-    updated_at: Date | null
-    user_id: number | null
-    music_idx: string | null
-    chart_id: number | null
-  }
-
-  export type RecitalBestPlayCountAggregateOutputType = {
-    id: number
-    difficulty: number
-    level: number
-    score: number
-    max_combo: number
-    rank: number
-    besttime: number
-    grade_recital: number
-    fc_type: number
-    created_at: number
-    updated_at: number
-    user_id: number
-    music_idx: number
-    chart_id: number
-    _all: number
-  }
-
-
-  export type RecitalBestPlayAvgAggregateInputType = {
-    id?: true
-    level?: true
-    score?: true
-    max_combo?: true
-    grade_recital?: true
-    fc_type?: true
-    user_id?: true
-    chart_id?: true
-  }
-
-  export type RecitalBestPlaySumAggregateInputType = {
-    id?: true
-    level?: true
-    score?: true
-    max_combo?: true
-    grade_recital?: true
-    fc_type?: true
-    user_id?: true
-    chart_id?: true
-  }
-
-  export type RecitalBestPlayMinAggregateInputType = {
-    id?: true
-    difficulty?: true
-    level?: true
-    score?: true
-    max_combo?: true
-    rank?: true
-    besttime?: true
-    grade_recital?: true
-    fc_type?: true
-    created_at?: true
-    updated_at?: true
-    user_id?: true
-    music_idx?: true
-    chart_id?: true
-  }
-
-  export type RecitalBestPlayMaxAggregateInputType = {
-    id?: true
-    difficulty?: true
-    level?: true
-    score?: true
-    max_combo?: true
-    rank?: true
-    besttime?: true
-    grade_recital?: true
-    fc_type?: true
-    created_at?: true
-    updated_at?: true
-    user_id?: true
-    music_idx?: true
-    chart_id?: true
-  }
-
-  export type RecitalBestPlayCountAggregateInputType = {
-    id?: true
-    difficulty?: true
-    level?: true
-    score?: true
-    max_combo?: true
-    rank?: true
-    besttime?: true
-    grade_recital?: true
-    fc_type?: true
-    created_at?: true
-    updated_at?: true
-    user_id?: true
-    music_idx?: true
-    chart_id?: true
-    _all?: true
-  }
-
-  export type RecitalBestPlayAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which RecitalBestPlay to aggregate.
-     */
-    where?: RecitalBestPlayWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of RecitalBestPlays to fetch.
-     */
-    orderBy?: RecitalBestPlayOrderByWithRelationInput | RecitalBestPlayOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: RecitalBestPlayWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` RecitalBestPlays from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` RecitalBestPlays.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned RecitalBestPlays
-    **/
-    _count?: true | RecitalBestPlayCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: RecitalBestPlayAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: RecitalBestPlaySumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: RecitalBestPlayMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: RecitalBestPlayMaxAggregateInputType
-  }
-
-  export type GetRecitalBestPlayAggregateType<T extends RecitalBestPlayAggregateArgs> = {
-        [P in keyof T & keyof AggregateRecitalBestPlay]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateRecitalBestPlay[P]>
-      : GetScalarType<T[P], AggregateRecitalBestPlay[P]>
-  }
-
-
-
-
-  export type RecitalBestPlayGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: RecitalBestPlayWhereInput
-    orderBy?: RecitalBestPlayOrderByWithAggregationInput | RecitalBestPlayOrderByWithAggregationInput[]
-    by: RecitalBestPlayScalarFieldEnum[] | RecitalBestPlayScalarFieldEnum
-    having?: RecitalBestPlayScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: RecitalBestPlayCountAggregateInputType | true
-    _avg?: RecitalBestPlayAvgAggregateInputType
-    _sum?: RecitalBestPlaySumAggregateInputType
-    _min?: RecitalBestPlayMinAggregateInputType
-    _max?: RecitalBestPlayMaxAggregateInputType
-  }
-
-  export type RecitalBestPlayGroupByOutputType = {
-    id: number
-    difficulty: string
-    level: number
-    score: number
-    max_combo: number
-    rank: string
-    besttime: string
-    grade_recital: number
-    fc_type: number
-    created_at: Date
-    updated_at: Date
-    user_id: number
-    music_idx: string
-    chart_id: number | null
-    _count: RecitalBestPlayCountAggregateOutputType | null
-    _avg: RecitalBestPlayAvgAggregateOutputType | null
-    _sum: RecitalBestPlaySumAggregateOutputType | null
-    _min: RecitalBestPlayMinAggregateOutputType | null
-    _max: RecitalBestPlayMaxAggregateOutputType | null
-  }
-
-  type GetRecitalBestPlayGroupByPayload<T extends RecitalBestPlayGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<RecitalBestPlayGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof RecitalBestPlayGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], RecitalBestPlayGroupByOutputType[P]>
-            : GetScalarType<T[P], RecitalBestPlayGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type RecitalBestPlaySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    difficulty?: boolean
-    level?: boolean
-    score?: boolean
-    max_combo?: boolean
-    rank?: boolean
-    besttime?: boolean
-    grade_recital?: boolean
-    fc_type?: boolean
-    created_at?: boolean
-    updated_at?: boolean
-    user_id?: boolean
-    music_idx?: boolean
-    chart_id?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    music?: boolean | MusicDefaultArgs<ExtArgs>
-    chart?: boolean | RecitalBestPlay$chartArgs<ExtArgs>
-  }, ExtArgs["result"]["recitalBestPlay"]>
-
-  export type RecitalBestPlaySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    difficulty?: boolean
-    level?: boolean
-    score?: boolean
-    max_combo?: boolean
-    rank?: boolean
-    besttime?: boolean
-    grade_recital?: boolean
-    fc_type?: boolean
-    created_at?: boolean
-    updated_at?: boolean
-    user_id?: boolean
-    music_idx?: boolean
-    chart_id?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    music?: boolean | MusicDefaultArgs<ExtArgs>
-    chart?: boolean | RecitalBestPlay$chartArgs<ExtArgs>
-  }, ExtArgs["result"]["recitalBestPlay"]>
-
-  export type RecitalBestPlaySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    difficulty?: boolean
-    level?: boolean
-    score?: boolean
-    max_combo?: boolean
-    rank?: boolean
-    besttime?: boolean
-    grade_recital?: boolean
-    fc_type?: boolean
-    created_at?: boolean
-    updated_at?: boolean
-    user_id?: boolean
-    music_idx?: boolean
-    chart_id?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    music?: boolean | MusicDefaultArgs<ExtArgs>
-    chart?: boolean | RecitalBestPlay$chartArgs<ExtArgs>
-  }, ExtArgs["result"]["recitalBestPlay"]>
-
-  export type RecitalBestPlaySelectScalar = {
-    id?: boolean
-    difficulty?: boolean
-    level?: boolean
-    score?: boolean
-    max_combo?: boolean
-    rank?: boolean
-    besttime?: boolean
-    grade_recital?: boolean
-    fc_type?: boolean
-    created_at?: boolean
-    updated_at?: boolean
-    user_id?: boolean
-    music_idx?: boolean
-    chart_id?: boolean
-  }
-
-  export type RecitalBestPlayOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "difficulty" | "level" | "score" | "max_combo" | "rank" | "besttime" | "grade_recital" | "fc_type" | "created_at" | "updated_at" | "user_id" | "music_idx" | "chart_id", ExtArgs["result"]["recitalBestPlay"]>
-  export type RecitalBestPlayInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    music?: boolean | MusicDefaultArgs<ExtArgs>
-    chart?: boolean | RecitalBestPlay$chartArgs<ExtArgs>
-  }
-  export type RecitalBestPlayIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    music?: boolean | MusicDefaultArgs<ExtArgs>
-    chart?: boolean | RecitalBestPlay$chartArgs<ExtArgs>
-  }
-  export type RecitalBestPlayIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    music?: boolean | MusicDefaultArgs<ExtArgs>
-    chart?: boolean | RecitalBestPlay$chartArgs<ExtArgs>
-  }
-
-  export type $RecitalBestPlayPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "RecitalBestPlay"
-    objects: {
-      user: Prisma.$UserPayload<ExtArgs>
-      music: Prisma.$MusicPayload<ExtArgs>
-      chart: Prisma.$MusicChartPayload<ExtArgs> | null
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: number
-      difficulty: string
-      level: number
-      score: number
-      max_combo: number
-      rank: string
-      besttime: string
-      grade_recital: number
-      fc_type: number
-      created_at: Date
-      updated_at: Date
-      user_id: number
-      music_idx: string
-      chart_id: number | null
-    }, ExtArgs["result"]["recitalBestPlay"]>
-    composites: {}
-  }
-
-  type RecitalBestPlayGetPayload<S extends boolean | null | undefined | RecitalBestPlayDefaultArgs> = $Result.GetResult<Prisma.$RecitalBestPlayPayload, S>
-
-  type RecitalBestPlayCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<RecitalBestPlayFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: RecitalBestPlayCountAggregateInputType | true
-    }
-
-  export interface RecitalBestPlayDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['RecitalBestPlay'], meta: { name: 'RecitalBestPlay' } }
-    /**
-     * Find zero or one RecitalBestPlay that matches the filter.
-     * @param {RecitalBestPlayFindUniqueArgs} args - Arguments to find a RecitalBestPlay
-     * @example
-     * // Get one RecitalBestPlay
-     * const recitalBestPlay = await prisma.recitalBestPlay.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends RecitalBestPlayFindUniqueArgs>(args: SelectSubset<T, RecitalBestPlayFindUniqueArgs<ExtArgs>>): Prisma__RecitalBestPlayClient<$Result.GetResult<Prisma.$RecitalBestPlayPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one RecitalBestPlay that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {RecitalBestPlayFindUniqueOrThrowArgs} args - Arguments to find a RecitalBestPlay
-     * @example
-     * // Get one RecitalBestPlay
-     * const recitalBestPlay = await prisma.recitalBestPlay.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends RecitalBestPlayFindUniqueOrThrowArgs>(args: SelectSubset<T, RecitalBestPlayFindUniqueOrThrowArgs<ExtArgs>>): Prisma__RecitalBestPlayClient<$Result.GetResult<Prisma.$RecitalBestPlayPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first RecitalBestPlay that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {RecitalBestPlayFindFirstArgs} args - Arguments to find a RecitalBestPlay
-     * @example
-     * // Get one RecitalBestPlay
-     * const recitalBestPlay = await prisma.recitalBestPlay.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends RecitalBestPlayFindFirstArgs>(args?: SelectSubset<T, RecitalBestPlayFindFirstArgs<ExtArgs>>): Prisma__RecitalBestPlayClient<$Result.GetResult<Prisma.$RecitalBestPlayPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first RecitalBestPlay that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {RecitalBestPlayFindFirstOrThrowArgs} args - Arguments to find a RecitalBestPlay
-     * @example
-     * // Get one RecitalBestPlay
-     * const recitalBestPlay = await prisma.recitalBestPlay.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends RecitalBestPlayFindFirstOrThrowArgs>(args?: SelectSubset<T, RecitalBestPlayFindFirstOrThrowArgs<ExtArgs>>): Prisma__RecitalBestPlayClient<$Result.GetResult<Prisma.$RecitalBestPlayPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more RecitalBestPlays that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {RecitalBestPlayFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all RecitalBestPlays
-     * const recitalBestPlays = await prisma.recitalBestPlay.findMany()
-     * 
-     * // Get first 10 RecitalBestPlays
-     * const recitalBestPlays = await prisma.recitalBestPlay.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const recitalBestPlayWithIdOnly = await prisma.recitalBestPlay.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends RecitalBestPlayFindManyArgs>(args?: SelectSubset<T, RecitalBestPlayFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RecitalBestPlayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a RecitalBestPlay.
-     * @param {RecitalBestPlayCreateArgs} args - Arguments to create a RecitalBestPlay.
-     * @example
-     * // Create one RecitalBestPlay
-     * const RecitalBestPlay = await prisma.recitalBestPlay.create({
-     *   data: {
-     *     // ... data to create a RecitalBestPlay
-     *   }
-     * })
-     * 
-     */
-    create<T extends RecitalBestPlayCreateArgs>(args: SelectSubset<T, RecitalBestPlayCreateArgs<ExtArgs>>): Prisma__RecitalBestPlayClient<$Result.GetResult<Prisma.$RecitalBestPlayPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many RecitalBestPlays.
-     * @param {RecitalBestPlayCreateManyArgs} args - Arguments to create many RecitalBestPlays.
-     * @example
-     * // Create many RecitalBestPlays
-     * const recitalBestPlay = await prisma.recitalBestPlay.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends RecitalBestPlayCreateManyArgs>(args?: SelectSubset<T, RecitalBestPlayCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many RecitalBestPlays and returns the data saved in the database.
-     * @param {RecitalBestPlayCreateManyAndReturnArgs} args - Arguments to create many RecitalBestPlays.
-     * @example
-     * // Create many RecitalBestPlays
-     * const recitalBestPlay = await prisma.recitalBestPlay.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many RecitalBestPlays and only return the `id`
-     * const recitalBestPlayWithIdOnly = await prisma.recitalBestPlay.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends RecitalBestPlayCreateManyAndReturnArgs>(args?: SelectSubset<T, RecitalBestPlayCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RecitalBestPlayPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a RecitalBestPlay.
-     * @param {RecitalBestPlayDeleteArgs} args - Arguments to delete one RecitalBestPlay.
-     * @example
-     * // Delete one RecitalBestPlay
-     * const RecitalBestPlay = await prisma.recitalBestPlay.delete({
-     *   where: {
-     *     // ... filter to delete one RecitalBestPlay
-     *   }
-     * })
-     * 
-     */
-    delete<T extends RecitalBestPlayDeleteArgs>(args: SelectSubset<T, RecitalBestPlayDeleteArgs<ExtArgs>>): Prisma__RecitalBestPlayClient<$Result.GetResult<Prisma.$RecitalBestPlayPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one RecitalBestPlay.
-     * @param {RecitalBestPlayUpdateArgs} args - Arguments to update one RecitalBestPlay.
-     * @example
-     * // Update one RecitalBestPlay
-     * const recitalBestPlay = await prisma.recitalBestPlay.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends RecitalBestPlayUpdateArgs>(args: SelectSubset<T, RecitalBestPlayUpdateArgs<ExtArgs>>): Prisma__RecitalBestPlayClient<$Result.GetResult<Prisma.$RecitalBestPlayPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more RecitalBestPlays.
-     * @param {RecitalBestPlayDeleteManyArgs} args - Arguments to filter RecitalBestPlays to delete.
-     * @example
-     * // Delete a few RecitalBestPlays
-     * const { count } = await prisma.recitalBestPlay.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends RecitalBestPlayDeleteManyArgs>(args?: SelectSubset<T, RecitalBestPlayDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more RecitalBestPlays.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {RecitalBestPlayUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many RecitalBestPlays
-     * const recitalBestPlay = await prisma.recitalBestPlay.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends RecitalBestPlayUpdateManyArgs>(args: SelectSubset<T, RecitalBestPlayUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more RecitalBestPlays and returns the data updated in the database.
-     * @param {RecitalBestPlayUpdateManyAndReturnArgs} args - Arguments to update many RecitalBestPlays.
-     * @example
-     * // Update many RecitalBestPlays
-     * const recitalBestPlay = await prisma.recitalBestPlay.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more RecitalBestPlays and only return the `id`
-     * const recitalBestPlayWithIdOnly = await prisma.recitalBestPlay.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends RecitalBestPlayUpdateManyAndReturnArgs>(args: SelectSubset<T, RecitalBestPlayUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RecitalBestPlayPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one RecitalBestPlay.
-     * @param {RecitalBestPlayUpsertArgs} args - Arguments to update or create a RecitalBestPlay.
-     * @example
-     * // Update or create a RecitalBestPlay
-     * const recitalBestPlay = await prisma.recitalBestPlay.upsert({
-     *   create: {
-     *     // ... data to create a RecitalBestPlay
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the RecitalBestPlay we want to update
-     *   }
-     * })
-     */
-    upsert<T extends RecitalBestPlayUpsertArgs>(args: SelectSubset<T, RecitalBestPlayUpsertArgs<ExtArgs>>): Prisma__RecitalBestPlayClient<$Result.GetResult<Prisma.$RecitalBestPlayPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of RecitalBestPlays.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {RecitalBestPlayCountArgs} args - Arguments to filter RecitalBestPlays to count.
-     * @example
-     * // Count the number of RecitalBestPlays
-     * const count = await prisma.recitalBestPlay.count({
-     *   where: {
-     *     // ... the filter for the RecitalBestPlays we want to count
-     *   }
-     * })
-    **/
-    count<T extends RecitalBestPlayCountArgs>(
-      args?: Subset<T, RecitalBestPlayCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], RecitalBestPlayCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a RecitalBestPlay.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {RecitalBestPlayAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends RecitalBestPlayAggregateArgs>(args: Subset<T, RecitalBestPlayAggregateArgs>): Prisma.PrismaPromise<GetRecitalBestPlayAggregateType<T>>
-
-    /**
-     * Group by RecitalBestPlay.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {RecitalBestPlayGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends RecitalBestPlayGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: RecitalBestPlayGroupByArgs['orderBy'] }
-        : { orderBy?: RecitalBestPlayGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, RecitalBestPlayGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRecitalBestPlayGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the RecitalBestPlay model
-   */
-  readonly fields: RecitalBestPlayFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for RecitalBestPlay.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__RecitalBestPlayClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    music<T extends MusicDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MusicDefaultArgs<ExtArgs>>): Prisma__MusicClient<$Result.GetResult<Prisma.$MusicPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    chart<T extends RecitalBestPlay$chartArgs<ExtArgs> = {}>(args?: Subset<T, RecitalBestPlay$chartArgs<ExtArgs>>): Prisma__MusicChartClient<$Result.GetResult<Prisma.$MusicChartPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the RecitalBestPlay model
-   */
-  interface RecitalBestPlayFieldRefs {
-    readonly id: FieldRef<"RecitalBestPlay", 'Int'>
-    readonly difficulty: FieldRef<"RecitalBestPlay", 'String'>
-    readonly level: FieldRef<"RecitalBestPlay", 'Int'>
-    readonly score: FieldRef<"RecitalBestPlay", 'Int'>
-    readonly max_combo: FieldRef<"RecitalBestPlay", 'Int'>
-    readonly rank: FieldRef<"RecitalBestPlay", 'String'>
-    readonly besttime: FieldRef<"RecitalBestPlay", 'String'>
-    readonly grade_recital: FieldRef<"RecitalBestPlay", 'Int'>
-    readonly fc_type: FieldRef<"RecitalBestPlay", 'Int'>
-    readonly created_at: FieldRef<"RecitalBestPlay", 'DateTime'>
-    readonly updated_at: FieldRef<"RecitalBestPlay", 'DateTime'>
-    readonly user_id: FieldRef<"RecitalBestPlay", 'Int'>
-    readonly music_idx: FieldRef<"RecitalBestPlay", 'String'>
-    readonly chart_id: FieldRef<"RecitalBestPlay", 'Int'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * RecitalBestPlay findUnique
-   */
-  export type RecitalBestPlayFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RecitalBestPlay
-     */
-    select?: RecitalBestPlaySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RecitalBestPlay
-     */
-    omit?: RecitalBestPlayOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RecitalBestPlayInclude<ExtArgs> | null
-    /**
-     * Filter, which RecitalBestPlay to fetch.
-     */
-    where: RecitalBestPlayWhereUniqueInput
-  }
-
-  /**
-   * RecitalBestPlay findUniqueOrThrow
-   */
-  export type RecitalBestPlayFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RecitalBestPlay
-     */
-    select?: RecitalBestPlaySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RecitalBestPlay
-     */
-    omit?: RecitalBestPlayOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RecitalBestPlayInclude<ExtArgs> | null
-    /**
-     * Filter, which RecitalBestPlay to fetch.
-     */
-    where: RecitalBestPlayWhereUniqueInput
-  }
-
-  /**
-   * RecitalBestPlay findFirst
-   */
-  export type RecitalBestPlayFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RecitalBestPlay
-     */
-    select?: RecitalBestPlaySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RecitalBestPlay
-     */
-    omit?: RecitalBestPlayOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RecitalBestPlayInclude<ExtArgs> | null
-    /**
-     * Filter, which RecitalBestPlay to fetch.
-     */
-    where?: RecitalBestPlayWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of RecitalBestPlays to fetch.
-     */
-    orderBy?: RecitalBestPlayOrderByWithRelationInput | RecitalBestPlayOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for RecitalBestPlays.
-     */
-    cursor?: RecitalBestPlayWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` RecitalBestPlays from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` RecitalBestPlays.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of RecitalBestPlays.
-     */
-    distinct?: RecitalBestPlayScalarFieldEnum | RecitalBestPlayScalarFieldEnum[]
-  }
-
-  /**
-   * RecitalBestPlay findFirstOrThrow
-   */
-  export type RecitalBestPlayFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RecitalBestPlay
-     */
-    select?: RecitalBestPlaySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RecitalBestPlay
-     */
-    omit?: RecitalBestPlayOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RecitalBestPlayInclude<ExtArgs> | null
-    /**
-     * Filter, which RecitalBestPlay to fetch.
-     */
-    where?: RecitalBestPlayWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of RecitalBestPlays to fetch.
-     */
-    orderBy?: RecitalBestPlayOrderByWithRelationInput | RecitalBestPlayOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for RecitalBestPlays.
-     */
-    cursor?: RecitalBestPlayWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` RecitalBestPlays from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` RecitalBestPlays.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of RecitalBestPlays.
-     */
-    distinct?: RecitalBestPlayScalarFieldEnum | RecitalBestPlayScalarFieldEnum[]
-  }
-
-  /**
-   * RecitalBestPlay findMany
-   */
-  export type RecitalBestPlayFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RecitalBestPlay
-     */
-    select?: RecitalBestPlaySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RecitalBestPlay
-     */
-    omit?: RecitalBestPlayOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RecitalBestPlayInclude<ExtArgs> | null
-    /**
-     * Filter, which RecitalBestPlays to fetch.
-     */
-    where?: RecitalBestPlayWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of RecitalBestPlays to fetch.
-     */
-    orderBy?: RecitalBestPlayOrderByWithRelationInput | RecitalBestPlayOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing RecitalBestPlays.
-     */
-    cursor?: RecitalBestPlayWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` RecitalBestPlays from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` RecitalBestPlays.
-     */
-    skip?: number
-    distinct?: RecitalBestPlayScalarFieldEnum | RecitalBestPlayScalarFieldEnum[]
-  }
-
-  /**
-   * RecitalBestPlay create
-   */
-  export type RecitalBestPlayCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RecitalBestPlay
-     */
-    select?: RecitalBestPlaySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RecitalBestPlay
-     */
-    omit?: RecitalBestPlayOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RecitalBestPlayInclude<ExtArgs> | null
-    /**
-     * The data needed to create a RecitalBestPlay.
-     */
-    data: XOR<RecitalBestPlayCreateInput, RecitalBestPlayUncheckedCreateInput>
-  }
-
-  /**
-   * RecitalBestPlay createMany
-   */
-  export type RecitalBestPlayCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many RecitalBestPlays.
-     */
-    data: RecitalBestPlayCreateManyInput | RecitalBestPlayCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * RecitalBestPlay createManyAndReturn
-   */
-  export type RecitalBestPlayCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RecitalBestPlay
-     */
-    select?: RecitalBestPlaySelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the RecitalBestPlay
-     */
-    omit?: RecitalBestPlayOmit<ExtArgs> | null
-    /**
-     * The data used to create many RecitalBestPlays.
-     */
-    data: RecitalBestPlayCreateManyInput | RecitalBestPlayCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RecitalBestPlayIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * RecitalBestPlay update
-   */
-  export type RecitalBestPlayUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RecitalBestPlay
-     */
-    select?: RecitalBestPlaySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RecitalBestPlay
-     */
-    omit?: RecitalBestPlayOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RecitalBestPlayInclude<ExtArgs> | null
-    /**
-     * The data needed to update a RecitalBestPlay.
-     */
-    data: XOR<RecitalBestPlayUpdateInput, RecitalBestPlayUncheckedUpdateInput>
-    /**
-     * Choose, which RecitalBestPlay to update.
-     */
-    where: RecitalBestPlayWhereUniqueInput
-  }
-
-  /**
-   * RecitalBestPlay updateMany
-   */
-  export type RecitalBestPlayUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update RecitalBestPlays.
-     */
-    data: XOR<RecitalBestPlayUpdateManyMutationInput, RecitalBestPlayUncheckedUpdateManyInput>
-    /**
-     * Filter which RecitalBestPlays to update
-     */
-    where?: RecitalBestPlayWhereInput
-    /**
-     * Limit how many RecitalBestPlays to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * RecitalBestPlay updateManyAndReturn
-   */
-  export type RecitalBestPlayUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RecitalBestPlay
-     */
-    select?: RecitalBestPlaySelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the RecitalBestPlay
-     */
-    omit?: RecitalBestPlayOmit<ExtArgs> | null
-    /**
-     * The data used to update RecitalBestPlays.
-     */
-    data: XOR<RecitalBestPlayUpdateManyMutationInput, RecitalBestPlayUncheckedUpdateManyInput>
-    /**
-     * Filter which RecitalBestPlays to update
-     */
-    where?: RecitalBestPlayWhereInput
-    /**
-     * Limit how many RecitalBestPlays to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RecitalBestPlayIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * RecitalBestPlay upsert
-   */
-  export type RecitalBestPlayUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RecitalBestPlay
-     */
-    select?: RecitalBestPlaySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RecitalBestPlay
-     */
-    omit?: RecitalBestPlayOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RecitalBestPlayInclude<ExtArgs> | null
-    /**
-     * The filter to search for the RecitalBestPlay to update in case it exists.
-     */
-    where: RecitalBestPlayWhereUniqueInput
-    /**
-     * In case the RecitalBestPlay found by the `where` argument doesn't exist, create a new RecitalBestPlay with this data.
-     */
-    create: XOR<RecitalBestPlayCreateInput, RecitalBestPlayUncheckedCreateInput>
-    /**
-     * In case the RecitalBestPlay was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<RecitalBestPlayUpdateInput, RecitalBestPlayUncheckedUpdateInput>
-  }
-
-  /**
-   * RecitalBestPlay delete
-   */
-  export type RecitalBestPlayDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RecitalBestPlay
-     */
-    select?: RecitalBestPlaySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RecitalBestPlay
-     */
-    omit?: RecitalBestPlayOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RecitalBestPlayInclude<ExtArgs> | null
-    /**
-     * Filter which RecitalBestPlay to delete.
-     */
-    where: RecitalBestPlayWhereUniqueInput
-  }
-
-  /**
-   * RecitalBestPlay deleteMany
-   */
-  export type RecitalBestPlayDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which RecitalBestPlays to delete
-     */
-    where?: RecitalBestPlayWhereInput
-    /**
-     * Limit how many RecitalBestPlays to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * RecitalBestPlay.chart
-   */
-  export type RecitalBestPlay$chartArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MusicChart
-     */
-    select?: MusicChartSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the MusicChart
-     */
-    omit?: MusicChartOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MusicChartInclude<ExtArgs> | null
-    where?: MusicChartWhereInput
-  }
-
-  /**
-   * RecitalBestPlay without action
-   */
-  export type RecitalBestPlayDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RecitalBestPlay
-     */
-    select?: RecitalBestPlaySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RecitalBestPlay
-     */
-    omit?: RecitalBestPlayOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RecitalBestPlayInclude<ExtArgs> | null
   }
 
 
@@ -37632,13 +33116,6 @@ export namespace Prisma {
     category_short: 'category_short',
     description: 'description',
     background: 'background',
-    sheet_len: 'sheet_len',
-    difficulty_levels: 'difficulty_levels',
-    difficulty_name: 'difficulty_name',
-    normal: 'normal',
-    hard: 'hard',
-    expert: 'expert',
-    real: 'real',
     created_at: 'created_at',
     updated_at: 'updated_at'
   };
@@ -37813,25 +33290,6 @@ export namespace Prisma {
   export type ChartEvaluationReactionScalarFieldEnum = (typeof ChartEvaluationReactionScalarFieldEnum)[keyof typeof ChartEvaluationReactionScalarFieldEnum]
 
 
-  export const RecentPlayScalarFieldEnum: {
-    id: 'id',
-    difficulty: 'difficulty',
-    level: 'level',
-    score: 'score',
-    max_combo: 'max_combo',
-    rank: 'rank',
-    play_time: 'play_time',
-    grade_basic: 'grade_basic',
-    created_at: 'created_at',
-    updated_at: 'updated_at',
-    user_id: 'user_id',
-    music_idx: 'music_idx',
-    chart_id: 'chart_id'
-  };
-
-  export type RecentPlayScalarFieldEnum = (typeof RecentPlayScalarFieldEnum)[keyof typeof RecentPlayScalarFieldEnum]
-
-
   export const UserBestGradeScalarFieldEnum: {
     id: 'id',
     grade_basic: 'grade_basic',
@@ -37843,46 +33301,6 @@ export namespace Prisma {
   };
 
   export type UserBestGradeScalarFieldEnum = (typeof UserBestGradeScalarFieldEnum)[keyof typeof UserBestGradeScalarFieldEnum]
-
-
-  export const BasicBestPlayScalarFieldEnum: {
-    id: 'id',
-    difficulty: 'difficulty',
-    level: 'level',
-    score: 'score',
-    max_combo: 'max_combo',
-    rank: 'rank',
-    besttime: 'besttime',
-    grade_basic: 'grade_basic',
-    fc_type: 'fc_type',
-    created_at: 'created_at',
-    updated_at: 'updated_at',
-    user_id: 'user_id',
-    music_idx: 'music_idx',
-    chart_id: 'chart_id'
-  };
-
-  export type BasicBestPlayScalarFieldEnum = (typeof BasicBestPlayScalarFieldEnum)[keyof typeof BasicBestPlayScalarFieldEnum]
-
-
-  export const RecitalBestPlayScalarFieldEnum: {
-    id: 'id',
-    difficulty: 'difficulty',
-    level: 'level',
-    score: 'score',
-    max_combo: 'max_combo',
-    rank: 'rank',
-    besttime: 'besttime',
-    grade_recital: 'grade_recital',
-    fc_type: 'fc_type',
-    created_at: 'created_at',
-    updated_at: 'updated_at',
-    user_id: 'user_id',
-    music_idx: 'music_idx',
-    chart_id: 'chart_id'
-  };
-
-  export type RecitalBestPlayScalarFieldEnum = (typeof RecitalBestPlayScalarFieldEnum)[keyof typeof RecitalBestPlayScalarFieldEnum]
 
 
   export const PlayDataScalarFieldEnum: {
@@ -38200,10 +33618,7 @@ export namespace Prisma {
     sync_token_version?: IntFilter<"User"> | number
     created_at?: DateTimeFilter<"User"> | Date | string
     updated_at?: DateTimeFilter<"User"> | Date | string
-    PlayHistory?: RecentPlayListRelationFilter
     PlayData?: PlayDataListRelationFilter
-    BasicBestPlay?: BasicBestPlayListRelationFilter
-    RecitalBestPlay?: RecitalBestPlayListRelationFilter
     UserBestGrade?: UserBestGradeListRelationFilter
     bingoProgress?: BingoCellProgressListRelationFilter
     chartEvaluations?: ChartEvaluationListRelationFilter
@@ -38245,10 +33660,7 @@ export namespace Prisma {
     sync_token_version?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
-    PlayHistory?: RecentPlayOrderByRelationAggregateInput
     PlayData?: PlayDataOrderByRelationAggregateInput
-    BasicBestPlay?: BasicBestPlayOrderByRelationAggregateInput
-    RecitalBestPlay?: RecitalBestPlayOrderByRelationAggregateInput
     UserBestGrade?: UserBestGradeOrderByRelationAggregateInput
     bingoProgress?: BingoCellProgressOrderByRelationAggregateInput
     chartEvaluations?: ChartEvaluationOrderByRelationAggregateInput
@@ -38293,10 +33705,7 @@ export namespace Prisma {
     sync_token_version?: IntFilter<"User"> | number
     created_at?: DateTimeFilter<"User"> | Date | string
     updated_at?: DateTimeFilter<"User"> | Date | string
-    PlayHistory?: RecentPlayListRelationFilter
     PlayData?: PlayDataListRelationFilter
-    BasicBestPlay?: BasicBestPlayListRelationFilter
-    RecitalBestPlay?: RecitalBestPlayListRelationFilter
     UserBestGrade?: UserBestGradeListRelationFilter
     bingoProgress?: BingoCellProgressListRelationFilter
     chartEvaluations?: ChartEvaluationListRelationFilter
@@ -38393,19 +33802,9 @@ export namespace Prisma {
     category_short?: StringFilter<"Music"> | string
     description?: StringNullableFilter<"Music"> | string | null
     background?: StringNullableFilter<"Music"> | string | null
-    sheet_len?: IntFilter<"Music"> | number
-    difficulty_levels?: StringFilter<"Music"> | string
-    difficulty_name?: StringFilter<"Music"> | string
-    normal?: IntFilter<"Music"> | number
-    hard?: IntFilter<"Music"> | number
-    expert?: IntFilter<"Music"> | number
-    real?: IntNullableFilter<"Music"> | number | null
     created_at?: DateTimeFilter<"Music"> | Date | string
     updated_at?: DateTimeFilter<"Music"> | Date | string
-    RecentPlay?: RecentPlayListRelationFilter
     PlayData?: PlayDataListRelationFilter
-    BasicBestPlay?: BasicBestPlayListRelationFilter
-    RecitalBestPlay?: RecitalBestPlayListRelationFilter
     bingoCovers?: BingoListRelationFilter
     bingoMissions?: BingoCellListRelationFilter
     charts?: MusicChartListRelationFilter
@@ -38423,19 +33822,9 @@ export namespace Prisma {
     category_short?: SortOrder
     description?: SortOrderInput | SortOrder
     background?: SortOrderInput | SortOrder
-    sheet_len?: SortOrder
-    difficulty_levels?: SortOrder
-    difficulty_name?: SortOrder
-    normal?: SortOrder
-    hard?: SortOrder
-    expert?: SortOrder
-    real?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
-    RecentPlay?: RecentPlayOrderByRelationAggregateInput
     PlayData?: PlayDataOrderByRelationAggregateInput
-    BasicBestPlay?: BasicBestPlayOrderByRelationAggregateInput
-    RecitalBestPlay?: RecitalBestPlayOrderByRelationAggregateInput
     bingoCovers?: BingoOrderByRelationAggregateInput
     bingoMissions?: BingoCellOrderByRelationAggregateInput
     charts?: MusicChartOrderByRelationAggregateInput
@@ -38456,19 +33845,9 @@ export namespace Prisma {
     category_short?: StringFilter<"Music"> | string
     description?: StringNullableFilter<"Music"> | string | null
     background?: StringNullableFilter<"Music"> | string | null
-    sheet_len?: IntFilter<"Music"> | number
-    difficulty_levels?: StringFilter<"Music"> | string
-    difficulty_name?: StringFilter<"Music"> | string
-    normal?: IntFilter<"Music"> | number
-    hard?: IntFilter<"Music"> | number
-    expert?: IntFilter<"Music"> | number
-    real?: IntNullableFilter<"Music"> | number | null
     created_at?: DateTimeFilter<"Music"> | Date | string
     updated_at?: DateTimeFilter<"Music"> | Date | string
-    RecentPlay?: RecentPlayListRelationFilter
     PlayData?: PlayDataListRelationFilter
-    BasicBestPlay?: BasicBestPlayListRelationFilter
-    RecitalBestPlay?: RecitalBestPlayListRelationFilter
     bingoCovers?: BingoListRelationFilter
     bingoMissions?: BingoCellListRelationFilter
     charts?: MusicChartListRelationFilter
@@ -38486,13 +33865,6 @@ export namespace Prisma {
     category_short?: SortOrder
     description?: SortOrderInput | SortOrder
     background?: SortOrderInput | SortOrder
-    sheet_len?: SortOrder
-    difficulty_levels?: SortOrder
-    difficulty_name?: SortOrder
-    normal?: SortOrder
-    hard?: SortOrder
-    expert?: SortOrder
-    real?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     _count?: MusicCountOrderByAggregateInput
@@ -38515,13 +33887,6 @@ export namespace Prisma {
     category_short?: StringWithAggregatesFilter<"Music"> | string
     description?: StringNullableWithAggregatesFilter<"Music"> | string | null
     background?: StringNullableWithAggregatesFilter<"Music"> | string | null
-    sheet_len?: IntWithAggregatesFilter<"Music"> | number
-    difficulty_levels?: StringWithAggregatesFilter<"Music"> | string
-    difficulty_name?: StringWithAggregatesFilter<"Music"> | string
-    normal?: IntWithAggregatesFilter<"Music"> | number
-    hard?: IntWithAggregatesFilter<"Music"> | number
-    expert?: IntWithAggregatesFilter<"Music"> | number
-    real?: IntNullableWithAggregatesFilter<"Music"> | number | null
     created_at?: DateTimeWithAggregatesFilter<"Music"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"Music"> | Date | string
   }
@@ -38548,10 +33913,7 @@ export namespace Prisma {
     music?: XOR<MusicScalarRelationFilter, MusicWhereInput>
     levelConstantHistory?: ChartLevelConstantHistoryListRelationFilter
     evaluations?: ChartEvaluationListRelationFilter
-    RecentPlay?: RecentPlayListRelationFilter
     PlayData?: PlayDataListRelationFilter
-    BasicBestPlay?: BasicBestPlayListRelationFilter
-    RecitalBestPlay?: RecitalBestPlayListRelationFilter
     playHistory?: ChartPlayHistoryListRelationFilter
     recordSnapshots?: ChartRecordSnapshotListRelationFilter
     examStageOptions?: ExamStageChartListRelationFilter
@@ -38578,10 +33940,7 @@ export namespace Prisma {
     music?: MusicOrderByWithRelationInput
     levelConstantHistory?: ChartLevelConstantHistoryOrderByRelationAggregateInput
     evaluations?: ChartEvaluationOrderByRelationAggregateInput
-    RecentPlay?: RecentPlayOrderByRelationAggregateInput
     PlayData?: PlayDataOrderByRelationAggregateInput
-    BasicBestPlay?: BasicBestPlayOrderByRelationAggregateInput
-    RecitalBestPlay?: RecitalBestPlayOrderByRelationAggregateInput
     playHistory?: ChartPlayHistoryOrderByRelationAggregateInput
     recordSnapshots?: ChartRecordSnapshotOrderByRelationAggregateInput
     examStageOptions?: ExamStageChartOrderByRelationAggregateInput
@@ -38612,10 +33971,7 @@ export namespace Prisma {
     music?: XOR<MusicScalarRelationFilter, MusicWhereInput>
     levelConstantHistory?: ChartLevelConstantHistoryListRelationFilter
     evaluations?: ChartEvaluationListRelationFilter
-    RecentPlay?: RecentPlayListRelationFilter
     PlayData?: PlayDataListRelationFilter
-    BasicBestPlay?: BasicBestPlayListRelationFilter
-    RecitalBestPlay?: RecitalBestPlayListRelationFilter
     playHistory?: ChartPlayHistoryListRelationFilter
     recordSnapshots?: ChartRecordSnapshotListRelationFilter
     examStageOptions?: ExamStageChartListRelationFilter
@@ -39470,109 +34826,6 @@ export namespace Prisma {
     updated_at?: DateTimeWithAggregatesFilter<"ChartEvaluationReaction"> | Date | string
   }
 
-  export type RecentPlayWhereInput = {
-    AND?: RecentPlayWhereInput | RecentPlayWhereInput[]
-    OR?: RecentPlayWhereInput[]
-    NOT?: RecentPlayWhereInput | RecentPlayWhereInput[]
-    id?: IntFilter<"RecentPlay"> | number
-    difficulty?: StringFilter<"RecentPlay"> | string
-    level?: IntFilter<"RecentPlay"> | number
-    score?: IntFilter<"RecentPlay"> | number
-    max_combo?: IntFilter<"RecentPlay"> | number
-    rank?: StringFilter<"RecentPlay"> | string
-    play_time?: StringFilter<"RecentPlay"> | string
-    grade_basic?: IntFilter<"RecentPlay"> | number
-    created_at?: DateTimeFilter<"RecentPlay"> | Date | string
-    updated_at?: DateTimeFilter<"RecentPlay"> | Date | string
-    user_id?: IntFilter<"RecentPlay"> | number
-    music_idx?: StringFilter<"RecentPlay"> | string
-    chart_id?: IntNullableFilter<"RecentPlay"> | number | null
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    music?: XOR<MusicScalarRelationFilter, MusicWhereInput>
-    chart?: XOR<MusicChartNullableScalarRelationFilter, MusicChartWhereInput> | null
-  }
-
-  export type RecentPlayOrderByWithRelationInput = {
-    id?: SortOrder
-    difficulty?: SortOrder
-    level?: SortOrder
-    score?: SortOrder
-    max_combo?: SortOrder
-    rank?: SortOrder
-    play_time?: SortOrder
-    grade_basic?: SortOrder
-    created_at?: SortOrder
-    updated_at?: SortOrder
-    user_id?: SortOrder
-    music_idx?: SortOrder
-    chart_id?: SortOrderInput | SortOrder
-    user?: UserOrderByWithRelationInput
-    music?: MusicOrderByWithRelationInput
-    chart?: MusicChartOrderByWithRelationInput
-  }
-
-  export type RecentPlayWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
-    AND?: RecentPlayWhereInput | RecentPlayWhereInput[]
-    OR?: RecentPlayWhereInput[]
-    NOT?: RecentPlayWhereInput | RecentPlayWhereInput[]
-    difficulty?: StringFilter<"RecentPlay"> | string
-    level?: IntFilter<"RecentPlay"> | number
-    score?: IntFilter<"RecentPlay"> | number
-    max_combo?: IntFilter<"RecentPlay"> | number
-    rank?: StringFilter<"RecentPlay"> | string
-    play_time?: StringFilter<"RecentPlay"> | string
-    grade_basic?: IntFilter<"RecentPlay"> | number
-    created_at?: DateTimeFilter<"RecentPlay"> | Date | string
-    updated_at?: DateTimeFilter<"RecentPlay"> | Date | string
-    user_id?: IntFilter<"RecentPlay"> | number
-    music_idx?: StringFilter<"RecentPlay"> | string
-    chart_id?: IntNullableFilter<"RecentPlay"> | number | null
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    music?: XOR<MusicScalarRelationFilter, MusicWhereInput>
-    chart?: XOR<MusicChartNullableScalarRelationFilter, MusicChartWhereInput> | null
-  }, "id">
-
-  export type RecentPlayOrderByWithAggregationInput = {
-    id?: SortOrder
-    difficulty?: SortOrder
-    level?: SortOrder
-    score?: SortOrder
-    max_combo?: SortOrder
-    rank?: SortOrder
-    play_time?: SortOrder
-    grade_basic?: SortOrder
-    created_at?: SortOrder
-    updated_at?: SortOrder
-    user_id?: SortOrder
-    music_idx?: SortOrder
-    chart_id?: SortOrderInput | SortOrder
-    _count?: RecentPlayCountOrderByAggregateInput
-    _avg?: RecentPlayAvgOrderByAggregateInput
-    _max?: RecentPlayMaxOrderByAggregateInput
-    _min?: RecentPlayMinOrderByAggregateInput
-    _sum?: RecentPlaySumOrderByAggregateInput
-  }
-
-  export type RecentPlayScalarWhereWithAggregatesInput = {
-    AND?: RecentPlayScalarWhereWithAggregatesInput | RecentPlayScalarWhereWithAggregatesInput[]
-    OR?: RecentPlayScalarWhereWithAggregatesInput[]
-    NOT?: RecentPlayScalarWhereWithAggregatesInput | RecentPlayScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"RecentPlay"> | number
-    difficulty?: StringWithAggregatesFilter<"RecentPlay"> | string
-    level?: IntWithAggregatesFilter<"RecentPlay"> | number
-    score?: IntWithAggregatesFilter<"RecentPlay"> | number
-    max_combo?: IntWithAggregatesFilter<"RecentPlay"> | number
-    rank?: StringWithAggregatesFilter<"RecentPlay"> | string
-    play_time?: StringWithAggregatesFilter<"RecentPlay"> | string
-    grade_basic?: IntWithAggregatesFilter<"RecentPlay"> | number
-    created_at?: DateTimeWithAggregatesFilter<"RecentPlay"> | Date | string
-    updated_at?: DateTimeWithAggregatesFilter<"RecentPlay"> | Date | string
-    user_id?: IntWithAggregatesFilter<"RecentPlay"> | number
-    music_idx?: StringWithAggregatesFilter<"RecentPlay"> | string
-    chart_id?: IntNullableWithAggregatesFilter<"RecentPlay"> | number | null
-  }
-
   export type UserBestGradeWhereInput = {
     AND?: UserBestGradeWhereInput | UserBestGradeWhereInput[]
     OR?: UserBestGradeWhereInput[]
@@ -39640,222 +34893,6 @@ export namespace Prisma {
     user_id?: IntWithAggregatesFilter<"UserBestGrade"> | number
   }
 
-  export type BasicBestPlayWhereInput = {
-    AND?: BasicBestPlayWhereInput | BasicBestPlayWhereInput[]
-    OR?: BasicBestPlayWhereInput[]
-    NOT?: BasicBestPlayWhereInput | BasicBestPlayWhereInput[]
-    id?: IntFilter<"BasicBestPlay"> | number
-    difficulty?: StringFilter<"BasicBestPlay"> | string
-    level?: IntFilter<"BasicBestPlay"> | number
-    score?: IntFilter<"BasicBestPlay"> | number
-    max_combo?: IntFilter<"BasicBestPlay"> | number
-    rank?: StringFilter<"BasicBestPlay"> | string
-    besttime?: StringFilter<"BasicBestPlay"> | string
-    grade_basic?: IntFilter<"BasicBestPlay"> | number
-    fc_type?: IntFilter<"BasicBestPlay"> | number
-    created_at?: DateTimeFilter<"BasicBestPlay"> | Date | string
-    updated_at?: DateTimeFilter<"BasicBestPlay"> | Date | string
-    user_id?: IntFilter<"BasicBestPlay"> | number
-    music_idx?: StringFilter<"BasicBestPlay"> | string
-    chart_id?: IntNullableFilter<"BasicBestPlay"> | number | null
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    music?: XOR<MusicScalarRelationFilter, MusicWhereInput>
-    chart?: XOR<MusicChartNullableScalarRelationFilter, MusicChartWhereInput> | null
-  }
-
-  export type BasicBestPlayOrderByWithRelationInput = {
-    id?: SortOrder
-    difficulty?: SortOrder
-    level?: SortOrder
-    score?: SortOrder
-    max_combo?: SortOrder
-    rank?: SortOrder
-    besttime?: SortOrder
-    grade_basic?: SortOrder
-    fc_type?: SortOrder
-    created_at?: SortOrder
-    updated_at?: SortOrder
-    user_id?: SortOrder
-    music_idx?: SortOrder
-    chart_id?: SortOrderInput | SortOrder
-    user?: UserOrderByWithRelationInput
-    music?: MusicOrderByWithRelationInput
-    chart?: MusicChartOrderByWithRelationInput
-  }
-
-  export type BasicBestPlayWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
-    AND?: BasicBestPlayWhereInput | BasicBestPlayWhereInput[]
-    OR?: BasicBestPlayWhereInput[]
-    NOT?: BasicBestPlayWhereInput | BasicBestPlayWhereInput[]
-    difficulty?: StringFilter<"BasicBestPlay"> | string
-    level?: IntFilter<"BasicBestPlay"> | number
-    score?: IntFilter<"BasicBestPlay"> | number
-    max_combo?: IntFilter<"BasicBestPlay"> | number
-    rank?: StringFilter<"BasicBestPlay"> | string
-    besttime?: StringFilter<"BasicBestPlay"> | string
-    grade_basic?: IntFilter<"BasicBestPlay"> | number
-    fc_type?: IntFilter<"BasicBestPlay"> | number
-    created_at?: DateTimeFilter<"BasicBestPlay"> | Date | string
-    updated_at?: DateTimeFilter<"BasicBestPlay"> | Date | string
-    user_id?: IntFilter<"BasicBestPlay"> | number
-    music_idx?: StringFilter<"BasicBestPlay"> | string
-    chart_id?: IntNullableFilter<"BasicBestPlay"> | number | null
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    music?: XOR<MusicScalarRelationFilter, MusicWhereInput>
-    chart?: XOR<MusicChartNullableScalarRelationFilter, MusicChartWhereInput> | null
-  }, "id">
-
-  export type BasicBestPlayOrderByWithAggregationInput = {
-    id?: SortOrder
-    difficulty?: SortOrder
-    level?: SortOrder
-    score?: SortOrder
-    max_combo?: SortOrder
-    rank?: SortOrder
-    besttime?: SortOrder
-    grade_basic?: SortOrder
-    fc_type?: SortOrder
-    created_at?: SortOrder
-    updated_at?: SortOrder
-    user_id?: SortOrder
-    music_idx?: SortOrder
-    chart_id?: SortOrderInput | SortOrder
-    _count?: BasicBestPlayCountOrderByAggregateInput
-    _avg?: BasicBestPlayAvgOrderByAggregateInput
-    _max?: BasicBestPlayMaxOrderByAggregateInput
-    _min?: BasicBestPlayMinOrderByAggregateInput
-    _sum?: BasicBestPlaySumOrderByAggregateInput
-  }
-
-  export type BasicBestPlayScalarWhereWithAggregatesInput = {
-    AND?: BasicBestPlayScalarWhereWithAggregatesInput | BasicBestPlayScalarWhereWithAggregatesInput[]
-    OR?: BasicBestPlayScalarWhereWithAggregatesInput[]
-    NOT?: BasicBestPlayScalarWhereWithAggregatesInput | BasicBestPlayScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"BasicBestPlay"> | number
-    difficulty?: StringWithAggregatesFilter<"BasicBestPlay"> | string
-    level?: IntWithAggregatesFilter<"BasicBestPlay"> | number
-    score?: IntWithAggregatesFilter<"BasicBestPlay"> | number
-    max_combo?: IntWithAggregatesFilter<"BasicBestPlay"> | number
-    rank?: StringWithAggregatesFilter<"BasicBestPlay"> | string
-    besttime?: StringWithAggregatesFilter<"BasicBestPlay"> | string
-    grade_basic?: IntWithAggregatesFilter<"BasicBestPlay"> | number
-    fc_type?: IntWithAggregatesFilter<"BasicBestPlay"> | number
-    created_at?: DateTimeWithAggregatesFilter<"BasicBestPlay"> | Date | string
-    updated_at?: DateTimeWithAggregatesFilter<"BasicBestPlay"> | Date | string
-    user_id?: IntWithAggregatesFilter<"BasicBestPlay"> | number
-    music_idx?: StringWithAggregatesFilter<"BasicBestPlay"> | string
-    chart_id?: IntNullableWithAggregatesFilter<"BasicBestPlay"> | number | null
-  }
-
-  export type RecitalBestPlayWhereInput = {
-    AND?: RecitalBestPlayWhereInput | RecitalBestPlayWhereInput[]
-    OR?: RecitalBestPlayWhereInput[]
-    NOT?: RecitalBestPlayWhereInput | RecitalBestPlayWhereInput[]
-    id?: IntFilter<"RecitalBestPlay"> | number
-    difficulty?: StringFilter<"RecitalBestPlay"> | string
-    level?: IntFilter<"RecitalBestPlay"> | number
-    score?: IntFilter<"RecitalBestPlay"> | number
-    max_combo?: IntFilter<"RecitalBestPlay"> | number
-    rank?: StringFilter<"RecitalBestPlay"> | string
-    besttime?: StringFilter<"RecitalBestPlay"> | string
-    grade_recital?: IntFilter<"RecitalBestPlay"> | number
-    fc_type?: IntFilter<"RecitalBestPlay"> | number
-    created_at?: DateTimeFilter<"RecitalBestPlay"> | Date | string
-    updated_at?: DateTimeFilter<"RecitalBestPlay"> | Date | string
-    user_id?: IntFilter<"RecitalBestPlay"> | number
-    music_idx?: StringFilter<"RecitalBestPlay"> | string
-    chart_id?: IntNullableFilter<"RecitalBestPlay"> | number | null
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    music?: XOR<MusicScalarRelationFilter, MusicWhereInput>
-    chart?: XOR<MusicChartNullableScalarRelationFilter, MusicChartWhereInput> | null
-  }
-
-  export type RecitalBestPlayOrderByWithRelationInput = {
-    id?: SortOrder
-    difficulty?: SortOrder
-    level?: SortOrder
-    score?: SortOrder
-    max_combo?: SortOrder
-    rank?: SortOrder
-    besttime?: SortOrder
-    grade_recital?: SortOrder
-    fc_type?: SortOrder
-    created_at?: SortOrder
-    updated_at?: SortOrder
-    user_id?: SortOrder
-    music_idx?: SortOrder
-    chart_id?: SortOrderInput | SortOrder
-    user?: UserOrderByWithRelationInput
-    music?: MusicOrderByWithRelationInput
-    chart?: MusicChartOrderByWithRelationInput
-  }
-
-  export type RecitalBestPlayWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
-    AND?: RecitalBestPlayWhereInput | RecitalBestPlayWhereInput[]
-    OR?: RecitalBestPlayWhereInput[]
-    NOT?: RecitalBestPlayWhereInput | RecitalBestPlayWhereInput[]
-    difficulty?: StringFilter<"RecitalBestPlay"> | string
-    level?: IntFilter<"RecitalBestPlay"> | number
-    score?: IntFilter<"RecitalBestPlay"> | number
-    max_combo?: IntFilter<"RecitalBestPlay"> | number
-    rank?: StringFilter<"RecitalBestPlay"> | string
-    besttime?: StringFilter<"RecitalBestPlay"> | string
-    grade_recital?: IntFilter<"RecitalBestPlay"> | number
-    fc_type?: IntFilter<"RecitalBestPlay"> | number
-    created_at?: DateTimeFilter<"RecitalBestPlay"> | Date | string
-    updated_at?: DateTimeFilter<"RecitalBestPlay"> | Date | string
-    user_id?: IntFilter<"RecitalBestPlay"> | number
-    music_idx?: StringFilter<"RecitalBestPlay"> | string
-    chart_id?: IntNullableFilter<"RecitalBestPlay"> | number | null
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    music?: XOR<MusicScalarRelationFilter, MusicWhereInput>
-    chart?: XOR<MusicChartNullableScalarRelationFilter, MusicChartWhereInput> | null
-  }, "id">
-
-  export type RecitalBestPlayOrderByWithAggregationInput = {
-    id?: SortOrder
-    difficulty?: SortOrder
-    level?: SortOrder
-    score?: SortOrder
-    max_combo?: SortOrder
-    rank?: SortOrder
-    besttime?: SortOrder
-    grade_recital?: SortOrder
-    fc_type?: SortOrder
-    created_at?: SortOrder
-    updated_at?: SortOrder
-    user_id?: SortOrder
-    music_idx?: SortOrder
-    chart_id?: SortOrderInput | SortOrder
-    _count?: RecitalBestPlayCountOrderByAggregateInput
-    _avg?: RecitalBestPlayAvgOrderByAggregateInput
-    _max?: RecitalBestPlayMaxOrderByAggregateInput
-    _min?: RecitalBestPlayMinOrderByAggregateInput
-    _sum?: RecitalBestPlaySumOrderByAggregateInput
-  }
-
-  export type RecitalBestPlayScalarWhereWithAggregatesInput = {
-    AND?: RecitalBestPlayScalarWhereWithAggregatesInput | RecitalBestPlayScalarWhereWithAggregatesInput[]
-    OR?: RecitalBestPlayScalarWhereWithAggregatesInput[]
-    NOT?: RecitalBestPlayScalarWhereWithAggregatesInput | RecitalBestPlayScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"RecitalBestPlay"> | number
-    difficulty?: StringWithAggregatesFilter<"RecitalBestPlay"> | string
-    level?: IntWithAggregatesFilter<"RecitalBestPlay"> | number
-    score?: IntWithAggregatesFilter<"RecitalBestPlay"> | number
-    max_combo?: IntWithAggregatesFilter<"RecitalBestPlay"> | number
-    rank?: StringWithAggregatesFilter<"RecitalBestPlay"> | string
-    besttime?: StringWithAggregatesFilter<"RecitalBestPlay"> | string
-    grade_recital?: IntWithAggregatesFilter<"RecitalBestPlay"> | number
-    fc_type?: IntWithAggregatesFilter<"RecitalBestPlay"> | number
-    created_at?: DateTimeWithAggregatesFilter<"RecitalBestPlay"> | Date | string
-    updated_at?: DateTimeWithAggregatesFilter<"RecitalBestPlay"> | Date | string
-    user_id?: IntWithAggregatesFilter<"RecitalBestPlay"> | number
-    music_idx?: StringWithAggregatesFilter<"RecitalBestPlay"> | string
-    chart_id?: IntNullableWithAggregatesFilter<"RecitalBestPlay"> | number | null
-  }
-
   export type PlayDataWhereInput = {
     AND?: PlayDataWhereInput | PlayDataWhereInput[]
     OR?: PlayDataWhereInput[]
@@ -39909,6 +34946,7 @@ export namespace Prisma {
 
   export type PlayDataWhereUniqueInput = Prisma.AtLeast<{
     id?: number
+    user_id_chart_id?: PlayDataUser_idChart_idCompoundUniqueInput
     AND?: PlayDataWhereInput | PlayDataWhereInput[]
     OR?: PlayDataWhereInput[]
     NOT?: PlayDataWhereInput | PlayDataWhereInput[]
@@ -39932,7 +34970,7 @@ export namespace Prisma {
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     music?: XOR<MusicScalarRelationFilter, MusicWhereInput>
     chart?: XOR<MusicChartNullableScalarRelationFilter, MusicChartWhereInput> | null
-  }, "id">
+  }, "id" | "user_id_chart_id">
 
   export type PlayDataOrderByWithAggregationInput = {
     id?: SortOrder
@@ -40743,10 +35781,7 @@ export namespace Prisma {
     sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
-    PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
     PlayData?: PlayDataCreateNestedManyWithoutUserInput
-    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutUserInput
-    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeCreateNestedManyWithoutUserInput
     bingoProgress?: BingoCellProgressCreateNestedManyWithoutUserInput
     chartEvaluations?: ChartEvaluationCreateNestedManyWithoutUserInput
@@ -40788,10 +35823,7 @@ export namespace Prisma {
     sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
-    PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutUserInput
-    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutUserInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeUncheckedCreateNestedManyWithoutUserInput
     bingoProgress?: BingoCellProgressUncheckedCreateNestedManyWithoutUserInput
     chartEvaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutUserInput
@@ -40832,10 +35864,7 @@ export namespace Prisma {
     sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
     PlayData?: PlayDataUpdateManyWithoutUserNestedInput
-    BasicBestPlay?: BasicBestPlayUpdateManyWithoutUserNestedInput
-    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUpdateManyWithoutUserNestedInput
     bingoProgress?: BingoCellProgressUpdateManyWithoutUserNestedInput
     chartEvaluations?: ChartEvaluationUpdateManyWithoutUserNestedInput
@@ -40877,10 +35906,7 @@ export namespace Prisma {
     sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutUserNestedInput
-    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutUserNestedInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUncheckedUpdateManyWithoutUserNestedInput
     bingoProgress?: BingoCellProgressUncheckedUpdateManyWithoutUserNestedInput
     chartEvaluations?: ChartEvaluationUncheckedUpdateManyWithoutUserNestedInput
@@ -40996,19 +36022,9 @@ export namespace Prisma {
     category_short: string
     description?: string | null
     background?: string | null
-    sheet_len: number
-    difficulty_levels: string
-    difficulty_name: string
-    normal: number
-    hard: number
-    expert: number
-    real?: number | null
     created_at?: Date | string
     updated_at?: Date | string
-    RecentPlay?: RecentPlayCreateNestedManyWithoutMusicInput
     PlayData?: PlayDataCreateNestedManyWithoutMusicInput
-    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutMusicInput
-    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutMusicInput
     bingoCovers?: BingoCreateNestedManyWithoutCoverMusicInput
     bingoMissions?: BingoCellCreateNestedManyWithoutMusicInput
     charts?: MusicChartCreateNestedManyWithoutMusicInput
@@ -41026,19 +36042,9 @@ export namespace Prisma {
     category_short: string
     description?: string | null
     background?: string | null
-    sheet_len: number
-    difficulty_levels: string
-    difficulty_name: string
-    normal: number
-    hard: number
-    expert: number
-    real?: number | null
     created_at?: Date | string
     updated_at?: Date | string
-    RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutMusicInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutMusicInput
-    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutMusicInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutMusicInput
     bingoCovers?: BingoUncheckedCreateNestedManyWithoutCoverMusicInput
     bingoMissions?: BingoCellUncheckedCreateNestedManyWithoutMusicInput
     charts?: MusicChartUncheckedCreateNestedManyWithoutMusicInput
@@ -41055,19 +36061,9 @@ export namespace Prisma {
     category_short?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     background?: NullableStringFieldUpdateOperationsInput | string | null
-    sheet_len?: IntFieldUpdateOperationsInput | number
-    difficulty_levels?: StringFieldUpdateOperationsInput | string
-    difficulty_name?: StringFieldUpdateOperationsInput | string
-    normal?: IntFieldUpdateOperationsInput | number
-    hard?: IntFieldUpdateOperationsInput | number
-    expert?: IntFieldUpdateOperationsInput | number
-    real?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    RecentPlay?: RecentPlayUpdateManyWithoutMusicNestedInput
     PlayData?: PlayDataUpdateManyWithoutMusicNestedInput
-    BasicBestPlay?: BasicBestPlayUpdateManyWithoutMusicNestedInput
-    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutMusicNestedInput
     bingoCovers?: BingoUpdateManyWithoutCoverMusicNestedInput
     bingoMissions?: BingoCellUpdateManyWithoutMusicNestedInput
     charts?: MusicChartUpdateManyWithoutMusicNestedInput
@@ -41085,19 +36081,9 @@ export namespace Prisma {
     category_short?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     background?: NullableStringFieldUpdateOperationsInput | string | null
-    sheet_len?: IntFieldUpdateOperationsInput | number
-    difficulty_levels?: StringFieldUpdateOperationsInput | string
-    difficulty_name?: StringFieldUpdateOperationsInput | string
-    normal?: IntFieldUpdateOperationsInput | number
-    hard?: IntFieldUpdateOperationsInput | number
-    expert?: IntFieldUpdateOperationsInput | number
-    real?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    RecentPlay?: RecentPlayUncheckedUpdateManyWithoutMusicNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutMusicNestedInput
-    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutMusicNestedInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutMusicNestedInput
     bingoCovers?: BingoUncheckedUpdateManyWithoutCoverMusicNestedInput
     bingoMissions?: BingoCellUncheckedUpdateManyWithoutMusicNestedInput
     charts?: MusicChartUncheckedUpdateManyWithoutMusicNestedInput
@@ -41115,13 +36101,6 @@ export namespace Prisma {
     category_short: string
     description?: string | null
     background?: string | null
-    sheet_len: number
-    difficulty_levels: string
-    difficulty_name: string
-    normal: number
-    hard: number
-    expert: number
-    real?: number | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -41135,13 +36114,6 @@ export namespace Prisma {
     category_short?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     background?: NullableStringFieldUpdateOperationsInput | string | null
-    sheet_len?: IntFieldUpdateOperationsInput | number
-    difficulty_levels?: StringFieldUpdateOperationsInput | string
-    difficulty_name?: StringFieldUpdateOperationsInput | string
-    normal?: IntFieldUpdateOperationsInput | number
-    hard?: IntFieldUpdateOperationsInput | number
-    expert?: IntFieldUpdateOperationsInput | number
-    real?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -41156,13 +36128,6 @@ export namespace Prisma {
     category_short?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     background?: NullableStringFieldUpdateOperationsInput | string | null
-    sheet_len?: IntFieldUpdateOperationsInput | number
-    difficulty_levels?: StringFieldUpdateOperationsInput | string
-    difficulty_name?: StringFieldUpdateOperationsInput | string
-    normal?: IntFieldUpdateOperationsInput | number
-    hard?: IntFieldUpdateOperationsInput | number
-    expert?: IntFieldUpdateOperationsInput | number
-    real?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -41184,10 +36149,7 @@ export namespace Prisma {
     music: MusicCreateNestedOneWithoutChartsInput
     levelConstantHistory?: ChartLevelConstantHistoryCreateNestedManyWithoutChartInput
     evaluations?: ChartEvaluationCreateNestedManyWithoutChartInput
-    RecentPlay?: RecentPlayCreateNestedManyWithoutChartInput
     PlayData?: PlayDataCreateNestedManyWithoutChartInput
-    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutChartInput
-    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutChartInput
     playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
     examStageOptions?: ExamStageChartCreateNestedManyWithoutChartInput
@@ -41213,10 +36175,7 @@ export namespace Prisma {
     updated_at?: Date | string
     levelConstantHistory?: ChartLevelConstantHistoryUncheckedCreateNestedManyWithoutChartInput
     evaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutChartInput
-    RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutChartInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutChartInput
-    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutChartInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutChartInput
     playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
     examStageOptions?: ExamStageChartUncheckedCreateNestedManyWithoutChartInput
@@ -41241,10 +36200,7 @@ export namespace Prisma {
     music?: MusicUpdateOneRequiredWithoutChartsNestedInput
     levelConstantHistory?: ChartLevelConstantHistoryUpdateManyWithoutChartNestedInput
     evaluations?: ChartEvaluationUpdateManyWithoutChartNestedInput
-    RecentPlay?: RecentPlayUpdateManyWithoutChartNestedInput
     PlayData?: PlayDataUpdateManyWithoutChartNestedInput
-    BasicBestPlay?: BasicBestPlayUpdateManyWithoutChartNestedInput
-    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutChartNestedInput
     playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
     examStageOptions?: ExamStageChartUpdateManyWithoutChartNestedInput
@@ -41270,10 +36226,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     levelConstantHistory?: ChartLevelConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
     evaluations?: ChartEvaluationUncheckedUpdateManyWithoutChartNestedInput
-    RecentPlay?: RecentPlayUncheckedUpdateManyWithoutChartNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutChartNestedInput
-    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutChartNestedInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutChartNestedInput
     playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
     examStageOptions?: ExamStageChartUncheckedUpdateManyWithoutChartNestedInput
@@ -42125,112 +37078,6 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type RecentPlayCreateInput = {
-    difficulty: string
-    level: number
-    score: number
-    max_combo: number
-    rank: string
-    play_time: string
-    grade_basic: number
-    created_at?: Date | string
-    updated_at?: Date | string
-    user: UserCreateNestedOneWithoutPlayHistoryInput
-    music: MusicCreateNestedOneWithoutRecentPlayInput
-    chart?: MusicChartCreateNestedOneWithoutRecentPlayInput
-  }
-
-  export type RecentPlayUncheckedCreateInput = {
-    id?: number
-    difficulty: string
-    level: number
-    score: number
-    max_combo: number
-    rank: string
-    play_time: string
-    grade_basic: number
-    created_at?: Date | string
-    updated_at?: Date | string
-    user_id: number
-    music_idx: string
-    chart_id?: number | null
-  }
-
-  export type RecentPlayUpdateInput = {
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    score?: IntFieldUpdateOperationsInput | number
-    max_combo?: IntFieldUpdateOperationsInput | number
-    rank?: StringFieldUpdateOperationsInput | string
-    play_time?: StringFieldUpdateOperationsInput | string
-    grade_basic?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutPlayHistoryNestedInput
-    music?: MusicUpdateOneRequiredWithoutRecentPlayNestedInput
-    chart?: MusicChartUpdateOneWithoutRecentPlayNestedInput
-  }
-
-  export type RecentPlayUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    score?: IntFieldUpdateOperationsInput | number
-    max_combo?: IntFieldUpdateOperationsInput | number
-    rank?: StringFieldUpdateOperationsInput | string
-    play_time?: StringFieldUpdateOperationsInput | string
-    grade_basic?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user_id?: IntFieldUpdateOperationsInput | number
-    music_idx?: StringFieldUpdateOperationsInput | string
-    chart_id?: NullableIntFieldUpdateOperationsInput | number | null
-  }
-
-  export type RecentPlayCreateManyInput = {
-    id?: number
-    difficulty: string
-    level: number
-    score: number
-    max_combo: number
-    rank: string
-    play_time: string
-    grade_basic: number
-    created_at?: Date | string
-    updated_at?: Date | string
-    user_id: number
-    music_idx: string
-    chart_id?: number | null
-  }
-
-  export type RecentPlayUpdateManyMutationInput = {
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    score?: IntFieldUpdateOperationsInput | number
-    max_combo?: IntFieldUpdateOperationsInput | number
-    rank?: StringFieldUpdateOperationsInput | string
-    play_time?: StringFieldUpdateOperationsInput | string
-    grade_basic?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type RecentPlayUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    score?: IntFieldUpdateOperationsInput | number
-    max_combo?: IntFieldUpdateOperationsInput | number
-    rank?: StringFieldUpdateOperationsInput | string
-    play_time?: StringFieldUpdateOperationsInput | string
-    grade_basic?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user_id?: IntFieldUpdateOperationsInput | number
-    music_idx?: StringFieldUpdateOperationsInput | string
-    chart_id?: NullableIntFieldUpdateOperationsInput | number | null
-  }
-
   export type UserBestGradeCreateInput = {
     grade_basic: number
     grade_recital: number
@@ -42295,232 +37142,6 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user_id?: IntFieldUpdateOperationsInput | number
-  }
-
-  export type BasicBestPlayCreateInput = {
-    difficulty: string
-    level: number
-    score: number
-    max_combo: number
-    rank: string
-    besttime: string
-    grade_basic: number
-    fc_type: number
-    created_at?: Date | string
-    updated_at?: Date | string
-    user: UserCreateNestedOneWithoutBasicBestPlayInput
-    music: MusicCreateNestedOneWithoutBasicBestPlayInput
-    chart?: MusicChartCreateNestedOneWithoutBasicBestPlayInput
-  }
-
-  export type BasicBestPlayUncheckedCreateInput = {
-    id?: number
-    difficulty: string
-    level: number
-    score: number
-    max_combo: number
-    rank: string
-    besttime: string
-    grade_basic: number
-    fc_type: number
-    created_at?: Date | string
-    updated_at?: Date | string
-    user_id: number
-    music_idx: string
-    chart_id?: number | null
-  }
-
-  export type BasicBestPlayUpdateInput = {
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    score?: IntFieldUpdateOperationsInput | number
-    max_combo?: IntFieldUpdateOperationsInput | number
-    rank?: StringFieldUpdateOperationsInput | string
-    besttime?: StringFieldUpdateOperationsInput | string
-    grade_basic?: IntFieldUpdateOperationsInput | number
-    fc_type?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutBasicBestPlayNestedInput
-    music?: MusicUpdateOneRequiredWithoutBasicBestPlayNestedInput
-    chart?: MusicChartUpdateOneWithoutBasicBestPlayNestedInput
-  }
-
-  export type BasicBestPlayUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    score?: IntFieldUpdateOperationsInput | number
-    max_combo?: IntFieldUpdateOperationsInput | number
-    rank?: StringFieldUpdateOperationsInput | string
-    besttime?: StringFieldUpdateOperationsInput | string
-    grade_basic?: IntFieldUpdateOperationsInput | number
-    fc_type?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user_id?: IntFieldUpdateOperationsInput | number
-    music_idx?: StringFieldUpdateOperationsInput | string
-    chart_id?: NullableIntFieldUpdateOperationsInput | number | null
-  }
-
-  export type BasicBestPlayCreateManyInput = {
-    id?: number
-    difficulty: string
-    level: number
-    score: number
-    max_combo: number
-    rank: string
-    besttime: string
-    grade_basic: number
-    fc_type: number
-    created_at?: Date | string
-    updated_at?: Date | string
-    user_id: number
-    music_idx: string
-    chart_id?: number | null
-  }
-
-  export type BasicBestPlayUpdateManyMutationInput = {
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    score?: IntFieldUpdateOperationsInput | number
-    max_combo?: IntFieldUpdateOperationsInput | number
-    rank?: StringFieldUpdateOperationsInput | string
-    besttime?: StringFieldUpdateOperationsInput | string
-    grade_basic?: IntFieldUpdateOperationsInput | number
-    fc_type?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type BasicBestPlayUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    score?: IntFieldUpdateOperationsInput | number
-    max_combo?: IntFieldUpdateOperationsInput | number
-    rank?: StringFieldUpdateOperationsInput | string
-    besttime?: StringFieldUpdateOperationsInput | string
-    grade_basic?: IntFieldUpdateOperationsInput | number
-    fc_type?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user_id?: IntFieldUpdateOperationsInput | number
-    music_idx?: StringFieldUpdateOperationsInput | string
-    chart_id?: NullableIntFieldUpdateOperationsInput | number | null
-  }
-
-  export type RecitalBestPlayCreateInput = {
-    difficulty: string
-    level: number
-    score: number
-    max_combo: number
-    rank: string
-    besttime: string
-    grade_recital: number
-    fc_type: number
-    created_at?: Date | string
-    updated_at?: Date | string
-    user: UserCreateNestedOneWithoutRecitalBestPlayInput
-    music: MusicCreateNestedOneWithoutRecitalBestPlayInput
-    chart?: MusicChartCreateNestedOneWithoutRecitalBestPlayInput
-  }
-
-  export type RecitalBestPlayUncheckedCreateInput = {
-    id?: number
-    difficulty: string
-    level: number
-    score: number
-    max_combo: number
-    rank: string
-    besttime: string
-    grade_recital: number
-    fc_type: number
-    created_at?: Date | string
-    updated_at?: Date | string
-    user_id: number
-    music_idx: string
-    chart_id?: number | null
-  }
-
-  export type RecitalBestPlayUpdateInput = {
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    score?: IntFieldUpdateOperationsInput | number
-    max_combo?: IntFieldUpdateOperationsInput | number
-    rank?: StringFieldUpdateOperationsInput | string
-    besttime?: StringFieldUpdateOperationsInput | string
-    grade_recital?: IntFieldUpdateOperationsInput | number
-    fc_type?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutRecitalBestPlayNestedInput
-    music?: MusicUpdateOneRequiredWithoutRecitalBestPlayNestedInput
-    chart?: MusicChartUpdateOneWithoutRecitalBestPlayNestedInput
-  }
-
-  export type RecitalBestPlayUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    score?: IntFieldUpdateOperationsInput | number
-    max_combo?: IntFieldUpdateOperationsInput | number
-    rank?: StringFieldUpdateOperationsInput | string
-    besttime?: StringFieldUpdateOperationsInput | string
-    grade_recital?: IntFieldUpdateOperationsInput | number
-    fc_type?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user_id?: IntFieldUpdateOperationsInput | number
-    music_idx?: StringFieldUpdateOperationsInput | string
-    chart_id?: NullableIntFieldUpdateOperationsInput | number | null
-  }
-
-  export type RecitalBestPlayCreateManyInput = {
-    id?: number
-    difficulty: string
-    level: number
-    score: number
-    max_combo: number
-    rank: string
-    besttime: string
-    grade_recital: number
-    fc_type: number
-    created_at?: Date | string
-    updated_at?: Date | string
-    user_id: number
-    music_idx: string
-    chart_id?: number | null
-  }
-
-  export type RecitalBestPlayUpdateManyMutationInput = {
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    score?: IntFieldUpdateOperationsInput | number
-    max_combo?: IntFieldUpdateOperationsInput | number
-    rank?: StringFieldUpdateOperationsInput | string
-    besttime?: StringFieldUpdateOperationsInput | string
-    grade_recital?: IntFieldUpdateOperationsInput | number
-    fc_type?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type RecitalBestPlayUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    score?: IntFieldUpdateOperationsInput | number
-    max_combo?: IntFieldUpdateOperationsInput | number
-    rank?: StringFieldUpdateOperationsInput | string
-    besttime?: StringFieldUpdateOperationsInput | string
-    grade_recital?: IntFieldUpdateOperationsInput | number
-    fc_type?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user_id?: IntFieldUpdateOperationsInput | number
-    music_idx?: StringFieldUpdateOperationsInput | string
-    chart_id?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type PlayDataCreateInput = {
@@ -43455,28 +38076,10 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
-  export type RecentPlayListRelationFilter = {
-    every?: RecentPlayWhereInput
-    some?: RecentPlayWhereInput
-    none?: RecentPlayWhereInput
-  }
-
   export type PlayDataListRelationFilter = {
     every?: PlayDataWhereInput
     some?: PlayDataWhereInput
     none?: PlayDataWhereInput
-  }
-
-  export type BasicBestPlayListRelationFilter = {
-    every?: BasicBestPlayWhereInput
-    some?: BasicBestPlayWhereInput
-    none?: BasicBestPlayWhereInput
-  }
-
-  export type RecitalBestPlayListRelationFilter = {
-    every?: RecitalBestPlayWhereInput
-    some?: RecitalBestPlayWhereInput
-    none?: RecitalBestPlayWhereInput
   }
 
   export type UserBestGradeListRelationFilter = {
@@ -43538,19 +38141,7 @@ export namespace Prisma {
     nulls?: NullsOrder
   }
 
-  export type RecentPlayOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
   export type PlayDataOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type BasicBestPlayOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type RecitalBestPlayOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -43874,24 +38465,12 @@ export namespace Prisma {
     category_short?: SortOrder
     description?: SortOrder
     background?: SortOrder
-    sheet_len?: SortOrder
-    difficulty_levels?: SortOrder
-    difficulty_name?: SortOrder
-    normal?: SortOrder
-    hard?: SortOrder
-    expert?: SortOrder
-    real?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
 
   export type MusicAvgOrderByAggregateInput = {
     id?: SortOrder
-    sheet_len?: SortOrder
-    normal?: SortOrder
-    hard?: SortOrder
-    expert?: SortOrder
-    real?: SortOrder
   }
 
   export type MusicMaxOrderByAggregateInput = {
@@ -43904,13 +38483,6 @@ export namespace Prisma {
     category_short?: SortOrder
     description?: SortOrder
     background?: SortOrder
-    sheet_len?: SortOrder
-    difficulty_levels?: SortOrder
-    difficulty_name?: SortOrder
-    normal?: SortOrder
-    hard?: SortOrder
-    expert?: SortOrder
-    real?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -43925,24 +38497,12 @@ export namespace Prisma {
     category_short?: SortOrder
     description?: SortOrder
     background?: SortOrder
-    sheet_len?: SortOrder
-    difficulty_levels?: SortOrder
-    difficulty_name?: SortOrder
-    normal?: SortOrder
-    hard?: SortOrder
-    expert?: SortOrder
-    real?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
 
   export type MusicSumOrderByAggregateInput = {
     id?: SortOrder
-    sheet_len?: SortOrder
-    normal?: SortOrder
-    hard?: SortOrder
-    expert?: SortOrder
-    real?: SortOrder
   }
 
   export type FloatNullableFilter<$PrismaModel = never> = {
@@ -44755,79 +39315,6 @@ export namespace Prisma {
     user_id?: SortOrder
   }
 
-  export type MusicChartNullableScalarRelationFilter = {
-    is?: MusicChartWhereInput | null
-    isNot?: MusicChartWhereInput | null
-  }
-
-  export type RecentPlayCountOrderByAggregateInput = {
-    id?: SortOrder
-    difficulty?: SortOrder
-    level?: SortOrder
-    score?: SortOrder
-    max_combo?: SortOrder
-    rank?: SortOrder
-    play_time?: SortOrder
-    grade_basic?: SortOrder
-    created_at?: SortOrder
-    updated_at?: SortOrder
-    user_id?: SortOrder
-    music_idx?: SortOrder
-    chart_id?: SortOrder
-  }
-
-  export type RecentPlayAvgOrderByAggregateInput = {
-    id?: SortOrder
-    level?: SortOrder
-    score?: SortOrder
-    max_combo?: SortOrder
-    grade_basic?: SortOrder
-    user_id?: SortOrder
-    chart_id?: SortOrder
-  }
-
-  export type RecentPlayMaxOrderByAggregateInput = {
-    id?: SortOrder
-    difficulty?: SortOrder
-    level?: SortOrder
-    score?: SortOrder
-    max_combo?: SortOrder
-    rank?: SortOrder
-    play_time?: SortOrder
-    grade_basic?: SortOrder
-    created_at?: SortOrder
-    updated_at?: SortOrder
-    user_id?: SortOrder
-    music_idx?: SortOrder
-    chart_id?: SortOrder
-  }
-
-  export type RecentPlayMinOrderByAggregateInput = {
-    id?: SortOrder
-    difficulty?: SortOrder
-    level?: SortOrder
-    score?: SortOrder
-    max_combo?: SortOrder
-    rank?: SortOrder
-    play_time?: SortOrder
-    grade_basic?: SortOrder
-    created_at?: SortOrder
-    updated_at?: SortOrder
-    user_id?: SortOrder
-    music_idx?: SortOrder
-    chart_id?: SortOrder
-  }
-
-  export type RecentPlaySumOrderByAggregateInput = {
-    id?: SortOrder
-    level?: SortOrder
-    score?: SortOrder
-    max_combo?: SortOrder
-    grade_basic?: SortOrder
-    user_id?: SortOrder
-    chart_id?: SortOrder
-  }
-
   export type UserBestGradeCountOrderByAggregateInput = {
     id?: SortOrder
     grade_basic?: SortOrder
@@ -44872,150 +39359,14 @@ export namespace Prisma {
     user_id?: SortOrder
   }
 
-  export type BasicBestPlayCountOrderByAggregateInput = {
-    id?: SortOrder
-    difficulty?: SortOrder
-    level?: SortOrder
-    score?: SortOrder
-    max_combo?: SortOrder
-    rank?: SortOrder
-    besttime?: SortOrder
-    grade_basic?: SortOrder
-    fc_type?: SortOrder
-    created_at?: SortOrder
-    updated_at?: SortOrder
-    user_id?: SortOrder
-    music_idx?: SortOrder
-    chart_id?: SortOrder
+  export type MusicChartNullableScalarRelationFilter = {
+    is?: MusicChartWhereInput | null
+    isNot?: MusicChartWhereInput | null
   }
 
-  export type BasicBestPlayAvgOrderByAggregateInput = {
-    id?: SortOrder
-    level?: SortOrder
-    score?: SortOrder
-    max_combo?: SortOrder
-    grade_basic?: SortOrder
-    fc_type?: SortOrder
-    user_id?: SortOrder
-    chart_id?: SortOrder
-  }
-
-  export type BasicBestPlayMaxOrderByAggregateInput = {
-    id?: SortOrder
-    difficulty?: SortOrder
-    level?: SortOrder
-    score?: SortOrder
-    max_combo?: SortOrder
-    rank?: SortOrder
-    besttime?: SortOrder
-    grade_basic?: SortOrder
-    fc_type?: SortOrder
-    created_at?: SortOrder
-    updated_at?: SortOrder
-    user_id?: SortOrder
-    music_idx?: SortOrder
-    chart_id?: SortOrder
-  }
-
-  export type BasicBestPlayMinOrderByAggregateInput = {
-    id?: SortOrder
-    difficulty?: SortOrder
-    level?: SortOrder
-    score?: SortOrder
-    max_combo?: SortOrder
-    rank?: SortOrder
-    besttime?: SortOrder
-    grade_basic?: SortOrder
-    fc_type?: SortOrder
-    created_at?: SortOrder
-    updated_at?: SortOrder
-    user_id?: SortOrder
-    music_idx?: SortOrder
-    chart_id?: SortOrder
-  }
-
-  export type BasicBestPlaySumOrderByAggregateInput = {
-    id?: SortOrder
-    level?: SortOrder
-    score?: SortOrder
-    max_combo?: SortOrder
-    grade_basic?: SortOrder
-    fc_type?: SortOrder
-    user_id?: SortOrder
-    chart_id?: SortOrder
-  }
-
-  export type RecitalBestPlayCountOrderByAggregateInput = {
-    id?: SortOrder
-    difficulty?: SortOrder
-    level?: SortOrder
-    score?: SortOrder
-    max_combo?: SortOrder
-    rank?: SortOrder
-    besttime?: SortOrder
-    grade_recital?: SortOrder
-    fc_type?: SortOrder
-    created_at?: SortOrder
-    updated_at?: SortOrder
-    user_id?: SortOrder
-    music_idx?: SortOrder
-    chart_id?: SortOrder
-  }
-
-  export type RecitalBestPlayAvgOrderByAggregateInput = {
-    id?: SortOrder
-    level?: SortOrder
-    score?: SortOrder
-    max_combo?: SortOrder
-    grade_recital?: SortOrder
-    fc_type?: SortOrder
-    user_id?: SortOrder
-    chart_id?: SortOrder
-  }
-
-  export type RecitalBestPlayMaxOrderByAggregateInput = {
-    id?: SortOrder
-    difficulty?: SortOrder
-    level?: SortOrder
-    score?: SortOrder
-    max_combo?: SortOrder
-    rank?: SortOrder
-    besttime?: SortOrder
-    grade_recital?: SortOrder
-    fc_type?: SortOrder
-    created_at?: SortOrder
-    updated_at?: SortOrder
-    user_id?: SortOrder
-    music_idx?: SortOrder
-    chart_id?: SortOrder
-  }
-
-  export type RecitalBestPlayMinOrderByAggregateInput = {
-    id?: SortOrder
-    difficulty?: SortOrder
-    level?: SortOrder
-    score?: SortOrder
-    max_combo?: SortOrder
-    rank?: SortOrder
-    besttime?: SortOrder
-    grade_recital?: SortOrder
-    fc_type?: SortOrder
-    created_at?: SortOrder
-    updated_at?: SortOrder
-    user_id?: SortOrder
-    music_idx?: SortOrder
-    chart_id?: SortOrder
-  }
-
-  export type RecitalBestPlaySumOrderByAggregateInput = {
-    id?: SortOrder
-    level?: SortOrder
-    score?: SortOrder
-    max_combo?: SortOrder
-    grade_recital?: SortOrder
-    fc_type?: SortOrder
-    user_id?: SortOrder
-    chart_id?: SortOrder
+  export type PlayDataUser_idChart_idCompoundUniqueInput = {
+    user_id: number
+    chart_id: number
   }
 
   export type PlayDataCountOrderByAggregateInput = {
@@ -45670,32 +40021,11 @@ export namespace Prisma {
     submissionId?: SortOrder
   }
 
-  export type RecentPlayCreateNestedManyWithoutUserInput = {
-    create?: XOR<RecentPlayCreateWithoutUserInput, RecentPlayUncheckedCreateWithoutUserInput> | RecentPlayCreateWithoutUserInput[] | RecentPlayUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: RecentPlayCreateOrConnectWithoutUserInput | RecentPlayCreateOrConnectWithoutUserInput[]
-    createMany?: RecentPlayCreateManyUserInputEnvelope
-    connect?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
-  }
-
   export type PlayDataCreateNestedManyWithoutUserInput = {
     create?: XOR<PlayDataCreateWithoutUserInput, PlayDataUncheckedCreateWithoutUserInput> | PlayDataCreateWithoutUserInput[] | PlayDataUncheckedCreateWithoutUserInput[]
     connectOrCreate?: PlayDataCreateOrConnectWithoutUserInput | PlayDataCreateOrConnectWithoutUserInput[]
     createMany?: PlayDataCreateManyUserInputEnvelope
     connect?: PlayDataWhereUniqueInput | PlayDataWhereUniqueInput[]
-  }
-
-  export type BasicBestPlayCreateNestedManyWithoutUserInput = {
-    create?: XOR<BasicBestPlayCreateWithoutUserInput, BasicBestPlayUncheckedCreateWithoutUserInput> | BasicBestPlayCreateWithoutUserInput[] | BasicBestPlayUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: BasicBestPlayCreateOrConnectWithoutUserInput | BasicBestPlayCreateOrConnectWithoutUserInput[]
-    createMany?: BasicBestPlayCreateManyUserInputEnvelope
-    connect?: BasicBestPlayWhereUniqueInput | BasicBestPlayWhereUniqueInput[]
-  }
-
-  export type RecitalBestPlayCreateNestedManyWithoutUserInput = {
-    create?: XOR<RecitalBestPlayCreateWithoutUserInput, RecitalBestPlayUncheckedCreateWithoutUserInput> | RecitalBestPlayCreateWithoutUserInput[] | RecitalBestPlayUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: RecitalBestPlayCreateOrConnectWithoutUserInput | RecitalBestPlayCreateOrConnectWithoutUserInput[]
-    createMany?: RecitalBestPlayCreateManyUserInputEnvelope
-    connect?: RecitalBestPlayWhereUniqueInput | RecitalBestPlayWhereUniqueInput[]
   }
 
   export type UserBestGradeCreateNestedManyWithoutUserInput = {
@@ -45761,32 +40091,11 @@ export namespace Prisma {
     connect?: ExamAchievementWhereUniqueInput | ExamAchievementWhereUniqueInput[]
   }
 
-  export type RecentPlayUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<RecentPlayCreateWithoutUserInput, RecentPlayUncheckedCreateWithoutUserInput> | RecentPlayCreateWithoutUserInput[] | RecentPlayUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: RecentPlayCreateOrConnectWithoutUserInput | RecentPlayCreateOrConnectWithoutUserInput[]
-    createMany?: RecentPlayCreateManyUserInputEnvelope
-    connect?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
-  }
-
   export type PlayDataUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<PlayDataCreateWithoutUserInput, PlayDataUncheckedCreateWithoutUserInput> | PlayDataCreateWithoutUserInput[] | PlayDataUncheckedCreateWithoutUserInput[]
     connectOrCreate?: PlayDataCreateOrConnectWithoutUserInput | PlayDataCreateOrConnectWithoutUserInput[]
     createMany?: PlayDataCreateManyUserInputEnvelope
     connect?: PlayDataWhereUniqueInput | PlayDataWhereUniqueInput[]
-  }
-
-  export type BasicBestPlayUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<BasicBestPlayCreateWithoutUserInput, BasicBestPlayUncheckedCreateWithoutUserInput> | BasicBestPlayCreateWithoutUserInput[] | BasicBestPlayUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: BasicBestPlayCreateOrConnectWithoutUserInput | BasicBestPlayCreateOrConnectWithoutUserInput[]
-    createMany?: BasicBestPlayCreateManyUserInputEnvelope
-    connect?: BasicBestPlayWhereUniqueInput | BasicBestPlayWhereUniqueInput[]
-  }
-
-  export type RecitalBestPlayUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<RecitalBestPlayCreateWithoutUserInput, RecitalBestPlayUncheckedCreateWithoutUserInput> | RecitalBestPlayCreateWithoutUserInput[] | RecitalBestPlayUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: RecitalBestPlayCreateOrConnectWithoutUserInput | RecitalBestPlayCreateOrConnectWithoutUserInput[]
-    createMany?: RecitalBestPlayCreateManyUserInputEnvelope
-    connect?: RecitalBestPlayWhereUniqueInput | RecitalBestPlayWhereUniqueInput[]
   }
 
   export type UserBestGradeUncheckedCreateNestedManyWithoutUserInput = {
@@ -45880,20 +40189,6 @@ export namespace Prisma {
     set?: Date | string
   }
 
-  export type RecentPlayUpdateManyWithoutUserNestedInput = {
-    create?: XOR<RecentPlayCreateWithoutUserInput, RecentPlayUncheckedCreateWithoutUserInput> | RecentPlayCreateWithoutUserInput[] | RecentPlayUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: RecentPlayCreateOrConnectWithoutUserInput | RecentPlayCreateOrConnectWithoutUserInput[]
-    upsert?: RecentPlayUpsertWithWhereUniqueWithoutUserInput | RecentPlayUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: RecentPlayCreateManyUserInputEnvelope
-    set?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
-    disconnect?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
-    delete?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
-    connect?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
-    update?: RecentPlayUpdateWithWhereUniqueWithoutUserInput | RecentPlayUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: RecentPlayUpdateManyWithWhereWithoutUserInput | RecentPlayUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: RecentPlayScalarWhereInput | RecentPlayScalarWhereInput[]
-  }
-
   export type PlayDataUpdateManyWithoutUserNestedInput = {
     create?: XOR<PlayDataCreateWithoutUserInput, PlayDataUncheckedCreateWithoutUserInput> | PlayDataCreateWithoutUserInput[] | PlayDataUncheckedCreateWithoutUserInput[]
     connectOrCreate?: PlayDataCreateOrConnectWithoutUserInput | PlayDataCreateOrConnectWithoutUserInput[]
@@ -45906,34 +40201,6 @@ export namespace Prisma {
     update?: PlayDataUpdateWithWhereUniqueWithoutUserInput | PlayDataUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: PlayDataUpdateManyWithWhereWithoutUserInput | PlayDataUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: PlayDataScalarWhereInput | PlayDataScalarWhereInput[]
-  }
-
-  export type BasicBestPlayUpdateManyWithoutUserNestedInput = {
-    create?: XOR<BasicBestPlayCreateWithoutUserInput, BasicBestPlayUncheckedCreateWithoutUserInput> | BasicBestPlayCreateWithoutUserInput[] | BasicBestPlayUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: BasicBestPlayCreateOrConnectWithoutUserInput | BasicBestPlayCreateOrConnectWithoutUserInput[]
-    upsert?: BasicBestPlayUpsertWithWhereUniqueWithoutUserInput | BasicBestPlayUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: BasicBestPlayCreateManyUserInputEnvelope
-    set?: BasicBestPlayWhereUniqueInput | BasicBestPlayWhereUniqueInput[]
-    disconnect?: BasicBestPlayWhereUniqueInput | BasicBestPlayWhereUniqueInput[]
-    delete?: BasicBestPlayWhereUniqueInput | BasicBestPlayWhereUniqueInput[]
-    connect?: BasicBestPlayWhereUniqueInput | BasicBestPlayWhereUniqueInput[]
-    update?: BasicBestPlayUpdateWithWhereUniqueWithoutUserInput | BasicBestPlayUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: BasicBestPlayUpdateManyWithWhereWithoutUserInput | BasicBestPlayUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: BasicBestPlayScalarWhereInput | BasicBestPlayScalarWhereInput[]
-  }
-
-  export type RecitalBestPlayUpdateManyWithoutUserNestedInput = {
-    create?: XOR<RecitalBestPlayCreateWithoutUserInput, RecitalBestPlayUncheckedCreateWithoutUserInput> | RecitalBestPlayCreateWithoutUserInput[] | RecitalBestPlayUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: RecitalBestPlayCreateOrConnectWithoutUserInput | RecitalBestPlayCreateOrConnectWithoutUserInput[]
-    upsert?: RecitalBestPlayUpsertWithWhereUniqueWithoutUserInput | RecitalBestPlayUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: RecitalBestPlayCreateManyUserInputEnvelope
-    set?: RecitalBestPlayWhereUniqueInput | RecitalBestPlayWhereUniqueInput[]
-    disconnect?: RecitalBestPlayWhereUniqueInput | RecitalBestPlayWhereUniqueInput[]
-    delete?: RecitalBestPlayWhereUniqueInput | RecitalBestPlayWhereUniqueInput[]
-    connect?: RecitalBestPlayWhereUniqueInput | RecitalBestPlayWhereUniqueInput[]
-    update?: RecitalBestPlayUpdateWithWhereUniqueWithoutUserInput | RecitalBestPlayUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: RecitalBestPlayUpdateManyWithWhereWithoutUserInput | RecitalBestPlayUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: RecitalBestPlayScalarWhereInput | RecitalBestPlayScalarWhereInput[]
   }
 
   export type UserBestGradeUpdateManyWithoutUserNestedInput = {
@@ -46062,20 +40329,6 @@ export namespace Prisma {
     deleteMany?: ExamAchievementScalarWhereInput | ExamAchievementScalarWhereInput[]
   }
 
-  export type RecentPlayUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<RecentPlayCreateWithoutUserInput, RecentPlayUncheckedCreateWithoutUserInput> | RecentPlayCreateWithoutUserInput[] | RecentPlayUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: RecentPlayCreateOrConnectWithoutUserInput | RecentPlayCreateOrConnectWithoutUserInput[]
-    upsert?: RecentPlayUpsertWithWhereUniqueWithoutUserInput | RecentPlayUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: RecentPlayCreateManyUserInputEnvelope
-    set?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
-    disconnect?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
-    delete?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
-    connect?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
-    update?: RecentPlayUpdateWithWhereUniqueWithoutUserInput | RecentPlayUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: RecentPlayUpdateManyWithWhereWithoutUserInput | RecentPlayUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: RecentPlayScalarWhereInput | RecentPlayScalarWhereInput[]
-  }
-
   export type PlayDataUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<PlayDataCreateWithoutUserInput, PlayDataUncheckedCreateWithoutUserInput> | PlayDataCreateWithoutUserInput[] | PlayDataUncheckedCreateWithoutUserInput[]
     connectOrCreate?: PlayDataCreateOrConnectWithoutUserInput | PlayDataCreateOrConnectWithoutUserInput[]
@@ -46088,34 +40341,6 @@ export namespace Prisma {
     update?: PlayDataUpdateWithWhereUniqueWithoutUserInput | PlayDataUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: PlayDataUpdateManyWithWhereWithoutUserInput | PlayDataUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: PlayDataScalarWhereInput | PlayDataScalarWhereInput[]
-  }
-
-  export type BasicBestPlayUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<BasicBestPlayCreateWithoutUserInput, BasicBestPlayUncheckedCreateWithoutUserInput> | BasicBestPlayCreateWithoutUserInput[] | BasicBestPlayUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: BasicBestPlayCreateOrConnectWithoutUserInput | BasicBestPlayCreateOrConnectWithoutUserInput[]
-    upsert?: BasicBestPlayUpsertWithWhereUniqueWithoutUserInput | BasicBestPlayUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: BasicBestPlayCreateManyUserInputEnvelope
-    set?: BasicBestPlayWhereUniqueInput | BasicBestPlayWhereUniqueInput[]
-    disconnect?: BasicBestPlayWhereUniqueInput | BasicBestPlayWhereUniqueInput[]
-    delete?: BasicBestPlayWhereUniqueInput | BasicBestPlayWhereUniqueInput[]
-    connect?: BasicBestPlayWhereUniqueInput | BasicBestPlayWhereUniqueInput[]
-    update?: BasicBestPlayUpdateWithWhereUniqueWithoutUserInput | BasicBestPlayUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: BasicBestPlayUpdateManyWithWhereWithoutUserInput | BasicBestPlayUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: BasicBestPlayScalarWhereInput | BasicBestPlayScalarWhereInput[]
-  }
-
-  export type RecitalBestPlayUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<RecitalBestPlayCreateWithoutUserInput, RecitalBestPlayUncheckedCreateWithoutUserInput> | RecitalBestPlayCreateWithoutUserInput[] | RecitalBestPlayUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: RecitalBestPlayCreateOrConnectWithoutUserInput | RecitalBestPlayCreateOrConnectWithoutUserInput[]
-    upsert?: RecitalBestPlayUpsertWithWhereUniqueWithoutUserInput | RecitalBestPlayUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: RecitalBestPlayCreateManyUserInputEnvelope
-    set?: RecitalBestPlayWhereUniqueInput | RecitalBestPlayWhereUniqueInput[]
-    disconnect?: RecitalBestPlayWhereUniqueInput | RecitalBestPlayWhereUniqueInput[]
-    delete?: RecitalBestPlayWhereUniqueInput | RecitalBestPlayWhereUniqueInput[]
-    connect?: RecitalBestPlayWhereUniqueInput | RecitalBestPlayWhereUniqueInput[]
-    update?: RecitalBestPlayUpdateWithWhereUniqueWithoutUserInput | RecitalBestPlayUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: RecitalBestPlayUpdateManyWithWhereWithoutUserInput | RecitalBestPlayUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: RecitalBestPlayScalarWhereInput | RecitalBestPlayScalarWhereInput[]
   }
 
   export type UserBestGradeUncheckedUpdateManyWithoutUserNestedInput = {
@@ -46244,32 +40469,11 @@ export namespace Prisma {
     deleteMany?: ExamAchievementScalarWhereInput | ExamAchievementScalarWhereInput[]
   }
 
-  export type RecentPlayCreateNestedManyWithoutMusicInput = {
-    create?: XOR<RecentPlayCreateWithoutMusicInput, RecentPlayUncheckedCreateWithoutMusicInput> | RecentPlayCreateWithoutMusicInput[] | RecentPlayUncheckedCreateWithoutMusicInput[]
-    connectOrCreate?: RecentPlayCreateOrConnectWithoutMusicInput | RecentPlayCreateOrConnectWithoutMusicInput[]
-    createMany?: RecentPlayCreateManyMusicInputEnvelope
-    connect?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
-  }
-
   export type PlayDataCreateNestedManyWithoutMusicInput = {
     create?: XOR<PlayDataCreateWithoutMusicInput, PlayDataUncheckedCreateWithoutMusicInput> | PlayDataCreateWithoutMusicInput[] | PlayDataUncheckedCreateWithoutMusicInput[]
     connectOrCreate?: PlayDataCreateOrConnectWithoutMusicInput | PlayDataCreateOrConnectWithoutMusicInput[]
     createMany?: PlayDataCreateManyMusicInputEnvelope
     connect?: PlayDataWhereUniqueInput | PlayDataWhereUniqueInput[]
-  }
-
-  export type BasicBestPlayCreateNestedManyWithoutMusicInput = {
-    create?: XOR<BasicBestPlayCreateWithoutMusicInput, BasicBestPlayUncheckedCreateWithoutMusicInput> | BasicBestPlayCreateWithoutMusicInput[] | BasicBestPlayUncheckedCreateWithoutMusicInput[]
-    connectOrCreate?: BasicBestPlayCreateOrConnectWithoutMusicInput | BasicBestPlayCreateOrConnectWithoutMusicInput[]
-    createMany?: BasicBestPlayCreateManyMusicInputEnvelope
-    connect?: BasicBestPlayWhereUniqueInput | BasicBestPlayWhereUniqueInput[]
-  }
-
-  export type RecitalBestPlayCreateNestedManyWithoutMusicInput = {
-    create?: XOR<RecitalBestPlayCreateWithoutMusicInput, RecitalBestPlayUncheckedCreateWithoutMusicInput> | RecitalBestPlayCreateWithoutMusicInput[] | RecitalBestPlayUncheckedCreateWithoutMusicInput[]
-    connectOrCreate?: RecitalBestPlayCreateOrConnectWithoutMusicInput | RecitalBestPlayCreateOrConnectWithoutMusicInput[]
-    createMany?: RecitalBestPlayCreateManyMusicInputEnvelope
-    connect?: RecitalBestPlayWhereUniqueInput | RecitalBestPlayWhereUniqueInput[]
   }
 
   export type BingoCreateNestedManyWithoutCoverMusicInput = {
@@ -46307,32 +40511,11 @@ export namespace Prisma {
     connect?: ExamRewardWhereUniqueInput | ExamRewardWhereUniqueInput[]
   }
 
-  export type RecentPlayUncheckedCreateNestedManyWithoutMusicInput = {
-    create?: XOR<RecentPlayCreateWithoutMusicInput, RecentPlayUncheckedCreateWithoutMusicInput> | RecentPlayCreateWithoutMusicInput[] | RecentPlayUncheckedCreateWithoutMusicInput[]
-    connectOrCreate?: RecentPlayCreateOrConnectWithoutMusicInput | RecentPlayCreateOrConnectWithoutMusicInput[]
-    createMany?: RecentPlayCreateManyMusicInputEnvelope
-    connect?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
-  }
-
   export type PlayDataUncheckedCreateNestedManyWithoutMusicInput = {
     create?: XOR<PlayDataCreateWithoutMusicInput, PlayDataUncheckedCreateWithoutMusicInput> | PlayDataCreateWithoutMusicInput[] | PlayDataUncheckedCreateWithoutMusicInput[]
     connectOrCreate?: PlayDataCreateOrConnectWithoutMusicInput | PlayDataCreateOrConnectWithoutMusicInput[]
     createMany?: PlayDataCreateManyMusicInputEnvelope
     connect?: PlayDataWhereUniqueInput | PlayDataWhereUniqueInput[]
-  }
-
-  export type BasicBestPlayUncheckedCreateNestedManyWithoutMusicInput = {
-    create?: XOR<BasicBestPlayCreateWithoutMusicInput, BasicBestPlayUncheckedCreateWithoutMusicInput> | BasicBestPlayCreateWithoutMusicInput[] | BasicBestPlayUncheckedCreateWithoutMusicInput[]
-    connectOrCreate?: BasicBestPlayCreateOrConnectWithoutMusicInput | BasicBestPlayCreateOrConnectWithoutMusicInput[]
-    createMany?: BasicBestPlayCreateManyMusicInputEnvelope
-    connect?: BasicBestPlayWhereUniqueInput | BasicBestPlayWhereUniqueInput[]
-  }
-
-  export type RecitalBestPlayUncheckedCreateNestedManyWithoutMusicInput = {
-    create?: XOR<RecitalBestPlayCreateWithoutMusicInput, RecitalBestPlayUncheckedCreateWithoutMusicInput> | RecitalBestPlayCreateWithoutMusicInput[] | RecitalBestPlayUncheckedCreateWithoutMusicInput[]
-    connectOrCreate?: RecitalBestPlayCreateOrConnectWithoutMusicInput | RecitalBestPlayCreateOrConnectWithoutMusicInput[]
-    createMany?: RecitalBestPlayCreateManyMusicInputEnvelope
-    connect?: RecitalBestPlayWhereUniqueInput | RecitalBestPlayWhereUniqueInput[]
   }
 
   export type BingoUncheckedCreateNestedManyWithoutCoverMusicInput = {
@@ -46370,20 +40553,6 @@ export namespace Prisma {
     connect?: ExamRewardWhereUniqueInput | ExamRewardWhereUniqueInput[]
   }
 
-  export type RecentPlayUpdateManyWithoutMusicNestedInput = {
-    create?: XOR<RecentPlayCreateWithoutMusicInput, RecentPlayUncheckedCreateWithoutMusicInput> | RecentPlayCreateWithoutMusicInput[] | RecentPlayUncheckedCreateWithoutMusicInput[]
-    connectOrCreate?: RecentPlayCreateOrConnectWithoutMusicInput | RecentPlayCreateOrConnectWithoutMusicInput[]
-    upsert?: RecentPlayUpsertWithWhereUniqueWithoutMusicInput | RecentPlayUpsertWithWhereUniqueWithoutMusicInput[]
-    createMany?: RecentPlayCreateManyMusicInputEnvelope
-    set?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
-    disconnect?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
-    delete?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
-    connect?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
-    update?: RecentPlayUpdateWithWhereUniqueWithoutMusicInput | RecentPlayUpdateWithWhereUniqueWithoutMusicInput[]
-    updateMany?: RecentPlayUpdateManyWithWhereWithoutMusicInput | RecentPlayUpdateManyWithWhereWithoutMusicInput[]
-    deleteMany?: RecentPlayScalarWhereInput | RecentPlayScalarWhereInput[]
-  }
-
   export type PlayDataUpdateManyWithoutMusicNestedInput = {
     create?: XOR<PlayDataCreateWithoutMusicInput, PlayDataUncheckedCreateWithoutMusicInput> | PlayDataCreateWithoutMusicInput[] | PlayDataUncheckedCreateWithoutMusicInput[]
     connectOrCreate?: PlayDataCreateOrConnectWithoutMusicInput | PlayDataCreateOrConnectWithoutMusicInput[]
@@ -46396,34 +40565,6 @@ export namespace Prisma {
     update?: PlayDataUpdateWithWhereUniqueWithoutMusicInput | PlayDataUpdateWithWhereUniqueWithoutMusicInput[]
     updateMany?: PlayDataUpdateManyWithWhereWithoutMusicInput | PlayDataUpdateManyWithWhereWithoutMusicInput[]
     deleteMany?: PlayDataScalarWhereInput | PlayDataScalarWhereInput[]
-  }
-
-  export type BasicBestPlayUpdateManyWithoutMusicNestedInput = {
-    create?: XOR<BasicBestPlayCreateWithoutMusicInput, BasicBestPlayUncheckedCreateWithoutMusicInput> | BasicBestPlayCreateWithoutMusicInput[] | BasicBestPlayUncheckedCreateWithoutMusicInput[]
-    connectOrCreate?: BasicBestPlayCreateOrConnectWithoutMusicInput | BasicBestPlayCreateOrConnectWithoutMusicInput[]
-    upsert?: BasicBestPlayUpsertWithWhereUniqueWithoutMusicInput | BasicBestPlayUpsertWithWhereUniqueWithoutMusicInput[]
-    createMany?: BasicBestPlayCreateManyMusicInputEnvelope
-    set?: BasicBestPlayWhereUniqueInput | BasicBestPlayWhereUniqueInput[]
-    disconnect?: BasicBestPlayWhereUniqueInput | BasicBestPlayWhereUniqueInput[]
-    delete?: BasicBestPlayWhereUniqueInput | BasicBestPlayWhereUniqueInput[]
-    connect?: BasicBestPlayWhereUniqueInput | BasicBestPlayWhereUniqueInput[]
-    update?: BasicBestPlayUpdateWithWhereUniqueWithoutMusicInput | BasicBestPlayUpdateWithWhereUniqueWithoutMusicInput[]
-    updateMany?: BasicBestPlayUpdateManyWithWhereWithoutMusicInput | BasicBestPlayUpdateManyWithWhereWithoutMusicInput[]
-    deleteMany?: BasicBestPlayScalarWhereInput | BasicBestPlayScalarWhereInput[]
-  }
-
-  export type RecitalBestPlayUpdateManyWithoutMusicNestedInput = {
-    create?: XOR<RecitalBestPlayCreateWithoutMusicInput, RecitalBestPlayUncheckedCreateWithoutMusicInput> | RecitalBestPlayCreateWithoutMusicInput[] | RecitalBestPlayUncheckedCreateWithoutMusicInput[]
-    connectOrCreate?: RecitalBestPlayCreateOrConnectWithoutMusicInput | RecitalBestPlayCreateOrConnectWithoutMusicInput[]
-    upsert?: RecitalBestPlayUpsertWithWhereUniqueWithoutMusicInput | RecitalBestPlayUpsertWithWhereUniqueWithoutMusicInput[]
-    createMany?: RecitalBestPlayCreateManyMusicInputEnvelope
-    set?: RecitalBestPlayWhereUniqueInput | RecitalBestPlayWhereUniqueInput[]
-    disconnect?: RecitalBestPlayWhereUniqueInput | RecitalBestPlayWhereUniqueInput[]
-    delete?: RecitalBestPlayWhereUniqueInput | RecitalBestPlayWhereUniqueInput[]
-    connect?: RecitalBestPlayWhereUniqueInput | RecitalBestPlayWhereUniqueInput[]
-    update?: RecitalBestPlayUpdateWithWhereUniqueWithoutMusicInput | RecitalBestPlayUpdateWithWhereUniqueWithoutMusicInput[]
-    updateMany?: RecitalBestPlayUpdateManyWithWhereWithoutMusicInput | RecitalBestPlayUpdateManyWithWhereWithoutMusicInput[]
-    deleteMany?: RecitalBestPlayScalarWhereInput | RecitalBestPlayScalarWhereInput[]
   }
 
   export type BingoUpdateManyWithoutCoverMusicNestedInput = {
@@ -46496,20 +40637,6 @@ export namespace Prisma {
     deleteMany?: ExamRewardScalarWhereInput | ExamRewardScalarWhereInput[]
   }
 
-  export type RecentPlayUncheckedUpdateManyWithoutMusicNestedInput = {
-    create?: XOR<RecentPlayCreateWithoutMusicInput, RecentPlayUncheckedCreateWithoutMusicInput> | RecentPlayCreateWithoutMusicInput[] | RecentPlayUncheckedCreateWithoutMusicInput[]
-    connectOrCreate?: RecentPlayCreateOrConnectWithoutMusicInput | RecentPlayCreateOrConnectWithoutMusicInput[]
-    upsert?: RecentPlayUpsertWithWhereUniqueWithoutMusicInput | RecentPlayUpsertWithWhereUniqueWithoutMusicInput[]
-    createMany?: RecentPlayCreateManyMusicInputEnvelope
-    set?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
-    disconnect?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
-    delete?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
-    connect?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
-    update?: RecentPlayUpdateWithWhereUniqueWithoutMusicInput | RecentPlayUpdateWithWhereUniqueWithoutMusicInput[]
-    updateMany?: RecentPlayUpdateManyWithWhereWithoutMusicInput | RecentPlayUpdateManyWithWhereWithoutMusicInput[]
-    deleteMany?: RecentPlayScalarWhereInput | RecentPlayScalarWhereInput[]
-  }
-
   export type PlayDataUncheckedUpdateManyWithoutMusicNestedInput = {
     create?: XOR<PlayDataCreateWithoutMusicInput, PlayDataUncheckedCreateWithoutMusicInput> | PlayDataCreateWithoutMusicInput[] | PlayDataUncheckedCreateWithoutMusicInput[]
     connectOrCreate?: PlayDataCreateOrConnectWithoutMusicInput | PlayDataCreateOrConnectWithoutMusicInput[]
@@ -46522,34 +40649,6 @@ export namespace Prisma {
     update?: PlayDataUpdateWithWhereUniqueWithoutMusicInput | PlayDataUpdateWithWhereUniqueWithoutMusicInput[]
     updateMany?: PlayDataUpdateManyWithWhereWithoutMusicInput | PlayDataUpdateManyWithWhereWithoutMusicInput[]
     deleteMany?: PlayDataScalarWhereInput | PlayDataScalarWhereInput[]
-  }
-
-  export type BasicBestPlayUncheckedUpdateManyWithoutMusicNestedInput = {
-    create?: XOR<BasicBestPlayCreateWithoutMusicInput, BasicBestPlayUncheckedCreateWithoutMusicInput> | BasicBestPlayCreateWithoutMusicInput[] | BasicBestPlayUncheckedCreateWithoutMusicInput[]
-    connectOrCreate?: BasicBestPlayCreateOrConnectWithoutMusicInput | BasicBestPlayCreateOrConnectWithoutMusicInput[]
-    upsert?: BasicBestPlayUpsertWithWhereUniqueWithoutMusicInput | BasicBestPlayUpsertWithWhereUniqueWithoutMusicInput[]
-    createMany?: BasicBestPlayCreateManyMusicInputEnvelope
-    set?: BasicBestPlayWhereUniqueInput | BasicBestPlayWhereUniqueInput[]
-    disconnect?: BasicBestPlayWhereUniqueInput | BasicBestPlayWhereUniqueInput[]
-    delete?: BasicBestPlayWhereUniqueInput | BasicBestPlayWhereUniqueInput[]
-    connect?: BasicBestPlayWhereUniqueInput | BasicBestPlayWhereUniqueInput[]
-    update?: BasicBestPlayUpdateWithWhereUniqueWithoutMusicInput | BasicBestPlayUpdateWithWhereUniqueWithoutMusicInput[]
-    updateMany?: BasicBestPlayUpdateManyWithWhereWithoutMusicInput | BasicBestPlayUpdateManyWithWhereWithoutMusicInput[]
-    deleteMany?: BasicBestPlayScalarWhereInput | BasicBestPlayScalarWhereInput[]
-  }
-
-  export type RecitalBestPlayUncheckedUpdateManyWithoutMusicNestedInput = {
-    create?: XOR<RecitalBestPlayCreateWithoutMusicInput, RecitalBestPlayUncheckedCreateWithoutMusicInput> | RecitalBestPlayCreateWithoutMusicInput[] | RecitalBestPlayUncheckedCreateWithoutMusicInput[]
-    connectOrCreate?: RecitalBestPlayCreateOrConnectWithoutMusicInput | RecitalBestPlayCreateOrConnectWithoutMusicInput[]
-    upsert?: RecitalBestPlayUpsertWithWhereUniqueWithoutMusicInput | RecitalBestPlayUpsertWithWhereUniqueWithoutMusicInput[]
-    createMany?: RecitalBestPlayCreateManyMusicInputEnvelope
-    set?: RecitalBestPlayWhereUniqueInput | RecitalBestPlayWhereUniqueInput[]
-    disconnect?: RecitalBestPlayWhereUniqueInput | RecitalBestPlayWhereUniqueInput[]
-    delete?: RecitalBestPlayWhereUniqueInput | RecitalBestPlayWhereUniqueInput[]
-    connect?: RecitalBestPlayWhereUniqueInput | RecitalBestPlayWhereUniqueInput[]
-    update?: RecitalBestPlayUpdateWithWhereUniqueWithoutMusicInput | RecitalBestPlayUpdateWithWhereUniqueWithoutMusicInput[]
-    updateMany?: RecitalBestPlayUpdateManyWithWhereWithoutMusicInput | RecitalBestPlayUpdateManyWithWhereWithoutMusicInput[]
-    deleteMany?: RecitalBestPlayScalarWhereInput | RecitalBestPlayScalarWhereInput[]
   }
 
   export type BingoUncheckedUpdateManyWithoutCoverMusicNestedInput = {
@@ -46642,32 +40741,11 @@ export namespace Prisma {
     connect?: ChartEvaluationWhereUniqueInput | ChartEvaluationWhereUniqueInput[]
   }
 
-  export type RecentPlayCreateNestedManyWithoutChartInput = {
-    create?: XOR<RecentPlayCreateWithoutChartInput, RecentPlayUncheckedCreateWithoutChartInput> | RecentPlayCreateWithoutChartInput[] | RecentPlayUncheckedCreateWithoutChartInput[]
-    connectOrCreate?: RecentPlayCreateOrConnectWithoutChartInput | RecentPlayCreateOrConnectWithoutChartInput[]
-    createMany?: RecentPlayCreateManyChartInputEnvelope
-    connect?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
-  }
-
   export type PlayDataCreateNestedManyWithoutChartInput = {
     create?: XOR<PlayDataCreateWithoutChartInput, PlayDataUncheckedCreateWithoutChartInput> | PlayDataCreateWithoutChartInput[] | PlayDataUncheckedCreateWithoutChartInput[]
     connectOrCreate?: PlayDataCreateOrConnectWithoutChartInput | PlayDataCreateOrConnectWithoutChartInput[]
     createMany?: PlayDataCreateManyChartInputEnvelope
     connect?: PlayDataWhereUniqueInput | PlayDataWhereUniqueInput[]
-  }
-
-  export type BasicBestPlayCreateNestedManyWithoutChartInput = {
-    create?: XOR<BasicBestPlayCreateWithoutChartInput, BasicBestPlayUncheckedCreateWithoutChartInput> | BasicBestPlayCreateWithoutChartInput[] | BasicBestPlayUncheckedCreateWithoutChartInput[]
-    connectOrCreate?: BasicBestPlayCreateOrConnectWithoutChartInput | BasicBestPlayCreateOrConnectWithoutChartInput[]
-    createMany?: BasicBestPlayCreateManyChartInputEnvelope
-    connect?: BasicBestPlayWhereUniqueInput | BasicBestPlayWhereUniqueInput[]
-  }
-
-  export type RecitalBestPlayCreateNestedManyWithoutChartInput = {
-    create?: XOR<RecitalBestPlayCreateWithoutChartInput, RecitalBestPlayUncheckedCreateWithoutChartInput> | RecitalBestPlayCreateWithoutChartInput[] | RecitalBestPlayUncheckedCreateWithoutChartInput[]
-    connectOrCreate?: RecitalBestPlayCreateOrConnectWithoutChartInput | RecitalBestPlayCreateOrConnectWithoutChartInput[]
-    createMany?: RecitalBestPlayCreateManyChartInputEnvelope
-    connect?: RecitalBestPlayWhereUniqueInput | RecitalBestPlayWhereUniqueInput[]
   }
 
   export type ChartPlayHistoryCreateNestedManyWithoutChartInput = {
@@ -46719,32 +40797,11 @@ export namespace Prisma {
     connect?: ChartEvaluationWhereUniqueInput | ChartEvaluationWhereUniqueInput[]
   }
 
-  export type RecentPlayUncheckedCreateNestedManyWithoutChartInput = {
-    create?: XOR<RecentPlayCreateWithoutChartInput, RecentPlayUncheckedCreateWithoutChartInput> | RecentPlayCreateWithoutChartInput[] | RecentPlayUncheckedCreateWithoutChartInput[]
-    connectOrCreate?: RecentPlayCreateOrConnectWithoutChartInput | RecentPlayCreateOrConnectWithoutChartInput[]
-    createMany?: RecentPlayCreateManyChartInputEnvelope
-    connect?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
-  }
-
   export type PlayDataUncheckedCreateNestedManyWithoutChartInput = {
     create?: XOR<PlayDataCreateWithoutChartInput, PlayDataUncheckedCreateWithoutChartInput> | PlayDataCreateWithoutChartInput[] | PlayDataUncheckedCreateWithoutChartInput[]
     connectOrCreate?: PlayDataCreateOrConnectWithoutChartInput | PlayDataCreateOrConnectWithoutChartInput[]
     createMany?: PlayDataCreateManyChartInputEnvelope
     connect?: PlayDataWhereUniqueInput | PlayDataWhereUniqueInput[]
-  }
-
-  export type BasicBestPlayUncheckedCreateNestedManyWithoutChartInput = {
-    create?: XOR<BasicBestPlayCreateWithoutChartInput, BasicBestPlayUncheckedCreateWithoutChartInput> | BasicBestPlayCreateWithoutChartInput[] | BasicBestPlayUncheckedCreateWithoutChartInput[]
-    connectOrCreate?: BasicBestPlayCreateOrConnectWithoutChartInput | BasicBestPlayCreateOrConnectWithoutChartInput[]
-    createMany?: BasicBestPlayCreateManyChartInputEnvelope
-    connect?: BasicBestPlayWhereUniqueInput | BasicBestPlayWhereUniqueInput[]
-  }
-
-  export type RecitalBestPlayUncheckedCreateNestedManyWithoutChartInput = {
-    create?: XOR<RecitalBestPlayCreateWithoutChartInput, RecitalBestPlayUncheckedCreateWithoutChartInput> | RecitalBestPlayCreateWithoutChartInput[] | RecitalBestPlayUncheckedCreateWithoutChartInput[]
-    connectOrCreate?: RecitalBestPlayCreateOrConnectWithoutChartInput | RecitalBestPlayCreateOrConnectWithoutChartInput[]
-    createMany?: RecitalBestPlayCreateManyChartInputEnvelope
-    connect?: RecitalBestPlayWhereUniqueInput | RecitalBestPlayWhereUniqueInput[]
   }
 
   export type ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput = {
@@ -46830,20 +40887,6 @@ export namespace Prisma {
     deleteMany?: ChartEvaluationScalarWhereInput | ChartEvaluationScalarWhereInput[]
   }
 
-  export type RecentPlayUpdateManyWithoutChartNestedInput = {
-    create?: XOR<RecentPlayCreateWithoutChartInput, RecentPlayUncheckedCreateWithoutChartInput> | RecentPlayCreateWithoutChartInput[] | RecentPlayUncheckedCreateWithoutChartInput[]
-    connectOrCreate?: RecentPlayCreateOrConnectWithoutChartInput | RecentPlayCreateOrConnectWithoutChartInput[]
-    upsert?: RecentPlayUpsertWithWhereUniqueWithoutChartInput | RecentPlayUpsertWithWhereUniqueWithoutChartInput[]
-    createMany?: RecentPlayCreateManyChartInputEnvelope
-    set?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
-    disconnect?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
-    delete?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
-    connect?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
-    update?: RecentPlayUpdateWithWhereUniqueWithoutChartInput | RecentPlayUpdateWithWhereUniqueWithoutChartInput[]
-    updateMany?: RecentPlayUpdateManyWithWhereWithoutChartInput | RecentPlayUpdateManyWithWhereWithoutChartInput[]
-    deleteMany?: RecentPlayScalarWhereInput | RecentPlayScalarWhereInput[]
-  }
-
   export type PlayDataUpdateManyWithoutChartNestedInput = {
     create?: XOR<PlayDataCreateWithoutChartInput, PlayDataUncheckedCreateWithoutChartInput> | PlayDataCreateWithoutChartInput[] | PlayDataUncheckedCreateWithoutChartInput[]
     connectOrCreate?: PlayDataCreateOrConnectWithoutChartInput | PlayDataCreateOrConnectWithoutChartInput[]
@@ -46856,34 +40899,6 @@ export namespace Prisma {
     update?: PlayDataUpdateWithWhereUniqueWithoutChartInput | PlayDataUpdateWithWhereUniqueWithoutChartInput[]
     updateMany?: PlayDataUpdateManyWithWhereWithoutChartInput | PlayDataUpdateManyWithWhereWithoutChartInput[]
     deleteMany?: PlayDataScalarWhereInput | PlayDataScalarWhereInput[]
-  }
-
-  export type BasicBestPlayUpdateManyWithoutChartNestedInput = {
-    create?: XOR<BasicBestPlayCreateWithoutChartInput, BasicBestPlayUncheckedCreateWithoutChartInput> | BasicBestPlayCreateWithoutChartInput[] | BasicBestPlayUncheckedCreateWithoutChartInput[]
-    connectOrCreate?: BasicBestPlayCreateOrConnectWithoutChartInput | BasicBestPlayCreateOrConnectWithoutChartInput[]
-    upsert?: BasicBestPlayUpsertWithWhereUniqueWithoutChartInput | BasicBestPlayUpsertWithWhereUniqueWithoutChartInput[]
-    createMany?: BasicBestPlayCreateManyChartInputEnvelope
-    set?: BasicBestPlayWhereUniqueInput | BasicBestPlayWhereUniqueInput[]
-    disconnect?: BasicBestPlayWhereUniqueInput | BasicBestPlayWhereUniqueInput[]
-    delete?: BasicBestPlayWhereUniqueInput | BasicBestPlayWhereUniqueInput[]
-    connect?: BasicBestPlayWhereUniqueInput | BasicBestPlayWhereUniqueInput[]
-    update?: BasicBestPlayUpdateWithWhereUniqueWithoutChartInput | BasicBestPlayUpdateWithWhereUniqueWithoutChartInput[]
-    updateMany?: BasicBestPlayUpdateManyWithWhereWithoutChartInput | BasicBestPlayUpdateManyWithWhereWithoutChartInput[]
-    deleteMany?: BasicBestPlayScalarWhereInput | BasicBestPlayScalarWhereInput[]
-  }
-
-  export type RecitalBestPlayUpdateManyWithoutChartNestedInput = {
-    create?: XOR<RecitalBestPlayCreateWithoutChartInput, RecitalBestPlayUncheckedCreateWithoutChartInput> | RecitalBestPlayCreateWithoutChartInput[] | RecitalBestPlayUncheckedCreateWithoutChartInput[]
-    connectOrCreate?: RecitalBestPlayCreateOrConnectWithoutChartInput | RecitalBestPlayCreateOrConnectWithoutChartInput[]
-    upsert?: RecitalBestPlayUpsertWithWhereUniqueWithoutChartInput | RecitalBestPlayUpsertWithWhereUniqueWithoutChartInput[]
-    createMany?: RecitalBestPlayCreateManyChartInputEnvelope
-    set?: RecitalBestPlayWhereUniqueInput | RecitalBestPlayWhereUniqueInput[]
-    disconnect?: RecitalBestPlayWhereUniqueInput | RecitalBestPlayWhereUniqueInput[]
-    delete?: RecitalBestPlayWhereUniqueInput | RecitalBestPlayWhereUniqueInput[]
-    connect?: RecitalBestPlayWhereUniqueInput | RecitalBestPlayWhereUniqueInput[]
-    update?: RecitalBestPlayUpdateWithWhereUniqueWithoutChartInput | RecitalBestPlayUpdateWithWhereUniqueWithoutChartInput[]
-    updateMany?: RecitalBestPlayUpdateManyWithWhereWithoutChartInput | RecitalBestPlayUpdateManyWithWhereWithoutChartInput[]
-    deleteMany?: RecitalBestPlayScalarWhereInput | RecitalBestPlayScalarWhereInput[]
   }
 
   export type ChartPlayHistoryUpdateManyWithoutChartNestedInput = {
@@ -46984,20 +40999,6 @@ export namespace Prisma {
     deleteMany?: ChartEvaluationScalarWhereInput | ChartEvaluationScalarWhereInput[]
   }
 
-  export type RecentPlayUncheckedUpdateManyWithoutChartNestedInput = {
-    create?: XOR<RecentPlayCreateWithoutChartInput, RecentPlayUncheckedCreateWithoutChartInput> | RecentPlayCreateWithoutChartInput[] | RecentPlayUncheckedCreateWithoutChartInput[]
-    connectOrCreate?: RecentPlayCreateOrConnectWithoutChartInput | RecentPlayCreateOrConnectWithoutChartInput[]
-    upsert?: RecentPlayUpsertWithWhereUniqueWithoutChartInput | RecentPlayUpsertWithWhereUniqueWithoutChartInput[]
-    createMany?: RecentPlayCreateManyChartInputEnvelope
-    set?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
-    disconnect?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
-    delete?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
-    connect?: RecentPlayWhereUniqueInput | RecentPlayWhereUniqueInput[]
-    update?: RecentPlayUpdateWithWhereUniqueWithoutChartInput | RecentPlayUpdateWithWhereUniqueWithoutChartInput[]
-    updateMany?: RecentPlayUpdateManyWithWhereWithoutChartInput | RecentPlayUpdateManyWithWhereWithoutChartInput[]
-    deleteMany?: RecentPlayScalarWhereInput | RecentPlayScalarWhereInput[]
-  }
-
   export type PlayDataUncheckedUpdateManyWithoutChartNestedInput = {
     create?: XOR<PlayDataCreateWithoutChartInput, PlayDataUncheckedCreateWithoutChartInput> | PlayDataCreateWithoutChartInput[] | PlayDataUncheckedCreateWithoutChartInput[]
     connectOrCreate?: PlayDataCreateOrConnectWithoutChartInput | PlayDataCreateOrConnectWithoutChartInput[]
@@ -47010,34 +41011,6 @@ export namespace Prisma {
     update?: PlayDataUpdateWithWhereUniqueWithoutChartInput | PlayDataUpdateWithWhereUniqueWithoutChartInput[]
     updateMany?: PlayDataUpdateManyWithWhereWithoutChartInput | PlayDataUpdateManyWithWhereWithoutChartInput[]
     deleteMany?: PlayDataScalarWhereInput | PlayDataScalarWhereInput[]
-  }
-
-  export type BasicBestPlayUncheckedUpdateManyWithoutChartNestedInput = {
-    create?: XOR<BasicBestPlayCreateWithoutChartInput, BasicBestPlayUncheckedCreateWithoutChartInput> | BasicBestPlayCreateWithoutChartInput[] | BasicBestPlayUncheckedCreateWithoutChartInput[]
-    connectOrCreate?: BasicBestPlayCreateOrConnectWithoutChartInput | BasicBestPlayCreateOrConnectWithoutChartInput[]
-    upsert?: BasicBestPlayUpsertWithWhereUniqueWithoutChartInput | BasicBestPlayUpsertWithWhereUniqueWithoutChartInput[]
-    createMany?: BasicBestPlayCreateManyChartInputEnvelope
-    set?: BasicBestPlayWhereUniqueInput | BasicBestPlayWhereUniqueInput[]
-    disconnect?: BasicBestPlayWhereUniqueInput | BasicBestPlayWhereUniqueInput[]
-    delete?: BasicBestPlayWhereUniqueInput | BasicBestPlayWhereUniqueInput[]
-    connect?: BasicBestPlayWhereUniqueInput | BasicBestPlayWhereUniqueInput[]
-    update?: BasicBestPlayUpdateWithWhereUniqueWithoutChartInput | BasicBestPlayUpdateWithWhereUniqueWithoutChartInput[]
-    updateMany?: BasicBestPlayUpdateManyWithWhereWithoutChartInput | BasicBestPlayUpdateManyWithWhereWithoutChartInput[]
-    deleteMany?: BasicBestPlayScalarWhereInput | BasicBestPlayScalarWhereInput[]
-  }
-
-  export type RecitalBestPlayUncheckedUpdateManyWithoutChartNestedInput = {
-    create?: XOR<RecitalBestPlayCreateWithoutChartInput, RecitalBestPlayUncheckedCreateWithoutChartInput> | RecitalBestPlayCreateWithoutChartInput[] | RecitalBestPlayUncheckedCreateWithoutChartInput[]
-    connectOrCreate?: RecitalBestPlayCreateOrConnectWithoutChartInput | RecitalBestPlayCreateOrConnectWithoutChartInput[]
-    upsert?: RecitalBestPlayUpsertWithWhereUniqueWithoutChartInput | RecitalBestPlayUpsertWithWhereUniqueWithoutChartInput[]
-    createMany?: RecitalBestPlayCreateManyChartInputEnvelope
-    set?: RecitalBestPlayWhereUniqueInput | RecitalBestPlayWhereUniqueInput[]
-    disconnect?: RecitalBestPlayWhereUniqueInput | RecitalBestPlayWhereUniqueInput[]
-    delete?: RecitalBestPlayWhereUniqueInput | RecitalBestPlayWhereUniqueInput[]
-    connect?: RecitalBestPlayWhereUniqueInput | RecitalBestPlayWhereUniqueInput[]
-    update?: RecitalBestPlayUpdateWithWhereUniqueWithoutChartInput | RecitalBestPlayUpdateWithWhereUniqueWithoutChartInput[]
-    updateMany?: RecitalBestPlayUpdateManyWithWhereWithoutChartInput | RecitalBestPlayUpdateManyWithWhereWithoutChartInput[]
-    deleteMany?: RecitalBestPlayScalarWhereInput | RecitalBestPlayScalarWhereInput[]
   }
 
   export type ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput = {
@@ -47666,50 +41639,6 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutChartReactionsInput, UserUpdateWithoutChartReactionsInput>, UserUncheckedUpdateWithoutChartReactionsInput>
   }
 
-  export type UserCreateNestedOneWithoutPlayHistoryInput = {
-    create?: XOR<UserCreateWithoutPlayHistoryInput, UserUncheckedCreateWithoutPlayHistoryInput>
-    connectOrCreate?: UserCreateOrConnectWithoutPlayHistoryInput
-    connect?: UserWhereUniqueInput
-  }
-
-  export type MusicCreateNestedOneWithoutRecentPlayInput = {
-    create?: XOR<MusicCreateWithoutRecentPlayInput, MusicUncheckedCreateWithoutRecentPlayInput>
-    connectOrCreate?: MusicCreateOrConnectWithoutRecentPlayInput
-    connect?: MusicWhereUniqueInput
-  }
-
-  export type MusicChartCreateNestedOneWithoutRecentPlayInput = {
-    create?: XOR<MusicChartCreateWithoutRecentPlayInput, MusicChartUncheckedCreateWithoutRecentPlayInput>
-    connectOrCreate?: MusicChartCreateOrConnectWithoutRecentPlayInput
-    connect?: MusicChartWhereUniqueInput
-  }
-
-  export type UserUpdateOneRequiredWithoutPlayHistoryNestedInput = {
-    create?: XOR<UserCreateWithoutPlayHistoryInput, UserUncheckedCreateWithoutPlayHistoryInput>
-    connectOrCreate?: UserCreateOrConnectWithoutPlayHistoryInput
-    upsert?: UserUpsertWithoutPlayHistoryInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPlayHistoryInput, UserUpdateWithoutPlayHistoryInput>, UserUncheckedUpdateWithoutPlayHistoryInput>
-  }
-
-  export type MusicUpdateOneRequiredWithoutRecentPlayNestedInput = {
-    create?: XOR<MusicCreateWithoutRecentPlayInput, MusicUncheckedCreateWithoutRecentPlayInput>
-    connectOrCreate?: MusicCreateOrConnectWithoutRecentPlayInput
-    upsert?: MusicUpsertWithoutRecentPlayInput
-    connect?: MusicWhereUniqueInput
-    update?: XOR<XOR<MusicUpdateToOneWithWhereWithoutRecentPlayInput, MusicUpdateWithoutRecentPlayInput>, MusicUncheckedUpdateWithoutRecentPlayInput>
-  }
-
-  export type MusicChartUpdateOneWithoutRecentPlayNestedInput = {
-    create?: XOR<MusicChartCreateWithoutRecentPlayInput, MusicChartUncheckedCreateWithoutRecentPlayInput>
-    connectOrCreate?: MusicChartCreateOrConnectWithoutRecentPlayInput
-    upsert?: MusicChartUpsertWithoutRecentPlayInput
-    disconnect?: MusicChartWhereInput | boolean
-    delete?: MusicChartWhereInput | boolean
-    connect?: MusicChartWhereUniqueInput
-    update?: XOR<XOR<MusicChartUpdateToOneWithWhereWithoutRecentPlayInput, MusicChartUpdateWithoutRecentPlayInput>, MusicChartUncheckedUpdateWithoutRecentPlayInput>
-  }
-
   export type UserCreateNestedOneWithoutUserBestGradeInput = {
     create?: XOR<UserCreateWithoutUserBestGradeInput, UserUncheckedCreateWithoutUserBestGradeInput>
     connectOrCreate?: UserCreateOrConnectWithoutUserBestGradeInput
@@ -47722,94 +41651,6 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutUserBestGradeInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutUserBestGradeInput, UserUpdateWithoutUserBestGradeInput>, UserUncheckedUpdateWithoutUserBestGradeInput>
-  }
-
-  export type UserCreateNestedOneWithoutBasicBestPlayInput = {
-    create?: XOR<UserCreateWithoutBasicBestPlayInput, UserUncheckedCreateWithoutBasicBestPlayInput>
-    connectOrCreate?: UserCreateOrConnectWithoutBasicBestPlayInput
-    connect?: UserWhereUniqueInput
-  }
-
-  export type MusicCreateNestedOneWithoutBasicBestPlayInput = {
-    create?: XOR<MusicCreateWithoutBasicBestPlayInput, MusicUncheckedCreateWithoutBasicBestPlayInput>
-    connectOrCreate?: MusicCreateOrConnectWithoutBasicBestPlayInput
-    connect?: MusicWhereUniqueInput
-  }
-
-  export type MusicChartCreateNestedOneWithoutBasicBestPlayInput = {
-    create?: XOR<MusicChartCreateWithoutBasicBestPlayInput, MusicChartUncheckedCreateWithoutBasicBestPlayInput>
-    connectOrCreate?: MusicChartCreateOrConnectWithoutBasicBestPlayInput
-    connect?: MusicChartWhereUniqueInput
-  }
-
-  export type UserUpdateOneRequiredWithoutBasicBestPlayNestedInput = {
-    create?: XOR<UserCreateWithoutBasicBestPlayInput, UserUncheckedCreateWithoutBasicBestPlayInput>
-    connectOrCreate?: UserCreateOrConnectWithoutBasicBestPlayInput
-    upsert?: UserUpsertWithoutBasicBestPlayInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutBasicBestPlayInput, UserUpdateWithoutBasicBestPlayInput>, UserUncheckedUpdateWithoutBasicBestPlayInput>
-  }
-
-  export type MusicUpdateOneRequiredWithoutBasicBestPlayNestedInput = {
-    create?: XOR<MusicCreateWithoutBasicBestPlayInput, MusicUncheckedCreateWithoutBasicBestPlayInput>
-    connectOrCreate?: MusicCreateOrConnectWithoutBasicBestPlayInput
-    upsert?: MusicUpsertWithoutBasicBestPlayInput
-    connect?: MusicWhereUniqueInput
-    update?: XOR<XOR<MusicUpdateToOneWithWhereWithoutBasicBestPlayInput, MusicUpdateWithoutBasicBestPlayInput>, MusicUncheckedUpdateWithoutBasicBestPlayInput>
-  }
-
-  export type MusicChartUpdateOneWithoutBasicBestPlayNestedInput = {
-    create?: XOR<MusicChartCreateWithoutBasicBestPlayInput, MusicChartUncheckedCreateWithoutBasicBestPlayInput>
-    connectOrCreate?: MusicChartCreateOrConnectWithoutBasicBestPlayInput
-    upsert?: MusicChartUpsertWithoutBasicBestPlayInput
-    disconnect?: MusicChartWhereInput | boolean
-    delete?: MusicChartWhereInput | boolean
-    connect?: MusicChartWhereUniqueInput
-    update?: XOR<XOR<MusicChartUpdateToOneWithWhereWithoutBasicBestPlayInput, MusicChartUpdateWithoutBasicBestPlayInput>, MusicChartUncheckedUpdateWithoutBasicBestPlayInput>
-  }
-
-  export type UserCreateNestedOneWithoutRecitalBestPlayInput = {
-    create?: XOR<UserCreateWithoutRecitalBestPlayInput, UserUncheckedCreateWithoutRecitalBestPlayInput>
-    connectOrCreate?: UserCreateOrConnectWithoutRecitalBestPlayInput
-    connect?: UserWhereUniqueInput
-  }
-
-  export type MusicCreateNestedOneWithoutRecitalBestPlayInput = {
-    create?: XOR<MusicCreateWithoutRecitalBestPlayInput, MusicUncheckedCreateWithoutRecitalBestPlayInput>
-    connectOrCreate?: MusicCreateOrConnectWithoutRecitalBestPlayInput
-    connect?: MusicWhereUniqueInput
-  }
-
-  export type MusicChartCreateNestedOneWithoutRecitalBestPlayInput = {
-    create?: XOR<MusicChartCreateWithoutRecitalBestPlayInput, MusicChartUncheckedCreateWithoutRecitalBestPlayInput>
-    connectOrCreate?: MusicChartCreateOrConnectWithoutRecitalBestPlayInput
-    connect?: MusicChartWhereUniqueInput
-  }
-
-  export type UserUpdateOneRequiredWithoutRecitalBestPlayNestedInput = {
-    create?: XOR<UserCreateWithoutRecitalBestPlayInput, UserUncheckedCreateWithoutRecitalBestPlayInput>
-    connectOrCreate?: UserCreateOrConnectWithoutRecitalBestPlayInput
-    upsert?: UserUpsertWithoutRecitalBestPlayInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutRecitalBestPlayInput, UserUpdateWithoutRecitalBestPlayInput>, UserUncheckedUpdateWithoutRecitalBestPlayInput>
-  }
-
-  export type MusicUpdateOneRequiredWithoutRecitalBestPlayNestedInput = {
-    create?: XOR<MusicCreateWithoutRecitalBestPlayInput, MusicUncheckedCreateWithoutRecitalBestPlayInput>
-    connectOrCreate?: MusicCreateOrConnectWithoutRecitalBestPlayInput
-    upsert?: MusicUpsertWithoutRecitalBestPlayInput
-    connect?: MusicWhereUniqueInput
-    update?: XOR<XOR<MusicUpdateToOneWithWhereWithoutRecitalBestPlayInput, MusicUpdateWithoutRecitalBestPlayInput>, MusicUncheckedUpdateWithoutRecitalBestPlayInput>
-  }
-
-  export type MusicChartUpdateOneWithoutRecitalBestPlayNestedInput = {
-    create?: XOR<MusicChartCreateWithoutRecitalBestPlayInput, MusicChartUncheckedCreateWithoutRecitalBestPlayInput>
-    connectOrCreate?: MusicChartCreateOrConnectWithoutRecitalBestPlayInput
-    upsert?: MusicChartUpsertWithoutRecitalBestPlayInput
-    disconnect?: MusicChartWhereInput | boolean
-    delete?: MusicChartWhereInput | boolean
-    connect?: MusicChartWhereUniqueInput
-    update?: XOR<XOR<MusicChartUpdateToOneWithWhereWithoutRecitalBestPlayInput, MusicChartUpdateWithoutRecitalBestPlayInput>, MusicChartUncheckedUpdateWithoutRecitalBestPlayInput>
   }
 
   export type UserCreateNestedOneWithoutPlayDataInput = {
@@ -48672,45 +42513,6 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
-  export type RecentPlayCreateWithoutUserInput = {
-    difficulty: string
-    level: number
-    score: number
-    max_combo: number
-    rank: string
-    play_time: string
-    grade_basic: number
-    created_at?: Date | string
-    updated_at?: Date | string
-    music: MusicCreateNestedOneWithoutRecentPlayInput
-    chart?: MusicChartCreateNestedOneWithoutRecentPlayInput
-  }
-
-  export type RecentPlayUncheckedCreateWithoutUserInput = {
-    id?: number
-    difficulty: string
-    level: number
-    score: number
-    max_combo: number
-    rank: string
-    play_time: string
-    grade_basic: number
-    created_at?: Date | string
-    updated_at?: Date | string
-    music_idx: string
-    chart_id?: number | null
-  }
-
-  export type RecentPlayCreateOrConnectWithoutUserInput = {
-    where: RecentPlayWhereUniqueInput
-    create: XOR<RecentPlayCreateWithoutUserInput, RecentPlayUncheckedCreateWithoutUserInput>
-  }
-
-  export type RecentPlayCreateManyUserInputEnvelope = {
-    data: RecentPlayCreateManyUserInput | RecentPlayCreateManyUserInput[]
-    skipDuplicates?: boolean
-  }
-
   export type PlayDataCreateWithoutUserInput = {
     level: number
     difficulty: string
@@ -48757,88 +42559,6 @@ export namespace Prisma {
 
   export type PlayDataCreateManyUserInputEnvelope = {
     data: PlayDataCreateManyUserInput | PlayDataCreateManyUserInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type BasicBestPlayCreateWithoutUserInput = {
-    difficulty: string
-    level: number
-    score: number
-    max_combo: number
-    rank: string
-    besttime: string
-    grade_basic: number
-    fc_type: number
-    created_at?: Date | string
-    updated_at?: Date | string
-    music: MusicCreateNestedOneWithoutBasicBestPlayInput
-    chart?: MusicChartCreateNestedOneWithoutBasicBestPlayInput
-  }
-
-  export type BasicBestPlayUncheckedCreateWithoutUserInput = {
-    id?: number
-    difficulty: string
-    level: number
-    score: number
-    max_combo: number
-    rank: string
-    besttime: string
-    grade_basic: number
-    fc_type: number
-    created_at?: Date | string
-    updated_at?: Date | string
-    music_idx: string
-    chart_id?: number | null
-  }
-
-  export type BasicBestPlayCreateOrConnectWithoutUserInput = {
-    where: BasicBestPlayWhereUniqueInput
-    create: XOR<BasicBestPlayCreateWithoutUserInput, BasicBestPlayUncheckedCreateWithoutUserInput>
-  }
-
-  export type BasicBestPlayCreateManyUserInputEnvelope = {
-    data: BasicBestPlayCreateManyUserInput | BasicBestPlayCreateManyUserInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type RecitalBestPlayCreateWithoutUserInput = {
-    difficulty: string
-    level: number
-    score: number
-    max_combo: number
-    rank: string
-    besttime: string
-    grade_recital: number
-    fc_type: number
-    created_at?: Date | string
-    updated_at?: Date | string
-    music: MusicCreateNestedOneWithoutRecitalBestPlayInput
-    chart?: MusicChartCreateNestedOneWithoutRecitalBestPlayInput
-  }
-
-  export type RecitalBestPlayUncheckedCreateWithoutUserInput = {
-    id?: number
-    difficulty: string
-    level: number
-    score: number
-    max_combo: number
-    rank: string
-    besttime: string
-    grade_recital: number
-    fc_type: number
-    created_at?: Date | string
-    updated_at?: Date | string
-    music_idx: string
-    chart_id?: number | null
-  }
-
-  export type RecitalBestPlayCreateOrConnectWithoutUserInput = {
-    where: RecitalBestPlayWhereUniqueInput
-    create: XOR<RecitalBestPlayCreateWithoutUserInput, RecitalBestPlayUncheckedCreateWithoutUserInput>
-  }
-
-  export type RecitalBestPlayCreateManyUserInputEnvelope = {
-    data: RecitalBestPlayCreateManyUserInput | RecitalBestPlayCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -49137,41 +42857,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type RecentPlayUpsertWithWhereUniqueWithoutUserInput = {
-    where: RecentPlayWhereUniqueInput
-    update: XOR<RecentPlayUpdateWithoutUserInput, RecentPlayUncheckedUpdateWithoutUserInput>
-    create: XOR<RecentPlayCreateWithoutUserInput, RecentPlayUncheckedCreateWithoutUserInput>
-  }
-
-  export type RecentPlayUpdateWithWhereUniqueWithoutUserInput = {
-    where: RecentPlayWhereUniqueInput
-    data: XOR<RecentPlayUpdateWithoutUserInput, RecentPlayUncheckedUpdateWithoutUserInput>
-  }
-
-  export type RecentPlayUpdateManyWithWhereWithoutUserInput = {
-    where: RecentPlayScalarWhereInput
-    data: XOR<RecentPlayUpdateManyMutationInput, RecentPlayUncheckedUpdateManyWithoutUserInput>
-  }
-
-  export type RecentPlayScalarWhereInput = {
-    AND?: RecentPlayScalarWhereInput | RecentPlayScalarWhereInput[]
-    OR?: RecentPlayScalarWhereInput[]
-    NOT?: RecentPlayScalarWhereInput | RecentPlayScalarWhereInput[]
-    id?: IntFilter<"RecentPlay"> | number
-    difficulty?: StringFilter<"RecentPlay"> | string
-    level?: IntFilter<"RecentPlay"> | number
-    score?: IntFilter<"RecentPlay"> | number
-    max_combo?: IntFilter<"RecentPlay"> | number
-    rank?: StringFilter<"RecentPlay"> | string
-    play_time?: StringFilter<"RecentPlay"> | string
-    grade_basic?: IntFilter<"RecentPlay"> | number
-    created_at?: DateTimeFilter<"RecentPlay"> | Date | string
-    updated_at?: DateTimeFilter<"RecentPlay"> | Date | string
-    user_id?: IntFilter<"RecentPlay"> | number
-    music_idx?: StringFilter<"RecentPlay"> | string
-    chart_id?: IntNullableFilter<"RecentPlay"> | number | null
-  }
-
   export type PlayDataUpsertWithWhereUniqueWithoutUserInput = {
     where: PlayDataWhereUniqueInput
     update: XOR<PlayDataUpdateWithoutUserInput, PlayDataUncheckedUpdateWithoutUserInput>
@@ -49210,78 +42895,6 @@ export namespace Prisma {
     user_id?: IntFilter<"PlayData"> | number
     music_idx?: StringFilter<"PlayData"> | string
     chart_id?: IntNullableFilter<"PlayData"> | number | null
-  }
-
-  export type BasicBestPlayUpsertWithWhereUniqueWithoutUserInput = {
-    where: BasicBestPlayWhereUniqueInput
-    update: XOR<BasicBestPlayUpdateWithoutUserInput, BasicBestPlayUncheckedUpdateWithoutUserInput>
-    create: XOR<BasicBestPlayCreateWithoutUserInput, BasicBestPlayUncheckedCreateWithoutUserInput>
-  }
-
-  export type BasicBestPlayUpdateWithWhereUniqueWithoutUserInput = {
-    where: BasicBestPlayWhereUniqueInput
-    data: XOR<BasicBestPlayUpdateWithoutUserInput, BasicBestPlayUncheckedUpdateWithoutUserInput>
-  }
-
-  export type BasicBestPlayUpdateManyWithWhereWithoutUserInput = {
-    where: BasicBestPlayScalarWhereInput
-    data: XOR<BasicBestPlayUpdateManyMutationInput, BasicBestPlayUncheckedUpdateManyWithoutUserInput>
-  }
-
-  export type BasicBestPlayScalarWhereInput = {
-    AND?: BasicBestPlayScalarWhereInput | BasicBestPlayScalarWhereInput[]
-    OR?: BasicBestPlayScalarWhereInput[]
-    NOT?: BasicBestPlayScalarWhereInput | BasicBestPlayScalarWhereInput[]
-    id?: IntFilter<"BasicBestPlay"> | number
-    difficulty?: StringFilter<"BasicBestPlay"> | string
-    level?: IntFilter<"BasicBestPlay"> | number
-    score?: IntFilter<"BasicBestPlay"> | number
-    max_combo?: IntFilter<"BasicBestPlay"> | number
-    rank?: StringFilter<"BasicBestPlay"> | string
-    besttime?: StringFilter<"BasicBestPlay"> | string
-    grade_basic?: IntFilter<"BasicBestPlay"> | number
-    fc_type?: IntFilter<"BasicBestPlay"> | number
-    created_at?: DateTimeFilter<"BasicBestPlay"> | Date | string
-    updated_at?: DateTimeFilter<"BasicBestPlay"> | Date | string
-    user_id?: IntFilter<"BasicBestPlay"> | number
-    music_idx?: StringFilter<"BasicBestPlay"> | string
-    chart_id?: IntNullableFilter<"BasicBestPlay"> | number | null
-  }
-
-  export type RecitalBestPlayUpsertWithWhereUniqueWithoutUserInput = {
-    where: RecitalBestPlayWhereUniqueInput
-    update: XOR<RecitalBestPlayUpdateWithoutUserInput, RecitalBestPlayUncheckedUpdateWithoutUserInput>
-    create: XOR<RecitalBestPlayCreateWithoutUserInput, RecitalBestPlayUncheckedCreateWithoutUserInput>
-  }
-
-  export type RecitalBestPlayUpdateWithWhereUniqueWithoutUserInput = {
-    where: RecitalBestPlayWhereUniqueInput
-    data: XOR<RecitalBestPlayUpdateWithoutUserInput, RecitalBestPlayUncheckedUpdateWithoutUserInput>
-  }
-
-  export type RecitalBestPlayUpdateManyWithWhereWithoutUserInput = {
-    where: RecitalBestPlayScalarWhereInput
-    data: XOR<RecitalBestPlayUpdateManyMutationInput, RecitalBestPlayUncheckedUpdateManyWithoutUserInput>
-  }
-
-  export type RecitalBestPlayScalarWhereInput = {
-    AND?: RecitalBestPlayScalarWhereInput | RecitalBestPlayScalarWhereInput[]
-    OR?: RecitalBestPlayScalarWhereInput[]
-    NOT?: RecitalBestPlayScalarWhereInput | RecitalBestPlayScalarWhereInput[]
-    id?: IntFilter<"RecitalBestPlay"> | number
-    difficulty?: StringFilter<"RecitalBestPlay"> | string
-    level?: IntFilter<"RecitalBestPlay"> | number
-    score?: IntFilter<"RecitalBestPlay"> | number
-    max_combo?: IntFilter<"RecitalBestPlay"> | number
-    rank?: StringFilter<"RecitalBestPlay"> | string
-    besttime?: StringFilter<"RecitalBestPlay"> | string
-    grade_recital?: IntFilter<"RecitalBestPlay"> | number
-    fc_type?: IntFilter<"RecitalBestPlay"> | number
-    created_at?: DateTimeFilter<"RecitalBestPlay"> | Date | string
-    updated_at?: DateTimeFilter<"RecitalBestPlay"> | Date | string
-    user_id?: IntFilter<"RecitalBestPlay"> | number
-    music_idx?: StringFilter<"RecitalBestPlay"> | string
-    chart_id?: IntNullableFilter<"RecitalBestPlay"> | number | null
   }
 
   export type UserBestGradeUpsertWithWhereUniqueWithoutUserInput = {
@@ -49567,45 +43180,6 @@ export namespace Prisma {
     submissionId?: IntNullableFilter<"ExamAchievement"> | number | null
   }
 
-  export type RecentPlayCreateWithoutMusicInput = {
-    difficulty: string
-    level: number
-    score: number
-    max_combo: number
-    rank: string
-    play_time: string
-    grade_basic: number
-    created_at?: Date | string
-    updated_at?: Date | string
-    user: UserCreateNestedOneWithoutPlayHistoryInput
-    chart?: MusicChartCreateNestedOneWithoutRecentPlayInput
-  }
-
-  export type RecentPlayUncheckedCreateWithoutMusicInput = {
-    id?: number
-    difficulty: string
-    level: number
-    score: number
-    max_combo: number
-    rank: string
-    play_time: string
-    grade_basic: number
-    created_at?: Date | string
-    updated_at?: Date | string
-    user_id: number
-    chart_id?: number | null
-  }
-
-  export type RecentPlayCreateOrConnectWithoutMusicInput = {
-    where: RecentPlayWhereUniqueInput
-    create: XOR<RecentPlayCreateWithoutMusicInput, RecentPlayUncheckedCreateWithoutMusicInput>
-  }
-
-  export type RecentPlayCreateManyMusicInputEnvelope = {
-    data: RecentPlayCreateManyMusicInput | RecentPlayCreateManyMusicInput[]
-    skipDuplicates?: boolean
-  }
-
   export type PlayDataCreateWithoutMusicInput = {
     level: number
     difficulty: string
@@ -49652,88 +43226,6 @@ export namespace Prisma {
 
   export type PlayDataCreateManyMusicInputEnvelope = {
     data: PlayDataCreateManyMusicInput | PlayDataCreateManyMusicInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type BasicBestPlayCreateWithoutMusicInput = {
-    difficulty: string
-    level: number
-    score: number
-    max_combo: number
-    rank: string
-    besttime: string
-    grade_basic: number
-    fc_type: number
-    created_at?: Date | string
-    updated_at?: Date | string
-    user: UserCreateNestedOneWithoutBasicBestPlayInput
-    chart?: MusicChartCreateNestedOneWithoutBasicBestPlayInput
-  }
-
-  export type BasicBestPlayUncheckedCreateWithoutMusicInput = {
-    id?: number
-    difficulty: string
-    level: number
-    score: number
-    max_combo: number
-    rank: string
-    besttime: string
-    grade_basic: number
-    fc_type: number
-    created_at?: Date | string
-    updated_at?: Date | string
-    user_id: number
-    chart_id?: number | null
-  }
-
-  export type BasicBestPlayCreateOrConnectWithoutMusicInput = {
-    where: BasicBestPlayWhereUniqueInput
-    create: XOR<BasicBestPlayCreateWithoutMusicInput, BasicBestPlayUncheckedCreateWithoutMusicInput>
-  }
-
-  export type BasicBestPlayCreateManyMusicInputEnvelope = {
-    data: BasicBestPlayCreateManyMusicInput | BasicBestPlayCreateManyMusicInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type RecitalBestPlayCreateWithoutMusicInput = {
-    difficulty: string
-    level: number
-    score: number
-    max_combo: number
-    rank: string
-    besttime: string
-    grade_recital: number
-    fc_type: number
-    created_at?: Date | string
-    updated_at?: Date | string
-    user: UserCreateNestedOneWithoutRecitalBestPlayInput
-    chart?: MusicChartCreateNestedOneWithoutRecitalBestPlayInput
-  }
-
-  export type RecitalBestPlayUncheckedCreateWithoutMusicInput = {
-    id?: number
-    difficulty: string
-    level: number
-    score: number
-    max_combo: number
-    rank: string
-    besttime: string
-    grade_recital: number
-    fc_type: number
-    created_at?: Date | string
-    updated_at?: Date | string
-    user_id: number
-    chart_id?: number | null
-  }
-
-  export type RecitalBestPlayCreateOrConnectWithoutMusicInput = {
-    where: RecitalBestPlayWhereUniqueInput
-    create: XOR<RecitalBestPlayCreateWithoutMusicInput, RecitalBestPlayUncheckedCreateWithoutMusicInput>
-  }
-
-  export type RecitalBestPlayCreateManyMusicInputEnvelope = {
-    data: RecitalBestPlayCreateManyMusicInput | RecitalBestPlayCreateManyMusicInput[]
     skipDuplicates?: boolean
   }
 
@@ -49831,10 +43323,7 @@ export namespace Prisma {
     updated_at?: Date | string
     levelConstantHistory?: ChartLevelConstantHistoryCreateNestedManyWithoutChartInput
     evaluations?: ChartEvaluationCreateNestedManyWithoutChartInput
-    RecentPlay?: RecentPlayCreateNestedManyWithoutChartInput
     PlayData?: PlayDataCreateNestedManyWithoutChartInput
-    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutChartInput
-    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutChartInput
     playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
     examStageOptions?: ExamStageChartCreateNestedManyWithoutChartInput
@@ -49859,10 +43348,7 @@ export namespace Prisma {
     updated_at?: Date | string
     levelConstantHistory?: ChartLevelConstantHistoryUncheckedCreateNestedManyWithoutChartInput
     evaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutChartInput
-    RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutChartInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutChartInput
-    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutChartInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutChartInput
     playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
     examStageOptions?: ExamStageChartUncheckedCreateNestedManyWithoutChartInput
@@ -49938,22 +43424,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type RecentPlayUpsertWithWhereUniqueWithoutMusicInput = {
-    where: RecentPlayWhereUniqueInput
-    update: XOR<RecentPlayUpdateWithoutMusicInput, RecentPlayUncheckedUpdateWithoutMusicInput>
-    create: XOR<RecentPlayCreateWithoutMusicInput, RecentPlayUncheckedCreateWithoutMusicInput>
-  }
-
-  export type RecentPlayUpdateWithWhereUniqueWithoutMusicInput = {
-    where: RecentPlayWhereUniqueInput
-    data: XOR<RecentPlayUpdateWithoutMusicInput, RecentPlayUncheckedUpdateWithoutMusicInput>
-  }
-
-  export type RecentPlayUpdateManyWithWhereWithoutMusicInput = {
-    where: RecentPlayScalarWhereInput
-    data: XOR<RecentPlayUpdateManyMutationInput, RecentPlayUncheckedUpdateManyWithoutMusicInput>
-  }
-
   export type PlayDataUpsertWithWhereUniqueWithoutMusicInput = {
     where: PlayDataWhereUniqueInput
     update: XOR<PlayDataUpdateWithoutMusicInput, PlayDataUncheckedUpdateWithoutMusicInput>
@@ -49968,38 +43438,6 @@ export namespace Prisma {
   export type PlayDataUpdateManyWithWhereWithoutMusicInput = {
     where: PlayDataScalarWhereInput
     data: XOR<PlayDataUpdateManyMutationInput, PlayDataUncheckedUpdateManyWithoutMusicInput>
-  }
-
-  export type BasicBestPlayUpsertWithWhereUniqueWithoutMusicInput = {
-    where: BasicBestPlayWhereUniqueInput
-    update: XOR<BasicBestPlayUpdateWithoutMusicInput, BasicBestPlayUncheckedUpdateWithoutMusicInput>
-    create: XOR<BasicBestPlayCreateWithoutMusicInput, BasicBestPlayUncheckedCreateWithoutMusicInput>
-  }
-
-  export type BasicBestPlayUpdateWithWhereUniqueWithoutMusicInput = {
-    where: BasicBestPlayWhereUniqueInput
-    data: XOR<BasicBestPlayUpdateWithoutMusicInput, BasicBestPlayUncheckedUpdateWithoutMusicInput>
-  }
-
-  export type BasicBestPlayUpdateManyWithWhereWithoutMusicInput = {
-    where: BasicBestPlayScalarWhereInput
-    data: XOR<BasicBestPlayUpdateManyMutationInput, BasicBestPlayUncheckedUpdateManyWithoutMusicInput>
-  }
-
-  export type RecitalBestPlayUpsertWithWhereUniqueWithoutMusicInput = {
-    where: RecitalBestPlayWhereUniqueInput
-    update: XOR<RecitalBestPlayUpdateWithoutMusicInput, RecitalBestPlayUncheckedUpdateWithoutMusicInput>
-    create: XOR<RecitalBestPlayCreateWithoutMusicInput, RecitalBestPlayUncheckedCreateWithoutMusicInput>
-  }
-
-  export type RecitalBestPlayUpdateWithWhereUniqueWithoutMusicInput = {
-    where: RecitalBestPlayWhereUniqueInput
-    data: XOR<RecitalBestPlayUpdateWithoutMusicInput, RecitalBestPlayUncheckedUpdateWithoutMusicInput>
-  }
-
-  export type RecitalBestPlayUpdateManyWithWhereWithoutMusicInput = {
-    where: RecitalBestPlayScalarWhereInput
-    data: XOR<RecitalBestPlayUpdateManyMutationInput, RecitalBestPlayUncheckedUpdateManyWithoutMusicInput>
   }
 
   export type BingoUpsertWithWhereUniqueWithoutCoverMusicInput = {
@@ -50175,19 +43613,9 @@ export namespace Prisma {
     category_short: string
     description?: string | null
     background?: string | null
-    sheet_len: number
-    difficulty_levels: string
-    difficulty_name: string
-    normal: number
-    hard: number
-    expert: number
-    real?: number | null
     created_at?: Date | string
     updated_at?: Date | string
-    RecentPlay?: RecentPlayCreateNestedManyWithoutMusicInput
     PlayData?: PlayDataCreateNestedManyWithoutMusicInput
-    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutMusicInput
-    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutMusicInput
     bingoCovers?: BingoCreateNestedManyWithoutCoverMusicInput
     bingoMissions?: BingoCellCreateNestedManyWithoutMusicInput
     examStages?: ExamStageCreateNestedManyWithoutMusicInput
@@ -50204,19 +43632,9 @@ export namespace Prisma {
     category_short: string
     description?: string | null
     background?: string | null
-    sheet_len: number
-    difficulty_levels: string
-    difficulty_name: string
-    normal: number
-    hard: number
-    expert: number
-    real?: number | null
     created_at?: Date | string
     updated_at?: Date | string
-    RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutMusicInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutMusicInput
-    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutMusicInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutMusicInput
     bingoCovers?: BingoUncheckedCreateNestedManyWithoutCoverMusicInput
     bingoMissions?: BingoCellUncheckedCreateNestedManyWithoutMusicInput
     examStages?: ExamStageUncheckedCreateNestedManyWithoutMusicInput
@@ -50290,45 +43708,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type RecentPlayCreateWithoutChartInput = {
-    difficulty: string
-    level: number
-    score: number
-    max_combo: number
-    rank: string
-    play_time: string
-    grade_basic: number
-    created_at?: Date | string
-    updated_at?: Date | string
-    user: UserCreateNestedOneWithoutPlayHistoryInput
-    music: MusicCreateNestedOneWithoutRecentPlayInput
-  }
-
-  export type RecentPlayUncheckedCreateWithoutChartInput = {
-    id?: number
-    difficulty: string
-    level: number
-    score: number
-    max_combo: number
-    rank: string
-    play_time: string
-    grade_basic: number
-    created_at?: Date | string
-    updated_at?: Date | string
-    user_id: number
-    music_idx: string
-  }
-
-  export type RecentPlayCreateOrConnectWithoutChartInput = {
-    where: RecentPlayWhereUniqueInput
-    create: XOR<RecentPlayCreateWithoutChartInput, RecentPlayUncheckedCreateWithoutChartInput>
-  }
-
-  export type RecentPlayCreateManyChartInputEnvelope = {
-    data: RecentPlayCreateManyChartInput | RecentPlayCreateManyChartInput[]
-    skipDuplicates?: boolean
-  }
-
   export type PlayDataCreateWithoutChartInput = {
     level: number
     difficulty: string
@@ -50375,88 +43754,6 @@ export namespace Prisma {
 
   export type PlayDataCreateManyChartInputEnvelope = {
     data: PlayDataCreateManyChartInput | PlayDataCreateManyChartInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type BasicBestPlayCreateWithoutChartInput = {
-    difficulty: string
-    level: number
-    score: number
-    max_combo: number
-    rank: string
-    besttime: string
-    grade_basic: number
-    fc_type: number
-    created_at?: Date | string
-    updated_at?: Date | string
-    user: UserCreateNestedOneWithoutBasicBestPlayInput
-    music: MusicCreateNestedOneWithoutBasicBestPlayInput
-  }
-
-  export type BasicBestPlayUncheckedCreateWithoutChartInput = {
-    id?: number
-    difficulty: string
-    level: number
-    score: number
-    max_combo: number
-    rank: string
-    besttime: string
-    grade_basic: number
-    fc_type: number
-    created_at?: Date | string
-    updated_at?: Date | string
-    user_id: number
-    music_idx: string
-  }
-
-  export type BasicBestPlayCreateOrConnectWithoutChartInput = {
-    where: BasicBestPlayWhereUniqueInput
-    create: XOR<BasicBestPlayCreateWithoutChartInput, BasicBestPlayUncheckedCreateWithoutChartInput>
-  }
-
-  export type BasicBestPlayCreateManyChartInputEnvelope = {
-    data: BasicBestPlayCreateManyChartInput | BasicBestPlayCreateManyChartInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type RecitalBestPlayCreateWithoutChartInput = {
-    difficulty: string
-    level: number
-    score: number
-    max_combo: number
-    rank: string
-    besttime: string
-    grade_recital: number
-    fc_type: number
-    created_at?: Date | string
-    updated_at?: Date | string
-    user: UserCreateNestedOneWithoutRecitalBestPlayInput
-    music: MusicCreateNestedOneWithoutRecitalBestPlayInput
-  }
-
-  export type RecitalBestPlayUncheckedCreateWithoutChartInput = {
-    id?: number
-    difficulty: string
-    level: number
-    score: number
-    max_combo: number
-    rank: string
-    besttime: string
-    grade_recital: number
-    fc_type: number
-    created_at?: Date | string
-    updated_at?: Date | string
-    user_id: number
-    music_idx: string
-  }
-
-  export type RecitalBestPlayCreateOrConnectWithoutChartInput = {
-    where: RecitalBestPlayWhereUniqueInput
-    create: XOR<RecitalBestPlayCreateWithoutChartInput, RecitalBestPlayUncheckedCreateWithoutChartInput>
-  }
-
-  export type RecitalBestPlayCreateManyChartInputEnvelope = {
-    data: RecitalBestPlayCreateManyChartInput | RecitalBestPlayCreateManyChartInput[]
     skipDuplicates?: boolean
   }
 
@@ -50628,19 +43925,9 @@ export namespace Prisma {
     category_short?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     background?: NullableStringFieldUpdateOperationsInput | string | null
-    sheet_len?: IntFieldUpdateOperationsInput | number
-    difficulty_levels?: StringFieldUpdateOperationsInput | string
-    difficulty_name?: StringFieldUpdateOperationsInput | string
-    normal?: IntFieldUpdateOperationsInput | number
-    hard?: IntFieldUpdateOperationsInput | number
-    expert?: IntFieldUpdateOperationsInput | number
-    real?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    RecentPlay?: RecentPlayUpdateManyWithoutMusicNestedInput
     PlayData?: PlayDataUpdateManyWithoutMusicNestedInput
-    BasicBestPlay?: BasicBestPlayUpdateManyWithoutMusicNestedInput
-    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutMusicNestedInput
     bingoCovers?: BingoUpdateManyWithoutCoverMusicNestedInput
     bingoMissions?: BingoCellUpdateManyWithoutMusicNestedInput
     examStages?: ExamStageUpdateManyWithoutMusicNestedInput
@@ -50657,19 +43944,9 @@ export namespace Prisma {
     category_short?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     background?: NullableStringFieldUpdateOperationsInput | string | null
-    sheet_len?: IntFieldUpdateOperationsInput | number
-    difficulty_levels?: StringFieldUpdateOperationsInput | string
-    difficulty_name?: StringFieldUpdateOperationsInput | string
-    normal?: IntFieldUpdateOperationsInput | number
-    hard?: IntFieldUpdateOperationsInput | number
-    expert?: IntFieldUpdateOperationsInput | number
-    real?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    RecentPlay?: RecentPlayUncheckedUpdateManyWithoutMusicNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutMusicNestedInput
-    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutMusicNestedInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutMusicNestedInput
     bingoCovers?: BingoUncheckedUpdateManyWithoutCoverMusicNestedInput
     bingoMissions?: BingoCellUncheckedUpdateManyWithoutMusicNestedInput
     examStages?: ExamStageUncheckedUpdateManyWithoutMusicNestedInput
@@ -50719,22 +43996,6 @@ export namespace Prisma {
     data: XOR<ChartEvaluationUpdateManyMutationInput, ChartEvaluationUncheckedUpdateManyWithoutChartInput>
   }
 
-  export type RecentPlayUpsertWithWhereUniqueWithoutChartInput = {
-    where: RecentPlayWhereUniqueInput
-    update: XOR<RecentPlayUpdateWithoutChartInput, RecentPlayUncheckedUpdateWithoutChartInput>
-    create: XOR<RecentPlayCreateWithoutChartInput, RecentPlayUncheckedCreateWithoutChartInput>
-  }
-
-  export type RecentPlayUpdateWithWhereUniqueWithoutChartInput = {
-    where: RecentPlayWhereUniqueInput
-    data: XOR<RecentPlayUpdateWithoutChartInput, RecentPlayUncheckedUpdateWithoutChartInput>
-  }
-
-  export type RecentPlayUpdateManyWithWhereWithoutChartInput = {
-    where: RecentPlayScalarWhereInput
-    data: XOR<RecentPlayUpdateManyMutationInput, RecentPlayUncheckedUpdateManyWithoutChartInput>
-  }
-
   export type PlayDataUpsertWithWhereUniqueWithoutChartInput = {
     where: PlayDataWhereUniqueInput
     update: XOR<PlayDataUpdateWithoutChartInput, PlayDataUncheckedUpdateWithoutChartInput>
@@ -50749,38 +44010,6 @@ export namespace Prisma {
   export type PlayDataUpdateManyWithWhereWithoutChartInput = {
     where: PlayDataScalarWhereInput
     data: XOR<PlayDataUpdateManyMutationInput, PlayDataUncheckedUpdateManyWithoutChartInput>
-  }
-
-  export type BasicBestPlayUpsertWithWhereUniqueWithoutChartInput = {
-    where: BasicBestPlayWhereUniqueInput
-    update: XOR<BasicBestPlayUpdateWithoutChartInput, BasicBestPlayUncheckedUpdateWithoutChartInput>
-    create: XOR<BasicBestPlayCreateWithoutChartInput, BasicBestPlayUncheckedCreateWithoutChartInput>
-  }
-
-  export type BasicBestPlayUpdateWithWhereUniqueWithoutChartInput = {
-    where: BasicBestPlayWhereUniqueInput
-    data: XOR<BasicBestPlayUpdateWithoutChartInput, BasicBestPlayUncheckedUpdateWithoutChartInput>
-  }
-
-  export type BasicBestPlayUpdateManyWithWhereWithoutChartInput = {
-    where: BasicBestPlayScalarWhereInput
-    data: XOR<BasicBestPlayUpdateManyMutationInput, BasicBestPlayUncheckedUpdateManyWithoutChartInput>
-  }
-
-  export type RecitalBestPlayUpsertWithWhereUniqueWithoutChartInput = {
-    where: RecitalBestPlayWhereUniqueInput
-    update: XOR<RecitalBestPlayUpdateWithoutChartInput, RecitalBestPlayUncheckedUpdateWithoutChartInput>
-    create: XOR<RecitalBestPlayCreateWithoutChartInput, RecitalBestPlayUncheckedCreateWithoutChartInput>
-  }
-
-  export type RecitalBestPlayUpdateWithWhereUniqueWithoutChartInput = {
-    where: RecitalBestPlayWhereUniqueInput
-    data: XOR<RecitalBestPlayUpdateWithoutChartInput, RecitalBestPlayUncheckedUpdateWithoutChartInput>
-  }
-
-  export type RecitalBestPlayUpdateManyWithWhereWithoutChartInput = {
-    where: RecitalBestPlayScalarWhereInput
-    data: XOR<RecitalBestPlayUpdateManyMutationInput, RecitalBestPlayUncheckedUpdateManyWithoutChartInput>
   }
 
   export type ChartPlayHistoryUpsertWithWhereUniqueWithoutChartInput = {
@@ -50925,10 +44154,7 @@ export namespace Prisma {
     sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
-    PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
     PlayData?: PlayDataCreateNestedManyWithoutUserInput
-    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutUserInput
-    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeCreateNestedManyWithoutUserInput
     bingoProgress?: BingoCellProgressCreateNestedManyWithoutUserInput
     chartEvaluations?: ChartEvaluationCreateNestedManyWithoutUserInput
@@ -50969,10 +44195,7 @@ export namespace Prisma {
     sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
-    PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutUserInput
-    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutUserInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeUncheckedCreateNestedManyWithoutUserInput
     bingoProgress?: BingoCellProgressUncheckedCreateNestedManyWithoutUserInput
     chartEvaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutUserInput
@@ -51106,10 +44329,7 @@ export namespace Prisma {
     sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
     PlayData?: PlayDataUpdateManyWithoutUserNestedInput
-    BasicBestPlay?: BasicBestPlayUpdateManyWithoutUserNestedInput
-    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUpdateManyWithoutUserNestedInput
     bingoProgress?: BingoCellProgressUpdateManyWithoutUserNestedInput
     chartEvaluations?: ChartEvaluationUpdateManyWithoutUserNestedInput
@@ -51150,10 +44370,7 @@ export namespace Prisma {
     sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutUserNestedInput
-    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutUserNestedInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUncheckedUpdateManyWithoutUserNestedInput
     bingoProgress?: BingoCellProgressUncheckedUpdateManyWithoutUserNestedInput
     chartEvaluations?: ChartEvaluationUncheckedUpdateManyWithoutUserNestedInput
@@ -51213,10 +44430,7 @@ export namespace Prisma {
     music: MusicCreateNestedOneWithoutChartsInput
     levelConstantHistory?: ChartLevelConstantHistoryCreateNestedManyWithoutChartInput
     evaluations?: ChartEvaluationCreateNestedManyWithoutChartInput
-    RecentPlay?: RecentPlayCreateNestedManyWithoutChartInput
     PlayData?: PlayDataCreateNestedManyWithoutChartInput
-    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutChartInput
-    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
     examStageOptions?: ExamStageChartCreateNestedManyWithoutChartInput
     tierEntries?: TierEntryCreateNestedManyWithoutChartInput
@@ -51241,10 +44455,7 @@ export namespace Prisma {
     updated_at?: Date | string
     levelConstantHistory?: ChartLevelConstantHistoryUncheckedCreateNestedManyWithoutChartInput
     evaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutChartInput
-    RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutChartInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutChartInput
-    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutChartInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
     examStageOptions?: ExamStageChartUncheckedCreateNestedManyWithoutChartInput
     tierEntries?: TierEntryUncheckedCreateNestedManyWithoutChartInput
@@ -51285,10 +44496,7 @@ export namespace Prisma {
     sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
-    PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
     PlayData?: PlayDataCreateNestedManyWithoutUserInput
-    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutUserInput
-    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeCreateNestedManyWithoutUserInput
     bingoProgress?: BingoCellProgressCreateNestedManyWithoutUserInput
     chartEvaluations?: ChartEvaluationCreateNestedManyWithoutUserInput
@@ -51329,10 +44537,7 @@ export namespace Prisma {
     sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
-    PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutUserInput
-    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutUserInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeUncheckedCreateNestedManyWithoutUserInput
     bingoProgress?: BingoCellProgressUncheckedCreateNestedManyWithoutUserInput
     chartEvaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutUserInput
@@ -51408,10 +44613,7 @@ export namespace Prisma {
     music?: MusicUpdateOneRequiredWithoutChartsNestedInput
     levelConstantHistory?: ChartLevelConstantHistoryUpdateManyWithoutChartNestedInput
     evaluations?: ChartEvaluationUpdateManyWithoutChartNestedInput
-    RecentPlay?: RecentPlayUpdateManyWithoutChartNestedInput
     PlayData?: PlayDataUpdateManyWithoutChartNestedInput
-    BasicBestPlay?: BasicBestPlayUpdateManyWithoutChartNestedInput
-    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
     examStageOptions?: ExamStageChartUpdateManyWithoutChartNestedInput
     tierEntries?: TierEntryUpdateManyWithoutChartNestedInput
@@ -51436,10 +44638,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     levelConstantHistory?: ChartLevelConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
     evaluations?: ChartEvaluationUncheckedUpdateManyWithoutChartNestedInput
-    RecentPlay?: RecentPlayUncheckedUpdateManyWithoutChartNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutChartNestedInput
-    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutChartNestedInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
     examStageOptions?: ExamStageChartUncheckedUpdateManyWithoutChartNestedInput
     tierEntries?: TierEntryUncheckedUpdateManyWithoutChartNestedInput
@@ -51486,10 +44685,7 @@ export namespace Prisma {
     sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
     PlayData?: PlayDataUpdateManyWithoutUserNestedInput
-    BasicBestPlay?: BasicBestPlayUpdateManyWithoutUserNestedInput
-    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUpdateManyWithoutUserNestedInput
     bingoProgress?: BingoCellProgressUpdateManyWithoutUserNestedInput
     chartEvaluations?: ChartEvaluationUpdateManyWithoutUserNestedInput
@@ -51530,10 +44726,7 @@ export namespace Prisma {
     sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutUserNestedInput
-    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutUserNestedInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUncheckedUpdateManyWithoutUserNestedInput
     bingoProgress?: BingoCellProgressUncheckedUpdateManyWithoutUserNestedInput
     chartEvaluations?: ChartEvaluationUncheckedUpdateManyWithoutUserNestedInput
@@ -51599,10 +44792,7 @@ export namespace Prisma {
     music: MusicCreateNestedOneWithoutChartsInput
     levelConstantHistory?: ChartLevelConstantHistoryCreateNestedManyWithoutChartInput
     evaluations?: ChartEvaluationCreateNestedManyWithoutChartInput
-    RecentPlay?: RecentPlayCreateNestedManyWithoutChartInput
     PlayData?: PlayDataCreateNestedManyWithoutChartInput
-    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutChartInput
-    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutChartInput
     playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
     examStageOptions?: ExamStageChartCreateNestedManyWithoutChartInput
     tierEntries?: TierEntryCreateNestedManyWithoutChartInput
@@ -51627,10 +44817,7 @@ export namespace Prisma {
     updated_at?: Date | string
     levelConstantHistory?: ChartLevelConstantHistoryUncheckedCreateNestedManyWithoutChartInput
     evaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutChartInput
-    RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutChartInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutChartInput
-    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutChartInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutChartInput
     playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
     examStageOptions?: ExamStageChartUncheckedCreateNestedManyWithoutChartInput
     tierEntries?: TierEntryUncheckedCreateNestedManyWithoutChartInput
@@ -51671,10 +44858,7 @@ export namespace Prisma {
     sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
-    PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
     PlayData?: PlayDataCreateNestedManyWithoutUserInput
-    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutUserInput
-    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeCreateNestedManyWithoutUserInput
     bingoProgress?: BingoCellProgressCreateNestedManyWithoutUserInput
     chartEvaluations?: ChartEvaluationCreateNestedManyWithoutUserInput
@@ -51715,10 +44899,7 @@ export namespace Prisma {
     sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
-    PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutUserInput
-    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutUserInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeUncheckedCreateNestedManyWithoutUserInput
     bingoProgress?: BingoCellProgressUncheckedCreateNestedManyWithoutUserInput
     chartEvaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutUserInput
@@ -51794,10 +44975,7 @@ export namespace Prisma {
     music?: MusicUpdateOneRequiredWithoutChartsNestedInput
     levelConstantHistory?: ChartLevelConstantHistoryUpdateManyWithoutChartNestedInput
     evaluations?: ChartEvaluationUpdateManyWithoutChartNestedInput
-    RecentPlay?: RecentPlayUpdateManyWithoutChartNestedInput
     PlayData?: PlayDataUpdateManyWithoutChartNestedInput
-    BasicBestPlay?: BasicBestPlayUpdateManyWithoutChartNestedInput
-    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutChartNestedInput
     playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
     examStageOptions?: ExamStageChartUpdateManyWithoutChartNestedInput
     tierEntries?: TierEntryUpdateManyWithoutChartNestedInput
@@ -51822,10 +45000,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     levelConstantHistory?: ChartLevelConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
     evaluations?: ChartEvaluationUncheckedUpdateManyWithoutChartNestedInput
-    RecentPlay?: RecentPlayUncheckedUpdateManyWithoutChartNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutChartNestedInput
-    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutChartNestedInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutChartNestedInput
     playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
     examStageOptions?: ExamStageChartUncheckedUpdateManyWithoutChartNestedInput
     tierEntries?: TierEntryUncheckedUpdateManyWithoutChartNestedInput
@@ -51872,10 +45047,7 @@ export namespace Prisma {
     sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
     PlayData?: PlayDataUpdateManyWithoutUserNestedInput
-    BasicBestPlay?: BasicBestPlayUpdateManyWithoutUserNestedInput
-    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUpdateManyWithoutUserNestedInput
     bingoProgress?: BingoCellProgressUpdateManyWithoutUserNestedInput
     chartEvaluations?: ChartEvaluationUpdateManyWithoutUserNestedInput
@@ -51916,10 +45088,7 @@ export namespace Prisma {
     sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutUserNestedInput
-    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutUserNestedInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUncheckedUpdateManyWithoutUserNestedInput
     bingoProgress?: BingoCellProgressUncheckedUpdateManyWithoutUserNestedInput
     chartEvaluations?: ChartEvaluationUncheckedUpdateManyWithoutUserNestedInput
@@ -51984,10 +45153,7 @@ export namespace Prisma {
     updated_at?: Date | string
     music: MusicCreateNestedOneWithoutChartsInput
     evaluations?: ChartEvaluationCreateNestedManyWithoutChartInput
-    RecentPlay?: RecentPlayCreateNestedManyWithoutChartInput
     PlayData?: PlayDataCreateNestedManyWithoutChartInput
-    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutChartInput
-    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutChartInput
     playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
     examStageOptions?: ExamStageChartCreateNestedManyWithoutChartInput
@@ -52012,10 +45178,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     evaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutChartInput
-    RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutChartInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutChartInput
-    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutChartInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutChartInput
     playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
     examStageOptions?: ExamStageChartUncheckedCreateNestedManyWithoutChartInput
@@ -52055,10 +45218,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     music?: MusicUpdateOneRequiredWithoutChartsNestedInput
     evaluations?: ChartEvaluationUpdateManyWithoutChartNestedInput
-    RecentPlay?: RecentPlayUpdateManyWithoutChartNestedInput
     PlayData?: PlayDataUpdateManyWithoutChartNestedInput
-    BasicBestPlay?: BasicBestPlayUpdateManyWithoutChartNestedInput
-    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutChartNestedInput
     playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
     examStageOptions?: ExamStageChartUpdateManyWithoutChartNestedInput
@@ -52083,10 +45243,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     evaluations?: ChartEvaluationUncheckedUpdateManyWithoutChartNestedInput
-    RecentPlay?: RecentPlayUncheckedUpdateManyWithoutChartNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutChartNestedInput
-    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutChartNestedInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutChartNestedInput
     playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
     examStageOptions?: ExamStageChartUncheckedUpdateManyWithoutChartNestedInput
@@ -52411,10 +45568,7 @@ export namespace Prisma {
     music: MusicCreateNestedOneWithoutChartsInput
     levelConstantHistory?: ChartLevelConstantHistoryCreateNestedManyWithoutChartInput
     evaluations?: ChartEvaluationCreateNestedManyWithoutChartInput
-    RecentPlay?: RecentPlayCreateNestedManyWithoutChartInput
     PlayData?: PlayDataCreateNestedManyWithoutChartInput
-    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutChartInput
-    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutChartInput
     playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
     examStageOptions?: ExamStageChartCreateNestedManyWithoutChartInput
@@ -52439,10 +45593,7 @@ export namespace Prisma {
     updated_at?: Date | string
     levelConstantHistory?: ChartLevelConstantHistoryUncheckedCreateNestedManyWithoutChartInput
     evaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutChartInput
-    RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutChartInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutChartInput
-    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutChartInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutChartInput
     playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
     examStageOptions?: ExamStageChartUncheckedCreateNestedManyWithoutChartInput
@@ -52546,10 +45697,7 @@ export namespace Prisma {
     music?: MusicUpdateOneRequiredWithoutChartsNestedInput
     levelConstantHistory?: ChartLevelConstantHistoryUpdateManyWithoutChartNestedInput
     evaluations?: ChartEvaluationUpdateManyWithoutChartNestedInput
-    RecentPlay?: RecentPlayUpdateManyWithoutChartNestedInput
     PlayData?: PlayDataUpdateManyWithoutChartNestedInput
-    BasicBestPlay?: BasicBestPlayUpdateManyWithoutChartNestedInput
-    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutChartNestedInput
     playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
     examStageOptions?: ExamStageChartUpdateManyWithoutChartNestedInput
@@ -52574,10 +45722,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     levelConstantHistory?: ChartLevelConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
     evaluations?: ChartEvaluationUncheckedUpdateManyWithoutChartNestedInput
-    RecentPlay?: RecentPlayUncheckedUpdateManyWithoutChartNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutChartNestedInput
-    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutChartNestedInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutChartNestedInput
     playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
     examStageOptions?: ExamStageChartUncheckedUpdateManyWithoutChartNestedInput
@@ -52631,10 +45776,7 @@ export namespace Prisma {
     music: MusicCreateNestedOneWithoutChartsInput
     levelConstantHistory?: ChartLevelConstantHistoryCreateNestedManyWithoutChartInput
     evaluations?: ChartEvaluationCreateNestedManyWithoutChartInput
-    RecentPlay?: RecentPlayCreateNestedManyWithoutChartInput
     PlayData?: PlayDataCreateNestedManyWithoutChartInput
-    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutChartInput
-    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutChartInput
     playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
     examStageOptions?: ExamStageChartCreateNestedManyWithoutChartInput
@@ -52659,10 +45801,7 @@ export namespace Prisma {
     updated_at?: Date | string
     levelConstantHistory?: ChartLevelConstantHistoryUncheckedCreateNestedManyWithoutChartInput
     evaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutChartInput
-    RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutChartInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutChartInput
-    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutChartInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutChartInput
     playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
     examStageOptions?: ExamStageChartUncheckedCreateNestedManyWithoutChartInput
@@ -52738,10 +45877,7 @@ export namespace Prisma {
     music?: MusicUpdateOneRequiredWithoutChartsNestedInput
     levelConstantHistory?: ChartLevelConstantHistoryUpdateManyWithoutChartNestedInput
     evaluations?: ChartEvaluationUpdateManyWithoutChartNestedInput
-    RecentPlay?: RecentPlayUpdateManyWithoutChartNestedInput
     PlayData?: PlayDataUpdateManyWithoutChartNestedInput
-    BasicBestPlay?: BasicBestPlayUpdateManyWithoutChartNestedInput
-    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutChartNestedInput
     playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
     examStageOptions?: ExamStageChartUpdateManyWithoutChartNestedInput
@@ -52766,10 +45902,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     levelConstantHistory?: ChartLevelConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
     evaluations?: ChartEvaluationUncheckedUpdateManyWithoutChartNestedInput
-    RecentPlay?: RecentPlayUncheckedUpdateManyWithoutChartNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutChartNestedInput
-    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutChartNestedInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutChartNestedInput
     playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
     examStageOptions?: ExamStageChartUncheckedUpdateManyWithoutChartNestedInput
@@ -52792,10 +45925,7 @@ export namespace Prisma {
     updated_at?: Date | string
     music: MusicCreateNestedOneWithoutChartsInput
     levelConstantHistory?: ChartLevelConstantHistoryCreateNestedManyWithoutChartInput
-    RecentPlay?: RecentPlayCreateNestedManyWithoutChartInput
     PlayData?: PlayDataCreateNestedManyWithoutChartInput
-    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutChartInput
-    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutChartInput
     playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
     examStageOptions?: ExamStageChartCreateNestedManyWithoutChartInput
@@ -52820,10 +45950,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     levelConstantHistory?: ChartLevelConstantHistoryUncheckedCreateNestedManyWithoutChartInput
-    RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutChartInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutChartInput
-    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutChartInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutChartInput
     playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
     examStageOptions?: ExamStageChartUncheckedCreateNestedManyWithoutChartInput
@@ -52865,10 +45992,7 @@ export namespace Prisma {
     sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
-    PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
     PlayData?: PlayDataCreateNestedManyWithoutUserInput
-    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutUserInput
-    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeCreateNestedManyWithoutUserInput
     bingoProgress?: BingoCellProgressCreateNestedManyWithoutUserInput
     chartReactions?: ChartEvaluationReactionCreateNestedManyWithoutUserInput
@@ -52909,10 +46033,7 @@ export namespace Prisma {
     sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
-    PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutUserInput
-    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutUserInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeUncheckedCreateNestedManyWithoutUserInput
     bingoProgress?: BingoCellProgressUncheckedCreateNestedManyWithoutUserInput
     chartReactions?: ChartEvaluationReactionUncheckedCreateNestedManyWithoutUserInput
@@ -52980,10 +46101,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     music?: MusicUpdateOneRequiredWithoutChartsNestedInput
     levelConstantHistory?: ChartLevelConstantHistoryUpdateManyWithoutChartNestedInput
-    RecentPlay?: RecentPlayUpdateManyWithoutChartNestedInput
     PlayData?: PlayDataUpdateManyWithoutChartNestedInput
-    BasicBestPlay?: BasicBestPlayUpdateManyWithoutChartNestedInput
-    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutChartNestedInput
     playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
     examStageOptions?: ExamStageChartUpdateManyWithoutChartNestedInput
@@ -53008,10 +46126,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     levelConstantHistory?: ChartLevelConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
-    RecentPlay?: RecentPlayUncheckedUpdateManyWithoutChartNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutChartNestedInput
-    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutChartNestedInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutChartNestedInput
     playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
     examStageOptions?: ExamStageChartUncheckedUpdateManyWithoutChartNestedInput
@@ -53059,10 +46174,7 @@ export namespace Prisma {
     sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
     PlayData?: PlayDataUpdateManyWithoutUserNestedInput
-    BasicBestPlay?: BasicBestPlayUpdateManyWithoutUserNestedInput
-    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUpdateManyWithoutUserNestedInput
     bingoProgress?: BingoCellProgressUpdateManyWithoutUserNestedInput
     chartReactions?: ChartEvaluationReactionUpdateManyWithoutUserNestedInput
@@ -53103,10 +46215,7 @@ export namespace Prisma {
     sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutUserNestedInput
-    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutUserNestedInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUncheckedUpdateManyWithoutUserNestedInput
     bingoProgress?: BingoCellProgressUncheckedUpdateManyWithoutUserNestedInput
     chartReactions?: ChartEvaluationReactionUncheckedUpdateManyWithoutUserNestedInput
@@ -53196,10 +46305,7 @@ export namespace Prisma {
     sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
-    PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
     PlayData?: PlayDataCreateNestedManyWithoutUserInput
-    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutUserInput
-    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeCreateNestedManyWithoutUserInput
     bingoProgress?: BingoCellProgressCreateNestedManyWithoutUserInput
     chartEvaluations?: ChartEvaluationCreateNestedManyWithoutUserInput
@@ -53240,10 +46346,7 @@ export namespace Prisma {
     sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
-    PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutUserInput
-    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutUserInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeUncheckedCreateNestedManyWithoutUserInput
     bingoProgress?: BingoCellProgressUncheckedCreateNestedManyWithoutUserInput
     chartEvaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutUserInput
@@ -53339,10 +46442,7 @@ export namespace Prisma {
     sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
     PlayData?: PlayDataUpdateManyWithoutUserNestedInput
-    BasicBestPlay?: BasicBestPlayUpdateManyWithoutUserNestedInput
-    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUpdateManyWithoutUserNestedInput
     bingoProgress?: BingoCellProgressUpdateManyWithoutUserNestedInput
     chartEvaluations?: ChartEvaluationUpdateManyWithoutUserNestedInput
@@ -53383,10 +46483,7 @@ export namespace Prisma {
     sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutUserNestedInput
-    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutUserNestedInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUncheckedUpdateManyWithoutUserNestedInput
     bingoProgress?: BingoCellProgressUncheckedUpdateManyWithoutUserNestedInput
     chartEvaluations?: ChartEvaluationUncheckedUpdateManyWithoutUserNestedInput
@@ -53395,452 +46492,6 @@ export namespace Prisma {
     chartRecordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutUserNestedInput
     examSubmissions?: ExamSubmissionUncheckedUpdateManyWithoutUserNestedInput
     examAchievements?: ExamAchievementUncheckedUpdateManyWithoutUserNestedInput
-  }
-
-  export type UserCreateWithoutPlayHistoryInput = {
-    username?: string | null
-    nostalgia_name?: string | null
-    discord_id?: string | null
-    discord_name?: string | null
-    avatar?: string | null
-    country?: string
-    rank_basic?: number | null
-    rank_recital?: number | null
-    rank_basic_country?: number | null
-    rank_recital_country?: number | null
-    play_count?: number | null
-    score_p?: number | null
-    score_f?: number | null
-    score_s?: number | null
-    score_a2?: number | null
-    score_a?: number | null
-    score_b2?: number | null
-    score_b?: number | null
-    score_c?: number | null
-    score_d?: number | null
-    role?: string
-    grade_basic?: number | null
-    grade_recital?: number | null
-    exam_basic?: number | null
-    exam_recital?: number | null
-    sync_token_version?: number
-    created_at?: Date | string
-    updated_at?: Date | string
-    PlayData?: PlayDataCreateNestedManyWithoutUserInput
-    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutUserInput
-    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutUserInput
-    UserBestGrade?: UserBestGradeCreateNestedManyWithoutUserInput
-    bingoProgress?: BingoCellProgressCreateNestedManyWithoutUserInput
-    chartEvaluations?: ChartEvaluationCreateNestedManyWithoutUserInput
-    chartReactions?: ChartEvaluationReactionCreateNestedManyWithoutUserInput
-    dataSyncs?: DataSyncCreateNestedManyWithoutUserInput
-    chartPlayHistory?: ChartPlayHistoryCreateNestedManyWithoutUserInput
-    chartRecordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutUserInput
-    examSubmissions?: ExamSubmissionCreateNestedManyWithoutUserInput
-    examAchievements?: ExamAchievementCreateNestedManyWithoutUserInput
-  }
-
-  export type UserUncheckedCreateWithoutPlayHistoryInput = {
-    id?: number
-    username?: string | null
-    nostalgia_name?: string | null
-    discord_id?: string | null
-    discord_name?: string | null
-    avatar?: string | null
-    country?: string
-    rank_basic?: number | null
-    rank_recital?: number | null
-    rank_basic_country?: number | null
-    rank_recital_country?: number | null
-    play_count?: number | null
-    score_p?: number | null
-    score_f?: number | null
-    score_s?: number | null
-    score_a2?: number | null
-    score_a?: number | null
-    score_b2?: number | null
-    score_b?: number | null
-    score_c?: number | null
-    score_d?: number | null
-    role?: string
-    grade_basic?: number | null
-    grade_recital?: number | null
-    exam_basic?: number | null
-    exam_recital?: number | null
-    sync_token_version?: number
-    created_at?: Date | string
-    updated_at?: Date | string
-    PlayData?: PlayDataUncheckedCreateNestedManyWithoutUserInput
-    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutUserInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutUserInput
-    UserBestGrade?: UserBestGradeUncheckedCreateNestedManyWithoutUserInput
-    bingoProgress?: BingoCellProgressUncheckedCreateNestedManyWithoutUserInput
-    chartEvaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutUserInput
-    chartReactions?: ChartEvaluationReactionUncheckedCreateNestedManyWithoutUserInput
-    dataSyncs?: DataSyncUncheckedCreateNestedManyWithoutUserInput
-    chartPlayHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutUserInput
-    chartRecordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutUserInput
-    examSubmissions?: ExamSubmissionUncheckedCreateNestedManyWithoutUserInput
-    examAchievements?: ExamAchievementUncheckedCreateNestedManyWithoutUserInput
-  }
-
-  export type UserCreateOrConnectWithoutPlayHistoryInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutPlayHistoryInput, UserUncheckedCreateWithoutPlayHistoryInput>
-  }
-
-  export type MusicCreateWithoutRecentPlayInput = {
-    index: string
-    title: string
-    title_kana: string
-    artist?: string | null
-    category: string
-    category_short: string
-    description?: string | null
-    background?: string | null
-    sheet_len: number
-    difficulty_levels: string
-    difficulty_name: string
-    normal: number
-    hard: number
-    expert: number
-    real?: number | null
-    created_at?: Date | string
-    updated_at?: Date | string
-    PlayData?: PlayDataCreateNestedManyWithoutMusicInput
-    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutMusicInput
-    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutMusicInput
-    bingoCovers?: BingoCreateNestedManyWithoutCoverMusicInput
-    bingoMissions?: BingoCellCreateNestedManyWithoutMusicInput
-    charts?: MusicChartCreateNestedManyWithoutMusicInput
-    examStages?: ExamStageCreateNestedManyWithoutMusicInput
-    examRewards?: ExamRewardCreateNestedManyWithoutMusicInput
-  }
-
-  export type MusicUncheckedCreateWithoutRecentPlayInput = {
-    id?: number
-    index: string
-    title: string
-    title_kana: string
-    artist?: string | null
-    category: string
-    category_short: string
-    description?: string | null
-    background?: string | null
-    sheet_len: number
-    difficulty_levels: string
-    difficulty_name: string
-    normal: number
-    hard: number
-    expert: number
-    real?: number | null
-    created_at?: Date | string
-    updated_at?: Date | string
-    PlayData?: PlayDataUncheckedCreateNestedManyWithoutMusicInput
-    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutMusicInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutMusicInput
-    bingoCovers?: BingoUncheckedCreateNestedManyWithoutCoverMusicInput
-    bingoMissions?: BingoCellUncheckedCreateNestedManyWithoutMusicInput
-    charts?: MusicChartUncheckedCreateNestedManyWithoutMusicInput
-    examStages?: ExamStageUncheckedCreateNestedManyWithoutMusicInput
-    examRewards?: ExamRewardUncheckedCreateNestedManyWithoutMusicInput
-  }
-
-  export type MusicCreateOrConnectWithoutRecentPlayInput = {
-    where: MusicWhereUniqueInput
-    create: XOR<MusicCreateWithoutRecentPlayInput, MusicUncheckedCreateWithoutRecentPlayInput>
-  }
-
-  export type MusicChartCreateWithoutRecentPlayInput = {
-    difficulty: string
-    level: number
-    level_constant?: number | null
-    bpm_min?: number | null
-    bpm_max?: number | null
-    note_count?: number | null
-    duration_seconds?: number | null
-    released_at?: Date | string | null
-    unlock_condition?: string | null
-    play_video_url?: string | null
-    chart_preview_url?: string | null
-    created_at?: Date | string
-    updated_at?: Date | string
-    music: MusicCreateNestedOneWithoutChartsInput
-    levelConstantHistory?: ChartLevelConstantHistoryCreateNestedManyWithoutChartInput
-    evaluations?: ChartEvaluationCreateNestedManyWithoutChartInput
-    PlayData?: PlayDataCreateNestedManyWithoutChartInput
-    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutChartInput
-    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutChartInput
-    playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
-    recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
-    examStageOptions?: ExamStageChartCreateNestedManyWithoutChartInput
-    tierEntries?: TierEntryCreateNestedManyWithoutChartInput
-    tierPlacementHistory?: TierPlacementHistoryCreateNestedManyWithoutChartInput
-  }
-
-  export type MusicChartUncheckedCreateWithoutRecentPlayInput = {
-    id?: number
-    difficulty: string
-    level: number
-    level_constant?: number | null
-    bpm_min?: number | null
-    bpm_max?: number | null
-    note_count?: number | null
-    duration_seconds?: number | null
-    released_at?: Date | string | null
-    unlock_condition?: string | null
-    play_video_url?: string | null
-    chart_preview_url?: string | null
-    music_idx: string
-    created_at?: Date | string
-    updated_at?: Date | string
-    levelConstantHistory?: ChartLevelConstantHistoryUncheckedCreateNestedManyWithoutChartInput
-    evaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutChartInput
-    PlayData?: PlayDataUncheckedCreateNestedManyWithoutChartInput
-    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutChartInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutChartInput
-    playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
-    recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
-    examStageOptions?: ExamStageChartUncheckedCreateNestedManyWithoutChartInput
-    tierEntries?: TierEntryUncheckedCreateNestedManyWithoutChartInput
-    tierPlacementHistory?: TierPlacementHistoryUncheckedCreateNestedManyWithoutChartInput
-  }
-
-  export type MusicChartCreateOrConnectWithoutRecentPlayInput = {
-    where: MusicChartWhereUniqueInput
-    create: XOR<MusicChartCreateWithoutRecentPlayInput, MusicChartUncheckedCreateWithoutRecentPlayInput>
-  }
-
-  export type UserUpsertWithoutPlayHistoryInput = {
-    update: XOR<UserUpdateWithoutPlayHistoryInput, UserUncheckedUpdateWithoutPlayHistoryInput>
-    create: XOR<UserCreateWithoutPlayHistoryInput, UserUncheckedCreateWithoutPlayHistoryInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutPlayHistoryInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutPlayHistoryInput, UserUncheckedUpdateWithoutPlayHistoryInput>
-  }
-
-  export type UserUpdateWithoutPlayHistoryInput = {
-    username?: NullableStringFieldUpdateOperationsInput | string | null
-    nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
-    discord_id?: NullableStringFieldUpdateOperationsInput | string | null
-    discord_name?: NullableStringFieldUpdateOperationsInput | string | null
-    avatar?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: StringFieldUpdateOperationsInput | string
-    rank_basic?: NullableIntFieldUpdateOperationsInput | number | null
-    rank_recital?: NullableIntFieldUpdateOperationsInput | number | null
-    rank_basic_country?: NullableIntFieldUpdateOperationsInput | number | null
-    rank_recital_country?: NullableIntFieldUpdateOperationsInput | number | null
-    play_count?: NullableIntFieldUpdateOperationsInput | number | null
-    score_p?: NullableIntFieldUpdateOperationsInput | number | null
-    score_f?: NullableIntFieldUpdateOperationsInput | number | null
-    score_s?: NullableIntFieldUpdateOperationsInput | number | null
-    score_a2?: NullableIntFieldUpdateOperationsInput | number | null
-    score_a?: NullableIntFieldUpdateOperationsInput | number | null
-    score_b2?: NullableIntFieldUpdateOperationsInput | number | null
-    score_b?: NullableIntFieldUpdateOperationsInput | number | null
-    score_c?: NullableIntFieldUpdateOperationsInput | number | null
-    score_d?: NullableIntFieldUpdateOperationsInput | number | null
-    role?: StringFieldUpdateOperationsInput | string
-    grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
-    grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
-    exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
-    exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
-    sync_token_version?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    PlayData?: PlayDataUpdateManyWithoutUserNestedInput
-    BasicBestPlay?: BasicBestPlayUpdateManyWithoutUserNestedInput
-    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutUserNestedInput
-    UserBestGrade?: UserBestGradeUpdateManyWithoutUserNestedInput
-    bingoProgress?: BingoCellProgressUpdateManyWithoutUserNestedInput
-    chartEvaluations?: ChartEvaluationUpdateManyWithoutUserNestedInput
-    chartReactions?: ChartEvaluationReactionUpdateManyWithoutUserNestedInput
-    dataSyncs?: DataSyncUpdateManyWithoutUserNestedInput
-    chartPlayHistory?: ChartPlayHistoryUpdateManyWithoutUserNestedInput
-    chartRecordSnapshots?: ChartRecordSnapshotUpdateManyWithoutUserNestedInput
-    examSubmissions?: ExamSubmissionUpdateManyWithoutUserNestedInput
-    examAchievements?: ExamAchievementUpdateManyWithoutUserNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutPlayHistoryInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    username?: NullableStringFieldUpdateOperationsInput | string | null
-    nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
-    discord_id?: NullableStringFieldUpdateOperationsInput | string | null
-    discord_name?: NullableStringFieldUpdateOperationsInput | string | null
-    avatar?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: StringFieldUpdateOperationsInput | string
-    rank_basic?: NullableIntFieldUpdateOperationsInput | number | null
-    rank_recital?: NullableIntFieldUpdateOperationsInput | number | null
-    rank_basic_country?: NullableIntFieldUpdateOperationsInput | number | null
-    rank_recital_country?: NullableIntFieldUpdateOperationsInput | number | null
-    play_count?: NullableIntFieldUpdateOperationsInput | number | null
-    score_p?: NullableIntFieldUpdateOperationsInput | number | null
-    score_f?: NullableIntFieldUpdateOperationsInput | number | null
-    score_s?: NullableIntFieldUpdateOperationsInput | number | null
-    score_a2?: NullableIntFieldUpdateOperationsInput | number | null
-    score_a?: NullableIntFieldUpdateOperationsInput | number | null
-    score_b2?: NullableIntFieldUpdateOperationsInput | number | null
-    score_b?: NullableIntFieldUpdateOperationsInput | number | null
-    score_c?: NullableIntFieldUpdateOperationsInput | number | null
-    score_d?: NullableIntFieldUpdateOperationsInput | number | null
-    role?: StringFieldUpdateOperationsInput | string
-    grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
-    grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
-    exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
-    exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
-    sync_token_version?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    PlayData?: PlayDataUncheckedUpdateManyWithoutUserNestedInput
-    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutUserNestedInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutUserNestedInput
-    UserBestGrade?: UserBestGradeUncheckedUpdateManyWithoutUserNestedInput
-    bingoProgress?: BingoCellProgressUncheckedUpdateManyWithoutUserNestedInput
-    chartEvaluations?: ChartEvaluationUncheckedUpdateManyWithoutUserNestedInput
-    chartReactions?: ChartEvaluationReactionUncheckedUpdateManyWithoutUserNestedInput
-    dataSyncs?: DataSyncUncheckedUpdateManyWithoutUserNestedInput
-    chartPlayHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutUserNestedInput
-    chartRecordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutUserNestedInput
-    examSubmissions?: ExamSubmissionUncheckedUpdateManyWithoutUserNestedInput
-    examAchievements?: ExamAchievementUncheckedUpdateManyWithoutUserNestedInput
-  }
-
-  export type MusicUpsertWithoutRecentPlayInput = {
-    update: XOR<MusicUpdateWithoutRecentPlayInput, MusicUncheckedUpdateWithoutRecentPlayInput>
-    create: XOR<MusicCreateWithoutRecentPlayInput, MusicUncheckedCreateWithoutRecentPlayInput>
-    where?: MusicWhereInput
-  }
-
-  export type MusicUpdateToOneWithWhereWithoutRecentPlayInput = {
-    where?: MusicWhereInput
-    data: XOR<MusicUpdateWithoutRecentPlayInput, MusicUncheckedUpdateWithoutRecentPlayInput>
-  }
-
-  export type MusicUpdateWithoutRecentPlayInput = {
-    index?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    title_kana?: StringFieldUpdateOperationsInput | string
-    artist?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: StringFieldUpdateOperationsInput | string
-    category_short?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    background?: NullableStringFieldUpdateOperationsInput | string | null
-    sheet_len?: IntFieldUpdateOperationsInput | number
-    difficulty_levels?: StringFieldUpdateOperationsInput | string
-    difficulty_name?: StringFieldUpdateOperationsInput | string
-    normal?: IntFieldUpdateOperationsInput | number
-    hard?: IntFieldUpdateOperationsInput | number
-    expert?: IntFieldUpdateOperationsInput | number
-    real?: NullableIntFieldUpdateOperationsInput | number | null
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    PlayData?: PlayDataUpdateManyWithoutMusicNestedInput
-    BasicBestPlay?: BasicBestPlayUpdateManyWithoutMusicNestedInput
-    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutMusicNestedInput
-    bingoCovers?: BingoUpdateManyWithoutCoverMusicNestedInput
-    bingoMissions?: BingoCellUpdateManyWithoutMusicNestedInput
-    charts?: MusicChartUpdateManyWithoutMusicNestedInput
-    examStages?: ExamStageUpdateManyWithoutMusicNestedInput
-    examRewards?: ExamRewardUpdateManyWithoutMusicNestedInput
-  }
-
-  export type MusicUncheckedUpdateWithoutRecentPlayInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    index?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    title_kana?: StringFieldUpdateOperationsInput | string
-    artist?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: StringFieldUpdateOperationsInput | string
-    category_short?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    background?: NullableStringFieldUpdateOperationsInput | string | null
-    sheet_len?: IntFieldUpdateOperationsInput | number
-    difficulty_levels?: StringFieldUpdateOperationsInput | string
-    difficulty_name?: StringFieldUpdateOperationsInput | string
-    normal?: IntFieldUpdateOperationsInput | number
-    hard?: IntFieldUpdateOperationsInput | number
-    expert?: IntFieldUpdateOperationsInput | number
-    real?: NullableIntFieldUpdateOperationsInput | number | null
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    PlayData?: PlayDataUncheckedUpdateManyWithoutMusicNestedInput
-    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutMusicNestedInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutMusicNestedInput
-    bingoCovers?: BingoUncheckedUpdateManyWithoutCoverMusicNestedInput
-    bingoMissions?: BingoCellUncheckedUpdateManyWithoutMusicNestedInput
-    charts?: MusicChartUncheckedUpdateManyWithoutMusicNestedInput
-    examStages?: ExamStageUncheckedUpdateManyWithoutMusicNestedInput
-    examRewards?: ExamRewardUncheckedUpdateManyWithoutMusicNestedInput
-  }
-
-  export type MusicChartUpsertWithoutRecentPlayInput = {
-    update: XOR<MusicChartUpdateWithoutRecentPlayInput, MusicChartUncheckedUpdateWithoutRecentPlayInput>
-    create: XOR<MusicChartCreateWithoutRecentPlayInput, MusicChartUncheckedCreateWithoutRecentPlayInput>
-    where?: MusicChartWhereInput
-  }
-
-  export type MusicChartUpdateToOneWithWhereWithoutRecentPlayInput = {
-    where?: MusicChartWhereInput
-    data: XOR<MusicChartUpdateWithoutRecentPlayInput, MusicChartUncheckedUpdateWithoutRecentPlayInput>
-  }
-
-  export type MusicChartUpdateWithoutRecentPlayInput = {
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
-    bpm_min?: NullableIntFieldUpdateOperationsInput | number | null
-    bpm_max?: NullableIntFieldUpdateOperationsInput | number | null
-    note_count?: NullableIntFieldUpdateOperationsInput | number | null
-    duration_seconds?: NullableIntFieldUpdateOperationsInput | number | null
-    released_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    unlock_condition?: NullableStringFieldUpdateOperationsInput | string | null
-    play_video_url?: NullableStringFieldUpdateOperationsInput | string | null
-    chart_preview_url?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    music?: MusicUpdateOneRequiredWithoutChartsNestedInput
-    levelConstantHistory?: ChartLevelConstantHistoryUpdateManyWithoutChartNestedInput
-    evaluations?: ChartEvaluationUpdateManyWithoutChartNestedInput
-    PlayData?: PlayDataUpdateManyWithoutChartNestedInput
-    BasicBestPlay?: BasicBestPlayUpdateManyWithoutChartNestedInput
-    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutChartNestedInput
-    playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
-    recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
-    examStageOptions?: ExamStageChartUpdateManyWithoutChartNestedInput
-    tierEntries?: TierEntryUpdateManyWithoutChartNestedInput
-    tierPlacementHistory?: TierPlacementHistoryUpdateManyWithoutChartNestedInput
-  }
-
-  export type MusicChartUncheckedUpdateWithoutRecentPlayInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
-    bpm_min?: NullableIntFieldUpdateOperationsInput | number | null
-    bpm_max?: NullableIntFieldUpdateOperationsInput | number | null
-    note_count?: NullableIntFieldUpdateOperationsInput | number | null
-    duration_seconds?: NullableIntFieldUpdateOperationsInput | number | null
-    released_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    unlock_condition?: NullableStringFieldUpdateOperationsInput | string | null
-    play_video_url?: NullableStringFieldUpdateOperationsInput | string | null
-    chart_preview_url?: NullableStringFieldUpdateOperationsInput | string | null
-    music_idx?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    levelConstantHistory?: ChartLevelConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
-    evaluations?: ChartEvaluationUncheckedUpdateManyWithoutChartNestedInput
-    PlayData?: PlayDataUncheckedUpdateManyWithoutChartNestedInput
-    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutChartNestedInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutChartNestedInput
-    playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
-    recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
-    examStageOptions?: ExamStageChartUncheckedUpdateManyWithoutChartNestedInput
-    tierEntries?: TierEntryUncheckedUpdateManyWithoutChartNestedInput
-    tierPlacementHistory?: TierPlacementHistoryUncheckedUpdateManyWithoutChartNestedInput
   }
 
   export type UserCreateWithoutUserBestGradeInput = {
@@ -53872,10 +46523,7 @@ export namespace Prisma {
     sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
-    PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
     PlayData?: PlayDataCreateNestedManyWithoutUserInput
-    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutUserInput
-    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutUserInput
     bingoProgress?: BingoCellProgressCreateNestedManyWithoutUserInput
     chartEvaluations?: ChartEvaluationCreateNestedManyWithoutUserInput
     chartReactions?: ChartEvaluationReactionCreateNestedManyWithoutUserInput
@@ -53916,10 +46564,7 @@ export namespace Prisma {
     sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
-    PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutUserInput
-    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutUserInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutUserInput
     bingoProgress?: BingoCellProgressUncheckedCreateNestedManyWithoutUserInput
     chartEvaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutUserInput
     chartReactions?: ChartEvaluationReactionUncheckedCreateNestedManyWithoutUserInput
@@ -53975,10 +46620,7 @@ export namespace Prisma {
     sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
     PlayData?: PlayDataUpdateManyWithoutUserNestedInput
-    BasicBestPlay?: BasicBestPlayUpdateManyWithoutUserNestedInput
-    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutUserNestedInput
     bingoProgress?: BingoCellProgressUpdateManyWithoutUserNestedInput
     chartEvaluations?: ChartEvaluationUpdateManyWithoutUserNestedInput
     chartReactions?: ChartEvaluationReactionUpdateManyWithoutUserNestedInput
@@ -54019,10 +46661,7 @@ export namespace Prisma {
     sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutUserNestedInput
-    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutUserNestedInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutUserNestedInput
     bingoProgress?: BingoCellProgressUncheckedUpdateManyWithoutUserNestedInput
     chartEvaluations?: ChartEvaluationUncheckedUpdateManyWithoutUserNestedInput
     chartReactions?: ChartEvaluationReactionUncheckedUpdateManyWithoutUserNestedInput
@@ -54031,898 +46670,6 @@ export namespace Prisma {
     chartRecordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutUserNestedInput
     examSubmissions?: ExamSubmissionUncheckedUpdateManyWithoutUserNestedInput
     examAchievements?: ExamAchievementUncheckedUpdateManyWithoutUserNestedInput
-  }
-
-  export type UserCreateWithoutBasicBestPlayInput = {
-    username?: string | null
-    nostalgia_name?: string | null
-    discord_id?: string | null
-    discord_name?: string | null
-    avatar?: string | null
-    country?: string
-    rank_basic?: number | null
-    rank_recital?: number | null
-    rank_basic_country?: number | null
-    rank_recital_country?: number | null
-    play_count?: number | null
-    score_p?: number | null
-    score_f?: number | null
-    score_s?: number | null
-    score_a2?: number | null
-    score_a?: number | null
-    score_b2?: number | null
-    score_b?: number | null
-    score_c?: number | null
-    score_d?: number | null
-    role?: string
-    grade_basic?: number | null
-    grade_recital?: number | null
-    exam_basic?: number | null
-    exam_recital?: number | null
-    sync_token_version?: number
-    created_at?: Date | string
-    updated_at?: Date | string
-    PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
-    PlayData?: PlayDataCreateNestedManyWithoutUserInput
-    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutUserInput
-    UserBestGrade?: UserBestGradeCreateNestedManyWithoutUserInput
-    bingoProgress?: BingoCellProgressCreateNestedManyWithoutUserInput
-    chartEvaluations?: ChartEvaluationCreateNestedManyWithoutUserInput
-    chartReactions?: ChartEvaluationReactionCreateNestedManyWithoutUserInput
-    dataSyncs?: DataSyncCreateNestedManyWithoutUserInput
-    chartPlayHistory?: ChartPlayHistoryCreateNestedManyWithoutUserInput
-    chartRecordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutUserInput
-    examSubmissions?: ExamSubmissionCreateNestedManyWithoutUserInput
-    examAchievements?: ExamAchievementCreateNestedManyWithoutUserInput
-  }
-
-  export type UserUncheckedCreateWithoutBasicBestPlayInput = {
-    id?: number
-    username?: string | null
-    nostalgia_name?: string | null
-    discord_id?: string | null
-    discord_name?: string | null
-    avatar?: string | null
-    country?: string
-    rank_basic?: number | null
-    rank_recital?: number | null
-    rank_basic_country?: number | null
-    rank_recital_country?: number | null
-    play_count?: number | null
-    score_p?: number | null
-    score_f?: number | null
-    score_s?: number | null
-    score_a2?: number | null
-    score_a?: number | null
-    score_b2?: number | null
-    score_b?: number | null
-    score_c?: number | null
-    score_d?: number | null
-    role?: string
-    grade_basic?: number | null
-    grade_recital?: number | null
-    exam_basic?: number | null
-    exam_recital?: number | null
-    sync_token_version?: number
-    created_at?: Date | string
-    updated_at?: Date | string
-    PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
-    PlayData?: PlayDataUncheckedCreateNestedManyWithoutUserInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutUserInput
-    UserBestGrade?: UserBestGradeUncheckedCreateNestedManyWithoutUserInput
-    bingoProgress?: BingoCellProgressUncheckedCreateNestedManyWithoutUserInput
-    chartEvaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutUserInput
-    chartReactions?: ChartEvaluationReactionUncheckedCreateNestedManyWithoutUserInput
-    dataSyncs?: DataSyncUncheckedCreateNestedManyWithoutUserInput
-    chartPlayHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutUserInput
-    chartRecordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutUserInput
-    examSubmissions?: ExamSubmissionUncheckedCreateNestedManyWithoutUserInput
-    examAchievements?: ExamAchievementUncheckedCreateNestedManyWithoutUserInput
-  }
-
-  export type UserCreateOrConnectWithoutBasicBestPlayInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutBasicBestPlayInput, UserUncheckedCreateWithoutBasicBestPlayInput>
-  }
-
-  export type MusicCreateWithoutBasicBestPlayInput = {
-    index: string
-    title: string
-    title_kana: string
-    artist?: string | null
-    category: string
-    category_short: string
-    description?: string | null
-    background?: string | null
-    sheet_len: number
-    difficulty_levels: string
-    difficulty_name: string
-    normal: number
-    hard: number
-    expert: number
-    real?: number | null
-    created_at?: Date | string
-    updated_at?: Date | string
-    RecentPlay?: RecentPlayCreateNestedManyWithoutMusicInput
-    PlayData?: PlayDataCreateNestedManyWithoutMusicInput
-    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutMusicInput
-    bingoCovers?: BingoCreateNestedManyWithoutCoverMusicInput
-    bingoMissions?: BingoCellCreateNestedManyWithoutMusicInput
-    charts?: MusicChartCreateNestedManyWithoutMusicInput
-    examStages?: ExamStageCreateNestedManyWithoutMusicInput
-    examRewards?: ExamRewardCreateNestedManyWithoutMusicInput
-  }
-
-  export type MusicUncheckedCreateWithoutBasicBestPlayInput = {
-    id?: number
-    index: string
-    title: string
-    title_kana: string
-    artist?: string | null
-    category: string
-    category_short: string
-    description?: string | null
-    background?: string | null
-    sheet_len: number
-    difficulty_levels: string
-    difficulty_name: string
-    normal: number
-    hard: number
-    expert: number
-    real?: number | null
-    created_at?: Date | string
-    updated_at?: Date | string
-    RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutMusicInput
-    PlayData?: PlayDataUncheckedCreateNestedManyWithoutMusicInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutMusicInput
-    bingoCovers?: BingoUncheckedCreateNestedManyWithoutCoverMusicInput
-    bingoMissions?: BingoCellUncheckedCreateNestedManyWithoutMusicInput
-    charts?: MusicChartUncheckedCreateNestedManyWithoutMusicInput
-    examStages?: ExamStageUncheckedCreateNestedManyWithoutMusicInput
-    examRewards?: ExamRewardUncheckedCreateNestedManyWithoutMusicInput
-  }
-
-  export type MusicCreateOrConnectWithoutBasicBestPlayInput = {
-    where: MusicWhereUniqueInput
-    create: XOR<MusicCreateWithoutBasicBestPlayInput, MusicUncheckedCreateWithoutBasicBestPlayInput>
-  }
-
-  export type MusicChartCreateWithoutBasicBestPlayInput = {
-    difficulty: string
-    level: number
-    level_constant?: number | null
-    bpm_min?: number | null
-    bpm_max?: number | null
-    note_count?: number | null
-    duration_seconds?: number | null
-    released_at?: Date | string | null
-    unlock_condition?: string | null
-    play_video_url?: string | null
-    chart_preview_url?: string | null
-    created_at?: Date | string
-    updated_at?: Date | string
-    music: MusicCreateNestedOneWithoutChartsInput
-    levelConstantHistory?: ChartLevelConstantHistoryCreateNestedManyWithoutChartInput
-    evaluations?: ChartEvaluationCreateNestedManyWithoutChartInput
-    RecentPlay?: RecentPlayCreateNestedManyWithoutChartInput
-    PlayData?: PlayDataCreateNestedManyWithoutChartInput
-    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutChartInput
-    playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
-    recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
-    examStageOptions?: ExamStageChartCreateNestedManyWithoutChartInput
-    tierEntries?: TierEntryCreateNestedManyWithoutChartInput
-    tierPlacementHistory?: TierPlacementHistoryCreateNestedManyWithoutChartInput
-  }
-
-  export type MusicChartUncheckedCreateWithoutBasicBestPlayInput = {
-    id?: number
-    difficulty: string
-    level: number
-    level_constant?: number | null
-    bpm_min?: number | null
-    bpm_max?: number | null
-    note_count?: number | null
-    duration_seconds?: number | null
-    released_at?: Date | string | null
-    unlock_condition?: string | null
-    play_video_url?: string | null
-    chart_preview_url?: string | null
-    music_idx: string
-    created_at?: Date | string
-    updated_at?: Date | string
-    levelConstantHistory?: ChartLevelConstantHistoryUncheckedCreateNestedManyWithoutChartInput
-    evaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutChartInput
-    RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutChartInput
-    PlayData?: PlayDataUncheckedCreateNestedManyWithoutChartInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutChartInput
-    playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
-    recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
-    examStageOptions?: ExamStageChartUncheckedCreateNestedManyWithoutChartInput
-    tierEntries?: TierEntryUncheckedCreateNestedManyWithoutChartInput
-    tierPlacementHistory?: TierPlacementHistoryUncheckedCreateNestedManyWithoutChartInput
-  }
-
-  export type MusicChartCreateOrConnectWithoutBasicBestPlayInput = {
-    where: MusicChartWhereUniqueInput
-    create: XOR<MusicChartCreateWithoutBasicBestPlayInput, MusicChartUncheckedCreateWithoutBasicBestPlayInput>
-  }
-
-  export type UserUpsertWithoutBasicBestPlayInput = {
-    update: XOR<UserUpdateWithoutBasicBestPlayInput, UserUncheckedUpdateWithoutBasicBestPlayInput>
-    create: XOR<UserCreateWithoutBasicBestPlayInput, UserUncheckedCreateWithoutBasicBestPlayInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutBasicBestPlayInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutBasicBestPlayInput, UserUncheckedUpdateWithoutBasicBestPlayInput>
-  }
-
-  export type UserUpdateWithoutBasicBestPlayInput = {
-    username?: NullableStringFieldUpdateOperationsInput | string | null
-    nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
-    discord_id?: NullableStringFieldUpdateOperationsInput | string | null
-    discord_name?: NullableStringFieldUpdateOperationsInput | string | null
-    avatar?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: StringFieldUpdateOperationsInput | string
-    rank_basic?: NullableIntFieldUpdateOperationsInput | number | null
-    rank_recital?: NullableIntFieldUpdateOperationsInput | number | null
-    rank_basic_country?: NullableIntFieldUpdateOperationsInput | number | null
-    rank_recital_country?: NullableIntFieldUpdateOperationsInput | number | null
-    play_count?: NullableIntFieldUpdateOperationsInput | number | null
-    score_p?: NullableIntFieldUpdateOperationsInput | number | null
-    score_f?: NullableIntFieldUpdateOperationsInput | number | null
-    score_s?: NullableIntFieldUpdateOperationsInput | number | null
-    score_a2?: NullableIntFieldUpdateOperationsInput | number | null
-    score_a?: NullableIntFieldUpdateOperationsInput | number | null
-    score_b2?: NullableIntFieldUpdateOperationsInput | number | null
-    score_b?: NullableIntFieldUpdateOperationsInput | number | null
-    score_c?: NullableIntFieldUpdateOperationsInput | number | null
-    score_d?: NullableIntFieldUpdateOperationsInput | number | null
-    role?: StringFieldUpdateOperationsInput | string
-    grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
-    grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
-    exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
-    exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
-    sync_token_version?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
-    PlayData?: PlayDataUpdateManyWithoutUserNestedInput
-    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutUserNestedInput
-    UserBestGrade?: UserBestGradeUpdateManyWithoutUserNestedInput
-    bingoProgress?: BingoCellProgressUpdateManyWithoutUserNestedInput
-    chartEvaluations?: ChartEvaluationUpdateManyWithoutUserNestedInput
-    chartReactions?: ChartEvaluationReactionUpdateManyWithoutUserNestedInput
-    dataSyncs?: DataSyncUpdateManyWithoutUserNestedInput
-    chartPlayHistory?: ChartPlayHistoryUpdateManyWithoutUserNestedInput
-    chartRecordSnapshots?: ChartRecordSnapshotUpdateManyWithoutUserNestedInput
-    examSubmissions?: ExamSubmissionUpdateManyWithoutUserNestedInput
-    examAchievements?: ExamAchievementUpdateManyWithoutUserNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutBasicBestPlayInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    username?: NullableStringFieldUpdateOperationsInput | string | null
-    nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
-    discord_id?: NullableStringFieldUpdateOperationsInput | string | null
-    discord_name?: NullableStringFieldUpdateOperationsInput | string | null
-    avatar?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: StringFieldUpdateOperationsInput | string
-    rank_basic?: NullableIntFieldUpdateOperationsInput | number | null
-    rank_recital?: NullableIntFieldUpdateOperationsInput | number | null
-    rank_basic_country?: NullableIntFieldUpdateOperationsInput | number | null
-    rank_recital_country?: NullableIntFieldUpdateOperationsInput | number | null
-    play_count?: NullableIntFieldUpdateOperationsInput | number | null
-    score_p?: NullableIntFieldUpdateOperationsInput | number | null
-    score_f?: NullableIntFieldUpdateOperationsInput | number | null
-    score_s?: NullableIntFieldUpdateOperationsInput | number | null
-    score_a2?: NullableIntFieldUpdateOperationsInput | number | null
-    score_a?: NullableIntFieldUpdateOperationsInput | number | null
-    score_b2?: NullableIntFieldUpdateOperationsInput | number | null
-    score_b?: NullableIntFieldUpdateOperationsInput | number | null
-    score_c?: NullableIntFieldUpdateOperationsInput | number | null
-    score_d?: NullableIntFieldUpdateOperationsInput | number | null
-    role?: StringFieldUpdateOperationsInput | string
-    grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
-    grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
-    exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
-    exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
-    sync_token_version?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
-    PlayData?: PlayDataUncheckedUpdateManyWithoutUserNestedInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutUserNestedInput
-    UserBestGrade?: UserBestGradeUncheckedUpdateManyWithoutUserNestedInput
-    bingoProgress?: BingoCellProgressUncheckedUpdateManyWithoutUserNestedInput
-    chartEvaluations?: ChartEvaluationUncheckedUpdateManyWithoutUserNestedInput
-    chartReactions?: ChartEvaluationReactionUncheckedUpdateManyWithoutUserNestedInput
-    dataSyncs?: DataSyncUncheckedUpdateManyWithoutUserNestedInput
-    chartPlayHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutUserNestedInput
-    chartRecordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutUserNestedInput
-    examSubmissions?: ExamSubmissionUncheckedUpdateManyWithoutUserNestedInput
-    examAchievements?: ExamAchievementUncheckedUpdateManyWithoutUserNestedInput
-  }
-
-  export type MusicUpsertWithoutBasicBestPlayInput = {
-    update: XOR<MusicUpdateWithoutBasicBestPlayInput, MusicUncheckedUpdateWithoutBasicBestPlayInput>
-    create: XOR<MusicCreateWithoutBasicBestPlayInput, MusicUncheckedCreateWithoutBasicBestPlayInput>
-    where?: MusicWhereInput
-  }
-
-  export type MusicUpdateToOneWithWhereWithoutBasicBestPlayInput = {
-    where?: MusicWhereInput
-    data: XOR<MusicUpdateWithoutBasicBestPlayInput, MusicUncheckedUpdateWithoutBasicBestPlayInput>
-  }
-
-  export type MusicUpdateWithoutBasicBestPlayInput = {
-    index?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    title_kana?: StringFieldUpdateOperationsInput | string
-    artist?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: StringFieldUpdateOperationsInput | string
-    category_short?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    background?: NullableStringFieldUpdateOperationsInput | string | null
-    sheet_len?: IntFieldUpdateOperationsInput | number
-    difficulty_levels?: StringFieldUpdateOperationsInput | string
-    difficulty_name?: StringFieldUpdateOperationsInput | string
-    normal?: IntFieldUpdateOperationsInput | number
-    hard?: IntFieldUpdateOperationsInput | number
-    expert?: IntFieldUpdateOperationsInput | number
-    real?: NullableIntFieldUpdateOperationsInput | number | null
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    RecentPlay?: RecentPlayUpdateManyWithoutMusicNestedInput
-    PlayData?: PlayDataUpdateManyWithoutMusicNestedInput
-    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutMusicNestedInput
-    bingoCovers?: BingoUpdateManyWithoutCoverMusicNestedInput
-    bingoMissions?: BingoCellUpdateManyWithoutMusicNestedInput
-    charts?: MusicChartUpdateManyWithoutMusicNestedInput
-    examStages?: ExamStageUpdateManyWithoutMusicNestedInput
-    examRewards?: ExamRewardUpdateManyWithoutMusicNestedInput
-  }
-
-  export type MusicUncheckedUpdateWithoutBasicBestPlayInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    index?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    title_kana?: StringFieldUpdateOperationsInput | string
-    artist?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: StringFieldUpdateOperationsInput | string
-    category_short?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    background?: NullableStringFieldUpdateOperationsInput | string | null
-    sheet_len?: IntFieldUpdateOperationsInput | number
-    difficulty_levels?: StringFieldUpdateOperationsInput | string
-    difficulty_name?: StringFieldUpdateOperationsInput | string
-    normal?: IntFieldUpdateOperationsInput | number
-    hard?: IntFieldUpdateOperationsInput | number
-    expert?: IntFieldUpdateOperationsInput | number
-    real?: NullableIntFieldUpdateOperationsInput | number | null
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    RecentPlay?: RecentPlayUncheckedUpdateManyWithoutMusicNestedInput
-    PlayData?: PlayDataUncheckedUpdateManyWithoutMusicNestedInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutMusicNestedInput
-    bingoCovers?: BingoUncheckedUpdateManyWithoutCoverMusicNestedInput
-    bingoMissions?: BingoCellUncheckedUpdateManyWithoutMusicNestedInput
-    charts?: MusicChartUncheckedUpdateManyWithoutMusicNestedInput
-    examStages?: ExamStageUncheckedUpdateManyWithoutMusicNestedInput
-    examRewards?: ExamRewardUncheckedUpdateManyWithoutMusicNestedInput
-  }
-
-  export type MusicChartUpsertWithoutBasicBestPlayInput = {
-    update: XOR<MusicChartUpdateWithoutBasicBestPlayInput, MusicChartUncheckedUpdateWithoutBasicBestPlayInput>
-    create: XOR<MusicChartCreateWithoutBasicBestPlayInput, MusicChartUncheckedCreateWithoutBasicBestPlayInput>
-    where?: MusicChartWhereInput
-  }
-
-  export type MusicChartUpdateToOneWithWhereWithoutBasicBestPlayInput = {
-    where?: MusicChartWhereInput
-    data: XOR<MusicChartUpdateWithoutBasicBestPlayInput, MusicChartUncheckedUpdateWithoutBasicBestPlayInput>
-  }
-
-  export type MusicChartUpdateWithoutBasicBestPlayInput = {
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
-    bpm_min?: NullableIntFieldUpdateOperationsInput | number | null
-    bpm_max?: NullableIntFieldUpdateOperationsInput | number | null
-    note_count?: NullableIntFieldUpdateOperationsInput | number | null
-    duration_seconds?: NullableIntFieldUpdateOperationsInput | number | null
-    released_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    unlock_condition?: NullableStringFieldUpdateOperationsInput | string | null
-    play_video_url?: NullableStringFieldUpdateOperationsInput | string | null
-    chart_preview_url?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    music?: MusicUpdateOneRequiredWithoutChartsNestedInput
-    levelConstantHistory?: ChartLevelConstantHistoryUpdateManyWithoutChartNestedInput
-    evaluations?: ChartEvaluationUpdateManyWithoutChartNestedInput
-    RecentPlay?: RecentPlayUpdateManyWithoutChartNestedInput
-    PlayData?: PlayDataUpdateManyWithoutChartNestedInput
-    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutChartNestedInput
-    playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
-    recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
-    examStageOptions?: ExamStageChartUpdateManyWithoutChartNestedInput
-    tierEntries?: TierEntryUpdateManyWithoutChartNestedInput
-    tierPlacementHistory?: TierPlacementHistoryUpdateManyWithoutChartNestedInput
-  }
-
-  export type MusicChartUncheckedUpdateWithoutBasicBestPlayInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
-    bpm_min?: NullableIntFieldUpdateOperationsInput | number | null
-    bpm_max?: NullableIntFieldUpdateOperationsInput | number | null
-    note_count?: NullableIntFieldUpdateOperationsInput | number | null
-    duration_seconds?: NullableIntFieldUpdateOperationsInput | number | null
-    released_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    unlock_condition?: NullableStringFieldUpdateOperationsInput | string | null
-    play_video_url?: NullableStringFieldUpdateOperationsInput | string | null
-    chart_preview_url?: NullableStringFieldUpdateOperationsInput | string | null
-    music_idx?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    levelConstantHistory?: ChartLevelConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
-    evaluations?: ChartEvaluationUncheckedUpdateManyWithoutChartNestedInput
-    RecentPlay?: RecentPlayUncheckedUpdateManyWithoutChartNestedInput
-    PlayData?: PlayDataUncheckedUpdateManyWithoutChartNestedInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutChartNestedInput
-    playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
-    recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
-    examStageOptions?: ExamStageChartUncheckedUpdateManyWithoutChartNestedInput
-    tierEntries?: TierEntryUncheckedUpdateManyWithoutChartNestedInput
-    tierPlacementHistory?: TierPlacementHistoryUncheckedUpdateManyWithoutChartNestedInput
-  }
-
-  export type UserCreateWithoutRecitalBestPlayInput = {
-    username?: string | null
-    nostalgia_name?: string | null
-    discord_id?: string | null
-    discord_name?: string | null
-    avatar?: string | null
-    country?: string
-    rank_basic?: number | null
-    rank_recital?: number | null
-    rank_basic_country?: number | null
-    rank_recital_country?: number | null
-    play_count?: number | null
-    score_p?: number | null
-    score_f?: number | null
-    score_s?: number | null
-    score_a2?: number | null
-    score_a?: number | null
-    score_b2?: number | null
-    score_b?: number | null
-    score_c?: number | null
-    score_d?: number | null
-    role?: string
-    grade_basic?: number | null
-    grade_recital?: number | null
-    exam_basic?: number | null
-    exam_recital?: number | null
-    sync_token_version?: number
-    created_at?: Date | string
-    updated_at?: Date | string
-    PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
-    PlayData?: PlayDataCreateNestedManyWithoutUserInput
-    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutUserInput
-    UserBestGrade?: UserBestGradeCreateNestedManyWithoutUserInput
-    bingoProgress?: BingoCellProgressCreateNestedManyWithoutUserInput
-    chartEvaluations?: ChartEvaluationCreateNestedManyWithoutUserInput
-    chartReactions?: ChartEvaluationReactionCreateNestedManyWithoutUserInput
-    dataSyncs?: DataSyncCreateNestedManyWithoutUserInput
-    chartPlayHistory?: ChartPlayHistoryCreateNestedManyWithoutUserInput
-    chartRecordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutUserInput
-    examSubmissions?: ExamSubmissionCreateNestedManyWithoutUserInput
-    examAchievements?: ExamAchievementCreateNestedManyWithoutUserInput
-  }
-
-  export type UserUncheckedCreateWithoutRecitalBestPlayInput = {
-    id?: number
-    username?: string | null
-    nostalgia_name?: string | null
-    discord_id?: string | null
-    discord_name?: string | null
-    avatar?: string | null
-    country?: string
-    rank_basic?: number | null
-    rank_recital?: number | null
-    rank_basic_country?: number | null
-    rank_recital_country?: number | null
-    play_count?: number | null
-    score_p?: number | null
-    score_f?: number | null
-    score_s?: number | null
-    score_a2?: number | null
-    score_a?: number | null
-    score_b2?: number | null
-    score_b?: number | null
-    score_c?: number | null
-    score_d?: number | null
-    role?: string
-    grade_basic?: number | null
-    grade_recital?: number | null
-    exam_basic?: number | null
-    exam_recital?: number | null
-    sync_token_version?: number
-    created_at?: Date | string
-    updated_at?: Date | string
-    PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
-    PlayData?: PlayDataUncheckedCreateNestedManyWithoutUserInput
-    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutUserInput
-    UserBestGrade?: UserBestGradeUncheckedCreateNestedManyWithoutUserInput
-    bingoProgress?: BingoCellProgressUncheckedCreateNestedManyWithoutUserInput
-    chartEvaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutUserInput
-    chartReactions?: ChartEvaluationReactionUncheckedCreateNestedManyWithoutUserInput
-    dataSyncs?: DataSyncUncheckedCreateNestedManyWithoutUserInput
-    chartPlayHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutUserInput
-    chartRecordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutUserInput
-    examSubmissions?: ExamSubmissionUncheckedCreateNestedManyWithoutUserInput
-    examAchievements?: ExamAchievementUncheckedCreateNestedManyWithoutUserInput
-  }
-
-  export type UserCreateOrConnectWithoutRecitalBestPlayInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutRecitalBestPlayInput, UserUncheckedCreateWithoutRecitalBestPlayInput>
-  }
-
-  export type MusicCreateWithoutRecitalBestPlayInput = {
-    index: string
-    title: string
-    title_kana: string
-    artist?: string | null
-    category: string
-    category_short: string
-    description?: string | null
-    background?: string | null
-    sheet_len: number
-    difficulty_levels: string
-    difficulty_name: string
-    normal: number
-    hard: number
-    expert: number
-    real?: number | null
-    created_at?: Date | string
-    updated_at?: Date | string
-    RecentPlay?: RecentPlayCreateNestedManyWithoutMusicInput
-    PlayData?: PlayDataCreateNestedManyWithoutMusicInput
-    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutMusicInput
-    bingoCovers?: BingoCreateNestedManyWithoutCoverMusicInput
-    bingoMissions?: BingoCellCreateNestedManyWithoutMusicInput
-    charts?: MusicChartCreateNestedManyWithoutMusicInput
-    examStages?: ExamStageCreateNestedManyWithoutMusicInput
-    examRewards?: ExamRewardCreateNestedManyWithoutMusicInput
-  }
-
-  export type MusicUncheckedCreateWithoutRecitalBestPlayInput = {
-    id?: number
-    index: string
-    title: string
-    title_kana: string
-    artist?: string | null
-    category: string
-    category_short: string
-    description?: string | null
-    background?: string | null
-    sheet_len: number
-    difficulty_levels: string
-    difficulty_name: string
-    normal: number
-    hard: number
-    expert: number
-    real?: number | null
-    created_at?: Date | string
-    updated_at?: Date | string
-    RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutMusicInput
-    PlayData?: PlayDataUncheckedCreateNestedManyWithoutMusicInput
-    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutMusicInput
-    bingoCovers?: BingoUncheckedCreateNestedManyWithoutCoverMusicInput
-    bingoMissions?: BingoCellUncheckedCreateNestedManyWithoutMusicInput
-    charts?: MusicChartUncheckedCreateNestedManyWithoutMusicInput
-    examStages?: ExamStageUncheckedCreateNestedManyWithoutMusicInput
-    examRewards?: ExamRewardUncheckedCreateNestedManyWithoutMusicInput
-  }
-
-  export type MusicCreateOrConnectWithoutRecitalBestPlayInput = {
-    where: MusicWhereUniqueInput
-    create: XOR<MusicCreateWithoutRecitalBestPlayInput, MusicUncheckedCreateWithoutRecitalBestPlayInput>
-  }
-
-  export type MusicChartCreateWithoutRecitalBestPlayInput = {
-    difficulty: string
-    level: number
-    level_constant?: number | null
-    bpm_min?: number | null
-    bpm_max?: number | null
-    note_count?: number | null
-    duration_seconds?: number | null
-    released_at?: Date | string | null
-    unlock_condition?: string | null
-    play_video_url?: string | null
-    chart_preview_url?: string | null
-    created_at?: Date | string
-    updated_at?: Date | string
-    music: MusicCreateNestedOneWithoutChartsInput
-    levelConstantHistory?: ChartLevelConstantHistoryCreateNestedManyWithoutChartInput
-    evaluations?: ChartEvaluationCreateNestedManyWithoutChartInput
-    RecentPlay?: RecentPlayCreateNestedManyWithoutChartInput
-    PlayData?: PlayDataCreateNestedManyWithoutChartInput
-    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutChartInput
-    playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
-    recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
-    examStageOptions?: ExamStageChartCreateNestedManyWithoutChartInput
-    tierEntries?: TierEntryCreateNestedManyWithoutChartInput
-    tierPlacementHistory?: TierPlacementHistoryCreateNestedManyWithoutChartInput
-  }
-
-  export type MusicChartUncheckedCreateWithoutRecitalBestPlayInput = {
-    id?: number
-    difficulty: string
-    level: number
-    level_constant?: number | null
-    bpm_min?: number | null
-    bpm_max?: number | null
-    note_count?: number | null
-    duration_seconds?: number | null
-    released_at?: Date | string | null
-    unlock_condition?: string | null
-    play_video_url?: string | null
-    chart_preview_url?: string | null
-    music_idx: string
-    created_at?: Date | string
-    updated_at?: Date | string
-    levelConstantHistory?: ChartLevelConstantHistoryUncheckedCreateNestedManyWithoutChartInput
-    evaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutChartInput
-    RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutChartInput
-    PlayData?: PlayDataUncheckedCreateNestedManyWithoutChartInput
-    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutChartInput
-    playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
-    recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
-    examStageOptions?: ExamStageChartUncheckedCreateNestedManyWithoutChartInput
-    tierEntries?: TierEntryUncheckedCreateNestedManyWithoutChartInput
-    tierPlacementHistory?: TierPlacementHistoryUncheckedCreateNestedManyWithoutChartInput
-  }
-
-  export type MusicChartCreateOrConnectWithoutRecitalBestPlayInput = {
-    where: MusicChartWhereUniqueInput
-    create: XOR<MusicChartCreateWithoutRecitalBestPlayInput, MusicChartUncheckedCreateWithoutRecitalBestPlayInput>
-  }
-
-  export type UserUpsertWithoutRecitalBestPlayInput = {
-    update: XOR<UserUpdateWithoutRecitalBestPlayInput, UserUncheckedUpdateWithoutRecitalBestPlayInput>
-    create: XOR<UserCreateWithoutRecitalBestPlayInput, UserUncheckedCreateWithoutRecitalBestPlayInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutRecitalBestPlayInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutRecitalBestPlayInput, UserUncheckedUpdateWithoutRecitalBestPlayInput>
-  }
-
-  export type UserUpdateWithoutRecitalBestPlayInput = {
-    username?: NullableStringFieldUpdateOperationsInput | string | null
-    nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
-    discord_id?: NullableStringFieldUpdateOperationsInput | string | null
-    discord_name?: NullableStringFieldUpdateOperationsInput | string | null
-    avatar?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: StringFieldUpdateOperationsInput | string
-    rank_basic?: NullableIntFieldUpdateOperationsInput | number | null
-    rank_recital?: NullableIntFieldUpdateOperationsInput | number | null
-    rank_basic_country?: NullableIntFieldUpdateOperationsInput | number | null
-    rank_recital_country?: NullableIntFieldUpdateOperationsInput | number | null
-    play_count?: NullableIntFieldUpdateOperationsInput | number | null
-    score_p?: NullableIntFieldUpdateOperationsInput | number | null
-    score_f?: NullableIntFieldUpdateOperationsInput | number | null
-    score_s?: NullableIntFieldUpdateOperationsInput | number | null
-    score_a2?: NullableIntFieldUpdateOperationsInput | number | null
-    score_a?: NullableIntFieldUpdateOperationsInput | number | null
-    score_b2?: NullableIntFieldUpdateOperationsInput | number | null
-    score_b?: NullableIntFieldUpdateOperationsInput | number | null
-    score_c?: NullableIntFieldUpdateOperationsInput | number | null
-    score_d?: NullableIntFieldUpdateOperationsInput | number | null
-    role?: StringFieldUpdateOperationsInput | string
-    grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
-    grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
-    exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
-    exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
-    sync_token_version?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
-    PlayData?: PlayDataUpdateManyWithoutUserNestedInput
-    BasicBestPlay?: BasicBestPlayUpdateManyWithoutUserNestedInput
-    UserBestGrade?: UserBestGradeUpdateManyWithoutUserNestedInput
-    bingoProgress?: BingoCellProgressUpdateManyWithoutUserNestedInput
-    chartEvaluations?: ChartEvaluationUpdateManyWithoutUserNestedInput
-    chartReactions?: ChartEvaluationReactionUpdateManyWithoutUserNestedInput
-    dataSyncs?: DataSyncUpdateManyWithoutUserNestedInput
-    chartPlayHistory?: ChartPlayHistoryUpdateManyWithoutUserNestedInput
-    chartRecordSnapshots?: ChartRecordSnapshotUpdateManyWithoutUserNestedInput
-    examSubmissions?: ExamSubmissionUpdateManyWithoutUserNestedInput
-    examAchievements?: ExamAchievementUpdateManyWithoutUserNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutRecitalBestPlayInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    username?: NullableStringFieldUpdateOperationsInput | string | null
-    nostalgia_name?: NullableStringFieldUpdateOperationsInput | string | null
-    discord_id?: NullableStringFieldUpdateOperationsInput | string | null
-    discord_name?: NullableStringFieldUpdateOperationsInput | string | null
-    avatar?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: StringFieldUpdateOperationsInput | string
-    rank_basic?: NullableIntFieldUpdateOperationsInput | number | null
-    rank_recital?: NullableIntFieldUpdateOperationsInput | number | null
-    rank_basic_country?: NullableIntFieldUpdateOperationsInput | number | null
-    rank_recital_country?: NullableIntFieldUpdateOperationsInput | number | null
-    play_count?: NullableIntFieldUpdateOperationsInput | number | null
-    score_p?: NullableIntFieldUpdateOperationsInput | number | null
-    score_f?: NullableIntFieldUpdateOperationsInput | number | null
-    score_s?: NullableIntFieldUpdateOperationsInput | number | null
-    score_a2?: NullableIntFieldUpdateOperationsInput | number | null
-    score_a?: NullableIntFieldUpdateOperationsInput | number | null
-    score_b2?: NullableIntFieldUpdateOperationsInput | number | null
-    score_b?: NullableIntFieldUpdateOperationsInput | number | null
-    score_c?: NullableIntFieldUpdateOperationsInput | number | null
-    score_d?: NullableIntFieldUpdateOperationsInput | number | null
-    role?: StringFieldUpdateOperationsInput | string
-    grade_basic?: NullableIntFieldUpdateOperationsInput | number | null
-    grade_recital?: NullableIntFieldUpdateOperationsInput | number | null
-    exam_basic?: NullableIntFieldUpdateOperationsInput | number | null
-    exam_recital?: NullableIntFieldUpdateOperationsInput | number | null
-    sync_token_version?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
-    PlayData?: PlayDataUncheckedUpdateManyWithoutUserNestedInput
-    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutUserNestedInput
-    UserBestGrade?: UserBestGradeUncheckedUpdateManyWithoutUserNestedInput
-    bingoProgress?: BingoCellProgressUncheckedUpdateManyWithoutUserNestedInput
-    chartEvaluations?: ChartEvaluationUncheckedUpdateManyWithoutUserNestedInput
-    chartReactions?: ChartEvaluationReactionUncheckedUpdateManyWithoutUserNestedInput
-    dataSyncs?: DataSyncUncheckedUpdateManyWithoutUserNestedInput
-    chartPlayHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutUserNestedInput
-    chartRecordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutUserNestedInput
-    examSubmissions?: ExamSubmissionUncheckedUpdateManyWithoutUserNestedInput
-    examAchievements?: ExamAchievementUncheckedUpdateManyWithoutUserNestedInput
-  }
-
-  export type MusicUpsertWithoutRecitalBestPlayInput = {
-    update: XOR<MusicUpdateWithoutRecitalBestPlayInput, MusicUncheckedUpdateWithoutRecitalBestPlayInput>
-    create: XOR<MusicCreateWithoutRecitalBestPlayInput, MusicUncheckedCreateWithoutRecitalBestPlayInput>
-    where?: MusicWhereInput
-  }
-
-  export type MusicUpdateToOneWithWhereWithoutRecitalBestPlayInput = {
-    where?: MusicWhereInput
-    data: XOR<MusicUpdateWithoutRecitalBestPlayInput, MusicUncheckedUpdateWithoutRecitalBestPlayInput>
-  }
-
-  export type MusicUpdateWithoutRecitalBestPlayInput = {
-    index?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    title_kana?: StringFieldUpdateOperationsInput | string
-    artist?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: StringFieldUpdateOperationsInput | string
-    category_short?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    background?: NullableStringFieldUpdateOperationsInput | string | null
-    sheet_len?: IntFieldUpdateOperationsInput | number
-    difficulty_levels?: StringFieldUpdateOperationsInput | string
-    difficulty_name?: StringFieldUpdateOperationsInput | string
-    normal?: IntFieldUpdateOperationsInput | number
-    hard?: IntFieldUpdateOperationsInput | number
-    expert?: IntFieldUpdateOperationsInput | number
-    real?: NullableIntFieldUpdateOperationsInput | number | null
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    RecentPlay?: RecentPlayUpdateManyWithoutMusicNestedInput
-    PlayData?: PlayDataUpdateManyWithoutMusicNestedInput
-    BasicBestPlay?: BasicBestPlayUpdateManyWithoutMusicNestedInput
-    bingoCovers?: BingoUpdateManyWithoutCoverMusicNestedInput
-    bingoMissions?: BingoCellUpdateManyWithoutMusicNestedInput
-    charts?: MusicChartUpdateManyWithoutMusicNestedInput
-    examStages?: ExamStageUpdateManyWithoutMusicNestedInput
-    examRewards?: ExamRewardUpdateManyWithoutMusicNestedInput
-  }
-
-  export type MusicUncheckedUpdateWithoutRecitalBestPlayInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    index?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    title_kana?: StringFieldUpdateOperationsInput | string
-    artist?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: StringFieldUpdateOperationsInput | string
-    category_short?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    background?: NullableStringFieldUpdateOperationsInput | string | null
-    sheet_len?: IntFieldUpdateOperationsInput | number
-    difficulty_levels?: StringFieldUpdateOperationsInput | string
-    difficulty_name?: StringFieldUpdateOperationsInput | string
-    normal?: IntFieldUpdateOperationsInput | number
-    hard?: IntFieldUpdateOperationsInput | number
-    expert?: IntFieldUpdateOperationsInput | number
-    real?: NullableIntFieldUpdateOperationsInput | number | null
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    RecentPlay?: RecentPlayUncheckedUpdateManyWithoutMusicNestedInput
-    PlayData?: PlayDataUncheckedUpdateManyWithoutMusicNestedInput
-    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutMusicNestedInput
-    bingoCovers?: BingoUncheckedUpdateManyWithoutCoverMusicNestedInput
-    bingoMissions?: BingoCellUncheckedUpdateManyWithoutMusicNestedInput
-    charts?: MusicChartUncheckedUpdateManyWithoutMusicNestedInput
-    examStages?: ExamStageUncheckedUpdateManyWithoutMusicNestedInput
-    examRewards?: ExamRewardUncheckedUpdateManyWithoutMusicNestedInput
-  }
-
-  export type MusicChartUpsertWithoutRecitalBestPlayInput = {
-    update: XOR<MusicChartUpdateWithoutRecitalBestPlayInput, MusicChartUncheckedUpdateWithoutRecitalBestPlayInput>
-    create: XOR<MusicChartCreateWithoutRecitalBestPlayInput, MusicChartUncheckedCreateWithoutRecitalBestPlayInput>
-    where?: MusicChartWhereInput
-  }
-
-  export type MusicChartUpdateToOneWithWhereWithoutRecitalBestPlayInput = {
-    where?: MusicChartWhereInput
-    data: XOR<MusicChartUpdateWithoutRecitalBestPlayInput, MusicChartUncheckedUpdateWithoutRecitalBestPlayInput>
-  }
-
-  export type MusicChartUpdateWithoutRecitalBestPlayInput = {
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
-    bpm_min?: NullableIntFieldUpdateOperationsInput | number | null
-    bpm_max?: NullableIntFieldUpdateOperationsInput | number | null
-    note_count?: NullableIntFieldUpdateOperationsInput | number | null
-    duration_seconds?: NullableIntFieldUpdateOperationsInput | number | null
-    released_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    unlock_condition?: NullableStringFieldUpdateOperationsInput | string | null
-    play_video_url?: NullableStringFieldUpdateOperationsInput | string | null
-    chart_preview_url?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    music?: MusicUpdateOneRequiredWithoutChartsNestedInput
-    levelConstantHistory?: ChartLevelConstantHistoryUpdateManyWithoutChartNestedInput
-    evaluations?: ChartEvaluationUpdateManyWithoutChartNestedInput
-    RecentPlay?: RecentPlayUpdateManyWithoutChartNestedInput
-    PlayData?: PlayDataUpdateManyWithoutChartNestedInput
-    BasicBestPlay?: BasicBestPlayUpdateManyWithoutChartNestedInput
-    playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
-    recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
-    examStageOptions?: ExamStageChartUpdateManyWithoutChartNestedInput
-    tierEntries?: TierEntryUpdateManyWithoutChartNestedInput
-    tierPlacementHistory?: TierPlacementHistoryUpdateManyWithoutChartNestedInput
-  }
-
-  export type MusicChartUncheckedUpdateWithoutRecitalBestPlayInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    level_constant?: NullableFloatFieldUpdateOperationsInput | number | null
-    bpm_min?: NullableIntFieldUpdateOperationsInput | number | null
-    bpm_max?: NullableIntFieldUpdateOperationsInput | number | null
-    note_count?: NullableIntFieldUpdateOperationsInput | number | null
-    duration_seconds?: NullableIntFieldUpdateOperationsInput | number | null
-    released_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    unlock_condition?: NullableStringFieldUpdateOperationsInput | string | null
-    play_video_url?: NullableStringFieldUpdateOperationsInput | string | null
-    chart_preview_url?: NullableStringFieldUpdateOperationsInput | string | null
-    music_idx?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    levelConstantHistory?: ChartLevelConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
-    evaluations?: ChartEvaluationUncheckedUpdateManyWithoutChartNestedInput
-    RecentPlay?: RecentPlayUncheckedUpdateManyWithoutChartNestedInput
-    PlayData?: PlayDataUncheckedUpdateManyWithoutChartNestedInput
-    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutChartNestedInput
-    playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
-    recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
-    examStageOptions?: ExamStageChartUncheckedUpdateManyWithoutChartNestedInput
-    tierEntries?: TierEntryUncheckedUpdateManyWithoutChartNestedInput
-    tierPlacementHistory?: TierPlacementHistoryUncheckedUpdateManyWithoutChartNestedInput
   }
 
   export type UserCreateWithoutPlayDataInput = {
@@ -54954,9 +46701,6 @@ export namespace Prisma {
     sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
-    PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
-    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutUserInput
-    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeCreateNestedManyWithoutUserInput
     bingoProgress?: BingoCellProgressCreateNestedManyWithoutUserInput
     chartEvaluations?: ChartEvaluationCreateNestedManyWithoutUserInput
@@ -54998,9 +46742,6 @@ export namespace Prisma {
     sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
-    PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
-    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutUserInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeUncheckedCreateNestedManyWithoutUserInput
     bingoProgress?: BingoCellProgressUncheckedCreateNestedManyWithoutUserInput
     chartEvaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutUserInput
@@ -55026,18 +46767,8 @@ export namespace Prisma {
     category_short: string
     description?: string | null
     background?: string | null
-    sheet_len: number
-    difficulty_levels: string
-    difficulty_name: string
-    normal: number
-    hard: number
-    expert: number
-    real?: number | null
     created_at?: Date | string
     updated_at?: Date | string
-    RecentPlay?: RecentPlayCreateNestedManyWithoutMusicInput
-    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutMusicInput
-    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutMusicInput
     bingoCovers?: BingoCreateNestedManyWithoutCoverMusicInput
     bingoMissions?: BingoCellCreateNestedManyWithoutMusicInput
     charts?: MusicChartCreateNestedManyWithoutMusicInput
@@ -55055,18 +46786,8 @@ export namespace Prisma {
     category_short: string
     description?: string | null
     background?: string | null
-    sheet_len: number
-    difficulty_levels: string
-    difficulty_name: string
-    normal: number
-    hard: number
-    expert: number
-    real?: number | null
     created_at?: Date | string
     updated_at?: Date | string
-    RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutMusicInput
-    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutMusicInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutMusicInput
     bingoCovers?: BingoUncheckedCreateNestedManyWithoutCoverMusicInput
     bingoMissions?: BingoCellUncheckedCreateNestedManyWithoutMusicInput
     charts?: MusicChartUncheckedCreateNestedManyWithoutMusicInput
@@ -55096,9 +46817,6 @@ export namespace Prisma {
     music: MusicCreateNestedOneWithoutChartsInput
     levelConstantHistory?: ChartLevelConstantHistoryCreateNestedManyWithoutChartInput
     evaluations?: ChartEvaluationCreateNestedManyWithoutChartInput
-    RecentPlay?: RecentPlayCreateNestedManyWithoutChartInput
-    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutChartInput
-    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutChartInput
     playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
     examStageOptions?: ExamStageChartCreateNestedManyWithoutChartInput
@@ -55124,9 +46842,6 @@ export namespace Prisma {
     updated_at?: Date | string
     levelConstantHistory?: ChartLevelConstantHistoryUncheckedCreateNestedManyWithoutChartInput
     evaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutChartInput
-    RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutChartInput
-    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutChartInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutChartInput
     playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
     examStageOptions?: ExamStageChartUncheckedCreateNestedManyWithoutChartInput
@@ -55179,9 +46894,6 @@ export namespace Prisma {
     sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
-    BasicBestPlay?: BasicBestPlayUpdateManyWithoutUserNestedInput
-    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUpdateManyWithoutUserNestedInput
     bingoProgress?: BingoCellProgressUpdateManyWithoutUserNestedInput
     chartEvaluations?: ChartEvaluationUpdateManyWithoutUserNestedInput
@@ -55223,9 +46935,6 @@ export namespace Prisma {
     sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
-    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutUserNestedInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUncheckedUpdateManyWithoutUserNestedInput
     bingoProgress?: BingoCellProgressUncheckedUpdateManyWithoutUserNestedInput
     chartEvaluations?: ChartEvaluationUncheckedUpdateManyWithoutUserNestedInput
@@ -55257,18 +46966,8 @@ export namespace Prisma {
     category_short?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     background?: NullableStringFieldUpdateOperationsInput | string | null
-    sheet_len?: IntFieldUpdateOperationsInput | number
-    difficulty_levels?: StringFieldUpdateOperationsInput | string
-    difficulty_name?: StringFieldUpdateOperationsInput | string
-    normal?: IntFieldUpdateOperationsInput | number
-    hard?: IntFieldUpdateOperationsInput | number
-    expert?: IntFieldUpdateOperationsInput | number
-    real?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    RecentPlay?: RecentPlayUpdateManyWithoutMusicNestedInput
-    BasicBestPlay?: BasicBestPlayUpdateManyWithoutMusicNestedInput
-    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutMusicNestedInput
     bingoCovers?: BingoUpdateManyWithoutCoverMusicNestedInput
     bingoMissions?: BingoCellUpdateManyWithoutMusicNestedInput
     charts?: MusicChartUpdateManyWithoutMusicNestedInput
@@ -55286,18 +46985,8 @@ export namespace Prisma {
     category_short?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     background?: NullableStringFieldUpdateOperationsInput | string | null
-    sheet_len?: IntFieldUpdateOperationsInput | number
-    difficulty_levels?: StringFieldUpdateOperationsInput | string
-    difficulty_name?: StringFieldUpdateOperationsInput | string
-    normal?: IntFieldUpdateOperationsInput | number
-    hard?: IntFieldUpdateOperationsInput | number
-    expert?: IntFieldUpdateOperationsInput | number
-    real?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    RecentPlay?: RecentPlayUncheckedUpdateManyWithoutMusicNestedInput
-    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutMusicNestedInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutMusicNestedInput
     bingoCovers?: BingoUncheckedUpdateManyWithoutCoverMusicNestedInput
     bingoMissions?: BingoCellUncheckedUpdateManyWithoutMusicNestedInput
     charts?: MusicChartUncheckedUpdateManyWithoutMusicNestedInput
@@ -55333,9 +47022,6 @@ export namespace Prisma {
     music?: MusicUpdateOneRequiredWithoutChartsNestedInput
     levelConstantHistory?: ChartLevelConstantHistoryUpdateManyWithoutChartNestedInput
     evaluations?: ChartEvaluationUpdateManyWithoutChartNestedInput
-    RecentPlay?: RecentPlayUpdateManyWithoutChartNestedInput
-    BasicBestPlay?: BasicBestPlayUpdateManyWithoutChartNestedInput
-    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutChartNestedInput
     playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
     examStageOptions?: ExamStageChartUpdateManyWithoutChartNestedInput
@@ -55361,9 +47047,6 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     levelConstantHistory?: ChartLevelConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
     evaluations?: ChartEvaluationUncheckedUpdateManyWithoutChartNestedInput
-    RecentPlay?: RecentPlayUncheckedUpdateManyWithoutChartNestedInput
-    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutChartNestedInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutChartNestedInput
     playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
     examStageOptions?: ExamStageChartUncheckedUpdateManyWithoutChartNestedInput
@@ -55380,19 +47063,9 @@ export namespace Prisma {
     category_short: string
     description?: string | null
     background?: string | null
-    sheet_len: number
-    difficulty_levels: string
-    difficulty_name: string
-    normal: number
-    hard: number
-    expert: number
-    real?: number | null
     created_at?: Date | string
     updated_at?: Date | string
-    RecentPlay?: RecentPlayCreateNestedManyWithoutMusicInput
     PlayData?: PlayDataCreateNestedManyWithoutMusicInput
-    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutMusicInput
-    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutMusicInput
     bingoMissions?: BingoCellCreateNestedManyWithoutMusicInput
     charts?: MusicChartCreateNestedManyWithoutMusicInput
     examStages?: ExamStageCreateNestedManyWithoutMusicInput
@@ -55409,19 +47082,9 @@ export namespace Prisma {
     category_short: string
     description?: string | null
     background?: string | null
-    sheet_len: number
-    difficulty_levels: string
-    difficulty_name: string
-    normal: number
-    hard: number
-    expert: number
-    real?: number | null
     created_at?: Date | string
     updated_at?: Date | string
-    RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutMusicInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutMusicInput
-    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutMusicInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutMusicInput
     bingoMissions?: BingoCellUncheckedCreateNestedManyWithoutMusicInput
     charts?: MusicChartUncheckedCreateNestedManyWithoutMusicInput
     examStages?: ExamStageUncheckedCreateNestedManyWithoutMusicInput
@@ -55494,19 +47157,9 @@ export namespace Prisma {
     category_short?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     background?: NullableStringFieldUpdateOperationsInput | string | null
-    sheet_len?: IntFieldUpdateOperationsInput | number
-    difficulty_levels?: StringFieldUpdateOperationsInput | string
-    difficulty_name?: StringFieldUpdateOperationsInput | string
-    normal?: IntFieldUpdateOperationsInput | number
-    hard?: IntFieldUpdateOperationsInput | number
-    expert?: IntFieldUpdateOperationsInput | number
-    real?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    RecentPlay?: RecentPlayUpdateManyWithoutMusicNestedInput
     PlayData?: PlayDataUpdateManyWithoutMusicNestedInput
-    BasicBestPlay?: BasicBestPlayUpdateManyWithoutMusicNestedInput
-    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutMusicNestedInput
     bingoMissions?: BingoCellUpdateManyWithoutMusicNestedInput
     charts?: MusicChartUpdateManyWithoutMusicNestedInput
     examStages?: ExamStageUpdateManyWithoutMusicNestedInput
@@ -55523,19 +47176,9 @@ export namespace Prisma {
     category_short?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     background?: NullableStringFieldUpdateOperationsInput | string | null
-    sheet_len?: IntFieldUpdateOperationsInput | number
-    difficulty_levels?: StringFieldUpdateOperationsInput | string
-    difficulty_name?: StringFieldUpdateOperationsInput | string
-    normal?: IntFieldUpdateOperationsInput | number
-    hard?: IntFieldUpdateOperationsInput | number
-    expert?: IntFieldUpdateOperationsInput | number
-    real?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    RecentPlay?: RecentPlayUncheckedUpdateManyWithoutMusicNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutMusicNestedInput
-    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutMusicNestedInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutMusicNestedInput
     bingoMissions?: BingoCellUncheckedUpdateManyWithoutMusicNestedInput
     charts?: MusicChartUncheckedUpdateManyWithoutMusicNestedInput
     examStages?: ExamStageUncheckedUpdateManyWithoutMusicNestedInput
@@ -55567,19 +47210,9 @@ export namespace Prisma {
     category_short: string
     description?: string | null
     background?: string | null
-    sheet_len: number
-    difficulty_levels: string
-    difficulty_name: string
-    normal: number
-    hard: number
-    expert: number
-    real?: number | null
     created_at?: Date | string
     updated_at?: Date | string
-    RecentPlay?: RecentPlayCreateNestedManyWithoutMusicInput
     PlayData?: PlayDataCreateNestedManyWithoutMusicInput
-    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutMusicInput
-    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutMusicInput
     bingoCovers?: BingoCreateNestedManyWithoutCoverMusicInput
     charts?: MusicChartCreateNestedManyWithoutMusicInput
     examStages?: ExamStageCreateNestedManyWithoutMusicInput
@@ -55596,19 +47229,9 @@ export namespace Prisma {
     category_short: string
     description?: string | null
     background?: string | null
-    sheet_len: number
-    difficulty_levels: string
-    difficulty_name: string
-    normal: number
-    hard: number
-    expert: number
-    real?: number | null
     created_at?: Date | string
     updated_at?: Date | string
-    RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutMusicInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutMusicInput
-    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutMusicInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutMusicInput
     bingoCovers?: BingoUncheckedCreateNestedManyWithoutCoverMusicInput
     charts?: MusicChartUncheckedCreateNestedManyWithoutMusicInput
     examStages?: ExamStageUncheckedCreateNestedManyWithoutMusicInput
@@ -55701,19 +47324,9 @@ export namespace Prisma {
     category_short?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     background?: NullableStringFieldUpdateOperationsInput | string | null
-    sheet_len?: IntFieldUpdateOperationsInput | number
-    difficulty_levels?: StringFieldUpdateOperationsInput | string
-    difficulty_name?: StringFieldUpdateOperationsInput | string
-    normal?: IntFieldUpdateOperationsInput | number
-    hard?: IntFieldUpdateOperationsInput | number
-    expert?: IntFieldUpdateOperationsInput | number
-    real?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    RecentPlay?: RecentPlayUpdateManyWithoutMusicNestedInput
     PlayData?: PlayDataUpdateManyWithoutMusicNestedInput
-    BasicBestPlay?: BasicBestPlayUpdateManyWithoutMusicNestedInput
-    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutMusicNestedInput
     bingoCovers?: BingoUpdateManyWithoutCoverMusicNestedInput
     charts?: MusicChartUpdateManyWithoutMusicNestedInput
     examStages?: ExamStageUpdateManyWithoutMusicNestedInput
@@ -55730,19 +47343,9 @@ export namespace Prisma {
     category_short?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     background?: NullableStringFieldUpdateOperationsInput | string | null
-    sheet_len?: IntFieldUpdateOperationsInput | number
-    difficulty_levels?: StringFieldUpdateOperationsInput | string
-    difficulty_name?: StringFieldUpdateOperationsInput | string
-    normal?: IntFieldUpdateOperationsInput | number
-    hard?: IntFieldUpdateOperationsInput | number
-    expert?: IntFieldUpdateOperationsInput | number
-    real?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    RecentPlay?: RecentPlayUncheckedUpdateManyWithoutMusicNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutMusicNestedInput
-    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutMusicNestedInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutMusicNestedInput
     bingoCovers?: BingoUncheckedUpdateManyWithoutCoverMusicNestedInput
     charts?: MusicChartUncheckedUpdateManyWithoutMusicNestedInput
     examStages?: ExamStageUncheckedUpdateManyWithoutMusicNestedInput
@@ -55832,10 +47435,7 @@ export namespace Prisma {
     sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
-    PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
     PlayData?: PlayDataCreateNestedManyWithoutUserInput
-    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutUserInput
-    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeCreateNestedManyWithoutUserInput
     chartEvaluations?: ChartEvaluationCreateNestedManyWithoutUserInput
     chartReactions?: ChartEvaluationReactionCreateNestedManyWithoutUserInput
@@ -55876,10 +47476,7 @@ export namespace Prisma {
     sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
-    PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutUserInput
-    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutUserInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeUncheckedCreateNestedManyWithoutUserInput
     chartEvaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutUserInput
     chartReactions?: ChartEvaluationReactionUncheckedCreateNestedManyWithoutUserInput
@@ -55971,10 +47568,7 @@ export namespace Prisma {
     sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
     PlayData?: PlayDataUpdateManyWithoutUserNestedInput
-    BasicBestPlay?: BasicBestPlayUpdateManyWithoutUserNestedInput
-    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUpdateManyWithoutUserNestedInput
     chartEvaluations?: ChartEvaluationUpdateManyWithoutUserNestedInput
     chartReactions?: ChartEvaluationReactionUpdateManyWithoutUserNestedInput
@@ -56015,10 +47609,7 @@ export namespace Prisma {
     sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutUserNestedInput
-    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutUserNestedInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUncheckedUpdateManyWithoutUserNestedInput
     chartEvaluations?: ChartEvaluationUncheckedUpdateManyWithoutUserNestedInput
     chartReactions?: ChartEvaluationReactionUncheckedUpdateManyWithoutUserNestedInput
@@ -56304,19 +47895,9 @@ export namespace Prisma {
     category_short: string
     description?: string | null
     background?: string | null
-    sheet_len: number
-    difficulty_levels: string
-    difficulty_name: string
-    normal: number
-    hard: number
-    expert: number
-    real?: number | null
     created_at?: Date | string
     updated_at?: Date | string
-    RecentPlay?: RecentPlayCreateNestedManyWithoutMusicInput
     PlayData?: PlayDataCreateNestedManyWithoutMusicInput
-    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutMusicInput
-    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutMusicInput
     bingoCovers?: BingoCreateNestedManyWithoutCoverMusicInput
     bingoMissions?: BingoCellCreateNestedManyWithoutMusicInput
     charts?: MusicChartCreateNestedManyWithoutMusicInput
@@ -56333,19 +47914,9 @@ export namespace Prisma {
     category_short: string
     description?: string | null
     background?: string | null
-    sheet_len: number
-    difficulty_levels: string
-    difficulty_name: string
-    normal: number
-    hard: number
-    expert: number
-    real?: number | null
     created_at?: Date | string
     updated_at?: Date | string
-    RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutMusicInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutMusicInput
-    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutMusicInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutMusicInput
     bingoCovers?: BingoUncheckedCreateNestedManyWithoutCoverMusicInput
     bingoMissions?: BingoCellUncheckedCreateNestedManyWithoutMusicInput
     charts?: MusicChartUncheckedCreateNestedManyWithoutMusicInput
@@ -56443,19 +48014,9 @@ export namespace Prisma {
     category_short?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     background?: NullableStringFieldUpdateOperationsInput | string | null
-    sheet_len?: IntFieldUpdateOperationsInput | number
-    difficulty_levels?: StringFieldUpdateOperationsInput | string
-    difficulty_name?: StringFieldUpdateOperationsInput | string
-    normal?: IntFieldUpdateOperationsInput | number
-    hard?: IntFieldUpdateOperationsInput | number
-    expert?: IntFieldUpdateOperationsInput | number
-    real?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    RecentPlay?: RecentPlayUpdateManyWithoutMusicNestedInput
     PlayData?: PlayDataUpdateManyWithoutMusicNestedInput
-    BasicBestPlay?: BasicBestPlayUpdateManyWithoutMusicNestedInput
-    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutMusicNestedInput
     bingoCovers?: BingoUpdateManyWithoutCoverMusicNestedInput
     bingoMissions?: BingoCellUpdateManyWithoutMusicNestedInput
     charts?: MusicChartUpdateManyWithoutMusicNestedInput
@@ -56472,19 +48033,9 @@ export namespace Prisma {
     category_short?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     background?: NullableStringFieldUpdateOperationsInput | string | null
-    sheet_len?: IntFieldUpdateOperationsInput | number
-    difficulty_levels?: StringFieldUpdateOperationsInput | string
-    difficulty_name?: StringFieldUpdateOperationsInput | string
-    normal?: IntFieldUpdateOperationsInput | number
-    hard?: IntFieldUpdateOperationsInput | number
-    expert?: IntFieldUpdateOperationsInput | number
-    real?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    RecentPlay?: RecentPlayUncheckedUpdateManyWithoutMusicNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutMusicNestedInput
-    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutMusicNestedInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutMusicNestedInput
     bingoCovers?: BingoUncheckedUpdateManyWithoutCoverMusicNestedInput
     bingoMissions?: BingoCellUncheckedUpdateManyWithoutMusicNestedInput
     charts?: MusicChartUncheckedUpdateManyWithoutMusicNestedInput
@@ -56552,10 +48103,7 @@ export namespace Prisma {
     music: MusicCreateNestedOneWithoutChartsInput
     levelConstantHistory?: ChartLevelConstantHistoryCreateNestedManyWithoutChartInput
     evaluations?: ChartEvaluationCreateNestedManyWithoutChartInput
-    RecentPlay?: RecentPlayCreateNestedManyWithoutChartInput
     PlayData?: PlayDataCreateNestedManyWithoutChartInput
-    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutChartInput
-    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutChartInput
     playHistory?: ChartPlayHistoryCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotCreateNestedManyWithoutChartInput
     tierEntries?: TierEntryCreateNestedManyWithoutChartInput
@@ -56580,10 +48128,7 @@ export namespace Prisma {
     updated_at?: Date | string
     levelConstantHistory?: ChartLevelConstantHistoryUncheckedCreateNestedManyWithoutChartInput
     evaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutChartInput
-    RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutChartInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutChartInput
-    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutChartInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutChartInput
     playHistory?: ChartPlayHistoryUncheckedCreateNestedManyWithoutChartInput
     recordSnapshots?: ChartRecordSnapshotUncheckedCreateNestedManyWithoutChartInput
     tierEntries?: TierEntryUncheckedCreateNestedManyWithoutChartInput
@@ -56657,10 +48202,7 @@ export namespace Prisma {
     music?: MusicUpdateOneRequiredWithoutChartsNestedInput
     levelConstantHistory?: ChartLevelConstantHistoryUpdateManyWithoutChartNestedInput
     evaluations?: ChartEvaluationUpdateManyWithoutChartNestedInput
-    RecentPlay?: RecentPlayUpdateManyWithoutChartNestedInput
     PlayData?: PlayDataUpdateManyWithoutChartNestedInput
-    BasicBestPlay?: BasicBestPlayUpdateManyWithoutChartNestedInput
-    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutChartNestedInput
     playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
     tierEntries?: TierEntryUpdateManyWithoutChartNestedInput
@@ -56685,10 +48227,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     levelConstantHistory?: ChartLevelConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
     evaluations?: ChartEvaluationUncheckedUpdateManyWithoutChartNestedInput
-    RecentPlay?: RecentPlayUncheckedUpdateManyWithoutChartNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutChartNestedInput
-    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutChartNestedInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutChartNestedInput
     playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
     tierEntries?: TierEntryUncheckedUpdateManyWithoutChartNestedInput
@@ -56746,19 +48285,9 @@ export namespace Prisma {
     category_short: string
     description?: string | null
     background?: string | null
-    sheet_len: number
-    difficulty_levels: string
-    difficulty_name: string
-    normal: number
-    hard: number
-    expert: number
-    real?: number | null
     created_at?: Date | string
     updated_at?: Date | string
-    RecentPlay?: RecentPlayCreateNestedManyWithoutMusicInput
     PlayData?: PlayDataCreateNestedManyWithoutMusicInput
-    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutMusicInput
-    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutMusicInput
     bingoCovers?: BingoCreateNestedManyWithoutCoverMusicInput
     bingoMissions?: BingoCellCreateNestedManyWithoutMusicInput
     charts?: MusicChartCreateNestedManyWithoutMusicInput
@@ -56775,19 +48304,9 @@ export namespace Prisma {
     category_short: string
     description?: string | null
     background?: string | null
-    sheet_len: number
-    difficulty_levels: string
-    difficulty_name: string
-    normal: number
-    hard: number
-    expert: number
-    real?: number | null
     created_at?: Date | string
     updated_at?: Date | string
-    RecentPlay?: RecentPlayUncheckedCreateNestedManyWithoutMusicInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutMusicInput
-    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutMusicInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutMusicInput
     bingoCovers?: BingoUncheckedCreateNestedManyWithoutCoverMusicInput
     bingoMissions?: BingoCellUncheckedCreateNestedManyWithoutMusicInput
     charts?: MusicChartUncheckedCreateNestedManyWithoutMusicInput
@@ -56867,19 +48386,9 @@ export namespace Prisma {
     category_short?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     background?: NullableStringFieldUpdateOperationsInput | string | null
-    sheet_len?: IntFieldUpdateOperationsInput | number
-    difficulty_levels?: StringFieldUpdateOperationsInput | string
-    difficulty_name?: StringFieldUpdateOperationsInput | string
-    normal?: IntFieldUpdateOperationsInput | number
-    hard?: IntFieldUpdateOperationsInput | number
-    expert?: IntFieldUpdateOperationsInput | number
-    real?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    RecentPlay?: RecentPlayUpdateManyWithoutMusicNestedInput
     PlayData?: PlayDataUpdateManyWithoutMusicNestedInput
-    BasicBestPlay?: BasicBestPlayUpdateManyWithoutMusicNestedInput
-    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutMusicNestedInput
     bingoCovers?: BingoUpdateManyWithoutCoverMusicNestedInput
     bingoMissions?: BingoCellUpdateManyWithoutMusicNestedInput
     charts?: MusicChartUpdateManyWithoutMusicNestedInput
@@ -56896,19 +48405,9 @@ export namespace Prisma {
     category_short?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     background?: NullableStringFieldUpdateOperationsInput | string | null
-    sheet_len?: IntFieldUpdateOperationsInput | number
-    difficulty_levels?: StringFieldUpdateOperationsInput | string
-    difficulty_name?: StringFieldUpdateOperationsInput | string
-    normal?: IntFieldUpdateOperationsInput | number
-    hard?: IntFieldUpdateOperationsInput | number
-    expert?: IntFieldUpdateOperationsInput | number
-    real?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    RecentPlay?: RecentPlayUncheckedUpdateManyWithoutMusicNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutMusicNestedInput
-    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutMusicNestedInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutMusicNestedInput
     bingoCovers?: BingoUncheckedUpdateManyWithoutCoverMusicNestedInput
     bingoMissions?: BingoCellUncheckedUpdateManyWithoutMusicNestedInput
     charts?: MusicChartUncheckedUpdateManyWithoutMusicNestedInput
@@ -56944,10 +48443,7 @@ export namespace Prisma {
     sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
-    PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
     PlayData?: PlayDataCreateNestedManyWithoutUserInput
-    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutUserInput
-    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeCreateNestedManyWithoutUserInput
     bingoProgress?: BingoCellProgressCreateNestedManyWithoutUserInput
     chartEvaluations?: ChartEvaluationCreateNestedManyWithoutUserInput
@@ -56988,10 +48484,7 @@ export namespace Prisma {
     sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
-    PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutUserInput
-    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutUserInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeUncheckedCreateNestedManyWithoutUserInput
     bingoProgress?: BingoCellProgressUncheckedCreateNestedManyWithoutUserInput
     chartEvaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutUserInput
@@ -57109,10 +48602,7 @@ export namespace Prisma {
     sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
     PlayData?: PlayDataUpdateManyWithoutUserNestedInput
-    BasicBestPlay?: BasicBestPlayUpdateManyWithoutUserNestedInput
-    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUpdateManyWithoutUserNestedInput
     bingoProgress?: BingoCellProgressUpdateManyWithoutUserNestedInput
     chartEvaluations?: ChartEvaluationUpdateManyWithoutUserNestedInput
@@ -57153,10 +48643,7 @@ export namespace Prisma {
     sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutUserNestedInput
-    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutUserNestedInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUncheckedUpdateManyWithoutUserNestedInput
     bingoProgress?: BingoCellProgressUncheckedUpdateManyWithoutUserNestedInput
     chartEvaluations?: ChartEvaluationUncheckedUpdateManyWithoutUserNestedInput
@@ -57270,10 +48757,7 @@ export namespace Prisma {
     sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
-    PlayHistory?: RecentPlayCreateNestedManyWithoutUserInput
     PlayData?: PlayDataCreateNestedManyWithoutUserInput
-    BasicBestPlay?: BasicBestPlayCreateNestedManyWithoutUserInput
-    RecitalBestPlay?: RecitalBestPlayCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeCreateNestedManyWithoutUserInput
     bingoProgress?: BingoCellProgressCreateNestedManyWithoutUserInput
     chartEvaluations?: ChartEvaluationCreateNestedManyWithoutUserInput
@@ -57314,10 +48798,7 @@ export namespace Prisma {
     sync_token_version?: number
     created_at?: Date | string
     updated_at?: Date | string
-    PlayHistory?: RecentPlayUncheckedCreateNestedManyWithoutUserInput
     PlayData?: PlayDataUncheckedCreateNestedManyWithoutUserInput
-    BasicBestPlay?: BasicBestPlayUncheckedCreateNestedManyWithoutUserInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedCreateNestedManyWithoutUserInput
     UserBestGrade?: UserBestGradeUncheckedCreateNestedManyWithoutUserInput
     bingoProgress?: BingoCellProgressUncheckedCreateNestedManyWithoutUserInput
     chartEvaluations?: ChartEvaluationUncheckedCreateNestedManyWithoutUserInput
@@ -57445,10 +48926,7 @@ export namespace Prisma {
     sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    PlayHistory?: RecentPlayUpdateManyWithoutUserNestedInput
     PlayData?: PlayDataUpdateManyWithoutUserNestedInput
-    BasicBestPlay?: BasicBestPlayUpdateManyWithoutUserNestedInput
-    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUpdateManyWithoutUserNestedInput
     bingoProgress?: BingoCellProgressUpdateManyWithoutUserNestedInput
     chartEvaluations?: ChartEvaluationUpdateManyWithoutUserNestedInput
@@ -57489,10 +48967,7 @@ export namespace Prisma {
     sync_token_version?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    PlayHistory?: RecentPlayUncheckedUpdateManyWithoutUserNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutUserNestedInput
-    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutUserNestedInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutUserNestedInput
     UserBestGrade?: UserBestGradeUncheckedUpdateManyWithoutUserNestedInput
     bingoProgress?: BingoCellProgressUncheckedUpdateManyWithoutUserNestedInput
     chartEvaluations?: ChartEvaluationUncheckedUpdateManyWithoutUserNestedInput
@@ -57587,21 +49062,6 @@ export namespace Prisma {
     examId?: IntFieldUpdateOperationsInput | number
   }
 
-  export type RecentPlayCreateManyUserInput = {
-    id?: number
-    difficulty: string
-    level: number
-    score: number
-    max_combo: number
-    rank: string
-    play_time: string
-    grade_basic: number
-    created_at?: Date | string
-    updated_at?: Date | string
-    music_idx: string
-    chart_id?: number | null
-  }
-
   export type PlayDataCreateManyUserInput = {
     id?: number
     level: number
@@ -57616,38 +49076,6 @@ export namespace Prisma {
     grade_basic: number
     grade_recital: number
     besttime: string
-    created_at?: Date | string
-    updated_at?: Date | string
-    music_idx: string
-    chart_id?: number | null
-  }
-
-  export type BasicBestPlayCreateManyUserInput = {
-    id?: number
-    difficulty: string
-    level: number
-    score: number
-    max_combo: number
-    rank: string
-    besttime: string
-    grade_basic: number
-    fc_type: number
-    created_at?: Date | string
-    updated_at?: Date | string
-    music_idx: string
-    chart_id?: number | null
-  }
-
-  export type RecitalBestPlayCreateManyUserInput = {
-    id?: number
-    difficulty: string
-    level: number
-    score: number
-    max_combo: number
-    rank: string
-    besttime: string
-    grade_recital: number
-    fc_type: number
     created_at?: Date | string
     updated_at?: Date | string
     music_idx: string
@@ -57757,50 +49185,6 @@ export namespace Prisma {
     submissionId?: number | null
   }
 
-  export type RecentPlayUpdateWithoutUserInput = {
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    score?: IntFieldUpdateOperationsInput | number
-    max_combo?: IntFieldUpdateOperationsInput | number
-    rank?: StringFieldUpdateOperationsInput | string
-    play_time?: StringFieldUpdateOperationsInput | string
-    grade_basic?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    music?: MusicUpdateOneRequiredWithoutRecentPlayNestedInput
-    chart?: MusicChartUpdateOneWithoutRecentPlayNestedInput
-  }
-
-  export type RecentPlayUncheckedUpdateWithoutUserInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    score?: IntFieldUpdateOperationsInput | number
-    max_combo?: IntFieldUpdateOperationsInput | number
-    rank?: StringFieldUpdateOperationsInput | string
-    play_time?: StringFieldUpdateOperationsInput | string
-    grade_basic?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    music_idx?: StringFieldUpdateOperationsInput | string
-    chart_id?: NullableIntFieldUpdateOperationsInput | number | null
-  }
-
-  export type RecentPlayUncheckedUpdateManyWithoutUserInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    score?: IntFieldUpdateOperationsInput | number
-    max_combo?: IntFieldUpdateOperationsInput | number
-    rank?: StringFieldUpdateOperationsInput | string
-    play_time?: StringFieldUpdateOperationsInput | string
-    grade_basic?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    music_idx?: StringFieldUpdateOperationsInput | string
-    chart_id?: NullableIntFieldUpdateOperationsInput | number | null
-  }
-
   export type PlayDataUpdateWithoutUserInput = {
     level?: IntFieldUpdateOperationsInput | number
     difficulty?: StringFieldUpdateOperationsInput | string
@@ -57854,100 +49238,6 @@ export namespace Prisma {
     grade_basic?: IntFieldUpdateOperationsInput | number
     grade_recital?: IntFieldUpdateOperationsInput | number
     besttime?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    music_idx?: StringFieldUpdateOperationsInput | string
-    chart_id?: NullableIntFieldUpdateOperationsInput | number | null
-  }
-
-  export type BasicBestPlayUpdateWithoutUserInput = {
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    score?: IntFieldUpdateOperationsInput | number
-    max_combo?: IntFieldUpdateOperationsInput | number
-    rank?: StringFieldUpdateOperationsInput | string
-    besttime?: StringFieldUpdateOperationsInput | string
-    grade_basic?: IntFieldUpdateOperationsInput | number
-    fc_type?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    music?: MusicUpdateOneRequiredWithoutBasicBestPlayNestedInput
-    chart?: MusicChartUpdateOneWithoutBasicBestPlayNestedInput
-  }
-
-  export type BasicBestPlayUncheckedUpdateWithoutUserInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    score?: IntFieldUpdateOperationsInput | number
-    max_combo?: IntFieldUpdateOperationsInput | number
-    rank?: StringFieldUpdateOperationsInput | string
-    besttime?: StringFieldUpdateOperationsInput | string
-    grade_basic?: IntFieldUpdateOperationsInput | number
-    fc_type?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    music_idx?: StringFieldUpdateOperationsInput | string
-    chart_id?: NullableIntFieldUpdateOperationsInput | number | null
-  }
-
-  export type BasicBestPlayUncheckedUpdateManyWithoutUserInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    score?: IntFieldUpdateOperationsInput | number
-    max_combo?: IntFieldUpdateOperationsInput | number
-    rank?: StringFieldUpdateOperationsInput | string
-    besttime?: StringFieldUpdateOperationsInput | string
-    grade_basic?: IntFieldUpdateOperationsInput | number
-    fc_type?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    music_idx?: StringFieldUpdateOperationsInput | string
-    chart_id?: NullableIntFieldUpdateOperationsInput | number | null
-  }
-
-  export type RecitalBestPlayUpdateWithoutUserInput = {
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    score?: IntFieldUpdateOperationsInput | number
-    max_combo?: IntFieldUpdateOperationsInput | number
-    rank?: StringFieldUpdateOperationsInput | string
-    besttime?: StringFieldUpdateOperationsInput | string
-    grade_recital?: IntFieldUpdateOperationsInput | number
-    fc_type?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    music?: MusicUpdateOneRequiredWithoutRecitalBestPlayNestedInput
-    chart?: MusicChartUpdateOneWithoutRecitalBestPlayNestedInput
-  }
-
-  export type RecitalBestPlayUncheckedUpdateWithoutUserInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    score?: IntFieldUpdateOperationsInput | number
-    max_combo?: IntFieldUpdateOperationsInput | number
-    rank?: StringFieldUpdateOperationsInput | string
-    besttime?: StringFieldUpdateOperationsInput | string
-    grade_recital?: IntFieldUpdateOperationsInput | number
-    fc_type?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    music_idx?: StringFieldUpdateOperationsInput | string
-    chart_id?: NullableIntFieldUpdateOperationsInput | number | null
-  }
-
-  export type RecitalBestPlayUncheckedUpdateManyWithoutUserInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    score?: IntFieldUpdateOperationsInput | number
-    max_combo?: IntFieldUpdateOperationsInput | number
-    rank?: StringFieldUpdateOperationsInput | string
-    besttime?: StringFieldUpdateOperationsInput | string
-    grade_recital?: IntFieldUpdateOperationsInput | number
-    fc_type?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     music_idx?: StringFieldUpdateOperationsInput | string
@@ -58262,21 +49552,6 @@ export namespace Prisma {
     submissionId?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
-  export type RecentPlayCreateManyMusicInput = {
-    id?: number
-    difficulty: string
-    level: number
-    score: number
-    max_combo: number
-    rank: string
-    play_time: string
-    grade_basic: number
-    created_at?: Date | string
-    updated_at?: Date | string
-    user_id: number
-    chart_id?: number | null
-  }
-
   export type PlayDataCreateManyMusicInput = {
     id?: number
     level: number
@@ -58291,38 +49566,6 @@ export namespace Prisma {
     grade_basic: number
     grade_recital: number
     besttime: string
-    created_at?: Date | string
-    updated_at?: Date | string
-    user_id: number
-    chart_id?: number | null
-  }
-
-  export type BasicBestPlayCreateManyMusicInput = {
-    id?: number
-    difficulty: string
-    level: number
-    score: number
-    max_combo: number
-    rank: string
-    besttime: string
-    grade_basic: number
-    fc_type: number
-    created_at?: Date | string
-    updated_at?: Date | string
-    user_id: number
-    chart_id?: number | null
-  }
-
-  export type RecitalBestPlayCreateManyMusicInput = {
-    id?: number
-    difficulty: string
-    level: number
-    score: number
-    max_combo: number
-    rank: string
-    besttime: string
-    grade_recital: number
-    fc_type: number
     created_at?: Date | string
     updated_at?: Date | string
     user_id: number
@@ -58393,50 +49636,6 @@ export namespace Prisma {
     examId: number
   }
 
-  export type RecentPlayUpdateWithoutMusicInput = {
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    score?: IntFieldUpdateOperationsInput | number
-    max_combo?: IntFieldUpdateOperationsInput | number
-    rank?: StringFieldUpdateOperationsInput | string
-    play_time?: StringFieldUpdateOperationsInput | string
-    grade_basic?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutPlayHistoryNestedInput
-    chart?: MusicChartUpdateOneWithoutRecentPlayNestedInput
-  }
-
-  export type RecentPlayUncheckedUpdateWithoutMusicInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    score?: IntFieldUpdateOperationsInput | number
-    max_combo?: IntFieldUpdateOperationsInput | number
-    rank?: StringFieldUpdateOperationsInput | string
-    play_time?: StringFieldUpdateOperationsInput | string
-    grade_basic?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user_id?: IntFieldUpdateOperationsInput | number
-    chart_id?: NullableIntFieldUpdateOperationsInput | number | null
-  }
-
-  export type RecentPlayUncheckedUpdateManyWithoutMusicInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    score?: IntFieldUpdateOperationsInput | number
-    max_combo?: IntFieldUpdateOperationsInput | number
-    rank?: StringFieldUpdateOperationsInput | string
-    play_time?: StringFieldUpdateOperationsInput | string
-    grade_basic?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user_id?: IntFieldUpdateOperationsInput | number
-    chart_id?: NullableIntFieldUpdateOperationsInput | number | null
-  }
-
   export type PlayDataUpdateWithoutMusicInput = {
     level?: IntFieldUpdateOperationsInput | number
     difficulty?: StringFieldUpdateOperationsInput | string
@@ -58490,100 +49689,6 @@ export namespace Prisma {
     grade_basic?: IntFieldUpdateOperationsInput | number
     grade_recital?: IntFieldUpdateOperationsInput | number
     besttime?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user_id?: IntFieldUpdateOperationsInput | number
-    chart_id?: NullableIntFieldUpdateOperationsInput | number | null
-  }
-
-  export type BasicBestPlayUpdateWithoutMusicInput = {
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    score?: IntFieldUpdateOperationsInput | number
-    max_combo?: IntFieldUpdateOperationsInput | number
-    rank?: StringFieldUpdateOperationsInput | string
-    besttime?: StringFieldUpdateOperationsInput | string
-    grade_basic?: IntFieldUpdateOperationsInput | number
-    fc_type?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutBasicBestPlayNestedInput
-    chart?: MusicChartUpdateOneWithoutBasicBestPlayNestedInput
-  }
-
-  export type BasicBestPlayUncheckedUpdateWithoutMusicInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    score?: IntFieldUpdateOperationsInput | number
-    max_combo?: IntFieldUpdateOperationsInput | number
-    rank?: StringFieldUpdateOperationsInput | string
-    besttime?: StringFieldUpdateOperationsInput | string
-    grade_basic?: IntFieldUpdateOperationsInput | number
-    fc_type?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user_id?: IntFieldUpdateOperationsInput | number
-    chart_id?: NullableIntFieldUpdateOperationsInput | number | null
-  }
-
-  export type BasicBestPlayUncheckedUpdateManyWithoutMusicInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    score?: IntFieldUpdateOperationsInput | number
-    max_combo?: IntFieldUpdateOperationsInput | number
-    rank?: StringFieldUpdateOperationsInput | string
-    besttime?: StringFieldUpdateOperationsInput | string
-    grade_basic?: IntFieldUpdateOperationsInput | number
-    fc_type?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user_id?: IntFieldUpdateOperationsInput | number
-    chart_id?: NullableIntFieldUpdateOperationsInput | number | null
-  }
-
-  export type RecitalBestPlayUpdateWithoutMusicInput = {
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    score?: IntFieldUpdateOperationsInput | number
-    max_combo?: IntFieldUpdateOperationsInput | number
-    rank?: StringFieldUpdateOperationsInput | string
-    besttime?: StringFieldUpdateOperationsInput | string
-    grade_recital?: IntFieldUpdateOperationsInput | number
-    fc_type?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutRecitalBestPlayNestedInput
-    chart?: MusicChartUpdateOneWithoutRecitalBestPlayNestedInput
-  }
-
-  export type RecitalBestPlayUncheckedUpdateWithoutMusicInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    score?: IntFieldUpdateOperationsInput | number
-    max_combo?: IntFieldUpdateOperationsInput | number
-    rank?: StringFieldUpdateOperationsInput | string
-    besttime?: StringFieldUpdateOperationsInput | string
-    grade_recital?: IntFieldUpdateOperationsInput | number
-    fc_type?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user_id?: IntFieldUpdateOperationsInput | number
-    chart_id?: NullableIntFieldUpdateOperationsInput | number | null
-  }
-
-  export type RecitalBestPlayUncheckedUpdateManyWithoutMusicInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    score?: IntFieldUpdateOperationsInput | number
-    max_combo?: IntFieldUpdateOperationsInput | number
-    rank?: StringFieldUpdateOperationsInput | string
-    besttime?: StringFieldUpdateOperationsInput | string
-    grade_recital?: IntFieldUpdateOperationsInput | number
-    fc_type?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user_id?: IntFieldUpdateOperationsInput | number
@@ -58692,10 +49797,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     levelConstantHistory?: ChartLevelConstantHistoryUpdateManyWithoutChartNestedInput
     evaluations?: ChartEvaluationUpdateManyWithoutChartNestedInput
-    RecentPlay?: RecentPlayUpdateManyWithoutChartNestedInput
     PlayData?: PlayDataUpdateManyWithoutChartNestedInput
-    BasicBestPlay?: BasicBestPlayUpdateManyWithoutChartNestedInput
-    RecitalBestPlay?: RecitalBestPlayUpdateManyWithoutChartNestedInput
     playHistory?: ChartPlayHistoryUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUpdateManyWithoutChartNestedInput
     examStageOptions?: ExamStageChartUpdateManyWithoutChartNestedInput
@@ -58720,10 +49822,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     levelConstantHistory?: ChartLevelConstantHistoryUncheckedUpdateManyWithoutChartNestedInput
     evaluations?: ChartEvaluationUncheckedUpdateManyWithoutChartNestedInput
-    RecentPlay?: RecentPlayUncheckedUpdateManyWithoutChartNestedInput
     PlayData?: PlayDataUncheckedUpdateManyWithoutChartNestedInput
-    BasicBestPlay?: BasicBestPlayUncheckedUpdateManyWithoutChartNestedInput
-    RecitalBestPlay?: RecitalBestPlayUncheckedUpdateManyWithoutChartNestedInput
     playHistory?: ChartPlayHistoryUncheckedUpdateManyWithoutChartNestedInput
     recordSnapshots?: ChartRecordSnapshotUncheckedUpdateManyWithoutChartNestedInput
     examStageOptions?: ExamStageChartUncheckedUpdateManyWithoutChartNestedInput
@@ -58826,21 +49925,6 @@ export namespace Prisma {
     updated_at?: Date | string
   }
 
-  export type RecentPlayCreateManyChartInput = {
-    id?: number
-    difficulty: string
-    level: number
-    score: number
-    max_combo: number
-    rank: string
-    play_time: string
-    grade_basic: number
-    created_at?: Date | string
-    updated_at?: Date | string
-    user_id: number
-    music_idx: string
-  }
-
   export type PlayDataCreateManyChartInput = {
     id?: number
     level: number
@@ -58855,38 +49939,6 @@ export namespace Prisma {
     grade_basic: number
     grade_recital: number
     besttime: string
-    created_at?: Date | string
-    updated_at?: Date | string
-    user_id: number
-    music_idx: string
-  }
-
-  export type BasicBestPlayCreateManyChartInput = {
-    id?: number
-    difficulty: string
-    level: number
-    score: number
-    max_combo: number
-    rank: string
-    besttime: string
-    grade_basic: number
-    fc_type: number
-    created_at?: Date | string
-    updated_at?: Date | string
-    user_id: number
-    music_idx: string
-  }
-
-  export type RecitalBestPlayCreateManyChartInput = {
-    id?: number
-    difficulty: string
-    level: number
-    score: number
-    max_combo: number
-    rank: string
-    besttime: string
-    grade_recital: number
-    fc_type: number
     created_at?: Date | string
     updated_at?: Date | string
     user_id: number
@@ -59007,50 +50059,6 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type RecentPlayUpdateWithoutChartInput = {
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    score?: IntFieldUpdateOperationsInput | number
-    max_combo?: IntFieldUpdateOperationsInput | number
-    rank?: StringFieldUpdateOperationsInput | string
-    play_time?: StringFieldUpdateOperationsInput | string
-    grade_basic?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutPlayHistoryNestedInput
-    music?: MusicUpdateOneRequiredWithoutRecentPlayNestedInput
-  }
-
-  export type RecentPlayUncheckedUpdateWithoutChartInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    score?: IntFieldUpdateOperationsInput | number
-    max_combo?: IntFieldUpdateOperationsInput | number
-    rank?: StringFieldUpdateOperationsInput | string
-    play_time?: StringFieldUpdateOperationsInput | string
-    grade_basic?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user_id?: IntFieldUpdateOperationsInput | number
-    music_idx?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type RecentPlayUncheckedUpdateManyWithoutChartInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    score?: IntFieldUpdateOperationsInput | number
-    max_combo?: IntFieldUpdateOperationsInput | number
-    rank?: StringFieldUpdateOperationsInput | string
-    play_time?: StringFieldUpdateOperationsInput | string
-    grade_basic?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user_id?: IntFieldUpdateOperationsInput | number
-    music_idx?: StringFieldUpdateOperationsInput | string
-  }
-
   export type PlayDataUpdateWithoutChartInput = {
     level?: IntFieldUpdateOperationsInput | number
     difficulty?: StringFieldUpdateOperationsInput | string
@@ -59104,100 +50112,6 @@ export namespace Prisma {
     grade_basic?: IntFieldUpdateOperationsInput | number
     grade_recital?: IntFieldUpdateOperationsInput | number
     besttime?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user_id?: IntFieldUpdateOperationsInput | number
-    music_idx?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type BasicBestPlayUpdateWithoutChartInput = {
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    score?: IntFieldUpdateOperationsInput | number
-    max_combo?: IntFieldUpdateOperationsInput | number
-    rank?: StringFieldUpdateOperationsInput | string
-    besttime?: StringFieldUpdateOperationsInput | string
-    grade_basic?: IntFieldUpdateOperationsInput | number
-    fc_type?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutBasicBestPlayNestedInput
-    music?: MusicUpdateOneRequiredWithoutBasicBestPlayNestedInput
-  }
-
-  export type BasicBestPlayUncheckedUpdateWithoutChartInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    score?: IntFieldUpdateOperationsInput | number
-    max_combo?: IntFieldUpdateOperationsInput | number
-    rank?: StringFieldUpdateOperationsInput | string
-    besttime?: StringFieldUpdateOperationsInput | string
-    grade_basic?: IntFieldUpdateOperationsInput | number
-    fc_type?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user_id?: IntFieldUpdateOperationsInput | number
-    music_idx?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type BasicBestPlayUncheckedUpdateManyWithoutChartInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    score?: IntFieldUpdateOperationsInput | number
-    max_combo?: IntFieldUpdateOperationsInput | number
-    rank?: StringFieldUpdateOperationsInput | string
-    besttime?: StringFieldUpdateOperationsInput | string
-    grade_basic?: IntFieldUpdateOperationsInput | number
-    fc_type?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user_id?: IntFieldUpdateOperationsInput | number
-    music_idx?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type RecitalBestPlayUpdateWithoutChartInput = {
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    score?: IntFieldUpdateOperationsInput | number
-    max_combo?: IntFieldUpdateOperationsInput | number
-    rank?: StringFieldUpdateOperationsInput | string
-    besttime?: StringFieldUpdateOperationsInput | string
-    grade_recital?: IntFieldUpdateOperationsInput | number
-    fc_type?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutRecitalBestPlayNestedInput
-    music?: MusicUpdateOneRequiredWithoutRecitalBestPlayNestedInput
-  }
-
-  export type RecitalBestPlayUncheckedUpdateWithoutChartInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    score?: IntFieldUpdateOperationsInput | number
-    max_combo?: IntFieldUpdateOperationsInput | number
-    rank?: StringFieldUpdateOperationsInput | string
-    besttime?: StringFieldUpdateOperationsInput | string
-    grade_recital?: IntFieldUpdateOperationsInput | number
-    fc_type?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user_id?: IntFieldUpdateOperationsInput | number
-    music_idx?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type RecitalBestPlayUncheckedUpdateManyWithoutChartInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    difficulty?: StringFieldUpdateOperationsInput | string
-    level?: IntFieldUpdateOperationsInput | number
-    score?: IntFieldUpdateOperationsInput | number
-    max_combo?: IntFieldUpdateOperationsInput | number
-    rank?: StringFieldUpdateOperationsInput | string
-    besttime?: StringFieldUpdateOperationsInput | string
-    grade_recital?: IntFieldUpdateOperationsInput | number
-    fc_type?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user_id?: IntFieldUpdateOperationsInput | number

@@ -14,8 +14,6 @@ export interface MusicItem {
     artist: string | null;
     category_short: string;
     background: string | null;
-    sheet_len: number;
-    difficulty_levels: string;
     normal: number;
     hard: number;
     expert: number;

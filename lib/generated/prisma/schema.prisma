@@ -39,10 +39,7 @@ model User {
   sync_token_version   Int                       @default(0)
   created_at           DateTime                  @default(now())
   updated_at           DateTime                  @updatedAt
-  PlayHistory          RecentPlay[]
   PlayData             PlayData[]
-  BasicBestPlay        BasicBestPlay[]
-  RecitalBestPlay      RecitalBestPlay[]
   UserBestGrade        UserBestGrade[]
   bingoProgress        BingoCellProgress[]
   chartEvaluations     ChartEvaluation[]
@@ -52,36 +49,31 @@ model User {
   chartRecordSnapshots ChartRecordSnapshot[]
   examSubmissions      ExamSubmission[]
   examAchievements     ExamAchievement[]
+
+  @@index([grade_basic, id])
+  @@index([grade_recital, id])
+  @@index([country, grade_basic, id])
+  @@index([country, grade_recital, id])
 }
 
 model Music {
-  id                Int               @id @default(autoincrement())
-  index             String            @unique
-  title             String
-  title_kana        String
-  artist            String?
-  category          String
-  category_short    String
-  description       String?
-  background        String? // 변수명 jacket으로 변경 필요
-  sheet_len         Int // 변수명 difficulty_len으로 변경 필요
-  difficulty_levels String // 차후에 difficulty_levels Int[]로 변경 필요(postgresql 기준), [1, 4, 10, 1] 이런식임.
-  difficulty_name   String // 차후 변경 필요
-  normal            Int
-  hard              Int
-  expert            Int
-  real              Int?
-  created_at        DateTime          @default(now())
-  updated_at        DateTime          @updatedAt
-  RecentPlay        RecentPlay[]
-  PlayData          PlayData[]
-  BasicBestPlay     BasicBestPlay[]
-  RecitalBestPlay   RecitalBestPlay[]
-  bingoCovers       Bingo[]           @relation("BingoCoverMusic")
-  bingoMissions     BingoCell[]       @relation("BingoMissionMusic")
-  charts            MusicChart[]
-  examStages        ExamStage[]
-  examRewards       ExamReward[]
+  id             Int          @id @default(autoincrement())
+  index          String       @unique
+  title          String
+  title_kana     String
+  artist         String?
+  category       String
+  category_short String
+  description    String?
+  background     String? // 변수명 jacket으로 변경 필요
+  created_at     DateTime     @default(now())
+  updated_at     DateTime     @updatedAt
+  PlayData       PlayData[]
+  bingoCovers    Bingo[]      @relation("BingoCoverMusic")
+  bingoMissions  BingoCell[]  @relation("BingoMissionMusic")
+  charts         MusicChart[]
+  examStages     ExamStage[]
+  examRewards    ExamReward[]
 }
 
 // 악곡별 채보 정보를 난이도 컬럼과 분리해 관리함
@@ -105,10 +97,7 @@ model MusicChart {
 
   levelConstantHistory ChartLevelConstantHistory[]
   evaluations          ChartEvaluation[]
-  RecentPlay           RecentPlay[]
   PlayData             PlayData[]
-  BasicBestPlay        BasicBestPlay[]
-  RecitalBestPlay      RecitalBestPlay[]
   playHistory          ChartPlayHistory[]
   recordSnapshots      ChartRecordSnapshot[]
   examStageOptions     ExamStageChart[]
@@ -302,25 +291,6 @@ model ChartEvaluationReaction {
   @@index([evaluation_id, value])
 }
 
-model RecentPlay {
-  id          Int         @id @default(autoincrement())
-  difficulty  String
-  level       Int
-  score       Int
-  max_combo   Int
-  rank        String
-  play_time   String
-  grade_basic Int
-  created_at  DateTime    @default(now())
-  updated_at  DateTime    @updatedAt
-  user_id     Int
-  user        User        @relation(fields: [user_id], references: [id])
-  music_idx   String
-  music       Music       @relation(fields: [music_idx], references: [index])
-  chart_id    Int?
-  chart       MusicChart? @relation(fields: [chart_id], references: [id], onDelete: SetNull)
-}
-
 model UserBestGrade {
   id            Int      @id @default(autoincrement())
   grade_basic   Int
@@ -330,46 +300,8 @@ model UserBestGrade {
   updated_at    DateTime @updatedAt
   user_id       Int
   user          User     @relation(fields: [user_id], references: [id])
-}
 
-model BasicBestPlay {
-  id          Int         @id @default(autoincrement())
-  difficulty  String
-  level       Int
-  score       Int
-  max_combo   Int
-  rank        String
-  besttime    String
-  grade_basic Int
-  fc_type     Int
-  created_at  DateTime    @default(now())
-  updated_at  DateTime    @updatedAt
-  user_id     Int
-  user        User        @relation(fields: [user_id], references: [id])
-  music_idx   String
-  music       Music       @relation(fields: [music_idx], references: [index])
-  chart_id    Int?
-  chart       MusicChart? @relation(fields: [chart_id], references: [id], onDelete: SetNull)
-}
-
-model RecitalBestPlay {
-  id            Int         @id @default(autoincrement())
-  difficulty    String
-  level         Int
-  score         Int
-  max_combo     Int
-  rank          String
-  besttime      String
-  grade_recital Int
-  fc_type       Int
-  created_at    DateTime    @default(now())
-  updated_at    DateTime    @updatedAt
-  user_id       Int
-  user          User        @relation(fields: [user_id], references: [id])
-  music_idx     String
-  music         Music       @relation(fields: [music_idx], references: [index])
-  chart_id      Int?
-  chart         MusicChart? @relation(fields: [chart_id], references: [id], onDelete: SetNull)
+  @@index([user_id, besttime])
 }
 
 model PlayData {
@@ -394,6 +326,11 @@ model PlayData {
   music           Music       @relation(fields: [music_idx], references: [index])
   chart_id        Int?
   chart           MusicChart? @relation(fields: [chart_id], references: [id], onDelete: SetNull)
+
+  @@unique([user_id, chart_id])
+  @@index([chart_id, score, user_id])
+  @@index([user_id, grade_basic])
+  @@index([user_id, grade_recital])
 }
 
 model Bingo {

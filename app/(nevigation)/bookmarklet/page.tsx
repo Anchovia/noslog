@@ -22,8 +22,6 @@ function StepTitle({ number, children }: { number: number; children: string }) {
 }
 
 async function requestOrigin() {
-    if (process.env.APP_URL) return process.env.APP_URL.replace(/\/$/, "");
-
     const requestHeaders = await headers();
     const host =
         requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host");
@@ -33,8 +31,10 @@ async function requestOrigin() {
             ? "http"
             : "https");
 
-    if (!host) throw new Error("Application origin could not be resolved");
-    return `${protocol}://${host}`;
+    if (host) return `${protocol}://${host}`;
+    if (process.env.APP_URL) return process.env.APP_URL.replace(/\/$/, "");
+
+    throw new Error("Application origin could not be resolved");
 }
 
 export default async function BookmarkletPage() {

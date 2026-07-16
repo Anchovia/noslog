@@ -3,6 +3,7 @@
 import db from "@/lib/db";
 import { getUserRankingPosition } from "@/lib/rankings";
 import getSession from "@/lib/session";
+import { normalizeStoredGrade } from "@/lib/utils";
 import { redirect } from "next/navigation";
 
 const bestPlaySelect = {
@@ -61,13 +62,13 @@ export async function getProfileData(id: number) {
                 },
                 orderBy: { besttime: "asc" },
             }),
-            db.basicBestPlay.findMany({
+            db.playData.findMany({
                 where: { user_id: id },
                 select: { ...bestPlaySelect, grade_basic: true },
                 orderBy: [{ grade_basic: "desc" }, { score: "desc" }],
                 take: 10,
             }),
-            db.recitalBestPlay.findMany({
+            db.playData.findMany({
                 where: { user_id: id },
                 select: { ...bestPlaySelect, grade_recital: true },
                 orderBy: [{ grade_recital: "desc" }, { score: "desc" }],
@@ -138,7 +139,11 @@ export async function getProfileData(id: number) {
             created_at: user.created_at.toISOString(),
             last_played_at: recentPlays[0]?.source_play_time ?? null,
         },
-        gradeHistory,
+        gradeHistory: gradeHistory.map((point) => ({
+            ...point,
+            grade_basic: normalizeStoredGrade(point.grade_basic) ?? 0,
+            grade_recital: normalizeStoredGrade(point.grade_recital) ?? 0,
+        })),
         basicBestPlays,
         recitalBestPlays,
         recentPlays: recentPlays.map((play) => ({

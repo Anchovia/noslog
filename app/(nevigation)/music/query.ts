@@ -142,37 +142,56 @@ export function buildMusicWhere({
 
     if (selectedDifficulties.includes("normal")) {
         difficultyFilters.push({
-            normal: {
-                gte: parseNumber(normalMin, 1),
-                lte: parseNumber(normalMax, 12),
+            charts: {
+                some: {
+                    difficulty: "Normal",
+                    level: {
+                        gte: parseNumber(normalMin, 1),
+                        lte: parseNumber(normalMax, 12),
+                    },
+                },
             },
         });
     }
 
     if (selectedDifficulties.includes("hard")) {
         difficultyFilters.push({
-            hard: {
-                gte: parseNumber(hardMin, 1),
-                lte: parseNumber(hardMax, 12),
+            charts: {
+                some: {
+                    difficulty: "Hard",
+                    level: {
+                        gte: parseNumber(hardMin, 1),
+                        lte: parseNumber(hardMax, 12),
+                    },
+                },
             },
         });
     }
 
     if (selectedDifficulties.includes("expert")) {
         difficultyFilters.push({
-            expert: {
-                gte: parseNumber(expertMin, 8),
-                lte: parseNumber(expertMax, 12),
+            charts: {
+                some: {
+                    difficulty: "Expert",
+                    level: {
+                        gte: parseNumber(expertMin, 8),
+                        lte: parseNumber(expertMax, 12),
+                    },
+                },
             },
         });
     }
 
     if (selectedDifficulties.includes("real")) {
         difficultyFilters.push({
-            real: {
-                not: null,
-                gte: parseNumber(realMin, 1),
-                lte: parseNumber(realMax, 3),
+            charts: {
+                some: {
+                    difficulty: "Real",
+                    level: {
+                        gte: parseNumber(realMin, 1),
+                        lte: parseNumber(realMax, 3),
+                    },
+                },
             },
         });
     }
@@ -182,8 +201,8 @@ export function buildMusicWhere({
             q
                 ? {
                       OR: [
-                          { title: { contains: q } },
-                          { artist: { contains: q } },
+                          { title: { contains: q, mode: "insensitive" } },
+                          { artist: { contains: q, mode: "insensitive" } },
                       ],
                   }
                 : {},

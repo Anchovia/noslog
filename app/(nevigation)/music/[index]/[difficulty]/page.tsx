@@ -49,10 +49,12 @@ export default async function MusicDetailPage(props: {
                 title: true,
                 artist: true,
                 category_short: true,
-                normal: true,
-                hard: true,
-                expert: true,
-                real: true,
+                charts: {
+                    select: {
+                        difficulty: true,
+                        level: true,
+                    },
+                },
             },
         }),
         db.musicChart.findUnique({
@@ -82,6 +84,21 @@ export default async function MusicDetailPage(props: {
     if (!music || !selectedChart) {
         notFound();
     }
+
+    const chartLevels = new Map(
+        music.charts.map((chart) => [chart.difficulty, chart.level])
+    );
+    const musicWithLevels = {
+        index: music.index,
+        background: music.background,
+        title: music.title,
+        artist: music.artist,
+        category_short: music.category_short,
+        normal: chartLevels.get("Normal") ?? 0,
+        hard: chartLevels.get("Hard") ?? 0,
+        expert: chartLevels.get("Expert") ?? 0,
+        real: chartLevels.get("Real") ?? null,
+    };
 
     const session = await getSession();
 
@@ -310,7 +327,7 @@ export default async function MusicDetailPage(props: {
 
     return (
         <MusicDetail
-            music={music}
+            music={musicWithLevels}
             difficulty={selectedDifficulty}
             activeTab={activeTab}
             isLoggedIn={Boolean(session.id)}

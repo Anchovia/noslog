@@ -1,5 +1,4 @@
 import db from "@/lib/db";
-import { formatToGrade } from "@/lib/utils";
 
 function getKoreanDate() {
     return new Intl.DateTimeFormat("en-CA", {
@@ -13,26 +12,20 @@ function getKoreanDate() {
 export async function updateGrade(user_id: number) {
     const startTime = Date.now(); // 시작 시간
 
-    const basicBestData = await db.playData.findMany({
-        where: {
-            user_id,
-        },
-        select: {
-            grade_basic: true,
-            besttime: true,
-            difficulty: true,
-            score: true,
-            max_combo: true,
-            level: true,
-            rank: true,
-            music_idx: true,
-            chart_id: true,
-            user_id: true,
-            fc_type: true,
-        },
-        orderBy: [{ grade_basic: "desc" }],
-        take: 50,
-    });
+    const [basicBestData, recitalBestData] = await Promise.all([
+        db.playData.findMany({
+            where: { user_id },
+            select: { grade_basic: true },
+            orderBy: [{ grade_basic: "desc" }],
+            take: 50,
+        }),
+        db.playData.findMany({
+            where: { user_id },
+            select: { grade_recital: true },
+            orderBy: [{ grade_recital: "desc" }],
+            take: 50,
+        }),
+    ]);
     console.info("(1)베이직 그레이드 상위 50개 곡 불러오기 완료");
 
     // 베이직 그레이드 합산
@@ -41,29 +34,6 @@ export async function updateGrade(user_id: number) {
         0
     );
     console.info("(2)베이직 그레이드 합산 완료");
-
-    // 리사이틀 그레이드 상위 50개 곡의 그레이드 합산
-    const recitalBestData = await db.playData.findMany({
-        where: {
-            user_id,
-        },
-        select: {
-            grade_recital: true,
-            besttime: true,
-            difficulty: true,
-            score: true,
-            max_combo: true,
-            level: true,
-            rank: true,
-            music_idx: true,
-            chart_id: true,
-            user_id: true,
-            fc_type: true,
-        },
-        orderBy: [{ grade_recital: "desc" }],
-        take: 50,
-    });
-    console.info("(3)리사이틀 그레이드 상위 50개 곡 불러오기 완료");
 
     // 리사이틀 그레이드 합산
     const recitalGrade = recitalBestData.reduce(
@@ -102,8 +72,8 @@ export async function updateGrade(user_id: number) {
                 where: { id: latestTodayHistory.id },
                 data: {
                     besttime: today,
-                    grade_basic: Number(formatToGrade(basicGrade)),
-                    grade_recital: Number(formatToGrade(recitalGrade)),
+                    grade_basic: basicGrade,
+                    grade_recital: recitalGrade,
                 },
             });
 
@@ -120,8 +90,8 @@ export async function updateGrade(user_id: number) {
                 data: {
                     user_id,
                     besttime: today,
-                    grade_basic: Number(formatToGrade(basicGrade)),
-                    grade_recital: Number(formatToGrade(recitalGrade)),
+                    grade_basic: basicGrade,
+                    grade_recital: recitalGrade,
                 },
             });
         }
@@ -140,24 +110,6 @@ export async function updateGrade(user_id: number) {
                 where: { id: { in: expiredHistory.map(({ id }) => id) } },
             });
         }
-
-        // 기존 베스트 플레이 데이터 삭제 (중복 방지)
-        await tx.basicBestPlay.deleteMany({
-            where: { user_id: user_id },
-        });
-        await tx.recitalBestPlay.deleteMany({
-            where: { user_id: user_id },
-        });
-        console.info("(6)기존 베스트 플레이 데이터 삭제 완료");
-
-        // 새로운 베스트 플레이 데이터 생성
-        await tx.basicBestPlay.createMany({
-            data: basicBestData,
-        });
-        await tx.recitalBestPlay.createMany({
-            data: recitalBestData,
-        });
-        console.info("(7)새로운 베스트 플레이 데이터 생성 완료");
     });
 
     const duration = Date.now() - startTime;

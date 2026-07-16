@@ -18,15 +18,28 @@ export async function getMusicPage(
             artist: true,
             category_short: true,
             background: true,
-            sheet_len: true,
-            difficulty_levels: true,
-            normal: true,
-            hard: true,
-            expert: true,
-            real: true,
+            charts: {
+                select: {
+                    difficulty: true,
+                    level: true,
+                },
+            },
         },
     });
-    const sortedMusics = sortMusics(musics, searchParams);
+    const musicItems = musics.map(({ charts, ...music }) => {
+        const levels = new Map(
+            charts.map((chart) => [chart.difficulty, chart.level])
+        );
+
+        return {
+            ...music,
+            normal: levels.get("Normal") ?? 0,
+            hard: levels.get("Hard") ?? 0,
+            expert: levels.get("Expert") ?? 0,
+            real: levels.get("Real") ?? null,
+        };
+    });
+    const sortedMusics = sortMusics(musicItems, searchParams);
     const start = page * PAGE_SIZE;
 
     return sortedMusics.slice(start, start + PAGE_SIZE);
