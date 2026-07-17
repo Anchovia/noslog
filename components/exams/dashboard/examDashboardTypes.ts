@@ -1,0 +1,50 @@
+export type ExamMode = "basic" | "recital" | "event";
+
+export interface ExamStageItem {
+    id: number;
+    position: number;
+    label: string | null;
+    requirementType: string;
+    requiredValue: number;
+    bestValue: number | null;
+    musicIndex: string;
+    title: string;
+    artist: string | null;
+    charts: { chartId: number; difficulty: string; level: number }[];
+}
+
+export interface ExamDashboardItem {
+    id: number;
+    slug: string;
+    mode: string;
+    scoringType: string;
+    grade: number | null;
+    shortLabel: string;
+    title: string;
+    description: string | null;
+    feeNos: number;
+    requiredGrade: number;
+    rewards: {
+        id: number;
+        type: string;
+        label: string;
+        musicIndex: string | null;
+    }[];
+    isAchieved: boolean;
+    submissionStatus: string | null;
+    playerGrade: number | null;
+    stages: ExamStageItem[];
+}
+
+export interface ExamStageResult extends ExamStageItem {
+    comparisonValue: number;
+    isPassed: boolean | null;
+}
+
+export interface ExamSimulationResult {
+    stages: ExamStageResult[];
+    totalValue: number;
+    targetValue: number;
+    progress: number;
+    firstFailedStage: ExamStageResult | undefined;
+}
