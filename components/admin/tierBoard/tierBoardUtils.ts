@@ -11,8 +11,17 @@ const DIFFICULTY_COLORS: Record<string, string> = {
     real: "text-real",
 };
 
+const DIFFICULTY_BORDERS: Record<string, string> = {
+    expert: "border-expert",
+    real: "border-real",
+};
+
 export function getTierDifficultyColor(difficulty: string) {
     return DIFFICULTY_COLORS[difficulty.toLowerCase()];
+}
+
+export function getTierDifficultyBorder(difficulty: string) {
+    return DIFFICULTY_BORDERS[difficulty.toLowerCase()] ?? "border-transparent";
 }
 
 export function getEntryDragId(id: number) {

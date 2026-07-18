@@ -4,7 +4,10 @@ import MusicJacket from "@/components/music/musicJacket";
 import { cn } from "@/lib/utils";
 
 import type { TierChartSearchResult } from "./tierBoardTypes";
-import { getTierDifficultyColor } from "./tierBoardUtils";
+import {
+    getTierDifficultyBorder,
+    getTierDifficultyColor,
+} from "./tierBoardUtils";
 
 interface TierChartSearchProps {
     query: string;
@@ -75,7 +78,12 @@ export default function TierChartSearch({
                                       index={chart.musicIndex}
                                       background={chart.jacket}
                                       title={chart.title}
-                                      className="size-10 shrink-0 rounded-md"
+                                      className={cn(
+                                          "size-10 shrink-0 rounded-md border-2",
+                                          getTierDifficultyBorder(
+                                              chart.difficulty
+                                          )
+                                      )}
                                   />
                                   <span className="min-w-0 flex-1">
                                       <strong className="block truncate text-sm">

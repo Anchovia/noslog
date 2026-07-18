@@ -4,6 +4,7 @@ import type { TierBandData } from "@/components/admin/tierBoard/tierBoardTypes";
 import {
     getBandDropId,
     getEntryDragId,
+    getTierDifficultyBorder,
     resolveTierDropTarget,
 } from "@/components/admin/tierBoard/tierBoardUtils";
 
@@ -54,6 +55,12 @@ function bands(): TierBandData[] {
 }
 
 describe("서열표 드래그 대상 계산", () => {
+    it("Real과 Expert 채보의 테두리 색상을 구분한다", () => {
+        expect(getTierDifficultyBorder("Real")).toBe("border-real");
+        expect(getTierDifficultyBorder("expert")).toBe("border-expert");
+        expect(getTierDifficultyBorder("Hard")).toBe("border-transparent");
+    });
+
     it("드래그와 드롭 식별자를 구분해 생성한다", () => {
         expect(getEntryDragId(12)).toBe("entry-12");
         expect(getBandDropId(12)).toBe("band-12");

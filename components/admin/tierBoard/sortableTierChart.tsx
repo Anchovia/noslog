@@ -5,7 +5,7 @@ import MusicJacket from "@/components/music/musicJacket";
 import { cn } from "@/lib/utils";
 
 import type { TierEntryData } from "./tierBoardTypes";
-import { getEntryDragId } from "./tierBoardUtils";
+import { getEntryDragId, getTierDifficultyBorder } from "./tierBoardUtils";
 
 interface SortableTierChartProps {
     entry: TierEntryData;
@@ -50,7 +50,8 @@ export default function SortableTierChart({
                 transition,
             }}
             className={cn(
-                "bg-surface-muted relative size-11 shrink-0 cursor-grab touch-none rounded-md bg-cover bg-center active:cursor-grabbing",
+                "bg-surface-muted relative size-11 shrink-0 cursor-grab touch-none overflow-hidden rounded-md border-2 bg-cover bg-center active:cursor-grabbing",
+                getTierDifficultyBorder(entry.chart.difficulty),
                 selected && "ring-real ring-2",
                 isDragging && "opacity-30"
             )}
