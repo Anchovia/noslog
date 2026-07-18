@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 
 import {
+    discardExamProofUpload,
     requestExamProofUpload,
     submitExamProof,
 } from "@/app/(nevigation)/exams/actions";
@@ -105,6 +106,7 @@ export default function ExamDashboard({
 
         setIsUploading(true);
         setUploadMessage(null);
+        let uploadedBlobUrl: string | null = null;
         try {
             const upload = await requestExamProofUpload(
                 selectedExam.id,
@@ -120,6 +122,7 @@ export default function ExamDashboard({
                 token: upload.token,
                 contentType: file.type,
             });
+            uploadedBlobUrl = blob.url;
 
             const submit = await submitExamProof(selectedExam.id, blob.url);
             setUploadMessage(
@@ -127,6 +130,12 @@ export default function ExamDashboard({
             );
             if (submit.success) router.refresh();
         } catch {
+            if (uploadedBlobUrl) {
+                await discardExamProofUpload(
+                    selectedExam.id,
+                    uploadedBlobUrl
+                ).catch(() => null);
+            }
             setUploadMessage("업로드 중 오류가 발생했습니다.");
         } finally {
             setIsUploading(false);

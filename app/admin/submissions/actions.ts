@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 
 import { requireAdmin } from "@/lib/admin";
+import { deleteBlobIfOwned } from "@/lib/blob";
 import db from "@/lib/db";
 
 export async function reviewExamSubmission(formData: FormData) {
@@ -56,6 +57,26 @@ export async function reviewExamSubmission(formData: FormData) {
             });
         }
     });
+
+    revalidatePath("/admin");
+    revalidatePath("/admin/submissions");
+    revalidatePath("/exams");
+}
+
+export async function deleteExamSubmission(formData: FormData) {
+    await requireAdmin();
+
+    const submissionId = Number(formData.get("submissionId"));
+    if (!Number.isInteger(submissionId)) return;
+
+    const submission = await db.examSubmission.findUnique({
+        where: { id: submissionId },
+        select: { id: true, proofImageUrl: true },
+    });
+    if (!submission) return;
+
+    await db.examSubmission.delete({ where: { id: submission.id } });
+    await deleteBlobIfOwned(submission.proofImageUrl);
 
     revalidatePath("/admin");
     revalidatePath("/admin/submissions");

@@ -15,12 +15,15 @@ const mocks = vi.hoisted(() => ({
     bingoDelete: vi.fn(),
     userUpdate: vi.fn(),
     examSubmissionFindFirst: vi.fn(),
+    examSubmissionFindUnique: vi.fn(),
+    examSubmissionDelete: vi.fn(),
     examSubmissionUpdate: vi.fn(),
     examAchievementUpsert: vi.fn(),
     examAchievementDeleteMany: vi.fn(),
     updateTag: vi.fn(),
     revalidatePath: vi.fn(),
     redirect: vi.fn(),
+    deleteBlobIfOwned: vi.fn(),
 }));
 
 const transactionClient = {
@@ -53,8 +56,16 @@ vi.mock("@/lib/db", () => ({
         bingoCellProgress: { count: mocks.bingoProgressCount },
         bingo: { delete: mocks.bingoDelete },
         user: { update: mocks.userUpdate },
-        examSubmission: { findFirst: mocks.examSubmissionFindFirst },
+        examSubmission: {
+            findFirst: mocks.examSubmissionFindFirst,
+            findUnique: mocks.examSubmissionFindUnique,
+            delete: mocks.examSubmissionDelete,
+        },
     },
+}));
+
+vi.mock("@/lib/blob", () => ({
+    deleteBlobIfOwned: mocks.deleteBlobIfOwned,
 }));
 
 vi.mock("next/cache", () => ({
@@ -74,7 +85,10 @@ import {
 } from "@/app/admin/music/actions";
 import { deleteBingo } from "@/app/admin/bingos/actions";
 import { updateUserRole } from "@/app/admin/users/actions";
-import { reviewExamSubmission } from "@/app/admin/submissions/actions";
+import {
+    deleteExamSubmission,
+    reviewExamSubmission,
+} from "@/app/admin/submissions/actions";
 
 describe("관리자 액션", () => {
     beforeEach(() => {
@@ -89,6 +103,7 @@ describe("관리자 액션", () => {
         mocks.bingoDelete.mockResolvedValue({ id: 40 });
         mocks.userUpdate.mockResolvedValue({ id: 2 });
         mocks.examSubmissionUpdate.mockResolvedValue({ id: 50 });
+        mocks.examSubmissionDelete.mockResolvedValue({ id: 50 });
         mocks.examAchievementUpsert.mockResolvedValue({ id: 60 });
         mocks.examAchievementDeleteMany.mockResolvedValue({ count: 0 });
         mocks.transaction.mockImplementation(async (input) => {
@@ -275,5 +290,26 @@ describe("관리자 액션", () => {
                 where: { userId_examId: { userId: 2, examId: 30 } },
             })
         );
+    });
+
+    it("검정 제출 기록을 삭제한 뒤 연결된 Blob을 정리한다", async () => {
+        mocks.examSubmissionFindUnique.mockResolvedValue({
+            id: 50,
+            proofImageUrl:
+                "https://store.public.blob.vercel-storage.com/proof.jpg",
+        });
+        const formData = new FormData();
+        formData.set("submissionId", "50");
+
+        await deleteExamSubmission(formData);
+
+        expect(mocks.examSubmissionDelete).toHaveBeenCalledWith({
+            where: { id: 50 },
+        });
+        expect(mocks.deleteBlobIfOwned).toHaveBeenCalledWith(
+            "https://store.public.blob.vercel-storage.com/proof.jpg"
+        );
+        expect(mocks.revalidatePath).toHaveBeenCalledWith("/admin/submissions");
+        expect(mocks.revalidatePath).toHaveBeenCalledWith("/exams");
     });
 });
