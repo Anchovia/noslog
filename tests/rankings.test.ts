@@ -11,6 +11,11 @@ vi.mock("next/cache", () => ({
 }));
 
 import { getUserRankingPosition } from "@/lib/rankings";
+import {
+    formatRankingGrade,
+    getPaginationItems,
+    getRankingPageHref,
+} from "@/components/rankings/table/rankingTableUtils";
 
 describe("getUserRankingPosition", () => {
     beforeEach(() => {
@@ -69,5 +74,33 @@ describe("getUserRankingPosition", () => {
             })
         ).resolves.toBeNull();
         expect(count).not.toHaveBeenCalled();
+    });
+});
+
+describe("ranking table utilities", () => {
+    it("Grd 저장값을 화면 표시 단위로 변환한다", () => {
+        expect(formatRankingGrade(568300)).toBe("5,683");
+    });
+
+    it("페이지가 적으면 모든 페이지 번호를 표시한다", () => {
+        expect(getPaginationItems(2, 4)).toEqual([1, 2, 3, 4]);
+    });
+
+    it("페이지가 많으면 현재 페이지 주변과 양 끝만 표시한다", () => {
+        expect(getPaginationItems(5, 10)).toEqual([
+            1,
+            "ellipsis",
+            4,
+            5,
+            6,
+            "ellipsis",
+            10,
+        ]);
+    });
+
+    it("랭킹 조건을 유지한 페이지 주소를 생성한다", () => {
+        expect(getRankingPageHref("recital", "kr", 3)).toBe(
+            "/rankings?mode=recital&region=kr&page=3"
+        );
     });
 });
