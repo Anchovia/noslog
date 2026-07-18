@@ -34,9 +34,7 @@ export default function BingoList({ bingos }: { bingos: BingoListItem[] }) {
         <div className="flex flex-col gap-4 px-4 py-4">
             <div className="flex items-end justify-between">
                 <h1 className="text-title">빙고</h1>
-                <p className="text-caption">
-                    {bingos.length}판 · 해금 완료 {counts.completed}
-                </p>
+                <p className="text-caption">해금 완료 {counts.completed}</p>
             </div>
 
             {continueBingo ? <ContinueBingoCard bingo={continueBingo} /> : null}

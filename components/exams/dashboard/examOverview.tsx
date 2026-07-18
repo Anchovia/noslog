@@ -30,7 +30,7 @@ export default function ExamOverview({ exam }: { exam: ExamDashboardItem }) {
                             )}
                         >
                             {exam.playerGrade >= exam.requiredGrade ? "✓" : "✕"}{" "}
-                            {formatToComma(exam.playerGrade)}
+                            현재 {formatToComma(exam.playerGrade)} Grd.
                         </span>
                     ) : null}
                 </p>
@@ -55,7 +55,7 @@ export default function ExamOverview({ exam }: { exam: ExamDashboardItem }) {
                                 {reward.musicIndex ? (
                                     <Link
                                         href={`/music?q=${encodeURIComponent(reward.label)}`}
-                                        className="decoration-divider underline underline-offset-2"
+                                        className="decoration-divider hover:text-chart focus-visible:ring-text-secondary/30 rounded underline underline-offset-2 transition-colors focus-visible:ring-2 focus-visible:outline-none"
                                     >
                                         {reward.label}
                                     </Link>

@@ -9,9 +9,7 @@ import {
     requestExamProofUpload,
     submitExamProof,
 } from "@/app/(nevigation)/exams/actions";
-import ExamModeTabs, {
-    EXAM_MODES,
-} from "@/components/exams/dashboard/examModeTabs";
+import ExamModeTabs from "@/components/exams/dashboard/examModeTabs";
 import ExamOverview from "@/components/exams/dashboard/examOverview";
 import ExamProofUpload from "@/components/exams/dashboard/examProofUpload";
 import ExamSelector from "@/components/exams/dashboard/examSelector";
@@ -38,10 +36,7 @@ export default function ExamDashboard({
     isAuthenticated: boolean;
 }) {
     const router = useRouter();
-    const initialMode =
-        EXAM_MODES.find((item) =>
-            exams.some((exam) => exam.mode === item.value)
-        )?.value ?? "basic";
+    const initialMode: ExamMode = "basic";
     const initialModeExams = exams.filter((exam) => exam.mode === initialMode);
     const [mode, setMode] = useState<ExamMode>(initialMode);
     const [selectedExamId, setSelectedExamId] = useState<number | null>(

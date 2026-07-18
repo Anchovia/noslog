@@ -75,7 +75,12 @@ export async function deleteExamSubmission(formData: FormData) {
     });
     if (!submission) return;
 
-    await db.examSubmission.delete({ where: { id: submission.id } });
+    await db.$transaction(async (tx) => {
+        await tx.examAchievement.deleteMany({
+            where: { submissionId: submission.id },
+        });
+        await tx.examSubmission.delete({ where: { id: submission.id } });
+    });
     await deleteBlobIfOwned(submission.proofImageUrl);
 
     revalidatePath("/admin");

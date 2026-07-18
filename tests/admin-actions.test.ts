@@ -29,7 +29,10 @@ const mocks = vi.hoisted(() => ({
 const transactionClient = {
     musicChart: { update: mocks.musicChartUpdate },
     chartLevelConstantHistory: { create: mocks.constantHistoryCreate },
-    examSubmission: { update: mocks.examSubmissionUpdate },
+    examSubmission: {
+        update: mocks.examSubmissionUpdate,
+        delete: mocks.examSubmissionDelete,
+    },
     examAchievement: {
         upsert: mocks.examAchievementUpsert,
         deleteMany: mocks.examAchievementDeleteMany,
@@ -292,7 +295,7 @@ describe("관리자 액션", () => {
         );
     });
 
-    it("검정 제출 기록을 삭제한 뒤 연결된 Blob을 정리한다", async () => {
+    it("검정 제출과 연결된 합격 이력을 함께 삭제한 뒤 Blob을 정리한다", async () => {
         mocks.examSubmissionFindUnique.mockResolvedValue({
             id: 50,
             proofImageUrl:
@@ -303,6 +306,9 @@ describe("관리자 액션", () => {
 
         await deleteExamSubmission(formData);
 
+        expect(mocks.examAchievementDeleteMany).toHaveBeenCalledWith({
+            where: { submissionId: 50 },
+        });
         expect(mocks.examSubmissionDelete).toHaveBeenCalledWith({
             where: { id: 50 },
         });

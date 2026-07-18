@@ -11,9 +11,8 @@ export default function ProfileGradeTrend({
 }) {
     return (
         <section className="bg-surface rounded-card p-4">
-            <div className="mb-2 flex items-center justify-between">
+            <div className="mb-2">
                 <h2 className="text-section font-bold">그레이드 추이</h2>
-                <span className="text-caption">최근 {data.length}회</span>
             </div>
             <ProfileGradeChart data={data} mode={mode} />
             {data.length > 1 ? (

@@ -65,10 +65,10 @@ export default async function TiersPage({ searchParams }: TiersPageProps) {
                         }
                         aria-current={item.value === mode ? "page" : undefined}
                         className={cn(
-                            "flex h-9 items-center justify-center rounded-md px-4 text-sm font-semibold",
+                            "focus-visible:ring-text-secondary/30 flex h-9 cursor-pointer items-center justify-center rounded-md px-4 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none",
                             item.value === mode
-                                ? "bg-text-primary text-bg"
-                                : "bg-surface text-text-secondary"
+                                ? "bg-text-primary text-bg hover:bg-text-primary/90"
+                                : "bg-surface text-text-secondary hover:bg-surface-muted hover:text-text-primary"
                         )}
                     >
                         {item.label}

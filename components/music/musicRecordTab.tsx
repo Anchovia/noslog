@@ -1,20 +1,27 @@
 import { cn, formatToComma, formatToGrade } from "@/lib/utils";
+import { formatScoreRecordDate } from "@/lib/music/scoreTrend";
 import Image from "next/image";
 import Link from "next/link";
 import { rankAssetNames } from "./musicDetailConfig";
-import type { RecentChartPlay, UserPlayData } from "./musicDetailTypes";
+import type {
+    RecentChartPlay,
+    ScoreTrendPoint,
+    UserPlayData,
+} from "./musicDetailTypes";
 import ScoreTrend from "./scoreTrend";
 
 interface MusicRecordTabProps {
     isLoggedIn: boolean;
     userPlayData: UserPlayData | null;
     recentChartPlays: RecentChartPlay[];
+    scoreTrend: ScoreTrendPoint[];
 }
 
 export default function MusicRecordTab({
     isLoggedIn,
     userPlayData,
     recentChartPlays,
+    scoreTrend,
 }: MusicRecordTabProps) {
     const scoreProgress = userPlayData
         ? Math.min(
@@ -106,15 +113,25 @@ export default function MusicRecordTab({
                         <div className="mt-1.5 flex items-center justify-between gap-3 text-[10px]">
                             <span className="text-text-disabled truncate tabular-nums">
                                 {userPlayData
-                                    ? `S 950k · ${userPlayData.besttime.split(" ")[0].replaceAll("-", ".").replaceAll("/", ".")} 달성`
+                                    ? formatScoreRecordDate(
+                                          userPlayData.besttime
+                                      )
                                     : "기록 없음"}
                             </span>
-                            <span className="text-score shrink-0 tabular-nums">
-                                {scoreToPerfect === null
-                                    ? "P(1000k)까지 -"
-                                    : scoreToPerfect === 0
-                                      ? "Perfect 달성"
-                                      : `P(1000k)까지 -${formatToComma(scoreToPerfect)}`}
+                            <span className="text-text-secondary shrink-0 tabular-nums">
+                                Pianist까지{" "}
+                                <strong
+                                    className={cn(
+                                        scoreToPerfect !== null &&
+                                            "text-success"
+                                    )}
+                                >
+                                    {scoreToPerfect === null
+                                        ? "-"
+                                        : scoreToPerfect === 0
+                                          ? "달성"
+                                          : `${formatToComma(scoreToPerfect)}점`}
+                                </strong>
                             </span>
                         </div>
                     </div>
@@ -151,11 +168,10 @@ export default function MusicRecordTab({
                 </dl>
 
                 <section className="bg-surface rounded-card p-4">
-                    <header className="flex items-center justify-between">
+                    <header>
                         <h2 className="text-sm font-bold">스코어 추이</h2>
-                        <span className="text-caption">최근 4회 갱신</span>
                     </header>
-                    <ScoreTrend plays={recentChartPlays} />
+                    <ScoreTrend points={scoreTrend} />
                 </section>
 
                 <section className="bg-surface rounded-card overflow-hidden">

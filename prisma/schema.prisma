@@ -500,8 +500,8 @@ model ExamAchievement {
   user         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   examId       Int             @map("exam_id")
   exam         Exam            @relation(fields: [examId], references: [id], onDelete: Cascade)
-  submissionId Int?            @unique @map("submission_id")
-  submission   ExamSubmission? @relation(fields: [submissionId], references: [id], onDelete: SetNull)
+  submissionId Int            @unique @map("submission_id")
+  submission   ExamSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
 
   @@unique([userId, examId])
   @@index([examId, achievedAt])

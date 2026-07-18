@@ -145,7 +145,7 @@ export default function ProfileSettingCard({ user }: ProfileSettingCardProps) {
                     <p className="text-caption mt-1">
                         JPG, PNG, WebP · 최대 4MB
                     </p>
-                    <label className="border-border text-text-primary rounded-card mt-3 inline-flex h-9 cursor-pointer items-center gap-2 border px-3 text-xs font-semibold">
+                    <label className="border-border text-text-primary hover:bg-surface-muted focus-within:ring-text-secondary/30 rounded-card mt-3 inline-flex h-9 cursor-pointer items-center gap-2 border px-3 text-xs font-semibold transition-colors focus-within:ring-2">
                         <Camera className="size-4" aria-hidden />
                         사진 변경
                         <input
@@ -204,7 +204,7 @@ export default function ProfileSettingCard({ user }: ProfileSettingCardProps) {
                     </div>
                     <a
                         href="/discord/start?returnTo=/profile/settings"
-                        className="border-border text-text-primary rounded-card flex h-9 shrink-0 items-center border px-3 text-xs font-bold"
+                        className="border-border text-text-primary hover:bg-surface-muted focus-visible:ring-text-secondary/30 rounded-card flex h-9 shrink-0 cursor-pointer items-center border px-3 text-xs font-bold transition-colors focus-visible:ring-2 focus-visible:outline-none"
                     >
                         {user.discord_id ? "다시 연결" : "연결"}
                     </a>
@@ -220,14 +220,14 @@ export default function ProfileSettingCard({ user }: ProfileSettingCardProps) {
             <div className="grid grid-cols-2 gap-2">
                 <Link
                     href={`/profile/${user.id}`}
-                    className="border-border text-text-secondary rounded-card flex h-11 items-center justify-center border text-sm font-semibold"
+                    className="border-border text-text-secondary hover:bg-surface-muted hover:text-text-primary focus-visible:ring-text-secondary/30 rounded-card flex h-11 cursor-pointer items-center justify-center border text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none"
                 >
                     취소
                 </Link>
                 <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="bg-text-primary text-bg rounded-card flex h-11 cursor-pointer items-center justify-center gap-2 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-50"
+                    className="bg-text-primary text-bg hover:bg-text-primary/90 focus-visible:ring-text-secondary/30 rounded-card flex h-11 cursor-pointer items-center justify-center gap-2 text-sm font-bold transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                 >
                     <Save className="size-4" aria-hidden />
                     {isSubmitting ? "저장 중" : "저장"}

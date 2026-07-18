@@ -1,5 +1,6 @@
 import db from "@/lib/db";
 import { CACHE_TAGS } from "@/lib/cacheTags";
+import { selectScoreImprovements } from "@/lib/music/scoreTrend";
 import { unstable_cache } from "next/cache";
 
 // 모든 탭에서 공통으로 사용하는 악곡과 채보 정보만 캐시함
@@ -255,4 +256,40 @@ export async function getRecentUserChartPlays(userId: number, chartId: number) {
         rank: play.rank,
         play_time: play.source_play_time,
     }));
+}
+
+export async function getUserChartScoreTrend(
+    userId: number,
+    chartId: number,
+    currentRecord: { score: number; rank: string; besttime: string } | null
+) {
+    const snapshots = await db.chartRecordSnapshot.findMany({
+        where: { user_id: userId, chart_id: chartId, score: { gt: 0 } },
+        select: {
+            id: true,
+            score: true,
+            rank: true,
+            created_at: true,
+        },
+        orderBy: [{ created_at: "asc" }, { id: "asc" }],
+    });
+
+    const records = snapshots.map((snapshot) => ({
+        id: snapshot.id,
+        score: snapshot.score,
+        rank: snapshot.rank,
+        play_time: snapshot.created_at.toISOString(),
+    }));
+
+    // 스냅샷 도입 전에 존재한 현재 베스트 기록도 최초 지점으로 표시함
+    if (currentRecord?.score) {
+        records.push({
+            id: -1,
+            score: currentRecord.score,
+            rank: currentRecord.rank,
+            play_time: currentRecord.besttime,
+        });
+    }
+
+    return selectScoreImprovements(records);
 }

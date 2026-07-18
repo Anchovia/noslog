@@ -81,22 +81,22 @@ export default function MusicInfoTab({
                         <dl className="flex w-1/2 flex-col gap-2">
                             {[
                                 ["계단", chartDetail.patternAverages.stairs],
-                                ["동치", chartDetail.patternAverages.chord],
-                                ["트릴", chartDetail.patternAverages.trill],
-                                [
-                                    "글리산도",
-                                    chartDetail.patternAverages.glissando,
-                                ],
                                 [
                                     "연타",
                                     chartDetail.patternAverages.repetition,
+                                ],
+                                ["폴리리듬", chartDetail.patternAverages.chord],
+                                ["즈레", chartDetail.patternAverages.trill],
+                                [
+                                    "글리산도",
+                                    chartDetail.patternAverages.glissando,
                                 ],
                             ].map(([label, value]) => (
                                 <div
                                     key={label}
                                     className="flex items-center gap-2 text-xs"
                                 >
-                                    <dt className="text-text-secondary w-12 shrink-0">
+                                    <dt className="text-text-secondary w-14 shrink-0">
                                         {label}
                                     </dt>
                                     <div className="bg-surface-muted h-1.5 min-w-0 flex-1 overflow-hidden rounded-full">

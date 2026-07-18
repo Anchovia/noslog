@@ -56,12 +56,14 @@ export default function ExamProofUpload({
                 aria-disabled={disabled}
                 className={cn(
                     "border-text-disabled flex h-10 items-center justify-center gap-2 rounded-lg border border-dashed text-xs font-semibold",
-                    disabled
-                        ? "cursor-not-allowed opacity-50"
-                        : "hover:bg-surface cursor-pointer"
+                    exam.isAchieved
+                        ? "border-success/40 text-success"
+                        : disabled
+                          ? "cursor-not-allowed opacity-50"
+                          : "hover:bg-surface cursor-pointer"
                 )}
             >
-                <Upload className="size-4" />
+                {exam.isAchieved ? null : <Upload className="size-4" />}
                 {isUploading
                     ? "업로드 중..."
                     : exam.isAchieved

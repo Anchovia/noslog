@@ -15,6 +15,7 @@ export default function MusicDetail({
     isLoggedIn,
     userPlayData,
     recentChartPlays,
+    scoreTrend,
     chartDetail,
     ranking,
     tier,
@@ -38,6 +39,7 @@ export default function MusicDetail({
                     isLoggedIn={isLoggedIn}
                     userPlayData={userPlayData}
                     recentChartPlays={recentChartPlays}
+                    scoreTrend={scoreTrend}
                 />
             ) : null}
 

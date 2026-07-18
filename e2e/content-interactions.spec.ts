@@ -27,6 +27,10 @@ test("검정 선택 항목을 아코디언으로 열고 닫는다", async ({ pag
     await page.goto("/exams");
     await expectPageLoaded(page);
 
+    await expect(
+        page.getByRole("button", { name: "Basic", exact: true })
+    ).toHaveClass(/bg-text-primary/);
+
     const selector = page.locator("main button[aria-expanded]").first();
     const stageTable = page.getByText("과제곡", { exact: true });
 

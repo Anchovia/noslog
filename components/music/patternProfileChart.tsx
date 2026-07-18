@@ -24,10 +24,10 @@ export default function PatternProfileChart({
 }: PatternProfileChartProps) {
     const data = [
         { label: "계단", value: values.stairs },
-        { label: "동치", value: values.chord },
-        { label: "트릴", value: values.trill },
-        { label: "글리산도", value: values.glissando },
         { label: "연타", value: values.repetition },
+        { label: "폴리리듬", value: values.chord },
+        { label: "즈레", value: values.trill },
+        { label: "글리산도", value: values.glissando },
     ];
 
     return (

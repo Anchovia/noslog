@@ -23,10 +23,10 @@ export default function ProfileModeTabs({
                     type="button"
                     onClick={() => onChange(item)}
                     className={cn(
-                        "h-9 rounded-md text-sm font-semibold transition-colors",
+                        "focus-visible:ring-text-secondary/30 h-9 cursor-pointer rounded-md text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none",
                         mode === item
-                            ? "bg-text-primary text-bg"
-                            : "text-text-secondary"
+                            ? "bg-text-primary text-bg hover:bg-text-primary/90"
+                            : "text-text-secondary hover:bg-surface-muted hover:text-text-primary"
                     )}
                 >
                     {item === "basic" ? "Basic" : "Recital"}

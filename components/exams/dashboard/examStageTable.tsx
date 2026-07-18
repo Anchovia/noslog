@@ -63,7 +63,7 @@ function StageRow({
             </span>
             <span
                 className={cn(
-                    "text-right text-xs tabular-nums",
+                    "flex items-center justify-end gap-1.5 text-right text-xs tabular-nums",
                     stage.bestValue === null || stage.bestValue === 0
                         ? "text-text-disabled"
                         : stage.isPassed
@@ -71,11 +71,18 @@ function StageRow({
                           : "text-danger"
                 )}
             >
-                {stage.bestValue === null
-                    ? "연동 미지원"
-                    : stage.bestValue > 0
-                      ? `${formatExamValue(stage.bestValue, scoringType)} ${stage.isPassed ? "✓" : "✕"}`
-                      : "기록 없음"}
+                {stage.bestValue === null ? (
+                    "연동 미지원"
+                ) : stage.bestValue > 0 ? (
+                    <>
+                        <span>{stage.isPassed ? "✓" : "✕"}</span>
+                        <span>
+                            {formatExamValue(stage.bestValue, scoringType)}
+                        </span>
+                    </>
+                ) : (
+                    "기록 없음"
+                )}
             </span>
         </>
     );
@@ -83,7 +90,7 @@ function StageRow({
     return firstChart ? (
         <Link
             href={`/music/${stage.musicIndex}/${firstChart.difficulty.toLowerCase()}`}
-            className={rowClass}
+            className={`${rowClass} hover:bg-surface-muted focus-visible:ring-text-secondary/30 transition-colors focus-visible:ring-2 focus-visible:outline-none`}
         >
             {content}
         </Link>
