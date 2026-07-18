@@ -35,7 +35,7 @@ export default function ExamSelector({
                             aria-expanded={selected}
                             onClick={() => onChange(exam.id)}
                             className={cn(
-                                "bg-surface rounded-card flex h-14 w-full items-center gap-3 px-3 text-left",
+                                "bg-surface hover:bg-surface-muted focus-visible:ring-text-secondary/30 rounded-card flex h-14 w-full cursor-pointer items-center gap-3 px-3 text-left transition-colors focus-visible:ring-2 focus-visible:outline-none",
                                 selected && "ring-border ring-1",
                                 !selected && locked && "opacity-50"
                             )}

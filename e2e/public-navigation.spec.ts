@@ -47,6 +47,28 @@ test("로그인 페이지에서 Discord 로그인과 비회원 이동을 제공�
     await expectNoHorizontalOverflow(page);
 });
 
+test("홈 유저 랭킹의 Basic과 Recital을 전환한다", async ({ page }) => {
+    await page.goto("/");
+
+    const recitalLink = page.getByRole("link", {
+        name: "Recital",
+        exact: true,
+    });
+    await recitalLink.click();
+
+    await expect(page).toHaveURL(/\?ranking=recital$/);
+    await expect(recitalLink).toHaveAttribute("aria-current", "page");
+
+    const basicLink = page.getByRole("link", {
+        name: "Basic",
+        exact: true,
+    });
+    await basicLink.click();
+
+    await expect(page).toHaveURL(/\?ranking=basic$/);
+    await expect(basicLink).toHaveAttribute("aria-current", "page");
+});
+
 test("핵심 공개 화면은 390px에서 가로로 넘치지 않는다", async ({ page }) => {
     for (const path of [
         "/",

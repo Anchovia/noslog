@@ -24,10 +24,10 @@ export default function BingoMissionFilters({
                 type="button"
                 onClick={() => onChange("incomplete")}
                 className={cn(
-                    "h-8 rounded-md px-3 text-xs font-semibold",
+                    "focus-visible:ring-text-secondary/30 h-8 cursor-pointer rounded-md px-3 text-xs font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none",
                     filter === "incomplete"
-                        ? "bg-text-primary text-bg"
-                        : "bg-surface text-text-secondary"
+                        ? "bg-text-primary text-bg hover:bg-text-primary/90"
+                        : "bg-surface text-text-secondary hover:bg-surface-muted hover:text-text-primary"
                 )}
             >
                 미완료 {incompleteCount}
@@ -36,10 +36,10 @@ export default function BingoMissionFilters({
                 type="button"
                 onClick={() => onChange("completed")}
                 className={cn(
-                    "h-8 rounded-md px-3 text-xs font-semibold",
+                    "focus-visible:ring-text-secondary/30 h-8 cursor-pointer rounded-md px-3 text-xs font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none",
                     filter === "completed"
-                        ? "bg-text-primary text-bg"
-                        : "bg-surface text-text-secondary"
+                        ? "bg-text-primary text-bg hover:bg-text-primary/90"
+                        : "bg-surface text-text-secondary hover:bg-surface-muted hover:text-text-primary"
                 )}
             >
                 완료 {completedCount}
@@ -48,10 +48,10 @@ export default function BingoMissionFilters({
                 type="button"
                 onClick={() => onChange("rich")}
                 className={cn(
-                    "h-8 rounded-md px-3 text-xs font-semibold",
+                    "focus-visible:ring-score/30 h-8 cursor-pointer rounded-md px-3 text-xs font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none",
                     filter === "rich"
-                        ? "bg-score text-bg"
-                        : "bg-surface text-score"
+                        ? "bg-score text-bg hover:bg-score/90"
+                        : "bg-surface text-score hover:bg-surface-muted"
                 )}
             >
                 리치만 {richCount}

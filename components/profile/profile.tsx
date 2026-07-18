@@ -1,6 +1,5 @@
 "use client";
 
-import { LogOut } from "lucide-react";
 import { useState } from "react";
 
 import { logout } from "@/app/(nevigation)/profile/[id]/actions";
@@ -80,9 +79,8 @@ export default function ProfileDashboard({
                 <form action={logout}>
                     <button
                         type="submit"
-                        className="border-danger/50 text-danger rounded-card flex h-11 w-full items-center justify-center gap-2 border text-sm font-semibold"
+                        className="border-danger/50 text-danger hover:bg-danger/10 focus-visible:ring-danger/30 rounded-card flex h-11 w-full cursor-pointer items-center justify-center border text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none"
                     >
-                        <LogOut size={16} />
                         로그아웃
                     </button>
                 </form>

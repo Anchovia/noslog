@@ -8,6 +8,7 @@ import {
     getCachedUserRankingPage,
     getUserRankingPosition,
 } from "@/lib/rankings";
+import type { UserRankingMode } from "@/lib/rankings";
 import { getUser } from "@/lib/user";
 import {
     formatToComma,
@@ -27,10 +28,19 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-export default async function Home() {
+interface HomeProps {
+    searchParams: Promise<{
+        ranking?: string | string[];
+    }>;
+}
+
+export default async function Home({ searchParams }: HomeProps) {
+    const { ranking } = await searchParams;
+    const rankingMode: UserRankingMode =
+        ranking === "recital" ? "recital" : "basic";
     const [user, { rows: rankingUsers }] = await Promise.all([
         getUser(),
-        getCachedUserRankingPage("basic", "all", 1, 5),
+        getCachedUserRankingPage(rankingMode, "all", 1, 5),
     ]);
     const userRank = user
         ? await getUserRankingPosition({
@@ -57,7 +67,7 @@ export default async function Home() {
                                 {user.username || "이름 없는 유저"}
                             </strong>
                             <span className="text-text-secondary shrink-0 text-sm">
-                                · {userRank ? `#${userRank}위` : "순위 -"}
+                                · {userRank ? `#${userRank}` : "순위 -"}
                             </span>
                         </div>
                         <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
@@ -77,7 +87,7 @@ export default async function Home() {
 
                     <Link
                         href={`/profile/${user.id}`}
-                        className="border-border text-text-primary rounded-card flex h-9 shrink-0 items-center justify-center border px-3 text-xs font-bold"
+                        className="border-border text-text-primary hover:bg-surface-muted focus-visible:ring-text-secondary/30 rounded-card flex h-9 shrink-0 cursor-pointer items-center justify-center border px-3 text-xs font-bold transition-colors focus-visible:ring-2 focus-visible:outline-none"
                     >
                         내 프로필
                     </Link>
@@ -125,10 +135,10 @@ export default async function Home() {
             <section className="grid grid-cols-3 gap-2">
                 <Link
                     href="/music"
-                    className="bg-surface rounded-card flex h-20 flex-col items-center justify-center gap-2"
+                    className="bg-surface hover:bg-surface-muted focus-visible:ring-text-secondary/30 rounded-card group flex h-20 flex-col items-center justify-center gap-2 transition-colors focus-visible:ring-2 focus-visible:outline-none"
                 >
                     <Music2
-                        className="text-text-secondary size-6"
+                        className="text-text-secondary group-hover:text-text-primary size-6 transition-colors"
                         aria-hidden="true"
                     />
                     <span className="text-caption text-text-primary font-semibold">
@@ -137,10 +147,10 @@ export default async function Home() {
                 </Link>
                 <Link
                     href="/rankings"
-                    className="bg-surface rounded-card flex h-20 flex-col items-center justify-center gap-2"
+                    className="bg-surface hover:bg-surface-muted focus-visible:ring-text-secondary/30 rounded-card group flex h-20 flex-col items-center justify-center gap-2 transition-colors focus-visible:ring-2 focus-visible:outline-none"
                 >
                     <Trophy
-                        className="text-text-secondary size-6"
+                        className="text-text-secondary group-hover:text-text-primary size-6 transition-colors"
                         aria-hidden="true"
                     />
                     <span className="text-caption text-text-primary font-semibold">
@@ -149,10 +159,10 @@ export default async function Home() {
                 </Link>
                 <Link
                     href="/bingo"
-                    className="bg-surface rounded-card flex h-20 flex-col items-center justify-center gap-2"
+                    className="bg-surface hover:bg-surface-muted focus-visible:ring-text-secondary/30 rounded-card group flex h-20 flex-col items-center justify-center gap-2 transition-colors focus-visible:ring-2 focus-visible:outline-none"
                 >
                     <Grid3X3
-                        className="text-text-secondary size-6"
+                        className="text-text-secondary group-hover:text-text-primary size-6 transition-colors"
                         aria-hidden="true"
                     />
                     <span className="text-caption text-text-primary font-semibold">
@@ -161,10 +171,10 @@ export default async function Home() {
                 </Link>
                 <Link
                     href="/tiers"
-                    className="bg-surface rounded-card flex h-20 flex-col items-center justify-center gap-2"
+                    className="bg-surface hover:bg-surface-muted focus-visible:ring-text-secondary/30 rounded-card group flex h-20 flex-col items-center justify-center gap-2 transition-colors focus-visible:ring-2 focus-visible:outline-none"
                 >
                     <ListOrdered
-                        className="text-text-secondary size-6"
+                        className="text-text-secondary group-hover:text-text-primary size-6 transition-colors"
                         aria-hidden="true"
                     />
                     <span className="text-caption text-text-primary font-semibold">
@@ -173,10 +183,10 @@ export default async function Home() {
                 </Link>
                 <Link
                     href="/exams"
-                    className="bg-surface rounded-card flex h-20 flex-col items-center justify-center gap-2"
+                    className="bg-surface hover:bg-surface-muted focus-visible:ring-text-secondary/30 rounded-card group flex h-20 flex-col items-center justify-center gap-2 transition-colors focus-visible:ring-2 focus-visible:outline-none"
                 >
                     <BadgeCheck
-                        className="text-text-secondary size-6"
+                        className="text-text-secondary group-hover:text-text-primary size-6 transition-colors"
                         aria-hidden="true"
                     />
                     <span className="text-caption text-text-primary font-semibold">
@@ -199,17 +209,17 @@ export default async function Home() {
             {/* 데이터 연동 가이드 */}
             <Link
                 href="/bookmarklet"
-                className="bg-surface rounded-card flex h-10 items-center justify-between px-4"
+                className="bg-surface hover:bg-surface-muted focus-visible:ring-text-secondary/30 rounded-card group flex h-10 items-center justify-between px-4 transition-colors focus-visible:ring-2 focus-visible:outline-none"
             >
                 <div className="flex items-center gap-2">
                     <DatabaseZap
-                        className="text-text-secondary size-4"
+                        className="text-text-secondary group-hover:text-text-primary size-4 transition-colors"
                         aria-hidden="true"
                     />
                     <span className="text-caption">데이터 연동 가이드</span>
                 </div>
                 <ChevronRight
-                    className="text-text-disabled size-4"
+                    className="text-text-disabled group-hover:text-text-primary size-4 transition-colors"
                     aria-hidden="true"
                 />
             </Link>
@@ -220,17 +230,43 @@ export default async function Home() {
                         <h2 className="text-section">유저 랭킹</h2>
 
                         <div className="border-border rounded-card flex overflow-hidden border">
-                            <span className="bg-border text-text-primary px-2 py-1 text-[10px] font-medium">
+                            <Link
+                                href="/?ranking=basic"
+                                replace
+                                scroll={false}
+                                aria-current={
+                                    rankingMode === "basic" ? "page" : undefined
+                                }
+                                className={
+                                    rankingMode === "basic"
+                                        ? "bg-border text-text-primary px-2 py-1 text-[10px] font-medium"
+                                        : "text-text-secondary hover:bg-border/60 hover:text-text-primary px-2 py-1 text-[10px] font-medium transition-colors"
+                                }
+                            >
                                 Basic
-                            </span>
-                            <span className="text-text-secondary px-2 py-1 text-[10px] font-medium">
+                            </Link>
+                            <Link
+                                href="/?ranking=recital"
+                                replace
+                                scroll={false}
+                                aria-current={
+                                    rankingMode === "recital"
+                                        ? "page"
+                                        : undefined
+                                }
+                                className={
+                                    rankingMode === "recital"
+                                        ? "bg-border text-text-primary px-2 py-1 text-[10px] font-medium"
+                                        : "text-text-secondary hover:bg-border/60 hover:text-text-primary px-2 py-1 text-[10px] font-medium transition-colors"
+                                }
+                            >
                                 Recital
-                            </span>
+                            </Link>
                         </div>
                     </div>
 
                     <Link
-                        href="/rankings"
+                        href={`/rankings?mode=${rankingMode}`}
                         className="text-caption hover:text-text-primary transition-colors"
                     >
                         전체 →

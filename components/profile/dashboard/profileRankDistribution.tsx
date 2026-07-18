@@ -32,7 +32,7 @@ export default function ProfileRankDistribution({
                 <button
                     type="button"
                     onClick={onToggle}
-                    className="text-caption flex items-center gap-1"
+                    className="text-caption hover:bg-surface-muted hover:text-text-primary focus-visible:ring-text-secondary/30 flex cursor-pointer items-center gap-1 rounded px-1.5 py-1 transition-colors focus-visible:ring-2 focus-visible:outline-none"
                 >
                     {expanded ? "접기" : "전체"}
                     <ChevronDown

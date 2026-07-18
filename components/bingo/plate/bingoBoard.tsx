@@ -39,7 +39,7 @@ export default function BingoBoard({
                         type="button"
                         onClick={() => onSelect(cell)}
                         className={cn(
-                            "bg-surface hover:bg-surface-muted relative flex aspect-square min-w-0 items-center justify-center rounded-md p-1.5 text-center transition-colors",
+                            "bg-surface hover:bg-surface-muted focus-visible:ring-text-secondary/30 relative flex aspect-square min-w-0 cursor-pointer items-center justify-center rounded-md p-1.5 text-center transition-colors focus-visible:ring-2 focus-visible:outline-none",
                             isCompleted && "text-chart",
                             isCompletedLine && "text-score",
                             isRich &&

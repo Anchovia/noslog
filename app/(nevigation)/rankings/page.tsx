@@ -140,10 +140,10 @@ export default async function Rankings({ searchParams }: RankingsPageProps) {
                         href={filterHref(item.value, region)}
                         aria-current={item.value === mode ? "page" : undefined}
                         className={cn(
-                            "flex h-10 items-center justify-center rounded-md text-sm font-semibold",
+                            "focus-visible:ring-text-secondary/30 flex h-10 cursor-pointer items-center justify-center rounded-md text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none",
                             item.value === mode
-                                ? "bg-border text-text-primary"
-                                : "text-text-secondary"
+                                ? "bg-border text-text-primary hover:bg-border/80"
+                                : "text-text-secondary hover:bg-surface-muted hover:text-text-primary"
                         )}
                     >
                         {item.label}
@@ -163,10 +163,10 @@ export default async function Rankings({ searchParams }: RankingsPageProps) {
                             item.value === region ? "page" : undefined
                         }
                         className={cn(
-                            "border-divider flex h-9 items-center justify-center gap-1.5 border-l text-xs font-semibold first:border-l-0",
+                            "border-divider focus-visible:ring-text-secondary/30 flex h-9 cursor-pointer items-center justify-center gap-1.5 border-l text-xs font-semibold transition-colors first:border-l-0 focus-visible:ring-2 focus-visible:outline-none",
                             item.value === region
-                                ? "bg-surface-muted text-text-primary"
-                                : "text-text-secondary"
+                                ? "bg-surface-muted text-text-primary hover:bg-border"
+                                : "text-text-secondary hover:bg-surface-muted hover:text-text-primary"
                         )}
                     >
                         <RegionIcon icon={item.icon} />

@@ -30,7 +30,7 @@ export default function MusicSearchBar({
                 type="button"
                 onClick={onToggleFilter}
                 aria-expanded={filterOpen}
-                className="bg-surface-muted text-section rounded-card flex h-9.5 min-w-14 shrink-0 items-center justify-center px-3 whitespace-nowrap"
+                className="bg-surface-muted text-section hover:bg-border focus-visible:ring-text-secondary/30 rounded-card flex h-9.5 min-w-14 shrink-0 cursor-pointer items-center justify-center px-3 whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:outline-none"
             >
                 필터
             </button>
