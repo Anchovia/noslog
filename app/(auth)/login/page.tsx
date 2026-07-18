@@ -40,13 +40,13 @@ export default async function LoginPage({
                 </p>
 
                 <div className="mt-10 flex w-full flex-col items-center">
-                    <Link
+                    <a
                         href="/discord/start"
                         className="bg-discord text-text-primary rounded-card flex h-12 w-full items-center justify-center gap-2 text-sm font-bold transition-opacity hover:opacity-90 active:opacity-80"
                     >
                         <MessageCircle className="size-5" aria-hidden />
                         Discord로 계속하기
-                    </Link>
+                    </a>
 
                     {error ? (
                         <p className="border-danger/40 bg-danger/10 text-danger rounded-card mt-3 w-full border px-3 py-2 text-xs">

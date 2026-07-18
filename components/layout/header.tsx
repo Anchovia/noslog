@@ -42,6 +42,7 @@ export default async function Header() {
                             src={user.avatar}
                             alt={`${user.username ?? "사용자"} 프로필`}
                             fill
+                            sizes="32px"
                         />
                     </Link>
                 ) : (

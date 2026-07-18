@@ -202,12 +202,12 @@ export default function ProfileSettingCard({ user }: ProfileSettingCardProps) {
                                 : "현재 NosLog 계정을 유지한 채 연결됩니다."}
                         </p>
                     </div>
-                    <Link
+                    <a
                         href="/discord/start?returnTo=/profile/settings"
                         className="border-border text-text-primary rounded-card flex h-9 shrink-0 items-center border px-3 text-xs font-bold"
                     >
                         {user.discord_id ? "다시 연결" : "연결"}
-                    </Link>
+                    </a>
                 </div>
             </section>
 
