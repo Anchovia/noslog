@@ -1,6 +1,6 @@
 "use client";
 
-import { toggleBingoCell } from "@/app/(nevigation)/bingo/[id]/actions";
+import { setBingoCellCompletion } from "@/app/(nevigation)/bingo/[id]/actions";
 import { getBingoProgress } from "@/lib/bingo";
 import { useMemo, useState, useTransition } from "react";
 
@@ -89,7 +89,7 @@ export function useBingoPlate({
         });
 
         startTransition(async () => {
-            const result = await toggleBingoCell(cellId);
+            const result = await setBingoCellCompletion(cellId, !wasCompleted);
 
             if (!result.success) {
                 setCompletedCellIds((current) => {
