@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
 import {
+    getBingoEditorCellLabel,
+    getBingoEditorCellPrefix,
+} from "@/components/admin/bingo/bingoEditorUtils";
+import {
     filterBingoMissions,
     getBingoCellLabel,
     getBingoLineCoordinates,
@@ -186,5 +190,18 @@ describe("빙고 목록 계산", () => {
         expect(
             getVisibleBingos(bingos, "all", "desc").map((bingo) => bingo.id)
         ).toEqual([3, 2, 1]);
+    });
+});
+
+describe("관리자 빙고 편집기 계산", () => {
+    it("미션 위치를 A1부터 E5까지 표시한다", () => {
+        expect(getBingoEditorCellLabel(1)).toBe("A1");
+        expect(getBingoEditorCellLabel(13)).toBe("C3");
+        expect(getBingoEditorCellLabel(25)).toBe("E5");
+    });
+
+    it("서버 액션이 사용하는 미션 필드 접두사를 만든다", () => {
+        expect(getBingoEditorCellPrefix(1)).toBe("cell-1");
+        expect(getBingoEditorCellPrefix(25)).toBe("cell-25");
     });
 });
