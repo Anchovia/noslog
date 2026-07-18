@@ -5,6 +5,10 @@ import { expectNoHorizontalOverflow, expectPageLoaded } from "./helpers";
 test("악곡 목록의 정렬과 보기 방식을 URL에 반영한다", async ({ page }) => {
     await page.goto("/music");
     await expectPageLoaded(page);
+    await expect(page.getByRole("button", { name: "필터" })).toHaveCSS(
+        "white-space",
+        "nowrap"
+    );
 
     const listView = page.getByRole("button", { name: "리스트 보기" });
     const gridView = page.getByRole("button", { name: "그리드 보기" });

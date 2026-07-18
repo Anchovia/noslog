@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 import { expectNoHorizontalOverflow, expectPageLoaded } from "./helpers";
 
 const publicRoutes = [
-    { label: "악곡", path: "/music", heading: "악곡" },
+    { label: "악곡", path: "/music", heading: "악곡 검색" },
     { label: "랭킹", path: "/rankings", heading: "유저 랭킹" },
     { label: "서열", path: "/tiers", heading: "서열표" },
     { label: "빙고", path: "/bingo", heading: "빙고" },

@@ -1,6 +1,30 @@
-import { getCachedUserRankingPage } from "@/lib/rankings";
+import OfficialXTimeline from "@/components/home/officialXTimeline";
+import {
+    CountryMark,
+    ExamBadge,
+    UserAvatar,
+} from "@/components/rankings/table/rankingUserMeta";
+import {
+    getCachedUserRankingPage,
+    getUserRankingPosition,
+} from "@/lib/rankings";
 import { getUser } from "@/lib/user";
-import { formatToGrade } from "@/lib/utils";
+import {
+    formatToComma,
+    formatToGrade,
+    normalizeStoredGrade,
+} from "@/lib/utils";
+import {
+    BadgeCheck,
+    ChevronRight,
+    Clock3,
+    DatabaseZap,
+    Grid3X3,
+    ListOrdered,
+    Music2,
+    Search,
+    Trophy,
+} from "lucide-react";
 import Link from "next/link";
 
 export default async function Home() {
@@ -8,23 +32,67 @@ export default async function Home() {
         getUser(),
         getCachedUserRankingPage("basic", "all", 1, 5),
     ]);
+    const userRank = user
+        ? await getUserRankingPosition({
+              userId: user.id,
+              grade: user.grade_basic,
+              mode: "basic",
+          })
+        : null;
 
     return (
         <div className="flex flex-col gap-4 px-4 py-4">
             {/* 상단 로그인/프로필 카드 */}
-            <section className="bg-surface rounded-card flex items-center justify-between p-4">
-                <p className="text-section">내 NOSTALGIA 기록 모아보기</p>
-                {user ? (
-                    <span className="text-caption">{user.username}</span>
-                ) : (
+            {user ? (
+                <section className="bg-surface rounded-card flex min-h-20 items-center gap-3 p-4">
+                    <UserAvatar
+                        avatar={user.avatar}
+                        username={user.username}
+                        size={48}
+                    />
+
+                    <div className="min-w-0 flex-1">
+                        <div className="flex min-w-0 items-center gap-1.5">
+                            <strong className="text-section truncate">
+                                {user.username || "이름 없는 유저"}
+                            </strong>
+                            <span className="text-text-secondary shrink-0 text-sm">
+                                · {userRank ? `#${userRank}위` : "순위 -"}
+                            </span>
+                        </div>
+                        <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                            <span className="text-text-primary shrink-0 text-sm font-medium tabular-nums">
+                                Grd{" "}
+                                {formatToComma(
+                                    normalizeStoredGrade(user.grade_basic)
+                                )}
+                            </span>
+                            <ExamBadge mode="basic" exam={user.exam_basic} />
+                            <ExamBadge
+                                mode="recital"
+                                exam={user.exam_recital}
+                            />
+                        </div>
+                    </div>
+
+                    <Link
+                        href={`/profile/${user.id}`}
+                        className="border-border text-text-primary rounded-card flex h-9 shrink-0 items-center justify-center border px-3 text-xs font-bold"
+                    >
+                        내 프로필
+                    </Link>
+                </section>
+            ) : (
+                <section className="bg-surface rounded-card flex items-center justify-between p-4">
+                    <p className="text-section">내 NOSTALGIA 기록 모아보기</p>
                     <Link
                         href="/login"
                         className="bg-discord rounded-card text-text-primary px-3 py-2 text-xs font-bold"
                     >
                         로그인
                     </Link>
-                )}
-            </section>
+                </section>
+            )}
             {/* 히어로 + 검색 */}
             <section className="flex flex-col items-center gap-8 text-center">
                 <div className="flex flex-col items-center gap-3">
@@ -40,11 +108,17 @@ export default async function Home() {
                 </div>
 
                 <form action="/music" className="w-full">
-                    <input
-                        name="q"
-                        placeholder="곡 제목 · 아티스트 검색"
-                        className="border-border bg-surface text-input placeholder:text-text-disabled h-11 w-full rounded-full border px-4"
-                    />
+                    <div className="border-border bg-surface focus-within:border-text-secondary focus-within:ring-text-secondary/20 flex h-11 w-full items-center gap-2 rounded-full border px-4 transition focus-within:ring-2">
+                        <Search
+                            className="text-text-disabled size-5 shrink-0"
+                            aria-hidden="true"
+                        />
+                        <input
+                            name="q"
+                            placeholder="곡 제목 · 아티스트 검색"
+                            className="text-input placeholder:text-text-disabled h-full min-w-0 flex-1 bg-transparent outline-none"
+                        />
+                    </div>
                 </form>
             </section>
             {/* 퀵 메뉴 */}
@@ -53,7 +127,10 @@ export default async function Home() {
                     href="/music"
                     className="bg-surface rounded-card flex h-20 flex-col items-center justify-center gap-2"
                 >
-                    <span className="border-border size-6 rounded-md border" />
+                    <Music2
+                        className="text-text-secondary size-6"
+                        aria-hidden="true"
+                    />
                     <span className="text-caption text-text-primary font-semibold">
                         악곡
                     </span>
@@ -62,7 +139,10 @@ export default async function Home() {
                     href="/rankings"
                     className="bg-surface rounded-card flex h-20 flex-col items-center justify-center gap-2"
                 >
-                    <span className="border-border size-6 rounded-md border" />
+                    <Trophy
+                        className="text-text-secondary size-6"
+                        aria-hidden="true"
+                    />
                     <span className="text-caption text-text-primary font-semibold">
                         랭킹
                     </span>
@@ -71,7 +151,10 @@ export default async function Home() {
                     href="/bingo"
                     className="bg-surface rounded-card flex h-20 flex-col items-center justify-center gap-2"
                 >
-                    <span className="border-border size-6 rounded-md border" />
+                    <Grid3X3
+                        className="text-text-secondary size-6"
+                        aria-hidden="true"
+                    />
                     <span className="text-caption text-text-primary font-semibold">
                         빙고
                     </span>
@@ -80,7 +163,10 @@ export default async function Home() {
                     href="/tiers"
                     className="bg-surface rounded-card flex h-20 flex-col items-center justify-center gap-2"
                 >
-                    <span className="border-border size-6 rounded-md border" />
+                    <ListOrdered
+                        className="text-text-secondary size-6"
+                        aria-hidden="true"
+                    />
                     <span className="text-caption text-text-primary font-semibold">
                         서열표
                     </span>
@@ -89,13 +175,19 @@ export default async function Home() {
                     href="/exams"
                     className="bg-surface rounded-card flex h-20 flex-col items-center justify-center gap-2"
                 >
-                    <span className="border-border size-6 rounded-md border" />
+                    <BadgeCheck
+                        className="text-text-secondary size-6"
+                        aria-hidden="true"
+                    />
                     <span className="text-caption text-text-primary font-semibold">
                         검정
                     </span>
                 </Link>
                 <div className="bg-surface-muted rounded-card relative flex h-20 flex-col items-center justify-center gap-2 opacity-50">
-                    <span className="border-border size-6 rounded-md border" />
+                    <Clock3
+                        className="text-text-secondary size-6"
+                        aria-hidden="true"
+                    />
                     <span className="text-caption text-text-secondary font-semibold">
                         준비중
                     </span>
@@ -110,10 +202,16 @@ export default async function Home() {
                 className="bg-surface rounded-card flex h-10 items-center justify-between px-4"
             >
                 <div className="flex items-center gap-2">
-                    <span className="border-border size-4 rounded border" />
+                    <DatabaseZap
+                        className="text-text-secondary size-4"
+                        aria-hidden="true"
+                    />
                     <span className="text-caption">데이터 연동 가이드</span>
                 </div>
-                <span className="text-text-disabled text-base">›</span>
+                <ChevronRight
+                    className="text-text-disabled size-4"
+                    aria-hidden="true"
+                />
             </Link>
             {/* 랭킹 카드 */}
             <section className="bg-surface rounded-card overflow-hidden">
@@ -160,9 +258,17 @@ export default async function Home() {
                                 {index + 1}
                             </span>
 
-                            <span className="bg-surface-muted mr-3 h-2.5 w-4 shrink-0" />
+                            <UserAvatar
+                                avatar={rankingUser.avatar}
+                                username={rankingUser.username}
+                                size={24}
+                            />
 
-                            <span className="text-body flex-1 truncate">
+                            <span className="mx-2 flex w-4 shrink-0 items-center justify-center">
+                                <CountryMark country={rankingUser.country} />
+                            </span>
+
+                            <span className="text-body min-w-0 flex-1 truncate">
                                 {rankingUser.username ?? "Unknown"}
                             </span>
 
@@ -173,6 +279,8 @@ export default async function Home() {
                     ))}
                 </div>
             </section>
+            {/* NOSTALGIA 공식 소식 */}
+            <OfficialXTimeline />
         </div>
     );
 }
