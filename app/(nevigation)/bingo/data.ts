@@ -32,7 +32,7 @@ export const getCachedPublishedBingos = unstable_cache(
             endsAt: bingo.endsAt?.toISOString() ?? null,
         }));
     },
-    ["published-bingos"],
+    ["published-bingos", "op3-20260719"],
     {
         revalidate: 3600,
         tags: [CACHE_TAGS.bingos],
@@ -82,7 +82,7 @@ export const getCachedBingoDetail = unstable_cache(
               }
             : null;
     },
-    ["bingo-detail"],
+    ["bingo-detail", "op3-20260719"],
     {
         revalidate: 3600,
         tags: [CACHE_TAGS.bingos],
@@ -100,7 +100,7 @@ export function isBingoAvailable(
 }
 
 // 완료 상태는 로그인 사용자마다 다르므로 공유 캐시를 사용하지 않음
-export async function getUserCompletedBingoCellIds(
+export async function getUserBingoCellProgress(
     userId: number,
     cellIds: number[]
 ) {
@@ -110,10 +110,16 @@ export async function getUserCompletedBingoCellIds(
         where: {
             userId,
             bingoCellId: { in: cellIds },
-            isCompleted: true,
         },
-        select: { bingoCellId: true },
+        select: {
+            bingoCellId: true,
+            isCompleted: true,
+            updatedAt: true,
+        },
     });
 
-    return progress.map((item) => item.bingoCellId);
+    return progress.map((item) => ({
+        ...item,
+        updatedAt: item.updatedAt.toISOString(),
+    }));
 }

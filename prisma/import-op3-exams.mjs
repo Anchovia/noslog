@@ -20,6 +20,15 @@ const db = new PrismaClient();
 
 const labels = ["1st", "2nd", "Fin"];
 const difficultyOrder = ["Normal", "Hard", "Expert", "Real"];
+const realConstantOverrides = new Map([
+    ["管弦楽組曲第2番より「バディヌリー」", 12.5],
+    ["野ばら", 12.5],
+    ["エチュード Op.25-5", 13],
+    ["クープランの墓よりプレリュード", 13],
+    ["ハンガリー狂詩曲第2番", 13],
+    ["レクイエムより「怒りの日」", 13],
+    ["東洋風幻想曲イスラメイ", 13.5],
+]);
 
 const archiveMusics = [
     {
@@ -438,18 +447,26 @@ function findChart(music, chartSpec) {
     return chart;
 }
 
-function getVirtualArchiveMusics() {
+function getVirtualArchiveMusics(storedMusics) {
     let virtualChartId = -1;
-    return archiveMusics.map((music) => ({
-        index: music.index,
-        title: music.title,
-        artist: music.artist,
-        charts: music.levels.map((level, index) => ({
-            id: virtualChartId--,
-            difficulty: difficultyOrder[index],
-            level,
-        })),
-    }));
+    return archiveMusics
+        .filter(
+            (music) =>
+                !storedMusics.some(
+                    (stored) =>
+                        normalize(stored.title) === normalize(music.title)
+                )
+        )
+        .map((music) => ({
+            index: music.index,
+            title: music.title,
+            artist: music.artist,
+            charts: music.levels.map((level, index) => ({
+                id: virtualChartId--,
+                difficulty: difficultyOrder[index],
+                level,
+            })),
+        }));
 }
 
 async function ensureArchiveMusics() {
@@ -475,7 +492,11 @@ async function ensureArchiveMusics() {
                     create: music.levels.map((level, index) => ({
                         difficulty: difficultyOrder[index],
                         level,
-                        level_constant: level,
+                        level_constant:
+                            difficultyOrder[index] === "Real"
+                                ? (realConstantOverrides.get(music.title) ??
+                                  level + 10)
+                                : level,
                     })),
                 },
             },
@@ -496,7 +517,7 @@ async function resolveExams(includeVirtualArchive = false) {
         },
     });
     const musics = includeVirtualArchive
-        ? [...storedMusics, ...getVirtualArchiveMusics()]
+        ? [...storedMusics, ...getVirtualArchiveMusics(storedMusics)]
         : storedMusics;
 
     const errors = [];
@@ -641,7 +662,6 @@ try {
     );
 
     if (!shouldApply) {
-        console.log(`추가 예정 아카이브 악곡: ${archiveMusics.length}개`);
         console.log("저장하려면 --apply 옵션을 추가하세요.");
         process.exitCode = 0;
     } else {

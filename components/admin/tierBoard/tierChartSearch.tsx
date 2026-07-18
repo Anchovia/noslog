@@ -1,5 +1,6 @@
 import { Plus, Search, X } from "lucide-react";
 
+import MusicJacket from "@/components/music/musicJacket";
 import { cn } from "@/lib/utils";
 
 import type { TierChartSearchResult } from "./tierBoardTypes";
@@ -70,13 +71,11 @@ export default function TierChartSearch({
                                       index > 0 && "border-divider border-t"
                                   )}
                               >
-                                  <div
-                                      className="bg-surface-muted size-10 shrink-0 rounded-md bg-cover bg-center"
-                                      style={{
-                                          backgroundImage: chart.jacket
-                                              ? `url(${chart.jacket})`
-                                              : undefined,
-                                      }}
+                                  <MusicJacket
+                                      index={chart.musicIndex}
+                                      background={chart.jacket}
+                                      title={chart.title}
+                                      className="size-10 shrink-0 rounded-md"
                                   />
                                   <span className="min-w-0 flex-1">
                                       <strong className="block truncate text-sm">

@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { cn } from "@/lib/utils";
+import MusicJacket from "./musicJacket";
 
 type Difficulty = "Normal" | "Hard" | "Expert" | "Real";
 
@@ -78,21 +79,16 @@ export default function MusicCard(props: MusicCardProps) {
         text: "text-text-secondary",
     };
     const defaultDifficulty: Difficulty = "Normal";
-    const jacketImageUrl =
-        background ||
-        `https://p.eagate.573.jp/game/nostalgia/op3/img/jacket.html?c=${index}`;
-
     return (
         <Link
             href={`/music/${index}/${defaultDifficulty.toLowerCase()}`}
             className="bg-surface rounded-card hover:bg-surface-muted flex min-h-16 w-full overflow-hidden transition-colors"
         >
-            <div
-                className="bg-surface-muted relative w-14 shrink-0 overflow-hidden bg-cover bg-center"
-                style={{
-                    backgroundImage: `url(${jacketImageUrl})`,
-                }}
-                aria-hidden="true"
+            <MusicJacket
+                index={index}
+                background={background}
+                title={title}
+                className="w-14 shrink-0"
             />
 
             <div className="flex min-w-0 flex-1 items-center justify-between gap-3 px-3 py-2.5">

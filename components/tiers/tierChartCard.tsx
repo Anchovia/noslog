@@ -1,11 +1,8 @@
 import Link from "next/link";
 
-import {
-    getJacketUrl,
-    getTierRecordStatus,
-    type TierRecord,
-} from "@/lib/tiers";
+import { getTierRecordStatus, type TierRecord } from "@/lib/tiers";
 import { cn } from "@/lib/utils";
+import MusicJacket from "@/components/music/musicJacket";
 
 interface TierChartCardProps {
     chart: {
@@ -63,15 +60,11 @@ export default function TierChartCard({
                 status === "unplayed" && "opacity-55"
             )}
         >
-            <span
-                className="absolute inset-0 bg-cover bg-center"
-                style={{
-                    backgroundImage: `url(${getJacketUrl(
-                        chart.music.index,
-                        chart.music.background
-                    )})`,
-                }}
-                aria-hidden
+            <MusicJacket
+                index={chart.music.index}
+                background={chart.music.background}
+                title={chart.music.title}
+                className="absolute inset-0"
             />
 
             {showRecord && rankIconName ? (

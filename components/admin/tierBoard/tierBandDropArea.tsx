@@ -3,6 +3,7 @@ import { rectSortingStrategy, SortableContext } from "@dnd-kit/sortable";
 import { Plus } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { formatTierValue } from "@/lib/tiers";
 
 import SortableTierChart from "./sortableTierChart";
 import type { TierBandData } from "./tierBoardTypes";
@@ -54,7 +55,7 @@ export default function TierBandDropArea({
             <button
                 type="button"
                 onClick={onOpenSearch}
-                aria-label={`${band.value.toFixed(2)} 구간에 채보 추가`}
+                aria-label={`${formatTierValue(band.value)} 구간에 채보 추가`}
                 title="채보 추가"
                 className={cn(
                     "border-text-disabled text-text-disabled hover:border-text-secondary hover:text-text-secondary flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-md border border-dashed",

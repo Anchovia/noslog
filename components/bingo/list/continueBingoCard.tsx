@@ -9,7 +9,7 @@ interface ContinueBingoCardProps {
     bingo: BingoListItem;
 }
 
-// 가장 진행률이 높은 미완료 빙고를 이어서 진행 카드로 표시함
+// 사용자가 가장 최근에 변경한 빙고를 이어서 진행 카드로 표시함
 export default function ContinueBingoCard({ bingo }: ContinueBingoCardProps) {
     return (
         <Link

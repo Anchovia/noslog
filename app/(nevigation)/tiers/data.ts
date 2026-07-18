@@ -28,7 +28,7 @@ export const getCachedTierLists = unstable_cache(
             updatedAt: tierList.updatedAt.toISOString(),
         }));
     },
-    ["public-tier-lists"],
+    ["public-tier-lists", "official-v1"],
     {
         revalidate: 3600,
         tags: [CACHE_TAGS.tierLists],
@@ -84,7 +84,7 @@ export const getCachedTierDetail = unstable_cache(
               }
             : null;
     },
-    ["public-tier-detail"],
+    ["public-tier-detail", "official-v1"],
     {
         revalidate: 3600,
         tags: [CACHE_TAGS.tierLists],

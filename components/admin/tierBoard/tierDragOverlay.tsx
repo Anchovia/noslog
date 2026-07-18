@@ -1,3 +1,5 @@
+import MusicJacket from "@/components/music/musicJacket";
+
 import type { TierEntryData } from "./tierBoardTypes";
 
 // 드래그 중인 채보의 미리보기를 표시함
@@ -7,13 +9,16 @@ export default function TierDragOverlay({
     entry: TierEntryData | undefined;
 }) {
     return entry ? (
-        <div
-            className="bg-surface-muted border-score size-11 rounded-md border bg-cover bg-center shadow-lg"
-            style={{
-                backgroundImage: entry.chart.music.background
-                    ? `url(${entry.chart.music.background})`
-                    : undefined,
-            }}
+        <MusicJacket
+            index={entry.chart.music.index}
+            background={entry.chart.music.background}
+            title={entry.chart.music.title}
+            className="border-score size-11 rounded-md border shadow-lg"
+            fallback={
+                <span className="text-text-disabled m-auto text-xs font-semibold">
+                    {entry.chart.level}
+                </span>
+            }
         />
     ) : null;
 }

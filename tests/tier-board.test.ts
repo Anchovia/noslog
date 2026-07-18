@@ -21,6 +21,7 @@ function bands(): TierBandData[] {
                         difficulty: "expert",
                         level: 12,
                         music: {
+                            index: "music-1",
                             title: "첫 곡",
                             artist: null,
                             background: null,
@@ -35,6 +36,7 @@ function bands(): TierBandData[] {
                         difficulty: "real",
                         level: 3,
                         music: {
+                            index: "music-2",
                             title: "두 번째 곡",
                             artist: null,
                             background: null,

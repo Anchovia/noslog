@@ -31,13 +31,11 @@ export function getBingoStatusCounts(
     );
 }
 
-// 완료하지 않은 빙고 중 진행률이 가장 높은 판을 이어서 진행 대상으로 선택함
+// 사용자가 가장 최근에 완료 상태를 변경한 빙고를 이어서 진행 대상으로 선택함
 export function getContinueBingo(bingos: BingoListItem[]) {
     return [...bingos]
-        .filter((bingo) => !bingo.isCompleted)
-        .sort(
-            (a, b) => b.progressPercent - a.progressPercent || a.id - b.id
-        )[0];
+        .filter((bingo) => bingo.lastModifiedAt)
+        .sort((a, b) => b.lastModifiedAt!.localeCompare(a.lastModifiedAt!))[0];
 }
 
 // 선택한 상태와 진행률 순서에 맞춰 빙고 목록을 정리함

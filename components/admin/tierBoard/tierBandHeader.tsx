@@ -1,6 +1,7 @@
 import { Check, Pencil, Trash2 } from "lucide-react";
 
 import { deleteTierBand, updateTierBand } from "@/app/admin/tiers/actions";
+import { formatTierValue, MAX_TIER_VALUE } from "@/lib/tiers";
 
 import type { TierBandData } from "./tierBoardTypes";
 
@@ -14,7 +15,7 @@ export default function TierBandHeader({ band }: { band: TierBandData }) {
                     className="flex h-8 w-fit cursor-pointer list-none items-center gap-2"
                 >
                     <strong className="text-body font-bold tabular-nums">
-                        {band.value.toFixed(2)}
+                        {formatTierValue(band.value)}
                     </strong>
                     <Pencil className="text-text-disabled group-open:text-text-primary size-3.5" />
                 </summary>
@@ -27,8 +28,8 @@ export default function TierBandHeader({ band }: { band: TierBandData }) {
                         name="value"
                         type="number"
                         min="1"
-                        max="14"
-                        step="0.01"
+                        max={MAX_TIER_VALUE}
+                        step="0.1"
                         required
                         defaultValue={band.value}
                         aria-label="서열표 구간값"

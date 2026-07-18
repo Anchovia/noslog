@@ -3,6 +3,7 @@ export interface TierChartData {
     difficulty: string;
     level: number;
     music: {
+        index: string;
         title: string;
         artist: string | null;
         background: string | null;
@@ -23,6 +24,7 @@ export interface TierBandData {
 
 export interface TierChartSearchResult {
     id: number;
+    musicIndex: string;
     title: string;
     artist: string | null;
     jacket: string | null;

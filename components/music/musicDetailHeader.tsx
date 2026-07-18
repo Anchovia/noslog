@@ -5,6 +5,7 @@ import {
 } from "@/lib/musicCategories";
 import { difficultyStyles } from "./musicDetailConfig";
 import type { Difficulty, MusicInfo } from "./musicDetailTypes";
+import MusicJacket from "./musicJacket";
 
 interface MusicDetailHeaderProps {
     music: MusicInfo;
@@ -17,17 +18,15 @@ export default function MusicDetailHeader({
     difficulty,
     levelConstant,
 }: MusicDetailHeaderProps) {
-    const jacketImageUrl =
-        music.background ||
-        `https://p.eagate.573.jp/game/nostalgia/op3/img/jacket.html?c=${music.index}`;
     const category = normalizeMusicCategory(music.category_short);
 
     return (
         <section className="flex min-w-0 items-center gap-3">
-            <div
-                className="bg-surface-muted rounded-card size-24 shrink-0 bg-cover bg-center"
-                style={{ backgroundImage: `url(${jacketImageUrl})` }}
-                aria-hidden="true"
+            <MusicJacket
+                index={music.index}
+                background={music.background}
+                title={music.title}
+                className="rounded-card size-24 shrink-0"
             />
 
             <div className="flex min-w-0 flex-1 flex-col gap-1.5">

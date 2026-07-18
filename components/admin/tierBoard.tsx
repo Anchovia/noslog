@@ -151,6 +151,7 @@ export default function TierBoard({
 
     return (
         <DndContext
+            id={`tier-board-${tierListId}`}
             sensors={sensors}
             collisionDetection={closestCenter}
             onDragStart={handleDragStart}

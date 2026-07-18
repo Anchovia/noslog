@@ -9,6 +9,7 @@ import {
 import TierBoard from "@/components/admin/tierBoard";
 import TierListForm from "@/components/admin/tierListForm";
 import db from "@/lib/db";
+import { MAX_TIER_VALUE } from "@/lib/tiers";
 
 export default async function EditTierListPage({
     params,
@@ -30,6 +31,7 @@ export default async function EditTierListPage({
                                 include: {
                                     music: {
                                         select: {
+                                            index: true,
                                             title: true,
                                             artist: true,
                                             background: true,
@@ -89,8 +91,8 @@ export default async function EditTierListPage({
                         name="value"
                         type="number"
                         min="1"
-                        max="14"
-                        step="0.01"
+                        max={MAX_TIER_VALUE}
+                        step="0.1"
                         required
                         aria-label="추가할 서열표 상수"
                         placeholder="구간 추가 (예: 12.7)"

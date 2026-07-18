@@ -47,6 +47,7 @@ vi.mock("@/lib/db", () => ({
             findUnique: mocks.entryFindUnique,
             findMany: mocks.entryFindMany,
             create: mocks.entryCreate,
+            update: mocks.txEntryUpdate,
         },
         tierPlacementHistory: { create: mocks.historyCreate },
     },
@@ -102,6 +103,7 @@ describe("관리자 서열표 액션", () => {
                 difficulty: "Expert",
                 level: 11,
                 music: {
+                    index: "altale-index",
                     title: "Altale",
                     artist: "削除",
                     background: null,
@@ -110,7 +112,11 @@ describe("관리자 서열표 액션", () => {
         ]);
 
         await expect(searchTierCharts("  ALT  ", 5)).resolves.toEqual([
-            expect.objectContaining({ id: 20, title: "Altale" }),
+            expect.objectContaining({
+                id: 20,
+                title: "Altale",
+                jacket: "https://p.eagate.573.jp/game/nostalgia/op3/img/jacket.html?c=altale-index",
+            }),
         ]);
         expect(mocks.chartFindMany).toHaveBeenCalledWith(
             expect.objectContaining({
@@ -224,7 +230,7 @@ describe("관리자 서열표 액션", () => {
             where: { id: 1 },
             data: { tierBandId: 11, position: 2 },
         });
-        expect(mocks.txHistoryCreate).toHaveBeenCalledWith({
+        expect(mocks.historyCreate).toHaveBeenCalledWith({
             data: { tierListId: 5, chartId: 20, bandValue: 12.4 },
         });
     });
