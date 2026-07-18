@@ -1,3 +1,5 @@
+import type { RankingRow } from "./ranking/musicRankingTypes";
+
 export type Difficulty = "Normal" | "Hard" | "Expert" | "Real";
 
 export type DetailTab = "record" | "detail" | "ranking" | "tier";
@@ -32,18 +34,6 @@ export interface UserPlayData {
     fullcombo_count: number;
     pianistic_count: number;
     besttime: string;
-}
-
-export interface RankingRow {
-    rank: string;
-    score: number;
-    fc_type: number;
-    user_id: number;
-    user: {
-        username: string | null;
-        id: number;
-        avatar: string | null;
-    };
 }
 
 export interface RecentChartPlay {
