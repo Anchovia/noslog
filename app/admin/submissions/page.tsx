@@ -150,8 +150,10 @@ export default async function AdminSubmissionsPage({
                                         value={submission.id}
                                     />
                                     <button className="border-danger/40 text-danger flex h-10 w-full cursor-pointer items-center justify-center gap-1 rounded-md border text-sm font-bold">
-                                        <Trash2 className="size-4" /> 제출 기록
-                                        삭제
+                                        <Trash2 className="size-4" />
+                                        {submission.status === "approved"
+                                            ? "합격 이력 및 제출 삭제"
+                                            : "제출 기록 삭제"}
                                     </button>
                                 </form>
                             </div>
