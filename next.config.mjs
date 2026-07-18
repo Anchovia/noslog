@@ -38,6 +38,9 @@ const nextConfig = {
             {
                 hostname: "imagedelivery.net",
             },
+            {
+                hostname: "*.public.blob.vercel-storage.com",
+            },
             /*
             {
                 hostname: "cdn44.atwikiimg.com",

@@ -1,5 +1,6 @@
 "use client";
 
+import { put } from "@vercel/blob/client";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 
@@ -88,38 +89,38 @@ export default function ExamDashboard({
 
     async function handleProofUpload(file: File | undefined) {
         if (!file || !selectedExam) return;
-        if (!file.type.startsWith("image/")) {
-            setUploadMessage("이미지 파일만 업로드할 수 있습니다.");
+        if (
+            !(["image/jpeg", "image/png", "image/webp"] as string[]).includes(
+                file.type
+            )
+        ) {
+            setUploadMessage("JPG, PNG, WebP 이미지만 업로드할 수 있습니다.");
+            return;
+        }
+        if (file.size > 4 * 1024 * 1024) {
+            setUploadMessage("이미지는 4MB 이하로 선택해주세요.");
             return;
         }
 
         setIsUploading(true);
         setUploadMessage(null);
         try {
-            const upload = await requestExamProofUpload(selectedExam.id);
+            const upload = await requestExamProofUpload(
+                selectedExam.id,
+                file.type
+            );
             if (!upload.success) {
                 setUploadMessage(upload.message);
                 return;
             }
 
-            const formData = new FormData();
-            formData.append("file", file);
-            const response = await fetch(upload.uploadUrl, {
-                method: "POST",
-                body: formData,
+            const blob = await put(upload.pathname, file, {
+                access: "public",
+                token: upload.token,
+                contentType: file.type,
             });
-            const responseData = (await response.json()) as {
-                success?: boolean;
-            };
-            if (!response.ok || !responseData.success) {
-                setUploadMessage("이미지를 업로드하지 못했습니다.");
-                return;
-            }
 
-            const submit = await submitExamProof(
-                selectedExam.id,
-                upload.imageUrl
-            );
+            const submit = await submitExamProof(selectedExam.id, blob.url);
             setUploadMessage(
                 submit.success ? "합격 인증을 제출했습니다." : submit.message
             );

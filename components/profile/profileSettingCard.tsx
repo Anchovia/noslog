@@ -4,9 +4,10 @@ import { Camera, MessageCircle, Save } from "lucide-react";
 import Link from "next/link";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { put } from "@vercel/blob/client";
 
 import {
-    getImageUploadUrl,
+    requestProfileAvatarUpload,
     uploadUserSetting,
 } from "@/app/(nevigation)/profile/settings/actions";
 import {
@@ -88,24 +89,23 @@ export default function ProfileSettingCard({ user }: ProfileSettingCardProps) {
         let avatar = data.avatar;
 
         if (file) {
-            const upload = await getImageUploadUrl();
+            const upload = await requestProfileAvatarUpload(file.type);
             if (!upload.success) {
                 setSubmitError(upload.message);
                 return;
             }
 
-            const uploadFormData = new FormData();
-            uploadFormData.append("file", file);
-            const uploadResponse = await fetch(upload.result.uploadURL, {
-                method: "POST",
-                body: uploadFormData,
-            });
-            if (!uploadResponse.ok) {
+            try {
+                const blob = await put(upload.pathname, file, {
+                    access: "public",
+                    token: upload.token,
+                    contentType: file.type,
+                });
+                avatar = blob.url;
+            } catch {
                 setSubmitError("프로필 이미지 업로드에 실패했습니다.");
                 return;
             }
-
-            avatar = upload.result.deliveryURL;
         }
 
         const formData = new FormData();

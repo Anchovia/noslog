@@ -2,6 +2,11 @@
 
 import { redirect } from "next/navigation";
 
+import {
+    createImageUploadToken,
+    deleteBlobIfOwned,
+    isValidImageBlob,
+} from "@/lib/blob";
 import db from "@/lib/db";
 import { CACHE_TAGS, getUserProfileTag } from "@/lib/cacheTags";
 import getSession from "@/lib/session";
@@ -14,38 +19,6 @@ type SettingActionResult = {
     message: string;
     fieldErrors?: Record<string, string[]>;
 };
-
-const CLOUDFLARE_DELIVERY_ACCOUNT = "zAwkQO6bEReNpmM7QzHHXA";
-
-function isCloudflareDeliveryUrl(url: string) {
-    try {
-        const parsed = new URL(url);
-        const path = parsed.pathname.split("/").filter(Boolean);
-
-        return (
-            parsed.protocol === "https:" &&
-            parsed.hostname === "imagedelivery.net" &&
-            path.length === 2 &&
-            path[0] === CLOUDFLARE_DELIVERY_ACCOUNT &&
-            !parsed.search &&
-            !parsed.hash
-        );
-    } catch {
-        return false;
-    }
-}
-
-function cloudflareImageId(url: string | null) {
-    if (!url) return null;
-
-    try {
-        const parsed = new URL(url);
-        if (parsed.hostname !== "imagedelivery.net") return null;
-        return parsed.pathname.split("/").filter(Boolean)[1] ?? null;
-    } catch {
-        return null;
-    }
-}
 
 // 프로필 입력값과 새 아바타를 한 번에 저장함
 export async function uploadUserSetting(
@@ -77,20 +50,23 @@ export async function uploadUserSetting(
         return { success: false, message: "사용자 정보를 찾을 수 없습니다." };
     }
 
-    const submittedAvatar = result.data.avatar.replace(/\/profile$/, "");
-    const currentAvatarBase =
-        currentUser.avatar?.replace(/\/profile$/, "") ?? "";
+    const submittedAvatar = result.data.avatar;
+    const currentAvatarBase = currentUser.avatar ?? "";
     const avatarChanged =
         submittedAvatar.length > 0 && submittedAvatar !== currentAvatarBase;
-    if (avatarChanged && !isCloudflareDeliveryUrl(submittedAvatar)) {
+    if (
+        avatarChanged &&
+        !(await isValidImageBlob(
+            submittedAvatar,
+            `avatars/${session.id}/profile`
+        ))
+    ) {
         return {
             success: false,
             message: "허용되지 않은 프로필 이미지 주소입니다.",
         };
     }
-    const nextAvatar = avatarChanged
-        ? `${submittedAvatar}/profile`
-        : currentUser.avatar;
+    const nextAvatar = avatarChanged ? submittedAvatar : currentUser.avatar;
 
     try {
         await db.user.update({
@@ -109,80 +85,48 @@ export async function uploadUserSetting(
                 : null;
 
         if (code === "P2002") {
+            if (avatarChanged) await deleteBlobIfOwned(submittedAvatar);
             return {
                 success: false,
                 message: "이미 사용 중인 닉네임입니다.",
             };
         }
+        if (avatarChanged) await deleteBlobIfOwned(submittedAvatar);
         return { success: false, message: "프로필 저장에 실패했습니다." };
     }
 
-    const previousAvatarId = cloudflareImageId(currentUser.avatar);
-    if (
-        avatarChanged &&
-        previousAvatarId &&
-        process.env.CLOUDFLARE_ACCOUNT_ID &&
-        process.env.CLOUDFLARE_API_KEY
-    ) {
-        await fetch(
-            `https://api.cloudflare.com/client/v4/accounts/${process.env.CLOUDFLARE_ACCOUNT_ID}/images/v1/${previousAvatarId}`,
-            {
-                method: "DELETE",
-                headers: {
-                    Authorization: `Bearer ${process.env.CLOUDFLARE_API_KEY}`,
-                },
-            }
-        ).catch(() => null);
-    }
+    if (avatarChanged) await deleteBlobIfOwned(currentUser.avatar);
 
     redirect(`/profile/${session.id}`);
 }
 
-// 로그인한 사용자에게 일회용 이미지 업로드 주소를 발급함
-export async function getImageUploadUrl() {
+// 로그인한 사용자에게 프로필 이미지 한 장 전용 업로드 토큰을 발급함
+export async function requestProfileAvatarUpload(contentType: string) {
     const session = await getSession();
     if (!session.id) {
         return { success: false as const, message: "로그인이 필요합니다." };
     }
 
-    if (!process.env.CLOUDFLARE_ACCOUNT_ID || !process.env.CLOUDFLARE_API_KEY) {
-        return {
-            success: false as const,
-            message: "이미지 업로드 설정이 필요합니다.",
-        };
-    }
-
     try {
-        const response = await fetch(
-            `https://api.cloudflare.com/client/v4/accounts/${process.env.CLOUDFLARE_ACCOUNT_ID}/images/v2/direct_upload`,
-            {
-                method: "POST",
-                headers: {
-                    Authorization: `Bearer ${process.env.CLOUDFLARE_API_KEY}`,
-                },
-                cache: "no-store",
-            }
+        const upload = await createImageUploadToken(
+            `avatars/${session.id}/profile`,
+            contentType
         );
-        const data = await response.json();
-
-        if (!response.ok || !data.success) {
+        if (!upload) {
             return {
                 success: false as const,
-                message: "이미지 업로드 주소를 만들지 못했습니다.",
+                message: "JPG, PNG, WebP 이미지만 사용할 수 있습니다.",
             };
         }
 
         return {
             success: true as const,
-            result: {
-                uploadURL: String(data.result.uploadURL),
-                deliveryURL: `https://imagedelivery.net/${CLOUDFLARE_DELIVERY_ACCOUNT}/${String(data.result.id)}`,
-            },
+            ...upload,
         };
     } catch {
         return {
             success: false as const,
-            message: "이미지 업로드 서버에 연결하지 못했습니다.",
+            message: "Vercel Blob 업로드 설정을 확인해주세요.",
         };
     }
 }

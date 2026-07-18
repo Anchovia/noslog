@@ -2,17 +2,10 @@
 
 import { revalidatePath } from "next/cache";
 
+import { createImageUploadToken, isValidImageBlob } from "@/lib/blob";
 import db from "@/lib/db";
 import getSession from "@/lib/session";
 import { normalizeStoredGrade } from "@/lib/utils";
-
-interface CloudflareUploadResponse {
-    success: boolean;
-    result?: {
-        id: string;
-        uploadURL: string;
-    };
-}
 
 async function getAvailableExam(examId: number, userId: number) {
     const exam = await db.exam.findFirst({
@@ -54,7 +47,10 @@ async function getAvailableExam(examId: number, userId: number) {
         : null;
 }
 
-export async function requestExamProofUpload(examId: number) {
+export async function requestExamProofUpload(
+    examId: number,
+    contentType: string
+) {
     const session = await getSession();
 
     if (!session.id) {
@@ -77,49 +73,25 @@ export async function requestExamProofUpload(examId: number) {
     if (exam.submissions.length > 0) {
         return { success: false as const, message: "현재 심사 중입니다." };
     }
-    if (!process.env.CLOUDFLARE_ACCOUNT_ID || !process.env.CLOUDFLARE_API_KEY) {
-        return {
-            success: false as const,
-            message: "이미지 업로드 설정이 필요합니다.",
-        };
-    }
-
-    let response: Response;
-    let data: CloudflareUploadResponse;
     try {
-        response = await fetch(
-            `https://api.cloudflare.com/client/v4/accounts/${process.env.CLOUDFLARE_ACCOUNT_ID}/images/v2/direct_upload`,
-            {
-                method: "POST",
-                headers: {
-                    Authorization: `Bearer ${process.env.CLOUDFLARE_API_KEY}`,
-                },
-                cache: "no-store",
-            }
+        const upload = await createImageUploadToken(
+            `exam-proofs/${session.id}/${examId}/proof`,
+            contentType
         );
-        data = (await response.json()) as CloudflareUploadResponse;
+        if (!upload) {
+            return {
+                success: false as const,
+                message: "JPG, PNG, WebP 이미지만 사용할 수 있습니다.",
+            };
+        }
+
+        return { success: true as const, ...upload };
     } catch {
         return {
             success: false as const,
-            message: "이미지 업로드 서버에 연결하지 못했습니다.",
+            message: "Vercel Blob 업로드 설정을 확인해주세요.",
         };
     }
-
-    if (!response.ok || !data.success || !data.result) {
-        return {
-            success: false as const,
-            message: "업로드 주소를 생성하지 못했습니다.",
-        };
-    }
-
-    const deliveryHash =
-        process.env.CLOUDFLARE_IMAGES_DELIVERY_HASH ?? "zAwkQO6bEReNpmM7QzHHXA";
-
-    return {
-        success: true as const,
-        uploadUrl: data.result.uploadURL,
-        imageUrl: `https://imagedelivery.net/${deliveryHash}/${data.result.id}/public`,
-    };
 }
 
 export async function submitExamProof(examId: number, proofImageUrl: string) {
@@ -132,21 +104,11 @@ export async function submitExamProof(examId: number, proofImageUrl: string) {
         return { success: false as const, message: "잘못된 검정입니다." };
     }
 
-    let proofUrl: URL;
-    try {
-        proofUrl = new URL(proofImageUrl);
-    } catch {
-        return {
-            success: false as const,
-            message: "잘못된 이미지 주소입니다.",
-        };
-    }
     if (
-        proofUrl.protocol !== "https:" ||
-        proofUrl.hostname !== "imagedelivery.net" ||
-        !proofUrl.pathname.startsWith(
-            `/${process.env.CLOUDFLARE_IMAGES_DELIVERY_HASH ?? "zAwkQO6bEReNpmM7QzHHXA"}/`
-        )
+        !(await isValidImageBlob(
+            proofImageUrl,
+            `exam-proofs/${session.id}/${examId}/proof`
+        ))
     ) {
         return {
             success: false as const,
