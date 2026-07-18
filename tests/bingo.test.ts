@@ -6,6 +6,12 @@ import {
     getBingoLineCoordinates,
     getBingoMissionLink,
 } from "@/components/bingo/plate/bingoPlateUtils";
+import type { BingoListItem } from "@/components/bingo/list/bingoListTypes";
+import {
+    getBingoStatusCounts,
+    getContinueBingo,
+    getVisibleBingos,
+} from "@/components/bingo/list/bingoListUtils";
 import { getBingoProgress } from "@/lib/bingo";
 
 function board(completedPositions: number[]) {
@@ -106,5 +112,79 @@ describe("빙고판 UI 계산", () => {
         expect(
             filterBingoMissions(cells, new Set([10]), new Set([2]), "rich")
         ).toEqual([cells[1]]);
+    });
+});
+
+describe("빙고 목록 계산", () => {
+    const bingos: BingoListItem[] = [
+        {
+            id: 1,
+            title: "미진행",
+            musicIndex: "music-1",
+            background: null,
+            reward: 1000,
+            requiredLines: 5,
+            completedCells: 0,
+            completedLines: 0,
+            richLines: 0,
+            richPositions: [],
+            completedPositions: [],
+            progressPercent: 0,
+            isCompleted: false,
+        },
+        {
+            id: 2,
+            title: "진행 중",
+            musicIndex: "music-2",
+            background: null,
+            reward: 2000,
+            requiredLines: 5,
+            completedCells: 10,
+            completedLines: 1,
+            richLines: 2,
+            richPositions: [5, 10],
+            completedPositions: [1, 2, 3, 4],
+            progressPercent: 40,
+            isCompleted: false,
+        },
+        {
+            id: 3,
+            title: "완료",
+            musicIndex: "music-3",
+            background: null,
+            reward: 3000,
+            requiredLines: 1,
+            completedCells: 15,
+            completedLines: 2,
+            richLines: 0,
+            richPositions: [],
+            completedPositions: [1, 2, 3, 4, 5],
+            progressPercent: 60,
+            isCompleted: true,
+        },
+    ];
+
+    it("완료하지 않은 빙고 중 진행률이 가장 높은 판을 선택한다", () => {
+        expect(getContinueBingo(bingos)?.id).toBe(2);
+    });
+
+    it("진행 중, 리치와 완료 상태별 개수를 계산한다", () => {
+        expect(getBingoStatusCounts(bingos)).toEqual({
+            progress: 1,
+            rich: 1,
+            completed: 1,
+        });
+    });
+
+    it("상태 필터와 진행률 정렬 방향을 함께 적용한다", () => {
+        expect(getVisibleBingos(bingos, "progress", "desc")).toEqual([
+            bingos[1],
+        ]);
+        expect(
+            getVisibleBingos(bingos, "all", "asc").map((bingo) => bingo.id)
+        ).toEqual([1, 2, 3]);
+        expect(
+            getVisibleBingos(bingos, "all", "desc").map((bingo) => bingo.id)
+        ).toEqual([3, 2, 1]);
     });
 });
