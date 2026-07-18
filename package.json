@@ -8,6 +8,7 @@
         "start": "next start",
         "postinstall": "prisma generate",
         "db:migrate:deploy": "prisma migrate deploy",
+        "db:import:exams:op3": "node prisma/import-op3-exams.mjs --env-file=.env",
         "db:seed:e2e": "node prisma/seed-e2e.mjs",
         "test": "vitest run",
         "test:watch": "vitest",
