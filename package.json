@@ -8,6 +8,7 @@
         "start": "next start",
         "postinstall": "prisma generate",
         "db:migrate:deploy": "prisma migrate deploy",
+        "db:seed:e2e": "node prisma/seed-e2e.mjs",
         "test": "vitest run",
         "test:watch": "vitest",
         "test:e2e": "playwright test",
