@@ -1,5 +1,6 @@
 "use client";
 
+import { formatScoreRecordDate } from "@/lib/music/scoreTrend";
 import {
     Line,
     LineChart,
@@ -10,7 +11,7 @@ import {
 } from "recharts";
 
 interface ScoreTrendProps {
-    plays: {
+    points: {
         id: number;
         score: number;
         rank: string;
@@ -18,16 +19,16 @@ interface ScoreTrendProps {
     }[];
 }
 
-export default function ScoreTrend({ plays }: ScoreTrendProps) {
-    if (plays.length === 0) {
+export default function ScoreTrend({ points }: ScoreTrendProps) {
+    if (points.length === 0) {
         return (
             <div className="text-text-disabled flex h-32 items-center justify-center text-sm">
-                최근 플레이 기록이 없습니다.
+                베스트 스코어 갱신 이력이 없습니다.
             </div>
         );
     }
 
-    const scores = plays.map((play) => play.score);
+    const scores = points.map((point) => point.score);
     const minimum = Math.max(0, Math.min(...scores) - 10000);
     const maximum = Math.min(1000000, Math.max(...scores) + 10000);
 
@@ -35,7 +36,7 @@ export default function ScoreTrend({ plays }: ScoreTrendProps) {
         <div className="h-40 w-full">
             <ResponsiveContainer width="100%" height="100%">
                 <LineChart
-                    data={plays}
+                    data={points}
                     margin={{ top: 12, right: 10, bottom: 0, left: 10 }}
                 >
                     <XAxis dataKey="play_time" hide />
@@ -53,7 +54,9 @@ export default function ScoreTrend({ plays }: ScoreTrendProps) {
                             "점수",
                         ]}
                         labelFormatter={(_, payload) =>
-                            payload[0]?.payload.play_time ?? ""
+                            formatScoreRecordDate(
+                                payload[0]?.payload.play_time ?? ""
+                            )
                         }
                     />
                     <Line
@@ -72,8 +75,10 @@ export default function ScoreTrend({ plays }: ScoreTrendProps) {
                 </LineChart>
             </ResponsiveContainer>
             <div className="text-text-disabled -mt-5 flex justify-between text-[10px]">
-                <span>{plays[0]?.play_time.split(" ")[0]}</span>
-                <span>{plays.at(-1)?.play_time.split(" ")[0]} 현재</span>
+                <span>{formatScoreRecordDate(points[0]?.play_time ?? "")}</span>
+                <span>
+                    {formatScoreRecordDate(points.at(-1)?.play_time ?? "")}
+                </span>
             </div>
         </div>
     );

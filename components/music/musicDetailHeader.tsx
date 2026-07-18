@@ -1,4 +1,8 @@
 import { cn } from "@/lib/utils";
+import {
+    MUSIC_CATEGORY_BADGE_STYLES,
+    normalizeMusicCategory,
+} from "@/lib/musicCategories";
 import { difficultyStyles } from "./musicDetailConfig";
 import type { Difficulty, MusicInfo } from "./musicDetailTypes";
 
@@ -16,6 +20,7 @@ export default function MusicDetailHeader({
     const jacketImageUrl =
         music.background ||
         `https://p.eagate.573.jp/game/nostalgia/op3/img/jacket.html?c=${music.index}`;
+    const category = normalizeMusicCategory(music.category_short);
 
     return (
         <section className="flex min-w-0 items-center gap-3">
@@ -26,7 +31,14 @@ export default function MusicDetailHeader({
             />
 
             <div className="flex min-w-0 flex-1 flex-col gap-1.5">
-                <span className="bg-surface-muted text-text-secondary w-fit rounded px-2 py-1 text-xs font-bold">
+                <span
+                    className={cn(
+                        "w-fit rounded px-2 py-1 text-xs font-bold",
+                        category
+                            ? MUSIC_CATEGORY_BADGE_STYLES[category]
+                            : "bg-surface-muted text-text-secondary"
+                    )}
+                >
                     {music.category_short}
                 </span>
                 <h1 className="text-text-primary truncate text-xl font-extrabold">

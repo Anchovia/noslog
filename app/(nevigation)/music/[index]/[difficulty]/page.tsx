@@ -12,6 +12,7 @@ import {
     getCachedMusicDetail,
     getRecentUserChartPlays,
     getUserChartRecord,
+    getUserChartScoreTrend,
 } from "./data";
 
 const difficulties = ["Normal", "Hard", "Expert", "Real"] as const;
@@ -84,10 +85,13 @@ export default async function MusicDetailPage(props: {
     const userPlayData = session.id
         ? await getUserChartRecord(session.id, chart.id)
         : null;
-    const recentChartPlays =
+    const [recentChartPlays, scoreTrend] =
         session.id && activeTab === "record"
-            ? await getRecentUserChartPlays(session.id, chart.id)
-            : [];
+            ? await Promise.all([
+                  getRecentUserChartPlays(session.id, chart.id),
+                  getUserChartScoreTrend(session.id, chart.id, userPlayData),
+              ])
+            : [[], []];
 
     let evaluationCount = 0;
     let patternAverages = {
@@ -288,6 +292,7 @@ export default async function MusicDetailPage(props: {
             isLoggedIn={Boolean(session.id)}
             userPlayData={userPlayData}
             recentChartPlays={recentChartPlays}
+            scoreTrend={scoreTrend}
             chartDetail={{
                 ...chart,
                 evaluationCount,

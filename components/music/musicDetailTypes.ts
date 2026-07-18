@@ -43,6 +43,13 @@ export interface RecentChartPlay {
     play_time: string;
 }
 
+export interface ScoreTrendPoint {
+    id: number;
+    score: number;
+    rank: string;
+    play_time: string;
+}
+
 export interface ChartDetail {
     id: number;
     level: number;
@@ -79,6 +86,7 @@ export interface MusicDetailProps {
     isLoggedIn: boolean;
     userPlayData: UserPlayData | null;
     recentChartPlays: RecentChartPlay[];
+    scoreTrend: ScoreTrendPoint[];
     chartDetail: ChartDetail;
     ranking: {
         rows: RankingRow[];
