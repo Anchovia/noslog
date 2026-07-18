@@ -1,10 +1,11 @@
 "use server";
 
-import { Prisma } from "@/lib/generated/prisma";
-import { revalidatePath } from "next/cache";
+import { Prisma } from "@prisma/client";
+import { revalidatePath, updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { requireAdmin } from "@/lib/admin";
+import { CACHE_TAGS } from "@/lib/cacheTags";
 import db from "@/lib/db";
 
 function optionalText(value: FormDataEntryValue | null) {
@@ -133,6 +134,7 @@ export async function saveBingo(formData: FormData) {
         }
     });
 
+    updateTag(CACHE_TAGS.bingos);
     revalidatePath("/admin");
     revalidatePath("/admin/bingos");
     revalidatePath("/bingo");
@@ -151,6 +153,7 @@ export async function deleteBingo(formData: FormData) {
     if (progressCount > 0) return;
 
     await db.bingo.delete({ where: { id } });
+    updateTag(CACHE_TAGS.bingos);
     revalidatePath("/admin");
     revalidatePath("/admin/bingos");
     revalidatePath("/bingo");

@@ -1,6 +1,6 @@
 import db from "@/lib/db";
 import { CACHE_TAGS } from "@/lib/cacheTags";
-import type { Prisma } from "@/lib/generated/prisma";
+import type { Prisma } from "@prisma/client";
 import { unstable_cache } from "next/cache";
 
 export type UserRankingMode = "basic" | "recital";

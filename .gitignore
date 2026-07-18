@@ -8,6 +8,9 @@
 
 # testing
 /coverage
+/playwright-report
+/test-results
+/blob-report
 
 # next.js
 /.next/
@@ -48,6 +51,3 @@ pnpm-debug.log*
 .env
 .env.*
 !.env.example
-
-# prisma generated temp files
-lib/generated/prisma/*.tmp*

@@ -11,9 +11,10 @@ export interface ToggleBingoCellResult {
     message?: string;
 }
 
-// 현재 로그인한 사용자의 빙고 칸 완료 상태만 변경함
-export async function toggleBingoCell(
-    bingoCellId: number
+// 현재 로그인한 사용자의 빙고 칸을 요청한 완료 상태로 저장함
+export async function setBingoCellCompletion(
+    bingoCellId: number,
+    isCompleted: boolean
 ): Promise<ToggleBingoCellResult> {
     const session = await getSession();
 
@@ -22,6 +23,14 @@ export async function toggleBingoCell(
             success: false,
             message: "로그인 후 빙고 진행 상태를 저장할 수 있습니다.",
         };
+    }
+
+    if (
+        !Number.isInteger(bingoCellId) ||
+        bingoCellId < 1 ||
+        typeof isCompleted !== "boolean"
+    ) {
+        return { success: false, message: "잘못된 빙고 칸입니다." };
     }
 
     const cell = await db.bingoCell.findUnique({
@@ -34,10 +43,6 @@ export async function toggleBingoCell(
                     startsAt: true,
                     endsAt: true,
                 },
-            },
-            progress: {
-                where: { userId: session.id },
-                select: { id: true },
             },
         },
     });
@@ -56,25 +61,32 @@ export async function toggleBingoCell(
         return { success: false, message: "현재 진행할 수 없는 빙고입니다." };
     }
 
-    const previous = cell.progress[0];
-
-    if (previous) {
-        await db.bingoCellProgress.delete({
+    if (isCompleted) {
+        await db.bingoCellProgress.upsert({
             where: {
                 userId_bingoCellId: {
                     userId: session.id,
                     bingoCellId,
                 },
             },
-        });
-    } else {
-        await db.bingoCellProgress.create({
-            data: {
+            create: {
                 bingoCellId,
                 userId: session.id,
                 isCompleted: true,
                 completionSource: "manual",
                 completedAt: new Date(),
+            },
+            update: {
+                isCompleted: true,
+                completionSource: "manual",
+                completedAt: new Date(),
+            },
+        });
+    } else {
+        await db.bingoCellProgress.deleteMany({
+            where: {
+                bingoCellId,
+                userId: session.id,
             },
         });
     }
@@ -82,5 +94,5 @@ export async function toggleBingoCell(
     revalidatePath("/bingo");
     revalidatePath(`/bingo/${cell.bingoId}`);
 
-    return { success: true, isCompleted: !previous };
+    return { success: true, isCompleted };
 }

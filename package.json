@@ -8,6 +8,13 @@
         "start": "next start",
         "postinstall": "prisma generate",
         "db:migrate:deploy": "prisma migrate deploy",
+        "db:seed:e2e": "node prisma/seed-e2e.mjs",
+        "test": "vitest run",
+        "test:watch": "vitest",
+        "test:e2e": "playwright test",
+        "test:e2e:headed": "playwright test --headed",
+        "test:e2e:ui": "playwright test --ui",
+        "typecheck": "tsc --noEmit",
         "lint": "eslint .",
         "format": "prettier --write .",
         "format:check": "prettier --check .",
@@ -30,6 +37,7 @@
         "@radix-ui/react-slider": "^1.4.3",
         "@radix-ui/react-switch": "^1.3.3",
         "@radix-ui/react-tabs": "^1.1.17",
+        "@vercel/blob": "^2.6.1",
         "axios": "^1.18.1",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
@@ -48,6 +56,7 @@
         "zustand": "^5.0.14"
     },
     "devDependencies": {
+        "@playwright/test": "^1.61.1",
         "@tailwindcss/postcss": "^4.3.2",
         "@types/js-cookie": "^3.0.6",
         "@types/node": "^24.13.3",
@@ -62,7 +71,8 @@
         "prettier": "^3.9.5",
         "prettier-plugin-tailwindcss": "^0.8.0",
         "tailwindcss": "^4.3.2",
-        "typescript": "~5.9.3"
+        "typescript": "~5.9.3",
+        "vitest": "^4.1.10"
     },
     "overrides": {
         "@types/react": "19.2.17",

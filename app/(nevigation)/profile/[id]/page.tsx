@@ -1,7 +1,7 @@
 import ProfileDashboard from "@/components/profile/profile";
 import getSession from "@/lib/session";
 import { notFound } from "next/navigation";
-import { getProfileData } from "./actions";
+import { getCachedProfileData } from "./data";
 
 export default async function ProfilePage({
     params,
@@ -14,7 +14,7 @@ export default async function ProfilePage({
     if (!Number.isInteger(id) || id < 1) notFound();
 
     const [profileData, session] = await Promise.all([
-        getProfileData(id),
+        getCachedProfileData(id),
         getSession(),
     ]);
 

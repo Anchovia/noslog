@@ -1,0 +1,103 @@
+name: CI
+
+on:
+    push:
+        branches:
+            - main
+            - dev
+    pull_request:
+        branches:
+            - main
+            - dev
+
+jobs:
+    verify:
+        runs-on: ubuntu-latest
+        timeout-minutes: 15
+        env:
+            DATABASE_URL: postgresql://postgres:postgres@localhost:5432/noslog
+            COOKIE_PASSWORD: ci-only-cookie-password-at-least-32-characters
+            BOOKMARKLET_SECRET: ci-only-bookmarklet-secret-at-least-32-characters
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 24
+                  cache: npm
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Lint
+              run: npm run lint
+
+            - name: Test
+              run: npm test
+
+            - name: Type check
+              run: npm run typecheck
+
+            - name: Build
+              run: npm run build
+
+    e2e:
+        needs: verify
+        runs-on: ubuntu-latest
+        timeout-minutes: 15
+        services:
+            postgres:
+                image: postgres:16-alpine
+                env:
+                    POSTGRES_DB: noslog_e2e
+                    POSTGRES_USER: postgres
+                    POSTGRES_PASSWORD: postgres
+                ports:
+                    - 5432:5432
+                options: >-
+                    --health-cmd "pg_isready -U postgres -d noslog_e2e"
+                    --health-interval 5s
+                    --health-timeout 5s
+                    --health-retries 10
+        env:
+            CI: "true"
+            E2E_SEED: "1"
+            DATABASE_URL: postgresql://postgres:postgres@localhost:5432/noslog_e2e
+            COOKIE_PASSWORD: ci-only-cookie-password-at-least-32-characters
+            BOOKMARKLET_SECRET: ci-only-bookmarklet-secret-at-least-32-characters
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 24
+                  cache: npm
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Install Playwright Chromium
+              run: npx playwright install --with-deps chromium
+
+            - name: Apply database migrations
+              run: npm run db:migrate:deploy
+
+            - name: Seed E2E database
+              run: npm run db:seed:e2e
+
+            - name: Run Playwright E2E
+              run: npm run test:e2e
+
+            - name: Upload Playwright report
+              if: failure()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: playwright-report
+                  path: playwright-report/
+                  retention-days: 7

@@ -2,7 +2,7 @@ import { ChevronRight, Plus, Search } from "lucide-react";
 import Link from "next/link";
 
 import Badge from "@/components/ui/Badge";
-import { Prisma } from "@/lib/generated/prisma";
+import { Prisma } from "@prisma/client";
 import db from "@/lib/db";
 
 function getModeVariant(mode: string) {

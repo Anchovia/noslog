@@ -1,8 +1,11 @@
-import { Check, ExternalLink, X } from "lucide-react";
+import { Check, ExternalLink, Trash2, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-import { reviewExamSubmission } from "@/app/admin/submissions/actions";
+import {
+    deleteExamSubmission,
+    reviewExamSubmission,
+} from "@/app/admin/submissions/actions";
 import db from "@/lib/db";
 
 const statuses = ["pending", "approved", "rejected"] as const;
@@ -98,40 +101,58 @@ export default async function AdminSubmissionsPage({
                                         )}
                                     </time>
                                 </div>
-                                <form
-                                    action={reviewExamSubmission}
-                                    className="flex flex-col gap-2"
-                                >
+                                {submission.status === "pending" ? (
+                                    <form
+                                        action={reviewExamSubmission}
+                                        className="flex flex-col gap-2"
+                                    >
+                                        <input
+                                            type="hidden"
+                                            name="submissionId"
+                                            value={submission.id}
+                                        />
+                                        <textarea
+                                            name="reviewerNote"
+                                            defaultValue={
+                                                submission.reviewerNote ?? ""
+                                            }
+                                            placeholder="심사 메모 또는 반려 사유"
+                                            rows={2}
+                                            className="border-border bg-bg text-input w-full resize-none rounded-md border px-3 py-2"
+                                        />
+                                        <div className="grid grid-cols-2 gap-2">
+                                            <button
+                                                name="status"
+                                                value="rejected"
+                                                className="border-danger/40 text-danger flex h-10 cursor-pointer items-center justify-center gap-1 rounded-md border text-sm font-bold"
+                                            >
+                                                <X className="size-4" /> 반려
+                                            </button>
+                                            <button
+                                                name="status"
+                                                value="approved"
+                                                className="bg-success text-bg flex h-10 cursor-pointer items-center justify-center gap-1 rounded-md text-sm font-bold"
+                                            >
+                                                <Check className="size-4" />{" "}
+                                                승인
+                                            </button>
+                                        </div>
+                                    </form>
+                                ) : submission.reviewerNote ? (
+                                    <p className="text-caption bg-bg rounded-md px-3 py-2">
+                                        심사 메모: {submission.reviewerNote}
+                                    </p>
+                                ) : null}
+                                <form action={deleteExamSubmission}>
                                     <input
                                         type="hidden"
                                         name="submissionId"
                                         value={submission.id}
                                     />
-                                    <textarea
-                                        name="reviewerNote"
-                                        defaultValue={
-                                            submission.reviewerNote ?? ""
-                                        }
-                                        placeholder="심사 메모 또는 반려 사유"
-                                        rows={2}
-                                        className="border-border bg-bg text-input w-full resize-none rounded-md border px-3 py-2"
-                                    />
-                                    <div className="grid grid-cols-2 gap-2">
-                                        <button
-                                            name="status"
-                                            value="rejected"
-                                            className="border-danger/40 text-danger flex h-10 items-center justify-center gap-1 rounded-md border text-sm font-bold"
-                                        >
-                                            <X className="size-4" /> 반려
-                                        </button>
-                                        <button
-                                            name="status"
-                                            value="approved"
-                                            className="bg-success text-bg flex h-10 items-center justify-center gap-1 rounded-md text-sm font-bold"
-                                        >
-                                            <Check className="size-4" /> 승인
-                                        </button>
-                                    </div>
+                                    <button className="border-danger/40 text-danger flex h-10 w-full cursor-pointer items-center justify-center gap-1 rounded-md border text-sm font-bold">
+                                        <Trash2 className="size-4" /> 제출 기록
+                                        삭제
+                                    </button>
                                 </form>
                             </div>
                         </article>

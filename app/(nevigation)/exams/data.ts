@@ -92,7 +92,11 @@ export async function getUserExamState(
         examIds.length > 0
             ? db.examSubmission.findMany({
                   where: { userId, examId: { in: examIds } },
-                  select: { examId: true, status: true },
+                  select: {
+                      examId: true,
+                      status: true,
+                      reviewerNote: true,
+                  },
                   orderBy: { submittedAt: "desc" },
               })
             : Promise.resolve([]),

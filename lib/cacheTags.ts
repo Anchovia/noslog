@@ -6,4 +6,10 @@ export const CACHE_TAGS = {
     tierLists: "tier-lists",
     userRankings: "user-rankings",
     exams: "exams",
+    bingos: "bingos",
+    userProfiles: "user-profiles",
 } as const;
+
+export function getUserProfileTag(userId: number) {
+    return `user-profile-${userId}`;
+}

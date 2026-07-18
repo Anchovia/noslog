@@ -31,14 +31,14 @@ function getStageSignature(
 
 export async function searchAdminMusic(query: string) {
     await requireAdmin();
-    const keyword = query.trim();
+    const keyword = query.trim().slice(0, 100);
     if (!keyword) return [];
 
     const musics = await db.music.findMany({
         where: {
             OR: [
-                { title: { contains: keyword } },
-                { artist: { contains: keyword } },
+                { title: { contains: keyword, mode: "insensitive" } },
+                { artist: { contains: keyword, mode: "insensitive" } },
             ],
         },
         select: {

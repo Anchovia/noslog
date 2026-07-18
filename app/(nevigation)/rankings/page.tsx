@@ -56,7 +56,7 @@ function RegionIcon({ icon }: { icon?: "kr" | "jp" | "global" }) {
                 alt=""
                 width={16}
                 height={12}
-                className="rounded-[2px]"
+                className="h-3 w-4 shrink-0 rounded-[2px]"
             />
         );
     }

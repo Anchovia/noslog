@@ -6,14 +6,14 @@ import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/admin";
 import { CACHE_TAGS } from "@/lib/cacheTags";
 import db from "@/lib/db";
-import type { Prisma } from "@/lib/generated/prisma";
+import type { Prisma } from "@prisma/client";
 
 const tierModes = new Set(["basic", "recital"]);
 const tierStatuses = new Set(["draft", "published", "archived"]);
 
 export async function searchTierCharts(query: string, tierListId: number) {
     await requireAdmin();
-    const keyword = query.trim();
+    const keyword = query.trim().slice(0, 100);
     if (!keyword || !Number.isInteger(tierListId)) return [];
 
     const charts = await db.musicChart.findMany({
@@ -21,9 +21,9 @@ export async function searchTierCharts(query: string, tierListId: number) {
             tierEntries: { none: { tierListId } },
             music: {
                 OR: [
-                    { title: { contains: keyword } },
-                    { artist: { contains: keyword } },
-                    { index: { contains: keyword } },
+                    { title: { contains: keyword, mode: "insensitive" } },
+                    { artist: { contains: keyword, mode: "insensitive" } },
+                    { index: { contains: keyword, mode: "insensitive" } },
                 ],
             },
         },

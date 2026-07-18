@@ -1,6 +1,6 @@
 import { musicBG } from "../../constants";
 import db from "../../db";
-import type { Prisma } from "../../generated/prisma";
+import type { Prisma } from "@prisma/client";
 
 interface SyncMusicSheet {
     difficulty: string;

@@ -2,7 +2,7 @@ import "server-only";
 
 import { CACHE_TAGS } from "@/lib/cacheTags";
 import db from "@/lib/db";
-import { Prisma } from "@/lib/generated/prisma";
+import { Prisma } from "@prisma/client";
 import { unstable_cache } from "next/cache";
 import {
     normalizeMusicQuery,
@@ -42,7 +42,7 @@ function encodeCursor(row: MusicRow) {
 }
 
 function decodeCursor(value: string | null): MusicCursor | null {
-    if (!value) return null;
+    if (!value || value.length > 2_048) return null;
 
     try {
         const parsed = JSON.parse(
