@@ -9,7 +9,7 @@ import {
 
 describe("악곡 검색 UI 쿼리 변환", () => {
     it("유효한 카테고리만 초기 선택값으로 사용한다", () => {
-        expect(parseMusicCategories("BM,Org,unknown,Cl/Jz")).toEqual([
+        expect(parseMusicCategories("bm,ORG,unknown,cl/jz")).toEqual([
             "BM",
             "Org",
             "Cl/Jz",

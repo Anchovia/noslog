@@ -1,7 +1,7 @@
 import type { MusicSearchParams } from "@/app/(nevigation)/music/query";
+import { normalizeMusicCategories } from "@/lib/musicCategories";
 
 import {
-    MUSIC_CATEGORIES,
     MUSIC_DIFFICULTIES,
     type BuildMusicSearchParamsInput,
     type MusicCategory,
@@ -10,13 +10,7 @@ import {
 } from "./musicSearchTypes";
 
 export function parseMusicCategories(value?: string): MusicCategory[] {
-    if (!value) return [];
-
-    return value
-        .split(",")
-        .filter((category): category is MusicCategory =>
-            MUSIC_CATEGORIES.some((item) => item.value === category)
-        );
+    return normalizeMusicCategories(value);
 }
 
 export function parseMusicFilterEnabled(

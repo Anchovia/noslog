@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
 
+import {
+    filterBingoMissions,
+    getBingoCellLabel,
+    getBingoLineCoordinates,
+    getBingoMissionLink,
+} from "@/components/bingo/plate/bingoPlateUtils";
 import { getBingoProgress } from "@/lib/bingo";
 
 function board(completedPositions: number[]) {
@@ -44,5 +50,61 @@ describe("getBingoProgress", () => {
         expect(result.completedCells).toBe(25);
         expect(result.completedLines).toBe(12);
         expect(result.progressPercent).toBe(100);
+    });
+});
+
+describe("빙고판 UI 계산", () => {
+    const cells = [
+        {
+            id: 10,
+            challenge: "악곡 플레이",
+            missionType: "music",
+            musicIndex: "music-index",
+            position: 1,
+            categoryShort: null,
+        },
+        {
+            id: 20,
+            challenge: "BM 플레이",
+            missionType: "category",
+            musicIndex: null,
+            position: 2,
+            categoryShort: "var · variety",
+        },
+    ];
+
+    it("빙고 위치를 A1부터 E5까지 표시한다", () => {
+        expect(getBingoCellLabel(1)).toBe("A1");
+        expect(getBingoCellLabel(13)).toBe("C3");
+        expect(getBingoCellLabel(25)).toBe("E5");
+    });
+
+    it("완성 줄의 시작점과 끝점 좌표를 계산한다", () => {
+        expect(getBingoLineCoordinates([1, 2, 3, 4, 5])).toEqual({
+            x1: 0.5,
+            y1: 0.5,
+            x2: 4.5,
+            y2: 0.5,
+        });
+        expect(getBingoLineCoordinates([1, 7, 13, 19, 25])).toEqual({
+            x1: 0.5,
+            y1: 0.5,
+            x2: 4.5,
+            y2: 4.5,
+        });
+    });
+
+    it("악곡과 카테고리 미션 링크를 현재 검색 규격으로 만든다", () => {
+        expect(getBingoMissionLink(cells[0])).toBe("/music/music-index/normal");
+        expect(getBingoMissionLink(cells[1])).toBe("/music?categories=Var");
+    });
+
+    it("선택한 상태에 맞는 미션만 반환한다", () => {
+        expect(
+            filterBingoMissions(cells, new Set([10]), new Set([2]), "completed")
+        ).toEqual([cells[0]]);
+        expect(
+            filterBingoMissions(cells, new Set([10]), new Set([2]), "rich")
+        ).toEqual([cells[1]]);
     });
 });

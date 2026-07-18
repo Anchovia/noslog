@@ -1,3 +1,5 @@
+import { normalizeMusicCategories } from "@/lib/musicCategories";
+
 export interface MusicSearchParams {
     q?: string;
     categories?: string;
@@ -74,9 +76,7 @@ export function normalizeMusicQuery(
 
     return {
         q: searchParams.q?.trim() ?? "",
-        categories: searchParams.categories
-            ? searchParams.categories.split(",").filter(Boolean)
-            : [],
+        categories: normalizeMusicCategories(searchParams.categories),
         difficulties: selectedDifficulties.map((difficulty) => {
             const config = difficultyConfig[difficulty];
             return {

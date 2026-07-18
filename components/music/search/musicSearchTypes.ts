@@ -1,4 +1,7 @@
 import type { MusicSearchParams } from "@/app/(nevigation)/music/query";
+import type { MusicCategory } from "@/lib/musicCategories";
+
+export type { MusicCategory } from "@/lib/musicCategories";
 
 export const MUSIC_CATEGORIES = [
     {
@@ -83,7 +86,6 @@ export const MUSIC_DIFFICULTIES = [
     },
 ] as const;
 
-export type MusicCategory = (typeof MUSIC_CATEGORIES)[number]["value"];
 export type MusicDifficulty = (typeof MUSIC_DIFFICULTIES)[number]["value"];
 export type MusicDifficultyConfig = (typeof MUSIC_DIFFICULTIES)[number];
 export type MusicDifficultyState = Record<MusicDifficulty, boolean>;

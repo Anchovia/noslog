@@ -34,7 +34,7 @@ describe("normalizeMusicQuery", () => {
     it("검색어와 카테고리를 정리하고 레벨 정렬 기본값을 내림차순으로 둔다", () => {
         const result = normalizeMusicQuery({
             q: "  Life  ",
-            categories: "BM,Org,,",
+            categories: "bm,ORG,unknown,,",
             sort: "level",
         });
 
