@@ -4,6 +4,7 @@ import {
     chartEvaluationReactionSchema,
     chartEvaluationSchema,
 } from "@/app/(nevigation)/music/[index]/[difficulty]/evaluationSchema";
+import { patternItems } from "@/components/music/musicTierVoteConfig";
 
 const validEvaluation = {
     chartId: 1,
@@ -17,6 +18,16 @@ const validEvaluation = {
 };
 
 describe("chartEvaluationSchema", () => {
+    it("패턴 항목을 서비스 기준 순서로 제공한다", () => {
+        expect(patternItems.map((item) => item.label)).toEqual([
+            "계단",
+            "연타",
+            "폴리리듬",
+            "즈레",
+            "글리산도",
+        ]);
+    });
+
     it("올바른 체감 난이도와 다섯 패턴 값을 허용한다", () => {
         expect(chartEvaluationSchema.safeParse(validEvaluation).success).toBe(
             true

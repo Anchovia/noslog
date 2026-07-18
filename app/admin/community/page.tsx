@@ -62,10 +62,10 @@ export default async function AdminCommunityPage() {
                             </p>
                             <p className="text-caption">
                                 추천 {up} · 비추천 {down} · 계단{" "}
-                                {evaluation.stairs} / 동치 {evaluation.chord} /
-                                트릴 {evaluation.trill} / 글리산도{" "}
-                                {evaluation.glissando} / 연타{" "}
-                                {evaluation.repetition}
+                                {evaluation.stairs} / 연타{" "}
+                                {evaluation.repetition} / 폴리리듬{" "}
+                                {evaluation.chord} / 즈레 {evaluation.trill} /
+                                글리산도 {evaluation.glissando}
                             </p>
                             <form action={deleteEvaluation}>
                                 <input
