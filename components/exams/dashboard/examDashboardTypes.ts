@@ -32,6 +32,7 @@ export interface ExamDashboardItem {
     }[];
     isAchieved: boolean;
     submissionStatus: string | null;
+    submissionReviewerNote: string | null;
     playerGrade: number | null;
     stages: ExamStageItem[];
 }

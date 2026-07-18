@@ -31,10 +31,16 @@ export default async function ExamsPage() {
     const achievedExamIds = new Set(
         userState?.achievements.map((item) => item.examId) ?? []
     );
-    const latestSubmissionByExam = new Map<number, string>();
+    const latestSubmissionByExam = new Map<
+        number,
+        { status: string; reviewerNote: string | null }
+    >();
     for (const submission of userState?.submissions ?? []) {
         if (!latestSubmissionByExam.has(submission.examId)) {
-            latestSubmissionByExam.set(submission.examId, submission.status);
+            latestSubmissionByExam.set(submission.examId, {
+                status: submission.status,
+                reviewerNote: submission.reviewerNote,
+            });
         }
     }
     const bestScoreByChart = new Map<number, number>();
@@ -47,6 +53,7 @@ export default async function ExamsPage() {
     }
 
     const items: ExamDashboardItem[] = exams.map((exam) => {
+        const latestSubmission = latestSubmissionByExam.get(exam.id);
         const legacyGrade =
             exam.mode === "basic"
                 ? user?.exam_basic
@@ -77,7 +84,8 @@ export default async function ExamsPage() {
                 musicIndex: reward.music?.index ?? null,
             })),
             isAchieved: achievedExamIds.has(exam.id) || isLegacyAchievement,
-            submissionStatus: latestSubmissionByExam.get(exam.id) ?? null,
+            submissionStatus: latestSubmission?.status ?? null,
+            submissionReviewerNote: latestSubmission?.reviewerNote ?? null,
             playerGrade:
                 exam.mode === "recital"
                     ? normalizeStoredGrade(user?.grade_recital)

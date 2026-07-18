@@ -38,6 +38,19 @@ export default function ExamProofUpload({
                     onUpload(file);
                 }}
             />
+            {exam.submissionStatus === "rejected" ? (
+                <div className="border-danger/40 bg-danger/5 mb-2 rounded-md border px-3 py-2">
+                    <p className="text-danger text-xs font-semibold">
+                        인증이 반려되었습니다.
+                    </p>
+                    <p className="text-text-secondary mt-1 text-xs leading-relaxed whitespace-pre-wrap">
+                        {`사유: "${
+                            exam.submissionReviewerNote ||
+                            "등록된 반려 사유가 없습니다. 증빙 이미지를 확인한 뒤 다시 제출해주세요."
+                        }"`}
+                    </p>
+                </div>
+            ) : null}
             <label
                 htmlFor={inputId}
                 aria-disabled={disabled}
@@ -55,9 +68,11 @@ export default function ExamProofUpload({
                       ? "합격 인증 완료"
                       : exam.submissionStatus === "pending"
                         ? "인증 심사 중"
-                        : isAuthenticated
-                          ? "합격 스크린샷 업로드"
-                          : "로그인 후 인증 가능"}
+                        : exam.submissionStatus === "rejected"
+                          ? "합격 스크린샷 다시 제출"
+                          : isAuthenticated
+                            ? "합격 스크린샷 업로드"
+                            : "로그인 후 인증 가능"}
             </label>
             {message ? (
                 <p

@@ -22,6 +22,7 @@ function exam(changes: Partial<ExamDashboardItem> = {}): ExamDashboardItem {
         rewards: [],
         isAchieved: false,
         submissionStatus: null,
+        submissionReviewerNote: null,
         playerGrade: 3500,
         stages: [],
         ...changes,

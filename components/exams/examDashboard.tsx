@@ -61,8 +61,9 @@ export default function ExamDashboard({
         [exams, mode]
     );
     const selectedExam =
-        modeExams.find((exam) => exam.id === selectedExamId) ??
-        getDefaultExam(modeExams);
+        selectedExamId === null
+            ? null
+            : (modeExams.find((exam) => exam.id === selectedExamId) ?? null);
     const simulation = useMemo(
         () => (selectedExam ? calculateExamSimulation(selectedExam) : null),
         [selectedExam]
@@ -83,7 +84,7 @@ export default function ExamDashboard({
     }
 
     function selectExam(examId: number) {
-        setSelectedExamId(examId);
+        setSelectedExamId((current) => (current === examId ? null : examId));
         setUploadMessage(null);
     }
 
@@ -144,33 +145,33 @@ export default function ExamDashboard({
                 <>
                     <ExamSelector
                         exams={modeExams}
-                        selectedExamId={selectedExam?.id}
+                        selectedExamId={selectedExam?.id ?? null}
                         onChange={selectExam}
-                    />
-
-                    {selectedExam && simulation ? (
-                        <>
-                            <ExamOverview exam={selectedExam} />
-                            <ExamStageTable
-                                stages={simulation.stages}
-                                scoringType={selectedExam.scoringType}
-                            />
-                            <ExamSimulation
-                                exam={selectedExam}
-                                simulation={simulation}
-                            />
-                            <ExamProofUpload
-                                exam={selectedExam}
-                                isAuthenticated={isAuthenticated}
-                                isUploading={isUploading}
-                                disabled={uploadDisabled}
-                                message={uploadMessage}
-                                onUpload={(file) =>
-                                    void handleProofUpload(file)
-                                }
-                            />
-                        </>
-                    ) : null}
+                    >
+                        {selectedExam && simulation ? (
+                            <>
+                                <ExamOverview exam={selectedExam} />
+                                <ExamStageTable
+                                    stages={simulation.stages}
+                                    scoringType={selectedExam.scoringType}
+                                />
+                                <ExamSimulation
+                                    exam={selectedExam}
+                                    simulation={simulation}
+                                />
+                                <ExamProofUpload
+                                    exam={selectedExam}
+                                    isAuthenticated={isAuthenticated}
+                                    isUploading={isUploading}
+                                    disabled={uploadDisabled}
+                                    message={uploadMessage}
+                                    onUpload={(file) =>
+                                        void handleProofUpload(file)
+                                    }
+                                />
+                            </>
+                        ) : null}
+                    </ExamSelector>
                 </>
             )}
         </div>
