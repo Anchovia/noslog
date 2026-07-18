@@ -13,6 +13,8 @@ const mocks = vi.hoisted(() => ({
     submissionDeleteMany: vi.fn(),
     submissionCreate: vi.fn(),
     revalidatePath: vi.fn(),
+    claimUploadTokenQuota: vi.fn(),
+    releaseUploadTokenQuota: vi.fn(),
 }));
 
 vi.mock("@/lib/session", () => ({
@@ -22,7 +24,15 @@ vi.mock("@/lib/session", () => ({
 vi.mock("@/lib/blob", () => ({
     createImageUploadToken: mocks.createImageUploadToken,
     deleteBlobIfOwned: mocks.deleteBlobIfOwned,
+    isImageContentType: (value: string) => value === "image/jpeg",
     isValidImageBlob: mocks.isValidImageBlob,
+}));
+
+vi.mock("@/lib/uploadRateLimit", () => ({
+    claimUploadTokenQuota: mocks.claimUploadTokenQuota,
+    getUploadLimitMessage: () =>
+        "이미지는 한 시간에 최대 10회까지 업로드할 수 있습니다.",
+    releaseUploadTokenQuota: mocks.releaseUploadTokenQuota,
 }));
 
 vi.mock("@/lib/db", () => ({
@@ -43,6 +53,7 @@ vi.mock("next/cache", () => ({
 
 import {
     discardExamProofUpload,
+    requestExamProofUpload,
     submitExamProof,
 } from "@/app/(nevigation)/exams/actions";
 
@@ -67,6 +78,15 @@ describe("검정 증빙 업로드 액션", () => {
         mocks.submissionFindFirst.mockResolvedValue(null);
         mocks.submissionDeleteMany.mockResolvedValue({ count: 0 });
         mocks.submissionCreate.mockResolvedValue({ id: 50 });
+        mocks.claimUploadTokenQuota.mockResolvedValue({
+            allowed: true,
+            grantId: 70,
+        });
+        mocks.createImageUploadToken.mockResolvedValue({
+            pathname: "exam-proofs/2/30/proof.jpg",
+            token: "upload-token",
+        });
+        mocks.releaseUploadTokenQuota.mockResolvedValue(undefined);
         mocks.transaction.mockImplementation(async (callback) =>
             callback({
                 examSubmission: {
@@ -75,6 +95,38 @@ describe("검정 증빙 업로드 액션", () => {
                 },
             })
         );
+    });
+
+    it("발급 한도를 초과하면 Blob 업로드 토큰을 만들지 않는다", async () => {
+        mocks.claimUploadTokenQuota.mockResolvedValue({
+            allowed: false,
+            grantId: null,
+        });
+
+        await expect(requestExamProofUpload(30, "image/jpeg")).resolves.toEqual(
+            {
+                success: false,
+                message:
+                    "이미지는 한 시간에 최대 10회까지 업로드할 수 있습니다.",
+            }
+        );
+
+        expect(mocks.createImageUploadToken).not.toHaveBeenCalled();
+    });
+
+    it("Blob 토큰 생성에 실패하면 소비한 발급 횟수를 되돌린다", async () => {
+        mocks.createImageUploadToken.mockRejectedValueOnce(
+            new Error("blob error")
+        );
+
+        await expect(requestExamProofUpload(30, "image/jpeg")).resolves.toEqual(
+            {
+                success: false,
+                message: "이미지 업로드 요청을 처리하지 못했습니다.",
+            }
+        );
+
+        expect(mocks.releaseUploadTokenQuota).toHaveBeenCalledWith(2, 70);
     });
 
     it("재제출이 성공하면 이전 반려 기록과 Blob을 정리한다", async () => {

@@ -48,11 +48,23 @@ model User {
   chartRecordSnapshots ChartRecordSnapshot[]
   examSubmissions      ExamSubmission[]
   examAchievements     ExamAchievement[]
+  uploadTokenGrants    UploadTokenGrant[]
 
   @@index([grade_basic, id])
   @@index([grade_recital, id])
   @@index([country, grade_basic, id])
   @@index([country, grade_recital, id])
+}
+
+// 사용자별 이미지 업로드 토큰 발급 횟수를 제한함
+model UploadTokenGrant {
+  id        Int      @id @default(autoincrement())
+  purpose   String
+  createdAt DateTime @default(now()) @map("created_at")
+  userId    Int      @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, purpose, createdAt])
 }
 
 model Music {

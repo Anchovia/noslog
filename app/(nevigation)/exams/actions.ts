@@ -5,10 +5,16 @@ import { revalidatePath } from "next/cache";
 import {
     createImageUploadToken,
     deleteBlobIfOwned,
+    isImageContentType,
     isValidImageBlob,
 } from "@/lib/blob";
 import db from "@/lib/db";
 import getSession from "@/lib/session";
+import {
+    claimUploadTokenQuota,
+    getUploadLimitMessage,
+    releaseUploadTokenQuota,
+} from "@/lib/uploadRateLimit";
 import { normalizeStoredGrade } from "@/lib/utils";
 
 async function getAvailableExam(examId: number, userId: number) {
@@ -64,6 +70,12 @@ export async function requestExamProofUpload(
     if (!Number.isInteger(examId)) {
         return { success: false as const, message: "잘못된 검정입니다." };
     }
+    if (!isImageContentType(contentType)) {
+        return {
+            success: false as const,
+            message: "JPG, PNG, WebP 이미지만 사용할 수 있습니다.",
+        };
+    }
 
     const exam = await getAvailableExam(examId, userId);
     if (!exam) {
@@ -78,12 +90,23 @@ export async function requestExamProofUpload(
     if (exam.submissions.length > 0) {
         return { success: false as const, message: "현재 심사 중입니다." };
     }
+    let grantId: number | null = null;
     try {
+        const quota = await claimUploadTokenQuota(userId, "exam-proof");
+        if (!quota.allowed) {
+            return {
+                success: false as const,
+                message: getUploadLimitMessage(),
+            };
+        }
+        grantId = quota.grantId;
+
         const upload = await createImageUploadToken(
             `exam-proofs/${userId}/${examId}/proof`,
             contentType
         );
         if (!upload) {
+            await releaseUploadTokenQuota(userId, grantId).catch(() => null);
             return {
                 success: false as const,
                 message: "JPG, PNG, WebP 이미지만 사용할 수 있습니다.",
@@ -92,9 +115,12 @@ export async function requestExamProofUpload(
 
         return { success: true as const, ...upload };
     } catch {
+        if (grantId !== null) {
+            await releaseUploadTokenQuota(userId, grantId).catch(() => null);
+        }
         return {
             success: false as const,
-            message: "Vercel Blob 업로드 설정을 확인해주세요.",
+            message: "이미지 업로드 요청을 처리하지 못했습니다.",
         };
     }
 }

@@ -5,11 +5,17 @@ import { redirect } from "next/navigation";
 import {
     createImageUploadToken,
     deleteBlobIfOwned,
+    isImageContentType,
     isValidImageBlob,
 } from "@/lib/blob";
 import db from "@/lib/db";
 import { CACHE_TAGS, getUserProfileTag } from "@/lib/cacheTags";
 import getSession from "@/lib/session";
+import {
+    claimUploadTokenQuota,
+    getUploadLimitMessage,
+    releaseUploadTokenQuota,
+} from "@/lib/uploadRateLimit";
 import { updateTag } from "next/cache";
 
 import { settingSchema } from "./schema";
@@ -106,13 +112,32 @@ export async function requestProfileAvatarUpload(contentType: string) {
     if (!session.id) {
         return { success: false as const, message: "로그인이 필요합니다." };
     }
+    if (!isImageContentType(contentType)) {
+        return {
+            success: false as const,
+            message: "JPG, PNG, WebP 이미지만 사용할 수 있습니다.",
+        };
+    }
 
+    let grantId: number | null = null;
     try {
+        const quota = await claimUploadTokenQuota(session.id, "profile-avatar");
+        if (!quota.allowed) {
+            return {
+                success: false as const,
+                message: getUploadLimitMessage(),
+            };
+        }
+        grantId = quota.grantId;
+
         const upload = await createImageUploadToken(
             `avatars/${session.id}/profile`,
             contentType
         );
         if (!upload) {
+            await releaseUploadTokenQuota(session.id, grantId).catch(
+                () => null
+            );
             return {
                 success: false as const,
                 message: "JPG, PNG, WebP 이미지만 사용할 수 있습니다.",
@@ -124,9 +149,14 @@ export async function requestProfileAvatarUpload(contentType: string) {
             ...upload,
         };
     } catch {
+        if (grantId !== null) {
+            await releaseUploadTokenQuota(session.id, grantId).catch(
+                () => null
+            );
+        }
         return {
             success: false as const,
-            message: "Vercel Blob 업로드 설정을 확인해주세요.",
+            message: "이미지 업로드 요청을 처리하지 못했습니다.",
         };
     }
 }
