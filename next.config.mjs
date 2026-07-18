@@ -36,9 +36,6 @@ const nextConfig = {
                 hostname: "p.eagate.573.jp",
             },
             {
-                hostname: "imagedelivery.net",
-            },
-            {
                 hostname: "*.public.blob.vercel-storage.com",
             },
             /*
