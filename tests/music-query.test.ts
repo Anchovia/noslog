@@ -54,4 +54,24 @@ describe("normalizeMusicQuery", () => {
             { difficulty: "Real", min: 1, max: 3 },
         ]);
     });
+
+    it("범위를 벗어나거나 뒤집힌 레벨을 유효 범위로 정리한다", () => {
+        const result = normalizeMusicQuery({
+            expert: "true",
+            expertMin: "99",
+            expertMax: "-10",
+            real: "true",
+            realMin: "3",
+            realMax: "1",
+        });
+
+        expect(result.difficulties).toEqual([
+            { difficulty: "Expert", min: 1, max: 12 },
+            { difficulty: "Real", min: 1, max: 3 },
+        ]);
+    });
+
+    it("검색어 길이를 100자로 제한한다", () => {
+        expect(normalizeMusicQuery({ q: "a".repeat(150) }).q).toHaveLength(100);
+    });
 });

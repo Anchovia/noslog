@@ -118,7 +118,12 @@ export async function uploadUserSetting(
     }
 
     const previousAvatarId = cloudflareImageId(currentUser.avatar);
-    if (avatarChanged && previousAvatarId) {
+    if (
+        avatarChanged &&
+        previousAvatarId &&
+        process.env.CLOUDFLARE_ACCOUNT_ID &&
+        process.env.CLOUDFLARE_API_KEY
+    ) {
         await fetch(
             `https://api.cloudflare.com/client/v4/accounts/${process.env.CLOUDFLARE_ACCOUNT_ID}/images/v1/${previousAvatarId}`,
             {
@@ -138,6 +143,13 @@ export async function getImageUploadUrl() {
     const session = await getSession();
     if (!session.id) {
         return { success: false as const, message: "로그인이 필요합니다." };
+    }
+
+    if (!process.env.CLOUDFLARE_ACCOUNT_ID || !process.env.CLOUDFLARE_API_KEY) {
+        return {
+            success: false as const,
+            message: "이미지 업로드 설정이 필요합니다.",
+        };
     }
 
     try {

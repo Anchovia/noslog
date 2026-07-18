@@ -14,6 +14,10 @@ const mocks = vi.hoisted(() => ({
     bingoProgressCount: vi.fn(),
     bingoDelete: vi.fn(),
     userUpdate: vi.fn(),
+    examSubmissionFindFirst: vi.fn(),
+    examSubmissionUpdate: vi.fn(),
+    examAchievementUpsert: vi.fn(),
+    examAchievementDeleteMany: vi.fn(),
     updateTag: vi.fn(),
     revalidatePath: vi.fn(),
     redirect: vi.fn(),
@@ -22,6 +26,11 @@ const mocks = vi.hoisted(() => ({
 const transactionClient = {
     musicChart: { update: mocks.musicChartUpdate },
     chartLevelConstantHistory: { create: mocks.constantHistoryCreate },
+    examSubmission: { update: mocks.examSubmissionUpdate },
+    examAchievement: {
+        upsert: mocks.examAchievementUpsert,
+        deleteMany: mocks.examAchievementDeleteMany,
+    },
 };
 
 vi.mock("@/lib/admin", () => ({
@@ -44,6 +53,7 @@ vi.mock("@/lib/db", () => ({
         bingoCellProgress: { count: mocks.bingoProgressCount },
         bingo: { delete: mocks.bingoDelete },
         user: { update: mocks.userUpdate },
+        examSubmission: { findFirst: mocks.examSubmissionFindFirst },
     },
 }));
 
@@ -64,6 +74,7 @@ import {
 } from "@/app/admin/music/actions";
 import { deleteBingo } from "@/app/admin/bingos/actions";
 import { updateUserRole } from "@/app/admin/users/actions";
+import { reviewExamSubmission } from "@/app/admin/submissions/actions";
 
 describe("관리자 액션", () => {
     beforeEach(() => {
@@ -77,6 +88,9 @@ describe("관리자 액션", () => {
         mocks.examDelete.mockResolvedValue({ id: 30 });
         mocks.bingoDelete.mockResolvedValue({ id: 40 });
         mocks.userUpdate.mockResolvedValue({ id: 2 });
+        mocks.examSubmissionUpdate.mockResolvedValue({ id: 50 });
+        mocks.examAchievementUpsert.mockResolvedValue({ id: 60 });
+        mocks.examAchievementDeleteMany.mockResolvedValue({ count: 0 });
         mocks.transaction.mockImplementation(async (input) => {
             if (typeof input === "function") {
                 return input(transactionClient);
@@ -223,5 +237,43 @@ describe("관리자 액션", () => {
         await updateUserRole(formData);
 
         expect(mocks.userUpdate).not.toHaveBeenCalled();
+    });
+
+    it("대기 상태가 아닌 검정 제출은 다시 심사하지 않는다", async () => {
+        mocks.examSubmissionFindFirst.mockResolvedValue(null);
+        const formData = new FormData();
+        formData.set("submissionId", "50");
+        formData.set("status", "approved");
+
+        await reviewExamSubmission(formData);
+
+        expect(mocks.examSubmissionFindFirst).toHaveBeenCalledWith({
+            where: { id: 50, status: "pending" },
+            select: { id: true, userId: true, examId: true },
+        });
+        expect(mocks.transaction).not.toHaveBeenCalled();
+    });
+
+    it("대기 중인 검정 제출을 승인하고 합격 이력을 생성한다", async () => {
+        mocks.examSubmissionFindFirst.mockResolvedValue({
+            id: 50,
+            userId: 2,
+            examId: 30,
+        });
+        const formData = new FormData();
+        formData.set("submissionId", "50");
+        formData.set("status", "approved");
+
+        await reviewExamSubmission(formData);
+
+        expect(mocks.examSubmissionUpdate).toHaveBeenCalledWith({
+            where: { id: 50 },
+            data: expect.objectContaining({ status: "approved" }),
+        });
+        expect(mocks.examAchievementUpsert).toHaveBeenCalledWith(
+            expect.objectContaining({
+                where: { userId_examId: { userId: 2, examId: 30 } },
+            })
+        );
     });
 });

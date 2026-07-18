@@ -60,6 +60,10 @@ function parseNumber(value: string | undefined, fallback: number) {
     return Number.isFinite(parsed) ? parsed : fallback;
 }
 
+function clampLevel(value: number, max: number) {
+    return Math.min(max, Math.max(1, value));
+}
+
 export function normalizeMusicQuery(
     searchParams: MusicSearchParams
 ): NormalizedMusicQuery {
@@ -75,20 +79,29 @@ export function normalizeMusicQuery(
     const sort = searchParams.sort === "level" ? "level" : "name";
 
     return {
-        q: searchParams.q?.trim() ?? "",
+        q: searchParams.q?.trim().slice(0, 100) ?? "",
         categories: normalizeMusicCategories(searchParams.categories),
         difficulties: selectedDifficulties.map((difficulty) => {
             const config = difficultyConfig[difficulty];
-            return {
-                difficulty: config.label,
-                min: parseNumber(
+            const first = clampLevel(
+                parseNumber(
                     searchParams[`${difficulty}Min`],
                     config.defaultMin
                 ),
-                max: parseNumber(
+                config.defaultMax
+            );
+            const second = clampLevel(
+                parseNumber(
                     searchParams[`${difficulty}Max`],
                     config.defaultMax
                 ),
+                config.defaultMax
+            );
+
+            return {
+                difficulty: config.label,
+                min: Math.min(first, second),
+                max: Math.max(first, second),
             };
         }),
         sort,

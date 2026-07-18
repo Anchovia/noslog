@@ -21,7 +21,7 @@ export default async function Header() {
                 </span>
             </Link>
             <div className="ml-auto flex items-center gap-3">
-                <nav className="flex items-center gap-2">
+                <nav className="flex items-center gap-2" aria-label="주요 메뉴">
                     {navItems.map((item) => (
                         <Link
                             key={item.href}
@@ -38,7 +38,11 @@ export default async function Header() {
                         href={`/profile/${user.id}`}
                         className="border-border relative size-8 shrink-0 overflow-hidden rounded-full border"
                     >
-                        <Image src={user.avatar} alt="avatar" fill />
+                        <Image
+                            src={user.avatar}
+                            alt={`${user.username ?? "사용자"} 프로필`}
+                            fill
+                        />
                     </Link>
                 ) : (
                     <Link

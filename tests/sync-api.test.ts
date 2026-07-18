@@ -137,6 +137,14 @@ function createRequest(body: unknown, requestOrigin = origin) {
     });
 }
 
+function createRequestWithHeaders(body: unknown, headers: HeadersInit) {
+    return new NextRequest("http://localhost/api/receivePlayerData", {
+        method: "POST",
+        headers: { Origin: origin, ...headers },
+        body: JSON.stringify(body),
+    });
+}
+
 describe("POST /api/receivePlayerData", () => {
     beforeEach(() => {
         vi.clearAllMocks();
@@ -157,6 +165,43 @@ describe("POST /api/receivePlayerData", () => {
         );
 
         expect(response.status).toBe(403);
+        expect(mocks.verifySyncToken).not.toHaveBeenCalled();
+    });
+
+    it("JSON이 아닌 요청을 거부한다", async () => {
+        const response = await POST(
+            createRequestWithHeaders(requestBody(), {
+                "Content-Type": "text/plain",
+            })
+        );
+
+        expect(response.status).toBe(415);
+        expect(mocks.verifySyncToken).not.toHaveBeenCalled();
+    });
+
+    it("허용 크기를 초과한 요청을 본문 파싱 전에 거부한다", async () => {
+        const response = await POST(
+            createRequestWithHeaders(requestBody(), {
+                "Content-Type": "application/json",
+                "Content-Length": String(8 * 1024 * 1024 + 1),
+            })
+        );
+
+        expect(response.status).toBe(413);
+        expect(mocks.verifySyncToken).not.toHaveBeenCalled();
+    });
+
+    it("허용 개수를 초과한 최근 기록 배열을 거부한다", async () => {
+        const body = requestBody();
+        const history = body.recentData.data.player.history_list.history;
+        body.recentData.data.player.history_list.history = Array.from(
+            { length: 101 },
+            () => history[0]
+        );
+
+        const response = await POST(createRequest(body));
+
+        expect(response.status).toBe(400);
         expect(mocks.verifySyncToken).not.toHaveBeenCalled();
     });
 

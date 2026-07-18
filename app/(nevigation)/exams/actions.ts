@@ -84,17 +84,26 @@ export async function requestExamProofUpload(examId: number) {
         };
     }
 
-    const response = await fetch(
-        `https://api.cloudflare.com/client/v4/accounts/${process.env.CLOUDFLARE_ACCOUNT_ID}/images/v2/direct_upload`,
-        {
-            method: "POST",
-            headers: {
-                Authorization: `Bearer ${process.env.CLOUDFLARE_API_KEY}`,
-            },
-            cache: "no-store",
-        }
-    );
-    const data = (await response.json()) as CloudflareUploadResponse;
+    let response: Response;
+    let data: CloudflareUploadResponse;
+    try {
+        response = await fetch(
+            `https://api.cloudflare.com/client/v4/accounts/${process.env.CLOUDFLARE_ACCOUNT_ID}/images/v2/direct_upload`,
+            {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${process.env.CLOUDFLARE_API_KEY}`,
+                },
+                cache: "no-store",
+            }
+        );
+        data = (await response.json()) as CloudflareUploadResponse;
+    } catch {
+        return {
+            success: false as const,
+            message: "이미지 업로드 서버에 연결하지 못했습니다.",
+        };
+    }
 
     if (!response.ok || !data.success || !data.result) {
         return {

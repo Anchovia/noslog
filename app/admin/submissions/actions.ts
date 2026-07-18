@@ -19,8 +19,8 @@ export async function reviewExamSubmission(formData: FormData) {
         return;
     }
 
-    const submission = await db.examSubmission.findUnique({
-        where: { id: submissionId },
+    const submission = await db.examSubmission.findFirst({
+        where: { id: submissionId, status: "pending" },
         select: { id: true, userId: true, examId: true },
     });
     if (!submission) return;

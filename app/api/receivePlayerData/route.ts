@@ -15,67 +15,70 @@ import { revalidateTag } from "next/cache";
 import { z } from "zod";
 
 const EAGATE_ORIGIN = "https://p.eagate.573.jp";
+const MAX_SYNC_BODY_BYTES = 8 * 1024 * 1024;
+const shortText = z.string().min(1).max(256);
+const nullableShortText = z.string().max(256).nullable();
 const difficultySchema = z.enum(["Normal", "Hard", "Expert", "Real"]);
 const recentHistorySchema = z.object({
     difficulty: difficultySchema,
-    level: z.number().int().positive(),
-    score: z.number().int().nonnegative(),
-    max_combo: z.number().int().nonnegative(),
-    rank: z.string().min(1),
-    play_time: z.string().min(1),
-    music: z.string().min(1),
-    grade_basic: z.number().int().nonnegative(),
+    level: z.number().int().min(1).max(14),
+    score: z.number().int().min(0).max(1_000_000),
+    max_combo: z.number().int().min(0).max(1_000_000),
+    rank: z.string().min(1).max(32),
+    play_time: z.string().min(1).max(64),
+    music: shortText,
+    grade_basic: z.number().int().min(0).max(100_000_000),
 });
 const musicSheetSchema = z.object({
     difficulty: difficultySchema,
-    level: z.number().int().positive(),
-    score: z.number().int().nonnegative(),
-    rank: z.string().min(1),
-    fc_type: z.number().int().nonnegative(),
-    play_count: z.number().int().nonnegative(),
-    fullcombo_count: z.number().int().nonnegative(),
-    pianistic_count: z.number().int().nonnegative(),
-    max_combo: z.number().int().nonnegative(),
-    grade_basic: z.number().int().nonnegative(),
-    grade_recital: z.number().int().nonnegative(),
-    besttime: z.string(),
+    level: z.number().int().min(1).max(14),
+    score: z.number().int().min(0).max(1_000_000),
+    rank: z.string().min(1).max(32),
+    fc_type: z.number().int().min(0).max(10),
+    play_count: z.number().int().min(0).max(10_000_000),
+    fullcombo_count: z.number().int().min(0).max(10_000_000),
+    pianistic_count: z.number().int().min(0).max(10_000_000),
+    max_combo: z.number().int().min(0).max(1_000_000),
+    grade_basic: z.number().int().min(0).max(100_000_000),
+    grade_recital: z.number().int().min(0).max(100_000_000),
+    besttime: z.string().max(64),
 });
 const musicSchema = z.object({
-    "@index": z.string().min(1),
-    artist: z.string().nullable(),
-    category: z.string().min(1),
-    category_short: z.string().min(1),
-    description: z.string().nullable(),
-    title: z.string().min(1),
-    title_kana: z.string(),
+    "@index": z.string().min(1).max(128),
+    artist: nullableShortText,
+    category: z.string().min(1).max(128),
+    category_short: z.string().min(1).max(32),
+    description: z.string().max(5_000).nullable(),
+    title: shortText,
+    title_kana: z.string().max(256),
     sheet: z.array(musicSheetSchema).min(3).max(4),
 });
 const syncRequestSchema = z.object({
-    token: z.string().min(1),
+    token: z.string().min(1).max(512),
     playerData: z.object({
-        status: z.number(),
+        status: z.number().int(),
         data: z.object({
             player: z.object({
-                name: z.string().min(1),
-                play_count: z.number().int().nonnegative(),
+                name: z.string().min(1).max(64),
+                play_count: z.number().int().min(0).max(10_000_000),
             }),
         }),
     }),
     recentData: z.object({
-        status: z.number(),
+        status: z.number().int(),
         data: z.object({
             player: z.object({
                 history_list: z.object({
-                    history: z.array(recentHistorySchema),
+                    history: z.array(recentHistorySchema).max(100),
                 }),
             }),
         }),
     }),
     totalData: z
         .object({
-            status: z.number(),
+            status: z.number().int(),
             data: z.object({
-                music: z.array(musicSchema),
+                music: z.array(musicSchema).max(2_000),
             }),
         })
         .nullable(),
@@ -87,6 +90,7 @@ function corsHeaders() {
         "Access-Control-Allow-Methods": "POST, OPTIONS",
         "Access-Control-Allow-Headers": "Content-Type",
         "Access-Control-Max-Age": "86400",
+        "Cache-Control": "no-store",
         Vary: "Origin",
     };
 }
@@ -105,6 +109,15 @@ function json(
 export async function POST(request: NextRequest) {
     if (request.headers.get("origin") !== EAGATE_ORIGIN) {
         return json("허용되지 않은 요청입니다.", 403);
+    }
+
+    if (!request.headers.get("content-type")?.startsWith("application/json")) {
+        return json("JSON 형식의 요청만 허용됩니다.", 415);
+    }
+
+    const contentLength = Number(request.headers.get("content-length"));
+    if (Number.isFinite(contentLength) && contentLength > MAX_SYNC_BODY_BYTES) {
+        return json("전송된 데이터가 너무 큽니다.", 413);
     }
 
     const body = await request.json().catch(() => null);

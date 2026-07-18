@@ -42,7 +42,7 @@ function encodeCursor(row: MusicRow) {
 }
 
 function decodeCursor(value: string | null): MusicCursor | null {
-    if (!value) return null;
+    if (!value || value.length > 2_048) return null;
 
     try {
         const parsed = JSON.parse(

@@ -24,6 +24,10 @@ export async function toggleBingoCell(
         };
     }
 
+    if (!Number.isInteger(bingoCellId) || bingoCellId < 1) {
+        return { success: false, message: "잘못된 빙고 칸입니다." };
+    }
+
     const cell = await db.bingoCell.findUnique({
         where: { id: bingoCellId },
         select: {
