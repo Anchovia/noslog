@@ -2,6 +2,7 @@ import { Settings } from "lucide-react";
 import Link from "next/link";
 
 import Badge from "@/components/ui/Badge";
+import DiscordIcon from "@/components/ui/DiscordIcon";
 
 import ProfileShareDialog from "./profileShareDialog";
 import type { ProfileMode, ProfileUser } from "./profileTypes";
@@ -36,9 +37,21 @@ export default function ProfileHeader({
                         <span className="text-text-secondary shrink-0 text-xs font-bold">
                             {getProfileCountryCode(user.country)}
                         </span>
-                        <h1 className="text-title truncate">
+                        <h1 className="text-title min-w-0 flex-1 truncate">
                             {user.username || "이름 없는 유저"}
                         </h1>
+                        <div className="flex shrink-0 gap-1.5">
+                            <ProfileShareDialog user={user} mode={mode} />
+                            {isOwner ? (
+                                <Link
+                                    href="/profile/settings"
+                                    className="border-border text-text-secondary hover:bg-surface-muted hover:text-text-primary focus-visible:ring-text-secondary/30 flex size-9 cursor-pointer items-center justify-center rounded-md border transition-colors focus-visible:ring-2 focus-visible:outline-none"
+                                    aria-label="프로필 설정"
+                                >
+                                    <Settings size={16} />
+                                </Link>
+                            ) : null}
+                        </div>
                     </div>
                     <div className="mt-1 flex flex-wrap gap-1.5">
                         {user.exam_basic ? (
@@ -52,29 +65,18 @@ export default function ProfileHeader({
                             </Badge>
                         ) : null}
                     </div>
-                    <p className="text-caption mt-1.5 truncate">
+                    <p className="text-caption mt-1.5 whitespace-nowrap">
                         {formatProfileDate(user.created_at)} 가입 ·{" "}
                         {formatProfileDate(user.last_played_at)} 마지막 플레이
                     </p>
-                </div>
-                <div className="flex shrink-0 gap-1.5">
-                    <ProfileShareDialog user={user} mode={mode} />
-                    {isOwner ? (
-                        <Link
-                            href="/profile/settings"
-                            className="border-border text-text-secondary hover:bg-surface-muted hover:text-text-primary focus-visible:ring-text-secondary/30 flex size-9 cursor-pointer items-center justify-center rounded-md border transition-colors focus-visible:ring-2 focus-visible:outline-none"
-                            aria-label="프로필 설정"
-                        >
-                            <Settings size={16} />
-                        </Link>
-                    ) : null}
                 </div>
             </section>
 
             <div className="flex flex-wrap gap-2">
                 {user.discord_name ? (
-                    <span className="bg-surface text-caption rounded-md px-2.5 py-1.5">
-                        {user.discord_name}
+                    <span className="bg-surface text-caption flex items-center gap-1.5 rounded-md px-2.5 py-1.5">
+                        <DiscordIcon className="text-discord size-3.5" />
+                        <span>{user.discord_name}</span>
                     </span>
                 ) : null}
                 {user.nostalgia_name &&

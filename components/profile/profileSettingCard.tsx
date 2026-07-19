@@ -1,6 +1,6 @@
 "use client";
 
-import { Camera, MessageCircle, Save } from "lucide-react";
+import { Camera, Save } from "lucide-react";
 import Link from "next/link";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -15,6 +15,7 @@ import {
     settingSchema,
 } from "@/app/(nevigation)/profile/settings/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import DiscordIcon from "@/components/ui/DiscordIcon";
 
 interface ProfileSettingCardProps {
     user: {
@@ -188,7 +189,7 @@ export default function ProfileSettingCard({ user }: ProfileSettingCardProps) {
                 </div>
                 <div className="border-border bg-bg rounded-card flex items-center gap-3 border p-3">
                     <span className="bg-discord/15 text-discord flex size-9 shrink-0 items-center justify-center rounded-full">
-                        <MessageCircle className="size-4" aria-hidden />
+                        <DiscordIcon className="size-4" />
                     </span>
                     <div className="min-w-0 flex-1">
                         <p className="text-body truncate text-sm font-semibold">
