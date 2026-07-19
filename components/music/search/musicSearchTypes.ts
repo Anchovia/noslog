@@ -1,4 +1,7 @@
-import type { MusicSearchParams } from "@/app/(nevigation)/music/query";
+import type {
+    MusicRecordFilter,
+    MusicSearchParams,
+} from "@/app/(nevigation)/music/query";
 import type { MusicCategory } from "@/lib/musicCategories";
 
 export type { MusicCategory } from "@/lib/musicCategories";
@@ -93,6 +96,7 @@ export type MusicDifficultyRanges = Record<MusicDifficulty, [number, number]>;
 
 export interface MusicSearchProps {
     searchParams: MusicSearchParams;
+    isLoggedIn: boolean;
 }
 
 export interface BuildMusicSearchParamsInput {
@@ -101,4 +105,5 @@ export interface BuildMusicSearchParamsInput {
     ranges: MusicDifficultyRanges;
     searchValue: string;
     currentParams: MusicSearchParams;
+    recordFilters: MusicRecordFilter[];
 }

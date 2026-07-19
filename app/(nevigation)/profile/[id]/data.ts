@@ -45,6 +45,7 @@ async function queryProfileData(id: number) {
                     score_c: true,
                     score_d: true,
                     created_at: true,
+                    preferredArcade: { select: { name: true } },
                 },
             }),
             db.userBestGrade.findMany({

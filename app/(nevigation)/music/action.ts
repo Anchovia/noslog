@@ -2,10 +2,12 @@
 
 import { getMusicPage } from "./data";
 import type { MusicSearchParams } from "./query";
+import getSession from "@/lib/session";
 
 export async function getMoreMusics(
     cursor: string,
     searchParams: MusicSearchParams
 ) {
-    return getMusicPage(searchParams, cursor);
+    const session = await getSession();
+    return getMusicPage(searchParams, cursor, session.id ?? null);
 }

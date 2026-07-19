@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 
 import ProfileSettingCard from "@/components/profile/profileSettingCard";
+import { getActiveArcades } from "@/lib/arcades";
 import db from "@/lib/db";
 import getSession from "@/lib/session";
 
@@ -23,17 +24,21 @@ export default async function ProfileSettingsPage({
     if (!session.id) redirect("/login");
     const { discordError } = await searchParams;
 
-    const user = await db.user.findUnique({
-        where: { id: session.id },
-        select: {
-            id: true,
-            avatar: true,
-            username: true,
-            country: true,
-            discord_id: true,
-            discord_name: true,
-        },
-    });
+    const [user, arcades] = await Promise.all([
+        db.user.findUnique({
+            where: { id: session.id },
+            select: {
+                id: true,
+                avatar: true,
+                username: true,
+                country: true,
+                discord_id: true,
+                discord_name: true,
+                preferred_arcade_id: true,
+            },
+        }),
+        getActiveArcades(),
+    ]);
     if (!user) redirect("/login");
 
     return (
@@ -52,7 +57,7 @@ export default async function ProfileSettingsPage({
                 </p>
             ) : null}
 
-            <ProfileSettingCard user={user} />
+            <ProfileSettingCard user={user} arcades={arcades} />
         </div>
     );
 }

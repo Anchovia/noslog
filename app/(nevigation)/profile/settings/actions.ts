@@ -39,6 +39,7 @@ export async function uploadUserSetting(
         avatar: String(formData.get("avatar") ?? ""),
         username: String(formData.get("username") ?? ""),
         country: String(formData.get("country") ?? ""),
+        preferredArcadeId: String(formData.get("preferredArcadeId") ?? ""),
     });
 
     if (!result.success) {
@@ -74,6 +75,21 @@ export async function uploadUserSetting(
         };
     }
     const nextAvatar = avatarChanged ? submittedAvatar : currentUser.avatar;
+    const preferredArcadeId = result.data.preferredArcadeId
+        ? Number(result.data.preferredArcadeId)
+        : null;
+    if (preferredArcadeId !== null) {
+        const arcade = await db.arcade.findFirst({
+            where: { id: preferredArcadeId, is_active: true },
+            select: { id: true },
+        });
+        if (!arcade) {
+            return {
+                success: false,
+                message: "선택한 오락실을 찾을 수 없습니다.",
+            };
+        }
+    }
 
     try {
         await db.user.update({
@@ -82,6 +98,7 @@ export async function uploadUserSetting(
                 username: result.data.username,
                 country: result.data.country,
                 avatar: nextAvatar,
+                preferred_arcade_id: preferredArcadeId,
             },
         });
         updateTag(CACHE_TAGS.userRankings);

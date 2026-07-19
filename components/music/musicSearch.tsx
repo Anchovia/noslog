@@ -22,11 +22,15 @@ import {
     getInitialMusicDifficultyState,
     parseMusicCategories,
 } from "@/components/music/search/musicSearchUtils";
+import type { MusicRecordFilter } from "@/app/(nevigation)/music/query";
 
 export type { MusicSearchProps } from "@/components/music/search/musicSearchTypes";
 
 // 악곡 검색 폼과 즉시 적용 필터 상태를 하위 영역에 연결함
-export default function MusicSearch({ searchParams }: MusicSearchProps) {
+export default function MusicSearch({
+    searchParams,
+    isLoggedIn,
+}: MusicSearchProps) {
     const router = useRouter();
     const rangeUpdateTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
     const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -41,6 +45,16 @@ export default function MusicSearch({ searchParams }: MusicSearchProps) {
         useState<MusicDifficultyRanges>(() =>
             getInitialMusicDifficultyRanges(searchParams)
         );
+    const [recordFilters, setRecordFilters] = useState<MusicRecordFilter[]>(
+        () =>
+            isLoggedIn
+                ? (searchParams.records ?? "")
+                      .split(",")
+                      .filter((value): value is MusicRecordFilter =>
+                          ["s", "fc", "pianist", "unplayed"].includes(value)
+                      )
+                : []
+    );
     const { register, handleSubmit, getValues } = useForm<searchType>({
         resolver: zodResolver(searchSchema),
         defaultValues: {
@@ -68,8 +82,26 @@ export default function MusicSearch({ searchParams }: MusicSearchProps) {
             ranges,
             searchValue,
             currentParams: searchParams,
+            recordFilters,
         });
 
+        router.replace(`/music?${params.toString()}`, { scroll: false });
+    }
+
+    function handleRecordToggle(filter: MusicRecordFilter) {
+        const nextFilters = recordFilters.includes(filter)
+            ? recordFilters.filter((item) => item !== filter)
+            : [...recordFilters, filter];
+        setRecordFilters(nextFilters);
+
+        const params = buildMusicSearchParams({
+            categories: selectedCategories,
+            difficulties: selectedDifficulties,
+            ranges: difficultyRanges,
+            searchValue: getValues("search")?.trim() ?? "",
+            currentParams: searchParams,
+            recordFilters: nextFilters,
+        });
         router.replace(`/music?${params.toString()}`, { scroll: false });
     }
 
@@ -175,6 +207,9 @@ export default function MusicSearch({ searchParams }: MusicSearchProps) {
                         onDifficultyToggle={handleDifficultyToggle}
                         onRangeChange={handleRangeChange}
                         onRangeCommit={handleRangeCommit}
+                        recordFilters={recordFilters}
+                        isLoggedIn={isLoggedIn}
+                        onRecordToggle={handleRecordToggle}
                     />
                 ) : null}
             </form>

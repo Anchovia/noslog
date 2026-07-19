@@ -29,6 +29,7 @@ export interface ProfileUser {
     score_d: number | null;
     created_at: string;
     last_played_at: string | null;
+    preferredArcade: { name: string } | null;
 }
 
 export interface BestPlayItem {

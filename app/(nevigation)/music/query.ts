@@ -18,7 +18,11 @@ export interface MusicSearchParams {
     sort?: "name" | "level";
     order?: "asc" | "desc";
     view?: "list" | "grid";
+    records?: string;
 }
+
+export const MUSIC_RECORD_FILTERS = ["s", "fc", "pianist", "unplayed"] as const;
+export type MusicRecordFilter = (typeof MUSIC_RECORD_FILTERS)[number];
 
 export type DifficultyKey = "normal" | "hard" | "expert" | "real";
 
@@ -34,6 +38,7 @@ export interface NormalizedMusicQuery {
     difficulties: MusicDifficultyFilter[];
     sort: "name" | "level";
     order: "asc" | "desc";
+    recordFilters: MusicRecordFilter[];
 }
 
 const difficulties: DifficultyKey[] = ["normal", "hard", "expert", "real"];
@@ -111,5 +116,10 @@ export function normalizeMusicQuery(
                 : sort === "level"
                   ? "desc"
                   : "asc",
+        recordFilters: (searchParams.records ?? "")
+            .split(",")
+            .filter((value): value is MusicRecordFilter =>
+                MUSIC_RECORD_FILTERS.includes(value as MusicRecordFilter)
+            ),
     };
 }

@@ -21,6 +21,10 @@ export const settingSchema = z.object({
     avatar: z.union([z.url("올바른 이미지 주소가 아닙니다."), z.literal("")]),
     username: usernameSchema,
     country: countrySchema,
+    preferredArcadeId: z.union([
+        z.literal(""),
+        z.string().regex(/^\d+$/, "오락실을 다시 선택해주세요."),
+    ]),
 });
 
 export const onboardingSchema = z.object({
