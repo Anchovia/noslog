@@ -74,7 +74,7 @@ export default function ScoreTrend({ points }: ScoreTrendProps) {
                     />
                 </LineChart>
             </ResponsiveContainer>
-            <div className="text-text-disabled -mt-5 flex justify-between text-[10px]">
+            <div className="text-caption text-text-disabled -mt-5 flex justify-between">
                 <span>{formatScoreRecordDate(points[0]?.play_time ?? "")}</span>
                 <span>
                     {formatScoreRecordDate(points.at(-1)?.play_time ?? "")}

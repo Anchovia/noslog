@@ -145,7 +145,7 @@ export default function ProfileSettingCard({ user }: ProfileSettingCardProps) {
                     <p className="text-caption mt-1">
                         JPG, PNG, WebP · 최대 4MB
                     </p>
-                    <label className="border-border text-text-primary hover:bg-surface-muted focus-within:ring-text-secondary/30 rounded-card mt-3 inline-flex h-9 cursor-pointer items-center gap-2 border px-3 text-xs font-semibold transition-colors focus-within:ring-2">
+                    <label className="border-border text-text-primary hover:bg-surface-muted focus-within:ring-text-secondary/30 rounded-card mt-3 inline-flex h-10 cursor-pointer items-center gap-2 border px-3 text-sm font-semibold transition-colors focus-within:ring-2">
                         <Camera className="size-4" aria-hidden />
                         사진 변경
                         <input
@@ -204,7 +204,7 @@ export default function ProfileSettingCard({ user }: ProfileSettingCardProps) {
                     </div>
                     <a
                         href="/discord/start?returnTo=/profile/settings"
-                        className="border-border text-text-primary hover:bg-surface-muted focus-visible:ring-text-secondary/30 rounded-card flex h-9 shrink-0 cursor-pointer items-center border px-3 text-xs font-bold transition-colors focus-visible:ring-2 focus-visible:outline-none"
+                        className="border-border text-text-primary hover:bg-surface-muted focus-visible:ring-text-secondary/30 rounded-card flex h-10 shrink-0 items-center border px-3 text-sm font-bold transition-colors focus-visible:ring-2 focus-visible:outline-none"
                     >
                         {user.discord_id ? "다시 연결" : "연결"}
                     </a>

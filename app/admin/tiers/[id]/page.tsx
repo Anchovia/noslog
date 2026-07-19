@@ -96,13 +96,13 @@ export default async function EditTierListPage({
                         required
                         aria-label="추가할 서열표 상수"
                         placeholder="구간 추가 (예: 12.7)"
-                        className="h-8 min-w-0 flex-1 bg-transparent text-center text-sm font-semibold outline-none"
+                        className="text-input h-11 min-w-0 flex-1 bg-transparent text-center font-semibold outline-none"
                     />
                     <button
                         type="submit"
                         aria-label="상수 구간 추가"
                         title="상수 구간 추가"
-                        className="text-text-secondary hover:text-text-primary ml-auto flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-md"
+                        className="text-text-secondary hover:bg-surface-muted hover:text-text-primary ml-auto flex size-11 shrink-0 items-center justify-center rounded-md"
                     >
                         <Plus className="size-4" />
                     </button>

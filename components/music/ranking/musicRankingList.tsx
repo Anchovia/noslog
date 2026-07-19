@@ -61,7 +61,7 @@ export default function MusicRankingList({
                                     {row.score.toLocaleString("ko-KR")}
                                 </strong>
                                 {row.fc_type >= 2 ? (
-                                    <span className="border-rank-fc/40 text-rank-fc rounded border py-0.5 text-center text-[8px] leading-none font-black">
+                                    <span className="border-rank-fc/40 text-rank-fc rounded border py-0.5 text-center text-[10px] leading-none font-black">
                                         FC
                                     </span>
                                 ) : (

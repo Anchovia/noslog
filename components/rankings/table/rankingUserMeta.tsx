@@ -64,7 +64,7 @@ export function ExamBadge({
     if (!exam) return null;
 
     return (
-        <Badge variant={mode} className="h-5 shrink-0 px-1.5 text-[10px]">
+        <Badge variant={mode} className="h-5 shrink-0 px-1.5">
             {mode === "basic" ? "Basic" : "Recital"} {exam}급
         </Badge>
     );

@@ -33,12 +33,12 @@ export default function TierBandHeader({ band }: { band: TierBandData }) {
                         required
                         defaultValue={band.value}
                         aria-label="서열표 구간값"
-                        className="border-border bg-bg h-9 w-20 rounded-md border px-2 text-right font-bold tabular-nums"
+                        className="border-border bg-bg text-input h-11 w-24 rounded-md border px-2 text-right font-bold tabular-nums"
                     />
                     <button
                         aria-label={`${band.value} 구간값 저장`}
                         title="구간값 저장"
-                        className="border-border hover:bg-bg flex size-9 cursor-pointer items-center justify-center rounded-md border"
+                        className="border-border hover:bg-bg flex size-11 items-center justify-center rounded-md border"
                     >
                         <Check className="size-4" />
                     </button>

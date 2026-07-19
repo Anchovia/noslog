@@ -61,7 +61,7 @@ export default function BingoBoard({
                                 <span className="rotate-6 text-sm font-extrabold">
                                     {label}
                                 </span>
-                                <span className="rotate-6 text-[8px] leading-none font-extrabold tracking-wide">
+                                <span className="rotate-6 text-[10px] leading-none font-extrabold tracking-wide">
                                     CLEAR
                                 </span>
                             </span>
@@ -71,7 +71,7 @@ export default function BingoBoard({
                             </span>
                         )}
                         {isRich ? (
-                            <span className="bg-score text-bg absolute -top-1 -right-1 rounded px-1 py-0.5 text-[9px] leading-none font-extrabold">
+                            <span className="bg-score text-bg absolute -top-1 -right-1 rounded px-1 py-0.5 text-[10px] leading-none font-extrabold">
                                 리치
                             </span>
                         ) : null}

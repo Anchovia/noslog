@@ -52,18 +52,12 @@ export default function ProfileHeader({ user, isOwner }: ProfileHeaderProps) {
                     </div>
                     <div className="mt-1 flex flex-wrap gap-1.5">
                         {user.exam_basic ? (
-                            <Badge
-                                variant="basic"
-                                className="h-5 px-1.5 text-[10px]"
-                            >
+                            <Badge variant="basic" className="h-5 px-1.5">
                                 Basic {user.exam_basic}급
                             </Badge>
                         ) : null}
                         {user.exam_recital ? (
-                            <Badge
-                                variant="recital"
-                                className="h-5 px-1.5 text-[10px]"
-                            >
+                            <Badge variant="recital" className="h-5 px-1.5">
                                 Recital {user.exam_recital}급
                             </Badge>
                         ) : null}

@@ -22,7 +22,7 @@ export default function ExamSimulation({
     return (
         <section className="bg-surface rounded-card px-3 py-2.5">
             <div className="flex items-center justify-between gap-3">
-                <h2 className="text-sm font-semibold">합격 시뮬레이션</h2>
+                <h2 className="text-section">합격 시뮬레이션</h2>
                 {exam.scoringType === "score" ? (
                     <p className="text-text-secondary text-right text-xs tabular-nums">
                         누적 {formatExamValue(totalValue, exam.scoringType)} /{" "}

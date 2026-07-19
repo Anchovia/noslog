@@ -40,16 +40,14 @@ export default function MusicDetailHeader({
                 >
                     {music.category_short}
                 </span>
-                <h1 className="text-text-primary truncate text-xl font-extrabold">
-                    {music.title}
-                </h1>
+                <h1 className="text-title truncate">{music.title}</h1>
                 <p className="text-text-secondary truncate text-sm">
                     {music.artist || "아티스트 미상"}
                 </p>
             </div>
 
             <div className="shrink-0 text-right">
-                <p className="text-text-disabled text-[10px]">레벨 상수</p>
+                <p className="text-caption text-text-disabled">레벨 상수</p>
                 <strong
                     className={cn(
                         "text-xl font-black tabular-nums",

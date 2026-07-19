@@ -67,7 +67,7 @@ export default function MusicInfoTab({
 
             <section className="bg-surface rounded-card p-4">
                 <header className="flex items-center justify-between gap-3">
-                    <h2 className="text-sm font-bold">패턴 경향</h2>
+                    <h2 className="text-section">패턴 경향</h2>
                     <span className="text-caption">
                         {difficulty} · 투표 {chartDetail.evaluationCount}
                     </span>
@@ -130,7 +130,7 @@ export default function MusicInfoTab({
 
             <section className="bg-surface rounded-card p-4">
                 <header className="flex items-center justify-between gap-3">
-                    <h2 className="text-sm font-bold">점수 분포</h2>
+                    <h2 className="text-section">점수 분포</h2>
                     <span className="text-caption">
                         {difficulty} · 전체 {chartDetail.playerCount}명
                     </span>
@@ -163,7 +163,7 @@ export default function MusicInfoTab({
                                     />
                                     <span
                                         className={cn(
-                                            "mt-1 truncate text-center text-[9px]",
+                                            "text-caption mt-1 truncate text-center",
                                             item.key === "pianist"
                                                 ? "text-score"
                                                 : "text-text-disabled"

@@ -33,9 +33,7 @@ export function CardTitle({
     className,
     ...props
 }: HTMLAttributes<HTMLHeadingElement>) {
-    return (
-        <h2 className={cn("text-section font-bold", className)} {...props} />
-    );
+    return <h2 className={cn("text-section", className)} {...props} />;
 }
 
 // 카드 본문 영역

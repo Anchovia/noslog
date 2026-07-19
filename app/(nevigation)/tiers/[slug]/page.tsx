@@ -189,11 +189,11 @@ export default async function TierDetailPage({
                             )}
                         >
                             <header className="bg-surface-muted flex min-h-11 items-center gap-3 px-3">
-                                <h2 className="text-text-primary text-base font-bold tabular-nums">
+                                <h2 className="text-section font-bold tabular-nums">
                                     {formatTierValue(band.value)}
                                 </h2>
                                 {user ? (
-                                    <div className="text-text-secondary ml-auto flex items-center gap-2 text-[10px]">
+                                    <div className="text-caption ml-auto flex items-center gap-2">
                                         <span className="text-rank-s">
                                             S {countStatus("s")}
                                         </span>

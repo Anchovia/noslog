@@ -73,8 +73,8 @@ export default async function AdminExamsPage({
                 </Link>
             </div>
 
-            <form className="grid grid-cols-[minmax(0,1fr)_5rem_5.5rem_2.5rem] gap-1.5">
-                <label className="border-border bg-surface flex h-10 min-w-0 items-center gap-2 rounded-md border px-3">
+            <form className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_2.75rem] gap-2">
+                <label className="border-border bg-surface col-span-3 flex h-11 min-w-0 items-center gap-2 rounded-md border px-3">
                     <Search className="text-text-disabled size-4 shrink-0" />
                     <input
                         name="q"
@@ -87,7 +87,7 @@ export default async function AdminExamsPage({
                     name="mode"
                     defaultValue={mode}
                     aria-label="모드 필터"
-                    className="border-border bg-surface text-text-primary h-10 rounded-md border px-2 text-xs"
+                    className="border-border bg-surface text-input h-11 min-w-0 rounded-md border px-2"
                 >
                     <option value="">전체</option>
                     <option value="basic">Basic</option>
@@ -98,7 +98,7 @@ export default async function AdminExamsPage({
                     name="status"
                     defaultValue={status}
                     aria-label="상태 필터"
-                    className="border-border bg-surface text-text-primary h-10 rounded-md border px-2 text-xs"
+                    className="border-border bg-surface text-input h-11 min-w-0 rounded-md border px-2"
                 >
                     <option value="">모든 상태</option>
                     <option value="draft">초안</option>
@@ -106,7 +106,7 @@ export default async function AdminExamsPage({
                 </select>
                 <button
                     type="submit"
-                    className="border-border bg-surface text-text-primary flex size-10 items-center justify-center rounded-md border"
+                    className="border-border bg-surface text-text-primary hover:bg-surface-muted flex size-11 items-center justify-center rounded-md border transition-colors"
                     aria-label="필터 적용"
                     title="필터 적용"
                 >

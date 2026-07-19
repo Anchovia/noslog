@@ -23,9 +23,7 @@ export default function MusicPatternVoteGrid({
     return (
         <div className="border-divider mt-4 border-t pt-3">
             <div className="flex items-baseline gap-2">
-                <h3 className="text-text-primary text-sm font-bold">
-                    패턴 투표
-                </h3>
+                <h3 className="text-section">패턴 투표</h3>
                 <span className="text-caption">필수 · 제출 시 함께 반영</span>
             </div>
             <div className="mt-3 grid grid-cols-[4rem_repeat(5,minmax(0,1fr))] items-center">

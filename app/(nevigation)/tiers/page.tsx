@@ -115,7 +115,7 @@ export default async function TiersPage({ searchParams }: TiersPageProps) {
                                         >
                                             {tierList.mode}
                                         </span>
-                                        <h2 className="text-text-primary truncate text-base font-semibold">
+                                        <h2 className="text-section truncate">
                                             {tierList.title}
                                         </h2>
                                     </div>

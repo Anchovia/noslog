@@ -37,7 +37,7 @@ export default function TierChartSearch({
                         value={query}
                         onChange={(event) => onQueryChange(event.target.value)}
                         placeholder="곡 제목 · 아티스트 · 식별자 검색"
-                        className="border-border bg-bg text-input h-10 w-full rounded-md border pr-3 pl-10"
+                        className="border-border bg-bg text-input h-11 w-full rounded-md border pr-3 pl-10"
                     />
                 </div>
                 <button
@@ -45,7 +45,7 @@ export default function TierChartSearch({
                     onClick={onClose}
                     aria-label="검색 닫기"
                     title="닫기"
-                    className="text-text-secondary hover:bg-surface-muted flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-md"
+                    className="text-text-secondary hover:bg-surface-muted flex size-11 shrink-0 items-center justify-center rounded-md"
                 >
                     <X className="size-4" />
                 </button>
