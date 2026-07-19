@@ -1,7 +1,7 @@
 "use client";
 
 import Script from "next/script";
-import { useCallback, useEffect, useRef } from "react";
+import { useRef } from "react";
 
 const OFFICIAL_X_URL = "https://x.com/NOSTALGIA_573";
 
@@ -16,17 +16,20 @@ type XWidgetsWindow = Window & {
 // NOSTALGIA 공식 계정의 최신 게시물을 X 공식 위젯으로 표시함
 export default function OfficialXTimeline() {
     const timelineRef = useRef<HTMLDivElement>(null);
+    const loadRequestedRef = useRef(false);
 
-    const loadTimeline = useCallback(() => {
+    const loadTimeline = () => {
         const container = timelineRef.current;
-        if (!container) return;
+        const widgets = (window as XWidgetsWindow).twttr?.widgets;
 
-        void (window as XWidgetsWindow).twttr?.widgets?.load(container);
-    }, []);
+        if (!container || !widgets || loadRequestedRef.current) return;
 
-    useEffect(() => {
-        loadTimeline();
-    }, [loadTimeline]);
+        // 이미 변환된 타임라인은 다시 요청하지 않음
+        if (!container.querySelector(".twitter-timeline")) return;
+
+        loadRequestedRef.current = true;
+        void widgets.load(container);
+    };
 
     return (
         <section className="bg-surface rounded-card overflow-hidden">
@@ -47,7 +50,7 @@ export default function OfficialXTimeline() {
                     className="twitter-timeline text-caption flex min-h-52 items-center justify-center px-4 text-center"
                     data-theme="dark"
                     data-lang="ko"
-                    data-tweet-limit="2"
+                    data-tweet-limit="1"
                     data-chrome="noheader nofooter noborders transparent"
                     data-dnt="true"
                     href={OFFICIAL_X_URL}
@@ -60,7 +63,6 @@ export default function OfficialXTimeline() {
                 id="x-widgets"
                 src="https://platform.twitter.com/widgets.js"
                 strategy="lazyOnload"
-                onLoad={loadTimeline}
                 onReady={loadTimeline}
             />
         </section>
