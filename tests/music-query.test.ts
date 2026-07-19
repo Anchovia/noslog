@@ -10,6 +10,7 @@ describe("normalizeMusicQuery", () => {
             difficulties: [{ difficulty: "Expert", min: 8, max: 12 }],
             sort: "name",
             order: "asc",
+            recordFilters: [],
         });
     });
 
@@ -73,5 +74,13 @@ describe("normalizeMusicQuery", () => {
 
     it("검색어 길이를 100자로 제한한다", () => {
         expect(normalizeMusicQuery({ q: "a".repeat(150) }).q).toHaveLength(100);
+    });
+
+    it("개인 기록 필터에서 지원하는 값만 복수 선택한다", () => {
+        expect(
+            normalizeMusicQuery({
+                records: "s,a-plus,fc,unplayed,unknown,pianist",
+            }).recordFilters
+        ).toEqual(["s", "fc", "unplayed", "pianist"]);
     });
 });

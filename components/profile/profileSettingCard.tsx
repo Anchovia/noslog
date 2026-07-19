@@ -1,6 +1,6 @@
 "use client";
 
-import { Camera, Save } from "lucide-react";
+import { Camera, MapPin, Save } from "lucide-react";
 import Link from "next/link";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -26,7 +26,9 @@ interface ProfileSettingCardProps {
         country: string;
         discord_id: string | null;
         discord_name: string | null;
+        preferred_arcade_id: number | null;
     };
+    arcades: { id: number; name: string; region: string | null }[];
 }
 
 const inputClass =
@@ -39,7 +41,10 @@ function FieldError({ message }: { message?: string }) {
 }
 
 // 프로필 이미지와 공개 정보를 한 화면에서 수정함
-export default function ProfileSettingCard({ user }: ProfileSettingCardProps) {
+export default function ProfileSettingCard({
+    user,
+    arcades,
+}: ProfileSettingCardProps) {
     const [preview, setPreview] = useState(user.avatar ?? "");
     const [file, setFile] = useState<File | null>(null);
     const [fileError, setFileError] = useState("");
@@ -58,6 +63,7 @@ export default function ProfileSettingCard({ user }: ProfileSettingCardProps) {
                 user.country === "ko-KR" || user.country === "ja-JP"
                     ? user.country
                     : "global",
+            preferredArcadeId: user.preferred_arcade_id?.toString() ?? "",
         },
     });
 
@@ -119,6 +125,7 @@ export default function ProfileSettingCard({ user }: ProfileSettingCardProps) {
         formData.set("avatar", avatar);
         formData.set("username", data.username);
         formData.set("country", data.country);
+        formData.set("preferredArcadeId", data.preferredArcadeId);
 
         const result = await uploadUserSetting(formData);
         if (result?.fieldErrors) {
@@ -165,6 +172,34 @@ export default function ProfileSettingCard({ user }: ProfileSettingCardProps) {
                     </label>
                     <FieldError message={fileError} />
                 </div>
+            </section>
+
+            <section className="bg-surface rounded-card flex flex-col gap-4 p-4">
+                <div>
+                    <h2 className="text-section flex items-center gap-2">
+                        <MapPin className="text-chart size-4" /> 선호 오락실
+                    </h2>
+                    <p className="text-caption mt-1">
+                        프로필에 표시할 오락실을 선택합니다.
+                    </p>
+                </div>
+                <label className="text-text-secondary text-xs font-semibold">
+                    오락실
+                    <select
+                        className={`${inputClass} mt-1.5`}
+                        {...register("preferredArcadeId")}
+                    >
+                        <option value="">설정 안 함</option>
+                        {arcades.map((arcade) => (
+                            <option key={arcade.id} value={arcade.id}>
+                                {arcade.region
+                                    ? `${arcade.name} · ${arcade.region}`
+                                    : arcade.name}
+                            </option>
+                        ))}
+                    </select>
+                    <FieldError message={errors.preferredArcadeId?.message} />
+                </label>
             </section>
 
             <section className="bg-surface rounded-card flex flex-col gap-4 p-4">

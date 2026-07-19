@@ -75,6 +75,7 @@
         background: var(--color-bg);
         color: var(--color-text-primary);
         font-family: var(--font-sans);
+        font-synthesis: none;
     }
 
     /* 폼 요소가 앱 기본 타이포그래피를 상속하도록 맞춤 */

@@ -47,6 +47,7 @@ describe("악곡 검색 UI 쿼리 변환", () => {
                 order: "desc",
                 view: "grid",
             },
+            recordFilters: ["s", "unplayed"],
         });
 
         expect(params.get("q")).toBe("Life");
@@ -60,5 +61,6 @@ describe("악곡 검색 UI 쿼리 변환", () => {
         expect(params.get("sort")).toBe("level");
         expect(params.get("order")).toBe("desc");
         expect(params.get("view")).toBe("grid");
+        expect(params.get("records")).toBe("s,unplayed");
     });
 });

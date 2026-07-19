@@ -45,10 +45,11 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="ko" className="bg-bg text-text-primary">
-            <body className={`${pretendard.variable} font-sans`}>
-                {children}
-            </body>
+        <html
+            lang="ko"
+            className={`${pretendard.variable} bg-bg text-text-primary`}
+        >
+            <body className="font-sans">{children}</body>
         </html>
     );
 }

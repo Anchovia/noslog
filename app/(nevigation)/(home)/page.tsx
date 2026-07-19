@@ -4,11 +4,11 @@ import {
     ExamBadge,
     UserAvatar,
 } from "@/components/rankings/table/rankingUserMeta";
+import type { UserRankingMode } from "@/lib/rankings";
 import {
     getCachedUserRankingPage,
     getUserRankingPosition,
 } from "@/lib/rankings";
-import type { UserRankingMode } from "@/lib/rankings";
 import { getUser } from "@/lib/user";
 import {
     formatToComma,
@@ -18,11 +18,11 @@ import {
 import {
     BadgeCheck,
     ChevronRight,
-    Clock3,
     DatabaseZap,
     Grid3X3,
     ListOrdered,
     Music2,
+    MapPin,
     Search,
     Trophy,
 } from "lucide-react";
@@ -101,7 +101,7 @@ export default async function Home({ searchParams }: HomeProps) {
                     <p className="text-section">내 NOSTALGIA 기록 모아보기</p>
                     <Link
                         href="/login"
-                        className="bg-discord rounded-card text-text-primary hover:bg-discord/90 flex h-10 items-center px-3 text-sm font-bold transition-colors"
+                        className="bg-discord rounded-card text-text-primary hover:bg-discord/90 flex h-8 items-center px-3 text-sm font-bold transition-colors"
                     >
                         로그인
                     </Link>
@@ -188,12 +188,12 @@ export default async function Home({ searchParams }: HomeProps) {
                     <span className="text-label">검정</span>
                 </Link>
                 <div className="bg-surface-muted rounded-card relative flex h-20 flex-col items-center justify-center gap-2 opacity-50">
-                    <Clock3
+                    <MapPin
                         className="text-text-secondary size-6"
                         aria-hidden="true"
                     />
                     <span className="text-caption text-text-secondary font-semibold">
-                        준비중
+                        오락실
                     </span>
                     <span className="bg-real/15 text-real absolute top-1 right-1 rounded px-1 text-[10px] font-bold">
                         SOON

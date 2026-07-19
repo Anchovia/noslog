@@ -1,6 +1,8 @@
 import MusicCategoryFilter from "./musicCategoryFilter";
 import MusicDifficultyFilter from "./musicDifficultyFilter";
 import MusicDifficultyRange from "./musicDifficultyRange";
+import MusicRecordFilter from "./musicRecordFilter";
+import type { MusicRecordFilter as MusicRecordFilterValue } from "@/app/(nevigation)/music/query";
 import {
     MUSIC_DIFFICULTIES,
     type MusicCategory,
@@ -17,6 +19,9 @@ interface MusicFilterPanelProps {
     onDifficultyToggle: (difficulty: MusicDifficulty) => void;
     onRangeChange: (difficulty: MusicDifficulty, value: number[]) => void;
     onRangeCommit: (difficulty: MusicDifficulty, value: number[]) => void;
+    recordFilters: MusicRecordFilterValue[];
+    isLoggedIn: boolean;
+    onRecordToggle: (value: MusicRecordFilterValue) => void;
 }
 
 // 카테고리, 난이도와 레벨 범위 필터를 조립함
@@ -28,6 +33,9 @@ export default function MusicFilterPanel({
     onDifficultyToggle,
     onRangeChange,
     onRangeCommit,
+    recordFilters,
+    isLoggedIn,
+    onRecordToggle,
 }: MusicFilterPanelProps) {
     return (
         <article className="border-text-disabled/70 bg-bg rounded-card flex flex-col gap-4 border border-dashed p-3">
@@ -50,6 +58,11 @@ export default function MusicFilterPanel({
                     />
                 ) : null
             )}
+            <MusicRecordFilter
+                selected={recordFilters}
+                isLoggedIn={isLoggedIn}
+                onToggle={onRecordToggle}
+            />
         </article>
     );
 }

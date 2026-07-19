@@ -1,4 +1,4 @@
-import { Settings } from "lucide-react";
+import { MapPin, Settings } from "lucide-react";
 import Link from "next/link";
 
 import Badge from "@/components/ui/Badge";
@@ -37,7 +37,7 @@ export default function ProfileHeader({
                         <span className="text-text-secondary shrink-0 text-xs font-bold">
                             {getProfileCountryCode(user.country)}
                         </span>
-                        <h1 className="text-title min-w-0 flex-1 truncate">
+                        <h1 className="text-title min-w-0 flex-1 break-words">
                             {user.username || "이름 없는 유저"}
                         </h1>
                         <div className="flex shrink-0 gap-1.5">
@@ -72,17 +72,32 @@ export default function ProfileHeader({
                 </div>
             </section>
 
-            <div className="flex flex-wrap gap-2">
-                {user.discord_name ? (
-                    <span className="bg-surface text-caption flex items-center gap-1.5 rounded-md px-2.5 py-1.5">
-                        <DiscordIcon className="text-discord size-3.5" />
-                        <span>{user.discord_name}</span>
+            <div className="grid min-w-0 grid-cols-2 gap-2">
+                {user.nostalgia_name ? (
+                    <span className="bg-surface text-caption col-span-2 flex min-w-0 items-center gap-2 rounded-md px-2.5 py-1.5">
+                        <span className="text-text-disabled shrink-0 font-semibold">
+                            NOSTALGIA ID
+                        </span>
+                        <span className="text-text-primary truncate">
+                            {user.nostalgia_name}
+                        </span>
                     </span>
                 ) : null}
-                {user.nostalgia_name &&
-                user.nostalgia_name !== user.username ? (
-                    <span className="bg-surface text-caption rounded-md px-2.5 py-1.5">
-                        게임명 {user.nostalgia_name}
+                {user.discord_name ? (
+                    <span className="bg-surface text-caption flex min-w-0 items-center gap-1.5 rounded-md px-2.5 py-1.5">
+                        <DiscordIcon className="text-discord size-3.5" />
+                        <span className="truncate">{user.discord_name}</span>
+                    </span>
+                ) : null}
+                {user.preferredArcade ? (
+                    <span
+                        className="bg-surface text-caption flex min-w-0 items-center gap-1.5 rounded-md px-2.5 py-1.5"
+                        title={user.preferredArcade.name}
+                    >
+                        <MapPin className="text-chart size-3.5 shrink-0" />
+                        <span className="truncate">
+                            {user.preferredArcade.name}
+                        </span>
                     </span>
                 ) : null}
             </div>

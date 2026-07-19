@@ -14,6 +14,7 @@ const tabs = [
     { href: "/admin/music", label: "악곡" },
     { href: "/admin/tiers", label: "서열표" },
     { href: "/admin/bingos", label: "빙고" },
+    { href: "/admin/arcades", label: "오락실" },
     { href: "/admin/users", label: "유저" },
     { href: "/admin/community", label: "의견" },
     { href: "/admin/syncs", label: "동기화" },

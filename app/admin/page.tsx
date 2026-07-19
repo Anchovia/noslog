@@ -6,6 +6,7 @@ import {
     ListMusic,
     MessageSquareText,
     Music2,
+    MapPin,
     Rows3,
     Users,
 } from "lucide-react";
@@ -50,6 +51,12 @@ export default async function AdminPage() {
             label: "빙고 초안",
             count: draftBingoCount,
             color: "text-chart",
+        },
+        {
+            href: "/admin/arcades",
+            label: "오락실 관리",
+            icon: MapPin,
+            color: "bg-chart/10 text-chart",
         },
     ];
 

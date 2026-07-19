@@ -146,6 +146,7 @@ describe("프로필 이미지 업로드 토큰", () => {
                 username: "CAROL",
                 country: "ko-KR",
                 avatar: newAvatar,
+                preferred_arcade_id: null,
             },
         });
         expect(mocks.deleteBlobIfOwned).toHaveBeenCalledWith(oldAvatar);

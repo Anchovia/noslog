@@ -91,16 +91,16 @@ export default function MusicRecordTab({
                                 ) : null}
                             </div>
                         </div>
+                    </div>
 
-                        <div className="text-right">
-                            <p className="text-caption">내 그레이드</p>
-                            <strong className="text-score text-xl font-black whitespace-nowrap tabular-nums">
-                                Grd{" "}
-                                {userPlayData
-                                    ? formatToGrade(userPlayData.grade_basic)
-                                    : "-"}
-                            </strong>
-                        </div>
+                    <div className="flex items-baseline justify-end gap-2">
+                        <span className="text-caption">내 그레이드</span>
+                        <strong className="text-score text-xl font-black whitespace-nowrap tabular-nums">
+                            Grd{" "}
+                            {userPlayData
+                                ? formatToGrade(userPlayData.grade_basic)
+                                : "-"}
+                        </strong>
                     </div>
 
                     <div>

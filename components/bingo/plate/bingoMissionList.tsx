@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import { Check, ExternalLink } from "lucide-react";
 import Link from "next/link";
+import BingoTermHelp from "../bingoTermHelp";
 
 import type { BingoCellItem } from "./bingoPlateTypes";
 import {
@@ -70,7 +71,7 @@ export default function BingoMissionList({
                                         isCompleted && "line-through"
                                     )}
                                 >
-                                    {cell.challenge}
+                                    <BingoTermHelp text={cell.challenge} />
                                 </p>
                                 <div className="text-caption mt-0.5 flex items-center gap-2">
                                     <span>

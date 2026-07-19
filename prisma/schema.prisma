@@ -16,6 +16,8 @@ model User {
   avatar               String?
   country              String                    @default("ko-KR")
   profile_completed_at DateTime?
+  preferred_arcade_id  Int?
+  preferredArcade      Arcade?                   @relation(fields: [preferred_arcade_id], references: [id], onDelete: SetNull)
   rank_basic           Int?
   rank_recital         Int?
   rank_basic_country   Int?
@@ -55,6 +57,21 @@ model User {
   @@index([grade_recital, id])
   @@index([country, grade_basic, id])
   @@index([country, grade_recital, id])
+  @@index([preferred_arcade_id])
+}
+
+// 유저가 선택할 수 있는 오락실 목록을 관리자 데이터로 관리함
+model Arcade {
+  id         Int      @id @default(autoincrement())
+  name       String   @unique
+  region     String?
+  address    String?
+  is_active  Boolean  @default(true)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  users      User[]
+
+  @@index([is_active, name])
 }
 
 // 사용자별 이미지 업로드 토큰 발급 횟수를 제한함

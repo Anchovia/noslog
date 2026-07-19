@@ -87,6 +87,7 @@ export function buildMusicSearchParams({
     ranges,
     searchValue,
     currentParams,
+    recordFilters,
 }: BuildMusicSearchParamsInput) {
     const params = new URLSearchParams();
 
@@ -108,6 +109,9 @@ export function buildMusicSearchParams({
     if (currentParams.sort) params.set("sort", currentParams.sort);
     if (currentParams.order) params.set("order", currentParams.order);
     if (currentParams.view) params.set("view", currentParams.view);
+    if (recordFilters.length > 0) {
+        params.set("records", recordFilters.join(","));
+    }
 
     return params;
 }

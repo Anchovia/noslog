@@ -58,7 +58,7 @@ function decodeCursor(value: string | null): MusicCursor | null {
     }
 }
 
-function buildWhere(query: NormalizedMusicQuery) {
+function buildWhere(query: NormalizedMusicQuery, userId: number | null) {
     const conditions: Prisma.Sql[] = [];
 
     if (query.q) {
@@ -88,10 +88,64 @@ function buildWhere(query: NormalizedMusicQuery) {
             Prisma.sql`(${Prisma.join(difficultyConditions, " OR ")})`
         );
     }
+    const recordCondition = buildRecordWhere(query, userId);
+    if (recordCondition) conditions.push(recordCondition);
 
     return conditions.length > 0
         ? Prisma.sql`WHERE ${Prisma.join(conditions, " AND ")}`
         : Prisma.empty;
+}
+
+function buildRecordWhere(query: NormalizedMusicQuery, userId: number | null) {
+    if (!userId || query.recordFilters.length === 0) return null;
+
+    const chartConditions = query.difficulties.map(
+        ({ difficulty, min, max }) => Prisma.sql`
+            (record_chart."difficulty" = ${difficulty}
+             AND record_chart."level" BETWEEN ${min} AND ${max})
+        `
+    );
+    const chartWhere =
+        chartConditions.length > 0
+            ? Prisma.sql`AND (${Prisma.join(chartConditions, " OR ")})`
+            : Prisma.empty;
+    const playedConditions = query.recordFilters
+        .filter((filter) => filter !== "unplayed")
+        .map((filter) => {
+            if (filter === "s") return Prisma.sql`UPPER(play."rank") = 'S'`;
+            if (filter === "fc")
+                return Prisma.sql`(play."fc_type" > 0 OR play."fullcombo_count" > 0)`;
+            return Prisma.sql`(play."score" >= 1000000 OR play."pianistic_count" > 0)`;
+        });
+    const statusConditions: Prisma.Sql[] = [];
+
+    if (playedConditions.length > 0) {
+        statusConditions.push(Prisma.sql`
+            EXISTS (
+                SELECT 1
+                FROM "PlayData" AS play
+                JOIN "MusicChart" AS record_chart ON record_chart."id" = play."chart_id"
+                WHERE play."user_id" = ${userId}
+                  AND play."music_idx" = music."index"
+                  ${chartWhere}
+                  AND (${Prisma.join(playedConditions, " OR ")})
+            )
+        `);
+    }
+    if (query.recordFilters.includes("unplayed")) {
+        statusConditions.push(Prisma.sql`
+            NOT EXISTS (
+                SELECT 1
+                FROM "PlayData" AS play
+                JOIN "MusicChart" AS record_chart ON record_chart."id" = play."chart_id"
+                WHERE play."user_id" = ${userId}
+                  AND play."music_idx" = music."index"
+                  ${chartWhere}
+            )
+        `);
+    }
+
+    return Prisma.sql`(${Prisma.join(statusConditions, " OR ")})`;
 }
 
 function buildCursorWhere(
@@ -141,7 +195,8 @@ function buildOrderBy(query: NormalizedMusicQuery) {
 
 async function queryMusicPage(
     query: NormalizedMusicQuery,
-    cursorValue: string | null
+    cursorValue: string | null,
+    userId: number | null = null
 ) {
     const cursor = decodeCursor(cursorValue);
     const selectedDifficulties = query.difficulties.map(
@@ -169,7 +224,7 @@ async function queryMusicPage(
                 )::int AS "representative_level"
             FROM "Music" AS music
             JOIN "MusicChart" AS chart ON chart."music_idx" = music."index"
-            ${buildWhere(query)}
+            ${buildWhere(query, userId)}
             GROUP BY
                 music."index",
                 music."title",
@@ -216,7 +271,12 @@ const getCachedMusicPage = unstable_cache(
 
 export async function getMusicPage(
     searchParams: MusicSearchParams,
-    cursor: string | null = null
+    cursor: string | null = null,
+    userId: number | null = null
 ) {
-    return getCachedMusicPage(normalizeMusicQuery(searchParams), cursor);
+    const query = normalizeMusicQuery(searchParams);
+    if (userId && query.recordFilters.length > 0) {
+        return queryMusicPage(query, cursor, userId);
+    }
+    return getCachedMusicPage({ ...query, recordFilters: [] }, cursor);
 }
