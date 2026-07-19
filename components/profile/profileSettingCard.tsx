@@ -11,6 +11,7 @@ import {
     uploadUserSetting,
 } from "@/app/(nevigation)/profile/settings/actions";
 import {
+    PROFILE_COUNTRIES,
     SettingType,
     settingSchema,
 } from "@/app/(nevigation)/profile/settings/schema";
@@ -22,6 +23,7 @@ interface ProfileSettingCardProps {
         id: number;
         avatar: string | null;
         username: string | null;
+        country: string;
         discord_id: string | null;
         discord_name: string | null;
     };
@@ -52,6 +54,10 @@ export default function ProfileSettingCard({ user }: ProfileSettingCardProps) {
         defaultValues: {
             avatar: user.avatar ?? "",
             username: user.username ?? "",
+            country:
+                user.country === "ko-KR" || user.country === "ja-JP"
+                    ? user.country
+                    : "global",
         },
     });
 
@@ -112,6 +118,7 @@ export default function ProfileSettingCard({ user }: ProfileSettingCardProps) {
         const formData = new FormData();
         formData.set("avatar", avatar);
         formData.set("username", data.username);
+        formData.set("country", data.country);
 
         const result = await uploadUserSetting(formData);
         if (result?.fieldErrors) {
@@ -178,6 +185,29 @@ export default function ProfileSettingCard({ user }: ProfileSettingCardProps) {
                     />
                     <FieldError message={errors.username?.message} />
                 </label>
+                <fieldset>
+                    <legend className="text-text-secondary text-xs font-semibold">
+                        국가
+                    </legend>
+                    <div className="mt-1.5 grid grid-cols-3 gap-2">
+                        {PROFILE_COUNTRIES.map((country) => (
+                            <label
+                                key={country.value}
+                                className="has-checked:border-text-primary has-checked:bg-text-primary has-checked:text-bg border-border bg-bg text-text-secondary hover:bg-surface-muted rounded-card flex h-11 cursor-pointer items-center justify-center gap-1.5 border text-sm font-semibold transition-colors"
+                            >
+                                <input
+                                    type="radio"
+                                    value={country.value}
+                                    className="sr-only"
+                                    {...register("country")}
+                                />
+                                <span>{country.code}</span>
+                                <span className="sr-only">{country.label}</span>
+                            </label>
+                        ))}
+                    </div>
+                    <FieldError message={errors.country?.message} />
+                </fieldset>
             </section>
 
             <section className="bg-surface rounded-card flex flex-col gap-4 p-4">

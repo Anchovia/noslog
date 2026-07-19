@@ -29,6 +29,7 @@ export default async function ProfileSettingsPage({
             id: true,
             avatar: true,
             username: true,
+            country: true,
             discord_id: true,
             discord_name: true,
         },

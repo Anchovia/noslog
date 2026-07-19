@@ -14,6 +14,7 @@ const routes: {
 } = {
     publicOnly: {},
     privateOnly: {
+        "/onboarding": true,
         "/profile/settings": true,
     },
 } as const;
@@ -24,6 +25,16 @@ export async function proxy(request: NextRequest) {
 
     // 로그인 상태에서 public route 접근시
     if (session.id) {
+        if (
+            session.profileCompleted === false &&
+            !pathname.startsWith("/onboarding") &&
+            !pathname.startsWith("/discord/")
+        ) {
+            return NextResponse.redirect(new URL("/onboarding", request.url));
+        }
+        if (pathname === "/onboarding" && session.profileCompleted === true) {
+            return NextResponse.redirect(new URL("/", request.url));
+        }
         if (routes.publicOnly[pathname]) {
             return NextResponse.redirect(new URL("/", request.url));
         }

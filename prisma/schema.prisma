@@ -15,6 +15,7 @@ model User {
   discord_name         String?
   avatar               String?
   country              String                    @default("ko-KR")
+  profile_completed_at DateTime?
   rank_basic           Int?
   rank_recital         Int?
   rank_basic_country   Int?

@@ -115,7 +115,11 @@ export async function GET(request: NextRequest) {
         const avatar = discordAvatar(discordUser);
         const linkedUser = await db.user.findUnique({
             where: { discord_id: discordUser.id },
-            select: { id: true, avatar: true },
+            select: {
+                id: true,
+                avatar: true,
+                profile_completed_at: true,
+            },
         });
 
         if (session.id) {
@@ -167,12 +171,16 @@ export async function GET(request: NextRequest) {
                   },
                   select: { id: true },
               });
+        const profileCompleted = Boolean(linkedUser?.profile_completed_at);
 
         revalidateTag(getUserProfileTag(user.id), "max");
         revalidateTag(CACHE_TAGS.userRankings, "max");
         session.id = user.id;
+        session.profileCompleted = profileCompleted;
         await session.save();
-        return NextResponse.redirect(new URL(returnTo, request.url));
+        return NextResponse.redirect(
+            new URL(profileCompleted ? returnTo : "/onboarding", request.url)
+        );
     } catch {
         return errorRedirect(request, "account_update", isLinking);
     }
