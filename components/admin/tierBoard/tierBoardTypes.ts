@@ -42,3 +42,10 @@ export interface TierDropTarget {
     bandId: number;
     index: number;
 }
+
+// 일괄 적용 시 채보의 최종 구간과 순서를 서버에 전달함
+export interface TierEntryPlacement {
+    id: number;
+    tierBandId: number;
+    position: number;
+}

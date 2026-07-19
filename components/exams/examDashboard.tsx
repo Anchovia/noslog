@@ -158,21 +158,26 @@ export default function ExamDashboard({
                                 <ExamStageTable
                                     stages={simulation.stages}
                                     scoringType={selectedExam.scoringType}
+                                    showBest={selectedExam.mode !== "event"}
                                 />
-                                <ExamSimulation
-                                    exam={selectedExam}
-                                    simulation={simulation}
-                                />
-                                <ExamProofUpload
-                                    exam={selectedExam}
-                                    isAuthenticated={isAuthenticated}
-                                    isUploading={isUploading}
-                                    disabled={uploadDisabled}
-                                    message={uploadMessage}
-                                    onUpload={(file) =>
-                                        void handleProofUpload(file)
-                                    }
-                                />
+                                {selectedExam.mode !== "event" ? (
+                                    <>
+                                        <ExamSimulation
+                                            exam={selectedExam}
+                                            simulation={simulation}
+                                        />
+                                        <ExamProofUpload
+                                            exam={selectedExam}
+                                            isAuthenticated={isAuthenticated}
+                                            isUploading={isUploading}
+                                            disabled={uploadDisabled}
+                                            message={uploadMessage}
+                                            onUpload={(file) =>
+                                                void handleProofUpload(file)
+                                            }
+                                        />
+                                    </>
+                                ) : null}
                             </>
                         ) : null}
                     </ExamSelector>

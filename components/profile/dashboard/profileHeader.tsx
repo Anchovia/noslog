@@ -1,34 +1,24 @@
-import { Settings, Share2 } from "lucide-react";
+import { Settings } from "lucide-react";
 import Link from "next/link";
 
 import Badge from "@/components/ui/Badge";
 
-import type { ProfileUser } from "./profileTypes";
+import ProfileShareDialog from "./profileShareDialog";
+import type { ProfileMode, ProfileUser } from "./profileTypes";
 import { formatProfileDate, getProfileCountryCode } from "./profileUtils";
 
 interface ProfileHeaderProps {
     user: ProfileUser;
     isOwner: boolean;
+    mode: ProfileMode;
 }
 
 // 프로필 기본 정보, 공유와 설정 진입을 한곳에서 관리함
-export default function ProfileHeader({ user, isOwner }: ProfileHeaderProps) {
-    async function handleShare() {
-        const shareData = {
-            title: `${user.username || "NosLog 유저"} 프로필`,
-            url: window.location.href,
-        };
-
-        try {
-            if (navigator.share) await navigator.share(shareData);
-            else await navigator.clipboard.writeText(shareData.url);
-        } catch (error) {
-            if (error instanceof Error && error.name !== "AbortError") {
-                console.error("프로필 공유에 실패했습니다.", error);
-            }
-        }
-    }
-
+export default function ProfileHeader({
+    user,
+    isOwner,
+    mode,
+}: ProfileHeaderProps) {
     return (
         <>
             <section className="flex items-center gap-3">
@@ -68,14 +58,7 @@ export default function ProfileHeader({ user, isOwner }: ProfileHeaderProps) {
                     </p>
                 </div>
                 <div className="flex shrink-0 gap-1.5">
-                    <button
-                        type="button"
-                        onClick={() => void handleShare()}
-                        className="border-border text-text-secondary hover:bg-surface-muted hover:text-text-primary focus-visible:ring-text-secondary/30 flex size-9 cursor-pointer items-center justify-center rounded-md border transition-colors focus-visible:ring-2 focus-visible:outline-none"
-                        aria-label="프로필 공유"
-                    >
-                        <Share2 size={16} />
-                    </button>
+                    <ProfileShareDialog user={user} mode={mode} />
                     {isOwner ? (
                         <Link
                             href="/profile/settings"

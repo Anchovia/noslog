@@ -2,9 +2,12 @@ import { describe, expect, it } from "vitest";
 
 import type { TierBandData } from "@/components/admin/tierBoard/tierBoardTypes";
 import {
+    getTierBoardChangeCount,
     getBandDropId,
     getEntryDragId,
     getTierDifficultyBorder,
+    getTierEntryPlacements,
+    moveTierEntryInBoard,
     resolveTierDropTarget,
 } from "@/components/admin/tierBoard/tierBoardUtils";
 
@@ -98,5 +101,18 @@ describe("서열표 드래그 대상 계산", () => {
                 bandId: 999,
             })
         ).toBeNull();
+    });
+
+    it("드롭 결과를 로컬 보드에만 반영하고 변경된 배치를 만든다", () => {
+        const initialBands = bands();
+        const movedBands = moveTierEntryInBoard(initialBands, 101, 20, 0);
+
+        expect(movedBands[0].entries).toMatchObject([{ id: 102, position: 1 }]);
+        expect(movedBands[1].entries).toMatchObject([{ id: 101, position: 1 }]);
+        expect(getTierBoardChangeCount(initialBands, movedBands)).toBe(2);
+        expect(getTierEntryPlacements(movedBands)).toEqual([
+            { id: 102, tierBandId: 10, position: 1 },
+            { id: 101, tierBandId: 20, position: 1 },
+        ]);
     });
 });

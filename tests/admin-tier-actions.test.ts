@@ -5,7 +5,10 @@ const mocks = vi.hoisted(() => ({
     chartFindMany: vi.fn(),
     chartFindUnique: vi.fn(),
     bandFindFirst: vi.fn(),
+    bandFindMany: vi.fn(),
     bandCount: vi.fn(),
+    bandCreate: vi.fn(),
+    bandUpdate: vi.fn(),
     entryCount: vi.fn(),
     entryFindFirst: vi.fn(),
     entryFindUnique: vi.fn(),
@@ -39,7 +42,10 @@ vi.mock("@/lib/db", () => ({
         },
         tierBand: {
             findFirst: mocks.bandFindFirst,
+            findMany: mocks.bandFindMany,
             count: mocks.bandCount,
+            create: mocks.bandCreate,
+            update: mocks.bandUpdate,
         },
         tierEntry: {
             count: mocks.entryCount,
@@ -61,7 +67,7 @@ vi.mock("next/navigation", () => ({ redirect: mocks.redirect }));
 import {
     addTierBand,
     addTierEntry,
-    moveTierEntryByDrop,
+    applyTierBoardLayout,
     searchTierCharts,
 } from "@/app/admin/tiers/actions";
 
@@ -72,7 +78,10 @@ describe("관리자 서열표 액션", () => {
         mocks.chartFindMany.mockResolvedValue([]);
         mocks.chartFindUnique.mockResolvedValue({ id: 20 });
         mocks.bandFindFirst.mockResolvedValue({ value: 12 });
+        mocks.bandFindMany.mockResolvedValue([]);
         mocks.bandCount.mockResolvedValue(0);
+        mocks.bandCreate.mockResolvedValue({ id: 10 });
+        mocks.bandUpdate.mockResolvedValue({ id: 10 });
         mocks.entryCount.mockResolvedValue(0);
         mocks.entryFindFirst.mockResolvedValue({ position: 2 });
         mocks.entryCreate.mockResolvedValue({ id: 1 });
@@ -150,17 +159,40 @@ describe("관리자 서열표 액션", () => {
     });
 
     it("같은 서열 상수 구간을 중복 추가하지 않는다", async () => {
-        mocks.bandCount.mockResolvedValue(1);
+        mocks.bandFindMany.mockResolvedValue([{ id: 10, value: 12.3 }]);
         const formData = new FormData();
         formData.set("tierListId", "5");
         formData.set("value", "12.3");
 
         await addTierBand(formData);
 
-        expect(mocks.bandCount).toHaveBeenCalledWith({
-            where: { tierListId: 5, value: 12.3 },
-        });
+        expect(mocks.bandCreate).not.toHaveBeenCalled();
         expect(mocks.transaction).not.toHaveBeenCalled();
+    });
+
+    it("서열 상수 구간을 콜백형 트랜잭션 없이 일괄 추가한다", async () => {
+        mocks.bandFindMany.mockResolvedValue([
+            { id: 10, value: 12.0 },
+            { id: 11, value: 11.3 },
+        ]);
+        const formData = new FormData();
+        formData.set("tierListId", "5");
+        formData.set("value", "11.4");
+
+        await addTierBand(formData);
+
+        expect(mocks.bandCreate).toHaveBeenCalledWith({
+            data: { tierListId: 5, value: 11.4, position: 2 },
+        });
+        expect(mocks.bandUpdate).toHaveBeenCalledWith({
+            where: { id: 10 },
+            data: { position: -10 },
+        });
+        expect(mocks.bandUpdate).toHaveBeenCalledWith({
+            where: { id: 11 },
+            data: { position: 3 },
+        });
+        expect(Array.isArray(mocks.transaction.mock.calls[0]?.[0])).toBe(true);
     });
 
     it("이미 서열표에 포함된 채보는 다른 구간에도 추가하지 않는다", async () => {
@@ -202,29 +234,30 @@ describe("관리자 서열표 액션", () => {
         expect(mocks.updateTag).toHaveBeenCalledWith("tier-lists");
     });
 
-    it("다른 구간으로 드롭하면 양쪽 순서를 정리하고 이력을 남긴다", async () => {
-        mocks.entryFindUnique.mockResolvedValue({
-            id: 1,
-            tierListId: 5,
-            tierBandId: 10,
-            chartId: 20,
-        });
-        mocks.bandFindFirst.mockResolvedValue({ value: 12.4 });
+    it("변경한 전체 배치를 한 번에 저장하고 구간 이동 이력을 남긴다", async () => {
+        mocks.bandFindMany.mockResolvedValue([
+            { id: 10, value: 12.3 },
+            { id: 11, value: 12.4 },
+        ]);
         mocks.entryFindMany.mockResolvedValue([
-            { id: 1, tierBandId: 10 },
-            { id: 2, tierBandId: 10 },
-            { id: 3, tierBandId: 11 },
+            { id: 1, chartId: 20, tierBandId: 10, position: 1 },
+            { id: 2, chartId: 21, tierBandId: 10, position: 2 },
+            { id: 3, chartId: 22, tierBandId: 11, position: 1 },
         ]);
 
-        await moveTierEntryByDrop(1, 11, 1);
+        await applyTierBoardLayout(5, [
+            { id: 2, tierBandId: 10, position: 1 },
+            { id: 3, tierBandId: 11, position: 1 },
+            { id: 1, tierBandId: 11, position: 2 },
+        ]);
 
         expect(mocks.txEntryUpdate).toHaveBeenCalledWith({
-            where: { id: 2 },
-            data: { tierBandId: 10, position: 1 },
+            where: { id: 1 },
+            data: { position: -1 },
         });
         expect(mocks.txEntryUpdate).toHaveBeenCalledWith({
-            where: { id: 3 },
-            data: { tierBandId: 11, position: 1 },
+            where: { id: 2 },
+            data: { position: -2 },
         });
         expect(mocks.txEntryUpdate).toHaveBeenCalledWith({
             where: { id: 1 },

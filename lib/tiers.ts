@@ -6,7 +6,8 @@ export type TierRecord = {
     fc_type: number;
 };
 
-export type TierRecordStatus = "pianist" | "fc" | "s" | "played" | "unplayed";
+export type TierRecordStatus =
+    "pianist" | "fc" | "s" | "a_plus" | "played" | "unplayed";
 
 export const tierModeStyles: Record<string, string> = {
     basic: "bg-chart/15 text-chart",
@@ -46,7 +47,8 @@ export function getTierRecordStatus(
     if (!record || record.score <= 0) return "unplayed";
     if (record.fc_type === 3 || record.score >= 1_000_000) return "pianist";
     if (record.fc_type >= 2) return "fc";
-    if (record.rank.toUpperCase() === "S") return "s";
+    if (record.score >= 950_000) return "s";
+    if (record.score >= 900_000) return "a_plus";
     return "played";
 }
 

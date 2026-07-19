@@ -109,6 +109,14 @@ export default async function EditTierListPage({
                 </form>
 
                 <TierBoard
+                    key={tierList.bands
+                        .map(
+                            (band) =>
+                                `${band.id}:${band.entries
+                                    .map((entry) => entry.id)
+                                    .join(",")}`
+                        )
+                        .join("|")}
                     tierListId={tierList.id}
                     bands={tierList.bands.map((band) => ({
                         id: band.id,

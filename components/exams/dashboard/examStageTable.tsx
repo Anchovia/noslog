@@ -13,6 +13,7 @@ import {
 interface ExamStageTableProps {
     stages: ExamStageResult[];
     scoringType: string;
+    showBest?: boolean;
 }
 
 function StageRow({
@@ -20,15 +21,21 @@ function StageRow({
     index,
     length,
     scoringType,
+    showBest,
 }: {
     stage: ExamStageResult;
     index: number;
     length: number;
     scoringType: string;
+    showBest: boolean;
 }) {
     const firstChart = stage.charts[0];
-    const rowClass =
-        "border-divider grid h-13 grid-cols-[2.25rem_minmax(0,1fr)_5.5rem_5.5rem] items-center gap-1 border-t px-3";
+    const rowClass = cn(
+        "border-divider grid h-13 items-center gap-1 border-t px-3",
+        showBest
+            ? "grid-cols-[2.25rem_minmax(0,1fr)_5.5rem_5.5rem]"
+            : "grid-cols-[2.25rem_minmax(0,1fr)_6.5rem]"
+    );
     const content: ReactNode = (
         <>
             <span className="text-text-disabled text-xs">
@@ -61,29 +68,31 @@ function StageRow({
                     : ""}
                 {formatExamValue(stage.requiredValue, scoringType)}
             </span>
-            <span
-                className={cn(
-                    "flex items-center justify-end gap-1.5 text-right text-xs tabular-nums",
-                    stage.bestValue === null || stage.bestValue === 0
-                        ? "text-text-disabled"
-                        : stage.isPassed
-                          ? "text-success"
-                          : "text-danger"
-                )}
-            >
-                {stage.bestValue === null ? (
-                    "연동 미지원"
-                ) : stage.bestValue > 0 ? (
-                    <>
-                        <span>{stage.isPassed ? "✓" : "✕"}</span>
-                        <span>
-                            {formatExamValue(stage.bestValue, scoringType)}
-                        </span>
-                    </>
-                ) : (
-                    "기록 없음"
-                )}
-            </span>
+            {showBest ? (
+                <span
+                    className={cn(
+                        "flex items-center justify-end gap-1.5 text-right text-xs tabular-nums",
+                        stage.bestValue === null || stage.bestValue === 0
+                            ? "text-text-disabled"
+                            : stage.isPassed
+                              ? "text-success"
+                              : "text-danger"
+                    )}
+                >
+                    {stage.bestValue === null ? (
+                        "연동 미지원"
+                    ) : stage.bestValue > 0 ? (
+                        <>
+                            <span>{stage.isPassed ? "✓" : "✕"}</span>
+                            <span>
+                                {formatExamValue(stage.bestValue, scoringType)}
+                            </span>
+                        </>
+                    ) : (
+                        "기록 없음"
+                    )}
+                </span>
+            ) : null}
         </>
     );
 
@@ -103,14 +112,24 @@ function StageRow({
 export default function ExamStageTable({
     stages,
     scoringType,
+    showBest = true,
 }: ExamStageTableProps) {
     return (
         <section className="bg-surface rounded-card overflow-hidden">
-            <div className="bg-surface-muted text-text-secondary grid h-7 grid-cols-[2.25rem_minmax(0,1fr)_5.5rem_5.5rem] items-center gap-1 px-3 text-xs font-semibold">
+            <div
+                className={cn(
+                    "bg-surface-muted text-text-secondary grid h-7 items-center gap-1 px-3 text-xs font-semibold",
+                    showBest
+                        ? "grid-cols-[2.25rem_minmax(0,1fr)_5.5rem_5.5rem]"
+                        : "grid-cols-[2.25rem_minmax(0,1fr)_6.5rem]"
+                )}
+            >
                 <span />
                 <span>과제곡</span>
                 <span className="text-right">통과 조건</span>
-                <span className="text-right">내 베스트</span>
+                {showBest ? (
+                    <span className="text-right">내 베스트</span>
+                ) : null}
             </div>
             {stages.map((stage, index) => (
                 <StageRow
@@ -119,6 +138,7 @@ export default function ExamStageTable({
                     index={index}
                     length={stages.length}
                     scoringType={scoringType}
+                    showBest={showBest}
                 />
             ))}
         </section>

@@ -48,7 +48,7 @@ export default function ProfileDashboard({
 
     return (
         <div className="flex flex-col gap-3 px-4 py-4">
-            <ProfileHeader user={user} isOwner={isOwner} />
+            <ProfileHeader user={user} isOwner={isOwner} mode={mode} />
             <ProfileModeTabs mode={mode} onChange={setMode} />
             <ProfileSummary
                 user={user}

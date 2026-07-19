@@ -77,6 +77,24 @@ describe("getTierRecordStatus", () => {
         ).toBe("s");
         expect(
             getTierRecordStatus({ score: 900_000, rank: "A", fc_type: 0 })
+        ).toBe("a_plus");
+        expect(
+            getTierRecordStatus({ score: 899_999, rank: "A", fc_type: 0 })
         ).toBe("played");
+    });
+
+    it("Pianist, FC, S, A+ 순서로 우선 판정한다", () => {
+        expect(
+            getTierRecordStatus({ score: 1_000_000, rank: "S", fc_type: 2 })
+        ).toBe("pianist");
+        expect(
+            getTierRecordStatus({ score: 970_000, rank: "S", fc_type: 2 })
+        ).toBe("fc");
+        expect(
+            getTierRecordStatus({ score: 970_000, rank: "S", fc_type: 0 })
+        ).toBe("s");
+        expect(
+            getTierRecordStatus({ score: 920_000, rank: "A+", fc_type: 0 })
+        ).toBe("a_plus");
     });
 });

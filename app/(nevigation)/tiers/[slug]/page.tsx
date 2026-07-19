@@ -101,8 +101,8 @@ export default async function TierDetailPage({
                         className={cn(
                             "flex h-9 shrink-0 items-center gap-1.5 rounded-md px-3 text-xs font-semibold transition-colors",
                             recommendationEnabled
-                                ? "bg-real text-bg"
-                                : "bg-surface-muted text-text-secondary"
+                                ? "bg-real text-bg hover:bg-real/85"
+                                : "bg-surface-muted text-text-secondary hover:bg-divider hover:text-text-primary"
                         )}
                     >
                         {recommendationEnabled ? "추천 끄기" : "추천 구간 보기"}
@@ -153,6 +153,15 @@ export default async function TierDetailPage({
                                   recommendationDistance <= 0.2
                                 ? "edge"
                                 : "outside";
+
+                    if (
+                        recommendationEnabled &&
+                        recommendation &&
+                        recommendationStrength === "outside"
+                    ) {
+                        return null;
+                    }
+
                     const bandEntries = band.entries.map((entry) => ({
                         ...entry,
                         record: recordByChartId.get(entry.chartId),
@@ -182,10 +191,7 @@ export default async function TierDetailPage({
                                     "ring-real/70 ring-1",
                                 recommendationEnabled &&
                                     recommendationStrength === "edge" &&
-                                    "ring-real/35 ring-1",
-                                recommendationEnabled &&
-                                    recommendationStrength === "outside" &&
-                                    "opacity-40"
+                                    "ring-real/35 ring-1"
                             )}
                         >
                             <header className="bg-surface-muted flex min-h-11 items-center gap-3 px-3">
