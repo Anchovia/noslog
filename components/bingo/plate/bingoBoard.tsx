@@ -54,7 +54,7 @@ export default function BingoBoard({
                         {isCompleted ? (
                             <span
                                 className={cn(
-                                    "border-chart relative z-10 flex size-11 -rotate-6 flex-col items-center justify-center rounded-full border-2",
+                                    "border-chart relative z-10 flex size-12 -rotate-6 flex-col items-center justify-center rounded-full border-2",
                                     isCompletedLine && "border-score"
                                 )}
                             >
@@ -71,8 +71,8 @@ export default function BingoBoard({
                             </span>
                         )}
                         {isRich ? (
-                            <span className="bg-score text-bg absolute -top-1 -right-1 rounded px-1 py-0.5 text-[10px] leading-none font-extrabold">
-                                리치
+                            <span className="bg-score text-bg absolute -top-1 -right-1 rounded px-1 py-0.5 text-[9px] leading-none font-extrabold whitespace-nowrap">
+                                빙고 찬스
                             </span>
                         ) : null}
                     </button>

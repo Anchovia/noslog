@@ -27,7 +27,7 @@ export default function ContinueBingoCard({ bingo }: ContinueBingoCardProps) {
                     <span className="text-caption">이어서 진행</span>
                     {bingo.richLines > 0 ? (
                         <span className="bg-score text-bg rounded px-1.5 py-0.5 text-xs font-extrabold">
-                            리치 {bingo.richLines}
+                            빙고 찬스 {bingo.richLines}
                         </span>
                     ) : null}
                 </div>

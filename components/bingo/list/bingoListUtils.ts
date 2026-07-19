@@ -11,7 +11,7 @@ export const BINGO_STATUS_FILTERS: {
 }[] = [
     { value: "all", label: "전체" },
     { value: "progress", label: "진행 중" },
-    { value: "rich", label: "리치" },
+    { value: "rich", label: "빙고 찬스" },
     { value: "completed", label: "완료" },
 ];
 

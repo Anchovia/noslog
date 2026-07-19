@@ -45,7 +45,7 @@ describe("getBingoProgress", () => {
         expect(result.progressPercent).toBe(20);
     });
 
-    it("한 칸만 남은 줄의 위치를 리치 칸으로 반환한다", () => {
+    it("한 칸만 남은 줄의 위치를 빙고 찬스 칸으로 반환한다", () => {
         const result = getBingoProgress(board([1, 2, 3, 4]));
 
         expect(result.richLines).toBe(1);
@@ -179,7 +179,7 @@ describe("빙고 목록 계산", () => {
         expect(getContinueBingo([bingos[0]])).toBeUndefined();
     });
 
-    it("진행 중, 리치와 완료 상태별 개수를 계산한다", () => {
+    it("진행 중, 빙고 찬스와 완료 상태별 개수를 계산한다", () => {
         expect(getBingoStatusCounts(bingos)).toEqual({
             progress: 1,
             rich: 1,

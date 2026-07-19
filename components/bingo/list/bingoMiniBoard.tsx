@@ -5,7 +5,7 @@ interface BingoMiniBoardProps {
     richPositions: number[];
 }
 
-// 카드 위에 완료와 리치 위치를 축소한 5x5 보드로 표시함
+// 카드 위에 완료와 빙고 찬스 위치를 축소한 5x5 보드로 표시함
 export default function BingoMiniBoard({
     completedPositions,
     richPositions,
