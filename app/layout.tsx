@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 
+const appUrl = process.env.APP_URL?.trim() || "https://noslog.app";
+
 // Pretendard 로컬 폰트를 전역 CSS 변수로 연결함
 const pretendard = localFont({
     src: "./fonts/PretendardVariable.woff2",
@@ -11,8 +13,30 @@ const pretendard = localFont({
 });
 
 export const metadata: Metadata = {
-    title: "NosLog",
-    description: "NOSTALGIA 플레이어를 위한 개인 기록·성과 대시보드",
+    metadataBase: new URL(appUrl),
+    applicationName: "NosLog",
+    title: {
+        default: "NosLog",
+        template: "%s | NosLog",
+    },
+    description: "NOSTALGIA 플레이 기록·랭킹·서열 아카이브",
+    alternates: {
+        canonical: "/",
+    },
+    openGraph: {
+        type: "website",
+        locale: "ko_KR",
+        url: "/",
+        siteName: "NosLog",
+        title: "NosLog",
+        description: "NOSTALGIA 플레이 기록·랭킹·서열 아카이브",
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "NosLog",
+        description: "NOSTALGIA 플레이 기록·랭킹·서열 아카이브",
+    },
+    manifest: "/manifest.webmanifest",
 };
 
 export default function RootLayout({
