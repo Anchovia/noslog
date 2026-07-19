@@ -1,10 +1,11 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
+import MusicJacket from "@/components/music/musicJacket";
 import { cn } from "@/lib/utils";
 
 import type { TierEntryData } from "./tierBoardTypes";
-import { getEntryDragId } from "./tierBoardUtils";
+import { getEntryDragId, getTierDifficultyBorder } from "./tierBoardUtils";
 
 interface SortableTierChartProps {
     entry: TierEntryData;
@@ -47,23 +48,27 @@ export default function SortableTierChart({
             style={{
                 transform: CSS.Transform.toString(transform),
                 transition,
-                backgroundImage: entry.chart.music.background
-                    ? `url(${entry.chart.music.background})`
-                    : undefined,
             }}
             className={cn(
-                "bg-surface-muted relative size-11 shrink-0 cursor-grab touch-none rounded-md bg-cover bg-center active:cursor-grabbing",
+                "bg-surface-muted relative size-11 shrink-0 cursor-grab touch-none overflow-hidden rounded-md border-2 bg-cover bg-center active:cursor-grabbing",
+                getTierDifficultyBorder(entry.chart.difficulty),
                 selected && "ring-real ring-2",
                 isDragging && "opacity-30"
             )}
             {...attributes}
             {...listeners}
         >
-            {!entry.chart.music.background ? (
-                <span className="text-text-disabled text-xs font-bold">
-                    {entry.chart.level}
-                </span>
-            ) : null}
+            <MusicJacket
+                index={entry.chart.music.index}
+                background={entry.chart.music.background}
+                title={entry.chart.music.title}
+                className="absolute inset-0"
+                fallback={
+                    <span className="text-text-disabled m-auto text-xs font-semibold">
+                        {entry.chart.level}
+                    </span>
+                }
+            />
         </button>
     );
 }

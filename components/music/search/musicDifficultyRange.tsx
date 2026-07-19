@@ -61,7 +61,7 @@ export default function MusicDifficultyRange({
                 />
             </Slider.Root>
 
-            <div className="text-text-disabled flex items-center justify-between text-[10px]">
+            <div className="text-caption text-text-disabled flex items-center justify-between">
                 <span>1</span>
                 <span>{difficulty.max}</span>
             </div>

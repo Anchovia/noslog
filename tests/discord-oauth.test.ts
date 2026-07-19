@@ -4,6 +4,7 @@ import { NextRequest } from "next/server";
 const mocks = vi.hoisted(() => ({
     session: {
         id: undefined as number | undefined,
+        profileCompleted: undefined as boolean | undefined,
         discordOAuthState: undefined as string | undefined,
         discordOAuthReturnTo: undefined as string | undefined,
         save: vi.fn(),
@@ -67,6 +68,7 @@ describe("Discord OAuth", () => {
     beforeEach(() => {
         vi.clearAllMocks();
         mocks.session.id = undefined;
+        mocks.session.profileCompleted = undefined;
         mocks.session.discordOAuthState = undefined;
         mocks.session.discordOAuthReturnTo = undefined;
         mocks.getSession.mockResolvedValue(mocks.session);
@@ -152,7 +154,11 @@ describe("Discord OAuth", () => {
         mocks.session.id = 1;
         mocks.session.discordOAuthState = "state";
         mockDiscordSuccess();
-        mocks.userFindUnique.mockResolvedValueOnce({ id: 2, avatar: null });
+        mocks.userFindUnique.mockResolvedValueOnce({
+            id: 2,
+            avatar: null,
+            profile_completed_at: new Date(),
+        });
 
         const response = await completeDiscordOAuth(
             request("/discord/complete?code=code&state=state")
@@ -208,7 +214,31 @@ describe("Discord OAuth", () => {
             select: { id: true },
         });
         expect(mocks.session.id).toBe(7);
+        expect(mocks.session.profileCompleted).toBe(false);
         expect(mocks.session.save).toHaveBeenCalledTimes(2);
-        expect(new URL(response.headers.get("location")!).pathname).toBe("/");
+        expect(new URL(response.headers.get("location")!).pathname).toBe(
+            "/onboarding"
+        );
+    });
+
+    it("프로필 설정을 마친 기존 사용자는 요청한 화면으로 돌아간다", async () => {
+        mocks.session.discordOAuthState = "state";
+        mocks.session.discordOAuthReturnTo = "/music";
+        mockDiscordSuccess();
+        mocks.userFindUnique.mockResolvedValueOnce({
+            id: 3,
+            avatar: null,
+            profile_completed_at: new Date("2026-07-19"),
+        });
+        mocks.userUpdate.mockResolvedValueOnce({ id: 3 });
+
+        const response = await completeDiscordOAuth(
+            request("/discord/complete?code=code&state=state")
+        );
+
+        expect(mocks.session.profileCompleted).toBe(true);
+        expect(new URL(response.headers.get("location")!).pathname).toBe(
+            "/music"
+        );
     });
 });

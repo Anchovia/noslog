@@ -61,35 +61,26 @@ export async function setBingoCellCompletion(
         return { success: false, message: "현재 진행할 수 없는 빙고입니다." };
     }
 
-    if (isCompleted) {
-        await db.bingoCellProgress.upsert({
-            where: {
-                userId_bingoCellId: {
-                    userId: session.id,
-                    bingoCellId,
-                },
-            },
-            create: {
-                bingoCellId,
+    await db.bingoCellProgress.upsert({
+        where: {
+            userId_bingoCellId: {
                 userId: session.id,
-                isCompleted: true,
-                completionSource: "manual",
-                completedAt: new Date(),
-            },
-            update: {
-                isCompleted: true,
-                completionSource: "manual",
-                completedAt: new Date(),
-            },
-        });
-    } else {
-        await db.bingoCellProgress.deleteMany({
-            where: {
                 bingoCellId,
-                userId: session.id,
             },
-        });
-    }
+        },
+        create: {
+            bingoCellId,
+            userId: session.id,
+            isCompleted,
+            completionSource: "manual",
+            completedAt: isCompleted ? now : null,
+        },
+        update: {
+            isCompleted,
+            completionSource: "manual",
+            completedAt: isCompleted ? now : null,
+        },
+    });
 
     revalidatePath("/bingo");
     revalidatePath(`/bingo/${cell.bingoId}`);

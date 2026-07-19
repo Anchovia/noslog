@@ -4,7 +4,7 @@ import { type ButtonHTMLAttributes } from "react";
 
 // 공통 버튼 스타일과 variant를 한곳에서 관리함
 const buttonVariants = cva(
-    "inline-flex h-10 items-center justify-center rounded-card px-4 text-sm font-medium transition-colors disabled:pointer-events-none disabled:opacity-50",
+    "focus-visible:ring-text-secondary/30 inline-flex items-center justify-center rounded-card font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50",
     {
         variants: {
             variant: {
@@ -15,9 +15,9 @@ const buttonVariants = cva(
                 danger: "bg-danger text-text-primary hover:bg-danger/90",
             },
             size: {
-                sm: "h-8 px-3 text-xs",
+                sm: "h-8 px-3 text-xs font-semibold",
                 md: "h-10 px-4 text-sm",
-                lg: "h-12 px-5 text-base",
+                lg: "h-12 px-5 text-sm font-bold",
                 icon: "size-10 px-0",
             },
         },

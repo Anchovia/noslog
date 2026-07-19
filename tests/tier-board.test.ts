@@ -2,8 +2,12 @@ import { describe, expect, it } from "vitest";
 
 import type { TierBandData } from "@/components/admin/tierBoard/tierBoardTypes";
 import {
+    getTierBoardChangeCount,
     getBandDropId,
     getEntryDragId,
+    getTierDifficultyBorder,
+    getTierEntryPlacements,
+    moveTierEntryInBoard,
     resolveTierDropTarget,
 } from "@/components/admin/tierBoard/tierBoardUtils";
 
@@ -21,6 +25,7 @@ function bands(): TierBandData[] {
                         difficulty: "expert",
                         level: 12,
                         music: {
+                            index: "music-1",
                             title: "첫 곡",
                             artist: null,
                             background: null,
@@ -35,6 +40,7 @@ function bands(): TierBandData[] {
                         difficulty: "real",
                         level: 3,
                         music: {
+                            index: "music-2",
                             title: "두 번째 곡",
                             artist: null,
                             background: null,
@@ -52,6 +58,12 @@ function bands(): TierBandData[] {
 }
 
 describe("서열표 드래그 대상 계산", () => {
+    it("Real과 Expert 채보의 테두리 색상을 구분한다", () => {
+        expect(getTierDifficultyBorder("Real")).toBe("border-real");
+        expect(getTierDifficultyBorder("expert")).toBe("border-expert");
+        expect(getTierDifficultyBorder("Hard")).toBe("border-transparent");
+    });
+
     it("드래그와 드롭 식별자를 구분해 생성한다", () => {
         expect(getEntryDragId(12)).toBe("entry-12");
         expect(getBandDropId(12)).toBe("band-12");
@@ -89,5 +101,18 @@ describe("서열표 드래그 대상 계산", () => {
                 bandId: 999,
             })
         ).toBeNull();
+    });
+
+    it("드롭 결과를 로컬 보드에만 반영하고 변경된 배치를 만든다", () => {
+        const initialBands = bands();
+        const movedBands = moveTierEntryInBoard(initialBands, 101, 20, 0);
+
+        expect(movedBands[0].entries).toMatchObject([{ id: 102, position: 1 }]);
+        expect(movedBands[1].entries).toMatchObject([{ id: 101, position: 1 }]);
+        expect(getTierBoardChangeCount(initialBands, movedBands)).toBe(2);
+        expect(getTierEntryPlacements(movedBands)).toEqual([
+            { id: 102, tierBandId: 10, position: 1 },
+            { id: 101, tierBandId: 20, position: 1 },
+        ]);
     });
 });

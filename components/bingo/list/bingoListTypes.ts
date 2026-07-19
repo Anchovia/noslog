@@ -12,6 +12,7 @@ export interface BingoListItem {
     completedPositions: number[];
     progressPercent: number;
     isCompleted: boolean;
+    lastModifiedAt: string | null;
 }
 
 export type BingoStatusFilter = "all" | "progress" | "rich" | "completed";

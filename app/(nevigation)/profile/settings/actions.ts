@@ -38,6 +38,7 @@ export async function uploadUserSetting(
     const result = settingSchema.safeParse({
         avatar: String(formData.get("avatar") ?? ""),
         username: String(formData.get("username") ?? ""),
+        country: String(formData.get("country") ?? ""),
     });
 
     if (!result.success) {
@@ -79,6 +80,7 @@ export async function uploadUserSetting(
             where: { id: session.id },
             data: {
                 username: result.data.username,
+                country: result.data.country,
                 avatar: nextAvatar,
             },
         });

@@ -10,7 +10,7 @@ interface BingoMissionFiltersProps {
     onChange: (filter: MissionFilter) => void;
 }
 
-// 미완료, 완료와 리치 미션 목록을 전환함
+// 미완료, 완료와 빙고 찬스 미션 목록을 전환함
 export default function BingoMissionFilters({
     filter,
     incompleteCount,
@@ -54,7 +54,7 @@ export default function BingoMissionFilters({
                         : "bg-surface text-score hover:bg-surface-muted"
                 )}
             >
-                리치만 {richCount}
+                빙고 찬스만 {richCount}
             </button>
         </div>
     );

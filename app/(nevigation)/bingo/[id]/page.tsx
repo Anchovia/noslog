@@ -6,7 +6,7 @@ import getSession from "@/lib/session";
 import { formatToComma } from "@/lib/utils";
 import {
     getCachedBingoDetail,
-    getUserCompletedBingoCellIds,
+    getUserBingoCellProgress,
     isBingoAvailable,
 } from "../data";
 
@@ -35,13 +35,17 @@ export default async function BingoDetailPage({
         position: cell.position,
         categoryShort: cell.categoryShort,
     }));
-    const completedCellIds = session.id
-        ? await getUserCompletedBingoCellIds(
+    const userProgress = session.id
+        ? await getUserBingoCellProgress(
               session.id,
               bingo.cells.map((cell) => cell.id)
           )
         : [];
-    const completedCellIdSet = new Set(completedCellIds);
+    const completedCellIdSet = new Set(
+        userProgress
+            .filter((item) => item.isCompleted)
+            .map((item) => item.bingoCellId)
+    );
     const progress = getBingoProgress(
         bingo.cells.map((cell) => ({
             id: cell.id,
@@ -100,7 +104,7 @@ export default async function BingoDetailPage({
 
             <BingoPlate
                 cells={cells}
-                initialCompletedCellIds={completedCellIds}
+                initialCompletedCellIds={[...completedCellIdSet]}
                 canEdit={Boolean(session.id)}
             />
         </div>

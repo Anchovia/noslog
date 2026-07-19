@@ -1,11 +1,8 @@
 import Link from "next/link";
 
-import {
-    getJacketUrl,
-    getTierRecordStatus,
-    type TierRecord,
-} from "@/lib/tiers";
+import { getTierRecordStatus, type TierRecord } from "@/lib/tiers";
 import { cn } from "@/lib/utils";
+import MusicJacket from "@/components/music/musicJacket";
 
 interface TierChartCardProps {
     chart: {
@@ -39,6 +36,8 @@ function getRankIconName(record?: TierRecord) {
     const status = getTierRecordStatus(record);
     if (status === "pianist") return "p";
     if (status === "fc") return "fc_bg";
+    if (status === "s") return "s";
+    if (status === "a_plus") return "a2";
     return record ? rankIconNames[record.rank.toUpperCase()] : undefined;
 }
 
@@ -56,22 +55,21 @@ export default function TierChartCard({
             href={`/music/${chart.music.index}/${chart.difficulty.toLowerCase()}?tab=tier`}
             title={`${chart.music.title} ${chart.difficulty}`}
             className={cn(
-                "bg-surface-muted relative aspect-square min-w-0 overflow-hidden rounded-md ring-1 transition-transform active:scale-[0.98]",
-                status === "pianist" && "ring-score",
-                status === "fc" && "ring-rank-fc",
-                status !== "pianist" && status !== "fc" && "ring-border",
+                "bg-surface-muted relative aspect-square min-w-0 overflow-hidden rounded-md transition-transform duration-150 ease-out hover:z-10 hover:scale-[1.04] focus-visible:z-10 focus-visible:scale-[1.04] focus-visible:outline-none active:scale-[0.98]",
+                status === "pianist" && "ring-score ring-2",
+                status === "fc" && "ring-rank-fc ring-2",
+                status === "s" && "ring-rank-s ring-2",
+                status === "a_plus" && "ring-rank-a-plus ring-2",
+                (status === "played" || status === "unplayed") &&
+                    "ring-border ring-1",
                 status === "unplayed" && "opacity-55"
             )}
         >
-            <span
-                className="absolute inset-0 bg-cover bg-center"
-                style={{
-                    backgroundImage: `url(${getJacketUrl(
-                        chart.music.index,
-                        chart.music.background
-                    )})`,
-                }}
-                aria-hidden
+            <MusicJacket
+                index={chart.music.index}
+                background={chart.music.background}
+                title={chart.music.title}
+                className="absolute inset-0"
             />
 
             {showRecord && rankIconName ? (

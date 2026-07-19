@@ -14,19 +14,20 @@ export default async function Header() {
     const user = await getUser();
 
     return (
-        <header className="border-divider bg-surface flex h-13 items-center border-b px-4">
+        <header className="border-divider bg-surface flex h-14 items-center border-b px-3 min-[390px]:px-4">
             <Link href="/" className="flex shrink-0 items-center gap-2">
-                <span className="text-text-primary text-[17px] font-bold tracking-normal">
-                    NosLog
-                </span>
+                <span className="text-wordmark tracking-normal">NosLog</span>
             </Link>
-            <div className="ml-auto flex items-center gap-3">
-                <nav className="flex items-center gap-2" aria-label="주요 메뉴">
+            <div className="ml-auto flex min-w-0 items-center gap-2 min-[390px]:gap-3">
+                <nav
+                    className="flex min-w-0 items-center gap-1 min-[390px]:gap-2"
+                    aria-label="주요 메뉴"
+                >
                     {navItems.map((item) => (
                         <Link
                             key={item.href}
                             href={item.href}
-                            className="text-text-secondary hover:text-text-primary shrink-0 text-xs font-semibold transition-colors"
+                            className="text-text-secondary hover:text-text-primary flex h-10 shrink-0 items-center text-sm font-semibold transition-colors"
                         >
                             {item.label}
                         </Link>
@@ -48,7 +49,7 @@ export default async function Header() {
                 ) : (
                     <Link
                         href="/login"
-                        className="rounded-card border-border text-text-primary shrink-0 border px-2 py-1 text-xs font-bold"
+                        className="rounded-card border-border text-text-primary hover:bg-surface-muted flex h-10 shrink-0 items-center border px-3 text-sm font-bold transition-colors"
                     >
                         로그인
                     </Link>

@@ -22,7 +22,6 @@ import {
 import {
     calculateExamSimulation,
     canEnterExam,
-    getDefaultExam,
 } from "@/components/exams/dashboard/examDashboardUtils";
 
 export type { ExamDashboardItem } from "@/components/exams/dashboard/examDashboardTypes";
@@ -37,11 +36,8 @@ export default function ExamDashboard({
 }) {
     const router = useRouter();
     const initialMode: ExamMode = "basic";
-    const initialModeExams = exams.filter((exam) => exam.mode === initialMode);
     const [mode, setMode] = useState<ExamMode>(initialMode);
-    const [selectedExamId, setSelectedExamId] = useState<number | null>(
-        getDefaultExam(initialModeExams)?.id ?? null
-    );
+    const [selectedExamId, setSelectedExamId] = useState<number | null>(null);
     const [isUploading, setIsUploading] = useState(false);
     const [uploadMessage, setUploadMessage] = useState<string | null>(null);
 
@@ -73,9 +69,8 @@ export default function ExamDashboard({
         selectedExam.submissionStatus === "pending";
 
     function changeMode(nextMode: ExamMode) {
-        const nextExams = exams.filter((exam) => exam.mode === nextMode);
         setMode(nextMode);
-        setSelectedExamId(getDefaultExam(nextExams)?.id ?? null);
+        setSelectedExamId(null);
         setUploadMessage(null);
     }
 
@@ -158,21 +153,26 @@ export default function ExamDashboard({
                                 <ExamStageTable
                                     stages={simulation.stages}
                                     scoringType={selectedExam.scoringType}
+                                    showBest={selectedExam.mode !== "event"}
                                 />
-                                <ExamSimulation
-                                    exam={selectedExam}
-                                    simulation={simulation}
-                                />
-                                <ExamProofUpload
-                                    exam={selectedExam}
-                                    isAuthenticated={isAuthenticated}
-                                    isUploading={isUploading}
-                                    disabled={uploadDisabled}
-                                    message={uploadMessage}
-                                    onUpload={(file) =>
-                                        void handleProofUpload(file)
-                                    }
-                                />
+                                {selectedExam.mode !== "event" ? (
+                                    <>
+                                        <ExamSimulation
+                                            exam={selectedExam}
+                                            simulation={simulation}
+                                        />
+                                        <ExamProofUpload
+                                            exam={selectedExam}
+                                            isAuthenticated={isAuthenticated}
+                                            isUploading={isUploading}
+                                            disabled={uploadDisabled}
+                                            message={uploadMessage}
+                                            onUpload={(file) =>
+                                                void handleProofUpload(file)
+                                            }
+                                        />
+                                    </>
+                                ) : null}
                             </>
                         ) : null}
                     </ExamSelector>

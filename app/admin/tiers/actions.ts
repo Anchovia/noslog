@@ -6,7 +6,9 @@ import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/admin";
 import { CACHE_TAGS } from "@/lib/cacheTags";
 import db from "@/lib/db";
+import { getJacketUrl, MAX_TIER_VALUE } from "@/lib/tiers";
 import type { Prisma } from "@prisma/client";
+import type { TierEntryPlacement } from "@/components/admin/tierBoard/tierBoardTypes";
 
 const tierModes = new Set(["basic", "recital"]);
 const tierStatuses = new Set(["draft", "published", "archived"]);
@@ -33,6 +35,7 @@ export async function searchTierCharts(query: string, tierListId: number) {
             level: true,
             music: {
                 select: {
+                    index: true,
                     title: true,
                     artist: true,
                     background: true,
@@ -45,9 +48,10 @@ export async function searchTierCharts(query: string, tierListId: number) {
 
     return charts.map((chart) => ({
         id: chart.id,
+        musicIndex: chart.music.index,
         title: chart.music.title,
         artist: chart.music.artist,
-        jacket: chart.music.background,
+        jacket: getJacketUrl(chart.music.index, chart.music.background),
         difficulty: chart.difficulty,
         level: chart.level,
     }));
@@ -76,48 +80,6 @@ function revalidateTierList(id: number) {
     revalidatePath(`/admin/tiers/${id}`);
     revalidatePath("/tiers");
     revalidatePath(`/tiers/${id}`);
-}
-
-async function normalizeEntryPositions(
-    transaction: Prisma.TransactionClient,
-    tierBandId: number
-) {
-    const entries = await transaction.tierEntry.findMany({
-        where: { tierBandId },
-        select: { id: true },
-        orderBy: { position: "asc" },
-    });
-
-    for (const [index, entry] of entries.entries()) {
-        await transaction.tierEntry.update({
-            where: { id: entry.id },
-            data: { position: index + 1 },
-        });
-    }
-}
-
-async function normalizeBandPositions(
-    transaction: Prisma.TransactionClient,
-    tierListId: number
-) {
-    const bands = await transaction.tierBand.findMany({
-        where: { tierListId },
-        select: { id: true },
-        orderBy: { value: "desc" },
-    });
-
-    for (const [index, band] of bands.entries()) {
-        await transaction.tierBand.update({
-            where: { id: band.id },
-            data: { position: -(index + 1) },
-        });
-    }
-    for (const [index, band] of bands.entries()) {
-        await transaction.tierBand.update({
-            where: { id: band.id },
-            data: { position: index + 1 },
-        });
-    }
 }
 
 export async function createTierList(formData: FormData) {
@@ -171,30 +133,43 @@ export async function addTierBand(formData: FormData) {
         !Number.isInteger(tierListId) ||
         !Number.isFinite(value) ||
         value < 1 ||
-        value > 14
+        value > MAX_TIER_VALUE
     )
         return;
 
-    const lastBand = await db.tierBand.findFirst({
+    const bands = await db.tierBand.findMany({
         where: { tierListId },
-        select: { position: true },
-        orderBy: { position: "desc" },
+        select: { id: true, value: true },
+        orderBy: { value: "desc" },
     });
-    const duplicate = await db.tierBand.count({
-        where: { tierListId, value },
-    });
-    if (duplicate) return;
+    if (bands.some((band) => band.value === value)) return;
 
-    await db.$transaction(async (transaction) => {
-        await transaction.tierBand.create({
+    const insertionIndex = bands.findIndex((band) => band.value < value);
+    const position =
+        insertionIndex === -1 ? bands.length + 1 : insertionIndex + 1;
+    const operations: Prisma.PrismaPromise<unknown>[] = [
+        ...bands.map((band) =>
+            db.tierBand.update({
+                where: { id: band.id },
+                data: { position: -band.id },
+            })
+        ),
+        db.tierBand.create({
             data: {
                 tierListId,
                 value,
-                position: (lastBand?.position ?? 0) + 1,
+                position,
             },
-        });
-        await normalizeBandPositions(transaction, tierListId);
-    });
+        }),
+        ...bands.map((band, index) =>
+            db.tierBand.update({
+                where: { id: band.id },
+                data: { position: index + 1 + (index >= position - 1 ? 1 : 0) },
+            })
+        ),
+    ];
+
+    await db.$transaction(operations);
     revalidateTierList(tierListId);
 }
 
@@ -206,7 +181,7 @@ export async function updateTierBand(formData: FormData) {
         !Number.isInteger(id) ||
         !Number.isFinite(value) ||
         value < 1 ||
-        value > 14
+        value > MAX_TIER_VALUE
     )
         return;
 
@@ -220,24 +195,45 @@ export async function updateTierBand(formData: FormData) {
     });
     if (!band || band.value === value) return;
 
-    const duplicate = await db.tierBand.count({
-        where: { tierListId: band.tierListId, value, NOT: { id } },
+    const bands = await db.tierBand.findMany({
+        where: { tierListId: band.tierListId },
+        select: { id: true, value: true },
     });
-    if (duplicate) return;
+    if (bands.some((item) => item.id !== id && item.value === value)) return;
 
-    await db.$transaction(async (transaction) => {
-        await transaction.tierBand.update({ where: { id }, data: { value } });
-        if (band.entries.length > 0) {
-            await transaction.tierPlacementHistory.createMany({
-                data: band.entries.map((entry) => ({
-                    tierListId: band.tierListId,
-                    chartId: entry.chartId,
-                    bandValue: value,
-                })),
-            });
-        }
-        await normalizeBandPositions(transaction, band.tierListId);
-    });
+    const sortedBands = bands
+        .map((item) => (item.id === id ? { ...item, value } : item))
+        .sort((left, right) => right.value - left.value);
+    const operations: Prisma.PrismaPromise<unknown>[] = [
+        ...bands.map((item) =>
+            db.tierBand.update({
+                where: { id: item.id },
+                data: { position: -item.id },
+            })
+        ),
+        ...sortedBands.map((item, index) =>
+            db.tierBand.update({
+                where: { id: item.id },
+                data: {
+                    position: index + 1,
+                    ...(item.id === id ? { value } : {}),
+                },
+            })
+        ),
+        ...(band.entries.length > 0
+            ? [
+                  db.tierPlacementHistory.createMany({
+                      data: band.entries.map((entry) => ({
+                          tierListId: band.tierListId,
+                          chartId: entry.chartId,
+                          bandValue: value,
+                      })),
+                  }),
+              ]
+            : []),
+    ];
+
+    await db.$transaction(operations);
     revalidateTierList(band.tierListId);
 }
 
@@ -255,20 +251,39 @@ export async function deleteTierBand(formData: FormData) {
     });
     if (!band) return;
 
-    await db.$transaction(async (transaction) => {
-        if (band.entries.length > 0) {
-            await transaction.tierPlacementHistory.createMany({
-                data: band.entries.map((entry) => ({
-                    tierListId: band.tierListId,
-                    chartId: entry.chartId,
-                    bandValue: null,
-                })),
-            });
-        }
-        await transaction.tierBand.delete({ where: { id } });
-
-        await normalizeBandPositions(transaction, band.tierListId);
+    const remainingBands = await db.tierBand.findMany({
+        where: { tierListId: band.tierListId, NOT: { id } },
+        select: { id: true },
+        orderBy: { value: "desc" },
     });
+    const operations: Prisma.PrismaPromise<unknown>[] = [
+        ...remainingBands.map((item) =>
+            db.tierBand.update({
+                where: { id: item.id },
+                data: { position: -item.id },
+            })
+        ),
+        ...(band.entries.length > 0
+            ? [
+                  db.tierPlacementHistory.createMany({
+                      data: band.entries.map((entry) => ({
+                          tierListId: band.tierListId,
+                          chartId: entry.chartId,
+                          bandValue: null,
+                      })),
+                  }),
+              ]
+            : []),
+        db.tierBand.delete({ where: { id } }),
+        ...remainingBands.map((item, index) =>
+            db.tierBand.update({
+                where: { id: item.id },
+                data: { position: index + 1 },
+            })
+        ),
+    ];
+
+    await db.$transaction(operations);
     revalidateTierList(band.tierListId);
 }
 
@@ -313,87 +328,110 @@ export async function addTierEntry(formData: FormData) {
     revalidateTierList(tierListId);
 }
 
-export async function moveTierEntryByDrop(
-    entryId: number,
-    targetBandId: number,
-    targetIndex: number
+// 드래그로 바뀐 전체 배치를 한 번에 검증하고 저장함
+export async function applyTierBoardLayout(
+    tierListId: number,
+    placements: TierEntryPlacement[]
 ) {
     await requireAdmin();
+    if (!Number.isInteger(tierListId) || !Array.isArray(placements)) return;
+
+    const isValidPlacement = (placement: TierEntryPlacement) =>
+        Number.isInteger(placement.id) &&
+        Number.isInteger(placement.tierBandId) &&
+        Number.isInteger(placement.position) &&
+        placement.position > 0;
+    if (!placements.every(isValidPlacement)) return;
+
+    const [bands, entries] = await Promise.all([
+        db.tierBand.findMany({
+            where: { tierListId },
+            select: { id: true, value: true },
+        }),
+        db.tierEntry.findMany({
+            where: { tierListId },
+            select: {
+                id: true,
+                chartId: true,
+                tierBandId: true,
+                position: true,
+            },
+        }),
+    ]);
+    const bandIds = new Set(bands.map((band) => band.id));
+    const entriesById = new Map(entries.map((entry) => [entry.id, entry]));
+    const placementIds = new Set(placements.map((placement) => placement.id));
     if (
-        !Number.isInteger(entryId) ||
-        !Number.isInteger(targetBandId) ||
-        !Number.isInteger(targetIndex)
+        placementIds.size !== placements.length ||
+        placementIds.size !== entriesById.size ||
+        placements.some(
+            (placement) =>
+                !entriesById.has(placement.id) ||
+                !bandIds.has(placement.tierBandId)
+        )
     )
         return;
 
-    const entry = await db.tierEntry.findUnique({ where: { id: entryId } });
-    if (!entry) return;
-
-    const targetBand = await db.tierBand.findFirst({
-        where: { id: targetBandId, tierListId: entry.tierListId },
-        select: { value: true },
-    });
-    if (!targetBand) return;
-
-    const affectedBandIds = [...new Set([entry.tierBandId, targetBandId])];
-    const affectedEntries = await db.tierEntry.findMany({
-        where: { tierBandId: { in: affectedBandIds } },
-        select: { id: true, tierBandId: true },
-        orderBy: { position: "asc" },
-    });
-    const sourceIds = affectedEntries
-        .filter(
-            (item) =>
-                item.tierBandId === entry.tierBandId && item.id !== entryId
+    const positionsByBand = new Map<number, number[]>();
+    for (const placement of placements) {
+        const positions = positionsByBand.get(placement.tierBandId) ?? [];
+        positions.push(placement.position);
+        positionsByBand.set(placement.tierBandId, positions);
+    }
+    if (
+        [...positionsByBand.values()].some((positions) =>
+            positions
+                .sort((left, right) => left - right)
+                .some((position, index) => position !== index + 1)
         )
-        .map((item) => item.id);
-    const targetIds = affectedEntries
-        .filter(
-            (item) => item.tierBandId === targetBandId && item.id !== entryId
-        )
-        .map((item) => item.id);
-    const insertAt = Math.max(0, Math.min(targetIndex, targetIds.length));
-    targetIds.splice(insertAt, 0, entryId);
+    )
+        return;
 
-    await db.$transaction(async (transaction) => {
-        for (const [index, item] of affectedEntries.entries()) {
-            await transaction.tierEntry.update({
-                where: { id: item.id },
-                data: { position: -(index + 1) },
-            });
-        }
+    const changedPlacements = placements.filter((placement) => {
+        const entry = entriesById.get(placement.id);
+        return (
+            entry?.tierBandId !== placement.tierBandId ||
+            entry.position !== placement.position
+        );
+    });
+    if (changedPlacements.length === 0) return;
 
-        if (entry.tierBandId !== targetBandId) {
-            for (const [index, id] of sourceIds.entries()) {
-                await transaction.tierEntry.update({
-                    where: { id },
-                    data: {
-                        tierBandId: entry.tierBandId,
-                        position: index + 1,
-                    },
-                });
-            }
-        }
-
-        for (const [index, id] of targetIds.entries()) {
-            await transaction.tierEntry.update({
-                where: { id },
-                data: { tierBandId: targetBandId, position: index + 1 },
-            });
-        }
-
-        if (entry.tierBandId !== targetBandId) {
-            await transaction.tierPlacementHistory.create({
+    const bandValues = new Map(bands.map((band) => [band.id, band.value]));
+    const operations: Prisma.PrismaPromise<unknown>[] = [
+        // 기존 양수 위치를 고유한 음수 값으로 옮겨 위치 제약 충돌을 피함
+        ...changedPlacements.map((placement) =>
+            db.tierEntry.update({
+                where: { id: placement.id },
+                data: { position: -placement.id },
+            })
+        ),
+        ...changedPlacements.map((placement) =>
+            db.tierEntry.update({
+                where: { id: placement.id },
                 data: {
-                    tierListId: entry.tierListId,
-                    chartId: entry.chartId,
-                    bandValue: targetBand.value,
+                    tierBandId: placement.tierBandId,
+                    position: placement.position,
                 },
-            });
-        }
-    });
+            })
+        ),
+        ...changedPlacements.flatMap((placement) => {
+            const entry = entriesById.get(placement.id);
+            if (!entry || entry.tierBandId === placement.tierBandId) return [];
 
-    revalidateTierList(entry.tierListId);
+            return [
+                db.tierPlacementHistory.create({
+                    data: {
+                        tierListId,
+                        chartId: entry.chartId,
+                        bandValue: bandValues.get(placement.tierBandId) ?? null,
+                    },
+                }),
+            ];
+        }),
+    ];
+
+    await db.$transaction(operations);
+    revalidateTierList(tierListId);
 }
 
 export async function deleteTierEntry(formData: FormData) {
@@ -404,16 +442,34 @@ export async function deleteTierEntry(formData: FormData) {
     const entry = await db.tierEntry.findUnique({ where: { id } });
     if (!entry) return;
 
-    await db.$transaction(async (transaction) => {
-        await transaction.tierEntry.delete({ where: { id } });
-        await normalizeEntryPositions(transaction, entry.tierBandId);
-        await transaction.tierPlacementHistory.create({
+    const remainingEntries = await db.tierEntry.findMany({
+        where: { tierBandId: entry.tierBandId, NOT: { id } },
+        select: { id: true },
+        orderBy: { position: "asc" },
+    });
+    const operations: Prisma.PrismaPromise<unknown>[] = [
+        ...remainingEntries.map((item) =>
+            db.tierEntry.update({
+                where: { id: item.id },
+                data: { position: -item.id },
+            })
+        ),
+        db.tierEntry.delete({ where: { id } }),
+        ...remainingEntries.map((item, index) =>
+            db.tierEntry.update({
+                where: { id: item.id },
+                data: { position: index + 1 },
+            })
+        ),
+        db.tierPlacementHistory.create({
             data: {
                 tierListId: entry.tierListId,
                 chartId: entry.chartId,
                 bandValue: null,
             },
-        });
-    });
+        }),
+    ];
+
+    await db.$transaction(operations);
     revalidateTierList(entry.tierListId);
 }

@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 
 interface SessionContent {
     id?: number;
+    profileCompleted?: boolean;
     discordOAuthState?: string;
     discordOAuthReturnTo?: string;
 }

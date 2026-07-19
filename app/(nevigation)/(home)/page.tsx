@@ -54,7 +54,7 @@ export default async function Home({ searchParams }: HomeProps) {
         <div className="flex flex-col gap-4 px-4 py-4">
             {/* 상단 로그인/프로필 카드 */}
             {user ? (
-                <section className="bg-surface rounded-card flex min-h-20 items-center gap-3 p-4">
+                <section className="bg-surface rounded-card sticky top-2 z-20 flex min-h-20 items-center gap-3 p-4 shadow-lg">
                     <UserAvatar
                         avatar={user.avatar}
                         username={user.username}
@@ -71,11 +71,15 @@ export default async function Home({ searchParams }: HomeProps) {
                             </span>
                         </div>
                         <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
-                            <span className="text-text-primary shrink-0 text-sm font-medium tabular-nums">
-                                Grd{" "}
-                                {formatToComma(
-                                    normalizeStoredGrade(user.grade_basic)
-                                )}
+                            <span className="shrink-0 text-sm font-medium tabular-nums">
+                                <span className="text-text-secondary">
+                                    Grd{" "}
+                                </span>
+                                <span className="text-score font-bold">
+                                    {formatToComma(
+                                        normalizeStoredGrade(user.grade_basic)
+                                    )}
+                                </span>
                             </span>
                             <ExamBadge mode="basic" exam={user.exam_basic} />
                             <ExamBadge
@@ -87,7 +91,7 @@ export default async function Home({ searchParams }: HomeProps) {
 
                     <Link
                         href={`/profile/${user.id}`}
-                        className="border-border text-text-primary hover:bg-surface-muted focus-visible:ring-text-secondary/30 rounded-card flex h-9 shrink-0 cursor-pointer items-center justify-center border px-3 text-xs font-bold transition-colors focus-visible:ring-2 focus-visible:outline-none"
+                        className="border-border text-text-primary hover:bg-surface-muted focus-visible:ring-text-secondary/30 rounded-card flex h-10 shrink-0 items-center justify-center border px-3 text-sm font-bold transition-colors focus-visible:ring-2 focus-visible:outline-none"
                     >
                         내 프로필
                     </Link>
@@ -97,7 +101,7 @@ export default async function Home({ searchParams }: HomeProps) {
                     <p className="text-section">내 NOSTALGIA 기록 모아보기</p>
                     <Link
                         href="/login"
-                        className="bg-discord rounded-card text-text-primary px-3 py-2 text-xs font-bold"
+                        className="bg-discord rounded-card text-text-primary hover:bg-discord/90 flex h-10 items-center px-3 text-sm font-bold transition-colors"
                     >
                         로그인
                     </Link>
@@ -141,9 +145,7 @@ export default async function Home({ searchParams }: HomeProps) {
                         className="text-text-secondary group-hover:text-text-primary size-6 transition-colors"
                         aria-hidden="true"
                     />
-                    <span className="text-caption text-text-primary font-semibold">
-                        악곡
-                    </span>
+                    <span className="text-label">악곡</span>
                 </Link>
                 <Link
                     href="/rankings"
@@ -153,9 +155,7 @@ export default async function Home({ searchParams }: HomeProps) {
                         className="text-text-secondary group-hover:text-text-primary size-6 transition-colors"
                         aria-hidden="true"
                     />
-                    <span className="text-caption text-text-primary font-semibold">
-                        랭킹
-                    </span>
+                    <span className="text-label">랭킹</span>
                 </Link>
                 <Link
                     href="/bingo"
@@ -165,9 +165,7 @@ export default async function Home({ searchParams }: HomeProps) {
                         className="text-text-secondary group-hover:text-text-primary size-6 transition-colors"
                         aria-hidden="true"
                     />
-                    <span className="text-caption text-text-primary font-semibold">
-                        빙고
-                    </span>
+                    <span className="text-label">빙고</span>
                 </Link>
                 <Link
                     href="/tiers"
@@ -177,9 +175,7 @@ export default async function Home({ searchParams }: HomeProps) {
                         className="text-text-secondary group-hover:text-text-primary size-6 transition-colors"
                         aria-hidden="true"
                     />
-                    <span className="text-caption text-text-primary font-semibold">
-                        서열표
-                    </span>
+                    <span className="text-label">서열표</span>
                 </Link>
                 <Link
                     href="/exams"
@@ -189,9 +185,7 @@ export default async function Home({ searchParams }: HomeProps) {
                         className="text-text-secondary group-hover:text-text-primary size-6 transition-colors"
                         aria-hidden="true"
                     />
-                    <span className="text-caption text-text-primary font-semibold">
-                        검정
-                    </span>
+                    <span className="text-label">검정</span>
                 </Link>
                 <div className="bg-surface-muted rounded-card relative flex h-20 flex-col items-center justify-center gap-2 opacity-50">
                     <Clock3
@@ -216,7 +210,7 @@ export default async function Home({ searchParams }: HomeProps) {
                         className="text-text-secondary group-hover:text-text-primary size-4 transition-colors"
                         aria-hidden="true"
                     />
-                    <span className="text-caption">데이터 연동 가이드</span>
+                    <span className="text-body-muted">데이터 연동 가이드</span>
                 </div>
                 <ChevronRight
                     className="text-text-disabled group-hover:text-text-primary size-4 transition-colors"
@@ -239,8 +233,8 @@ export default async function Home({ searchParams }: HomeProps) {
                                 }
                                 className={
                                     rankingMode === "basic"
-                                        ? "bg-border text-text-primary px-2 py-1 text-[10px] font-medium"
-                                        : "text-text-secondary hover:bg-border/60 hover:text-text-primary px-2 py-1 text-[10px] font-medium transition-colors"
+                                        ? "bg-border text-text-primary px-2.5 py-1 text-xs font-semibold"
+                                        : "text-text-secondary hover:bg-border/60 hover:text-text-primary px-2.5 py-1 text-xs font-semibold transition-colors"
                                 }
                             >
                                 Basic
@@ -256,8 +250,8 @@ export default async function Home({ searchParams }: HomeProps) {
                                 }
                                 className={
                                     rankingMode === "recital"
-                                        ? "bg-border text-text-primary px-2 py-1 text-[10px] font-medium"
-                                        : "text-text-secondary hover:bg-border/60 hover:text-text-primary px-2 py-1 text-[10px] font-medium transition-colors"
+                                        ? "bg-border text-text-primary px-2.5 py-1 text-xs font-semibold"
+                                        : "text-text-secondary hover:bg-border/60 hover:text-text-primary px-2.5 py-1 text-xs font-semibold transition-colors"
                                 }
                             >
                                 Recital

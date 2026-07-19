@@ -30,7 +30,7 @@ export default function BingoListCard({ bingo }: BingoListCardProps) {
                 </div>
                 {bingo.richLines > 0 && !bingo.isCompleted ? (
                     <span className="bg-score text-bg absolute top-2 left-2 rounded px-1.5 py-0.5 text-xs font-extrabold">
-                        리치 {bingo.richLines}
+                        빙고 찬스 {bingo.richLines}
                     </span>
                 ) : null}
             </div>

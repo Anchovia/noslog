@@ -22,7 +22,7 @@ export default function ProfileSummary({
             <article className="bg-surface rounded-card flex min-w-0 flex-col justify-center p-4">
                 <p className="text-caption">그레이드</p>
                 <p className="mt-1 flex items-baseline gap-1.5 tabular-nums">
-                    <strong className="text-score text-3xl leading-none font-black">
+                    <strong className="text-score-display text-score">
                         {formatProfileGrade(grade)}
                     </strong>
                     <span className="text-text-secondary text-xs font-semibold">

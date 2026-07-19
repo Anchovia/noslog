@@ -1,6 +1,38 @@
 import { describe, expect, it } from "vitest";
 
-import { getTierRecommendation, getTierRecordStatus } from "@/lib/tiers";
+import {
+    formatTierValue,
+    getJacketUrl,
+    getTierRecommendation,
+    getTierRecordStatus,
+} from "@/lib/tiers";
+
+describe("formatTierValue", () => {
+    it("서열표 상수를 소수점 한 자리로 표시한다", () => {
+        expect(formatTierValue(14)).toBe("14.0");
+        expect(formatTierValue(13.8)).toBe("13.8");
+    });
+});
+
+describe("getJacketUrl", () => {
+    it("저장된 자켓 URL을 우선 사용하고 HTTPS로 정규화한다", () => {
+        expect(getJacketUrl("music-id", "http://example.com/jacket.jpg")).toBe(
+            "https://example.com/jacket.jpg"
+        );
+    });
+
+    it("기존 자켓 매핑을 fallback으로 사용한다", () => {
+        expect(getJacketUrl("818b48940c2d17325904fbab68689046", null)).toBe(
+            "https://p.eagate.573.jp//game/bemani/fansite/p/images/music/201703_jk/201703_nst_29.jpg"
+        );
+    });
+
+    it("저장된 자켓이 없으면 공식 동적 자켓 URL을 반환한다", () => {
+        expect(getJacketUrl("unknown-music", null)).toBe(
+            "https://p.eagate.573.jp/game/nostalgia/op3/img/jacket.html?c=unknown-music"
+        );
+    });
+});
 
 describe("getTierRecommendation", () => {
     it.each([
@@ -19,11 +51,11 @@ describe("getTierRecommendation", () => {
         expect(getTierRecommendation(0)).toBeNull();
     });
 
-    it("추천 범위를 1~14 안으로 제한한다", () => {
+    it("추천 범위를 1~14.5 안으로 제한한다", () => {
         expect(getTierRecommendation(1)?.min).toBe(6.3);
         expect(getTierRecommendation(9999999)).toMatchObject({
-            target: 14,
-            max: 14,
+            target: 14.5,
+            max: 14.5,
         });
     });
 });
@@ -45,6 +77,24 @@ describe("getTierRecordStatus", () => {
         ).toBe("s");
         expect(
             getTierRecordStatus({ score: 900_000, rank: "A", fc_type: 0 })
+        ).toBe("a_plus");
+        expect(
+            getTierRecordStatus({ score: 899_999, rank: "A", fc_type: 0 })
         ).toBe("played");
+    });
+
+    it("Pianist, FC, S, A+ 순서로 우선 판정한다", () => {
+        expect(
+            getTierRecordStatus({ score: 1_000_000, rank: "S", fc_type: 2 })
+        ).toBe("pianist");
+        expect(
+            getTierRecordStatus({ score: 970_000, rank: "S", fc_type: 2 })
+        ).toBe("fc");
+        expect(
+            getTierRecordStatus({ score: 970_000, rank: "S", fc_type: 0 })
+        ).toBe("s");
+        expect(
+            getTierRecordStatus({ score: 920_000, rank: "A+", fc_type: 0 })
+        ).toBe("a_plus");
     });
 });

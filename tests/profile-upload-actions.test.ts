@@ -11,6 +11,11 @@ const mocks = vi.hoisted(() => ({
     userUpdate: vi.fn(),
     updateTag: vi.fn(),
     redirect: vi.fn(),
+    session: {
+        id: 2,
+        profileCompleted: true,
+        save: vi.fn(),
+    },
 }));
 
 vi.mock("@/lib/session", () => ({
@@ -53,17 +58,24 @@ const oldAvatar =
 const newAvatar =
     "https://store.public.blob.vercel-storage.com/avatars/2/profile-new.png";
 
-function profileForm(username = "carol", avatar = newAvatar) {
+function profileForm(
+    username = "carol",
+    avatar = newAvatar,
+    country = "ko-KR"
+) {
     const formData = new FormData();
     formData.set("username", username);
     formData.set("avatar", avatar);
+    formData.set("country", country);
     return formData;
 }
 
 describe("프로필 이미지 업로드 토큰", () => {
     beforeEach(() => {
         vi.clearAllMocks();
-        mocks.getSession.mockResolvedValue({ id: 2 });
+        mocks.session.id = 2;
+        mocks.session.profileCompleted = true;
+        mocks.getSession.mockResolvedValue(mocks.session);
         mocks.claimUploadTokenQuota.mockResolvedValue({
             allowed: true,
             grantId: 10,
@@ -130,7 +142,11 @@ describe("프로필 이미지 업로드 토큰", () => {
 
         expect(mocks.userUpdate).toHaveBeenCalledWith({
             where: { id: 2 },
-            data: { username: "CAROL", avatar: newAvatar },
+            data: {
+                username: "CAROL",
+                country: "ko-KR",
+                avatar: newAvatar,
+            },
         });
         expect(mocks.deleteBlobIfOwned).toHaveBeenCalledWith(oldAvatar);
         expect(mocks.updateTag).toHaveBeenCalledWith("user-rankings");

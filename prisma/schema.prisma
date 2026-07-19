@@ -15,6 +15,7 @@ model User {
   discord_name         String?
   avatar               String?
   country              String                    @default("ko-KR")
+  profile_completed_at DateTime?
   rank_basic           Int?
   rank_recital         Int?
   rank_basic_country   Int?
@@ -345,19 +346,22 @@ model PlayData {
 }
 
 model Bingo {
-  id              Int         @id @default(autoincrement())
-  title           String?
-  description     String?
-  rewardNos       Int         @map("nos")
-  requiredLines   Int         @map("line")
-  status          String      @default("draft")
-  startsAt        DateTime?   @map("starts_at")
-  endsAt          DateTime?   @map("ends_at")
-  createdAt       DateTime    @default(now()) @map("created_at")
-  updatedAt       DateTime    @updatedAt @map("updated_at")
-  coverMusicIndex String      @map("music_idx")
-  coverMusic      Music       @relation("BingoCoverMusic", fields: [coverMusicIndex], references: [index])
-  cells           BingoCell[]
+  id                  Int         @id @default(autoincrement())
+  title               String?
+  description         String?
+  sourceVersion       String?     @map("source_version")
+  rewardNos           Int         @map("nos")
+  lineRewardNos       Int         @default(0) @map("line_reward_nos")
+  completionRewardNos Int         @default(0) @map("completion_reward_nos")
+  requiredLines       Int         @map("line")
+  status              String      @default("draft")
+  startsAt            DateTime?   @map("starts_at")
+  endsAt              DateTime?   @map("ends_at")
+  createdAt           DateTime    @default(now()) @map("created_at")
+  updatedAt           DateTime    @updatedAt @map("updated_at")
+  coverMusicIndex     String      @map("music_idx")
+  coverMusic          Music       @relation("BingoCoverMusic", fields: [coverMusicIndex], references: [index])
+  cells               BingoCell[]
 
   @@index([status, startsAt, endsAt])
 }

@@ -3,7 +3,7 @@ import { getBingoProgress } from "@/lib/bingo";
 import getSession from "@/lib/session";
 import {
     getCachedPublishedBingos,
-    getUserCompletedBingoCellIds,
+    getUserBingoCellProgress,
     isBingoAvailable,
 } from "./data";
 
@@ -16,10 +16,17 @@ export default async function BingoPage() {
     const cellIds = bingos.flatMap((bingo) =>
         bingo.cells.map((cell) => cell.id)
     );
-    const completedCellIds = session.id
-        ? await getUserCompletedBingoCellIds(session.id, cellIds)
+    const userProgress = session.id
+        ? await getUserBingoCellProgress(session.id, cellIds)
         : [];
-    const completedCellIdSet = new Set(completedCellIds);
+    const completedCellIdSet = new Set(
+        userProgress
+            .filter((item) => item.isCompleted)
+            .map((item) => item.bingoCellId)
+    );
+    const progressByCellId = new Map(
+        userProgress.map((item) => [item.bingoCellId, item])
+    );
 
     const items: BingoListItem[] = bingos.map((bingo) => {
         const cells = bingo.cells.map((cell) => ({
@@ -28,6 +35,15 @@ export default async function BingoPage() {
             isCompleted: completedCellIdSet.has(cell.id),
         }));
         const progress = getBingoProgress(cells);
+        const lastModifiedAt = bingo.cells.reduce<string | null>(
+            (latest, cell) => {
+                const updatedAt = progressByCellId.get(cell.id)?.updatedAt;
+                return updatedAt && (!latest || updatedAt > latest)
+                    ? updatedAt
+                    : latest;
+            },
+            null
+        );
 
         return {
             id: bingo.id,
@@ -45,6 +61,7 @@ export default async function BingoPage() {
             richLines: progress.richLines,
             progressPercent: progress.progressPercent,
             isCompleted: progress.completedLines >= bingo.requiredLines,
+            lastModifiedAt,
         };
     });
 

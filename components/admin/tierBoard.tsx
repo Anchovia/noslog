@@ -18,7 +18,7 @@ import { useEffect, useRef, useState, useTransition } from "react";
 
 import {
     addTierEntry,
-    moveTierEntryByDrop,
+    applyTierBoardLayout,
     searchTierCharts,
 } from "@/app/admin/tiers/actions";
 import TierBandCard from "@/components/admin/tierBoard/tierBandCard";
@@ -28,8 +28,14 @@ import {
     type TierChartSearchResult,
     type TierDropData,
 } from "@/components/admin/tierBoard/tierBoardTypes";
-import { resolveTierDropTarget } from "@/components/admin/tierBoard/tierBoardUtils";
+import {
+    getTierBoardChangeCount,
+    getTierEntryPlacements,
+    moveTierEntryInBoard,
+    resolveTierDropTarget,
+} from "@/components/admin/tierBoard/tierBoardUtils";
 import { cn } from "@/lib/utils";
+import { Save } from "lucide-react";
 
 export type { TierBandData } from "@/components/admin/tierBoard/tierBoardTypes";
 
@@ -44,6 +50,7 @@ export default function TierBoard({
     const router = useRouter();
     const requestId = useRef(0);
     const [activeEntryId, setActiveEntryId] = useState<number | null>(null);
+    const [draftBands, setDraftBands] = useState(bands);
     const [selectedEntryId, setSelectedEntryId] = useState<number | null>(null);
     const [searchBandId, setSearchBandId] = useState<number | null>(null);
     const [query, setQuery] = useState("");
@@ -126,20 +133,32 @@ export default function TierBoard({
 
         const entryId = Number(event.active.data.current?.entryId);
         const target = resolveTierDropTarget(
-            bands,
+            draftBands,
             event.over.data.current as TierDropData | undefined
         );
         if (!entryId || !target) return;
 
+        setDraftBands((current) =>
+            moveTierEntryInBoard(current, entryId, target.bandId, target.index)
+        );
+    }
+
+    const changeCount = getTierBoardChangeCount(bands, draftBands);
+    const activeEntry = draftBands
+        .flatMap((band) => band.entries)
+        .find((entry) => entry.id === activeEntryId);
+
+    function applyLayout() {
+        if (changeCount === 0) return;
+
         startMutation(async () => {
-            await moveTierEntryByDrop(entryId, target.bandId, target.index);
+            await applyTierBoardLayout(
+                tierListId,
+                getTierEntryPlacements(draftBands)
+            );
             router.refresh();
         });
     }
-
-    const activeEntry = bands
-        .flatMap((band) => band.entries)
-        .find((entry) => entry.id === activeEntryId);
 
     if (bands.length === 0) {
         return (
@@ -151,6 +170,7 @@ export default function TierBoard({
 
     return (
         <DndContext
+            id={`tier-board-${tierListId}`}
             sensors={sensors}
             collisionDetection={closestCenter}
             onDragStart={handleDragStart}
@@ -163,7 +183,24 @@ export default function TierBoard({
                     isMutating && "pointer-events-none opacity-70"
                 )}
             >
-                {bands.map((band) => (
+                <div className="bg-surface border-border rounded-card sticky top-2 z-10 flex min-h-11 items-center justify-between gap-3 border px-3 py-2 shadow-lg">
+                    <span className="text-caption">
+                        {changeCount > 0
+                            ? `배치 변경 ${changeCount}건`
+                            : "배치 변경 없음"}
+                    </span>
+                    <button
+                        type="button"
+                        onClick={applyLayout}
+                        disabled={changeCount === 0 || isMutating}
+                        className="bg-text-primary text-bg hover:bg-text-primary/90 flex h-9 shrink-0 items-center gap-1.5 rounded-md px-3 text-xs font-bold disabled:cursor-not-allowed disabled:opacity-40"
+                    >
+                        <Save className="size-3.5" />
+                        {isMutating ? "적용 중..." : "일괄 적용"}
+                    </button>
+                </div>
+
+                {draftBands.map((band) => (
                     <TierBandCard
                         key={band.id}
                         band={band}

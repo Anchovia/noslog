@@ -90,10 +90,10 @@ export default function MusicDetailNavigation({
                         key={tab.value}
                         href={`/music/${music.index}/${difficulty.toLowerCase()}?tab=${tab.value}`}
                         className={cn(
-                            "rounded-card shrink-0 px-3 py-2 text-sm font-semibold",
+                            "rounded-card flex h-9 shrink-0 items-center px-3 text-sm font-semibold transition-colors",
                             activeTab === tab.value
                                 ? "bg-text-primary text-bg"
-                                : "bg-surface text-text-secondary"
+                                : "bg-surface text-text-secondary hover:bg-surface-muted hover:text-text-primary"
                         )}
                     >
                         {tab.label}

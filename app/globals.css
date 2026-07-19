@@ -84,6 +84,25 @@
     select {
         font: inherit;
     }
+
+    /* 클릭 가능한 컨트롤의 기본 상호작용을 통일 */
+    button:not(:disabled),
+    [role="button"]:not([aria-disabled="true"]) {
+        cursor: pointer;
+    }
+
+    button:disabled,
+    [role="button"][aria-disabled="true"] {
+        cursor: not-allowed;
+    }
+
+    /* 입력 안내 문구는 크기를 유지하고 색과 굵기로 위계를 낮춤 */
+    input::placeholder,
+    textarea::placeholder {
+        color: var(--color-text-disabled);
+        font-weight: 400;
+        opacity: 1;
+    }
 }
 
 /* Figma 스타일 가이드 기준 타이포그래피 유틸리티 */
@@ -91,8 +110,16 @@
     @apply text-text-primary text-2xl leading-tight font-bold;
 }
 
+@utility text-score-display {
+    @apply text-text-primary text-4xl leading-none font-black tabular-nums;
+}
+
 @utility text-title {
     @apply text-text-primary text-xl leading-snug font-bold;
+}
+
+@utility text-wordmark {
+    @apply text-text-primary text-lg leading-none font-bold;
 }
 
 @utility text-section {
@@ -101,6 +128,14 @@
 
 @utility text-body {
     @apply text-text-primary text-sm leading-relaxed font-medium;
+}
+
+@utility text-body-muted {
+    @apply text-text-secondary text-sm leading-relaxed font-normal;
+}
+
+@utility text-label {
+    @apply text-text-primary text-sm leading-normal font-semibold;
 }
 
 @utility text-caption {

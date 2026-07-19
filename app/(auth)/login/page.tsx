@@ -1,7 +1,7 @@
-import { MessageCircle } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
+import DiscordIcon from "@/components/ui/DiscordIcon";
 import { getUser } from "@/lib/user";
 
 const errorMessages: Record<string, string> = {
@@ -44,7 +44,7 @@ export default async function LoginPage({
                         href="/discord/start"
                         className="bg-discord text-text-primary rounded-card flex h-12 w-full items-center justify-center gap-2 text-sm font-bold transition-opacity hover:opacity-90 active:opacity-80"
                     >
-                        <MessageCircle className="size-5" aria-hidden />
+                        <DiscordIcon className="size-5" />
                         Discord로 계속하기
                     </a>
 

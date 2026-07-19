@@ -19,7 +19,7 @@ const BINGO_LINES = [
     [5, 9, 13, 17, 21],
 ] as const;
 
-// 빙고판의 완료 칸, 완성 줄, 리치 칸을 한곳에서 계산함
+// 빙고판의 완료 칸, 완성 줄, 빙고 찬스 칸을 한곳에서 계산함
 export function getBingoProgress(cells: BingoProgressCell[]) {
     const completedPositions = new Set(
         cells.filter((cell) => cell.isCompleted).map((cell) => cell.position)

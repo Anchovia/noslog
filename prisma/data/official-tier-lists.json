@@ -1,0 +1,34 @@
+[
+    {
+        "slug": "basic-real",
+        "legacySlugs": ["basic-all"],
+        "title": "Basic Real 서열표",
+        "mode": "basic",
+        "difficulty": "Real",
+        "description": "Real 채보를 공식 레벨 상수별로 정리한 Basic 서열표"
+    },
+    {
+        "slug": "recital-real",
+        "legacySlugs": ["recital-all"],
+        "title": "Recital Real 서열표",
+        "mode": "recital",
+        "difficulty": "Real",
+        "description": "Real 채보를 공식 레벨 상수별로 정리한 Recital 서열표"
+    },
+    {
+        "slug": "basic-expert",
+        "legacySlugs": [],
+        "title": "Basic Expert 서열표",
+        "mode": "basic",
+        "difficulty": "Expert",
+        "description": "Expert 채보를 공식 레벨 상수별로 정리한 Basic 서열표"
+    },
+    {
+        "slug": "recital-expert",
+        "legacySlugs": [],
+        "title": "Recital Expert 서열표",
+        "mode": "recital",
+        "difficulty": "Expert",
+        "description": "Expert 채보를 공식 레벨 상수별로 정리한 Recital 서열표"
+    }
+]

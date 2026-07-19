@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { cn } from "@/lib/utils";
 import type { MusicItem } from "./musicList";
+import MusicJacket from "./musicJacket";
 
 type Difficulty = "Normal" | "Hard" | "Expert" | "Real";
 
@@ -46,19 +47,16 @@ const difficultyBadges: {
 export default function MusicGridCard(props: MusicItem) {
     const { index, title, artist, background, category_short } = props;
     const defaultDifficulty: Difficulty = "Normal";
-    const jacketImageUrl =
-        background ||
-        `https://p.eagate.573.jp/game/nostalgia/op3/img/jacket.html?c=${index}`;
-
     return (
         <Link
             href={`/music/${index}/${defaultDifficulty.toLowerCase()}`}
             className="bg-surface rounded-card hover:bg-surface-muted min-w-0 overflow-hidden transition-colors"
         >
-            <div
-                className="bg-surface-muted relative aspect-square w-full bg-cover bg-center"
-                style={{ backgroundImage: `url(${jacketImageUrl})` }}
-                aria-hidden="true"
+            <MusicJacket
+                index={index}
+                background={background}
+                title={title}
+                className="aspect-square w-full"
             >
                 <span
                     className={cn(
@@ -69,7 +67,7 @@ export default function MusicGridCard(props: MusicItem) {
                 >
                     {category_short}
                 </span>
-            </div>
+            </MusicJacket>
 
             <div className="flex min-w-0 flex-col gap-1.5 p-3">
                 <h2 className="text-text-primary truncate text-sm leading-snug font-semibold">

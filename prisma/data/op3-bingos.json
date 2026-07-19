@@ -1,0 +1,4842 @@
+[
+    {
+        "sourceVersion": "FORTE",
+        "title": "おもちゃの兵隊の行進",
+        "requiredLines": 2,
+        "lineRewardNos": 250,
+        "completionRewardNos": 3000,
+        "rewardNos": 6000,
+        "cells": [
+            {
+                "position": 1,
+                "title": "Hard 이상 난이도 ◆Just 판정 누계 1000회 이상 달성"
+            },
+            {
+                "position": 2,
+                "title": "◆Just 판정 300회 이상 획득"
+            },
+            {
+                "position": 3,
+                "title": "860000점 이상 획득"
+            },
+            {
+                "position": 4,
+                "title": "Hard 이상 난이도 ◆Just 판정 200회 이상 획득"
+            },
+            {
+                "position": 5,
+                "title": "Hard 이상 난이도 풀콤보 달성"
+            },
+            {
+                "position": 6,
+                "title": "50콤보 이상 획득"
+            },
+            {
+                "position": 7,
+                "title": "Miss 판정 20회 이하 5회 달성"
+            },
+            {
+                "position": 8,
+                "title": "10곡 연주"
+            },
+            {
+                "position": 9,
+                "title": "풀콤보 달성"
+            },
+            {
+                "position": 10,
+                "title": "◆Just 판정 1500회 이상 획득"
+            },
+            {
+                "position": 11,
+                "title": "《클래식&재즈》 악곡 50콤보 이상 3회 달성"
+            },
+            {
+                "position": 12,
+                "title": "풀콤보 5회 달성"
+            },
+            {
+                "position": 13,
+                "title": "랭크 B 이상 획득"
+            },
+            {
+                "position": 14,
+                "title": "난이도 3 이상 플레이"
+            },
+            {
+                "position": 15,
+                "title": "《노스텔지어 오리지널》 악곡 누계 800콤보 이상 획득"
+            },
+            {
+                "position": 16,
+                "title": "《노스텔지어 오리지널》 악곡 Hard 이상 난이도 Just 200회 이상 획득"
+            },
+            {
+                "position": 17,
+                "title": "랭크 B+ 이상 5회 달성"
+            },
+            {
+                "position": 18,
+                "title": "난이도 4 이상 Near와 Miss 판정 합계 50회 이하 5회 달성"
+            },
+            {
+                "position": 19,
+                "title": "누계 1000콤보 이상 획득"
+            },
+            {
+                "position": 20,
+                "title": "《클래식&재즈》 악곡 플레이"
+            },
+            {
+                "position": 21,
+                "title": "Hard 이상 난이도 플레이"
+            },
+            {
+                "position": 22,
+                "title": "Hard 이상 난이도 50콤보 이상 획득"
+            },
+            {
+                "position": 23,
+                "title": "Good 이상 판정 누계 1000회 이상 달성"
+            },
+            {
+                "position": 24,
+                "title": "난이도 5 이상 ◆Just 판정 200회 이상 획득"
+            },
+            {
+                "position": 25,
+                "title": "Expert 이상 난이도 Just 이상 판정 500회 이상 획득"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "FORTE",
+        "title": "Miroir Riorim",
+        "requiredLines": 4,
+        "lineRewardNos": 416,
+        "completionRewardNos": 5000,
+        "rewardNos": 9992,
+        "cells": [
+            {
+                "position": 1,
+                "title": "Expert 이상 난이도 풀콤보 달성"
+            },
+            {
+                "position": 2,
+                "title": "Expert 이상 난이도 850000점 이상 획득"
+            },
+            {
+                "position": 3,
+                "title": "난이도 5 이하 900000점 이상 획득"
+            },
+            {
+                "position": 4,
+                "title": "Hard 이상 난이도 200콤보 이상 15회 달성"
+            },
+            {
+                "position": 5,
+                "title": "Hard 이상 난이도 880000점 이상 획득"
+            },
+            {
+                "position": 6,
+                "title": "◆Just 판정 900회 이상 획득"
+            },
+            {
+                "position": 7,
+                "title": "Just 이상 판정 누계 2000회 이상 달성"
+            },
+            {
+                "position": 8,
+                "title": "랭크 A+ 이상 획득"
+            },
+            {
+                "position": 9,
+                "title": "난이도 10 이상 랭크 A 이상 획득"
+            },
+            {
+                "position": 10,
+                "title": "《클래식&재즈》 악곡 플레이"
+            },
+            {
+                "position": 11,
+                "title": "Hard 이상 난이도 ◆Just 판정 400회 이상 획득"
+            },
+            {
+                "position": 12,
+                "title": "Expert 이상 난이도 누계 2000콤보 이상 획득"
+            },
+            {
+                "position": 13,
+                "title": "《BEMANI》 악곡 Hard 이상 난이도 플레이"
+            },
+            {
+                "position": 14,
+                "title": "난이도 6 이상 풀콤보 달성"
+            },
+            {
+                "position": 15,
+                "title": "난이도 10 이상 ◆Just 판정 누계 1500회 이상 달성"
+            },
+            {
+                "position": 16,
+                "title": "Expert 이상, 난이도 9 이상 ◆Just 판정 500회 이상 획득"
+            },
+            {
+                "position": 17,
+                "title": "Expert 이상 난이도 Just 이상 판정 1000회 이상 획득"
+            },
+            {
+                "position": 18,
+                "title": "Expert 이상 난이도 Good 이상 판정 누계 3000회 이상 달성"
+            },
+            {
+                "position": 19,
+                "title": "800000점 이상 획득"
+            },
+            {
+                "position": 20,
+                "title": "난이도 5 이상 200콤보 이상 획득"
+            },
+            {
+                "position": 21,
+                "title": "Hard 이상 난이도 풀콤보 10회 달성"
+            },
+            {
+                "position": 22,
+                "title": "《노스텔지어 오리지널》 악곡 플레이"
+            },
+            {
+                "position": 23,
+                "title": "난이도 6 이상 플레이"
+            },
+            {
+                "position": 24,
+                "title": "풀콤보 6회 달성"
+            },
+            {
+                "position": 25,
+                "title": "500콤보 이상 획득"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "FORTE",
+        "title": "Mighty Guy",
+        "requiredLines": 6,
+        "lineRewardNos": 416,
+        "completionRewardNos": 5000,
+        "rewardNos": 9992,
+        "cells": [
+            {
+                "position": 1,
+                "title": "《팝스》 악곡 300콤보 이상 5회 달성"
+            },
+            {
+                "position": 2,
+                "title": "《BEMANI》 악곡 Hard 이상 난이도 플레이"
+            },
+            {
+                "position": 3,
+                "title": "Expert 이상, 난이도 7 이상 880000점 이상 획득"
+            },
+            {
+                "position": 4,
+                "title": "난이도 5 이상 풀콤보 6회 달성"
+            },
+            {
+                "position": 5,
+                "title": "《노스텔지어 오리지널》 악곡 Hard 이상 난이도 랭크 S 이상 획득"
+            },
+            {
+                "position": 6,
+                "title": "《버라이어티》 악곡 Good 이상 판정 누계 5000회 이상 달성"
+            },
+            {
+                "position": 7,
+                "title": "Hard 이상 난이도 Miss 판정 5회 이하 20회 달성"
+            },
+            {
+                "position": 8,
+                "title": "《BEMANI》 악곡 ◆Just 판정 400회 이상 획득"
+            },
+            {
+                "position": 9,
+                "title": "Expert 이상 난이도 플레이"
+            },
+            {
+                "position": 10,
+                "title": "난이도 6 이하 Near와 Miss 판정 합계 10회 이하 4회 달성"
+            },
+            {
+                "position": 11,
+                "title": "Miss 판정 30회 이하"
+            },
+            {
+                "position": 12,
+                "title": "랭크 B+ 이상 15회 달성"
+            },
+            {
+                "position": 13,
+                "title": "난이도 4 이상 누계 5000콤보 이상 획득"
+            },
+            {
+                "position": 14,
+                "title": "Hard 이상 난이도 ◆Just 판정 누계 1500회 이상 획득"
+            },
+            {
+                "position": 15,
+                "title": "200콤보 이상 획득"
+            },
+            {
+                "position": 16,
+                "title": "《클래식&재즈》 악곡 난이도 6 이상 Just 이상 판정 누계 2000회 이상 획득"
+            },
+            {
+                "position": 17,
+                "title": "난이도 5 이하 풀콤보 달성"
+            },
+            {
+                "position": 18,
+                "title": "Good 이상 판정 500회 이상 획득"
+            },
+            {
+                "position": 19,
+                "title": "Expert 이상, 난이도 4 이상 Good 이상 판정 600회 이상 획득"
+            },
+            {
+                "position": 20,
+                "title": "Hard 이상 난이도 5곡 연주"
+            },
+            {
+                "position": 21,
+                "title": "Just 이상 판정 300회 이상 획득"
+            },
+            {
+                "position": 22,
+                "title": "Expert 이상 난이도 랭크 A 이상 10회 달성"
+            },
+            {
+                "position": 23,
+                "title": "난이도 5 이하 Miss 판정 10회 이하"
+            },
+            {
+                "position": 24,
+                "title": "Hard 이상 난이도 920000점 이상 획득"
+            },
+            {
+                "position": 25,
+                "title": "《아니메》 악곡 풀콤보 달성"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "FORTE",
+        "title": "木枯らしのエチュード",
+        "requiredLines": 6,
+        "lineRewardNos": 416,
+        "completionRewardNos": 5000,
+        "rewardNos": 9992,
+        "cells": [
+            {
+                "position": 1,
+                "title": "《클래식&재즈》 악곡 Hard 이상 난이도 플레이"
+            },
+            {
+                "position": 2,
+                "title": "《클래식&재즈》 악곡 Hard 이상 난이도 풀콤보 달성"
+            },
+            {
+                "position": 3,
+                "title": "《클래식&재즈》 악곡 Expert 이상 난이도 700000점 이상 획득"
+            },
+            {
+                "position": 4,
+                "title": "《클래식&재즈》 악곡 200콤보 이상 10회 달성"
+            },
+            {
+                "position": 5,
+                "title": "《클래식&재즈》 악곡 랭크 A+ 이상 획득"
+            },
+            {
+                "position": 6,
+                "title": "《클래식&재즈》 악곡 난이도 7 이상 Good 이상 판정 누계 3000회 이상 획득"
+            },
+            {
+                "position": 7,
+                "title": "《클래식&재즈》 악곡 Hard 이상 난이도 ◆Just 판정 600회 이상 획득"
+            },
+            {
+                "position": 8,
+                "title": "난이도 6 이상 Miss 판정 5회 이하 15회 달성"
+            },
+            {
+                "position": 9,
+                "title": "《클래식&재즈》 악곡 Hard 이상 난이도 500콤보 이상 20회 달성"
+            },
+            {
+                "position": 10,
+                "title": "《팝스》 악곡 800000점 이상 획득"
+            },
+            {
+                "position": 11,
+                "title": "Hard 이상 난이도 Just 이상 판정 누계 10000회 이상 획득"
+            },
+            {
+                "position": 12,
+                "title": "《노스텔지어 오리지널》 악곡 Near와 Miss 판정 합계 3회 이하 10회 달성"
+            },
+            {
+                "position": 13,
+                "title": "난이도 9 이상 900000점 이상 획득"
+            },
+            {
+                "position": 14,
+                "title": "랭크 S 이상 획득"
+            },
+            {
+                "position": 15,
+                "title": "난이도 10 이상 ◆Just 판정 700회 이상 획득"
+            },
+            {
+                "position": 16,
+                "title": "《클래식&재즈》 악곡 1000콤보 이상 획득"
+            },
+            {
+                "position": 17,
+                "title": "《클래식&재즈》 악곡 ◆Just 판정 누계 9000회 이상 획득"
+            },
+            {
+                "position": 18,
+                "title": "《BEMANI》 악곡 난이도 6 이상 ◆Just 판정 700회 이상 획득"
+            },
+            {
+                "position": 19,
+                "title": "《클래식&재즈》 악곡 Expert 이상 난이도 Miss 판정 2회 이하"
+            },
+            {
+                "position": 20,
+                "title": "《클래식&재즈》 악곡 난이도 10 이상 랭크 A+ 이상 획득"
+            },
+            {
+                "position": 21,
+                "title": "《버라이어티》 악곡 Expert 이상 난이도 Good 이상 판정 1000회 이상 획득"
+            },
+            {
+                "position": 22,
+                "title": "《클래식&재즈》 악곡 Expert 이상 난이도 20곡 연주"
+            },
+            {
+                "position": 23,
+                "title": "《클래식&재즈》 악곡 앙상블 콤보 800 이상"
+            },
+            {
+                "position": 24,
+                "title": "Hard 이상 난이도 풀콤보 5회 달성"
+            },
+            {
+                "position": 25,
+                "title": "난이도 10 이상 누계 7000콤보 이상 획득"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "FORTE",
+        "title": "La fame di Adria",
+        "requiredLines": 6,
+        "lineRewardNos": 250,
+        "completionRewardNos": 3000,
+        "rewardNos": 6000,
+        "cells": [
+            {
+                "position": 1,
+                "title": "《BEMANI》 악곡 10회 연주"
+            },
+            {
+                "position": 2,
+                "title": "《노스텔지어 오리지널》 악곡 700콤보 이상 3회 달성"
+            },
+            {
+                "position": 3,
+                "title": "940000점 이상 획득"
+            },
+            {
+                "position": 4,
+                "title": "난이도 8 이상 풀콤보 달성"
+            },
+            {
+                "position": 5,
+                "title": "글리산도 노트 Just 이상 판정 누계 50회 이상 획득"
+            },
+            {
+                "position": 6,
+                "title": "테누토 노트 ◆Just 판정 누계 50회 이상 획득"
+            },
+            {
+                "position": 7,
+                "title": "《노스텔지어 오리지널》 악곡 랭크 S 이상 획득"
+            },
+            {
+                "position": 8,
+                "title": "트릴 노트 Just 이상 판정 누계 20회 이상 획득"
+            },
+            {
+                "position": 9,
+                "title": "랭크 A+ 이상 25회 달성"
+            },
+            {
+                "position": 10,
+                "title": "난이도 11 이상 980000점 이상 획득"
+            },
+            {
+                "position": 11,
+                "title": "난이도 11 이상 Miss 판정 5회 이하"
+            },
+            {
+                "position": 12,
+                "title": "Expert 이상 난이도 Miss 판정 10회 이하 20회 달성"
+            },
+            {
+                "position": 13,
+                "title": "난이도 10 이상 ◆Just 판정 900회 이상 획득"
+            },
+            {
+                "position": 14,
+                "title": "누계 10000콤보 이상 획득"
+            },
+            {
+                "position": 15,
+                "title": "《팝스》 악곡 난이도 5～8 연주하"
+            },
+            {
+                "position": 16,
+                "title": "《버라이어티》 악곡 Hard 이상 난이도 랭크 A 이상 획득"
+            },
+            {
+                "position": 17,
+                "title": "트릴 노트 ◆Just 판정 누계 20회 이상 획득"
+            },
+            {
+                "position": 18,
+                "title": "테누토 노트 Just 이상 판정 5회 이상 획득"
+            },
+            {
+                "position": 19,
+                "title": "앙상블 콤보 1000 이상 4회 달성"
+            },
+            {
+                "position": 20,
+                "title": "난이도 12 이상 500콤보 이상 획득"
+            },
+            {
+                "position": 21,
+                "title": "《노스텔지어 오리지널》 악곡 앙상블 콤보 400 이상"
+            },
+            {
+                "position": 22,
+                "title": "《팝스》 악곡 난이도 10 이상 Near와 Miss 판정 합계 30회 이하 획득"
+            },
+            {
+                "position": 23,
+                "title": "풀콤보 10회 달성"
+            },
+            {
+                "position": 24,
+                "title": "Miss 판정 20회 이하 10회 달성"
+            },
+            {
+                "position": 25,
+                "title": "《팝스》 악곡 Expert 이상 난이도 랭크 A+ 이상 12회 달성"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "FORTE",
+        "title": "チョコレートスマイル",
+        "requiredLines": 4,
+        "lineRewardNos": 250,
+        "completionRewardNos": 3000,
+        "rewardNos": 6000,
+        "cells": [
+            {
+                "position": 1,
+                "title": "ルミナスデイズ 연주"
+            },
+            {
+                "position": 2,
+                "title": "ルミナスデイズ 연주"
+            },
+            {
+                "position": 3,
+                "title": "ルミナスデイズ 연주"
+            },
+            {
+                "position": 4,
+                "title": "ルミナスデイズ 연주"
+            },
+            {
+                "position": 5,
+                "title": "ルミナスデイズ 연주"
+            },
+            {
+                "position": 6,
+                "title": "ルミナスデイズ 연주"
+            },
+            {
+                "position": 7,
+                "title": "ルミナスデイズ 연주"
+            },
+            {
+                "position": 8,
+                "title": "ルミナスデイズ 연주"
+            },
+            {
+                "position": 9,
+                "title": "ルミナスデイズ 연주"
+            },
+            {
+                "position": 10,
+                "title": "ルミナスデイズ 연주"
+            },
+            {
+                "position": 11,
+                "title": "ルミナスデイズ 연주"
+            },
+            {
+                "position": 12,
+                "title": "ルミナスデイズ 연주"
+            },
+            {
+                "position": 13,
+                "title": "ルミナスデイズ 연주"
+            },
+            {
+                "position": 14,
+                "title": "ルミナスデイズ 연주"
+            },
+            {
+                "position": 15,
+                "title": "ルミナスデイズ 연주"
+            },
+            {
+                "position": 16,
+                "title": "ルミナスデイズ 연주"
+            },
+            {
+                "position": 17,
+                "title": "ルミナスデイズ 연주"
+            },
+            {
+                "position": 18,
+                "title": "ルミナスデイズ 연주"
+            },
+            {
+                "position": 19,
+                "title": "ルミナスデイズ 연주"
+            },
+            {
+                "position": 20,
+                "title": "ルミナスデイズ 연주"
+            },
+            {
+                "position": 21,
+                "title": "ルミナスデイズ 연주"
+            },
+            {
+                "position": 22,
+                "title": "ルミナスデイズ 연주"
+            },
+            {
+                "position": 23,
+                "title": "ルミナスデイズ 연주"
+            },
+            {
+                "position": 24,
+                "title": "ルミナスデイズ 연주"
+            },
+            {
+                "position": 25,
+                "title": "ルミナスデイズ 연주"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "FORTE",
+        "title": "ラデツキー行進曲",
+        "requiredLines": 6,
+        "lineRewardNos": 250,
+        "completionRewardNos": 3000,
+        "rewardNos": 6000,
+        "cells": [
+            {
+                "position": 1,
+                "title": "테누토 노트 Near와 Miss 판정 합계 3회 이하"
+            },
+            {
+                "position": 2,
+                "title": "Hard 이상 난이도 8곡 연주"
+            },
+            {
+                "position": 3,
+                "title": "일반 노트 ◆Just 판정 400회 이상 획득"
+            },
+            {
+                "position": 4,
+                "title": "Miss 판정 3회 이하"
+            },
+            {
+                "position": 5,
+                "title": "랭크 S 이상 획득"
+            },
+            {
+                "position": 6,
+                "title": "《노스텔지어 오리지널》 악곡 100콤보 이상 획득"
+            },
+            {
+                "position": 7,
+                "title": "글리산도 노트 Good 이상 판정 30회 이상 획득"
+            },
+            {
+                "position": 8,
+                "title": "랭크 A 이상 7회 달성"
+            },
+            {
+                "position": 9,
+                "title": "Just 이상 판정 400회 이상 획득"
+            },
+            {
+                "position": 10,
+                "title": "300콤보 이상 획득"
+            },
+            {
+                "position": 11,
+                "title": "◆Just 판정 600회 이상 획득"
+            },
+            {
+                "position": 12,
+                "title": "Hard 이상 난이도 900000점 이상 획득"
+            },
+            {
+                "position": 13,
+                "title": "난이도 7 이하 풀콤보 달성"
+            },
+            {
+                "position": 14,
+                "title": "Good 이상 판정 600회 이상 획득"
+            },
+            {
+                "position": 15,
+                "title": "Good 이상 판정 누계 6000회 이상 획득"
+            },
+            {
+                "position": 16,
+                "title": "Near와 Miss 판정 합계 30회 이하"
+            },
+            {
+                "position": 17,
+                "title": "《클래식&재즈》 악곡 Expert 이상 난이도 플레이"
+            },
+            {
+                "position": 18,
+                "title": "풀콤보 3회 달성"
+            },
+            {
+                "position": 19,
+                "title": "랭크 A 이상 10회 달성"
+            },
+            {
+                "position": 20,
+                "title": "트릴 노트 Just 이상 판정 누계 30회 이상 획득"
+            },
+            {
+                "position": 21,
+                "title": "Hard 이상 난이도 Miss 판정 7회 이하 15회 달성"
+            },
+            {
+                "position": 22,
+                "title": "난이도 6 이상 200콤보 이상 획득"
+            },
+            {
+                "position": 23,
+                "title": "Near와 Miss 판정 합계 5회 이하"
+            },
+            {
+                "position": 24,
+                "title": "랭크 B+ 이상 획득"
+            },
+            {
+                "position": 25,
+                "title": "《아니메》 악곡 Hard 이상 난이도 플레이"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "FORTE",
+        "title": "Missing in the snow",
+        "requiredLines": 6,
+        "lineRewardNos": 250,
+        "completionRewardNos": 3000,
+        "rewardNos": 6000,
+        "cells": [
+            {
+                "position": 1,
+                "title": "트릴 노트 ◆Just 판정 누계 10회 이상 획득"
+            },
+            {
+                "position": 2,
+                "title": "난이도 6 이상 Near와 Miss 판정 합계 10회 이하"
+            },
+            {
+                "position": 3,
+                "title": "《노스텔지어 오리지널》 악곡 Miss 판정 5회 이하"
+            },
+            {
+                "position": 4,
+                "title": "300콤보 이상 2회 달성"
+            },
+            {
+                "position": 5,
+                "title": "난이도 7 이상 ◆Just 판정 500회 이상 획득"
+            },
+            {
+                "position": 6,
+                "title": "Just 이상 판정 700회 이상 획득"
+            },
+            {
+                "position": 7,
+                "title": "《버라이어티》 악곡 난이도 8 이하 플레이"
+            },
+            {
+                "position": 8,
+                "title": "랭크 A 이상 5회 달성"
+            },
+            {
+                "position": 9,
+                "title": "400콤보 이상 획득"
+            },
+            {
+                "position": 10,
+                "title": "Miss 판정 10회 이하 10회 달성"
+            },
+            {
+                "position": 11,
+                "title": "Expert 이상 난이도 왼손 플레이"
+            },
+            {
+                "position": 12,
+                "title": "ピアノ協奏曲第１番 \"蠍火\" 왼손 연주"
+            },
+            {
+                "position": 13,
+                "title": "ピアノ協奏曲第１番 \"蠍火\" 양손 연주"
+            },
+            {
+                "position": 14,
+                "title": "ピアノ協奏曲第１番 \"蠍火\" 오른손 연주"
+            },
+            {
+                "position": 15,
+                "title": "Expert 이상 난이도 오른손 플레이"
+            },
+            {
+                "position": 16,
+                "title": "난이도 7 이상 풀콤보 달성"
+            },
+            {
+                "position": 17,
+                "title": "풀콤보 5회 달성"
+            },
+            {
+                "position": 18,
+                "title": "랭크 A 이상 15회 달성"
+            },
+            {
+                "position": 19,
+                "title": "《클래식&재즈》 악곡 랭크 A+ 이상 획득"
+            },
+            {
+                "position": 20,
+                "title": "글리산도 노트 ◆Just 판정 누계 100회 이상 획득"
+            },
+            {
+                "position": 21,
+                "title": "《BEMANI》 악곡 900000점 이상 획득"
+            },
+            {
+                "position": 22,
+                "title": "700콤보 이상 획득"
+            },
+            {
+                "position": 23,
+                "title": "테누토 노트 ◆Just 판정 누계 40회 이상 획득"
+            },
+            {
+                "position": 24,
+                "title": "920000점 이상 획득"
+            },
+            {
+                "position": 25,
+                "title": "Near와 Miss 판정 합계 10회 이하 3회 달성"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "FORTE",
+        "title": "Rapunzel",
+        "requiredLines": 4,
+        "lineRewardNos": 250,
+        "completionRewardNos": 3000,
+        "rewardNos": 6000,
+        "cells": [
+            {
+                "position": 1,
+                "title": "Harmonia 연주"
+            },
+            {
+                "position": 2,
+                "title": "《팝스》 악곡 Expert 이상 난이도 풀콤보 달성"
+            },
+            {
+                "position": 3,
+                "title": "《노스텔지어 오리지널》 악곡 2곡 연주"
+            },
+            {
+                "position": 4,
+                "title": "Just 이상 판정 700회 이상 획득"
+            },
+            {
+                "position": 5,
+                "title": "TRUTH behind U 연주"
+            },
+            {
+                "position": 6,
+                "title": "《클래식&재즈》 악곡 500콤보 이상 3회 달성"
+            },
+            {
+                "position": 7,
+                "title": "300콤보 이상 3회 달성"
+            },
+            {
+                "position": 8,
+                "title": "《버라이어티》 악곡 플레이"
+            },
+            {
+                "position": 9,
+                "title": "Good 이상 판정 누계 5000회 이상 획득"
+            },
+            {
+                "position": 10,
+                "title": "《노스텔지어 오리지널》 악곡 Expert 이상 난이도 랭크 A+ 이상 획득"
+            },
+            {
+                "position": 11,
+                "title": "Near와 Miss 판정 합계 5회 이하"
+            },
+            {
+                "position": 12,
+                "title": "Fly far bounce 연주"
+            },
+            {
+                "position": 13,
+                "title": "10곡 연주"
+            },
+            {
+                "position": 14,
+                "title": "羊皮紙の上の銀河 연주"
+            },
+            {
+                "position": 15,
+                "title": "Hard 이상 난이도 랭크 B+ 3회 달성"
+            },
+            {
+                "position": 16,
+                "title": "Hard 이상 난이도 600콤보 이상 획득"
+            },
+            {
+                "position": 17,
+                "title": "Miss 판정 20회 이하 3회 달성"
+            },
+            {
+                "position": 18,
+                "title": "《아니메》 악곡 플레이"
+            },
+            {
+                "position": 19,
+                "title": "누계 5000콤보 이상 획득"
+            },
+            {
+                "position": 20,
+                "title": "《BEMANI》 악곡 Just 이상 판정 누계 2000회 이상 획득"
+            },
+            {
+                "position": 21,
+                "title": "僕の飛行機 연주"
+            },
+            {
+                "position": 22,
+                "title": "풀콤보 2회 달성"
+            },
+            {
+                "position": 23,
+                "title": "《클래식&재즈》 악곡 2곡 연주"
+            },
+            {
+                "position": 24,
+                "title": "난이도 11 이상 랭크 S 이상 획득"
+            },
+            {
+                "position": 25,
+                "title": "neu 연주"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "FORTE",
+        "title": "say...but in vain",
+        "requiredLines": 6,
+        "lineRewardNos": 500,
+        "completionRewardNos": 6000,
+        "rewardNos": 12000,
+        "cells": [
+            {
+                "position": 1,
+                "title": "◆Just 판정 누계 8000회 이상 획득"
+            },
+            {
+                "position": 2,
+                "title": "おもちゃの兵隊の行進 연주"
+            },
+            {
+                "position": 3,
+                "title": "ラデツキー行進曲 연주"
+            },
+            {
+                "position": 4,
+                "title": "990000점 이상 획득"
+            },
+            {
+                "position": 5,
+                "title": "《팝스》 악곡 Expert 이상 난이도 랭크 S 이상 획득"
+            },
+            {
+                "position": 6,
+                "title": "チョコレートスマイル 연주"
+            },
+            {
+                "position": 7,
+                "title": "《아니메》 악곡 풀콤보 달성"
+            },
+            {
+                "position": 8,
+                "title": "《버라이어티》 악곡 Good 이상 판정 누계 1000회 이상 획득"
+            },
+            {
+                "position": 9,
+                "title": "Miroir Riorim 연주"
+            },
+            {
+                "position": 10,
+                "title": "《노스텔지어 오리지널》 악곡 난이도 10 이상 Miss 판정 3회 이하"
+            },
+            {
+                "position": 11,
+                "title": "1000콤보 이상 획득"
+            },
+            {
+                "position": 12,
+                "title": "난이도 10 이상 980000점 이상 획득"
+            },
+            {
+                "position": 13,
+                "title": "Vide Nostalgia 연주"
+            },
+            {
+                "position": 14,
+                "title": "앙상블 콤보 1500 이상"
+            },
+            {
+                "position": 15,
+                "title": "Missing in the snow 연주"
+            },
+            {
+                "position": 16,
+                "title": "Mighty Guy 연주"
+            },
+            {
+                "position": 17,
+                "title": "15곡 연주"
+            },
+            {
+                "position": 18,
+                "title": "《BEMANI》 악곡 난이도 8 이상 Near와 Miss 판정 합계 3회 이하"
+            },
+            {
+                "position": 19,
+                "title": "Just 이상 판정 800회 이상 획득"
+            },
+            {
+                "position": 20,
+                "title": "木枯らしのエチュード 연주"
+            },
+            {
+                "position": 21,
+                "title": "Expert 이상 난이도 5곡 연주"
+            },
+            {
+                "position": 22,
+                "title": "La fame di Adria 연주"
+            },
+            {
+                "position": 23,
+                "title": "Rapunzel 연주"
+            },
+            {
+                "position": 24,
+                "title": "난이도 12 이상 Miss 판정 5회 이하"
+            },
+            {
+                "position": 25,
+                "title": "《클래식&재즈》 악곡 5곡 연주"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "Op.2",
+        "title": "凛として咲く花の如く",
+        "requiredLines": 4,
+        "lineRewardNos": 250,
+        "completionRewardNos": 3000,
+        "rewardNos": 6000,
+        "cells": [
+            {
+                "position": 1,
+                "title": "난이도 6 이상 풀콤보 달성"
+            },
+            {
+                "position": 2,
+                "title": "《버라이어티》 악곡 800000점 이상 획득"
+            },
+            {
+                "position": 3,
+                "title": "Hard 이상 난이도 Miss 판정 20회 이하"
+            },
+            {
+                "position": 4,
+                "title": "《노스텔지어 오리지널》 악곡 누계 2000콤보 이상 획득"
+            },
+            {
+                "position": 5,
+                "title": "《클래식&재즈》 악곡 Expert 이상 난이도 랭크 A 이상 획득"
+            },
+            {
+                "position": 6,
+                "title": "난이도 8 이상 플레이"
+            },
+            {
+                "position": 7,
+                "title": "Expert 이상 난이도 Just 이상 판정 300회 이상 획득"
+            },
+            {
+                "position": 8,
+                "title": "《팝스》 악곡 Hard 이상 난이도 700000점 이상 획득"
+            },
+            {
+                "position": 9,
+                "title": "主よ、人の望みの喜びよ 연주"
+            },
+            {
+                "position": 10,
+                "title": "◆Just 판정 누계 5000회 이상 획득"
+            },
+            {
+                "position": 11,
+                "title": "Hard 이상 난이도 랭크 A+ 이상 획득"
+            },
+            {
+                "position": 12,
+                "title": "난이도 6 이하 200콤보 이상 획득"
+            },
+            {
+                "position": 13,
+                "title": "《팝스》 악곡 5곡 연주"
+            },
+            {
+                "position": 14,
+                "title": "《클래식&재즈》 악곡 Good 이상 판정 600회 이상 획득"
+            },
+            {
+                "position": 15,
+                "title": "난이도 5 이상 Near와 Miss 판정 합계 20회 이하"
+            },
+            {
+                "position": 16,
+                "title": "Hard 이상 난이도 Good 이상 판정 누계 2500회 이상 획득"
+            },
+            {
+                "position": 17,
+                "title": "《아니메》 악곡 난이도 8 이상 900000점 이상 획득"
+            },
+            {
+                "position": 18,
+                "title": "《버라이어티》 악곡 Expert 이상 난이도 플레이"
+            },
+            {
+                "position": 19,
+                "title": "Good 이상 판정 800회 이상 획득"
+            },
+            {
+                "position": 20,
+                "title": "《노스텔지어 오리지널》 악곡 Expert 이상 난이도 랭크 A 이상 획득"
+            },
+            {
+                "position": 21,
+                "title": "《BEMANI》 악곡 Hard 이상 난이도 4곡 연주"
+            },
+            {
+                "position": 22,
+                "title": "《아니메》 악곡 풀콤보 3회 달성"
+            },
+            {
+                "position": 23,
+                "title": "展覧会の絵 연주"
+            },
+            {
+                "position": 24,
+                "title": "《버라이어티》 악곡 Expert 이상 난이도 Miss 판정 20회 이하"
+            },
+            {
+                "position": 25,
+                "title": "난이도 9 이상 ◆Just 판정 200회 이상"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "Op.2",
+        "title": "CHOCOLATE PHILOSOPHY",
+        "requiredLines": 6,
+        "lineRewardNos": 250,
+        "completionRewardNos": 3000,
+        "rewardNos": 6000,
+        "cells": [
+            {
+                "position": 1,
+                "title": "《노스텔지어 오리지널》 악곡 ◆Just 판정 700회 이상 획득"
+            },
+            {
+                "position": 2,
+                "title": "Expert 이상 난이도 Near와 Miss 판정 합계 10회 이하"
+            },
+            {
+                "position": 3,
+                "title": "《BEMANI》 악곡 Expert 이상 난이도 랭크 S 이상 7회 달성"
+            },
+            {
+                "position": 4,
+                "title": "《아니메》 악곡 Hard 이상 난이도 850000점 이상 획득"
+            },
+            {
+                "position": 5,
+                "title": "난이도 9 이상 500콤보 이상 획득"
+            },
+            {
+                "position": 6,
+                "title": "凛として咲く花の如く 연주"
+            },
+            {
+                "position": 7,
+                "title": "테누토 노트 ◆Just 판정 20회 이상 획득"
+            },
+            {
+                "position": 8,
+                "title": "난이도 10 이상 랭크 A+ 이상 획득"
+            },
+            {
+                "position": 9,
+                "title": "《팝스》 악곡 난이도 8 이상 Near와 Miss 판정 합계 10회 이하 5회 달성"
+            },
+            {
+                "position": 10,
+                "title": "Just 이상 판정 500회 이상 획득"
+            },
+            {
+                "position": 11,
+                "title": "난이도 6 이상 Miss 판정 3회 이하"
+            },
+            {
+                "position": 12,
+                "title": "글리산도 노트 Just 이상 판정 누계 1000회 이상 획득"
+            },
+            {
+                "position": 13,
+                "title": "《버라이어티》 악곡 Hard 이상 난이도 플레이"
+            },
+            {
+                "position": 14,
+                "title": "트릴 노트 ◆Just 판정 누계 50회 이상 획득"
+            },
+            {
+                "position": 15,
+                "title": "《BEMANI》 악곡 Expert 이상 난이도 랭크 A 이상 획득"
+            },
+            {
+                "position": 16,
+                "title": "《아니메》 악곡 Expert 이상 난이도 5곡 연주"
+            },
+            {
+                "position": 17,
+                "title": "《클래식&재즈》 악곡 700콤보 이상 획득"
+            },
+            {
+                "position": 18,
+                "title": "《BEMANI》 악곡 앙상블 콤보 1000 이상"
+            },
+            {
+                "position": 19,
+                "title": "난이도 7 이하 풀콤보 달성"
+            },
+            {
+                "position": 20,
+                "title": "난이도 3 이하 Good 이상 판정 500회 이상 획득"
+            },
+            {
+                "position": 21,
+                "title": "Expert 이상 난이도 풀콤보 5회 달성"
+            },
+            {
+                "position": 22,
+                "title": "チョコレートスマイル 연주"
+            },
+            {
+                "position": 23,
+                "title": "《버라이어티》 악곡 난이도 11 이상 플레이"
+            },
+            {
+                "position": 24,
+                "title": "난이도 3～5 980000점 이상 획득"
+            },
+            {
+                "position": 25,
+                "title": "《클래식&재즈》 악곡 누계 2000콤보 이상 획득"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "Op.2",
+        "title": "少年と少女のためのラプソディア",
+        "requiredLines": 6,
+        "lineRewardNos": 250,
+        "completionRewardNos": 3000,
+        "rewardNos": 6000,
+        "cells": [
+            {
+                "position": 1,
+                "title": "《아니메》 악곡 난이도 5 이상 800000점 이상 획득"
+            },
+            {
+                "position": 2,
+                "title": "Expert 이상 난이도 300콤보 이상 획득"
+            },
+            {
+                "position": 3,
+                "title": "난이도 7 이하 Miss 판정 10회 이하"
+            },
+            {
+                "position": 4,
+                "title": "《버라이어티》 악곡 Expert 이상 난이도 랭크 A 이상 3회 달성"
+            },
+            {
+                "position": 5,
+                "title": "난이도 10 이상 Just 이상 판정 500회 이상 획득"
+            },
+            {
+                "position": 6,
+                "title": "《클래식&재즈》 악곡 Near와 Miss 판정 합계 30회 이하 5회 달성"
+            },
+            {
+                "position": 7,
+                "title": "난이도 3～6 풀콤보 달성"
+            },
+            {
+                "position": 8,
+                "title": "Good 이상 판정 900회 이상 획득"
+            },
+            {
+                "position": 9,
+                "title": "Somnio 연주"
+            },
+            {
+                "position": 10,
+                "title": "《노스텔지어 오리지널》 악곡 Expert 이상 난이도 Near와 Miss 판정 합계 30회 이하"
+            },
+            {
+                "position": 11,
+                "title": "深海の夢 연주"
+            },
+            {
+                "position": 12,
+                "title": "Hard 이상 난이도 누계 1000콤보 이상 획득"
+            },
+            {
+                "position": 13,
+                "title": "앙상블 콤보 50 이상"
+            },
+            {
+                "position": 14,
+                "title": "《클래식&재즈》 악곡 Expert 이상 난이도 900000점 이상 획득"
+            },
+            {
+                "position": 15,
+                "title": "Hard 이상 난이도 Good 이상 판정 누계 5000회 이상 획득"
+            },
+            {
+                "position": 16,
+                "title": "《BEMANI》 악곡 난이도 8 이상 랭크 B+ 이상 획득"
+            },
+            {
+                "position": 17,
+                "title": "アーカーシャの碑文 연주"
+            },
+            {
+                "position": 18,
+                "title": "《팝스》 악곡 10곡 연주"
+            },
+            {
+                "position": 19,
+                "title": "글리산도 노트 ◆Just 판정 80회 이상 획득"
+            },
+            {
+                "position": 20,
+                "title": "《노스텔지어 오리지널》 악곡 풀콤보 5회 달성"
+            },
+            {
+                "position": 21,
+                "title": "《버라이어티》 악곡 Just 이상 판정 800회 이상 획득"
+            },
+            {
+                "position": 22,
+                "title": "《BEMANI》 악곡 ◆Just 판정 누계 3000회 이상 획득"
+            },
+            {
+                "position": 23,
+                "title": "난이도 4 이하 990000점 이상 획득"
+            },
+            {
+                "position": 24,
+                "title": "《아니메》 악곡 Hard 이상 난이도 300콤보 이상 6회 달성"
+            },
+            {
+                "position": 25,
+                "title": "Le Vent 연주"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "Op.2",
+        "title": "Moonstone",
+        "requiredLines": 6,
+        "lineRewardNos": 250,
+        "completionRewardNos": 3000,
+        "rewardNos": 6000,
+        "cells": [
+            {
+                "position": 1,
+                "title": "Real 이상 난이도 7곡 연주"
+            },
+            {
+                "position": 2,
+                "title": "《클래식&재즈》 악곡 Hard 이상 난이도 300콤보 이상 획득"
+            },
+            {
+                "position": 3,
+                "title": "Expert 이상 난이도 랭크 B+ 이상 획득"
+            },
+            {
+                "position": 4,
+                "title": "《팝스》 악곡 풀콤보 5회 달성"
+            },
+            {
+                "position": 5,
+                "title": "Expert 이상 난이도 850000점 이상 획득"
+            },
+            {
+                "position": 6,
+                "title": "300콤보 이상 7회 달성"
+            },
+            {
+                "position": 7,
+                "title": "Expert 이상 난이도 ◆Just 판정 200회 이상 획득"
+            },
+            {
+                "position": 8,
+                "title": "《클래식&재즈》 악곡 플레이[4]"
+            },
+            {
+                "position": 9,
+                "title": "《노스텔지어 오리지널》 악곡 ◆Just 판정 누계 1000회 이상 획득"
+            },
+            {
+                "position": 10,
+                "title": "【BASIC】 모드 60Grd 이상 6회 달성"
+            },
+            {
+                "position": 11,
+                "title": "Miss 판정 10회 이하"
+            },
+            {
+                "position": 12,
+                "title": "《팝스》 악곡 난이도 10 이상 플레이"
+            },
+            {
+                "position": 13,
+                "title": "《버라이어티》 악곡 10곡 연주"
+            },
+            {
+                "position": 14,
+                "title": "《아니메》 악곡 랭크 B+ 이상 획득"
+            },
+            {
+                "position": 15,
+                "title": "《버라이어티》 악곡 플레이[5]"
+            },
+            {
+                "position": 16,
+                "title": "《노스텔지어 오리지널》 악곡 Near와 Miss 판정 합계 30회 이하 5회 달성"
+            },
+            {
+                "position": 17,
+                "title": "랭크 A+ 이상 획득"
+            },
+            {
+                "position": 18,
+                "title": "《아니메》 악곡 Expert 이상 난이도 풀콤보 달성"
+            },
+            {
+                "position": 19,
+                "title": "트릴 노트 ◆Just 판정 8회 이상 획득"
+            },
+            {
+                "position": 20,
+                "title": "1000콤보 이상 획득"
+            },
+            {
+                "position": 21,
+                "title": "夢ハ夢ノママデ 연주"
+            },
+            {
+                "position": 22,
+                "title": "《BEMANI》 악곡 Good 이상 판정 누계 5000회 이상 획득"
+            },
+            {
+                "position": 23,
+                "title": "◆Just 판정 1000회 이상 획득"
+            },
+            {
+                "position": 24,
+                "title": "《버라이어티》 악곡 Miss 판정 20회 이하"
+            },
+            {
+                "position": 25,
+                "title": "【RECITAL】 모드 50Grd 이상 5회 달성"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "Op.2",
+        "title": "協奏曲第2番ト短調 RV 315「夏」より第三楽章",
+        "requiredLines": 5,
+        "lineRewardNos": 250,
+        "completionRewardNos": 3000,
+        "rewardNos": 6000,
+        "cells": [
+            {
+                "position": 1,
+                "title": "【RECITAL】 모드 45Grd 이상 6회 달성"
+            },
+            {
+                "position": 2,
+                "title": "《BEMANI》 악곡 랭크 A 이상 획득"
+            },
+            {
+                "position": 3,
+                "title": "《버라이어티》 악곡 ◆Just 판정 누계 2000회 이상 획득"
+            },
+            {
+                "position": 4,
+                "title": "풀콤보 5회 달성"
+            },
+            {
+                "position": 5,
+                "title": "トッカータとフーガ ニ短調 연주"
+            },
+            {
+                "position": 6,
+                "title": "《아니메》 악곡 난이도 5 이상 풀콤보 달성"
+            },
+            {
+                "position": 7,
+                "title": "協奏曲第4番へ短調 RV 297「冬」より第一楽章 연주"
+            },
+            {
+                "position": 8,
+                "title": "Miss 판정 15회 이하 8회 달성"
+            },
+            {
+                "position": 9,
+                "title": "《노스텔지어 오리지널》 악곡 Expert 이상 난이도 850000점 이상 획득"
+            },
+            {
+                "position": 10,
+                "title": "난이도 8 이상 랭크 A+ 이상 획득"
+            },
+            {
+                "position": 11,
+                "title": "《노스텔지어 오리지널》 악곡 ◆Just 판정 700회 이상 획득"
+            },
+            {
+                "position": 12,
+                "title": "Expert 이상 난이도 900000점 이상 획득"
+            },
+            {
+                "position": 13,
+                "title": "테누토 노트 Just 이상 판정 40회 이상 획득"
+            },
+            {
+                "position": 14,
+                "title": "트릴 노트 ◆Just 판정 누계 50회 이상 획득"
+            },
+            {
+                "position": 15,
+                "title": "《클래식&재즈》 악곡 Real 이상 난이도 플레이"
+            },
+            {
+                "position": 16,
+                "title": "Near와 Miss 판정 합계 10회 이하"
+            },
+            {
+                "position": 17,
+                "title": "《버라이어티》 악곡 난이도 7 이상 Near와 Miss 판정 합계 20회 이하 5회 달성"
+            },
+            {
+                "position": 18,
+                "title": "Real 이상 난이도 랭크 B+ 이상 획득"
+            },
+            {
+                "position": 19,
+                "title": "《아니메》 악곡 ◆Just 판정 400회 이상 획득"
+            },
+            {
+                "position": 20,
+                "title": "1000콤보 이상 획득"
+            },
+            {
+                "position": 21,
+                "title": "【BASIC】 모드 55Grd 이상 4회 달성"
+            },
+            {
+                "position": 22,
+                "title": "글리산도 노트 Good 이상 판정 30회 이상 획득"
+            },
+            {
+                "position": 23,
+                "title": "《BEMANI》 악곡 Expert 이상 난이도 Miss 판정 10회 이하"
+            },
+            {
+                "position": 24,
+                "title": "主よ、人の望みの喜びよ 연주"
+            },
+            {
+                "position": 25,
+                "title": "《팝스》 악곡 400콤보 이상 5회 달성"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "Op.2",
+        "title": "Element of SPADA",
+        "requiredLines": 6,
+        "lineRewardNos": 250,
+        "completionRewardNos": 3000,
+        "rewardNos": 6000,
+        "cells": [
+            {
+                "position": 1,
+                "title": "◆Just 판정 누계 1000회 이상 획득"
+            },
+            {
+                "position": 2,
+                "title": "ピアノ協奏曲第１番 \"蠍火\" 연주"
+            },
+            {
+                "position": 3,
+                "title": "《팝스》 악곡 랭크 B+ 이상 획득"
+            },
+            {
+                "position": 4,
+                "title": "Hard 이상 난이도 300콤보 이상 5회 달성"
+            },
+            {
+                "position": 5,
+                "title": "《버라이어티》 악곡 풀콤보 달성"
+            },
+            {
+                "position": 6,
+                "title": "테누토 노트 ◆Just 판정 20회 이상 획득"
+            },
+            {
+                "position": 7,
+                "title": "《클래식&재즈》 악곡 Miss 판정 50회 이하"
+            },
+            {
+                "position": 8,
+                "title": "《BEMANI》 악곡 10곡 연주"
+            },
+            {
+                "position": 9,
+                "title": "Near와 Miss 판정 합계 20회 이하"
+            },
+            {
+                "position": 10,
+                "title": "《노스텔지어 오리지널》 악곡 랭크 B+ 이상 획득"
+            },
+            {
+                "position": 11,
+                "title": "Good 이상 판정 700회 이상 획득"
+            },
+            {
+                "position": 12,
+                "title": "난이도 5~8 누계 500콤보 이상 획득"
+            },
+            {
+                "position": 13,
+                "title": "Blind Justice ~Torn souls, Hurt Faiths~ 연주"
+            },
+            {
+                "position": 14,
+                "title": "《클래식&재즈》 악곡 Expert 이상 난이도 Good 이상 판정 누계 2000회 이상 획득"
+            },
+            {
+                "position": 15,
+                "title": "《팝스》 악곡 800000점 이상 획득"
+            },
+            {
+                "position": 16,
+                "title": "《노스텔지어 오리지널》 악곡 Near와 Miss 판정 합계 30회 이하 5회 달성"
+            },
+            {
+                "position": 17,
+                "title": "난이도 10 이상 Just 이상 판정 500회 이상 획득"
+            },
+            {
+                "position": 18,
+                "title": "《팝스》 악곡 5곡 연주"
+            },
+            {
+                "position": 19,
+                "title": "랭크 A 이상 획득"
+            },
+            {
+                "position": 20,
+                "title": "400콤보 이상 3회 달성"
+            },
+            {
+                "position": 21,
+                "title": "Expert 이상 난이도 ◆Just 판정 200회 이상 획득"
+            },
+            {
+                "position": 22,
+                "title": "Miss 판정 10회 이하"
+            },
+            {
+                "position": 23,
+                "title": "《아니메》 악곡 풀콤보 3회 달성"
+            },
+            {
+                "position": 24,
+                "title": "CaptivAte～浄化～ 연주"
+            },
+            {
+                "position": 25,
+                "title": "Hard 이상 난이도 900000점 이상 획득"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "Op.2",
+        "title": "TRUTH behind U",
+        "requiredLines": 6,
+        "lineRewardNos": 250,
+        "completionRewardNos": 3000,
+        "rewardNos": 6000,
+        "cells": [
+            {
+                "position": 1,
+                "title": "《버라이어티》 악곡 Just 이상 판정 누계 1000회 이상 획득"
+            },
+            {
+                "position": 2,
+                "title": "난이도 8 이상 900000점 이상 획득"
+            },
+            {
+                "position": 3,
+                "title": "Miss 판정 15회 이하"
+            },
+            {
+                "position": 4,
+                "title": "Expert 이상 난이도 랭크 A 이상 4회 달성"
+            },
+            {
+                "position": 5,
+                "title": "《BEMANI》 악곡 ◆Just 판정 600회 이상 획득"
+            },
+            {
+                "position": 6,
+                "title": "neu 연주"
+            },
+            {
+                "position": 7,
+                "title": "글리산도 노트 Just 이상 판정 20회 이상 획득"
+            },
+            {
+                "position": 8,
+                "title": "《노스텔지어 오리지널》 악곡 누계 2000콤보 이상 획득"
+            },
+            {
+                "position": 9,
+                "title": "《버라이어티》 악곡 난이도 8 이상 랭크 A 이상 획득"
+            },
+            {
+                "position": 10,
+                "title": "Hard 이상 난이도 Miss 판정 5회 이하 4회 달성"
+            },
+            {
+                "position": 11,
+                "title": "【BASIC】 모드 60Grd 이상 5회 달성"
+            },
+            {
+                "position": 12,
+                "title": "《팝스》 악곡 1000콤보 이상 획득"
+            },
+            {
+                "position": 13,
+                "title": "Real 이상 난이도 플레이"
+            },
+            {
+                "position": 14,
+                "title": "凛として咲く花の如く 연주"
+            },
+            {
+                "position": 15,
+                "title": "《아니메》 악곡 400콤보 이상 5회 달성"
+            },
+            {
+                "position": 16,
+                "title": "《클래식&재즈》 악곡 Hard 이상 난이도 풀콤보 달성"
+            },
+            {
+                "position": 17,
+                "title": "Near와 Miss 판정 합계 15회 이하 4회 달성"
+            },
+            {
+                "position": 18,
+                "title": "僕の飛行機 연주"
+            },
+            {
+                "position": 19,
+                "title": "《아니메》 악곡 Miss 판정 20회 이하"
+            },
+            {
+                "position": 20,
+                "title": "테누토 노트 ◆Just 판정 20회 이상 획득"
+            },
+            {
+                "position": 21,
+                "title": "풀콤보 5회 달성"
+            },
+            {
+                "position": 22,
+                "title": "《클래식&재즈》 악곡 랭크 A+ 이상 획득"
+            },
+            {
+                "position": 23,
+                "title": "트릴 노트 ◆Just 판정 8회 이상 획득"
+            },
+            {
+                "position": 24,
+                "title": "《노스텔지어 오리지널》 악곡 Expert 이상 난이도 850000점 이상 획득"
+            },
+            {
+                "position": 25,
+                "title": "【RECITAL】 모드 40Grd 이상 7회 달성"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "Op.3",
+        "title": "波と凪の挟間で",
+        "requiredLines": 7,
+        "lineRewardNos": 625,
+        "completionRewardNos": 7500,
+        "rewardNos": 15000,
+        "cells": [
+            {
+                "position": 1,
+                "title": "Good 이상 판정 누계 1200회 이상 획득"
+            },
+            {
+                "position": 2,
+                "title": "Miss 판정 18회 이하"
+            },
+            {
+                "position": 3,
+                "title": "neko fun jitter 연주"
+            },
+            {
+                "position": 4,
+                "title": "【BASIC】 모드 43Grd 이상 획득"
+            },
+            {
+                "position": 5,
+                "title": "트릴 노트 ◆Just 판정 5회 이상 획득"
+            },
+            {
+                "position": 6,
+                "title": "熱き決闘者たち 연주[6]"
+            },
+            {
+                "position": 7,
+                "title": "Ater Regis 연주"
+            },
+            {
+                "position": 8,
+                "title": "테누토 노트 Just 이상 판정 12회 이상 획득"
+            },
+            {
+                "position": 9,
+                "title": "400콤보 이상 4회 달성"
+            },
+            {
+                "position": 10,
+                "title": "Expert 이상 난이도 【RECITAL】 모드 37Grd 이상 5회 달성"
+            },
+            {
+                "position": 11,
+                "title": "《버라이어티》 악곡 650콤보 이상 획득"
+            },
+            {
+                "position": 12,
+                "title": "글리산도 노트 ◆Just 판정 누계 80회 이상 획득"
+            },
+            {
+                "position": 13,
+                "title": "【BASIC or RECITAL】 모드 47Grd 이상 획득"
+            },
+            {
+                "position": 14,
+                "title": "おーまい！らぶりー！すうぃーてぃ！だーりん！ 연주"
+            },
+            {
+                "position": 15,
+                "title": "Expert 이상 난이도 850000점 이상 획득"
+            },
+            {
+                "position": 16,
+                "title": "【BASIC】 모드 40Grd 이상 5회 달성"
+            },
+            {
+                "position": 17,
+                "title": "《아니메》 악곡 Hard 이상 난이도 랭크 A 이상 획득"
+            },
+            {
+                "position": 18,
+                "title": "亡き王女の為のセプテット 연주"
+            },
+            {
+                "position": 19,
+                "title": "《버라이어티》 악곡 풀콤보 달성"
+            },
+            {
+                "position": 20,
+                "title": "랭크 B+ 이상 5회 달성"
+            },
+            {
+                "position": 21,
+                "title": "Real 이상 난이도 Just 이상 판정 누계 850회 이상 획득"
+            },
+            {
+                "position": 22,
+                "title": "【RECITAL】 모드 40Grd 이상 획득"
+            },
+            {
+                "position": 23,
+                "title": "Miss 판정 23회 이하 3회 달성"
+            },
+            {
+                "position": 24,
+                "title": "Real 이상 난이도 플레이"
+            },
+            {
+                "position": 25,
+                "title": "《팝스》 악곡 3곡 연주"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "Op.3",
+        "title": "久遠の空 ft. 小林まな",
+        "requiredLines": 7,
+        "lineRewardNos": 625,
+        "completionRewardNos": 7500,
+        "rewardNos": 15000,
+        "cells": [
+            {
+                "position": 1,
+                "title": "Good 이상 판정 누계 1200회 이상 획득"
+            },
+            {
+                "position": 2,
+                "title": "Just 이상 판정 누계 2000회 이상 획득"
+            },
+            {
+                "position": 3,
+                "title": "【BASIC】 모드 40Grd 이상 획득"
+            },
+            {
+                "position": 4,
+                "title": "난이도 10 이상 랭크 A 이상 획득"
+            },
+            {
+                "position": 5,
+                "title": "朧 연주"
+            },
+            {
+                "position": 6,
+                "title": "《버라이어티》 악곡 Near와 Miss 판정 합계 10회 이하"
+            },
+            {
+                "position": 7,
+                "title": "글리산도 노트 ◆Just 판정 12회 이상 획득"
+            },
+            {
+                "position": 8,
+                "title": "난이도 8 이하 990000점 이상 획득"
+            },
+            {
+                "position": 9,
+                "title": "《아니메》 악곡 Hard 이상 난이도 300콤보 이상 6회 달성"
+            },
+            {
+                "position": 10,
+                "title": "Good 이상 판정 900회 이상 획득"
+            },
+            {
+                "position": 11,
+                "title": "【RECITAL】 모드 30Grd 이상 획득"
+            },
+            {
+                "position": 12,
+                "title": "난이도 4 이상 풀콤보 2회 달성"
+            },
+            {
+                "position": 13,
+                "title": "レグルス αβ 연주"
+            },
+            {
+                "position": 14,
+                "title": "랭크 A 이상 획득"
+            },
+            {
+                "position": 15,
+                "title": "300콤보 이상 획득"
+            },
+            {
+                "position": 16,
+                "title": "アルストロメリア 연주"
+            },
+            {
+                "position": 17,
+                "title": "《팝스》 악곡 난이도 10 이상 【BASIC or RECITAL】 모드 39Grd 이상 획득"
+            },
+            {
+                "position": 18,
+                "title": "《버라이어티》 악곡 10곡 연주"
+            },
+            {
+                "position": 19,
+                "title": "《아니메》 악곡 랭크 B+ 이상 획득"
+            },
+            {
+                "position": 20,
+                "title": "Miss 판정 10회 이하"
+            },
+            {
+                "position": 21,
+                "title": "난이도 9 이상 플레이"
+            },
+            {
+                "position": 22,
+                "title": "Expert 이상 난이도 Just 이상 판정 200회 이상 획득"
+            },
+            {
+                "position": 23,
+                "title": "《팝스》 악곡 Hard 이상 난이도 풀콤보 달성"
+            },
+            {
+                "position": 24,
+                "title": "【RECITAL】 모드 38Grd 이상 3회 달성"
+            },
+            {
+                "position": 25,
+                "title": "트릴 노트 ◆Just 판정 누계 26회 이상 획득"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "Op.3",
+        "title": "バルベリア・タンゴ",
+        "requiredLines": 5,
+        "lineRewardNos": 625,
+        "completionRewardNos": 7500,
+        "rewardNos": 15000,
+        "cells": [
+            {
+                "position": 1,
+                "title": "Expert 이상 난이도 1000콤보 이상 획득"
+            },
+            {
+                "position": 2,
+                "title": "《아니메》 악곡 풀콤보 달성"
+            },
+            {
+                "position": 3,
+                "title": "待チ人ハ来ズ。 연주"
+            },
+            {
+                "position": 4,
+                "title": "난이도 5 ~ 10 900000점 이상 획득"
+            },
+            {
+                "position": 5,
+                "title": "누계 3500콤보 이상 획득"
+            },
+            {
+                "position": 6,
+                "title": "Normal 이상 난이도 Good 이상 판정 450회 이상 획득"
+            },
+            {
+                "position": 7,
+                "title": "幻想のサテライト 연주"
+            },
+            {
+                "position": 8,
+                "title": "《클래식&재즈》 악곡 Miss 판정 12회 이하"
+            },
+            {
+                "position": 9,
+                "title": "난이도 7 이상 Near와 Miss 판정 합계 20회 이하"
+            },
+            {
+                "position": 10,
+                "title": "Hard 이상 난이도 랭크 A 이상 5회 달성"
+            },
+            {
+                "position": 11,
+                "title": "《클래식&재즈》 악곡 650콤보 이상 4회 달성"
+            },
+            {
+                "position": 12,
+                "title": "【BASIC or RECITAL】 모드 47Grd 이상 획득"
+            },
+            {
+                "position": 13,
+                "title": "테누토 노트 ◆Just 판정 누계 30회 이상 획득"
+            },
+            {
+                "position": 14,
+                "title": "向日葵サンセット 연주"
+            },
+            {
+                "position": 15,
+                "title": "Expert 이상 난이도 ◆Just 판정 300회 이상 획득"
+            },
+            {
+                "position": 16,
+                "title": "NEGAI 연주"
+            },
+            {
+                "position": 17,
+                "title": "난이도 5 이상 3곡 연주"
+            },
+            {
+                "position": 18,
+                "title": "【RECITAL】 모드 37Grd 이상 획득"
+            },
+            {
+                "position": 19,
+                "title": "Miss 판정 7회 이하 4회 달성"
+            },
+            {
+                "position": 20,
+                "title": "《아니메》 악곡 난이도 12 이하 Just 이상 판정 250회 이상 획득"
+            },
+            {
+                "position": 21,
+                "title": "Real 이상 난이도 Good 이상 판정 누계 1000회 이상 획득"
+            },
+            {
+                "position": 22,
+                "title": "글리산도 노트 Just 이상 판정 누계 65회 이상 획득"
+            },
+            {
+                "position": 23,
+                "title": "【BASIC】 모드 45Grd 이상 획득"
+            },
+            {
+                "position": 24,
+                "title": "《팝스》 악곡 난이도 6 이상 랭크 A+ 이상 획득"
+            },
+            {
+                "position": 25,
+                "title": "サムイウワサ 연주"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "Op.3",
+        "title": "Gamja Dog",
+        "requiredLines": 4,
+        "lineRewardNos": 800,
+        "completionRewardNos": 9600,
+        "rewardNos": 19200,
+        "cells": [
+            {
+                "position": 1,
+                "title": "《버라이어티》 악곡 풀콤보 2회 달성"
+            },
+            {
+                "position": 2,
+                "title": "9곡 연주"
+            },
+            {
+                "position": 3,
+                "title": "《팝스》 악곡 랭크 B+ 이상 3회 달성"
+            },
+            {
+                "position": 4,
+                "title": "◆Just 판정 누계 2000회 이상 획득"
+            },
+            {
+                "position": 5,
+                "title": "《아니메》 악곡 누계 2000콤보 이상 획득"
+            },
+            {
+                "position": 6,
+                "title": "Just 이상 판정 800회 이상 획득"
+            },
+            {
+                "position": 7,
+                "title": "Danza Pantera 연주"
+            },
+            {
+                "position": 8,
+                "title": "《클래식&재즈》 악곡 500콤보 이상 3회 달성"
+            },
+            {
+                "position": 9,
+                "title": "テンションコードにくちづけを 연주"
+            },
+            {
+                "position": 10,
+                "title": "Expert 이상 난이도 랭크 S 이상 3회 달성"
+            },
+            {
+                "position": 11,
+                "title": "Expert 이상 난이도 1000콤보 이상 획득"
+            },
+            {
+                "position": 12,
+                "title": "【BASIC or RECITAL】 모드 40Grd 이상 획득"
+            },
+            {
+                "position": 13,
+                "title": "Tapioca 연주"
+            },
+            {
+                "position": 14,
+                "title": "테누토 노트 ◆Just 판정 누계 150회 이상 획득"
+            },
+            {
+                "position": 15,
+                "title": "난이도 4~10 ◆Just 판정 600회 이상 획득"
+            },
+            {
+                "position": 16,
+                "title": "1000000점 이상 획득"
+            },
+            {
+                "position": 17,
+                "title": "《노스텔지어 오리지널》 악곡 3곡 연주"
+            },
+            {
+                "position": 18,
+                "title": "【RECITAL】 모드 37Grd 이상 획득"
+            },
+            {
+                "position": 19,
+                "title": "트릴 노트 ◆Just 판정 누계 20회 이상 획득"
+            },
+            {
+                "position": 20,
+                "title": "《BEMANI》 악곡 Expert 이상 난이도 Miss 판정 5회 이하 3회 달성"
+            },
+            {
+                "position": 21,
+                "title": "Sweet tea 연주"
+            },
+            {
+                "position": 22,
+                "title": "글리산도 노트 ◆Just 판정 누계 150회 이상 획득"
+            },
+            {
+                "position": 23,
+                "title": "Hard 이상 난이도 ◆Just 판정 300회 이상 획득"
+            },
+            {
+                "position": 24,
+                "title": "누계 7000콤보 이상 획득"
+            },
+            {
+                "position": 25,
+                "title": "一夜の恋 연주"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "Op.3",
+        "title": "熊蜂の飛行",
+        "requiredLines": 6,
+        "lineRewardNos": 740,
+        "completionRewardNos": 8880,
+        "rewardNos": 17760,
+        "cells": [
+            {
+                "position": 1,
+                "title": "春の歌 연주"
+            },
+            {
+                "position": 2,
+                "title": "《클래식&재즈》 악곡 Expert 이상 난이도 888888점 이상 획득"
+            },
+            {
+                "position": 3,
+                "title": "글리산도 노트 Just 이상 판정 누계 888회 이상 획득"
+            },
+            {
+                "position": 4,
+                "title": "888콤보 이상 8회 달성"
+            },
+            {
+                "position": 5,
+                "title": "紡ぎ歌 연주"
+            },
+            {
+                "position": 6,
+                "title": "누계 8888콤보 이상 획득"
+            },
+            {
+                "position": 7,
+                "title": "Miss 판정 8회 이하 8회 달성"
+            },
+            {
+                "position": 8,
+                "title": "Expert 이상 난이도 Just 이상 판정 누계 888회 이상 획득"
+            },
+            {
+                "position": 9,
+                "title": "《노스텔지어 오리지널》 악곡 ◆Just 판정 88회 이상 획득"
+            },
+            {
+                "position": 10,
+                "title": "【BASIC】 모드 38Grd 이상 8회 달성"
+            },
+            {
+                "position": 11,
+                "title": "랭크 S 이상 획득"
+            },
+            {
+                "position": 12,
+                "title": "《팝스》 악곡 난이도 8 이상 플레이"
+            },
+            {
+                "position": 13,
+                "title": "8곡 연주"
+            },
+            {
+                "position": 14,
+                "title": "《아니메》 악곡 난이도 8 이상 플레이"
+            },
+            {
+                "position": 15,
+                "title": "풀콤보 8회 달성"
+            },
+            {
+                "position": 16,
+                "title": "【RECITAL】 모드 38Grd 이상 8회 달성"
+            },
+            {
+                "position": 17,
+                "title": "向日葵サンセット 연주"
+            },
+            {
+                "position": 18,
+                "title": "트릴 노트 ◆Just 판정 누계 88회 이상 획득"
+            },
+            {
+                "position": 19,
+                "title": "緑の風 연주"
+            },
+            {
+                "position": 20,
+                "title": "Just 이상 판정 누계 8888회 이상 획득"
+            },
+            {
+                "position": 21,
+                "title": "◆Just 판정 누계 888회 이상 획득"
+            },
+            {
+                "position": 22,
+                "title": "《BEMANI》 악곡 Expert 이상 난이도 풀콤보 달성"
+            },
+            {
+                "position": 23,
+                "title": "《클래식&재즈》 악곡 Expert 이상 난이도 888콤보 이상 획득"
+            },
+            {
+                "position": 24,
+                "title": "랭크 A 이상 8회 달성"
+            },
+            {
+                "position": 25,
+                "title": "花のやくそく 연주"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "Op.3",
+        "title": "恋愛観測 -2021真夏のエンディング ver.",
+        "requiredLines": 3,
+        "lineRewardNos": 800,
+        "completionRewardNos": 9600,
+        "rewardNos": 19200,
+        "cells": [
+            {
+                "position": 1,
+                "title": "《BEMANI》 악곡 Expert 이상 난이도 랭크 A 이상 획득"
+            },
+            {
+                "position": 2,
+                "title": "《BEMANI》 악곡 풀콤보 5회 달성"
+            },
+            {
+                "position": 3,
+                "title": "《BEMANI》 악곡 Hard 이상 난이도 5곡 연주"
+            },
+            {
+                "position": 4,
+                "title": "《BEMANI》 악곡 누계 5555콤보 이상 획득"
+            },
+            {
+                "position": 5,
+                "title": "《BEMANI》 악곡 Expert 이상 난이도 ◆Just 판정 55회 이상 획득"
+            },
+            {
+                "position": 6,
+                "title": "《BEMANI》 악곡 난이도 5 이상 Good 이상 판정 누계 555회 이상 획득"
+            },
+            {
+                "position": 7,
+                "title": "양손 《BEMANI》 악곡 난이도 5 이상 Miss 판정 5회 이하"
+            },
+            {
+                "position": 8,
+                "title": "スーパー戦湯ババンバーン 연주"
+            },
+            {
+                "position": 9,
+                "title": "LIKE A VAMPIRE 연주"
+            },
+            {
+                "position": 10,
+                "title": "チュッチュ♪マチュピチュ 연주"
+            },
+            {
+                "position": 11,
+                "title": "《BEMANI》 악곡 Hard 이상 난이도 랭크 A 이상 5회 달성"
+            },
+            {
+                "position": 12,
+                "title": "斑咲花 연주"
+            },
+            {
+                "position": 13,
+                "title": "《BEMANI》 악곡 Good 이상 판정 55회 이상 획득"
+            },
+            {
+                "position": 14,
+                "title": "DUAL STRIKER 연주"
+            },
+            {
+                "position": 15,
+                "title": "スーパー戦湯ババンバーン 연주"
+            },
+            {
+                "position": 16,
+                "title": "《BEMANI》 악곡 Miss 판정 5회 이하 5회 달성"
+            },
+            {
+                "position": 17,
+                "title": "DUAL STRIKER 연주"
+            },
+            {
+                "position": 18,
+                "title": "LIKE A VAMPIRE 연주"
+            },
+            {
+                "position": 19,
+                "title": "《BEMANI》 악곡 Just 이상 판정 555회 이상 획득"
+            },
+            {
+                "position": 20,
+                "title": "チュッチュ♪マチュピチュ 연주"
+            },
+            {
+                "position": 21,
+                "title": "《BEMANI》 악곡 난이도 5 이상 555555점 이상 획득"
+            },
+            {
+                "position": 22,
+                "title": "鋳鉄の檻 연주"
+            },
+            {
+                "position": 23,
+                "title": "斑咲花 연주"
+            },
+            {
+                "position": 24,
+                "title": "鋳鉄の檻 연주"
+            },
+            {
+                "position": 25,
+                "title": "《BEMANI》 악곡 Hard 이상 난이도 Near와 Miss 판정 합계 5회 이하"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "Op.3",
+        "title": "水の戯れ",
+        "requiredLines": 4,
+        "lineRewardNos": 800,
+        "completionRewardNos": 9600,
+        "rewardNos": 19200,
+        "cells": [
+            {
+                "position": 1,
+                "title": "트릴 노트 ◆Just 판정 10회 이상 획득"
+            },
+            {
+                "position": 2,
+                "title": "Hard 이상 난이도 풀콤보 달성"
+            },
+            {
+                "position": 3,
+                "title": "《BEMANI》 악곡 난이도 6 이상 4곡 연주"
+            },
+            {
+                "position": 4,
+                "title": "《아니메》 악곡 Hard 이상 난이도 Miss 판정 7회 이하"
+            },
+            {
+                "position": 5,
+                "title": "《버라이어티》 악곡 플레이"
+            },
+            {
+                "position": 6,
+                "title": "Expert 이상 난이도 Near와 Miss 판정 합계 15회 이하"
+            },
+            {
+                "position": 7,
+                "title": "850000점 이상 획득"
+            },
+            {
+                "position": 8,
+                "title": "《아니메》 악곡 【RECITAL】 모드 30Grd 이상 획득"
+            },
+            {
+                "position": 9,
+                "title": "《BEMANI》 악곡 Hard 이상 난이도 Good 이상 판정 누계 500회 이상 획득"
+            },
+            {
+                "position": 10,
+                "title": "Hard 이상 난이도 Just 이상 판정 누계 1200회 이상 획득"
+            },
+            {
+                "position": 11,
+                "title": "풀콤보 2회 달성"
+            },
+            {
+                "position": 12,
+                "title": "글리산도 노트 ◆Just 판정 5회 이상 획득"
+            },
+            {
+                "position": 13,
+                "title": "양손 Hard 이상 난이도 Just 이상 판정 누계 800회 이상 획득"
+            },
+            {
+                "position": 14,
+                "title": "《노스텔지어 오리지널》 악곡 【BASIC】 모드 30Grd 이상 3회 달성"
+            },
+            {
+                "position": 15,
+                "title": "350콤보 이상 획득"
+            },
+            {
+                "position": 16,
+                "title": "Real 이상 난이도 일반 노트 Good 이상 판정 누계 550회 이상 획득"
+            },
+            {
+                "position": 17,
+                "title": "《클래식&재즈》 악곡 풀콤보 달성"
+            },
+            {
+                "position": 18,
+                "title": "Miss 판정 20회 이하 5회 달성"
+            },
+            {
+                "position": 19,
+                "title": "《팝스》 악곡 Miss 판정 10회 이하"
+            },
+            {
+                "position": 20,
+                "title": "Expert 이상 난이도 3곡 연주"
+            },
+            {
+                "position": 21,
+                "title": "《아니메》 악곡 【BASIC】 모드 16Grd 이상 획득"
+            },
+            {
+                "position": 22,
+                "title": "양손 난이도 2 이상 누계 1100콤보 이상 획득"
+            },
+            {
+                "position": 23,
+                "title": "글리산도 노트 Good 이상 판정 5회 이상 획득"
+            },
+            {
+                "position": 24,
+                "title": "《팝스》 악곡 랭크 B+ 이상 획득"
+            },
+            {
+                "position": 25,
+                "title": "《노스텔지어 오리지널》 악곡 난이도 5 이상 ◆Just 판정 누계 1200회 이상 획득"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "Op.3",
+        "title": "スケルツォ第2番 Op.31",
+        "requiredLines": 4,
+        "lineRewardNos": 800,
+        "completionRewardNos": 9600,
+        "rewardNos": 19200,
+        "cells": [
+            {
+                "position": 1,
+                "title": "Hard 이상 난이도 누계 600콤보 이상 획득"
+            },
+            {
+                "position": 2,
+                "title": "650콤보 이상 획득"
+            },
+            {
+                "position": 3,
+                "title": "《버라이어티》 악곡 Good 이상 판정 500회 이상 획득"
+            },
+            {
+                "position": 4,
+                "title": "《팝스》 악곡 【RECITAL】 모드 35Grd 이상 3회 달성"
+            },
+            {
+                "position": 5,
+                "title": "《버라이어티》 악곡 Expert 이상 난이도 풀콤보 달성"
+            },
+            {
+                "position": 6,
+                "title": "Hard 이상 난이도 夢ハ夢ノママデ 연주"
+            },
+            {
+                "position": 7,
+                "title": "《버라이어티》 악곡 Expert 이상 난이도 랭크 A+ 이상 획득"
+            },
+            {
+                "position": 8,
+                "title": "《버라이어티》 악곡 랭크 B+ 이상 5회 달성"
+            },
+            {
+                "position": 9,
+                "title": "【BASIC】 모드 35Grd 이상 획득"
+            },
+            {
+                "position": 10,
+                "title": "Real 이상 난이도 【BASIC】 모드 25Grd 이상 4회 달성"
+            },
+            {
+                "position": 11,
+                "title": "《팝스》 악곡 난이도 6～10 Miss 판정 3회 이하"
+            },
+            {
+                "position": 12,
+                "title": "Expert 이상, 난이도 7 이상 Near와 Miss 판정 합계 10회 이하 3회 달성"
+            },
+            {
+                "position": 13,
+                "title": "Expert 이상 난이도 랭크 B 이상 5회 달성"
+            },
+            {
+                "position": 14,
+                "title": "《팝스》 악곡 【BASIC】 모드 32Grd 이상 획득"
+            },
+            {
+                "position": 15,
+                "title": "풀콤보 2회 달성"
+            },
+            {
+                "position": 16,
+                "title": "《BEMANI》 악곡 난이도 3 이상 랭크 B+ 이상 5회 달성"
+            },
+            {
+                "position": 17,
+                "title": "랭크 A 이상 획득"
+            },
+            {
+                "position": 18,
+                "title": "《버라이어티》 악곡 난이도 2 이상 ◆Just 판정 누계 2850회 이상 획득"
+            },
+            {
+                "position": 19,
+                "title": "난이도 1～9 Just 이상 판정 212회 이상 획득"
+            },
+            {
+                "position": 20,
+                "title": "《노스텔지어 오리지널》 악곡 Real 이상 난이도 랭크 A+ 이상 2회 달성"
+            },
+            {
+                "position": 21,
+                "title": "Near와 Miss 판정 합계 5회 이하"
+            },
+            {
+                "position": 22,
+                "title": "양손 Expert 이상 난이도 누계 800콤보 이상 획득"
+            },
+            {
+                "position": 23,
+                "title": "양손 플레이"
+            },
+            {
+                "position": 24,
+                "title": "Expert 이상 난이도 트릴 노트 Near와 Miss 판정 합계 7회 이하"
+            },
+            {
+                "position": 25,
+                "title": "풀콤보 달성"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "Op.3",
+        "title": "Turn the story",
+        "requiredLines": 4,
+        "lineRewardNos": 800,
+        "completionRewardNos": 9600,
+        "rewardNos": 19200,
+        "cells": [
+            {
+                "position": 1,
+                "title": "랭크 A 이상 획득"
+            },
+            {
+                "position": 2,
+                "title": "《클래식&재즈》 악곡 Expert 이상 난이도 100콤보 이상 획득"
+            },
+            {
+                "position": 3,
+                "title": "5곡 연주"
+            },
+            {
+                "position": 4,
+                "title": "Good 이상 판정 20회 이상 획득"
+            },
+            {
+                "position": 5,
+                "title": "Near와 Miss 판정 합계 5회 이하"
+            },
+            {
+                "position": 6,
+                "title": "◆Just 판정 400회 이상 획득"
+            },
+            {
+                "position": 7,
+                "title": "《BEMANI》 악곡 Near와 Miss 판정 합계 10회 이하 5회 달성"
+            },
+            {
+                "position": 8,
+                "title": "양손 난이도 6～11 【BASIC】 모드 35Grd 이상 5회 달성"
+            },
+            {
+                "position": 9,
+                "title": "Miss 판정 15회 이하"
+            },
+            {
+                "position": 10,
+                "title": "Expert 이상, 난이도 10 이상 ◆Just 판정 누계 2500회 이상 획득"
+            },
+            {
+                "position": 11,
+                "title": "Hard 이상 난이도 Just 이상 판정 700회 이상 획득"
+            },
+            {
+                "position": 12,
+                "title": "글리산도 노트 Just 이상 판정 누계 35회 이상 획득"
+            },
+            {
+                "position": 13,
+                "title": "Expert 이상 난이도 Miss 판정 20회 이하 3회 달성"
+            },
+            {
+                "position": 14,
+                "title": "양손 풀콤보 3회 달성"
+            },
+            {
+                "position": 15,
+                "title": "글리산도 노트 Good 이상 판정 누계 45회 이상 획득"
+            },
+            {
+                "position": 16,
+                "title": "《BEMANI》 악곡 난이도 7 이상 【RECITAL】 모드 37Grd 이상 3회 달성"
+            },
+            {
+                "position": 17,
+                "title": "《버라이어티》 악곡 난이도 10 이상 【BASIC or RECITAL】 모드 35Grd 이상 획득"
+            },
+            {
+                "position": 18,
+                "title": "랭크 B+ 이상 5회 달성"
+            },
+            {
+                "position": 19,
+                "title": "플레이"
+            },
+            {
+                "position": 20,
+                "title": "Expert 이상 난이도 925000점 이상 획득"
+            },
+            {
+                "position": 21,
+                "title": "Preserved Valkyria 연주"
+            },
+            {
+                "position": 22,
+                "title": "《BEMANI》 악곡 Good 이상 판정 누계 5000회 이상 획득"
+            },
+            {
+                "position": 23,
+                "title": "◆Just 판정 550회 이상 획득"
+            },
+            {
+                "position": 24,
+                "title": "《버라이어티》 악곡 Miss 판정 20회 이하"
+            },
+            {
+                "position": 25,
+                "title": "【RECITAL】 모드 30Grd 이상 5회 달성"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "Op.3",
+        "title": "ラプソディ・イン・ブルー",
+        "requiredLines": 4,
+        "lineRewardNos": 800,
+        "completionRewardNos": 9600,
+        "rewardNos": 19200,
+        "cells": [
+            {
+                "position": 1,
+                "title": "양손 【BASIC】 모드 35Grd 이상 5회 달성"
+            },
+            {
+                "position": 2,
+                "title": "난이도 1~10 【BASIC or RECITAL】 모드 38Grd 이상 획득"
+            },
+            {
+                "position": 3,
+                "title": "Real 이상 난이도 Good 이상 판정 275회 이상 획득"
+            },
+            {
+                "position": 4,
+                "title": "글리산도 노트 ◆Just 판정 3회 이상 획득"
+            },
+            {
+                "position": 5,
+                "title": "Real 이상 난이도 누계 1200콤보 이상 획득"
+            },
+            {
+                "position": 6,
+                "title": "550콤보 이상 획득"
+            },
+            {
+                "position": 7,
+                "title": "《노스텔지어 오리지널》 악곡 ◆Just 판정 누계 1150회 이상 획득"
+            },
+            {
+                "position": 8,
+                "title": "《노스텔지어 오리지널》 악곡 【BASIC or RECITAL】 모드 38Grd 이상 획득"
+            },
+            {
+                "position": 9,
+                "title": "ピアノソナタ「悲愴」第2楽章 연주"
+            },
+            {
+                "position": 10,
+                "title": "《아니메》 악곡 850000점 이상 획득"
+            },
+            {
+                "position": 11,
+                "title": "350콤보 이상 4회 달성"
+            },
+            {
+                "position": 12,
+                "title": "《BEMANI》 악곡 5곡 연주"
+            },
+            {
+                "position": 13,
+                "title": "난이도 9 이상 Near와 Miss 판정 합계 10회 이하"
+            },
+            {
+                "position": 14,
+                "title": "글리산도 노트 Good 이상 판정 누계 20회 이상 획득"
+            },
+            {
+                "position": 15,
+                "title": "《클래식&재즈》 악곡 Expert 이상 난이도 Miss 판정 10회 이하 5회 달성"
+            },
+            {
+                "position": 16,
+                "title": "《노스텔지어 오리지널》 악곡 난이도 6~12 【BASIC or RECITAL】 모드 33Grd 이상 3회 달성"
+            },
+            {
+                "position": 17,
+                "title": "테누토 노트 Just 이상 판정 8회 이상 획득"
+            },
+            {
+                "position": 18,
+                "title": "풀콤보 3회 달성"
+            },
+            {
+                "position": 19,
+                "title": "Hard 이상 난이도 Just 이상 판정 누계 2000회 이상 획득"
+            },
+            {
+                "position": 20,
+                "title": "Miss 판정 2회 이하"
+            },
+            {
+                "position": 21,
+                "title": "양손 난이도 8 이상 【RECITAL】 모드 28Grd 이상 2회 달성"
+            },
+            {
+                "position": 22,
+                "title": "양손 난이도 3 이상 랭크 B+ 이상 획득"
+            },
+            {
+                "position": 23,
+                "title": "양손 【RECITAL】 모드 37Grd 이상 획득"
+            },
+            {
+                "position": 24,
+                "title": "《클래식&재즈》 악곡 Hard 이상, 난이도 8~12 플레이"
+            },
+            {
+                "position": 25,
+                "title": "《아니메》 악곡 Expert 이상 난이도 풀콤보 달성"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "Op.3",
+        "title": "VALKYRIAS -英雄誕生-",
+        "requiredLines": 4,
+        "lineRewardNos": 800,
+        "completionRewardNos": 9600,
+        "rewardNos": 19200,
+        "cells": [
+            {
+                "position": 1,
+                "title": "《클래식&재즈》 악곡 Hard 이상 난이도 풀콤보 달성"
+            },
+            {
+                "position": 2,
+                "title": "Near와 Miss 판정 합계 15회 이하 4회 달성"
+            },
+            {
+                "position": 3,
+                "title": "voltississimo(NOSTALGIA Style) 연주"
+            },
+            {
+                "position": 4,
+                "title": "《아니메》 악곡 Miss 판정 20회 이하"
+            },
+            {
+                "position": 5,
+                "title": "테누토 노트 ◆Just 판정 20회 이상 획득"
+            },
+            {
+                "position": 6,
+                "title": "◆Just 판정 600회 이상 획득"
+            },
+            {
+                "position": 7,
+                "title": "Hard 이상 난이도 900000점 이상 획득"
+            },
+            {
+                "position": 8,
+                "title": "난이도 7 이하 풀콤보 달성"
+            },
+            {
+                "position": 9,
+                "title": "Good 이상 판정 600회 이상 획득"
+            },
+            {
+                "position": 10,
+                "title": "Good 이상 판정 누계 6000회 이상 획득"
+            },
+            {
+                "position": 11,
+                "title": "Preserved Valkyria 연주"
+            },
+            {
+                "position": 12,
+                "title": "Just 이상 판정 20회 이상 획득"
+            },
+            {
+                "position": 13,
+                "title": "《노스텔지어 오리지널》 악곡 누계 2000콤보 이상 획득"
+            },
+            {
+                "position": 14,
+                "title": "《버라이어티》 악곡 난이도 8 이상 랭크 A 이상 획득"
+            },
+            {
+                "position": 15,
+                "title": "Hard 이상 난이도 Miss 판정 5회 이하 4회 달성"
+            },
+            {
+                "position": 16,
+                "title": "Expert 이상 난이도 Near와 Miss 판정 합계 15회 이하"
+            },
+            {
+                "position": 17,
+                "title": "850000점 이상 획득"
+            },
+            {
+                "position": 18,
+                "title": "《아니메》 악곡 【RECITAL】 모드 30Grd 이상 획득"
+            },
+            {
+                "position": 19,
+                "title": "《BEMANI》 악곡 Hard 이상 난이도 Good 이상 판정 누계 500회 이상 획득"
+            },
+            {
+                "position": 20,
+                "title": "Hard 이상 난이도 Just 이상 판정 누계 1200회 이상 획득"
+            },
+            {
+                "position": 21,
+                "title": "《버라이어티》 악곡 Near와 Miss 판정 합계 10회 이하"
+            },
+            {
+                "position": 22,
+                "title": "글리산도 노트 ◆Just 판정 12회 이상 획득"
+            },
+            {
+                "position": 23,
+                "title": "난이도 8 이하 990000점 이상 획득"
+            },
+            {
+                "position": 24,
+                "title": "《아니메》 악곡 Hard 이상 난이도 300콤보 이상 6회 달성"
+            },
+            {
+                "position": 25,
+                "title": "Good 이상 판정 900회 이상 획득"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "Op.3",
+        "title": "Welcome to pop'n fantasy",
+        "requiredLines": 4,
+        "lineRewardNos": 800,
+        "completionRewardNos": 9600,
+        "rewardNos": 19200,
+        "cells": [
+            {
+                "position": 1,
+                "title": "《버라이어티》 악곡 Hard 이상 난이도 랭크 A 이상 획득"
+            },
+            {
+                "position": 2,
+                "title": "트릴 노트 ◆Just 판정 누계 20회 이상 획득"
+            },
+            {
+                "position": 3,
+                "title": "테누토 노트 Just 이상 판정 5회 이상 획득"
+            },
+            {
+                "position": 4,
+                "title": "【RECITAL】 모드 25Grd 이상 4회 달성"
+            },
+            {
+                "position": 5,
+                "title": "난이도 12 이상 500콤보 이상 획득"
+            },
+            {
+                "position": 6,
+                "title": "《노스텔지어 오리지널》 악곡 Near와 Miss 판정 합계 30회 이하 5회 달성"
+            },
+            {
+                "position": 7,
+                "title": "난이도 10 이상 Just 이상 판정 500회 이상 획득"
+            },
+            {
+                "position": 8,
+                "title": "《팝스》 악곡 5곡 연주"
+            },
+            {
+                "position": 9,
+                "title": "랭크 A 이상 획득"
+            },
+            {
+                "position": 10,
+                "title": "400콤보 이상 3회 달성"
+            },
+            {
+                "position": 11,
+                "title": "neu 연주"
+            },
+            {
+                "position": 12,
+                "title": "난이도 5 이상 3곡 연주"
+            },
+            {
+                "position": 13,
+                "title": "【RECITAL】 모드 37Grd 이상 획득"
+            },
+            {
+                "position": 14,
+                "title": "Miss 판정 7회 이하 4회 달성"
+            },
+            {
+                "position": 15,
+                "title": "《아니메》 악곡 난이도 12 이하 Just 이상 판정 250회 이상 획득"
+            },
+            {
+                "position": 16,
+                "title": "Harmonia 연주"
+            },
+            {
+                "position": 17,
+                "title": "글리산도 노트 ◆Just 판정 누계 150회 이상 획득"
+            },
+            {
+                "position": 18,
+                "title": "Hard 이상 난이도 ◆Just 판정 300회 이상 획득"
+            },
+            {
+                "position": 19,
+                "title": "누계 7000콤보 이상 획득"
+            },
+            {
+                "position": 20,
+                "title": "一夜の恋 연주"
+            },
+            {
+                "position": 21,
+                "title": "《아니메》 악곡 난이도 5 이상 풀콤보 달성"
+            },
+            {
+                "position": 22,
+                "title": "朧 연주"
+            },
+            {
+                "position": 23,
+                "title": "Miss 판정 15회 이하 8회 달성"
+            },
+            {
+                "position": 24,
+                "title": "《노스텔지어 오리지널》 악곡 Expert 이상 난이도 850000점 이상 획득"
+            },
+            {
+                "position": 25,
+                "title": "난이도 8 이상 랭크 A+ 이상 획득"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "Op.3",
+        "title": "The way to the castle",
+        "requiredLines": 4,
+        "lineRewardNos": 800,
+        "completionRewardNos": 9600,
+        "rewardNos": 19200,
+        "cells": [
+            {
+                "position": 1,
+                "title": "◆Just 판정 누계 2250회 이상 획득"
+            },
+            {
+                "position": 2,
+                "title": "《버라이어티》 악곡 난이도 5 이상 5곡 연주"
+            },
+            {
+                "position": 3,
+                "title": "누계 2000콤보 이상 획득"
+            },
+            {
+                "position": 4,
+                "title": "insist 연주"
+            },
+            {
+                "position": 5,
+                "title": "《버라이어티》 악곡 풀콤보 달성"
+            },
+            {
+                "position": 6,
+                "title": "테누토 노트 Just 이상 판정 5회 이상 획득"
+            },
+            {
+                "position": 7,
+                "title": "글리산도 노트 Just 이상 판정 누계 20회 이상 획득"
+            },
+            {
+                "position": 8,
+                "title": "650콤보 이상 2회 달성"
+            },
+            {
+                "position": 9,
+                "title": "양손 《클래식&재즈》 악곡 랭크 B 이상 획득"
+            },
+            {
+                "position": 10,
+                "title": "Good 이상 판정 누계 4200회 이상 획득"
+            },
+            {
+                "position": 11,
+                "title": "난이도 6 이상 Near와 Miss 판정 합계 15회 이하 5회 달성"
+            },
+            {
+                "position": 12,
+                "title": "【RECITAL】 모드 38Grd 이상 3회 달성"
+            },
+            {
+                "position": 13,
+                "title": "《아니메》 악곡 Miss 판정 3회 이하"
+            },
+            {
+                "position": 14,
+                "title": "양손 【BASIC or RECITAL】 모드 32Grd 이상 획득"
+            },
+            {
+                "position": 15,
+                "title": "《버라이어티》 악곡 난이도 7～11 【BASIC】 모드 37Grd 이상 4회 달성"
+            },
+            {
+                "position": 16,
+                "title": "《아니메》 악곡 ◆Just 판정 300회 이상 획득"
+            },
+            {
+                "position": 17,
+                "title": "Drive in Sunday 연주"
+            },
+            {
+                "position": 18,
+                "title": "Hard 이상 난이도 【BASIC】 모드 35Grd 이상 획득"
+            },
+            {
+                "position": 19,
+                "title": "Near와 Miss 판정 합계 10회 이하"
+            },
+            {
+                "position": 20,
+                "title": "양손 【RECITAL】 모드 28Grd 이상 획득"
+            },
+            {
+                "position": 21,
+                "title": "《클래식&재즈》 악곡 풀콤보 3회 달성"
+            },
+            {
+                "position": 22,
+                "title": "Expert 이상 난이도 Good 이상 판정 1150회 이상 획득"
+            },
+            {
+                "position": 23,
+                "title": "《노스텔지어 오리지널》 악곡 플레이"
+            },
+            {
+                "position": 24,
+                "title": "《아니메》 악곡 Expert 이상 난이도 950000점 이상 획득"
+            },
+            {
+                "position": 25,
+                "title": "난이도 5 이상 【BASIC or RECITAL】 모드 30Grd 이상 3회 달성"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "Op.3",
+        "title": "WONDERLAND",
+        "requiredLines": 4,
+        "lineRewardNos": 800,
+        "completionRewardNos": 9600,
+        "rewardNos": 19200,
+        "cells": [
+            {
+                "position": 1,
+                "title": "《버라이어티》 악곡 Near와 Miss 판정 합계 20회 이하 5회 달성"
+            },
+            {
+                "position": 2,
+                "title": "Hard 이상 난이도 Just 이상 판정 누계 1000회 이상 획득"
+            },
+            {
+                "position": 3,
+                "title": "《BEMANI》 악곡 Miss 판정 10회 이하"
+            },
+            {
+                "position": 4,
+                "title": "Expert 이상 난이도 【BASIC or RECITAL】 모드 32Grd 이상 획득"
+            },
+            {
+                "position": 5,
+                "title": "【BASIC】 모드 34Grd 이상 4회 달성"
+            },
+            {
+                "position": 6,
+                "title": "Hard 이상 난이도 랭크 S 이상 획득"
+            },
+            {
+                "position": 7,
+                "title": "풀콤보 2회 달성"
+            },
+            {
+                "position": 8,
+                "title": "《BEMANI》 악곡 Hard 이상 난이도 3곡 연주"
+            },
+            {
+                "position": 9,
+                "title": "난이도 8 이상 누계 2000콤보 이상 획득"
+            },
+            {
+                "position": 10,
+                "title": "난이도 5 이상 ◆Just 판정 500회 이상 획득"
+            },
+            {
+                "position": 11,
+                "title": "Real 이상 난이도 플레이"
+            },
+            {
+                "position": 12,
+                "title": "《클래식&재즈》 악곡 Hard 이상 난이도 Just 이상 판정 750회 이상 획득"
+            },
+            {
+                "position": 13,
+                "title": "Urban Life 연주"
+            },
+            {
+                "position": 14,
+                "title": "《팝스》 악곡 【RECITAL】 모드 27Grd 이상 3회 달성"
+            },
+            {
+                "position": 15,
+                "title": "◆Just 판정 누계 500회 이상 획득"
+            },
+            {
+                "position": 16,
+                "title": "Tapioca 연주"
+            },
+            {
+                "position": 17,
+                "title": "Hard 이상 난이도 풀콤보 달성"
+            },
+            {
+                "position": 18,
+                "title": "400콤보 이상 획득"
+            },
+            {
+                "position": 19,
+                "title": "《버라이어티》 악곡 랭크 B+ 이상 3회 달성"
+            },
+            {
+                "position": 20,
+                "title": "Manhattan 연주"
+            },
+            {
+                "position": 21,
+                "title": "《클래식&재즈》 악곡 Hard 이상 난이도 Good 이상 판정 600회 이상 획득"
+            },
+            {
+                "position": 22,
+                "title": "950000점 이상 획득"
+            },
+            {
+                "position": 23,
+                "title": "Good 이상 판정 누계 1110회 이상 획득"
+            },
+            {
+                "position": 24,
+                "title": "《아니메》 악곡 【RECITAL】 모드 28Grd 이상 획득"
+            },
+            {
+                "position": 25,
+                "title": "【BASIC】 모드 35Grd 이상 획득"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "Op.3",
+        "title": "ピアノ独奏無言歌 \"灰燼\"",
+        "requiredLines": 5,
+        "lineRewardNos": 800,
+        "completionRewardNos": 9600,
+        "rewardNos": 19200,
+        "cells": [
+            {
+                "position": 1,
+                "title": "◆Just 판정 누계 650회 이상 획득"
+            },
+            {
+                "position": 2,
+                "title": "《BEMANI》 악곡 3곡 연주"
+            },
+            {
+                "position": 3,
+                "title": "양손 【RECITAL】 모드 28Grd 이상 3회 달성"
+            },
+            {
+                "position": 4,
+                "title": "6곡 연주"
+            },
+            {
+                "position": 5,
+                "title": "《BEMANI》 악곡 누계 1300콤보 이상 획득"
+            },
+            {
+                "position": 6,
+                "title": "양손 《클래식&재즈》 악곡 플레이"
+            },
+            {
+                "position": 7,
+                "title": "Hard 이상 난이도 풀콤보 4회 달성"
+            },
+            {
+                "position": 8,
+                "title": "《BEMANI》 악곡 Miss 판정 5회 이하 4회 달성"
+            },
+            {
+                "position": 9,
+                "title": "Expert 이상 난이도 ◆Just 판정 200회 이상 획득"
+            },
+            {
+                "position": 10,
+                "title": "I 연주"
+            },
+            {
+                "position": 11,
+                "title": "【BASIC or RECITAL】 모드 36Grd 이상 획득"
+            },
+            {
+                "position": 12,
+                "title": "Good 이상 판정 누계 2600회 이상 획득"
+            },
+            {
+                "position": 13,
+                "title": "《BEMANI》 악곡 플레이"
+            },
+            {
+                "position": 14,
+                "title": "《노스텔지어 오리지널》 악곡 플레이"
+            },
+            {
+                "position": 15,
+                "title": "난이도 6 이상 랭크 B+ 이상 획득"
+            },
+            {
+                "position": 16,
+                "title": "neu 연주"
+            },
+            {
+                "position": 17,
+                "title": "《BEMANI》 악곡 난이도 5 이상 5곡 연주"
+            },
+            {
+                "position": 18,
+                "title": "《BEMANI》 악곡 풀콤보 달성"
+            },
+            {
+                "position": 19,
+                "title": "《노스텔지어 오리지널》 악곡 Hard 이상 난이도 플레이"
+            },
+            {
+                "position": 20,
+                "title": "《클래식&재즈》 악곡 누계 650콤보 이상 획득"
+            },
+            {
+                "position": 21,
+                "title": "양손 Hard 이상 난이도 950000점 이상 획득"
+            },
+            {
+                "position": 22,
+                "title": "Votum Stellarum 연주"
+            },
+            {
+                "position": 23,
+                "title": "◆Just 판정 누계 1950회 이상 획득"
+            },
+            {
+                "position": 24,
+                "title": "《BEMANI》 악곡 【BASIC or RECITAL】 모드 28Grd 이상 3회 달성"
+            },
+            {
+                "position": 25,
+                "title": "ピアノ協奏曲第１番 \"蠍火\" 연주"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "Op.3",
+        "title": "ラブキラ☆スプラッシュ",
+        "requiredLines": 4,
+        "lineRewardNos": 800,
+        "completionRewardNos": 9600,
+        "rewardNos": 19200,
+        "cells": [
+            {
+                "position": 1,
+                "title": "《BEMANI》 악곡 난이도 3 이상 랭크 B+ 이상 5회 달성"
+            },
+            {
+                "position": 2,
+                "title": "랭크 A 이상 획득"
+            },
+            {
+                "position": 3,
+                "title": "《버라이어티》 악곡 난이도 2 이상 ◆Just 판정 누계 2850회 이상 획득"
+            },
+            {
+                "position": 4,
+                "title": "난이도 1～9 Just 이상 판정 200회 이상 획득"
+            },
+            {
+                "position": 5,
+                "title": "《노스텔지어 오리지널》 악곡 Real 이상 난이도 랭크 A+ 이상 2회 달성"
+            },
+            {
+                "position": 6,
+                "title": "Expert 이상 난이도 1000콤보 이상 획득"
+            },
+            {
+                "position": 7,
+                "title": "【BASIC or RECITAL】 모드 40Grd 이상 획득"
+            },
+            {
+                "position": 8,
+                "title": "Tapioca 연주"
+            },
+            {
+                "position": 9,
+                "title": "테누토 노트 ◆Just 판정 누계 150회 이상 획득"
+            },
+            {
+                "position": 10,
+                "title": "난이도 4～10 ◆Just 판정 600회 이상 획득"
+            },
+            {
+                "position": 11,
+                "title": "난이도 8 이상 플레이"
+            },
+            {
+                "position": 12,
+                "title": "Expert 이상 난이도 Just 이상 판정 300회 이상 획득"
+            },
+            {
+                "position": 13,
+                "title": "《팝스》 악곡 Hard 이상 난이도 700000점 이상 획득"
+            },
+            {
+                "position": 14,
+                "title": "主よ、人の望みの喜びよ 연주"
+            },
+            {
+                "position": 15,
+                "title": "◆Just 판정 누계 5000회 이상 획득"
+            },
+            {
+                "position": 16,
+                "title": "Near와 Miss 판정 합계 10회 이하"
+            },
+            {
+                "position": 17,
+                "title": "《버라이어티》 악곡 난이도 7 이상 Near와 Miss 판정 합계 20회 이하 5회 달성"
+            },
+            {
+                "position": 18,
+                "title": "Real 이상 난이도 랭크 B+ 이상 획득"
+            },
+            {
+                "position": 19,
+                "title": "《아니메》 악곡 ◆Just 판정 400회 이상 획득"
+            },
+            {
+                "position": 20,
+                "title": "1000콤보 이상 획득"
+            },
+            {
+                "position": 21,
+                "title": "Hard 이상 난이도 누계 600콤보 이상 획득"
+            },
+            {
+                "position": 22,
+                "title": "650콤보 이상 획득"
+            },
+            {
+                "position": 23,
+                "title": "《버라이어티》 악곡 Good 이상 판정 500회 이상 획득"
+            },
+            {
+                "position": 24,
+                "title": "《팝스》 악곡 【RECITAL】 모드 35Grd 이상 3회 달성"
+            },
+            {
+                "position": 25,
+                "title": "《버라이어티》 악곡 Expert 이상 난이도 풀콤보 달성"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "Op.3",
+        "title": "mariposa",
+        "requiredLines": 5,
+        "lineRewardNos": 800,
+        "completionRewardNos": 9600,
+        "rewardNos": 19200,
+        "cells": [
+            {
+                "position": 1,
+                "title": "양손 ◆Just 판정 누계 500회 이상 획득"
+            },
+            {
+                "position": 2,
+                "title": "Expert 이상 난이도 플레이"
+            },
+            {
+                "position": 3,
+                "title": "《BEMANI》 악곡 난이도 5 이상 풀콤보 3회 달성"
+            },
+            {
+                "position": 4,
+                "title": "양손 랭크 A+ 이상 2회 달성"
+            },
+            {
+                "position": 5,
+                "title": "트릴 노트 ◆Just 판정 누계 30회 이상 획득"
+            },
+            {
+                "position": 6,
+                "title": "Hard 이상 난이도 980000점 이상 획득"
+            },
+            {
+                "position": 7,
+                "title": "《버라이어티》 악곡 플레이"
+            },
+            {
+                "position": 8,
+                "title": "Hard 이상 난이도 turn into white 연주"
+            },
+            {
+                "position": 9,
+                "title": "《노스텔지어 오리지널》 악곡 난이도 6 이상 플레이"
+            },
+            {
+                "position": 10,
+                "title": "양손 【BASIC】 모드 19Grd 이상 획득"
+            },
+            {
+                "position": 11,
+                "title": "양손 Expert 이상 난이도 누계 1200콤보 이상 획득"
+            },
+            {
+                "position": 12,
+                "title": "《BEMANI》 악곡 Expert 이상 난이도 950000점 이상 획득"
+            },
+            {
+                "position": 13,
+                "title": "【RECITAL】 모드 28Grd 이상 획득"
+            },
+            {
+                "position": 14,
+                "title": "《버라이어티》 악곡 Hard 이상 난이도 Miss 판정 10회 이하"
+            },
+            {
+                "position": 15,
+                "title": "《BEMANI》 악곡 Expert 이상 난이도 ◆Just 판정 누계 300회 이상 획득"
+            },
+            {
+                "position": 16,
+                "title": "양손 Expert 이상 난이도 랭크 B+ 이상 획득"
+            },
+            {
+                "position": 17,
+                "title": "◆Just 판정 누계 2500회 이상 획득"
+            },
+            {
+                "position": 18,
+                "title": "글리산도 노트 ◆Just 판정 누계 150회 이상 획득"
+            },
+            {
+                "position": 19,
+                "title": "【BASIC or RECITAL】 모드 30Grd 이상 획득"
+            },
+            {
+                "position": 20,
+                "title": "toy boxer(NOSTALGIA Style) 양손 연주"
+            },
+            {
+                "position": 21,
+                "title": "《노스텔지어 오리지널》 악곡 350콤보 이상 획득"
+            },
+            {
+                "position": 22,
+                "title": "Expert 이상 난이도 Miss 판정 1회 이하"
+            },
+            {
+                "position": 23,
+                "title": "《노스텔지어 오리지널》 악곡 3곡 연주"
+            },
+            {
+                "position": 24,
+                "title": "풀콤보 5회 달성"
+            },
+            {
+                "position": 25,
+                "title": "concon ~live pf addition~ 연주"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "Op.3",
+        "title": "天泣",
+        "requiredLines": 5,
+        "lineRewardNos": 800,
+        "completionRewardNos": 9600,
+        "rewardNos": 19200,
+        "cells": [
+            {
+                "position": 1,
+                "title": "Timepiece phase II 연주"
+            },
+            {
+                "position": 2,
+                "title": "【BASIC or RECITAL】 모드 30Grd 이상 획득"
+            },
+            {
+                "position": 3,
+                "title": "《BEMANI》 악곡 플레이"
+            },
+            {
+                "position": 4,
+                "title": "《클래식&재즈》 악곡 Expert 이상 난이도 Miss 판정 5회 이하 3회 달성"
+            },
+            {
+                "position": 5,
+                "title": "【RECITAL】 모드 30Grd 이상 5회 달성"
+            },
+            {
+                "position": 6,
+                "title": "글리산도 노트 ◆Just 판정 누계 200회 이상 획득"
+            },
+            {
+                "position": 7,
+                "title": "The Least 100sec 연주"
+            },
+            {
+                "position": 8,
+                "title": "《버라이어티》 악곡 350콤보 이상 5회 달성"
+            },
+            {
+                "position": 9,
+                "title": "랭크 A+ 이상 7회 달성"
+            },
+            {
+                "position": 10,
+                "title": "Hard 이상 난이도 Just 이상 판정 누계 1500회 이상 획득"
+            },
+            {
+                "position": 11,
+                "title": "robotip phactory 연주"
+            },
+            {
+                "position": 12,
+                "title": "《아니메》 악곡 Expert 이상 난이도 Near와 Miss 판정 합계 25회 이하 3회 달성"
+            },
+            {
+                "position": 13,
+                "title": "Six String Proof(NOSTALGIA STYLE) 연주"
+            },
+            {
+                "position": 14,
+                "title": "《BEMANI》 악곡 난이도 7 이상 플레이"
+            },
+            {
+                "position": 15,
+                "title": "《팝스》 악곡 랭크 A 이상 획득"
+            },
+            {
+                "position": 16,
+                "title": "Fuego 연주"
+            },
+            {
+                "position": 17,
+                "title": "랭크 S 이상 획득"
+            },
+            {
+                "position": 18,
+                "title": "Expert 이상 난이도 300콤보 이상 획득"
+            },
+            {
+                "position": 19,
+                "title": "《노스텔지어 오리지널》 악곡 Just 이상 판정 500회 이상 획득"
+            },
+            {
+                "position": 20,
+                "title": "Hard 이상 난이도 풀콤보 2회 달성"
+            },
+            {
+                "position": 21,
+                "title": "【BASIC】 모드 30Grd 이상 3회 달성"
+            },
+            {
+                "position": 22,
+                "title": "Expert 이상 난이도 ◆Just 이상 판정 누계 600회 이상 획득"
+            },
+            {
+                "position": 23,
+                "title": "mint candy ☆ citrus drop 연주"
+            },
+            {
+                "position": 24,
+                "title": "난이도 4 이상 Good 이상 판정 400회 이상 획득"
+            },
+            {
+                "position": 25,
+                "title": "풀콤보 4회 달성"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "Op.3",
+        "title": "ロミとロボの宇宙飛行",
+        "requiredLines": 2,
+        "lineRewardNos": 800,
+        "completionRewardNos": 9600,
+        "rewardNos": 19200,
+        "cells": [
+            {
+                "position": 1,
+                "title": "アルストロメリア 연주"
+            },
+            {
+                "position": 2,
+                "title": "누계 2500콤보 이상 획득"
+            },
+            {
+                "position": 3,
+                "title": "《BEMANI》 악곡 Near와 Miss 판정 합계 5회 이하"
+            },
+            {
+                "position": 4,
+                "title": "《클래식&재즈》 악곡 980000점 이상 획득"
+            },
+            {
+                "position": 5,
+                "title": "Evans 연주"
+            },
+            {
+                "position": 6,
+                "title": "누계 800콤보 이상 획득"
+            },
+            {
+                "position": 7,
+                "title": "True Blue 연주"
+            },
+            {
+                "position": 8,
+                "title": "《노스텔지어 오리지널》 악곡 350콤보 이상 3회 달성"
+            },
+            {
+                "position": 9,
+                "title": "【BASIC】 모드 30Grd 이상 2회 달성"
+            },
+            {
+                "position": 10,
+                "title": "《BEMANI》 악곡 Hard 이상 난이도 Just 이상 판정 누계 1500회 이상 획득"
+            },
+            {
+                "position": 11,
+                "title": "toy boxer(NOSTALGIA Style) 연주"
+            },
+            {
+                "position": 12,
+                "title": "Near와 Miss 판정 합계 25회 이하 6회 달성"
+            },
+            {
+                "position": 13,
+                "title": "変わりゆく時間とノスタルジアと 연주"
+            },
+            {
+                "position": 14,
+                "title": "난이도 7 이상 플레이"
+            },
+            {
+                "position": 15,
+                "title": "《BEMANI》 악곡 Expert 이상 난이도 랭크 A 이상 획득"
+            },
+            {
+                "position": 16,
+                "title": "ネリと琥珀糖 연주"
+            },
+            {
+                "position": 17,
+                "title": "Hard 이상 난이도 풀콤보 달성"
+            },
+            {
+                "position": 18,
+                "title": "Expert 이상 난이도 【RECITAL】 모드 30Grd 이상 획득"
+            },
+            {
+                "position": 19,
+                "title": "《노스텔지어 오리지널》 악곡 Just 이상 판정 700회 이상 획득"
+            },
+            {
+                "position": 20,
+                "title": "풀콤보 5회 달성"
+            },
+            {
+                "position": 21,
+                "title": "felys 연주"
+            },
+            {
+                "position": 22,
+                "title": "Expert 이상 난이도 【BASIC or RECITAL】 모드 28Grd 이상 6회 달성"
+            },
+            {
+                "position": 23,
+                "title": "FLOWER ～live pf addition～ 연주"
+            },
+            {
+                "position": 24,
+                "title": "난이도 4 이상 Good 이상 판정 500회 이상 획득"
+            },
+            {
+                "position": 25,
+                "title": "隅田川夏恋歌 연주"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "Op.3",
+        "title": "REcorrection",
+        "requiredLines": 2,
+        "lineRewardNos": 800,
+        "completionRewardNos": 9600,
+        "rewardNos": 19200,
+        "cells": [
+            {
+                "position": 1,
+                "title": "Übertreffen 연주"
+            },
+            {
+                "position": 2,
+                "title": "누계 2500콤보 이상 획득"
+            },
+            {
+                "position": 3,
+                "title": "《BEMANI》 악곡 Near와 Miss 판정 합계 5회 이하"
+            },
+            {
+                "position": 4,
+                "title": "《클래식&재즈》 악곡 980000점 이상 획득"
+            },
+            {
+                "position": 5,
+                "title": "Harmonia 연주"
+            },
+            {
+                "position": 6,
+                "title": "누계 800콤보 이상 획득"
+            },
+            {
+                "position": 7,
+                "title": "僕の飛行機 연주"
+            },
+            {
+                "position": 8,
+                "title": "《노스텔지어 오리지널》 악곡 350콤보 이상 3회 달성"
+            },
+            {
+                "position": 9,
+                "title": "【BASIC】 모드 30Grd 이상 2회 달성"
+            },
+            {
+                "position": 10,
+                "title": "《BEMANI》 악곡 Hard 이상 난이도 Just 이상 판정 누계 1500회 이상 획득"
+            },
+            {
+                "position": 11,
+                "title": "Afterimage d'automne 연주"
+            },
+            {
+                "position": 12,
+                "title": "Near와 Miss 판정 합계 25회 이하 6회 달성"
+            },
+            {
+                "position": 13,
+                "title": "Fly far bounce 연주"
+            },
+            {
+                "position": 14,
+                "title": "난이도 7 이상 플레이"
+            },
+            {
+                "position": 15,
+                "title": "《BEMANI》 악곡 Expert 이상 난이도 랭크 A 이상 획득"
+            },
+            {
+                "position": 16,
+                "title": "飽和世界 연주"
+            },
+            {
+                "position": 17,
+                "title": "Hard 이상 난이도 풀콤보 달성"
+            },
+            {
+                "position": 18,
+                "title": "Expert 이상 난이도 【RECITAL】 모드 30Grd 이상 획득"
+            },
+            {
+                "position": 19,
+                "title": "《노스텔지어 오리지널》 악곡 Just 이상 판정 700회 이상 획득"
+            },
+            {
+                "position": 20,
+                "title": "풀콤보 5회 달성"
+            },
+            {
+                "position": 21,
+                "title": "Ensemble Forecast 3/28 연주"
+            },
+            {
+                "position": 22,
+                "title": "Expert 이상 난이도 【BASIC or RECITAL】 모드 28Grd 이상 6회 달성"
+            },
+            {
+                "position": 23,
+                "title": "朧 연주"
+            },
+            {
+                "position": 24,
+                "title": "난이도 4 이상 Good 이상 판정 500회 이상 획득"
+            },
+            {
+                "position": 25,
+                "title": "neu 연주"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "Op.3",
+        "title": "Metamorphic",
+        "requiredLines": 4,
+        "lineRewardNos": 800,
+        "completionRewardNos": 9600,
+        "rewardNos": 19200,
+        "cells": [
+            {
+                "position": 1,
+                "title": "MONOLITH 연주하기 (노스텔지어 오리지널)"
+            },
+            {
+                "position": 2,
+                "title": "누적 2500콤보 이상"
+            },
+            {
+                "position": 3,
+                "title": "BEMANI 악곡으로 Near와 Miss가 총 5회 이하"
+            },
+            {
+                "position": 4,
+                "title": "클래식 & 재즈 악곡으로 980000점 이상 획득"
+            },
+            {
+                "position": 5,
+                "title": "Urban Life 연주하기 (노스텔지어 오리지널)"
+            },
+            {
+                "position": 6,
+                "title": "누적 800콤보 이상 획득"
+            },
+            {
+                "position": 7,
+                "title": "S랭크 이상 4회 달성"
+            },
+            {
+                "position": 8,
+                "title": "노스텔지어 오리지널 악곡으로 400콤보 이상 7회 달성"
+            },
+            {
+                "position": 9,
+                "title": "[베이직] 30Grd 이상을 2회 달성"
+            },
+            {
+                "position": 10,
+                "title": "BEMANI 악곡, Hard 이상에서 Just 이상을 누적 1500회 이상 획득"
+            },
+            {
+                "position": 11,
+                "title": "Towards the TOWER 연주하기 (BEMANI)"
+            },
+            {
+                "position": 12,
+                "title": "Near와 Miss의 합이 총 25회 이하를 6회 달성"
+            },
+            {
+                "position": 13,
+                "title": "양손, BEMANI 악곡으로 플레이"
+            },
+            {
+                "position": 14,
+                "title": "난이도 8 이상으로 플레이"
+            },
+            {
+                "position": 15,
+                "title": "Manhattan 연주하기 (노스텔지어 오리지널)"
+            },
+            {
+                "position": 16,
+                "title": "테누토에서 ◆Just 50회 이상 획득"
+            },
+            {
+                "position": 17,
+                "title": "Hard 이상으로 풀콤보 달성"
+            },
+            {
+                "position": 18,
+                "title": "Expert 이상에서 [리사이틀] 30Grd 이상 획득"
+            },
+            {
+                "position": 19,
+                "title": "노스텔지어 오리지널 악곡으로 Just 이상을 700회 이상 달성"
+            },
+            {
+                "position": 20,
+                "title": "풀콤보 3회 달성"
+            },
+            {
+                "position": 21,
+                "title": "WONDERLAND 연주하기 (노스텔지어 오리지널)"
+            },
+            {
+                "position": 22,
+                "title": "Expert 이상에서 [베이직 or 리사이틀] 30Grd 이상을 4회 달성"
+            },
+            {
+                "position": 23,
+                "title": "노스텔지어 오리지널 악곡, 난이도 5 이상에서 ◆Just를 누적 2000회 이상 획득"
+            },
+            {
+                "position": 24,
+                "title": "난이도 6 이상에서 Good 이상을 누적 500회 이상 획득"
+            },
+            {
+                "position": 25,
+                "title": "ロミとロボの宇宙飛行 연주하기 (BEMANI)"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "Op.3",
+        "title": "Indigo Nocturne",
+        "requiredLines": 4,
+        "lineRewardNos": 800,
+        "completionRewardNos": 9600,
+        "rewardNos": 19200,
+        "cells": [
+            {
+                "position": 1,
+                "title": "蒼氷のフラグメント 연주하기 (노스텔지어 오리지널)"
+            },
+            {
+                "position": 2,
+                "title": "누적 2500콤보 이상"
+            },
+            {
+                "position": 3,
+                "title": "BEMANI 악곡으로 Near와 Miss가 총 5회 이하"
+            },
+            {
+                "position": 4,
+                "title": "클래식 & 재즈 악곡으로 980000점 이상 획득"
+            },
+            {
+                "position": 5,
+                "title": "neu* 연주하기 (BEMANI)"
+            },
+            {
+                "position": 6,
+                "title": "누적 800콤보 이상 획득"
+            },
+            {
+                "position": 7,
+                "title": "S랭크 이상 4회 달성"
+            },
+            {
+                "position": 8,
+                "title": "노스텔지어 오리지널 악곡으로 400콤보 이상 7회 달성"
+            },
+            {
+                "position": 9,
+                "title": "[베이직] 30Grd 이상을 2회 달성"
+            },
+            {
+                "position": 10,
+                "title": "BEMANI 악곡, Hard 이상에서 Just 이상을 누적 1500회 이상 획득"
+            },
+            {
+                "position": 11,
+                "title": "La fame di Adria 연주하기 (노스텔지어 오리지널)"
+            },
+            {
+                "position": 12,
+                "title": "버라이어티 악곡, Expert 이상에서 Near와 Miss가 총 10회 이하를 6회 달성"
+            },
+            {
+                "position": 13,
+                "title": "양손, BEMANI 악곡으로 플레이"
+            },
+            {
+                "position": 14,
+                "title": "난이도 8 이상으로 플레이"
+            },
+            {
+                "position": 15,
+                "title": "おーまい！らぶりー！すうぃーてぃ！だーりん！ 연주하기 (BEMANI)"
+            },
+            {
+                "position": 16,
+                "title": "테누토에서 ◆Just 50회 이상 획득"
+            },
+            {
+                "position": 17,
+                "title": "Hard 이상으로 풀콤보 달성"
+            },
+            {
+                "position": 18,
+                "title": "Expert 이상에서 [리사이틀] 30Grd 이상 획득"
+            },
+            {
+                "position": 19,
+                "title": "노스텔지어 오리지널 악곡으로 Just 이상을 700회 이상 달성"
+            },
+            {
+                "position": 20,
+                "title": "풀콤보 3회 달성"
+            },
+            {
+                "position": 21,
+                "title": "霖が哭く 연주하기 (BEMANI)"
+            },
+            {
+                "position": 22,
+                "title": "Expert 이상에서 [베이직 or 리사이틀] 30Grd 이상을 4회 달성"
+            },
+            {
+                "position": 23,
+                "title": "노스텔지어 오리지널 악곡, 난이도 5 이상에서 ◆Just를 누적 2000회 이상 획득"
+            },
+            {
+                "position": 24,
+                "title": "난이도 6 이상에서 Good 이상을 누적 500회 이상 획득"
+            },
+            {
+                "position": 25,
+                "title": "REcorrection 연주하기 (BEMANI)"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "Op.3",
+        "title": "VOLAQUAS",
+        "requiredLines": 4,
+        "lineRewardNos": 800,
+        "completionRewardNos": 9600,
+        "rewardNos": 19200,
+        "cells": [
+            {
+                "position": 1,
+                "title": "양손으로 蒼氷のフラグメント 연주하기 (노스텔지어 오리지널)"
+            },
+            {
+                "position": 2,
+                "title": "누적 2500콤보 이상"
+            },
+            {
+                "position": 3,
+                "title": "BEMANI 악곡으로 Near와 Miss가 총 5회 이하"
+            },
+            {
+                "position": 4,
+                "title": "클래식 & 재즈 악곡, Expert 이상으로 980000점 이상 획득"
+            },
+            {
+                "position": 5,
+                "title": "양손으로 MONOLITH 연주하기 (노스텔지어 오리지널)"
+            },
+            {
+                "position": 6,
+                "title": "누적 800콤보 이상 획득"
+            },
+            {
+                "position": 7,
+                "title": "S랭크 이상 4회 달성"
+            },
+            {
+                "position": 8,
+                "title": "노스텔지어 오리지널 악곡으로 ◆Just를 누적 400회 이상 획득"
+            },
+            {
+                "position": 9,
+                "title": "[베이직] 30Grd 이상을 2회 달성"
+            },
+            {
+                "position": 10,
+                "title": "글리산도에서 ◆Just를 누적 50회 이상 획득"
+            },
+            {
+                "position": 11,
+                "title": "양손으로 REcorrection 연주하기 (BEMANI)"
+            },
+            {
+                "position": 12,
+                "title": "Near와 Miss가 총 10회 이하를 6회 달성"
+            },
+            {
+                "position": 13,
+                "title": "양손, BEMANI 악곡으로 플레이"
+            },
+            {
+                "position": 14,
+                "title": "난이도 8 이상으로 플레이"
+            },
+            {
+                "position": 15,
+                "title": "양손으로 Metamorphic 연주하기 (BEMANI)"
+            },
+            {
+                "position": 16,
+                "title": "테누토에서 ◆Just 100회 이상 획득"
+            },
+            {
+                "position": 17,
+                "title": "Expert 이상으로 풀콤보 달성"
+            },
+            {
+                "position": 18,
+                "title": "Expert 이상에서 [리사이틀] 30Grd 이상 획득"
+            },
+            {
+                "position": 19,
+                "title": "노스텔지어 오리지널 악곡으로 Just 이상을 700회 이상 달성"
+            },
+            {
+                "position": 20,
+                "title": "풀콤보 2회 달성"
+            },
+            {
+                "position": 21,
+                "title": "양손으로 Indigo Nocturne 연주하기 (BEMANI)"
+            },
+            {
+                "position": 22,
+                "title": "Expert 이상에서 [베이직 or 리사이틀] 30Grd 이상을 4회 달성"
+            },
+            {
+                "position": 23,
+                "title": "노스텔지어 오리지널 악곡, 난이도 5 이상에서 ◆Just를 누적 2000회 이상 획득"
+            },
+            {
+                "position": 24,
+                "title": "난이도 7 이상에서 Good 이상을 누적 500회 이상 획득"
+            },
+            {
+                "position": 25,
+                "title": "양손으로 ロミとロボの宇宙飛行 연주하기 (BEMANI)"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "Op.3",
+        "title": "ヴァイオリンソナタ第5番「春」第1楽章",
+        "requiredLines": 4,
+        "lineRewardNos": 800,
+        "completionRewardNos": 9600,
+        "rewardNos": 19200,
+        "cells": [
+            {
+                "position": 1,
+                "title": "エリーゼのために 연주하기 (클래식 & 재즈)"
+            },
+            {
+                "position": 2,
+                "title": "Hard 이상으로 980000점 이상 획득"
+            },
+            {
+                "position": 3,
+                "title": "난이도 7 이상으로 Near와 Miss가 총 10회 이하"
+            },
+            {
+                "position": 4,
+                "title": "[베이직 or 리사이틀] 35Grd 이상 획득"
+            },
+            {
+                "position": 5,
+                "title": "[리사이틀] 30Grd 이상을 5회 달성"
+            },
+            {
+                "position": 6,
+                "title": "POPS 악곡으로 [베이직] 35Grd 이상 획득"
+            },
+            {
+                "position": 7,
+                "title": "ピアノソナタ「悲愴」第2楽章 연주하기 (클래식 & 재즈)"
+            },
+            {
+                "position": 8,
+                "title": "버라이어티 악곡, Expert 이상에서 350콤보 이상을 5회 달성"
+            },
+            {
+                "position": 9,
+                "title": "A랭크 이상을 10회 달성"
+            },
+            {
+                "position": 10,
+                "title": "Hard 이상에서 Miss 15회 이하를 5회 달성"
+            },
+            {
+                "position": 11,
+                "title": "Good 이상을 누적 700회 이상 획득"
+            },
+            {
+                "position": 12,
+                "title": "노스텔지어 오리지널 악곡, Expert 이상에서 Near와 Miss가 총 25회 이하를 3회 달성"
+            },
+            {
+                "position": 13,
+                "title": "ピアノソナタ「月光」第3楽章 연주하기 (클래식 & 재즈)"
+            },
+            {
+                "position": 14,
+                "title": "양손, BEMANI 악곡, 난이도 7 이상으로 플레이"
+            },
+            {
+                "position": 15,
+                "title": "POPS 악곡으로 풀콤보 달성"
+            },
+            {
+                "position": 16,
+                "title": "BEMANI 악곡으로 누적 2500콤보 이상 획득"
+            },
+            {
+                "position": 17,
+                "title": "양손으로 S랭크 이상을 3회 획득"
+            },
+            {
+                "position": 18,
+                "title": "Real 이상에서 [베이직] 28Grd 이상을 2회 달성"
+            },
+            {
+                "position": 19,
+                "title": "ピアノソナタ「熱情」第3楽章 연주하기 (클래식 & 재즈)"
+            },
+            {
+                "position": 20,
+                "title": "풀콤보 2회 달성"
+            },
+            {
+                "position": 21,
+                "title": "400콤보 이상 획득"
+            },
+            {
+                "position": 22,
+                "title": "Expert 이상에서 ◆Just를 누적 500회 이상 획득"
+            },
+            {
+                "position": 23,
+                "title": "버라이어티 악곡을 7곡 연주"
+            },
+            {
+                "position": 24,
+                "title": "난이도 5 이상에서 Good 이상을 350회 이상 획득"
+            },
+            {
+                "position": 25,
+                "title": "交響曲第9番第4楽章\"歓喜の歌\" 연주하기 (클래식 & 재즈)"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "Op.3",
+        "title": "Groovin' Keys",
+        "requiredLines": 5,
+        "lineRewardNos": 800,
+        "completionRewardNos": 9600,
+        "rewardNos": 19200,
+        "cells": [
+            {
+                "position": 1,
+                "title": "[리사이틀] 30Grd 이상 획득"
+            },
+            {
+                "position": 2,
+                "title": "Hard 이상으로 900000점 이상 획득"
+            },
+            {
+                "position": 3,
+                "title": "난이도 6 이상에서 Near와 Miss가 총 10회 이하"
+            },
+            {
+                "position": 4,
+                "title": "BEMANI 악곡으로 [베이직 or 리사이틀] 35Grd 이상 획득"
+            },
+            {
+                "position": 5,
+                "title": "200콤보 이상을 5회 달성"
+            },
+            {
+                "position": 6,
+                "title": "버라이어티 악곡으로 [베이직] 28Grd 이상 획득"
+            },
+            {
+                "position": 7,
+                "title": "양손으로 Miss 5회 이하를 3회 달성"
+            },
+            {
+                "position": 8,
+                "title": "노스텔지어 오리지널 악곡, Expert 이상에서 500콤보 이상을 4회 달성"
+            },
+            {
+                "position": 9,
+                "title": "A랭크 이상을 10회 달성"
+            },
+            {
+                "position": 10,
+                "title": "◆Just 700회 이상 획득"
+            },
+            {
+                "position": 11,
+                "title": "Good 이상을 누적 1000회 이상 획득"
+            },
+            {
+                "position": 12,
+                "title": "클래식 & 재즈 악곡으로 Near와 Miss가 총 25회 이하를 3회 달성"
+            },
+            {
+                "position": 13,
+                "title": "누적 5000콤보 이상 획득"
+            },
+            {
+                "position": 14,
+                "title": "양손, BEMANI 악곡, 난이도 7 이상으로 플레이"
+            },
+            {
+                "position": 15,
+                "title": "노스텔지어 오리지널 악곡으로 풀콤보 달성"
+            },
+            {
+                "position": 16,
+                "title": "BEMANI 악곡으로 누적 2500콤보 이상 획득"
+            },
+            {
+                "position": 17,
+                "title": "양손으로 S랭크 이상을 3회 획득"
+            },
+            {
+                "position": 18,
+                "title": "Expert 이상에서 [베이직] 28Grd 이상을 4회 달성"
+            },
+            {
+                "position": 19,
+                "title": "풀콤보 달성"
+            },
+            {
+                "position": 20,
+                "title": "A랭크 이상을 3회 달성"
+            },
+            {
+                "position": 21,
+                "title": "400콤보 이상 획득"
+            },
+            {
+                "position": 22,
+                "title": "Expert 이상에서 ◆Just를 누적 500회 이상 획득"
+            },
+            {
+                "position": 23,
+                "title": "버라이어티 악곡을 7곡 연주"
+            },
+            {
+                "position": 24,
+                "title": "양손, 난이도 5 이상에서 Good 이상을 350회 이상 획득"
+            },
+            {
+                "position": 25,
+                "title": "A+랭크 이상 획득"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "Op.3",
+        "title": "Bárbara",
+        "requiredLines": 5,
+        "lineRewardNos": 800,
+        "completionRewardNos": 9600,
+        "rewardNos": 19200,
+        "cells": [
+            {
+                "position": 1,
+                "title": "Hard 이상으로 풀콤보 달성"
+            },
+            {
+                "position": 2,
+                "title": "Expert 이상에서 Near와 Miss가 총 10회 이하"
+            },
+            {
+                "position": 3,
+                "title": "난이도 4 이상에서 900000점 이상 획득"
+            },
+            {
+                "position": 4,
+                "title": "Hard 이상에서 200콤보 이상을 6회 달성"
+            },
+            {
+                "position": 5,
+                "title": "버라이어티 악곡으로 880000점 이상 획득"
+            },
+            {
+                "position": 6,
+                "title": "◆Just 900회 이상 획득"
+            },
+            {
+                "position": 7,
+                "title": "Just 이상을 누적 2000회 이상 획득"
+            },
+            {
+                "position": 8,
+                "title": "A+랭크 이상 획득"
+            },
+            {
+                "position": 9,
+                "title": "[베이직] 25Grd 이상을 6회 달성"
+            },
+            {
+                "position": 10,
+                "title": "클래식 & 재즈 악곡, Hard 이상으로 플레이"
+            },
+            {
+                "position": 11,
+                "title": "BEMANI 악곡으로 ◆Just 500회 이상 획득"
+            },
+            {
+                "position": 12,
+                "title": "Expert 이상에서 누적 2000콤보 이상 획득"
+            },
+            {
+                "position": 13,
+                "title": "BEMANI 악곡, Hard 이상에서 플레이"
+            },
+            {
+                "position": 14,
+                "title": "난이도 6 이상으로 풀콤보 달성"
+            },
+            {
+                "position": 15,
+                "title": "난이도 4 이상으로 ◆Just를 누적 1500회 이상 획득"
+            },
+            {
+                "position": 16,
+                "title": "BEMANI 악곡, Expert 이상, 난이도 9 이상에서 ◆Just를 100회 이상 획득"
+            },
+            {
+                "position": 17,
+                "title": "Expert 이상에서 Just 이상을 1000회 이상 획득"
+            },
+            {
+                "position": 18,
+                "title": "Expert 이상에서 Good 이상을 누적 3000회 이상 획득"
+            },
+            {
+                "position": 19,
+                "title": "800000점 이상 획득"
+            },
+            {
+                "position": 20,
+                "title": "노스텔지어 오리지널 악곡, 난이도 5 이상에서 200콤보 이상을 5회 획득"
+            },
+            {
+                "position": 21,
+                "title": "Hard 이상에서 [베이직 or 리사이틀] 30Grd 이상 획득"
+            },
+            {
+                "position": 22,
+                "title": "노스텔지어 오리지널 악곡 플레이"
+            },
+            {
+                "position": 23,
+                "title": "난이도 2 이상으로 플레이"
+            },
+            {
+                "position": 24,
+                "title": "풀콤보 6회 달성"
+            },
+            {
+                "position": 25,
+                "title": "[리사이틀] 26Grd 이상 획득"
+            }
+        ]
+    },
+    {
+        "sourceVersion": "Op.3",
+        "title": "I and I",
+        "requiredLines": 5,
+        "lineRewardNos": 800,
+        "completionRewardNos": 9600,
+        "rewardNos": 19200,
+        "cells": [
+            {
+                "position": 1,
+                "title": "◆Just를 누적 3000회 이상 획득"
+            },
+            {
+                "position": 2,
+                "title": "버라이어티 악곡, 난이도 5 이상으로 5곡 연주"
+            },
+            {
+                "position": 3,
+                "title": "누적 2000콤보 이상 획득"
+            },
+            {
+                "position": 4,
+                "title": "Preserved Valkyria 연주"
+            },
+            {
+                "position": 5,
+                "title": "BEMANI 악곡으로 풀콤보 달성"
+            },
+            {
+                "position": 6,
+                "title": "테누토에서 Just 이상을 10회 이상 획득"
+            },
+            {
+                "position": 7,
+                "title": "글리산도에서 Just 이상을 누적 40회 이상 획득"
+            },
+            {
+                "position": 8,
+                "title": "700콤보 이상을 2회 달성"
+            },
+            {
+                "position": 9,
+                "title": "양손, 클래식 & 재즈 악곡으로 A랭크 이상 획득"
+            },
+            {
+                "position": 10,
+                "title": "양손으로 Good 이상을 누적 3000회 이상 획득"
+            },
+            {
+                "position": 11,
+                "title": "난이도 6 이상에서 Near와 Miss가 총 15회 이하를 5회 달성"
+            },
+            {
+                "position": 12,
+                "title": "[리사이틀] 28Grd 이상을 3회 달성"
+            },
+            {
+                "position": 13,
+                "title": "BEMANI 악곡으로 Miss 3회 이하"
+            },
+            {
+                "position": 14,
+                "title": "양손으로 [베이직 or 리사이틀] 32Grd 이상 획득"
+            },
+            {
+                "position": 15,
+                "title": "난이도 6~11로 [베이직] 30Grd 이상을 5회 달성"
+            },
+            {
+                "position": 16,
+                "title": "양손, BEMANI 악곡으로 ◆Just 300회 이상 획득"
+            },
+            {
+                "position": 17,
+                "title": "Hard 이상에서 Lord=Crossight 연주하기"
+            },
+            {
+                "position": 18,
+                "title": "Hard 이상에서 [베이직] 35Grd 이상 획득"
+            },
+            {
+                "position": 19,
+                "title": "Near와 Miss가 총 10회 이하"
+            },
+            {
+                "position": 20,
+                "title": "양손으로 [리사이틀] 28Grd 이상 획득"
+            },
+            {
+                "position": 21,
+                "title": "BEMANI 악곡으로 풀콤보 3회 달성"
+            },
+            {
+                "position": 22,
+                "title": "글리산도에서 ◆Just 20회 이상 획득"
+            },
+            {
+                "position": 23,
+                "title": "노스텔지어 오리지널 악곡 플레이"
+            },
+            {
+                "position": 24,
+                "title": "버라이어티 악곡, Expert 이상으로 920000점 이상 획득"
+            },
+            {
+                "position": 25,
+                "title": "난이도 5 이상에서 500콤보 이상을 3회 달성"
+            }
+        ]
+    }
+]

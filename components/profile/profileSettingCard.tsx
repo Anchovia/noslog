@@ -1,6 +1,6 @@
 "use client";
 
-import { Camera, MessageCircle, Save } from "lucide-react";
+import { Camera, Save } from "lucide-react";
 import Link from "next/link";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -11,16 +11,19 @@ import {
     uploadUserSetting,
 } from "@/app/(nevigation)/profile/settings/actions";
 import {
+    PROFILE_COUNTRIES,
     SettingType,
     settingSchema,
 } from "@/app/(nevigation)/profile/settings/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import DiscordIcon from "@/components/ui/DiscordIcon";
 
 interface ProfileSettingCardProps {
     user: {
         id: number;
         avatar: string | null;
         username: string | null;
+        country: string;
         discord_id: string | null;
         discord_name: string | null;
     };
@@ -51,6 +54,10 @@ export default function ProfileSettingCard({ user }: ProfileSettingCardProps) {
         defaultValues: {
             avatar: user.avatar ?? "",
             username: user.username ?? "",
+            country:
+                user.country === "ko-KR" || user.country === "ja-JP"
+                    ? user.country
+                    : "global",
         },
     });
 
@@ -111,6 +118,7 @@ export default function ProfileSettingCard({ user }: ProfileSettingCardProps) {
         const formData = new FormData();
         formData.set("avatar", avatar);
         formData.set("username", data.username);
+        formData.set("country", data.country);
 
         const result = await uploadUserSetting(formData);
         if (result?.fieldErrors) {
@@ -145,7 +153,7 @@ export default function ProfileSettingCard({ user }: ProfileSettingCardProps) {
                     <p className="text-caption mt-1">
                         JPG, PNG, WebP · 최대 4MB
                     </p>
-                    <label className="border-border text-text-primary hover:bg-surface-muted focus-within:ring-text-secondary/30 rounded-card mt-3 inline-flex h-9 cursor-pointer items-center gap-2 border px-3 text-xs font-semibold transition-colors focus-within:ring-2">
+                    <label className="border-border text-text-primary hover:bg-surface-muted focus-within:ring-text-secondary/30 rounded-card mt-3 inline-flex h-10 cursor-pointer items-center gap-2 border px-3 text-sm font-semibold transition-colors focus-within:ring-2">
                         <Camera className="size-4" aria-hidden />
                         사진 변경
                         <input
@@ -177,6 +185,29 @@ export default function ProfileSettingCard({ user }: ProfileSettingCardProps) {
                     />
                     <FieldError message={errors.username?.message} />
                 </label>
+                <fieldset>
+                    <legend className="text-text-secondary text-xs font-semibold">
+                        국가
+                    </legend>
+                    <div className="mt-1.5 grid grid-cols-3 gap-2">
+                        {PROFILE_COUNTRIES.map((country) => (
+                            <label
+                                key={country.value}
+                                className="has-checked:border-text-primary has-checked:bg-text-primary has-checked:text-bg border-border bg-bg text-text-secondary hover:bg-surface-muted rounded-card flex h-11 cursor-pointer items-center justify-center gap-1.5 border text-sm font-semibold transition-colors"
+                            >
+                                <input
+                                    type="radio"
+                                    value={country.value}
+                                    className="sr-only"
+                                    {...register("country")}
+                                />
+                                <span>{country.code}</span>
+                                <span className="sr-only">{country.label}</span>
+                            </label>
+                        ))}
+                    </div>
+                    <FieldError message={errors.country?.message} />
+                </fieldset>
             </section>
 
             <section className="bg-surface rounded-card flex flex-col gap-4 p-4">
@@ -188,7 +219,7 @@ export default function ProfileSettingCard({ user }: ProfileSettingCardProps) {
                 </div>
                 <div className="border-border bg-bg rounded-card flex items-center gap-3 border p-3">
                     <span className="bg-discord/15 text-discord flex size-9 shrink-0 items-center justify-center rounded-full">
-                        <MessageCircle className="size-4" aria-hidden />
+                        <DiscordIcon className="size-4" />
                     </span>
                     <div className="min-w-0 flex-1">
                         <p className="text-body truncate text-sm font-semibold">
@@ -204,7 +235,7 @@ export default function ProfileSettingCard({ user }: ProfileSettingCardProps) {
                     </div>
                     <a
                         href="/discord/start?returnTo=/profile/settings"
-                        className="border-border text-text-primary hover:bg-surface-muted focus-visible:ring-text-secondary/30 rounded-card flex h-9 shrink-0 cursor-pointer items-center border px-3 text-xs font-bold transition-colors focus-visible:ring-2 focus-visible:outline-none"
+                        className="border-border text-text-primary hover:bg-surface-muted focus-visible:ring-text-secondary/30 rounded-card flex h-10 shrink-0 items-center border px-3 text-sm font-bold transition-colors focus-visible:ring-2 focus-visible:outline-none"
                     >
                         {user.discord_id ? "다시 연결" : "연결"}
                     </a>

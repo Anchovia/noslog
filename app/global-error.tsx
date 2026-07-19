@@ -6,7 +6,7 @@ export default function GlobalError({ reset }: { reset: () => void }) {
             <body className="bg-bg text-text-primary">
                 <main className="flex min-h-screen flex-col items-center justify-center gap-4 px-6 text-center">
                     <div>
-                        <h1 className="text-xl font-semibold">
+                        <h1 className="text-title">
                             NosLog를 불러오지 못했습니다.
                         </h1>
                         <p className="text-text-secondary mt-2 text-sm">

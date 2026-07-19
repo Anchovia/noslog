@@ -4,7 +4,6 @@ const mocks = vi.hoisted(() => ({
     getSession: vi.fn(),
     cellFindUnique: vi.fn(),
     progressUpsert: vi.fn(),
-    progressDeleteMany: vi.fn(),
     revalidatePath: vi.fn(),
 }));
 
@@ -15,7 +14,6 @@ vi.mock("@/lib/db", () => ({
         bingoCell: { findUnique: mocks.cellFindUnique },
         bingoCellProgress: {
             upsert: mocks.progressUpsert,
-            deleteMany: mocks.progressDeleteMany,
         },
     },
 }));
@@ -35,7 +33,6 @@ describe("빙고 진행 상태 액션", () => {
         mocks.getSession.mockResolvedValue({ id: 2 });
         mocks.cellFindUnique.mockResolvedValue(availableCell);
         mocks.progressUpsert.mockResolvedValue({ id: 10 });
-        mocks.progressDeleteMany.mockResolvedValue({ count: 1 });
     });
 
     it("비로그인 사용자는 진행 상태를 변경할 수 없다", async () => {
@@ -94,15 +91,26 @@ describe("빙고 진행 상태 액션", () => {
         expect(mocks.revalidatePath).toHaveBeenCalledWith("/bingo/5");
     });
 
-    it("완료 해제는 현재 사용자의 기록만 삭제한다", async () => {
+    it("완료 해제도 최근 변경 시각을 남기도록 상태를 저장한다", async () => {
         await expect(setBingoCellCompletion(3, false)).resolves.toEqual({
             success: true,
             isCompleted: false,
         });
 
-        expect(mocks.progressDeleteMany).toHaveBeenCalledWith({
-            where: { bingoCellId: 3, userId: 2 },
+        expect(mocks.progressUpsert).toHaveBeenCalledWith({
+            where: {
+                userId_bingoCellId: { userId: 2, bingoCellId: 3 },
+            },
+            create: expect.objectContaining({
+                userId: 2,
+                bingoCellId: 3,
+                isCompleted: false,
+                completedAt: null,
+            }),
+            update: expect.objectContaining({
+                isCompleted: false,
+                completedAt: null,
+            }),
         });
-        expect(mocks.progressUpsert).not.toHaveBeenCalled();
     });
 });

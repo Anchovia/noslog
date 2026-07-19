@@ -1,9 +1,13 @@
 import { Plus, Search, X } from "lucide-react";
 
+import MusicJacket from "@/components/music/musicJacket";
 import { cn } from "@/lib/utils";
 
 import type { TierChartSearchResult } from "./tierBoardTypes";
-import { getTierDifficultyColor } from "./tierBoardUtils";
+import {
+    getTierDifficultyBorder,
+    getTierDifficultyColor,
+} from "./tierBoardUtils";
 
 interface TierChartSearchProps {
     query: string;
@@ -33,7 +37,7 @@ export default function TierChartSearch({
                         value={query}
                         onChange={(event) => onQueryChange(event.target.value)}
                         placeholder="곡 제목 · 아티스트 · 식별자 검색"
-                        className="border-border bg-bg text-input h-10 w-full rounded-md border pr-3 pl-10"
+                        className="border-border bg-bg text-input h-11 w-full rounded-md border pr-3 pl-10"
                     />
                 </div>
                 <button
@@ -41,7 +45,7 @@ export default function TierChartSearch({
                     onClick={onClose}
                     aria-label="검색 닫기"
                     title="닫기"
-                    className="text-text-secondary hover:bg-surface-muted flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-md"
+                    className="text-text-secondary hover:bg-surface-muted flex size-11 shrink-0 items-center justify-center rounded-md"
                 >
                     <X className="size-4" />
                 </button>
@@ -70,13 +74,16 @@ export default function TierChartSearch({
                                       index > 0 && "border-divider border-t"
                                   )}
                               >
-                                  <div
-                                      className="bg-surface-muted size-10 shrink-0 rounded-md bg-cover bg-center"
-                                      style={{
-                                          backgroundImage: chart.jacket
-                                              ? `url(${chart.jacket})`
-                                              : undefined,
-                                      }}
+                                  <MusicJacket
+                                      index={chart.musicIndex}
+                                      background={chart.jacket}
+                                      title={chart.title}
+                                      className={cn(
+                                          "size-10 shrink-0 rounded-md border-2",
+                                          getTierDifficultyBorder(
+                                              chart.difficulty
+                                          )
+                                      )}
                                   />
                                   <span className="min-w-0 flex-1">
                                       <strong className="block truncate text-sm">

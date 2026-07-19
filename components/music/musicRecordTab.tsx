@@ -43,7 +43,7 @@ export default function MusicRecordTab({
                         </p>
                         <Link
                             href="/login"
-                            className="bg-text-primary text-bg rounded-card flex h-9 items-center justify-center px-4 text-sm font-bold"
+                            className="bg-text-primary text-bg rounded-card flex h-10 items-center justify-center px-4 text-sm font-bold"
                         >
                             로그인
                         </Link>
@@ -79,7 +79,7 @@ export default function MusicRecordTab({
                         <div className="min-w-0 flex-1">
                             <p className="text-caption">베스트 스코어</p>
                             <div className="flex items-center gap-2">
-                                <strong className="text-text-primary block truncate text-3xl font-black tabular-nums">
+                                <strong className="text-score-display block truncate">
                                     {userPlayData
                                         ? formatToComma(userPlayData.score)
                                         : "-"}
@@ -110,7 +110,7 @@ export default function MusicRecordTab({
                                 style={{ width: `${scoreProgress}%` }}
                             />
                         </div>
-                        <div className="mt-1.5 flex items-center justify-between gap-3 text-[10px]">
+                        <div className="text-caption mt-1.5 flex items-center justify-between gap-3">
                             <span className="text-text-disabled truncate tabular-nums">
                                 {userPlayData
                                     ? formatScoreRecordDate(
@@ -138,7 +138,7 @@ export default function MusicRecordTab({
                 </section>
 
                 <section className="bg-surface rounded-card p-4">
-                    <h2 className="text-sm font-bold">판정 상세</h2>
+                    <h2 className="text-section">판정 상세</h2>
                     <div className="text-text-disabled flex h-16 items-center justify-center text-sm">
                         판정 데이터가 제공되지 않습니다.
                     </div>
@@ -169,13 +169,13 @@ export default function MusicRecordTab({
 
                 <section className="bg-surface rounded-card p-4">
                     <header>
-                        <h2 className="text-sm font-bold">스코어 추이</h2>
+                        <h2 className="text-section">스코어 추이</h2>
                     </header>
                     <ScoreTrend points={scoreTrend} />
                 </section>
 
                 <section className="bg-surface rounded-card overflow-hidden">
-                    <h2 className="bg-surface-muted px-4 py-3 text-sm font-bold">
+                    <h2 className="text-section bg-surface-muted px-4 py-3">
                         최근 플레이
                     </h2>
                     {recentChartPlays.length > 0 ? (

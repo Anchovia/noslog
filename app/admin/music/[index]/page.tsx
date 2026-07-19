@@ -61,7 +61,7 @@ export default async function AdminMusicDetailPage({
     )?.duration_seconds;
 
     const inputClass =
-        "border-border bg-bg text-input h-10 w-full rounded-md border px-3";
+        "border-border bg-bg text-input h-11 w-full rounded-md border px-3";
 
     return (
         <div className="flex flex-col gap-4 px-4 py-5">
