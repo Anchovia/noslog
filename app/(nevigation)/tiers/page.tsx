@@ -15,8 +15,10 @@ import {
 } from "./data";
 
 interface TiersPageProps {
-    searchParams: Promise<{ mode?: string }>;
+    searchParams: Promise<{ mode?: string; sort?: string }>;
 }
+
+type TierListSort = "default" | "recent";
 
 const modes: { value: PublicTierMode; label: string }[] = [
     { value: "all", label: "전체" },
@@ -28,17 +30,43 @@ function normalizeMode(value?: string): PublicTierMode {
     return value === "basic" || value === "recital" ? value : "all";
 }
 
+function normalizeSort(value?: string): TierListSort {
+    return value === "recent" ? "recent" : "default";
+}
+
+const defaultTierOrder = new Map([
+    ["basic-real", 0],
+    ["recital-real", 1],
+    ["basic-expert", 2],
+    ["recital-expert", 3],
+]);
+
 export default async function TiersPage({ searchParams }: TiersPageProps) {
-    const { mode: requestedMode } = await searchParams;
+    const { mode: requestedMode, sort: requestedSort } = await searchParams;
     const mode = normalizeMode(requestedMode);
+    const sort = normalizeSort(requestedSort);
     const [user, tierLists] = await Promise.all([
         getUser(),
         getCachedTierLists(mode),
     ]);
+    const sortedTierLists = [...tierLists].sort((a, b) => {
+        if (sort === "recent") {
+            return (
+                new Date(b.updatedAt).getTime() -
+                    new Date(a.updatedAt).getTime() || b.id - a.id
+            );
+        }
+
+        return (
+            (defaultTierOrder.get(a.slug) ?? Number.MAX_SAFE_INTEGER) -
+                (defaultTierOrder.get(b.slug) ?? Number.MAX_SAFE_INTEGER) ||
+            a.title.localeCompare(b.title, "ko")
+        );
+    });
 
     const chartIds = [
         ...new Set(
-            tierLists.flatMap((tierList) =>
+            sortedTierLists.flatMap((tierList) =>
                 tierList.entries.map((entry) => entry.chartId)
             )
         ),
@@ -54,31 +82,77 @@ export default async function TiersPage({ searchParams }: TiersPageProps) {
         <div className="flex flex-col gap-4 px-4 py-5">
             <h1 className="text-title">서열표</h1>
 
-            <nav className="flex gap-2" aria-label="서열표 모드">
-                {modes.map((item) => (
-                    <Link
-                        key={item.value}
-                        href={
-                            item.value === "all"
-                                ? "/tiers"
-                                : `/tiers?mode=${item.value}`
-                        }
-                        aria-current={item.value === mode ? "page" : undefined}
-                        className={cn(
-                            "focus-visible:ring-text-secondary/30 flex h-9 cursor-pointer items-center justify-center rounded-md px-4 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none",
-                            item.value === mode
-                                ? "bg-text-primary text-bg hover:bg-text-primary/90"
-                                : "bg-surface text-text-secondary hover:bg-surface-muted hover:text-text-primary"
-                        )}
-                    >
-                        {item.label}
-                    </Link>
-                ))}
-            </nav>
+            <div className="flex items-center justify-between gap-3">
+                <nav className="flex gap-2" aria-label="서열표 모드">
+                    {modes.map((item) => {
+                        const href = new URLSearchParams({
+                            ...(item.value === "all"
+                                ? {}
+                                : { mode: item.value }),
+                            ...(sort === "recent" ? { sort } : {}),
+                        });
+
+                        return (
+                            <Link
+                                key={item.value}
+                                href={`/tiers${href.size ? `?${href}` : ""}`}
+                                aria-current={
+                                    item.value === mode ? "page" : undefined
+                                }
+                                className={cn(
+                                    "focus-visible:ring-text-secondary/30 flex h-9 cursor-pointer items-center justify-center rounded-md px-3 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none",
+                                    item.value === mode
+                                        ? "bg-text-primary text-bg hover:bg-text-primary/90"
+                                        : "bg-surface text-text-secondary hover:bg-surface-muted hover:text-text-primary"
+                                )}
+                            >
+                                {item.label}
+                            </Link>
+                        );
+                    })}
+                </nav>
+
+                <nav
+                    className="border-border rounded-card flex h-7 shrink-0 overflow-hidden border"
+                    aria-label="서열표 정렬"
+                >
+                    {(
+                        [
+                            { value: "default", label: "기본순" },
+                            { value: "recent", label: "최신순" },
+                        ] as const
+                    ).map((item) => {
+                        const href = new URLSearchParams({
+                            ...(mode === "all" ? {} : { mode }),
+                            ...(item.value === "recent"
+                                ? { sort: item.value }
+                                : {}),
+                        });
+
+                        return (
+                            <Link
+                                key={item.value}
+                                href={`/tiers${href.size ? `?${href}` : ""}`}
+                                aria-current={
+                                    item.value === sort ? "page" : undefined
+                                }
+                                className={cn(
+                                    "focus-visible:ring-text-secondary/30 flex cursor-pointer items-center px-2.5 text-xs font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none",
+                                    item.value === sort
+                                        ? "bg-border text-text-primary hover:bg-border/80"
+                                        : "text-text-secondary hover:bg-surface-muted hover:text-text-primary"
+                                )}
+                            >
+                                {item.label}
+                            </Link>
+                        );
+                    })}
+                </nav>
+            </div>
 
             <section className="flex flex-col gap-3" aria-label="서열표 목록">
-                {tierLists.length > 0 ? (
-                    tierLists.map((tierList) => {
+                {sortedTierLists.length > 0 ? (
+                    sortedTierLists.map((tierList) => {
                         const statuses = tierList.entries.map((entry) =>
                             getTierRecordStatus(
                                 recordByChartId.get(entry.chartId)

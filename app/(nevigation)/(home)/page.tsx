@@ -54,7 +54,7 @@ export default async function Home({ searchParams }: HomeProps) {
         <div className="flex flex-col gap-4 px-4 py-4">
             {/* 상단 로그인/프로필 카드 */}
             {user ? (
-                <section className="bg-surface rounded-card flex min-h-20 items-center gap-3 p-4">
+                <section className="bg-surface rounded-card sticky top-2 z-20 flex min-h-20 items-center gap-3 p-4 shadow-lg">
                     <UserAvatar
                         avatar={user.avatar}
                         username={user.username}
@@ -71,11 +71,15 @@ export default async function Home({ searchParams }: HomeProps) {
                             </span>
                         </div>
                         <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
-                            <span className="text-text-primary shrink-0 text-sm font-medium tabular-nums">
-                                Grd{" "}
-                                {formatToComma(
-                                    normalizeStoredGrade(user.grade_basic)
-                                )}
+                            <span className="shrink-0 text-sm font-medium tabular-nums">
+                                <span className="text-text-secondary">
+                                    Grd{" "}
+                                </span>
+                                <span className="text-score font-bold">
+                                    {formatToComma(
+                                        normalizeStoredGrade(user.grade_basic)
+                                    )}
+                                </span>
                             </span>
                             <ExamBadge mode="basic" exam={user.exam_basic} />
                             <ExamBadge
