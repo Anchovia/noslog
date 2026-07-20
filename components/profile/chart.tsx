@@ -8,6 +8,10 @@ export interface GradeHistoryPoint {
     grade_recital: number;
 }
 
+function formatGradeHistoryDate(value: string) {
+    return value.slice(0, 10).replaceAll("-", ".");
+}
+
 export default function ProfileGradeChart({
     data,
     mode,
@@ -30,6 +34,7 @@ export default function ProfileGradeChart({
             <ResponsiveContainer width="100%" height="100%">
                 <LineChart
                     data={data}
+                    accessibilityLayer={false}
                     margin={{ top: 8, right: 6, bottom: 8, left: 6 }}
                 >
                     <YAxis hide domain={["dataMin - 5", "dataMax + 5"]} />
@@ -43,6 +48,13 @@ export default function ProfileGradeChart({
                             fontSize: 12,
                         }}
                         labelStyle={{ color: "#a0a0aa" }}
+                        labelFormatter={(_, payload) => {
+                            const point = payload[0]?.payload as
+                                GradeHistoryPoint | undefined;
+                            return point
+                                ? formatGradeHistoryDate(point.besttime)
+                                : "";
+                        }}
                         formatter={(value) => [
                             Number(value).toLocaleString("ko-KR"),
                             "Grd",

@@ -17,8 +17,15 @@ export default function ProfileGradeTrend({
             <ProfileGradeChart data={data} mode={mode} />
             {data.length > 1 ? (
                 <div className="text-caption text-text-disabled flex justify-between">
-                    <span>{data[0].besttime.replaceAll("-", ".")}</span>
-                    <span>{data.at(-1)?.besttime.replaceAll("-", ".")}</span>
+                    <span>
+                        {data[0].besttime.slice(0, 10).replaceAll("-", ".")}
+                    </span>
+                    <span>
+                        {data
+                            .at(-1)
+                            ?.besttime.slice(0, 10)
+                            .replaceAll("-", ".")}
+                    </span>
                 </div>
             ) : null}
         </section>
