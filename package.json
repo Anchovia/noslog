@@ -3,7 +3,9 @@
     "version": "1.1.0",
     "private": true,
     "scripts": {
+        "predev": "npm run generate:jacket-manifest",
         "dev": "next dev",
+        "prebuild": "npm run generate:jacket-manifest",
         "build": "next build",
         "start": "next start",
         "postinstall": "prisma generate",
@@ -12,6 +14,7 @@
         "db:import:bingos:op3": "node prisma/import-op3-bingos.mjs --env-file=.env",
         "db:import:musics:nosdata": "node prisma/import-nosdata-musics.mjs --env-file=.env",
         "db:import:tiers:official": "node prisma/import-official-tiers.mjs --env-file=.env",
+        "generate:jacket-manifest": "node scripts/generate-music-jacket-manifest.mjs",
         "db:seed:e2e": "node prisma/seed-e2e.mjs",
         "test": "vitest run",
         "test:watch": "vitest",

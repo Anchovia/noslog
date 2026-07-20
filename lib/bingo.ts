@@ -1,3 +1,5 @@
+import { getJacketUrl } from "@/lib/musicJackets";
+
 export interface BingoProgressCell {
     id: number;
     position: number;
@@ -57,8 +59,5 @@ export function getBingoJacketUrl(
     musicIndex: string,
     background: string | null
 ) {
-    return (
-        background ||
-        `https://p.eagate.573.jp/game/nostalgia/op3/img/jacket.html?c=${musicIndex}`
-    );
+    return getJacketUrl(musicIndex, background);
 }

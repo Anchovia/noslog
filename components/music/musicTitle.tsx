@@ -1,6 +1,7 @@
 /* 자켓, 제목, 아티스트, 그레이드 */
 
 import { formatToGrade } from "@/lib/utils";
+import { getJacketUrl } from "@/lib/musicJackets";
 
 interface MusicTitleProps {
     background: string | null;
@@ -27,11 +28,7 @@ export default function MusicTitle({
             <article className="flex items-center gap-6">
                 <div
                     style={{
-                        backgroundImage: `${
-                            background
-                                ? `url(${background})`
-                                : `url(https://p.eagate.573.jp/game/nostalgia/op3/img/jacket.html?c=${index})`
-                        }`,
+                        backgroundImage: `url(${getJacketUrl(index, background)})`,
                         backgroundSize: "cover",
                     }}
                     className="aspect-square size-24 border border-white/50"
