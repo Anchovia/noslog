@@ -34,17 +34,17 @@ export default async function Header() {
                     ))}
                 </nav>
 
-                {user && user.avatar ? (
+                {user ? (
                     <Link
                         href={`/profile/${user.id}`}
-                        className="border-border relative size-8 shrink-0 overflow-hidden rounded-full border"
+                        className="border-border bg-text-primary text-bg relative flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full border text-sm font-bold"
+                        aria-label={`${user.username ?? "사용자"} 프로필`}
                     >
-                        <Image
-                            src={user.avatar}
-                            alt={`${user.username ?? "사용자"} 프로필`}
-                            fill
-                            sizes="32px"
-                        />
+                        {user.avatar ? (
+                            <Image src={user.avatar} alt="" fill sizes="32px" />
+                        ) : (
+                            (user.username?.charAt(0) ?? "N")
+                        )}
                     </Link>
                 ) : (
                     <Link

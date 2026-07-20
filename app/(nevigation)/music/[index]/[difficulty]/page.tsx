@@ -20,7 +20,6 @@ const tabs: DetailTab[] = ["record", "detail", "ranking", "tier"];
 const rankingPageSize = 7;
 
 const emptyDistribution = [
-    { key: "under950", label: "<950k", count: 0 },
     { key: "950", label: "950k", count: 0 },
     { key: "960", label: "960k", count: 0 },
     { key: "970", label: "970k", count: 0 },
@@ -120,14 +119,14 @@ export default async function MusicDetailPage(props: {
         scoreDistribution = emptyDistribution.map((item) => ({ ...item }));
 
         for (const record of scores) {
-            let bucket = 0;
-            if (record.fc_type === 3 || record.score >= 1000000) bucket = 6;
-            else if (record.score >= 990000) bucket = 5;
-            else if (record.score >= 980000) bucket = 4;
-            else if (record.score >= 970000) bucket = 3;
-            else if (record.score >= 960000) bucket = 2;
-            else if (record.score >= 950000) bucket = 1;
-            scoreDistribution[bucket].count++;
+            let bucket: number | null = null;
+            if (record.fc_type === 3 || record.score >= 1000000) bucket = 5;
+            else if (record.score >= 990000) bucket = 4;
+            else if (record.score >= 980000) bucket = 3;
+            else if (record.score >= 970000) bucket = 2;
+            else if (record.score >= 960000) bucket = 1;
+            else if (record.score >= 950000) bucket = 0;
+            if (bucket !== null) scoreDistribution[bucket].count++;
         }
 
         playerCount = scores.length;

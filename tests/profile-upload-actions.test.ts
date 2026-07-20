@@ -67,6 +67,10 @@ function profileForm(
     formData.set("username", username);
     formData.set("avatar", avatar);
     formData.set("country", country);
+    formData.set("preferredArcadeId", "");
+    formData.set("hideNostalgiaName", "false");
+    formData.set("hideDiscordName", "false");
+    formData.set("hidePlayCount", "false");
     return formData;
 }
 
@@ -147,6 +151,9 @@ describe("프로필 이미지 업로드 토큰", () => {
                 country: "ko-KR",
                 avatar: newAvatar,
                 preferred_arcade_id: null,
+                hide_nostalgia_name: false,
+                hide_discord_name: false,
+                hide_play_count: false,
             },
         });
         expect(mocks.deleteBlobIfOwned).toHaveBeenCalledWith(oldAvatar);

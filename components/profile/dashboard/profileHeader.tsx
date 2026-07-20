@@ -73,20 +73,26 @@ export default function ProfileHeader({
             </section>
 
             <div className="grid min-w-0 grid-cols-2 gap-2">
-                {user.nostalgia_name ? (
+                {user.hide_nostalgia_name || user.nostalgia_name ? (
                     <span className="bg-surface text-caption col-span-2 flex min-w-0 items-center gap-2 rounded-md px-2.5 py-1.5">
                         <span className="text-text-disabled shrink-0 font-semibold">
                             NOSTALGIA ID
                         </span>
                         <span className="text-text-primary truncate">
-                            {user.nostalgia_name}
+                            {user.hide_nostalgia_name
+                                ? "비공개"
+                                : user.nostalgia_name}
                         </span>
                     </span>
                 ) : null}
-                {user.discord_name ? (
+                {user.hide_discord_name || user.discord_name ? (
                     <span className="bg-surface text-caption flex min-w-0 items-center gap-1.5 rounded-md px-2.5 py-1.5">
                         <DiscordIcon className="text-discord size-3.5" />
-                        <span className="truncate">{user.discord_name}</span>
+                        <span className="truncate">
+                            {user.hide_discord_name
+                                ? "비공개"
+                                : user.discord_name}
+                        </span>
                     </span>
                 ) : null}
                 {user.preferredArcade ? (

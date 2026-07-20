@@ -138,7 +138,7 @@ export default function MusicInfoTab({
 
                 {chartDetail.playerCount > 0 ? (
                     <>
-                        <div className="mt-4 grid h-20 grid-cols-7 items-end gap-1">
+                        <div className="mt-4 grid h-20 grid-cols-6 items-end gap-1">
                             {chartDetail.scoreDistribution.map((item) => (
                                 <div
                                     key={item.key}
@@ -163,7 +163,7 @@ export default function MusicInfoTab({
                                     />
                                     <span
                                         className={cn(
-                                            "text-caption mt-1 truncate text-center",
+                                            "text-micro mt-1 text-center whitespace-nowrap",
                                             item.key === "pianist"
                                                 ? "text-score"
                                                 : "text-text-disabled"

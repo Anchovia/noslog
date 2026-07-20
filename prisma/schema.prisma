@@ -17,6 +17,9 @@ model User {
   country              String                    @default("ko-KR")
   profile_completed_at DateTime?
   preferred_arcade_id  Int?
+  hide_nostalgia_name  Boolean                   @default(false)
+  hide_discord_name    Boolean                   @default(false)
+  hide_play_count      Boolean                   @default(false)
   preferredArcade      Arcade?                   @relation(fields: [preferred_arcade_id], references: [id], onDelete: SetNull)
   rank_basic           Int?
   rank_recital         Int?

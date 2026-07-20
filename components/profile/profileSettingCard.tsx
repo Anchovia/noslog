@@ -3,7 +3,7 @@
 import { Camera, MapPin, Save } from "lucide-react";
 import Link from "next/link";
 import { ChangeEvent, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { put } from "@vercel/blob/client";
 
 import {
@@ -17,6 +17,7 @@ import {
 } from "@/app/(nevigation)/profile/settings/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import DiscordIcon from "@/components/ui/DiscordIcon";
+import { Switch } from "@/components/ui/Switch";
 
 interface ProfileSettingCardProps {
     user: {
@@ -27,6 +28,9 @@ interface ProfileSettingCardProps {
         discord_id: string | null;
         discord_name: string | null;
         preferred_arcade_id: number | null;
+        hide_nostalgia_name: boolean;
+        hide_discord_name: boolean;
+        hide_play_count: boolean;
     };
     arcades: { id: number; name: string; region: string | null }[];
 }
@@ -53,6 +57,7 @@ export default function ProfileSettingCard({
         register,
         handleSubmit,
         setError,
+        control,
         formState: { errors, isSubmitting },
     } = useForm<SettingType>({
         resolver: zodResolver(settingSchema),
@@ -64,6 +69,9 @@ export default function ProfileSettingCard({
                     ? user.country
                     : "global",
             preferredArcadeId: user.preferred_arcade_id?.toString() ?? "",
+            hideNostalgiaName: user.hide_nostalgia_name,
+            hideDiscordName: user.hide_discord_name,
+            hidePlayCount: user.hide_play_count,
         },
     });
 
@@ -126,6 +134,9 @@ export default function ProfileSettingCard({
         formData.set("username", data.username);
         formData.set("country", data.country);
         formData.set("preferredArcadeId", data.preferredArcadeId);
+        formData.set("hideNostalgiaName", String(data.hideNostalgiaName));
+        formData.set("hideDiscordName", String(data.hideDiscordName));
+        formData.set("hidePlayCount", String(data.hidePlayCount));
 
         const result = await uploadUserSetting(formData);
         if (result?.fieldErrors) {
@@ -243,6 +254,79 @@ export default function ProfileSettingCard({
                     </div>
                     <FieldError message={errors.country?.message} />
                 </fieldset>
+            </section>
+
+            <section className="bg-surface rounded-card flex flex-col gap-4 p-4">
+                <div>
+                    <h2 className="text-section">공개 설정</h2>
+                    <p className="text-caption mt-1">
+                        다른 사용자에게 표시할 플레이 정보를 선택합니다.
+                    </p>
+                </div>
+                <Controller
+                    name="hideNostalgiaName"
+                    control={control}
+                    render={({ field }) => (
+                        <label className="border-border bg-bg rounded-card flex cursor-pointer items-center justify-between gap-4 border p-3">
+                            <span className="min-w-0">
+                                <span className="text-body block text-sm font-semibold">
+                                    인게임 닉네임 비공개
+                                </span>
+                                <span className="text-caption mt-0.5 block">
+                                    프로필의 NOSTALGIA ID를 비공개로 표시합니다.
+                                </span>
+                            </span>
+                            <Switch
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                                aria-label="인게임 닉네임 비공개"
+                            />
+                        </label>
+                    )}
+                />
+                <Controller
+                    name="hideDiscordName"
+                    control={control}
+                    render={({ field }) => (
+                        <label className="border-border bg-bg rounded-card flex cursor-pointer items-center justify-between gap-4 border p-3">
+                            <span className="min-w-0">
+                                <span className="text-body block text-sm font-semibold">
+                                    Discord 닉네임 비공개
+                                </span>
+                                <span className="text-caption mt-0.5 block">
+                                    프로필의 Discord 닉네임을 비공개로
+                                    표시합니다.
+                                </span>
+                            </span>
+                            <Switch
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                                aria-label="Discord 닉네임 비공개"
+                            />
+                        </label>
+                    )}
+                />
+                <Controller
+                    name="hidePlayCount"
+                    control={control}
+                    render={({ field }) => (
+                        <label className="border-border bg-bg rounded-card flex cursor-pointer items-center justify-between gap-4 border p-3">
+                            <span className="min-w-0">
+                                <span className="text-body block text-sm font-semibold">
+                                    플레이 횟수 비공개
+                                </span>
+                                <span className="text-caption mt-0.5 block">
+                                    프로필과 공유 카드의 플레이 횟수를 숨깁니다.
+                                </span>
+                            </span>
+                            <Switch
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                                aria-label="플레이 횟수 비공개"
+                            />
+                        </label>
+                    )}
+                />
             </section>
 
             <section className="bg-surface rounded-card flex flex-col gap-4 p-4">
