@@ -60,6 +60,7 @@ export default function ProfileDashboard({
             <ProfileRankDistribution
                 rows={rankRows}
                 playCount={user.play_count}
+                isPlayCountPrivate={user.hide_play_count}
                 expanded={showAllRanks}
                 onToggle={() => setShowAllRanks((value) => !value)}
             />

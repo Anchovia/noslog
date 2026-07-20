@@ -1,11 +1,19 @@
 import BingoList, { type BingoListItem } from "@/components/bingo/bingoList";
 import { getBingoProgress } from "@/lib/bingo";
+import { createPageMetadata } from "@/lib/metadata/site";
 import getSession from "@/lib/session";
 import {
     getCachedPublishedBingos,
     getUserBingoCellProgress,
     isBingoAvailable,
 } from "./data";
+
+export const metadata = createPageMetadata({
+    title: "미션 빙고",
+    description:
+        "노스텔지어 미션 빙고의 과제와 진행 조건, 완성 보상을 확인하고 진행 상황을 기록합니다.",
+    path: "/bingo",
+});
 
 export default async function BingoPage() {
     const [session, publishedBingos] = await Promise.all([

@@ -3,7 +3,9 @@ import MusicDetail, {
     type MusicDetailProps,
 } from "@/components/music/musicDetail";
 import db from "@/lib/db";
+import { createPageMetadata } from "@/lib/metadata/site";
 import getSession from "@/lib/session";
+import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import {
     getCachedChartDetailStats,
@@ -20,7 +22,6 @@ const tabs: DetailTab[] = ["record", "detail", "ranking", "tier"];
 const rankingPageSize = 7;
 
 const emptyDistribution = [
-    { key: "under950", label: "<950k", count: 0 },
     { key: "950", label: "950k", count: 0 },
     { key: "960", label: "960k", count: 0 },
     { key: "970", label: "970k", count: 0 },
@@ -28,6 +29,45 @@ const emptyDistribution = [
     { key: "990", label: "990k", count: 0 },
     { key: "pianist", label: "Pianist", count: 0 },
 ];
+
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ index: string; difficulty: string }>;
+}): Promise<Metadata> {
+    const { index, difficulty } = await params;
+    const normalizedDifficulty = difficulty.toLowerCase();
+    const selectedDifficulty = difficulties.find(
+        (item) => item.toLowerCase() === normalizedDifficulty
+    );
+
+    if (!selectedDifficulty) {
+        return createPageMetadata({
+            title: "악곡을 찾을 수 없습니다",
+            path: "/music",
+            noIndex: true,
+        });
+    }
+
+    const { music, chart } = await getCachedMusicDetail(
+        index,
+        selectedDifficulty
+    );
+    if (!music || !chart) {
+        return createPageMetadata({
+            title: "악곡을 찾을 수 없습니다",
+            path: "/music",
+            noIndex: true,
+        });
+    }
+
+    const artist = music.artist ? ` · ${music.artist}` : "";
+    return createPageMetadata({
+        title: `${music.title} ${selectedDifficulty}`,
+        description: `${music.title}${artist}의 노스텔지어 ${selectedDifficulty} Lv ${chart.level} 채보 정보, 랭킹, 서열과 커뮤니티 평가를 확인합니다.`,
+        path: `/music/${encodeURIComponent(index)}/${normalizedDifficulty}`,
+    });
+}
 
 export default async function MusicDetailPage(props: {
     params: Promise<{ index: string; difficulty: string }>;
@@ -120,14 +160,14 @@ export default async function MusicDetailPage(props: {
         scoreDistribution = emptyDistribution.map((item) => ({ ...item }));
 
         for (const record of scores) {
-            let bucket = 0;
-            if (record.fc_type === 3 || record.score >= 1000000) bucket = 6;
-            else if (record.score >= 990000) bucket = 5;
-            else if (record.score >= 980000) bucket = 4;
-            else if (record.score >= 970000) bucket = 3;
-            else if (record.score >= 960000) bucket = 2;
-            else if (record.score >= 950000) bucket = 1;
-            scoreDistribution[bucket].count++;
+            let bucket: number | null = null;
+            if (record.fc_type === 3 || record.score >= 1000000) bucket = 5;
+            else if (record.score >= 990000) bucket = 4;
+            else if (record.score >= 980000) bucket = 3;
+            else if (record.score >= 970000) bucket = 2;
+            else if (record.score >= 960000) bucket = 1;
+            else if (record.score >= 950000) bucket = 0;
+            if (bucket !== null) scoreDistribution[bucket].count++;
         }
 
         playerCount = scores.length;

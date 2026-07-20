@@ -25,6 +25,9 @@ export const settingSchema = z.object({
         z.literal(""),
         z.string().regex(/^\d+$/, "오락실을 다시 선택해주세요."),
     ]),
+    hideNostalgiaName: z.boolean(),
+    hideDiscordName: z.boolean(),
+    hidePlayCount: z.boolean(),
 });
 
 export const onboardingSchema = z.object({

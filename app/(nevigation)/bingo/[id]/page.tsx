@@ -2,13 +2,44 @@ import { notFound } from "next/navigation";
 
 import BingoPlate, { type BingoCellItem } from "@/components/bingo/bingoPlate";
 import { getBingoJacketUrl, getBingoProgress } from "@/lib/bingo";
+import { createPageMetadata } from "@/lib/metadata/site";
 import getSession from "@/lib/session";
 import { formatToComma } from "@/lib/utils";
+import type { Metadata } from "next";
 import {
     getCachedBingoDetail,
     getUserBingoCellProgress,
     isBingoAvailable,
 } from "../data";
+
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+    const { id } = await params;
+    const bingoId = Number(id);
+    const bingo = Number.isInteger(bingoId)
+        ? await getCachedBingoDetail(bingoId)
+        : null;
+
+    if (!bingo || !isBingoAvailable(bingo)) {
+        return createPageMetadata({
+            title: "빙고를 찾을 수 없습니다",
+            path: "/bingo",
+            noIndex: true,
+        });
+    }
+
+    const title = bingo.title || bingo.coverMusic.title;
+    return createPageMetadata({
+        title: `${title} 빙고`,
+        description:
+            bingo.description ||
+            `${title} 미션 빙고의 25개 과제와 ${bingo.requiredLines}줄 완성 보상을 확인합니다.`,
+        path: `/bingo/${bingo.id}`,
+    });
+}
 
 export default async function BingoDetailPage({
     params,

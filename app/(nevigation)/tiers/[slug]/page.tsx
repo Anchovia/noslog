@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import TierChartCard from "@/components/tiers/tierChartCard";
+import { createPageMetadata } from "@/lib/metadata/site";
 import {
     formatTierDate,
     formatTierValue,
@@ -12,6 +13,7 @@ import {
 import { cn } from "@/lib/utils";
 import { getUser } from "@/lib/user";
 import { getCachedTierDetail, getUserTierRecords } from "../data";
+import type { Metadata } from "next";
 
 interface TierDetailPageProps {
     params: Promise<{ slug: string }>;
@@ -26,6 +28,27 @@ const filters: { value: TierFilter; label: string }[] = [
     { value: "fc", label: "FC" },
     { value: "unplayed", label: "미플레이" },
 ];
+
+export async function generateMetadata({
+    params,
+}: Pick<TierDetailPageProps, "params">): Promise<Metadata> {
+    const { slug } = await params;
+    const tierList = await getCachedTierDetail(slug);
+
+    if (!tierList) {
+        return createPageMetadata({
+            title: "서열표를 찾을 수 없습니다",
+            path: "/tiers",
+            noIndex: true,
+        });
+    }
+
+    return createPageMetadata({
+        title: tierList.title,
+        description: `${tierList.title}의 채보별 난이도 구간과 배치, 내 플레이 기록 기준 추천 구간을 확인합니다.`,
+        path: `/tiers/${encodeURIComponent(tierList.slug)}`,
+    });
+}
 
 function normalizeFilter(value?: string): TierFilter {
     return value === "pianist" || value === "fc" || value === "unplayed"

@@ -12,6 +12,7 @@ import {
 interface ProfileRankDistributionProps {
     rows: ProfileRankRow[];
     playCount: number | null;
+    isPlayCountPrivate: boolean;
     expanded: boolean;
     onToggle: () => void;
 }
@@ -20,6 +21,7 @@ interface ProfileRankDistributionProps {
 export default function ProfileRankDistribution({
     rows,
     playCount,
+    isPlayCountPrivate,
     expanded,
     onToggle,
 }: ProfileRankDistributionProps) {
@@ -76,7 +78,10 @@ export default function ProfileRankDistribution({
                 ))}
             </div>
             <p className="text-caption mt-3">
-                플레이 {formatToComma(playCount)}회
+                플레이{" "}
+                {isPlayCountPrivate
+                    ? "비공개"
+                    : `${formatToComma(playCount)}회`}
             </p>
         </section>
     );

@@ -1,15 +1,21 @@
+import { SITE_URL } from "@/lib/metadata/site";
 import type { MetadataRoute } from "next";
-
-const appUrl = process.env.APP_URL?.trim() || "https://noslog.app";
 
 export default function robots(): MetadataRoute.Robots {
     return {
         rules: {
             userAgent: "*",
             allow: "/",
-            disallow: ["/admin/", "/api/", "/profile/settings", "/onboarding"],
+            disallow: [
+                "/admin/",
+                "/api/",
+                "/discord/",
+                "/login",
+                "/onboarding",
+                "/profile/settings",
+            ],
         },
-        sitemap: `${appUrl}/sitemap.xml`,
-        host: appUrl,
+        sitemap: `${SITE_URL}/sitemap.xml`,
+        host: SITE_URL,
     };
 }

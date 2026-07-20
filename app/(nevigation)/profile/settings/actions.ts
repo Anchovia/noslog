@@ -40,6 +40,9 @@ export async function uploadUserSetting(
         username: String(formData.get("username") ?? ""),
         country: String(formData.get("country") ?? ""),
         preferredArcadeId: String(formData.get("preferredArcadeId") ?? ""),
+        hideNostalgiaName: formData.get("hideNostalgiaName") === "true",
+        hideDiscordName: formData.get("hideDiscordName") === "true",
+        hidePlayCount: formData.get("hidePlayCount") === "true",
     });
 
     if (!result.success) {
@@ -99,6 +102,9 @@ export async function uploadUserSetting(
                 country: result.data.country,
                 avatar: nextAvatar,
                 preferred_arcade_id: preferredArcadeId,
+                hide_nostalgia_name: result.data.hideNostalgiaName,
+                hide_discord_name: result.data.hideDiscordName,
+                hide_play_count: result.data.hidePlayCount,
             },
         });
         updateTag(CACHE_TAGS.userRankings);

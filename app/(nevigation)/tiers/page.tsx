@@ -1,6 +1,7 @@
 import { Plus } from "lucide-react";
 import Link from "next/link";
 
+import { createPageMetadata } from "@/lib/metadata/site";
 import { cn } from "@/lib/utils";
 import {
     formatTierDate,
@@ -13,6 +14,13 @@ import {
     getUserTierRecords,
     type PublicTierMode,
 } from "./data";
+
+export const metadata = createPageMetadata({
+    title: "악곡 서열표",
+    description:
+        "노스텔지어 Basic·Recital의 Expert·Real 채보 서열표와 추천 난이도 구간을 확인합니다.",
+    path: "/tiers",
+});
 
 interface TiersPageProps {
     searchParams: Promise<{ mode?: string; sort?: string }>;

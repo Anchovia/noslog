@@ -3,6 +3,8 @@
 import { Bookmark, Check, Copy } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
+import GuideMediaPlaceholder from "./guideMediaPlaceholder";
+
 interface BookmarkletInstallProps {
     href: string;
 }
@@ -23,6 +25,7 @@ export default function BookmarkletInstall({ href }: BookmarkletInstallProps) {
 
     return (
         <div className="flex flex-col items-center gap-3">
+            <GuideMediaPlaceholder label="북마클릿 등록" />
             <a
                 ref={bookmarkletRef}
                 onClick={(event) => {
@@ -42,10 +45,21 @@ export default function BookmarkletInstall({ href }: BookmarkletInstallProps) {
                     모바일에서 등록하는 방법
                 </summary>
                 <div className="border-divider mt-3 flex flex-col gap-3 border-t pt-3">
-                    <ol className="text-caption space-y-1.5">
-                        <li>1. 현재 페이지를 브라우저 북마크에 추가합니다.</li>
-                        <li>2. 추가한 북마크의 주소를 편집합니다.</li>
-                        <li>3. 복사한 주소로 교체하고 저장합니다.</li>
+                    <ol className="text-caption flex flex-col gap-3">
+                        <li className="flex flex-col gap-2">
+                            <GuideMediaPlaceholder label="모바일 북마크 추가" />
+                            <span>
+                                1. 현재 페이지를 브라우저 북마크에 추가합니다.
+                            </span>
+                        </li>
+                        <li className="flex flex-col gap-2">
+                            <GuideMediaPlaceholder label="모바일 북마크 주소 편집" />
+                            <span>2. 추가한 북마크의 주소를 편집합니다.</span>
+                        </li>
+                        <li className="flex flex-col gap-2">
+                            <GuideMediaPlaceholder label="모바일 북마클릿 주소 저장" />
+                            <span>3. 복사한 주소로 교체하고 저장합니다.</span>
+                        </li>
                     </ol>
                     <button
                         type="button"

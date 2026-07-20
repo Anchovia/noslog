@@ -143,6 +143,10 @@
     @apply text-text-secondary text-xs leading-normal font-normal;
 }
 
+@utility text-micro {
+    @apply text-text-secondary text-[10px] leading-normal font-normal;
+}
+
 @utility text-badge {
     @apply text-xs leading-none font-extrabold;
 }

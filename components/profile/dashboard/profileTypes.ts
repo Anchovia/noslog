@@ -18,6 +18,9 @@ export interface ProfileUser {
     exam_basic: number | null;
     exam_recital: number | null;
     play_count: number | null;
+    hide_nostalgia_name: boolean;
+    hide_discord_name: boolean;
+    hide_play_count: boolean;
     score_p: number | null;
     score_f: number | null;
     score_s: number | null;

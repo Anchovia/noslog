@@ -461,7 +461,12 @@ export async function GET(
                         fontSize: 18,
                     }}
                 >
-                    <span>플레이 {formatToComma(user.play_count)}회</span>
+                    <span>
+                        플레이{" "}
+                        {user.hide_play_count
+                            ? "비공개"
+                            : `${formatToComma(user.play_count)}회`}
+                    </span>
                     <span>{profileUrl}</span>
                 </div>
             </div>

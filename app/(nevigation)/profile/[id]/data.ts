@@ -35,6 +35,9 @@ async function queryProfileData(id: number) {
                     exam_basic: true,
                     exam_recital: true,
                     play_count: true,
+                    hide_nostalgia_name: true,
+                    hide_discord_name: true,
+                    hide_play_count: true,
                     score_p: true,
                     score_f: true,
                     score_s: true,
@@ -124,6 +127,11 @@ async function queryProfileData(id: number) {
     return {
         user: {
             ...user,
+            nostalgia_name: user.hide_nostalgia_name
+                ? null
+                : user.nostalgia_name,
+            discord_name: user.hide_discord_name ? null : user.discord_name,
+            play_count: user.hide_play_count ? null : user.play_count,
             rank_basic: rankBasic,
             rank_basic_country: rankBasicCountry,
             rank_recital: rankRecital,
