@@ -1,6 +1,12 @@
 import OfficialXTimeline from "@/components/home/officialXTimeline";
 import FeedbackDialog from "@/components/feedback/feedbackDialog";
 import {
+    createPageMetadata,
+    SITE_DESCRIPTION,
+    SITE_NAME,
+    SITE_URL,
+} from "@/lib/metadata/site";
+import {
     CountryMark,
     ExamBadge,
     UserAvatar,
@@ -16,6 +22,22 @@ import {
     formatToGrade,
     normalizeStoredGrade,
 } from "@/lib/utils";
+
+export const metadata = createPageMetadata({ path: "/" });
+
+const websiteJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: SITE_NAME,
+    url: SITE_URL,
+    description: SITE_DESCRIPTION,
+    inLanguage: "ko-KR",
+    potentialAction: {
+        "@type": "SearchAction",
+        target: `${SITE_URL}/music?q={search_term_string}`,
+        "query-input": "required name=search_term_string",
+    },
+};
 import {
     BadgeCheck,
     ChevronRight,
@@ -53,6 +75,15 @@ export default async function Home({ searchParams }: HomeProps) {
 
     return (
         <div className="flex flex-col gap-4 px-4 py-4">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify(websiteJsonLd).replaceAll(
+                        "<",
+                        "\\u003c"
+                    ),
+                }}
+            />
             {/* 상단 로그인/프로필 카드 */}
             {user ? (
                 <section className="bg-surface rounded-card sticky top-2 z-20 flex min-h-20 items-center gap-3 p-4 shadow-lg">

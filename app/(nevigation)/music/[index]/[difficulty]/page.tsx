@@ -3,7 +3,9 @@ import MusicDetail, {
     type MusicDetailProps,
 } from "@/components/music/musicDetail";
 import db from "@/lib/db";
+import { createPageMetadata } from "@/lib/metadata/site";
 import getSession from "@/lib/session";
+import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import {
     getCachedChartDetailStats,
@@ -27,6 +29,45 @@ const emptyDistribution = [
     { key: "990", label: "990k", count: 0 },
     { key: "pianist", label: "Pianist", count: 0 },
 ];
+
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ index: string; difficulty: string }>;
+}): Promise<Metadata> {
+    const { index, difficulty } = await params;
+    const normalizedDifficulty = difficulty.toLowerCase();
+    const selectedDifficulty = difficulties.find(
+        (item) => item.toLowerCase() === normalizedDifficulty
+    );
+
+    if (!selectedDifficulty) {
+        return createPageMetadata({
+            title: "악곡을 찾을 수 없습니다",
+            path: "/music",
+            noIndex: true,
+        });
+    }
+
+    const { music, chart } = await getCachedMusicDetail(
+        index,
+        selectedDifficulty
+    );
+    if (!music || !chart) {
+        return createPageMetadata({
+            title: "악곡을 찾을 수 없습니다",
+            path: "/music",
+            noIndex: true,
+        });
+    }
+
+    const artist = music.artist ? ` · ${music.artist}` : "";
+    return createPageMetadata({
+        title: `${music.title} ${selectedDifficulty}`,
+        description: `${music.title}${artist}의 노스텔지어 ${selectedDifficulty} Lv ${chart.level} 채보 정보, 랭킹, 서열과 커뮤니티 평가를 확인합니다.`,
+        path: `/music/${encodeURIComponent(index)}/${normalizedDifficulty}`,
+    });
+}
 
 export default async function MusicDetailPage(props: {
     params: Promise<{ index: string; difficulty: string }>;

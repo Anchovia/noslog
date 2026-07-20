@@ -4,12 +4,20 @@ import GuideMediaPlaceholder from "@/components/bookmarklet/guideMediaPlaceholde
 import Button from "@/components/ui/Button";
 import { createBookmarkletHref, createSyncToken } from "@/lib/bookmarklet";
 import db from "@/lib/db";
+import { createPageMetadata } from "@/lib/metadata/site";
 import { getUser } from "@/lib/user";
 import { formatDistanceToNow } from "date-fns";
 import { ko } from "date-fns/locale";
 import { Bookmark, CircleCheck, LogIn, RefreshCw } from "lucide-react";
 import { headers } from "next/headers";
 import Link from "next/link";
+
+export const metadata = createPageMetadata({
+    title: "데이터 연동 가이드",
+    description:
+        "북마클릿으로 NOSTALGIA 플레이 기록을 NosLog에 안전하게 연동하는 방법을 안내합니다.",
+    path: "/bookmarklet",
+});
 
 function StepTitle({ number, children }: { number: number; children: string }) {
     return (

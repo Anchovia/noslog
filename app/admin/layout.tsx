@@ -3,6 +3,12 @@ import Footer from "@/components/layout/footer";
 import Header from "@/components/layout/header";
 import SkipLink from "@/components/layout/skipLink";
 import { requireAdmin } from "@/lib/admin";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "관리자",
+    robots: { index: false, follow: false, noarchive: true },
+};
 
 export default async function AdminLayout({
     children,

@@ -1,4 +1,5 @@
 import UserRankingTable from "@/components/rankings/userRankingTable";
+import { createPageMetadata } from "@/lib/metadata/site";
 import { cn } from "@/lib/utils";
 import { getUser } from "@/lib/user";
 import {
@@ -13,6 +14,13 @@ import { Globe2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+
+export const metadata = createPageMetadata({
+    title: "유저 랭킹",
+    description:
+        "노스텔지어 Basic·Recital 그레이드 기준 전체, 한국, 일본 유저 랭킹을 확인합니다.",
+    path: "/rankings",
+});
 
 interface RankingsPageProps {
     searchParams: Promise<{

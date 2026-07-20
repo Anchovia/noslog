@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/metadata/site";
 import "./globals.css";
-
-const appUrl = process.env.APP_URL?.trim() || "https://noslog.app";
 
 // Pretendard 로컬 폰트를 전역 CSS 변수로 연결함
 const pretendard = localFont({
@@ -13,29 +12,56 @@ const pretendard = localFont({
 });
 
 export const metadata: Metadata = {
-    metadataBase: new URL(appUrl),
-    applicationName: "NosLog",
+    metadataBase: new URL(SITE_URL),
+    applicationName: SITE_NAME,
     title: {
-        default: "NosLog",
-        template: "%s | NosLog",
+        default: SITE_NAME,
+        template: `%s | ${SITE_NAME}`,
     },
-    description: "NOSTALGIA 플레이 기록·랭킹·서열 아카이브",
-    alternates: {
-        canonical: "/",
+    description: SITE_DESCRIPTION,
+    keywords: [
+        "NosLog",
+        "노스로그",
+        "NOSTALGIA",
+        "노스텔지어",
+        "노스텔지어 기록",
+        "노스텔지어 랭킹",
+        "노스텔지어 서열표",
+        "노스텔지어 검정",
+        "BEMANI",
+    ],
+    authors: [{ name: SITE_NAME, url: SITE_URL }],
+    creator: SITE_NAME,
+    publisher: SITE_NAME,
+    category: "game",
+    referrer: "origin-when-cross-origin",
+    robots: {
+        index: true,
+        follow: true,
+        googleBot: {
+            index: true,
+            follow: true,
+            "max-image-preview": "large",
+            "max-snippet": -1,
+            "max-video-preview": -1,
+        },
     },
     openGraph: {
         type: "website",
         locale: "ko_KR",
         url: "/",
-        siteName: "NosLog",
-        title: "NosLog",
-        description: "NOSTALGIA 플레이 기록·랭킹·서열 아카이브",
+        siteName: SITE_NAME,
+        title: SITE_NAME,
+        description: SITE_DESCRIPTION,
     },
     twitter: {
         card: "summary_large_image",
-        title: "NosLog",
-        description: "NOSTALGIA 플레이 기록·랭킹·서열 아카이브",
+        title: SITE_NAME,
+        description: SITE_DESCRIPTION,
     },
+    verification: process.env.GOOGLE_SITE_VERIFICATION
+        ? { google: process.env.GOOGLE_SITE_VERIFICATION }
+        : undefined,
     manifest: "/manifest.webmanifest",
 };
 

@@ -1,9 +1,17 @@
 import ExamDashboard, {
     type ExamDashboardItem,
 } from "@/components/exams/examDashboard";
+import { createPageMetadata } from "@/lib/metadata/site";
 import getSession from "@/lib/session";
 import { normalizeStoredGrade } from "@/lib/utils";
 import { getCachedPublishedExams, getUserExamState } from "./data";
+
+export const metadata = createPageMetadata({
+    title: "검정",
+    description:
+        "노스텔지어 Basic·Recital·Event 검정의 과제곡, 응시 조건, 합격 기준과 보상을 확인합니다.",
+    path: "/exams",
+});
 
 export default async function ExamsPage() {
     const [session, exams] = await Promise.all([
