@@ -1,4 +1,5 @@
 import OfficialXTimeline from "@/components/home/officialXTimeline";
+import FeedbackDialog from "@/components/feedback/feedbackDialog";
 import {
     CountryMark,
     ExamBadge,
@@ -217,6 +218,7 @@ export default async function Home({ searchParams }: HomeProps) {
                     aria-hidden="true"
                 />
             </Link>
+            <FeedbackDialog isAuthenticated={Boolean(user)} />
             {/* 랭킹 카드 */}
             <section className="bg-surface rounded-card overflow-hidden">
                 <div className="bg-surface-muted flex h-10 items-center justify-between px-3">

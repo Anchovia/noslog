@@ -55,12 +55,29 @@ model User {
   examSubmissions      ExamSubmission[]
   examAchievements     ExamAchievement[]
   uploadTokenGrants    UploadTokenGrant[]
+  feedbackReports      FeedbackReport[]
 
   @@index([grade_basic, id])
   @@index([grade_recital, id])
   @@index([country, grade_basic, id])
   @@index([country, grade_recital, id])
   @@index([preferred_arcade_id])
+}
+
+// 사용자가 제출한 오류 제보와 처리 상태를 관리함
+model FeedbackReport {
+  id         Int       @id @default(autoincrement())
+  content    String
+  imageUrl   String?   @map("image_url")
+  status     String    @default("open")
+  userId     Int       @map("user_id")
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  resolvedAt DateTime? @map("resolved_at")
+
+  @@index([status, createdAt])
+  @@index([userId, createdAt])
 }
 
 // 유저가 선택할 수 있는 오락실 목록을 관리자 데이터로 관리함
@@ -517,13 +534,13 @@ model ExamSubmission {
 
 // 승인된 검정 급수를 사용자별로 정규화해 보관함
 model ExamAchievement {
-  id           Int             @id @default(autoincrement())
-  achievedAt   DateTime        @default(now()) @map("achieved_at")
-  createdAt    DateTime        @default(now()) @map("created_at")
-  userId       Int             @map("user_id")
-  user         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  examId       Int             @map("exam_id")
-  exam         Exam            @relation(fields: [examId], references: [id], onDelete: Cascade)
+  id           Int            @id @default(autoincrement())
+  achievedAt   DateTime       @default(now()) @map("achieved_at")
+  createdAt    DateTime       @default(now()) @map("created_at")
+  userId       Int            @map("user_id")
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  examId       Int            @map("exam_id")
+  exam         Exam           @relation(fields: [examId], references: [id], onDelete: Cascade)
   submissionId Int            @unique @map("submission_id")
   submission   ExamSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
 

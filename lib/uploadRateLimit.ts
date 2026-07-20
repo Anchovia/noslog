@@ -2,7 +2,7 @@ import "server-only";
 
 import db from "@/lib/db";
 
-export type UploadPurpose = "profile-avatar" | "exam-proof";
+export type UploadPurpose = "profile-avatar" | "exam-proof" | "feedback-image";
 
 const UPLOAD_LIMIT = 10;
 const UPLOAD_WINDOW_MS = 60 * 60 * 1000;

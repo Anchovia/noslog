@@ -1,5 +1,6 @@
 import { regenerateSyncToken } from "@/app/(nevigation)/bookmarklet/action";
 import BookmarkletInstall from "@/components/bookmarklet/bookmarkletInstall";
+import GuideMediaPlaceholder from "@/components/bookmarklet/guideMediaPlaceholder";
 import Button from "@/components/ui/Button";
 import { createBookmarkletHref, createSyncToken } from "@/lib/bookmarklet";
 import db from "@/lib/db";
@@ -118,18 +119,27 @@ export default async function BookmarkletPage() {
             <section className="bg-surface rounded-card flex flex-col gap-4 p-4">
                 <StepTitle number={2}>기록 동기화</StepTitle>
 
-                <ol className="text-body flex flex-col gap-2">
-                    <li className="flex items-center gap-2">
-                        <span className="bg-text-disabled size-1.5 shrink-0 rounded-full" />
-                        p.eagate NOSTALGIA 페이지에 로그인
+                <ol className="text-body flex flex-col gap-4">
+                    <li className="flex flex-col gap-2">
+                        <GuideMediaPlaceholder label="NOSTALGIA 로그인" />
+                        <span className="flex items-center gap-2">
+                            <span className="bg-text-disabled size-1.5 shrink-0 rounded-full" />
+                            p.eagate NOSTALGIA 페이지에 로그인
+                        </span>
                     </li>
-                    <li className="flex items-center gap-2">
-                        <span className="bg-text-disabled size-1.5 shrink-0 rounded-full" />
-                        북마크바의 <strong>NosLog 동기화</strong> 클릭
+                    <li className="flex flex-col gap-2">
+                        <GuideMediaPlaceholder label="NosLog 동기화 실행" />
+                        <span className="flex items-center gap-2">
+                            <span className="bg-text-disabled size-1.5 shrink-0 rounded-full" />
+                            북마크바의 <strong>NosLog 동기화</strong> 클릭
+                        </span>
                     </li>
-                    <li className="flex items-center gap-2">
-                        <span className="bg-text-disabled size-1.5 shrink-0 rounded-full" />
-                        진행 상태가 표시되고 완료 후 프로필 갱신
+                    <li className="flex flex-col gap-2">
+                        <GuideMediaPlaceholder label="동기화 진행 상태" />
+                        <span className="flex items-center gap-2">
+                            <span className="bg-text-disabled size-1.5 shrink-0 rounded-full" />
+                            진행 상태가 표시되고 완료 후 프로필 갱신
+                        </span>
                     </li>
                 </ol>
             </section>
