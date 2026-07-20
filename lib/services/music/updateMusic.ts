@@ -1,5 +1,6 @@
 import { musicBG } from "../../constants";
 import db from "../../db";
+import { getLocalJacketUrl } from "../../musicJackets";
 import type { Prisma } from "@prisma/client";
 
 interface SyncMusicSheet {
@@ -64,7 +65,11 @@ export async function updateMusic(music: SyncMusicInput[]) {
             category: data.category,
             category_short: data.category_short,
             description: data.description,
-            background: existing?.background || musicBG[index] || null,
+            background:
+                getLocalJacketUrl(index) ||
+                existing?.background ||
+                musicBG[index] ||
+                null,
         };
 
         if (!existing) {

@@ -5,7 +5,7 @@
 import { Music2 } from "lucide-react";
 import { type ReactNode, useState } from "react";
 
-import { getJacketUrl } from "@/lib/tiers";
+import { getJacketCandidates } from "@/lib/musicJackets";
 import { cn } from "@/lib/utils";
 
 interface MusicJacketProps {
@@ -26,9 +26,11 @@ export default function MusicJacket({
     children,
     fallback,
 }: MusicJacketProps) {
-    const jacketUrl = getJacketUrl(index, background);
-    const [failedUrl, setFailedUrl] = useState<string | null>(null);
-    const showImage = jacketUrl && failedUrl !== jacketUrl;
+    const jacketCandidates = getJacketCandidates(index, background);
+    const [failedUrls, setFailedUrls] = useState<string[]>([]);
+    const jacketUrl = jacketCandidates.find(
+        (candidate) => !failedUrls.includes(candidate)
+    );
 
     return (
         <span
@@ -38,12 +40,18 @@ export default function MusicJacket({
             )}
             aria-label={`${title} 자켓`}
         >
-            {showImage ? (
+            {jacketUrl ? (
                 <img
                     src={jacketUrl}
                     alt=""
                     className="absolute inset-0 size-full object-cover"
-                    onError={() => setFailedUrl(jacketUrl)}
+                    onError={() =>
+                        setFailedUrls((current) =>
+                            current.includes(jacketUrl)
+                                ? current
+                                : [...current, jacketUrl]
+                        )
+                    }
                 />
             ) : fallback ? (
                 fallback

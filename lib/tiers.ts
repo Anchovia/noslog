@@ -1,4 +1,4 @@
-import { musicBG } from "@/lib/constants";
+export { getJacketUrl } from "@/lib/musicJackets";
 
 export type TierRecord = {
     score: number;
@@ -60,14 +60,4 @@ export function formatTierDate(date: Date | string) {
         .format(typeof date === "string" ? new Date(date) : date)
         .replaceAll(". ", ".")
         .replace(/\.$/, "");
-}
-
-export function getJacketUrl(index: string, background: string | null) {
-    const jacketUrl =
-        background ||
-        musicBG[index] ||
-        `https://p.eagate.573.jp/game/nostalgia/op3/img/jacket.html?c=${index}`;
-
-    // HTTPS 페이지에서 오래된 HTTP 자켓이 차단되지 않도록 맞춤
-    return jacketUrl.replace(/^http:\/\//, "https://");
 }

@@ -15,16 +15,19 @@ describe("formatTierValue", () => {
 });
 
 describe("getJacketUrl", () => {
-    it("저장된 자켓 URL을 우선 사용하고 HTTPS로 정규화한다", () => {
+    it("로컬 자켓이 없으면 저장된 URL을 사용하고 HTTPS로 정규화한다", () => {
         expect(getJacketUrl("music-id", "http://example.com/jacket.jpg")).toBe(
             "https://example.com/jacket.jpg"
         );
     });
 
-    it("기존 자켓 매핑을 fallback으로 사용한다", () => {
-        expect(getJacketUrl("818b48940c2d17325904fbab68689046", null)).toBe(
-            "https://p.eagate.573.jp//game/bemani/fansite/p/images/music/201703_jk/201703_nst_29.jpg"
-        );
+    it("로컬 자켓이 있으면 DB와 기존 매핑보다 우선 사용한다", () => {
+        expect(
+            getJacketUrl(
+                "818b48940c2d17325904fbab68689046",
+                "https://example.com/old-jacket.jpg"
+            )
+        ).toBe("/bg/818b48940c2d17325904fbab68689046.png");
     });
 
     it("저장된 자켓이 없으면 공식 동적 자켓 URL을 반환한다", () => {
