@@ -56,6 +56,7 @@ export function formatTierDate(date: Date | string) {
     return new Intl.DateTimeFormat("ko-KR", {
         month: "2-digit",
         day: "2-digit",
+        timeZone: "Asia/Seoul",
     })
         .format(typeof date === "string" ? new Date(date) : date)
         .replaceAll(". ", ".")
