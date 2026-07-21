@@ -1,5 +1,4 @@
 import { cn } from "@/lib/utils";
-import Link from "next/link";
 import { detailTabs, difficultyStyles } from "./musicDetailConfig";
 import type { DetailTab, Difficulty, MusicInfo } from "./musicDetailTypes";
 
@@ -7,12 +6,20 @@ interface MusicDetailNavigationProps {
     music: MusicInfo;
     difficulty: Difficulty;
     activeTab: DetailTab;
+    isLoading?: boolean;
+    onNavigate?: (
+        difficulty: Difficulty,
+        tab: DetailTab,
+        page?: number
+    ) => void;
 }
 
 export default function MusicDetailNavigation({
     music,
     difficulty,
     activeTab,
+    isLoading = false,
+    onNavigate,
 }: MusicDetailNavigationProps) {
     const difficultyLevels: Record<Difficulty, number | null> = {
         Normal: music.normal,
@@ -51,11 +58,13 @@ export default function MusicDetailNavigation({
                     }
 
                     return (
-                        <Link
+                        <button
+                            type="button"
                             key={item}
-                            href={`/music/${music.index}/${item.toLowerCase()}?tab=${activeTab}`}
+                            onClick={() => onNavigate?.(item, activeTab, 1)}
+                            disabled={isLoading || !onNavigate}
                             className={cn(
-                                "bg-surface rounded-card flex h-14 flex-col items-center justify-center gap-1 border",
+                                "bg-surface rounded-card flex h-14 cursor-pointer flex-col items-center justify-center gap-1 border disabled:cursor-wait",
                                 isActive
                                     ? "border-text-primary"
                                     : "border-transparent"
@@ -79,25 +88,27 @@ export default function MusicDetailNavigation({
                             >
                                 Lv {level}
                             </span>
-                        </Link>
+                        </button>
                     );
                 })}
             </nav>
 
             <nav className="flex gap-1 overflow-x-auto">
                 {detailTabs.map((tab) => (
-                    <Link
+                    <button
+                        type="button"
                         key={tab.value}
-                        href={`/music/${music.index}/${difficulty.toLowerCase()}?tab=${tab.value}`}
+                        onClick={() => onNavigate?.(difficulty, tab.value, 1)}
+                        disabled={isLoading || !onNavigate}
                         className={cn(
-                            "rounded-card flex h-9 shrink-0 items-center px-3 text-sm font-semibold transition-colors",
+                            "rounded-card flex h-9 shrink-0 cursor-pointer items-center px-3 text-sm font-semibold transition-colors disabled:cursor-wait",
                             activeTab === tab.value
                                 ? "bg-text-primary text-bg"
                                 : "bg-surface text-text-secondary hover:bg-surface-muted hover:text-text-primary"
                         )}
                     >
                         {tab.label}
-                    </Link>
+                    </button>
                 ))}
             </nav>
         </>

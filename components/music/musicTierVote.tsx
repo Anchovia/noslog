@@ -5,7 +5,6 @@ import {
     submitChartEvaluation,
     toggleChartEvaluationReaction,
 } from "@/app/(nevigation)/music/[index]/[difficulty]/action";
-import { useRouter } from "next/navigation";
 import { useForm, useWatch } from "react-hook-form";
 import { useState, useTransition } from "react";
 import MusicEvaluationForm from "./musicEvaluationForm";
@@ -30,10 +29,11 @@ export default function MusicTierVote({
     opinionCount,
     opinions,
 }: MusicTierVoteProps) {
-    const router = useRouter();
     const [isPending, startTransition] = useTransition();
     const [message, setMessage] = useState<string | null>(null);
     const [isCommentExpanded, setIsCommentExpanded] = useState(false);
+    const refreshDetail = () =>
+        window.dispatchEvent(new Event("music-detail:invalidate"));
     const defaultConstant = difficulty === "Real" ? level + 10 : level;
     const fallbackConstant = Math.min(
         14,
@@ -106,7 +106,7 @@ export default function MusicTierVote({
             });
 
             setMessage(result.message);
-            if (result.success) router.refresh();
+            if (result.success) refreshDetail();
         });
     };
 
@@ -118,7 +118,7 @@ export default function MusicTierVote({
             });
 
             setMessage(result.message);
-            if (result.success) router.refresh();
+            if (result.success) refreshDetail();
         });
     };
 
@@ -141,7 +141,7 @@ export default function MusicTierVote({
                     comment: "",
                 });
                 setIsCommentExpanded(false);
-                router.refresh();
+                refreshDetail();
             }
         });
     };

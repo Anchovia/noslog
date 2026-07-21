@@ -5,8 +5,18 @@ import MusicInfoTab from "./musicInfoTab";
 import MusicRankTable from "./musicRankTable";
 import MusicRecordTab from "./musicRecordTab";
 import MusicTierVote from "./musicTierVote";
+import type { DetailTab, Difficulty } from "./musicDetailTypes";
 
 export type { DetailTab, MusicDetailProps } from "./musicDetailTypes";
+
+interface NavigationProps {
+    isLoading?: boolean;
+    onNavigate?: (
+        difficulty: Difficulty,
+        tab: DetailTab,
+        page?: number
+    ) => void;
+}
 
 export default function MusicDetail({
     music,
@@ -19,7 +29,9 @@ export default function MusicDetail({
     chartDetail,
     ranking,
     tier,
-}: Props) {
+    isLoading = false,
+    onNavigate,
+}: Props & NavigationProps) {
     return (
         <div className="mx-auto flex min-h-screen max-w-(--breakpoint-sm) flex-col gap-3 px-4 py-4">
             <MusicDetailHeader
@@ -32,6 +44,8 @@ export default function MusicDetail({
                 music={music}
                 difficulty={difficulty}
                 activeTab={activeTab}
+                isLoading={isLoading}
+                onNavigate={onNavigate}
             />
 
             {activeTab === "record" ? (
@@ -70,6 +84,9 @@ export default function MusicDetail({
                                   user: userPlayData.user,
                               }
                             : null
+                    }
+                    onPageChange={(page) =>
+                        onNavigate?.(difficulty, "ranking", page)
                     }
                 />
             ) : null}
