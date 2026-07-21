@@ -55,7 +55,7 @@ export default function ExamOverview({ exam }: { exam: ExamDashboardItem }) {
                                 {reward.musicIndex ? (
                                     <Link
                                         href={`/music?q=${encodeURIComponent(reward.label)}`}
-                                        className="decoration-divider hover:text-chart focus-visible:ring-text-secondary/30 rounded underline underline-offset-2 transition-colors focus-visible:ring-2 focus-visible:outline-none"
+                                        className="decoration-divider hover:text-chart focus-visible:ring-focus/40 rounded underline underline-offset-2 transition-colors focus-visible:ring-2 focus-visible:outline-none"
                                     >
                                         {reward.label}
                                     </Link>

@@ -34,6 +34,7 @@ export default async function ProfileSettingsPage({
                 country: true,
                 discord_id: true,
                 discord_name: true,
+                discord_username: true,
                 preferred_arcade_id: true,
                 hide_nostalgia_name: true,
                 hide_discord_name: true,

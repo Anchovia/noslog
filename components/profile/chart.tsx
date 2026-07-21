@@ -41,13 +41,13 @@ export default function ProfileGradeChart({
                     <Tooltip
                         cursor={false}
                         contentStyle={{
-                            border: "1px solid #2a2a35",
+                            border: "1px solid var(--color-border)",
                             borderRadius: 8,
-                            background: "#121218",
-                            color: "#f2f2f5",
+                            background: "var(--color-surface)",
+                            color: "var(--color-text-primary)",
                             fontSize: 12,
                         }}
-                        labelStyle={{ color: "#a0a0aa" }}
+                        labelStyle={{ color: "var(--color-text-secondary)" }}
                         labelFormatter={(_, payload) => {
                             const point = payload[0]?.payload as
                                 GradeHistoryPoint | undefined;
@@ -63,10 +63,14 @@ export default function ProfileGradeChart({
                     <Line
                         type="monotone"
                         dataKey={dataKey}
-                        stroke="#facc15"
+                        stroke="var(--color-score)"
                         strokeWidth={2}
                         dot={false}
-                        activeDot={{ r: 4, fill: "#facc15", strokeWidth: 0 }}
+                        activeDot={{
+                            r: 4,
+                            fill: "var(--color-score)",
+                            strokeWidth: 0,
+                        }}
                     />
                 </LineChart>
             </ResponsiveContainer>

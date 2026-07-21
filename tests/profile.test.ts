@@ -15,6 +15,7 @@ function profileUser(): ProfileUser {
         username: "CAROL",
         nostalgia_name: "CAROL",
         discord_name: "carol",
+        discord_username: "carol_tag",
         preferredArcade: null,
         avatar: null,
         country: "ko-KR",

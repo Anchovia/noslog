@@ -36,7 +36,7 @@ export default function OnboardingForm() {
                     autoFocus
                     placeholder="1~20자 닉네임"
                     aria-invalid={Boolean(state?.fieldErrors?.username)}
-                    className="border-border bg-surface text-input placeholder:text-text-disabled focus:border-text-secondary focus:ring-text-secondary/20 rounded-card mt-1.5 h-11 w-full border px-3 transition outline-none focus:ring-2"
+                    className="border-border bg-surface text-input placeholder:text-text-disabled focus:border-focus focus:ring-focus/20 rounded-card mt-1.5 h-11 w-full border px-3 transition outline-none focus:ring-2"
                 />
                 <FieldError messages={state?.fieldErrors?.username} />
             </label>
@@ -49,7 +49,7 @@ export default function OnboardingForm() {
                     {PROFILE_COUNTRIES.map((country) => (
                         <label
                             key={country.value}
-                            className="has-checked:border-text-primary has-checked:bg-text-primary has-checked:text-bg border-border bg-surface text-text-secondary hover:bg-surface-muted rounded-card flex min-h-14 cursor-pointer flex-col items-center justify-center border font-semibold transition-colors"
+                            className="has-checked:border-interactive has-checked:bg-interactive has-checked:text-on-interactive border-border bg-surface text-text-secondary hover:bg-surface-muted rounded-card flex min-h-14 cursor-pointer flex-col items-center justify-center border font-semibold transition-colors"
                         >
                             <input
                                 type="radio"
@@ -77,7 +77,7 @@ export default function OnboardingForm() {
             <button
                 type="submit"
                 disabled={isPending}
-                className="bg-text-primary text-bg hover:bg-text-primary/90 focus-visible:ring-text-secondary/30 rounded-card flex h-12 cursor-pointer items-center justify-center text-sm font-bold transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                className="bg-text-primary text-bg hover:bg-text-primary/90 focus-visible:ring-focus/40 rounded-card flex h-12 cursor-pointer items-center justify-center text-sm font-bold transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
             >
                 {isPending ? "설정 중" : "NosLog 시작하기"}
             </button>

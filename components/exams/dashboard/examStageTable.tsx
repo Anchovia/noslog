@@ -99,7 +99,7 @@ function StageRow({
     return firstChart ? (
         <Link
             href={`/music/${stage.musicIndex}/${firstChart.difficulty.toLowerCase()}`}
-            className={`${rowClass} hover:bg-surface-muted focus-visible:ring-text-secondary/30 transition-colors focus-visible:ring-2 focus-visible:outline-none`}
+            className={`${rowClass} hover:bg-surface-muted focus-visible:ring-focus/40 transition-colors focus-visible:ring-2 focus-visible:outline-none`}
         >
             {content}
         </Link>

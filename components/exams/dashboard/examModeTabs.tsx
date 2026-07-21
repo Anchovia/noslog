@@ -23,7 +23,7 @@ export default function ExamModeTabs({ mode, onChange }: ExamModeTabsProps) {
                     type="button"
                     onClick={() => onChange(item.value)}
                     className={cn(
-                        "bg-surface text-text-secondary hover:bg-surface-muted hover:text-text-primary focus-visible:ring-text-secondary/30 h-9 rounded-lg px-4 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none",
+                        "bg-surface text-text-secondary hover:bg-surface-muted hover:text-text-primary focus-visible:ring-focus/40 h-9 rounded-lg px-4 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none",
                         mode === item.value &&
                             "bg-text-primary text-bg hover:bg-text-primary/90 hover:text-bg"
                     )}

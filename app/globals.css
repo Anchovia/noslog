@@ -18,6 +18,14 @@
     --color-text-secondary: #a0a0aa;
     --color-text-disabled: #666674;
 
+    /* 상호작용 */
+    --color-interactive: #f2f2f5;
+    --color-on-interactive: #0b0b10;
+    --color-focus: #f2f2f5;
+    --color-switch-active: #f2f2f5;
+    --color-switch-thumb: #f2f2f5;
+    --color-switch-thumb-active: #0b0b10;
+
     /* 상태 / 데이터 */
     --color-success: #22c55e;
     --color-danger: #ef4444;
@@ -56,6 +64,10 @@
 
     /* 모서리 */
     --radius-card: 0.5rem;
+}
+
+html {
+    color-scheme: dark;
 }
 
 @layer base {

@@ -5,23 +5,22 @@ import UserRankingList from "./table/userRankingList";
 
 export default function UserRankingTable({
     mode,
-    region,
     page,
     pageSize,
     totalCount,
     rows,
     currentUser,
+    onPageChange,
 }: UserRankingTableProps) {
     return (
         <div className="flex flex-col gap-3">
             <CurrentUserRanking mode={mode} currentUser={currentUser} />
             <UserRankingList mode={mode} rows={rows} />
             <RankingPagination
-                mode={mode}
-                region={region}
                 page={page}
                 pageSize={pageSize}
                 totalCount={totalCount}
+                onPageChange={onPageChange}
             />
         </div>
     );

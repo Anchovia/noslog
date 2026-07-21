@@ -5,7 +5,7 @@ import db from "@/lib/db";
 import { createArcade, updateArcade } from "./actions";
 
 const inputClass =
-    "border-border bg-bg text-input h-10 min-w-0 rounded-md border px-3 outline-none focus:border-text-secondary";
+    "border-border bg-bg text-input h-10 min-w-0 rounded-md border px-3 outline-none focus:border-focus";
 
 export default async function AdminArcadesPage() {
     const arcades = await db.arcade.findMany({

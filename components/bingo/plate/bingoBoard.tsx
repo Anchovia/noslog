@@ -39,13 +39,13 @@ export default function BingoBoard({
                         type="button"
                         onClick={() => onSelect(cell)}
                         className={cn(
-                            "bg-surface hover:bg-surface-muted focus-visible:ring-text-secondary/30 relative flex aspect-square min-w-0 cursor-pointer items-center justify-center rounded-md p-1.5 text-center transition-colors focus-visible:ring-2 focus-visible:outline-none",
+                            "bg-surface hover:bg-surface-muted focus-visible:ring-focus/40 relative flex aspect-square min-w-0 cursor-pointer items-center justify-center rounded-md p-1.5 text-center transition-colors focus-visible:ring-2 focus-visible:outline-none",
                             isCompleted && "text-chart",
                             isCompletedLine && "text-score",
                             isRich &&
                                 "border-score text-score border border-dashed",
                             isSelected &&
-                                "ring-text-primary bg-surface-muted ring-2"
+                                "ring-interactive bg-surface-muted ring-2"
                         )}
                         aria-pressed={isSelected}
                         aria-label={`${label} ${cell.challenge}`}

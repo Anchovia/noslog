@@ -45,7 +45,7 @@ export default function ProfileHeader({
                             {isOwner ? (
                                 <Link
                                     href="/profile/settings"
-                                    className="border-border text-text-secondary hover:bg-surface-muted hover:text-text-primary focus-visible:ring-text-secondary/30 flex size-9 cursor-pointer items-center justify-center rounded-md border transition-colors focus-visible:ring-2 focus-visible:outline-none"
+                                    className="border-border text-text-secondary hover:bg-surface-muted hover:text-text-primary focus-visible:ring-focus/40 flex size-9 cursor-pointer items-center justify-center rounded-md border transition-colors focus-visible:ring-2 focus-visible:outline-none"
                                     aria-label="프로필 설정"
                                 >
                                     <Settings size={16} />
@@ -85,13 +85,22 @@ export default function ProfileHeader({
                         </span>
                     </span>
                 ) : null}
-                {user.hide_discord_name || user.discord_name ? (
+                {user.hide_discord_name ||
+                user.discord_name ||
+                user.discord_username ? (
                     <span className="bg-surface text-caption flex min-w-0 items-center gap-1.5 rounded-md px-2.5 py-1.5">
                         <DiscordIcon className="text-discord size-3.5" />
                         <span className="truncate">
                             {user.hide_discord_name
                                 ? "비공개"
-                                : user.discord_name}
+                                : [
+                                      user.discord_name,
+                                      user.discord_username
+                                          ? `@${user.discord_username}`
+                                          : null,
+                                  ]
+                                      .filter(Boolean)
+                                      .join(" ")}
                         </span>
                     </span>
                 ) : null}

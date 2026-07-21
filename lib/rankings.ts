@@ -16,6 +16,24 @@ export interface UserRankingRow {
     exam: number | null;
 }
 
+export interface UserRankingPayload {
+    page: number;
+    totalCount: number;
+    rows: UserRankingRow[];
+    currentUser: UserRankingRow | null;
+}
+
+interface RankingViewer {
+    id: number;
+    username: string | null;
+    avatar: string | null;
+    country: string;
+    grade_basic: number | null;
+    grade_recital: number | null;
+    exam_basic: number | null;
+    exam_recital: number | null;
+}
+
 interface RankingPositionOptions {
     userId: number;
     grade: number | null;
@@ -32,6 +50,18 @@ export function getRankingRegionWhere(
         return { country: { notIn: ["ko-KR", "ja-JP"] } };
     }
     return {};
+}
+
+export function normalizeRankingMode(value?: string | null): UserRankingMode {
+    return value === "recital" ? "recital" : "basic";
+}
+
+export function normalizeRankingRegion(
+    value?: string | null
+): UserRankingRegion {
+    return value === "kr" || value === "jp" || value === "global"
+        ? value
+        : "all";
 }
 
 // 홈과 랭킹 페이지가 같은 공개 순위 데이터를 공유하도록 캐시함
@@ -118,4 +148,42 @@ export async function getUserRankingPosition({
     });
 
     return higherUserCount + 1;
+}
+
+export async function getCurrentUserRankingRow(
+    user: RankingViewer | null,
+    mode: UserRankingMode,
+    region: UserRankingRegion
+): Promise<UserRankingRow | null> {
+    if (!user) return null;
+
+    const gradeField = mode === "basic" ? "grade_basic" : "grade_recital";
+    const examField = mode === "basic" ? "exam_basic" : "exam_recital";
+    const grade = user[gradeField] ?? 0;
+    const matchesRegion =
+        region === "all" ||
+        (region === "kr" && user.country === "ko-KR") ||
+        (region === "jp" && user.country === "ja-JP") ||
+        (region === "global" &&
+            user.country !== "ko-KR" &&
+            user.country !== "ja-JP");
+
+    if (grade <= 0 || !matchesRegion) return null;
+
+    const rank = await getUserRankingPosition({
+        userId: user.id,
+        grade,
+        mode,
+        scope: getRankingRegionWhere(region),
+    });
+
+    return {
+        id: user.id,
+        rank: rank!,
+        username: user.username,
+        avatar: user.avatar,
+        country: user.country,
+        grade,
+        exam: user[examField],
+    };
 }

@@ -116,7 +116,7 @@ export default function ProfileShareDialog({
             <Dialog.Trigger asChild>
                 <button
                     type="button"
-                    className="border-border text-text-secondary hover:bg-surface-muted hover:text-text-primary focus-visible:ring-text-secondary/30 flex size-9 cursor-pointer items-center justify-center rounded-md border transition-colors focus-visible:ring-2 focus-visible:outline-none"
+                    className="border-border text-text-secondary hover:bg-surface-muted hover:text-text-primary focus-visible:ring-focus/40 flex size-9 cursor-pointer items-center justify-center rounded-md border transition-colors focus-visible:ring-2 focus-visible:outline-none"
                     aria-label="프로필 카드 공유"
                 >
                     <Share2 size={16} />
@@ -131,7 +131,7 @@ export default function ProfileShareDialog({
                             프로필 카드 내보내기
                         </Dialog.Title>
                         <Dialog.Close
-                            className="text-text-secondary hover:bg-surface-muted hover:text-text-primary focus-visible:ring-text-secondary/30 flex size-8 cursor-pointer items-center justify-center rounded-md transition-colors focus-visible:ring-2 focus-visible:outline-none"
+                            className="text-text-secondary hover:bg-surface-muted hover:text-text-primary focus-visible:ring-focus/40 flex size-8 cursor-pointer items-center justify-center rounded-md transition-colors focus-visible:ring-2 focus-visible:outline-none"
                             aria-label="닫기"
                         >
                             <X size={17} />
@@ -155,7 +155,7 @@ export default function ProfileShareDialog({
                             type="button"
                             onClick={() => void downloadImage()}
                             disabled={status === "loading"}
-                            className="bg-text-primary text-bg focus-visible:ring-text-primary/30 flex h-11 cursor-pointer items-center justify-center gap-2 rounded-md text-sm font-bold transition-colors hover:bg-white/85 focus-visible:ring-2 focus-visible:outline-none disabled:cursor-wait disabled:opacity-50"
+                            className="bg-text-primary text-bg focus-visible:ring-focus/40 flex h-11 cursor-pointer items-center justify-center gap-2 rounded-md text-sm font-bold transition-opacity hover:opacity-85 focus-visible:ring-2 focus-visible:outline-none disabled:cursor-wait disabled:opacity-50"
                         >
                             <Download size={16} />
                             이미지 저장
@@ -164,7 +164,7 @@ export default function ProfileShareDialog({
                             type="button"
                             onClick={() => void copyImage()}
                             disabled={status === "loading"}
-                            className="border-border text-text-primary hover:bg-surface-muted focus-visible:ring-text-secondary/30 flex h-11 cursor-pointer items-center justify-center gap-2 rounded-md border text-sm font-bold transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:cursor-wait disabled:opacity-50"
+                            className="border-border text-text-primary hover:bg-surface-muted focus-visible:ring-focus/40 flex h-11 cursor-pointer items-center justify-center gap-2 rounded-md border text-sm font-bold transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:cursor-wait disabled:opacity-50"
                         >
                             <Clipboard size={16} />
                             클립보드 복사
@@ -173,7 +173,7 @@ export default function ProfileShareDialog({
                             type="button"
                             onClick={() => void shareToX()}
                             disabled={status === "loading"}
-                            className="border-border text-text-primary hover:bg-surface-muted focus-visible:ring-text-secondary/30 flex h-11 cursor-pointer items-center justify-center gap-2 rounded-md border text-sm font-bold transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:cursor-wait disabled:opacity-50"
+                            className="border-border text-text-primary hover:bg-surface-muted focus-visible:ring-focus/40 flex h-11 cursor-pointer items-center justify-center gap-2 rounded-md border text-sm font-bold transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:cursor-wait disabled:opacity-50"
                             aria-label="X 공유"
                         >
                             <span

@@ -210,6 +210,7 @@ describe("Discord OAuth", () => {
             data: expect.objectContaining({
                 discord_id: "new-discord",
                 discord_name: "Discord User",
+                discord_username: "discord-user",
             }),
             select: { id: true },
         });

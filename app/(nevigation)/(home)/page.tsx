@@ -1,27 +1,37 @@
-import OfficialXTimeline from "@/components/home/officialXTimeline";
 import FeedbackDialog from "@/components/feedback/feedbackDialog";
+import HomeAnnouncements from "@/components/home/homeAnnouncements";
+import HomeRankingCard from "@/components/home/homeRankingCard";
+import OfficialXTimeline from "@/components/home/officialXTimeline";
+import {
+    ExamBadge,
+    UserAvatar,
+} from "@/components/rankings/table/rankingUserMeta";
+import { getPublishedAnnouncements } from "@/lib/announcements";
 import {
     createPageMetadata,
     SITE_DESCRIPTION,
     SITE_NAME,
     SITE_URL,
 } from "@/lib/metadata/site";
-import {
-    CountryMark,
-    ExamBadge,
-    UserAvatar,
-} from "@/components/rankings/table/rankingUserMeta";
 import type { UserRankingMode } from "@/lib/rankings";
 import {
     getCachedUserRankingPage,
     getUserRankingPosition,
 } from "@/lib/rankings";
 import { getUser } from "@/lib/user";
+import { formatToComma, normalizeStoredGrade } from "@/lib/utils";
 import {
-    formatToComma,
-    formatToGrade,
-    normalizeStoredGrade,
-} from "@/lib/utils";
+    BadgeCheck,
+    ChevronRight,
+    DatabaseZap,
+    Grid3X3,
+    ListOrdered,
+    MapPin,
+    Music2,
+    Search,
+    Trophy,
+} from "lucide-react";
+import Link from "next/link";
 
 export const metadata = createPageMetadata({ path: "/" });
 
@@ -38,18 +48,6 @@ const websiteJsonLd = {
         "query-input": "required name=search_term_string",
     },
 };
-import {
-    BadgeCheck,
-    ChevronRight,
-    DatabaseZap,
-    Grid3X3,
-    ListOrdered,
-    Music2,
-    MapPin,
-    Search,
-    Trophy,
-} from "lucide-react";
-import Link from "next/link";
 
 interface HomeProps {
     searchParams: Promise<{
@@ -61,10 +59,13 @@ export default async function Home({ searchParams }: HomeProps) {
     const { ranking } = await searchParams;
     const rankingMode: UserRankingMode =
         ranking === "recital" ? "recital" : "basic";
-    const [user, { rows: rankingUsers }] = await Promise.all([
-        getUser(),
-        getCachedUserRankingPage(rankingMode, "all", 1, 5),
-    ]);
+    const [user, basicRanking, recitalRanking, announcements] =
+        await Promise.all([
+            getUser(),
+            getCachedUserRankingPage("basic", "all", 1, 5),
+            getCachedUserRankingPage("recital", "all", 1, 5),
+            getPublishedAnnouncements(),
+        ]);
     const userRank = user
         ? await getUserRankingPosition({
               userId: user.id,
@@ -123,7 +124,7 @@ export default async function Home({ searchParams }: HomeProps) {
 
                     <Link
                         href={`/profile/${user.id}`}
-                        className="border-border text-text-primary hover:bg-surface-muted focus-visible:ring-text-secondary/30 rounded-card flex h-10 shrink-0 items-center justify-center border px-3 text-sm font-bold transition-colors focus-visible:ring-2 focus-visible:outline-none"
+                        className="border-border text-text-primary hover:bg-surface-muted focus-visible:ring-focus/40 rounded-card flex h-10 shrink-0 items-center justify-center border px-3 text-sm font-bold transition-colors focus-visible:ring-2 focus-visible:outline-none"
                     >
                         내 프로필
                     </Link>
@@ -139,8 +140,9 @@ export default async function Home({ searchParams }: HomeProps) {
                     </Link>
                 </section>
             )}
+            <HomeAnnouncements announcements={announcements} />
             {/* 히어로 + 검색 */}
-            <section className="flex flex-col items-center gap-8 text-center">
+            <section className="flex flex-col items-center gap-8 pt-4 text-center">
                 <div className="flex flex-col items-center gap-3">
                     <div className="border-text-primary text-text-primary flex size-11 items-center justify-center rounded-full border-2 text-lg font-bold">
                         N
@@ -154,7 +156,7 @@ export default async function Home({ searchParams }: HomeProps) {
                 </div>
 
                 <form action="/music" className="w-full">
-                    <div className="border-border bg-surface focus-within:border-text-secondary focus-within:ring-text-secondary/20 flex h-11 w-full items-center gap-2 rounded-full border px-4 transition focus-within:ring-2">
+                    <div className="border-border bg-surface focus-within:border-focus focus-within:ring-focus/20 flex h-11 w-full items-center gap-2 rounded-full border px-4 transition focus-within:ring-2">
                         <Search
                             className="text-text-disabled size-5 shrink-0"
                             aria-hidden="true"
@@ -171,7 +173,7 @@ export default async function Home({ searchParams }: HomeProps) {
             <section className="grid grid-cols-3 gap-2">
                 <Link
                     href="/music"
-                    className="bg-surface hover:bg-surface-muted focus-visible:ring-text-secondary/30 rounded-card group flex h-20 flex-col items-center justify-center gap-2 transition-colors focus-visible:ring-2 focus-visible:outline-none"
+                    className="bg-surface hover:bg-surface-muted focus-visible:ring-focus/40 rounded-card group flex h-20 flex-col items-center justify-center gap-2 transition-colors focus-visible:ring-2 focus-visible:outline-none"
                 >
                     <Music2
                         className="text-text-secondary group-hover:text-text-primary size-6 transition-colors"
@@ -181,7 +183,7 @@ export default async function Home({ searchParams }: HomeProps) {
                 </Link>
                 <Link
                     href="/rankings"
-                    className="bg-surface hover:bg-surface-muted focus-visible:ring-text-secondary/30 rounded-card group flex h-20 flex-col items-center justify-center gap-2 transition-colors focus-visible:ring-2 focus-visible:outline-none"
+                    className="bg-surface hover:bg-surface-muted focus-visible:ring-focus/40 rounded-card group flex h-20 flex-col items-center justify-center gap-2 transition-colors focus-visible:ring-2 focus-visible:outline-none"
                 >
                     <Trophy
                         className="text-text-secondary group-hover:text-text-primary size-6 transition-colors"
@@ -191,7 +193,7 @@ export default async function Home({ searchParams }: HomeProps) {
                 </Link>
                 <Link
                     href="/bingo"
-                    className="bg-surface hover:bg-surface-muted focus-visible:ring-text-secondary/30 rounded-card group flex h-20 flex-col items-center justify-center gap-2 transition-colors focus-visible:ring-2 focus-visible:outline-none"
+                    className="bg-surface hover:bg-surface-muted focus-visible:ring-focus/40 rounded-card group flex h-20 flex-col items-center justify-center gap-2 transition-colors focus-visible:ring-2 focus-visible:outline-none"
                 >
                     <Grid3X3
                         className="text-text-secondary group-hover:text-text-primary size-6 transition-colors"
@@ -201,7 +203,7 @@ export default async function Home({ searchParams }: HomeProps) {
                 </Link>
                 <Link
                     href="/tiers"
-                    className="bg-surface hover:bg-surface-muted focus-visible:ring-text-secondary/30 rounded-card group flex h-20 flex-col items-center justify-center gap-2 transition-colors focus-visible:ring-2 focus-visible:outline-none"
+                    className="bg-surface hover:bg-surface-muted focus-visible:ring-focus/40 rounded-card group flex h-20 flex-col items-center justify-center gap-2 transition-colors focus-visible:ring-2 focus-visible:outline-none"
                 >
                     <ListOrdered
                         className="text-text-secondary group-hover:text-text-primary size-6 transition-colors"
@@ -211,7 +213,7 @@ export default async function Home({ searchParams }: HomeProps) {
                 </Link>
                 <Link
                     href="/exams"
-                    className="bg-surface hover:bg-surface-muted focus-visible:ring-text-secondary/30 rounded-card group flex h-20 flex-col items-center justify-center gap-2 transition-colors focus-visible:ring-2 focus-visible:outline-none"
+                    className="bg-surface hover:bg-surface-muted focus-visible:ring-focus/40 rounded-card group flex h-20 flex-col items-center justify-center gap-2 transition-colors focus-visible:ring-2 focus-visible:outline-none"
                 >
                     <BadgeCheck
                         className="text-text-secondary group-hover:text-text-primary size-6 transition-colors"
@@ -235,7 +237,7 @@ export default async function Home({ searchParams }: HomeProps) {
             {/* 데이터 연동 가이드 */}
             <Link
                 href="/bookmarklet"
-                className="bg-surface hover:bg-surface-muted focus-visible:ring-text-secondary/30 rounded-card group flex h-10 items-center justify-between px-4 transition-colors focus-visible:ring-2 focus-visible:outline-none"
+                className="bg-surface hover:bg-surface-muted focus-visible:ring-focus/40 rounded-card group flex h-10 items-center justify-between px-4 transition-colors focus-visible:ring-2 focus-visible:outline-none"
             >
                 <div className="flex items-center gap-2">
                     <DatabaseZap
@@ -251,97 +253,13 @@ export default async function Home({ searchParams }: HomeProps) {
             </Link>
             <FeedbackDialog isAuthenticated={Boolean(user)} />
             {/* 랭킹 카드 */}
-            <section className="bg-surface rounded-card overflow-hidden">
-                <div className="bg-surface-muted flex h-10 items-center justify-between px-3">
-                    <div className="flex items-center gap-2">
-                        <h2 className="text-section">유저 랭킹</h2>
-
-                        <div className="border-border rounded-card flex overflow-hidden border">
-                            <Link
-                                href="/?ranking=basic"
-                                replace
-                                scroll={false}
-                                aria-current={
-                                    rankingMode === "basic" ? "page" : undefined
-                                }
-                                className={
-                                    rankingMode === "basic"
-                                        ? "bg-border text-text-primary px-2.5 py-1 text-xs font-semibold"
-                                        : "text-text-secondary hover:bg-border/60 hover:text-text-primary px-2.5 py-1 text-xs font-semibold transition-colors"
-                                }
-                            >
-                                Basic
-                            </Link>
-                            <Link
-                                href="/?ranking=recital"
-                                replace
-                                scroll={false}
-                                aria-current={
-                                    rankingMode === "recital"
-                                        ? "page"
-                                        : undefined
-                                }
-                                className={
-                                    rankingMode === "recital"
-                                        ? "bg-border text-text-primary px-2.5 py-1 text-xs font-semibold"
-                                        : "text-text-secondary hover:bg-border/60 hover:text-text-primary px-2.5 py-1 text-xs font-semibold transition-colors"
-                                }
-                            >
-                                Recital
-                            </Link>
-                        </div>
-                    </div>
-
-                    <Link
-                        href={`/rankings?mode=${rankingMode}`}
-                        className="text-caption hover:text-text-primary transition-colors"
-                    >
-                        전체 →
-                    </Link>
-                </div>
-
-                <div>
-                    {rankingUsers.map((rankingUser, index) => (
-                        <Link
-                            key={rankingUser.id}
-                            href={`/profile/${rankingUser.id}`}
-                            className="border-divider flex h-10 items-center border-t px-3"
-                        >
-                            <span
-                                className={
-                                    index === 0
-                                        ? "text-score w-8 text-sm font-bold"
-                                        : index === 2
-                                          ? "text-bronze w-8 text-sm font-bold"
-                                          : index >= 3
-                                            ? "text-text-disabled w-8 text-sm font-bold"
-                                            : "text-text-primary w-8 text-sm font-bold"
-                                }
-                            >
-                                {index + 1}
-                            </span>
-
-                            <UserAvatar
-                                avatar={rankingUser.avatar}
-                                username={rankingUser.username}
-                                size={24}
-                            />
-
-                            <span className="mx-2 flex w-4 shrink-0 items-center justify-center">
-                                <CountryMark country={rankingUser.country} />
-                            </span>
-
-                            <span className="text-body min-w-0 flex-1 truncate">
-                                {rankingUser.username ?? "Unknown"}
-                            </span>
-
-                            <span className="text-caption text-text-primary tabular-nums">
-                                Grd {formatToGrade(rankingUser.grade)}
-                            </span>
-                        </Link>
-                    ))}
-                </div>
-            </section>
+            <HomeRankingCard
+                initialMode={rankingMode}
+                rankings={{
+                    basic: basicRanking.rows,
+                    recital: recitalRanking.rows,
+                }}
+            />
             {/* NOSTALGIA 공식 소식 */}
             <OfficialXTimeline />
         </div>
