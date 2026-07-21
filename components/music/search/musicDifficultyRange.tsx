@@ -52,11 +52,11 @@ export default function MusicDifficultyRange({
                     />
                 </Slider.Track>
                 <Slider.Thumb
-                    className="bg-text-primary block size-4 rounded-full outline-none"
+                    className="bg-interactive block size-4 rounded-full outline-none"
                     aria-label={`${difficulty.label} 최소 레벨`}
                 />
                 <Slider.Thumb
-                    className="bg-text-primary block size-4 rounded-full outline-none"
+                    className="bg-interactive block size-4 rounded-full outline-none"
                     aria-label={`${difficulty.label} 최대 레벨`}
                 />
             </Slider.Root>

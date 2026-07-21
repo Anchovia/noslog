@@ -37,7 +37,7 @@ export default function BingoListFilters({
                             type="button"
                             onClick={() => onFilterChange(item.value)}
                             className={cn(
-                                "focus-visible:ring-text-secondary/30 h-8 shrink-0 cursor-pointer rounded-md px-3 text-xs font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none",
+                                "focus-visible:ring-focus/40 h-8 shrink-0 cursor-pointer rounded-md px-3 text-xs font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none",
                                 filter === item.value
                                     ? "bg-text-primary text-bg hover:bg-text-primary/90"
                                     : "bg-surface text-text-secondary hover:bg-surface-muted hover:text-text-primary"
@@ -52,7 +52,7 @@ export default function BingoListFilters({
             <button
                 type="button"
                 onClick={onSortDirectionChange}
-                className="text-caption hover:bg-surface-muted hover:text-text-primary focus-visible:ring-text-secondary/30 flex h-8 shrink-0 cursor-pointer items-center gap-1 rounded px-1.5 transition-colors focus-visible:ring-2 focus-visible:outline-none"
+                className="text-caption hover:bg-surface-muted hover:text-text-primary focus-visible:ring-focus/40 flex h-8 shrink-0 cursor-pointer items-center gap-1 rounded px-1.5 transition-colors focus-visible:ring-2 focus-visible:outline-none"
                 aria-label={`진행률 ${sortDirection === "desc" ? "낮은 순" : "높은 순"}으로 변경`}
                 title={
                     sortDirection === "desc"

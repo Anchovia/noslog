@@ -24,7 +24,7 @@ export default function BingoMissionFilters({
                 type="button"
                 onClick={() => onChange("incomplete")}
                 className={cn(
-                    "focus-visible:ring-text-secondary/30 h-8 cursor-pointer rounded-md px-3 text-xs font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none",
+                    "focus-visible:ring-focus/40 h-8 cursor-pointer rounded-md px-3 text-xs font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none",
                     filter === "incomplete"
                         ? "bg-text-primary text-bg hover:bg-text-primary/90"
                         : "bg-surface text-text-secondary hover:bg-surface-muted hover:text-text-primary"
@@ -36,7 +36,7 @@ export default function BingoMissionFilters({
                 type="button"
                 onClick={() => onChange("completed")}
                 className={cn(
-                    "focus-visible:ring-text-secondary/30 h-8 cursor-pointer rounded-md px-3 text-xs font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none",
+                    "focus-visible:ring-focus/40 h-8 cursor-pointer rounded-md px-3 text-xs font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none",
                     filter === "completed"
                         ? "bg-text-primary text-bg hover:bg-text-primary/90"
                         : "bg-surface text-text-secondary hover:bg-surface-muted hover:text-text-primary"

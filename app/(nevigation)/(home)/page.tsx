@@ -1,17 +1,18 @@
-import OfficialXTimeline from "@/components/home/officialXTimeline";
-import HomeRankingCard from "@/components/home/homeRankingCard";
 import FeedbackDialog from "@/components/feedback/feedbackDialog";
 import HomeAnnouncements from "@/components/home/homeAnnouncements";
+import HomeRankingCard from "@/components/home/homeRankingCard";
+import OfficialXTimeline from "@/components/home/officialXTimeline";
+import {
+    ExamBadge,
+    UserAvatar,
+} from "@/components/rankings/table/rankingUserMeta";
+import { getPublishedAnnouncements } from "@/lib/announcements";
 import {
     createPageMetadata,
     SITE_DESCRIPTION,
     SITE_NAME,
     SITE_URL,
 } from "@/lib/metadata/site";
-import {
-    ExamBadge,
-    UserAvatar,
-} from "@/components/rankings/table/rankingUserMeta";
 import type { UserRankingMode } from "@/lib/rankings";
 import {
     getCachedUserRankingPage,
@@ -19,7 +20,18 @@ import {
 } from "@/lib/rankings";
 import { getUser } from "@/lib/user";
 import { formatToComma, normalizeStoredGrade } from "@/lib/utils";
-import { getPublishedAnnouncements } from "@/lib/announcements";
+import {
+    BadgeCheck,
+    ChevronRight,
+    DatabaseZap,
+    Grid3X3,
+    ListOrdered,
+    MapPin,
+    Music2,
+    Search,
+    Trophy,
+} from "lucide-react";
+import Link from "next/link";
 
 export const metadata = createPageMetadata({ path: "/" });
 
@@ -36,18 +48,6 @@ const websiteJsonLd = {
         "query-input": "required name=search_term_string",
     },
 };
-import {
-    BadgeCheck,
-    ChevronRight,
-    DatabaseZap,
-    Grid3X3,
-    ListOrdered,
-    Music2,
-    MapPin,
-    Search,
-    Trophy,
-} from "lucide-react";
-import Link from "next/link";
 
 interface HomeProps {
     searchParams: Promise<{
@@ -124,7 +124,7 @@ export default async function Home({ searchParams }: HomeProps) {
 
                     <Link
                         href={`/profile/${user.id}`}
-                        className="border-border text-text-primary hover:bg-surface-muted focus-visible:ring-text-secondary/30 rounded-card flex h-10 shrink-0 items-center justify-center border px-3 text-sm font-bold transition-colors focus-visible:ring-2 focus-visible:outline-none"
+                        className="border-border text-text-primary hover:bg-surface-muted focus-visible:ring-focus/40 rounded-card flex h-10 shrink-0 items-center justify-center border px-3 text-sm font-bold transition-colors focus-visible:ring-2 focus-visible:outline-none"
                     >
                         내 프로필
                     </Link>
@@ -142,7 +142,7 @@ export default async function Home({ searchParams }: HomeProps) {
             )}
             <HomeAnnouncements announcements={announcements} />
             {/* 히어로 + 검색 */}
-            <section className="flex flex-col items-center gap-8 text-center">
+            <section className="flex flex-col items-center gap-8 pt-4 text-center">
                 <div className="flex flex-col items-center gap-3">
                     <div className="border-text-primary text-text-primary flex size-11 items-center justify-center rounded-full border-2 text-lg font-bold">
                         N
@@ -156,7 +156,7 @@ export default async function Home({ searchParams }: HomeProps) {
                 </div>
 
                 <form action="/music" className="w-full">
-                    <div className="border-border bg-surface focus-within:border-text-secondary focus-within:ring-text-secondary/20 flex h-11 w-full items-center gap-2 rounded-full border px-4 transition focus-within:ring-2">
+                    <div className="border-border bg-surface focus-within:border-focus focus-within:ring-focus/20 flex h-11 w-full items-center gap-2 rounded-full border px-4 transition focus-within:ring-2">
                         <Search
                             className="text-text-disabled size-5 shrink-0"
                             aria-hidden="true"
@@ -173,7 +173,7 @@ export default async function Home({ searchParams }: HomeProps) {
             <section className="grid grid-cols-3 gap-2">
                 <Link
                     href="/music"
-                    className="bg-surface hover:bg-surface-muted focus-visible:ring-text-secondary/30 rounded-card group flex h-20 flex-col items-center justify-center gap-2 transition-colors focus-visible:ring-2 focus-visible:outline-none"
+                    className="bg-surface hover:bg-surface-muted focus-visible:ring-focus/40 rounded-card group flex h-20 flex-col items-center justify-center gap-2 transition-colors focus-visible:ring-2 focus-visible:outline-none"
                 >
                     <Music2
                         className="text-text-secondary group-hover:text-text-primary size-6 transition-colors"
@@ -183,7 +183,7 @@ export default async function Home({ searchParams }: HomeProps) {
                 </Link>
                 <Link
                     href="/rankings"
-                    className="bg-surface hover:bg-surface-muted focus-visible:ring-text-secondary/30 rounded-card group flex h-20 flex-col items-center justify-center gap-2 transition-colors focus-visible:ring-2 focus-visible:outline-none"
+                    className="bg-surface hover:bg-surface-muted focus-visible:ring-focus/40 rounded-card group flex h-20 flex-col items-center justify-center gap-2 transition-colors focus-visible:ring-2 focus-visible:outline-none"
                 >
                     <Trophy
                         className="text-text-secondary group-hover:text-text-primary size-6 transition-colors"
@@ -193,7 +193,7 @@ export default async function Home({ searchParams }: HomeProps) {
                 </Link>
                 <Link
                     href="/bingo"
-                    className="bg-surface hover:bg-surface-muted focus-visible:ring-text-secondary/30 rounded-card group flex h-20 flex-col items-center justify-center gap-2 transition-colors focus-visible:ring-2 focus-visible:outline-none"
+                    className="bg-surface hover:bg-surface-muted focus-visible:ring-focus/40 rounded-card group flex h-20 flex-col items-center justify-center gap-2 transition-colors focus-visible:ring-2 focus-visible:outline-none"
                 >
                     <Grid3X3
                         className="text-text-secondary group-hover:text-text-primary size-6 transition-colors"
@@ -203,7 +203,7 @@ export default async function Home({ searchParams }: HomeProps) {
                 </Link>
                 <Link
                     href="/tiers"
-                    className="bg-surface hover:bg-surface-muted focus-visible:ring-text-secondary/30 rounded-card group flex h-20 flex-col items-center justify-center gap-2 transition-colors focus-visible:ring-2 focus-visible:outline-none"
+                    className="bg-surface hover:bg-surface-muted focus-visible:ring-focus/40 rounded-card group flex h-20 flex-col items-center justify-center gap-2 transition-colors focus-visible:ring-2 focus-visible:outline-none"
                 >
                     <ListOrdered
                         className="text-text-secondary group-hover:text-text-primary size-6 transition-colors"
@@ -213,7 +213,7 @@ export default async function Home({ searchParams }: HomeProps) {
                 </Link>
                 <Link
                     href="/exams"
-                    className="bg-surface hover:bg-surface-muted focus-visible:ring-text-secondary/30 rounded-card group flex h-20 flex-col items-center justify-center gap-2 transition-colors focus-visible:ring-2 focus-visible:outline-none"
+                    className="bg-surface hover:bg-surface-muted focus-visible:ring-focus/40 rounded-card group flex h-20 flex-col items-center justify-center gap-2 transition-colors focus-visible:ring-2 focus-visible:outline-none"
                 >
                     <BadgeCheck
                         className="text-text-secondary group-hover:text-text-primary size-6 transition-colors"
@@ -237,7 +237,7 @@ export default async function Home({ searchParams }: HomeProps) {
             {/* 데이터 연동 가이드 */}
             <Link
                 href="/bookmarklet"
-                className="bg-surface hover:bg-surface-muted focus-visible:ring-text-secondary/30 rounded-card group flex h-10 items-center justify-between px-4 transition-colors focus-visible:ring-2 focus-visible:outline-none"
+                className="bg-surface hover:bg-surface-muted focus-visible:ring-focus/40 rounded-card group flex h-10 items-center justify-between px-4 transition-colors focus-visible:ring-2 focus-visible:outline-none"
             >
                 <div className="flex items-center gap-2">
                     <DatabaseZap

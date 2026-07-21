@@ -9,7 +9,7 @@ import {
 } from "./actions";
 
 const inputClass =
-    "border-border bg-bg text-input placeholder:text-text-disabled w-full rounded-md border px-3 outline-none focus:border-text-secondary";
+    "border-border bg-bg text-input placeholder:text-text-disabled w-full rounded-md border px-3 outline-none focus:border-focus";
 
 export default async function AdminAnnouncementsPage() {
     const announcements = await db.announcement.findMany({

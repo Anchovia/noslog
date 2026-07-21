@@ -118,7 +118,7 @@ export default function TierListBrowser({
                             onClick={() => selectMode(item.value)}
                             aria-pressed={item.value === mode}
                             className={cn(
-                                "focus-visible:ring-text-secondary/30 flex h-9 cursor-pointer items-center justify-center rounded-md px-3 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none",
+                                "focus-visible:ring-focus/40 flex h-9 cursor-pointer items-center justify-center rounded-md px-3 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none",
                                 item.value === mode
                                     ? "bg-text-primary text-bg hover:bg-text-primary/90"
                                     : "bg-surface text-text-secondary hover:bg-surface-muted hover:text-text-primary"
@@ -145,7 +145,7 @@ export default function TierListBrowser({
                             onClick={() => selectSort(item.value)}
                             aria-pressed={item.value === sort}
                             className={cn(
-                                "focus-visible:ring-text-secondary/30 flex cursor-pointer items-center px-2.5 text-xs font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none",
+                                "focus-visible:ring-focus/40 flex cursor-pointer items-center px-2.5 text-xs font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none",
                                 item.value === sort
                                     ? "bg-border text-text-primary hover:bg-border/80"
                                     : "text-text-secondary hover:bg-surface-muted hover:text-text-primary"

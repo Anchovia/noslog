@@ -68,7 +68,7 @@ export const EMPTY_EXAM: ExamEditorData = {
 };
 
 export const EXAM_INPUT_CLASS =
-    "border-border bg-surface text-input placeholder:text-text-disabled h-11 w-full rounded-md border px-3 outline-none focus:border-text-secondary";
+    "border-border bg-surface text-input placeholder:text-text-disabled h-11 w-full rounded-md border px-3 outline-none focus:border-focus";
 export const EXAM_LABEL_CLASS = "text-caption mb-1.5 block font-semibold";
 
 export function getExamModeLabel(mode: ExamMode) {

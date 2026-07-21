@@ -98,7 +98,7 @@ export default function FeedbackDialog({
             }}
         >
             <Dialog.Trigger asChild>
-                <button className="border-border text-text-secondary hover:bg-surface-muted hover:text-text-primary focus-visible:ring-text-secondary/30 rounded-card flex h-10 w-full cursor-pointer items-center justify-center gap-2 border text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none">
+                <button className="border-border text-text-secondary hover:bg-surface-muted hover:text-text-primary focus-visible:ring-focus/40 rounded-card flex h-10 w-full cursor-pointer items-center justify-center gap-2 border text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none">
                     <MessageSquareWarning className="size-4" aria-hidden />
                     피드백 · 오류 제보
                 </button>
@@ -151,7 +151,7 @@ export default function FeedbackDialog({
                                 maxLength={1000}
                                 rows={6}
                                 placeholder="제보 내용을 입력해주세요."
-                                className="border-border bg-surface text-input placeholder:text-text-disabled focus:border-text-secondary focus:ring-text-secondary/20 rounded-card w-full resize-none border px-3 py-2 outline-none focus:ring-2"
+                                className="border-border bg-surface text-input placeholder:text-text-disabled focus:border-focus focus:ring-focus/20 rounded-card w-full resize-none border px-3 py-2 outline-none focus:ring-2"
                             />
                             <label className="border-border hover:bg-surface-muted rounded-card flex h-10 cursor-pointer items-center justify-center gap-2 border text-sm font-semibold transition-colors">
                                 <ImagePlus className="size-4" aria-hidden />

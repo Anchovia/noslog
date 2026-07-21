@@ -107,7 +107,7 @@ export default function MusicEvaluationForm({
                         onCommentExpandedChange(false);
                     }}
                     className={cn(
-                        "border-border bg-bg text-input placeholder:text-text-disabled focus:border-text-secondary min-w-0 flex-1 resize-none rounded-lg border border-dashed px-3 py-2 transition-[height] outline-none disabled:opacity-40",
+                        "border-border bg-bg text-input placeholder:text-text-disabled focus:border-focus min-w-0 flex-1 resize-none rounded-lg border border-dashed px-3 py-2 transition-[height] outline-none disabled:opacity-40",
                         isCommentExpanded
                             ? "h-24 w-full overflow-y-auto"
                             : "h-10 overflow-hidden",

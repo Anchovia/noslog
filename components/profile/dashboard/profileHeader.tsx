@@ -45,7 +45,7 @@ export default function ProfileHeader({
                             {isOwner ? (
                                 <Link
                                     href="/profile/settings"
-                                    className="border-border text-text-secondary hover:bg-surface-muted hover:text-text-primary focus-visible:ring-text-secondary/30 flex size-9 cursor-pointer items-center justify-center rounded-md border transition-colors focus-visible:ring-2 focus-visible:outline-none"
+                                    className="border-border text-text-secondary hover:bg-surface-muted hover:text-text-primary focus-visible:ring-focus/40 flex size-9 cursor-pointer items-center justify-center rounded-md border transition-colors focus-visible:ring-2 focus-visible:outline-none"
                                     aria-label="프로필 설정"
                                 >
                                     <Settings size={16} />

@@ -18,7 +18,6 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import DiscordIcon from "@/components/ui/DiscordIcon";
 import { Switch } from "@/components/ui/Switch";
-import { ThemeSetting } from "@/components/theme/themeToggle";
 
 interface ProfileSettingCardProps {
     user: {
@@ -38,7 +37,7 @@ interface ProfileSettingCardProps {
 }
 
 const inputClass =
-    "border-border bg-bg text-input placeholder:text-text-disabled focus:border-text-secondary focus:ring-text-secondary/20 h-11 w-full rounded-card border px-3 outline-none transition focus:ring-2";
+    "border-border bg-bg text-input placeholder:text-text-disabled focus:border-focus focus:ring-focus/20 h-11 w-full rounded-card border px-3 outline-none transition focus:ring-2";
 
 function FieldError({ message }: { message?: string }) {
     return message ? (
@@ -177,7 +176,7 @@ export default function ProfileSettingCard({
                     <p className="text-caption mt-1">
                         JPG, PNG, WebP · 최대 4MB
                     </p>
-                    <label className="border-border text-text-primary hover:bg-surface-muted focus-within:ring-text-secondary/30 rounded-card mt-3 inline-flex h-10 cursor-pointer items-center gap-2 border px-3 text-sm font-semibold transition-colors focus-within:ring-2">
+                    <label className="border-border text-text-primary hover:bg-surface-muted focus-within:ring-focus/40 rounded-card mt-3 inline-flex h-10 cursor-pointer items-center gap-2 border px-3 text-sm font-semibold transition-colors focus-within:ring-2">
                         <Camera className="size-4" aria-hidden />
                         사진 변경
                         <input
@@ -219,8 +218,6 @@ export default function ProfileSettingCard({
                 </label>
             </section>
 
-            <ThemeSetting />
-
             <section className="bg-surface rounded-card flex flex-col gap-4 p-4">
                 <div>
                     <h2 className="text-section">기본 정보</h2>
@@ -247,7 +244,7 @@ export default function ProfileSettingCard({
                         {PROFILE_COUNTRIES.map((country) => (
                             <label
                                 key={country.value}
-                                className="has-checked:border-text-primary has-checked:bg-text-primary has-checked:text-bg border-border bg-bg text-text-secondary hover:bg-surface-muted rounded-card flex h-11 cursor-pointer items-center justify-center gap-1.5 border text-sm font-semibold transition-colors"
+                                className="has-checked:border-interactive has-checked:bg-interactive has-checked:text-on-interactive border-border bg-bg text-text-secondary hover:bg-surface-muted rounded-card flex h-11 cursor-pointer items-center justify-center gap-1.5 border text-sm font-semibold transition-colors"
                             >
                                 <input
                                     type="radio"
@@ -397,7 +394,7 @@ export default function ProfileSettingCard({
                     </div>
                     <a
                         href="/discord/start?returnTo=/profile/settings"
-                        className="border-border text-text-primary hover:bg-surface-muted focus-visible:ring-text-secondary/30 rounded-card flex h-10 shrink-0 items-center border px-3 text-sm font-bold transition-colors focus-visible:ring-2 focus-visible:outline-none"
+                        className="border-border text-text-primary hover:bg-surface-muted focus-visible:ring-focus/40 rounded-card flex h-10 shrink-0 items-center border px-3 text-sm font-bold transition-colors focus-visible:ring-2 focus-visible:outline-none"
                     >
                         {user.discord_id ? "다시 연결" : "연결"}
                     </a>
@@ -413,14 +410,14 @@ export default function ProfileSettingCard({
             <div className="grid grid-cols-2 gap-2">
                 <Link
                     href={`/profile/${user.id}`}
-                    className="border-border text-text-secondary hover:bg-surface-muted hover:text-text-primary focus-visible:ring-text-secondary/30 rounded-card flex h-11 cursor-pointer items-center justify-center border text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none"
+                    className="border-border text-text-secondary hover:bg-surface-muted hover:text-text-primary focus-visible:ring-focus/40 rounded-card flex h-11 cursor-pointer items-center justify-center border text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none"
                 >
                     취소
                 </Link>
                 <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="bg-text-primary text-bg hover:bg-text-primary/90 focus-visible:ring-text-secondary/30 rounded-card flex h-11 cursor-pointer items-center justify-center gap-2 text-sm font-bold transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                    className="bg-text-primary text-bg hover:bg-text-primary/90 focus-visible:ring-focus/40 rounded-card flex h-11 cursor-pointer items-center justify-center gap-2 text-sm font-bold transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                 >
                     <Save className="size-4" aria-hidden />
                     {isSubmitting ? "저장 중" : "저장"}

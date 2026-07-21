@@ -157,7 +157,7 @@ export default function RankingBrowser({
                         onClick={() => load(item.value, view.region, 1)}
                         aria-pressed={item.value === view.mode}
                         className={cn(
-                            "focus-visible:ring-text-secondary/30 flex h-10 cursor-pointer items-center justify-center rounded-md text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none",
+                            "focus-visible:ring-focus/40 flex h-10 cursor-pointer items-center justify-center rounded-md text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none",
                             item.value === view.mode
                                 ? "bg-border text-text-primary hover:bg-border/80"
                                 : "text-text-secondary hover:bg-surface-muted hover:text-text-primary"
@@ -179,7 +179,7 @@ export default function RankingBrowser({
                         onClick={() => load(view.mode, item.value, 1)}
                         aria-pressed={item.value === view.region}
                         className={cn(
-                            "border-divider focus-visible:ring-text-secondary/30 flex h-9 cursor-pointer items-center justify-center gap-1.5 border-l text-xs font-semibold transition-colors first:border-l-0 focus-visible:ring-2 focus-visible:outline-none",
+                            "border-divider focus-visible:ring-focus/40 flex h-9 cursor-pointer items-center justify-center gap-1.5 border-l text-xs font-semibold transition-colors first:border-l-0 focus-visible:ring-2 focus-visible:outline-none",
                             item.value === view.region
                                 ? "bg-surface-muted text-text-primary hover:bg-border"
                                 : "text-text-secondary hover:bg-surface-muted hover:text-text-primary"

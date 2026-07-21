@@ -11,15 +11,6 @@ const pretendard = localFont({
     display: "swap",
 });
 
-const themeScript = `
-    try {
-        var theme = localStorage.getItem("noslog-theme");
-        document.documentElement.dataset.theme = theme === "light" ? "light" : "dark";
-    } catch (_) {
-        document.documentElement.dataset.theme = "dark";
-    }
-`;
-
 export const metadata: Metadata = {
     metadataBase: new URL(SITE_URL),
     applicationName: SITE_NAME,
@@ -82,13 +73,8 @@ export default function RootLayout({
     return (
         <html
             lang="ko"
-            data-theme="dark"
-            suppressHydrationWarning
             className={`${pretendard.variable} bg-bg text-text-primary`}
         >
-            <head>
-                <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-            </head>
             <body className="font-sans">{children}</body>
         </html>
     );

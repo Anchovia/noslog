@@ -37,8 +37,10 @@ export default function ExamPublicationSection({
                 >
                     <span
                         className={cn(
-                            "bg-text-primary absolute top-1 left-1 size-5 rounded-full transition-transform",
-                            isPublished && "translate-x-5"
+                            "absolute top-1 left-1 size-5 rounded-full transition-transform",
+                            isPublished
+                                ? "bg-switch-thumb-active translate-x-5"
+                                : "bg-switch-thumb"
                         )}
                     />
                 </button>

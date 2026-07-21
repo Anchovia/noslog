@@ -52,7 +52,7 @@ export default function BingoMissionList({
                                 isRich && "border-score border-l-2",
                                 isCompleted && "opacity-60",
                                 isSelected &&
-                                    "bg-surface-muted ring-text-primary ring-1 ring-inset"
+                                    "bg-surface-muted ring-interactive ring-1 ring-inset"
                             )}
                         >
                             <span
