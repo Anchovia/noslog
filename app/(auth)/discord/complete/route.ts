@@ -140,6 +140,7 @@ export async function GET(request: NextRequest) {
                 data: {
                     discord_id: discordUser.id,
                     discord_name: discordName,
+                    discord_username: discordUser.username,
                     avatar:
                         avatar && shouldUseDiscordAvatar(currentUser.avatar)
                             ? avatar
@@ -156,6 +157,7 @@ export async function GET(request: NextRequest) {
                   where: { id: linkedUser.id },
                   data: {
                       discord_name: discordName,
+                      discord_username: discordUser.username,
                       avatar:
                           avatar && shouldUseDiscordAvatar(linkedUser.avatar)
                               ? avatar
@@ -167,6 +169,7 @@ export async function GET(request: NextRequest) {
                   data: {
                       discord_id: discordUser.id,
                       discord_name: discordName,
+                      discord_username: discordUser.username,
                       avatar,
                   },
                   select: { id: true },

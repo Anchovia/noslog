@@ -27,6 +27,7 @@ interface ProfileSettingCardProps {
         country: string;
         discord_id: string | null;
         discord_name: string | null;
+        discord_username: string | null;
         preferred_arcade_id: number | null;
         hide_nostalgia_name: boolean;
         hide_discord_name: boolean;
@@ -343,7 +344,14 @@ export default function ProfileSettingCard({
                     <div className="min-w-0 flex-1">
                         <p className="text-body truncate text-sm font-semibold">
                             {user.discord_id
-                                ? (user.discord_name ?? "Discord 연결됨")
+                                ? [
+                                      user.discord_name,
+                                      user.discord_username
+                                          ? `@${user.discord_username}`
+                                          : null,
+                                  ]
+                                      .filter(Boolean)
+                                      .join(" ") || "Discord 연결됨"
                                 : "Discord 연결 필요"}
                         </p>
                         <p className="text-caption mt-0.5">

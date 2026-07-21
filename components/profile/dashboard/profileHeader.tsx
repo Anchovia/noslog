@@ -85,13 +85,22 @@ export default function ProfileHeader({
                         </span>
                     </span>
                 ) : null}
-                {user.hide_discord_name || user.discord_name ? (
+                {user.hide_discord_name ||
+                user.discord_name ||
+                user.discord_username ? (
                     <span className="bg-surface text-caption flex min-w-0 items-center gap-1.5 rounded-md px-2.5 py-1.5">
                         <DiscordIcon className="text-discord size-3.5" />
                         <span className="truncate">
                             {user.hide_discord_name
                                 ? "비공개"
-                                : user.discord_name}
+                                : [
+                                      user.discord_name,
+                                      user.discord_username
+                                          ? `@${user.discord_username}`
+                                          : null,
+                                  ]
+                                      .filter(Boolean)
+                                      .join(" ")}
                         </span>
                     </span>
                 ) : null}

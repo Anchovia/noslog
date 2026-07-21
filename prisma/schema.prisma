@@ -13,6 +13,7 @@ model User {
   nostalgia_name       String?
   discord_id           String?                   @unique
   discord_name         String?
+  discord_username     String?
   avatar               String?
   country              String                    @default("ko-KR")
   profile_completed_at DateTime?

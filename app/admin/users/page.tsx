@@ -17,6 +17,7 @@ export default async function AdminUsersPage({
                       { username: { contains: keyword } },
                       { nostalgia_name: { contains: keyword } },
                       { discord_name: { contains: keyword } },
+                      { discord_username: { contains: keyword } },
                   ],
               }
             : undefined,

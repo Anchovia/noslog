@@ -28,6 +28,7 @@ async function queryProfileData(id: number) {
                     username: true,
                     nostalgia_name: true,
                     discord_name: true,
+                    discord_username: true,
                     avatar: true,
                     country: true,
                     grade_basic: true,
@@ -131,6 +132,9 @@ async function queryProfileData(id: number) {
                 ? null
                 : user.nostalgia_name,
             discord_name: user.hide_discord_name ? null : user.discord_name,
+            discord_username: user.hide_discord_name
+                ? null
+                : user.discord_username,
             play_count: user.hide_play_count ? null : user.play_count,
             rank_basic: rankBasic,
             rank_basic_country: rankBasicCountry,

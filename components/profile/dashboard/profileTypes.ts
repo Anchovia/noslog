@@ -7,6 +7,7 @@ export interface ProfileUser {
     username: string | null;
     nostalgia_name: string | null;
     discord_name: string | null;
+    discord_username: string | null;
     avatar: string | null;
     country: string;
     rank_basic: number | null;
