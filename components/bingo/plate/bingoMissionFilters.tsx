@@ -54,7 +54,7 @@ export default function BingoMissionFilters({
                         : "bg-surface text-score hover:bg-surface-muted"
                 )}
             >
-                빙고 찬스만 {richCount}
+                빙고 찬스 {richCount}
             </button>
         </div>
     );
