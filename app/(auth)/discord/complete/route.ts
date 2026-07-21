@@ -118,6 +118,8 @@ export async function GET(request: NextRequest) {
             select: {
                 id: true,
                 avatar: true,
+                discord_name: true,
+                discord_username: true,
                 profile_completed_at: true,
             },
         });
@@ -156,8 +158,9 @@ export async function GET(request: NextRequest) {
             ? await db.user.update({
                   where: { id: linkedUser.id },
                   data: {
-                      discord_name: discordName,
-                      discord_username: discordUser.username,
+                      discord_name: linkedUser.discord_name ?? discordName,
+                      discord_username:
+                          linkedUser.discord_username ?? discordUser.username,
                       avatar:
                           avatar && shouldUseDiscordAvatar(linkedUser.avatar)
                               ? avatar

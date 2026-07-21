@@ -67,6 +67,8 @@ function profileForm(
     formData.set("username", username);
     formData.set("avatar", avatar);
     formData.set("country", country);
+    formData.set("discordName", "병훈");
+    formData.set("discordUsername", "hoonie71");
     formData.set("preferredArcadeId", "");
     formData.set("hideNostalgiaName", "false");
     formData.set("hideDiscordName", "false");
@@ -91,7 +93,10 @@ describe("프로필 이미지 업로드 토큰", () => {
         mocks.releaseUploadTokenQuota.mockResolvedValue(undefined);
         mocks.deleteBlobIfOwned.mockResolvedValue(undefined);
         mocks.isValidImageBlob.mockResolvedValue(true);
-        mocks.userFindUnique.mockResolvedValue({ avatar: oldAvatar });
+        mocks.userFindUnique.mockResolvedValue({
+            avatar: oldAvatar,
+            discord_id: "discord-id",
+        });
         mocks.userUpdate.mockResolvedValue({ id: 2 });
     });
 
@@ -150,6 +155,8 @@ describe("프로필 이미지 업로드 토큰", () => {
                 username: "CAROL",
                 country: "ko-KR",
                 avatar: newAvatar,
+                discord_name: "병훈",
+                discord_username: "hoonie71",
                 preferred_arcade_id: null,
                 hide_nostalgia_name: false,
                 hide_discord_name: false,

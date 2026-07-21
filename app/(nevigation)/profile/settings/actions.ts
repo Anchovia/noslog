@@ -39,6 +39,8 @@ export async function uploadUserSetting(
         avatar: String(formData.get("avatar") ?? ""),
         username: String(formData.get("username") ?? ""),
         country: String(formData.get("country") ?? ""),
+        discordName: String(formData.get("discordName") ?? ""),
+        discordUsername: String(formData.get("discordUsername") ?? ""),
         preferredArcadeId: String(formData.get("preferredArcadeId") ?? ""),
         hideNostalgiaName: formData.get("hideNostalgiaName") === "true",
         hideDiscordName: formData.get("hideDiscordName") === "true",
@@ -55,7 +57,7 @@ export async function uploadUserSetting(
 
     const currentUser = await db.user.findUnique({
         where: { id: session.id },
-        select: { avatar: true },
+        select: { avatar: true, discord_id: true },
     });
     if (!currentUser) {
         return { success: false, message: "사용자 정보를 찾을 수 없습니다." };
@@ -101,6 +103,12 @@ export async function uploadUserSetting(
                 username: result.data.username,
                 country: result.data.country,
                 avatar: nextAvatar,
+                discord_name: currentUser.discord_id
+                    ? result.data.discordName || null
+                    : null,
+                discord_username: currentUser.discord_id
+                    ? result.data.discordUsername || null
+                    : null,
                 preferred_arcade_id: preferredArcadeId,
                 hide_nostalgia_name: result.data.hideNostalgiaName,
                 hide_discord_name: result.data.hideDiscordName,

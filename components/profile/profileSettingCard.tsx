@@ -69,6 +69,8 @@ export default function ProfileSettingCard({
                 user.country === "ko-KR" || user.country === "ja-JP"
                     ? user.country
                     : "global",
+            discordName: user.discord_name ?? "",
+            discordUsername: user.discord_username ?? "",
             preferredArcadeId: user.preferred_arcade_id?.toString() ?? "",
             hideNostalgiaName: user.hide_nostalgia_name,
             hideDiscordName: user.hide_discord_name,
@@ -134,6 +136,8 @@ export default function ProfileSettingCard({
         formData.set("avatar", avatar);
         formData.set("username", data.username);
         formData.set("country", data.country);
+        formData.set("discordName", data.discordName);
+        formData.set("discordUsername", data.discordUsername);
         formData.set("preferredArcadeId", data.preferredArcadeId);
         formData.set("hideNostalgiaName", String(data.hideNostalgiaName));
         formData.set("hideDiscordName", String(data.hideDiscordName));
@@ -334,9 +338,37 @@ export default function ProfileSettingCard({
                 <div>
                     <h2 className="text-section">Discord</h2>
                     <p className="text-caption mt-1">
-                        로그인에 사용할 Discord 계정을 연결합니다.
+                        로그인 계정과 프로필에 표시할 정보를 관리합니다.
                     </p>
                 </div>
+                {user.discord_id ? (
+                    <div className="grid gap-3">
+                        <label className="text-text-secondary text-xs font-semibold">
+                            Discord 닉네임
+                            <input
+                                type="text"
+                                autoComplete="off"
+                                placeholder="Discord 표시 이름"
+                                className={`${inputClass} mt-1.5`}
+                                {...register("discordName")}
+                            />
+                            <FieldError message={errors.discordName?.message} />
+                        </label>
+                        <label className="text-text-secondary text-xs font-semibold">
+                            Discord 태그
+                            <input
+                                type="text"
+                                autoComplete="off"
+                                placeholder="hoonie71"
+                                className={`${inputClass} mt-1.5`}
+                                {...register("discordUsername")}
+                            />
+                            <FieldError
+                                message={errors.discordUsername?.message}
+                            />
+                        </label>
+                    </div>
+                ) : null}
                 <div className="border-border bg-bg rounded-card flex items-center gap-3 border p-3">
                     <span className="bg-discord/15 text-discord flex size-9 shrink-0 items-center justify-center rounded-full">
                         <DiscordIcon className="size-4" />
