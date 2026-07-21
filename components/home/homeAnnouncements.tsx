@@ -5,7 +5,7 @@ interface HomeAnnouncementsProps {
         id: number;
         title: string;
         content: string;
-        publishedAt: Date | null;
+        publishedAt: string | null;
     }[];
 }
 
@@ -37,7 +37,9 @@ export default function HomeAnnouncements({
                         </strong>
                         {announcement.publishedAt ? (
                             <time className="text-caption shrink-0 tabular-nums">
-                                {dateFormatter.format(announcement.publishedAt)}
+                                {dateFormatter.format(
+                                    new Date(announcement.publishedAt)
+                                )}
                             </time>
                         ) : null}
                         <ChevronDown className="text-text-disabled size-4 shrink-0 transition-transform group-open:rotate-180" />

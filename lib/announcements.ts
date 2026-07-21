@@ -6,7 +6,7 @@ import { CACHE_TAGS } from "./cacheTags";
 import db from "./db";
 
 async function queryPublishedAnnouncements() {
-    return db.announcement.findMany({
+    const announcements = await db.announcement.findMany({
         where: { isPublished: true },
         select: {
             id: true,
@@ -17,6 +17,11 @@ async function queryPublishedAnnouncements() {
         orderBy: [{ publishedAt: "desc" }, { id: "desc" }],
         take: 3,
     });
+
+    return announcements.map((announcement) => ({
+        ...announcement,
+        publishedAt: announcement.publishedAt?.toISOString() ?? null,
+    }));
 }
 
 export const getPublishedAnnouncements = unstable_cache(
