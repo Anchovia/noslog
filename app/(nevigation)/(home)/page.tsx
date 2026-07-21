@@ -1,4 +1,5 @@
 import OfficialXTimeline from "@/components/home/officialXTimeline";
+import HomeRankingCard from "@/components/home/homeRankingCard";
 import FeedbackDialog from "@/components/feedback/feedbackDialog";
 import {
     createPageMetadata,
@@ -7,7 +8,6 @@ import {
     SITE_URL,
 } from "@/lib/metadata/site";
 import {
-    CountryMark,
     ExamBadge,
     UserAvatar,
 } from "@/components/rankings/table/rankingUserMeta";
@@ -17,11 +17,7 @@ import {
     getUserRankingPosition,
 } from "@/lib/rankings";
 import { getUser } from "@/lib/user";
-import {
-    formatToComma,
-    formatToGrade,
-    normalizeStoredGrade,
-} from "@/lib/utils";
+import { formatToComma, normalizeStoredGrade } from "@/lib/utils";
 
 export const metadata = createPageMetadata({ path: "/" });
 
@@ -61,9 +57,10 @@ export default async function Home({ searchParams }: HomeProps) {
     const { ranking } = await searchParams;
     const rankingMode: UserRankingMode =
         ranking === "recital" ? "recital" : "basic";
-    const [user, { rows: rankingUsers }] = await Promise.all([
+    const [user, basicRanking, recitalRanking] = await Promise.all([
         getUser(),
-        getCachedUserRankingPage(rankingMode, "all", 1, 5),
+        getCachedUserRankingPage("basic", "all", 1, 5),
+        getCachedUserRankingPage("recital", "all", 1, 5),
     ]);
     const userRank = user
         ? await getUserRankingPosition({
@@ -251,97 +248,13 @@ export default async function Home({ searchParams }: HomeProps) {
             </Link>
             <FeedbackDialog isAuthenticated={Boolean(user)} />
             {/* 랭킹 카드 */}
-            <section className="bg-surface rounded-card overflow-hidden">
-                <div className="bg-surface-muted flex h-10 items-center justify-between px-3">
-                    <div className="flex items-center gap-2">
-                        <h2 className="text-section">유저 랭킹</h2>
-
-                        <div className="border-border rounded-card flex overflow-hidden border">
-                            <Link
-                                href="/?ranking=basic"
-                                replace
-                                scroll={false}
-                                aria-current={
-                                    rankingMode === "basic" ? "page" : undefined
-                                }
-                                className={
-                                    rankingMode === "basic"
-                                        ? "bg-border text-text-primary px-2.5 py-1 text-xs font-semibold"
-                                        : "text-text-secondary hover:bg-border/60 hover:text-text-primary px-2.5 py-1 text-xs font-semibold transition-colors"
-                                }
-                            >
-                                Basic
-                            </Link>
-                            <Link
-                                href="/?ranking=recital"
-                                replace
-                                scroll={false}
-                                aria-current={
-                                    rankingMode === "recital"
-                                        ? "page"
-                                        : undefined
-                                }
-                                className={
-                                    rankingMode === "recital"
-                                        ? "bg-border text-text-primary px-2.5 py-1 text-xs font-semibold"
-                                        : "text-text-secondary hover:bg-border/60 hover:text-text-primary px-2.5 py-1 text-xs font-semibold transition-colors"
-                                }
-                            >
-                                Recital
-                            </Link>
-                        </div>
-                    </div>
-
-                    <Link
-                        href={`/rankings?mode=${rankingMode}`}
-                        className="text-caption hover:text-text-primary transition-colors"
-                    >
-                        전체 →
-                    </Link>
-                </div>
-
-                <div>
-                    {rankingUsers.map((rankingUser, index) => (
-                        <Link
-                            key={rankingUser.id}
-                            href={`/profile/${rankingUser.id}`}
-                            className="border-divider flex h-10 items-center border-t px-3"
-                        >
-                            <span
-                                className={
-                                    index === 0
-                                        ? "text-score w-8 text-sm font-bold"
-                                        : index === 2
-                                          ? "text-bronze w-8 text-sm font-bold"
-                                          : index >= 3
-                                            ? "text-text-disabled w-8 text-sm font-bold"
-                                            : "text-text-primary w-8 text-sm font-bold"
-                                }
-                            >
-                                {index + 1}
-                            </span>
-
-                            <UserAvatar
-                                avatar={rankingUser.avatar}
-                                username={rankingUser.username}
-                                size={24}
-                            />
-
-                            <span className="mx-2 flex w-4 shrink-0 items-center justify-center">
-                                <CountryMark country={rankingUser.country} />
-                            </span>
-
-                            <span className="text-body min-w-0 flex-1 truncate">
-                                {rankingUser.username ?? "Unknown"}
-                            </span>
-
-                            <span className="text-caption text-text-primary tabular-nums">
-                                Grd {formatToGrade(rankingUser.grade)}
-                            </span>
-                        </Link>
-                    ))}
-                </div>
-            </section>
+            <HomeRankingCard
+                initialMode={rankingMode}
+                rankings={{
+                    basic: basicRanking.rows,
+                    recital: recitalRanking.rows,
+                }}
+            />
             {/* NOSTALGIA 공식 소식 */}
             <OfficialXTimeline />
         </div>
