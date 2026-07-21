@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ThemeIconToggle } from "@/components/theme/themeToggle";
 
 export default function Footer() {
     return (
@@ -11,6 +12,9 @@ export default function Footer() {
                 >
                     GitHub
                 </Link>
+            </span>
+            <span className="ml-auto">
+                <ThemeIconToggle />
             </span>
         </footer>
     );

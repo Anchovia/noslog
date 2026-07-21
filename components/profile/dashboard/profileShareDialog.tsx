@@ -155,7 +155,7 @@ export default function ProfileShareDialog({
                             type="button"
                             onClick={() => void downloadImage()}
                             disabled={status === "loading"}
-                            className="bg-text-primary text-bg focus-visible:ring-text-primary/30 flex h-11 cursor-pointer items-center justify-center gap-2 rounded-md text-sm font-bold transition-colors hover:bg-white/85 focus-visible:ring-2 focus-visible:outline-none disabled:cursor-wait disabled:opacity-50"
+                            className="bg-text-primary text-bg focus-visible:ring-text-primary/30 flex h-11 cursor-pointer items-center justify-center gap-2 rounded-md text-sm font-bold transition-opacity hover:opacity-85 focus-visible:ring-2 focus-visible:outline-none disabled:cursor-wait disabled:opacity-50"
                         >
                             <Download size={16} />
                             이미지 저장

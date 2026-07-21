@@ -58,6 +58,59 @@
     --radius-card: 0.5rem;
 }
 
+html {
+    color-scheme: dark;
+}
+
+html[data-theme="light"] {
+    color-scheme: light;
+
+    /* 배경 / 표면 */
+    --color-bg: #f3f4f6;
+    --color-surface: #ffffff;
+    --color-surface-muted: #f7f7f9;
+    --color-divider: #e5e7eb;
+    --color-border: #d1d5db;
+
+    /* 텍스트 */
+    --color-text-primary: #16181d;
+    --color-text-secondary: #5f636d;
+    --color-text-disabled: #9297a2;
+
+    /* 상태 / 데이터 */
+    --color-success: #15803d;
+    --color-danger: #dc2626;
+    --color-chart: #0284c7;
+    --color-score: #a16207;
+    --color-bronze: #925426;
+
+    /* 랭크 */
+    --color-rank-p-start: #9a711c;
+    --color-rank-p-end: #a34d78;
+    --color-rank-fc: #4d7c0f;
+    --color-rank-s: #8a6917;
+    --color-rank-a-plus: #a34f47;
+    --color-rank-a: #934747;
+
+    /* 난이도 */
+    --color-normal: #3f7653;
+    --color-hard: #8a5a2b;
+    --color-expert: #a54444;
+    --color-real: #6e57a0;
+
+    /* 검정 */
+    --color-basic: #416d9e;
+    --color-recital: #a14f7d;
+
+    /* 장르 */
+    --color-genre-pops: #a54444;
+    --color-genre-anime: #9e4f76;
+    --color-genre-bm: #456895;
+    --color-genre-original: #955b3c;
+    --color-genre-classic-jazz: #8a672f;
+    --color-genre-variety: #3f7653;
+}
+
 @layer base {
     /* 기본 테두리 색상을 디자인 토큰과 맞춤 */
     *,
@@ -68,7 +121,7 @@
         border-color: var(--color-border);
     }
 
-    /* 앱 전체에 다크 테마와 기본 폰트를 적용 */
+    /* 앱 전체에 선택된 테마와 기본 폰트를 적용 */
     html,
     body {
         min-height: 100vh;

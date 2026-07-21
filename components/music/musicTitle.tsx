@@ -31,11 +31,11 @@ export default function MusicTitle({
                         backgroundImage: `url(${getJacketUrl(index, background)})`,
                         backgroundSize: "cover",
                     }}
-                    className="aspect-square size-24 border border-white/50"
+                    className="border-border aspect-square size-24 border"
                 />
                 <div className="flex flex-col">
                     <h1 className="text-2xl font-bold">{title}</h1>
-                    <h2 className="text-xl font-normal text-white/80">
+                    <h2 className="text-text-secondary text-xl font-normal">
                         {artist}
                     </h2>
                 </div>
