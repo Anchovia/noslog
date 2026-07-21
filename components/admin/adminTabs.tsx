@@ -18,6 +18,7 @@ const tabs = [
     { href: "/admin/users", label: "유저" },
     { href: "/admin/community", label: "의견" },
     { href: "/admin/feedback", label: "피드백" },
+    { href: "/admin/announcements", label: "공지" },
     { href: "/admin/syncs", label: "동기화" },
 ];
 

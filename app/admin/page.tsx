@@ -6,6 +6,7 @@ import {
     ListMusic,
     MessageSquareText,
     MessageSquareWarning,
+    Megaphone,
     Music2,
     MapPin,
     Rows3,
@@ -183,6 +184,12 @@ export default async function AdminPage() {
             label: "피드백 관리",
             icon: MessageSquareWarning,
             color: "bg-score/10 text-score",
+        },
+        {
+            href: "/admin/announcements",
+            label: "공지사항 관리",
+            icon: Megaphone,
+            color: "bg-basic/10 text-basic",
         },
         {
             href: "/admin/syncs",

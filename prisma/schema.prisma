@@ -81,6 +81,19 @@ model FeedbackReport {
   @@index([userId, createdAt])
 }
 
+// 관리자가 작성하고 홈에 공개하는 서비스 공지사항
+model Announcement {
+  id          Int       @id @default(autoincrement())
+  title       String
+  content     String
+  isPublished Boolean   @default(false) @map("is_published")
+  publishedAt DateTime? @map("published_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@index([isPublished, publishedAt])
+}
+
 // 유저가 선택할 수 있는 오락실 목록을 관리자 데이터로 관리함
 model Arcade {
   id         Int      @id @default(autoincrement())

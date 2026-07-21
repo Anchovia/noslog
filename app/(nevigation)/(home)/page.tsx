@@ -1,6 +1,7 @@
 import OfficialXTimeline from "@/components/home/officialXTimeline";
 import HomeRankingCard from "@/components/home/homeRankingCard";
 import FeedbackDialog from "@/components/feedback/feedbackDialog";
+import HomeAnnouncements from "@/components/home/homeAnnouncements";
 import {
     createPageMetadata,
     SITE_DESCRIPTION,
@@ -18,6 +19,7 @@ import {
 } from "@/lib/rankings";
 import { getUser } from "@/lib/user";
 import { formatToComma, normalizeStoredGrade } from "@/lib/utils";
+import { getPublishedAnnouncements } from "@/lib/announcements";
 
 export const metadata = createPageMetadata({ path: "/" });
 
@@ -57,11 +59,13 @@ export default async function Home({ searchParams }: HomeProps) {
     const { ranking } = await searchParams;
     const rankingMode: UserRankingMode =
         ranking === "recital" ? "recital" : "basic";
-    const [user, basicRanking, recitalRanking] = await Promise.all([
-        getUser(),
-        getCachedUserRankingPage("basic", "all", 1, 5),
-        getCachedUserRankingPage("recital", "all", 1, 5),
-    ]);
+    const [user, basicRanking, recitalRanking, announcements] =
+        await Promise.all([
+            getUser(),
+            getCachedUserRankingPage("basic", "all", 1, 5),
+            getCachedUserRankingPage("recital", "all", 1, 5),
+            getPublishedAnnouncements(),
+        ]);
     const userRank = user
         ? await getUserRankingPosition({
               userId: user.id,
@@ -136,6 +140,7 @@ export default async function Home({ searchParams }: HomeProps) {
                     </Link>
                 </section>
             )}
+            <HomeAnnouncements announcements={announcements} />
             {/* 히어로 + 검색 */}
             <section className="flex flex-col items-center gap-8 text-center">
                 <div className="flex flex-col items-center gap-3">

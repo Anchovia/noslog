@@ -9,6 +9,7 @@ export const CACHE_TAGS = {
     bingos: "bingos",
     userProfiles: "user-profiles",
     arcades: "arcades",
+    announcements: "announcements",
 } as const;
 
 export function getUserProfileTag(userId: number) {
