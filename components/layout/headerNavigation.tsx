@@ -130,7 +130,7 @@ export default function HeaderMenu() {
                                     )}
                                 >
                                     <Icon
-                                        className="text-chart size-4 shrink-0"
+                                        className="text-text-primary size-4 shrink-0"
                                         aria-hidden="true"
                                     />
                                     <span className="text-section">
