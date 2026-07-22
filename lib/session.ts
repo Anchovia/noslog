@@ -8,6 +8,8 @@ interface SessionContent {
     discordOAuthReturnTo?: string;
 }
 
+const SESSION_TTL_SECONDS = 14 * 24 * 60 * 60;
+
 export default async function getSession() {
     const password = process.env.COOKIE_PASSWORD;
     if (!password || password.length < 32) {
@@ -17,11 +19,13 @@ export default async function getSession() {
     return getIronSession<SessionContent>(await cookies(), {
         cookieName: "user_session_cookie",
         password,
+        ttl: SESSION_TTL_SECONDS,
         cookieOptions: {
             httpOnly: true,
             sameSite: "lax",
             secure: process.env.NODE_ENV === "production",
             path: "/",
+            priority: "high",
         },
     });
 }

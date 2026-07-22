@@ -16,6 +16,8 @@ import { z } from "zod";
 
 const EAGATE_ORIGIN = "https://p.eagate.573.jp";
 const MAX_SYNC_BODY_BYTES = 8 * 1024 * 1024;
+const SYNC_COOLDOWN_MS = 30 * 1000;
+const SYNC_PROCESSING_TIMEOUT_MS = 15 * 60 * 1000;
 const shortText = z.string().min(1).max(256);
 const nullableShortText = z.string().max(256).nullable();
 const difficultySchema = z.enum(["Normal", "Hard", "Expert", "Real"]);
@@ -98,12 +100,83 @@ function corsHeaders() {
 function json(
     message: string,
     status: number,
-    data: Record<string, unknown> = {}
+    data: Record<string, unknown> = {},
+    headers: HeadersInit = {}
 ) {
     return NextResponse.json(
         { message, ...data },
-        { status, headers: corsHeaders() }
+        { status, headers: { ...corsHeaders(), ...headers } }
     );
+}
+
+type SyncAttemptResult =
+    | { allowed: true; syncId: number }
+    | { allowed: false; reason: "processing" | "cooldown"; retryAfter: number };
+
+// 사용자별 DB 잠금으로 여러 서버 인스턴스에서도 동기화 시작을 직렬화함
+async function createSyncAttempt(
+    userId: number,
+    syncScope: "full" | "recent",
+    receivedPlays: number
+): Promise<SyncAttemptResult> {
+    return db.$transaction(async (tx) => {
+        await tx.$queryRaw`SELECT pg_advisory_xact_lock(73051, ${userId})`;
+
+        const now = new Date();
+        const latestSync = await tx.dataSync.findFirst({
+            where: { user_id: userId },
+            select: { id: true, status: true, started_at: true },
+            orderBy: { started_at: "desc" },
+        });
+
+        if (latestSync?.status === "processing") {
+            const processingAge =
+                now.getTime() - latestSync.started_at.getTime();
+            if (processingAge < SYNC_PROCESSING_TIMEOUT_MS) {
+                return {
+                    allowed: false,
+                    reason: "processing",
+                    retryAfter: Math.max(
+                        1,
+                        Math.ceil(
+                            (SYNC_PROCESSING_TIMEOUT_MS - processingAge) / 1000
+                        )
+                    ),
+                };
+            }
+
+            await tx.dataSync.update({
+                where: { id: latestSync.id },
+                data: {
+                    status: "failed",
+                    error_message: "동기화 처리 시간이 초과되었습니다.",
+                    completed_at: now,
+                },
+            });
+        } else if (latestSync) {
+            const elapsed = now.getTime() - latestSync.started_at.getTime();
+            if (elapsed < SYNC_COOLDOWN_MS) {
+                return {
+                    allowed: false,
+                    reason: "cooldown",
+                    retryAfter: Math.max(
+                        1,
+                        Math.ceil((SYNC_COOLDOWN_MS - elapsed) / 1000)
+                    ),
+                };
+            }
+        }
+
+        const sync = await tx.dataSync.create({
+            data: {
+                user_id: userId,
+                sync_scope: syncScope,
+                received_plays: receivedPlays,
+            },
+            select: { id: true },
+        });
+        return { allowed: true, syncId: sync.id };
+    });
 }
 
 export async function POST(request: NextRequest) {
@@ -153,7 +226,23 @@ export async function POST(request: NextRequest) {
     const music: SyncMusicInput[] | null = totalData
         ? totalData.data.music
         : null;
-    let syncId: number | null = null;
+    const syncAttempt = await createSyncAttempt(
+        user.id,
+        music ? "full" : "recent",
+        history.length
+    );
+    if (!syncAttempt.allowed) {
+        return json(
+            syncAttempt.reason === "processing"
+                ? "이미 동기화를 처리하고 있습니다. 잠시 후 다시 시도해주세요."
+                : "동기화 요청이 너무 빠릅니다. 잠시 후 다시 시도해주세요.",
+            syncAttempt.reason === "processing" ? 409 : 429,
+            { retryAfter: syncAttempt.retryAfter },
+            { "Retry-After": String(syncAttempt.retryAfter) }
+        );
+    }
+
+    const syncId = syncAttempt.syncId;
 
     try {
         if (music) {
@@ -161,25 +250,16 @@ export async function POST(request: NextRequest) {
         }
         await updatePlayCount(user.id, name, playCount);
 
-        const sync = await db.dataSync.create({
-            data: {
-                user_id: user.id,
-                sync_scope: music ? "full" : "recent",
-                received_plays: history.length,
-            },
-        });
-        syncId = sync.id;
-
-        const insertedPlays = await updateRecentPlay(user.id, history, sync.id);
+        const insertedPlays = await updateRecentPlay(user.id, history, syncId);
         let changedRecords = 0;
         if (music) {
-            changedRecords = await updatePlayData(user.id, music, sync.id);
+            changedRecords = await updatePlayData(user.id, music, syncId);
             await updateGrade(user.id);
             await updateDummy();
         }
 
         await db.dataSync.update({
-            where: { id: sync.id },
+            where: { id: syncId },
             data: {
                 status: "completed",
                 inserted_plays: insertedPlays,
@@ -209,19 +289,15 @@ export async function POST(request: NextRequest) {
     } catch (error) {
         console.error("BEMANI data synchronization failed", error);
 
-        if (syncId) {
-            await db.dataSync.update({
-                where: { id: syncId },
-                data: {
-                    status: "failed",
-                    error_message:
-                        error instanceof Error
-                            ? error.message
-                            : "Unknown error",
-                    completed_at: new Date(),
-                },
-            });
-        }
+        await db.dataSync.update({
+            where: { id: syncId },
+            data: {
+                status: "failed",
+                error_message:
+                    error instanceof Error ? error.message : "Unknown error",
+                completed_at: new Date(),
+            },
+        });
 
         return json("데이터 처리 중 오류가 발생했습니다.", 500);
     }
