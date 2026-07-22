@@ -55,7 +55,8 @@ export function HeaderPrimaryNavigation() {
 export default function HeaderMenu() {
     const pathname = usePathname();
     const menuButtonRef = useRef<HTMLButtonElement>(null);
-    const [isOpen, setIsOpen] = useState(false);
+    const [openPathname, setOpenPathname] = useState<string | null>(null);
+    const isOpen = openPathname === pathname;
     const hasActiveSecondaryItem = secondaryItems.some((item) =>
         isActiveRoute(pathname, item.href)
     );
@@ -68,7 +69,7 @@ export default function HeaderMenu() {
 
         function handleKeyDown(event: KeyboardEvent) {
             if (event.key !== "Escape") return;
-            setIsOpen(false);
+            setOpenPathname(null);
             menuButtonRef.current?.focus();
         }
 
@@ -87,7 +88,11 @@ export default function HeaderMenu() {
                 aria-label={isOpen ? "전체 메뉴 닫기" : "전체 메뉴 열기"}
                 aria-expanded={isOpen}
                 aria-controls="header-secondary-menu"
-                onClick={() => setIsOpen((current) => !current)}
+                onClick={() =>
+                    setOpenPathname((current) =>
+                        current === pathname ? null : pathname
+                    )
+                }
                 className={cn(
                     "text-text-secondary hover:bg-surface-muted hover:text-text-primary focus-visible:ring-focus/40 flex size-10 shrink-0 items-center justify-center rounded-md transition-colors focus-visible:ring-2 focus-visible:outline-none",
                     (isOpen || hasActiveSecondaryItem) &&
@@ -106,7 +111,7 @@ export default function HeaderMenu() {
                     <button
                         type="button"
                         aria-label="전체 메뉴 닫기"
-                        onClick={() => setIsOpen(false)}
+                        onClick={() => setOpenPathname(null)}
                         className="fixed inset-x-0 top-14 bottom-0 bg-black/40"
                     />
                     <nav
@@ -122,7 +127,7 @@ export default function HeaderMenu() {
                                     key={item.href}
                                     href={item.href}
                                     aria-current={isActive ? "page" : undefined}
-                                    onClick={() => setIsOpen(false)}
+                                    onClick={() => setOpenPathname(null)}
                                     className={cn(
                                         "border-border bg-bg text-text-secondary hover:bg-surface-muted hover:text-text-primary flex h-11 items-center gap-2 rounded-md border px-3 transition-colors",
                                         isActive &&
