@@ -6,12 +6,66 @@ export type TierRecord = {
     fc_type: number;
 };
 
+export const TIER_MODES = ["basic", "recital"] as const;
+export const TIER_GOALS = ["s", "fc", "pianist"] as const;
+export const TIER_DIFFICULTIES = ["Normal", "Hard", "Expert", "Real"] as const;
+export const TIER_REGULAR_LEVELS = Array.from({ length: 12 }, (_, index) =>
+    String(index + 1)
+);
+export const TIER_REAL_LEVELS = ["real-1", "real-2", "real-3"] as const;
+
+export type TierMode = (typeof TIER_MODES)[number];
+export type TierGoal = (typeof TIER_GOALS)[number];
+export type TierDifficulty = (typeof TIER_DIFFICULTIES)[number];
+
+export const tierGoalLabels: Record<TierGoal, string> = {
+    s: "S",
+    fc: "Full Combo",
+    pianist: "Pianist",
+};
+
+export function isTierMode(value: string): value is TierMode {
+    return TIER_MODES.includes(value as TierMode);
+}
+
+export function isTierGoal(value: string): value is TierGoal {
+    return TIER_GOALS.includes(value as TierGoal);
+}
+
+export function isTierDifficulty(value: string): value is TierDifficulty {
+    return TIER_DIFFICULTIES.includes(value as TierDifficulty);
+}
+
+export function isTierLevelFilter(value: string) {
+    return (
+        TIER_REGULAR_LEVELS.includes(value) ||
+        TIER_REAL_LEVELS.includes(value as (typeof TIER_REAL_LEVELS)[number])
+    );
+}
+
+export function isTierGoalAchieved(
+    record: TierRecord | null | undefined,
+    goal: TierGoal
+) {
+    if (!record || record.score <= 0) return false;
+    if (goal === "s") return record.score >= 950_000;
+    if (goal === "fc") return record.fc_type >= 2 || record.score >= 1_000_000;
+    return record.fc_type === 3 || record.score >= 1_000_000;
+}
+
+export function formatOfficialChartLevel(difficulty: string, level: number) {
+    return difficulty.toLowerCase() === "real"
+        ? `Real ${level}`
+        : `Lv.${level}`;
+}
+
 export interface PublicTierBandEntry {
     id: number;
     chartId: number;
     position: number;
     chart: {
         difficulty: string;
+        level: number;
         music: {
             index: string;
             title: string;
@@ -36,8 +90,12 @@ export const tierModeStyles: Record<string, string> = {
     recital: "bg-recital/15 text-recital",
 };
 
-const MIN_TIER_VALUE = 1;
+export const MIN_TIER_VALUE = 1;
 export const MAX_TIER_VALUE = 14.5;
+export const TIER_BAND_VALUES = Array.from(
+    { length: Math.round((MAX_TIER_VALUE - MIN_TIER_VALUE) * 10) + 1 },
+    (_, index) => Math.round((MAX_TIER_VALUE - index * 0.1) * 10) / 10
+);
 
 // 서열표 상수를 소수점 한 자리로 통일함
 export function formatTierValue(value: number) {

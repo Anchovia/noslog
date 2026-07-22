@@ -1,22 +1,34 @@
-import { Plus } from "lucide-react";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import {
-    addTierBand,
-    deleteTierList,
-    updateTierList,
-} from "@/app/admin/tiers/actions";
+import { deleteTierList, updateTierList } from "@/app/admin/tiers/actions";
 import TierBoard from "@/components/admin/tierBoard";
 import TierListForm from "@/components/admin/tierListForm";
+import TierPlacementEditor from "@/components/admin/tierPlacementEditor";
 import db from "@/lib/db";
-import { MAX_TIER_VALUE } from "@/lib/tiers";
+import {
+    TIER_REAL_LEVELS,
+    TIER_REGULAR_LEVELS,
+    isTierDifficulty,
+    isTierLevelFilter,
+} from "@/lib/tiers";
+import type { Prisma } from "@prisma/client";
+
+interface EditTierListPageProps {
+    params: Promise<{ id: string }>;
+    searchParams: Promise<{
+        q?: string;
+        difficulty?: string;
+        level?: string;
+        page?: string;
+    }>;
+}
 
 export default async function EditTierListPage({
     params,
-}: {
-    params: Promise<{ id: string }>;
-}) {
-    const { id } = await params;
+    searchParams,
+}: EditTierListPageProps) {
+    const [{ id }, query] = await Promise.all([params, searchParams]);
     const tierListId = Number(id);
     if (!Number.isInteger(tierListId)) notFound();
 
@@ -24,101 +36,261 @@ export default async function EditTierListPage({
         where: { id: tierListId },
         include: {
             bands: {
-                include: {
-                    entries: {
-                        include: {
-                            chart: {
-                                include: {
-                                    music: {
-                                        select: {
-                                            index: true,
-                                            title: true,
-                                            artist: true,
-                                            background: true,
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                        orderBy: { position: "asc" },
-                    },
-                },
                 orderBy: { position: "asc" },
+                include: { _count: { select: { entries: true } } },
             },
         },
     });
     if (!tierList) notFound();
+
+    const keyword = (query.q ?? "").trim().slice(0, 100);
+    const difficulty = isTierDifficulty(query.difficulty ?? "")
+        ? query.difficulty
+        : "";
+    const level = isTierLevelFilter(query.level ?? "") ? query.level! : "";
+    const requestedPage = Number(query.page);
+    const page =
+        Number.isInteger(requestedPage) && requestedPage > 0
+            ? requestedPage
+            : 1;
+    const pageSize = 100;
+    const chartWhere: Prisma.MusicChartWhereInput = {
+        ...(difficulty ? { difficulty } : {}),
+        ...(level.startsWith("real-")
+            ? { difficulty: "Real", level: Number(level.slice(5)) }
+            : level
+              ? { difficulty: { not: "Real" }, level: Number(level) }
+              : {}),
+        ...(keyword
+            ? {
+                  music: {
+                      OR: [
+                          { title: { contains: keyword, mode: "insensitive" } },
+                          {
+                              artist: {
+                                  contains: keyword,
+                                  mode: "insensitive",
+                              },
+                          },
+                          { index: { contains: keyword, mode: "insensitive" } },
+                      ],
+                  },
+              }
+            : {}),
+    };
+
+    const [goalEntries, goalEntryCount, legacyTierList] = tierList.goal
+        ? await Promise.all([
+              db.tierEntry.findMany({
+                  where: { tierListId, chart: chartWhere },
+                  select: {
+                      id: true,
+                      tierBandId: true,
+                      chart: {
+                          select: {
+                              difficulty: true,
+                              level: true,
+                              music: {
+                                  select: {
+                                      index: true,
+                                      title: true,
+                                      artist: true,
+                                      background: true,
+                                  },
+                              },
+                          },
+                      },
+                  },
+                  orderBy: [
+                      { chart: { music: { title: "asc" } } },
+                      { chart: { difficulty: "asc" } },
+                  ],
+                  skip: (page - 1) * pageSize,
+                  take: pageSize,
+              }),
+              db.tierEntry.count({
+                  where: { tierListId, chart: chartWhere },
+              }),
+              Promise.resolve(null),
+          ])
+        : await Promise.all([
+              Promise.resolve([]),
+              Promise.resolve(0),
+              db.tierList.findUnique({
+                  where: { id: tierListId },
+                  include: {
+                      bands: {
+                          include: {
+                              entries: {
+                                  include: {
+                                      chart: {
+                                          include: {
+                                              music: {
+                                                  select: {
+                                                      index: true,
+                                                      title: true,
+                                                      artist: true,
+                                                      background: true,
+                                                  },
+                                              },
+                                          },
+                                      },
+                                  },
+                                  orderBy: { position: "asc" },
+                              },
+                          },
+                          orderBy: { position: "asc" },
+                      },
+                  },
+              }),
+          ]);
+
+    const filterParams = new URLSearchParams({
+        ...(keyword ? { q: keyword } : {}),
+        ...(difficulty ? { difficulty } : {}),
+        ...(level ? { level } : {}),
+    });
+    const pageHref = (nextPage: number) => {
+        const next = new URLSearchParams(filterParams);
+        if (nextPage > 1) next.set("page", String(nextPage));
+        return `/admin/tiers/${tierListId}${next.size > 0 ? `?${next}` : ""}`;
+    };
+    const pageCount = Math.max(1, Math.ceil(goalEntryCount / pageSize));
 
     return (
         <div className="flex flex-col gap-5 px-4 py-5">
             <section>
                 <h1 className="text-title">{tierList.title}</h1>
                 <p className="text-caption mt-1">
-                    채보를 끌어서 구간과 배치 순서를 변경합니다.
+                    {tierList.goal
+                        ? "채보를 검색하고 목표별 서열 상수를 변경합니다."
+                        : "보관된 기존 서열표의 배치를 확인합니다."}
                 </p>
             </section>
 
-            <details className="bg-surface rounded-card group p-3">
-                <summary className="text-body cursor-pointer list-none font-bold">
-                    서열표 정보
-                </summary>
-                <div className="border-divider mt-3 border-t pt-3">
-                    <TierListForm
-                        action={updateTierList}
-                        tierList={{
-                            id: tierList.id,
-                            slug: tierList.slug,
-                            title: tierList.title,
-                            mode: tierList.mode,
-                            description: tierList.description ?? "",
-                            status: tierList.status,
-                        }}
-                    />
-                </div>
-            </details>
+            {tierList.goal ? (
+                <details className="bg-surface rounded-card group p-3">
+                    <summary className="text-body cursor-pointer list-none font-bold">
+                        서열표 정보
+                    </summary>
+                    <div className="border-divider mt-3 border-t pt-3">
+                        <TierListForm
+                            action={updateTierList}
+                            tierList={{
+                                id: tierList.id,
+                                slug: tierList.slug,
+                                title: tierList.title,
+                                mode: tierList.mode,
+                                goal: tierList.goal,
+                                description: tierList.description ?? "",
+                                status: tierList.status,
+                            }}
+                        />
+                    </div>
+                </details>
+            ) : null}
 
-            <section className="flex flex-col gap-3">
-                <form
-                    action={addTierBand}
-                    className="border-divider flex items-center gap-2 rounded-md border border-dashed p-2"
-                >
-                    <input
-                        type="hidden"
-                        name="tierListId"
-                        value={tierList.id}
-                    />
-                    <input
-                        name="value"
-                        type="number"
-                        min="1"
-                        max={MAX_TIER_VALUE}
-                        step="0.1"
-                        required
-                        aria-label="추가할 서열표 상수"
-                        placeholder="구간 추가 (예: 12.7)"
-                        className="text-input h-11 min-w-0 flex-1 bg-transparent text-center font-semibold outline-none"
-                    />
-                    <button
-                        type="submit"
-                        aria-label="상수 구간 추가"
-                        title="상수 구간 추가"
-                        className="text-text-secondary hover:bg-surface-muted hover:text-text-primary ml-auto flex size-11 shrink-0 items-center justify-center rounded-md"
+            {tierList.goal ? (
+                <>
+                    <form
+                        method="get"
+                        className="bg-surface rounded-card grid grid-cols-2 gap-2 p-3"
                     >
-                        <Plus className="size-4" />
-                    </button>
-                </form>
+                        <input
+                            name="q"
+                            defaultValue={keyword}
+                            placeholder="곡 제목 · 아티스트 · 식별자"
+                            className="border-border bg-bg text-input col-span-2 h-11 rounded-md border px-3"
+                        />
+                        <select
+                            name="difficulty"
+                            defaultValue={difficulty}
+                            aria-label="난이도 필터"
+                            className="border-border bg-bg text-input h-11 rounded-md border px-3"
+                        >
+                            <option value="">전체 난이도</option>
+                            {(
+                                ["Normal", "Hard", "Expert", "Real"] as const
+                            ).map((item) => (
+                                <option key={item} value={item}>
+                                    {item}
+                                </option>
+                            ))}
+                        </select>
+                        <select
+                            name="level"
+                            defaultValue={level}
+                            aria-label="공식 레벨 필터"
+                            className="border-border bg-bg text-input h-11 rounded-md border px-3"
+                        >
+                            <option value="">전체 공식 레벨</option>
+                            {TIER_REGULAR_LEVELS.map((item) => (
+                                <option key={item} value={item}>
+                                    Lv.{item}
+                                </option>
+                            ))}
+                            {TIER_REAL_LEVELS.map((item) => (
+                                <option key={item} value={item}>
+                                    Real {item.slice(5)}
+                                </option>
+                            ))}
+                        </select>
+                        <button className="bg-text-primary text-bg h-10 rounded-md text-sm font-bold">
+                            검색
+                        </button>
+                        <Link
+                            href={`/admin/tiers/${tierListId}`}
+                            className="border-border text-text-secondary flex h-10 items-center justify-center rounded-md border text-sm font-semibold"
+                        >
+                            초기화
+                        </Link>
+                    </form>
 
+                    <TierPlacementEditor
+                        tierListId={tierListId}
+                        bands={tierList.bands.map((band) => ({
+                            id: band.id,
+                            value: band.value,
+                        }))}
+                        entries={goalEntries}
+                        totalCount={goalEntryCount}
+                    />
+
+                    {pageCount > 1 ? (
+                        <nav
+                            className="flex items-center justify-between gap-3"
+                            aria-label="채보 페이지"
+                        >
+                            {page > 1 ? (
+                                <Link
+                                    href={pageHref(page - 1)}
+                                    className="border-border text-text-secondary flex h-10 items-center rounded-md border px-3 text-sm font-semibold"
+                                >
+                                    이전
+                                </Link>
+                            ) : (
+                                <span />
+                            )}
+                            <span className="text-caption tabular-nums">
+                                {page}/{pageCount}
+                            </span>
+                            {page < pageCount ? (
+                                <Link
+                                    href={pageHref(page + 1)}
+                                    className="border-border text-text-secondary flex h-10 items-center rounded-md border px-3 text-sm font-semibold"
+                                >
+                                    다음
+                                </Link>
+                            ) : (
+                                <span />
+                            )}
+                        </nav>
+                    ) : null}
+                </>
+            ) : legacyTierList ? (
                 <TierBoard
-                    key={tierList.bands
-                        .map(
-                            (band) =>
-                                `${band.id}:${band.entries
-                                    .map((entry) => entry.id)
-                                    .join(",")}`
-                        )
-                        .join("|")}
-                    tierListId={tierList.id}
-                    bands={tierList.bands.map((band) => ({
+                    tierListId={legacyTierList.id}
+                    bands={legacyTierList.bands.map((band) => ({
                         id: band.id,
                         value: band.value,
                         entries: band.entries.map((entry) => ({
@@ -133,17 +305,19 @@ export default async function EditTierListPage({
                         })),
                     }))}
                 />
-            </section>
+            ) : null}
 
-            <form
-                action={deleteTierList}
-                className="border-divider border-t pt-5"
-            >
-                <input type="hidden" name="id" value={tierList.id} />
-                <button className="border-danger/60 text-danger hover:bg-danger/10 h-10 w-full cursor-pointer rounded-md border text-sm font-bold">
-                    서열표 삭제
-                </button>
-            </form>
+            {!tierList.goal ? (
+                <form
+                    action={deleteTierList}
+                    className="border-divider border-t pt-5"
+                >
+                    <input type="hidden" name="id" value={tierList.id} />
+                    <button className="border-danger/60 text-danger hover:bg-danger/10 h-10 w-full cursor-pointer rounded-md border text-sm font-bold">
+                        보관 서열표 삭제
+                    </button>
+                </form>
+            ) : null}
         </div>
     );
 }

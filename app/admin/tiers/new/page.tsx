@@ -16,6 +16,7 @@ export default function NewTierListPage() {
                     slug: "",
                     title: "",
                     mode: "basic",
+                    goal: "s",
                     description: "",
                     status: "draft",
                 }}

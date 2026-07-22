@@ -1,72 +1,131 @@
-import { Plus } from "lucide-react";
 import Link from "next/link";
 
-import TierListBrowser from "@/components/tiers/tierListBrowser";
+import TierBandBrowser from "@/components/tiers/tierBandBrowser";
+import TierControls from "@/components/tiers/tierControls";
 import { createPageMetadata } from "@/lib/metadata/site";
-import { getUser } from "@/lib/user";
 import {
-    getCachedTierLists,
-    getUserTierListProgress,
-    type PublicTierMode,
-} from "./data";
+    formatTierDate,
+    isTierDifficulty,
+    isTierGoal,
+    isTierLevelFilter,
+    isTierMode,
+    tierGoalLabels,
+    type TierDifficulty,
+    type TierGoal,
+    type TierMode,
+} from "@/lib/tiers";
+import { getUser } from "@/lib/user";
+import { getCachedGoalTierOverview, getTierBandForUser } from "./data";
 
 export const metadata = createPageMetadata({
     title: "악곡 서열표",
     description:
-        "노스텔지어 Basic·Recital의 Expert·Real 채보 서열표와 추천 난이도 구간을 확인합니다.",
+        "노스텔지어 Basic·Recital의 S·Full Combo·Pianist 목표별 통합 서열표를 확인합니다.",
     path: "/tiers",
 });
 
 interface TiersPageProps {
-    searchParams: Promise<{ mode?: string; sort?: string }>;
+    searchParams: Promise<{
+        mode?: string | string[];
+        goal?: string | string[];
+        difficulty?: string | string[];
+        level?: string | string[];
+    }>;
 }
 
-type TierListSort = "default" | "recent";
-
-function normalizeMode(value?: string): PublicTierMode {
-    return value === "basic" || value === "recital" ? value : "all";
+function firstParam(value?: string | string[]) {
+    return Array.isArray(value) ? value[0] : value;
 }
 
-function normalizeSort(value?: string): TierListSort {
-    return value === "recent" ? "recent" : "default";
+function splitParam(value?: string | string[]) {
+    return (firstParam(value) ?? "")
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean);
 }
 
 export default async function TiersPage({ searchParams }: TiersPageProps) {
-    const { mode: requestedMode, sort: requestedSort } = await searchParams;
-    const mode = normalizeMode(requestedMode);
-    const sort = normalizeSort(requestedSort);
-    const [user, tierLists] = await Promise.all([
+    const query = await searchParams;
+    const requestedMode = firstParam(query.mode) ?? "basic";
+    const requestedGoal = firstParam(query.goal) ?? "s";
+    const mode: TierMode = isTierMode(requestedMode) ? requestedMode : "basic";
+    const goal: TierGoal = isTierGoal(requestedGoal) ? requestedGoal : "s";
+    const difficulties = splitParam(query.difficulty).filter(
+        isTierDifficulty
+    ) as TierDifficulty[];
+    const levels = splitParam(query.level).filter(isTierLevelFilter);
+    const [user, tierList] = await Promise.all([
         getUser(),
-        getCachedTierLists("all"),
+        getCachedGoalTierOverview(mode, goal, difficulties, levels),
     ]);
-
-    const progress = user
-        ? await getUserTierListProgress(
-              user.id,
-              tierLists.map((tierList) => tierList.id)
-          )
-        : [];
+    const initialBand =
+        tierList?.bands[0] && tierList
+            ? await getTierBandForUser(
+                  tierList.slug,
+                  tierList.bands[0].id,
+                  user?.id,
+                  difficulties,
+                  levels
+              )
+            : null;
+    const filterKey = `${mode}:${goal}:${difficulties.join(",")}:${levels.join(",")}`;
 
     return (
         <div className="flex flex-col gap-4 px-4 py-5">
-            <h1 className="text-title">서열표</h1>
+            <div className="flex items-center justify-between gap-3">
+                <h1 className="text-title">서열표</h1>
+                {user?.role === "admin" && tierList ? (
+                    <Link
+                        href={`/admin/tiers/${tierList.id}`}
+                        className="text-caption hover:text-text-primary"
+                    >
+                        현재 서열표 편집
+                    </Link>
+                ) : null}
+            </div>
 
-            <TierListBrowser
-                initialMode={mode}
-                initialSort={sort}
-                tierLists={tierLists}
-                progress={progress}
-                isAuthenticated={Boolean(user)}
+            <TierControls
+                key={filterKey}
+                mode={mode}
+                goal={goal}
+                difficulties={difficulties}
+                levels={levels}
             />
 
-            {user?.role === "admin" ? (
-                <Link
-                    href="/admin/tiers/new"
-                    className="border-border text-text-secondary hover:text-text-primary flex h-12 items-center justify-center gap-2 rounded-md border border-dashed text-sm font-semibold transition-colors"
-                >
-                    <Plus size={16} aria-hidden />새 서열표 만들기
-                </Link>
-            ) : null}
+            {tierList ? (
+                <>
+                    <details className="bg-surface rounded-card group px-3 py-3">
+                        <summary className="text-body cursor-pointer list-none font-semibold">
+                            {tierGoalLabels[goal]} 서열표 안내
+                        </summary>
+                        <div className="border-divider text-body-muted mt-3 flex flex-col gap-2 border-t pt-3">
+                            <p>{tierList.description}</p>
+                            <p>
+                                난이도와 공식 레벨은 채보를 찾기 위한 필터이며,
+                                서열 배치는 목표별로 독립적으로 관리됩니다.
+                            </p>
+                            <p className="text-caption">
+                                업데이트 {formatTierDate(tierList.updatedAt)}
+                            </p>
+                        </div>
+                    </details>
+
+                    <TierBandBrowser
+                        key={filterKey}
+                        slug={tierList.slug}
+                        bands={tierList.bands}
+                        initialBand={initialBand}
+                        goal={goal}
+                        difficulties={difficulties}
+                        levels={levels}
+                        showRecords={Boolean(user)}
+                    />
+                </>
+            ) : (
+                <div className="bg-surface text-text-disabled rounded-card flex min-h-32 items-center justify-center px-4 text-center text-sm">
+                    선택한 목표의 공개 서열표가 없습니다.
+                </div>
+            )}
         </div>
     );
 }

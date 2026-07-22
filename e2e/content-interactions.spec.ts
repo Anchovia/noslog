@@ -56,19 +56,35 @@ test("검정 선택 항목을 아코디언으로 열고 닫는다", async ({ pag
     await expectNoHorizontalOverflow(page);
 });
 
-test("비로그인 서열표 상세에 데이터 연동 안내를 표시한다", async ({ page }) => {
+test("비로그인 통합 서열표에서 모드와 목표 필터를 제공한다", async ({
+    page,
+}) => {
     await page.goto("/tiers");
     await expectPageLoaded(page);
 
-    const firstTier = page.locator('a[href^="/tiers/"]').first();
-    if ((await firstTier.count()) === 0) {
-        await expect(page.getByText("공개된 서열표가 없습니다.")).toBeVisible();
+    await expect(
+        page.getByRole("button", { name: "Basic", exact: true })
+    ).toHaveAttribute("aria-pressed", "true");
+    const goalSelect = page.getByRole("combobox", { name: "목표" });
+    await expect(goalSelect).toHaveValue("s");
+    await expect(
+        page.getByRole("button", { name: "난이도 · 전체" })
+    ).toBeVisible();
+    await expect(
+        page.getByRole("button", { name: "레벨 · 전체" })
+    ).toBeVisible();
+
+    const tierRegion = page.getByRole("region", { name: "서열표 구간" });
+    if ((await tierRegion.count()) === 0) {
+        await expect(
+            page.getByText("선택한 목표의 공개 서열표가 없습니다.")
+        ).toBeVisible();
         return;
     }
 
-    await firstTier.click();
-    await expect(
-        page.getByText("데이터 연동 후 추천 구간을 확인할 수 있습니다.")
-    ).toBeVisible();
+    await expect(tierRegion.getByRole("heading").first()).toBeVisible();
+    await goalSelect.selectOption("fc");
+    await expect(page).toHaveURL(/\/tiers\?goal=fc$/);
+    await expect(goalSelect).toHaveValue("fc");
     await expectNoHorizontalOverflow(page);
 });

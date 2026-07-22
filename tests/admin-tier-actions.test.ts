@@ -5,6 +5,7 @@ const mocks = vi.hoisted(() => ({
     chartFindMany: vi.fn(),
     chartFindUnique: vi.fn(),
     bandFindFirst: vi.fn(),
+    bandFindUnique: vi.fn(),
     bandFindMany: vi.fn(),
     bandCount: vi.fn(),
     bandCreate: vi.fn(),
@@ -42,6 +43,7 @@ vi.mock("@/lib/db", () => ({
         },
         tierBand: {
             findFirst: mocks.bandFindFirst,
+            findUnique: mocks.bandFindUnique,
             findMany: mocks.bandFindMany,
             count: mocks.bandCount,
             create: mocks.bandCreate,
@@ -68,6 +70,7 @@ import {
     addTierBand,
     addTierEntry,
     applyTierBoardLayout,
+    moveTierEntryToBand,
     searchTierCharts,
 } from "@/app/admin/tiers/actions";
 
@@ -78,12 +81,23 @@ describe("관리자 서열표 액션", () => {
         mocks.chartFindMany.mockResolvedValue([]);
         mocks.chartFindUnique.mockResolvedValue({ id: 20 });
         mocks.bandFindFirst.mockResolvedValue({ value: 12 });
+        mocks.bandFindUnique.mockResolvedValue({
+            id: 11,
+            tierListId: 5,
+            value: 12.4,
+        });
         mocks.bandFindMany.mockResolvedValue([]);
         mocks.bandCount.mockResolvedValue(0);
         mocks.bandCreate.mockResolvedValue({ id: 10 });
         mocks.bandUpdate.mockResolvedValue({ id: 10 });
         mocks.entryCount.mockResolvedValue(0);
         mocks.entryFindFirst.mockResolvedValue({ position: 2 });
+        mocks.entryFindUnique.mockResolvedValue({
+            id: 1,
+            tierListId: 5,
+            tierBandId: 10,
+            chartId: 20,
+        });
         mocks.entryCreate.mockResolvedValue({ id: 1 });
         mocks.historyCreate.mockResolvedValue({ id: 1 });
         mocks.txEntryUpdate.mockResolvedValue({ id: 1 });
@@ -266,5 +280,24 @@ describe("관리자 서열표 액션", () => {
         expect(mocks.historyCreate).toHaveBeenCalledWith({
             data: { tierListId: 5, chartId: 20, bandValue: 12.4 },
         });
+    });
+
+    it("통합 서열표 채보를 새 상수 구간으로 옮기고 이력을 남긴다", async () => {
+        mocks.entryFindMany.mockResolvedValue([{ id: 2 }, { id: 3 }]);
+        mocks.entryFindFirst.mockResolvedValue({ position: 4 });
+        const formData = new FormData();
+        formData.set("entryId", "1");
+        formData.set("tierBandId", "11");
+
+        await moveTierEntryToBand(formData);
+
+        expect(mocks.txEntryUpdate).toHaveBeenCalledWith({
+            where: { id: 1 },
+            data: { tierBandId: 11, position: 5 },
+        });
+        expect(mocks.historyCreate).toHaveBeenCalledWith({
+            data: { tierListId: 5, chartId: 20, bandValue: 12.4 },
+        });
+        expect(mocks.updateTag).toHaveBeenCalledWith("tier-lists");
     });
 });

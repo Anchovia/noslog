@@ -265,6 +265,7 @@ model TierList {
   slug        String                 @unique
   title       String
   mode        String
+  goal        String?
   description String?
   status      String                 @default("draft")
   createdAt   DateTime               @default(now()) @map("created_at")
@@ -273,7 +274,7 @@ model TierList {
   entries     TierEntry[]
   history     TierPlacementHistory[]
 
-  @@index([mode, status, updatedAt])
+  @@index([mode, goal, status, updatedAt])
 }
 
 // 서열표 안의 12.9, 12.8 같은 상수 구간을 관리함

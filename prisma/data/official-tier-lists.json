@@ -1,34 +1,50 @@
 [
     {
-        "slug": "basic-real",
-        "legacySlugs": ["basic-all"],
-        "title": "Basic Real 서열표",
-        "mode": "basic",
-        "difficulty": "Real",
-        "description": "Real 채보를 공식 레벨 상수별로 정리한 Basic 서열표"
-    },
-    {
-        "slug": "recital-real",
-        "legacySlugs": ["recital-all"],
-        "title": "Recital Real 서열표",
-        "mode": "recital",
-        "difficulty": "Real",
-        "description": "Real 채보를 공식 레벨 상수별로 정리한 Recital 서열표"
-    },
-    {
-        "slug": "basic-expert",
+        "slug": "basic-s",
         "legacySlugs": [],
-        "title": "Basic Expert 서열표",
+        "title": "Basic S 서열표",
         "mode": "basic",
-        "difficulty": "Expert",
-        "description": "Expert 채보를 공식 레벨 상수별로 정리한 Basic 서열표"
+        "goal": "s",
+        "description": "Basic 모드에서 S 달성을 목표로 하는 통합 서열표"
     },
     {
-        "slug": "recital-expert",
+        "slug": "basic-fc",
         "legacySlugs": [],
-        "title": "Recital Expert 서열표",
+        "title": "Basic Full Combo 서열표",
+        "mode": "basic",
+        "goal": "fc",
+        "description": "Basic 모드에서 Full Combo 달성을 목표로 하는 통합 서열표"
+    },
+    {
+        "slug": "basic-pianist",
+        "legacySlugs": [],
+        "title": "Basic Pianist 서열표",
+        "mode": "basic",
+        "goal": "pianist",
+        "description": "Basic 모드에서 Pianist 달성을 목표로 하는 통합 서열표"
+    },
+    {
+        "slug": "recital-s",
+        "legacySlugs": [],
+        "title": "Recital S 서열표",
         "mode": "recital",
-        "difficulty": "Expert",
-        "description": "Expert 채보를 공식 레벨 상수별로 정리한 Recital 서열표"
+        "goal": "s",
+        "description": "Recital 모드에서 S 달성을 목표로 하는 통합 서열표"
+    },
+    {
+        "slug": "recital-fc",
+        "legacySlugs": [],
+        "title": "Recital Full Combo 서열표",
+        "mode": "recital",
+        "goal": "fc",
+        "description": "Recital 모드에서 Full Combo 달성을 목표로 하는 통합 서열표"
+    },
+    {
+        "slug": "recital-pianist",
+        "legacySlugs": [],
+        "title": "Recital Pianist 서열표",
+        "mode": "recital",
+        "goal": "pianist",
+        "description": "Recital 모드에서 Pianist 달성을 목표로 하는 통합 서열표"
     }
 ]

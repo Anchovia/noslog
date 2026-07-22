@@ -7,6 +7,7 @@ export interface TierListFormData {
     slug: string;
     title: string;
     mode: string;
+    goal: string;
     description: string;
     status: string;
 }
@@ -57,6 +58,18 @@ export default function TierListForm({
                     >
                         <option value="basic">Basic</option>
                         <option value="recital">Recital</option>
+                    </select>
+                </label>
+                <label className="text-caption col-span-2 flex flex-col gap-1">
+                    목표
+                    <select
+                        name="goal"
+                        defaultValue={tierList.goal}
+                        className={inputClass}
+                    >
+                        <option value="s">S</option>
+                        <option value="fc">Full Combo</option>
+                        <option value="pianist">Pianist</option>
                     </select>
                 </label>
                 <label className="text-caption col-span-2 flex flex-col gap-1">

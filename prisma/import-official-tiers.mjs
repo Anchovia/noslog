@@ -35,15 +35,24 @@ function constantKey(value) {
 function groupCharts(charts) {
     const groups = new Map();
 
+    for (let unit = 145; unit >= 10; unit -= 1) {
+        const value = unit / 10;
+        groups.set(constantKey(value), { value, charts: [] });
+    }
+
     for (const chart of charts) {
         const value = Number(chart.level_constant);
         const key = constantKey(value);
-        const group = groups.get(key) ?? { value, charts: [] };
+        const group = groups.get(key);
+        if (!group) {
+            throw new Error(
+                `${chart.music.title} ${chart.difficulty}: 서열 상수 ${value}가 1.0~14.5 범위를 벗어났습니다.`
+            );
+        }
         group.charts.push(chart);
-        groups.set(key, group);
     }
 
-    return [...groups.values()].sort((left, right) => right.value - left.value);
+    return [...groups.values()];
 }
 
 function validateDefinitions() {
@@ -55,18 +64,19 @@ function validateDefinitions() {
         if (!["basic", "recital"].includes(definition.mode)) {
             throw new Error(`지원하지 않는 모드: ${definition.mode}`);
         }
-        if (!["Expert", "Real"].includes(definition.difficulty)) {
-            throw new Error(`지원하지 않는 난이도: ${definition.difficulty}`);
+        if (!["s", "fc", "pianist"].includes(definition.goal)) {
+            throw new Error(`지원하지 않는 목표: ${definition.goal}`);
         }
         slugs.add(definition.slug);
     }
 }
 
-async function loadCharts(difficulty) {
+async function loadCharts() {
     const charts = await db.musicChart.findMany({
-        where: { difficulty, level_constant: { not: null } },
+        where: { level_constant: { not: null } },
         select: {
             id: true,
+            difficulty: true,
             level_constant: true,
             music: {
                 select: {
@@ -86,7 +96,8 @@ async function loadCharts(difficulty) {
         return (
             titleResult ||
             titleCollator.compare(left.music.title, right.music.title) ||
-            left.music.index.localeCompare(right.music.index)
+            left.music.index.localeCompare(right.music.index) ||
+            left.difficulty.localeCompare(right.difficulty)
         );
     });
 
@@ -120,6 +131,7 @@ async function replaceTierList(definition, groups, existing) {
                           slug: definition.slug,
                           title: definition.title,
                           mode: definition.mode,
+                          goal: definition.goal,
                           description: definition.description,
                           status: "published",
                       },
@@ -129,6 +141,7 @@ async function replaceTierList(definition, groups, existing) {
                           slug: definition.slug,
                           title: definition.title,
                           mode: definition.mode,
+                          goal: definition.goal,
                           description: definition.description,
                           status: "published",
                       },
@@ -170,7 +183,7 @@ async function replaceTierList(definition, groups, existing) {
                     tierListId: tierList.id,
                     tierBandId,
                     chartId: chart.id,
-                    position,
+                    position: position + 1,
                 }));
             });
 
@@ -193,23 +206,12 @@ async function replaceTierList(definition, groups, existing) {
 
 async function main() {
     validateDefinitions();
-    const difficulties = [
-        ...new Set(definitions.map((item) => item.difficulty)),
-    ];
-    const chartsByDifficulty = new Map();
-
-    for (const difficulty of difficulties) {
-        const charts = await loadCharts(difficulty);
-        if (charts.length === 0) {
-            throw new Error(
-                `${difficulty}: 공식 상수가 등록된 채보가 없습니다.`
-            );
-        }
-        chartsByDifficulty.set(difficulty, charts);
+    const charts = await loadCharts();
+    if (charts.length === 0) {
+        throw new Error("공식 상수가 등록된 채보가 없습니다.");
     }
 
     for (const definition of definitions) {
-        const charts = chartsByDifficulty.get(definition.difficulty);
         const groups = groupCharts(charts);
         const existing = await findExistingList(definition);
         const summary = `${definition.title}: ${groups.length}개 구간, ${charts.length}곡`;
