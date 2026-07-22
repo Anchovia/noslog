@@ -34,6 +34,18 @@ const MAP_SCOPE_BOUNDS: Record<
         southWest: [36.85, 126.35],
         northEast: [38.3, 127.85],
     },
+    daejeon: {
+        southWest: [36.18, 127.2],
+        northEast: [36.5, 127.55],
+    },
+    gwangju: {
+        southWest: [35.02, 126.65],
+        northEast: [35.32, 127.05],
+    },
+    daegu: {
+        southWest: [35.65, 128.35],
+        northEast: [36.05, 128.85],
+    },
     nationwide: {
         southWest: [33.0, 124.5],
         northEast: [38.8, 130.0],

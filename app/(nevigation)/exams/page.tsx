@@ -129,6 +129,12 @@ export default async function ExamsPage() {
     });
 
     return (
-        <ExamDashboard exams={items} isAuthenticated={Boolean(session.id)} />
+        <div className="flex flex-col gap-3 px-4 py-3">
+            <h1 className="text-title">검정</h1>
+            <ExamDashboard
+                exams={items}
+                isAuthenticated={Boolean(session.id)}
+            />
+        </div>
     );
 }

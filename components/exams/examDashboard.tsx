@@ -133,7 +133,7 @@ export default function ExamDashboard({
     }
 
     return (
-        <div className="flex flex-col gap-3 px-4 py-3">
+        <div className="flex flex-col gap-3">
             <ExamModeTabs mode={mode} onChange={changeMode} />
 
             {modeExams.length === 0 ? (

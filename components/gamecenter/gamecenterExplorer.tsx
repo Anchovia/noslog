@@ -41,13 +41,19 @@ export interface GamecenterArcade {
     preferredCount: number;
 }
 
-export type GamecenterMapScope = "seoul" | "gyeonggi" | "nationwide";
+export type GamecenterMapScope =
+    "nationwide" | "seoul" | "gyeonggi" | "daejeon" | "gwangju" | "daegu";
 
 const MAP_SCOPE_LABELS: Record<GamecenterMapScope, string> = {
+    nationwide: "전국",
     seoul: "서울",
     gyeonggi: "경기",
-    nationwide: "전국",
+    daejeon: "대전",
+    gwangju: "광주",
+    daegu: "대구",
 };
+
+const REGION_ORDER = ["서울", "경기", "대전", "광주", "대구"];
 
 interface GamecenterExplorerProps {
     appKey: string;
@@ -59,6 +65,21 @@ interface GamecenterExplorerProps {
 function kakaoMapUrl(arcade: GamecenterArcade) {
     if (arcade.latitude === null || arcade.longitude === null) return null;
     return `https://map.kakao.com/link/map/${encodeURIComponent(arcade.name)},${arcade.latitude},${arcade.longitude}`;
+}
+
+function getArcadeRegionLabel(arcade: GamecenterArcade) {
+    const location = `${arcade.region ?? ""} ${arcade.address ?? ""}`;
+    const knownRegion = REGION_ORDER.find((region) =>
+        location.includes(region)
+    );
+    return knownRegion ?? (arcade.region?.trim() || "기타 지역");
+}
+
+function matchesMapScope(arcade: GamecenterArcade, scope: GamecenterMapScope) {
+    return (
+        scope === "nationwide" ||
+        getArcadeRegionLabel(arcade) === MAP_SCOPE_LABELS[scope]
+    );
 }
 
 export default function GamecenterExplorer({
@@ -84,24 +105,37 @@ export default function GamecenterExplorer({
 
     const filteredArcades = useMemo(() => {
         const normalizedQuery = query.trim().toLocaleLowerCase("ko-KR");
-        if (!normalizedQuery) return arcades;
-        return arcades.filter((arcade) =>
-            [arcade.name, arcade.region, arcade.address]
-                .filter(Boolean)
-                .some((value) =>
-                    value!.toLocaleLowerCase("ko-KR").includes(normalizedQuery)
-                )
-        );
-    }, [arcades, query]);
+        return arcades
+            .filter((arcade) => matchesMapScope(arcade, mapScope))
+            .filter(
+                (arcade) =>
+                    !normalizedQuery ||
+                    [arcade.name, arcade.region, arcade.address]
+                        .filter(Boolean)
+                        .some((value) =>
+                            value!
+                                .toLocaleLowerCase("ko-KR")
+                                .includes(normalizedQuery)
+                        )
+            )
+            .sort((a, b) => {
+                const aRegion = getArcadeRegionLabel(a);
+                const bRegion = getArcadeRegionLabel(b);
+                const aOrder = REGION_ORDER.indexOf(aRegion);
+                const bOrder = REGION_ORDER.indexOf(bRegion);
+                const regionOrder =
+                    (aOrder === -1 ? REGION_ORDER.length : aOrder) -
+                    (bOrder === -1 ? REGION_ORDER.length : bOrder);
+                return (
+                    regionOrder ||
+                    aRegion.localeCompare(bRegion, "ko-KR") ||
+                    a.name.localeCompare(b.name, "ko-KR")
+                );
+            });
+    }, [arcades, mapScope, query]);
 
     const mapArcades = useMemo(() => {
-        if (mapScope === "nationwide") return arcades;
-        return arcades.filter((arcade) => {
-            const location = `${arcade.region ?? ""} ${arcade.address ?? ""}`;
-            return mapScope === "seoul"
-                ? location.includes("서울")
-                : location.includes("경기");
-        });
+        return arcades.filter((arcade) => matchesMapScope(arcade, mapScope));
     }, [arcades, mapScope]);
 
     function openFromMap(arcadeId: number) {
@@ -141,24 +175,32 @@ export default function GamecenterExplorer({
         }, 2000);
     }
 
+    function changeMapScope(scope: GamecenterMapScope) {
+        setMapScope(scope);
+        setOpenArcadeId(null);
+    }
+
     return (
         <div className="flex flex-col gap-4">
             <section className="flex items-center justify-between gap-3">
-                <h1 className="text-title">NOSTALGIA 오락실</h1>
+                <h1 className="text-title">오락실</h1>
                 <label>
                     <span className="sr-only">지도 지역</span>
                     <select
                         value={mapScope}
                         onChange={(event) =>
-                            setMapScope(
+                            changeMapScope(
                                 event.target.value as GamecenterMapScope
                             )
                         }
                         className="border-border bg-surface text-label focus:border-focus h-9 rounded-md border px-3 outline-none"
                     >
-                        <option value="nationwide">전국</option>
+                        <option value="nationwide">전체</option>
                         <option value="seoul">서울</option>
                         <option value="gyeonggi">경기</option>
+                        <option value="daejeon">대전</option>
+                        <option value="gwangju">광주</option>
+                        <option value="daegu">대구</option>
                     </select>
                 </label>
             </section>
@@ -192,9 +234,14 @@ export default function GamecenterExplorer({
             </label>
 
             <section className="flex flex-col gap-2" aria-label="오락실 목록">
-                {filteredArcades.map((arcade) => {
+                {filteredArcades.map((arcade, index) => {
                     const isOpen = openArcadeId === arcade.id;
                     const isPreferred = preferredArcadeId === arcade.id;
+                    const regionLabel = getArcadeRegionLabel(arcade);
+                    const showRegionHeading =
+                        index === 0 ||
+                        getArcadeRegionLabel(filteredArcades[index - 1]) !==
+                            regionLabel;
                     const mapUrl = kakaoMapUrl(arcade);
                     const statusMeta = isArcadeMachineStatus(
                         arcade.machineStatus
@@ -203,7 +250,15 @@ export default function GamecenterExplorer({
                         : ARCADE_MACHINE_STATUS_META.unknown;
                     const hasCoordinates =
                         arcade.latitude !== null && arcade.longitude !== null;
-                    return (
+                    return [
+                        showRegionHeading ? (
+                            <h2
+                                key={`region-${regionLabel}`}
+                                className="text-section mt-2 px-1 first:mt-0"
+                            >
+                                {regionLabel}
+                            </h2>
+                        ) : null,
                         <article
                             id={`gamecenter-${arcade.id}`}
                             key={arcade.id}
@@ -452,8 +507,8 @@ export default function GamecenterExplorer({
                                     </div>
                                 </div>
                             ) : null}
-                        </article>
-                    );
+                        </article>,
+                    ];
                 })}
 
                 {filteredArcades.length === 0 ? (

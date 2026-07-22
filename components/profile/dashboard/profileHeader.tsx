@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import Badge from "@/components/ui/Badge";
 import DiscordIcon from "@/components/ui/DiscordIcon";
+import ProfileAvatar from "@/components/profile/profileAvatar";
 
 import ProfileShareDialog from "./profileShareDialog";
 import type { ProfileMode, ProfileUser } from "./profileTypes";
@@ -23,14 +24,10 @@ export default function ProfileHeader({
     return (
         <>
             <section className="flex items-center gap-3">
-                <span
-                    className="border-border bg-surface-muted size-15 shrink-0 rounded-full border bg-cover bg-center"
-                    style={{
-                        backgroundImage: user.avatar
-                            ? `url(${user.avatar})`
-                            : undefined,
-                    }}
-                    aria-label={`${user.username || "유저"} 프로필 이미지`}
+                <ProfileAvatar
+                    avatar={user.avatar}
+                    username={user.username}
+                    size={60}
                 />
                 <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
@@ -41,15 +38,20 @@ export default function ProfileHeader({
                             {user.username || "이름 없는 유저"}
                         </h1>
                         <div className="flex shrink-0 gap-1.5">
-                            <ProfileShareDialog user={user} mode={mode} />
                             {isOwner ? (
-                                <Link
-                                    href="/profile/settings"
-                                    className="border-border text-text-secondary hover:bg-surface-muted hover:text-text-primary focus-visible:ring-focus/40 flex size-9 cursor-pointer items-center justify-center rounded-md border transition-colors focus-visible:ring-2 focus-visible:outline-none"
-                                    aria-label="프로필 설정"
-                                >
-                                    <Settings size={16} />
-                                </Link>
+                                <>
+                                    <ProfileShareDialog
+                                        user={user}
+                                        mode={mode}
+                                    />
+                                    <Link
+                                        href="/profile/settings"
+                                        className="border-border text-text-secondary hover:bg-surface-muted hover:text-text-primary focus-visible:ring-focus/40 flex size-9 cursor-pointer items-center justify-center rounded-md border transition-colors focus-visible:ring-2 focus-visible:outline-none"
+                                        aria-label="프로필 설정"
+                                    >
+                                        <Settings size={16} />
+                                    </Link>
+                                </>
                             ) : null}
                         </div>
                     </div>
