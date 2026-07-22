@@ -121,7 +121,9 @@ export default async function AdminSyncsPage({
                                 </div>
                             </div>
                             {sync.error_message ? (
-                                <pre className="border-danger/30 bg-danger/5 text-danger overflow-x-auto rounded-md border p-2 text-xs whitespace-pre-wrap">
+                                <pre
+                                    className={`${sync.status === "completed" ? "border-score/30 bg-score/5 text-score" : "border-danger/30 bg-danger/5 text-danger"} overflow-x-auto rounded-md border p-2 text-xs whitespace-pre-wrap`}
+                                >
                                     {sync.error_message}
                                 </pre>
                             ) : null}

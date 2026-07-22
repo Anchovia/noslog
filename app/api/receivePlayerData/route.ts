@@ -2,10 +2,7 @@ import { verifySyncToken } from "@/lib/bookmarklet";
 import { CACHE_TAGS, getUserProfileTag } from "@/lib/cacheTags";
 import db from "@/lib/db";
 import { updateDummy } from "@/lib/dummy/bingo";
-import {
-    type SyncMusicInput,
-    updateMusic,
-} from "@/lib/services/music/updateMusic";
+import type { SyncMusicInput } from "@/lib/services/music/updateMusic";
 import { updateGrade } from "@/lib/services/user/updateGrade";
 import { updatePlayCount } from "@/lib/services/user/updatePlayCount";
 import { updatePlayData } from "@/lib/services/user/updatePlayData";
@@ -112,6 +109,56 @@ function json(
 type SyncAttemptResult =
     | { allowed: true; syncId: number }
     | { allowed: false; reason: "processing" | "cooldown"; retryAfter: number };
+
+type SkippedChart = {
+    musicIndex: string;
+    difficulty: string;
+};
+
+async function filterKnownMusic(music: SyncMusicInput[]) {
+    const charts = await db.musicChart.findMany({
+        where: {
+            music_idx: {
+                in: [...new Set(music.map((item) => item["@index"]))],
+            },
+        },
+        select: { music_idx: true, difficulty: true },
+    });
+    const knownCharts = new Set(
+        charts.map((chart) => `${chart.music_idx}:${chart.difficulty}`)
+    );
+    const skippedCharts: SkippedChart[] = [];
+    const knownMusic = music.flatMap((item) => {
+        const sheet = item.sheet.filter((chart) => {
+            const known = knownCharts.has(
+                `${item["@index"]}:${chart.difficulty}`
+            );
+            if (!known) {
+                skippedCharts.push({
+                    musicIndex: item["@index"],
+                    difficulty: chart.difficulty,
+                });
+            }
+            return known;
+        });
+
+        return sheet.length > 0 ? [{ ...item, sheet }] : [];
+    });
+
+    return { knownMusic, skippedCharts };
+}
+
+function formatSkippedCharts(skippedCharts: SkippedChart[]) {
+    if (skippedCharts.length === 0) return null;
+
+    const preview = skippedCharts
+        .slice(0, 20)
+        .map((chart) => `${chart.musicIndex} (${chart.difficulty})`)
+        .join(", ");
+    const remainder = skippedCharts.length - 20;
+
+    return `DB에 등록되지 않은 채보 ${skippedCharts.length}개를 건너뛰었습니다: ${preview}${remainder > 0 ? ` 외 ${remainder}개` : ""}`;
+}
 
 // 사용자별 DB 잠금으로 여러 서버 인스턴스에서도 동기화 시작을 직렬화함
 async function createSyncAttempt(
@@ -245,17 +292,24 @@ export async function POST(request: NextRequest) {
     const syncId = syncAttempt.syncId;
 
     try {
-        if (music) {
-            await updateMusic(music);
-        }
         await updatePlayCount(user.id, name, playCount);
 
         const insertedPlays = await updateRecentPlay(user.id, history, syncId);
         let changedRecords = 0;
+        let syncNotice: string | null = null;
         if (music) {
-            changedRecords = await updatePlayData(user.id, music, syncId);
-            await updateGrade(user.id);
-            await updateDummy();
+            const { knownMusic, skippedCharts } = await filterKnownMusic(music);
+            syncNotice = formatSkippedCharts(skippedCharts);
+
+            if (knownMusic.length > 0) {
+                changedRecords = await updatePlayData(
+                    user.id,
+                    knownMusic,
+                    syncId
+                );
+                await updateGrade(user.id);
+                await updateDummy();
+            }
         }
 
         await db.dataSync.update({
@@ -264,6 +318,7 @@ export async function POST(request: NextRequest) {
                 status: "completed",
                 inserted_plays: insertedPlays,
                 changed_records: changedRecords,
+                error_message: syncNotice,
                 completed_at: new Date(),
             },
         });
@@ -271,8 +326,6 @@ export async function POST(request: NextRequest) {
         revalidateTag(getUserProfileTag(user.id), "max");
 
         if (music) {
-            revalidateTag(CACHE_TAGS.musicCatalog, "max");
-            revalidateTag(CACHE_TAGS.musicDetails, "max");
             revalidateTag(CACHE_TAGS.chartRankings, "max");
             revalidateTag(CACHE_TAGS.userRankings, "max");
             revalidateTag(CACHE_TAGS.bingos, "max");
