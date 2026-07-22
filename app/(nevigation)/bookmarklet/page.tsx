@@ -1,6 +1,5 @@
 import { regenerateSyncToken } from "@/app/(nevigation)/bookmarklet/action";
 import BookmarkletInstall from "@/components/bookmarklet/bookmarkletInstall";
-import GuideMediaPlaceholder from "@/components/bookmarklet/guideMediaPlaceholder";
 import Button from "@/components/ui/Button";
 import { createBookmarkletHref, createSyncToken } from "@/lib/bookmarklet";
 import db from "@/lib/db";
@@ -10,6 +9,7 @@ import { formatDistanceToNow } from "date-fns";
 import { ko } from "date-fns/locale";
 import { Bookmark, CircleCheck, LogIn, RefreshCw } from "lucide-react";
 import { headers } from "next/headers";
+import Image from "next/image";
 import Link from "next/link";
 
 export const metadata = createPageMetadata({
@@ -56,7 +56,6 @@ export default async function BookmarkletPage() {
                   orderBy: { started_at: "desc" },
                   select: {
                       status: true,
-                      sync_scope: true,
                       started_at: true,
                       completed_at: true,
                   },
@@ -93,10 +92,50 @@ export default async function BookmarkletPage() {
             <header>
                 <h1 className="text-title">데이터 연동</h1>
                 <p className="text-body-muted mt-2">
-                    북마클릿을 한 번 등록하면 NOSTALGIA 페이지에서 클릭 한
-                    번으로 기록이 동기화됩니다.
+                    북마클릿 등록으로 NOSTALGIA 기록을 동기화할 수 있습니다.
                 </p>
             </header>
+
+            <section className="border-border rounded-card flex min-h-15 items-center gap-3 border px-4 py-3">
+                <span
+                    className={
+                        latestSync?.status === "failed"
+                            ? "bg-danger size-2 shrink-0 rounded-full"
+                            : latestSync?.status === "completed"
+                              ? "bg-success size-2 shrink-0 rounded-full"
+                              : "bg-text-disabled size-2 shrink-0 rounded-full"
+                    }
+                />
+                <div className="min-w-0 flex-1">
+                    <p className="text-text-primary truncate text-sm font-semibold">
+                        {syncLabel}
+                    </p>
+                    <p className="text-caption mt-0.5">
+                        {user
+                            ? "문제가 있으면 토큰을 재발급 해주세요."
+                            : "로그인 후 연동 상태를 확인할 수 있습니다."}
+                    </p>
+                </div>
+                {user ? (
+                    <form action={regenerateSyncToken}>
+                        <Button
+                            type="submit"
+                            variant="ghost"
+                            size="icon"
+                            aria-label="연동 토큰 재발급"
+                            title="연동 토큰 재발급"
+                        >
+                            <RefreshCw size={16} aria-hidden />
+                        </Button>
+                    </form>
+                ) : (
+                    <CircleCheck
+                        size={18}
+                        className="text-text-disabled"
+                        aria-hidden
+                    />
+                )}
+            </section>
 
             <section className="bg-surface rounded-card flex flex-col gap-4 p-4">
                 <StepTitle number={1}>북마클릿 등록</StepTitle>
@@ -129,70 +168,37 @@ export default async function BookmarkletPage() {
 
                 <ol className="text-body flex flex-col gap-4">
                     <li className="flex flex-col gap-2">
-                        <GuideMediaPlaceholder label="NOSTALGIA 로그인" />
                         <span className="flex items-center gap-2">
                             <span className="bg-text-disabled size-1.5 shrink-0 rounded-full" />
                             p.eagate NOSTALGIA 페이지에 로그인
                         </span>
+                        <Image
+                            src="/images/guides/nostalgia-login.gif"
+                            alt="p.eagate NOSTALGIA 페이지에 로그인하는 방법"
+                            width={1280}
+                            height={720}
+                            unoptimized
+                            className="border-border h-auto w-full rounded-md border"
+                        />
                     </li>
                     <li className="flex flex-col gap-2">
-                        <GuideMediaPlaceholder label="NosLog 동기화 실행" />
                         <span className="flex items-center gap-2">
                             <span className="bg-text-disabled size-1.5 shrink-0 rounded-full" />
-                            북마크바의 <strong>NosLog 동기화</strong> 클릭
+                            <span className="whitespace-nowrap">
+                                북마크바의 <strong>NosLog 동기화</strong> 클릭
+                                및 동기화 완료
+                            </span>
                         </span>
-                    </li>
-                    <li className="flex flex-col gap-2">
-                        <GuideMediaPlaceholder label="동기화 진행 상태" />
-                        <span className="flex items-center gap-2">
-                            <span className="bg-text-disabled size-1.5 shrink-0 rounded-full" />
-                            진행 상태가 표시되고 완료 후 프로필 갱신
-                        </span>
+                        <Image
+                            src="/images/guides/noslog-sync.gif"
+                            alt="북마크바에서 NosLog 동기화를 실행하는 방법"
+                            width={1280}
+                            height={720}
+                            unoptimized
+                            className="border-border h-auto w-full rounded-md border"
+                        />
                     </li>
                 </ol>
-            </section>
-
-            <section className="border-border rounded-card flex min-h-15 items-center gap-3 border px-4">
-                <span
-                    className={
-                        latestSync?.status === "failed"
-                            ? "bg-danger size-2 shrink-0 rounded-full"
-                            : latestSync?.status === "completed"
-                              ? "bg-success size-2 shrink-0 rounded-full"
-                              : "bg-text-disabled size-2 shrink-0 rounded-full"
-                    }
-                />
-                <div className="min-w-0 flex-1">
-                    <p className="text-text-primary truncate text-sm font-semibold">
-                        {syncLabel}
-                    </p>
-                    <p className="text-caption mt-0.5">
-                        {user
-                            ? latestSync?.status === "completed"
-                                ? `${latestSync.sync_scope === "recent" ? "최근 기록" : "전체 기록"} 동기화 · 문제가 있으면 토큰을 재발급하세요.`
-                                : "문제가 있으면 연동 토큰을 재발급하세요."
-                            : "로그인 후 연동 상태를 확인할 수 있습니다."}
-                    </p>
-                </div>
-                {user ? (
-                    <form action={regenerateSyncToken}>
-                        <Button
-                            type="submit"
-                            variant="ghost"
-                            size="icon"
-                            aria-label="연동 토큰 재발급"
-                            title="연동 토큰 재발급"
-                        >
-                            <RefreshCw size={16} aria-hidden />
-                        </Button>
-                    </form>
-                ) : (
-                    <CircleCheck
-                        size={18}
-                        className="text-text-disabled"
-                        aria-hidden
-                    />
-                )}
             </section>
         </div>
     );

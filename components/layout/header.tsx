@@ -2,58 +2,47 @@ import { getUser } from "@/lib/user";
 import Image from "next/image";
 import Link from "next/link";
 
-const navItems = [
-    { href: "/music", label: "악곡" },
-    { href: "/rankings", label: "랭킹" },
-    { href: "/tiers", label: "서열" },
-    { href: "/bingo", label: "빙고" },
-    { href: "/exams", label: "검정" },
-];
+import HeaderMenu, { HeaderPrimaryNavigation } from "./headerNavigation";
 
 export default async function Header() {
     const user = await getUser();
 
     return (
-        <header className="border-divider bg-surface flex h-14 items-center border-b px-3 min-[390px]:px-4">
+        <header className="border-divider bg-surface sticky top-0 z-50 flex h-14 items-center border-b px-3 min-[390px]:px-4">
             <Link href="/" className="flex shrink-0 items-center gap-2">
                 <span className="text-wordmark tracking-normal">NosLog</span>
             </Link>
-            <div className="ml-auto flex min-w-0 items-center gap-2 min-[390px]:gap-3">
-                <nav
-                    className="flex min-w-0 items-center gap-1 min-[390px]:gap-2"
-                    aria-label="주요 메뉴"
-                >
-                    {navItems.map((item) => (
-                        <Link
-                            key={item.href}
-                            href={item.href}
-                            className="text-section text-text-secondary hover:text-text-primary flex h-10 shrink-0 items-center transition-colors"
-                        >
-                            {item.label}
-                        </Link>
-                    ))}
-                </nav>
+            <div className="ml-auto flex min-w-0 items-center">
+                <HeaderPrimaryNavigation />
 
-                {user ? (
-                    <Link
-                        href={`/profile/${user.id}`}
-                        className="border-border bg-text-primary text-bg relative flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full border text-sm font-bold"
-                        aria-label={`${user.username ?? "사용자"} 프로필`}
-                    >
-                        {user.avatar ? (
-                            <Image src={user.avatar} alt="" fill sizes="32px" />
-                        ) : (
-                            (user.username?.charAt(0) ?? "N")
-                        )}
-                    </Link>
-                ) : (
-                    <Link
-                        href="/login"
-                        className="rounded-card border-border text-text-primary hover:bg-surface-muted flex h-10 shrink-0 items-center border px-3 text-sm font-bold transition-colors"
-                    >
-                        로그인
-                    </Link>
-                )}
+                <div className="flex shrink-0 items-center">
+                    {user ? (
+                        <Link
+                            href={`/profile/${user.id}`}
+                            className="border-border bg-text-primary text-bg relative mx-1.5 flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full border text-sm font-bold"
+                            aria-label={`${user.username ?? "사용자"} 프로필`}
+                        >
+                            {user.avatar ? (
+                                <Image
+                                    src={user.avatar}
+                                    alt=""
+                                    fill
+                                    sizes="32px"
+                                />
+                            ) : (
+                                (user.username?.charAt(0) ?? "N")
+                            )}
+                        </Link>
+                    ) : (
+                        <Link
+                            href="/login"
+                            className="rounded-card border-border text-text-primary hover:bg-surface-muted mx-1 flex h-10 shrink-0 items-center border px-3 text-sm font-bold transition-colors"
+                        >
+                            로그인
+                        </Link>
+                    )}
+                    <HeaderMenu />
+                </div>
             </div>
         </header>
     );

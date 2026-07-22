@@ -104,17 +104,21 @@ export default function ProfileHeader({
                         </span>
                     </span>
                 ) : null}
-                {user.preferredArcade ? (
+                <span
+                    className="bg-surface text-caption flex min-w-0 items-center gap-1.5 rounded-md px-2.5 py-1.5"
+                    title={user.preferredArcade?.name ?? "선호 오락실 미설정"}
+                >
+                    <MapPin className="text-chart size-3.5 shrink-0" />
                     <span
-                        className="bg-surface text-caption flex min-w-0 items-center gap-1.5 rounded-md px-2.5 py-1.5"
-                        title={user.preferredArcade.name}
+                        className={
+                            user.preferredArcade
+                                ? "truncate"
+                                : "text-text-disabled truncate"
+                        }
                     >
-                        <MapPin className="text-chart size-3.5 shrink-0" />
-                        <span className="truncate">
-                            {user.preferredArcade.name}
-                        </span>
+                        {user.preferredArcade?.name ?? "미설정"}
                     </span>
-                ) : null}
+                </span>
             </div>
         </>
     );

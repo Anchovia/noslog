@@ -18,6 +18,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import DiscordIcon from "@/components/ui/DiscordIcon";
 import { Switch } from "@/components/ui/Switch";
+import { ThemeSetting } from "@/components/theme/themeToggle";
 
 interface ProfileSettingCardProps {
     user: {
@@ -189,6 +190,8 @@ export default function ProfileSettingCard({
                     <FieldError message={fileError} />
                 </div>
             </section>
+
+            <ThemeSetting />
 
             <section className="bg-surface rounded-card flex flex-col gap-4 p-4">
                 <div>

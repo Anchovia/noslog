@@ -33,7 +33,7 @@ export default function ScoreTrend({ points }: ScoreTrendProps) {
     const maximum = Math.min(1000000, Math.max(...scores) + 10000);
 
     return (
-        <div className="h-40 w-full">
+        <div className="h-40 w-full [&_.recharts-surface:focus:not(:focus-visible)]:outline-none">
             <ResponsiveContainer width="100%" height="100%">
                 <LineChart
                     data={points}
