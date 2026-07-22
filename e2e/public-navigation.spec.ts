@@ -6,20 +6,32 @@ const publicRoutes = [
     { label: "악곡", path: "/music", heading: "악곡 검색" },
     { label: "랭킹", path: "/rankings", heading: "유저 랭킹" },
     { label: "서열", path: "/tiers", heading: "서열표" },
-    { label: "빙고", path: "/bingo", heading: "빙고" },
+    { label: "빙고", path: "/bingo", heading: "빙고", requiresMenu: true },
 ];
 
 test("모바일 헤더에서 주요 공개 페이지로 이동한다", async ({ page }) => {
     await page.goto("/");
     await expectPageLoaded(page);
 
-    const navigation = page.getByRole("banner").getByRole("navigation").last();
-    await expect(navigation).toBeVisible();
-    await expect(
-        page.getByRole("banner").getByRole("link", { name: "로그인" })
-    ).toBeVisible();
+    const banner = page.getByRole("banner");
+    const primaryNavigation = banner.getByRole("navigation", {
+        name: "주요 메뉴",
+    });
+    await expect(primaryNavigation).toBeVisible();
+    await expect(banner.getByRole("link", { name: "로그인" })).toBeVisible();
 
     for (const route of publicRoutes) {
+        const navigation = route.requiresMenu
+            ? banner.getByRole("navigation", { name: "전체 메뉴" })
+            : primaryNavigation;
+
+        if (route.requiresMenu) {
+            await banner
+                .getByRole("button", { name: "전체 메뉴 열기" })
+                .click();
+            await expect(navigation).toBeVisible();
+        }
+
         await navigation.getByRole("link", { name: route.label }).click();
         await expect(page).toHaveURL(new RegExp(`${route.path}(?:\\?.*)?$`));
         await expect(
@@ -27,6 +39,12 @@ test("모바일 헤더에서 주요 공개 페이지로 이동한다", async ({ 
         ).toBeVisible();
         await expectPageLoaded(page);
         await expectNoHorizontalOverflow(page);
+
+        if (route.requiresMenu) {
+            await expect(
+                banner.getByRole("button", { name: "전체 메뉴 열기" })
+            ).toBeVisible();
+        }
     }
 });
 
