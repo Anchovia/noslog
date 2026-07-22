@@ -3,6 +3,7 @@
 import {
     Check,
     ChevronDown,
+    Copy,
     ExternalLink,
     MapPin,
     Search,
@@ -31,13 +32,22 @@ export interface GamecenterArcade {
     latitude: number | null;
     longitude: number | null;
     machineCount: number | null;
-    priceInfo: string | null;
+    playPrice: number | null;
+    coinCount: number | null;
     businessHours: unknown;
     machineStatus: string;
     statusNote: string | null;
     notes: string | null;
     preferredCount: number;
 }
+
+export type GamecenterMapScope = "seoul" | "gyeonggi" | "nationwide";
+
+const MAP_SCOPE_LABELS: Record<GamecenterMapScope, string> = {
+    seoul: "서울",
+    gyeonggi: "경기",
+    nationwide: "전국",
+};
 
 interface GamecenterExplorerProps {
     appKey: string;
@@ -59,7 +69,9 @@ export default function GamecenterExplorer({
 }: GamecenterExplorerProps) {
     const router = useRouter();
     const [query, setQuery] = useState("");
+    const [mapScope, setMapScope] = useState<GamecenterMapScope>("nationwide");
     const [openArcadeId, setOpenArcadeId] = useState<number | null>(null);
+    const [copiedAddressId, setCopiedAddressId] = useState<number | null>(null);
     const [preferredArcadeId, setPreferredArcadeId] = useState(
         initialPreferredArcadeId
     );
@@ -81,6 +93,16 @@ export default function GamecenterExplorer({
                 )
         );
     }, [arcades, query]);
+
+    const mapArcades = useMemo(() => {
+        if (mapScope === "nationwide") return arcades;
+        return arcades.filter((arcade) => {
+            const location = `${arcade.region ?? ""} ${arcade.address ?? ""}`;
+            return mapScope === "seoul"
+                ? location.includes("서울")
+                : location.includes("경기");
+        });
+    }, [arcades, mapScope]);
 
     function openFromMap(arcadeId: number) {
         setQuery("");
@@ -108,22 +130,50 @@ export default function GamecenterExplorer({
         });
     }
 
+    async function copyAddress(arcade: GamecenterArcade) {
+        if (!arcade.address) return;
+        await navigator.clipboard.writeText(arcade.address);
+        setCopiedAddressId(arcade.id);
+        window.setTimeout(() => {
+            setCopiedAddressId((current) =>
+                current === arcade.id ? null : current
+            );
+        }, 2000);
+    }
+
     return (
         <div className="flex flex-col gap-4">
+            <section className="flex items-center justify-between gap-3">
+                <h1 className="text-title">NOSTALGIA 오락실</h1>
+                <label>
+                    <span className="sr-only">지도 지역</span>
+                    <select
+                        value={mapScope}
+                        onChange={(event) =>
+                            setMapScope(
+                                event.target.value as GamecenterMapScope
+                            )
+                        }
+                        className="border-border bg-surface text-label focus:border-focus h-9 rounded-md border px-3 outline-none"
+                    >
+                        <option value="nationwide">전국</option>
+                        <option value="seoul">서울</option>
+                        <option value="gyeonggi">경기</option>
+                    </select>
+                </label>
+            </section>
             <section className="border-border bg-surface rounded-card overflow-hidden border">
                 <ArcadeBubbleMap
                     appKey={appKey}
-                    arcades={arcades}
+                    arcades={mapArcades}
+                    scope={mapScope}
                     selectedId={openArcadeId}
                     onSelect={openFromMap}
                 />
-                <div className="flex items-center justify-between gap-3 px-3 py-2">
+                <div className="px-3 py-2">
                     <p className="text-caption">
-                        원이 클수록 선호 오락실로 지정한 사용자가 많습니다.
+                        {MAP_SCOPE_LABELS[mapScope]} NOSTALGIA 오락실 선호 분포
                     </p>
-                    <span className="text-caption shrink-0">
-                        총 {arcades.length}곳
-                    </span>
                 </div>
             </section>
 
@@ -227,10 +277,48 @@ export default function GamecenterExplorer({
                                     <div className="flex flex-col gap-3 p-4">
                                         <div>
                                             <p className="text-label">주소</p>
-                                            <p className="text-body-muted mt-1">
-                                                {arcade.address ??
-                                                    "주소 정보 준비 중"}
-                                            </p>
+                                            <div className="mt-1 flex items-center justify-between gap-2">
+                                                <p className="text-body-muted min-w-0 flex-1">
+                                                    {arcade.address ??
+                                                        "주소 정보 준비 중"}
+                                                </p>
+                                                {arcade.address ? (
+                                                    <button
+                                                        type="button"
+                                                        onClick={() =>
+                                                            void copyAddress(
+                                                                arcade
+                                                            )
+                                                        }
+                                                        className="border-border bg-surface-muted text-text-primary focus-visible:ring-focus/40 flex size-8 shrink-0 items-center justify-center rounded-md border focus-visible:ring-2 focus-visible:outline-none"
+                                                        aria-label={
+                                                            copiedAddressId ===
+                                                            arcade.id
+                                                                ? "주소 복사됨"
+                                                                : "주소 복사"
+                                                        }
+                                                        title={
+                                                            copiedAddressId ===
+                                                            arcade.id
+                                                                ? "복사됨"
+                                                                : "주소 복사"
+                                                        }
+                                                    >
+                                                        {copiedAddressId ===
+                                                        arcade.id ? (
+                                                            <Check
+                                                                className="size-4"
+                                                                aria-hidden="true"
+                                                            />
+                                                        ) : (
+                                                            <Copy
+                                                                className="size-4"
+                                                                aria-hidden="true"
+                                                            />
+                                                        )}
+                                                    </button>
+                                                ) : null}
+                                            </div>
                                         </div>
                                         <div>
                                             <p className="text-label">
@@ -242,8 +330,12 @@ export default function GamecenterExplorer({
                                                         플레이 요금
                                                     </p>
                                                     <p className="text-label mt-1">
-                                                        {arcade.priceInfo ??
-                                                            "미확인"}
+                                                        {arcade.playPrice !==
+                                                            null &&
+                                                        arcade.coinCount !==
+                                                            null
+                                                            ? `${arcade.playPrice.toLocaleString("ko-KR")}원 / ${arcade.coinCount}코인`
+                                                            : "미확인"}
                                                     </p>
                                                 </div>
                                                 <div className="bg-surface-muted rounded-card p-3">

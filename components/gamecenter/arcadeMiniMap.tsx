@@ -1,8 +1,9 @@
 "use client";
 
+import { Minus, Plus } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-import { loadKakaoMaps } from "@/lib/kakaoMaps";
+import { type KakaoMapInstance, loadKakaoMaps } from "@/lib/kakaoMaps";
 
 interface ArcadeMiniMapProps {
     appKey: string;
@@ -18,6 +19,7 @@ export default function ArcadeMiniMap({
     longitude,
 }: ArcadeMiniMapProps) {
     const containerRef = useRef<HTMLDivElement>(null);
+    const mapRef = useRef<KakaoMapInstance | null>(null);
     const [hasError, setHasError] = useState(false);
 
     useEffect(() => {
@@ -35,8 +37,9 @@ export default function ArcadeMiniMap({
                 const map = new kakao.maps.Map(container, {
                     center,
                     level: 3,
-                    scrollwheel: false,
+                    scrollwheel: true,
                 });
+                mapRef.current = map;
                 marker = new kakao.maps.Marker({ map, position: center });
                 frame = requestAnimationFrame(() => map.relayout());
             })
@@ -46,6 +49,7 @@ export default function ArcadeMiniMap({
 
         return () => {
             isCancelled = true;
+            mapRef.current = null;
             cancelAnimationFrame(frame);
             marker?.setMap(null);
         };
@@ -59,12 +63,42 @@ export default function ArcadeMiniMap({
         );
     }
 
+    function changeZoom(change: number) {
+        const map = mapRef.current;
+        if (!map) return;
+        map.setLevel(Math.min(14, Math.max(1, map.getLevel() + change)));
+    }
+
     return (
-        <div
-            ref={containerRef}
-            className="bg-surface-muted h-44 w-full"
-            role="img"
-            aria-label={`${name} 위치 지도`}
-        />
+        <div className="relative h-44 w-full">
+            <div
+                ref={containerRef}
+                className="bg-surface-muted size-full"
+                role="img"
+                aria-label={`${name} 위치 지도`}
+            />
+            <div
+                className="border-border bg-surface absolute right-2 bottom-2 z-10 flex flex-col overflow-hidden rounded-md border shadow-md"
+                role="group"
+                aria-label="지도 확대 및 축소"
+            >
+                <button
+                    type="button"
+                    onClick={() => changeZoom(-1)}
+                    className="hover:bg-surface-muted focus-visible:ring-focus/40 flex size-8 items-center justify-center focus-visible:ring-2 focus-visible:outline-none"
+                    aria-label="지도 확대"
+                >
+                    <Plus className="size-4" aria-hidden="true" />
+                </button>
+                <button
+                    type="button"
+                    onClick={() => changeZoom(1)}
+                    className="border-divider hover:bg-surface-muted focus-visible:ring-focus/40 flex size-8 items-center justify-center border-t focus-visible:ring-2 focus-visible:outline-none"
+                    aria-label="지도 축소"
+                >
+                    <Minus className="size-4" aria-hidden="true" />
+                </button>
+            </div>
+        </div>
     );
 }

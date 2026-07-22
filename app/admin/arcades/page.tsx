@@ -10,6 +10,16 @@ import db from "@/lib/db";
 
 import { createArcade, updateArcade } from "./actions";
 
+async function createArcadeFormAction(formData: FormData) {
+    "use server";
+    await createArcade(formData);
+}
+
+async function updateArcadeFormAction(formData: FormData) {
+    "use server";
+    await updateArcade(formData);
+}
+
 const inputClass =
     "border-border bg-bg text-input h-10 min-w-0 rounded-md border px-3 outline-none focus:border-focus";
 const textareaClass =
@@ -90,7 +100,7 @@ export default async function AdminArcadesPage() {
             </section>
 
             <form
-                action={createArcade}
+                action={createArcadeFormAction}
                 className="bg-surface rounded-card grid gap-2 p-3"
             >
                 <h2 className="text-section flex items-center gap-2">
@@ -131,15 +141,28 @@ export default async function AdminArcadesPage() {
                         />
                     </label>
                     <label className="text-caption flex min-w-0 flex-col gap-1">
-                        플레이 요금
+                        플레이 요금 (원)
                         <input
-                            name="priceInfo"
-                            maxLength={80}
-                            placeholder="예: 500원 / 1코인"
+                            type="number"
+                            name="playPrice"
+                            min={1}
+                            max={100000}
+                            placeholder="예: 500"
                             className={inputClass}
                         />
                     </label>
                 </div>
+                <label className="text-caption flex flex-col gap-1">
+                    1회 플레이 코인 수
+                    <input
+                        type="number"
+                        name="coinCount"
+                        min={1}
+                        max={100}
+                        placeholder="예: 1"
+                        className={inputClass}
+                    />
+                </label>
                 <BusinessHoursFields />
                 <label className="text-caption flex flex-col gap-1">
                     기체 상태
@@ -173,7 +196,7 @@ export default async function AdminArcadesPage() {
                 {arcades.map((arcade) => (
                     <form
                         key={arcade.id}
-                        action={updateArcade}
+                        action={updateArcadeFormAction}
                         className="bg-surface rounded-card grid gap-2 p-3"
                     >
                         <input type="hidden" name="id" value={arcade.id} />
@@ -226,16 +249,30 @@ export default async function AdminArcadesPage() {
                                 />
                             </label>
                             <label className="text-caption flex min-w-0 flex-col gap-1">
-                                플레이 요금
+                                플레이 요금 (원)
                                 <input
-                                    name="priceInfo"
-                                    maxLength={80}
-                                    defaultValue={arcade.price_info ?? ""}
-                                    placeholder="예: 500원 / 1코인"
+                                    type="number"
+                                    name="playPrice"
+                                    min={1}
+                                    max={100000}
+                                    defaultValue={arcade.play_price ?? ""}
+                                    placeholder="예: 500"
                                     className={inputClass}
                                 />
                             </label>
                         </div>
+                        <label className="text-caption flex flex-col gap-1">
+                            1회 플레이 코인 수
+                            <input
+                                type="number"
+                                name="coinCount"
+                                min={1}
+                                max={100}
+                                defaultValue={arcade.coin_count ?? ""}
+                                placeholder="예: 1"
+                                className={inputClass}
+                            />
+                        </label>
                         <BusinessHoursFields value={arcade.business_hours} />
                         <label className="text-caption flex flex-col gap-1">
                             기체 상태

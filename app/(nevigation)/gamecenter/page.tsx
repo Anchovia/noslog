@@ -18,10 +18,6 @@ export default async function GamecenterPage() {
 
     return (
         <div className="flex flex-col gap-4 px-4 py-5">
-            <section>
-                <h1 className="text-title">NOSTALGIA 오락실</h1>
-            </section>
-
             <GamecenterExplorer
                 appKey={process.env.NEXT_PUBLIC_KAKAO_MAP_APP_KEY ?? ""}
                 arcades={arcades.map((arcade) => ({
@@ -32,7 +28,8 @@ export default async function GamecenterPage() {
                     latitude: arcade.latitude,
                     longitude: arcade.longitude,
                     machineCount: arcade.machine_count,
-                    priceInfo: arcade.price_info,
+                    playPrice: arcade.play_price,
+                    coinCount: arcade.coin_count,
                     businessHours: arcade.business_hours,
                     machineStatus: arcade.machine_status,
                     statusNote: arcade.status_note,

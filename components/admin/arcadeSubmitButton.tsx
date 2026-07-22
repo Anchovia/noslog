@@ -1,8 +1,10 @@
 "use client";
 
 import { Plus, Save } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { type MouseEvent, useRef, useState } from "react";
 
+import { createArcade, updateArcade } from "@/app/admin/arcades/actions";
 import { loadKakaoMaps, type KakaoMapsApi } from "@/lib/kakaoMaps";
 
 interface ArcadeSubmitButtonProps {
@@ -26,18 +28,33 @@ function addressQueries(address: string) {
 function geocode(kakao: KakaoMapsApi, address: string) {
     const geocoder = new kakao.maps.services.Geocoder();
     return new Promise<{ latitude: string; longitude: string } | null>(
-        (resolve) => {
+        (resolve, reject) => {
             const queries = addressQueries(address);
+            let isSettled = false;
+            const timeout = window.setTimeout(() => {
+                isSettled = true;
+                reject(new Error("GEOCODING_TIMEOUT"));
+            }, 10000);
+
+            function finish(
+                coordinates: { latitude: string; longitude: string } | null
+            ) {
+                if (isSettled) return;
+                isSettled = true;
+                window.clearTimeout(timeout);
+                resolve(coordinates);
+            }
 
             function search(index: number) {
+                if (isSettled) return;
                 const query = queries[index];
                 if (!query) {
-                    resolve(null);
+                    finish(null);
                     return;
                 }
                 geocoder.addressSearch(query, (result, status) => {
                     if (status === kakao.maps.services.Status.OK && result[0]) {
-                        resolve({
+                        finish({
                             latitude: result[0].y,
                             longitude: result[0].x,
                         });
@@ -57,6 +74,7 @@ export default function ArcadeSubmitButton({
     mode,
     originalAddress,
 }: ArcadeSubmitButtonProps) {
+    const router = useRouter();
     const buttonRef = useRef<HTMLButtonElement>(null);
     const [message, setMessage] = useState("");
     const [isPending, setIsPending] = useState(false);
@@ -80,35 +98,43 @@ export default function ArcadeSubmitButton({
         setIsPending(true);
         setMessage("주소에서 위치를 찾는 중입니다.");
         const address = addressInput.value.trim();
-        if (
-            mode === "update" &&
-            address === originalAddress &&
-            latitudeInput.value &&
-            longitudeInput.value
-        ) {
-            setIsPending(false);
-            form.requestSubmit();
-            return;
-        }
         try {
-            const kakao = await loadKakaoMaps(appKey);
-            const coordinates = await geocode(kakao, address);
-            if (!coordinates) {
-                setIsPending(false);
-                setMessage("주소에 맞는 위치를 찾지 못했습니다.");
-                return;
+            const canReuseCoordinates =
+                mode === "update" &&
+                address === originalAddress &&
+                latitudeInput.value &&
+                longitudeInput.value;
+
+            if (!canReuseCoordinates) {
+                const kakao = await loadKakaoMaps(appKey);
+                const coordinates = await geocode(kakao, address);
+                if (!coordinates) {
+                    setMessage("주소에 맞는 위치를 찾지 못했습니다.");
+                    return;
+                }
+
+                latitudeInput.value = coordinates.latitude;
+                longitudeInput.value = coordinates.longitude;
             }
 
-            latitudeInput.value = coordinates.latitude;
-            longitudeInput.value = coordinates.longitude;
             setMessage("위치를 확인했습니다. 저장 중입니다.");
-            setIsPending(false);
-            form.requestSubmit();
-        } catch {
-            setIsPending(false);
+            const result =
+                mode === "create"
+                    ? await createArcade(new FormData(form))
+                    : await updateArcade(new FormData(form));
+            setMessage(result.message);
+            if (result.success) {
+                if (mode === "create") form.reset();
+                router.refresh();
+            }
+        } catch (error) {
             setMessage(
-                "Kakao Developers의 카카오맵 사용 설정과 허용 도메인을 확인해주세요."
+                error instanceof Error && error.message === "GEOCODING_TIMEOUT"
+                    ? "주소 검색 응답이 지연되고 있습니다. 다시 시도해주세요."
+                    : "저장하지 못했습니다. 카카오맵 설정과 입력 내용을 확인해주세요."
             );
+        } finally {
+            setIsPending(false);
         }
     }
 

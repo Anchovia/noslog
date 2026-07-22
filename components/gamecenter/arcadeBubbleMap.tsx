@@ -4,23 +4,46 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 import { type KakaoOverlay, loadKakaoMaps } from "@/lib/kakaoMaps";
 
-import type { GamecenterArcade } from "./gamecenterExplorer";
+import type {
+    GamecenterArcade,
+    GamecenterMapScope,
+} from "./gamecenterExplorer";
 
 interface ArcadeBubbleMapProps {
     appKey: string;
     arcades: GamecenterArcade[];
+    scope: GamecenterMapScope;
     selectedId: number | null;
     onSelect: (arcadeId: number) => void;
 }
 
 function bubbleSize(count: number, maxCount: number) {
-    if (maxCount <= 0) return 34;
-    return 34 + Math.round(28 * Math.sqrt(count / maxCount));
+    if (maxCount <= 0) return 22;
+    return 22 + Math.round(14 * Math.sqrt(count / maxCount));
 }
+
+const MAP_SCOPE_BOUNDS: Record<
+    GamecenterMapScope,
+    { southWest: [number, number]; northEast: [number, number] }
+> = {
+    seoul: {
+        southWest: [37.413, 126.734],
+        northEast: [37.715, 127.269],
+    },
+    gyeonggi: {
+        southWest: [36.85, 126.35],
+        northEast: [38.3, 127.85],
+    },
+    nationwide: {
+        southWest: [33.0, 124.5],
+        northEast: [38.8, 130.0],
+    },
+};
 
 export default function ArcadeBubbleMap({
     appKey,
     arcades,
+    scope,
     selectedId,
     onSelect,
 }: ArcadeBubbleMapProps) {
@@ -44,10 +67,7 @@ export default function ArcadeBubbleMap({
 
     useEffect(() => {
         const container = containerRef.current;
-        if (!container || mappedArcades.length === 0) {
-            setIsLoading(false);
-            return;
-        }
+        if (!container) return;
 
         let isCancelled = false;
         const overlays: KakaoOverlay[] = [];
@@ -59,10 +79,10 @@ export default function ArcadeBubbleMap({
         loadKakaoMaps(appKey)
             .then((kakao) => {
                 if (isCancelled) return;
-                const first = mappedArcades[0];
+                const scopeBounds = MAP_SCOPE_BOUNDS[scope];
                 const center = new kakao.maps.LatLng(
-                    first.latitude!,
-                    first.longitude!
+                    (scopeBounds.southWest[0] + scopeBounds.northEast[0]) / 2,
+                    (scopeBounds.southWest[1] + scopeBounds.northEast[1]) / 2
                 );
                 const map = new kakao.maps.Map(container, {
                     center,
@@ -70,6 +90,8 @@ export default function ArcadeBubbleMap({
                     scrollwheel: false,
                 });
                 const bounds = new kakao.maps.LatLngBounds();
+                bounds.extend(new kakao.maps.LatLng(...scopeBounds.southWest));
+                bounds.extend(new kakao.maps.LatLng(...scopeBounds.northEast));
                 const maxCount = Math.max(
                     ...mappedArcades.map((arcade) => arcade.preferredCount),
                     0
@@ -118,7 +140,10 @@ export default function ArcadeBubbleMap({
                     overlays.push(overlay);
                 });
 
-                if (mappedArcades.length > 1) map.setBounds(bounds);
+                map.setBounds(bounds);
+                if (scope === "seoul") {
+                    map.setLevel(Math.max(1, map.getLevel() - 1));
+                }
                 setIsLoading(false);
             })
             .catch(() => {
@@ -134,7 +159,7 @@ export default function ArcadeBubbleMap({
             cleanupListeners.forEach((cleanup) => cleanup());
             bubbles.clear();
         };
-    }, [appKey, mappedArcades]);
+    }, [appKey, mappedArcades, scope]);
 
     useEffect(() => {
         bubblesRef.current.forEach((bubble, arcadeId) => {
@@ -145,14 +170,6 @@ export default function ArcadeBubbleMap({
                 : "0 6px 14px rgba(0, 0, 0, 0.24)";
         });
     }, [selectedId, isLoading]);
-
-    if (mappedArcades.length === 0) {
-        return (
-            <div className="bg-surface-muted text-body-muted flex h-72 items-center justify-center px-6 text-center">
-                지도에 표시할 오락실 위치를 준비하고 있습니다.
-            </div>
-        );
-    }
 
     return (
         <div className="relative h-72 w-full">
@@ -171,6 +188,11 @@ export default function ArcadeBubbleMap({
                     지도를 불러오지 못했습니다. 오락실 목록은 계속 확인할 수
                     있습니다.
                 </div>
+            ) : null}
+            {!isLoading && !hasError && mappedArcades.length === 0 ? (
+                <p className="bg-surface/90 text-caption absolute top-3 left-1/2 -translate-x-1/2 rounded-full px-3 py-1.5 whitespace-nowrap">
+                    해당 지역에 등록된 위치가 없습니다.
+                </p>
             ) : null}
         </div>
     );

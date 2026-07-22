@@ -58,7 +58,10 @@ function businessHoursFrom(formData: FormData) {
 function operationDetailsFrom(formData: FormData) {
     const machineCountText = String(formData.get("machineCount") ?? "").trim();
     const machineCount = machineCountText ? Number(machineCountText) : null;
-    const priceInfo = optionalText(formData.get("priceInfo"));
+    const playPriceText = String(formData.get("playPrice") ?? "").trim();
+    const coinCountText = String(formData.get("coinCount") ?? "").trim();
+    const playPrice = playPriceText ? Number(playPriceText) : null;
+    const coinCount = coinCountText ? Number(coinCountText) : null;
     const businessHours = businessHoursFrom(formData);
     const machineStatus = String(formData.get("machineStatus") ?? "unknown");
     const statusNote = optionalText(formData.get("statusNote"));
@@ -69,7 +72,15 @@ function operationDetailsFrom(formData: FormData) {
             (!Number.isInteger(machineCount) ||
                 machineCount < 1 ||
                 machineCount > 20)) ||
-        (priceInfo?.length ?? 0) > 80 ||
+        (playPrice === null) !== (coinCount === null) ||
+        (playPrice !== null &&
+            (!Number.isInteger(playPrice) ||
+                playPrice < 1 ||
+                playPrice > 100000)) ||
+        (coinCount !== null &&
+            (!Number.isInteger(coinCount) ||
+                coinCount < 1 ||
+                coinCount > 100)) ||
         businessHours === undefined ||
         !isArcadeMachineStatus(machineStatus) ||
         (statusNote?.length ?? 0) > 200 ||
@@ -80,7 +91,8 @@ function operationDetailsFrom(formData: FormData) {
 
     return {
         machine_count: machineCount,
-        price_info: priceInfo,
+        play_price: playPrice,
+        coin_count: coinCount,
         business_hours: businessHours === null ? Prisma.DbNull : businessHours,
         machine_status: machineStatus,
         status_note: statusNote,
@@ -93,7 +105,9 @@ export async function createArcade(formData: FormData) {
     const name = String(formData.get("name") ?? "").trim();
     const coordinates = coordinatesFrom(formData);
     const operationDetails = operationDetailsFrom(formData);
-    if (!name || name.length > 80 || !coordinates || !operationDetails) return;
+    if (!name || name.length > 80 || !coordinates || !operationDetails) {
+        return { success: false, message: "입력 내용을 확인해주세요." };
+    }
 
     await db.arcade.create({
         data: {
@@ -107,6 +121,7 @@ export async function createArcade(formData: FormData) {
     updateTag(CACHE_TAGS.arcades);
     revalidatePath("/admin/arcades");
     revalidatePath("/gamecenter");
+    return { success: true, message: "오락실을 추가했습니다." };
 }
 
 export async function updateArcade(formData: FormData) {
@@ -122,7 +137,7 @@ export async function updateArcade(formData: FormData) {
         !coordinates ||
         !operationDetails
     ) {
-        return;
+        return { success: false, message: "입력 내용을 확인해주세요." };
     }
 
     await db.arcade.update({
@@ -140,4 +155,5 @@ export async function updateArcade(formData: FormData) {
     updateTag(CACHE_TAGS.userProfiles);
     revalidatePath("/admin/arcades");
     revalidatePath("/gamecenter");
+    return { success: true, message: "오락실 정보를 저장했습니다." };
 }
