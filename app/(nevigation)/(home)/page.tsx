@@ -2,10 +2,6 @@ import FeedbackDialog from "@/components/feedback/feedbackDialog";
 import HomeAnnouncements from "@/components/home/homeAnnouncements";
 import HomeRankingCard from "@/components/home/homeRankingCard";
 import OfficialXTimeline from "@/components/home/officialXTimeline";
-import {
-    ExamBadge,
-    UserAvatar,
-} from "@/components/rankings/table/rankingUserMeta";
 import { getPublishedAnnouncements } from "@/lib/announcements";
 import {
     createPageMetadata,
@@ -14,12 +10,8 @@ import {
     SITE_URL,
 } from "@/lib/metadata/site";
 import type { UserRankingMode } from "@/lib/rankings";
-import {
-    getCachedUserRankingPage,
-    getUserRankingPosition,
-} from "@/lib/rankings";
+import { getCachedUserRankingPage } from "@/lib/rankings";
 import { getUser } from "@/lib/user";
-import { formatToComma, normalizeStoredGrade } from "@/lib/utils";
 import {
     BadgeCheck,
     ChevronRight,
@@ -66,14 +58,6 @@ export default async function Home({ searchParams }: HomeProps) {
             getCachedUserRankingPage("recital", "all", 1, 5),
             getPublishedAnnouncements(),
         ]);
-    const userRank = user
-        ? await getUserRankingPosition({
-              userId: user.id,
-              grade: user.grade_basic,
-              mode: "basic",
-          })
-        : null;
-
     return (
         <div className="flex flex-col gap-4 px-4 py-4">
             <script
@@ -85,51 +69,8 @@ export default async function Home({ searchParams }: HomeProps) {
                     ),
                 }}
             />
-            {/* 상단 로그인/프로필 카드 */}
-            {user ? (
-                <section className="bg-surface rounded-card sticky top-16 z-20 flex min-h-20 items-center gap-3 p-4 shadow-lg">
-                    <UserAvatar
-                        avatar={user.avatar}
-                        username={user.username}
-                        size={48}
-                    />
-
-                    <div className="min-w-0 flex-1">
-                        <div className="flex min-w-0 items-center gap-1.5">
-                            <strong className="text-section truncate">
-                                {user.username || "이름 없는 유저"}
-                            </strong>
-                            <span className="text-text-secondary shrink-0 text-sm">
-                                · {userRank ? `#${userRank}` : "순위 -"}
-                            </span>
-                        </div>
-                        <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
-                            <span className="shrink-0 text-sm font-medium tabular-nums">
-                                <span className="text-text-secondary">
-                                    Grd{" "}
-                                </span>
-                                <span className="text-score font-bold">
-                                    {formatToComma(
-                                        normalizeStoredGrade(user.grade_basic)
-                                    )}
-                                </span>
-                            </span>
-                            <ExamBadge mode="basic" exam={user.exam_basic} />
-                            <ExamBadge
-                                mode="recital"
-                                exam={user.exam_recital}
-                            />
-                        </div>
-                    </div>
-
-                    <Link
-                        href={`/profile/${user.id}`}
-                        className="border-border text-text-primary hover:bg-surface-muted focus-visible:ring-focus/40 rounded-card flex h-10 shrink-0 items-center justify-center border px-3 text-sm font-bold transition-colors focus-visible:ring-2 focus-visible:outline-none"
-                    >
-                        내 프로필
-                    </Link>
-                </section>
-            ) : (
+            {/* 비로그인 사용자 안내 */}
+            {!user ? (
                 <section className="bg-surface rounded-card flex items-center justify-between p-4">
                     <p className="text-section">내 NOSTALGIA 기록 모아보기</p>
                     <Link
@@ -139,7 +80,7 @@ export default async function Home({ searchParams }: HomeProps) {
                         로그인
                     </Link>
                 </section>
-            )}
+            ) : null}
             <HomeAnnouncements announcements={announcements} />
             {/* 히어로 + 검색 */}
             <section className="flex flex-col items-center gap-8 pt-4 text-center">

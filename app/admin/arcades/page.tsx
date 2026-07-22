@@ -6,6 +6,7 @@ import {
     ARCADE_WEEKDAYS,
     normalizeArcadeBusinessHours,
 } from "@/lib/arcadeDetails";
+import { ARCADE_REGIONS, inferLegacyArcadeRegion } from "@/lib/arcadeRegions";
 import db from "@/lib/db";
 
 import { createArcade, updateArcade } from "./actions";
@@ -113,12 +114,21 @@ export default async function AdminArcadesPage() {
                     placeholder="오락실 이름"
                     className={inputClass}
                 />
-                <input
+                <select
                     name="region"
-                    maxLength={40}
-                    placeholder="지역"
+                    required
+                    defaultValue=""
                     className={inputClass}
-                />
+                >
+                    <option value="" disabled>
+                        지역 선택
+                    </option>
+                    {ARCADE_REGIONS.map((region) => (
+                        <option key={region} value={region}>
+                            {region}
+                        </option>
+                    ))}
+                </select>
                 <input
                     name="address"
                     required
@@ -210,13 +220,21 @@ export default async function AdminArcadesPage() {
                                 className={`${inputClass} flex-1`}
                             />
                         </div>
-                        <input
+                        <select
                             name="region"
-                            maxLength={40}
-                            defaultValue={arcade.region ?? ""}
-                            placeholder="지역"
+                            required
+                            defaultValue={inferLegacyArcadeRegion(
+                                arcade.region,
+                                arcade.address
+                            )}
                             className={inputClass}
-                        />
+                        >
+                            {ARCADE_REGIONS.map((region) => (
+                                <option key={region} value={region}>
+                                    {region}
+                                </option>
+                            ))}
+                        </select>
                         <input
                             name="address"
                             required

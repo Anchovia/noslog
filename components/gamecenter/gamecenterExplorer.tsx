@@ -19,6 +19,7 @@ import {
     ARCADE_MACHINE_STATUS_META,
     isArcadeMachineStatus,
 } from "@/lib/arcadeDetails";
+import { ARCADE_REGIONS, getStoredArcadeRegion } from "@/lib/arcadeRegions";
 
 import ArcadeBubbleMap from "./arcadeBubbleMap";
 import ArcadeBusinessHours from "./arcadeBusinessHours";
@@ -53,7 +54,7 @@ const MAP_SCOPE_LABELS: Record<GamecenterMapScope, string> = {
     daegu: "대구",
 };
 
-const REGION_ORDER = ["서울", "경기", "대전", "광주", "대구"];
+const REGION_ORDER = [...ARCADE_REGIONS];
 
 interface GamecenterExplorerProps {
     appKey: string;
@@ -68,11 +69,7 @@ function kakaoMapUrl(arcade: GamecenterArcade) {
 }
 
 function getArcadeRegionLabel(arcade: GamecenterArcade) {
-    const location = `${arcade.region ?? ""} ${arcade.address ?? ""}`;
-    const knownRegion = REGION_ORDER.find((region) =>
-        location.includes(region)
-    );
-    return knownRegion ?? (arcade.region?.trim() || "기타 지역");
+    return getStoredArcadeRegion(arcade.region);
 }
 
 function matchesMapScope(arcade: GamecenterArcade, scope: GamecenterMapScope) {

@@ -5,6 +5,7 @@ import { Prisma } from "@prisma/client";
 
 import { requireAdmin } from "@/lib/admin";
 import { ARCADE_WEEKDAYS, isArcadeMachineStatus } from "@/lib/arcadeDetails";
+import { isArcadeRegion } from "@/lib/arcadeRegions";
 import { CACHE_TAGS } from "@/lib/cacheTags";
 import db from "@/lib/db";
 
@@ -103,16 +104,23 @@ function operationDetailsFrom(formData: FormData) {
 export async function createArcade(formData: FormData) {
     await requireAdmin();
     const name = String(formData.get("name") ?? "").trim();
+    const region = String(formData.get("region") ?? "").trim();
     const coordinates = coordinatesFrom(formData);
     const operationDetails = operationDetailsFrom(formData);
-    if (!name || name.length > 80 || !coordinates || !operationDetails) {
+    if (
+        !name ||
+        name.length > 80 ||
+        !isArcadeRegion(region) ||
+        !coordinates ||
+        !operationDetails
+    ) {
         return { success: false, message: "입력 내용을 확인해주세요." };
     }
 
     await db.arcade.create({
         data: {
             name,
-            region: optionalText(formData.get("region")),
+            region,
             address: optionalText(formData.get("address")),
             ...coordinates,
             ...operationDetails,
@@ -128,12 +136,14 @@ export async function updateArcade(formData: FormData) {
     await requireAdmin();
     const id = Number(formData.get("id"));
     const name = String(formData.get("name") ?? "").trim();
+    const region = String(formData.get("region") ?? "").trim();
     const coordinates = coordinatesFrom(formData);
     const operationDetails = operationDetailsFrom(formData);
     if (
         !Number.isInteger(id) ||
         !name ||
         name.length > 80 ||
+        !isArcadeRegion(region) ||
         !coordinates ||
         !operationDetails
     ) {
@@ -144,7 +154,7 @@ export async function updateArcade(formData: FormData) {
         where: { id },
         data: {
             name,
-            region: optionalText(formData.get("region")),
+            region,
             address: optionalText(formData.get("address")),
             ...coordinates,
             ...operationDetails,
