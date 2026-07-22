@@ -112,7 +112,7 @@ export default async function BookmarkletPage() {
                     </p>
                     <p className="text-caption mt-0.5">
                         {user
-                            ? "문제가 있으면 토큰을 재발급 해주세요"
+                            ? "문제가 있으면 토큰을 재발급 해주세요."
                             : "로그인 후 연동 상태를 확인할 수 있습니다."}
                     </p>
                 </div>
