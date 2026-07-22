@@ -15,6 +15,7 @@ const staticRoutes: Array<{
     { path: "/tiers", changeFrequency: "weekly", priority: 0.8 },
     { path: "/bingo", changeFrequency: "weekly", priority: 0.8 },
     { path: "/exams", changeFrequency: "weekly", priority: 0.8 },
+    { path: "/gamecenter", changeFrequency: "weekly", priority: 0.8 },
     { path: "/bookmarklet", changeFrequency: "monthly", priority: 0.6 },
 ];
 

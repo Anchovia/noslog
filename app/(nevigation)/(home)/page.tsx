@@ -221,18 +221,16 @@ export default async function Home({ searchParams }: HomeProps) {
                     />
                     <span className="text-label">검정</span>
                 </Link>
-                <div className="bg-surface-muted rounded-card relative flex h-20 flex-col items-center justify-center gap-2 opacity-50">
+                <Link
+                    href="/gamecenter"
+                    className="bg-surface hover:bg-surface-muted focus-visible:ring-focus/40 rounded-card group flex h-20 flex-col items-center justify-center gap-2 transition-colors focus-visible:ring-2 focus-visible:outline-none"
+                >
                     <MapPin
-                        className="text-text-secondary size-6"
+                        className="text-text-secondary group-hover:text-text-primary size-6 transition-colors"
                         aria-hidden="true"
                     />
-                    <span className="text-caption text-text-secondary font-semibold">
-                        오락실
-                    </span>
-                    <span className="bg-real/15 text-real absolute top-1 right-1 rounded px-1 text-[10px] font-bold">
-                        SOON
-                    </span>
-                </div>
+                    <span className="text-label">오락실</span>
+                </Link>
             </section>
             {/* 데이터 연동 가이드 */}
             <Link

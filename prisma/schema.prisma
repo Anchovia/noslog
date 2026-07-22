@@ -96,14 +96,22 @@ model Announcement {
 
 // 유저가 선택할 수 있는 오락실 목록을 관리자 데이터로 관리함
 model Arcade {
-  id         Int      @id @default(autoincrement())
-  name       String   @unique
-  region     String?
-  address    String?
-  is_active  Boolean  @default(true)
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  users      User[]
+  id             Int      @id @default(autoincrement())
+  name           String   @unique
+  region         String?
+  address        String?
+  latitude       Float?
+  longitude      Float?
+  machine_count  Int?
+  price_info     String?
+  business_hours Json?
+  machine_status String   @default("unknown")
+  status_note    String?
+  notes          String?
+  is_active      Boolean  @default(true)
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+  users          User[]
 
   @@index([is_active, name])
 }

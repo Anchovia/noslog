@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "Arcade"
+ADD COLUMN "latitude" DOUBLE PRECISION,
+ADD COLUMN "longitude" DOUBLE PRECISION;
