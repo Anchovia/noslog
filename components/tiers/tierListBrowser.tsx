@@ -1,12 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import {
-    formatTierDate,
-    getTierRecordStatus,
-    tierModeStyles,
-    type TierRecord,
-} from "@/lib/tiers";
+import { formatTierDate, tierModeStyles } from "@/lib/tiers";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
@@ -19,14 +14,22 @@ interface TierListSummary {
     title: string;
     mode: string;
     updatedAt: string;
-    entries: { chartId: number }[];
+    totalCount: number;
+}
+
+interface TierListProgress {
+    tierListId: number;
+    pianistCount: number;
+    fcCount: number;
+    sCount: number;
+    clearedCount: number;
 }
 
 interface TierListBrowserProps {
     initialMode: TierMode;
     initialSort: TierSort;
     tierLists: TierListSummary[];
-    records: ({ chart_id: number | null } & TierRecord)[];
+    progress: TierListProgress[];
     isAuthenticated: boolean;
 }
 
@@ -47,21 +50,14 @@ export default function TierListBrowser({
     initialMode,
     initialSort,
     tierLists,
-    records,
+    progress,
     isAuthenticated,
 }: TierListBrowserProps) {
     const [mode, setMode] = useState(initialMode);
     const [sort, setSort] = useState(initialSort);
-    const recordByChartId = useMemo(
-        () =>
-            new Map(
-                records.flatMap((record) =>
-                    record.chart_id === null
-                        ? []
-                        : [[record.chart_id, record] as const]
-                )
-            ),
-        [records]
+    const progressByTierListId = useMemo(
+        () => new Map(progress.map((item) => [item.tierListId, item])),
+        [progress]
     );
     const visibleTierLists = useMemo(() => {
         const filtered =
@@ -160,24 +156,14 @@ export default function TierListBrowser({
             <section className="flex flex-col gap-3" aria-label="서열표 목록">
                 {visibleTierLists.length > 0 ? (
                     visibleTierLists.map((tierList) => {
-                        const statuses = tierList.entries.map((entry) =>
-                            getTierRecordStatus(
-                                recordByChartId.get(entry.chartId)
-                            )
+                        const tierProgress = progressByTierListId.get(
+                            tierList.id
                         );
-                        const pianistCount = statuses.filter(
-                            (status) => status === "pianist"
-                        ).length;
-                        const fcCount = statuses.filter(
-                            (status) => status === "fc"
-                        ).length;
-                        const sCount = statuses.filter(
-                            (status) => status === "s"
-                        ).length;
-                        const clearedCount = statuses.filter(
-                            (status) => status !== "unplayed"
-                        ).length;
-                        const totalCount = tierList.entries.length;
+                        const pianistCount = tierProgress?.pianistCount ?? 0;
+                        const fcCount = tierProgress?.fcCount ?? 0;
+                        const sCount = tierProgress?.sCount ?? 0;
+                        const clearedCount = tierProgress?.clearedCount ?? 0;
+                        const totalCount = tierList.totalCount;
 
                         return (
                             <Link

@@ -6,7 +6,7 @@ import { createPageMetadata } from "@/lib/metadata/site";
 import { getUser } from "@/lib/user";
 import {
     getCachedTierLists,
-    getUserTierRecords,
+    getUserTierListProgress,
     type PublicTierMode,
 } from "./data";
 
@@ -40,14 +40,12 @@ export default async function TiersPage({ searchParams }: TiersPageProps) {
         getCachedTierLists("all"),
     ]);
 
-    const chartIds = [
-        ...new Set(
-            tierLists.flatMap((tierList) =>
-                tierList.entries.map((entry) => entry.chartId)
-            )
-        ),
-    ];
-    const records = user ? await getUserTierRecords(user.id, chartIds) : [];
+    const progress = user
+        ? await getUserTierListProgress(
+              user.id,
+              tierLists.map((tierList) => tierList.id)
+          )
+        : [];
 
     return (
         <div className="flex flex-col gap-4 px-4 py-5">
@@ -57,7 +55,7 @@ export default async function TiersPage({ searchParams }: TiersPageProps) {
                 initialMode={mode}
                 initialSort={sort}
                 tierLists={tierLists}
-                records={records}
+                progress={progress}
                 isAuthenticated={Boolean(user)}
             />
 

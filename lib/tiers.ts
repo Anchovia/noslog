@@ -6,6 +6,28 @@ export type TierRecord = {
     fc_type: number;
 };
 
+export interface PublicTierBandEntry {
+    id: number;
+    chartId: number;
+    position: number;
+    chart: {
+        difficulty: string;
+        music: {
+            index: string;
+            title: string;
+            background: string | null;
+        };
+    };
+    record: TierRecord | null;
+}
+
+export interface PublicTierBandPayload {
+    id: number;
+    value: number;
+    position: number;
+    entries: PublicTierBandEntry[];
+}
+
 export type TierRecordStatus =
     "pianist" | "fc" | "s" | "a_plus" | "played" | "unplayed";
 
