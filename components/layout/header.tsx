@@ -12,14 +12,14 @@ export default async function Header() {
             <Link href="/" className="flex shrink-0 items-center gap-2">
                 <span className="text-wordmark tracking-normal">NosLog</span>
             </Link>
-            <div className="ml-auto flex min-w-0 items-center gap-2 min-[390px]:gap-3">
+            <div className="ml-auto flex min-w-0 items-center">
                 <HeaderPrimaryNavigation />
 
-                <div className="flex shrink-0 items-center gap-1">
+                <div className="flex shrink-0 items-center">
                     {user ? (
                         <Link
                             href={`/profile/${user.id}`}
-                            className="border-border bg-text-primary text-bg relative flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full border text-sm font-bold"
+                            className="border-border bg-text-primary text-bg relative mx-1.5 flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full border text-sm font-bold"
                             aria-label={`${user.username ?? "사용자"} 프로필`}
                         >
                             {user.avatar ? (
@@ -36,7 +36,7 @@ export default async function Header() {
                     ) : (
                         <Link
                             href="/login"
-                            className="rounded-card border-border text-text-primary hover:bg-surface-muted flex h-10 shrink-0 items-center border px-3 text-sm font-bold transition-colors"
+                            className="rounded-card border-border text-text-primary hover:bg-surface-muted mx-1 flex h-10 shrink-0 items-center border px-3 text-sm font-bold transition-colors"
                         >
                             로그인
                         </Link>

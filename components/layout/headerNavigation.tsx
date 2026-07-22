@@ -28,10 +28,7 @@ export function HeaderPrimaryNavigation() {
     const pathname = usePathname();
 
     return (
-        <nav
-            className="flex min-w-0 items-center gap-2 min-[390px]:gap-3"
-            aria-label="주요 메뉴"
-        >
+        <nav className="flex min-w-0 items-center" aria-label="주요 메뉴">
             {primaryItems.map((item) => {
                 const isActive = isActiveRoute(pathname, item.href);
                 return (
@@ -40,8 +37,8 @@ export function HeaderPrimaryNavigation() {
                         href={item.href}
                         aria-current={isActive ? "page" : undefined}
                         className={cn(
-                            "text-section text-text-secondary hover:text-text-primary flex h-10 shrink-0 items-center border-b-2 border-transparent transition-colors",
-                            isActive && "border-chart text-text-primary"
+                            "text-section text-text-secondary hover:text-text-primary flex size-11 shrink-0 items-center justify-center transition-colors",
+                            isActive && "text-text-primary"
                         )}
                     >
                         {item.label}
@@ -94,9 +91,8 @@ export default function HeaderMenu() {
                     )
                 }
                 className={cn(
-                    "text-text-secondary hover:bg-surface-muted hover:text-text-primary focus-visible:ring-focus/40 flex size-10 shrink-0 items-center justify-center rounded-md transition-colors focus-visible:ring-2 focus-visible:outline-none",
-                    (isOpen || hasActiveSecondaryItem) &&
-                        "bg-surface-muted text-text-primary"
+                    "text-text-secondary hover:text-text-primary focus-visible:ring-focus/40 flex size-11 shrink-0 items-center justify-center rounded-md transition-colors focus-visible:ring-2 focus-visible:outline-none",
+                    (isOpen || hasActiveSecondaryItem) && "text-text-primary"
                 )}
             >
                 {isOpen ? (
