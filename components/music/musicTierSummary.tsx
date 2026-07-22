@@ -96,7 +96,7 @@ export default function MusicTierSummary({
                 </header>
 
                 {constantHistory.length > 0 ? (
-                    <div className="mt-2 h-24">
+                    <div className="mt-2 h-24 [&_.recharts-surface:focus:not(:focus-visible)]:outline-none">
                         <ResponsiveContainer width="100%" height="100%">
                             <LineChart
                                 data={constantHistory}
