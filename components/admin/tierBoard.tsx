@@ -183,7 +183,7 @@ export default function TierBoard({
                     isMutating && "pointer-events-none opacity-70"
                 )}
             >
-                <div className="bg-surface border-border rounded-card sticky top-2 z-10 flex min-h-11 items-center justify-between gap-3 border px-3 py-2 shadow-lg">
+                <div className="bg-surface border-border rounded-card sticky top-16 z-10 flex min-h-11 items-center justify-between gap-3 border px-3 py-2 shadow-lg">
                     <span className="text-caption">
                         {changeCount > 0
                             ? `배치 변경 ${changeCount}건`

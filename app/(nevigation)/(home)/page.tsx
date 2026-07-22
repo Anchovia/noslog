@@ -87,7 +87,7 @@ export default async function Home({ searchParams }: HomeProps) {
             />
             {/* 상단 로그인/프로필 카드 */}
             {user ? (
-                <section className="bg-surface rounded-card sticky top-2 z-20 flex min-h-20 items-center gap-3 p-4 shadow-lg">
+                <section className="bg-surface rounded-card sticky top-16 z-20 flex min-h-20 items-center gap-3 p-4 shadow-lg">
                     <UserAvatar
                         avatar={user.avatar}
                         username={user.username}

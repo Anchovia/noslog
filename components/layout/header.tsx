@@ -8,7 +8,7 @@ export default async function Header() {
     const user = await getUser();
 
     return (
-        <header className="border-divider bg-surface relative z-50 flex h-14 items-center border-b px-3 min-[390px]:px-4">
+        <header className="border-divider bg-surface sticky top-0 z-50 flex h-14 items-center border-b px-3 min-[390px]:px-4">
             <Link href="/" className="flex shrink-0 items-center gap-2">
                 <span className="text-wordmark tracking-normal">NosLog</span>
             </Link>
