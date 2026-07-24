@@ -52,6 +52,14 @@ const MAP_SCOPE_BOUNDS: Record<
     },
 };
 
+const MAP_SCOPE_LEVELS: Partial<Record<GamecenterMapScope, number>> = {
+    seoul: 10,
+    gyeonggi: 11,
+    daejeon: 9,
+    gwangju: 9,
+    daegu: 9,
+};
+
 export default function ArcadeBubbleMap({
     appKey,
     arcades,
@@ -153,9 +161,8 @@ export default function ArcadeBubbleMap({
                 });
 
                 map.setBounds(bounds);
-                if (scope === "seoul") {
-                    map.setLevel(Math.max(1, map.getLevel() - 1));
-                }
+                const scopeLevel = MAP_SCOPE_LEVELS[scope];
+                if (scopeLevel !== undefined) map.setLevel(scopeLevel);
                 setIsLoading(false);
             })
             .catch(() => {
