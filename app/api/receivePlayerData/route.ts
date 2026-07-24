@@ -2,10 +2,7 @@ import { verifySyncToken } from "@/lib/bookmarklet";
 import { CACHE_TAGS, getUserProfileTag } from "@/lib/cacheTags";
 import db from "@/lib/db";
 import { updateDummy } from "@/lib/dummy/bingo";
-import {
-    type SyncMusicInput,
-    updateMusic,
-} from "@/lib/services/music/updateMusic";
+import type { SyncMusicInput } from "@/lib/services/music/updateMusic";
 import { updateGrade } from "@/lib/services/user/updateGrade";
 import { updatePlayCount } from "@/lib/services/user/updatePlayCount";
 import { updatePlayData } from "@/lib/services/user/updatePlayData";
@@ -16,6 +13,8 @@ import { z } from "zod";
 
 const EAGATE_ORIGIN = "https://p.eagate.573.jp";
 const MAX_SYNC_BODY_BYTES = 8 * 1024 * 1024;
+const SYNC_COOLDOWN_MS = 30 * 1000;
+const SYNC_PROCESSING_TIMEOUT_MS = 15 * 60 * 1000;
 const shortText = z.string().min(1).max(256);
 const nullableShortText = z.string().max(256).nullable();
 const difficultySchema = z.enum(["Normal", "Hard", "Expert", "Real"]);
@@ -98,12 +97,133 @@ function corsHeaders() {
 function json(
     message: string,
     status: number,
-    data: Record<string, unknown> = {}
+    data: Record<string, unknown> = {},
+    headers: HeadersInit = {}
 ) {
     return NextResponse.json(
         { message, ...data },
-        { status, headers: corsHeaders() }
+        { status, headers: { ...corsHeaders(), ...headers } }
     );
+}
+
+type SyncAttemptResult =
+    | { allowed: true; syncId: number }
+    | { allowed: false; reason: "processing" | "cooldown"; retryAfter: number };
+
+type SkippedChart = {
+    musicIndex: string;
+    difficulty: string;
+};
+
+async function filterKnownMusic(music: SyncMusicInput[]) {
+    const charts = await db.musicChart.findMany({
+        where: {
+            music_idx: {
+                in: [...new Set(music.map((item) => item["@index"]))],
+            },
+        },
+        select: { music_idx: true, difficulty: true },
+    });
+    const knownCharts = new Set(
+        charts.map((chart) => `${chart.music_idx}:${chart.difficulty}`)
+    );
+    const skippedCharts: SkippedChart[] = [];
+    const knownMusic = music.flatMap((item) => {
+        const sheet = item.sheet.filter((chart) => {
+            const known = knownCharts.has(
+                `${item["@index"]}:${chart.difficulty}`
+            );
+            if (!known) {
+                skippedCharts.push({
+                    musicIndex: item["@index"],
+                    difficulty: chart.difficulty,
+                });
+            }
+            return known;
+        });
+
+        return sheet.length > 0 ? [{ ...item, sheet }] : [];
+    });
+
+    return { knownMusic, skippedCharts };
+}
+
+function formatSkippedCharts(skippedCharts: SkippedChart[]) {
+    if (skippedCharts.length === 0) return null;
+
+    const preview = skippedCharts
+        .slice(0, 20)
+        .map((chart) => `${chart.musicIndex} (${chart.difficulty})`)
+        .join(", ");
+    const remainder = skippedCharts.length - 20;
+
+    return `DB에 등록되지 않은 채보 ${skippedCharts.length}개를 건너뛰었습니다: ${preview}${remainder > 0 ? ` 외 ${remainder}개` : ""}`;
+}
+
+// 사용자별 DB 잠금으로 여러 서버 인스턴스에서도 동기화 시작을 직렬화함
+async function createSyncAttempt(
+    userId: number,
+    syncScope: "full" | "recent",
+    receivedPlays: number
+): Promise<SyncAttemptResult> {
+    return db.$transaction(async (tx) => {
+        await tx.$queryRaw`SELECT pg_advisory_xact_lock(73051, ${userId})`;
+
+        const now = new Date();
+        const latestSync = await tx.dataSync.findFirst({
+            where: { user_id: userId },
+            select: { id: true, status: true, started_at: true },
+            orderBy: { started_at: "desc" },
+        });
+
+        if (latestSync?.status === "processing") {
+            const processingAge =
+                now.getTime() - latestSync.started_at.getTime();
+            if (processingAge < SYNC_PROCESSING_TIMEOUT_MS) {
+                return {
+                    allowed: false,
+                    reason: "processing",
+                    retryAfter: Math.max(
+                        1,
+                        Math.ceil(
+                            (SYNC_PROCESSING_TIMEOUT_MS - processingAge) / 1000
+                        )
+                    ),
+                };
+            }
+
+            await tx.dataSync.update({
+                where: { id: latestSync.id },
+                data: {
+                    status: "failed",
+                    error_message: "동기화 처리 시간이 초과되었습니다.",
+                    completed_at: now,
+                },
+            });
+        } else if (latestSync) {
+            const elapsed = now.getTime() - latestSync.started_at.getTime();
+            if (elapsed < SYNC_COOLDOWN_MS) {
+                return {
+                    allowed: false,
+                    reason: "cooldown",
+                    retryAfter: Math.max(
+                        1,
+                        Math.ceil((SYNC_COOLDOWN_MS - elapsed) / 1000)
+                    ),
+                };
+            }
+        }
+
+        const sync = await tx.dataSync.create({
+            data: {
+                user_id: userId,
+                sync_scope: syncScope,
+                received_plays: receivedPlays,
+            },
+            select: { id: true },
+        });
+        return { allowed: true, syncId: sync.id };
+    });
 }
 
 export async function POST(request: NextRequest) {
@@ -153,37 +273,52 @@ export async function POST(request: NextRequest) {
     const music: SyncMusicInput[] | null = totalData
         ? totalData.data.music
         : null;
-    let syncId: number | null = null;
+    const syncAttempt = await createSyncAttempt(
+        user.id,
+        music ? "full" : "recent",
+        history.length
+    );
+    if (!syncAttempt.allowed) {
+        return json(
+            syncAttempt.reason === "processing"
+                ? "이미 동기화를 처리하고 있습니다. 잠시 후 다시 시도해주세요."
+                : "동기화 요청이 너무 빠릅니다. 잠시 후 다시 시도해주세요.",
+            syncAttempt.reason === "processing" ? 409 : 429,
+            { retryAfter: syncAttempt.retryAfter },
+            { "Retry-After": String(syncAttempt.retryAfter) }
+        );
+    }
+
+    const syncId = syncAttempt.syncId;
 
     try {
-        if (music) {
-            await updateMusic(music);
-        }
         await updatePlayCount(user.id, name, playCount);
 
-        const sync = await db.dataSync.create({
-            data: {
-                user_id: user.id,
-                sync_scope: music ? "full" : "recent",
-                received_plays: history.length,
-            },
-        });
-        syncId = sync.id;
-
-        const insertedPlays = await updateRecentPlay(user.id, history, sync.id);
+        const insertedPlays = await updateRecentPlay(user.id, history, syncId);
         let changedRecords = 0;
+        let syncNotice: string | null = null;
         if (music) {
-            changedRecords = await updatePlayData(user.id, music, sync.id);
-            await updateGrade(user.id);
-            await updateDummy();
+            const { knownMusic, skippedCharts } = await filterKnownMusic(music);
+            syncNotice = formatSkippedCharts(skippedCharts);
+
+            if (knownMusic.length > 0) {
+                changedRecords = await updatePlayData(
+                    user.id,
+                    knownMusic,
+                    syncId
+                );
+                await updateGrade(user.id);
+                await updateDummy();
+            }
         }
 
         await db.dataSync.update({
-            where: { id: sync.id },
+            where: { id: syncId },
             data: {
                 status: "completed",
                 inserted_plays: insertedPlays,
                 changed_records: changedRecords,
+                error_message: syncNotice,
                 completed_at: new Date(),
             },
         });
@@ -191,8 +326,6 @@ export async function POST(request: NextRequest) {
         revalidateTag(getUserProfileTag(user.id), "max");
 
         if (music) {
-            revalidateTag(CACHE_TAGS.musicCatalog, "max");
-            revalidateTag(CACHE_TAGS.musicDetails, "max");
             revalidateTag(CACHE_TAGS.chartRankings, "max");
             revalidateTag(CACHE_TAGS.userRankings, "max");
             revalidateTag(CACHE_TAGS.bingos, "max");
@@ -209,19 +342,15 @@ export async function POST(request: NextRequest) {
     } catch (error) {
         console.error("BEMANI data synchronization failed", error);
 
-        if (syncId) {
-            await db.dataSync.update({
-                where: { id: syncId },
-                data: {
-                    status: "failed",
-                    error_message:
-                        error instanceof Error
-                            ? error.message
-                            : "Unknown error",
-                    completed_at: new Date(),
-                },
-            });
-        }
+        await db.dataSync.update({
+            where: { id: syncId },
+            data: {
+                status: "failed",
+                error_message:
+                    error instanceof Error ? error.message : "Unknown error",
+                completed_at: new Date(),
+            },
+        });
 
         return json("데이터 처리 중 오류가 발생했습니다.", 500);
     }

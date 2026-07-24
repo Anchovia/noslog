@@ -44,6 +44,8 @@ export default function MusicJacket({
                 <img
                     src={jacketUrl}
                     alt=""
+                    loading="lazy"
+                    decoding="async"
                     className="absolute inset-0 size-full object-cover"
                     onError={() =>
                         setFailedUrls((current) =>

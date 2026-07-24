@@ -1,4 +1,5 @@
 import Badge from "@/components/ui/Badge";
+import ProfileAvatar from "@/components/profile/profileAvatar";
 import type { UserRankingMode } from "@/lib/rankings";
 import { Globe2 } from "lucide-react";
 import Image from "next/image";
@@ -12,19 +13,7 @@ export function UserAvatar({
     username: string | null;
     size?: number;
 }) {
-    return (
-        <span
-            className="border-border bg-surface-muted flex shrink-0 items-center justify-center overflow-hidden rounded-full border bg-cover bg-center text-xs font-bold"
-            style={{
-                width: size,
-                height: size,
-                backgroundImage: avatar ? `url(${avatar})` : undefined,
-            }}
-            aria-label={`${username || "이름 없는 유저"} 프로필 이미지`}
-        >
-            {!avatar ? (username?.charAt(0).toUpperCase() ?? "?") : null}
-        </span>
-    );
+    return <ProfileAvatar avatar={avatar} username={username} size={size} />;
 }
 
 export function CountryMark({ country }: { country: string }) {

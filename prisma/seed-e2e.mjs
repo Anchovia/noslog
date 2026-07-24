@@ -81,23 +81,33 @@ async function seed() {
     await prisma.tierList.deleteMany({
         where: { slug: "e2e-basic-tier" },
     });
-    const tierList = await prisma.tierList.create({
-        data: {
-            slug: "e2e-basic-tier",
-            title: "E2E Basic 서열표",
-            mode: "basic",
-            status: "published",
-            bands: {
-                create: [{ value: 10.2, position: 0 }],
+    const tierList = await prisma.tierList.findUnique({
+        where: { slug: "basic-s" },
+    });
+    if (!tierList) {
+        throw new Error("Basic S 서열표 마이그레이션이 적용되지 않았습니다.");
+    }
+
+    const tierBand = await prisma.tierBand.findUnique({
+        where: {
+            tierListId_value: {
+                tierListId: tierList.id,
+                value: 10.2,
             },
         },
-        include: { bands: true },
+    });
+    if (!tierBand) {
+        throw new Error("Basic S 서열표의 10.2 구간을 찾을 수 없습니다.");
+    }
+
+    await prisma.tierEntry.deleteMany({
+        where: { tierListId: tierList.id },
     });
     await prisma.tierEntry.create({
         data: {
-            position: 0,
+            position: 1,
             tierListId: tierList.id,
-            tierBandId: tierList.bands[0].id,
+            tierBandId: tierBand.id,
             chartId: charts.get("Expert").id,
         },
     });

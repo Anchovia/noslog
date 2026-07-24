@@ -4,7 +4,7 @@ import { createPageMetadata } from "@/lib/metadata/site";
 import { getUser } from "@/lib/user";
 
 export const metadata = createPageMetadata({
-    title: "NOSTALGIA 오락실",
+    title: "오락실",
     description:
         "NOSTALGIA 기기가 설치된 오락실의 위치와 선호 이용자 수를 확인합니다.",
     path: "/gamecenter",

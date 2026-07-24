@@ -4,9 +4,12 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const mocks = vi.hoisted(() => ({
     verifySyncToken: vi.fn(),
     userFindUnique: vi.fn(),
+    transaction: vi.fn(),
+    queryRaw: vi.fn(),
+    dataSyncFindFirst: vi.fn(),
     dataSyncCreate: vi.fn(),
     dataSyncUpdate: vi.fn(),
-    updateMusic: vi.fn(),
+    musicChartFindMany: vi.fn(),
     updateGrade: vi.fn(),
     updatePlayCount: vi.fn(),
     updatePlayData: vi.fn(),
@@ -21,16 +24,15 @@ vi.mock("@/lib/bookmarklet", () => ({
 
 vi.mock("@/lib/db", () => ({
     default: {
+        $transaction: mocks.transaction,
         user: { findUnique: mocks.userFindUnique },
         dataSync: {
             create: mocks.dataSyncCreate,
+            findFirst: mocks.dataSyncFindFirst,
             update: mocks.dataSyncUpdate,
         },
+        musicChart: { findMany: mocks.musicChartFindMany },
     },
-}));
-
-vi.mock("@/lib/services/music/updateMusic", () => ({
-    updateMusic: mocks.updateMusic,
 }));
 vi.mock("@/lib/services/user/updateGrade", () => ({
     updateGrade: mocks.updateGrade,
@@ -153,8 +155,24 @@ describe("POST /api/receivePlayerData", () => {
             id: 1,
             sync_token_version: 0,
         });
+        mocks.transaction.mockImplementation((callback) =>
+            callback({
+                $queryRaw: mocks.queryRaw,
+                dataSync: {
+                    create: mocks.dataSyncCreate,
+                    findFirst: mocks.dataSyncFindFirst,
+                    update: mocks.dataSyncUpdate,
+                },
+            })
+        );
+        mocks.dataSyncFindFirst.mockResolvedValue(null);
         mocks.dataSyncCreate.mockResolvedValue({ id: 10 });
         mocks.dataSyncUpdate.mockResolvedValue({ id: 10 });
+        mocks.musicChartFindMany.mockResolvedValue([
+            { music_idx: "test-music", difficulty: "Normal" },
+            { music_idx: "test-music", difficulty: "Hard" },
+            { music_idx: "test-music", difficulty: "Expert" },
+        ]);
         mocks.updateRecentPlay.mockResolvedValue(1);
         mocks.updatePlayData.mockResolvedValue(3);
     });
@@ -215,6 +233,56 @@ describe("POST /api/receivePlayerData", () => {
         expect(data.message).toBe("연동 토큰이 올바르지 않습니다.");
     });
 
+    it("이미 처리 중인 사용자의 중복 동기화를 거부한다", async () => {
+        mocks.dataSyncFindFirst.mockResolvedValue({
+            id: 9,
+            status: "processing",
+            started_at: new Date(),
+        });
+
+        const response = await POST(createRequest(requestBody()));
+        const data = await response.json();
+
+        expect(response.status).toBe(409);
+        expect(data.message).toContain("이미 동기화를 처리하고 있습니다");
+        expect(mocks.dataSyncCreate).not.toHaveBeenCalled();
+        expect(mocks.updatePlayCount).not.toHaveBeenCalled();
+    });
+
+    it("30초 안에 반복된 동기화 요청을 제한한다", async () => {
+        mocks.dataSyncFindFirst.mockResolvedValue({
+            id: 9,
+            status: "completed",
+            started_at: new Date(),
+        });
+
+        const response = await POST(createRequest(requestBody()));
+
+        expect(response.status).toBe(429);
+        expect(Number(response.headers.get("Retry-After"))).toBeGreaterThan(0);
+        expect(mocks.dataSyncCreate).not.toHaveBeenCalled();
+    });
+
+    it("15분 넘게 멈춘 동기화를 실패 처리하고 새 요청을 시작한다", async () => {
+        mocks.dataSyncFindFirst.mockResolvedValue({
+            id: 9,
+            status: "processing",
+            started_at: new Date(Date.now() - 16 * 60 * 1000),
+        });
+
+        const response = await POST(createRequest(requestBody()));
+
+        expect(response.status).toBe(200);
+        expect(mocks.dataSyncUpdate).toHaveBeenCalledWith({
+            where: { id: 9 },
+            data: expect.objectContaining({
+                status: "failed",
+                error_message: "동기화 처리 시간이 초과되었습니다.",
+            }),
+        });
+        expect(mocks.dataSyncCreate).toHaveBeenCalledOnce();
+    });
+
     it("최근 기록만 동기화하고 사용자 프로필 캐시를 갱신한다", async () => {
         const response = await POST(createRequest(requestBody()));
         const data = await response.json();
@@ -226,7 +294,6 @@ describe("POST /api/receivePlayerData", () => {
             expect.any(Array),
             10
         );
-        expect(mocks.updateMusic).not.toHaveBeenCalled();
         expect(mocks.updatePlayData).not.toHaveBeenCalled();
         expect(mocks.dataSyncUpdate).toHaveBeenCalledWith({
             where: { id: 10 },
@@ -248,13 +315,14 @@ describe("POST /api/receivePlayerData", () => {
 
         expect(response.status).toBe(200);
         expect(data.syncScope).toBe("full");
-        expect(mocks.updateMusic).toHaveBeenCalledOnce();
-        expect(mocks.updatePlayData).toHaveBeenCalledOnce();
+        expect(mocks.updatePlayData).toHaveBeenCalledWith(
+            1,
+            requestBody(true).totalData?.data.music,
+            10
+        );
         expect(mocks.updateGrade).toHaveBeenCalledWith(1);
         expect(mocks.updateDummy).toHaveBeenCalledOnce();
         for (const tag of [
-            "music-catalog",
-            "music-details",
             "chart-rankings",
             "user-rankings",
             "bingos",
@@ -262,6 +330,62 @@ describe("POST /api/receivePlayerData", () => {
         ]) {
             expect(mocks.revalidateTag).toHaveBeenCalledWith(tag, "max");
         }
+        expect(mocks.revalidateTag).not.toHaveBeenCalledWith(
+            "music-catalog",
+            "max"
+        );
+        expect(mocks.revalidateTag).not.toHaveBeenCalledWith(
+            "music-details",
+            "max"
+        );
+    });
+
+    it("미등록 채보는 개인 기록에서 제외하고 동기화 내역에 남긴다", async () => {
+        mocks.musicChartFindMany.mockResolvedValue([
+            { music_idx: "test-music", difficulty: "Normal" },
+            { music_idx: "test-music", difficulty: "Hard" },
+        ]);
+
+        const response = await POST(createRequest(requestBody(true)));
+
+        expect(response.status).toBe(200);
+        expect(mocks.updatePlayData).toHaveBeenCalledWith(
+            1,
+            [
+                expect.objectContaining({
+                    "@index": "test-music",
+                    sheet: [musicSheet("Normal"), musicSheet("Hard")],
+                }),
+            ],
+            10
+        );
+        expect(mocks.dataSyncUpdate).toHaveBeenCalledWith({
+            where: { id: 10 },
+            data: expect.objectContaining({
+                status: "completed",
+                error_message: expect.stringContaining("test-music (Expert)"),
+            }),
+        });
+    });
+
+    it("등록된 채보가 하나도 없으면 기존 개인 기록을 덮어쓰지 않는다", async () => {
+        mocks.musicChartFindMany.mockResolvedValue([]);
+
+        const response = await POST(createRequest(requestBody(true)));
+
+        expect(response.status).toBe(200);
+        expect(mocks.updatePlayData).not.toHaveBeenCalled();
+        expect(mocks.updateGrade).not.toHaveBeenCalled();
+        expect(mocks.updateDummy).not.toHaveBeenCalled();
+        expect(mocks.dataSyncUpdate).toHaveBeenCalledWith({
+            where: { id: 10 },
+            data: expect.objectContaining({
+                status: "completed",
+                changed_records: 0,
+                error_message:
+                    expect.stringContaining("DB에 등록되지 않은 채보 3개"),
+            }),
+        });
     });
 
     it("처리 실패 시 동기화 실행을 실패 상태로 기록한다", async () => {

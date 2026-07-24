@@ -1,11 +1,31 @@
 import { describe, expect, it } from "vitest";
 
 import {
+    MAX_TIER_VALUE,
+    MIN_TIER_VALUE,
+    TIER_BAND_VALUES,
     formatTierValue,
     getJacketUrl,
     getTierRecommendation,
     getTierRecordStatus,
+    isTierGoalAchieved,
+    formatOfficialChartLevel,
 } from "@/lib/tiers";
+
+describe("TIER_BAND_VALUES", () => {
+    it("14.5부터 1.0까지 0.1 간격의 136개 서열 상수를 제공한다", () => {
+        expect(TIER_BAND_VALUES).toHaveLength(136);
+        expect(TIER_BAND_VALUES[0]).toBe(MAX_TIER_VALUE);
+        expect(TIER_BAND_VALUES.at(-1)).toBe(MIN_TIER_VALUE);
+        expect(
+            TIER_BAND_VALUES.every(
+                (value, index) =>
+                    index === 0 ||
+                    Math.round((TIER_BAND_VALUES[index - 1] - value) * 10) === 1
+            )
+        ).toBe(true);
+    });
+});
 
 describe("formatTierValue", () => {
     it("서열표 상수를 소수점 한 자리로 표시한다", () => {
@@ -99,5 +119,24 @@ describe("getTierRecordStatus", () => {
         expect(
             getTierRecordStatus({ score: 920_000, rank: "A+", fc_type: 0 })
         ).toBe("a_plus");
+    });
+});
+
+describe("목표별 서열표", () => {
+    const sRecord = { score: 970_000, rank: "S", fc_type: 0 };
+    const fcRecord = { score: 980_000, rank: "S", fc_type: 2 };
+    const pianistRecord = { score: 1_000_000, rank: "S", fc_type: 3 };
+
+    it("각 목표의 달성 조건을 독립적으로 판정한다", () => {
+        expect(isTierGoalAchieved(sRecord, "s")).toBe(true);
+        expect(isTierGoalAchieved(sRecord, "fc")).toBe(false);
+        expect(isTierGoalAchieved(fcRecord, "fc")).toBe(true);
+        expect(isTierGoalAchieved(fcRecord, "pianist")).toBe(false);
+        expect(isTierGoalAchieved(pianistRecord, "pianist")).toBe(true);
+    });
+
+    it("Real과 일반 채보의 공식 레벨 표기를 구분한다", () => {
+        expect(formatOfficialChartLevel("Expert", 12)).toBe("Lv.12");
+        expect(formatOfficialChartLevel("Real", 2)).toBe("Real 2");
     });
 });

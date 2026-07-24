@@ -14,6 +14,7 @@ import {
     formatProfileGrade,
     getProfileCountryCode,
 } from "@/components/profile/dashboard/profileUtils";
+import getSession from "@/lib/session";
 import { formatToComma } from "@/lib/utils";
 
 import { getCachedProfileData } from "../data";
@@ -182,6 +183,11 @@ export async function GET(
     const id = Number(rawId);
     if (!Number.isInteger(id) || id < 1) {
         return new Response("Not found", { status: 404 });
+    }
+
+    const session = await getSession();
+    if (session.id !== id) {
+        return new Response("Forbidden", { status: 403 });
     }
 
     const profileData = await getCachedProfileData(id);

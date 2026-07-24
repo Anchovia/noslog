@@ -1,3 +1,19 @@
+const contentSecurityPolicyReportOnly = [
+    "default-src 'self'",
+    "base-uri 'self'",
+    "object-src 'none'",
+    "frame-ancestors 'none'",
+    "form-action 'self'",
+    "script-src 'self' https://dapi.kakao.com https://platform.twitter.com 'report-sample'",
+    "style-src 'self' 'unsafe-inline' https://platform.twitter.com",
+    "img-src 'self' data: blob: https://cdn.discordapp.com https://p.eagate.573.jp https://*.public.blob.vercel-storage.com https://*.daumcdn.net https://*.kakaocdn.net https://pbs.twimg.com https://*.twimg.com",
+    "font-src 'self' data:",
+    "connect-src 'self' https://dapi.kakao.com https://*.kakao.com https://*.daum.net https://platform.twitter.com https://syndication.twitter.com",
+    "frame-src https://platform.twitter.com https://syndication.twitter.com",
+    "worker-src 'self' blob:",
+    "manifest-src 'self'",
+].join("; ");
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     experimental: {
@@ -26,6 +42,10 @@ const nextConfig = {
                     {
                         key: "Strict-Transport-Security",
                         value: "max-age=31536000; includeSubDomains",
+                    },
+                    {
+                        key: "Content-Security-Policy-Report-Only",
+                        value: contentSecurityPolicyReportOnly,
                     },
                 ],
             },

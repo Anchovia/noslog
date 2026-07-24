@@ -1,6 +1,6 @@
 import { getUser } from "@/lib/user";
-import Image from "next/image";
 import Link from "next/link";
+import ProfileAvatar from "@/components/profile/profileAvatar";
 
 import HeaderMenu, { HeaderPrimaryNavigation } from "./headerNavigation";
 
@@ -19,19 +19,14 @@ export default async function Header() {
                     {user ? (
                         <Link
                             href={`/profile/${user.id}`}
-                            className="border-border bg-text-primary text-bg relative mx-1.5 flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full border text-sm font-bold"
+                            className="mx-1.5 shrink-0"
                             aria-label={`${user.username ?? "사용자"} 프로필`}
                         >
-                            {user.avatar ? (
-                                <Image
-                                    src={user.avatar}
-                                    alt=""
-                                    fill
-                                    sizes="32px"
-                                />
-                            ) : (
-                                (user.username?.charAt(0) ?? "N")
-                            )}
+                            <ProfileAvatar
+                                avatar={user.avatar}
+                                username={user.username}
+                                size={32}
+                            />
                         </Link>
                     ) : (
                         <Link

@@ -17,6 +17,7 @@ import {
 } from "@/app/(nevigation)/profile/settings/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import DiscordIcon from "@/components/ui/DiscordIcon";
+import ProfileAvatar from "@/components/profile/profileAvatar";
 import { Switch } from "@/components/ui/Switch";
 import { ThemeSetting } from "@/components/theme/themeToggle";
 
@@ -161,17 +162,11 @@ export default function ProfileSettingCard({
     return (
         <form onSubmit={submit} className="flex flex-col gap-4">
             <section className="bg-surface rounded-card flex items-center gap-4 p-4">
-                <span
-                    className="border-border bg-surface-muted flex size-18 shrink-0 items-center justify-center rounded-full border bg-cover bg-center text-xl font-bold"
-                    style={{
-                        backgroundImage: preview
-                            ? `url(${preview})`
-                            : undefined,
-                    }}
-                    aria-label="프로필 이미지 미리보기"
-                >
-                    {!preview ? (user.username?.charAt(0) ?? "N") : null}
-                </span>
+                <ProfileAvatar
+                    avatar={preview || null}
+                    username={user.username}
+                    size={72}
+                />
                 <div className="min-w-0 flex-1">
                     <h2 className="text-section">프로필 이미지</h2>
                     <p className="text-caption mt-1">

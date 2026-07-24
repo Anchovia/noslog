@@ -76,17 +76,19 @@ export async function updatePlayData(
 
         for (const data of music) {
             for (const sheet of data.sheet) {
-                // 클리어 랭크 변수에 값 ++
+                const chart_id =
+                    chartIds.get(`${data["@index"]}:${sheet.difficulty}`) ??
+                    null;
+                if (!chart_id) {
+                    continue;
+                }
+                // DB에 등록된 채보만 클리어 랭크와 개인 기록에 반영함
                 if (sheet.rank in score) {
                     score[sheet.rank as keyof typeof score]++;
                 }
                 if (sheet.fc_type === 2) {
                     score["F"]++;
                 }
-                // 새 playData 객체 생성 및 배열에 push
-                const chart_id =
-                    chartIds.get(`${data["@index"]}:${sheet.difficulty}`) ??
-                    null;
                 const record = {
                     user_id,
                     music_idx: data["@index"],
@@ -106,40 +108,38 @@ export async function updatePlayData(
                 };
                 newPlayData.push(record);
 
-                if (chart_id) {
-                    const previous = previousByChart.get(chart_id);
-                    const changed =
-                        !previous ||
-                        previous.level !== record.level ||
-                        previous.score !== record.score ||
-                        previous.rank !== record.rank ||
-                        previous.fc_type !== record.fc_type ||
-                        previous.play_count !== record.play_count ||
-                        previous.fullcombo_count !== record.fullcombo_count ||
-                        previous.pianistic_count !== record.pianistic_count ||
-                        previous.max_combo !== record.max_combo ||
-                        previous.grade_basic !== record.grade_basic ||
-                        previous.grade_recital !== record.grade_recital ||
-                        previous.besttime !== record.besttime;
+                const previous = previousByChart.get(chart_id);
+                const changed =
+                    !previous ||
+                    previous.level !== record.level ||
+                    previous.score !== record.score ||
+                    previous.rank !== record.rank ||
+                    previous.fc_type !== record.fc_type ||
+                    previous.play_count !== record.play_count ||
+                    previous.fullcombo_count !== record.fullcombo_count ||
+                    previous.pianistic_count !== record.pianistic_count ||
+                    previous.max_combo !== record.max_combo ||
+                    previous.grade_basic !== record.grade_basic ||
+                    previous.grade_recital !== record.grade_recital ||
+                    previous.besttime !== record.besttime;
 
-                    if (changed) {
-                        changedSnapshots.push({
-                            level: record.level,
-                            score: record.score,
-                            rank: record.rank,
-                            fc_type: record.fc_type,
-                            play_count: record.play_count,
-                            fullcombo_count: record.fullcombo_count,
-                            pianistic_count: record.pianistic_count,
-                            max_combo: record.max_combo,
-                            grade_basic: record.grade_basic,
-                            grade_recital: record.grade_recital,
-                            besttime: record.besttime,
-                            chart_id,
-                            user_id,
-                            sync_id,
-                        });
-                    }
+                if (changed) {
+                    changedSnapshots.push({
+                        level: record.level,
+                        score: record.score,
+                        rank: record.rank,
+                        fc_type: record.fc_type,
+                        play_count: record.play_count,
+                        fullcombo_count: record.fullcombo_count,
+                        pianistic_count: record.pianistic_count,
+                        max_combo: record.max_combo,
+                        grade_basic: record.grade_basic,
+                        grade_recital: record.grade_recital,
+                        besttime: record.besttime,
+                        chart_id,
+                        user_id,
+                        sync_id,
+                    });
                 }
             }
         }

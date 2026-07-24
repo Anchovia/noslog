@@ -11,6 +11,7 @@ import type { Prisma } from "@prisma/client";
 import type { TierEntryPlacement } from "@/components/admin/tierBoard/tierBoardTypes";
 
 const tierModes = new Set(["basic", "recital"]);
+const tierGoals = new Set(["s", "fc", "pianist"]);
 const tierStatuses = new Set(["draft", "published", "archived"]);
 
 export async function searchTierCharts(query: string, tierListId: number) {
@@ -59,6 +60,7 @@ export async function searchTierCharts(query: string, tierListId: number) {
 
 function tierListData(formData: FormData) {
     const modeValue = String(formData.get("mode") ?? "basic");
+    const goalValue = String(formData.get("goal") ?? "s");
     const statusValue = String(formData.get("status") ?? "draft");
 
     return {
@@ -68,6 +70,7 @@ function tierListData(formData: FormData) {
             .replace(/[^a-z0-9-]/g, "-"),
         title: String(formData.get("title") ?? "").trim(),
         mode: tierModes.has(modeValue) ? modeValue : "basic",
+        goal: tierGoals.has(goalValue) ? goalValue : "s",
         description: String(formData.get("description") ?? "").trim() || null,
         status: tierStatuses.has(statusValue) ? statusValue : "draft",
     };
@@ -88,7 +91,20 @@ export async function createTierList(formData: FormData) {
     if (!data.slug || !data.title) return;
 
     const duplicate = await db.tierList.count({
-        where: { slug: data.slug },
+        where: {
+            OR: [
+                { slug: data.slug },
+                ...(data.status === "published"
+                    ? [
+                          {
+                              mode: data.mode,
+                              goal: data.goal,
+                              status: "published",
+                          },
+                      ]
+                    : []),
+            ],
+        },
     });
     if (duplicate) return;
 
@@ -104,7 +120,21 @@ export async function updateTierList(formData: FormData) {
     if (!Number.isInteger(id) || !data.slug || !data.title) return;
 
     const duplicate = await db.tierList.count({
-        where: { slug: data.slug, NOT: { id } },
+        where: {
+            NOT: { id },
+            OR: [
+                { slug: data.slug },
+                ...(data.status === "published"
+                    ? [
+                          {
+                              mode: data.mode,
+                              goal: data.goal,
+                              status: "published",
+                          },
+                      ]
+                    : []),
+            ],
+        },
     });
     if (duplicate) return;
 
@@ -471,5 +501,75 @@ export async function deleteTierEntry(formData: FormData) {
     ];
 
     await db.$transaction(operations);
+    revalidateTierList(entry.tierListId);
+}
+
+// 통합 서열표에서는 검색한 채보 한 건의 목표별 상수를 직접 변경함
+export async function moveTierEntryToBand(formData: FormData) {
+    await requireAdmin();
+    const entryId = Number(formData.get("entryId"));
+    const targetBandId = Number(formData.get("tierBandId"));
+    if (![entryId, targetBandId].every(Number.isInteger)) return;
+
+    const [entry, targetBand] = await Promise.all([
+        db.tierEntry.findUnique({ where: { id: entryId } }),
+        db.tierBand.findUnique({
+            where: { id: targetBandId },
+            select: { id: true, tierListId: true, value: true },
+        }),
+    ]);
+    if (
+        !entry ||
+        !targetBand ||
+        entry.tierListId !== targetBand.tierListId ||
+        entry.tierBandId === targetBand.id
+    )
+        return;
+
+    const [sourceEntries, targetLastEntry] = await Promise.all([
+        db.tierEntry.findMany({
+            where: { tierBandId: entry.tierBandId, NOT: { id: entry.id } },
+            select: { id: true },
+            orderBy: { position: "asc" },
+        }),
+        db.tierEntry.findFirst({
+            where: { tierBandId: targetBand.id },
+            select: { position: true },
+            orderBy: { position: "desc" },
+        }),
+    ]);
+
+    await db.$transaction([
+        ...sourceEntries.map((item) =>
+            db.tierEntry.update({
+                where: { id: item.id },
+                data: { position: -item.id },
+            })
+        ),
+        db.tierEntry.update({
+            where: { id: entry.id },
+            data: { position: -entry.id },
+        }),
+        ...sourceEntries.map((item, index) =>
+            db.tierEntry.update({
+                where: { id: item.id },
+                data: { position: index + 1 },
+            })
+        ),
+        db.tierEntry.update({
+            where: { id: entry.id },
+            data: {
+                tierBandId: targetBand.id,
+                position: (targetLastEntry?.position ?? 0) + 1,
+            },
+        }),
+        db.tierPlacementHistory.create({
+            data: {
+                tierListId: entry.tierListId,
+                chartId: entry.chartId,
+                bandValue: targetBand.value,
+            },
+        }),
+    ]);
     revalidateTierList(entry.tierListId);
 }

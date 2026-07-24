@@ -1,4 +1,5 @@
 import type { RankingUser } from "./musicRankingTypes";
+import ProfileAvatar from "@/components/profile/profileAvatar";
 
 interface RankingUserAvatarProps {
     user: RankingUser;
@@ -11,16 +12,10 @@ export default function RankingUserAvatar({
     size = 28,
 }: RankingUserAvatarProps) {
     return (
-        <span
-            className="border-border bg-surface-muted shrink-0 rounded-full border bg-cover bg-center"
-            style={{
-                width: size,
-                height: size,
-                backgroundImage: user.avatar
-                    ? `url(${user.avatar})`
-                    : undefined,
-            }}
-            aria-label={`${user.username || "이름 없는 유저"} 프로필 이미지`}
+        <ProfileAvatar
+            avatar={user.avatar}
+            username={user.username}
+            size={size}
         />
     );
 }

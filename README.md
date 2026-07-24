@@ -63,6 +63,10 @@ npm run dev
 
 기본 주소는 `http://localhost:3000`입니다.
 
+### 점검 모드
+
+`MAINTENANCE_MODE=true`로 설정하면 일반 페이지와 API 요청에 점검 안내를 표시합니다. 관리자 페이지와 Discord 로그인 경로는 점검 중에도 접근할 수 있습니다. Vercel에서는 환경변수를 변경한 뒤 다시 배포해야 적용됩니다.
+
 ## 검사 명령
 
 ```bash

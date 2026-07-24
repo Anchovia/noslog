@@ -21,6 +21,50 @@ const routes: {
 
 export async function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl;
+
+    if (process.env.MAINTENANCE_MODE?.toLowerCase() === "true") {
+        const isMaintenanceBypass =
+            pathname === "/maintenance" ||
+            pathname === "/login" ||
+            pathname.startsWith("/admin") ||
+            pathname.startsWith("/discord/") ||
+            pathname === "/manifest.webmanifest" ||
+            pathname === "/robots.txt" ||
+            pathname === "/sitemap.xml" ||
+            pathname === "/icon" ||
+            pathname === "/apple-icon" ||
+            pathname === "/opengraph-image" ||
+            pathname === "/twitter-image";
+
+        if (isMaintenanceBypass) {
+            return;
+        }
+
+        if (pathname.startsWith("/api/")) {
+            return NextResponse.json(
+                { message: "현재 서비스 점검 중입니다." },
+                {
+                    status: 503,
+                    headers: {
+                        "Cache-Control": "no-store",
+                        "Retry-After": "3600",
+                    },
+                }
+            );
+        }
+
+        const maintenanceUrl = request.nextUrl.clone();
+        maintenanceUrl.pathname = "/maintenance";
+        maintenanceUrl.search = "";
+        return NextResponse.rewrite(maintenanceUrl, {
+            status: 503,
+            headers: {
+                "Cache-Control": "no-store",
+                "Retry-After": "3600",
+            },
+        });
+    }
+
     const session = await getSession();
 
     // 로그인 상태에서 public route 접근시
