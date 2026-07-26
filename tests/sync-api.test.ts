@@ -100,7 +100,6 @@ function requestBody(full = false) {
                     play_count: 100,
                     travel_info: {
                         money: 1205,
-                        fame: "music-teacher",
                     },
                     last: {
                         playtime: "2026-07-17 12:00",

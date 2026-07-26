@@ -11,7 +11,6 @@ export interface SyncPlayerProfile {
     play_count: number;
     travel_info: {
         money: number;
-        fame: string;
     };
     last: {
         playtime: string;
@@ -60,7 +59,6 @@ export async function updatePlayerProfile(
                 nostalgia_name: player.name,
                 play_count: player.play_count,
                 nostalgia_nos: player.travel_info.money,
-                nostalgia_fame: player.travel_info.fame,
                 nostalgia_last_playtime: player.last.playtime,
                 equipped_brooch_index: equippedBroochIndex,
             },

@@ -28,7 +28,6 @@ model User {
   rank_recital_country    Int?
   play_count              Int?
   nostalgia_nos           Int?
-  nostalgia_fame          String?
   nostalgia_last_playtime String?
   equipped_brooch_index   String?
   equippedBrooch          Brooch?                   @relation("EquippedBrooch", fields: [equipped_brooch_index], references: [index], onDelete: SetNull)

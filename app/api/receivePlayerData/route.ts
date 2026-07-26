@@ -106,7 +106,6 @@ const syncRequestSchema = z.object({
                 play_count: z.number().int().min(0).max(10_000_000),
                 travel_info: z.object({
                     money: z.number().int().min(0).max(1_000_000_000),
-                    fame: z.string().max(256),
                 }),
                 last: z.object({
                     playtime: z.string().max(64),

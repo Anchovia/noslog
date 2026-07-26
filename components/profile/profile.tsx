@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { logout } from "@/app/(nevigation)/profile/[id]/actions";
 import ProfileBestPlays from "@/components/profile/dashboard/profileBestPlays";
+import ProfileAnalysisSummary from "@/components/profile/dashboard/profileAnalysisSummary";
 import ProfileGradeTrend from "@/components/profile/dashboard/profileGradeTrend";
 import ProfileHeader from "@/components/profile/dashboard/profileHeader";
 import ProfileModeTabs from "@/components/profile/dashboard/profileModeTabs";
@@ -31,6 +32,7 @@ export default function ProfileDashboard({
     recitalBestPlays,
     recentPlays,
     isOwner,
+    ownerAnalytics,
 }: ProfileDashboardProps) {
     const [mode, setMode] = useState<ProfileMode>("basic");
     const [showAllRanks, setShowAllRanks] = useState(false);
@@ -57,6 +59,11 @@ export default function ProfileDashboard({
                 countryRank={countryRank}
             />
             <ProfileGradeTrend data={gradeHistory} mode={mode} />
+            {ownerAnalytics ? (
+                <ProfileAnalysisSummary
+                    analytics={ownerAnalytics.performance}
+                />
+            ) : null}
             <ProfileRankDistribution
                 rows={rankRows}
                 playCount={user.play_count}
