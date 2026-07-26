@@ -1,8 +1,11 @@
+"use client";
+
 import { cn, formatToComma, formatToGrade } from "@/lib/utils";
 import type { PeerScoreComparison } from "@/lib/music/peerScoreComparison";
 import { formatScoreRecordDate } from "@/lib/music/scoreTrend";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import { rankAssetNames } from "./musicDetailConfig";
 import MusicJudgementAccordion from "./musicJudgementAccordion";
 import RecentPlayRow from "./recentPlayRow";
@@ -31,6 +34,7 @@ export default function MusicRecordTab({
     performanceTrend,
     peerScoreComparison,
 }: MusicRecordTabProps) {
+    const [showPeerComparison, setShowPeerComparison] = useState(false);
     const scoreProgress = userPlayData
         ? Math.min(
               100,
@@ -123,7 +127,43 @@ export default function MusicRecordTab({
                         </div>
 
                         <div className="min-w-0 flex-1">
-                            <p className="text-caption">베스트 스코어</p>
+                            <div className="flex items-center justify-between gap-2">
+                                <p className="text-caption">베스트 스코어</p>
+                                {peerScoreComparison ? (
+                                    <button
+                                        aria-checked={showPeerComparison}
+                                        className="focus-visible:ring-focus -my-2 flex min-h-11 shrink-0 items-center gap-1.5 rounded-sm focus-visible:ring-2 focus-visible:outline-none"
+                                        onClick={() =>
+                                            setShowPeerComparison(
+                                                (value) => !value
+                                            )
+                                        }
+                                        role="switch"
+                                        type="button"
+                                    >
+                                        <span className="text-micro whitespace-nowrap">
+                                            비슷한 사람과 비교
+                                        </span>
+                                        <span
+                                            aria-hidden
+                                            className={cn(
+                                                "relative h-5 w-9 rounded-full transition-colors",
+                                                showPeerComparison
+                                                    ? "bg-chart"
+                                                    : "bg-divider"
+                                            )}
+                                        >
+                                            <span
+                                                className={cn(
+                                                    "bg-text-primary absolute top-0.5 left-0.5 size-4 rounded-full transition-transform",
+                                                    showPeerComparison &&
+                                                        "translate-x-4"
+                                                )}
+                                            />
+                                        </span>
+                                    </button>
+                                ) : null}
+                            </div>
                             <div className="flex items-center gap-2">
                                 <strong className="text-score-display block truncate">
                                     {userPlayData
@@ -182,7 +222,9 @@ export default function MusicRecordTab({
                         </div>
                     </div>
 
-                    {peerScoreComparison && peerScoreDifference !== null ? (
+                    {showPeerComparison &&
+                    peerScoreComparison &&
+                    peerScoreDifference !== null ? (
                         <div className="bg-surface-muted rounded-card flex items-center justify-between gap-3 p-3">
                             <div className="min-w-0">
                                 <p className="text-caption">비슷한 Grd 평균</p>
@@ -233,6 +275,16 @@ export default function MusicRecordTab({
                     userPlayData={userPlayData}
                     scoreTrend={scoreTrend}
                     performanceTrend={performanceTrend}
+                    peerComparison={
+                        showPeerComparison
+                            ? (peerScoreComparison?.judgement ?? null)
+                            : null
+                    }
+                    peerNoteRates={
+                        showPeerComparison
+                            ? (peerScoreComparison?.noteRates ?? null)
+                            : null
+                    }
                 />
 
                 <section className="bg-surface rounded-card overflow-hidden">

@@ -263,7 +263,7 @@ export async function getUserChartPeerScoreComparison(
 ) {
     if (gradeBasic === null) return null;
 
-    const scores = await db.playData.aggregate({
+    const records = await db.playData.findMany({
         where: {
             chart_id: chartId,
             user_id: { not: userId },
@@ -276,11 +276,21 @@ export async function getUserChartPeerScoreComparison(
                 },
             },
         },
-        _avg: { score: true },
-        _count: { _all: true },
+        select: {
+            score: true,
+            judge_sjust: true,
+            judge_just: true,
+            judge_good: true,
+            judge_miss: true,
+            judge_near: true,
+            note_rate_standard: true,
+            note_rate_tenuto: true,
+            note_rate_glissando: true,
+            note_rate_trill: true,
+        },
     });
 
-    return buildPeerScoreComparison(scores._avg.score, scores._count._all);
+    return buildPeerScoreComparison(records);
 }
 
 export async function getRecentUserChartPlays(userId: number, chartId: number) {

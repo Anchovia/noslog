@@ -3,6 +3,10 @@
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 
+import type {
+    PeerJudgementComparison,
+    PeerNoteRateComparison,
+} from "@/lib/music/peerScoreComparison";
 import JudgementBreakdown from "./judgementBreakdown";
 import type {
     PerformanceTrendPoint,
@@ -15,12 +19,16 @@ interface MusicJudgementAccordionProps {
     userPlayData: UserPlayData | null;
     scoreTrend: ScoreTrendPoint[];
     performanceTrend: PerformanceTrendPoint[];
+    peerComparison: PeerJudgementComparison | null;
+    peerNoteRates: PeerNoteRateComparison | null;
 }
 
 export default function MusicJudgementAccordion({
     userPlayData,
     scoreTrend,
     performanceTrend,
+    peerComparison,
+    peerNoteRates,
 }: MusicJudgementAccordionProps) {
     const [expanded, setExpanded] = useState(false);
 
@@ -67,6 +75,8 @@ export default function MusicJudgementAccordion({
                             note_rate_trill:
                                 userPlayData?.note_rate_trill ?? null,
                         }}
+                        peerComparison={peerComparison}
+                        peerNoteRates={peerNoteRates}
                     />
 
                     <div className="border-divider mt-4 border-t pt-4">

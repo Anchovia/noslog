@@ -8,10 +8,16 @@ import {
     type JudgementCounts,
     type NoteSuccessRates,
 } from "@/lib/music/judgementStats";
+import type {
+    PeerJudgementComparison,
+    PeerNoteRateComparison,
+} from "@/lib/music/peerScoreComparison";
 
 interface JudgementBreakdownProps {
     counts: JudgementCounts;
     noteRates: NoteSuccessRates;
+    peerComparison?: PeerJudgementComparison | null;
+    peerNoteRates?: PeerNoteRateComparison | null;
 }
 
 const judgementRows = [
@@ -52,6 +58,8 @@ const noteRows = [
 export default function JudgementBreakdown({
     counts,
     noteRates,
+    peerComparison,
+    peerNoteRates,
 }: JudgementBreakdownProps) {
     const hasData = hasJudgementData(counts);
     const total = getJudgementTotal(counts);
@@ -66,7 +74,7 @@ export default function JudgementBreakdown({
 
     return (
         <div className="mt-3 flex flex-col gap-4">
-            <div className="space-y-2.5">
+            <div className={peerComparison ? "space-y-3" : "space-y-2.5"}>
                 {judgementRows.map((row) => {
                     const count = counts[row.key];
                     const percentage = getJudgementPercentage(count, total);
@@ -87,19 +95,37 @@ export default function JudgementBreakdown({
                                     }}
                                 />
                             </span>
-                            <span className="text-caption flex items-baseline justify-end gap-2 tabular-nums">
-                                <strong className="text-text-primary min-w-0 text-right font-semibold">
-                                    {count === null
-                                        ? "-"
-                                        : formatToComma(count)}
-                                </strong>
-                                <span className="text-micro text-text-disabled w-8 shrink-0 text-right">
-                                    {formatMetricPercentage(percentage) ?? "-"}
+                            <span className="flex flex-col items-end tabular-nums">
+                                <span className="text-caption flex items-baseline justify-end gap-2">
+                                    <strong className="text-text-primary min-w-0 text-right font-semibold">
+                                        {count === null
+                                            ? "-"
+                                            : formatToComma(count)}
+                                    </strong>
+                                    <span className="text-micro text-text-disabled w-8 shrink-0 text-right">
+                                        {formatMetricPercentage(percentage) ??
+                                            "-"}
+                                    </span>
                                 </span>
+                                {peerComparison ? (
+                                    <span className="text-micro text-text-disabled mt-0.5 whitespace-nowrap">
+                                        평균{" "}
+                                        {formatMetricPercentage(
+                                            peerComparison.averages[row.key]
+                                        )}
+                                    </span>
+                                ) : null}
                             </span>
                         </div>
                     );
                 })}
+                {peerComparison ? (
+                    <p className="text-micro text-right tabular-nums">
+                        유사 Grd{" "}
+                        {peerComparison.sampleCount.toLocaleString("ko-KR")}명
+                        기준
+                    </p>
+                ) : null}
             </div>
 
             <div className="border-divider border-t pt-3">
@@ -111,8 +137,18 @@ export default function JudgementBreakdown({
                             className="bg-surface-muted rounded-md px-3 py-2"
                         >
                             <dt className="text-caption">{row.label}</dt>
-                            <dd className="text-label mt-0.5 font-bold tabular-nums">
-                                {formatNoteSuccessRate(noteRates[row.key])}
+                            <dd className="mt-0.5 tabular-nums">
+                                <strong className="text-label block">
+                                    {formatNoteSuccessRate(noteRates[row.key])}
+                                </strong>
+                                {peerNoteRates ? (
+                                    <span className="text-micro text-text-disabled mt-0.5 block font-normal">
+                                        평균{" "}
+                                        {formatNoteSuccessRate(
+                                            peerNoteRates.averages[row.key]
+                                        )}
+                                    </span>
+                                ) : null}
                             </dd>
                         </div>
                     ))}
