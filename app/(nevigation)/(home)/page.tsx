@@ -1,6 +1,5 @@
 import FeedbackDialog from "@/components/feedback/feedbackDialog";
 import HomeAnnouncements from "@/components/home/homeAnnouncements";
-import HomeRankingCard from "@/components/home/homeRankingCard";
 import OfficialXTimeline from "@/components/home/officialXTimeline";
 import { getPublishedAnnouncements } from "@/lib/announcements";
 import {
@@ -9,8 +8,6 @@ import {
     SITE_NAME,
     SITE_URL,
 } from "@/lib/metadata/site";
-import type { UserRankingMode } from "@/lib/rankings";
-import { getCachedUserRankingPage } from "@/lib/rankings";
 import { getUser } from "@/lib/user";
 import {
     BadgeCheck,
@@ -41,23 +38,11 @@ const websiteJsonLd = {
     },
 };
 
-interface HomeProps {
-    searchParams: Promise<{
-        ranking?: string | string[];
-    }>;
-}
-
-export default async function Home({ searchParams }: HomeProps) {
-    const { ranking } = await searchParams;
-    const rankingMode: UserRankingMode =
-        ranking === "recital" ? "recital" : "basic";
-    const [user, basicRanking, recitalRanking, announcements] =
-        await Promise.all([
-            getUser(),
-            getCachedUserRankingPage("basic", "all", 1, 5),
-            getCachedUserRankingPage("recital", "all", 1, 5),
-            getPublishedAnnouncements(),
-        ]);
+export default async function Home() {
+    const [user, announcements] = await Promise.all([
+        getUser(),
+        getPublishedAnnouncements(),
+    ]);
     return (
         <div className="flex flex-col gap-4 px-4 py-4">
             <script
@@ -191,14 +176,6 @@ export default async function Home({ searchParams }: HomeProps) {
                 />
             </Link>
             <FeedbackDialog isAuthenticated={Boolean(user)} />
-            {/* 랭킹 카드 */}
-            <HomeRankingCard
-                initialMode={rankingMode}
-                rankings={{
-                    basic: basicRanking.rows,
-                    recital: recitalRanking.rows,
-                }}
-            />
             {/* NOSTALGIA 공식 소식 */}
             <OfficialXTimeline />
         </div>
