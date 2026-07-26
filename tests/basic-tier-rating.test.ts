@@ -36,7 +36,7 @@ describe("Basic 서열 레이팅", () => {
         expect(getBasicRatingBasePower(0)).toBe(0);
     });
 
-    it("이론상 만점은 가장 높은 100개 채보만 반영한다", () => {
+    it("이론상 만점은 설정된 상위 채보 수만 반영한다", () => {
         const constants = Array.from(
             { length: BASIC_RATING_TOP_COUNT + 20 },
             (_, index) => index + 1
@@ -48,7 +48,7 @@ describe("Basic 서열 레이팅", () => {
         expect(calculateBasicRatingTheoreticalMax(constants)).toBe(expected);
     });
 
-    it("이론상 Top 100을 모두 Pianist하면 10,000점이다", () => {
+    it("이론상 반영 채보를 모두 Pianist하면 10,000점이다", () => {
         const constants = Array.from(
             { length: BASIC_RATING_TOP_COUNT },
             (_, index) => 10 + index / 100
@@ -85,7 +85,7 @@ describe("Basic 서열 레이팅", () => {
         expect(result.rating).toBeCloseTo(8_200);
     });
 
-    it("100곡을 채우지 못하면 실제 기여 기록만 집계한다", () => {
+    it("반영 곡 수를 채우지 못하면 실제 기여 기록만 집계한다", () => {
         const theoreticalMax = calculateBasicRatingTheoreticalMax(
             Array.from({ length: BASIC_RATING_TOP_COUNT }, () => 12)
         );
@@ -96,7 +96,9 @@ describe("Basic 서열 레이팅", () => {
         );
 
         expect(result.filledSlots).toBe(1);
-        expect(result.rating).toBeCloseTo(100);
+        expect(result.rating).toBeCloseTo(
+            BASIC_RATING_MAX / BASIC_RATING_TOP_COUNT
+        );
         expect(result.cutlinePoints).toBe(0);
     });
 });

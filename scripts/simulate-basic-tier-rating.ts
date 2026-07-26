@@ -3,9 +3,12 @@ import { loadEnvFile } from "node:process";
 import { PrismaClient } from "@prisma/client";
 
 import {
+    BASIC_RATING_ACTIVE_CURVE,
     BASIC_RATING_CURVES,
     BASIC_RATING_POLICY_VERSION,
     BASIC_RATING_SCORE_FLOOR,
+    BASIC_RATING_TIER_GOAL,
+    BASIC_RATING_TIER_MODE,
     BASIC_RATING_TOP_COUNT,
     calculateBasicRating,
     calculateBasicRatingTheoreticalMax,
@@ -62,8 +65,12 @@ function formatNumber(value: number, digits = 2) {
 }
 
 try {
-    const tierList = await db.tierList.findUnique({
-        where: { slug: "basic-pianist" },
+    const tierList = await db.tierList.findFirst({
+        where: {
+            mode: BASIC_RATING_TIER_MODE,
+            goal: BASIC_RATING_TIER_GOAL,
+            status: "published",
+        },
         select: {
             id: true,
             slug: true,
@@ -232,6 +239,7 @@ try {
         readOnly: true,
         policy: {
             version: BASIC_RATING_POLICY_VERSION,
+            activeCurve: BASIC_RATING_ACTIVE_CURVE,
             tierList: tierList.slug,
             tierListUpdatedAt: tierList.updatedAt.toISOString(),
             entryCount: tierList.entries.length,
@@ -285,11 +293,11 @@ try {
             `정책: S 이상 · 채보별 최고 기록 · Top ${BASIC_RATING_TOP_COUNT} · 서열 상수² · 만점 10,000`
         );
         console.log(
-            `표본: 대상 ${users.size}명 · Top 100 충족 ${fullSampleCount}명`
+            `표본: 대상 ${users.size}명 · Top ${BASIC_RATING_TOP_COUNT} 충족 ${fullSampleCount}명`
         );
         if (fullSampleCount < 20) {
             console.log(
-                "주의: Top 100을 채운 사용자가 20명 미만이라 전체 분포 확정에는 표본이 부족합니다."
+                `주의: Top ${BASIC_RATING_TOP_COUNT}을 채운 사용자가 20명 미만이라 전체 분포 확정에는 표본이 부족합니다.`
             );
         }
 
@@ -314,7 +322,7 @@ try {
                         : "-";
                 console.log(
                     `${String(row.rank).padStart(2, " ")}. ${row.name} (#${row.userId}) ` +
-                        `${formatNumber(row.rating)}점 · ${row.filledSlots}/100곡 · Grd ${displayedGrade}`
+                        `${formatNumber(row.rating)}점 · ${row.filledSlots}/${BASIC_RATING_TOP_COUNT}곡 · Grd ${displayedGrade}`
                 );
             }
         }

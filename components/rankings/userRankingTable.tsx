@@ -5,6 +5,7 @@ import UserRankingList from "./table/userRankingList";
 
 export default function UserRankingTable({
     mode,
+    metric,
     page,
     pageSize,
     totalCount,
@@ -14,8 +15,12 @@ export default function UserRankingTable({
 }: UserRankingTableProps) {
     return (
         <div className="flex flex-col gap-3">
-            <CurrentUserRanking mode={mode} currentUser={currentUser} />
-            <UserRankingList mode={mode} rows={rows} />
+            <CurrentUserRanking
+                mode={mode}
+                metric={metric}
+                currentUser={currentUser}
+            />
+            <UserRankingList mode={mode} metric={metric} rows={rows} />
             <RankingPagination
                 page={page}
                 pageSize={pageSize}

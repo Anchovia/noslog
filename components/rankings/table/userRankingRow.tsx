@@ -1,18 +1,28 @@
 import type {
+    UserRankingMetric,
     UserRankingMode,
     UserRankingRow as RankingRow,
 } from "@/lib/rankings";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { formatRankingGrade, PODIUM_STYLES } from "./rankingTableUtils";
+import {
+    formatRankingGrade,
+    formatRankingRating,
+    PODIUM_STYLES,
+} from "./rankingTableUtils";
 import { CountryMark, ExamBadge, UserAvatar } from "./rankingUserMeta";
 
 interface UserRankingRowProps {
     mode: UserRankingMode;
+    metric: UserRankingMetric;
     row: RankingRow;
 }
 
-export default function UserRankingRow({ mode, row }: UserRankingRowProps) {
+export default function UserRankingRow({
+    mode,
+    metric,
+    row,
+}: UserRankingRowProps) {
     return (
         <li className="border-divider flex min-h-13 items-center gap-3 border-t px-3 first:border-t-0">
             <span
@@ -38,9 +48,15 @@ export default function UserRankingRow({ mode, row }: UserRankingRowProps) {
                     <ExamBadge mode={mode} exam={row.exam} />
                 </div>
             </div>
-            <strong className="text-text-primary shrink-0 text-sm tabular-nums">
-                Grd {formatRankingGrade(row.grade)}
-            </strong>
+            {metric === "rating" ? (
+                <strong className="text-text-primary shrink-0 text-sm tabular-nums">
+                    {formatRankingRating(row.rating ?? 0)}
+                </strong>
+            ) : (
+                <strong className="text-text-primary shrink-0 text-sm tabular-nums">
+                    Grd {formatRankingGrade(row.grade)}
+                </strong>
+            )}
         </li>
     );
 }

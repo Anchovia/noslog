@@ -1,6 +1,7 @@
 import {
     getCachedUserRankingPage,
     getCurrentUserRankingRow,
+    normalizeRankingMetric,
     normalizeRankingMode,
     normalizeRankingRegion,
 } from "@/lib/rankings";
@@ -11,6 +12,10 @@ const PAGE_SIZE = 7;
 
 export async function GET(request: NextRequest) {
     const mode = normalizeRankingMode(request.nextUrl.searchParams.get("mode"));
+    const metric = normalizeRankingMetric(
+        request.nextUrl.searchParams.get("metric"),
+        mode
+    );
     const region = normalizeRankingRegion(
         request.nextUrl.searchParams.get("region")
     );
@@ -22,7 +27,7 @@ export async function GET(request: NextRequest) {
         ? Math.max(1, requestedPage)
         : 1;
     const [{ totalCount, rows }, user] = await Promise.all([
-        getCachedUserRankingPage(mode, region, page, PAGE_SIZE),
+        getCachedUserRankingPage(mode, region, page, PAGE_SIZE, metric),
         getUser(),
     ]);
     const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
@@ -33,13 +38,19 @@ export async function GET(request: NextRequest) {
             mode,
             region,
             currentPage,
-            PAGE_SIZE
+            PAGE_SIZE,
+            metric
         );
         return NextResponse.json({
             page: currentPage,
             totalCount: rankingPage.totalCount,
             rows: rankingPage.rows,
-            currentUser: await getCurrentUserRankingRow(user, mode, region),
+            currentUser: await getCurrentUserRankingRow(
+                user,
+                mode,
+                region,
+                metric
+            ),
         });
     }
 
@@ -47,6 +58,6 @@ export async function GET(request: NextRequest) {
         page,
         totalCount,
         rows,
-        currentUser: await getCurrentUserRankingRow(user, mode, region),
+        currentUser: await getCurrentUserRankingRow(user, mode, region, metric),
     });
 }
