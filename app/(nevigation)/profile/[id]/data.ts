@@ -1,6 +1,6 @@
 import { CACHE_TAGS, getUserProfileTag } from "@/lib/cacheTags";
 import db from "@/lib/db";
-import { buildProfilePerformanceAnalytics } from "@/lib/profile/profileAnalytics";
+import { buildProfileSJustAnalytics } from "@/lib/profile/profileAnalytics";
 import { getUserRankingPosition } from "@/lib/rankings";
 import { normalizeStoredGrade } from "@/lib/utils";
 import { unstable_cache } from "next/cache";
@@ -173,59 +173,20 @@ export function getCachedProfileData(id: number) {
     })();
 }
 
-// NOS·명성·상세 판정은 공개 캐시에 넣지 않고 본인 프로필에서만 조회함
+// 상세 판정은 공개 캐시에 넣지 않고 본인 프로필에서만 조회함
 export async function getProfileOwnerAnalytics(id: number) {
-    const [records, recentPlays] = await Promise.all([
-        db.playData.findMany({
-            where: { user_id: id, play_count: { gt: 0 } },
-            select: {
-                play_count: true,
-                clear_count: true,
-                fullcombo_count: true,
-                pianistic_count: true,
-                judge_sjust: true,
-                judge_just: true,
-                judge_good: true,
-                judge_miss: true,
-                judge_near: true,
-                note_rate_standard: true,
-                note_rate_tenuto: true,
-                note_rate_glissando: true,
-                note_rate_trill: true,
-            },
-        }),
-        db.chartPlayHistory.findMany({
-            where: { user_id: id },
-            select: {
-                id: true,
-                source_play_time: true,
-                fast_count: true,
-                slow_count: true,
-                judge_sjust: true,
-                judge_just: true,
-                judge_good: true,
-                judge_miss: true,
-                judge_near: true,
-            },
-            orderBy: [{ source_play_time: "desc" }, { id: "desc" }],
-            take: 30,
-        }),
-    ]);
+    const records = await db.playData.findMany({
+        where: { user_id: id, play_count: { gt: 0 } },
+        select: {
+            judge_sjust: true,
+            judge_just: true,
+            judge_good: true,
+            judge_miss: true,
+            judge_near: true,
+        },
+    });
 
     return {
-        performance: buildProfilePerformanceAnalytics(
-            records,
-            recentPlays.reverse().map((play) => ({
-                id: play.id,
-                play_time: play.source_play_time,
-                fast_count: play.fast_count,
-                slow_count: play.slow_count,
-                judge_sjust: play.judge_sjust,
-                judge_just: play.judge_just,
-                judge_good: play.judge_good,
-                judge_miss: play.judge_miss,
-                judge_near: play.judge_near,
-            }))
-        ),
+        judgement: buildProfileSJustAnalytics(records),
     };
 }

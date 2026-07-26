@@ -23,10 +23,12 @@ import type {
 } from "./musicDetailTypes";
 
 type TrendMetric = "score" | "missNear" | "sjust" | "timing";
+type TrendVariant = "score" | "judgement";
 
 interface ScoreTrendProps {
     points: ScoreTrendPoint[];
     performancePoints: PerformanceTrendPoint[];
+    variant: TrendVariant;
 }
 
 interface TrendChartPoint {
@@ -38,10 +40,9 @@ interface TrendChartPoint {
     isBest?: boolean;
 }
 
-const metricOptions: { key: TrendMetric; label: string }[] = [
-    { key: "score", label: "점수" },
-    { key: "missNear", label: "Miss/Near" },
+const judgementMetricOptions: { key: TrendMetric; label: string }[] = [
     { key: "sjust", label: "S-Just" },
+    { key: "missNear", label: "Miss/Near" },
     { key: "timing", label: "FAST/SLOW" },
 ];
 
@@ -85,8 +86,11 @@ function formatTrendValue(value: number, metric: TrendMetric) {
 export default function ScoreTrend({
     points,
     performancePoints,
+    variant,
 }: ScoreTrendProps) {
-    const [activeMetric, setActiveMetric] = useState<TrendMetric>("score");
+    const [activeMetric, setActiveMetric] = useState<TrendMetric>(
+        variant === "score" ? "score" : "sjust"
+    );
 
     const scoreRecords =
         points.length > 0
@@ -169,32 +173,34 @@ export default function ScoreTrend({
 
     return (
         <div className="mt-3">
-            <div
-                aria-label="추이 지표"
-                className="bg-surface-muted grid grid-cols-4 gap-1 rounded-md p-1"
-                role="tablist"
-            >
-                {metricOptions.map((option) => {
-                    const isActive = activeMetric === option.key;
+            {variant === "judgement" ? (
+                <div
+                    aria-label="최근 판정 추이 지표"
+                    className="bg-surface-muted grid grid-cols-3 gap-1 rounded-md p-1"
+                    role="tablist"
+                >
+                    {judgementMetricOptions.map((option) => {
+                        const isActive = activeMetric === option.key;
 
-                    return (
-                        <button
-                            key={option.key}
-                            aria-selected={isActive}
-                            className={`text-caption h-8 rounded-sm transition-colors ${
-                                isActive
-                                    ? "bg-surface text-text-primary font-semibold"
-                                    : "text-text-secondary"
-                            }`}
-                            onClick={() => setActiveMetric(option.key)}
-                            role="tab"
-                            type="button"
-                        >
-                            {option.label}
-                        </button>
-                    );
-                })}
-            </div>
+                        return (
+                            <button
+                                key={option.key}
+                                aria-selected={isActive}
+                                className={`text-caption h-8 rounded-sm transition-colors ${
+                                    isActive
+                                        ? "bg-surface text-text-primary font-semibold"
+                                        : "text-text-secondary"
+                                }`}
+                                onClick={() => setActiveMetric(option.key)}
+                                role="tab"
+                                type="button"
+                            >
+                                {option.label}
+                            </button>
+                        );
+                    })}
+                </div>
+            ) : null}
 
             {chartPoints.length === 0 ? (
                 <div className="text-caption flex h-40 items-center justify-center text-center">
@@ -202,7 +208,11 @@ export default function ScoreTrend({
                     없습니다.
                 </div>
             ) : (
-                <div className="relative mt-2 [&_.recharts-surface:focus:not(:focus-visible)]:outline-none">
+                <div
+                    className={`relative [&_.recharts-surface:focus:not(:focus-visible)]:outline-none ${
+                        variant === "judgement" ? "mt-2" : ""
+                    }`}
+                >
                     {activeMetric === "score" &&
                     chartPoints.some((point) => point.isBest) ? (
                         <div className="text-micro pointer-events-none absolute top-1 right-1 z-10 flex items-center gap-1.5">

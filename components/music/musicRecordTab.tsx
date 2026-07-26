@@ -2,8 +2,8 @@ import { cn, formatToComma, formatToGrade } from "@/lib/utils";
 import { formatScoreRecordDate } from "@/lib/music/scoreTrend";
 import Image from "next/image";
 import Link from "next/link";
-import JudgementBreakdown from "./judgementBreakdown";
 import { rankAssetNames } from "./musicDetailConfig";
+import MusicJudgementAccordion from "./musicJudgementAccordion";
 import RecentPlayRow from "./recentPlayRow";
 import type {
     PerformanceTrendPoint,
@@ -174,40 +174,22 @@ export default function MusicRecordTab({
                             </span>
                         </div>
                     </div>
-                </section>
 
-                <section className="bg-surface rounded-card p-4">
-                    <h2 className="text-section">판정 상세</h2>
-                    <JudgementBreakdown
-                        counts={{
-                            judge_sjust: userPlayData?.judge_sjust ?? null,
-                            judge_just: userPlayData?.judge_just ?? null,
-                            judge_good: userPlayData?.judge_good ?? null,
-                            judge_miss: userPlayData?.judge_miss ?? null,
-                            judge_near: userPlayData?.judge_near ?? null,
-                        }}
-                        noteRates={{
-                            note_rate_standard:
-                                userPlayData?.note_rate_standard ?? null,
-                            note_rate_tenuto:
-                                userPlayData?.note_rate_tenuto ?? null,
-                            note_rate_glissando:
-                                userPlayData?.note_rate_glissando ?? null,
-                            note_rate_trill:
-                                userPlayData?.note_rate_trill ?? null,
-                        }}
-                    />
-                </section>
-
-                <section className="bg-surface rounded-card p-4">
-                    <header>
+                    <div className="border-divider border-t pt-4">
                         <h2 className="text-section">스코어 추이</h2>
-                    </header>
-                    <ScoreTrend
-                        points={scoreTrend}
-                        performancePoints={performanceTrend}
-                    />
+                        <ScoreTrend
+                            points={scoreTrend}
+                            performancePoints={performanceTrend}
+                            variant="score"
+                        />
+                    </div>
                 </section>
+
+                <MusicJudgementAccordion
+                    userPlayData={userPlayData}
+                    scoreTrend={scoreTrend}
+                    performanceTrend={performanceTrend}
+                />
 
                 <section className="bg-surface rounded-card overflow-hidden">
                     <h2 className="text-section bg-surface-muted px-4 py-3">

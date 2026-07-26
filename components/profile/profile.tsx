@@ -4,9 +4,9 @@ import { useState } from "react";
 
 import { logout } from "@/app/(nevigation)/profile/[id]/actions";
 import ProfileBestPlays from "@/components/profile/dashboard/profileBestPlays";
-import ProfileAnalysisSummary from "@/components/profile/dashboard/profileAnalysisSummary";
 import ProfileGradeTrend from "@/components/profile/dashboard/profileGradeTrend";
 import ProfileHeader from "@/components/profile/dashboard/profileHeader";
+import ProfileJudgementSummary from "@/components/profile/dashboard/profileJudgementSummary";
 import ProfileModeTabs from "@/components/profile/dashboard/profileModeTabs";
 import ProfileRankDistribution from "@/components/profile/dashboard/profileRankDistribution";
 import ProfileRecentPlays from "@/components/profile/dashboard/profileRecentPlays";
@@ -60,9 +60,7 @@ export default function ProfileDashboard({
             />
             <ProfileGradeTrend data={gradeHistory} mode={mode} />
             {ownerAnalytics ? (
-                <ProfileAnalysisSummary
-                    analytics={ownerAnalytics.performance}
-                />
+                <ProfileJudgementSummary analytics={ownerAnalytics.judgement} />
             ) : null}
             <ProfileRankDistribution
                 rows={rankRows}

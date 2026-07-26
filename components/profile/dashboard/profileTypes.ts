@@ -1,5 +1,5 @@
 import type { GradeHistoryPoint } from "../chart";
-import type { ProfilePerformanceAnalytics } from "@/lib/profile/profileAnalytics";
+import type { ProfileSJustAnalytics } from "@/lib/profile/profileAnalytics";
 
 export type ProfileMode = "basic" | "recital";
 
@@ -79,5 +79,5 @@ export interface ProfileRankRow {
 }
 
 export interface ProfileOwnerAnalytics {
-    performance: ProfilePerformanceAnalytics;
+    judgement: ProfileSJustAnalytics;
 }
