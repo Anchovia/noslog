@@ -209,8 +209,46 @@ export function getUserTierRecords(userId: number, chartIds: number[]) {
             score: true,
             rank: true,
             fc_type: true,
+            max_combo: true,
+            play_count: true,
+            clear_count: true,
+            fullcombo_count: true,
+            pianistic_count: true,
+            judge_sjust: true,
+            judge_just: true,
+            judge_good: true,
+            judge_miss: true,
+            judge_near: true,
+            note_rate_standard: true,
+            note_rate_tenuto: true,
+            note_rate_glissando: true,
+            note_rate_trill: true,
+            besttime: true,
         },
     });
+}
+
+interface LatestTierPlayRow {
+    chart_id: number;
+    fast_count: number | null;
+    slow_count: number | null;
+    source_play_time: string;
+}
+
+export function getLatestUserTierPlays(userId: number, chartIds: number[]) {
+    if (chartIds.length === 0) return Promise.resolve([]);
+
+    return db.$queryRaw<LatestTierPlayRow[]>(Prisma.sql`
+        SELECT DISTINCT ON ("chart_id")
+            "chart_id",
+            "fast_count",
+            "slow_count",
+            "source_play_time"
+        FROM "ChartPlayHistory"
+        WHERE "user_id" = ${userId}
+          AND "chart_id" IN (${Prisma.join(chartIds)})
+        ORDER BY "chart_id", "source_play_time" DESC, "id" DESC
+    `);
 }
 
 export async function getTierBandForUser(
@@ -223,23 +261,33 @@ export async function getTierBandForUser(
     const band = await getCachedTierBand(slug, bandId, difficulties, levels);
     if (!band) return null;
 
-    const records = userId
-        ? await getUserTierRecords(
-              userId,
-              band.entries.map((entry) => entry.chartId)
-          )
-        : [];
+    const chartIds = band.entries.map((entry) => entry.chartId);
+    const [records, latestPlays] = userId
+        ? await Promise.all([
+              getUserTierRecords(userId, chartIds),
+              getLatestUserTierPlays(userId, chartIds),
+          ])
+        : [[], []];
     const recordByChartId = new Map(
         records.flatMap((record) =>
             record.chart_id === null ? [] : [[record.chart_id, record] as const]
         )
+    );
+    const latestPlayByChartId = new Map(
+        latestPlays.map((play) => [play.chart_id, play] as const)
     );
 
     return {
         ...band,
         entries: band.entries.map((entry) => ({
             ...entry,
-            record: recordByChartId.get(entry.chartId) ?? null,
+            record: recordByChartId.has(entry.chartId)
+                ? {
+                      ...recordByChartId.get(entry.chartId)!,
+                      latestPlay:
+                          latestPlayByChartId.get(entry.chartId) ?? null,
+                  }
+                : null,
         })),
     };
 }

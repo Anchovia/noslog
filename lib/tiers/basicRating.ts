@@ -1,4 +1,5 @@
 export const BASIC_RATING_MAX = 10_000;
+export const BASIC_RATING_POLICY_VERSION = "basic-top100-draft-v1";
 export const BASIC_RATING_TOP_COUNT = 100;
 export const BASIC_RATING_SCORE_FLOOR = 950_000;
 export const BASIC_RATING_SCORE_MAX = 1_000_000;

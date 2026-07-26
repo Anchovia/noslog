@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 
 import {
     formatTierValue,
@@ -10,6 +10,7 @@ import {
     type TierGoal,
 } from "@/lib/tiers";
 import TierChartCard from "./tierChartCard";
+import TierRecordDetail from "./tierRecordDetail";
 
 interface TierBandSummary {
     id: number;
@@ -49,6 +50,7 @@ function TierBandSection({
     const [band, setBand] = useState(initialData);
     const [isLoading, setIsLoading] = useState(false);
     const [hasError, setHasError] = useState(false);
+    const [selectedEntryId, setSelectedEntryId] = useState<number | null>(null);
 
     const loadBand = useCallback(async () => {
         if (band || isLoading) return;
@@ -129,15 +131,52 @@ function TierBandSection({
                 </div>
             ) : band.entries.length > 0 ? (
                 <div className="grid grid-cols-3 gap-2 p-3">
-                    {band.entries.map((entry) => (
-                        <TierChartCard
-                            key={entry.id}
-                            chart={entry.chart}
-                            record={entry.record ?? undefined}
-                            goal={goal}
-                            showRecord={showRecords}
-                        />
-                    ))}
+                    {Array.from(
+                        { length: Math.ceil(band.entries.length / 3) },
+                        (_, rowIndex) =>
+                            band.entries.slice(rowIndex * 3, rowIndex * 3 + 3)
+                    ).map((row, rowIndex) => {
+                        const selectedEntry = row.find(
+                            (entry) => entry.id === selectedEntryId
+                        );
+                        const panelId = selectedEntry
+                            ? `tier-record-detail-${selectedEntry.id}`
+                            : undefined;
+
+                        return (
+                            <Fragment key={`tier-row-${rowIndex}`}>
+                                {row.map((entry) => (
+                                    <TierChartCard
+                                        key={entry.id}
+                                        entryId={entry.id}
+                                        chart={entry.chart}
+                                        record={entry.record ?? undefined}
+                                        goal={goal}
+                                        showRecord={showRecords}
+                                        selected={entry.id === selectedEntryId}
+                                        detailPanelId={
+                                            entry.id === selectedEntryId
+                                                ? panelId
+                                                : undefined
+                                        }
+                                        onSelect={() =>
+                                            setSelectedEntryId((current) =>
+                                                current === entry.id
+                                                    ? null
+                                                    : entry.id
+                                            )
+                                        }
+                                    />
+                                ))}
+                                {selectedEntry && panelId ? (
+                                    <TierRecordDetail
+                                        entry={selectedEntry}
+                                        panelId={panelId}
+                                    />
+                                ) : null}
+                            </Fragment>
+                        );
+                    })}
                 </div>
             ) : (
                 <div className="text-text-disabled flex h-24 items-center justify-center px-4 text-center text-sm">

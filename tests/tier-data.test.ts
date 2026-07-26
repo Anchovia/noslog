@@ -92,7 +92,35 @@ describe("공개 서열표 데이터 최적화", () => {
             ],
         });
         mocks.playDataFindMany.mockResolvedValue([
-            { chart_id: 201, score: 950000, rank: "S", fc_type: 0 },
+            {
+                chart_id: 201,
+                score: 950000,
+                rank: "S",
+                fc_type: 0,
+                max_combo: 300,
+                play_count: 10,
+                clear_count: 9,
+                fullcombo_count: 1,
+                pianistic_count: 0,
+                judge_sjust: 900,
+                judge_just: 70,
+                judge_good: 20,
+                judge_miss: 10,
+                judge_near: 0,
+                note_rate_standard: 9500,
+                note_rate_tenuto: 9600,
+                note_rate_glissando: null,
+                note_rate_trill: 9000,
+                besttime: "2026.07.20 12:00",
+            },
+        ]);
+        mocks.queryRaw.mockResolvedValue([
+            {
+                chart_id: 201,
+                fast_count: 12,
+                slow_count: 8,
+                source_play_time: "2026.07.20 12:00",
+            },
         ]);
 
         const band = await getTierBandForUser("basic-expert", 11, 7);
@@ -104,12 +132,32 @@ describe("공개 서열표 데이터 최적화", () => {
                 score: true,
                 rank: true,
                 fc_type: true,
+                max_combo: true,
+                play_count: true,
+                clear_count: true,
+                fullcombo_count: true,
+                pianistic_count: true,
+                judge_sjust: true,
+                judge_just: true,
+                judge_good: true,
+                judge_miss: true,
+                judge_near: true,
+                note_rate_standard: true,
+                note_rate_tenuto: true,
+                note_rate_glissando: true,
+                note_rate_trill: true,
+                besttime: true,
             },
         });
-        expect(band?.entries.map((entry) => entry.record)).toEqual([
-            { chart_id: 201, score: 950000, rank: "S", fc_type: 0 },
-            null,
-        ]);
+        expect(band?.entries[0].record).toMatchObject({
+            chart_id: 201,
+            score: 950000,
+            latestPlay: {
+                fast_count: 12,
+                slow_count: 8,
+            },
+        });
+        expect(band?.entries[1].record).toBeNull();
     });
 
     it("난이도와 일반·Real 공식 레벨 필터를 구간 조회에 전달한다", async () => {

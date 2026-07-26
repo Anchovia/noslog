@@ -4,6 +4,7 @@ import { PrismaClient } from "@prisma/client";
 
 import {
     BASIC_RATING_CURVES,
+    BASIC_RATING_POLICY_VERSION,
     BASIC_RATING_SCORE_FLOOR,
     BASIC_RATING_TOP_COUNT,
     calculateBasicRating,
@@ -230,6 +231,7 @@ try {
         generatedAt: new Date().toISOString(),
         readOnly: true,
         policy: {
+            version: BASIC_RATING_POLICY_VERSION,
             tierList: tierList.slug,
             tierListUpdatedAt: tierList.updatedAt.toISOString(),
             entryCount: tierList.entries.length,
