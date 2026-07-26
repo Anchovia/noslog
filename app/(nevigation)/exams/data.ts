@@ -80,7 +80,23 @@ export async function getUserExamState(
         chartIds.length > 0
             ? db.playData.findMany({
                   where: { user_id: userId, chart_id: { in: chartIds } },
-                  select: { chart_id: true, score: true },
+                  select: {
+                      chart_id: true,
+                      score: true,
+                      rank: true,
+                      fc_type: true,
+                      play_count: true,
+                      max_combo: true,
+                      judge_sjust: true,
+                      judge_just: true,
+                      judge_good: true,
+                      judge_miss: true,
+                      judge_near: true,
+                      note_rate_standard: true,
+                      note_rate_tenuto: true,
+                      note_rate_glissando: true,
+                      note_rate_trill: true,
+                  },
               })
             : Promise.resolve([]),
         examIds.length > 0

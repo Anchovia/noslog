@@ -51,13 +51,10 @@ export default async function ExamsPage() {
             });
         }
     }
-    const bestScoreByChart = new Map<number, number>();
+    const recordByChart = new Map<number, (typeof records)[number]>();
     for (const record of records) {
         if (!record.chart_id) continue;
-        bestScoreByChart.set(
-            record.chart_id,
-            Math.max(bestScoreByChart.get(record.chart_id) ?? 0, record.score)
-        );
+        recordByChart.set(record.chart_id, record);
     }
 
     const items: ExamDashboardItem[] = exams.map((exam) => {
@@ -98,33 +95,53 @@ export default async function ExamsPage() {
                 exam.mode === "recital"
                     ? normalizeStoredGrade(user?.grade_recital)
                     : normalizeStoredGrade(user?.grade_basic),
-            stages: exam.stages.map((stage) => ({
-                id: stage.id,
-                position: stage.position,
-                label: stage.label,
-                requirementType: stage.requirementType,
-                requiredValue: stage.requiredValue,
-                bestValue:
-                    exam.scoringType === "score"
-                        ? Math.max(
-                              0,
-                              ...stage.allowedCharts.map(
-                                  (item) =>
-                                      bestScoreByChart.get(item.chart.id) ?? 0
-                              )
-                          )
+            stages: exam.stages.map((stage) => {
+                const bestRecord = stage.allowedCharts
+                    .map((item) => recordByChart.get(item.chart.id))
+                    .filter((record): record is NonNullable<typeof record> =>
+                        Boolean(record && record.play_count > 0)
+                    )
+                    .sort((a, b) => b.score - a.score)[0];
+
+                return {
+                    id: stage.id,
+                    position: stage.position,
+                    label: stage.label,
+                    requirementType: stage.requirementType,
+                    requiredValue: stage.requiredValue,
+                    bestValue:
+                        exam.scoringType === "score"
+                            ? (bestRecord?.score ?? 0)
+                            : null,
+                    bestRecord: bestRecord
+                        ? {
+                              score: bestRecord.score,
+                              rank: bestRecord.rank,
+                              fcType: bestRecord.fc_type,
+                              maxCombo: bestRecord.max_combo,
+                              judgeSjust: bestRecord.judge_sjust,
+                              judgeJust: bestRecord.judge_just,
+                              judgeGood: bestRecord.judge_good,
+                              judgeMiss: bestRecord.judge_miss,
+                              judgeNear: bestRecord.judge_near,
+                              noteRateStandard: bestRecord.note_rate_standard,
+                              noteRateTenuto: bestRecord.note_rate_tenuto,
+                              noteRateGlissando: bestRecord.note_rate_glissando,
+                              noteRateTrill: bestRecord.note_rate_trill,
+                          }
                         : null,
-                musicIndex: stage.music.index,
-                title: stage.music.title,
-                artist: stage.music.artist,
-                charts: stage.allowedCharts
-                    .map((item) => ({
-                        chartId: item.chart.id,
-                        difficulty: item.chart.difficulty,
-                        level: item.chart.level,
-                    }))
-                    .sort((a, b) => a.level - b.level),
-            })),
+                    musicIndex: stage.music.index,
+                    title: stage.music.title,
+                    artist: stage.music.artist,
+                    charts: stage.allowedCharts
+                        .map((item) => ({
+                            chartId: item.chart.id,
+                            difficulty: item.chart.difficulty,
+                            level: item.chart.level,
+                        }))
+                        .sort((a, b) => a.level - b.level),
+                };
+            }),
         };
     });
 

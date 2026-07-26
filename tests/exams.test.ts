@@ -83,9 +83,12 @@ describe("검정 선택과 합격 시뮬레이션", () => {
         expect(result.stages[0].isPassed).toBe(true);
         expect(result.stages[1].comparisonValue).toBe(1830000);
         expect(result.stages[1].isPassed).toBe(false);
+        expect(result.stages[1].individualTargetValue).toBe(950000);
+        expect(result.stages[1].individualGapValue).toBe(40000);
         expect(result.totalValue).toBe(1830000);
         expect(result.targetValue).toBe(1850000);
         expect(result.firstFailedStage?.id).toBe(2);
+        expect(result.priorityStage?.id).toBe(2);
     });
 
     it("기록을 계산할 수 없는 단계는 합격 여부를 비워둔다", () => {
@@ -111,5 +114,82 @@ describe("검정 선택과 합격 시뮬레이션", () => {
 
         expect(result.stages[0].isPassed).toBeNull();
         expect(result.firstFailedStage).toBeUndefined();
+    });
+
+    it("성공률이 가장 낮은 음표를 과제곡 약점으로 선택한다", () => {
+        const result = calculateExamSimulation(
+            exam({
+                stages: [
+                    {
+                        id: 1,
+                        position: 1,
+                        label: null,
+                        requirementType: "single",
+                        requiredValue: 900000,
+                        bestValue: 850000,
+                        bestRecord: {
+                            score: 850000,
+                            rank: "A+",
+                            fcType: 0,
+                            maxCombo: 320,
+                            judgeSjust: 800,
+                            judgeJust: 100,
+                            judgeGood: 30,
+                            judgeMiss: 20,
+                            judgeNear: 5,
+                            noteRateStandard: 9500,
+                            noteRateTenuto: 9200,
+                            noteRateGlissando: null,
+                            noteRateTrill: 7300,
+                        },
+                        musicIndex: "music-1",
+                        title: "첫 곡",
+                        artist: null,
+                        charts: [],
+                    },
+                ],
+            })
+        );
+
+        expect(result.stages[0].weakestNote).toEqual({
+            label: "트릴",
+            rate: 7300,
+        });
+        expect(result.priorityStage?.individualGapValue).toBe(50000);
+    });
+
+    it("모든 과제곡이 미플레이면 첫 곡부터 추천한다", () => {
+        const result = calculateExamSimulation(
+            exam({
+                stages: [
+                    {
+                        id: 1,
+                        position: 1,
+                        label: null,
+                        requirementType: "single",
+                        requiredValue: 850000,
+                        bestValue: 0,
+                        musicIndex: "music-1",
+                        title: "첫 곡",
+                        artist: null,
+                        charts: [],
+                    },
+                    {
+                        id: 2,
+                        position: 2,
+                        label: null,
+                        requirementType: "cumulative",
+                        requiredValue: 1750000,
+                        bestValue: 0,
+                        musicIndex: "music-2",
+                        title: "두 번째 곡",
+                        artist: null,
+                        charts: [],
+                    },
+                ],
+            })
+        );
+
+        expect(result.priorityStage?.id).toBe(1);
     });
 });
