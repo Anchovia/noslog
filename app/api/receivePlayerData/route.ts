@@ -395,7 +395,12 @@ export async function POST(request: NextRequest) {
                 ? "전체 기록 동기화가 완료되었습니다."
                 : "최근 기록 동기화가 완료되었습니다.",
             200,
-            { syncScope: music ? "full" : "recent" }
+            {
+                syncScope: music ? "full" : "recent",
+                receivedPlays: history.length,
+                insertedPlays,
+                changedRecords,
+            }
         );
     } catch (error) {
         console.error("BEMANI data synchronization failed", error);

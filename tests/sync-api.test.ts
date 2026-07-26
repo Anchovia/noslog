@@ -356,6 +356,11 @@ describe("POST /api/receivePlayerData", () => {
 
         expect(response.status).toBe(200);
         expect(data.syncScope).toBe("recent");
+        expect(data).toMatchObject({
+            receivedPlays: 1,
+            insertedPlays: 1,
+            changedRecords: 0,
+        });
         expect(mocks.updatePlayerProfile).toHaveBeenCalledWith(
             1,
             requestBody().playerData.data.player
@@ -386,6 +391,11 @@ describe("POST /api/receivePlayerData", () => {
 
         expect(response.status).toBe(200);
         expect(data.syncScope).toBe("full");
+        expect(data).toMatchObject({
+            receivedPlays: 1,
+            insertedPlays: 1,
+            changedRecords: 3,
+        });
         expect(mocks.updateBemaniMusicMetadata).toHaveBeenCalledWith(
             requestBody(true).totalData?.data.music
         );

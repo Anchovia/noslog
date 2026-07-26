@@ -160,7 +160,7 @@ export function createBookmarkletHref(
                 if(!response.ok)throw new Error(result.message||"데이터 처리에 실패했습니다.");
 
                 setStatus(result.message||"동기화가 완료됐습니다.","#22c55e",true);
-                addLink("NosLog 페이지로 이동",${JSON.stringify(`${appOrigin}/`)});
+                addLink("동기화 결과 보기",${JSON.stringify(`${appOrigin}/bookmarklet`)});
                 addCloseButton();
             }catch(error){
                 setStatus(error instanceof Error?error.message:"동기화 중 오류가 발생했습니다.","#ef4444");

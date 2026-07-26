@@ -1,16 +1,17 @@
 import { regenerateSyncToken } from "@/app/(nevigation)/bookmarklet/action";
 import BookmarkletInstall from "@/components/bookmarklet/bookmarkletInstall";
+import SyncResultSummary from "@/components/bookmarklet/syncResultSummary";
 import Button from "@/components/ui/Button";
 import { createBookmarkletHref, createSyncToken } from "@/lib/bookmarklet";
-import db from "@/lib/db";
 import { createPageMetadata } from "@/lib/metadata/site";
 import { getUser } from "@/lib/user";
 import { formatDistanceToNow } from "date-fns";
 import { ko } from "date-fns/locale";
-import { Bookmark, CircleCheck, LogIn, RefreshCw } from "lucide-react";
+import { Bookmark, CircleCheck, KeyRound, LogIn } from "lucide-react";
 import { headers } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
+import { getLatestSyncSummary } from "./data";
 
 export const metadata = createPageMetadata({
     title: "데이터 연동 가이드",
@@ -50,17 +51,7 @@ export default async function BookmarkletPage() {
     const user = await getUser();
     const [appOrigin, latestSync] = await Promise.all([
         requestOrigin(),
-        user
-            ? db.dataSync.findFirst({
-                  where: { user_id: user.id },
-                  orderBy: { started_at: "desc" },
-                  select: {
-                      status: true,
-                      started_at: true,
-                      completed_at: true,
-                  },
-              })
-            : null,
+        user ? getLatestSyncSummary(user.id) : null,
     ]);
     const token = user
         ? createSyncToken({
@@ -75,7 +66,7 @@ export default async function BookmarkletPage() {
     const bookmarkletHref = token
         ? createBookmarkletHref(appOrigin, token, protectionBypassSecret)
         : null;
-    const syncDate = latestSync?.completed_at ?? latestSync?.started_at;
+    const syncDate = latestSync?.completedAt ?? latestSync?.startedAt;
     const syncLabel = !latestSync
         ? "아직 동기화 기록이 없습니다."
         : latestSync.status === "processing"
@@ -111,9 +102,15 @@ export default async function BookmarkletPage() {
                         {syncLabel}
                     </p>
                     <p className="text-caption mt-0.5">
-                        {user
-                            ? "문제가 있으면 토큰을 재발급 해주세요."
-                            : "로그인 후 연동 상태를 확인할 수 있습니다."}
+                        {!user
+                            ? "로그인 후 연동 상태를 확인할 수 있습니다."
+                            : latestSync?.status === "processing"
+                              ? "완료되면 처리 결과를 확인할 수 있습니다."
+                              : latestSync?.status === "failed"
+                                ? "로그인 상태를 확인한 뒤 다시 동기화해주세요."
+                                : latestSync
+                                  ? "최근 처리 결과를 아래에서 확인할 수 있습니다."
+                                  : "동기화하면 처리 결과가 여기에 표시됩니다."}
                     </p>
                 </div>
                 {user ? (
@@ -125,7 +122,7 @@ export default async function BookmarkletPage() {
                             aria-label="연동 토큰 재발급"
                             title="연동 토큰 재발급"
                         >
-                            <RefreshCw size={16} aria-hidden />
+                            <KeyRound size={16} aria-hidden />
                         </Button>
                     </form>
                 ) : (
@@ -136,6 +133,8 @@ export default async function BookmarkletPage() {
                     />
                 )}
             </section>
+
+            {latestSync ? <SyncResultSummary summary={latestSync} /> : null}
 
             <section className="bg-surface rounded-card flex flex-col gap-4 p-4">
                 <StepTitle number={1}>북마클릿 등록</StepTitle>
