@@ -1,29 +1,16 @@
 import db from "@/lib/db";
 import type { Prisma } from "@prisma/client";
-
-interface PlayerSheetData {
-    level: number;
-    difficulty: string;
-    score: number;
-    rank: string;
-    fc_type: number;
-    play_count: number;
-    fullcombo_count: number;
-    pianistic_count: number;
-    max_combo: number;
-    grade_basic: number;
-    grade_recital: number;
-    besttime: string;
-}
-
-interface PlayerMusicData {
-    "@index": string;
-    sheet: PlayerSheetData[];
-}
+import type { SyncMusicInput } from "@/lib/services/music/updateMusic";
+import {
+    getBemaniClearFlag,
+    mapBemaniJudgeCounts,
+    mapBemaniNoteSuccessRates,
+    normalizeBemaniRank,
+} from "@/lib/services/user/bemaniRecordMapping";
 
 export async function updatePlayData(
     user_id: number,
-    music: PlayerMusicData[],
+    music: SyncMusicInput[],
     sync_id: number
 ) {
     const startTime = Date.now(); // 시작 시간
@@ -45,11 +32,22 @@ export async function updatePlayData(
             rank: true,
             fc_type: true,
             play_count: true,
+            clear_count: true,
+            clear_flag: true,
             fullcombo_count: true,
             pianistic_count: true,
             max_combo: true,
             grade_basic: true,
             grade_recital: true,
+            judge_sjust: true,
+            judge_just: true,
+            judge_good: true,
+            judge_miss: true,
+            judge_near: true,
+            note_rate_standard: true,
+            note_rate_tenuto: true,
+            note_rate_glissando: true,
+            note_rate_trill: true,
             besttime: true,
         },
     });
@@ -82,9 +80,10 @@ export async function updatePlayData(
                 if (!chart_id) {
                     continue;
                 }
+                const normalizedRank = normalizeBemaniRank(sheet.rank);
                 // DB에 등록된 채보만 클리어 랭크와 개인 기록에 반영함
-                if (sheet.rank in score) {
-                    score[sheet.rank as keyof typeof score]++;
+                if (normalizedRank in score) {
+                    score[normalizedRank as keyof typeof score]++;
                 }
                 if (sheet.fc_type === 2) {
                     score["F"]++;
@@ -96,14 +95,18 @@ export async function updatePlayData(
                     level: sheet.level,
                     difficulty: sheet.difficulty,
                     score: sheet.score,
-                    rank: sheet.rank,
+                    rank: normalizedRank,
                     fc_type: sheet.fc_type,
                     play_count: sheet.play_count,
+                    clear_count: sheet.clear_count,
+                    clear_flag: getBemaniClearFlag(sheet.clear_flag),
                     fullcombo_count: sheet.fullcombo_count,
                     pianistic_count: sheet.pianistic_count,
                     max_combo: sheet.max_combo,
                     grade_basic: sheet.grade_basic,
                     grade_recital: sheet.grade_recital,
+                    ...mapBemaniJudgeCounts(sheet.judge),
+                    ...mapBemaniNoteSuccessRates(sheet.note_success_rate),
                     besttime: sheet.besttime,
                 };
                 newPlayData.push(record);
@@ -116,11 +119,23 @@ export async function updatePlayData(
                     previous.rank !== record.rank ||
                     previous.fc_type !== record.fc_type ||
                     previous.play_count !== record.play_count ||
+                    previous.clear_count !== record.clear_count ||
+                    previous.clear_flag !== record.clear_flag ||
                     previous.fullcombo_count !== record.fullcombo_count ||
                     previous.pianistic_count !== record.pianistic_count ||
                     previous.max_combo !== record.max_combo ||
                     previous.grade_basic !== record.grade_basic ||
                     previous.grade_recital !== record.grade_recital ||
+                    previous.judge_sjust !== record.judge_sjust ||
+                    previous.judge_just !== record.judge_just ||
+                    previous.judge_good !== record.judge_good ||
+                    previous.judge_miss !== record.judge_miss ||
+                    previous.judge_near !== record.judge_near ||
+                    previous.note_rate_standard !== record.note_rate_standard ||
+                    previous.note_rate_tenuto !== record.note_rate_tenuto ||
+                    previous.note_rate_glissando !==
+                        record.note_rate_glissando ||
+                    previous.note_rate_trill !== record.note_rate_trill ||
                     previous.besttime !== record.besttime;
 
                 if (changed) {
@@ -130,11 +145,22 @@ export async function updatePlayData(
                         rank: record.rank,
                         fc_type: record.fc_type,
                         play_count: record.play_count,
+                        clear_count: record.clear_count,
+                        clear_flag: record.clear_flag,
                         fullcombo_count: record.fullcombo_count,
                         pianistic_count: record.pianistic_count,
                         max_combo: record.max_combo,
                         grade_basic: record.grade_basic,
                         grade_recital: record.grade_recital,
+                        judge_sjust: record.judge_sjust,
+                        judge_just: record.judge_just,
+                        judge_good: record.judge_good,
+                        judge_miss: record.judge_miss,
+                        judge_near: record.judge_near,
+                        note_rate_standard: record.note_rate_standard,
+                        note_rate_tenuto: record.note_rate_tenuto,
+                        note_rate_glissando: record.note_rate_glissando,
+                        note_rate_trill: record.note_rate_trill,
                         besttime: record.besttime,
                         chart_id,
                         user_id,

@@ -10,8 +10,9 @@ const mocks = vi.hoisted(() => ({
     dataSyncCreate: vi.fn(),
     dataSyncUpdate: vi.fn(),
     musicChartFindMany: vi.fn(),
+    updateBemaniMusicMetadata: vi.fn(),
     updateGrade: vi.fn(),
-    updatePlayCount: vi.fn(),
+    updatePlayerProfile: vi.fn(),
     updatePlayData: vi.fn(),
     updateRecentPlay: vi.fn(),
     updateDummy: vi.fn(),
@@ -37,8 +38,11 @@ vi.mock("@/lib/db", () => ({
 vi.mock("@/lib/services/user/updateGrade", () => ({
     updateGrade: mocks.updateGrade,
 }));
-vi.mock("@/lib/services/user/updatePlayCount", () => ({
-    updatePlayCount: mocks.updatePlayCount,
+vi.mock("@/lib/services/music/updateMusic", () => ({
+    updateBemaniMusicMetadata: mocks.updateBemaniMusicMetadata,
+}));
+vi.mock("@/lib/services/user/updatePlayerProfile", () => ({
+    updatePlayerProfile: mocks.updatePlayerProfile,
 }));
 vi.mock("@/lib/services/user/updatePlayData", () => ({
     updatePlayData: mocks.updatePlayData,
@@ -65,11 +69,20 @@ function musicSheet(difficulty: "Normal" | "Hard" | "Expert") {
         rank: "S",
         fc_type: 0,
         play_count: 1,
+        clear_count: 1,
+        clear_flag: [0] as [number],
         fullcombo_count: 0,
         pianistic_count: 0,
         max_combo: 500,
         grade_basic: 100,
         grade_recital: 100,
+        judge: [450, 30, 15, 5, 0] as [number, number, number, number, number],
+        note_success_rate: [9800, 9700, -1, 9600] as [
+            number,
+            number,
+            number,
+            number,
+        ],
         besttime: "2026-07-17 12:00",
     };
 }
@@ -79,22 +92,62 @@ function requestBody(full = false) {
         token: "valid-token",
         playerData: {
             status: 0,
-            data: { player: { name: "CAROL", play_count: 100 } },
+            data: {
+                status: 0,
+                fail_code: 0,
+                player: {
+                    name: "CAROL",
+                    play_count: 100,
+                    travel_info: {
+                        money: 1205,
+                        fame: "music-teacher",
+                    },
+                    last: {
+                        playtime: "2026-07-17 12:00",
+                        brooch: {
+                            "@index": "brooch-1",
+                            name: "White Dog",
+                            description: "A white dog brooch",
+                        },
+                    },
+                    brooch_list: {
+                        brooch: [
+                            {
+                                "@index": "brooch-1",
+                                name: "White Dog",
+                                description: "A white dog brooch",
+                            },
+                        ],
+                    },
+                },
+            },
         },
         recentData: {
             status: 0,
             data: {
+                status: 0,
+                fail_code: 0,
                 player: {
+                    name: "CAROL",
                     history_list: {
                         history: [
                             {
+                                artist: "artist",
+                                best_score: 940000,
+                                class_basic: "03",
                                 difficulty: "Expert",
+                                fast_count: 20,
+                                is_onehand: false,
+                                judge_count: [450, 30, 15, 5, 0],
                                 level: 10,
+                                license: "",
                                 score: 950000,
+                                slow_count: 15,
                                 max_combo: 500,
-                                rank: "S",
+                                rank: "s",
                                 play_time: "2026-07-17 12:00",
                                 music: "test-music",
+                                title: "Test Music",
                                 grade_basic: 100,
                             },
                         ],
@@ -106,6 +159,8 @@ function requestBody(full = false) {
             ? {
                   status: 0,
                   data: {
+                      status: 0,
+                      fail_code: 0,
                       music: [
                           {
                               "@index": "test-music",
@@ -113,8 +168,10 @@ function requestBody(full = false) {
                               category: "BEMANI",
                               category_short: "BM",
                               description: null,
+                              license: "",
                               title: "Test Music",
                               title_kana: "test",
+                              unlock_type: 1,
                               sheet: [
                                   musicSheet("Normal"),
                                   musicSheet("Hard"),
@@ -246,7 +303,7 @@ describe("POST /api/receivePlayerData", () => {
         expect(response.status).toBe(409);
         expect(data.message).toContain("이미 동기화를 처리하고 있습니다");
         expect(mocks.dataSyncCreate).not.toHaveBeenCalled();
-        expect(mocks.updatePlayCount).not.toHaveBeenCalled();
+        expect(mocks.updatePlayerProfile).not.toHaveBeenCalled();
     });
 
     it("30초 안에 반복된 동기화 요청을 제한한다", async () => {
@@ -289,9 +346,13 @@ describe("POST /api/receivePlayerData", () => {
 
         expect(response.status).toBe(200);
         expect(data.syncScope).toBe("recent");
+        expect(mocks.updatePlayerProfile).toHaveBeenCalledWith(
+            1,
+            requestBody().playerData.data.player
+        );
         expect(mocks.updateRecentPlay).toHaveBeenCalledWith(
             1,
-            expect.any(Array),
+            requestBody().recentData.data.player.history_list.history,
             10
         );
         expect(mocks.updatePlayData).not.toHaveBeenCalled();
@@ -315,6 +376,9 @@ describe("POST /api/receivePlayerData", () => {
 
         expect(response.status).toBe(200);
         expect(data.syncScope).toBe("full");
+        expect(mocks.updateBemaniMusicMetadata).toHaveBeenCalledWith(
+            requestBody(true).totalData?.data.music
+        );
         expect(mocks.updatePlayData).toHaveBeenCalledWith(
             1,
             requestBody(true).totalData?.data.music,
@@ -375,6 +439,7 @@ describe("POST /api/receivePlayerData", () => {
 
         expect(response.status).toBe(200);
         expect(mocks.updatePlayData).not.toHaveBeenCalled();
+        expect(mocks.updateBemaniMusicMetadata).not.toHaveBeenCalled();
         expect(mocks.updateGrade).not.toHaveBeenCalled();
         expect(mocks.updateDummy).not.toHaveBeenCalled();
         expect(mocks.dataSyncUpdate).toHaveBeenCalledWith({

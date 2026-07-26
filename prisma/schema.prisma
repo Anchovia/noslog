@@ -8,61 +8,91 @@ datasource db {
 }
 
 model User {
-  id                   Int                       @id @default(autoincrement())
-  username             String?                   @unique
-  nostalgia_name       String?
-  discord_id           String?                   @unique
-  discord_name         String?
-  discord_username     String?
-  avatar               String?
-  country              String                    @default("ko-KR")
-  profile_completed_at DateTime?
-  preferred_arcade_id  Int?
-  hide_nostalgia_name  Boolean                   @default(false)
-  hide_discord_name    Boolean                   @default(false)
-  hide_play_count      Boolean                   @default(false)
-  preferredArcade      Arcade?                   @relation(fields: [preferred_arcade_id], references: [id], onDelete: SetNull)
-  rank_basic           Int?
-  rank_recital         Int?
-  rank_basic_country   Int?
-  rank_recital_country Int?
-  play_count           Int?
+  id                      Int                       @id @default(autoincrement())
+  username                String?                   @unique
+  nostalgia_name          String?
+  discord_id              String?                   @unique
+  discord_name            String?
+  discord_username        String?
+  avatar                  String?
+  country                 String                    @default("ko-KR")
+  profile_completed_at    DateTime?
+  preferred_arcade_id     Int?
+  hide_nostalgia_name     Boolean                   @default(false)
+  hide_discord_name       Boolean                   @default(false)
+  hide_play_count         Boolean                   @default(false)
+  preferredArcade         Arcade?                   @relation(fields: [preferred_arcade_id], references: [id], onDelete: SetNull)
+  rank_basic              Int?
+  rank_recital            Int?
+  rank_basic_country      Int?
+  rank_recital_country    Int?
+  play_count              Int?
+  nostalgia_nos           Int?
+  nostalgia_fame          String?
+  nostalgia_last_playtime String?
+  equipped_brooch_index   String?
+  equippedBrooch          Brooch?                   @relation("EquippedBrooch", fields: [equipped_brooch_index], references: [index], onDelete: SetNull)
   // 후에 score Int[]로 변경 필요(postgresql 기준)
-  score_p              Int?
-  score_f              Int?
-  score_s              Int?
-  score_a2             Int?
-  score_a              Int?
-  score_b2             Int?
-  score_b              Int?
-  score_c              Int?
-  score_d              Int?
-  role                 String                    @default("user")
-  grade_basic          Int?
-  grade_recital        Int?
-  exam_basic           Int?
-  exam_recital         Int?
-  sync_token_version   Int                       @default(0)
-  created_at           DateTime                  @default(now())
-  updated_at           DateTime                  @updatedAt
-  PlayData             PlayData[]
-  UserBestGrade        UserBestGrade[]
-  bingoProgress        BingoCellProgress[]
-  chartEvaluations     ChartEvaluation[]
-  chartReactions       ChartEvaluationReaction[]
-  dataSyncs            DataSync[]
-  chartPlayHistory     ChartPlayHistory[]
-  chartRecordSnapshots ChartRecordSnapshot[]
-  examSubmissions      ExamSubmission[]
-  examAchievements     ExamAchievement[]
-  uploadTokenGrants    UploadTokenGrant[]
-  feedbackReports      FeedbackReport[]
+  score_p                 Int?
+  score_f                 Int?
+  score_s                 Int?
+  score_a2                Int?
+  score_a                 Int?
+  score_b2                Int?
+  score_b                 Int?
+  score_c                 Int?
+  score_d                 Int?
+  role                    String                    @default("user")
+  grade_basic             Int?
+  grade_recital           Int?
+  exam_basic              Int?
+  exam_recital            Int?
+  sync_token_version      Int                       @default(0)
+  created_at              DateTime                  @default(now())
+  updated_at              DateTime                  @updatedAt
+  PlayData                PlayData[]
+  UserBestGrade           UserBestGrade[]
+  bingoProgress           BingoCellProgress[]
+  chartEvaluations        ChartEvaluation[]
+  chartReactions          ChartEvaluationReaction[]
+  dataSyncs               DataSync[]
+  chartPlayHistory        ChartPlayHistory[]
+  chartRecordSnapshots    ChartRecordSnapshot[]
+  examSubmissions         ExamSubmission[]
+  examAchievements        ExamAchievement[]
+  uploadTokenGrants       UploadTokenGrant[]
+  feedbackReports         FeedbackReport[]
+  brooches                UserBrooch[]
 
   @@index([grade_basic, id])
   @@index([grade_recital, id])
   @@index([country, grade_basic, id])
   @@index([country, grade_recital, id])
   @@index([preferred_arcade_id])
+  @@index([equipped_brooch_index])
+}
+
+// NOSTALGIA가 제공하는 브로치 카탈로그
+model Brooch {
+  index         String       @id
+  name          String
+  description   String
+  created_at    DateTime     @default(now())
+  updated_at    DateTime     @updatedAt
+  owners        UserBrooch[]
+  equippedUsers User[]       @relation("EquippedBrooch")
+}
+
+// 사용자가 보유한 브로치를 카탈로그와 연결함
+model UserBrooch {
+  user_id      Int
+  user         User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  brooch_index String
+  brooch       Brooch   @relation(fields: [brooch_index], references: [index], onDelete: Cascade)
+  synced_at    DateTime @default(now())
+
+  @@id([user_id, brooch_index])
+  @@index([brooch_index])
 }
 
 // 사용자가 제출한 오류 제보와 처리 상태를 관리함
@@ -137,6 +167,8 @@ model Music {
   category       String
   category_short String
   description    String?
+  license        String?
+  unlock_type    Int?
   background     String? // 변수명 jacket으로 변경 필요
   created_at     DateTime     @default(now())
   updated_at     DateTime     @updatedAt
@@ -202,19 +234,30 @@ model DataSync {
 
 // 공식 최근 플레이 응답을 중복 없이 누적해 점수 추이에 사용함
 model ChartPlayHistory {
-  id               Int        @id @default(autoincrement())
-  score            Int
-  max_combo        Int
-  rank             String
-  grade_basic      Int
-  source_play_time String
-  chart_id         Int
-  chart            MusicChart @relation(fields: [chart_id], references: [id], onDelete: Cascade)
-  user_id          Int
-  user             User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  first_sync_id    Int?
-  firstSync        DataSync?  @relation(fields: [first_sync_id], references: [id], onDelete: SetNull)
-  created_at       DateTime   @default(now())
+  id                  Int        @id @default(autoincrement())
+  level               Int?
+  score               Int
+  previous_best_score Int?
+  max_combo           Int
+  rank                String
+  grade_basic         Int
+  class_basic         String?
+  fast_count          Int?
+  slow_count          Int?
+  is_onehand          Boolean?
+  judge_sjust         Int?
+  judge_just          Int?
+  judge_good          Int?
+  judge_miss          Int?
+  judge_near          Int?
+  source_play_time    String
+  chart_id            Int
+  chart               MusicChart @relation(fields: [chart_id], references: [id], onDelete: Cascade)
+  user_id             Int
+  user                User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  first_sync_id       Int?
+  firstSync           DataSync?  @relation(fields: [first_sync_id], references: [id], onDelete: SetNull)
+  created_at          DateTime   @default(now())
 
   @@unique([user_id, chart_id, source_play_time, score, max_combo, rank])
   @@index([user_id, chart_id, source_play_time])
@@ -222,25 +265,36 @@ model ChartPlayHistory {
 
 // 전체 플레이 데이터에서 실제 최고 기록이 변경된 시점만 저장함
 model ChartRecordSnapshot {
-  id              Int        @id @default(autoincrement())
-  level           Int
-  score           Int
-  rank            String
-  fc_type         Int
-  play_count      Int
-  fullcombo_count Int
-  pianistic_count Int
-  max_combo       Int
-  grade_basic     Int
-  grade_recital   Int
-  besttime        String
-  chart_id        Int
-  chart           MusicChart @relation(fields: [chart_id], references: [id], onDelete: Cascade)
-  user_id         Int
-  user            User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  sync_id         Int
-  sync            DataSync   @relation(fields: [sync_id], references: [id], onDelete: Cascade)
-  created_at      DateTime   @default(now())
+  id                  Int        @id @default(autoincrement())
+  level               Int
+  score               Int
+  rank                String
+  fc_type             Int
+  play_count          Int
+  clear_count         Int?
+  clear_flag          Int?
+  fullcombo_count     Int
+  pianistic_count     Int
+  max_combo           Int
+  grade_basic         Int
+  grade_recital       Int
+  judge_sjust         Int?
+  judge_just          Int?
+  judge_good          Int?
+  judge_miss          Int?
+  judge_near          Int?
+  note_rate_standard  Int?
+  note_rate_tenuto    Int?
+  note_rate_glissando Int?
+  note_rate_trill     Int?
+  besttime            String
+  chart_id            Int
+  chart               MusicChart @relation(fields: [chart_id], references: [id], onDelete: Cascade)
+  user_id             Int
+  user                User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  sync_id             Int
+  sync                DataSync   @relation(fields: [sync_id], references: [id], onDelete: Cascade)
+  created_at          DateTime   @default(now())
 
   @@unique([sync_id, chart_id])
   @@index([user_id, chart_id, created_at])
@@ -378,27 +432,38 @@ model UserBestGrade {
 }
 
 model PlayData {
-  id              Int         @id @default(autoincrement())
-  level           Int
-  difficulty      String
-  score           Int
-  rank            String
-  fc_type         Int
-  play_count      Int
-  fullcombo_count Int
-  pianistic_count Int
-  max_combo       Int
-  grade_basic     Int
-  grade_recital   Int
-  besttime        String
-  created_at      DateTime    @default(now())
-  updated_at      DateTime    @updatedAt
-  user_id         Int
-  user            User        @relation(fields: [user_id], references: [id])
-  music_idx       String
-  music           Music       @relation(fields: [music_idx], references: [index])
-  chart_id        Int?
-  chart           MusicChart? @relation(fields: [chart_id], references: [id], onDelete: SetNull)
+  id                  Int         @id @default(autoincrement())
+  level               Int
+  difficulty          String
+  score               Int
+  rank                String
+  fc_type             Int
+  play_count          Int
+  clear_count         Int?
+  clear_flag          Int?
+  fullcombo_count     Int
+  pianistic_count     Int
+  max_combo           Int
+  grade_basic         Int
+  grade_recital       Int
+  judge_sjust         Int?
+  judge_just          Int?
+  judge_good          Int?
+  judge_miss          Int?
+  judge_near          Int?
+  note_rate_standard  Int?
+  note_rate_tenuto    Int?
+  note_rate_glissando Int?
+  note_rate_trill     Int?
+  besttime            String
+  created_at          DateTime    @default(now())
+  updated_at          DateTime    @updatedAt
+  user_id             Int
+  user                User        @relation(fields: [user_id], references: [id])
+  music_idx           String
+  music               Music       @relation(fields: [music_idx], references: [index])
+  chart_id            Int?
+  chart               MusicChart? @relation(fields: [chart_id], references: [id], onDelete: SetNull)
 
   @@unique([user_id, chart_id])
   @@index([chart_id, score, user_id])

@@ -10,11 +10,15 @@ interface SyncMusicSheet {
     rank: string;
     fc_type: number;
     play_count: number;
+    clear_count: number;
+    clear_flag: [number];
     fullcombo_count: number;
     pianistic_count: number;
     max_combo: number;
     grade_basic: number;
     grade_recital: number;
+    judge: [number, number, number, number, number];
+    note_success_rate: [number, number, number, number];
     besttime: string;
 }
 
@@ -24,9 +28,70 @@ export interface SyncMusicInput {
     category: string;
     category_short: string;
     description: string | null;
+    license: string;
     title: string;
     title_kana: string;
+    unlock_type: number;
     sheet: SyncMusicSheet[];
+}
+
+function bemaniMetadata(data: SyncMusicInput) {
+    return {
+        title: data.title,
+        title_kana: data.title_kana,
+        artist: data.artist,
+        category: data.category,
+        category_short: data.category_short,
+        description: data.description,
+        license: data.license,
+        unlock_type: data.unlock_type,
+    };
+}
+
+// 이미 등록된 악곡의 BEMANI 원본 메타데이터만 최신 상태로 유지함
+export async function updateBemaniMusicMetadata(music: SyncMusicInput[]) {
+    const indexes = [...new Set(music.map((data) => data["@index"]))];
+    const existingMusic = await db.music.findMany({
+        where: { index: { in: indexes } },
+        select: {
+            index: true,
+            title: true,
+            title_kana: true,
+            artist: true,
+            category: true,
+            category_short: true,
+            description: true,
+            license: true,
+            unlock_type: true,
+        },
+    });
+    const inputByIndex = new Map(
+        music.map((data) => [data["@index"], data] as const)
+    );
+    const updates = existingMusic.flatMap((existing) => {
+        const input = inputByIndex.get(existing.index);
+        if (!input) return [];
+
+        const metadata = bemaniMetadata(input);
+        const changed = Object.entries(metadata).some(
+            ([key, value]) => existing[key as keyof typeof existing] !== value
+        );
+
+        return changed
+            ? [
+                  db.music.update({
+                      where: { index: existing.index },
+                      data: metadata,
+                  }),
+              ]
+            : [];
+    });
+
+    if (updates.length > 0) {
+        await db.$transaction(updates);
+    }
+
+    return updates.length;
 }
 
 export async function updateMusic(music: SyncMusicInput[]) {
@@ -46,6 +111,8 @@ export async function updateMusic(music: SyncMusicInput[]) {
             category: true,
             category_short: true,
             description: true,
+            license: true,
+            unlock_type: true,
             background: true,
         },
     });
@@ -59,12 +126,7 @@ export async function updateMusic(music: SyncMusicInput[]) {
         const index = data["@index"];
         const existing = existingByIndex.get(index);
         const metadata = {
-            title: data.title,
-            title_kana: data.title_kana,
-            artist: data.artist,
-            category: data.category,
-            category_short: data.category_short,
-            description: data.description,
+            ...bemaniMetadata(data),
             background:
                 getLocalJacketUrl(index) ||
                 existing?.background ||
