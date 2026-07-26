@@ -2,6 +2,9 @@ import { describe, expect, it } from "vitest";
 
 import {
     formatScoreRecordDate,
+    formatTrendTooltipDate,
+    getMissNearCount,
+    getSJustRate,
     selectScoreImprovements,
 } from "@/lib/music/scoreTrend";
 
@@ -36,5 +39,42 @@ describe("베스트 스코어 추이", () => {
             "2025.10.01"
         );
         expect(formatScoreRecordDate("2025/05/29 12:30:00")).toBe("2025.05.29");
+    });
+
+    it("툴팁 날짜에는 플레이 시각을 분 단위까지 표시한다", () => {
+        expect(formatTrendTooltipDate("2026/07/14 14:19:30")).toBe(
+            "2026.07.14 14:19"
+        );
+        expect(formatTrendTooltipDate("2025-10-01T17:58:33.236Z")).toBe(
+            "2025.10.01 17:58"
+        );
+    });
+
+    it("Miss와 Near 합계를 계산한다", () => {
+        expect(getMissNearCount({ judge_miss: 15, judge_near: 2 })).toBe(17);
+        expect(
+            getMissNearCount({ judge_miss: null, judge_near: 2 })
+        ).toBeNull();
+    });
+
+    it("전체 판정 중 S-Just 비율을 소수점 한 자리로 계산한다", () => {
+        expect(
+            getSJustRate({
+                judge_sjust: 1485,
+                judge_just: 77,
+                judge_good: 27,
+                judge_miss: 15,
+                judge_near: 0,
+            })
+        ).toBe(92.6);
+        expect(
+            getSJustRate({
+                judge_sjust: null,
+                judge_just: 0,
+                judge_good: 0,
+                judge_miss: 0,
+                judge_near: 0,
+            })
+        ).toBeNull();
     });
 });

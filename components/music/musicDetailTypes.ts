@@ -71,6 +71,20 @@ export interface ScoreTrendPoint {
     play_time: string;
 }
 
+export interface PerformanceTrendPoint {
+    id: number;
+    score: number;
+    best_score: number | null;
+    fast_count: number | null;
+    slow_count: number | null;
+    judge_sjust: number | null;
+    judge_just: number | null;
+    judge_good: number | null;
+    judge_miss: number | null;
+    judge_near: number | null;
+    play_time: string;
+}
+
 export interface ChartDetail {
     id: number;
     level: number;
@@ -108,6 +122,7 @@ export interface MusicDetailProps {
     userPlayData: UserPlayData | null;
     recentChartPlays: RecentChartPlay[];
     scoreTrend: ScoreTrendPoint[];
+    performanceTrend: PerformanceTrendPoint[];
     chartDetail: ChartDetail;
     ranking: {
         rows: RankingRow[];

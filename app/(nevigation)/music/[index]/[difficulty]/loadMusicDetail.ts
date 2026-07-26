@@ -11,6 +11,7 @@ import {
     getCachedMusicDetail,
     getRecentUserChartPlays,
     getUserChartRecord,
+    getUserChartPerformanceTrend,
     getUserChartScoreTrend,
 } from "./data";
 
@@ -77,13 +78,14 @@ export async function loadMusicDetail(
     const userPlayData = userId
         ? await getUserChartRecord(userId, chart.id)
         : null;
-    const [recentChartPlays, scoreTrend] =
+    const [recentChartPlays, scoreTrend, performanceTrend] =
         userId && activeTab === "record"
             ? await Promise.all([
                   getRecentUserChartPlays(userId, chart.id),
                   getUserChartScoreTrend(userId, chart.id, userPlayData),
+                  getUserChartPerformanceTrend(userId, chart.id),
               ])
-            : [[], []];
+            : [[], [], []];
 
     let evaluationCount = 0;
     let patternAverages = {
@@ -253,6 +255,7 @@ export async function loadMusicDetail(
         userPlayData,
         recentChartPlays,
         scoreTrend,
+        performanceTrend,
         chartDetail: {
             ...chart,
             evaluationCount,

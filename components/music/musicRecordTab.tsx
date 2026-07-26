@@ -6,6 +6,7 @@ import JudgementBreakdown from "./judgementBreakdown";
 import { rankAssetNames } from "./musicDetailConfig";
 import RecentPlayRow from "./recentPlayRow";
 import type {
+    PerformanceTrendPoint,
     RecentChartPlay,
     ScoreTrendPoint,
     UserPlayData,
@@ -17,6 +18,7 @@ interface MusicRecordTabProps {
     userPlayData: UserPlayData | null;
     recentChartPlays: RecentChartPlay[];
     scoreTrend: ScoreTrendPoint[];
+    performanceTrend: PerformanceTrendPoint[];
 }
 
 export default function MusicRecordTab({
@@ -24,6 +26,7 @@ export default function MusicRecordTab({
     userPlayData,
     recentChartPlays,
     scoreTrend,
+    performanceTrend,
 }: MusicRecordTabProps) {
     const scoreProgress = userPlayData
         ? Math.min(
@@ -78,6 +81,22 @@ export default function MusicRecordTab({
                 )}
                 aria-hidden={!isLoggedIn || undefined}
             >
+                <dl className="grid grid-cols-4 gap-2 text-center">
+                    {cumulativeStats.map(({ label, value }) => (
+                        <div
+                            key={label}
+                            className="bg-surface rounded-card flex min-h-17 min-w-0 flex-col items-center justify-center px-1 py-2.5"
+                        >
+                            <dt className="text-caption flex h-5 items-center justify-center whitespace-nowrap">
+                                {label}
+                            </dt>
+                            <dd className="text-label mt-1 font-bold tabular-nums">
+                                {value === null ? "-" : formatToComma(value)}
+                            </dd>
+                        </div>
+                    ))}
+                </dl>
+
                 <section className="bg-surface rounded-card flex flex-col gap-4 p-4">
                     <div className="flex items-center gap-3">
                         <div className="bg-surface-muted rounded-card flex size-14 shrink-0 items-center justify-center">
@@ -180,27 +199,14 @@ export default function MusicRecordTab({
                     />
                 </section>
 
-                <dl className="grid grid-cols-4 gap-2 text-center">
-                    {cumulativeStats.map(({ label, value }) => (
-                        <div
-                            key={label}
-                            className="bg-surface rounded-card flex min-h-17 min-w-0 flex-col items-center justify-center px-1 py-2.5"
-                        >
-                            <dt className="text-caption flex h-5 items-center justify-center whitespace-nowrap">
-                                {label}
-                            </dt>
-                            <dd className="text-label mt-1 font-bold tabular-nums">
-                                {value === null ? "-" : formatToComma(value)}
-                            </dd>
-                        </div>
-                    ))}
-                </dl>
-
                 <section className="bg-surface rounded-card p-4">
                     <header>
                         <h2 className="text-section">스코어 추이</h2>
                     </header>
-                    <ScoreTrend points={scoreTrend} />
+                    <ScoreTrend
+                        points={scoreTrend}
+                        performancePoints={performanceTrend}
+                    />
                 </section>
 
                 <section className="bg-surface rounded-card overflow-hidden">
