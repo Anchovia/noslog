@@ -49,7 +49,18 @@ export interface UserPlayData {
 export interface RecentChartPlay {
     id: number;
     score: number;
+    best_score: number | null;
+    max_combo: number;
     rank: string;
+    grade_basic: number;
+    class_basic: string | null;
+    fast_count: number | null;
+    slow_count: number | null;
+    judge_sjust: number | null;
+    judge_just: number | null;
+    judge_good: number | null;
+    judge_miss: number | null;
+    judge_near: number | null;
     play_time: string;
 }
 

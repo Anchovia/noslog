@@ -237,7 +237,7 @@ model ChartPlayHistory {
   id                  Int        @id @default(autoincrement())
   level               Int?
   score               Int
-  previous_best_score Int?
+  best_score          Int?
   max_combo           Int
   rank                String
   grade_basic         Int

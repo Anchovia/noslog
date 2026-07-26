@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import JudgementBreakdown from "./judgementBreakdown";
 import { rankAssetNames } from "./musicDetailConfig";
+import RecentPlayRow from "./recentPlayRow";
 import type {
     RecentChartPlay,
     ScoreTrendPoint,
@@ -208,53 +209,9 @@ export default function MusicRecordTab({
                     </h2>
                     {recentChartPlays.length > 0 ? (
                         <ul className="divide-divider divide-y">
-                            {[...recentChartPlays]
-                                .reverse()
-                                .map((play, index, plays) => {
-                                    const previous = plays[index + 1];
-                                    const difference = previous
-                                        ? play.score - previous.score
-                                        : null;
-                                    const rankName =
-                                        rankAssetNames[play.rank.toUpperCase()];
-
-                                    return (
-                                        <li
-                                            key={play.id}
-                                            className="flex h-11 items-center gap-3 px-4 text-sm"
-                                        >
-                                            <time className="text-text-disabled w-14 shrink-0 text-xs tabular-nums">
-                                                {play.play_time
-                                                    .split(" ")[0]
-                                                    .replaceAll("/", ".")}
-                                            </time>
-                                            <strong className="text-text-primary tabular-nums">
-                                                {formatToComma(play.score)}
-                                            </strong>
-                                            {rankName ? (
-                                                <Image
-                                                    src={`https://p.eagate.573.jp/game/nostalgia/op3/img/pdata/music_data/grade/grade_${rankName}.png`}
-                                                    alt={`${play.rank} 랭크`}
-                                                    width={20}
-                                                    height={20}
-                                                />
-                                            ) : null}
-                                            <span
-                                                className={cn(
-                                                    "ml-auto text-xs tabular-nums",
-                                                    difference !== null &&
-                                                        difference > 0
-                                                        ? "text-success"
-                                                        : "text-text-disabled"
-                                                )}
-                                            >
-                                                {difference === null
-                                                    ? "-"
-                                                    : `${difference > 0 ? "+" : ""}${formatToComma(difference)}`}
-                                            </span>
-                                        </li>
-                                    );
-                                })}
+                            {[...recentChartPlays].reverse().map((play) => (
+                                <RecentPlayRow key={play.id} play={play} />
+                            ))}
                         </ul>
                     ) : (
                         <div className="text-text-disabled flex h-20 items-center justify-center text-sm">
