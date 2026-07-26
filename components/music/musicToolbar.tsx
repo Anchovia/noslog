@@ -2,9 +2,10 @@
 
 import { ArrowDown, ArrowUp, Grid2X2, List } from "lucide-react";
 
+import type { MusicSort } from "@/app/(nevigation)/music/query";
 import { cn } from "@/lib/utils";
 
-export type SortMode = "name" | "level";
+export type SortMode = MusicSort;
 export type SortOrder = "asc" | "desc";
 export type ViewMode = "list" | "grid";
 
@@ -12,14 +13,23 @@ interface MusicToolbarProps {
     sortMode: SortMode;
     sortOrder: SortOrder;
     viewMode: ViewMode;
+    isLoggedIn: boolean;
     onSortModeChange: (mode: SortMode) => void;
     onViewModeChange: (mode: ViewMode) => void;
 }
+
+const sortOptions: { value: SortMode; label: string; personal?: boolean }[] = [
+    { value: "name", label: "이름" },
+    { value: "level", label: "레벨" },
+    { value: "recent", label: "최근", personal: true },
+    { value: "weakness", label: "취약", personal: true },
+];
 
 export default function MusicToolbar({
     sortMode,
     sortOrder,
     viewMode,
+    isLoggedIn,
     onSortModeChange,
     onViewModeChange,
 }: MusicToolbarProps) {
@@ -28,32 +38,26 @@ export default function MusicToolbar({
     return (
         <section className="flex items-center justify-between">
             <div className="border-border rounded-card flex h-6 overflow-hidden border">
-                <button
-                    type="button"
-                    onClick={() => onSortModeChange("name")}
-                    className={cn(
-                        "focus-visible:ring-focus/40 flex cursor-pointer items-center gap-1 px-3 text-xs leading-none transition-colors focus-visible:ring-2 focus-visible:outline-none",
-                        sortMode === "name"
-                            ? "bg-border text-text-primary hover:bg-border/80"
-                            : "text-text-secondary hover:bg-surface-muted hover:text-text-primary"
-                    )}
-                >
-                    <span>이름순</span>
-                    {sortMode === "name" && <SortArrow size={12} />}
-                </button>
-                <button
-                    type="button"
-                    onClick={() => onSortModeChange("level")}
-                    className={cn(
-                        "focus-visible:ring-focus/40 flex cursor-pointer items-center gap-1 px-3 text-xs leading-none transition-colors focus-visible:ring-2 focus-visible:outline-none",
-                        sortMode === "level"
-                            ? "bg-border text-text-primary hover:bg-border/80"
-                            : "text-text-secondary hover:bg-surface-muted hover:text-text-primary"
-                    )}
-                >
-                    <span>레벨순</span>
-                    {sortMode === "level" && <SortArrow size={12} />}
-                </button>
+                {sortOptions
+                    .filter((option) => isLoggedIn || !option.personal)
+                    .map((option) => (
+                        <button
+                            key={option.value}
+                            type="button"
+                            onClick={() => onSortModeChange(option.value)}
+                            className={cn(
+                                "focus-visible:ring-focus/40 flex cursor-pointer items-center gap-1 px-2.5 text-xs leading-none transition-colors focus-visible:ring-2 focus-visible:outline-none",
+                                sortMode === option.value
+                                    ? "bg-border text-text-primary hover:bg-border/80"
+                                    : "text-text-secondary hover:bg-surface-muted hover:text-text-primary"
+                            )}
+                        >
+                            <span>{option.label}</span>
+                            {sortMode === option.value && (
+                                <SortArrow size={12} />
+                            )}
+                        </button>
+                    ))}
             </div>
 
             <div className="border-border rounded-card flex h-6 overflow-hidden border">

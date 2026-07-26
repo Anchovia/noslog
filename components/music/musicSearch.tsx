@@ -22,7 +22,10 @@ import {
     getInitialMusicDifficultyState,
     parseMusicCategories,
 } from "@/components/music/search/musicSearchUtils";
-import type { MusicRecordFilter } from "@/app/(nevigation)/music/query";
+import {
+    MUSIC_RECORD_FILTERS,
+    type MusicRecordFilter,
+} from "@/app/(nevigation)/music/query";
 
 export type { MusicSearchProps } from "@/components/music/search/musicSearchTypes";
 
@@ -51,7 +54,9 @@ export default function MusicSearch({
                 ? (searchParams.records ?? "")
                       .split(",")
                       .filter((value): value is MusicRecordFilter =>
-                          ["s", "fc", "pianist", "unplayed"].includes(value)
+                          MUSIC_RECORD_FILTERS.includes(
+                              value as MusicRecordFilter
+                          )
                       )
                 : []
     );

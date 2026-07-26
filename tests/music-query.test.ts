@@ -83,4 +83,35 @@ describe("normalizeMusicQuery", () => {
             }).recordFilters
         ).toEqual(["s", "fc", "unplayed", "pianist"]);
     });
+
+    it("판정과 음표 성공률 기반 개인 기록 필터를 정리한다", () => {
+        expect(
+            normalizeMusicQuery({
+                records:
+                    "clear,recent,miss-near,sjust-low,standard-low,tenuto-low,glissando-low,trill-low,fast,slow,invalid",
+            }).recordFilters
+        ).toEqual([
+            "clear",
+            "recent",
+            "miss-near",
+            "sjust-low",
+            "standard-low",
+            "tenuto-low",
+            "glissando-low",
+            "trill-low",
+            "fast",
+            "slow",
+        ]);
+    });
+
+    it("개인 기록 정렬은 기본적으로 내림차순을 사용한다", () => {
+        expect(normalizeMusicQuery({ sort: "recent" })).toMatchObject({
+            sort: "recent",
+            order: "desc",
+        });
+        expect(normalizeMusicQuery({ sort: "weakness" })).toMatchObject({
+            sort: "weakness",
+            order: "desc",
+        });
+    });
 });

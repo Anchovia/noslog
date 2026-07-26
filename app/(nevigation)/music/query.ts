@@ -15,14 +15,31 @@ export interface MusicSearchParams {
     expertMax?: string;
     realMin?: string;
     realMax?: string;
-    sort?: "name" | "level";
+    sort?: MusicSort;
     order?: "asc" | "desc";
     view?: "list" | "grid";
     records?: string;
 }
 
-export const MUSIC_RECORD_FILTERS = ["s", "fc", "pianist", "unplayed"] as const;
+export const MUSIC_RECORD_FILTERS = [
+    "clear",
+    "s",
+    "fc",
+    "pianist",
+    "unplayed",
+    "recent",
+    "miss-near",
+    "sjust-low",
+    "standard-low",
+    "tenuto-low",
+    "glissando-low",
+    "trill-low",
+    "fast",
+    "slow",
+] as const;
 export type MusicRecordFilter = (typeof MUSIC_RECORD_FILTERS)[number];
+export const MUSIC_SORTS = ["name", "level", "recent", "weakness"] as const;
+export type MusicSort = (typeof MUSIC_SORTS)[number];
 
 export type DifficultyKey = "normal" | "hard" | "expert" | "real";
 
@@ -36,7 +53,7 @@ export interface NormalizedMusicQuery {
     q: string;
     categories: string[];
     difficulties: MusicDifficultyFilter[];
-    sort: "name" | "level";
+    sort: MusicSort;
     order: "asc" | "desc";
     recordFilters: MusicRecordFilter[];
 }
@@ -81,7 +98,9 @@ export function normalizeMusicQuery(
             !hasExplicitDifficulty && difficulty === "expert"
         )
     );
-    const sort = searchParams.sort === "level" ? "level" : "name";
+    const sort = MUSIC_SORTS.includes(searchParams.sort as MusicSort)
+        ? (searchParams.sort as MusicSort)
+        : "name";
 
     return {
         q: searchParams.q?.trim().slice(0, 100) ?? "",
@@ -113,9 +132,9 @@ export function normalizeMusicQuery(
         order:
             searchParams.order === "asc" || searchParams.order === "desc"
                 ? searchParams.order
-                : sort === "level"
-                  ? "desc"
-                  : "asc",
+                : sort === "name"
+                  ? "asc"
+                  : "desc",
         recordFilters: (searchParams.records ?? "")
             .split(",")
             .filter((value): value is MusicRecordFilter =>
