@@ -223,7 +223,7 @@ async function createSyncAttempt(
     receivedPlays: number
 ): Promise<SyncAttemptResult> {
     return db.$transaction(async (tx) => {
-        await tx.$queryRaw`SELECT pg_advisory_xact_lock(73051, ${userId})`;
+        await tx.$executeRaw`SELECT pg_advisory_xact_lock(73051, ${userId}::integer)`;
 
         const now = new Date();
         const latestSync = await tx.dataSync.findFirst({

@@ -2,6 +2,7 @@ import { cn, formatToComma, formatToGrade } from "@/lib/utils";
 import { formatScoreRecordDate } from "@/lib/music/scoreTrend";
 import Image from "next/image";
 import Link from "next/link";
+import JudgementBreakdown from "./judgementBreakdown";
 import { rankAssetNames } from "./musicDetailConfig";
 import type {
     RecentChartPlay,
@@ -32,6 +33,24 @@ export default function MusicRecordTab({
     const scoreToPerfect = userPlayData
         ? Math.max(0, 1000000 - userPlayData.score)
         : null;
+    const cumulativeStats = [
+        {
+            label: "플레이",
+            value: userPlayData?.play_count ?? null,
+        },
+        {
+            label: "최대 콤보",
+            value: userPlayData?.max_combo ?? null,
+        },
+        {
+            label: "풀콤보",
+            value: userPlayData?.fullcombo_count ?? null,
+        },
+        {
+            label: "Pianist",
+            value: userPlayData?.pianistic_count ?? null,
+        },
+    ];
 
     return (
         <div className="relative">
@@ -139,29 +158,38 @@ export default function MusicRecordTab({
 
                 <section className="bg-surface rounded-card p-4">
                     <h2 className="text-section">판정 상세</h2>
-                    <div className="text-text-disabled flex h-16 items-center justify-center text-sm">
-                        판정 데이터가 제공되지 않습니다.
-                    </div>
+                    <JudgementBreakdown
+                        counts={{
+                            judge_sjust: userPlayData?.judge_sjust ?? null,
+                            judge_just: userPlayData?.judge_just ?? null,
+                            judge_good: userPlayData?.judge_good ?? null,
+                            judge_miss: userPlayData?.judge_miss ?? null,
+                            judge_near: userPlayData?.judge_near ?? null,
+                        }}
+                        noteRates={{
+                            note_rate_standard:
+                                userPlayData?.note_rate_standard ?? null,
+                            note_rate_tenuto:
+                                userPlayData?.note_rate_tenuto ?? null,
+                            note_rate_glissando:
+                                userPlayData?.note_rate_glissando ?? null,
+                            note_rate_trill:
+                                userPlayData?.note_rate_trill ?? null,
+                        }}
+                    />
                 </section>
 
                 <dl className="grid grid-cols-4 gap-2 text-center">
-                    {[
-                        ["플레이", userPlayData?.play_count ?? "-"],
-                        ["콤보", userPlayData?.max_combo ?? "-"],
-                        ["풀콤보", userPlayData?.fullcombo_count ?? "-"],
-                        ["Pianist", userPlayData?.pianistic_count ?? "-"],
-                    ].map(([label, value]) => (
+                    {cumulativeStats.map(({ label, value }) => (
                         <div
                             key={label}
-                            className="bg-surface rounded-card flex min-h-15 flex-col items-center justify-center px-1 py-3"
+                            className="bg-surface rounded-card flex min-h-17 min-w-0 flex-col items-center justify-center px-1 py-2.5"
                         >
-                            <dt className="text-text-secondary text-xs">
+                            <dt className="text-caption flex h-5 items-center justify-center whitespace-nowrap">
                                 {label}
                             </dt>
-                            <dd className="text-text-primary mt-1 text-sm font-bold tabular-nums">
-                                {typeof value === "number"
-                                    ? formatToComma(value)
-                                    : value}
+                            <dd className="text-label mt-1 font-bold tabular-nums">
+                                {value === null ? "-" : formatToComma(value)}
                             </dd>
                         </div>
                     ))}

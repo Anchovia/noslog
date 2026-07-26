@@ -31,8 +31,18 @@ export interface UserPlayData {
     score: number;
     max_combo: number;
     play_count: number;
+    clear_count: number | null;
     fullcombo_count: number;
     pianistic_count: number;
+    judge_sjust: number | null;
+    judge_just: number | null;
+    judge_good: number | null;
+    judge_miss: number | null;
+    judge_near: number | null;
+    note_rate_standard: number | null;
+    note_rate_tenuto: number | null;
+    note_rate_glissando: number | null;
+    note_rate_trill: number | null;
     besttime: string;
 }
 

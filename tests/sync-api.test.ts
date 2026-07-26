@@ -5,7 +5,7 @@ const mocks = vi.hoisted(() => ({
     verifySyncToken: vi.fn(),
     userFindUnique: vi.fn(),
     transaction: vi.fn(),
-    queryRaw: vi.fn(),
+    executeRaw: vi.fn(),
     dataSyncFindFirst: vi.fn(),
     dataSyncCreate: vi.fn(),
     dataSyncUpdate: vi.fn(),
@@ -214,7 +214,7 @@ describe("POST /api/receivePlayerData", () => {
         });
         mocks.transaction.mockImplementation((callback) =>
             callback({
-                $queryRaw: mocks.queryRaw,
+                $executeRaw: mocks.executeRaw,
                 dataSync: {
                     create: mocks.dataSyncCreate,
                     findFirst: mocks.dataSyncFindFirst,
@@ -304,6 +304,17 @@ describe("POST /api/receivePlayerData", () => {
         expect(data.message).toContain("이미 동기화를 처리하고 있습니다");
         expect(mocks.dataSyncCreate).not.toHaveBeenCalled();
         expect(mocks.updatePlayerProfile).not.toHaveBeenCalled();
+    });
+
+    it("사용자별 동기화 잠금 키를 PostgreSQL integer로 고정한다", async () => {
+        await POST(createRequest(requestBody()));
+
+        const [queryParts, userId] = mocks.executeRaw.mock.calls[0];
+
+        expect(queryParts.join("?")).toContain(
+            "pg_advisory_xact_lock(73051, ?::integer)"
+        );
+        expect(userId).toBe(1);
     });
 
     it("30초 안에 반복된 동기화 요청을 제한한다", async () => {
