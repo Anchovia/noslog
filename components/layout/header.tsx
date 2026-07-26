@@ -36,7 +36,7 @@ export default async function Header() {
                             로그인
                         </Link>
                     )}
-                    <HeaderMenu />
+                    <HeaderMenu isAdmin={user?.role === "admin"} />
                 </div>
             </div>
         </header>

@@ -8,6 +8,7 @@ import {
 import Link from "next/link";
 
 import { resetUserSyncToken, updateUserRole } from "@/app/admin/users/actions";
+import AdminRoleToggleButton from "@/components/admin/adminRoleToggleButton";
 import {
     getSyncHealthClassName,
     getUserSyncHealth,
@@ -330,12 +331,14 @@ export default async function AdminUsersPage({
                                         user.role === "admin" ? "user" : "admin"
                                     }
                                 />
-                                <button className="border-border flex h-9 w-full items-center justify-center gap-1 rounded-md border text-xs font-bold">
-                                    <ShieldCheck className="size-3.5" />{" "}
-                                    {user.role === "admin"
-                                        ? "권한 해제"
-                                        : "관리자 지정"}
-                                </button>
+                                <AdminRoleToggleButton
+                                    isAdmin={user.role === "admin"}
+                                    userLabel={
+                                        user.nostalgia_name ??
+                                        user.username ??
+                                        `유저 ${user.id}`
+                                    }
+                                />
                             </form>
                             <form action={resetUserSyncToken}>
                                 <input
