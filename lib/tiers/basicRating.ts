@@ -106,6 +106,18 @@ export function getBasicRatingBasePower(tierConstant: number) {
     return tierConstant ** BASIC_RATING_TIER_EXPONENT;
 }
 
+export function getBasicRatingMaxContribution(
+    tierConstant: number,
+    theoreticalMax: number
+) {
+    if (!Number.isFinite(theoreticalMax) || theoreticalMax <= 0) return 0;
+
+    return (
+        (getBasicRatingBasePower(tierConstant) / theoreticalMax) *
+        BASIC_RATING_MAX
+    );
+}
+
 export function calculateBasicRatingTheoreticalMax(
     tierConstants: number[],
     topCount = BASIC_RATING_TOP_COUNT

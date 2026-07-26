@@ -1,5 +1,9 @@
 import { CACHE_TAGS } from "@/lib/cacheTags";
 import db from "@/lib/db";
+import {
+    BASIC_RATING_TOP_COUNT,
+    calculateBasicRatingTheoreticalMax,
+} from "@/lib/tiers/basicRating";
 import type {
     PublicTierBandPayload,
     TierDifficulty,
@@ -91,6 +95,45 @@ export const getCachedGoalTierOverview = unstable_cache(
         };
     },
     ["public-goal-tier-overview", "v1"],
+    {
+        revalidate: 3600,
+        tags: [CACHE_TAGS.tierLists],
+    }
+);
+
+// 현재 공개 서열표를 기준으로 10,000점 정규화에 사용할 상위 70곡 이론값을 계산함
+export const getCachedBasicTierWeightTheoreticalMax = unstable_cache(
+    async (tierListId: number) => {
+        const tierList = await db.tierList.findUnique({
+            where: { id: tierListId },
+            select: {
+                mode: true,
+                goal: true,
+                status: true,
+                entries: {
+                    select: {
+                        tierBand: { select: { value: true } },
+                    },
+                },
+            },
+        });
+
+        if (
+            !tierList ||
+            tierList.mode !== "basic" ||
+            tierList.status !== "published" ||
+            tierList.entries.length < BASIC_RATING_TOP_COUNT
+        ) {
+            return null;
+        }
+
+        const theoreticalMax = calculateBasicRatingTheoreticalMax(
+            tierList.entries.map((entry) => entry.tierBand.value)
+        );
+
+        return theoreticalMax > 0 ? theoreticalMax : null;
+    },
+    ["basic-tier-weight-theoretical-max", "v2"],
     {
         revalidate: 3600,
         tags: [CACHE_TAGS.tierLists],

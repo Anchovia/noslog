@@ -7,10 +7,16 @@ import {
     calculateBasicRatingTheoreticalMax,
     getBasicRatingBasePower,
     getBasicRatingCoefficient,
+    getBasicRatingMaxContribution,
 } from "@/lib/tiers/basicRating";
 import { describe, expect, it } from "vitest";
 
 describe("Basic 서열 레이팅", () => {
+    it("곡별 최대 기여 점수를 10,000점 기준으로 정규화한다", () => {
+        expect(getBasicRatingMaxContribution(10, 1_000)).toBe(1_000);
+        expect(getBasicRatingMaxContribution(14.5, 0)).toBe(0);
+    });
+
     it("S 미만 기록에는 포인트를 주지 않는다", () => {
         expect(
             getBasicRatingCoefficient(BASIC_RATING_SCORE_FLOOR - 1, "balanced")
