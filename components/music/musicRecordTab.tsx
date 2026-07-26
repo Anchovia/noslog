@@ -1,4 +1,5 @@
 import { cn, formatToComma, formatToGrade } from "@/lib/utils";
+import type { PeerScoreComparison } from "@/lib/music/peerScoreComparison";
 import { formatScoreRecordDate } from "@/lib/music/scoreTrend";
 import Image from "next/image";
 import Link from "next/link";
@@ -19,6 +20,7 @@ interface MusicRecordTabProps {
     recentChartPlays: RecentChartPlay[];
     scoreTrend: ScoreTrendPoint[];
     performanceTrend: PerformanceTrendPoint[];
+    peerScoreComparison: PeerScoreComparison | null;
 }
 
 export default function MusicRecordTab({
@@ -27,6 +29,7 @@ export default function MusicRecordTab({
     recentChartPlays,
     scoreTrend,
     performanceTrend,
+    peerScoreComparison,
 }: MusicRecordTabProps) {
     const scoreProgress = userPlayData
         ? Math.min(
@@ -37,6 +40,10 @@ export default function MusicRecordTab({
     const scoreToPerfect = userPlayData
         ? Math.max(0, 1000000 - userPlayData.score)
         : null;
+    const peerScoreDifference =
+        userPlayData && peerScoreComparison
+            ? userPlayData.score - peerScoreComparison.averageScore
+            : null;
     const cumulativeStats = [
         {
             label: "플레이",
@@ -174,6 +181,43 @@ export default function MusicRecordTab({
                             </span>
                         </div>
                     </div>
+
+                    {peerScoreComparison && peerScoreDifference !== null ? (
+                        <div className="bg-surface-muted rounded-card flex items-center justify-between gap-3 p-3">
+                            <div className="min-w-0">
+                                <p className="text-caption">비슷한 Grd 평균</p>
+                                <p className="text-micro mt-1 tabular-nums">
+                                    ±{peerScoreComparison.gradeRange} ·{" "}
+                                    {peerScoreComparison.sampleCount.toLocaleString(
+                                        "ko-KR"
+                                    )}
+                                    명 기준
+                                </p>
+                            </div>
+                            <div className="shrink-0 text-right">
+                                <strong className="text-label tabular-nums">
+                                    {formatToComma(
+                                        peerScoreComparison.averageScore
+                                    )}
+                                </strong>
+                                <p
+                                    className={cn(
+                                        "text-micro mt-1 tabular-nums",
+                                        peerScoreDifference > 0 &&
+                                            "text-success"
+                                    )}
+                                >
+                                    {peerScoreDifference === 0
+                                        ? "내 기록과 동일"
+                                        : `내 기록 ${
+                                              peerScoreDifference > 0 ? "+" : ""
+                                          }${formatToComma(
+                                              peerScoreDifference
+                                          )}점`}
+                                </p>
+                            </div>
+                        </div>
+                    ) : null}
 
                     <div className="border-divider border-t pt-4">
                         <h2 className="text-section">스코어 추이</h2>

@@ -1,5 +1,9 @@
 import db from "@/lib/db";
 import { CACHE_TAGS } from "@/lib/cacheTags";
+import {
+    buildPeerScoreComparison,
+    PEER_STORED_GRADE_RANGE,
+} from "@/lib/music/peerScoreComparison";
 import { selectScoreImprovements } from "@/lib/music/scoreTrend";
 import { unstable_cache } from "next/cache";
 
@@ -220,7 +224,12 @@ export function getUserChartRecord(userId: number, chartId: number) {
         select: {
             user_id: true,
             user: {
-                select: { id: true, username: true, avatar: true },
+                select: {
+                    id: true,
+                    username: true,
+                    avatar: true,
+                    grade_basic: true,
+                },
             },
             rank: true,
             fc_type: true,
@@ -245,6 +254,33 @@ export function getUserChartRecord(userId: number, chartId: number) {
             besttime: true,
         },
     });
+}
+
+export async function getUserChartPeerScoreComparison(
+    userId: number,
+    chartId: number,
+    gradeBasic: number | null
+) {
+    if (gradeBasic === null) return null;
+
+    const scores = await db.playData.aggregate({
+        where: {
+            chart_id: chartId,
+            user_id: { not: userId },
+            play_count: { gt: 0 },
+            score: { gt: 0 },
+            user: {
+                grade_basic: {
+                    gte: Math.max(0, gradeBasic - PEER_STORED_GRADE_RANGE),
+                    lte: gradeBasic + PEER_STORED_GRADE_RANGE,
+                },
+            },
+        },
+        _avg: { score: true },
+        _count: { _all: true },
+    });
+
+    return buildPeerScoreComparison(scores._avg.score, scores._count._all);
 }
 
 export async function getRecentUserChartPlays(userId: number, chartId: number) {

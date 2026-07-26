@@ -1,3 +1,4 @@
+import type { PeerScoreComparison } from "@/lib/music/peerScoreComparison";
 import type { RankingRow } from "./ranking/musicRankingTypes";
 
 export type Difficulty = "Normal" | "Hard" | "Expert" | "Real";
@@ -22,6 +23,7 @@ export interface UserPlayData {
         id: number;
         username: string | null;
         avatar: string | null;
+        grade_basic: number | null;
     };
     rank: string;
     fc_type: number;
@@ -123,6 +125,7 @@ export interface MusicDetailProps {
     recentChartPlays: RecentChartPlay[];
     scoreTrend: ScoreTrendPoint[];
     performanceTrend: PerformanceTrendPoint[];
+    peerScoreComparison: PeerScoreComparison | null;
     chartDetail: ChartDetail;
     ranking: {
         rows: RankingRow[];
