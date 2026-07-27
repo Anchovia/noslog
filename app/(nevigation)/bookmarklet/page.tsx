@@ -6,7 +6,7 @@ import { createPageMetadata } from "@/lib/metadata/site";
 import { getUser } from "@/lib/user";
 import { formatDistanceToNow } from "date-fns";
 import { ko } from "date-fns/locale";
-import { Bookmark, CircleCheck, LogIn } from "lucide-react";
+import { AlertTriangle, Bookmark, CircleCheck, LogIn } from "lucide-react";
 import { headers } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
@@ -122,6 +122,17 @@ export default async function BookmarkletPage() {
                     />
                 )}
             </section>
+
+            {user ? (
+                <p className="border-score/30 bg-score/5 text-caption text-score rounded-card flex items-start gap-2 border px-3 py-2.5">
+                    <AlertTriangle
+                        className="mt-0.5 size-3.5 shrink-0"
+                        aria-hidden
+                    />
+                    재발급하면 기존 북마클릿이 만료됩니다. 재발급 후 북마클릿을
+                    다시 등록해주세요.
+                </p>
+            ) : null}
 
             {latestSync ? <SyncResultSummary summary={latestSync} /> : null}
 

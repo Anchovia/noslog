@@ -22,7 +22,8 @@ export async function regenerateSyncToken() {
         revalidatePath("/bookmarklet");
         return {
             success: true as const,
-            message: "연동 토큰을 재발급했습니다.",
+            message:
+                "연동 토큰을 재발급했습니다. 북마클릿을 다시 등록해주세요.",
         };
     } catch (error) {
         console.error("연동 토큰 재발급에 실패했습니다.", error);
