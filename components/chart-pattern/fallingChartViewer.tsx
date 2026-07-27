@@ -8,6 +8,7 @@ import {
     getActivePlaybackPianoRanges,
     getApproachDurationMs,
     getChartPlaybackDurationMs,
+    getPlaybackRibbonVisibleEndMs,
     prepareChartPlaybackNotes,
     projectPlaybackLane,
     projectPlaybackRange,
@@ -388,7 +389,10 @@ function drawPreparedNote({
     horizonY: number;
     judgmentY: number;
 }) {
-    const visibleEnd = currentTimeMs + approachDurationMs;
+    const visibleEnd =
+        note.type === "standard"
+            ? currentTimeMs + approachDurationMs
+            : getPlaybackRibbonVisibleEndMs(currentTimeMs, approachDurationMs);
     if (note.endTimeMs < currentTimeMs - 130 || note.startTimeMs > visibleEnd) {
         return;
     }

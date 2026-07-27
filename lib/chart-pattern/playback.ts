@@ -251,7 +251,19 @@ export function getActivePlaybackPianoRanges(
 
 export function getApproachDurationMs(noteSpeed: number) {
     const clampedSpeed = Math.min(4, Math.max(1, noteSpeed));
-    return 4_000 / clampedSpeed;
+    return 2_000 / clampedSpeed;
+}
+
+export function getPlaybackRibbonVisibleEndMs(
+    currentTimeMs: number,
+    approachDurationMs: number
+) {
+    const spawnY = 0.065;
+    const controlY = -0.22;
+    const judgmentY = 1;
+    const apexProgress =
+        (spawnY - controlY) / (spawnY - 2 * controlY + judgmentY);
+    return currentTimeMs + approachDurationMs * (1 - apexProgress);
 }
 
 function quadraticPoint(

@@ -4,6 +4,7 @@ import {
     getActivePlaybackPianoRanges,
     getApproachDurationMs,
     getChartPlaybackDurationMs,
+    getPlaybackRibbonVisibleEndMs,
     prepareChartPlaybackNotes,
     projectPlaybackLane,
     projectPlaybackRange,
@@ -71,12 +72,45 @@ describe("낙하형 채보 재생 계산", () => {
         expect(getChartPlaybackDurationMs(document)).toBe(3_000);
     });
 
-    it("새 2.0 속도는 기존 3.0 기준의 접근 시간을 사용하고 4.0까지 지원한다", () => {
-        expect(getApproachDurationMs(1)).toBe(4_000);
-        expect(getApproachDurationMs(2)).toBe(2_000);
-        expect(getApproachDurationMs(3)).toBeCloseTo(4_000 / 3);
-        expect(getApproachDurationMs(4)).toBe(1_000);
-        expect(getApproachDurationMs(5)).toBe(1_000);
+    it("새 2.0 속도는 직전 4.0 기준의 접근 시간을 사용하고 4.0까지 지원한다", () => {
+        expect(getApproachDurationMs(1)).toBe(2_000);
+        expect(getApproachDurationMs(2)).toBe(1_000);
+        expect(getApproachDurationMs(3)).toBeCloseTo(2_000 / 3);
+        expect(getApproachDurationMs(4)).toBe(500);
+        expect(getApproachDurationMs(5)).toBe(500);
+    });
+
+    it("롱노트 리본은 궤적 정점 이후 구간만 표시한다", () => {
+        const currentTimeMs = 1_000;
+        const approachDurationMs = 500;
+        const visibleEndMs = getPlaybackRibbonVisibleEndMs(
+            currentTimeMs,
+            approachDurationMs
+        );
+        const apex = projectPlaybackRange({
+            lane: 4,
+            width: 2,
+            timeMs: visibleEndMs,
+            currentTimeMs,
+            approachDurationMs,
+            canvasWidth: 800,
+            horizonY: 60,
+            judgmentY: 500,
+        });
+        const spawn = projectPlaybackRange({
+            lane: 4,
+            width: 2,
+            timeMs: currentTimeMs + approachDurationMs,
+            currentTimeMs,
+            approachDurationMs,
+            canvasWidth: 800,
+            horizonY: 60,
+            judgmentY: 500,
+        });
+
+        expect(visibleEndMs).toBeGreaterThan(currentTimeMs);
+        expect(visibleEndMs).toBeLessThan(currentTimeMs + approachDurationMs);
+        expect(apex.y).toBeLessThan(spawn.y);
     });
 
     it("테누토와 글리산도는 연주가 끝날 때까지 피아노 입력을 유지한다", () => {
