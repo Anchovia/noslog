@@ -39,6 +39,9 @@ export default function TimingInspector() {
         (state) => state.replaceTimingPoints
     );
     const [tapBpm, setTapBpm] = useState<number | null>(null);
+    const [customSignaturePointId, setCustomSignaturePointId] = useState<
+        string | null
+    >(null);
     const tapsRef = useRef<number[]>([]);
 
     const sortedPoints = useMemo(
@@ -51,6 +54,16 @@ export default function TimingInspector() {
     const selectedIndex = sortedPoints.findIndex(
         (point) => point.id === selected.id
     );
+    const detectedSignaturePreset =
+        selected.numerator === 3 && selected.denominator === 4
+            ? "3/4"
+            : selected.numerator === 4 && selected.denominator === 4
+              ? "4/4"
+              : "other";
+    const signaturePreset =
+        customSignaturePointId === selected.id
+            ? "other"
+            : detectedSignaturePreset;
 
     function updateSelected(changes: Partial<ChartTimingPoint>) {
         replaceTimingPoints(
@@ -104,6 +117,19 @@ export default function TimingInspector() {
         );
         replaceTimingPoints(next);
         selectTimingPoint(sortedPoints[selectedIndex - 1].id);
+    }
+
+    function useCurrentTime() {
+        updateSelected({
+            timeMs: Math.round(currentTimeMs * 1_000) / 1_000,
+        });
+    }
+
+    function applySignaturePreset(numerator: 3 | 4) {
+        setCustomSignaturePointId((current) =>
+            current === selected.id ? null : current
+        );
+        updateSelected({ numerator, denominator: 4 });
     }
 
     function registerTap() {
@@ -200,6 +226,13 @@ export default function TimingInspector() {
                                 ms
                             </span>
                         </div>
+                        <button
+                            type="button"
+                            onClick={useCurrentTime}
+                            className="border-border hover:bg-surface-muted mt-1 h-8 rounded-md border text-xs font-semibold"
+                        >
+                            현재 재생 위치 적용
+                        </button>
                     </label>
 
                     <label className="text-caption col-span-2 flex flex-col gap-1">
@@ -227,54 +260,149 @@ export default function TimingInspector() {
                         />
                     </label>
 
-                    <label className="text-caption flex flex-col gap-1">
-                        박자 수
-                        <input
-                            key={`${selected.id}-numerator-${selected.numerator}`}
-                            type="number"
-                            min="1"
-                            max="64"
-                            step="1"
-                            defaultValue={selected.numerator}
-                            onBlur={(event) => {
-                                const value = Number(event.target.value);
-                                if (
-                                    Number.isInteger(value) &&
-                                    value >= 1 &&
-                                    value <= 64
-                                ) {
-                                    updateSelected({ numerator: value });
-                                }
-                            }}
-                            className={inputClass}
-                        />
-                    </label>
+                    <fieldset className="col-span-2">
+                        <legend className="text-caption mb-1.5">박자표</legend>
+                        <div className="flex flex-col gap-1.5">
+                            <label
+                                className={`border-border hover:bg-surface-muted flex h-9 cursor-pointer items-center gap-2 rounded-md border px-2.5 ${
+                                    signaturePreset === "3/4"
+                                        ? "bg-surface-muted text-text-primary"
+                                        : "text-text-secondary"
+                                }`}
+                            >
+                                <input
+                                    type="radio"
+                                    name={`time-signature-${selected.id}`}
+                                    value="3/4"
+                                    checked={signaturePreset === "3/4"}
+                                    onChange={() => applySignaturePreset(3)}
+                                    className="accent-text-primary size-3.5"
+                                />
+                                <strong className="text-xs">3/4</strong>
+                                <span className="text-micro">왈츠</span>
+                            </label>
 
-                    <label className="text-caption flex flex-col gap-1">
-                        기준 음표
-                        <select
-                            key={`${selected.id}-denominator-${selected.denominator}`}
-                            defaultValue={selected.denominator}
-                            onChange={(event) => {
-                                const parsed =
-                                    timeSignatureDenominatorSchema.safeParse(
-                                        Number(event.target.value)
-                                    );
-                                if (parsed.success) {
-                                    updateSelected({
-                                        denominator: parsed.data,
-                                    });
-                                }
-                            }}
-                            className={inputClass}
-                        >
-                            {[1, 2, 4, 8, 16, 32].map((value) => (
-                                <option key={value} value={value}>
-                                    1/{value}
-                                </option>
-                            ))}
-                        </select>
-                    </label>
+                            <label
+                                className={`border-border hover:bg-surface-muted flex h-9 cursor-pointer items-center gap-2 rounded-md border px-2.5 ${
+                                    signaturePreset === "4/4"
+                                        ? "bg-surface-muted text-text-primary"
+                                        : "text-text-secondary"
+                                }`}
+                            >
+                                <input
+                                    type="radio"
+                                    name={`time-signature-${selected.id}`}
+                                    value="4/4"
+                                    checked={signaturePreset === "4/4"}
+                                    onChange={() => applySignaturePreset(4)}
+                                    className="accent-text-primary size-3.5"
+                                />
+                                <strong className="text-xs">4/4</strong>
+                                <span className="text-micro">일반</span>
+                            </label>
+
+                            <div
+                                className={`border-border rounded-md border p-2.5 ${
+                                    signaturePreset === "other"
+                                        ? "bg-surface-muted"
+                                        : ""
+                                }`}
+                            >
+                                <label className="mb-2 flex cursor-pointer items-center gap-2">
+                                    <input
+                                        type="radio"
+                                        name={`time-signature-${selected.id}`}
+                                        value="other"
+                                        checked={signaturePreset === "other"}
+                                        onChange={() =>
+                                            setCustomSignaturePointId(
+                                                selected.id
+                                            )
+                                        }
+                                        className="accent-text-primary size-3.5"
+                                    />
+                                    <strong className="text-xs">
+                                        기타 박자표
+                                    </strong>
+                                </label>
+
+                                <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
+                                    <label className="text-caption flex flex-col gap-1">
+                                        박자 수
+                                        <input
+                                            key={`${selected.id}-numerator-${selected.numerator}`}
+                                            type="number"
+                                            min="1"
+                                            max="64"
+                                            step="1"
+                                            defaultValue={selected.numerator}
+                                            onFocus={() =>
+                                                setCustomSignaturePointId(
+                                                    selected.id
+                                                )
+                                            }
+                                            onBlur={(event) => {
+                                                const value = Number(
+                                                    event.target.value
+                                                );
+                                                if (
+                                                    Number.isInteger(value) &&
+                                                    value >= 1 &&
+                                                    value <= 64
+                                                ) {
+                                                    updateSelected({
+                                                        numerator: value,
+                                                    });
+                                                }
+                                            }}
+                                            className={inputClass}
+                                        />
+                                    </label>
+                                    <span className="mt-5 text-sm font-semibold">
+                                        /
+                                    </span>
+                                    <label className="text-caption flex flex-col gap-1">
+                                        기준 음표
+                                        <select
+                                            key={`${selected.id}-denominator-${selected.denominator}`}
+                                            defaultValue={selected.denominator}
+                                            onFocus={() =>
+                                                setCustomSignaturePointId(
+                                                    selected.id
+                                                )
+                                            }
+                                            onChange={(event) => {
+                                                const parsed =
+                                                    timeSignatureDenominatorSchema.safeParse(
+                                                        Number(
+                                                            event.target.value
+                                                        )
+                                                    );
+                                                if (parsed.success) {
+                                                    updateSelected({
+                                                        denominator:
+                                                            parsed.data,
+                                                    });
+                                                }
+                                            }}
+                                            className={inputClass}
+                                        >
+                                            {[1, 2, 4, 8, 16, 32].map(
+                                                (value) => (
+                                                    <option
+                                                        key={value}
+                                                        value={value}
+                                                    >
+                                                        {value}
+                                                    </option>
+                                                )
+                                            )}
+                                        </select>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
 
                     <label className="text-caption col-span-2 flex flex-col gap-1">
                         기준 틱

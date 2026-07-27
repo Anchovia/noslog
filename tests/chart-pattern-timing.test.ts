@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import type { ChartTimingPoint } from "@/lib/chart-pattern/schema";
 import {
     formatBpm,
+    formatRevisionDateTime,
     getBeatMarkers,
     getSnapGridMarkers,
     getSnapGridSubdivision,
@@ -91,6 +92,43 @@ describe("채보 타이밍 계산", () => {
             { timeMs: 1_500, accent: false },
             { timeMs: 2_000, accent: true },
         ]);
+    });
+
+    it("3/4 박자는 4분음표 세 박자마다 강박을 만든다", () => {
+        const markers = getBeatMarkers(
+            [
+                {
+                    id: "timing-3-4",
+                    tick: 0,
+                    timeMs: 0,
+                    bpm: 60,
+                    numerator: 3,
+                    denominator: 4,
+                },
+            ],
+            480,
+            0,
+            6_100
+        );
+
+        expect(
+            markers.map(({ timeMs, accent }) => ({ timeMs, accent }))
+        ).toEqual([
+            { timeMs: 0, accent: true },
+            { timeMs: 1_000, accent: false },
+            { timeMs: 2_000, accent: false },
+            { timeMs: 3_000, accent: true },
+            { timeMs: 4_000, accent: false },
+            { timeMs: 5_000, accent: false },
+            { timeMs: 6_000, accent: true },
+        ]);
+    });
+
+    it("저장 이력 시간을 서버 환경과 무관한 KST 24시간제로 표시한다", () => {
+        expect(formatRevisionDateTime("2026-07-27T17:26:00.000Z")).toBe(
+            "07. 28. 02:26"
+        );
+        expect(formatRevisionDateTime("invalid")).toBe("-");
     });
 
     it("정수 BPM의 끝자리 0을 제거하지 않는다", () => {

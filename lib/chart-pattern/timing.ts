@@ -219,6 +219,22 @@ export function formatEditorTime(timeMs: number) {
     ).padStart(3, "0")}`;
 }
 
+export function formatRevisionDateTime(value: string | number | Date) {
+    const timestamp =
+        value instanceof Date ? value.getTime() : new Date(value).getTime();
+    if (!Number.isFinite(timestamp)) return "-";
+
+    // KST는 일광 절약 시간이 없으므로 실행 환경의 로케일에 맡기지 않고
+    // UTC 기준으로 9시간을 더해 항상 같은 24시간 문자열을 만든다.
+    const kst = new Date(timestamp + 9 * 60 * 60 * 1_000);
+    const month = String(kst.getUTCMonth() + 1).padStart(2, "0");
+    const day = String(kst.getUTCDate()).padStart(2, "0");
+    const hour = String(kst.getUTCHours()).padStart(2, "0");
+    const minute = String(kst.getUTCMinutes()).padStart(2, "0");
+
+    return `${month}. ${day}. ${hour}:${minute}`;
+}
+
 export function formatBpm(bpm: number) {
     return bpm.toFixed(3).replace(/0+$/, "").replace(/\.$/, "");
 }

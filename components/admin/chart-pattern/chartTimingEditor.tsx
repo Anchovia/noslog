@@ -47,7 +47,10 @@ import {
     type ChartExport,
     type ChartNoteType,
 } from "@/lib/chart-pattern/schema";
-import { formatEditorTime } from "@/lib/chart-pattern/timing";
+import {
+    formatEditorTime,
+    formatRevisionDateTime,
+} from "@/lib/chart-pattern/timing";
 
 import {
     type ChartPlaybackRate,
@@ -862,14 +865,9 @@ function ChartTimingEditorWorkspace({
                                                 </span>
                                             </span>
                                             <span className="text-micro mt-1 block">
-                                                {new Date(
+                                                {formatRevisionDateTime(
                                                     revision.createdAt
-                                                ).toLocaleString("ko-KR", {
-                                                    month: "2-digit",
-                                                    day: "2-digit",
-                                                    hour: "2-digit",
-                                                    minute: "2-digit",
-                                                })}
+                                                )}
                                             </span>
                                         </button>
                                     ))}
