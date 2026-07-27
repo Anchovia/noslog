@@ -6,6 +6,7 @@ import { toast } from "sonner";
 
 import {
     changeChartNoteHand,
+    getMinimumChartNoteDurationTicks,
     resizeChartNoteHorizontally,
 } from "@/lib/chart-pattern/editor";
 import {
@@ -57,6 +58,13 @@ export default function NoteInspector() {
         () => (selectedNotes.length === 1 ? selectedNotes[0] : null),
         [selectedNotes]
     );
+    const minimumDurationTicks = selected
+        ? getMinimumChartNoteDurationTicks(
+              selected.type,
+              snapDivisor,
+              document.ticksPerQuarter
+          )
+        : 0;
 
     function updateSelected(changes: Partial<ChartNote>) {
         if (!selected) return;
@@ -373,21 +381,18 @@ export default function NoteInspector() {
                             <input
                                 key={`${selected.id}-duration-${selected.durationTicks}`}
                                 type="number"
-                                min={selected.type === "standard" ? 0 : 1}
+                                min={minimumDurationTicks}
                                 step="1"
                                 disabled={selected.type === "standard"}
                                 defaultValue={selected.durationTicks}
                                 onBlur={(event) => {
                                     const value = Number(event.target.value);
-                                    if (
-                                        Number.isInteger(value) &&
-                                        value >=
-                                            (selected.type === "standard"
-                                                ? 0
-                                                : 1)
-                                    ) {
+                                    if (Number.isInteger(value) && value >= 0) {
                                         updateSelected({
-                                            durationTicks: value,
+                                            durationTicks: Math.max(
+                                                minimumDurationTicks,
+                                                value
+                                            ),
                                         });
                                     }
                                 }}

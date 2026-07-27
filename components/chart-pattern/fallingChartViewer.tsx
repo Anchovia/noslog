@@ -5,6 +5,7 @@ import { type ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import type { Application, Graphics } from "pixi.js";
 
 import {
+    getActivePlaybackPianoRanges,
     getApproachDurationMs,
     getChartPlaybackDurationMs,
     prepareChartPlaybackNotes,
@@ -50,7 +51,8 @@ const colors = {
     pianoWhite: 0xe7e6e1,
     pianoWhiteAlt: 0xd2d4d4,
     pianoBlack: 0x161820,
-    pianoPressed: 0x55d7c0,
+    pianoPressedLeft: 0x91e5ef,
+    pianoPressedRight: 0xf3a2a2,
 };
 
 function colorForHand(hand: ChartHand) {
@@ -303,18 +305,15 @@ function drawPiano(
     const pianoTop = judgmentY + 5;
     const pianoBottom = height;
     const laneWidth = (right - left) / CHART_LANE_COUNT;
-    const activeLanes = new Set<number>();
+    const activeLaneHands = new Map<number, ChartHand>();
 
-    for (const note of notes) {
-        if (Math.abs(note.startTimeMs - currentTimeMs) > 95) continue;
-        const point = note.pathPoints[0];
-        if (!point) continue;
+    for (const range of getActivePlaybackPianoRanges(notes, currentTimeMs)) {
         for (
-            let lane = Math.floor(point.lane);
-            lane < Math.ceil(point.lane + point.width);
+            let lane = Math.floor(range.lane);
+            lane < Math.ceil(range.lane + range.width);
             lane += 1
         ) {
-            activeLanes.add(lane);
+            activeLaneHands.set(lane, range.hand);
         }
     }
 
@@ -323,15 +322,19 @@ function drawPiano(
         .fill({ color: 0xbfc2c4, alpha: 0.92 });
     for (let lane = 0; lane < CHART_LANE_COUNT; lane += 1) {
         const x = left + lane * laneWidth;
+        const activeHand = activeLaneHands.get(lane);
         graphics
             .rect(x, pianoTop, laneWidth, pianoBottom - pianoTop)
             .fill({
-                color: activeLanes.has(lane)
-                    ? colors.pianoPressed
-                    : lane % 2 === 0
-                      ? colors.pianoWhite
-                      : colors.pianoWhiteAlt,
-                alpha: activeLanes.has(lane) ? 0.82 : 0.96,
+                color:
+                    activeHand === "left"
+                        ? colors.pianoPressedLeft
+                        : activeHand === "right"
+                          ? colors.pianoPressedRight
+                          : lane % 2 === 0
+                            ? colors.pianoWhite
+                            : colors.pianoWhiteAlt,
+                alpha: activeHand === undefined ? 0.96 : 0.9,
             })
             .stroke({ color: 0x565a63, width: 0.65, alpha: 0.7 });
     }
@@ -823,7 +826,7 @@ export default function FallingChartViewer({
                             className="bg-transparent font-semibold outline-none"
                             aria-label="노트 속도"
                         >
-                            {Array.from({ length: 21 }, (_, index) => {
+                            {Array.from({ length: 31 }, (_, index) => {
                                 const value = 1 + index * 0.1;
                                 return (
                                     <option

@@ -95,21 +95,17 @@ describe("채보 타이밍 계산", () => {
     });
 
     it("3/4 박자는 4분음표 세 박자마다 강박을 만든다", () => {
-        const markers = getBeatMarkers(
-            [
-                {
-                    id: "timing-3-4",
-                    tick: 0,
-                    timeMs: 0,
-                    bpm: 60,
-                    numerator: 3,
-                    denominator: 4,
-                },
-            ],
-            480,
-            0,
-            6_100
-        );
+        const threeFourTiming = [
+            {
+                id: "timing-3-4",
+                tick: 0,
+                timeMs: 0,
+                bpm: 60,
+                numerator: 3,
+                denominator: 4 as const,
+            },
+        ];
+        const markers = getBeatMarkers(threeFourTiming, 480, 0, 6_100);
 
         expect(
             markers.map(({ timeMs, accent }) => ({ timeMs, accent }))
@@ -122,6 +118,26 @@ describe("채보 타이밍 계산", () => {
             { timeMs: 5_000, accent: false },
             { timeMs: 6_000, accent: true },
         ]);
+
+        const accentTicks = new Set(
+            markers
+                .filter((marker) => marker.accent)
+                .map((marker) => marker.tick)
+        );
+        const wholeNoteTicks = getSnapGridMarkers(
+            threeFourTiming,
+            480,
+            4,
+            0,
+            10_100
+        )
+            .filter((marker) => marker.subdivision === 1)
+            .map((marker) => marker.tick);
+
+        expect(wholeNoteTicks).toEqual([0, 1_920, 3_840]);
+        expect(accentTicks.has(0)).toBe(true);
+        expect(accentTicks.has(1_920)).toBe(false);
+        expect(accentTicks.has(3_840)).toBe(false);
     });
 
     it("저장 이력 시간을 서버 환경과 무관한 KST 24시간제로 표시한다", () => {

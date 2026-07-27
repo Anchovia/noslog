@@ -3,6 +3,7 @@ import {
     type ChartDocument,
     type ChartHand,
     type ChartNote,
+    type ChartNoteType,
 } from "./schema";
 import { snapTick, tickToMilliseconds } from "./timing";
 
@@ -50,6 +51,16 @@ export interface ChartSelectionRect {
     maxLane: number;
     minTick: number;
     maxTick: number;
+}
+
+export function getMinimumChartNoteDurationTicks(
+    type: ChartNoteType,
+    snapDivisor: number,
+    ticksPerQuarter: number
+) {
+    if (type === "standard") return 0;
+    if (type !== "tenuto") return 1;
+    return Math.max(1, Math.round((ticksPerQuarter * 4) / snapDivisor));
 }
 
 export function changeChartNoteHand(

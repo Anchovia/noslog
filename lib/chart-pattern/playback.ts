@@ -50,6 +50,14 @@ export interface PlaybackTrajectoryPoint {
     depth: number;
 }
 
+export interface PlaybackPianoRange {
+    lane: number;
+    width: number;
+    hand: ChartHand;
+}
+
+const PIANO_HIT_WINDOW_MS = 95;
+
 export function getChartPlaybackDurationMs(document: ChartDocument) {
     const lastNoteMs = document.notes.reduce(
         (latest, note) =>
@@ -187,9 +195,63 @@ export function prepareChartPlaybackNotes(
         );
 }
 
+function playbackPathPointAtTime(
+    points: PlaybackPathPoint[],
+    currentTimeMs: number
+) {
+    const first = points[0];
+    if (!first || currentTimeMs <= first.timeMs) return first;
+
+    const nextIndex = points.findIndex(
+        (point) => point.timeMs >= currentTimeMs
+    );
+    if (nextIndex === -1) return points.at(-1);
+
+    const previous = points[nextIndex - 1];
+    const next = points[nextIndex];
+    const progress =
+        next.timeMs === previous.timeMs
+            ? 0
+            : (currentTimeMs - previous.timeMs) /
+              (next.timeMs - previous.timeMs);
+    return {
+        lane: previous.lane + (next.lane - previous.lane) * progress,
+        width: previous.width + (next.width - previous.width) * progress,
+        timeMs: currentTimeMs,
+        hand: progress < 0.5 ? previous.hand : next.hand,
+    };
+}
+
+export function getActivePlaybackPianoRanges(
+    notes: PreparedPlaybackNote[],
+    currentTimeMs: number
+): PlaybackPianoRange[] {
+    return notes.flatMap((note) => {
+        const isHeldNote = note.type === "tenuto" || note.type === "glissando";
+        const isActive = isHeldNote
+            ? currentTimeMs >= note.startTimeMs - PIANO_HIT_WINDOW_MS &&
+              currentTimeMs <= note.endTimeMs + PIANO_HIT_WINDOW_MS
+            : Math.abs(note.startTimeMs - currentTimeMs) <= PIANO_HIT_WINDOW_MS;
+        if (!isActive) return [];
+
+        const point = isHeldNote
+            ? playbackPathPointAtTime(note.pathPoints, currentTimeMs)
+            : note.pathPoints[0];
+        return point
+            ? [
+                  {
+                      lane: point.lane,
+                      width: point.width,
+                      hand: point.hand,
+                  },
+              ]
+            : [];
+    });
+}
+
 export function getApproachDurationMs(noteSpeed: number) {
-    const clampedSpeed = Math.min(3, Math.max(1, noteSpeed));
-    return 6_000 / clampedSpeed;
+    const clampedSpeed = Math.min(4, Math.max(1, noteSpeed));
+    return 4_000 / clampedSpeed;
 }
 
 function quadraticPoint(

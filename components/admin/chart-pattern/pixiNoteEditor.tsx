@@ -19,6 +19,7 @@ import {
     flipChartNotesHorizontally,
     getChartEditorNavigationDurationMs,
     getChartEditorVerticalLayout,
+    getMinimumChartNoteDurationTicks,
     getChartNoteHorizontalResizeHandle,
     getChartNoteRenderPoints,
     getGlissandoSnapRenderPoints,
@@ -54,6 +55,11 @@ interface PointerPosition {
     rawTick: number;
     x: number;
     y: number;
+}
+
+interface HoverPreviewPosition {
+    lane: number;
+    tick: number;
 }
 
 interface CreateGesture {
@@ -204,7 +210,10 @@ function moveNotesForGesture(
 
 function styleForSnapSubdivision(subdivision: number) {
     if (subdivision === 1) {
-        return { color: colors.snapWhite, width: 1.35, alpha: 0.96 };
+        // 흰색은 박자표의 마디 첫 박자에만 사용한다. 1/1 스냅까지
+        // 흰색이면 3/4처럼 한 마디가 온음표와 다른 박자에서 두 기준선이
+        // 섞여 보이므로, 온음표 스냅은 강한 중립색으로 한 단계 낮춘다.
+        return { color: colors.snapGrayStrong, width: 1.1, alpha: 0.72 };
     }
     if (subdivision === 2) {
         return { color: colors.snapRed, width: 1.05, alpha: 0.8 };
@@ -400,7 +409,46 @@ function buildPreviewNote({
     };
 }
 
-function buildResizedNote(gesture: ResizeGesture): ChartNote {
+function buildHoverPreviewNote({
+    position,
+    tool,
+    hand,
+    width,
+    ticksPerQuarter,
+    snapDivisor,
+}: {
+    position: HoverPreviewPosition;
+    tool: Exclude<NoteEditorTool, "select">;
+    hand: ChartHand;
+    width: number;
+    ticksPerQuarter: number;
+    snapDivisor: number;
+}): ChartNote {
+    return {
+        ...buildPreviewNote({
+            gesture: {
+                kind: "create",
+                startLane: position.lane,
+                startTick: position.tick,
+                currentLane: position.lane,
+                currentTick: position.tick,
+                forceOneLane: false,
+            },
+            tool,
+            hand,
+            width,
+            ticksPerQuarter,
+            snapDivisor,
+        }),
+        id: "hover-preview",
+    };
+}
+
+function buildResizedNote(
+    gesture: ResizeGesture,
+    snapDivisor: number,
+    ticksPerQuarter: number
+): ChartNote {
     const note = gesture.original;
     if (gesture.action === "left" || gesture.action === "right") {
         return resizeChartNoteHorizontally(
@@ -409,7 +457,14 @@ function buildResizedNote(gesture: ResizeGesture): ChartNote {
             gesture.currentLane
         );
     }
-    const durationTicks = Math.max(1, gesture.currentTick - note.tick);
+    const durationTicks = Math.max(
+        getMinimumChartNoteDurationTicks(
+            note.type,
+            snapDivisor,
+            ticksPerQuarter
+        ),
+        gesture.currentTick - note.tick
+    );
     return {
         ...note,
         durationTicks,
@@ -481,6 +536,8 @@ export default function PixiNoteEditor({
     const clipboardRef = useRef<ChartNote[]>([]);
     const [rendererReady, setRendererReady] = useState(false);
     const [gesture, setGesture] = useState<NoteGesture | null>(null);
+    const [hoverPreviewPosition, setHoverPreviewPosition] =
+        useState<HoverPreviewPosition | null>(null);
     const [isResizeHandleHovered, setIsResizeHandleHovered] = useState(false);
     const [isAnchorHovered, setIsAnchorHovered] = useState(false);
     const [isDurationHandleHovered, setIsDurationHandleHovered] =
@@ -511,7 +568,22 @@ export default function PixiNoteEditor({
     }, [document.notes, document.ticksPerQuarter]);
 
     const previewNotes = (() => {
-        if (!gesture) return document.notes;
+        if (!gesture) {
+            if (tool === "select" || !hoverPreviewPosition) {
+                return document.notes;
+            }
+            return [
+                ...document.notes,
+                buildHoverPreviewNote({
+                    position: hoverPreviewPosition,
+                    tool,
+                    hand,
+                    width: defaultWidth,
+                    ticksPerQuarter: document.ticksPerQuarter,
+                    snapDivisor,
+                }),
+            ];
+        }
         if (gesture.kind === "move") {
             return moveNotesForGesture(
                 document.notes,
@@ -524,7 +596,7 @@ export default function PixiNoteEditor({
             return replacePreviewNote(
                 document.notes,
                 gesture.original.id,
-                buildResizedNote(gesture)
+                buildResizedNote(gesture, snapDivisor, document.ticksPerQuarter)
             );
         }
         if (gesture.kind === "point") {
@@ -694,7 +766,8 @@ export default function PixiNoteEditor({
                 document.ticksPerQuarter
             );
             if (noteEndMs < startMs || noteStartMs > endMs) continue;
-            const isPreview = note.id === "preview" || gesture !== null;
+            const isPlacementPreview =
+                note.id === "preview" || note.id === "hover-preview";
             const isSelected = selected.has(note.id);
             drawNote({
                 graphics: scene,
@@ -705,9 +778,10 @@ export default function PixiNoteEditor({
                 currentTimeMs,
                 timingPoints: document.timingPoints,
                 ticksPerQuarter: document.ticksPerQuarter,
-                isPreview: note.id === "preview" || (isPreview && isSelected),
+                isPreview:
+                    isPlacementPreview || (gesture !== null && isSelected),
                 isSelected,
-                isDimmed: hasSelection && !isSelected && note.id !== "preview",
+                isDimmed: hasSelection && !isSelected && !isPlacementPreview,
                 showControls: isSelected && selected.size === 1,
                 isConflicted: conflictingNoteIds.has(note.id),
             });
@@ -747,6 +821,7 @@ export default function PixiNoteEditor({
                 }
             };
             for (const note of previewNotes) {
+                if (note.id === "hover-preview") continue;
                 const noteStartMs = tickToMilliseconds(
                     note.tick,
                     document.timingPoints,
@@ -1366,6 +1441,7 @@ export default function PixiNoteEditor({
         event.currentTarget.setPointerCapture(event.pointerId);
 
         if (tool !== "select") {
+            setHoverPreviewPosition(null);
             setGesture({
                 kind: "create",
                 startLane: position.lane,
@@ -1501,8 +1577,27 @@ export default function PixiNoteEditor({
 
     function handlePointerMove(event: ReactPointerEvent<HTMLDivElement>) {
         const position = pointerPosition(event.clientX, event.clientY);
-        if (!position) return;
+        if (!position) {
+            if (!gesture) setHoverPreviewPosition(null);
+            return;
+        }
         if (!gesture) {
+            if (tool !== "select") {
+                setHoverPreviewPosition((current) =>
+                    current?.lane === position.lane &&
+                    current.tick === position.tick
+                        ? current
+                        : {
+                              lane: position.lane,
+                              tick: position.tick,
+                          }
+                );
+                setIsAnchorHovered(false);
+                setIsDurationHandleHovered(false);
+                setIsResizeHandleHovered(false);
+                return;
+            }
+            setHoverPreviewPosition(null);
             const selectedNotes =
                 tool === "select"
                     ? selectedNotesFrom(document.notes, selectedNoteIds)
@@ -1588,7 +1683,11 @@ export default function PixiNoteEditor({
                 gesture.selectedIds
             );
         } else if (gesture.kind === "resize") {
-            const next = buildResizedNote(gesture);
+            const next = buildResizedNote(
+                gesture,
+                snapDivisor,
+                document.ticksPerQuarter
+            );
             replaceNotes(
                 replacePreviewNote(document.notes, gesture.original.id, next),
                 [next.id]
@@ -1678,6 +1777,7 @@ export default function PixiNoteEditor({
                 finishGesture();
             }}
             onPointerLeave={() => {
+                setHoverPreviewPosition(null);
                 if (!gesture) {
                     setIsResizeHandleHovered(false);
                     setIsAnchorHovered(false);
@@ -1686,6 +1786,7 @@ export default function PixiNoteEditor({
             }}
             onPointerCancel={() => {
                 setGesture(null);
+                setHoverPreviewPosition(null);
                 setIsResizeHandleHovered(false);
                 setIsAnchorHovered(false);
                 setIsDurationHandleHovered(false);

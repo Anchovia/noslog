@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+    getActivePlaybackPianoRanges,
     getApproachDurationMs,
     getChartPlaybackDurationMs,
     prepareChartPlaybackNotes,
@@ -70,10 +71,55 @@ describe("낙하형 채보 재생 계산", () => {
         expect(getChartPlaybackDurationMs(document)).toBe(3_000);
     });
 
-    it("노트 속도가 빠를수록 화면에 나타나는 시간이 짧아진다", () => {
-        expect(getApproachDurationMs(1)).toBe(6_000);
-        expect(getApproachDurationMs(2)).toBe(3_000);
-        expect(getApproachDurationMs(3)).toBe(2_000);
+    it("새 2.0 속도는 기존 3.0 기준의 접근 시간을 사용하고 4.0까지 지원한다", () => {
+        expect(getApproachDurationMs(1)).toBe(4_000);
+        expect(getApproachDurationMs(2)).toBe(2_000);
+        expect(getApproachDurationMs(3)).toBeCloseTo(4_000 / 3);
+        expect(getApproachDurationMs(4)).toBe(1_000);
+        expect(getApproachDurationMs(5)).toBe(1_000);
+    });
+
+    it("테누토와 글리산도는 연주가 끝날 때까지 피아노 입력을 유지한다", () => {
+        const prepared = prepareChartPlaybackNotes(document);
+        const tenuto = {
+            id: "tenuto",
+            type: "tenuto" as const,
+            hand: "left" as const,
+            startTimeMs: 3_000,
+            endTimeMs: 4_000,
+            pathPoints: [
+                {
+                    lane: 2,
+                    width: 4,
+                    timeMs: 3_000,
+                    hand: "left" as const,
+                },
+                {
+                    lane: 6,
+                    width: 2,
+                    timeMs: 4_000,
+                    hand: "left" as const,
+                },
+            ],
+            trillSegments: [],
+        };
+        const notes = [...prepared, tenuto];
+
+        expect(getActivePlaybackPianoRanges(notes, 500)).toEqual([
+            { lane: 4, width: 2, hand: "left" },
+        ]);
+        expect(getActivePlaybackPianoRanges(notes, 596)).toEqual([]);
+        expect(getActivePlaybackPianoRanges(notes, 1_250)).toEqual([
+            { lane: 10, width: 2.75, hand: "right" },
+        ]);
+        expect(getActivePlaybackPianoRanges(notes, 1_750)).toEqual([
+            { lane: 14, width: 2.25, hand: "right" },
+        ]);
+        expect(getActivePlaybackPianoRanges(notes, 2_096)).toEqual([]);
+        expect(getActivePlaybackPianoRanges(notes, 3_500)).toEqual([
+            { lane: 4, width: 3, hand: "left" },
+        ]);
+        expect(getActivePlaybackPianoRanges(notes, 4_096)).toEqual([]);
     });
 
     it("판정선으로 접근할수록 노트 폭이 넓어지고 판정선에 도착한다", () => {

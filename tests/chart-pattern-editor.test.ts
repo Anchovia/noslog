@@ -10,6 +10,7 @@ import {
     flipChartNotesHorizontally,
     getChartEditorNavigationDurationMs,
     getChartEditorVerticalLayout,
+    getMinimumChartNoteDurationTicks,
     getChartNoteHorizontalResizeHandle,
     getGlissandoSnapRenderPoints,
     hasNewChartNoteConflicts,
@@ -71,6 +72,13 @@ const trill: ChartNote = {
 };
 
 describe("채보 편집 연산", () => {
+    it("테누토 최소 길이는 현재 스냅 한 칸을 유지한다", () => {
+        expect(getMinimumChartNoteDurationTicks("standard", 8, 480)).toBe(0);
+        expect(getMinimumChartNoteDurationTicks("tenuto", 8, 480)).toBe(240);
+        expect(getMinimumChartNoteDurationTicks("tenuto", 3, 480)).toBe(640);
+        expect(getMinimumChartNoteDurationTicks("glissando", 8, 480)).toBe(1);
+    });
+
     it("피아노 표시 여부에 따라 판정선 아래 건반 공간을 예약한다", () => {
         expect(getChartEditorVerticalLayout(600, false)).toEqual({
             judgmentY: 456,
