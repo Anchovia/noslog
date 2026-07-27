@@ -119,7 +119,7 @@ export default function ExamDashboard({
             }
 
             const blob = await put(upload.pathname, file, {
-                access: "public",
+                access: "private",
                 token: upload.token,
                 contentType: file.type,
             });

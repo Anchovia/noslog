@@ -56,8 +56,14 @@ export default async function LoginPage({
                     ) : null}
 
                     <p className="text-text-disabled mt-4 text-xs leading-relaxed">
-                        로그인하면 서비스 약관 및 개인정보 처리방침에 동의하게
-                        됩니다.
+                        로그인 전에{" "}
+                        <Link
+                            href="/privacy"
+                            className="text-text-secondary underline underline-offset-4"
+                        >
+                            개인정보처리방침
+                        </Link>
+                        을 확인해주세요.
                     </p>
 
                     <Link

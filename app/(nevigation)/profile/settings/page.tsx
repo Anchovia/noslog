@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 
 import ProfileSettingCard from "@/components/profile/profileSettingCard";
+import AccountDeletionCard from "@/components/profile/accountDeletionCard";
 import { getActiveArcades } from "@/lib/arcades";
 import db from "@/lib/db";
 import getSession from "@/lib/session";
@@ -62,6 +63,7 @@ export default async function ProfileSettingsPage({
             ) : null}
 
             <ProfileSettingCard user={user} arcades={arcades} />
+            <AccountDeletionCard />
         </div>
     );
 }

@@ -58,7 +58,7 @@ export default function FeedbackDialog({
                     return;
                 }
                 const blob = await put(upload.pathname, file, {
-                    access: "public",
+                    access: "private",
                     token: upload.token,
                     contentType: file.type,
                 });

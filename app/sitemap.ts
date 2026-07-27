@@ -17,6 +17,7 @@ const staticRoutes: Array<{
     { path: "/exams", changeFrequency: "weekly", priority: 0.8 },
     { path: "/gamecenter", changeFrequency: "weekly", priority: 0.8 },
     { path: "/bookmarklet", changeFrequency: "monthly", priority: 0.6 },
+    { path: "/privacy", changeFrequency: "monthly", priority: 0.3 },
 ];
 
 function absoluteUrl(path: string) {

@@ -22,6 +22,11 @@ const routes: {
 export async function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
+    // Vercel Cron은 자체 Bearer 토큰으로 인증하고 사용자 세션을 사용하지 않음
+    if (pathname.startsWith("/api/cron/")) {
+        return;
+    }
+
     if (process.env.MAINTENANCE_MODE?.toLowerCase() === "true") {
         const isMaintenanceBypass =
             pathname === "/maintenance" ||

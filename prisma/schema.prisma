@@ -425,7 +425,7 @@ model UserBestGrade {
   created_at    DateTime @default(now())
   updated_at    DateTime @updatedAt
   user_id       Int
-  user          User     @relation(fields: [user_id], references: [id])
+  user          User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@index([user_id, besttime])
 }
@@ -458,7 +458,7 @@ model PlayData {
   created_at          DateTime    @default(now())
   updated_at          DateTime    @updatedAt
   user_id             Int
-  user                User        @relation(fields: [user_id], references: [id])
+  user                User        @relation(fields: [user_id], references: [id], onDelete: Cascade)
   music_idx           String
   music               Music       @relation(fields: [music_idx], references: [index])
   chart_id            Int?
@@ -603,7 +603,7 @@ model ExamReward {
 // 사용자가 제출한 합격 증빙과 심사 상태를 관리함
 model ExamSubmission {
   id            Int              @id @default(autoincrement())
-  proofImageUrl String           @map("proof_image_url")
+  proofImageUrl String?          @map("proof_image_url")
   status        String           @default("pending")
   reviewerNote  String?          @map("reviewer_note")
   submittedAt   DateTime         @default(now()) @map("submitted_at")
