@@ -9,11 +9,13 @@ import {
     findChartNoteConflicts,
     flipChartNotesHorizontally,
     getChartEditorNavigationDurationMs,
+    getChartEditorVerticalLayout,
     getChartNoteHorizontalResizeHandle,
     getGlissandoSnapRenderPoints,
     hasNewChartNoteConflicts,
     moveGlissandoSnapAnchor,
     moveChartNotes,
+    moveChartNotesToSnap,
     resizeChartNoteHorizontally,
 } from "@/lib/chart-pattern/editor";
 import type { ChartNote } from "@/lib/chart-pattern/schema";
@@ -69,6 +71,21 @@ const trill: ChartNote = {
 };
 
 describe("채보 편집 연산", () => {
+    it("피아노 표시 여부에 따라 판정선 아래 건반 공간을 예약한다", () => {
+        expect(getChartEditorVerticalLayout(600, false)).toEqual({
+            judgmentY: 456,
+            pianoHeight: 0,
+        });
+        expect(getChartEditorVerticalLayout(600, true)).toEqual({
+            judgmentY: 492,
+            pianoHeight: 108,
+        });
+        expect(getChartEditorVerticalLayout(300, true)).toEqual({
+            judgmentY: 216,
+            pianoHeight: 84,
+        });
+    });
+
     it("확장한 글리산도의 손을 바꾼 뒤 연결점을 옮겨도 전체 색상을 유지한다", () => {
         const extended = {
             ...glissando,
@@ -344,6 +361,23 @@ describe("채보 편집 연산", () => {
         expect(moved[0]).toMatchObject({ lane: 11, tick: 720 });
         expect(moved[1]).toMatchObject({ lane: 13, tick: 1_200 });
         expect(moved[1].points.at(-1)).toMatchObject({ lane: 26 });
+    });
+
+    it("현재 스냅에 맞춰 기준 노트를 이동하고 다중 선택 간격을 유지한다", () => {
+        const first = { ...standard, tick: 160 };
+        const second = { ...glissando, tick: 400 };
+        const moved = moveChartNotesToSnap(
+            [first, second],
+            [first.id, second.id],
+            0,
+            60,
+            second.tick,
+            32,
+            480
+        );
+
+        expect(moved.map((note) => note.tick)).toEqual([240, 480]);
+        expect(moved[1].tick - moved[0].tick).toBe(240);
     });
 
     it("선택 노트와 경로·트릴의 두 번째 위치를 좌우 반전한다", () => {

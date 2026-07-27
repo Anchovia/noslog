@@ -18,11 +18,13 @@ import {
     findChartNoteConflicts,
     flipChartNotesHorizontally,
     getChartEditorNavigationDurationMs,
+    getChartEditorVerticalLayout,
     getChartNoteHorizontalResizeHandle,
     getChartNoteRenderPoints,
     getGlissandoSnapRenderPoints,
     moveGlissandoSnapAnchor,
     moveChartNotes,
+    moveChartNotesToSnap,
     resizeChartNoteHorizontally,
 } from "@/lib/chart-pattern/editor";
 import {
@@ -66,10 +68,15 @@ interface CreateGesture {
 interface MoveGesture {
     kind: "move";
     selectedIds: string[];
+    anchorTick: number;
     startLane: number;
     startTick: number;
     currentLane: number;
     currentTick: number;
+    startX: number;
+    startY: number;
+    currentX: number;
+    currentY: number;
 }
 
 interface ResizeGesture {
@@ -130,6 +137,7 @@ interface PixiRuntime {
 
 const snapDivisors = [1, 2, 3, 4, 6, 8, 12, 16, 24, 32];
 const DURATION_RESIZE_HIT_RADIUS_PX = 7;
+const MOVE_DRAG_THRESHOLD_PX = 4;
 
 const colors = {
     background: 0x080a0f,
@@ -152,10 +160,46 @@ const colors = {
     preview: 0xfacc15,
     selection: 0xf2c75c,
     conflict: 0xf0646d,
+    pianoWhite: 0xe7e6e1,
+    pianoWhiteAlt: 0xd2d4d4,
+    pianoBlack: 0x161820,
+    pianoRail: 0x252a34,
+    pianoEdge: 0x969aa5,
 };
 
 function colorForHand(hand: ChartHand) {
     return hand === "left" ? colors.left : colors.right;
+}
+
+function hasMoveGestureDragged(gesture: MoveGesture) {
+    return (
+        Math.hypot(
+            gesture.currentX - gesture.startX,
+            gesture.currentY - gesture.startY
+        ) >= MOVE_DRAG_THRESHOLD_PX
+    );
+}
+
+function moveNotesForGesture(
+    notes: ChartNote[],
+    gesture: MoveGesture,
+    snapDivisor: number,
+    ticksPerQuarter: number
+) {
+    const laneDelta = gesture.currentLane - gesture.startLane;
+    const tickDelta = gesture.currentTick - gesture.startTick;
+    if (!hasMoveGestureDragged(gesture)) {
+        return moveChartNotes(notes, gesture.selectedIds, laneDelta, tickDelta);
+    }
+    return moveChartNotesToSnap(
+        notes,
+        gesture.selectedIds,
+        laneDelta,
+        tickDelta,
+        gesture.anchorTick,
+        snapDivisor,
+        ticksPerQuarter
+    );
 }
 
 function styleForSnapSubdivision(subdivision: number) {
@@ -203,6 +247,58 @@ function styleForSnapSubdivision(subdivision: number) {
         };
     }
     return { color: colors.snapGrayWeak, width: 0.42, alpha: 0.27 };
+}
+
+function drawEditorPiano(
+    graphics: Graphics,
+    width: number,
+    height: number,
+    judgmentY: number,
+    activeLaneHands: Map<number, ChartHand>
+) {
+    const laneWidth = width / CHART_LANE_COUNT;
+    const pianoTop = judgmentY + 5;
+    const pianoHeight = Math.max(1, height - pianoTop);
+
+    for (let lane = 0; lane < CHART_LANE_COUNT; lane += 1) {
+        const x = lane * laneWidth;
+        const activeHand = activeLaneHands.get(lane);
+        graphics
+            .rect(x, pianoTop, laneWidth, pianoHeight)
+            .fill({
+                color:
+                    activeHand === undefined
+                        ? lane % 2 === 0
+                            ? colors.pianoWhite
+                            : colors.pianoWhiteAlt
+                        : colorForHand(activeHand),
+                alpha: activeHand === undefined ? 0.96 : 0.82,
+            })
+            .stroke({ color: 0x565a63, width: 0.65, alpha: 0.72 });
+    }
+
+    const blackAfter = new Set([0, 1, 3, 4, 5]);
+    for (let lane = 0; lane < CHART_LANE_COUNT - 1; lane += 1) {
+        if (!blackAfter.has(lane % 7)) continue;
+        const x = (lane + 1) * laneWidth;
+        graphics
+            .rect(
+                x - laneWidth * 0.22,
+                pianoTop,
+                laneWidth * 0.44,
+                pianoHeight * 0.56
+            )
+            .fill({ color: colors.pianoBlack, alpha: 0.98 });
+    }
+
+    graphics
+        .roundRect(0, judgmentY - 5, width, 10, 4)
+        .fill({ color: colors.pianoRail, alpha: 0.98 })
+        .stroke({ color: colors.pianoEdge, width: 2, alpha: 0.96 });
+    graphics
+        .moveTo(5, judgmentY - 1.5)
+        .lineTo(width - 5, judgmentY - 1.5)
+        .stroke({ color: colors.judgment, width: 1.5, alpha: 0.96 });
 }
 
 function clampLane(lane: number, width = 1) {
@@ -364,6 +460,7 @@ function selectedNotesFrom(notes: ChartNote[], selectedIds: string[]) {
 
 export default function PixiNoteEditor({
     pixelsPerSecond,
+    pianoVisible,
     tool,
     hand,
     defaultWidth,
@@ -371,6 +468,7 @@ export default function PixiNoteEditor({
     onToolChange,
 }: {
     pixelsPerSecond: number;
+    pianoVisible: boolean;
     tool: NoteEditorTool;
     hand: ChartHand;
     defaultWidth: number;
@@ -415,11 +513,11 @@ export default function PixiNoteEditor({
     const previewNotes = (() => {
         if (!gesture) return document.notes;
         if (gesture.kind === "move") {
-            return moveChartNotes(
+            return moveNotesForGesture(
                 document.notes,
-                gesture.selectedIds,
-                gesture.currentLane - gesture.startLane,
-                gesture.currentTick - gesture.startTick
+                gesture,
+                snapDivisor,
+                document.ticksPerQuarter
             );
         }
         if (gesture.kind === "resize") {
@@ -515,9 +613,14 @@ export default function PixiNoteEditor({
         for (const child of removed) child.destroy();
 
         const scene = new runtime.Graphics();
-        const judgmentY = height * 0.76;
+        const { judgmentY } = getChartEditorVerticalLayout(
+            height,
+            pianoVisible
+        );
         const pixelsPerMs = pixelsPerSecond / 1_000;
-        const startMs = currentTimeMs - (height - judgmentY) / pixelsPerMs;
+        const startMs = pianoVisible
+            ? currentTimeMs
+            : currentTimeMs - (height - judgmentY) / pixelsPerMs;
         const endMs = currentTimeMs + judgmentY / pixelsPerMs;
         const laneWidth = width / CHART_LANE_COUNT;
 
@@ -527,7 +630,7 @@ export default function PixiNoteEditor({
             const isGroupBoundary = isChartLaneGroupBoundary(lane);
             scene
                 .moveTo(x + 0.5, 0)
-                .lineTo(x + 0.5, height)
+                .lineTo(x + 0.5, pianoVisible ? judgmentY : height)
                 .stroke({
                     color: isGroupBoundary
                         ? colors.laneStrong
@@ -621,10 +724,67 @@ export default function PixiNoteEditor({
                 .stroke({ color: colors.selection, width: 1.5, alpha: 0.9 });
         }
 
-        scene
-            .moveTo(0, judgmentY + 0.5)
-            .lineTo(width, judgmentY + 0.5)
-            .stroke({ color: colors.judgment, width: 2 });
+        if (pianoVisible) {
+            const activeLaneHands = new Map<number, ChartHand>();
+            const currentTick = millisecondsToTick(
+                currentTimeMs,
+                document.timingPoints,
+                document.ticksPerQuarter
+            );
+            const markRange = (
+                laneValue: number,
+                widthValue: number,
+                handValue: ChartHand
+            ) => {
+                for (
+                    let lane = Math.floor(laneValue);
+                    lane < Math.ceil(laneValue + widthValue);
+                    lane += 1
+                ) {
+                    if (lane >= 0 && lane < CHART_LANE_COUNT) {
+                        activeLaneHands.set(lane, handValue);
+                    }
+                }
+            };
+            for (const note of previewNotes) {
+                const noteStartMs = tickToMilliseconds(
+                    note.tick,
+                    document.timingPoints,
+                    document.ticksPerQuarter
+                );
+                if (note.type === "standard") {
+                    if (Math.abs(noteStartMs - currentTimeMs) <= 90) {
+                        markRange(note.lane, note.width, note.hand);
+                    }
+                    continue;
+                }
+                const noteEndMs = tickToMilliseconds(
+                    note.tick + note.durationTicks,
+                    document.timingPoints,
+                    document.ticksPerQuarter
+                );
+                if (currentTimeMs < noteStartMs || currentTimeMs > noteEndMs) {
+                    continue;
+                }
+                if (
+                    note.type === "trill" &&
+                    note.pairLane !== undefined &&
+                    note.pairWidth !== undefined
+                ) {
+                    markRange(note.lane, note.width, note.hand);
+                    markRange(note.pairLane, note.pairWidth, note.hand);
+                    continue;
+                }
+                const range = chartNoteRangeAtTick(note, currentTick);
+                markRange(range.lane, range.width, range.hand);
+            }
+            drawEditorPiano(scene, width, height, judgmentY, activeLaneHands);
+        } else {
+            scene
+                .moveTo(0, judgmentY + 0.5)
+                .lineTo(width, judgmentY + 0.5)
+                .stroke({ color: colors.judgment, width: 2 });
+        }
         application.stage.addChild(scene);
         application.render();
     }, [
@@ -634,6 +794,7 @@ export default function PixiNoteEditor({
         gesture,
         conflictingNoteIds,
         pixelsPerSecond,
+        pianoVisible,
         previewNotes,
         selectedNoteIds,
         snapDivisor,
@@ -914,7 +1075,11 @@ export default function PixiNoteEditor({
             bounds.height - 1,
             Math.max(0, clientY - bounds.top)
         );
-        const judgmentY = bounds.height * 0.76;
+        const { judgmentY } = getChartEditorVerticalLayout(
+            bounds.height,
+            pianoVisible
+        );
+        if (pianoVisible && y > judgmentY) return null;
         const timeMs =
             currentTimeMs + (judgmentY - y) / (pixelsPerSecond / 1_000);
         const rawTick = millisecondsToTick(
@@ -999,7 +1164,10 @@ export default function PixiNoteEditor({
         if (!host) return null;
 
         const laneWidth = host.clientWidth / CHART_LANE_COUNT;
-        const judgmentY = host.clientHeight * 0.76;
+        const { judgmentY } = getChartEditorVerticalLayout(
+            host.clientHeight,
+            pianoVisible
+        );
         const pixelsPerMs = pixelsPerSecond / 1_000;
         return (
             getGlissandoSnapRenderPoints(note, document.ticksPerQuarter)
@@ -1036,7 +1204,10 @@ export default function PixiNoteEditor({
         const endTick = note.tick + note.durationTicks;
         const endRange = chartNoteRangeAtTick(note, endTick);
         const laneWidth = host.clientWidth / CHART_LANE_COUNT;
-        const judgmentY = host.clientHeight * 0.76;
+        const { judgmentY } = getChartEditorVerticalLayout(
+            host.clientHeight,
+            pianoVisible
+        );
         const endX =
             (note.type === "glissando"
                 ? endRange.lane + endRange.width
@@ -1316,10 +1487,15 @@ export default function PixiNoteEditor({
         setGesture({
             kind: "move",
             selectedIds: nextSelection,
+            anchorTick: hit.tick,
             startLane: position.lane,
             startTick: position.tick,
             currentLane: position.lane,
             currentTick: position.tick,
+            startX: position.x,
+            startY: position.y,
+            currentX: position.x,
+            currentY: position.y,
         });
     }
 
@@ -1371,6 +1547,15 @@ export default function PixiNoteEditor({
                     currentY: position.y,
                 };
             }
+            if (current.kind === "move") {
+                return {
+                    ...current,
+                    currentLane: position.lane,
+                    currentTick: position.tick,
+                    currentX: position.x,
+                    currentY: position.y,
+                };
+            }
             return {
                 ...current,
                 currentLane: position.lane,
@@ -1394,11 +1579,11 @@ export default function PixiNoteEditor({
             replaceNotes([...document.notes, next], [next.id]);
         } else if (gesture.kind === "move") {
             replaceNotes(
-                moveChartNotes(
+                moveNotesForGesture(
                     document.notes,
-                    gesture.selectedIds,
-                    gesture.currentLane - gesture.startLane,
-                    gesture.currentTick - gesture.startTick
+                    gesture,
+                    snapDivisor,
+                    document.ticksPerQuarter
                 ),
                 gesture.selectedIds
             );

@@ -28,6 +28,7 @@ import {
     useMemo,
     useRef,
     useState,
+    useSyncExternalStore,
 } from "react";
 import { toast } from "sonner";
 
@@ -91,6 +92,9 @@ interface ChartTimingEditorProps {
 
 const playbackRates: ChartPlaybackRate[] = [0.25, 0.5, 0.75, 1, 1.5, 2];
 const snapDivisors = [1, 2, 3, 4, 6, 8, 12, 16, 24, 32];
+const PIANO_VISIBILITY_STORAGE_KEY = "noslog-chart-editor-piano-visible";
+const PIANO_VISIBILITY_CHANGE_EVENT =
+    "noslog-chart-editor-piano-visibility-change";
 const noteTypeLabels: Record<ChartNoteType, string> = {
     standard: "일반",
     tenuto: "테누토",
@@ -103,6 +107,28 @@ const noteToolShortcuts: Record<ChartNoteType, number> = {
     glissando: 4,
     trill: 5,
 };
+
+function subscribePianoVisibility(onStoreChange: () => void) {
+    window.addEventListener("storage", onStoreChange);
+    window.addEventListener(PIANO_VISIBILITY_CHANGE_EVENT, onStoreChange);
+    return () => {
+        window.removeEventListener("storage", onStoreChange);
+        window.removeEventListener(
+            PIANO_VISIBILITY_CHANGE_EVENT,
+            onStoreChange
+        );
+    };
+}
+
+function getPianoVisibilitySnapshot() {
+    return (
+        window.localStorage.getItem(PIANO_VISIBILITY_STORAGE_KEY) !== "false"
+    );
+}
+
+function getServerPianoVisibilitySnapshot() {
+    return true;
+}
 
 function safeFileName(value: string) {
     return value
@@ -199,6 +225,11 @@ function ChartTimingEditorWorkspace({
     const [noteTool, setNoteTool] = useState<NoteEditorTool>("select");
     const [noteHand, setNoteHand] = useState<ChartHand>("left");
     const [noteWidth, setNoteWidth] = useState(2);
+    const pianoVisible = useSyncExternalStore(
+        subscribePianoVisibility,
+        getPianoVisibilitySnapshot,
+        getServerPianoVisibilitySnapshot
+    );
     const {
         fileName,
         waveformPeaks,
@@ -212,6 +243,14 @@ function ChartTimingEditorWorkspace({
     } = useChartAudio();
 
     const hasUnsavedChanges = changeSerial > persistedSerial;
+
+    const updatePianoVisibility = useCallback((visible: boolean) => {
+        window.localStorage.setItem(
+            PIANO_VISIBILITY_STORAGE_KEY,
+            String(visible)
+        );
+        window.dispatchEvent(new Event(PIANO_VISIBILITY_CHANGE_EVENT));
+    }, []);
 
     const validateCurrentDocument = useCallback(() => {
         const parsed = chartDocumentSchema.safeParse(store.getState().document);
@@ -848,11 +887,13 @@ function ChartTimingEditorWorkspace({
                         {editorMode === "timing" ? (
                             <TimingRuler
                                 pixelsPerSecond={pixelsPerSecond}
+                                pianoVisible={pianoVisible}
                                 onSeek={(time) => void seek(time)}
                             />
                         ) : (
                             <PixiNoteEditor
                                 pixelsPerSecond={pixelsPerSecond}
+                                pianoVisible={pianoVisible}
                                 tool={noteTool}
                                 hand={noteHand}
                                 defaultWidth={noteWidth}
@@ -999,6 +1040,18 @@ function ChartTimingEditorWorkspace({
                                 className="accent-text-primary size-3.5"
                             />
                             메트로놈
+                        </label>
+
+                        <label className="hover:bg-surface-muted flex h-8 items-center gap-2 rounded-md px-2 text-xs font-semibold">
+                            <input
+                                type="checkbox"
+                                checked={pianoVisible}
+                                onChange={(event) =>
+                                    updatePianoVisibility(event.target.checked)
+                                }
+                                className="accent-text-primary size-3.5"
+                            />
+                            피아노
                         </label>
 
                         {audioError ? (

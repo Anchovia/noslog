@@ -7,6 +7,7 @@ import {
     CHART_TICKS_PER_QUARTER,
     isChartLaneGroupBoundary,
 } from "@/lib/chart-pattern/schema";
+import { getChartEditorVerticalLayout } from "@/lib/chart-pattern/editor";
 import {
     formatBpm,
     formatEditorTime,
@@ -24,11 +25,59 @@ function cssColor(name: string, fallback: string) {
     );
 }
 
+function drawTimingPiano(
+    context: CanvasRenderingContext2D,
+    viewWidth: number,
+    viewHeight: number,
+    judgmentY: number
+) {
+    const laneWidth = viewWidth / CHART_LANE_COUNT;
+    const pianoTop = judgmentY + 5;
+    const pianoHeight = Math.max(1, viewHeight - pianoTop);
+
+    for (let lane = 0; lane < CHART_LANE_COUNT; lane += 1) {
+        context.fillStyle = lane % 2 === 0 ? "#e7e6e1" : "#d2d4d4";
+        context.fillRect(lane * laneWidth, pianoTop, laneWidth, pianoHeight);
+        context.strokeStyle = "#565a63";
+        context.lineWidth = 0.65;
+        context.strokeRect(lane * laneWidth, pianoTop, laneWidth, pianoHeight);
+    }
+
+    const blackAfter = new Set([0, 1, 3, 4, 5]);
+    context.fillStyle = "#161820";
+    for (let lane = 0; lane < CHART_LANE_COUNT - 1; lane += 1) {
+        if (!blackAfter.has(lane % 7)) continue;
+        const x = (lane + 1) * laneWidth;
+        context.fillRect(
+            x - laneWidth * 0.22,
+            pianoTop,
+            laneWidth * 0.44,
+            pianoHeight * 0.56
+        );
+    }
+
+    context.fillStyle = "#252a34";
+    context.strokeStyle = "#969aa5";
+    context.lineWidth = 2;
+    context.beginPath();
+    context.roundRect(0, judgmentY - 5, viewWidth, 10, 4);
+    context.fill();
+    context.stroke();
+    context.strokeStyle = cssColor("--color-text-primary", "#f2f2f5");
+    context.lineWidth = 1.5;
+    context.beginPath();
+    context.moveTo(5, judgmentY - 1.5);
+    context.lineTo(viewWidth - 5, judgmentY - 1.5);
+    context.stroke();
+}
+
 export default function TimingRuler({
     pixelsPerSecond,
+    pianoVisible,
     onSeek,
 }: {
     pixelsPerSecond: number;
+    pianoVisible: boolean;
     onSeek: (timeMs: number) => void;
 }) {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -60,9 +109,14 @@ export default function TimingRuler({
         context.setTransform(ratio, 0, 0, ratio, 0, 0);
         const viewWidth = bounds.width;
         const viewHeight = bounds.height;
-        const judgmentY = viewHeight * 0.76;
+        const { judgmentY } = getChartEditorVerticalLayout(
+            viewHeight,
+            pianoVisible
+        );
         const pixelsPerMs = pixelsPerSecond / 1_000;
-        const startMs = currentTimeMs - (viewHeight - judgmentY) / pixelsPerMs;
+        const startMs = pianoVisible
+            ? currentTimeMs
+            : currentTimeMs - (viewHeight - judgmentY) / pixelsPerMs;
         const endMs = currentTimeMs + judgmentY / pixelsPerMs;
 
         context.clearRect(0, 0, viewWidth, viewHeight);
@@ -79,7 +133,7 @@ export default function TimingRuler({
             context.lineWidth = isGroupBoundary ? 1 : 0.5;
             context.beginPath();
             context.moveTo(x + 0.5, 0);
-            context.lineTo(x + 0.5, viewHeight);
+            context.lineTo(x + 0.5, pianoVisible ? judgmentY : viewHeight);
             context.stroke();
         }
 
@@ -123,12 +177,16 @@ export default function TimingRuler({
             );
         }
 
-        context.strokeStyle = cssColor("--color-text-primary", "#f2f2f5");
-        context.lineWidth = 2;
-        context.beginPath();
-        context.moveTo(0, judgmentY + 0.5);
-        context.lineTo(viewWidth, judgmentY + 0.5);
-        context.stroke();
+        if (pianoVisible) {
+            drawTimingPiano(context, viewWidth, viewHeight, judgmentY);
+        } else {
+            context.strokeStyle = cssColor("--color-text-primary", "#f2f2f5");
+            context.lineWidth = 2;
+            context.beginPath();
+            context.moveTo(0, judgmentY + 0.5);
+            context.lineTo(viewWidth, judgmentY + 0.5);
+            context.stroke();
+        }
 
         context.fillStyle = cssColor("--color-surface", "#121218");
         context.fillRect(8, judgmentY - 26, 92, 20);
@@ -136,7 +194,13 @@ export default function TimingRuler({
         context.font = "12px monospace";
         context.textBaseline = "middle";
         context.fillText(formatEditorTime(currentTimeMs), 14, judgmentY - 16);
-    }, [currentTimeMs, pixelsPerSecond, selectedTimingPointId, timingPoints]);
+    }, [
+        currentTimeMs,
+        pianoVisible,
+        pixelsPerSecond,
+        selectedTimingPointId,
+        timingPoints,
+    ]);
 
     useEffect(() => {
         draw();
@@ -151,10 +215,14 @@ export default function TimingRuler({
         const canvas = canvasRef.current;
         if (!canvas) return;
         const bounds = canvas.getBoundingClientRect();
-        const judgmentY = bounds.height * 0.76;
+        const y = clientY - bounds.top;
+        const { judgmentY } = getChartEditorVerticalLayout(
+            bounds.height,
+            pianoVisible
+        );
+        if (pianoVisible && y > judgmentY) return;
         const pixelsPerMs = pixelsPerSecond / 1_000;
-        const nextTime =
-            currentTimeMs + (judgmentY - (clientY - bounds.top)) / pixelsPerMs;
+        const nextTime = currentTimeMs + (judgmentY - y) / pixelsPerMs;
         onSeek(Math.min(durationMs, Math.max(0, nextTime)));
     }
 

@@ -4,9 +4,38 @@ import {
     type ChartHand,
     type ChartNote,
 } from "./schema";
-import { tickToMilliseconds } from "./timing";
+import { snapTick, tickToMilliseconds } from "./timing";
 
 const DEFAULT_CHART_EDITOR_DURATION_MS = 10 * 60 * 1_000;
+const DEFAULT_JUDGMENT_LINE_RATIO = 0.76;
+const PIANO_HEIGHT_RATIO = 0.18;
+const MIN_PIANO_HEIGHT = 84;
+const MAX_PIANO_HEIGHT = 124;
+
+export interface ChartEditorVerticalLayout {
+    judgmentY: number;
+    pianoHeight: number;
+}
+
+export function getChartEditorVerticalLayout(
+    viewHeight: number,
+    pianoVisible: boolean
+): ChartEditorVerticalLayout {
+    if (!pianoVisible) {
+        return {
+            judgmentY: viewHeight * DEFAULT_JUDGMENT_LINE_RATIO,
+            pianoHeight: 0,
+        };
+    }
+    const pianoHeight = Math.min(
+        MAX_PIANO_HEIGHT,
+        Math.max(MIN_PIANO_HEIGHT, viewHeight * PIANO_HEIGHT_RATIO)
+    );
+    return {
+        judgmentY: Math.max(1, viewHeight - pianoHeight),
+        pianoHeight,
+    };
+}
 
 export interface ChartNoteRenderPoint {
     lane: number;
@@ -840,6 +869,28 @@ export function moveChartNotes(
             })),
         };
     });
+}
+
+export function moveChartNotesToSnap(
+    notes: ChartNote[],
+    selectedIds: string[],
+    laneDelta: number,
+    pointerTickDelta: number,
+    anchorTick: number,
+    snapDivisor: number,
+    ticksPerQuarter: number
+) {
+    const snappedAnchorTick = snapTick(
+        anchorTick + pointerTickDelta,
+        snapDivisor,
+        ticksPerQuarter
+    );
+    return moveChartNotes(
+        notes,
+        selectedIds,
+        laneDelta,
+        snappedAnchorTick - anchorTick
+    );
 }
 
 export function flipChartNotesHorizontally(
