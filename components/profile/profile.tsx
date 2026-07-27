@@ -59,9 +59,6 @@ export default function ProfileDashboard({
                 countryRank={countryRank}
             />
             <ProfileGradeTrend data={gradeHistory} mode={mode} />
-            {ownerAnalytics ? (
-                <ProfileJudgementSummary analytics={ownerAnalytics.judgement} />
-            ) : null}
             <ProfileRankDistribution
                 rows={rankRows}
                 playCount={user.play_count}
@@ -69,6 +66,9 @@ export default function ProfileDashboard({
                 expanded={showAllRanks}
                 onToggle={() => setShowAllRanks((value) => !value)}
             />
+            {ownerAnalytics ? (
+                <ProfileJudgementSummary analytics={ownerAnalytics.judgement} />
+            ) : null}
             <ProfileBestPlays
                 plays={bestPlays}
                 mode={mode}
