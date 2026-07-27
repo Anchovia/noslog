@@ -5,6 +5,10 @@ import { useMemo } from "react";
 import { toast } from "sonner";
 
 import {
+    changeChartNoteHand,
+    resizeChartNoteHorizontally,
+} from "@/lib/chart-pattern/editor";
+import {
     CHART_LANE_COUNT,
     type ChartHand,
     type ChartNote,
@@ -25,6 +29,8 @@ const noteTypeLabels: Record<ChartNoteType, string> = {
     trill: "트릴",
 };
 
+const pathSnapDivisors = [1, 2, 3, 4, 6, 8, 12, 16, 24, 32];
+
 function clampLane(lane: number, width: number) {
     return Math.min(CHART_LANE_COUNT - width, Math.max(0, Math.round(lane)));
 }
@@ -36,13 +42,20 @@ function clampWidth(width: number, lane: number) {
 export default function NoteInspector() {
     const document = useChartEditorStore((state) => state.document);
     const currentTimeMs = useChartEditorStore((state) => state.currentTimeMs);
-    const selectedNoteId = useChartEditorStore((state) => state.selectedNoteId);
+    const snapDivisor = useChartEditorStore((state) => state.snapDivisor);
+    const selectedNoteIds = useChartEditorStore(
+        (state) => state.selectedNoteIds
+    );
     const replaceNotes = useChartEditorStore((state) => state.replaceNotes);
 
     const notes = document.notes;
+    const selectedNotes = useMemo(() => {
+        const ids = new Set(selectedNoteIds);
+        return notes.filter((note) => ids.has(note.id));
+    }, [notes, selectedNoteIds]);
     const selected = useMemo(
-        () => notes.find((note) => note.id === selectedNoteId) ?? null,
-        [notes, selectedNoteId]
+        () => (selectedNotes.length === 1 ? selectedNotes[0] : null),
+        [selectedNotes]
     );
 
     function updateSelected(changes: Partial<ChartNote>) {
@@ -50,7 +63,18 @@ export default function NoteInspector() {
         replaceNotes(
             notes.map((note) =>
                 note.id === selected.id ? { ...note, ...changes } : note
-            )
+            ),
+            selectedNoteIds
+        );
+    }
+
+    function changeSelectedHand(hand: ChartHand) {
+        if (!selected) return;
+        replaceNotes(
+            notes.map((note) =>
+                note.id === selected.id ? changeChartNoteHand(note, hand) : note
+            ),
+            selectedNoteIds
         );
     }
 
@@ -63,6 +87,8 @@ export default function NoteInspector() {
                 points: [],
                 pairLane: undefined,
                 pairWidth: undefined,
+                trillSnapDivisor: undefined,
+                glissandoSnapDivisor: undefined,
             });
             return;
         }
@@ -83,6 +109,8 @@ export default function NoteInspector() {
                 points: [],
                 pairLane: clampLane(preferredLane, pairWidth),
                 pairWidth,
+                trillSnapDivisor: selected.trillSnapDivisor ?? snapDivisor,
+                glissandoSnapDivisor: undefined,
             });
             return;
         }
@@ -92,6 +120,11 @@ export default function NoteInspector() {
             durationTicks,
             pairLane: undefined,
             pairWidth: undefined,
+            trillSnapDivisor: undefined,
+            glissandoSnapDivisor:
+                type === "glissando"
+                    ? (selected.glissandoSnapDivisor ?? snapDivisor)
+                    : undefined,
         });
     }
 
@@ -104,16 +137,42 @@ export default function NoteInspector() {
 
     function changeWidth(value: number) {
         if (!selected) return;
+        if (selected.type === "trill") {
+            const requestedWidth = clampWidth(value, selected.lane);
+            const resized = resizeChartNoteHorizontally(
+                selected,
+                "right",
+                selected.lane + requestedWidth - 1
+            );
+            updateSelected({
+                width: resized.width,
+                pairLane: resized.pairLane,
+                pairWidth: resized.pairWidth,
+            });
+            return;
+        }
         updateSelected({
             width: clampWidth(value, selected.lane),
         });
     }
 
     function deleteSelected() {
-        if (!selected) return;
+        if (selectedNoteIds.length === 0) return;
+        const ids = new Set(selectedNoteIds);
         replaceNotes(
-            notes.filter((note) => note.id !== selected.id),
-            null
+            notes.filter((note) => !ids.has(note.id)),
+            []
+        );
+    }
+
+    function changeSelectedGroupHand(hand: ChartHand) {
+        if (selectedNoteIds.length === 0) return;
+        const ids = new Set(selectedNoteIds);
+        replaceNotes(
+            notes.map((note) =>
+                ids.has(note.id) ? changeChartNoteHand(note, hand) : note
+            ),
+            selectedNoteIds
         );
     }
 
@@ -182,7 +241,7 @@ export default function NoteInspector() {
                 </p>
             </header>
 
-            {!selected ? (
+            {selectedNotes.length === 0 ? (
                 <div className="flex min-h-0 flex-1 flex-col items-center justify-center px-6 text-center">
                     <div className="bg-surface-muted flex size-11 items-center justify-center rounded-full">
                         <GitBranch className="text-text-secondary size-4" />
@@ -195,7 +254,36 @@ export default function NoteInspector() {
                         제어점을 편집할 수 있습니다.
                     </p>
                 </div>
-            ) : (
+            ) : selectedNotes.length > 1 ? (
+                <div className="min-h-0 flex-1 overflow-y-auto p-3">
+                    <div className="border-border bg-bg rounded-md border p-3">
+                        <strong className="text-sm">
+                            {selectedNotes.length.toLocaleString("ko-KR")}개
+                            노트 선택
+                        </strong>
+                        <p className="text-micro mt-1 leading-relaxed">
+                            드래그하면 선택한 간격과 위치를 유지한 채 함께
+                            이동합니다.
+                        </p>
+                    </div>
+                    <label className="text-caption mt-4 flex flex-col gap-1">
+                        연주 안내 손 일괄 변경
+                        <HandSelector
+                            value={selectedNotes[0].hand}
+                            onChange={changeSelectedGroupHand}
+                        />
+                    </label>
+                    <button
+                        type="button"
+                        onClick={deleteSelected}
+                        className="border-danger/40 text-danger mt-4 flex h-9 w-full items-center justify-center gap-1 rounded-md border text-xs font-semibold"
+                    >
+                        <Trash2 className="size-3.5" />
+                        선택한 {selectedNotes.length.toLocaleString("ko-KR")}개
+                        노트 삭제
+                    </button>
+                </div>
+            ) : selected ? (
                 <div className="min-h-0 flex-1 overflow-y-auto p-3">
                     <div className="grid grid-cols-2 gap-3">
                         <label className="text-caption col-span-2 flex flex-col gap-1">
@@ -223,22 +311,24 @@ export default function NoteInspector() {
                             연주 안내 손
                             <HandSelector
                                 value={selected.hand}
-                                onChange={(hand) => updateSelected({ hand })}
+                                onChange={changeSelectedHand}
                             />
                         </label>
 
                         <label className="text-caption flex flex-col gap-1">
                             시작 칸
                             <input
-                                key={`${selected.id}-lane-${selected.lane}`}
                                 type="number"
                                 min="1"
                                 max={CHART_LANE_COUNT}
                                 step="1"
-                                defaultValue={selected.lane + 1}
-                                onBlur={(event) =>
-                                    changeLane(Number(event.target.value))
-                                }
+                                value={selected.lane + 1}
+                                onChange={(event) => {
+                                    const value = Number(event.target.value);
+                                    if (Number.isInteger(value)) {
+                                        changeLane(value);
+                                    }
+                                }}
                                 className={inputClass}
                             />
                         </label>
@@ -246,15 +336,17 @@ export default function NoteInspector() {
                         <label className="text-caption flex flex-col gap-1">
                             폭
                             <input
-                                key={`${selected.id}-width-${selected.width}`}
                                 type="number"
                                 min="1"
                                 max={CHART_LANE_COUNT}
                                 step="1"
-                                defaultValue={selected.width}
-                                onBlur={(event) =>
-                                    changeWidth(Number(event.target.value))
-                                }
+                                value={selected.width}
+                                onChange={(event) => {
+                                    const value = Number(event.target.value);
+                                    if (Number.isInteger(value)) {
+                                        changeWidth(value);
+                                    }
+                                }}
                                 className={inputClass}
                             />
                         </label>
@@ -356,7 +448,53 @@ export default function NoteInspector() {
                                         className={inputClass}
                                     />
                                 </label>
+                                <label className="text-caption col-span-2 flex flex-col gap-1">
+                                    트릴 반복 간격
+                                    <select
+                                        value={selected.trillSnapDivisor ?? 8}
+                                        onChange={(event) =>
+                                            updateSelected({
+                                                trillSnapDivisor: Number(
+                                                    event.target.value
+                                                ),
+                                            })
+                                        }
+                                        className={inputClass}
+                                    >
+                                        {[4, 6, 8, 12, 16].map((divisor) => (
+                                            <option
+                                                key={divisor}
+                                                value={divisor}
+                                            >
+                                                1/{divisor}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </label>
                             </>
+                        ) : null}
+
+                        {selected.type === "glissando" ? (
+                            <label className="text-caption col-span-2 flex flex-col gap-1">
+                                연결 노트 간격
+                                <select
+                                    value={selected.glissandoSnapDivisor ?? 4}
+                                    onChange={(event) =>
+                                        updateSelected({
+                                            glissandoSnapDivisor: Number(
+                                                event.target.value
+                                            ),
+                                        })
+                                    }
+                                    className={inputClass}
+                                >
+                                    {pathSnapDivisors.map((divisor) => (
+                                        <option key={divisor} value={divisor}>
+                                            1/{divisor}
+                                        </option>
+                                    ))}
+                                </select>
+                            </label>
                         ) : null}
                     </div>
 
@@ -369,8 +507,9 @@ export default function NoteInspector() {
                                         경로 제어점
                                     </h3>
                                     <p className="text-micro mt-0.5">
-                                        현재 재생 위치에 위치·폭·손 변화를
-                                        추가합니다.
+                                        {selected.type === "glissando"
+                                            ? "각 연결 노트의 노란 점을 옮기면 앞뒤 구간이 함께 연결됩니다."
+                                            : "Ctrl+클릭으로 추가하고 옮기면 앞뒤 구간이 함께 연결됩니다."}
                                     </p>
                                 </div>
                                 <button
@@ -406,7 +545,9 @@ export default function NoteInspector() {
                                 </div>
                             ) : (
                                 <p className="text-micro mt-3">
-                                    아직 경로 변화가 없습니다.
+                                    {selected.type === "glissando"
+                                        ? "노란 연결점을 드래그하면 굴절점으로 저장됩니다."
+                                        : "아직 경로 변화가 없습니다."}
                                 </p>
                             )}
                         </section>
@@ -421,10 +562,13 @@ export default function NoteInspector() {
                         선택한 노트 삭제
                     </button>
                 </div>
-            )}
+            ) : null}
 
             <footer className="border-divider text-micro border-t px-3 py-2">
                 전체 {notes.length.toLocaleString("ko-KR")}개
+                {selectedNotes.length > 0
+                    ? ` · 선택 ${selectedNotes.length.toLocaleString("ko-KR")}개`
+                    : ""}
             </footer>
         </aside>
     );

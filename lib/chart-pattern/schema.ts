@@ -68,6 +68,8 @@ export const chartNoteSchema = z
             .max(CHART_LANE_COUNT - 1)
             .optional(),
         pairWidth: z.number().int().min(1).max(CHART_LANE_COUNT).optional(),
+        trillSnapDivisor: z.number().int().min(1).max(64).optional(),
+        glissandoSnapDivisor: z.number().int().min(1).max(64).optional(),
         points: z.array(chartPathPointSchema).max(10_000).default([]),
     })
     .strict()
@@ -107,15 +109,34 @@ export const chartNoteSchema = z
                     path: ["pairWidth"],
                 });
             }
+            if (note.glissandoSnapDivisor !== undefined) {
+                context.addIssue({
+                    code: "custom",
+                    message:
+                        "트릴에는 글리산도 연결 간격을 지정할 수 없습니다.",
+                    path: ["glissandoSnapDivisor"],
+                });
+            }
         } else if (
             note.pairLane !== undefined ||
-            note.pairWidth !== undefined
+            note.pairWidth !== undefined ||
+            note.trillSnapDivisor !== undefined
+        ) {
+            context.addIssue({
+                code: "custom",
+                message: "트릴 이외의 노트에는 트릴 속성을 지정할 수 없습니다.",
+                path: ["pairLane"],
+            });
+        }
+        if (
+            note.type !== "glissando" &&
+            note.glissandoSnapDivisor !== undefined
         ) {
             context.addIssue({
                 code: "custom",
                 message:
-                    "트릴 이외의 노트에는 두 번째 위치를 지정할 수 없습니다.",
-                path: ["pairLane"],
+                    "글리산도 이외의 노트에는 연결 간격을 지정할 수 없습니다.",
+                path: ["glissandoSnapDivisor"],
             });
         }
         for (const [index, point] of note.points.entries()) {

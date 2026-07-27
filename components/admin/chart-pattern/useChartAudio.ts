@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { getChartEditorNavigationDurationMs } from "@/lib/chart-pattern/editor";
 import { getBeatMarkers } from "@/lib/chart-pattern/timing";
 
 import {
@@ -220,7 +221,9 @@ export function useChartAudio() {
             const buffer = bufferRef.current;
             const durationMs =
                 buffer?.duration === undefined
-                    ? store.getState().document.durationMs
+                    ? getChartEditorNavigationDurationMs(
+                          store.getState().document
+                      )
                     : buffer.duration * 1_000;
             const clamped = Math.min(Math.max(0, timeMs), durationMs);
             if (isPlaying && buffer) {

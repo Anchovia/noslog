@@ -4,11 +4,27 @@ import {
     type PointerEvent as ReactPointerEvent,
     useCallback,
     useEffect,
+    useMemo,
     useRef,
     useState,
 } from "react";
 import type { Application, Graphics } from "pixi.js";
 
+import {
+    chartNoteContainsPoint,
+    chartNoteIntersectsRect,
+    chartNoteRangeAtTick,
+    cloneChartNotesAtTick,
+    findChartNoteConflicts,
+    flipChartNotesHorizontally,
+    getChartEditorNavigationDurationMs,
+    getChartNoteHorizontalResizeHandle,
+    getChartNoteRenderPoints,
+    getGlissandoSnapRenderPoints,
+    moveGlissandoSnapAnchor,
+    moveChartNotes,
+    resizeChartNoteHorizontally,
+} from "@/lib/chart-pattern/editor";
 import {
     CHART_LANE_COUNT,
     type ChartHand,
@@ -17,7 +33,9 @@ import {
 } from "@/lib/chart-pattern/schema";
 import {
     getBeatMarkers,
+    getSnapGridMarkers,
     millisecondsToTick,
+    moveTickBySnapSteps,
     snapTick,
     tickToMilliseconds,
 } from "@/lib/chart-pattern/timing";
@@ -26,17 +44,36 @@ import { useChartEditorStore } from "./chartEditorStore";
 
 export type NoteEditorTool = "select" | ChartNoteType;
 
+interface PointerPosition {
+    lane: number;
+    laneFloat: number;
+    tick: number;
+    rawTick: number;
+    x: number;
+    y: number;
+}
+
 interface CreateGesture {
     kind: "create";
     startLane: number;
     startTick: number;
     currentLane: number;
     currentTick: number;
+    forceOneLane: boolean;
 }
 
-interface EditGesture {
-    kind: "edit";
-    action: "move" | "resize-left" | "resize-right" | "resize-end";
+interface MoveGesture {
+    kind: "move";
+    selectedIds: string[];
+    startLane: number;
+    startTick: number;
+    currentLane: number;
+    currentTick: number;
+}
+
+interface ResizeGesture {
+    kind: "resize";
+    action: "left" | "right" | "end";
     original: ChartNote;
     startLane: number;
     startTick: number;
@@ -44,62 +81,131 @@ interface EditGesture {
     currentTick: number;
 }
 
-type NoteGesture = CreateGesture | EditGesture;
+interface PointGesture {
+    kind: "point";
+    original: ChartNote;
+    pointIndex: number;
+    startLane: number;
+    startTick: number;
+    currentLane: number;
+    currentTick: number;
+}
+
+interface GlissandoAnchorGesture {
+    kind: "glissando-anchor";
+    original: ChartNote;
+    tickOffset: number;
+    startLane: number;
+    startTick: number;
+    currentLane: number;
+    currentTick: number;
+}
+
+interface MarqueeGesture {
+    kind: "marquee";
+    startLaneFloat: number;
+    startRawTick: number;
+    currentLaneFloat: number;
+    currentRawTick: number;
+    startX: number;
+    startY: number;
+    currentX: number;
+    currentY: number;
+    additive: boolean;
+    initialSelection: string[];
+}
+
+type NoteGesture =
+    | CreateGesture
+    | MoveGesture
+    | ResizeGesture
+    | PointGesture
+    | GlissandoAnchorGesture
+    | MarqueeGesture;
 
 interface PixiRuntime {
     Graphics: typeof import("pixi.js").Graphics;
 }
 
-interface RenderPoint {
-    lane: number;
-    width: number;
-    tick: number;
-    hand: ChartHand;
-}
+const snapDivisors = [1, 2, 3, 4, 6, 8, 12, 16, 24, 32];
+const DURATION_RESIZE_HIT_RADIUS_PX = 7;
 
 const colors = {
-    background: 0x0b0b10,
-    laneStrong: 0x30303c,
-    laneWeak: 0x1f1f29,
-    beatStrong: 0x5f5f6f,
-    beatWeak: 0x292934,
-    left: 0x62d4e8,
-    right: 0xf06b68,
-    selected: 0xf4f4f7,
-    judgment: 0xf2f2f5,
+    background: 0x080a0f,
+    laneStrong: 0x30333c,
+    laneWeak: 0x1b1f27,
+    snapWhite: 0xe7e9ee,
+    snapRed: 0xa75a62,
+    snapPurpleStrong: 0x806b9a,
+    snapBlue: 0x52769b,
+    snapPurpleWeak: 0x685a78,
+    snapYellow: 0x75673f,
+    snapGrayStrong: 0x555a63,
+    snapGray: 0x464b54,
+    snapGrayWeak: 0x383d45,
+    left: 0x52d9e8,
+    right: 0xf05d5d,
+    noteFace: 0xf7f7f2,
+    noteShadow: 0x121820,
+    judgment: 0x79df62,
     preview: 0xfacc15,
+    selection: 0xf2c75c,
+    conflict: 0xf0646d,
 };
 
 function colorForHand(hand: ChartHand) {
     return hand === "left" ? colors.left : colors.right;
 }
 
-function clampLane(lane: number, width = 1) {
-    return Math.min(CHART_LANE_COUNT - width, Math.max(0, lane));
+function styleForSnapSubdivision(subdivision: number) {
+    if (subdivision === 1) {
+        return { color: colors.snapWhite, width: 1.35, alpha: 0.96 };
+    }
+    if (subdivision === 2) {
+        return { color: colors.snapRed, width: 1.05, alpha: 0.8 };
+    }
+    if (subdivision === 3) {
+        return {
+            color: colors.snapPurpleStrong,
+            width: 0.95,
+            alpha: 0.72,
+        };
+    }
+    if (subdivision === 4) {
+        return { color: colors.snapBlue, width: 0.85, alpha: 0.64 };
+    }
+    if (subdivision === 6) {
+        return {
+            color: colors.snapPurpleWeak,
+            width: 0.75,
+            alpha: 0.56,
+        };
+    }
+    if (subdivision === 8) {
+        return { color: colors.snapYellow, width: 0.65, alpha: 0.5 };
+    }
+    if (subdivision === 12) {
+        return {
+            color: colors.snapGrayStrong,
+            width: 0.58,
+            alpha: 0.44,
+        };
+    }
+    if (subdivision === 16) {
+        return { color: colors.snapGray, width: 0.52, alpha: 0.38 };
+    }
+    if (subdivision === 24) {
+        return {
+            color: colors.snapGrayWeak,
+            width: 0.46,
+            alpha: 0.32,
+        };
+    }
+    return { color: colors.snapGrayWeak, width: 0.42, alpha: 0.27 };
 }
 
-function noteRenderPoints(note: ChartNote): RenderPoint[] {
-    const points: RenderPoint[] = [
-        {
-            lane: note.lane,
-            width: note.width,
-            tick: note.tick,
-            hand: note.hand,
-        },
-        ...note.points.map((point) => ({
-            lane: point.lane,
-            width: point.width,
-            tick: note.tick + point.tickOffset,
-            hand: point.hand ?? note.hand,
-        })),
-    ].sort((first, second) => first.tick - second.tick);
-
-    const endTick = note.tick + note.durationTicks;
-    if (points.at(-1)?.tick !== endTick) {
-        const previous = points.at(-1) ?? points[0];
-        points.push({ ...previous, tick: endTick });
-    }
-    return points;
+function clampLane(lane: number, width = 1) {
+    return Math.min(CHART_LANE_COUNT - width, Math.max(0, Math.round(lane)));
 }
 
 function buildPreviewNote({
@@ -118,13 +224,18 @@ function buildPreviewNote({
     snapDivisor: number;
 }): ChartNote {
     if (tool === "standard") {
-        const moved = gesture.currentLane !== gesture.startLane;
-        const lane = moved
+        const movedAtLeastOneLane =
+            !gesture.forceOneLane &&
+            Math.abs(gesture.currentLane - gesture.startLane) >= 1;
+        const lane = movedAtLeastOneLane
             ? Math.min(gesture.startLane, gesture.currentLane)
-            : clampLane(gesture.startLane, width);
-        const noteWidth = moved
+            : clampLane(gesture.startLane, gesture.forceOneLane ? 1 : width);
+        const noteWidth = movedAtLeastOneLane
             ? Math.abs(gesture.currentLane - gesture.startLane) + 1
-            : Math.min(width, CHART_LANE_COUNT - lane);
+            : Math.min(
+                  gesture.forceOneLane ? 1 : width,
+                  CHART_LANE_COUNT - lane
+              );
         return {
             id: "preview",
             type: tool,
@@ -139,10 +250,13 @@ function buildPreviewNote({
 
     const earlierIsStart = gesture.startTick <= gesture.currentTick;
     const startTick = Math.min(gesture.startTick, gesture.currentTick);
-    const rawDuration = Math.abs(gesture.currentTick - gesture.startTick);
+    const minimumDuration = Math.max(
+        1,
+        Math.round((ticksPerQuarter * 4) / snapDivisor)
+    );
     const durationTicks = Math.max(
-        rawDuration,
-        Math.max(1, Math.round(ticksPerQuarter / snapDivisor))
+        Math.abs(gesture.currentTick - gesture.startTick),
+        minimumDuration
     );
     const firstLane = earlierIsStart ? gesture.startLane : gesture.currentLane;
     const lastLane = earlierIsStart ? gesture.currentLane : gesture.startLane;
@@ -161,6 +275,7 @@ function buildPreviewNote({
             pairLane:
                 endLane === lane ? clampLane(lane + width, width) : endLane,
             pairWidth: width,
+            trillSnapDivisor: snapDivisor,
             points: [],
         };
     }
@@ -173,6 +288,7 @@ function buildPreviewNote({
         durationTicks,
         lane,
         width,
+        glissandoSnapDivisor: tool === "glissando" ? snapDivisor : undefined,
         points:
             tool === "glissando" && endLane !== lane
                 ? [
@@ -187,77 +303,62 @@ function buildPreviewNote({
     };
 }
 
-function buildEditedNote(gesture: EditGesture): ChartNote {
+function buildResizedNote(gesture: ResizeGesture): ChartNote {
     const note = gesture.original;
-    const laneDelta = gesture.currentLane - gesture.startLane;
-    const tickDelta = gesture.currentTick - gesture.startTick;
-
-    if (gesture.action === "resize-left") {
-        const right = note.lane + note.width;
-        const lane = Math.min(right - 1, Math.max(0, gesture.currentLane));
-        return {
-            ...note,
-            lane,
-            width: right - lane,
-        };
-    }
-
-    if (gesture.action === "resize-right") {
-        const right = Math.min(
-            CHART_LANE_COUNT,
-            Math.max(note.lane + 1, gesture.currentLane + 1)
+    if (gesture.action === "left" || gesture.action === "right") {
+        return resizeChartNoteHorizontally(
+            note,
+            gesture.action,
+            gesture.currentLane
         );
-        return {
-            ...note,
-            width: right - note.lane,
-        };
     }
-
-    if (gesture.action === "resize-end") {
-        const durationTicks = Math.max(1, gesture.currentTick - note.tick);
-        return {
-            ...note,
-            durationTicks,
-            points: note.points
-                .filter((point) => point.tickOffset <= durationTicks)
-                .map((point) => ({
-                    ...point,
-                    tickOffset: Math.min(point.tickOffset, durationTicks),
-                })),
-        };
-    }
-
-    const occupied = [
-        { lane: note.lane, width: note.width },
-        ...note.points.map((point) => ({
-            lane: point.lane,
-            width: point.width,
-        })),
-        ...(note.pairLane !== undefined && note.pairWidth !== undefined
-            ? [{ lane: note.pairLane, width: note.pairWidth }]
-            : []),
-    ];
-    const minLane = Math.min(...occupied.map((point) => point.lane));
-    const maxLane = Math.max(
-        ...occupied.map((point) => point.lane + point.width)
-    );
-    const clampedDelta = Math.min(
-        CHART_LANE_COUNT - maxLane,
-        Math.max(-minLane, laneDelta)
-    );
+    const durationTicks = Math.max(1, gesture.currentTick - note.tick);
     return {
         ...note,
-        tick: Math.max(-10_000_000, note.tick + tickDelta),
-        lane: note.lane + clampedDelta,
-        pairLane:
-            note.pairLane === undefined
-                ? undefined
-                : note.pairLane + clampedDelta,
-        points: note.points.map((point) => ({
-            ...point,
-            lane: point.lane + clampedDelta,
-        })),
+        durationTicks,
+        points: note.points
+            .filter((point) => point.tickOffset <= durationTicks)
+            .map((point) => ({
+                ...point,
+                tickOffset: Math.min(point.tickOffset, durationTicks),
+            })),
     };
+}
+
+function buildPointEditedNote(gesture: PointGesture): ChartNote {
+    const note = gesture.original;
+    const point = note.points[gesture.pointIndex];
+    if (!point) return note;
+    const width = Math.min(point.width, CHART_LANE_COUNT);
+    const nextPoint = {
+        ...point,
+        lane: clampLane(gesture.currentLane, width),
+        tickOffset: Math.min(
+            note.durationTicks - 1,
+            Math.max(1, gesture.currentTick - note.tick)
+        ),
+    };
+    return {
+        ...note,
+        points: note.points
+            .map((value, index) =>
+                index === gesture.pointIndex ? nextPoint : value
+            )
+            .sort((first, second) => first.tickOffset - second.tickOffset),
+    };
+}
+
+function replacePreviewNote(
+    notes: ChartNote[],
+    originalId: string,
+    preview: ChartNote
+) {
+    return notes.map((note) => (note.id === originalId ? preview : note));
+}
+
+function selectedNotesFrom(notes: ChartNote[], selectedIds: string[]) {
+    const ids = new Set(selectedIds);
+    return notes.filter((note) => ids.has(note.id));
 }
 
 export default function PixiNoteEditor({
@@ -266,38 +367,100 @@ export default function PixiNoteEditor({
     hand,
     defaultWidth,
     onSeek,
+    onToolChange,
 }: {
     pixelsPerSecond: number;
     tool: NoteEditorTool;
     hand: ChartHand;
     defaultWidth: number;
     onSeek: (timeMs: number) => void;
+    onToolChange: (tool: NoteEditorTool) => void;
 }) {
     const hostRef = useRef<HTMLDivElement | null>(null);
     const applicationRef = useRef<Application | null>(null);
     const runtimeRef = useRef<PixiRuntime | null>(null);
+    const clipboardRef = useRef<ChartNote[]>([]);
     const [rendererReady, setRendererReady] = useState(false);
     const [gesture, setGesture] = useState<NoteGesture | null>(null);
+    const [isResizeHandleHovered, setIsResizeHandleHovered] = useState(false);
+    const [isAnchorHovered, setIsAnchorHovered] = useState(false);
+    const [isDurationHandleHovered, setIsDurationHandleHovered] =
+        useState(false);
     const document = useChartEditorStore((state) => state.document);
     const currentTimeMs = useChartEditorStore((state) => state.currentTimeMs);
     const snapDivisor = useChartEditorStore((state) => state.snapDivisor);
-    const selectedNoteId = useChartEditorStore((state) => state.selectedNoteId);
-    const selectNote = useChartEditorStore((state) => state.selectNote);
+    const selectedNoteIds = useChartEditorStore(
+        (state) => state.selectedNoteIds
+    );
+    const selectNotes = useChartEditorStore((state) => state.selectNotes);
+    const toggleNoteSelection = useChartEditorStore(
+        (state) => state.toggleNoteSelection
+    );
     const replaceNotes = useChartEditorStore((state) => state.replaceNotes);
+    const setSnapDivisor = useChartEditorStore((state) => state.setSnapDivisor);
+    const navigationDurationMs = getChartEditorNavigationDurationMs(document);
+    const conflictingNoteIds = useMemo(() => {
+        const ids = new Set<string>();
+        for (const conflict of findChartNoteConflicts(
+            document.notes,
+            document.ticksPerQuarter
+        )) {
+            ids.add(conflict.firstId);
+            ids.add(conflict.secondId);
+        }
+        return ids;
+    }, [document.notes, document.ticksPerQuarter]);
 
-    const previewNote =
-        gesture?.kind === "create" && tool !== "select"
-            ? buildPreviewNote({
-                  gesture,
-                  tool,
-                  hand,
-                  width: defaultWidth,
-                  ticksPerQuarter: document.ticksPerQuarter,
-                  snapDivisor,
-              })
-            : gesture?.kind === "edit"
-              ? buildEditedNote(gesture)
-              : null;
+    const previewNotes = (() => {
+        if (!gesture) return document.notes;
+        if (gesture.kind === "move") {
+            return moveChartNotes(
+                document.notes,
+                gesture.selectedIds,
+                gesture.currentLane - gesture.startLane,
+                gesture.currentTick - gesture.startTick
+            );
+        }
+        if (gesture.kind === "resize") {
+            return replacePreviewNote(
+                document.notes,
+                gesture.original.id,
+                buildResizedNote(gesture)
+            );
+        }
+        if (gesture.kind === "point") {
+            return replacePreviewNote(
+                document.notes,
+                gesture.original.id,
+                buildPointEditedNote(gesture)
+            );
+        }
+        if (gesture.kind === "glissando-anchor") {
+            return replacePreviewNote(
+                document.notes,
+                gesture.original.id,
+                moveGlissandoSnapAnchor(
+                    gesture.original,
+                    gesture.tickOffset,
+                    gesture.currentLane - gesture.startLane
+                )
+            );
+        }
+        if (gesture.kind === "create" && tool !== "select") {
+            return [
+                ...document.notes,
+                buildPreviewNote({
+                    gesture,
+                    tool,
+                    hand,
+                    width: defaultWidth,
+                    ticksPerQuarter: document.ticksPerQuarter,
+                    snapDivisor,
+                }),
+            ];
+        }
+        return document.notes;
+    })();
 
     useEffect(() => {
         const host = hostRef.current;
@@ -322,9 +485,7 @@ export default function PixiNoteEditor({
             }
             application = nextApplication;
             applicationRef.current = nextApplication;
-            runtimeRef.current = {
-                Graphics: pixi.Graphics,
-            };
+            runtimeRef.current = { Graphics: pixi.Graphics };
             nextApplication.canvas.className = "block h-full w-full touch-none";
             nextApplication.canvas.setAttribute("aria-hidden", "true");
             host.appendChild(nextApplication.canvas);
@@ -377,25 +538,44 @@ export default function PixiNoteEditor({
             startMs,
             endMs
         );
-        for (const beat of beatMarkers) {
-            const y = judgmentY - (beat.timeMs - currentTimeMs) * pixelsPerMs;
+        const beatByTick = new Map(
+            beatMarkers.map((beat) => [beat.tick, beat])
+        );
+        const snapMarkers = getSnapGridMarkers(
+            document.timingPoints,
+            document.ticksPerQuarter,
+            snapDivisor,
+            startMs,
+            endMs
+        );
+        for (const marker of snapMarkers) {
+            const beat = beatByTick.get(marker.tick);
+            const style = styleForSnapSubdivision(marker.subdivision);
+            const y = judgmentY - (marker.timeMs - currentTimeMs) * pixelsPerMs;
             scene
                 .moveTo(0, y + 0.5)
                 .lineTo(width, y + 0.5)
                 .stroke({
-                    color: beat.accent ? colors.beatStrong : colors.beatWeak,
-                    width: beat.accent ? 1.4 : 0.8,
+                    color: beat?.accent ? colors.snapWhite : style.color,
+                    width: beat?.accent ? 1.8 : style.width,
+                    alpha: beat?.accent ? 1 : style.alpha,
                 });
         }
+        for (const beat of beatMarkers) {
+            if (!beat.accent) continue;
+            if (snapMarkers.some((marker) => marker.tick === beat.tick)) {
+                continue;
+            }
+            const y = judgmentY - (beat.timeMs - currentTimeMs) * pixelsPerMs;
+            scene
+                .moveTo(0, y + 0.5)
+                .lineTo(width, y + 0.5)
+                .stroke({ color: colors.snapWhite, width: 1.8 });
+        }
 
-        const notesToRender = previewNote
-            ? gesture?.kind === "edit"
-                ? document.notes.map((note) =>
-                      note.id === gesture.original.id ? previewNote : note
-                  )
-                : [...document.notes, previewNote]
-            : document.notes;
-        for (const note of notesToRender) {
+        const selected = new Set(selectedNoteIds);
+        const hasSelection = selected.size > 0;
+        for (const note of previewNotes) {
             const noteStartMs = tickToMilliseconds(
                 note.tick,
                 document.timingPoints,
@@ -407,10 +587,8 @@ export default function PixiNoteEditor({
                 document.ticksPerQuarter
             );
             if (noteEndMs < startMs || noteStartMs > endMs) continue;
-            const isPreview =
-                note.id === "preview" ||
-                (gesture?.kind === "edit" && note.id === gesture.original.id);
-            const isSelected = note.id === selectedNoteId;
+            const isPreview = note.id === "preview" || gesture !== null;
+            const isSelected = selected.has(note.id);
             drawNote({
                 graphics: scene,
                 note,
@@ -420,9 +598,23 @@ export default function PixiNoteEditor({
                 currentTimeMs,
                 timingPoints: document.timingPoints,
                 ticksPerQuarter: document.ticksPerQuarter,
-                isPreview,
+                isPreview: note.id === "preview" || (isPreview && isSelected),
                 isSelected,
+                isDimmed: hasSelection && !isSelected && note.id !== "preview",
+                showControls: isSelected && selected.size === 1,
+                isConflicted: conflictingNoteIds.has(note.id),
             });
+        }
+
+        if (gesture?.kind === "marquee") {
+            const left = Math.min(gesture.startX, gesture.currentX);
+            const top = Math.min(gesture.startY, gesture.currentY);
+            const marqueeWidth = Math.abs(gesture.currentX - gesture.startX);
+            const marqueeHeight = Math.abs(gesture.currentY - gesture.startY);
+            scene
+                .rect(left, top, marqueeWidth, marqueeHeight)
+                .fill({ color: colors.selection, alpha: 0.1 })
+                .stroke({ color: colors.selection, width: 1.5, alpha: 0.9 });
         }
 
         scene
@@ -433,13 +625,14 @@ export default function PixiNoteEditor({
         application.render();
     }, [
         currentTimeMs,
-        document.notes,
         document.ticksPerQuarter,
         document.timingPoints,
-        pixelsPerSecond,
-        previewNote,
         gesture,
-        selectedNoteId,
+        conflictingNoteIds,
+        pixelsPerSecond,
+        previewNotes,
+        selectedNoteIds,
+        snapDivisor,
     ]);
 
     useEffect(() => {
@@ -452,7 +645,260 @@ export default function PixiNoteEditor({
         return () => observer.disconnect();
     }, [renderScene, rendererReady]);
 
-    function pointerPosition(clientX: number, clientY: number) {
+    const currentSnappedTick = useCallback(
+        () =>
+            Math.round(
+                snapTick(
+                    millisecondsToTick(
+                        currentTimeMs,
+                        document.timingPoints,
+                        document.ticksPerQuarter
+                    ),
+                    snapDivisor,
+                    document.ticksPerQuarter
+                )
+            ),
+        [
+            currentTimeMs,
+            document.ticksPerQuarter,
+            document.timingPoints,
+            snapDivisor,
+        ]
+    );
+
+    useEffect(() => {
+        function handleKeyboard(event: KeyboardEvent) {
+            const target = event.target;
+            if (
+                target instanceof HTMLInputElement ||
+                target instanceof HTMLTextAreaElement ||
+                target instanceof HTMLSelectElement
+            ) {
+                return;
+            }
+
+            const modifier = event.ctrlKey || event.metaKey;
+            const key = event.key.toLowerCase();
+            const toolKeys: Record<string, NoteEditorTool> = {
+                "1": "select",
+                "2": "standard",
+                "3": "tenuto",
+                "4": "glissando",
+                "5": "trill",
+            };
+            if (!modifier && !event.shiftKey && toolKeys[event.key]) {
+                event.preventDefault();
+                onToolChange(toolKeys[event.key]);
+                return;
+            }
+            if (!modifier && event.shiftKey && /^[1-9]$/.test(event.key)) {
+                const divisor = Number(event.key);
+                if (snapDivisors.includes(divisor)) {
+                    event.preventDefault();
+                    setSnapDivisor(divisor);
+                }
+                return;
+            }
+
+            const selectedNotes = selectedNotesFrom(
+                document.notes,
+                selectedNoteIds
+            );
+            if (modifier && key === "a") {
+                event.preventDefault();
+                selectNotes(document.notes.map((note) => note.id));
+                return;
+            }
+            if (modifier && (key === "c" || key === "x")) {
+                if (selectedNotes.length === 0) return;
+                event.preventDefault();
+                clipboardRef.current = structuredClone(selectedNotes);
+                if (key === "x") {
+                    const ids = new Set(selectedNoteIds);
+                    replaceNotes(
+                        document.notes.filter((note) => !ids.has(note.id)),
+                        []
+                    );
+                }
+                return;
+            }
+            if (modifier && key === "v") {
+                if (clipboardRef.current.length === 0) return;
+                event.preventDefault();
+                const pasted = cloneChartNotesAtTick(
+                    clipboardRef.current,
+                    currentSnappedTick(),
+                    () => crypto.randomUUID()
+                );
+                replaceNotes(
+                    [...document.notes, ...pasted],
+                    pasted.map((note) => note.id)
+                );
+                return;
+            }
+            if (modifier && key === "d") {
+                if (selectedNotes.length === 0) return;
+                event.preventDefault();
+                const lastTick = Math.max(
+                    ...selectedNotes.map(
+                        (note) => note.tick + note.durationTicks
+                    )
+                );
+                const timingPoint =
+                    [...document.timingPoints]
+                        .reverse()
+                        .find((point) => point.tick <= lastTick) ??
+                    document.timingPoints[0];
+                const measureTicks =
+                    ((document.ticksPerQuarter * 4) / timingPoint.denominator) *
+                    timingPoint.numerator;
+                const cloned = cloneChartNotesAtTick(
+                    selectedNotes,
+                    lastTick + measureTicks,
+                    () => crypto.randomUUID()
+                );
+                replaceNotes(
+                    [...document.notes, ...cloned],
+                    cloned.map((note) => note.id)
+                );
+                return;
+            }
+            if (modifier && key === "h") {
+                if (selectedNotes.length === 0) return;
+                event.preventDefault();
+                replaceNotes(
+                    flipChartNotesHorizontally(document.notes, selectedNoteIds)
+                );
+                return;
+            }
+
+            const snapStep = Math.max(
+                1,
+                Math.round((document.ticksPerQuarter * 4) / snapDivisor)
+            );
+            if (
+                selectedNotes.length > 0 &&
+                ((modifier &&
+                    [
+                        "arrowleft",
+                        "arrowright",
+                        "arrowup",
+                        "arrowdown",
+                    ].includes(key)) ||
+                    (!modifier && (key === "j" || key === "k")))
+            ) {
+                event.preventDefault();
+                const laneDelta =
+                    key === "arrowleft" ? -1 : key === "arrowright" ? 1 : 0;
+                const tickDelta =
+                    key === "arrowup" || key === "k"
+                        ? snapStep
+                        : key === "arrowdown" || key === "j"
+                          ? -snapStep
+                          : 0;
+                replaceNotes(
+                    moveChartNotes(
+                        document.notes,
+                        selectedNoteIds,
+                        laneDelta,
+                        tickDelta
+                    )
+                );
+                return;
+            }
+            if (
+                selectedNotes.length > 0 &&
+                (event.key === "Delete" || event.key === "Backspace")
+            ) {
+                event.preventDefault();
+                const ids = new Set(selectedNoteIds);
+                replaceNotes(
+                    document.notes.filter((note) => !ids.has(note.id)),
+                    []
+                );
+                return;
+            }
+            if (event.key === "Escape") {
+                selectNotes([]);
+            }
+        }
+
+        window.addEventListener("keydown", handleKeyboard);
+        return () => window.removeEventListener("keydown", handleKeyboard);
+    }, [
+        currentSnappedTick,
+        document,
+        onToolChange,
+        replaceNotes,
+        selectNotes,
+        selectedNoteIds,
+        setSnapDivisor,
+        snapDivisor,
+    ]);
+
+    useEffect(() => {
+        const host = hostRef.current;
+        if (!host) return;
+
+        function handleWheel(event: WheelEvent) {
+            event.preventDefault();
+            if (event.deltaY === 0) return;
+
+            if (event.ctrlKey) {
+                const currentIndex = snapDivisors.indexOf(snapDivisor);
+                const direction = event.deltaY > 0 ? 1 : -1;
+                const nextIndex = Math.min(
+                    snapDivisors.length - 1,
+                    Math.max(0, currentIndex + direction)
+                );
+                setSnapDivisor(snapDivisors[nextIndex]);
+                return;
+            }
+
+            const direction = event.deltaY > 0 ? -1 : 1;
+            const steps = direction * (event.shiftKey ? 4 : 1);
+            const currentTick = millisecondsToTick(
+                currentTimeMs,
+                document.timingPoints,
+                document.ticksPerQuarter
+            );
+            const nextTick = moveTickBySnapSteps(
+                currentTick,
+                snapDivisor,
+                document.ticksPerQuarter,
+                steps
+            );
+            onSeek(
+                Math.min(
+                    navigationDurationMs,
+                    Math.max(
+                        0,
+                        tickToMilliseconds(
+                            nextTick,
+                            document.timingPoints,
+                            document.ticksPerQuarter
+                        )
+                    )
+                )
+            );
+        }
+
+        host.addEventListener("wheel", handleWheel, { passive: false });
+        return () => host.removeEventListener("wheel", handleWheel);
+    }, [
+        currentTimeMs,
+        document.ticksPerQuarter,
+        document.timingPoints,
+        navigationDurationMs,
+        onSeek,
+        setSnapDivisor,
+        snapDivisor,
+    ]);
+
+    function pointerPosition(
+        clientX: number,
+        clientY: number
+    ): PointerPosition | null {
         const host = hostRef.current;
         if (!host) return null;
         const bounds = host.getBoundingClientRect();
@@ -472,88 +918,400 @@ export default function PixiNoteEditor({
             document.timingPoints,
             document.ticksPerQuarter
         );
+        const laneFloat = x / (bounds.width / CHART_LANE_COUNT);
         return {
             lane: Math.min(
                 CHART_LANE_COUNT - 1,
-                Math.max(0, Math.floor(x / (bounds.width / CHART_LANE_COUNT)))
+                Math.max(0, Math.floor(laneFloat))
             ),
+            laneFloat,
             tick: Math.round(
                 snapTick(rawTick, snapDivisor, document.ticksPerQuarter)
             ),
+            rawTick,
+            x,
+            y,
         };
     }
 
-    function findNoteAt(lane: number, tick: number) {
+    function findNoteAt(position: PointerPosition) {
         const hitPadding = Math.max(
             1,
-            Math.round(document.ticksPerQuarter / snapDivisor / 2)
+            Math.round(((document.ticksPerQuarter * 4) / snapDivisor) * 0.4)
         );
-        return [...document.notes].reverse().find((note) => {
-            const laneHit =
-                (lane >= note.lane && lane < note.lane + note.width) ||
-                (note.type === "trill" &&
-                    note.pairLane !== undefined &&
-                    note.pairWidth !== undefined &&
-                    lane >= note.pairLane &&
-                    lane < note.pairLane + note.pairWidth) ||
-                note.points.some(
-                    (point) =>
-                        lane >= point.lane && lane < point.lane + point.width
-                );
-            if (!laneHit) return false;
-            if (note.type === "standard") {
-                return Math.abs(tick - note.tick) <= hitPadding;
-            }
+        return [...document.notes]
+            .reverse()
+            .find((note) =>
+                chartNoteContainsPoint(
+                    note,
+                    position.laneFloat,
+                    position.rawTick,
+                    hitPadding
+                )
+            );
+    }
+
+    function horizontalResizeHandleAt(
+        note: ChartNote,
+        position: PointerPosition,
+        includeOutside = false
+    ) {
+        const hitPadding = Math.max(
+            1,
+            Math.round(((document.ticksPerQuarter * 4) / snapDivisor) * 0.4)
+        );
+        if (Math.abs(position.tick - note.tick) > hitPadding) return null;
+
+        return getChartNoteHorizontalResizeHandle(
+            note,
+            position.laneFloat,
+            (hostRef.current?.clientWidth ?? CHART_LANE_COUNT) /
+                CHART_LANE_COUNT,
+            { includeOutside }
+        );
+    }
+
+    function startHorizontalResize(
+        note: ChartNote,
+        action: "left" | "right",
+        position: PointerPosition
+    ) {
+        const anchorLane =
+            action === "left" ? note.lane : note.lane + note.width - 1;
+        setGesture({
+            kind: "resize",
+            action,
+            original: note,
+            startLane: anchorLane,
+            startTick: position.tick,
+            currentLane: anchorLane,
+            currentTick: position.tick,
+        });
+    }
+
+    function findGlissandoAnchorAt(note: ChartNote, position: PointerPosition) {
+        if (note.type !== "glissando") return null;
+        const host = hostRef.current;
+        if (!host) return null;
+
+        const laneWidth = host.clientWidth / CHART_LANE_COUNT;
+        const judgmentY = host.clientHeight * 0.76;
+        const pixelsPerMs = pixelsPerSecond / 1_000;
+        return (
+            getGlissandoSnapRenderPoints(note, document.ticksPerQuarter)
+                .map((point) => {
+                    const x = (point.lane + point.width / 2) * laneWidth;
+                    const y =
+                        judgmentY -
+                        (tickToMilliseconds(
+                            point.tick,
+                            document.timingPoints,
+                            document.ticksPerQuarter
+                        ) -
+                            currentTimeMs) *
+                            pixelsPerMs;
+                    return {
+                        point,
+                        distance: Math.hypot(position.x - x, position.y - y),
+                    };
+                })
+                .filter(({ distance }) => distance <= 10)
+                .sort((first, second) => first.distance - second.distance)[0]
+                ?.point ?? null
+        );
+    }
+
+    function isDurationResizeHandleAt(
+        note: ChartNote,
+        position: PointerPosition
+    ) {
+        if (note.type === "standard") return false;
+        const host = hostRef.current;
+        if (!host) return false;
+
+        const endTick = note.tick + note.durationTicks;
+        const endRange = chartNoteRangeAtTick(note, endTick);
+        const laneWidth = host.clientWidth / CHART_LANE_COUNT;
+        const judgmentY = host.clientHeight * 0.76;
+        const endX =
+            (note.type === "glissando"
+                ? endRange.lane + endRange.width
+                : endRange.lane + endRange.width / 2) * laneWidth;
+        const endY =
+            judgmentY -
+            (tickToMilliseconds(
+                endTick,
+                document.timingPoints,
+                document.ticksPerQuarter
+            ) -
+                currentTimeMs) *
+                (pixelsPerSecond / 1_000);
+        return (
+            Math.hypot(position.x - endX, position.y - endY) <=
+            DURATION_RESIZE_HIT_RADIUS_PX
+        );
+    }
+
+    function findControlPointAt(note: ChartNote, lane: number, tick: number) {
+        const hitPadding = Math.max(
+            1,
+            Math.round(((document.ticksPerQuarter * 4) / snapDivisor) * 0.4)
+        );
+        return note.points.findIndex((point) => {
+            const pointTick = note.tick + point.tickOffset;
             return (
-                tick >= note.tick - hitPadding &&
-                tick <= note.tick + note.durationTicks + hitPadding
+                Math.abs(tick - pointTick) <= hitPadding &&
+                lane >= point.lane &&
+                lane < point.lane + point.width
             );
         });
+    }
+
+    function deleteWithRightClick(position: PointerPosition) {
+        const selectedNotes = selectedNotesFrom(
+            document.notes,
+            selectedNoteIds
+        );
+        if (selectedNotes.length === 1) {
+            const selected = selectedNotes[0];
+            const glissandoAnchor = findGlissandoAnchorAt(selected, position);
+            if (glissandoAnchor) {
+                const tickOffset = glissandoAnchor.tick - selected.tick;
+                const hasStoredPoint = selected.points.some(
+                    (point) => point.tickOffset === tickOffset
+                );
+                if (tickOffset > 0 && hasStoredPoint) {
+                    replaceNotes(
+                        document.notes.map((note) =>
+                            note.id === selected.id
+                                ? {
+                                      ...note,
+                                      points: note.points.filter(
+                                          (point) =>
+                                              point.tickOffset !== tickOffset
+                                      ),
+                                  }
+                                : note
+                        ),
+                        [selected.id]
+                    );
+                }
+                return;
+            }
+            if (selected.type === "tenuto") {
+                const pointIndex = findControlPointAt(
+                    selected,
+                    position.lane,
+                    position.tick
+                );
+                if (pointIndex >= 0) {
+                    replaceNotes(
+                        document.notes.map((note) =>
+                            note.id === selected.id
+                                ? {
+                                      ...note,
+                                      points: note.points.filter(
+                                          (_, index) => index !== pointIndex
+                                      ),
+                                  }
+                                : note
+                        )
+                    );
+                    return;
+                }
+            }
+        }
+
+        const hit = findNoteAt(position);
+        if (!hit) return;
+        if (selectedNoteIds.includes(hit.id)) {
+            const selected = new Set(selectedNoteIds);
+            replaceNotes(
+                document.notes.filter((note) => !selected.has(note.id)),
+                []
+            );
+            return;
+        }
+        replaceNotes(
+            document.notes.filter((note) => note.id !== hit.id),
+            selectedNoteIds
+        );
+    }
+
+    function tryAddControlPoint(note: ChartNote, position: PointerPosition) {
+        if (note.type !== "tenuto" && note.type !== "glissando") {
+            return false;
+        }
+        const tickOffset = position.tick - note.tick;
+        if (
+            tickOffset <= 0 ||
+            tickOffset >= note.durationTicks ||
+            note.points.some((point) => point.tickOffset === tickOffset)
+        ) {
+            return false;
+        }
+        const range = chartNoteRangeAtTick(note, position.tick);
+        const width = Math.max(1, Math.round(range.width));
+        const lane = clampLane(Math.round(range.lane), width);
+        replaceNotes(
+            document.notes.map((value) =>
+                value.id === note.id
+                    ? {
+                          ...value,
+                          points: [
+                              ...value.points,
+                              {
+                                  tickOffset,
+                                  lane,
+                                  width,
+                                  hand: range.hand,
+                              },
+                          ].sort(
+                              (first, second) =>
+                                  first.tickOffset - second.tickOffset
+                          ),
+                      }
+                    : value
+            ),
+            [note.id]
+        );
+        return true;
     }
 
     function handlePointerDown(event: ReactPointerEvent<HTMLDivElement>) {
         const position = pointerPosition(event.clientX, event.clientY);
         if (!position) return;
         event.currentTarget.focus();
+        if (event.button === 2) {
+            event.preventDefault();
+            deleteWithRightClick(position);
+            return;
+        }
+        if (event.button !== 0) return;
         event.currentTarget.setPointerCapture(event.pointerId);
-        if (tool === "select") {
-            const note = findNoteAt(position.lane, position.tick);
-            selectNote(note?.id ?? null);
-            if (note) {
-                const hitPadding = Math.max(
-                    1,
-                    Math.round(document.ticksPerQuarter / snapDivisor / 2)
-                );
-                let action: EditGesture["action"] = "move";
-                if (
-                    note.type !== "standard" &&
-                    Math.abs(
-                        position.tick - (note.tick + note.durationTicks)
-                    ) <= hitPadding
-                ) {
-                    action = "resize-end";
-                } else if (position.lane === note.lane && note.width > 1) {
-                    action = "resize-left";
-                } else if (
-                    position.lane === note.lane + note.width - 1 &&
-                    note.width > 1
-                ) {
-                    action = "resize-right";
-                }
+
+        if (tool !== "select") {
+            setGesture({
+                kind: "create",
+                startLane: position.lane,
+                startTick: position.tick,
+                currentLane: position.lane,
+                currentTick: position.tick,
+                forceOneLane: tool === "standard" && event.shiftKey,
+            });
+            return;
+        }
+
+        const selectedNotes = selectedNotesFrom(
+            document.notes,
+            selectedNoteIds
+        );
+        if (selectedNotes.length === 1) {
+            const selected = selectedNotes[0];
+            const resizeHandle = horizontalResizeHandleAt(
+                selected,
+                position,
+                true
+            );
+            if (resizeHandle) {
+                startHorizontalResize(selected, resizeHandle, position);
+                return;
+            }
+            if (isDurationResizeHandleAt(selected, position)) {
+                const endTick = selected.tick + selected.durationTicks;
                 setGesture({
-                    kind: "edit",
-                    action,
-                    original: note,
+                    kind: "resize",
+                    action: "end",
+                    original: selected,
+                    startLane: position.lane,
+                    startTick: endTick,
+                    currentLane: position.lane,
+                    currentTick: endTick,
+                });
+                return;
+            }
+            const glissandoAnchor = findGlissandoAnchorAt(selected, position);
+            if (glissandoAnchor) {
+                setGesture({
+                    kind: "glissando-anchor",
+                    original: selected,
+                    tickOffset: glissandoAnchor.tick - selected.tick,
                     startLane: position.lane,
                     startTick: position.tick,
                     currentLane: position.lane,
                     currentTick: position.tick,
                 });
+                return;
             }
+            if (selected.type === "tenuto") {
+                const pointIndex = findControlPointAt(
+                    selected,
+                    position.lane,
+                    position.tick
+                );
+                if (pointIndex >= 0) {
+                    setGesture({
+                        kind: "point",
+                        original: selected,
+                        pointIndex,
+                        startLane: position.lane,
+                        startTick: position.tick,
+                        currentLane: position.lane,
+                        currentTick: position.tick,
+                    });
+                    return;
+                }
+            }
+        }
+
+        const hit = findNoteAt(position);
+        if (
+            event.ctrlKey &&
+            hit &&
+            selectedNoteIds.length === 1 &&
+            selectedNoteIds[0] === hit.id &&
+            tryAddControlPoint(hit, position)
+        ) {
             return;
         }
+        if (event.ctrlKey && hit) {
+            toggleNoteSelection(hit.id);
+            return;
+        }
+        if (!hit) {
+            setGesture({
+                kind: "marquee",
+                startLaneFloat: position.laneFloat,
+                startRawTick: position.rawTick,
+                currentLaneFloat: position.laneFloat,
+                currentRawTick: position.rawTick,
+                startX: position.x,
+                startY: position.y,
+                currentX: position.x,
+                currentY: position.y,
+                additive: event.ctrlKey,
+                initialSelection: selectedNoteIds,
+            });
+            return;
+        }
+
+        const nextSelection = selectedNoteIds.includes(hit.id)
+            ? selectedNoteIds
+            : [hit.id];
+        if (!selectedNoteIds.includes(hit.id)) selectNotes(nextSelection);
+
+        const horizontalResizeHandle =
+            nextSelection.length === 1
+                ? horizontalResizeHandleAt(hit, position)
+                : null;
+        if (horizontalResizeHandle) {
+            startHorizontalResize(hit, horizontalResizeHandle, position);
+            return;
+        }
+
         setGesture({
-            kind: "create",
+            kind: "move",
+            selectedIds: nextSelection,
             startLane: position.lane,
             startTick: position.tick,
             currentLane: position.lane,
@@ -562,47 +1320,143 @@ export default function PixiNoteEditor({
     }
 
     function handlePointerMove(event: ReactPointerEvent<HTMLDivElement>) {
-        if (!gesture) return;
         const position = pointerPosition(event.clientX, event.clientY);
         if (!position) return;
-        setGesture((current) =>
-            current
-                ? {
-                      ...current,
-                      currentLane: position.lane,
-                      currentTick: position.tick,
-                  }
-                : null
-        );
+        if (!gesture) {
+            const selectedNotes =
+                tool === "select"
+                    ? selectedNotesFrom(document.notes, selectedNoteIds)
+                    : [];
+            const selectedHandle =
+                selectedNotes.length === 1
+                    ? horizontalResizeHandleAt(selectedNotes[0], position, true)
+                    : null;
+            const selectedAnchor =
+                selectedNotes.length === 1
+                    ? findGlissandoAnchorAt(selectedNotes[0], position)
+                    : null;
+            const selectedDurationHandle =
+                selectedNotes.length === 1
+                    ? isDurationResizeHandleAt(selectedNotes[0], position)
+                    : false;
+            const hit =
+                tool === "select" &&
+                !selectedHandle &&
+                !selectedAnchor &&
+                !selectedDurationHandle
+                    ? findNoteAt(position)
+                    : undefined;
+            setIsAnchorHovered(Boolean(selectedAnchor));
+            setIsDurationHandleHovered(selectedDurationHandle);
+            setIsResizeHandleHovered(
+                Boolean(
+                    selectedHandle ||
+                    (hit && horizontalResizeHandleAt(hit, position))
+                )
+            );
+            return;
+        }
+        setGesture((current) => {
+            if (!current) return null;
+            if (current.kind === "marquee") {
+                return {
+                    ...current,
+                    currentLaneFloat: position.laneFloat,
+                    currentRawTick: position.rawTick,
+                    currentX: position.x,
+                    currentY: position.y,
+                };
+            }
+            return {
+                ...current,
+                currentLane: position.lane,
+                currentTick: position.tick,
+            };
+        });
     }
 
     function finishGesture() {
         if (!gesture) return;
-        if (gesture.kind === "edit") {
-            const next = buildEditedNote(gesture);
+        if (gesture.kind === "create" && tool !== "select") {
+            const next = buildPreviewNote({
+                gesture,
+                tool,
+                hand,
+                width: defaultWidth,
+                ticksPerQuarter: document.ticksPerQuarter,
+                snapDivisor,
+            });
+            next.id = crypto.randomUUID();
+            replaceNotes([...document.notes, next], [next.id]);
+        } else if (gesture.kind === "move") {
             replaceNotes(
-                document.notes.map((note) =>
-                    note.id === gesture.original.id ? next : note
+                moveChartNotes(
+                    document.notes,
+                    gesture.selectedIds,
+                    gesture.currentLane - gesture.startLane,
+                    gesture.currentTick - gesture.startTick
                 ),
-                next.id
+                gesture.selectedIds
             );
-            setGesture(null);
-            return;
+        } else if (gesture.kind === "resize") {
+            const next = buildResizedNote(gesture);
+            replaceNotes(
+                replacePreviewNote(document.notes, gesture.original.id, next),
+                [next.id]
+            );
+        } else if (gesture.kind === "point") {
+            const next = buildPointEditedNote(gesture);
+            replaceNotes(
+                replacePreviewNote(document.notes, gesture.original.id, next),
+                [next.id]
+            );
+        } else if (gesture.kind === "glissando-anchor") {
+            const next = moveGlissandoSnapAnchor(
+                gesture.original,
+                gesture.tickOffset,
+                gesture.currentLane - gesture.startLane
+            );
+            replaceNotes(
+                replacePreviewNote(document.notes, gesture.original.id, next),
+                [next.id]
+            );
+        } else if (gesture.kind === "marquee") {
+            const distance = Math.hypot(
+                gesture.currentX - gesture.startX,
+                gesture.currentY - gesture.startY
+            );
+            if (distance < 4) {
+                if (!gesture.additive) selectNotes([]);
+            } else {
+                const matched = document.notes
+                    .filter((note) =>
+                        chartNoteIntersectsRect(note, {
+                            minLane: Math.min(
+                                gesture.startLaneFloat,
+                                gesture.currentLaneFloat
+                            ),
+                            maxLane: Math.max(
+                                gesture.startLaneFloat,
+                                gesture.currentLaneFloat
+                            ),
+                            minTick: Math.min(
+                                gesture.startRawTick,
+                                gesture.currentRawTick
+                            ),
+                            maxTick: Math.max(
+                                gesture.startRawTick,
+                                gesture.currentRawTick
+                            ),
+                        })
+                    )
+                    .map((note) => note.id);
+                selectNotes(
+                    gesture.additive
+                        ? [...gesture.initialSelection, ...matched]
+                        : matched
+                );
+            }
         }
-        if (tool === "select") {
-            setGesture(null);
-            return;
-        }
-        const next = buildPreviewNote({
-            gesture,
-            tool,
-            hand,
-            width: defaultWidth,
-            ticksPerQuarter: document.ticksPerQuarter,
-            snapDivisor,
-        });
-        next.id = crypto.randomUUID();
-        replaceNotes([...document.notes, next], next.id);
         setGesture(null);
     }
 
@@ -610,10 +1464,21 @@ export default function PixiNoteEditor({
         <div
             ref={hostRef}
             role="application"
-            aria-label="28칸 WebGL 채보 작성 영역"
+            aria-label="28칸 WebGL 채보 작성 영역. 1~5 도구 전환, 좌클릭 작성과 선택, 우클릭 삭제, 드래그 범위 선택을 지원합니다."
             tabIndex={0}
             className={`h-full min-h-80 w-full overflow-hidden outline-none ${
-                tool === "select" ? "cursor-default" : "cursor-crosshair"
+                (gesture?.kind === "resize" && gesture.action === "end") ||
+                (tool === "select" && isDurationHandleHovered)
+                    ? "cursor-ns-resize"
+                    : (gesture?.kind === "resize" &&
+                            gesture.action !== "end") ||
+                        gesture?.kind === "glissando-anchor" ||
+                        (tool === "select" &&
+                            (isResizeHandleHovered || isAnchorHovered))
+                      ? "cursor-pointer"
+                      : tool === "select"
+                        ? "cursor-default"
+                        : "cursor-crosshair"
             }`}
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
@@ -623,33 +1488,136 @@ export default function PixiNoteEditor({
                 }
                 finishGesture();
             }}
-            onPointerCancel={() => setGesture(null)}
-            onWheel={(event) => {
-                event.preventDefault();
-                onSeek(
-                    Math.min(
-                        document.durationMs,
-                        Math.max(0, currentTimeMs + event.deltaY * 2)
-                    )
-                );
-            }}
-            onKeyDown={(event) => {
-                if (
-                    (event.key === "Delete" || event.key === "Backspace") &&
-                    selectedNoteId
-                ) {
-                    event.preventDefault();
-                    replaceNotes(
-                        document.notes.filter(
-                            (note) => note.id !== selectedNoteId
-                        ),
-                        null
-                    );
+            onPointerLeave={() => {
+                if (!gesture) {
+                    setIsResizeHandleHovered(false);
+                    setIsAnchorHovered(false);
+                    setIsDurationHandleHovered(false);
                 }
+            }}
+            onPointerCancel={() => {
+                setGesture(null);
+                setIsResizeHandleHovered(false);
+                setIsAnchorHovered(false);
+                setIsDurationHandleHovered(false);
             }}
             onContextMenu={(event) => event.preventDefault()}
         />
     );
+}
+
+function capPolygon(x: number, y: number, width: number, height: number) {
+    const bevel = Math.min(7, Math.max(2, height * 0.42, width * 0.05));
+    return [
+        x,
+        y,
+        x + width,
+        y,
+        x + width + bevel,
+        y + height / 2,
+        x + width,
+        y + height,
+        x,
+        y + height,
+        x - bevel,
+        y + height / 2,
+    ];
+}
+
+function drawCap({
+    graphics,
+    x,
+    centerY,
+    width,
+    hand,
+    alpha,
+    selected,
+    conflicted,
+    small = false,
+}: {
+    graphics: Graphics;
+    x: number;
+    centerY: number;
+    width: number;
+    hand: ChartHand;
+    alpha: number;
+    selected: boolean;
+    conflicted: boolean;
+    small?: boolean;
+}) {
+    const height = small ? 7 : 10;
+    const handColor = colorForHand(hand);
+    const outer = capPolygon(
+        x + 1,
+        centerY - height / 2 - 2,
+        Math.max(3, width - 2),
+        height + 4
+    );
+    graphics.poly(outer, true).fill({ color: handColor, alpha: alpha * 0.24 });
+    const shape = capPolygon(
+        x + 2,
+        centerY - height / 2,
+        Math.max(1, width - 4),
+        height
+    );
+    graphics
+        .poly(shape, true)
+        .fill({ color: colors.noteFace, alpha })
+        .stroke({ color: handColor, width: 1.4, alpha });
+    graphics
+        .moveTo(x + 5, centerY + 1)
+        .lineTo(x + width - 5, centerY + 1)
+        .stroke({ color: handColor, width: 1, alpha: alpha * 0.34 });
+    if (conflicted) {
+        graphics
+            .poly(
+                capPolygon(x, centerY - height / 2 - 2.5, width, height + 5),
+                true
+            )
+            .stroke({
+                color: colors.conflict,
+                width: 3.2,
+                alpha: 0.95,
+            });
+    }
+    if (selected) {
+        graphics
+            .poly(
+                capPolygon(x, centerY - height / 2 - 2.5, width, height + 5),
+                true
+            )
+            .stroke({
+                color: colors.selection,
+                width: 1.8,
+                alpha: 0.95,
+            });
+    }
+}
+
+function drawDiamond(
+    graphics: Graphics,
+    centerX: number,
+    centerY: number,
+    size: number,
+    fill: number,
+    alpha = 1
+) {
+    graphics
+        .poly(
+            [
+                centerX,
+                centerY - size,
+                centerX + size,
+                centerY,
+                centerX,
+                centerY + size,
+                centerX - size,
+                centerY,
+            ],
+            true
+        )
+        .fill({ color: fill, alpha })
+        .stroke({ color: colors.noteFace, width: 1, alpha });
 }
 
 function drawNote({
@@ -663,6 +1631,9 @@ function drawNote({
     ticksPerQuarter,
     isPreview,
     isSelected,
+    isDimmed,
+    showControls,
+    isConflicted,
 }: {
     graphics: Graphics;
     note: ChartNote;
@@ -674,155 +1645,259 @@ function drawNote({
     ticksPerQuarter: number;
     isPreview: boolean;
     isSelected: boolean;
+    isDimmed: boolean;
+    showControls: boolean;
+    isConflicted: boolean;
 }) {
     const yForTick = (tick: number) =>
         judgmentY -
         (tickToMilliseconds(tick, timingPoints, ticksPerQuarter) -
             currentTimeMs) *
             pixelsPerMs;
-    const headHeight = 9;
-    const alpha = isPreview ? 0.58 : 0.88;
-    const outlineColor = isPreview ? colors.preview : colors.selected;
+    const baseAlpha = isDimmed ? 0.28 : isPreview ? 0.58 : 0.94;
 
-    if (note.type !== "standard") {
-        if (note.type === "trill") {
-            const endY = yForTick(note.tick + note.durationTicks);
-            const startY = yForTick(note.tick);
-            const top = Math.min(startY, endY);
-            const height = Math.max(headHeight, Math.abs(endY - startY));
-            const pairLane = note.pairLane ?? note.lane;
-            const pairWidth = note.pairWidth ?? note.width;
-            graphics
-                .roundRect(
-                    note.lane * laneWidth + 1,
-                    top,
-                    note.width * laneWidth - 2,
-                    height,
-                    3
-                )
-                .fill({ color: colorForHand(note.hand), alpha: alpha * 0.5 });
-            graphics
-                .roundRect(
-                    pairLane * laneWidth + 1,
-                    top,
-                    pairWidth * laneWidth - 2,
-                    height,
-                    3
-                )
-                .fill({ color: colorForHand(note.hand), alpha: alpha * 0.5 });
-
-            const steps = Math.min(
-                64,
-                Math.max(2, Math.floor(note.durationTicks / 120))
+    if (note.type === "standard") {
+        drawCap({
+            graphics,
+            x: note.lane * laneWidth,
+            centerY: yForTick(note.tick),
+            width: note.width * laneWidth,
+            hand: note.hand,
+            alpha: baseAlpha,
+            selected: isSelected,
+            conflicted: isConflicted,
+        });
+    } else if (note.type === "trill") {
+        const pairLane = note.pairLane ?? note.lane;
+        const pairWidth = note.pairWidth ?? note.width;
+        const stepTicks = Math.max(
+            1,
+            Math.round((ticksPerQuarter * 4) / (note.trillSnapDivisor ?? 8))
+        );
+        const stepCount = Math.max(
+            1,
+            Math.ceil(note.durationTicks / stepTicks)
+        );
+        for (let index = 0; index < stepCount; index += 1) {
+            const startTick = note.tick + index * stepTicks;
+            const endTick = Math.min(
+                note.tick + note.durationTicks,
+                startTick + stepTicks
             );
-            for (let index = 0; index <= steps; index += 1) {
-                const lane = index % 2 === 0 ? note.lane : pairLane;
-                const width = index % 2 === 0 ? note.width : pairWidth;
-                const tick =
-                    note.tick +
-                    Math.round((note.durationTicks * index) / steps);
-                graphics
-                    .roundRect(
-                        lane * laneWidth + 1,
-                        yForTick(tick) - headHeight / 2,
-                        width * laneWidth - 2,
-                        headHeight,
-                        3
-                    )
-                    .fill({ color: colorForHand(note.hand), alpha });
-            }
-        } else {
-            const points = noteRenderPoints(note);
-            const polygon: number[] = [];
-            for (const point of points) {
-                polygon.push(point.lane * laneWidth + 1, yForTick(point.tick));
-            }
-            for (const point of [...points].reverse()) {
-                polygon.push(
-                    (point.lane + point.width) * laneWidth - 1,
-                    yForTick(point.tick)
-                );
-            }
+            const fromLane = index % 2 === 0 ? note.lane : pairLane;
+            const fromWidth = index % 2 === 0 ? note.width : pairWidth;
+            const toLane = index % 2 === 0 ? pairLane : note.lane;
+            const toWidth = index % 2 === 0 ? pairWidth : note.width;
+            const topY = yForTick(endTick);
+            const bottomY = yForTick(startTick);
+            const gap = Math.min(2.5, Math.abs(bottomY - topY) * 0.08);
+            const polygon = [
+                fromLane * laneWidth + 2,
+                bottomY - gap,
+                (fromLane + fromWidth) * laneWidth - 2,
+                bottomY - gap,
+                (toLane + toWidth) * laneWidth - 2,
+                topY + gap,
+                toLane * laneWidth + 2,
+                topY + gap,
+            ];
             graphics
                 .poly(polygon, true)
-                .fill({ color: colorForHand(note.hand), alpha: alpha * 0.52 });
-
-            for (const point of points) {
-                graphics
-                    .roundRect(
-                        point.lane * laneWidth + 1,
-                        yForTick(point.tick) - headHeight / 2,
-                        point.width * laneWidth - 2,
-                        headHeight,
-                        3
-                    )
-                    .fill({
-                        color: colorForHand(point.hand),
-                        alpha:
-                            point.tick === note.tick ||
-                            point.tick === note.tick + note.durationTicks
-                                ? alpha
-                                : alpha * 0.82,
-                    });
+                .fill({
+                    color: colorForHand(note.hand),
+                    alpha: baseAlpha * 0.72,
+                })
+                .stroke({
+                    color: colors.noteFace,
+                    width: 0.8,
+                    alpha: baseAlpha * 0.45,
+                });
+            if (isSelected) {
+                graphics.poly(polygon, true).stroke({
+                    color: colors.selection,
+                    width: 1.5,
+                    alpha: 0.92,
+                });
+            }
+            if (isConflicted) {
+                graphics.poly(polygon, true).stroke({
+                    color: colors.conflict,
+                    width: 2.8,
+                    alpha: 0.92,
+                });
             }
         }
+        const startCenterX = (note.lane + note.width / 2) * laneWidth;
+        drawCap({
+            graphics,
+            x: note.lane * laneWidth,
+            centerY: yForTick(note.tick),
+            width: note.width * laneWidth,
+            hand: note.hand,
+            alpha: baseAlpha,
+            selected: isSelected,
+            conflicted: isConflicted,
+        });
+        const finalSegmentIndex = stepCount - 1;
+        const endLane = finalSegmentIndex % 2 === 0 ? pairLane : note.lane;
+        const endWidth = finalSegmentIndex % 2 === 0 ? pairWidth : note.width;
+        drawCap({
+            graphics,
+            x: endLane * laneWidth,
+            centerY: yForTick(note.tick + note.durationTicks),
+            width: endWidth * laneWidth,
+            hand: note.hand,
+            alpha: baseAlpha,
+            selected: isSelected,
+            conflicted: isConflicted,
+        });
+        drawDiamond(
+            graphics,
+            startCenterX,
+            yForTick(note.tick) - 1,
+            5,
+            colors.selection,
+            baseAlpha
+        );
+        drawDiamond(
+            graphics,
+            startCenterX + 8,
+            yForTick(note.tick) - 8,
+            4,
+            colors.selection,
+            baseAlpha * 0.92
+        );
     } else {
-        graphics
-            .roundRect(
-                note.lane * laneWidth + 1,
-                yForTick(note.tick) - headHeight / 2,
-                note.width * laneWidth - 2,
-                headHeight,
-                3
-            )
-            .fill({ color: colorForHand(note.hand), alpha });
+        const points = getChartNoteRenderPoints(note);
+        for (let index = 0; index < points.length - 1; index += 1) {
+            const first = points[index];
+            const second = points[index + 1];
+            const polygon = [
+                first.lane * laneWidth + 2,
+                yForTick(first.tick),
+                (first.lane + first.width) * laneWidth - 2,
+                yForTick(first.tick),
+                (second.lane + second.width) * laneWidth - 2,
+                yForTick(second.tick),
+                second.lane * laneWidth + 2,
+                yForTick(second.tick),
+            ];
+            graphics
+                .poly(polygon, true)
+                .fill({
+                    color: colorForHand(first.hand),
+                    alpha: baseAlpha * 0.58,
+                })
+                .stroke({
+                    color: colorForHand(second.hand),
+                    width: 1,
+                    alpha: baseAlpha * 0.62,
+                });
+            graphics
+                .moveTo(
+                    (first.lane + first.width / 2) * laneWidth,
+                    yForTick(first.tick)
+                )
+                .lineTo(
+                    (second.lane + second.width / 2) * laneWidth,
+                    yForTick(second.tick)
+                )
+                .stroke({
+                    color: colors.noteFace,
+                    width: 1.3,
+                    alpha: baseAlpha * 0.72,
+                });
+            if (isSelected) {
+                graphics.poly(polygon, true).stroke({
+                    color: colors.selection,
+                    width: 1.6,
+                    alpha: 0.9,
+                });
+            }
+            if (isConflicted) {
+                graphics.poly(polygon, true).stroke({
+                    color: colors.conflict,
+                    width: 2.8,
+                    alpha: 0.92,
+                });
+            }
+        }
+        const capPoints =
+            note.type === "glissando"
+                ? getGlissandoSnapRenderPoints(note, ticksPerQuarter)
+                : points;
+        for (const point of capPoints) {
+            drawCap({
+                graphics,
+                x: point.lane * laneWidth,
+                centerY: yForTick(point.tick),
+                width: point.width * laneWidth,
+                hand: point.hand,
+                alpha: baseAlpha,
+                selected: isSelected,
+                conflicted: isConflicted,
+                small:
+                    point.tick !== note.tick &&
+                    point.tick !== note.tick + note.durationTicks,
+            });
+        }
     }
 
-    if (isSelected || isPreview) {
+    if (showControls) {
+        const handleSize = 4;
         const startY = yForTick(note.tick);
-        graphics
-            .roundRect(
-                note.lane * laneWidth,
-                startY - headHeight / 2 - 1,
-                note.width * laneWidth,
-                headHeight + 2,
-                4
-            )
-            .stroke({ color: outlineColor, width: isSelected ? 2 : 1 });
-        if (isSelected) {
-            const handleSize = 7;
-            const left = note.lane * laneWidth;
-            const right = (note.lane + note.width) * laneWidth;
-            graphics
-                .roundRect(
-                    left - handleSize / 2,
-                    startY - handleSize / 2,
-                    handleSize,
-                    handleSize,
-                    2
-                )
-                .fill(colors.selected);
-            graphics
-                .roundRect(
-                    right - handleSize / 2,
-                    startY - handleSize / 2,
-                    handleSize,
-                    handleSize,
-                    2
-                )
-                .fill(colors.selected);
-            if (note.type !== "standard") {
-                const endY = yForTick(note.tick + note.durationTicks);
-                const centerX = (note.lane + note.width / 2) * laneWidth;
-                graphics
-                    .roundRect(
-                        centerX - handleSize / 2,
-                        endY - handleSize / 2,
-                        handleSize,
-                        handleSize,
-                        2
-                    )
-                    .fill(colors.selected);
+        drawDiamond(
+            graphics,
+            note.lane * laneWidth,
+            startY,
+            handleSize,
+            colors.selection
+        );
+        drawDiamond(
+            graphics,
+            (note.lane + note.width) * laneWidth,
+            startY,
+            handleSize,
+            colors.selection
+        );
+        if (note.type !== "standard") {
+            const endTick = note.tick + note.durationTicks;
+            const endRange = chartNoteRangeAtTick(note, endTick);
+            const endHandleLane =
+                note.type === "glissando"
+                    ? endRange.lane + endRange.width
+                    : endRange.lane + endRange.width / 2;
+            drawDiamond(
+                graphics,
+                endHandleLane * laneWidth,
+                yForTick(endTick),
+                handleSize,
+                colors.selection
+            );
+        }
+        if (note.type === "glissando") {
+            for (const point of getGlissandoSnapRenderPoints(
+                note,
+                ticksPerQuarter
+            )) {
+                drawDiamond(
+                    graphics,
+                    (point.lane + point.width / 2) * laneWidth,
+                    yForTick(point.tick),
+                    4,
+                    colors.selection
+                );
+            }
+        } else if (note.type === "tenuto") {
+            for (const point of getChartNoteRenderPoints(note)) {
+                if (point.sourceIndex === null) continue;
+                drawDiamond(
+                    graphics,
+                    (point.lane + point.width / 2) * laneWidth,
+                    yForTick(point.tick),
+                    5,
+                    colors.selection
+                );
             }
         }
     }

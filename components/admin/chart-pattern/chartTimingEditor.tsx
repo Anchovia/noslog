@@ -25,6 +25,7 @@ import {
     type ReactNode,
     useCallback,
     useEffect,
+    useMemo,
     useRef,
     useState,
 } from "react";
@@ -36,6 +37,7 @@ import {
     restoreChartPatternRevision,
     saveChartPatternDraft,
 } from "@/app/admin/music/[index]/[difficulty]/pattern/actions";
+import { findChartNoteConflicts } from "@/lib/chart-pattern/editor";
 import {
     chartDocumentSchema,
     chartExportSchema,
@@ -95,6 +97,12 @@ const noteTypeLabels: Record<ChartNoteType, string> = {
     glissando: "글리산도",
     trill: "트릴",
 };
+const noteToolShortcuts: Record<ChartNoteType, number> = {
+    standard: 2,
+    tenuto: 3,
+    glissando: 4,
+    trill: 5,
+};
 
 function safeFileName(value: string) {
     return value
@@ -102,6 +110,12 @@ function safeFileName(value: string) {
         .replace(/[<>:"/\\|?*\u0000-\u001f]/g, "_")
         .replace(/\s+/g, "_")
         .slice(0, 80);
+}
+
+function formatSavedTime(value: Date) {
+    return new Date(value.getTime() + 9 * 60 * 60 * 1_000)
+        .toISOString()
+        .slice(11, 16);
 }
 
 function EditorButton({
@@ -152,6 +166,15 @@ function ChartTimingEditorWorkspace({
     );
     const saveStatus = useChartEditorStore((state) => state.saveStatus);
     const saveMessage = useChartEditorStore((state) => state.saveMessage);
+    const noteConflicts = useMemo(
+        () =>
+            findChartNoteConflicts(
+                chartDocument.notes,
+                chartDocument.ticksPerQuarter
+            ),
+        [chartDocument.notes, chartDocument.ticksPerQuarter]
+    );
+    const hasNoteConflicts = noteConflicts.length > 0;
     const lastSavedAt = useChartEditorStore((state) => state.lastSavedAt);
     const undoStackLength = useChartEditorStore(
         (state) => state.undoStack.length
@@ -246,6 +269,16 @@ function ChartTimingEditorWorkspace({
             const state = store.getState();
             if (state.saveStatus === "saving") {
                 toast.error("현재 저장이 끝난 뒤 다시 시도해주세요.");
+                return;
+            }
+            const conflicts = findChartNoteConflicts(
+                state.document.notes,
+                state.document.ticksPerQuarter
+            );
+            if (conflicts.length > 0) {
+                toast.error(
+                    `겹치는 노트 ${conflicts.length.toLocaleString("ko-KR")}건을 먼저 수정해주세요.`
+                );
                 return;
             }
             const validDocument = validateCurrentDocument();
@@ -515,26 +548,22 @@ function ChartTimingEditorWorkspace({
                     <div className="ml-auto flex min-w-0 items-center gap-2">
                         <div
                             className={`mr-1 min-w-36 text-right text-xs ${
-                                saveStatus === "error"
+                                saveStatus === "error" || hasNoteConflicts
                                     ? "text-danger"
                                     : "text-text-secondary"
                             }`}
                         >
                             <span className="block truncate">
-                                {saveStatus === "saving"
-                                    ? "저장 중..."
-                                    : hasUnsavedChanges
-                                      ? "저장되지 않은 변경"
-                                      : (saveMessage ??
-                                        (lastSavedAt
-                                            ? `${lastSavedAt.toLocaleTimeString(
-                                                  "ko-KR",
-                                                  {
-                                                      hour: "2-digit",
-                                                      minute: "2-digit",
-                                                  }
-                                              )} 저장`
-                                            : "새 채보"))}
+                                {hasNoteConflicts
+                                    ? `노트 충돌 ${noteConflicts.length.toLocaleString("ko-KR")}건`
+                                    : saveStatus === "saving"
+                                      ? "저장 중..."
+                                      : hasUnsavedChanges
+                                        ? "저장되지 않은 변경"
+                                        : (saveMessage ??
+                                          (lastSavedAt
+                                              ? `${formatSavedTime(lastSavedAt)} 저장`
+                                              : "새 채보"))}
                             </span>
                             <span className="text-micro block">
                                 저장 v{savedRevision}
@@ -580,7 +609,14 @@ function ChartTimingEditorWorkspace({
                         </Link>
                         <button
                             type="button"
-                            disabled={saveStatus === "saving"}
+                            disabled={
+                                saveStatus === "saving" || hasNoteConflicts
+                            }
+                            title={
+                                hasNoteConflicts
+                                    ? "겹치는 노트를 먼저 수정해주세요."
+                                    : "복구 가능한 버전 저장"
+                            }
                             onClick={() => void runExplicitSave("manual")}
                             className="border-border hover:bg-surface-muted flex h-9 items-center gap-1.5 rounded-md border px-3 text-xs font-bold disabled:opacity-40"
                         >
@@ -595,12 +631,15 @@ function ChartTimingEditorWorkspace({
                             type="button"
                             disabled={
                                 saveStatus === "saving" ||
-                                chartDocument.notes.length === 0
+                                chartDocument.notes.length === 0 ||
+                                hasNoteConflicts
                             }
                             title={
-                                chartDocument.notes.length === 0
-                                    ? "노트를 작성한 뒤 공개할 수 있습니다."
-                                    : "현재 채보 공개"
+                                hasNoteConflicts
+                                    ? "겹치는 노트를 먼저 수정해주세요."
+                                    : chartDocument.notes.length === 0
+                                      ? "노트를 작성한 뒤 공개할 수 있습니다."
+                                      : "현재 채보 공개"
                             }
                             onClick={() => {
                                 if (
@@ -669,6 +708,7 @@ function ChartTimingEditorWorkspace({
                                 >
                                     <MousePointer2 className="size-3.5" />
                                     선택
+                                    <kbd className="text-micro ml-auto">1</kbd>
                                 </button>
                                 <div className="mt-1 grid grid-cols-2 gap-1">
                                     {Object.entries(noteTypeLabels).map(
@@ -688,6 +728,13 @@ function ChartTimingEditorWorkspace({
                                                 }`}
                                             >
                                                 {label}
+                                                <kbd className="text-micro ml-1">
+                                                    {
+                                                        noteToolShortcuts[
+                                                            value as ChartNoteType
+                                                        ]
+                                                    }
+                                                </kbd>
                                             </button>
                                         )
                                     )}
@@ -740,8 +787,9 @@ function ChartTimingEditorWorkspace({
                                     ))}
                                 </div>
                                 <p className="text-micro mt-2 px-1 leading-relaxed">
-                                    일반 노트는 가로 드래그로 1~28칸 폭을 지정할
-                                    수 있습니다.
+                                    좌클릭으로 작성·선택하고 우클릭으로
+                                    삭제합니다. 선택 도구에서 빈 공간을
+                                    드래그하면 여러 노트를 선택할 수 있습니다.
                                 </p>
                             </section>
                         ) : null}
@@ -809,6 +857,7 @@ function ChartTimingEditorWorkspace({
                                 hand={noteHand}
                                 defaultWidth={noteWidth}
                                 onSeek={(time) => void seek(time)}
+                                onToolChange={setNoteTool}
                             />
                         )}
                         <div className="border-border bg-surface/95 absolute top-3 left-3 flex items-center gap-1 rounded-md border p-1 shadow-lg">

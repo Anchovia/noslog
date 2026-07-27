@@ -6,6 +6,7 @@ import { z } from "zod";
 
 import { requireAdmin } from "@/lib/admin";
 import { CACHE_TAGS } from "@/lib/cacheTags";
+import { findChartNoteConflicts } from "@/lib/chart-pattern/editor";
 import {
     chartDocumentSchema,
     type ChartDocument,
@@ -164,6 +165,15 @@ async function saveRevision(
     if (!parsed.success) return invalidInputResult();
 
     const { chartId, baseVersion, document, message } = parsed.data;
+    if (
+        findChartNoteConflicts(document.notes, document.ticksPerQuarter)
+            .length > 0
+    ) {
+        return {
+            success: false,
+            message: "겹치는 노트를 수정한 뒤 버전을 저장해주세요.",
+        };
+    }
     if (!(await chartExists(chartId))) {
         return { success: false, message: "악곡 채보를 찾을 수 없습니다." };
     }

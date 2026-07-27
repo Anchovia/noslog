@@ -3,7 +3,8 @@ import type { ChartTimingPoint } from "./schema";
 const MINUTES_TO_MILLISECONDS = 60_000;
 
 function stableFloat(value: number) {
-    return Math.round(value * 1_000_000_000) / 1_000_000_000;
+    const rounded = Math.round(value * 1_000_000_000) / 1_000_000_000;
+    return Object.is(rounded, -0) ? 0 : rounded;
 }
 
 export function sortTimingPoints(points: ChartTimingPoint[]) {
@@ -57,10 +58,109 @@ export function snapTick(
     return Math.round(tick / step) * step;
 }
 
+export function moveTickBySnapSteps(
+    tick: number,
+    divisor: number,
+    ticksPerQuarter: number,
+    steps: number
+) {
+    const step = (ticksPerQuarter * 4) / divisor;
+    const wholeSteps = Math.trunc(steps);
+    if (wholeSteps === 0) return stableFloat(tick);
+    const position = tick / step;
+    const baseIndex =
+        wholeSteps > 0
+            ? Math.floor(position + 0.000000001)
+            : Math.ceil(position - 0.000000001);
+    return stableFloat((baseIndex + wholeSteps) * step);
+}
+
 export interface BeatMarker {
     tick: number;
     timeMs: number;
     accent: boolean;
+}
+
+export interface SnapGridMarker {
+    tick: number;
+    timeMs: number;
+    subdivision: number;
+}
+
+function greatestCommonDivisor(first: number, second: number) {
+    let left = Math.abs(Math.round(first));
+    let right = Math.abs(Math.round(second));
+    while (right !== 0) {
+        const remainder = left % right;
+        left = right;
+        right = remainder;
+    }
+    return Math.max(1, left);
+}
+
+export function getSnapGridSubdivision(snapIndex: number, divisor: number) {
+    const safeDivisor = Math.max(1, Math.round(divisor));
+    const position =
+        ((Math.round(snapIndex) % safeDivisor) + safeDivisor) % safeDivisor;
+    if (position === 0) return 1;
+    return safeDivisor / greatestCommonDivisor(position, safeDivisor);
+}
+
+export function getSnapGridMarkers(
+    points: ChartTimingPoint[],
+    ticksPerQuarter: number,
+    divisor: number,
+    startMs: number,
+    endMs: number
+) {
+    if (
+        endMs <= startMs ||
+        points.length === 0 ||
+        !Number.isFinite(divisor) ||
+        divisor <= 0
+    ) {
+        return [] satisfies SnapGridMarker[];
+    }
+
+    const sorted = sortTimingPoints(points);
+    const stepTicks = (ticksPerQuarter * 4) / divisor;
+    const markers: SnapGridMarker[] = [];
+
+    for (let index = 0; index < sorted.length; index += 1) {
+        const point = sorted[index];
+        const nextPoint = sorted[index + 1];
+        const segmentStartMs = Math.max(startMs, point.timeMs);
+        const segmentEndMs = Math.min(endMs, nextPoint?.timeMs ?? endMs);
+        if (segmentEndMs < segmentStartMs) continue;
+
+        const firstVisibleTick = millisecondsToTick(
+            segmentStartMs,
+            [point],
+            ticksPerQuarter
+        );
+        const firstSnapIndex = Math.ceil(
+            (firstVisibleTick - 0.000001) / stepTicks
+        );
+
+        for (let snapIndex = firstSnapIndex; ; snapIndex += 1) {
+            const tick = stableFloat(snapIndex * stepTicks);
+            const timeMs = tickToMilliseconds(tick, [point], ticksPerQuarter);
+            if (timeMs > segmentEndMs + 0.001) break;
+            if (
+                timeMs >= startMs - 0.001 &&
+                timeMs <= endMs + 0.001 &&
+                (!nextPoint || timeMs < nextPoint.timeMs - 0.001)
+            ) {
+                markers.push({
+                    tick,
+                    timeMs,
+                    subdivision: getSnapGridSubdivision(snapIndex, divisor),
+                });
+            }
+        }
+    }
+
+    return markers;
 }
 
 export function getBeatMarkers(

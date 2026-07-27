@@ -4,7 +4,10 @@ import type { ChartTimingPoint } from "@/lib/chart-pattern/schema";
 import {
     formatBpm,
     getBeatMarkers,
+    getSnapGridMarkers,
+    getSnapGridSubdivision,
     millisecondsToTick,
+    moveTickBySnapSteps,
     snapTick,
     tickToMilliseconds,
 } from "@/lib/chart-pattern/timing";
@@ -42,6 +45,35 @@ describe("채보 타이밍 계산", () => {
     it("박자 분할에 맞춰 틱을 스냅한다", () => {
         expect(snapTick(260, 8, 480)).toBe(240);
         expect(snapTick(370, 8, 480)).toBe(480);
+    });
+
+    it("휠 이동을 현재 스냅 한 칸과 빠른 네 칸으로 계산한다", () => {
+        expect(moveTickBySnapSteps(370, 8, 480, 1)).toBe(480);
+        expect(moveTickBySnapSteps(370, 8, 480, -1)).toBe(240);
+        expect(moveTickBySnapSteps(640, 3, 480, 4)).toBe(3_200);
+        expect(moveTickBySnapSteps(240, 4, 480, 1)).toBe(480);
+    });
+
+    it("선택한 스냅 분할에 맞는 보조선 마커를 만든다", () => {
+        const markers = getSnapGridMarkers(timingPoints, 480, 3, 0, 2_100);
+
+        expect(markers.map(({ tick }) => tick)).toEqual([0, 640, 1_280, 1_920]);
+    });
+
+    it("osu! 방식으로 각 보조선의 최소 스냅 분할을 구분한다", () => {
+        expect(
+            Array.from({ length: 9 }, (_, index) =>
+                getSnapGridSubdivision(index, 8)
+            )
+        ).toEqual([1, 8, 4, 8, 2, 8, 4, 8, 1]);
+        expect(
+            [1, 2, 3, 4, 6, 8, 12].map((index) =>
+                getSnapGridSubdivision(index, 24)
+            )
+        ).toEqual([24, 12, 8, 6, 4, 3, 2]);
+        expect(
+            [1, 2, 4, 8, 16].map((index) => getSnapGridSubdivision(index, 32))
+        ).toEqual([32, 16, 8, 4, 2]);
     });
 
     it("박자표별 강박이 포함된 메트로놈 마커를 만든다", () => {

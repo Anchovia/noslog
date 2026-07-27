@@ -89,12 +89,16 @@ describe("채보 문서 스키마", () => {
                     width: 2,
                     pairLane: 14,
                     pairWidth: 3,
+                    trillSnapDivisor: 8,
                     points: [],
                 },
             ],
         });
 
         expect(parsed.success).toBe(true);
+        if (parsed.success) {
+            expect(parsed.data.notes[0].trillSnapDivisor).toBe(8);
+        }
     });
 
     it("두 번째 위치가 없는 트릴을 거부한다", () => {
@@ -110,6 +114,53 @@ describe("채보 문서 스키마", () => {
                     durationTicks: 960,
                     lane: 8,
                     width: 2,
+                    points: [],
+                },
+            ],
+        });
+
+        expect(parsed.success).toBe(false);
+    });
+
+    it("글리산도는 연결 노트 간격을 저장한다", () => {
+        const document = createDefaultChartDocument();
+        const parsed = chartDocumentSchema.safeParse({
+            ...document,
+            notes: [
+                {
+                    id: "glissando-1",
+                    type: "glissando",
+                    hand: "left",
+                    tick: 480,
+                    durationTicks: 1_920,
+                    lane: 8,
+                    width: 2,
+                    glissandoSnapDivisor: 4,
+                    points: [],
+                },
+            ],
+        });
+
+        expect(parsed.success).toBe(true);
+        if (parsed.success) {
+            expect(parsed.data.notes[0].glissandoSnapDivisor).toBe(4);
+        }
+    });
+
+    it("글리산도가 아닌 노트의 연결 간격을 거부한다", () => {
+        const document = createDefaultChartDocument();
+        const parsed = chartDocumentSchema.safeParse({
+            ...document,
+            notes: [
+                {
+                    id: "tenuto-1",
+                    type: "tenuto",
+                    hand: "right",
+                    tick: 480,
+                    durationTicks: 960,
+                    lane: 8,
+                    width: 2,
+                    glissandoSnapDivisor: 4,
                     points: [],
                 },
             ],

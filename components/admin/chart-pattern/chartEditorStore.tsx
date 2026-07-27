@@ -1,9 +1,14 @@
 "use client";
 
 import { createContext, type ReactNode, useContext, useState } from "react";
+import { toast } from "sonner";
 import { useStore } from "zustand";
 import { createStore, type StoreApi } from "zustand/vanilla";
 
+import {
+    getChartEditorNavigationDurationMs,
+    hasNewChartNoteConflicts,
+} from "@/lib/chart-pattern/editor";
 import type {
     ChartDocument,
     ChartNote,
@@ -37,7 +42,7 @@ interface ChartEditorState {
     savedRevision: number;
     publishedRevision: number | null;
     selectedTimingPointId: string;
-    selectedNoteId: string | null;
+    selectedNoteIds: string[];
     currentTimeMs: number;
     playbackRate: ChartPlaybackRate;
     snapDivisor: number;
@@ -50,13 +55,14 @@ interface ChartEditorState {
     undoStack: HistoryEntry[];
     redoStack: HistoryEntry[];
     selectTimingPoint: (id: string) => void;
-    selectNote: (id: string | null) => void;
+    selectNotes: (ids: string[]) => void;
+    toggleNoteSelection: (id: string) => void;
     setCurrentTimeMs: (timeMs: number) => void;
     setPlaybackRate: (rate: ChartPlaybackRate) => void;
     setSnapDivisor: (divisor: number) => void;
     setMetronomeEnabled: (enabled: boolean) => void;
     replaceTimingPoints: (points: ChartTimingPoint[]) => void;
-    replaceNotes: (notes: ChartNote[], selectedNoteId?: string | null) => void;
+    replaceNotes: (notes: ChartNote[], selectedNoteIds?: string[]) => void;
     replaceDocument: (document: ChartDocument) => void;
     setDurationMs: (durationMs: number) => void;
     undo: () => void;
@@ -109,7 +115,7 @@ function createChartEditorStore(input: CreateChartEditorStoreInput) {
         savedRevision: input.savedRevision,
         publishedRevision: input.publishedRevision,
         selectedTimingPointId: input.document.timingPoints[0].id,
-        selectedNoteId: null,
+        selectedNoteIds: [],
         currentTimeMs: Math.max(0, input.document.timingPoints[0]?.timeMs ?? 0),
         playbackRate: 1,
         snapDivisor: 4,
@@ -122,12 +128,23 @@ function createChartEditorStore(input: CreateChartEditorStoreInput) {
         undoStack: [],
         redoStack: [],
         selectTimingPoint: (id) => set({ selectedTimingPointId: id }),
-        selectNote: (id) => set({ selectedNoteId: id }),
+        selectNotes: (ids) =>
+            set({
+                selectedNoteIds: [...new Set(ids)].filter((id) =>
+                    get().document.notes.some((note) => note.id === id)
+                ),
+            }),
+        toggleNoteSelection: (id) =>
+            set((state) => ({
+                selectedNoteIds: state.selectedNoteIds.includes(id)
+                    ? state.selectedNoteIds.filter((value) => value !== id)
+                    : [...state.selectedNoteIds, id],
+            })),
         setCurrentTimeMs: (timeMs) =>
             set((state) => ({
                 currentTimeMs: Math.min(
                     Math.max(0, timeMs),
-                    Math.max(state.document.durationMs, 0)
+                    getChartEditorNavigationDurationMs(state.document)
                 ),
             })),
         setPlaybackRate: (playbackRate) => set({ playbackRate }),
@@ -155,22 +172,35 @@ function createChartEditorStore(input: CreateChartEditorStoreInput) {
                 redoStack: [],
             });
         },
-        replaceNotes: (notes, selectedNoteId) => {
+        replaceNotes: (notes, selectedNoteIds) => {
             const state = get();
             if (
                 JSON.stringify(state.document.notes) === JSON.stringify(notes)
             ) {
-                if (selectedNoteId !== undefined) {
-                    set({ selectedNoteId });
+                if (selectedNoteIds !== undefined) {
+                    set({ selectedNoteIds });
                 }
                 return;
             }
+            if (
+                hasNewChartNoteConflicts(
+                    state.document.notes,
+                    notes,
+                    state.document.ticksPerQuarter
+                )
+            ) {
+                toast.error("다른 노트와 겹치는 위치입니다.", {
+                    id: "chart-note-overlap",
+                });
+                return;
+            }
+            const existingIds = new Set(notes.map((note) => note.id));
             set({
                 document: { ...state.document, notes },
-                selectedNoteId:
-                    selectedNoteId === undefined
-                        ? state.selectedNoteId
-                        : selectedNoteId,
+                selectedNoteIds: (selectedNoteIds === undefined
+                    ? state.selectedNoteIds
+                    : selectedNoteIds
+                ).filter((id) => existingIds.has(id)),
                 changeSerial: state.changeSerial + 1,
                 saveStatus: "idle",
                 saveMessage: null,
@@ -187,10 +217,10 @@ function createChartEditorStore(input: CreateChartEditorStoreInput) {
             set({
                 document,
                 selectedTimingPointId: document.timingPoints[0].id,
-                selectedNoteId: null,
+                selectedNoteIds: [],
                 currentTimeMs: Math.min(
                     state.currentTimeMs,
-                    document.durationMs
+                    getChartEditorNavigationDurationMs(document)
                 ),
                 changeSerial: state.changeSerial + 1,
                 saveStatus: "idle",
@@ -227,7 +257,7 @@ function createChartEditorStore(input: CreateChartEditorStoreInput) {
             if (!entry) return;
             set({
                 document: applyHistoryDocument(state.document, entry, "before"),
-                selectedNoteId: null,
+                selectedNoteIds: [],
                 changeSerial: state.changeSerial + 1,
                 saveStatus: "idle",
                 saveMessage: null,
@@ -241,7 +271,7 @@ function createChartEditorStore(input: CreateChartEditorStoreInput) {
             if (!entry) return;
             set({
                 document: applyHistoryDocument(state.document, entry, "after"),
-                selectedNoteId: null,
+                selectedNoteIds: [],
                 changeSerial: state.changeSerial + 1,
                 saveStatus: "idle",
                 saveMessage: null,

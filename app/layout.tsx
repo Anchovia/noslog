@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import Script from "next/script";
 import AppToaster from "@/components/ui/AppToaster";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/metadata/site";
 import "./globals.css";
@@ -88,7 +89,11 @@ export default function RootLayout({
             className={`${pretendard.variable} bg-bg text-text-primary`}
         >
             <head>
-                <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+                <Script
+                    id="noslog-theme"
+                    strategy="beforeInteractive"
+                    dangerouslySetInnerHTML={{ __html: themeScript }}
+                />
             </head>
             <body className="font-sans">
                 {children}

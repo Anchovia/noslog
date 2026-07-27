@@ -5,6 +5,10 @@ import Link from "next/link";
 import { useEffect, useMemo, useRef } from "react";
 
 import {
+    getChartNoteRenderPoints,
+    getGlissandoSnapRenderPoints,
+} from "@/lib/chart-pattern/editor";
+import {
     CHART_LANE_COUNT,
     type ChartDocument,
     type ChartHand,
@@ -335,22 +339,21 @@ function drawSheetNote(
                 document.ticksPerQuarter
             )
         );
-    const color = handColors[note.hand];
-    const headHeight = 5;
     const drawHead = (
         lane: number,
         width: number,
         tick: number,
-        hand: ChartHand = note.hand
-    ) => {
-        context.fillStyle = handColors[hand];
-        context.fillRect(
-            lane * laneWidth + 1,
-            yForTick(tick) - headHeight / 2,
-            width * laneWidth - 2,
-            headHeight
+        hand: ChartHand = note.hand,
+        small = false
+    ) =>
+        drawSheetCap(
+            context,
+            lane * laneWidth,
+            yForTick(tick),
+            width * laneWidth,
+            handColors[hand],
+            small
         );
-    };
 
     if (note.type === "standard") {
         drawHead(note.lane, note.width, note.tick);
@@ -360,77 +363,176 @@ function drawSheetNote(
     if (note.type === "trill") {
         const pairLane = note.pairLane ?? note.lane;
         const pairWidth = note.pairWidth ?? note.width;
-        const startY = yForTick(note.tick);
-        const endY = yForTick(note.tick + note.durationTicks);
-        context.globalAlpha = 0.38;
-        context.fillStyle = color;
-        context.fillRect(
-            note.lane * laneWidth + 1,
-            Math.min(startY, endY),
-            note.width * laneWidth - 2,
-            Math.abs(endY - startY)
+        const stepTicks = Math.max(
+            1,
+            Math.round(
+                (document.ticksPerQuarter * 4) / (note.trillSnapDivisor ?? 8)
+            )
         );
-        context.fillRect(
-            pairLane * laneWidth + 1,
-            Math.min(startY, endY),
-            pairWidth * laneWidth - 2,
-            Math.abs(endY - startY)
-        );
-        context.globalAlpha = 1;
-        const steps = Math.min(
-            64,
-            Math.max(2, Math.floor(note.durationTicks / 120))
-        );
-        for (let index = 0; index <= steps; index += 1) {
-            const lane = index % 2 === 0 ? note.lane : pairLane;
-            const width = index % 2 === 0 ? note.width : pairWidth;
-            drawHead(
-                lane,
-                width,
-                note.tick + Math.round((note.durationTicks * index) / steps)
+        const steps = Math.max(1, Math.ceil(note.durationTicks / stepTicks));
+        for (let index = 0; index < steps; index += 1) {
+            const startTick = note.tick + index * stepTicks;
+            const endTick = Math.min(
+                note.tick + note.durationTicks,
+                startTick + stepTicks
             );
+            const fromLane = index % 2 === 0 ? note.lane : pairLane;
+            const fromWidth = index % 2 === 0 ? note.width : pairWidth;
+            const toLane = index % 2 === 0 ? pairLane : note.lane;
+            const toWidth = index % 2 === 0 ? pairWidth : note.width;
+            context.save();
+            context.globalAlpha = 0.78;
+            context.fillStyle = handColors[note.hand];
+            context.strokeStyle = "rgba(255,255,255,.42)";
+            context.lineWidth = 0.7;
+            context.beginPath();
+            context.moveTo(fromLane * laneWidth + 1, yForTick(startTick) - 1);
+            context.lineTo(
+                (fromLane + fromWidth) * laneWidth - 1,
+                yForTick(startTick) - 1
+            );
+            context.lineTo(
+                (toLane + toWidth) * laneWidth - 1,
+                yForTick(endTick) + 1
+            );
+            context.lineTo(toLane * laneWidth + 1, yForTick(endTick) + 1);
+            context.closePath();
+            context.fill();
+            context.stroke();
+            context.restore();
         }
+        drawHead(note.lane, note.width, note.tick);
+        const centerX = (note.lane + note.width / 2) * laneWidth;
+        drawSheetDiamond(
+            context,
+            centerX,
+            yForTick(note.tick) - 1,
+            3.3,
+            "#f2c75c"
+        );
+        drawSheetDiamond(
+            context,
+            centerX + 5,
+            yForTick(note.tick) - 5,
+            2.4,
+            "#f2c75c"
+        );
         return;
     }
 
-    const points = [
-        {
-            lane: note.lane,
-            width: note.width,
-            tick: note.tick,
-            hand: note.hand,
-        },
-        ...note.points.map((point) => ({
-            lane: point.lane,
-            width: point.width,
-            tick: note.tick + point.tickOffset,
-            hand: point.hand ?? note.hand,
-        })),
-    ].sort((first, second) => first.tick - second.tick);
-    const endTick = note.tick + note.durationTicks;
-    if (points.at(-1)?.tick !== endTick) {
-        points.push({ ...(points.at(-1) ?? points[0]), tick: endTick });
-    }
-
-    context.globalAlpha = 0.45;
-    context.fillStyle = color;
-    context.beginPath();
-    points.forEach((point, index) => {
-        const x = point.lane * laneWidth + 1;
-        const y = yForTick(point.tick);
-        if (index === 0) context.moveTo(x, y);
-        else context.lineTo(x, y);
-    });
-    [...points].reverse().forEach((point) => {
+    const points = getChartNoteRenderPoints(note);
+    for (let index = 0; index < points.length - 1; index += 1) {
+        const first = points[index];
+        const second = points[index + 1];
+        context.save();
+        context.globalAlpha = 0.58;
+        context.fillStyle = handColors[first.hand];
+        context.strokeStyle = handColors[second.hand];
+        context.lineWidth = 0.8;
+        context.beginPath();
+        context.moveTo(first.lane * laneWidth + 1, yForTick(first.tick));
         context.lineTo(
-            (point.lane + point.width) * laneWidth - 1,
-            yForTick(point.tick)
+            (first.lane + first.width) * laneWidth - 1,
+            yForTick(first.tick)
         );
-    });
+        context.lineTo(
+            (second.lane + second.width) * laneWidth - 1,
+            yForTick(second.tick)
+        );
+        context.lineTo(second.lane * laneWidth + 1, yForTick(second.tick));
+        context.closePath();
+        context.fill();
+        context.stroke();
+        context.globalAlpha = 0.72;
+        context.strokeStyle = "#f7f7f2";
+        context.lineWidth = 0.9;
+        context.beginPath();
+        context.moveTo(
+            (first.lane + first.width / 2) * laneWidth,
+            yForTick(first.tick)
+        );
+        context.lineTo(
+            (second.lane + second.width / 2) * laneWidth,
+            yForTick(second.tick)
+        );
+        context.stroke();
+        context.restore();
+    }
+    const capPoints =
+        note.type === "glissando"
+            ? getGlissandoSnapRenderPoints(note, document.ticksPerQuarter)
+            : points;
+    for (const point of capPoints) {
+        drawHead(
+            point.lane,
+            point.width,
+            point.tick,
+            point.hand,
+            point.tick !== note.tick &&
+                point.tick !== note.tick + note.durationTicks
+        );
+    }
+}
+
+function drawSheetCap(
+    context: CanvasRenderingContext2D,
+    x: number,
+    centerY: number,
+    width: number,
+    handColor: string,
+    small = false
+) {
+    const height = small ? 4 : 6;
+    const bevel = Math.min(3.5, Math.max(1, width * 0.08));
+    const left = x + 1.5;
+    const right = x + width - 1.5;
+    const top = centerY - height / 2;
+    const bottom = centerY + height / 2;
+
+    context.save();
+    context.shadowColor = handColor;
+    context.shadowBlur = 4;
+    context.fillStyle = "rgba(247,247,242,.96)";
+    context.strokeStyle = handColor;
+    context.lineWidth = 1;
+    context.beginPath();
+    context.moveTo(left + bevel, top);
+    context.lineTo(right - bevel, top);
+    context.lineTo(right, centerY);
+    context.lineTo(right - bevel, bottom);
+    context.lineTo(left + bevel, bottom);
+    context.lineTo(left, centerY);
     context.closePath();
     context.fill();
-    context.globalAlpha = 1;
-    for (const point of points) {
-        drawHead(point.lane, point.width, point.tick, point.hand);
-    }
+    context.stroke();
+    context.shadowBlur = 0;
+    context.globalAlpha = 0.32;
+    context.strokeStyle = handColor;
+    context.beginPath();
+    context.moveTo(left + bevel + 1, centerY + 1);
+    context.lineTo(right - bevel - 1, centerY + 1);
+    context.stroke();
+    context.restore();
+}
+
+function drawSheetDiamond(
+    context: CanvasRenderingContext2D,
+    centerX: number,
+    centerY: number,
+    size: number,
+    color: string
+) {
+    context.save();
+    context.fillStyle = color;
+    context.strokeStyle = "#fff8df";
+    context.lineWidth = 0.8;
+    context.beginPath();
+    context.moveTo(centerX, centerY - size);
+    context.lineTo(centerX + size, centerY);
+    context.lineTo(centerX, centerY + size);
+    context.lineTo(centerX - size, centerY);
+    context.closePath();
+    context.fill();
+    context.stroke();
+    context.restore();
 }
