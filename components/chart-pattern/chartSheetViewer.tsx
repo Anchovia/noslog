@@ -2,7 +2,7 @@
 
 import { ArrowLeft, Info } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import {
     getChartNoteRenderPoints,
@@ -20,6 +20,8 @@ import {
     tickToMilliseconds,
 } from "@/lib/chart-pattern/timing";
 
+import FallingChartViewer from "./fallingChartViewer";
+
 interface ChartSheetViewerProps {
     title: string;
     artist: string | null;
@@ -28,6 +30,7 @@ interface ChartSheetViewerProps {
     revision: number | null;
     document: ChartDocument;
     backHref: string;
+    jacketUrl: string | null;
     preview?: boolean;
 }
 
@@ -62,8 +65,10 @@ export default function ChartSheetViewer({
     revision,
     document,
     backHref,
+    jacketUrl,
     preview = false,
 }: ChartSheetViewerProps) {
+    const [viewMode, setViewMode] = useState<"falling" | "sheet">("falling");
     const durationMs = useMemo(() => chartDuration(document), [document]);
     const panels = useMemo(
         () =>
@@ -123,12 +128,54 @@ export default function ChartSheetViewer({
             </header>
 
             <section className="mx-auto mt-4 w-full max-w-7xl">
+                <div
+                    role="tablist"
+                    aria-label="채보 보기 방식"
+                    className="border-border bg-surface inline-flex rounded-md border p-1"
+                >
+                    <button
+                        type="button"
+                        role="tab"
+                        aria-selected={viewMode === "falling"}
+                        onClick={() => setViewMode("falling")}
+                        className={`h-8 rounded px-3 text-xs font-semibold ${
+                            viewMode === "falling"
+                                ? "bg-text-primary text-bg"
+                                : "text-text-secondary hover:bg-surface-muted"
+                        }`}
+                    >
+                        낙하형
+                    </button>
+                    <button
+                        type="button"
+                        role="tab"
+                        aria-selected={viewMode === "sheet"}
+                        onClick={() => setViewMode("sheet")}
+                        className={`h-8 rounded px-3 text-xs font-semibold ${
+                            viewMode === "sheet"
+                                ? "bg-text-primary text-bg"
+                                : "text-text-secondary hover:bg-surface-muted"
+                        }`}
+                    >
+                        전체 악보
+                    </button>
+                </div>
+
                 <div className="border-border bg-surface text-caption flex items-start gap-2 rounded-md border px-3 py-2.5">
                     <Info className="mt-0.5 size-3.5 shrink-0" />
-                    <p>
-                        각 열은 아래에서 위로 진행합니다. 화면을 가로로
-                        스크롤하면 곡 전체 채보를 순서대로 확인할 수 있습니다.
-                    </p>
+                    {viewMode === "falling" ? (
+                        <p>
+                            노트가 판정선에 도착하는 흐름을 재생합니다. 로컬
+                            음원을 불러오면 브라우저에서만 사용되며 서버에는
+                            전송되지 않습니다.
+                        </p>
+                    ) : (
+                        <p>
+                            각 열은 아래에서 위로 진행합니다. 화면을 가로로
+                            스크롤하면 곡 전체 채보를 순서대로 확인할 수
+                            있습니다.
+                        </p>
+                    )}
                 </div>
 
                 <div className="mt-3 flex items-center gap-4 px-1 text-xs">
@@ -144,6 +191,13 @@ export default function ChartSheetViewer({
                 <div className="border-border bg-surface text-text-secondary mx-auto mt-4 flex min-h-64 w-full max-w-7xl items-center justify-center rounded-md border text-sm">
                     표시할 노트가 없습니다.
                 </div>
+            ) : viewMode === "falling" ? (
+                <section className="mx-auto mt-4 w-full max-w-5xl">
+                    <FallingChartViewer
+                        document={document}
+                        jacketUrl={jacketUrl}
+                    />
+                </section>
             ) : (
                 <section
                     tabIndex={0}

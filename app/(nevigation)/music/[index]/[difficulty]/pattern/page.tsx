@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import ChartSheetViewer from "@/components/chart-pattern/chartSheetViewer";
 import { chartDocumentSchema } from "@/lib/chart-pattern/schema";
 import db from "@/lib/db";
+import { getJacketUrl } from "@/lib/musicJackets";
 
 export default async function PublicChartPatternPage({
     params,
@@ -27,6 +28,7 @@ export default async function PublicChartPatternPage({
                     index: true,
                     title: true,
                     artist: true,
+                    background: true,
                 },
             },
             pattern: {
@@ -57,6 +59,7 @@ export default async function PublicChartPatternPage({
             level={chart.level}
             revision={chart.pattern.publishedRevision}
             document={document.data}
+            jacketUrl={getJacketUrl(chart.music.index, chart.music.background)}
             backHref={`/music/${encodeURIComponent(chart.music.index)}/${chart.difficulty.toLowerCase()}?tab=detail`}
         />
     );
