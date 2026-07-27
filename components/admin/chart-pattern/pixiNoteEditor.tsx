@@ -27,6 +27,7 @@ import {
 } from "@/lib/chart-pattern/editor";
 import {
     CHART_LANE_COUNT,
+    isChartLaneGroupBoundary,
     type ChartHand,
     type ChartNote,
     type ChartNoteType,
@@ -523,12 +524,15 @@ export default function PixiNoteEditor({
         scene.rect(0, 0, width, height).fill(colors.background);
         for (let lane = 0; lane <= CHART_LANE_COUNT; lane += 1) {
             const x = lane * laneWidth;
+            const isGroupBoundary = isChartLaneGroupBoundary(lane);
             scene
                 .moveTo(x + 0.5, 0)
                 .lineTo(x + 0.5, height)
                 .stroke({
-                    color: lane % 4 === 0 ? colors.laneStrong : colors.laneWeak,
-                    width: lane % 4 === 0 ? 1 : 0.5,
+                    color: isGroupBoundary
+                        ? colors.laneStrong
+                        : colors.laneWeak,
+                    width: isGroupBoundary ? 1 : 0.5,
                 });
         }
 

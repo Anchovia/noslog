@@ -1,12 +1,25 @@
 import { describe, expect, it } from "vitest";
 
 import {
+    CHART_LANE_GROUP_BOUNDARIES,
     chartDocumentSchema,
     chartExportSchema,
     createDefaultChartDocument,
+    isChartLaneGroupBoundary,
 } from "@/lib/chart-pattern/schema";
 
 describe("채보 문서 스키마", () => {
+    it("28칸을 3·3·3·3·4·3·3·3·3 묶음으로 구분한다", () => {
+        expect(CHART_LANE_GROUP_BOUNDARIES).toEqual([
+            0, 3, 6, 9, 12, 16, 19, 22, 25, 28,
+        ]);
+        expect(
+            Array.from({ length: 29 }, (_, lane) => lane).filter(
+                isChartLaneGroupBoundary
+            )
+        ).toEqual(CHART_LANE_GROUP_BOUNDARIES);
+    });
+
     it("28칸·480 TPQ 기준의 기본 문서를 만든다", () => {
         const document = createDefaultChartDocument({
             bpm: 180,

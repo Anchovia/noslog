@@ -8,6 +8,7 @@ import {
     getApproachDurationMs,
     getChartPlaybackDurationMs,
     prepareChartPlaybackNotes,
+    projectPlaybackLane,
     projectPlaybackRange,
     type PlaybackPathPoint,
     type PlaybackTrillSegment,
@@ -15,6 +16,7 @@ import {
 } from "@/lib/chart-pattern/playback";
 import {
     CHART_LANE_COUNT,
+    CHART_LANE_GROUP_BOUNDARIES,
     type ChartDocument,
     type ChartHand,
 } from "@/lib/chart-pattern/schema";
@@ -45,7 +47,6 @@ const colors = {
     judgment: 0xf2f0e9,
     judgmentEdge: 0x8f929d,
     guideStrong: 0x727786,
-    guideWeak: 0x343946,
     pianoWhite: 0xe7e6e1,
     pianoWhiteAlt: 0xd2d4d4,
     pianoBlack: 0x161820,
@@ -207,32 +208,52 @@ function drawHitGlow(
 
 function drawRibbon(
     graphics: Graphics,
-    first: ProjectedRange,
-    second: ProjectedRange,
+    points: ProjectedRange[],
     hand: ChartHand,
     alpha = 0.62
 ) {
-    const insetFirst = Math.min(2, (first.right - first.left) * 0.08);
-    const insetSecond = Math.min(2, (second.right - second.left) * 0.08);
-    const polygon = [
-        first.left + insetFirst,
-        first.y,
-        first.right - insetFirst,
-        first.y,
-        second.right - insetSecond,
-        second.y,
-        second.left + insetSecond,
-        second.y,
-    ];
+    if (points.length < 2) return;
+    const leftEdge = points.flatMap((point) => {
+        const inset = Math.min(2, (point.right - point.left) * 0.08);
+        return [point.left + inset, point.y];
+    });
+    const rightEdge = [...points].reverse().flatMap((point) => {
+        const inset = Math.min(2, (point.right - point.left) * 0.08);
+        return [point.right - inset, point.y];
+    });
     const handColor = colorForHand(hand);
     graphics
-        .poly(polygon, true)
+        .poly([...leftEdge, ...rightEdge], true)
         .fill({ color: handColor, alpha })
         .stroke({ color: handColor, width: 1, alpha: alpha * 0.9 });
-    graphics
-        .moveTo(first.center, first.y)
-        .lineTo(second.center, second.y)
-        .stroke({ color: colors.noteFace, width: 1.1, alpha: alpha * 0.72 });
+    graphics.moveTo(points[0].center, points[0].y);
+    for (let index = 1; index < points.length; index += 1) {
+        graphics.lineTo(points[index].center, points[index].y);
+    }
+    graphics.stroke({
+        color: colors.noteFace,
+        width: 1.1,
+        alpha: alpha * 0.72,
+    });
+}
+
+function sampleProjectedSegment(
+    first: PlaybackPathPoint,
+    second: PlaybackPathPoint,
+    project: (point: PlaybackPathPoint) => ProjectedRange
+) {
+    const durationMs = Math.abs(second.timeMs - first.timeMs);
+    const steps = Math.min(32, Math.max(6, Math.ceil(durationMs / 90)));
+    return Array.from({ length: steps + 1 }, (_, index) => {
+        const progress = index / steps;
+        return project(
+            interpolatePathPoint(
+                first,
+                second,
+                interpolate(first.timeMs, second.timeMs, progress)
+            )
+        );
+    });
 }
 
 function drawPlayfield(
@@ -246,45 +267,26 @@ function drawPlayfield(
         color: 0x070910,
         alpha: 0.74,
     });
-    const judgmentWidth = width * 0.94;
-    const centerX = width / 2;
-
-    for (let lane = 0; lane <= CHART_LANE_COUNT; lane += 1) {
-        const isStrong = lane % 4 === 0;
-        const bottomX =
-            centerX + (lane / CHART_LANE_COUNT - 0.5) * judgmentWidth;
-        const topX =
-            centerX + (lane / CHART_LANE_COUNT - 0.5) * judgmentWidth * 0.58;
-        graphics
-            .moveTo(topX, horizonY)
-            .bezierCurveTo(
-                topX,
-                horizonY + (judgmentY - horizonY) * 0.42,
-                bottomX,
-                horizonY + (judgmentY - horizonY) * 0.72,
-                bottomX,
-                judgmentY
-            )
-            .stroke({
-                color: isStrong ? colors.guideStrong : colors.guideWeak,
-                width: isStrong ? 0.9 : 0.45,
-                alpha: isStrong ? 0.32 : 0.22,
+    for (const lane of CHART_LANE_GROUP_BOUNDARIES) {
+        for (let step = 0; step <= 48; step += 1) {
+            const point = projectPlaybackLane({
+                lane,
+                progress: step / 48,
+                canvasWidth: width,
+                horizonY,
+                judgmentY,
             });
-    }
-
-    for (const progress of [0.18, 0.38, 0.6, 0.8]) {
-        const depth = Math.pow(progress, 1.62);
-        const horizontalDepth = Math.pow(progress, 0.92);
-        const visibleWidth = judgmentWidth * (0.58 + horizontalDepth * 0.42);
-        const y = horizonY + (judgmentY - horizonY) * depth;
-        graphics
-            .moveTo(centerX - visibleWidth / 2, y)
-            .lineTo(centerX + visibleWidth / 2, y)
-            .stroke({
-                color: colors.guideStrong,
-                width: 0.7,
-                alpha: 0.24,
-            });
+            if (step === 0) {
+                graphics.moveTo(point.x, point.y);
+            } else {
+                graphics.lineTo(point.x, point.y);
+            }
+        }
+        graphics.stroke({
+            color: colors.guideStrong,
+            width: 1,
+            alpha: 0.38,
+        });
     }
 }
 
@@ -430,8 +432,7 @@ function drawPreparedNote({
             const second = trillPointAt(segment, endTimeMs, note.hand);
             drawRibbon(
                 graphics,
-                project(first),
-                project(second),
+                sampleProjectedSegment(first, second, project),
                 note.hand,
                 0.74
             );
@@ -465,8 +466,7 @@ function drawPreparedNote({
         if (!clipped) continue;
         drawRibbon(
             graphics,
-            project(clipped.first),
-            project(clipped.second),
+            sampleProjectedSegment(clipped.first, clipped.second, project),
             clipped.first.hand,
             note.type === "glissando" ? 0.7 : 0.62
         );
@@ -515,7 +515,7 @@ function renderPlaybackFrame({
     width: number;
     height: number;
 }) {
-    const horizonY = Math.max(22, height * 0.055);
+    const horizonY = Math.max(40, height * 0.12);
     const judgmentY = height * 0.79;
     graphics.clear();
     drawPlayfield(graphics, width, height, horizonY, judgmentY);

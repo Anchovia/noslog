@@ -4,6 +4,7 @@ import {
     getApproachDurationMs,
     getChartPlaybackDurationMs,
     prepareChartPlaybackNotes,
+    projectPlaybackLane,
     projectPlaybackRange,
 } from "@/lib/chart-pattern/playback";
 import type { ChartDocument } from "@/lib/chart-pattern/schema";
@@ -75,7 +76,7 @@ describe("낙하형 채보 재생 계산", () => {
         expect(getApproachDurationMs(3)).toBe(2_000);
     });
 
-    it("판정선으로 접근할수록 노트 폭이 넓어지고 아래로 이동한다", () => {
+    it("판정선으로 접근할수록 노트 폭이 넓어지고 판정선에 도착한다", () => {
         const far = projectPlaybackRange({
             lane: 4,
             width: 2,
@@ -98,7 +99,28 @@ describe("낙하형 채보 재생 계산", () => {
         });
 
         expect(near.y).toBe(500);
-        expect(far.y).toBe(30);
+        expect(far.y).toBeGreaterThan(30);
         expect(near.right - near.left).toBeGreaterThan(far.right - far.left);
+    });
+
+    it("노트 궤적은 생성선에서 정점을 지난 뒤 판정선으로 내려온다", () => {
+        const projection = (progress: number) =>
+            projectPlaybackLane({
+                lane: 4,
+                progress,
+                canvasWidth: 800,
+                horizonY: 60,
+                judgmentY: 500,
+            });
+        const spawn = projection(0);
+        const apex = projection(0.16);
+        const falling = projection(0.4);
+        const judgment = projection(1);
+
+        expect(apex.y).toBeLessThan(spawn.y);
+        expect(falling.y).toBeGreaterThan(apex.y);
+        expect(judgment.y).toBe(500);
+        expect(spawn.x).toBeGreaterThan(falling.x);
+        expect(falling.x).toBeGreaterThan(judgment.x);
     });
 });

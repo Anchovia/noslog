@@ -44,6 +44,12 @@ export interface PlaybackProjection {
     depth: number;
 }
 
+export interface PlaybackTrajectoryPoint {
+    x: number;
+    y: number;
+    depth: number;
+}
+
 export function getChartPlaybackDurationMs(document: ChartDocument) {
     const lastNoteMs = document.notes.reduce(
         (latest, note) =>
@@ -186,6 +192,52 @@ export function getApproachDurationMs(noteSpeed: number) {
     return 6_000 / clampedSpeed;
 }
 
+function quadraticPoint(
+    start: number,
+    control: number,
+    end: number,
+    progress: number
+) {
+    const inverse = 1 - progress;
+    return (
+        inverse * inverse * start +
+        2 * inverse * progress * control +
+        progress * progress * end
+    );
+}
+
+export function projectPlaybackLane({
+    lane,
+    progress,
+    canvasWidth,
+    horizonY,
+    judgmentY,
+}: {
+    lane: number;
+    progress: number;
+    canvasWidth: number;
+    horizonY: number;
+    judgmentY: number;
+}): PlaybackTrajectoryPoint {
+    const clampedProgress = Math.min(1, Math.max(0, progress));
+    const judgmentWidth = canvasWidth * 0.94;
+    const spawnWidth = judgmentWidth * 0.52;
+    const centerX = canvasWidth / 2;
+    const normalizedLane = lane / CHART_LANE_COUNT - 0.5;
+    const spawnX = centerX + normalizedLane * spawnWidth;
+    const judgmentX = centerX + normalizedLane * judgmentWidth;
+    const controlX = spawnX + (judgmentX - spawnX) * 0.72;
+    const playfieldHeight = judgmentY - horizonY;
+    const spawnY = horizonY + playfieldHeight * 0.065;
+    const controlY = horizonY - playfieldHeight * 0.22;
+
+    return {
+        x: quadraticPoint(spawnX, controlX, judgmentX, clampedProgress),
+        y: quadraticPoint(spawnY, controlY, judgmentY, clampedProgress),
+        depth: clampedProgress,
+    };
+}
+
 export function projectPlaybackRange({
     lane,
     width,
@@ -209,21 +261,28 @@ export function projectPlaybackRange({
         1,
         Math.max(0, 1 - (timeMs - currentTimeMs) / approachDurationMs)
     );
-    const depth = Math.pow(linearProgress, 1.62);
-    const horizontalDepth = Math.pow(linearProgress, 0.92);
-    const judgmentWidth = canvasWidth * 0.94;
-    const visibleWidth = judgmentWidth * (0.58 + horizontalDepth * 0.42);
-    const centerX = canvasWidth / 2;
-    const xForLane = (value: number) =>
-        centerX + (value / CHART_LANE_COUNT - 0.5) * visibleWidth;
-    const left = xForLane(lane);
-    const right = xForLane(lane + width);
+    const leftPoint = projectPlaybackLane({
+        lane,
+        progress: linearProgress,
+        canvasWidth,
+        horizonY,
+        judgmentY,
+    });
+    const rightPoint = projectPlaybackLane({
+        lane: lane + width,
+        progress: linearProgress,
+        canvasWidth,
+        horizonY,
+        judgmentY,
+    });
+    const left = leftPoint.x;
+    const right = rightPoint.x;
 
     return {
         left,
         right,
         center: (left + right) / 2,
-        y: horizonY + (judgmentY - horizonY) * depth,
-        depth,
+        y: (leftPoint.y + rightPoint.y) / 2,
+        depth: linearProgress,
     };
 }

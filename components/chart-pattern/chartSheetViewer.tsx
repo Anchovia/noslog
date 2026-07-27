@@ -10,6 +10,7 @@ import {
 } from "@/lib/chart-pattern/editor";
 import {
     CHART_LANE_COUNT,
+    isChartLaneGroupBoundary,
     type ChartDocument,
     type ChartHand,
     type ChartNote,
@@ -307,8 +308,9 @@ function drawPanel(
 
     for (let lane = 0; lane <= CHART_LANE_COUNT; lane += 1) {
         const x = lane * laneWidth + 0.5;
-        context.strokeStyle = lane % 4 === 0 ? "#343441" : "#20202a";
-        context.lineWidth = lane % 4 === 0 ? 1 : 0.5;
+        const isGroupBoundary = isChartLaneGroupBoundary(lane);
+        context.strokeStyle = isGroupBoundary ? "#343441" : "#20202a";
+        context.lineWidth = isGroupBoundary ? 1 : 0.5;
         context.beginPath();
         context.moveTo(x, PADDING_TOP);
         context.lineTo(x, PANEL_HEIGHT - PADDING_BOTTOM);

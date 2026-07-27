@@ -89,7 +89,7 @@ interface ChartTimingEditorProps {
     revisions: ChartEditorRevision[];
 }
 
-const playbackRates: ChartPlaybackRate[] = [0.25, 0.5, 0.75, 1];
+const playbackRates: ChartPlaybackRate[] = [0.25, 0.5, 0.75, 1, 1.5, 2];
 const snapDivisors = [1, 2, 3, 4, 6, 8, 12, 16, 24, 32];
 const noteTypeLabels: Record<ChartNoteType, string> = {
     standard: "일반",

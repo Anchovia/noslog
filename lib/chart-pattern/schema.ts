@@ -2,7 +2,14 @@ import { z } from "zod";
 
 export const CHART_FORMAT_VERSION = 1;
 export const CHART_LANE_COUNT = 28;
+export const CHART_LANE_GROUP_BOUNDARIES = [
+    0, 3, 6, 9, 12, 16, 19, 22, 25, 28,
+] as const;
 export const CHART_TICKS_PER_QUARTER = 480;
+
+export function isChartLaneGroupBoundary(lane: number) {
+    return CHART_LANE_GROUP_BOUNDARIES.some((boundary) => boundary === lane);
+}
 
 export const chartHandSchema = z.enum(["left", "right"]);
 export const chartNoteTypeSchema = z.enum([

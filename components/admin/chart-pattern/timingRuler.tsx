@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef } from "react";
 import {
     CHART_LANE_COUNT,
     CHART_TICKS_PER_QUARTER,
+    isChartLaneGroupBoundary,
 } from "@/lib/chart-pattern/schema";
 import {
     formatBpm,
@@ -71,11 +72,11 @@ export default function TimingRuler({
         const laneWidth = viewWidth / CHART_LANE_COUNT;
         for (let lane = 0; lane <= CHART_LANE_COUNT; lane += 1) {
             const x = lane * laneWidth;
-            context.strokeStyle =
-                lane % 4 === 0
-                    ? cssColor("--color-border", "#2a2a35")
-                    : cssColor("--color-divider", "#20202a");
-            context.lineWidth = lane % 4 === 0 ? 1 : 0.5;
+            const isGroupBoundary = isChartLaneGroupBoundary(lane);
+            context.strokeStyle = isGroupBoundary
+                ? cssColor("--color-border", "#2a2a35")
+                : cssColor("--color-divider", "#20202a");
+            context.lineWidth = isGroupBoundary ? 1 : 0.5;
             context.beginPath();
             context.moveTo(x + 0.5, 0);
             context.lineTo(x + 0.5, viewHeight);
