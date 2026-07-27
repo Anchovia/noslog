@@ -22,7 +22,7 @@ interface SyncMusicSheet {
     besttime: string;
 }
 
-export interface SyncMusicInput {
+export interface BemaniMusicCatalogInput {
     "@index": string;
     artist: string | null;
     category: string;
@@ -32,10 +32,14 @@ export interface SyncMusicInput {
     title: string;
     title_kana: string;
     unlock_type: number;
+    sheet: Pick<SyncMusicSheet, "difficulty" | "level">[];
+}
+
+export interface SyncMusicInput extends Omit<BemaniMusicCatalogInput, "sheet"> {
     sheet: SyncMusicSheet[];
 }
 
-function bemaniMetadata(data: SyncMusicInput) {
+function bemaniMetadata(data: BemaniMusicCatalogInput) {
     return {
         title: data.title,
         title_kana: data.title_kana,
@@ -48,53 +52,7 @@ function bemaniMetadata(data: SyncMusicInput) {
     };
 }
 
-// 이미 등록된 악곡의 BEMANI 원본 메타데이터만 최신 상태로 유지함
-export async function updateBemaniMusicMetadata(music: SyncMusicInput[]) {
-    const indexes = [...new Set(music.map((data) => data["@index"]))];
-    const existingMusic = await db.music.findMany({
-        where: { index: { in: indexes } },
-        select: {
-            index: true,
-            title: true,
-            title_kana: true,
-            artist: true,
-            category: true,
-            category_short: true,
-            description: true,
-            license: true,
-            unlock_type: true,
-        },
-    });
-    const inputByIndex = new Map(
-        music.map((data) => [data["@index"], data] as const)
-    );
-    const updates = existingMusic.flatMap((existing) => {
-        const input = inputByIndex.get(existing.index);
-        if (!input) return [];
-
-        const metadata = bemaniMetadata(input);
-        const changed = Object.entries(metadata).some(
-            ([key, value]) => existing[key as keyof typeof existing] !== value
-        );
-
-        return changed
-            ? [
-                  db.music.update({
-                      where: { index: existing.index },
-                      data: metadata,
-                  }),
-              ]
-            : [];
-    });
-
-    if (updates.length > 0) {
-        await db.$transaction(updates);
-    }
-
-    return updates.length;
-}
-
-export async function updateMusic(music: SyncMusicInput[]) {
+export async function updateMusic(music: BemaniMusicCatalogInput[]) {
     const startTime = Date.now(); // 시작 시간
 
     const existingMusic = await db.music.findMany({
@@ -173,6 +131,10 @@ export async function updateMusic(music: SyncMusicInput[]) {
                     music_idx: data["@index"],
                     difficulty: sheet.difficulty,
                     level: sheet.level,
+                    level_constant:
+                        sheet.difficulty === "Real"
+                            ? sheet.level + 10
+                            : sheet.level,
                 },
                 update: {
                     level: sheet.level,

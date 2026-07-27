@@ -2,10 +2,8 @@ import { verifySyncToken } from "@/lib/bookmarklet";
 import { CACHE_TAGS, getUserProfileTag } from "@/lib/cacheTags";
 import db from "@/lib/db";
 import { updateDummy } from "@/lib/dummy/bingo";
-import {
-    updateBemaniMusicMetadata,
-    type SyncMusicInput,
-} from "@/lib/services/music/updateMusic";
+import { processBemaniCatalogUpdates } from "@/lib/services/music/catalogSync";
+import { type SyncMusicInput } from "@/lib/services/music/updateMusic";
 import { updateGrade } from "@/lib/services/user/updateGrade";
 import { updatePlayData } from "@/lib/services/user/updatePlayData";
 import { updatePlayerProfile } from "@/lib/services/user/updatePlayerProfile";
@@ -308,7 +306,7 @@ export async function POST(request: NextRequest) {
 
     const user = await db.user.findUnique({
         where: { id: tokenPayload.userId },
-        select: { id: true, sync_token_version: true },
+        select: { id: true, sync_token_version: true, role: true },
     });
     if (!user || user.sync_token_version !== tokenPayload.version) {
         return json("연동 토큰이 만료되었습니다. 다시 등록해주세요.", 401);
@@ -354,12 +352,16 @@ export async function POST(request: NextRequest) {
         const insertedPlays = await updateRecentPlay(user.id, history, syncId);
         let changedRecords = 0;
         let syncNotice: string | null = null;
+        let catalogUpdates = { detected: 0, pending: 0, applied: 0 };
         if (music) {
+            catalogUpdates = await processBemaniCatalogUpdates(
+                music,
+                user.role === "admin"
+            );
             const { knownMusic, skippedCharts } = await filterKnownMusic(music);
             syncNotice = formatSkippedCharts(skippedCharts);
 
             if (knownMusic.length > 0) {
-                await updateBemaniMusicMetadata(knownMusic);
                 changedRecords = await updatePlayData(
                     user.id,
                     knownMusic,
@@ -388,6 +390,10 @@ export async function POST(request: NextRequest) {
             revalidateTag(CACHE_TAGS.userRankings, "max");
             revalidateTag(CACHE_TAGS.bingos, "max");
             revalidateTag(CACHE_TAGS.userProfiles, "max");
+            if (catalogUpdates.applied > 0) {
+                revalidateTag(CACHE_TAGS.musicCatalog, "max");
+                revalidateTag(CACHE_TAGS.musicDetails, "max");
+            }
         }
 
         return json(
@@ -400,6 +406,7 @@ export async function POST(request: NextRequest) {
                 receivedPlays: history.length,
                 insertedPlays,
                 changedRecords,
+                catalogUpdates,
             }
         );
     } catch (error) {

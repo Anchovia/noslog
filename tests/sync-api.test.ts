@@ -10,7 +10,7 @@ const mocks = vi.hoisted(() => ({
     dataSyncCreate: vi.fn(),
     dataSyncUpdate: vi.fn(),
     musicChartFindMany: vi.fn(),
-    updateBemaniMusicMetadata: vi.fn(),
+    processBemaniCatalogUpdates: vi.fn(),
     updateGrade: vi.fn(),
     updatePlayerProfile: vi.fn(),
     updatePlayData: vi.fn(),
@@ -38,8 +38,8 @@ vi.mock("@/lib/db", () => ({
 vi.mock("@/lib/services/user/updateGrade", () => ({
     updateGrade: mocks.updateGrade,
 }));
-vi.mock("@/lib/services/music/updateMusic", () => ({
-    updateBemaniMusicMetadata: mocks.updateBemaniMusicMetadata,
+vi.mock("@/lib/services/music/catalogSync", () => ({
+    processBemaniCatalogUpdates: mocks.processBemaniCatalogUpdates,
 }));
 vi.mock("@/lib/services/user/updatePlayerProfile", () => ({
     updatePlayerProfile: mocks.updatePlayerProfile,
@@ -210,6 +210,7 @@ describe("POST /api/receivePlayerData", () => {
         mocks.userFindUnique.mockResolvedValue({
             id: 1,
             sync_token_version: 0,
+            role: "user",
         });
         mocks.transaction.mockImplementation((callback) =>
             callback({
@@ -231,6 +232,11 @@ describe("POST /api/receivePlayerData", () => {
         ]);
         mocks.updateRecentPlay.mockResolvedValue(1);
         mocks.updatePlayData.mockResolvedValue(3);
+        mocks.processBemaniCatalogUpdates.mockResolvedValue({
+            detected: 0,
+            pending: 0,
+            applied: 0,
+        });
     });
 
     it("허용되지 않은 Origin 요청을 거부한다", async () => {
@@ -396,8 +402,9 @@ describe("POST /api/receivePlayerData", () => {
             insertedPlays: 1,
             changedRecords: 3,
         });
-        expect(mocks.updateBemaniMusicMetadata).toHaveBeenCalledWith(
-            requestBody(true).totalData?.data.music
+        expect(mocks.processBemaniCatalogUpdates).toHaveBeenCalledWith(
+            requestBody(true).totalData?.data.music,
+            false
         );
         expect(mocks.updatePlayData).toHaveBeenCalledWith(
             1,
@@ -459,7 +466,10 @@ describe("POST /api/receivePlayerData", () => {
 
         expect(response.status).toBe(200);
         expect(mocks.updatePlayData).not.toHaveBeenCalled();
-        expect(mocks.updateBemaniMusicMetadata).not.toHaveBeenCalled();
+        expect(mocks.processBemaniCatalogUpdates).toHaveBeenCalledWith(
+            requestBody(true).totalData?.data.music,
+            false
+        );
         expect(mocks.updateGrade).not.toHaveBeenCalled();
         expect(mocks.updateDummy).not.toHaveBeenCalled();
         expect(mocks.dataSyncUpdate).toHaveBeenCalledWith({
@@ -471,6 +481,41 @@ describe("POST /api/receivePlayerData", () => {
                     expect.stringContaining("DB에 등록되지 않은 채보 3개"),
             }),
         });
+    });
+
+    it("관리자 전체 연동은 감지한 카탈로그 변경을 즉시 반영한다", async () => {
+        mocks.userFindUnique.mockResolvedValue({
+            id: 1,
+            sync_token_version: 0,
+            role: "admin",
+        });
+        mocks.processBemaniCatalogUpdates.mockResolvedValue({
+            detected: 1,
+            pending: 0,
+            applied: 1,
+        });
+
+        const response = await POST(createRequest(requestBody(true)));
+        const data = await response.json();
+
+        expect(response.status).toBe(200);
+        expect(data.catalogUpdates).toEqual({
+            detected: 1,
+            pending: 0,
+            applied: 1,
+        });
+        expect(mocks.processBemaniCatalogUpdates).toHaveBeenCalledWith(
+            requestBody(true).totalData?.data.music,
+            true
+        );
+        expect(mocks.revalidateTag).toHaveBeenCalledWith(
+            "music-catalog",
+            "max"
+        );
+        expect(mocks.revalidateTag).toHaveBeenCalledWith(
+            "music-details",
+            "max"
+        );
     });
 
     it("처리 실패 시 동기화 실행을 실패 상태로 기록한다", async () => {

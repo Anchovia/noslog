@@ -179,6 +179,26 @@ model Music {
   examRewards    ExamReward[]
 }
 
+// 사용자 연동에서 감지한 공식 악곡 카탈로그 변경 후보와 처리 이력을 보존함
+model MusicCatalogCandidate {
+  id             Int       @id @default(autoincrement())
+  musicIndex     String    @map("music_index")
+  fingerprint    String
+  payload        Json
+  beforeSnapshot Json?     @map("before_snapshot")
+  status         String    @default("pending")
+  seenCount      Int       @default(1) @map("seen_count")
+  firstSeenAt    DateTime  @default(now()) @map("first_seen_at")
+  lastSeenAt     DateTime  @default(now()) @map("last_seen_at")
+  reviewedAt     DateTime? @map("reviewed_at")
+  appliedAt      DateTime? @map("applied_at")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  @@unique([musicIndex, fingerprint])
+  @@index([status, lastSeenAt])
+}
+
 // 악곡별 채보 정보를 난이도 컬럼과 분리해 관리함
 model MusicChart {
   id                Int       @id @default(autoincrement())

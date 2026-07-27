@@ -9,6 +9,7 @@ import {
     Megaphone,
     Music2,
     MapPin,
+    RefreshCw,
     Rows3,
     Users,
 } from "lucide-react";
@@ -30,6 +31,7 @@ export default async function AdminPage() {
         pendingSubmissionCount,
         failedSyncCount,
         missingConstantCount,
+        pendingCatalogCount,
         draftBingoCount,
         openFeedbackCount,
         userCount,
@@ -49,6 +51,7 @@ export default async function AdminPage() {
             },
         }),
         db.musicChart.count({ where: { level_constant: null } }),
+        db.musicCatalogCandidate.count({ where: { status: "pending" } }),
         db.bingo.count({ where: { status: "draft" } }),
         db.feedbackReport.count({ where: { status: "open" } }),
         db.user.count(),
@@ -162,6 +165,12 @@ export default async function AdminPage() {
             color: "text-hard",
         },
         {
+            href: "/admin/catalog?status=pending",
+            label: "악곡 업데이트",
+            count: pendingCatalogCount,
+            color: "text-success",
+        },
+        {
             href: "/admin/bingos",
             label: "빙고 초안",
             count: draftBingoCount,
@@ -208,6 +217,12 @@ export default async function AdminPage() {
             label: "악곡 정보",
             icon: Music2,
             color: "bg-normal/10 text-normal",
+        },
+        {
+            href: "/admin/catalog",
+            label: "악곡 업데이트",
+            icon: RefreshCw,
+            color: "bg-success/10 text-success",
         },
         {
             href: "/admin/bingos",

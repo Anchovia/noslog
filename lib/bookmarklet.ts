@@ -117,7 +117,7 @@ export function createBookmarkletHref(
             const addCloseButton=()=>{
                 const close=document.createElement("button");
                 close.textContent="닫기";
-                Object.assign(close.style,{marginTop:"12px",marginLeft:"8px",padding:"6px 10px",border:"1px solid #2a2a35",borderRadius:"6px",background:"#1a1a22",color:"#f2f2f5",cursor:"pointer"});
+                Object.assign(close.style,{display:"block",marginTop:"12px",padding:"6px 10px",border:"1px solid #2a2a35",borderRadius:"6px",background:"#1a1a22",color:"#f2f2f5",cursor:"pointer"});
                 close.onclick=()=>overlay.remove();
                 overlay.appendChild(close);
             };
