@@ -62,6 +62,10 @@ model User {
   uploadTokenGrants       UploadTokenGrant[]
   feedbackReports         FeedbackReport[]
   brooches                UserBrooch[]
+  chartPatternsCreated    ChartPattern[]            @relation("ChartPatternCreatedBy")
+  chartPatternsUpdated    ChartPattern[]            @relation("ChartPatternUpdatedBy")
+  chartPatternsPublished  ChartPattern[]            @relation("ChartPatternPublishedBy")
+  chartPatternRevisions   ChartPatternRevision[]    @relation("ChartPatternRevisionCreatedBy")
 
   @@index([grade_basic, id])
   @@index([grade_recital, id])
@@ -226,10 +230,57 @@ model MusicChart {
   examStageOptions     ExamStageChart[]
   tierEntries          TierEntry[]
   tierPlacementHistory TierPlacementHistory[]
+  pattern              ChartPattern?
 
   @@unique([music_idx, difficulty])
   @@index([level])
   @@index([level_constant])
+}
+
+// 악곡 채보 편집기의 현재 초안과 공개 스냅샷을 관리함
+model ChartPattern {
+  id                Int                    @id @default(autoincrement())
+  chartId           Int                    @unique @map("chart_id")
+  chart             MusicChart             @relation(fields: [chartId], references: [id], onDelete: Cascade)
+  formatVersion     Int                    @default(1) @map("format_version")
+  draftContent      Json                   @map("draft_content")
+  publishedContent  Json?                  @map("published_content")
+  draftVersion      Int                    @default(0) @map("draft_version")
+  savedRevision     Int                    @default(0) @map("saved_revision")
+  publishedRevision Int?                   @map("published_revision")
+  createdById       Int?                   @map("created_by_id")
+  createdBy         User?                  @relation("ChartPatternCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  updatedById       Int?                   @map("updated_by_id")
+  updatedBy         User?                  @relation("ChartPatternUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+  publishedById     Int?                   @map("published_by_id")
+  publishedBy       User?                  @relation("ChartPatternPublishedBy", fields: [publishedById], references: [id], onDelete: SetNull)
+  publishedAt       DateTime?              @map("published_at")
+  createdAt         DateTime               @default(now()) @map("created_at")
+  updatedAt         DateTime               @updatedAt @map("updated_at")
+  revisions         ChartPatternRevision[]
+
+  @@index([publishedAt])
+  @@index([createdById])
+  @@index([updatedById])
+  @@index([publishedById])
+}
+
+// 명시적 저장과 공개 시점의 채보 문서를 복구 가능한 버전으로 보존함
+model ChartPatternRevision {
+  id          Int          @id @default(autoincrement())
+  patternId   Int          @map("pattern_id")
+  pattern     ChartPattern @relation(fields: [patternId], references: [id], onDelete: Cascade)
+  number      Int
+  kind        String       @default("manual")
+  message     String?
+  content     Json
+  createdById Int?         @map("created_by_id")
+  createdBy   User?        @relation("ChartPatternRevisionCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt   DateTime     @default(now()) @map("created_at")
+
+  @@unique([patternId, number])
+  @@index([patternId, createdAt])
+  @@index([createdById])
 }
 
 // 유저의 데이터 연동 실행 단위와 처리 결과를 관리함

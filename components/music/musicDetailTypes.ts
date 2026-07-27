@@ -99,6 +99,7 @@ export interface ChartDetail {
     unlock_condition: string | null;
     play_video_url: string | null;
     chart_preview_url: string | null;
+    has_published_pattern: boolean;
     evaluationCount: number;
     patternAverages: {
         stairs: number;

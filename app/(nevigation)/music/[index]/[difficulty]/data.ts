@@ -43,6 +43,11 @@ export const getCachedMusicDetail = unstable_cache(
                     unlock_condition: true,
                     play_video_url: true,
                     chart_preview_url: true,
+                    pattern: {
+                        select: {
+                            publishedRevision: true,
+                        },
+                    },
                 },
             }),
         ]);
@@ -52,12 +57,16 @@ export const getCachedMusicDetail = unstable_cache(
             chart: chart
                 ? {
                       ...chart,
+                      has_published_pattern:
+                          chart.pattern?.publishedRevision !== null &&
+                          chart.pattern?.publishedRevision !== undefined,
+                      pattern: undefined,
                       released_at: chart.released_at?.toISOString() ?? null,
                   }
                 : null,
         };
     },
-    ["music-detail"],
+    ["music-detail-v2"],
     {
         revalidate: 3600,
         tags: [CACHE_TAGS.musicCatalog, CACHE_TAGS.musicDetails],
