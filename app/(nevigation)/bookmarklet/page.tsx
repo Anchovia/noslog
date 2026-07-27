@@ -1,13 +1,12 @@
-import { regenerateSyncToken } from "@/app/(nevigation)/bookmarklet/action";
 import BookmarkletInstall from "@/components/bookmarklet/bookmarkletInstall";
 import SyncResultSummary from "@/components/bookmarklet/syncResultSummary";
-import Button from "@/components/ui/Button";
+import SyncTokenRegenerateButton from "@/components/bookmarklet/syncTokenRegenerateButton";
 import { createBookmarkletHref, createSyncToken } from "@/lib/bookmarklet";
 import { createPageMetadata } from "@/lib/metadata/site";
 import { getUser } from "@/lib/user";
 import { formatDistanceToNow } from "date-fns";
 import { ko } from "date-fns/locale";
-import { Bookmark, CircleCheck, KeyRound, LogIn } from "lucide-react";
+import { Bookmark, CircleCheck, LogIn } from "lucide-react";
 import { headers } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
@@ -114,17 +113,7 @@ export default async function BookmarkletPage() {
                     </p>
                 </div>
                 {user ? (
-                    <form action={regenerateSyncToken}>
-                        <Button
-                            type="submit"
-                            variant="ghost"
-                            size="icon"
-                            aria-label="연동 토큰 재발급"
-                            title="연동 토큰 재발급"
-                        >
-                            <KeyRound size={16} aria-hidden />
-                        </Button>
-                    </form>
+                    <SyncTokenRegenerateButton />
                 ) : (
                     <CircleCheck
                         size={18}

@@ -54,18 +54,6 @@ export default async function Home() {
                     ),
                 }}
             />
-            {/* 비로그인 사용자 안내 */}
-            {!user ? (
-                <section className="bg-surface rounded-card flex items-center justify-between p-4">
-                    <p className="text-section">내 NOSTALGIA 기록 모아보기</p>
-                    <Link
-                        href="/login"
-                        className="bg-discord rounded-card text-text-primary hover:bg-discord/90 flex h-8 items-center px-3 text-sm font-bold transition-colors"
-                    >
-                        로그인
-                    </Link>
-                </section>
-            ) : null}
             <HomeAnnouncements announcements={announcements} />
             {/* 히어로 + 검색 */}
             <section className="flex flex-col items-center gap-8 pt-4 text-center">

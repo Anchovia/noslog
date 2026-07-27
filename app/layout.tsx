@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import AppToaster from "@/components/ui/AppToaster";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/metadata/site";
 import "./globals.css";
 
@@ -89,7 +90,10 @@ export default function RootLayout({
             <head>
                 <script dangerouslySetInnerHTML={{ __html: themeScript }} />
             </head>
-            <body className="font-sans">{children}</body>
+            <body className="font-sans">
+                {children}
+                <AppToaster />
+            </body>
         </html>
     );
 }
