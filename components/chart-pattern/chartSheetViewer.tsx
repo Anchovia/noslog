@@ -58,6 +58,7 @@ const PANEL_HEIGHT = 720;
 const PADDING_TOP = 30;
 const PADDING_BOTTOM = 34;
 const PANEL_NOTE_EDGE_INSET = 4;
+const PANEL_MEASURE_EDGE_INSET = 5;
 const PANEL_BOUNDARY_EPSILON_MS = 0.001;
 
 const handColors: Record<ChartHand, string> = {
@@ -340,6 +341,8 @@ function drawPanel(
     const chartBottom = PANEL_HEIGHT - PADDING_BOTTOM;
     const yForTime = (timeMs: number) =>
         chartBottom - ((timeMs - startMs) / panelDuration) * chartHeight;
+    const yForMeasureTime = (timeMs: number) =>
+        Math.min(chartBottom - PANEL_MEASURE_EDGE_INSET, yForTime(timeMs));
 
     context.clearRect(0, 0, PANEL_WIDTH, PANEL_HEIGHT);
     context.fillStyle = "#0b0b10";
@@ -369,7 +372,10 @@ function drawPanel(
     );
     for (const beat of beats) {
         if (beat.timeMs >= endMs - PANEL_BOUNDARY_EPSILON_MS) continue;
-        const y = yForTime(beat.timeMs) + 0.5;
+        const y =
+            (beat.accent
+                ? yForMeasureTime(beat.timeMs)
+                : yForTime(beat.timeMs)) + 0.5;
         context.strokeStyle = beat.accent ? "#656574" : "#2a2a34";
         context.lineWidth = beat.accent ? 1.2 : 0.7;
         context.beginPath();
@@ -428,7 +434,7 @@ function drawPanel(
         markers: measureMarkers,
         startMs,
         endMs,
-        yForTime,
+        yForMeasureTime,
     });
 }
 
@@ -438,12 +444,12 @@ function drawMeasureAnnotations(
         markers,
         startMs,
         endMs,
-        yForTime,
+        yForMeasureTime,
     }: {
         markers: MeasureMarker[];
         startMs: number;
         endMs: number;
-        yForTime: (timeMs: number) => number;
+        yForMeasureTime: (timeMs: number) => number;
     }
 ) {
     const visibleMarkers = markers.filter(
@@ -455,7 +461,7 @@ function drawMeasureAnnotations(
     context.save();
     context.textAlign = "left";
     for (const marker of visibleMarkers) {
-        const y = yForTime(marker.timeMs) + 0.5;
+        const y = yForMeasureTime(marker.timeMs) + 0.5;
         context.fillStyle = "#c2c2cc";
         context.font = "600 8px ui-monospace, monospace";
         context.textBaseline = "bottom";
