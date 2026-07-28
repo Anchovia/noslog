@@ -12,6 +12,7 @@ const tabs = [
     { href: "/admin/exams", label: "검정" },
     { href: "/admin/submissions", label: "인증" },
     { href: "/admin/music", label: "악곡" },
+    { href: "/admin/catalog", label: "업데이트" },
     { href: "/admin/tiers", label: "서열표" },
     { href: "/admin/bingos", label: "빙고" },
     { href: "/admin/arcades", label: "오락실" },

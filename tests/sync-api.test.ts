@@ -5,13 +5,14 @@ const mocks = vi.hoisted(() => ({
     verifySyncToken: vi.fn(),
     userFindUnique: vi.fn(),
     transaction: vi.fn(),
-    queryRaw: vi.fn(),
+    executeRaw: vi.fn(),
     dataSyncFindFirst: vi.fn(),
     dataSyncCreate: vi.fn(),
     dataSyncUpdate: vi.fn(),
     musicChartFindMany: vi.fn(),
+    processBemaniCatalogUpdates: vi.fn(),
     updateGrade: vi.fn(),
-    updatePlayCount: vi.fn(),
+    updatePlayerProfile: vi.fn(),
     updatePlayData: vi.fn(),
     updateRecentPlay: vi.fn(),
     updateDummy: vi.fn(),
@@ -37,8 +38,11 @@ vi.mock("@/lib/db", () => ({
 vi.mock("@/lib/services/user/updateGrade", () => ({
     updateGrade: mocks.updateGrade,
 }));
-vi.mock("@/lib/services/user/updatePlayCount", () => ({
-    updatePlayCount: mocks.updatePlayCount,
+vi.mock("@/lib/services/music/catalogSync", () => ({
+    processBemaniCatalogUpdates: mocks.processBemaniCatalogUpdates,
+}));
+vi.mock("@/lib/services/user/updatePlayerProfile", () => ({
+    updatePlayerProfile: mocks.updatePlayerProfile,
 }));
 vi.mock("@/lib/services/user/updatePlayData", () => ({
     updatePlayData: mocks.updatePlayData,
@@ -65,11 +69,20 @@ function musicSheet(difficulty: "Normal" | "Hard" | "Expert") {
         rank: "S",
         fc_type: 0,
         play_count: 1,
+        clear_count: 1,
+        clear_flag: [0] as [number],
         fullcombo_count: 0,
         pianistic_count: 0,
         max_combo: 500,
         grade_basic: 100,
         grade_recital: 100,
+        judge: [450, 30, 15, 5, 0] as [number, number, number, number, number],
+        note_success_rate: [9800, 9700, -1, 9600] as [
+            number,
+            number,
+            number,
+            number,
+        ],
         besttime: "2026-07-17 12:00",
     };
 }
@@ -79,22 +92,61 @@ function requestBody(full = false) {
         token: "valid-token",
         playerData: {
             status: 0,
-            data: { player: { name: "CAROL", play_count: 100 } },
+            data: {
+                status: 0,
+                fail_code: 0,
+                player: {
+                    name: "CAROL",
+                    play_count: 100,
+                    travel_info: {
+                        money: 1205,
+                    },
+                    last: {
+                        playtime: "2026-07-17 12:00",
+                        brooch: {
+                            "@index": "brooch-1",
+                            name: "White Dog",
+                            description: "A white dog brooch",
+                        },
+                    },
+                    brooch_list: {
+                        brooch: [
+                            {
+                                "@index": "brooch-1",
+                                name: "White Dog",
+                                description: "A white dog brooch",
+                            },
+                        ],
+                    },
+                },
+            },
         },
         recentData: {
             status: 0,
             data: {
+                status: 0,
+                fail_code: 0,
                 player: {
+                    name: "CAROL",
                     history_list: {
                         history: [
                             {
+                                artist: "artist",
+                                best_score: 940000,
+                                class_basic: "03",
                                 difficulty: "Expert",
+                                fast_count: 20,
+                                is_onehand: false,
+                                judge_count: [450, 30, 15, 5, 0],
                                 level: 10,
+                                license: "",
                                 score: 950000,
+                                slow_count: 15,
                                 max_combo: 500,
-                                rank: "S",
+                                rank: "s",
                                 play_time: "2026-07-17 12:00",
                                 music: "test-music",
+                                title: "Test Music",
                                 grade_basic: 100,
                             },
                         ],
@@ -106,6 +158,8 @@ function requestBody(full = false) {
             ? {
                   status: 0,
                   data: {
+                      status: 0,
+                      fail_code: 0,
                       music: [
                           {
                               "@index": "test-music",
@@ -113,8 +167,10 @@ function requestBody(full = false) {
                               category: "BEMANI",
                               category_short: "BM",
                               description: null,
+                              license: "",
                               title: "Test Music",
                               title_kana: "test",
+                              unlock_type: 1,
                               sheet: [
                                   musicSheet("Normal"),
                                   musicSheet("Hard"),
@@ -154,10 +210,11 @@ describe("POST /api/receivePlayerData", () => {
         mocks.userFindUnique.mockResolvedValue({
             id: 1,
             sync_token_version: 0,
+            role: "user",
         });
         mocks.transaction.mockImplementation((callback) =>
             callback({
-                $queryRaw: mocks.queryRaw,
+                $executeRaw: mocks.executeRaw,
                 dataSync: {
                     create: mocks.dataSyncCreate,
                     findFirst: mocks.dataSyncFindFirst,
@@ -175,6 +232,11 @@ describe("POST /api/receivePlayerData", () => {
         ]);
         mocks.updateRecentPlay.mockResolvedValue(1);
         mocks.updatePlayData.mockResolvedValue(3);
+        mocks.processBemaniCatalogUpdates.mockResolvedValue({
+            detected: 0,
+            pending: 0,
+            applied: 0,
+        });
     });
 
     it("허용되지 않은 Origin 요청을 거부한다", async () => {
@@ -246,7 +308,18 @@ describe("POST /api/receivePlayerData", () => {
         expect(response.status).toBe(409);
         expect(data.message).toContain("이미 동기화를 처리하고 있습니다");
         expect(mocks.dataSyncCreate).not.toHaveBeenCalled();
-        expect(mocks.updatePlayCount).not.toHaveBeenCalled();
+        expect(mocks.updatePlayerProfile).not.toHaveBeenCalled();
+    });
+
+    it("사용자별 동기화 잠금 키를 PostgreSQL integer로 고정한다", async () => {
+        await POST(createRequest(requestBody()));
+
+        const [queryParts, userId] = mocks.executeRaw.mock.calls[0];
+
+        expect(queryParts.join("?")).toContain(
+            "pg_advisory_xact_lock(73051, ?::integer)"
+        );
+        expect(userId).toBe(1);
     });
 
     it("30초 안에 반복된 동기화 요청을 제한한다", async () => {
@@ -289,9 +362,18 @@ describe("POST /api/receivePlayerData", () => {
 
         expect(response.status).toBe(200);
         expect(data.syncScope).toBe("recent");
+        expect(data).toMatchObject({
+            receivedPlays: 1,
+            insertedPlays: 1,
+            changedRecords: 0,
+        });
+        expect(mocks.updatePlayerProfile).toHaveBeenCalledWith(
+            1,
+            requestBody().playerData.data.player
+        );
         expect(mocks.updateRecentPlay).toHaveBeenCalledWith(
             1,
-            expect.any(Array),
+            requestBody().recentData.data.player.history_list.history,
             10
         );
         expect(mocks.updatePlayData).not.toHaveBeenCalled();
@@ -315,6 +397,15 @@ describe("POST /api/receivePlayerData", () => {
 
         expect(response.status).toBe(200);
         expect(data.syncScope).toBe("full");
+        expect(data).toMatchObject({
+            receivedPlays: 1,
+            insertedPlays: 1,
+            changedRecords: 3,
+        });
+        expect(mocks.processBemaniCatalogUpdates).toHaveBeenCalledWith(
+            requestBody(true).totalData?.data.music,
+            false
+        );
         expect(mocks.updatePlayData).toHaveBeenCalledWith(
             1,
             requestBody(true).totalData?.data.music,
@@ -375,6 +466,10 @@ describe("POST /api/receivePlayerData", () => {
 
         expect(response.status).toBe(200);
         expect(mocks.updatePlayData).not.toHaveBeenCalled();
+        expect(mocks.processBemaniCatalogUpdates).toHaveBeenCalledWith(
+            requestBody(true).totalData?.data.music,
+            false
+        );
         expect(mocks.updateGrade).not.toHaveBeenCalled();
         expect(mocks.updateDummy).not.toHaveBeenCalled();
         expect(mocks.dataSyncUpdate).toHaveBeenCalledWith({
@@ -386,6 +481,41 @@ describe("POST /api/receivePlayerData", () => {
                     expect.stringContaining("DB에 등록되지 않은 채보 3개"),
             }),
         });
+    });
+
+    it("관리자 전체 연동은 감지한 카탈로그 변경을 즉시 반영한다", async () => {
+        mocks.userFindUnique.mockResolvedValue({
+            id: 1,
+            sync_token_version: 0,
+            role: "admin",
+        });
+        mocks.processBemaniCatalogUpdates.mockResolvedValue({
+            detected: 1,
+            pending: 0,
+            applied: 1,
+        });
+
+        const response = await POST(createRequest(requestBody(true)));
+        const data = await response.json();
+
+        expect(response.status).toBe(200);
+        expect(data.catalogUpdates).toEqual({
+            detected: 1,
+            pending: 0,
+            applied: 1,
+        });
+        expect(mocks.processBemaniCatalogUpdates).toHaveBeenCalledWith(
+            requestBody(true).totalData?.data.music,
+            true
+        );
+        expect(mocks.revalidateTag).toHaveBeenCalledWith(
+            "music-catalog",
+            "max"
+        );
+        expect(mocks.revalidateTag).toHaveBeenCalledWith(
+            "music-details",
+            "max"
+        );
     });
 
     it("처리 실패 시 동기화 실행을 실패 상태로 기록한다", async () => {

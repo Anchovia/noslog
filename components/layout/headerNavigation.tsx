@@ -1,6 +1,14 @@
 "use client";
 
-import { Grid3X3, MapPin, Menu, RefreshCw, Trophy, X } from "lucide-react";
+import {
+    Grid3X3,
+    MapPin,
+    Menu,
+    RefreshCw,
+    ShieldCheck,
+    Trophy,
+    X,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -49,12 +57,22 @@ export function HeaderPrimaryNavigation() {
     );
 }
 
-export default function HeaderMenu() {
+export default function HeaderMenu({ isAdmin = false }: { isAdmin?: boolean }) {
     const pathname = usePathname();
     const menuButtonRef = useRef<HTMLButtonElement>(null);
     const [openPathname, setOpenPathname] = useState<string | null>(null);
     const isOpen = openPathname === pathname;
-    const hasActiveSecondaryItem = secondaryItems.some((item) =>
+    const menuItems = isAdmin
+        ? [
+              ...secondaryItems,
+              {
+                  href: "/admin",
+                  label: "관리자",
+                  icon: ShieldCheck,
+              },
+          ]
+        : secondaryItems;
+    const hasActiveSecondaryItem = menuItems.some((item) =>
         isActiveRoute(pathname, item.href)
     );
 
@@ -115,7 +133,7 @@ export default function HeaderMenu() {
                         aria-label="전체 메뉴"
                         className="border-divider bg-surface fixed top-14 left-1/2 grid w-full max-w-97.5 -translate-x-1/2 grid-cols-2 gap-2 border-b p-3 shadow-xl"
                     >
-                        {secondaryItems.map((item) => {
+                        {menuItems.map((item) => {
                             const Icon = item.icon;
                             const isActive = isActiveRoute(pathname, item.href);
                             return (
@@ -127,7 +145,8 @@ export default function HeaderMenu() {
                                     className={cn(
                                         "border-border bg-bg text-text-secondary hover:bg-surface-muted hover:text-text-primary flex h-11 items-center gap-2 rounded-md border px-3 transition-colors",
                                         isActive &&
-                                            "border-chart bg-surface-muted text-text-primary"
+                                            "border-chart bg-surface-muted text-text-primary",
+                                        item.href === "/admin" && "col-span-2"
                                     )}
                                 >
                                     <Icon

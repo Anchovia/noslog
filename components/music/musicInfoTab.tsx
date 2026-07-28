@@ -202,18 +202,25 @@ export default function MusicInfoTab({
                         <Play size={15} aria-hidden /> 플레이 영상
                     </span>
                 )}
-                {chartDetail.chart_preview_url ? (
+                {chartDetail.has_published_pattern ? (
+                    <Link
+                        href={`/music/${musicIndex}/${difficulty.toLowerCase()}/pattern`}
+                        className="border-border rounded-card flex h-10 items-center justify-center gap-2 border text-sm font-semibold"
+                    >
+                        <ScanSearch size={15} aria-hidden /> 채보 확인
+                    </Link>
+                ) : chartDetail.chart_preview_url ? (
                     <a
                         href={chartDetail.chart_preview_url}
                         target="_blank"
                         rel="noreferrer"
                         className="border-border rounded-card flex h-10 items-center justify-center gap-2 border text-sm font-semibold"
                     >
-                        <ScanSearch size={15} aria-hidden /> 채보 프리뷰
+                        <ScanSearch size={15} aria-hidden /> 외부 채보
                     </a>
                 ) : (
                     <span className="border-border text-text-disabled rounded-card flex h-10 items-center justify-center gap-2 border text-sm font-semibold opacity-60">
-                        <ScanSearch size={15} aria-hidden /> 채보 프리뷰
+                        <ScanSearch size={15} aria-hidden /> 채보 확인
                     </span>
                 )}
             </div>

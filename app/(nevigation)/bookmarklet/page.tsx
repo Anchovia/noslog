@@ -1,16 +1,16 @@
-import { regenerateSyncToken } from "@/app/(nevigation)/bookmarklet/action";
 import BookmarkletInstall from "@/components/bookmarklet/bookmarkletInstall";
-import Button from "@/components/ui/Button";
+import SyncResultSummary from "@/components/bookmarklet/syncResultSummary";
+import SyncTokenRegenerateButton from "@/components/bookmarklet/syncTokenRegenerateButton";
 import { createBookmarkletHref, createSyncToken } from "@/lib/bookmarklet";
-import db from "@/lib/db";
 import { createPageMetadata } from "@/lib/metadata/site";
 import { getUser } from "@/lib/user";
 import { formatDistanceToNow } from "date-fns";
 import { ko } from "date-fns/locale";
-import { Bookmark, CircleCheck, LogIn, RefreshCw } from "lucide-react";
+import { AlertTriangle, Bookmark, CircleCheck, LogIn } from "lucide-react";
 import { headers } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
+import { getLatestSyncSummary } from "./data";
 
 export const metadata = createPageMetadata({
     title: "데이터 연동 가이드",
@@ -50,17 +50,7 @@ export default async function BookmarkletPage() {
     const user = await getUser();
     const [appOrigin, latestSync] = await Promise.all([
         requestOrigin(),
-        user
-            ? db.dataSync.findFirst({
-                  where: { user_id: user.id },
-                  orderBy: { started_at: "desc" },
-                  select: {
-                      status: true,
-                      started_at: true,
-                      completed_at: true,
-                  },
-              })
-            : null,
+        user ? getLatestSyncSummary(user.id) : null,
     ]);
     const token = user
         ? createSyncToken({
@@ -75,7 +65,7 @@ export default async function BookmarkletPage() {
     const bookmarkletHref = token
         ? createBookmarkletHref(appOrigin, token, protectionBypassSecret)
         : null;
-    const syncDate = latestSync?.completed_at ?? latestSync?.started_at;
+    const syncDate = latestSync?.completedAt ?? latestSync?.startedAt;
     const syncLabel = !latestSync
         ? "아직 동기화 기록이 없습니다."
         : latestSync.status === "processing"
@@ -111,23 +101,19 @@ export default async function BookmarkletPage() {
                         {syncLabel}
                     </p>
                     <p className="text-caption mt-0.5">
-                        {user
-                            ? "문제가 있으면 토큰을 재발급 해주세요."
-                            : "로그인 후 연동 상태를 확인할 수 있습니다."}
+                        {!user
+                            ? "로그인 후 연동 상태를 확인할 수 있습니다."
+                            : latestSync?.status === "processing"
+                              ? "완료되면 처리 결과를 확인할 수 있습니다."
+                              : latestSync?.status === "failed"
+                                ? "로그인 상태를 확인한 뒤 다시 동기화해주세요."
+                                : latestSync
+                                  ? "최근 처리 결과를 아래에서 확인할 수 있습니다."
+                                  : "동기화하면 처리 결과가 여기에 표시됩니다."}
                     </p>
                 </div>
                 {user ? (
-                    <form action={regenerateSyncToken}>
-                        <Button
-                            type="submit"
-                            variant="ghost"
-                            size="icon"
-                            aria-label="연동 토큰 재발급"
-                            title="연동 토큰 재발급"
-                        >
-                            <RefreshCw size={16} aria-hidden />
-                        </Button>
-                    </form>
+                    <SyncTokenRegenerateButton />
                 ) : (
                     <CircleCheck
                         size={18}
@@ -136,6 +122,19 @@ export default async function BookmarkletPage() {
                     />
                 )}
             </section>
+
+            {user ? (
+                <p className="border-score/30 bg-score/5 text-caption text-score rounded-card flex items-start gap-2 border px-3 py-2.5">
+                    <AlertTriangle
+                        className="mt-0.5 size-3.5 shrink-0"
+                        aria-hidden
+                    />
+                    재발급하면 기존 북마클릿이 만료됩니다. 재발급 후 북마클릿을
+                    다시 등록해주세요.
+                </p>
+            ) : null}
+
+            {latestSync ? <SyncResultSummary summary={latestSync} /> : null}
 
             <section className="bg-surface rounded-card flex flex-col gap-4 p-4">
                 <StepTitle number={1}>북마클릿 등록</StepTitle>

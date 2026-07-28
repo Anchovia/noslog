@@ -1,9 +1,16 @@
+"use client";
+
 import { cn, formatToComma, formatToGrade } from "@/lib/utils";
+import type { PeerScoreComparison } from "@/lib/music/peerScoreComparison";
 import { formatScoreRecordDate } from "@/lib/music/scoreTrend";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import { rankAssetNames } from "./musicDetailConfig";
+import MusicJudgementAccordion from "./musicJudgementAccordion";
+import RecentPlayRow from "./recentPlayRow";
 import type {
+    PerformanceTrendPoint,
     RecentChartPlay,
     ScoreTrendPoint,
     UserPlayData,
@@ -15,6 +22,8 @@ interface MusicRecordTabProps {
     userPlayData: UserPlayData | null;
     recentChartPlays: RecentChartPlay[];
     scoreTrend: ScoreTrendPoint[];
+    performanceTrend: PerformanceTrendPoint[];
+    peerScoreComparison: PeerScoreComparison | null;
 }
 
 export default function MusicRecordTab({
@@ -22,7 +31,10 @@ export default function MusicRecordTab({
     userPlayData,
     recentChartPlays,
     scoreTrend,
+    performanceTrend,
+    peerScoreComparison,
 }: MusicRecordTabProps) {
+    const [showPeerComparison, setShowPeerComparison] = useState(false);
     const scoreProgress = userPlayData
         ? Math.min(
               100,
@@ -32,6 +44,28 @@ export default function MusicRecordTab({
     const scoreToPerfect = userPlayData
         ? Math.max(0, 1000000 - userPlayData.score)
         : null;
+    const peerScoreDifference =
+        userPlayData && peerScoreComparison
+            ? userPlayData.score - peerScoreComparison.averageScore
+            : null;
+    const cumulativeStats = [
+        {
+            label: "플레이",
+            value: userPlayData?.play_count ?? null,
+        },
+        {
+            label: "최대 콤보",
+            value: userPlayData?.max_combo ?? null,
+        },
+        {
+            label: "풀콤보",
+            value: userPlayData?.fullcombo_count ?? null,
+        },
+        {
+            label: "Pianist",
+            value: userPlayData?.pianistic_count ?? null,
+        },
+    ];
 
     return (
         <div className="relative">
@@ -58,6 +92,22 @@ export default function MusicRecordTab({
                 )}
                 aria-hidden={!isLoggedIn || undefined}
             >
+                <dl className="grid grid-cols-4 gap-2 text-center">
+                    {cumulativeStats.map(({ label, value }) => (
+                        <div
+                            key={label}
+                            className="bg-surface rounded-card flex min-h-17 min-w-0 flex-col items-center justify-center px-1 py-2.5"
+                        >
+                            <dt className="text-caption flex h-5 items-center justify-center whitespace-nowrap">
+                                {label}
+                            </dt>
+                            <dd className="text-label mt-1 font-bold tabular-nums">
+                                {value === null ? "-" : formatToComma(value)}
+                            </dd>
+                        </div>
+                    ))}
+                </dl>
+
                 <section className="bg-surface rounded-card flex flex-col gap-4 p-4">
                     <div className="flex items-center gap-3">
                         <div className="bg-surface-muted rounded-card flex size-14 shrink-0 items-center justify-center">
@@ -77,7 +127,43 @@ export default function MusicRecordTab({
                         </div>
 
                         <div className="min-w-0 flex-1">
-                            <p className="text-caption">베스트 스코어</p>
+                            <div className="flex items-center justify-between gap-2">
+                                <p className="text-caption">베스트 스코어</p>
+                                {peerScoreComparison ? (
+                                    <button
+                                        aria-checked={showPeerComparison}
+                                        className="focus-visible:ring-focus -my-2 flex min-h-11 shrink-0 items-center gap-1.5 rounded-sm focus-visible:ring-2 focus-visible:outline-none"
+                                        onClick={() =>
+                                            setShowPeerComparison(
+                                                (value) => !value
+                                            )
+                                        }
+                                        role="switch"
+                                        type="button"
+                                    >
+                                        <span className="text-micro whitespace-nowrap">
+                                            비슷한 사람과 비교
+                                        </span>
+                                        <span
+                                            aria-hidden
+                                            className={cn(
+                                                "relative h-5 w-9 rounded-full transition-colors",
+                                                showPeerComparison
+                                                    ? "bg-chart"
+                                                    : "bg-divider"
+                                            )}
+                                        >
+                                            <span
+                                                className={cn(
+                                                    "bg-text-primary absolute top-0.5 left-0.5 size-4 rounded-full transition-transform",
+                                                    showPeerComparison &&
+                                                        "translate-x-4"
+                                                )}
+                                            />
+                                        </span>
+                                    </button>
+                                ) : null}
+                            </div>
                             <div className="flex items-center gap-2">
                                 <strong className="text-score-display block truncate">
                                     {userPlayData
@@ -135,44 +221,71 @@ export default function MusicRecordTab({
                             </span>
                         </div>
                     </div>
-                </section>
 
-                <section className="bg-surface rounded-card p-4">
-                    <h2 className="text-section">판정 상세</h2>
-                    <div className="text-text-disabled flex h-16 items-center justify-center text-sm">
-                        판정 데이터가 제공되지 않습니다.
+                    {showPeerComparison &&
+                    peerScoreComparison &&
+                    peerScoreDifference !== null ? (
+                        <div className="bg-surface-muted rounded-card flex items-center justify-between gap-3 p-3">
+                            <div className="min-w-0">
+                                <p className="text-caption">비슷한 Grd 평균</p>
+                                <p className="text-micro mt-1 tabular-nums">
+                                    ±{peerScoreComparison.gradeRange} ·{" "}
+                                    {peerScoreComparison.sampleCount.toLocaleString(
+                                        "ko-KR"
+                                    )}
+                                    명 기준
+                                </p>
+                            </div>
+                            <div className="shrink-0 text-right">
+                                <strong className="text-label tabular-nums">
+                                    {formatToComma(
+                                        peerScoreComparison.averageScore
+                                    )}
+                                </strong>
+                                <p
+                                    className={cn(
+                                        "text-micro mt-1 tabular-nums",
+                                        peerScoreDifference > 0 &&
+                                            "text-success"
+                                    )}
+                                >
+                                    {peerScoreDifference === 0
+                                        ? "내 기록과 동일"
+                                        : `내 기록 ${
+                                              peerScoreDifference > 0 ? "+" : ""
+                                          }${formatToComma(
+                                              peerScoreDifference
+                                          )}점`}
+                                </p>
+                            </div>
+                        </div>
+                    ) : null}
+
+                    <div className="border-divider border-t pt-4">
+                        <h2 className="text-section">스코어 추이</h2>
+                        <ScoreTrend
+                            points={scoreTrend}
+                            performancePoints={performanceTrend}
+                            variant="score"
+                        />
                     </div>
                 </section>
 
-                <dl className="grid grid-cols-4 gap-2 text-center">
-                    {[
-                        ["플레이", userPlayData?.play_count ?? "-"],
-                        ["콤보", userPlayData?.max_combo ?? "-"],
-                        ["풀콤보", userPlayData?.fullcombo_count ?? "-"],
-                        ["Pianist", userPlayData?.pianistic_count ?? "-"],
-                    ].map(([label, value]) => (
-                        <div
-                            key={label}
-                            className="bg-surface rounded-card flex min-h-15 flex-col items-center justify-center px-1 py-3"
-                        >
-                            <dt className="text-text-secondary text-xs">
-                                {label}
-                            </dt>
-                            <dd className="text-text-primary mt-1 text-sm font-bold tabular-nums">
-                                {typeof value === "number"
-                                    ? formatToComma(value)
-                                    : value}
-                            </dd>
-                        </div>
-                    ))}
-                </dl>
-
-                <section className="bg-surface rounded-card p-4">
-                    <header>
-                        <h2 className="text-section">스코어 추이</h2>
-                    </header>
-                    <ScoreTrend points={scoreTrend} />
-                </section>
+                <MusicJudgementAccordion
+                    userPlayData={userPlayData}
+                    scoreTrend={scoreTrend}
+                    performanceTrend={performanceTrend}
+                    peerComparison={
+                        showPeerComparison
+                            ? (peerScoreComparison?.judgement ?? null)
+                            : null
+                    }
+                    peerNoteRates={
+                        showPeerComparison
+                            ? (peerScoreComparison?.noteRates ?? null)
+                            : null
+                    }
+                />
 
                 <section className="bg-surface rounded-card overflow-hidden">
                     <h2 className="text-section bg-surface-muted px-4 py-3">
@@ -180,53 +293,9 @@ export default function MusicRecordTab({
                     </h2>
                     {recentChartPlays.length > 0 ? (
                         <ul className="divide-divider divide-y">
-                            {[...recentChartPlays]
-                                .reverse()
-                                .map((play, index, plays) => {
-                                    const previous = plays[index + 1];
-                                    const difference = previous
-                                        ? play.score - previous.score
-                                        : null;
-                                    const rankName =
-                                        rankAssetNames[play.rank.toUpperCase()];
-
-                                    return (
-                                        <li
-                                            key={play.id}
-                                            className="flex h-11 items-center gap-3 px-4 text-sm"
-                                        >
-                                            <time className="text-text-disabled w-14 shrink-0 text-xs tabular-nums">
-                                                {play.play_time
-                                                    .split(" ")[0]
-                                                    .replaceAll("/", ".")}
-                                            </time>
-                                            <strong className="text-text-primary tabular-nums">
-                                                {formatToComma(play.score)}
-                                            </strong>
-                                            {rankName ? (
-                                                <Image
-                                                    src={`https://p.eagate.573.jp/game/nostalgia/op3/img/pdata/music_data/grade/grade_${rankName}.png`}
-                                                    alt={`${play.rank} 랭크`}
-                                                    width={20}
-                                                    height={20}
-                                                />
-                                            ) : null}
-                                            <span
-                                                className={cn(
-                                                    "ml-auto text-xs tabular-nums",
-                                                    difference !== null &&
-                                                        difference > 0
-                                                        ? "text-success"
-                                                        : "text-text-disabled"
-                                                )}
-                                            >
-                                                {difference === null
-                                                    ? "-"
-                                                    : `${difference > 0 ? "+" : ""}${formatToComma(difference)}`}
-                                            </span>
-                                        </li>
-                                    );
-                                })}
+                            {[...recentChartPlays].reverse().map((play) => (
+                                <RecentPlayRow key={play.id} play={play} />
+                            ))}
                         </ul>
                     ) : (
                         <div className="text-text-disabled flex h-20 items-center justify-center text-sm">

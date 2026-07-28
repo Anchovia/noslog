@@ -1,6 +1,5 @@
 import FeedbackDialog from "@/components/feedback/feedbackDialog";
 import HomeAnnouncements from "@/components/home/homeAnnouncements";
-import HomeRankingCard from "@/components/home/homeRankingCard";
 import OfficialXTimeline from "@/components/home/officialXTimeline";
 import { getPublishedAnnouncements } from "@/lib/announcements";
 import {
@@ -9,8 +8,6 @@ import {
     SITE_NAME,
     SITE_URL,
 } from "@/lib/metadata/site";
-import type { UserRankingMode } from "@/lib/rankings";
-import { getCachedUserRankingPage } from "@/lib/rankings";
 import { getUser } from "@/lib/user";
 import {
     BadgeCheck,
@@ -41,23 +38,11 @@ const websiteJsonLd = {
     },
 };
 
-interface HomeProps {
-    searchParams: Promise<{
-        ranking?: string | string[];
-    }>;
-}
-
-export default async function Home({ searchParams }: HomeProps) {
-    const { ranking } = await searchParams;
-    const rankingMode: UserRankingMode =
-        ranking === "recital" ? "recital" : "basic";
-    const [user, basicRanking, recitalRanking, announcements] =
-        await Promise.all([
-            getUser(),
-            getCachedUserRankingPage("basic", "all", 1, 5),
-            getCachedUserRankingPage("recital", "all", 1, 5),
-            getPublishedAnnouncements(),
-        ]);
+export default async function Home() {
+    const [user, announcements] = await Promise.all([
+        getUser(),
+        getPublishedAnnouncements(),
+    ]);
     return (
         <div className="flex flex-col gap-4 px-4 py-4">
             <script
@@ -69,18 +54,6 @@ export default async function Home({ searchParams }: HomeProps) {
                     ),
                 }}
             />
-            {/* 비로그인 사용자 안내 */}
-            {!user ? (
-                <section className="bg-surface rounded-card flex items-center justify-between p-4">
-                    <p className="text-section">내 NOSTALGIA 기록 모아보기</p>
-                    <Link
-                        href="/login"
-                        className="bg-discord rounded-card text-text-primary hover:bg-discord/90 flex h-8 items-center px-3 text-sm font-bold transition-colors"
-                    >
-                        로그인
-                    </Link>
-                </section>
-            ) : null}
             <HomeAnnouncements announcements={announcements} />
             {/* 히어로 + 검색 */}
             <section className="flex flex-col items-center gap-8 pt-4 text-center">
@@ -191,14 +164,6 @@ export default async function Home({ searchParams }: HomeProps) {
                 />
             </Link>
             <FeedbackDialog isAuthenticated={Boolean(user)} />
-            {/* 랭킹 카드 */}
-            <HomeRankingCard
-                initialMode={rankingMode}
-                rankings={{
-                    basic: basicRanking.rows,
-                    recital: recitalRanking.rows,
-                }}
-            />
             {/* NOSTALGIA 공식 소식 */}
             <OfficialXTimeline />
         </div>

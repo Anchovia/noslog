@@ -87,6 +87,17 @@ export default function MusicList({
                     : "flex flex-col"
             )}
         >
+            {musics.length === 0 ? (
+                <p
+                    className={cn(
+                        "bg-surface rounded-card text-caption text-text-secondary flex min-h-28 items-center justify-center px-4 text-center",
+                        viewMode === "grid" && "col-span-2"
+                    )}
+                >
+                    조건에 맞는 악곡이 없습니다.
+                </p>
+            ) : null}
+
             {musics.map((music) =>
                 viewMode === "grid" ? (
                     <MusicGridCard key={music.index} {...music} />

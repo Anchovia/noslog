@@ -68,23 +68,31 @@ export default async function AdminSubmissionsPage({
                             key={submission.id}
                             className="bg-surface rounded-card overflow-hidden"
                         >
-                            <a
-                                href={submission.proofImageUrl}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="bg-surface-muted relative block aspect-video"
-                            >
-                                <Image
-                                    src={submission.proofImageUrl}
-                                    alt="검정 합격 증빙"
-                                    fill
-                                    sizes="358px"
-                                    className="object-contain"
-                                />
-                                <span className="bg-bg/80 absolute top-2 right-2 flex size-8 items-center justify-center rounded-md">
-                                    <ExternalLink className="size-4" />
-                                </span>
-                            </a>
+                            {submission.proofImageUrl ? (
+                                <a
+                                    href={`/api/admin/private-images/exam/${submission.id}`}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="bg-surface-muted relative block aspect-video"
+                                >
+                                    <Image
+                                        src={`/api/admin/private-images/exam/${submission.id}`}
+                                        alt="검정 합격 증빙"
+                                        fill
+                                        unoptimized
+                                        sizes="358px"
+                                        className="object-contain"
+                                    />
+                                    <span className="bg-bg/80 absolute top-2 right-2 flex size-8 items-center justify-center rounded-md">
+                                        <ExternalLink className="size-4" />
+                                    </span>
+                                </a>
+                            ) : (
+                                <div className="bg-surface-muted text-caption flex aspect-video items-center justify-center px-6 text-center">
+                                    보관 기간이 지나 증빙 이미지가
+                                    삭제되었습니다.
+                                </div>
+                            )}
                             <div className="flex flex-col gap-3 p-3">
                                 <div className="flex items-start justify-between gap-3">
                                     <div className="min-w-0">

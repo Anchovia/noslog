@@ -3,10 +3,10 @@
 import { revalidatePath } from "next/cache";
 
 import {
-    createImageUploadToken,
+    createPrivateImageUploadToken,
     deleteBlobIfOwned,
     isImageContentType,
-    isValidImageBlob,
+    isValidPrivateImageBlob,
 } from "@/lib/blob";
 import db from "@/lib/db";
 import getSession from "@/lib/session";
@@ -101,7 +101,7 @@ export async function requestExamProofUpload(
         }
         grantId = quota.grantId;
 
-        const upload = await createImageUploadToken(
+        const upload = await createPrivateImageUploadToken(
             `exam-proofs/${userId}/${examId}/proof`,
             contentType
         );
@@ -137,7 +137,7 @@ export async function submitExamProof(examId: number, proofImageUrl: string) {
     }
 
     if (
-        !(await isValidImageBlob(
+        !(await isValidPrivateImageBlob(
             proofImageUrl,
             `exam-proofs/${userId}/${examId}/proof`
         ))
@@ -221,7 +221,7 @@ export async function discardExamProofUpload(
     if (!session.id || !Number.isInteger(examId)) return;
 
     if (
-        !(await isValidImageBlob(
+        !(await isValidPrivateImageBlob(
             proofImageUrl,
             `exam-proofs/${session.id}/${examId}/proof`
         ))

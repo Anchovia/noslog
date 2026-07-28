@@ -1,14 +1,20 @@
-import type { UserRankingMode, UserRankingRow } from "@/lib/rankings";
-import { formatRankingGrade } from "./rankingTableUtils";
+import type {
+    UserRankingMetric,
+    UserRankingMode,
+    UserRankingRow,
+} from "@/lib/rankings";
+import { formatRankingGrade, formatRankingRating } from "./rankingTableUtils";
 import { ExamBadge, UserAvatar } from "./rankingUserMeta";
 
 interface CurrentUserRankingProps {
     mode: UserRankingMode;
+    metric: UserRankingMetric;
     currentUser: UserRankingRow | null;
 }
 
 export default function CurrentUserRanking({
     mode,
+    metric,
     currentUser,
 }: CurrentUserRankingProps) {
     if (!currentUser) {
@@ -38,9 +44,15 @@ export default function CurrentUserRanking({
                 </div>
                 <p className="text-caption mt-0.5">내 순위</p>
             </div>
-            <strong className="text-text-primary shrink-0 text-sm tabular-nums">
-                Grd {formatRankingGrade(currentUser.grade)}
-            </strong>
+            {metric === "rating" ? (
+                <strong className="text-text-primary shrink-0 text-sm tabular-nums">
+                    {formatRankingRating(currentUser.rating ?? 0)}
+                </strong>
+            ) : (
+                <strong className="text-text-primary shrink-0 text-sm tabular-nums">
+                    Grd {formatRankingGrade(currentUser.grade)}
+                </strong>
+            )}
         </section>
     );
 }

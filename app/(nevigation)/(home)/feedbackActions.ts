@@ -3,10 +3,10 @@
 import { revalidatePath } from "next/cache";
 
 import {
-    createImageUploadToken,
+    createPrivateImageUploadToken,
     deleteBlobIfOwned,
     isImageContentType,
-    isValidImageBlob,
+    isValidPrivateImageBlob,
 } from "@/lib/blob";
 import db from "@/lib/db";
 import getSession from "@/lib/session";
@@ -39,7 +39,7 @@ export async function requestFeedbackImageUpload(contentType: string) {
         }
         grantId = quota.grantId;
 
-        const upload = await createImageUploadToken(
+        const upload = await createPrivateImageUploadToken(
             `feedback/${session.id}/report`,
             contentType
         );
@@ -79,7 +79,10 @@ export async function submitFeedbackReport(
     }
     if (
         imageUrl &&
-        !(await isValidImageBlob(imageUrl, `feedback/${session.id}/report`))
+        !(await isValidPrivateImageBlob(
+            imageUrl,
+            `feedback/${session.id}/report`
+        ))
     ) {
         return {
             success: false as const,
@@ -106,7 +109,9 @@ export async function submitFeedbackReport(
 export async function discardFeedbackImage(imageUrl: string) {
     const session = await getSession();
     if (!session.id) return;
-    if (await isValidImageBlob(imageUrl, `feedback/${session.id}/report`)) {
+    if (
+        await isValidPrivateImageBlob(imageUrl, `feedback/${session.id}/report`)
+    ) {
         await deleteBlobIfOwned(imageUrl);
     }
 }

@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import TierBandBrowser from "@/components/tiers/tierBandBrowser";
 import TierControls from "@/components/tiers/tierControls";
+import TierRatingWeightChart from "@/components/tiers/tierRatingWeightChart";
 import { createPageMetadata } from "@/lib/metadata/site";
 import {
     formatTierDate,
@@ -15,7 +16,11 @@ import {
     type TierMode,
 } from "@/lib/tiers";
 import { getUser } from "@/lib/user";
-import { getCachedGoalTierOverview, getTierBandForUser } from "./data";
+import {
+    getCachedBasicTierWeightTheoreticalMax,
+    getCachedGoalTierOverview,
+    getTierBandForUser,
+} from "./data";
 
 export const metadata = createPageMetadata({
     title: "악곡 서열표",
@@ -58,16 +63,23 @@ export default async function TiersPage({ searchParams }: TiersPageProps) {
         getUser(),
         getCachedGoalTierOverview(mode, goal, difficulties, levels),
     ]);
-    const initialBand =
-        tierList?.bands[0] && tierList
-            ? await getTierBandForUser(
-                  tierList.slug,
-                  tierList.bands[0].id,
-                  user?.id,
-                  difficulties,
-                  levels
-              )
-            : null;
+    const showRatingWeight = mode === "basic" && Boolean(tierList);
+    const [initialBand, ratingTheoreticalMax] = tierList
+        ? await Promise.all([
+              tierList.bands[0]
+                  ? getTierBandForUser(
+                        tierList.slug,
+                        tierList.bands[0].id,
+                        user?.id,
+                        difficulties,
+                        levels
+                    )
+                  : Promise.resolve(null),
+              showRatingWeight
+                  ? getCachedBasicTierWeightTheoreticalMax(tierList.id)
+                  : Promise.resolve(null),
+          ])
+        : [null, null];
     const filterKey = `${mode}:${goal}:${difficulties.join(",")}:${levels.join(",")}`;
 
     return (
@@ -99,6 +111,12 @@ export default async function TiersPage({ searchParams }: TiersPageProps) {
                             {tierGoalLabels[goal]} 서열표 안내
                         </summary>
                         <div className="border-divider text-body-muted mt-3 flex flex-col gap-2 border-t pt-3">
+                            {ratingTheoreticalMax ? (
+                                <TierRatingWeightChart
+                                    theoreticalMax={ratingTheoreticalMax}
+                                    goal={goal}
+                                />
+                            ) : null}
                             <p>{tierList.description}</p>
                             <p>
                                 난이도와 공식 레벨은 채보를 찾기 위한 필터이며,

@@ -10,26 +10,49 @@ interface SyncMusicSheet {
     rank: string;
     fc_type: number;
     play_count: number;
+    clear_count: number;
+    clear_flag: [number];
     fullcombo_count: number;
     pianistic_count: number;
     max_combo: number;
     grade_basic: number;
     grade_recital: number;
+    judge: [number, number, number, number, number];
+    note_success_rate: [number, number, number, number];
     besttime: string;
 }
 
-export interface SyncMusicInput {
+export interface BemaniMusicCatalogInput {
     "@index": string;
     artist: string | null;
     category: string;
     category_short: string;
     description: string | null;
+    license: string;
     title: string;
     title_kana: string;
+    unlock_type: number;
+    sheet: Pick<SyncMusicSheet, "difficulty" | "level">[];
+}
+
+export interface SyncMusicInput extends Omit<BemaniMusicCatalogInput, "sheet"> {
     sheet: SyncMusicSheet[];
 }
 
-export async function updateMusic(music: SyncMusicInput[]) {
+function bemaniMetadata(data: BemaniMusicCatalogInput) {
+    return {
+        title: data.title,
+        title_kana: data.title_kana,
+        artist: data.artist,
+        category: data.category,
+        category_short: data.category_short,
+        description: data.description,
+        license: data.license,
+        unlock_type: data.unlock_type,
+    };
+}
+
+export async function updateMusic(music: BemaniMusicCatalogInput[]) {
     const startTime = Date.now(); // 시작 시간
 
     const existingMusic = await db.music.findMany({
@@ -46,6 +69,8 @@ export async function updateMusic(music: SyncMusicInput[]) {
             category: true,
             category_short: true,
             description: true,
+            license: true,
+            unlock_type: true,
             background: true,
         },
     });
@@ -59,12 +84,7 @@ export async function updateMusic(music: SyncMusicInput[]) {
         const index = data["@index"];
         const existing = existingByIndex.get(index);
         const metadata = {
-            title: data.title,
-            title_kana: data.title_kana,
-            artist: data.artist,
-            category: data.category,
-            category_short: data.category_short,
-            description: data.description,
+            ...bemaniMetadata(data),
             background:
                 getLocalJacketUrl(index) ||
                 existing?.background ||
@@ -111,6 +131,10 @@ export async function updateMusic(music: SyncMusicInput[]) {
                     music_idx: data["@index"],
                     difficulty: sheet.difficulty,
                     level: sheet.level,
+                    level_constant:
+                        sheet.difficulty === "Real"
+                            ? sheet.level + 10
+                            : sheet.level,
                 },
                 update: {
                     level: sheet.level,

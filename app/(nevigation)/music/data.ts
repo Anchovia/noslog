@@ -23,12 +23,14 @@ interface MusicRow {
     expert: number;
     real: number | null;
     representative_level: number;
+    record_metric: number;
 }
 
 interface MusicCursor {
     index: string;
     title: string;
     representativeLevel: number;
+    recordMetric: number;
 }
 
 function encodeCursor(row: MusicRow) {
@@ -37,6 +39,7 @@ function encodeCursor(row: MusicRow) {
             index: row.index,
             title: row.title,
             representativeLevel: row.representative_level,
+            recordMetric: row.record_metric,
         } satisfies MusicCursor)
     ).toString("base64url");
 }
@@ -50,7 +53,8 @@ function decodeCursor(value: string | null): MusicCursor | null {
         ) as Partial<MusicCursor>;
         return typeof parsed.index === "string" &&
             typeof parsed.title === "string" &&
-            Number.isInteger(parsed.representativeLevel)
+            Number.isInteger(parsed.representativeLevel) &&
+            Number.isFinite(parsed.recordMetric)
             ? (parsed as MusicCursor)
             : null;
     } catch {
@@ -99,23 +103,78 @@ function buildWhere(query: NormalizedMusicQuery, userId: number | null) {
 function buildRecordWhere(query: NormalizedMusicQuery, userId: number | null) {
     if (!userId || query.recordFilters.length === 0) return null;
 
-    const chartConditions = query.difficulties.map(
+    const recordChartConditions = query.difficulties.map(
         ({ difficulty, min, max }) => Prisma.sql`
             (record_chart."difficulty" = ${difficulty}
              AND record_chart."level" BETWEEN ${min} AND ${max})
         `
     );
-    const chartWhere =
-        chartConditions.length > 0
-            ? Prisma.sql`AND (${Prisma.join(chartConditions, " OR ")})`
+    const recordChartWhere =
+        recordChartConditions.length > 0
+            ? Prisma.sql`AND (${Prisma.join(recordChartConditions, " OR ")})`
             : Prisma.empty;
+    const historyChartConditions = query.difficulties.map(
+        ({ difficulty, min, max }) => Prisma.sql`
+            (history_chart."difficulty" = ${difficulty}
+             AND history_chart."level" BETWEEN ${min} AND ${max})
+        `
+    );
+    const historyChartWhere =
+        historyChartConditions.length > 0
+            ? Prisma.sql`AND (${Prisma.join(historyChartConditions, " OR ")})`
+            : Prisma.empty;
+    const judgementTotal = Prisma.sql`
+        (
+            COALESCE(play."judge_sjust", 0) +
+            COALESCE(play."judge_just", 0) +
+            COALESCE(play."judge_good", 0) +
+            COALESCE(play."judge_miss", 0) +
+            COALESCE(play."judge_near", 0)
+        )
+    `;
+    const playDataFilters = new Set([
+        "clear",
+        "s",
+        "fc",
+        "pianist",
+        "miss-near",
+        "sjust-low",
+        "standard-low",
+        "tenuto-low",
+        "glissando-low",
+        "trill-low",
+    ]);
     const playedConditions = query.recordFilters
-        .filter((filter) => filter !== "unplayed")
+        .filter((filter) => playDataFilters.has(filter))
         .map((filter) => {
+            if (filter === "clear")
+                return Prisma.sql`COALESCE(play."clear_count", 0) > 0`;
             if (filter === "s") return Prisma.sql`UPPER(play."rank") = 'S'`;
             if (filter === "fc")
                 return Prisma.sql`(play."fc_type" > 0 OR play."fullcombo_count" > 0)`;
-            return Prisma.sql`(play."score" >= 1000000 OR play."pianistic_count" > 0)`;
+            if (filter === "pianist")
+                return Prisma.sql`(play."score" >= 1000000 OR play."pianistic_count" > 0)`;
+            if (filter === "miss-near")
+                return Prisma.sql`
+                    ${judgementTotal} > 0
+                    AND (
+                        (COALESCE(play."judge_miss", 0) + COALESCE(play."judge_near", 0))::double precision /
+                        ${judgementTotal}
+                    ) >= 0.05
+                `;
+            if (filter === "sjust-low")
+                return Prisma.sql`
+                    ${judgementTotal} > 0
+                    AND COALESCE(play."judge_sjust", 0)::double precision /
+                        ${judgementTotal} < 0.85
+                `;
+            if (filter === "standard-low")
+                return Prisma.sql`play."note_rate_standard" IS NOT NULL AND play."note_rate_standard" < 9000`;
+            if (filter === "tenuto-low")
+                return Prisma.sql`play."note_rate_tenuto" IS NOT NULL AND play."note_rate_tenuto" < 9000`;
+            if (filter === "glissando-low")
+                return Prisma.sql`play."note_rate_glissando" IS NOT NULL AND play."note_rate_glissando" < 9000`;
+            return Prisma.sql`play."note_rate_trill" IS NOT NULL AND play."note_rate_trill" < 9000`;
         });
     const statusConditions: Prisma.Sql[] = [];
 
@@ -127,7 +186,8 @@ function buildRecordWhere(query: NormalizedMusicQuery, userId: number | null) {
                 JOIN "MusicChart" AS record_chart ON record_chart."id" = play."chart_id"
                 WHERE play."user_id" = ${userId}
                   AND play."music_idx" = music."index"
-                  ${chartWhere}
+                  AND play."play_count" > 0
+                  ${recordChartWhere}
                   AND (${Prisma.join(playedConditions, " OR ")})
             )
         `);
@@ -140,12 +200,185 @@ function buildRecordWhere(query: NormalizedMusicQuery, userId: number | null) {
                 JOIN "MusicChart" AS record_chart ON record_chart."id" = play."chart_id"
                 WHERE play."user_id" = ${userId}
                   AND play."music_idx" = music."index"
-                  ${chartWhere}
+                  AND play."play_count" > 0
+                  ${recordChartWhere}
+            )
+        `);
+    }
+    if (query.recordFilters.includes("recent")) {
+        statusConditions.push(Prisma.sql`
+            EXISTS (
+                SELECT 1
+                FROM "ChartPlayHistory" AS history
+                JOIN "MusicChart" AS history_chart ON history_chart."id" = history."chart_id"
+                WHERE history."user_id" = ${userId}
+                  AND history_chart."music_idx" = music."index"
+                  ${historyChartWhere}
+                  AND (
+                      CASE
+                          WHEN history."source_play_time" ~
+                              '^[0-9]{4}[./][0-9]{2}[./][0-9]{2} [0-9]{2}:[0-9]{2}'
+                          THEN TO_TIMESTAMP(
+                              REPLACE(
+                                  SUBSTRING(history."source_play_time" FROM 1 FOR 16),
+                                  '/',
+                                  '.'
+                              ),
+                              'YYYY.MM.DD HH24:MI'
+                          )
+                          ELSE NULL
+                      END
+                  ) >= NOW() - INTERVAL '30 days'
+            )
+        `);
+    }
+    for (const timingFilter of ["fast", "slow"] as const) {
+        if (!query.recordFilters.includes(timingFilter)) continue;
+
+        const timingComparison =
+            timingFilter === "fast"
+                ? Prisma.sql`latest."fast_count" > latest."slow_count"`
+                : Prisma.sql`latest."slow_count" > latest."fast_count"`;
+        statusConditions.push(Prisma.sql`
+            EXISTS (
+                SELECT 1
+                FROM (
+                    SELECT DISTINCT ON (history."chart_id")
+                        history."fast_count",
+                        history."slow_count"
+                    FROM "ChartPlayHistory" AS history
+                    JOIN "MusicChart" AS history_chart ON history_chart."id" = history."chart_id"
+                    WHERE history."user_id" = ${userId}
+                      AND history_chart."music_idx" = music."index"
+                      ${historyChartWhere}
+                    ORDER BY
+                        history."chart_id",
+                        REPLACE(history."source_play_time", '/', '.') DESC,
+                        history."id" DESC
+                ) AS latest
+                WHERE latest."fast_count" IS NOT NULL
+                  AND latest."slow_count" IS NOT NULL
+                  AND ${timingComparison}
             )
         `);
     }
 
     return Prisma.sql`(${Prisma.join(statusConditions, " OR ")})`;
+}
+
+function buildRecordMetric(query: NormalizedMusicQuery, userId: number | null) {
+    if (!userId || (query.sort !== "recent" && query.sort !== "weakness")) {
+        return Prisma.sql`0::double precision`;
+    }
+
+    const chartConditions = query.difficulties.map(
+        ({ difficulty, min, max }) => Prisma.sql`
+            (metric_chart."difficulty" = ${difficulty}
+             AND metric_chart."level" BETWEEN ${min} AND ${max})
+        `
+    );
+    const chartWhere =
+        chartConditions.length > 0
+            ? Prisma.sql`AND (${Prisma.join(chartConditions, " OR ")})`
+            : Prisma.empty;
+
+    if (query.sort === "recent") {
+        return Prisma.sql`
+            COALESCE(
+                (
+                    SELECT MAX(
+                        CASE
+                            WHEN history."source_play_time" ~
+                                '^[0-9]{4}[./][0-9]{2}[./][0-9]{2} [0-9]{2}:[0-9]{2}'
+                            THEN EXTRACT(
+                                EPOCH FROM TO_TIMESTAMP(
+                                    REPLACE(
+                                        SUBSTRING(history."source_play_time" FROM 1 FOR 16),
+                                        '/',
+                                        '.'
+                                    ),
+                                    'YYYY.MM.DD HH24:MI'
+                                )
+                            )
+                            ELSE 0
+                        END
+                    )
+                    FROM "ChartPlayHistory" AS history
+                    JOIN "MusicChart" AS metric_chart
+                      ON metric_chart."id" = history."chart_id"
+                    WHERE history."user_id" = ${userId}
+                      AND metric_chart."music_idx" = music_catalog."index"
+                      ${chartWhere}
+                ),
+                0
+            )::double precision
+        `;
+    }
+
+    const judgementTotal = Prisma.sql`
+        (
+            COALESCE(play."judge_sjust", 0) +
+            COALESCE(play."judge_just", 0) +
+            COALESCE(play."judge_good", 0) +
+            COALESCE(play."judge_miss", 0) +
+            COALESCE(play."judge_near", 0)
+        )
+    `;
+    const noteRateCount = Prisma.sql`
+        (
+            CASE WHEN play."note_rate_standard" IS NOT NULL THEN 1 ELSE 0 END +
+            CASE WHEN play."note_rate_tenuto" IS NOT NULL THEN 1 ELSE 0 END +
+            CASE WHEN play."note_rate_glissando" IS NOT NULL THEN 1 ELSE 0 END +
+            CASE WHEN play."note_rate_trill" IS NOT NULL THEN 1 ELSE 0 END
+        )
+    `;
+    const noteWeakness = Prisma.sql`
+        COALESCE(
+            (
+                COALESCE((10000 - play."note_rate_standard") / 10000.0, 0) +
+                COALESCE((10000 - play."note_rate_tenuto") / 10000.0, 0) +
+                COALESCE((10000 - play."note_rate_glissando") / 10000.0, 0) +
+                COALESCE((10000 - play."note_rate_trill") / 10000.0, 0)
+            ) / NULLIF(${noteRateCount}, 0),
+            0
+        )
+    `;
+
+    return Prisma.sql`
+        COALESCE(
+            (
+                SELECT MAX(
+                    CASE
+                        WHEN ${judgementTotal} > 0
+                        THEN (
+                            (
+                                (
+                                    COALESCE(play."judge_miss", 0) +
+                                    COALESCE(play."judge_near", 0)
+                                )::double precision /
+                                ${judgementTotal}
+                            ) * 0.6 +
+                            (
+                                1 -
+                                COALESCE(play."judge_sjust", 0)::double precision /
+                                ${judgementTotal}
+                            ) * 0.3 +
+                            ${noteWeakness} * 0.1
+                        )
+                        ELSE 0
+                    END
+                )
+                FROM "PlayData" AS play
+                JOIN "MusicChart" AS metric_chart
+                  ON metric_chart."id" = play."chart_id"
+                WHERE play."user_id" = ${userId}
+                  AND play."music_idx" = music_catalog."index"
+                  AND play."play_count" > 0
+                  ${chartWhere}
+            ),
+            0
+        )::double precision
+    `;
 }
 
 function buildCursorWhere(
@@ -171,6 +404,23 @@ function buildCursorWhere(
         `;
     }
 
+    if (query.sort === "recent" || query.sort === "weakness") {
+        const metricComparison =
+            query.order === "asc"
+                ? Prisma.sql`catalog."record_metric" > ${cursor.recordMetric}`
+                : Prisma.sql`catalog."record_metric" < ${cursor.recordMetric}`;
+        return Prisma.sql`
+            WHERE ${metricComparison}
+               OR (
+                    catalog."record_metric" = ${cursor.recordMetric}
+                    AND (
+                        catalog."title" > ${cursor.title}
+                        OR (catalog."title" = ${cursor.title} AND catalog."index" > ${cursor.index})
+                    )
+               )
+        `;
+    }
+
     const titleComparison =
         query.order === "asc"
             ? Prisma.sql`catalog."title" > ${cursor.title}`
@@ -186,6 +436,12 @@ function buildOrderBy(query: NormalizedMusicQuery) {
         return query.order === "asc"
             ? Prisma.sql`catalog."representative_level" ASC, catalog."title" ASC, catalog."index" ASC`
             : Prisma.sql`catalog."representative_level" DESC, catalog."title" ASC, catalog."index" ASC`;
+    }
+
+    if (query.sort === "recent" || query.sort === "weakness") {
+        return query.order === "asc"
+            ? Prisma.sql`catalog."record_metric" ASC, catalog."title" ASC, catalog."index" ASC`
+            : Prisma.sql`catalog."record_metric" DESC, catalog."title" ASC, catalog."index" ASC`;
     }
 
     return query.order === "asc"
@@ -205,7 +461,7 @@ async function queryMusicPage(
     const representativeDifficulties =
         selectedDifficulties.length > 0 ? selectedDifficulties : ["Expert"];
     const rows = await db.$queryRaw<MusicRow[]>(Prisma.sql`
-        WITH catalog AS (
+        WITH music_catalog AS (
             SELECT
                 music."index",
                 music."title",
@@ -231,6 +487,12 @@ async function queryMusicPage(
                 music."artist",
                 music."category_short",
                 music."background"
+        ),
+        catalog AS (
+            SELECT
+                music_catalog.*,
+                ${buildRecordMetric(query, userId)} AS "record_metric"
+            FROM music_catalog
         )
         SELECT *
         FROM catalog
@@ -275,8 +537,21 @@ export async function getMusicPage(
     userId: number | null = null
 ) {
     const query = normalizeMusicQuery(searchParams);
-    if (userId && query.recordFilters.length > 0) {
+    const usesPersonalSort =
+        query.sort === "recent" || query.sort === "weakness";
+
+    if (userId && (query.recordFilters.length > 0 || usesPersonalSort)) {
         return queryMusicPage(query, cursor, userId);
     }
-    return getCachedMusicPage({ ...query, recordFilters: [] }, cursor);
+
+    const publicQuery = usesPersonalSort
+        ? {
+              ...query,
+              sort: "name" as const,
+              order: "asc" as const,
+              recordFilters: [],
+          }
+        : { ...query, recordFilters: [] };
+
+    return getCachedMusicPage(publicQuery, cursor);
 }

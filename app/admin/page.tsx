@@ -9,16 +9,21 @@ import {
     Megaphone,
     Music2,
     MapPin,
+    RefreshCw,
     Rows3,
     Users,
 } from "lucide-react";
 import Link from "next/link";
 
 import AdminActivityChart from "@/components/admin/adminActivityChart";
+import { STALE_SYNC_THRESHOLD_MS } from "@/lib/admin/syncHealth";
 import db from "@/lib/db";
 
 export default async function AdminPage() {
-    const activityStart = new Date();
+    const now = new Date();
+    const recentSyncStart = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+    const staleSyncBefore = new Date(now.getTime() - STALE_SYNC_THRESHOLD_MS);
+    const activityStart = new Date(now);
     activityStart.setHours(0, 0, 0, 0);
     activityStart.setDate(activityStart.getDate() - 6);
 
@@ -26,23 +31,65 @@ export default async function AdminPage() {
         pendingSubmissionCount,
         failedSyncCount,
         missingConstantCount,
+        pendingCatalogCount,
         draftBingoCount,
         openFeedbackCount,
         userCount,
         musicCount,
         completedSyncCount,
+        staleSyncCount,
+        attentionUserCount,
         recentUsers,
         recentSyncs,
         recentFeedback,
     ] = await Promise.all([
         db.examSubmission.count({ where: { status: "pending" } }),
-        db.dataSync.count({ where: { status: "failed" } }),
+        db.dataSync.count({
+            where: {
+                status: "failed",
+                started_at: { gte: recentSyncStart },
+            },
+        }),
         db.musicChart.count({ where: { level_constant: null } }),
+        db.musicCatalogCandidate.count({ where: { status: "pending" } }),
         db.bingo.count({ where: { status: "draft" } }),
         db.feedbackReport.count({ where: { status: "open" } }),
         db.user.count(),
         db.music.count(),
-        db.dataSync.count({ where: { status: "completed" } }),
+        db.dataSync.count({
+            where: {
+                status: "completed",
+                started_at: { gte: recentSyncStart },
+            },
+        }),
+        db.dataSync.count({
+            where: {
+                status: "processing",
+                started_at: { lte: staleSyncBefore },
+            },
+        }),
+        db.user.count({
+            where: {
+                OR: [
+                    { dataSyncs: { none: {} } },
+                    { PlayData: { none: {} } },
+                    {
+                        PlayData: {
+                            some: {
+                                OR: [
+                                    { judge_sjust: null },
+                                    { judge_just: null },
+                                    { judge_good: null },
+                                    { judge_miss: null },
+                                    { judge_near: null },
+                                    { note_rate_standard: null },
+                                ],
+                            },
+                        },
+                    },
+                ],
+            },
+        }),
         db.user.findMany({
             where: { created_at: { gte: activityStart } },
             select: { created_at: true },
@@ -95,15 +142,33 @@ export default async function AdminPage() {
         },
         {
             href: "/admin/syncs?status=failed",
-            label: "동기화 실패",
+            label: "24시간 동기화 실패",
             count: failedSyncCount,
             color: "text-danger",
+        },
+        {
+            href: "/admin/syncs?status=processing",
+            label: "동기화 처리 지연",
+            count: staleSyncCount,
+            color: "text-score",
+        },
+        {
+            href: "/admin/users?state=attention",
+            label: "연동 데이터 점검",
+            count: attentionUserCount,
+            color: "text-recital",
         },
         {
             href: "/admin/music?missing=1",
             label: "공식 상수 미입력",
             count: missingConstantCount,
             color: "text-hard",
+        },
+        {
+            href: "/admin/catalog?status=pending",
+            label: "악곡 업데이트",
+            count: pendingCatalogCount,
+            color: "text-success",
         },
         {
             href: "/admin/bingos",
@@ -123,11 +188,15 @@ export default async function AdminPage() {
         { label: "전체 유저", value: userCount, color: "text-basic" },
         { label: "등록 악곡", value: musicCount, color: "text-normal" },
         {
-            label: "완료 동기화",
+            label: "24시간 동기화",
             value: completedSyncCount,
             color: "text-chart",
         },
-        { label: "접수 피드백", value: openFeedbackCount, color: "text-score" },
+        {
+            label: "24시간 실패",
+            value: failedSyncCount,
+            color: "text-danger",
+        },
     ];
 
     const menus = [
@@ -148,6 +217,12 @@ export default async function AdminPage() {
             label: "악곡 정보",
             icon: Music2,
             color: "bg-normal/10 text-normal",
+        },
+        {
+            href: "/admin/catalog",
+            label: "악곡 업데이트",
+            icon: RefreshCw,
+            color: "bg-success/10 text-success",
         },
         {
             href: "/admin/bingos",

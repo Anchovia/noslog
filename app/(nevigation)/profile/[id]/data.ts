@@ -1,5 +1,6 @@
 import { CACHE_TAGS, getUserProfileTag } from "@/lib/cacheTags";
 import db from "@/lib/db";
+import { buildProfileSJustAnalytics } from "@/lib/profile/profileAnalytics";
 import { getUserRankingPosition } from "@/lib/rankings";
 import { normalizeStoredGrade } from "@/lib/utils";
 import { unstable_cache } from "next/cache";
@@ -170,4 +171,22 @@ export function getCachedProfileData(id: number) {
         revalidate: 300,
         tags: [CACHE_TAGS.userProfiles, getUserProfileTag(id)],
     })();
+}
+
+// 상세 판정은 공개 캐시에 넣지 않고 본인 프로필에서만 조회함
+export async function getProfileOwnerAnalytics(id: number) {
+    const records = await db.playData.findMany({
+        where: { user_id: id, play_count: { gt: 0 } },
+        select: {
+            judge_sjust: true,
+            judge_just: true,
+            judge_good: true,
+            judge_miss: true,
+            judge_near: true,
+        },
+    });
+
+    return {
+        judgement: buildProfileSJustAnalytics(records),
+    };
 }

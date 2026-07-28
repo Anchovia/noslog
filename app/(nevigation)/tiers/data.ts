@@ -1,5 +1,9 @@
 import { CACHE_TAGS } from "@/lib/cacheTags";
 import db from "@/lib/db";
+import {
+    BASIC_RATING_TOP_COUNT,
+    calculateBasicRatingTheoreticalMax,
+} from "@/lib/tiers/basicRating";
 import type {
     PublicTierBandPayload,
     TierDifficulty,
@@ -91,6 +95,45 @@ export const getCachedGoalTierOverview = unstable_cache(
         };
     },
     ["public-goal-tier-overview", "v1"],
+    {
+        revalidate: 3600,
+        tags: [CACHE_TAGS.tierLists],
+    }
+);
+
+// 현재 공개 서열표를 기준으로 10,000점 정규화에 사용할 상위 70곡 이론값을 계산함
+export const getCachedBasicTierWeightTheoreticalMax = unstable_cache(
+    async (tierListId: number) => {
+        const tierList = await db.tierList.findUnique({
+            where: { id: tierListId },
+            select: {
+                mode: true,
+                goal: true,
+                status: true,
+                entries: {
+                    select: {
+                        tierBand: { select: { value: true } },
+                    },
+                },
+            },
+        });
+
+        if (
+            !tierList ||
+            tierList.mode !== "basic" ||
+            tierList.status !== "published" ||
+            tierList.entries.length < BASIC_RATING_TOP_COUNT
+        ) {
+            return null;
+        }
+
+        const theoreticalMax = calculateBasicRatingTheoreticalMax(
+            tierList.entries.map((entry) => entry.tierBand.value)
+        );
+
+        return theoreticalMax > 0 ? theoreticalMax : null;
+    },
+    ["basic-tier-weight-theoretical-max", "v2"],
     {
         revalidate: 3600,
         tags: [CACHE_TAGS.tierLists],
@@ -209,8 +252,46 @@ export function getUserTierRecords(userId: number, chartIds: number[]) {
             score: true,
             rank: true,
             fc_type: true,
+            max_combo: true,
+            play_count: true,
+            clear_count: true,
+            fullcombo_count: true,
+            pianistic_count: true,
+            judge_sjust: true,
+            judge_just: true,
+            judge_good: true,
+            judge_miss: true,
+            judge_near: true,
+            note_rate_standard: true,
+            note_rate_tenuto: true,
+            note_rate_glissando: true,
+            note_rate_trill: true,
+            besttime: true,
         },
     });
+}
+
+interface LatestTierPlayRow {
+    chart_id: number;
+    fast_count: number | null;
+    slow_count: number | null;
+    source_play_time: string;
+}
+
+export function getLatestUserTierPlays(userId: number, chartIds: number[]) {
+    if (chartIds.length === 0) return Promise.resolve([]);
+
+    return db.$queryRaw<LatestTierPlayRow[]>(Prisma.sql`
+        SELECT DISTINCT ON ("chart_id")
+            "chart_id",
+            "fast_count",
+            "slow_count",
+            "source_play_time"
+        FROM "ChartPlayHistory"
+        WHERE "user_id" = ${userId}
+          AND "chart_id" IN (${Prisma.join(chartIds)})
+        ORDER BY "chart_id", "source_play_time" DESC, "id" DESC
+    `);
 }
 
 export async function getTierBandForUser(
@@ -223,23 +304,33 @@ export async function getTierBandForUser(
     const band = await getCachedTierBand(slug, bandId, difficulties, levels);
     if (!band) return null;
 
-    const records = userId
-        ? await getUserTierRecords(
-              userId,
-              band.entries.map((entry) => entry.chartId)
-          )
-        : [];
+    const chartIds = band.entries.map((entry) => entry.chartId);
+    const [records, latestPlays] = userId
+        ? await Promise.all([
+              getUserTierRecords(userId, chartIds),
+              getLatestUserTierPlays(userId, chartIds),
+          ])
+        : [[], []];
     const recordByChartId = new Map(
         records.flatMap((record) =>
             record.chart_id === null ? [] : [[record.chart_id, record] as const]
         )
+    );
+    const latestPlayByChartId = new Map(
+        latestPlays.map((play) => [play.chart_id, play] as const)
     );
 
     return {
         ...band,
         entries: band.entries.map((entry) => ({
             ...entry,
-            record: recordByChartId.get(entry.chartId) ?? null,
+            record: recordByChartId.has(entry.chartId)
+                ? {
+                      ...recordByChartId.get(entry.chartId)!,
+                      latestPlay:
+                          latestPlayByChartId.get(entry.chartId) ?? null,
+                  }
+                : null,
         })),
     };
 }

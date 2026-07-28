@@ -78,6 +78,7 @@ function tierListData(formData: FormData) {
 
 function revalidateTierList(id: number) {
     updateTag(CACHE_TAGS.tierLists);
+    updateTag(CACHE_TAGS.userRankings);
     revalidatePath("/admin");
     revalidatePath("/admin/tiers");
     revalidatePath(`/admin/tiers/${id}`);
@@ -149,6 +150,7 @@ export async function deleteTierList(formData: FormData) {
 
     await db.tierList.delete({ where: { id } });
     updateTag(CACHE_TAGS.tierLists);
+    updateTag(CACHE_TAGS.userRankings);
     revalidatePath("/admin");
     revalidatePath("/admin/tiers");
     revalidatePath("/tiers");

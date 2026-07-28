@@ -65,8 +65,8 @@ test("로그인 페이지에서 Discord 로그인과 비회원 이동을 제공�
     await expectNoHorizontalOverflow(page);
 });
 
-test("홈 유저 랭킹의 Basic과 Recital을 전환한다", async ({ page }) => {
-    await page.goto("/");
+test("랭킹 페이지에서 Basic과 Recital을 전환한다", async ({ page }) => {
+    await page.goto("/rankings");
 
     const recitalButton = page.getByRole("button", {
         name: "Recital",
@@ -74,7 +74,7 @@ test("홈 유저 랭킹의 Basic과 Recital을 전환한다", async ({ page }) =
     });
     await recitalButton.click();
 
-    await expect(page).toHaveURL(/\?ranking=recital$/);
+    await expect(page).toHaveURL(/(?:\?|&)mode=recital(?:&|$)/);
     await expect(recitalButton).toHaveAttribute("aria-pressed", "true");
 
     const basicButton = page.getByRole("button", {
@@ -83,7 +83,7 @@ test("홈 유저 랭킹의 Basic과 Recital을 전환한다", async ({ page }) =
     });
     await basicButton.click();
 
-    await expect(page).toHaveURL(/\/$/);
+    await expect(page).toHaveURL(/(?:\?|&)mode=basic(?:&|$)/);
     await expect(basicButton).toHaveAttribute("aria-pressed", "true");
 });
 

@@ -37,6 +37,7 @@ export default async function Music(props: {
                 key={`results-${searchKey}`}
                 initialPage={initialPage}
                 searchParams={searchParams}
+                isLoggedIn={Boolean(session.id)}
             />
         </div>
     );

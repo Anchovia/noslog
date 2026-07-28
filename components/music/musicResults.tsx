@@ -17,24 +17,35 @@ interface MusicResultsProps {
         nextCursor: string | null;
     };
     searchParams: MusicSearchParams;
+    isLoggedIn: boolean;
 }
 
 // 악곡 결과의 정렬과 보기 상태를 한곳에서 관리함
 export default function MusicResults({
     initialPage,
     searchParams,
+    isLoggedIn,
 }: MusicResultsProps) {
     const router = useRouter();
     const pathname = usePathname();
     const currentSearchParams = useSearchParams();
+    const requestedSortMode: SortMode =
+        searchParams.sort === "level" ||
+        searchParams.sort === "recent" ||
+        searchParams.sort === "weakness"
+            ? searchParams.sort
+            : "name";
     const initialSortMode: SortMode =
-        searchParams.sort === "level" ? "level" : "name";
+        isLoggedIn ||
+        (requestedSortMode !== "recent" && requestedSortMode !== "weakness")
+            ? requestedSortMode
+            : "name";
     const initialSortOrder: SortOrder =
         searchParams.order === "asc" || searchParams.order === "desc"
             ? searchParams.order
-            : initialSortMode === "level"
-              ? "desc"
-              : "asc";
+            : initialSortMode === "name"
+              ? "asc"
+              : "desc";
     const [sortMode, setSortMode] = useState<SortMode>(initialSortMode);
     const [sortOrder, setSortOrder] = useState<SortOrder>(initialSortOrder);
     const [viewMode, setViewMode] = useState<ViewMode>(
@@ -47,9 +58,9 @@ export default function MusicResults({
                 ? sortOrder === "asc"
                     ? "desc"
                     : "asc"
-                : nextSortMode === "level"
-                  ? "desc"
-                  : "asc";
+                : nextSortMode === "name"
+                  ? "asc"
+                  : "desc";
         const params = new URLSearchParams(currentSearchParams.toString());
 
         params.set("sort", nextSortMode);
@@ -75,6 +86,7 @@ export default function MusicResults({
                 sortMode={sortMode}
                 sortOrder={sortOrder}
                 viewMode={viewMode}
+                isLoggedIn={isLoggedIn}
                 onSortModeChange={handleSortModeChange}
                 onViewModeChange={handleViewModeChange}
             />

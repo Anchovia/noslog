@@ -22,7 +22,9 @@ import {
 import {
     calculateExamSimulation,
     canEnterExam,
+    getDefaultExam,
 } from "@/components/exams/dashboard/examDashboardUtils";
+import { Switch } from "@/components/ui/Switch";
 
 export type { ExamDashboardItem } from "@/components/exams/dashboard/examDashboardTypes";
 
@@ -37,7 +39,12 @@ export default function ExamDashboard({
     const router = useRouter();
     const initialMode: ExamMode = "basic";
     const [mode, setMode] = useState<ExamMode>(initialMode);
-    const [selectedExamId, setSelectedExamId] = useState<number | null>(null);
+    const [selectedExamId, setSelectedExamId] = useState<number | null>(
+        () =>
+            getDefaultExam(exams.filter((exam) => exam.mode === initialMode))
+                ?.id ?? null
+    );
+    const [showAdvice, setShowAdvice] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
     const [uploadMessage, setUploadMessage] = useState<string | null>(null);
 
@@ -70,12 +77,16 @@ export default function ExamDashboard({
 
     function changeMode(nextMode: ExamMode) {
         setMode(nextMode);
-        setSelectedExamId(null);
+        setSelectedExamId(
+            getDefaultExam(exams.filter((exam) => exam.mode === nextMode))
+                ?.id ?? null
+        );
+        setShowAdvice(false);
         setUploadMessage(null);
     }
 
     function selectExam(examId: number) {
-        setSelectedExamId((current) => (current === examId ? null : examId));
+        setSelectedExamId(examId);
         setUploadMessage(null);
     }
 
@@ -108,7 +119,7 @@ export default function ExamDashboard({
             }
 
             const blob = await put(upload.pathname, file, {
-                access: "public",
+                access: "private",
                 token: upload.token,
                 contentType: file.type,
             });
@@ -142,6 +153,30 @@ export default function ExamDashboard({
                 </section>
             ) : (
                 <>
+                    {mode === "basic" ? (
+                        <section className="bg-surface rounded-card flex items-center justify-between gap-4 p-3">
+                            <div className="min-w-0">
+                                <label
+                                    htmlFor="exam-advice-switch"
+                                    className="text-label font-semibold"
+                                >
+                                    플레이 조언
+                                </label>
+                                <p className="text-caption mt-0.5">
+                                    {isAuthenticated
+                                        ? "내 기록으로 합격 준비도와 연습할 곡을 확인합니다."
+                                        : "로그인하면 내 기록 기반 조언을 확인할 수 있습니다."}
+                                </p>
+                            </div>
+                            <Switch
+                                id="exam-advice-switch"
+                                aria-label="플레이 조언"
+                                checked={showAdvice}
+                                onCheckedChange={setShowAdvice}
+                                disabled={!isAuthenticated}
+                            />
+                        </section>
+                    ) : null}
                     <ExamSelector
                         exams={modeExams}
                         selectedExamId={selectedExam?.id ?? null}
@@ -150,17 +185,22 @@ export default function ExamDashboard({
                         {selectedExam && simulation ? (
                             <>
                                 <ExamOverview exam={selectedExam} />
+                                {selectedExam.mode === "basic" && showAdvice ? (
+                                    <ExamSimulation
+                                        exam={selectedExam}
+                                        simulation={simulation}
+                                    />
+                                ) : null}
                                 <ExamStageTable
                                     stages={simulation.stages}
                                     scoringType={selectedExam.scoringType}
-                                    showBest={selectedExam.mode !== "event"}
+                                    showBest={
+                                        selectedExam.mode === "basic" &&
+                                        showAdvice
+                                    }
                                 />
                                 {selectedExam.mode !== "event" ? (
                                     <>
-                                        <ExamSimulation
-                                            exam={selectedExam}
-                                            simulation={simulation}
-                                        />
                                         <ExamProofUpload
                                             exam={selectedExam}
                                             isAuthenticated={isAuthenticated}

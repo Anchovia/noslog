@@ -1,4 +1,8 @@
-import type { UserRankingMode, UserRankingRegion } from "@/lib/rankings";
+import type {
+    UserRankingMetric,
+    UserRankingMode,
+    UserRankingRegion,
+} from "@/lib/rankings";
 
 export type PaginationItem = number | "ellipsis";
 
@@ -10,6 +14,10 @@ export const PODIUM_STYLES = [
 
 export function formatRankingGrade(grade: number) {
     return Math.round(grade / 100).toLocaleString("ko-KR");
+}
+
+export function formatRankingRating(rating: number) {
+    return Math.round(rating).toLocaleString("ko-KR");
 }
 
 export function getPaginationItems(
@@ -39,7 +47,9 @@ export function getPaginationItems(
 export function getRankingPageHref(
     mode: UserRankingMode,
     region: UserRankingRegion,
-    page: number
+    page: number,
+    metric: UserRankingMetric = "grade"
 ) {
-    return `/rankings?mode=${mode}&region=${region}&page=${page}`;
+    const metricParam = metric === "rating" ? "&metric=rating" : "";
+    return `/rankings?mode=${mode}${metricParam}&region=${region}&page=${page}`;
 }

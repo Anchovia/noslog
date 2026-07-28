@@ -1,18 +1,32 @@
-import type { UserRankingMode, UserRankingRow } from "@/lib/rankings";
+import type {
+    UserRankingMetric,
+    UserRankingMode,
+    UserRankingRow,
+} from "@/lib/rankings";
 import RankingRow from "./userRankingRow";
 
 interface UserRankingListProps {
     mode: UserRankingMode;
+    metric: UserRankingMetric;
     rows: UserRankingRow[];
 }
 
-export default function UserRankingList({ mode, rows }: UserRankingListProps) {
+export default function UserRankingList({
+    mode,
+    metric,
+    rows,
+}: UserRankingListProps) {
     return (
         <section className="bg-surface rounded-card overflow-hidden">
             {rows.length > 0 ? (
                 <ol>
                     {rows.map((row) => (
-                        <RankingRow key={row.id} mode={mode} row={row} />
+                        <RankingRow
+                            key={row.id}
+                            mode={mode}
+                            metric={metric}
+                            row={row}
+                        />
                     ))}
                 </ol>
             ) : (

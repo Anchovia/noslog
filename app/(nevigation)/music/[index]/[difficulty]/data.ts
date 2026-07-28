@@ -1,5 +1,9 @@
 import db from "@/lib/db";
 import { CACHE_TAGS } from "@/lib/cacheTags";
+import {
+    buildPeerScoreComparison,
+    PEER_STORED_GRADE_RANGE,
+} from "@/lib/music/peerScoreComparison";
 import { selectScoreImprovements } from "@/lib/music/scoreTrend";
 import { unstable_cache } from "next/cache";
 
@@ -39,6 +43,11 @@ export const getCachedMusicDetail = unstable_cache(
                     unlock_condition: true,
                     play_video_url: true,
                     chart_preview_url: true,
+                    pattern: {
+                        select: {
+                            publishedRevision: true,
+                        },
+                    },
                 },
             }),
         ]);
@@ -48,12 +57,16 @@ export const getCachedMusicDetail = unstable_cache(
             chart: chart
                 ? {
                       ...chart,
+                      has_published_pattern:
+                          chart.pattern?.publishedRevision !== null &&
+                          chart.pattern?.publishedRevision !== undefined,
+                      pattern: undefined,
                       released_at: chart.released_at?.toISOString() ?? null,
                   }
                 : null,
         };
     },
-    ["music-detail"],
+    ["music-detail-v2"],
     {
         revalidate: 3600,
         tags: [CACHE_TAGS.musicCatalog, CACHE_TAGS.musicDetails],
@@ -220,7 +233,12 @@ export function getUserChartRecord(userId: number, chartId: number) {
         select: {
             user_id: true,
             user: {
-                select: { id: true, username: true, avatar: true },
+                select: {
+                    id: true,
+                    username: true,
+                    avatar: true,
+                    grade_basic: true,
+                },
             },
             rank: true,
             fc_type: true,
@@ -230,11 +248,58 @@ export function getUserChartRecord(userId: number, chartId: number) {
             score: true,
             max_combo: true,
             play_count: true,
+            clear_count: true,
             fullcombo_count: true,
             pianistic_count: true,
+            judge_sjust: true,
+            judge_just: true,
+            judge_good: true,
+            judge_miss: true,
+            judge_near: true,
+            note_rate_standard: true,
+            note_rate_tenuto: true,
+            note_rate_glissando: true,
+            note_rate_trill: true,
             besttime: true,
         },
     });
+}
+
+export async function getUserChartPeerScoreComparison(
+    userId: number,
+    chartId: number,
+    gradeBasic: number | null
+) {
+    if (gradeBasic === null) return null;
+
+    const records = await db.playData.findMany({
+        where: {
+            chart_id: chartId,
+            user_id: { not: userId },
+            play_count: { gt: 0 },
+            score: { gt: 0 },
+            user: {
+                grade_basic: {
+                    gte: Math.max(0, gradeBasic - PEER_STORED_GRADE_RANGE),
+                    lte: gradeBasic + PEER_STORED_GRADE_RANGE,
+                },
+            },
+        },
+        select: {
+            score: true,
+            judge_sjust: true,
+            judge_just: true,
+            judge_good: true,
+            judge_miss: true,
+            judge_near: true,
+            note_rate_standard: true,
+            note_rate_tenuto: true,
+            note_rate_glissando: true,
+            note_rate_trill: true,
+        },
+    });
+
+    return buildPeerScoreComparison(records);
 }
 
 export async function getRecentUserChartPlays(userId: number, chartId: number) {
@@ -243,7 +308,18 @@ export async function getRecentUserChartPlays(userId: number, chartId: number) {
         select: {
             id: true,
             score: true,
+            best_score: true,
+            max_combo: true,
             rank: true,
+            grade_basic: true,
+            class_basic: true,
+            fast_count: true,
+            slow_count: true,
+            judge_sjust: true,
+            judge_just: true,
+            judge_good: true,
+            judge_miss: true,
+            judge_near: true,
             source_play_time: true,
         },
         orderBy: [{ source_play_time: "desc" }, { id: "desc" }],
@@ -253,7 +329,56 @@ export async function getRecentUserChartPlays(userId: number, chartId: number) {
     return plays.reverse().map((play) => ({
         id: play.id,
         score: play.score,
+        best_score: play.best_score,
+        max_combo: play.max_combo,
         rank: play.rank,
+        grade_basic: play.grade_basic,
+        class_basic: play.class_basic,
+        fast_count: play.fast_count,
+        slow_count: play.slow_count,
+        judge_sjust: play.judge_sjust,
+        judge_just: play.judge_just,
+        judge_good: play.judge_good,
+        judge_miss: play.judge_miss,
+        judge_near: play.judge_near,
+        play_time: play.source_play_time,
+    }));
+}
+
+export async function getUserChartPerformanceTrend(
+    userId: number,
+    chartId: number
+) {
+    const plays = await db.chartPlayHistory.findMany({
+        where: { user_id: userId, chart_id: chartId },
+        select: {
+            id: true,
+            score: true,
+            best_score: true,
+            fast_count: true,
+            slow_count: true,
+            judge_sjust: true,
+            judge_just: true,
+            judge_good: true,
+            judge_miss: true,
+            judge_near: true,
+            source_play_time: true,
+        },
+        orderBy: [{ source_play_time: "desc" }, { id: "desc" }],
+        take: 30,
+    });
+
+    return plays.reverse().map((play) => ({
+        id: play.id,
+        score: play.score,
+        best_score: play.best_score,
+        fast_count: play.fast_count,
+        slow_count: play.slow_count,
+        judge_sjust: play.judge_sjust,
+        judge_just: play.judge_just,
+        judge_good: play.judge_good,
+        judge_miss: play.judge_miss,
+        judge_near: play.judge_near,
         play_time: play.source_play_time,
     }));
 }
@@ -281,15 +406,26 @@ export async function getUserChartScoreTrend(
         play_time: snapshot.created_at.toISOString(),
     }));
 
-    // 스냅샷 도입 전에 존재한 현재 베스트 기록도 최초 지점으로 표시함
+    const improvements = selectScoreImprovements(records);
+
+    // 현재 최고점은 동기화 시각 대신 BEMANI의 실제 달성 시각으로 표시함
     if (currentRecord?.score) {
-        records.push({
+        const currentBestIndex = improvements.findIndex(
+            (record) => record.score === currentRecord.score
+        );
+        const currentBest = {
             id: -1,
             score: currentRecord.score,
             rank: currentRecord.rank,
             play_time: currentRecord.besttime,
-        });
+        };
+
+        if (currentBestIndex >= 0) {
+            improvements[currentBestIndex] = currentBest;
+        } else {
+            improvements.push(currentBest);
+        }
     }
 
-    return selectScoreImprovements(records);
+    return improvements;
 }

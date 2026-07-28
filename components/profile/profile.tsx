@@ -6,6 +6,7 @@ import { logout } from "@/app/(nevigation)/profile/[id]/actions";
 import ProfileBestPlays from "@/components/profile/dashboard/profileBestPlays";
 import ProfileGradeTrend from "@/components/profile/dashboard/profileGradeTrend";
 import ProfileHeader from "@/components/profile/dashboard/profileHeader";
+import ProfileJudgementSummary from "@/components/profile/dashboard/profileJudgementSummary";
 import ProfileModeTabs from "@/components/profile/dashboard/profileModeTabs";
 import ProfileRankDistribution from "@/components/profile/dashboard/profileRankDistribution";
 import ProfileRecentPlays from "@/components/profile/dashboard/profileRecentPlays";
@@ -31,6 +32,7 @@ export default function ProfileDashboard({
     recitalBestPlays,
     recentPlays,
     isOwner,
+    ownerAnalytics,
 }: ProfileDashboardProps) {
     const [mode, setMode] = useState<ProfileMode>("basic");
     const [showAllRanks, setShowAllRanks] = useState(false);
@@ -64,6 +66,9 @@ export default function ProfileDashboard({
                 expanded={showAllRanks}
                 onToggle={() => setShowAllRanks((value) => !value)}
             />
+            {ownerAnalytics ? (
+                <ProfileJudgementSummary analytics={ownerAnalytics.judgement} />
+            ) : null}
             <ProfileBestPlays
                 plays={bestPlays}
                 mode={mode}

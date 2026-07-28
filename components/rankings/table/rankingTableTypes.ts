@@ -1,7 +1,12 @@
-import type { UserRankingMode, UserRankingRow } from "@/lib/rankings";
+import type {
+    UserRankingMetric,
+    UserRankingMode,
+    UserRankingRow,
+} from "@/lib/rankings";
 
 export interface UserRankingTableProps {
     mode: UserRankingMode;
+    metric: UserRankingMetric;
     page: number;
     pageSize: number;
     totalCount: number;

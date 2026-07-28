@@ -60,6 +60,16 @@ export function formatProfileDate(value: string | null) {
         .replace(/\.$/, "");
 }
 
+export function formatProfileDateTime(value: string | null) {
+    if (!value) return "기록 없음";
+
+    const normalized = value.replace("T", " ");
+    const [date, time] = normalized.split(" ");
+    const formattedDate = date.replaceAll("-", ".").replaceAll("/", ".");
+
+    return time ? `${formattedDate} ${time.slice(0, 5)}` : formattedDate;
+}
+
 export function getProfileCountryCode(country: string) {
     if (country === "ko-KR") return "KR";
     if (country === "ja-JP") return "JP";

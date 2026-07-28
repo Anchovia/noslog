@@ -9,7 +9,7 @@ export const difficultyStyles: Record<Difficulty, string> = {
 
 export const detailTabs: { value: DetailTab; label: string }[] = [
     { value: "record", label: "내 기록" },
-    { value: "detail", label: "상세" },
+    { value: "detail", label: "악곡 정보" },
     { value: "ranking", label: "랭킹" },
     { value: "tier", label: "서열 및 투표" },
 ];

@@ -246,6 +246,7 @@ describe("관리자 서열표 액션", () => {
             expect.any(Promise),
         ]);
         expect(mocks.updateTag).toHaveBeenCalledWith("tier-lists");
+        expect(mocks.updateTag).toHaveBeenCalledWith("user-rankings");
     });
 
     it("변경한 전체 배치를 한 번에 저장하고 구간 이동 이력을 남긴다", async () => {

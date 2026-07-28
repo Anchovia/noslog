@@ -1,3 +1,4 @@
+import type { PeerScoreComparison } from "@/lib/music/peerScoreComparison";
 import type { RankingRow } from "./ranking/musicRankingTypes";
 
 export type Difficulty = "Normal" | "Hard" | "Expert" | "Real";
@@ -22,6 +23,7 @@ export interface UserPlayData {
         id: number;
         username: string | null;
         avatar: string | null;
+        grade_basic: number | null;
     };
     rank: string;
     fc_type: number;
@@ -31,15 +33,36 @@ export interface UserPlayData {
     score: number;
     max_combo: number;
     play_count: number;
+    clear_count: number | null;
     fullcombo_count: number;
     pianistic_count: number;
+    judge_sjust: number | null;
+    judge_just: number | null;
+    judge_good: number | null;
+    judge_miss: number | null;
+    judge_near: number | null;
+    note_rate_standard: number | null;
+    note_rate_tenuto: number | null;
+    note_rate_glissando: number | null;
+    note_rate_trill: number | null;
     besttime: string;
 }
 
 export interface RecentChartPlay {
     id: number;
     score: number;
+    best_score: number | null;
+    max_combo: number;
     rank: string;
+    grade_basic: number;
+    class_basic: string | null;
+    fast_count: number | null;
+    slow_count: number | null;
+    judge_sjust: number | null;
+    judge_just: number | null;
+    judge_good: number | null;
+    judge_miss: number | null;
+    judge_near: number | null;
     play_time: string;
 }
 
@@ -47,6 +70,20 @@ export interface ScoreTrendPoint {
     id: number;
     score: number;
     rank: string;
+    play_time: string;
+}
+
+export interface PerformanceTrendPoint {
+    id: number;
+    score: number;
+    best_score: number | null;
+    fast_count: number | null;
+    slow_count: number | null;
+    judge_sjust: number | null;
+    judge_just: number | null;
+    judge_good: number | null;
+    judge_miss: number | null;
+    judge_near: number | null;
     play_time: string;
 }
 
@@ -62,6 +99,7 @@ export interface ChartDetail {
     unlock_condition: string | null;
     play_video_url: string | null;
     chart_preview_url: string | null;
+    has_published_pattern: boolean;
     evaluationCount: number;
     patternAverages: {
         stairs: number;
@@ -87,6 +125,8 @@ export interface MusicDetailProps {
     userPlayData: UserPlayData | null;
     recentChartPlays: RecentChartPlay[];
     scoreTrend: ScoreTrendPoint[];
+    performanceTrend: PerformanceTrendPoint[];
+    peerScoreComparison: PeerScoreComparison | null;
     chartDetail: ChartDetail;
     ranking: {
         rows: RankingRow[];

@@ -2,9 +2,9 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
     getSession: vi.fn(),
-    isValidImageBlob: vi.fn(),
+    isValidPrivateImageBlob: vi.fn(),
     deleteBlobIfOwned: vi.fn(),
-    createImageUploadToken: vi.fn(),
+    createPrivateImageUploadToken: vi.fn(),
     examFindFirst: vi.fn(),
     userFindUnique: vi.fn(),
     submissionFindMany: vi.fn(),
@@ -22,10 +22,10 @@ vi.mock("@/lib/session", () => ({
 }));
 
 vi.mock("@/lib/blob", () => ({
-    createImageUploadToken: mocks.createImageUploadToken,
+    createPrivateImageUploadToken: mocks.createPrivateImageUploadToken,
     deleteBlobIfOwned: mocks.deleteBlobIfOwned,
     isImageContentType: (value: string) => value === "image/jpeg",
-    isValidImageBlob: mocks.isValidImageBlob,
+    isValidPrivateImageBlob: mocks.isValidPrivateImageBlob,
 }));
 
 vi.mock("@/lib/uploadRateLimit", () => ({
@@ -58,15 +58,15 @@ import {
 } from "@/app/(nevigation)/exams/actions";
 
 const proofUrl =
-    "https://store.public.blob.vercel-storage.com/exam-proofs/2/30/proof-new.jpg";
+    "https://store.private.blob.vercel-storage.com/exam-proofs/2/30/proof-new.jpg";
 const rejectedProofUrl =
-    "https://store.public.blob.vercel-storage.com/exam-proofs/2/30/proof-old.jpg";
+    "https://store.private.blob.vercel-storage.com/exam-proofs/2/30/proof-old.jpg";
 
 describe("검정 증빙 업로드 액션", () => {
     beforeEach(() => {
         vi.clearAllMocks();
         mocks.getSession.mockResolvedValue({ id: 2 });
-        mocks.isValidImageBlob.mockResolvedValue(true);
+        mocks.isValidPrivateImageBlob.mockResolvedValue(true);
         mocks.examFindFirst.mockResolvedValue({
             id: 30,
             mode: "basic",
@@ -82,7 +82,7 @@ describe("검정 증빙 업로드 액션", () => {
             allowed: true,
             grantId: 70,
         });
-        mocks.createImageUploadToken.mockResolvedValue({
+        mocks.createPrivateImageUploadToken.mockResolvedValue({
             pathname: "exam-proofs/2/30/proof.jpg",
             token: "upload-token",
         });
@@ -111,11 +111,11 @@ describe("검정 증빙 업로드 액션", () => {
             }
         );
 
-        expect(mocks.createImageUploadToken).not.toHaveBeenCalled();
+        expect(mocks.createPrivateImageUploadToken).not.toHaveBeenCalled();
     });
 
     it("Blob 토큰 생성에 실패하면 소비한 발급 횟수를 되돌린다", async () => {
-        mocks.createImageUploadToken.mockRejectedValueOnce(
+        mocks.createPrivateImageUploadToken.mockRejectedValueOnce(
             new Error("blob error")
         );
 
@@ -165,7 +165,7 @@ describe("검정 증빙 업로드 액션", () => {
 
         vi.clearAllMocks();
         mocks.getSession.mockResolvedValue({ id: 2 });
-        mocks.isValidImageBlob.mockResolvedValue(true);
+        mocks.isValidPrivateImageBlob.mockResolvedValue(true);
         mocks.submissionFindFirst.mockResolvedValue({ id: 50 });
 
         await discardExamProofUpload(30, proofUrl);

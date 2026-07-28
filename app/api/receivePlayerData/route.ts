@@ -2,10 +2,11 @@ import { verifySyncToken } from "@/lib/bookmarklet";
 import { CACHE_TAGS, getUserProfileTag } from "@/lib/cacheTags";
 import db from "@/lib/db";
 import { updateDummy } from "@/lib/dummy/bingo";
-import type { SyncMusicInput } from "@/lib/services/music/updateMusic";
+import { processBemaniCatalogUpdates } from "@/lib/services/music/catalogSync";
+import { type SyncMusicInput } from "@/lib/services/music/updateMusic";
 import { updateGrade } from "@/lib/services/user/updateGrade";
-import { updatePlayCount } from "@/lib/services/user/updatePlayCount";
 import { updatePlayData } from "@/lib/services/user/updatePlayData";
+import { updatePlayerProfile } from "@/lib/services/user/updatePlayerProfile";
 import { updateRecentPlay } from "@/lib/services/user/updateRecentPlay";
 import { NextRequest, NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
@@ -18,14 +19,38 @@ const SYNC_PROCESSING_TIMEOUT_MS = 15 * 60 * 1000;
 const shortText = z.string().min(1).max(256);
 const nullableShortText = z.string().max(256).nullable();
 const difficultySchema = z.enum(["Normal", "Hard", "Expert", "Real"]);
+const sourceStatusSchema = z.object({
+    status: z.number().int(),
+    fail_code: z.number().int(),
+});
+const broochSchema = z.object({
+    "@index": z.string().max(128),
+    name: z.string().max(256),
+    description: z.string().max(5_000),
+});
 const recentHistorySchema = z.object({
+    artist: z.string().max(256),
+    best_score: z.number().int().min(0).max(1_000_000),
+    class_basic: z.string().max(32),
     difficulty: difficultySchema,
+    fast_count: z.number().int().min(0).max(1_000_000),
+    is_onehand: z.boolean(),
+    judge_count: z.tuple([
+        z.number().int().min(0).max(1_000_000),
+        z.number().int().min(0).max(1_000_000),
+        z.number().int().min(0).max(1_000_000),
+        z.number().int().min(0).max(1_000_000),
+        z.number().int().min(0).max(1_000_000),
+    ]),
     level: z.number().int().min(1).max(14),
+    license: z.string().max(5_000),
     score: z.number().int().min(0).max(1_000_000),
+    slow_count: z.number().int().min(0).max(1_000_000),
     max_combo: z.number().int().min(0).max(1_000_000),
     rank: z.string().min(1).max(32),
     play_time: z.string().min(1).max(64),
     music: shortText,
+    title: shortText,
     grade_basic: z.number().int().min(0).max(100_000_000),
 });
 const musicSheetSchema = z.object({
@@ -35,11 +60,26 @@ const musicSheetSchema = z.object({
     rank: z.string().min(1).max(32),
     fc_type: z.number().int().min(0).max(10),
     play_count: z.number().int().min(0).max(10_000_000),
+    clear_count: z.number().int().min(0).max(10_000_000),
+    clear_flag: z.tuple([z.number().int().min(0).max(1_000_000)]),
     fullcombo_count: z.number().int().min(0).max(10_000_000),
     pianistic_count: z.number().int().min(0).max(10_000_000),
     max_combo: z.number().int().min(0).max(1_000_000),
     grade_basic: z.number().int().min(0).max(100_000_000),
     grade_recital: z.number().int().min(0).max(100_000_000),
+    judge: z.tuple([
+        z.number().int().min(0).max(1_000_000),
+        z.number().int().min(0).max(1_000_000),
+        z.number().int().min(0).max(1_000_000),
+        z.number().int().min(0).max(1_000_000),
+        z.number().int().min(0).max(1_000_000),
+    ]),
+    note_success_rate: z.tuple([
+        z.number().int().min(-1).max(10_000),
+        z.number().int().min(-1).max(10_000),
+        z.number().int().min(-1).max(10_000),
+        z.number().int().min(-1).max(10_000),
+    ]),
     besttime: z.string().max(64),
 });
 const musicSchema = z.object({
@@ -48,25 +88,38 @@ const musicSchema = z.object({
     category: z.string().min(1).max(128),
     category_short: z.string().min(1).max(32),
     description: z.string().max(5_000).nullable(),
+    license: z.string().max(5_000),
     title: shortText,
     title_kana: z.string().max(256),
+    unlock_type: z.number().int().min(0).max(100),
     sheet: z.array(musicSheetSchema).min(3).max(4),
 });
 const syncRequestSchema = z.object({
     token: z.string().min(1).max(512),
     playerData: z.object({
         status: z.number().int(),
-        data: z.object({
+        data: sourceStatusSchema.extend({
             player: z.object({
                 name: z.string().min(1).max(64),
                 play_count: z.number().int().min(0).max(10_000_000),
+                travel_info: z.object({
+                    money: z.number().int().min(0).max(1_000_000_000),
+                }),
+                last: z.object({
+                    playtime: z.string().max(64),
+                    brooch: broochSchema,
+                }),
+                brooch_list: z.object({
+                    brooch: z.array(broochSchema).max(1_000),
+                }),
             }),
         }),
     }),
     recentData: z.object({
         status: z.number().int(),
-        data: z.object({
+        data: sourceStatusSchema.extend({
             player: z.object({
+                name: z.string().max(64),
                 history_list: z.object({
                     history: z.array(recentHistorySchema).max(100),
                 }),
@@ -76,7 +129,7 @@ const syncRequestSchema = z.object({
     totalData: z
         .object({
             status: z.number().int(),
-            data: z.object({
+            data: sourceStatusSchema.extend({
                 music: z.array(musicSchema).max(2_000),
             }),
         })
@@ -167,7 +220,7 @@ async function createSyncAttempt(
     receivedPlays: number
 ): Promise<SyncAttemptResult> {
     return db.$transaction(async (tx) => {
-        await tx.$queryRaw`SELECT pg_advisory_xact_lock(73051, ${userId})`;
+        await tx.$executeRaw`SELECT pg_advisory_xact_lock(73051, ${userId}::integer)`;
 
         const now = new Date();
         const latestSync = await tx.dataSync.findFirst({
@@ -253,7 +306,7 @@ export async function POST(request: NextRequest) {
 
     const user = await db.user.findUnique({
         where: { id: tokenPayload.userId },
-        select: { id: true, sync_token_version: true },
+        select: { id: true, sync_token_version: true, role: true },
     });
     if (!user || user.sync_token_version !== tokenPayload.version) {
         return json("연동 토큰이 만료되었습니다. 다시 등록해주세요.", 401);
@@ -262,13 +315,15 @@ export async function POST(request: NextRequest) {
     const { playerData, recentData, totalData } = parsed.data;
     if (
         playerData.status !== 0 ||
+        playerData.data.status !== 0 ||
         recentData.status !== 0 ||
-        (totalData && totalData.status !== 0)
+        recentData.data.status !== 0 ||
+        (totalData && (totalData.status !== 0 || totalData.data.status !== 0))
     ) {
         return json("NOSTALGIA 로그인 상태를 확인해주세요.", 400);
     }
 
-    const { name, play_count: playCount } = playerData.data.player;
+    const player = playerData.data.player;
     const history = recentData.data.player.history_list.history;
     const music: SyncMusicInput[] | null = totalData
         ? totalData.data.music
@@ -292,12 +347,17 @@ export async function POST(request: NextRequest) {
     const syncId = syncAttempt.syncId;
 
     try {
-        await updatePlayCount(user.id, name, playCount);
+        await updatePlayerProfile(user.id, player);
 
         const insertedPlays = await updateRecentPlay(user.id, history, syncId);
         let changedRecords = 0;
         let syncNotice: string | null = null;
+        let catalogUpdates = { detected: 0, pending: 0, applied: 0 };
         if (music) {
+            catalogUpdates = await processBemaniCatalogUpdates(
+                music,
+                user.role === "admin"
+            );
             const { knownMusic, skippedCharts } = await filterKnownMusic(music);
             syncNotice = formatSkippedCharts(skippedCharts);
 
@@ -330,6 +390,10 @@ export async function POST(request: NextRequest) {
             revalidateTag(CACHE_TAGS.userRankings, "max");
             revalidateTag(CACHE_TAGS.bingos, "max");
             revalidateTag(CACHE_TAGS.userProfiles, "max");
+            if (catalogUpdates.applied > 0) {
+                revalidateTag(CACHE_TAGS.musicCatalog, "max");
+                revalidateTag(CACHE_TAGS.musicDetails, "max");
+            }
         }
 
         return json(
@@ -337,7 +401,13 @@ export async function POST(request: NextRequest) {
                 ? "전체 기록 동기화가 완료되었습니다."
                 : "최근 기록 동기화가 완료되었습니다.",
             200,
-            { syncScope: music ? "full" : "recent" }
+            {
+                syncScope: music ? "full" : "recent",
+                receivedPlays: history.length,
+                insertedPlays,
+                changedRecords,
+                catalogUpdates,
+            }
         );
     } catch (error) {
         console.error("BEMANI data synchronization failed", error);

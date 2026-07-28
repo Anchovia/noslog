@@ -57,15 +57,16 @@ export default async function AdminFeedbackPage({
                     >
                         {report.imageUrl ? (
                             <a
-                                href={report.imageUrl}
+                                href={`/api/admin/private-images/feedback/${report.id}`}
                                 target="_blank"
                                 rel="noreferrer"
                                 className="bg-surface-muted relative block aspect-video"
                             >
                                 <Image
-                                    src={report.imageUrl}
+                                    src={`/api/admin/private-images/feedback/${report.id}`}
                                     alt="피드백 첨부 이미지"
                                     fill
+                                    unoptimized
                                     sizes="358px"
                                     className="object-contain"
                                 />

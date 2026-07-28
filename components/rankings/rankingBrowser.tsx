@@ -2,6 +2,7 @@
 
 import UserRankingTable from "@/components/rankings/userRankingTable";
 import type {
+    UserRankingMetric,
     UserRankingMode,
     UserRankingPayload,
     UserRankingRegion,
@@ -18,6 +19,11 @@ const rankingModes: { value: UserRankingMode; label: string }[] = [
     { value: "recital", label: "Recital" },
 ];
 
+const rankingMetrics: { value: UserRankingMetric; label: string }[] = [
+    { value: "grade", label: "공식 Grd" },
+    { value: "rating", label: "NosLog 레이팅" },
+];
+
 const rankingRegions: {
     value: UserRankingRegion;
     label: string;
@@ -31,6 +37,7 @@ const rankingRegions: {
 
 interface RankingBrowserProps {
     initialMode: UserRankingMode;
+    initialMetric: UserRankingMetric;
     initialRegion: UserRankingRegion;
     initialData: UserRankingPayload;
 }
@@ -60,19 +67,22 @@ function RegionIcon({ icon }: { icon?: "kr" | "jp" | "global" }) {
 
 function cacheKey(
     mode: UserRankingMode,
+    metric: UserRankingMetric,
     region: UserRankingRegion,
     page: number
 ) {
-    return `${mode}:${region}:${page}`;
+    return `${mode}:${metric}:${region}:${page}`;
 }
 
 export default function RankingBrowser({
     initialMode,
+    initialMetric,
     initialRegion,
     initialData,
 }: RankingBrowserProps) {
     const [view, setView] = useState({
         mode: initialMode,
+        metric: initialMetric,
         region: initialRegion,
         data: initialData,
     });
@@ -82,7 +92,12 @@ export default function RankingBrowser({
     const cache = useRef(
         new Map<string, UserRankingPayload>([
             [
-                cacheKey(initialMode, initialRegion, initialData.page),
+                cacheKey(
+                    initialMode,
+                    initialMetric,
+                    initialRegion,
+                    initialData.page
+                ),
                 initialData,
             ],
         ])
@@ -90,11 +105,17 @@ export default function RankingBrowser({
 
     function updateUrl(
         mode: UserRankingMode,
+        metric: UserRankingMetric,
         region: UserRankingRegion,
         page: number
     ) {
         const url = new URL(window.location.href);
         url.searchParams.set("mode", mode);
+        if (metric === "rating") {
+            url.searchParams.set("metric", metric);
+        } else {
+            url.searchParams.delete("metric");
+        }
         url.searchParams.set("region", region);
         url.searchParams.set("page", String(page));
         window.history.replaceState(null, "", url);
@@ -102,17 +123,18 @@ export default function RankingBrowser({
 
     async function load(
         mode: UserRankingMode,
+        metric: UserRankingMetric,
         region: UserRankingRegion,
         page: number
     ) {
-        const key = cacheKey(mode, region, page);
+        const key = cacheKey(mode, metric, region, page);
         const cached = cache.current.get(key);
         const currentRequestId = ++requestId.current;
 
         setError(null);
         if (cached) {
-            setView({ mode, region, data: cached });
-            updateUrl(mode, region, cached.page);
+            setView({ mode, metric, region, data: cached });
+            updateUrl(mode, metric, region, cached.page);
             setIsLoading(false);
             return;
         }
@@ -121,6 +143,7 @@ export default function RankingBrowser({
         try {
             const params = new URLSearchParams({
                 mode,
+                metric,
                 region,
                 page: String(page),
             });
@@ -130,11 +153,14 @@ export default function RankingBrowser({
             if (!response.ok) throw new Error("랭킹을 불러오지 못했습니다.");
 
             const result = (await response.json()) as UserRankingPayload;
-            cache.current.set(cacheKey(mode, region, result.page), result);
+            cache.current.set(
+                cacheKey(mode, metric, region, result.page),
+                result
+            );
             if (currentRequestId !== requestId.current) return;
 
-            setView({ mode, region, data: result });
-            updateUrl(mode, region, result.page);
+            setView({ mode, metric, region, data: result });
+            updateUrl(mode, metric, region, result.page);
         } catch {
             if (currentRequestId === requestId.current) {
                 setError("랭킹을 불러오지 못했습니다. 다시 시도해주세요.");
@@ -154,7 +180,16 @@ export default function RankingBrowser({
                     <button
                         key={item.value}
                         type="button"
-                        onClick={() => load(item.value, view.region, 1)}
+                        onClick={() =>
+                            load(
+                                item.value,
+                                item.value === "recital"
+                                    ? "grade"
+                                    : view.metric,
+                                view.region,
+                                1
+                            )
+                        }
                         aria-pressed={item.value === view.mode}
                         className={cn(
                             "focus-visible:ring-focus/40 flex h-10 cursor-pointer items-center justify-center rounded-md text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none",
@@ -169,6 +204,41 @@ export default function RankingBrowser({
             </nav>
 
             <nav
+                className="border-border rounded-card grid grid-cols-2 overflow-hidden border"
+                aria-label="랭킹 평가 기준"
+            >
+                {rankingMetrics.map((item) => (
+                    <button
+                        key={item.value}
+                        type="button"
+                        onClick={() =>
+                            load(
+                                item.value === "rating" ? "basic" : view.mode,
+                                item.value,
+                                view.region,
+                                1
+                            )
+                        }
+                        aria-pressed={item.value === view.metric}
+                        className={cn(
+                            "border-divider focus-visible:ring-focus/40 flex h-9 cursor-pointer items-center justify-center border-l text-xs font-semibold transition-colors first:border-l-0 focus-visible:ring-2 focus-visible:outline-none",
+                            item.value === view.metric
+                                ? "bg-surface-muted text-text-primary hover:bg-border"
+                                : "text-text-secondary hover:bg-surface-muted hover:text-text-primary"
+                        )}
+                    >
+                        {item.label}
+                    </button>
+                ))}
+            </nav>
+
+            {view.metric === "rating" ? (
+                <p className="text-caption px-1">
+                    현재 Basic Pianist 서열 상수 · 상위 70곡 · 10,000점 만점
+                </p>
+            ) : null}
+
+            <nav
                 className="border-border rounded-card grid grid-cols-4 overflow-hidden border"
                 aria-label="랭킹 지역"
             >
@@ -176,7 +246,9 @@ export default function RankingBrowser({
                     <button
                         key={item.value}
                         type="button"
-                        onClick={() => load(view.mode, item.value, 1)}
+                        onClick={() =>
+                            load(view.mode, view.metric, item.value, 1)
+                        }
                         aria-pressed={item.value === view.region}
                         className={cn(
                             "border-divider focus-visible:ring-focus/40 flex h-9 cursor-pointer items-center justify-center gap-1.5 border-l text-xs font-semibold transition-colors first:border-l-0 focus-visible:ring-2 focus-visible:outline-none",
@@ -206,12 +278,15 @@ export default function RankingBrowser({
             >
                 <UserRankingTable
                     mode={view.mode}
+                    metric={view.metric}
                     page={view.data.page}
                     pageSize={PAGE_SIZE}
                     totalCount={view.data.totalCount}
                     rows={view.data.rows}
                     currentUser={view.data.currentUser}
-                    onPageChange={(page) => load(view.mode, view.region, page)}
+                    onPageChange={(page) =>
+                        load(view.mode, view.metric, view.region, page)
+                    }
                 />
             </div>
         </>

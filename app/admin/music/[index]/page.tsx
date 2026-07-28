@@ -1,4 +1,4 @@
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, PencilRuler } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -154,7 +154,18 @@ export default async function AdminMusicDetailPage({
                         >
                             {chart.difficulty}
                         </h2>
-                        <span className="text-caption">Lv {chart.level}</span>
+                        <div className="flex items-center gap-2">
+                            <span className="text-caption">
+                                Lv {chart.level}
+                            </span>
+                            <Link
+                                href={`/admin/music/${encodeURIComponent(music.index)}/${chart.difficulty.toLowerCase()}/pattern`}
+                                className="border-border hover:bg-surface-muted flex h-8 items-center gap-1 rounded-md border px-2 text-xs font-semibold"
+                            >
+                                <PencilRuler className="size-3.5" />
+                                채보 편집
+                            </Link>
+                        </div>
                     </header>
                     <div className="grid grid-cols-2 gap-2">
                         <label className="text-caption flex flex-col gap-1">

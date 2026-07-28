@@ -3,7 +3,7 @@ import { createPageMetadata } from "@/lib/metadata/site";
 import getSession from "@/lib/session";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getCachedProfileData } from "./data";
+import { getCachedProfileData, getProfileOwnerAnalytics } from "./data";
 
 export async function generateMetadata({
     params,
@@ -43,10 +43,16 @@ export default async function ProfilePage({
 
     if (!profileData) notFound();
 
+    const isOwner = session.id === profileData.user.id;
+    const ownerAnalytics = isOwner
+        ? await getProfileOwnerAnalytics(profileData.user.id)
+        : null;
+
     return (
         <ProfileDashboard
             {...profileData}
-            isOwner={session.id === profileData.user.id}
+            isOwner={isOwner}
+            ownerAnalytics={ownerAnalytics}
         />
     );
 }

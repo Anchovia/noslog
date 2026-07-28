@@ -26,6 +26,8 @@ export default function MusicDetail({
     userPlayData,
     recentChartPlays,
     scoreTrend,
+    performanceTrend,
+    peerScoreComparison,
     chartDetail,
     ranking,
     tier,
@@ -54,6 +56,8 @@ export default function MusicDetail({
                     userPlayData={userPlayData}
                     recentChartPlays={recentChartPlays}
                     scoreTrend={scoreTrend}
+                    performanceTrend={performanceTrend}
+                    peerScoreComparison={peerScoreComparison}
                 />
             ) : null}
 
