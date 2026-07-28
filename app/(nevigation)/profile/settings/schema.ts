@@ -1,13 +1,25 @@
 import z from "zod";
 
+import { SUPPORTED_LOCALES } from "@/lib/i18n/routing";
+
 export const PROFILE_COUNTRIES = [
     { value: "ko-KR", label: "대한민국", code: "KR" },
     { value: "ja-JP", label: "일본", code: "JP" },
     { value: "global", label: "기타", code: "GLO" },
 ] as const;
 
+export const PROFILE_LANGUAGES = [
+    { value: "ko", label: "한국어" },
+    { value: "ja", label: "日本語" },
+    { value: "en", label: "English" },
+] as const;
+
 export const countrySchema = z.enum(["ko-KR", "ja-JP", "global"], {
     error: "국가를 선택해주세요.",
+});
+
+export const localeSchema = z.enum(SUPPORTED_LOCALES, {
+    error: "언어를 선택해주세요.",
 });
 
 export const usernameSchema = z
@@ -39,6 +51,8 @@ export const settingSchema = z.object({
     avatar: z.union([z.url("올바른 이미지 주소가 아닙니다."), z.literal("")]),
     username: usernameSchema,
     country: countrySchema,
+    locale: localeSchema,
+    showLocalizedMusicTitle: z.boolean(),
     discordName: discordNameSchema,
     discordUsername: discordUsernameSchema,
     preferredArcadeId: z.union([

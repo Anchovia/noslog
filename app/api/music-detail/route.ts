@@ -5,6 +5,9 @@ import {
     normalizeMusicDetailTab,
     normalizeMusicDifficulty,
 } from "@/app/(nevigation)/music/[index]/[difficulty]/loadMusicDetail";
+import { getRequestLocale } from "@/lib/i18n/server";
+import { getMusicTitleDisplayPreference } from "@/lib/i18n/musicTitle";
+import { isLocale } from "@/lib/i18n/routing";
 
 export async function GET(request: Request) {
     const params = new URL(request.url).searchParams;
@@ -22,13 +25,21 @@ export async function GET(request: Request) {
         );
     }
 
-    const session = await getSession();
+    const [session, requestLocale] = await Promise.all([
+        getSession(),
+        getRequestLocale(),
+    ]);
+    const localeParam = params.get("locale");
+    const locale = isLocale(localeParam) ? localeParam : requestLocale;
+    const showLocalizedTitle = await getMusicTitleDisplayPreference(session.id);
     const data = await loadMusicDetail(
         index,
         difficulty,
         tab,
         page,
-        session.id
+        session.id,
+        locale,
+        showLocalizedTitle
     );
     if (!data) {
         return NextResponse.json(

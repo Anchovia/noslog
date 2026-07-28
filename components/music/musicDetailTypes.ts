@@ -9,6 +9,7 @@ export interface MusicInfo {
     index: string;
     background: string | null;
     title: string;
+    localizedTitle: string | null;
     artist: string | null;
     category_short: string;
     normal: number;

@@ -1,5 +1,9 @@
 import Link from "next/link";
 
+import {
+    useLocalizedHref,
+    useTranslations,
+} from "@/components/i18n/localeProvider";
 import { cn } from "@/lib/utils";
 import type { MusicItem } from "./musicList";
 import MusicJacket from "./musicJacket";
@@ -45,11 +49,16 @@ const difficultyBadges: {
 
 // 그리드 보기에서 자켓 중심의 악곡 정보를 표시함
 export default function MusicGridCard(props: MusicItem) {
-    const { index, title, artist, background, category_short } = props;
+    const { index, title, localizedTitle, artist, background, category_short } =
+        props;
+    const localizedHref = useLocalizedHref();
+    const t = useTranslations();
     const defaultDifficulty: Difficulty = "Normal";
     return (
         <Link
-            href={`/music/${index}/${defaultDifficulty.toLowerCase()}`}
+            href={localizedHref(
+                `/music/${index}/${defaultDifficulty.toLowerCase()}`
+            )}
             className="bg-surface rounded-card hover:bg-surface-muted min-w-0 overflow-hidden transition-colors"
         >
             <MusicJacket
@@ -70,11 +79,14 @@ export default function MusicGridCard(props: MusicItem) {
             </MusicJacket>
 
             <div className="flex min-w-0 flex-col gap-1.5 p-3">
+                {localizedTitle ? (
+                    <p className="text-caption truncate">{localizedTitle}</p>
+                ) : null}
                 <h2 className="text-text-primary truncate text-sm leading-snug font-semibold">
                     {title}
                 </h2>
                 <p className="text-text-secondary truncate text-xs leading-normal">
-                    {artist || "아티스트 미상"}
+                    {artist || t("music.unknownArtist")}
                 </p>
 
                 <div className="flex items-center gap-1">

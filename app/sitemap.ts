@@ -1,4 +1,5 @@
 import db from "@/lib/db";
+import { localizePath, SUPPORTED_LOCALES } from "@/lib/i18n/routing";
 import { SITE_URL } from "@/lib/metadata/site";
 import type { MetadataRoute } from "next";
 
@@ -25,11 +26,29 @@ function absoluteUrl(path: string) {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const staticEntries: MetadataRoute.Sitemap = staticRoutes.map((route) => ({
-        url: absoluteUrl(route.path),
-        changeFrequency: route.changeFrequency,
-        priority: route.priority,
-    }));
+    const localizedEntries = (
+        path: string,
+        options: Omit<MetadataRoute.Sitemap[number], "url" | "alternates">
+    ): MetadataRoute.Sitemap =>
+        SUPPORTED_LOCALES.map((locale) => ({
+            ...options,
+            url: absoluteUrl(localizePath(path || "/", locale)),
+            alternates: {
+                languages: Object.fromEntries(
+                    SUPPORTED_LOCALES.map((item) => [
+                        item,
+                        absoluteUrl(localizePath(path || "/", item)),
+                    ])
+                ),
+            },
+        }));
+
+    const staticEntries: MetadataRoute.Sitemap = staticRoutes.flatMap((route) =>
+        localizedEntries(route.path, {
+            changeFrequency: route.changeFrequency,
+            priority: route.priority,
+        })
+    );
 
     try {
         const now = new Date();
@@ -65,30 +84,34 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         ]);
 
         const musicEntries: MetadataRoute.Sitemap = musics.flatMap((music) =>
-            music.charts.map((chart) => ({
-                url: absoluteUrl(
-                    `/music/${encodeURIComponent(music.index)}/${chart.difficulty.toLowerCase()}`
-                ),
-                lastModified:
-                    chart.updated_at > music.updated_at
-                        ? chart.updated_at
-                        : music.updated_at,
-                changeFrequency: "monthly" as const,
-                priority: 0.7,
-            }))
+            music.charts.flatMap((chart) =>
+                localizedEntries(
+                    `/music/${encodeURIComponent(music.index)}/${chart.difficulty.toLowerCase()}`,
+                    {
+                        lastModified:
+                            chart.updated_at > music.updated_at
+                                ? chart.updated_at
+                                : music.updated_at,
+                        changeFrequency: "monthly",
+                        priority: 0.7,
+                    }
+                )
+            )
         );
-        const tierEntries: MetadataRoute.Sitemap = tierLists.map((tier) => ({
-            url: absoluteUrl(`/tiers/${encodeURIComponent(tier.slug)}`),
-            lastModified: tier.updatedAt,
-            changeFrequency: "weekly",
-            priority: 0.7,
-        }));
-        const bingoEntries: MetadataRoute.Sitemap = bingos.map((bingo) => ({
-            url: absoluteUrl(`/bingo/${bingo.id}`),
-            lastModified: bingo.updatedAt,
-            changeFrequency: "weekly",
-            priority: 0.7,
-        }));
+        const tierEntries: MetadataRoute.Sitemap = tierLists.flatMap((tier) =>
+            localizedEntries(`/tiers/${encodeURIComponent(tier.slug)}`, {
+                lastModified: tier.updatedAt,
+                changeFrequency: "weekly",
+                priority: 0.7,
+            })
+        );
+        const bingoEntries: MetadataRoute.Sitemap = bingos.flatMap((bingo) =>
+            localizedEntries(`/bingo/${bingo.id}`, {
+                lastModified: bingo.updatedAt,
+                changeFrequency: "weekly",
+                priority: 0.7,
+            })
+        );
 
         return [
             ...staticEntries,

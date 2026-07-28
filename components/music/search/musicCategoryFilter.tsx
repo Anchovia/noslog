@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { useTranslations } from "@/components/i18n/localeProvider";
 
 import { MUSIC_CATEGORIES, type MusicCategory } from "./musicSearchTypes";
 
@@ -12,9 +13,13 @@ export default function MusicCategoryFilter({
     selected,
     onToggle,
 }: MusicCategoryFilterProps) {
+    const t = useTranslations();
+
     return (
         <div className="flex flex-col gap-2">
-            <span className="text-caption font-semibold">카테고리</span>
+            <span className="text-caption font-semibold">
+                {t("music.category")}
+            </span>
             <div className="flex flex-wrap gap-2">
                 {MUSIC_CATEGORIES.map((category) => (
                     <button

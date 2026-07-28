@@ -184,8 +184,15 @@ function requestBody(full = false) {
     };
 }
 
-function createRequest(body: unknown, requestOrigin = origin) {
-    return new NextRequest("http://localhost/api/receivePlayerData", {
+function createRequest(
+    body: unknown,
+    requestOrigin = origin,
+    locale?: "ko" | "ja" | "en"
+) {
+    const url = new URL("http://localhost/api/receivePlayerData");
+    if (locale) url.searchParams.set("locale", locale);
+
+    return new NextRequest(url, {
         method: "POST",
         headers: {
             Origin: requestOrigin,
@@ -293,6 +300,16 @@ describe("POST /api/receivePlayerData", () => {
 
         expect(response.status).toBe(401);
         expect(data.message).toBe("연동 토큰이 올바르지 않습니다.");
+    });
+
+    it("선택한 언어로 동기화 API 결과를 반환한다", async () => {
+        mocks.verifySyncToken.mockReturnValue(null);
+
+        const response = await POST(createRequest(requestBody(), origin, "en"));
+        const data = await response.json();
+
+        expect(response.status).toBe(401);
+        expect(data.message).toBe("The sync token is invalid.");
     });
 
     it("이미 처리 중인 사용자의 중복 동기화를 거부한다", async () => {

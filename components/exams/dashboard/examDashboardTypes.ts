@@ -26,6 +26,7 @@ export interface ExamStageItem {
     bestRecord?: ExamStageRecord | null;
     musicIndex: string;
     title: string;
+    localizedTitle?: string | null;
     artist: string | null;
     charts: { chartId: number; difficulty: string; level: number }[];
 }
@@ -45,6 +46,7 @@ export interface ExamDashboardItem {
         id: number;
         type: string;
         label: string;
+        localizedTitle?: string | null;
         musicIndex: string | null;
     }[];
     isAchieved: boolean;

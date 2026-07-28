@@ -1,6 +1,8 @@
 import { ChevronDown } from "lucide-react";
 import type { ReactNode } from "react";
 
+import { useTranslations } from "@/components/i18n/localeProvider";
+import type { MessageKey } from "@/lib/i18n/messages";
 import type { ExamDashboardItem } from "./examDashboardTypes";
 import { canEnterExam } from "./examDashboardUtils";
 
@@ -11,12 +13,12 @@ interface ExamSelectorProps {
     children: ReactNode;
 }
 
-function getExamStatus(exam: ExamDashboardItem) {
-    if (exam.isAchieved) return "완료";
-    if (exam.submissionStatus === "pending") return "심사 중";
-    if (exam.submissionStatus === "rejected") return "반려";
-    if (!canEnterExam(exam)) return "잠김";
-    return "응시 가능";
+function getExamStatusKey(exam: ExamDashboardItem): MessageKey {
+    if (exam.isAchieved) return "exams.status.completed";
+    if (exam.submissionStatus === "pending") return "exams.status.pending";
+    if (exam.submissionStatus === "rejected") return "exams.status.rejected";
+    if (!canEnterExam(exam)) return "exams.status.locked";
+    return "exams.status.available";
 }
 
 // 한 번에 하나의 검정을 명확하게 선택하고 상세 영역을 이어서 표시함
@@ -26,6 +28,7 @@ export default function ExamSelector({
     onChange,
     children,
 }: ExamSelectorProps) {
+    const t = useTranslations();
     const selectedExam =
         exams.find((exam) => exam.id === selectedExamId) ?? exams[0];
 
@@ -37,11 +40,11 @@ export default function ExamSelector({
                         htmlFor="exam-selector"
                         className="text-label font-semibold"
                     >
-                        검정 선택
+                        {t("exams.select")}
                     </label>
                     {selectedExam ? (
                         <span className="text-caption">
-                            {getExamStatus(selectedExam)}
+                            {t(getExamStatusKey(selectedExam))}
                         </span>
                     ) : null}
                 </div>

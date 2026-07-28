@@ -3,12 +3,14 @@
 import { Bookmark, Check, Copy } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "@/components/i18n/localeProvider";
 
 interface BookmarkletInstallProps {
     href: string;
 }
 
 export default function BookmarkletInstall({ href }: BookmarkletInstallProps) {
+    const t = useTranslations();
     const [copied, setCopied] = useState(false);
     const [isMobileGuideOpen, setIsMobileGuideOpen] = useState(false);
     const bookmarkletRef = useRef<HTMLAnchorElement>(null);
@@ -29,7 +31,7 @@ export default function BookmarkletInstall({ href }: BookmarkletInstallProps) {
                 <>
                     <Image
                         src="/images/guides/bookmarklet-install.gif"
-                        alt="PC에서 북마클릿을 등록하는 방법"
+                        alt={t("sync.installDesktopAlt")}
                         width={640}
                         height={360}
                         unoptimized
@@ -42,11 +44,9 @@ export default function BookmarkletInstall({ href }: BookmarkletInstallProps) {
                         className="border-text-secondary hover:border-text-primary rounded-card text-text-primary flex h-11 items-center gap-2 border border-dashed px-5 text-sm font-bold transition-colors"
                     >
                         <Bookmark size={17} aria-hidden />
-                        NosLog 동기화
+                        {t("sync.bookmarklet")}
                     </a>
-                    <p className="text-body-muted">
-                        이 버튼을 북마크바로 드래그하세요
-                    </p>
+                    <p className="text-body-muted">{t("sync.drag")}</p>
                 </>
             ) : null}
 
@@ -58,8 +58,8 @@ export default function BookmarkletInstall({ href }: BookmarkletInstallProps) {
             >
                 <summary className="text-body-muted hover:text-text-primary cursor-pointer list-none text-center underline transition-colors">
                     {isMobileGuideOpen
-                        ? "PC에서 등록하는 방법"
-                        : "모바일에서 등록하는 방법"}
+                        ? t("sync.desktopGuide")
+                        : t("sync.mobileGuide")}
                 </summary>
                 <div className="border-divider mt-3 flex flex-col gap-3 border-t pt-3">
                     <button
@@ -72,16 +72,14 @@ export default function BookmarkletInstall({ href }: BookmarkletInstallProps) {
                         ) : (
                             <Copy size={15} aria-hidden />
                         )}
-                        {copied ? "복사됨" : "북마클릿 주소 복사"}
+                        {copied ? t("sync.copied") : t("sync.copyAddress")}
                     </button>
                     <ol className="text-body-muted flex flex-col gap-3">
                         <li className="flex flex-col gap-2">
-                            <span>
-                                1. 현재 페이지를 브라우저 북마크에 추가합니다.
-                            </span>
+                            <span>{t("sync.mobileAdd")}</span>
                             <Image
                                 src="/images/guides/mobile-bookmark-add.gif"
-                                alt="모바일에서 북마크를 추가하는 방법"
+                                alt={t("sync.mobileAddAlt")}
                                 width={332}
                                 height={430}
                                 unoptimized
@@ -89,12 +87,10 @@ export default function BookmarkletInstall({ href }: BookmarkletInstallProps) {
                             />
                         </li>
                         <li className="flex flex-col gap-2">
-                            <span>
-                                2. 추가한 북마크의 주소를 편집하고 저장합니다.
-                            </span>
+                            <span>{t("sync.mobileEdit")}</span>
                             <Image
                                 src="/images/guides/mobile-bookmark-edit.gif"
-                                alt="모바일에서 북마크 주소를 편집하는 방법"
+                                alt={t("sync.mobileEditAlt")}
                                 width={332}
                                 height={669}
                                 unoptimized

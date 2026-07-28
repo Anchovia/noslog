@@ -4,30 +4,41 @@ import { createPageMetadata } from "@/lib/metadata/site";
 import { getMusicPage } from "./data";
 import type { MusicSearchParams } from "./query";
 import getSession from "@/lib/session";
+import { getServerI18n } from "@/lib/i18n/server";
+import { getMusicTitleDisplayPreference } from "@/lib/i18n/musicTitle";
+import { localizePath } from "@/lib/i18n/routing";
 
-export const metadata = createPageMetadata({
-    title: "악곡 검색",
-    description:
-        "노스텔지어 악곡을 제목과 아티스트로 검색하고 난이도, 레벨, 카테고리와 플레이 기록으로 필터링합니다.",
-    path: "/music",
-});
+export async function generateMetadata() {
+    const { locale, t } = await getServerI18n();
+    return createPageMetadata({
+        title: t("music.title"),
+        description: t("music.metaDescription"),
+        path: localizePath("/music", locale),
+    });
+}
 
 export default async function Music(props: {
     searchParams: Promise<MusicSearchParams>;
 }) {
-    const searchParams = await props.searchParams;
-    const session = await getSession();
+    const [searchParams, session, { locale, t }] = await Promise.all([
+        props.searchParams,
+        getSession(),
+        getServerI18n(),
+    ]);
+    const showLocalizedTitle = await getMusicTitleDisplayPreference(session.id);
     const initialPage = await getMusicPage(
         searchParams,
         null,
-        session.id ?? null
+        session.id ?? null,
+        locale,
+        showLocalizedTitle
     );
     const searchKey = JSON.stringify(searchParams);
 
     return (
         <div className="mx-auto flex h-full min-h-screen max-w-(--breakpoint-sm) flex-col gap-4 px-4 py-4">
             <header className="flex items-center justify-between">
-                <h1 className="text-title">악곡 검색</h1>
+                <h1 className="text-title">{t("music.title")}</h1>
             </header>
             <MusicSearch
                 searchParams={searchParams}

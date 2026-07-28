@@ -1,4 +1,6 @@
 import db from "@/lib/db";
+import { getRequestLocale } from "@/lib/i18n/server";
+import { localizePath } from "@/lib/i18n/routing";
 import { isTierGoal } from "@/lib/tiers";
 import { redirect } from "next/navigation";
 
@@ -8,6 +10,7 @@ export default async function LegacyTierDetailPage({
 }: {
     params: Promise<{ slug: string }>;
 }) {
+    const locale = await getRequestLocale();
     const { slug } = await params;
     const tierList = await db.tierList.findUnique({
         where: { slug },
@@ -17,5 +20,5 @@ export default async function LegacyTierDetailPage({
     const goal =
         tierList?.goal && isTierGoal(tierList.goal) ? tierList.goal : "s";
 
-    redirect(`/tiers?mode=${mode}&goal=${goal}`);
+    redirect(`${localizePath("/tiers", locale)}?mode=${mode}&goal=${goal}`);
 }

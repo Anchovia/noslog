@@ -54,9 +54,14 @@ export function getStageLabel(
     return index === 0 ? "1st" : index === 1 ? "2nd" : "3rd";
 }
 
-export function formatExamValue(value: number, scoringType: string) {
+export function formatExamValue(
+    value: number,
+    scoringType: string,
+    locale = "ko"
+) {
+    const pointSuffix = locale === "en" ? " pts" : "점";
     return scoringType === "recital_point"
-        ? `${Number.isInteger(value) ? value : value.toFixed(1)}점`
+        ? `${Number.isInteger(value) ? value : value.toFixed(1)}${pointSuffix}`
         : formatToComma(value);
 }
 

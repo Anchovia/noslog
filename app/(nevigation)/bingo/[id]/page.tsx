@@ -2,6 +2,12 @@ import { notFound } from "next/navigation";
 
 import BingoPlate, { type BingoCellItem } from "@/components/bingo/bingoPlate";
 import { getBingoJacketUrl, getBingoProgress } from "@/lib/bingo";
+import {
+    getLocalizedMusicTitle,
+    getMusicTitleDisplayPreference,
+} from "@/lib/i18n/musicTitle";
+import { getServerI18n } from "@/lib/i18n/server";
+import { localizePath } from "@/lib/i18n/routing";
 import { createPageMetadata } from "@/lib/metadata/site";
 import getSession from "@/lib/session";
 import { formatToComma } from "@/lib/utils";
@@ -17,6 +23,7 @@ export async function generateMetadata({
 }: {
     params: Promise<{ id: string }>;
 }): Promise<Metadata> {
+    const { locale, t } = await getServerI18n();
     const { id } = await params;
     const bingoId = Number(id);
     const bingo = Number.isInteger(bingoId)
@@ -25,19 +32,19 @@ export async function generateMetadata({
 
     if (!bingo || !isBingoAvailable(bingo)) {
         return createPageMetadata({
-            title: "빙고를 찾을 수 없습니다",
-            path: "/bingo",
+            title: t("bingo.title"),
+            path: localizePath("/bingo", locale),
             noIndex: true,
         });
     }
 
     const title = bingo.title || bingo.coverMusic.title;
     return createPageMetadata({
-        title: `${title} 빙고`,
+        title: `${title} · ${t("bingo.title")}`,
         description:
             bingo.description ||
             `${title} 미션 빙고의 25개 과제와 ${bingo.requiredLines}줄 완성 보상을 확인합니다.`,
-        path: `/bingo/${bingo.id}`,
+        path: localizePath(`/bingo/${bingo.id}`, locale),
     });
 }
 
@@ -46,6 +53,7 @@ export default async function BingoDetailPage({
 }: {
     params: Promise<{ id: string }>;
 }) {
+    const { locale, t } = await getServerI18n();
     const { id } = await params;
     const bingoId = Number(id);
 
@@ -57,12 +65,25 @@ export default async function BingoDetailPage({
     ]);
 
     if (!bingo || !isBingoAvailable(bingo)) notFound();
+    const showLocalizedTitle = await getMusicTitleDisplayPreference(session.id);
+    const coverLocalizedTitle =
+        !bingo.title || bingo.title === bingo.coverMusic.title
+            ? getLocalizedMusicTitle(
+                  bingo.coverMusic,
+                  locale,
+                  showLocalizedTitle
+              )
+            : null;
 
     const cells: BingoCellItem[] = bingo.cells.map((cell) => ({
         id: cell.id,
         challenge: cell.title,
         missionType: cell.missionType,
         musicIndex: cell.musicIndex,
+        musicTitle: cell.music?.title ?? null,
+        localizedMusicTitle: cell.music
+            ? getLocalizedMusicTitle(cell.music, locale, showLocalizedTitle)
+            : null,
         position: cell.position,
         categoryShort: cell.categoryShort,
     }));
@@ -95,17 +116,24 @@ export default async function BingoDetailPage({
                     }}
                 />
                 <div className="min-w-0 flex-1">
+                    {coverLocalizedTitle ? (
+                        <p className="text-micro truncate">
+                            {coverLocalizedTitle}
+                        </p>
+                    ) : null}
                     <h1 className="text-section truncate font-bold">
                         {bingo.title || bingo.coverMusic.title}
                     </h1>
                     <p className="text-caption mt-1 truncate">
                         {bingo.description ||
                             bingo.coverMusic.description ||
-                            `${bingo.requiredLines}줄 완성 시 보상 획득`}
+                            t("bingo.defaultDescription", {
+                                count: bingo.requiredLines,
+                            })}
                     </p>
                 </div>
                 <div className="text-caption shrink-0 text-right">
-                    <p>줄</p>
+                    <p>{t("bingo.lines")}</p>
                     <p>
                         <strong className="text-text-primary">
                             {progress.completedLines}
@@ -124,11 +152,16 @@ export default async function BingoDetailPage({
                 </div>
                 <div className="text-caption mt-2 flex items-center justify-between">
                     <span>
-                        줄 {progress.completedLines}/{bingo.requiredLines} · 칸{" "}
-                        {progress.completedCells}/25
+                        {t("bingo.progress", {
+                            lines: progress.completedLines,
+                            required: bingo.requiredLines,
+                            cells: progress.completedCells,
+                        })}
                     </span>
                     <span className="text-score">
-                        보상 {formatToComma(bingo.rewardNos)}nos
+                        {t("bingo.reward", {
+                            value: formatToComma(bingo.rewardNos),
+                        })}
                     </span>
                 </div>
             </section>

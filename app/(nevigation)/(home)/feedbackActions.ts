@@ -9,6 +9,8 @@ import {
     isValidPrivateImageBlob,
 } from "@/lib/blob";
 import db from "@/lib/db";
+import { createTranslator, getMessages } from "@/lib/i18n/messages";
+import { isLocale, type Locale } from "@/lib/i18n/routing";
 import getSession from "@/lib/session";
 import {
     claimUploadTokenQuota,
@@ -16,15 +18,20 @@ import {
     releaseUploadTokenQuota,
 } from "@/lib/uploadRateLimit";
 
-export async function requestFeedbackImageUpload(contentType: string) {
+export async function requestFeedbackImageUpload(
+    contentType: string,
+    requestedLocale?: Locale
+) {
+    const locale = isLocale(requestedLocale) ? requestedLocale : "ko";
+    const t = createTranslator(getMessages(locale));
     const session = await getSession();
     if (!session.id) {
-        return { success: false as const, message: "로그인이 필요합니다." };
+        return { success: false as const, message: t("feedback.loginError") };
     }
     if (!isImageContentType(contentType)) {
         return {
             success: false as const,
-            message: "JPG, PNG, WebP 이미지만 첨부할 수 있습니다.",
+            message: t("feedback.invalidImage"),
         };
     }
 
@@ -54,18 +61,21 @@ export async function requestFeedbackImageUpload(contentType: string) {
         }
         return {
             success: false as const,
-            message: "이미지 업로드 요청을 처리하지 못했습니다.",
+            message: t("feedback.uploadError"),
         };
     }
 }
 
 export async function submitFeedbackReport(
     contentInput: string,
-    imageUrlInput: string
+    imageUrlInput: string,
+    requestedLocale?: Locale
 ) {
+    const locale = isLocale(requestedLocale) ? requestedLocale : "ko";
+    const t = createTranslator(getMessages(locale));
     const session = await getSession();
     if (!session.id) {
-        return { success: false as const, message: "로그인이 필요합니다." };
+        return { success: false as const, message: t("feedback.loginError") };
     }
 
     const content = contentInput.trim();
@@ -74,7 +84,7 @@ export async function submitFeedbackReport(
         if (imageUrl) await deleteBlobIfOwned(imageUrl);
         return {
             success: false as const,
-            message: "제보 내용은 10~1000자로 입력해주세요.",
+            message: t("feedback.contentError"),
         };
     }
     if (
@@ -86,7 +96,7 @@ export async function submitFeedbackReport(
     ) {
         return {
             success: false as const,
-            message: "허용되지 않은 첨부 이미지입니다.",
+            message: t("feedback.attachmentError"),
         };
     }
 
@@ -96,12 +106,12 @@ export async function submitFeedbackReport(
         });
         revalidatePath("/admin");
         revalidatePath("/admin/feedback");
-        return { success: true as const, message: "제보를 접수했습니다." };
+        return { success: true as const, message: t("feedback.success") };
     } catch {
         if (imageUrl) await deleteBlobIfOwned(imageUrl);
         return {
             success: false as const,
-            message: "제보를 접수하지 못했습니다.",
+            message: t("feedback.submitError"),
         };
     }
 }

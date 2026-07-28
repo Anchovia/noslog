@@ -3,6 +3,8 @@
 import Script from "next/script";
 import { useRef } from "react";
 
+import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
+
 const OFFICIAL_X_URL = "https://x.com/NOSTALGIA_573";
 
 type XWidgetsWindow = Window & {
@@ -15,6 +17,8 @@ type XWidgetsWindow = Window & {
 
 // NOSTALGIA 공식 계정의 최신 게시물을 X 공식 위젯으로 표시함
 export default function OfficialXTimeline() {
+    const locale = useLocale();
+    const t = useTranslations();
     const timelineRef = useRef<HTMLDivElement>(null);
     const loadRequestedRef = useRef(false);
 
@@ -34,14 +38,14 @@ export default function OfficialXTimeline() {
     return (
         <section className="bg-surface rounded-card overflow-hidden">
             <div className="bg-surface-muted flex h-10 items-center justify-between px-3">
-                <h2 className="text-section">NOSTALGIA 공식 소식</h2>
+                <h2 className="text-section">{t("home.officialNews")}</h2>
                 <a
                     href={OFFICIAL_X_URL}
                     target="_blank"
                     rel="noreferrer"
                     className="text-caption hover:text-text-primary transition-colors"
                 >
-                    공식 X →
+                    {t("home.officialX")}
                 </a>
             </div>
 
@@ -49,13 +53,13 @@ export default function OfficialXTimeline() {
                 <a
                     className="twitter-timeline text-caption flex min-h-52 items-center justify-center px-4 text-center"
                     data-theme="dark"
-                    data-lang="ko"
+                    data-lang={locale}
                     data-tweet-limit="1"
                     data-chrome="noheader nofooter noborders transparent"
                     data-dnt="true"
                     href={OFFICIAL_X_URL}
                 >
-                    NOSTALGIA 공식 X에서 최신 소식 보기
+                    {t("home.officialXFallback")}
                 </a>
             </div>
 

@@ -1,38 +1,48 @@
 import type { MusicRecordFilter as MusicRecordFilterValue } from "@/app/(nevigation)/music/query";
+import {
+    useLocalizedHref,
+    useTranslations,
+    type MessageKey,
+} from "@/components/i18n/localeProvider";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
 const filterGroups: {
-    label: string;
-    filters: { value: MusicRecordFilterValue; label: string }[];
+    labelKey: MessageKey;
+    weakNoteGroup?: boolean;
+    filters: { value: MusicRecordFilterValue; labelKey: MessageKey }[];
 }[] = [
     {
-        label: "상태",
+        labelKey: "music.filter.status",
         filters: [
-            { value: "clear", label: "클리어" },
-            { value: "unplayed", label: "미플레이" },
-            { value: "s", label: "S" },
-            { value: "fc", label: "FC" },
-            { value: "pianist", label: "Pianist" },
+            { value: "clear", labelKey: "music.filter.clear" },
+            { value: "unplayed", labelKey: "music.filter.unplayed" },
+            { value: "s", labelKey: "music.filter.rankS" },
+            { value: "fc", labelKey: "music.filter.fullCombo" },
+            { value: "pianist", labelKey: "music.filter.pianist" },
         ],
     },
     {
-        label: "판정",
+        labelKey: "music.filter.judgement",
         filters: [
-            { value: "recent", label: "최근 30일" },
-            { value: "miss-near", label: "Miss/Near 5%+" },
-            { value: "sjust-low", label: "S-Just 85% 미만" },
-            { value: "fast", label: "최근 FAST" },
-            { value: "slow", label: "최근 SLOW" },
+            { value: "recent", labelKey: "music.filter.recent30" },
+            { value: "miss-near", labelKey: "music.filter.missNear" },
+            { value: "sjust-low", labelKey: "music.filter.sjustLow" },
+            { value: "fast", labelKey: "music.filter.recentFast" },
+            { value: "slow", labelKey: "music.filter.recentSlow" },
         ],
     },
     {
-        label: "약한 음표",
+        labelKey: "music.filter.weakNotes",
+        weakNoteGroup: true,
         filters: [
-            { value: "standard-low", label: "일반" },
-            { value: "tenuto-low", label: "테누토" },
-            { value: "glissando-low", label: "글리산도" },
-            { value: "trill-low", label: "트릴" },
+            { value: "standard-low", labelKey: "music.filter.standard" },
+            { value: "tenuto-low", labelKey: "music.filter.tenuto" },
+            {
+                value: "glissando-low",
+                labelKey: "music.filter.glissando",
+            },
+            { value: "trill-low", labelKey: "music.filter.trill" },
         ],
     },
 ];
@@ -48,25 +58,30 @@ export default function MusicRecordFilter({
     isLoggedIn,
     onToggle,
 }: MusicRecordFilterProps) {
+    const localizedHref = useLocalizedHref();
+    const t = useTranslations();
+
     return (
         <div>
             <div className="mb-2 flex items-center justify-between">
-                <h3 className="text-label">내 기록</h3>
+                <h3 className="text-label">{t("music.myRecords")}</h3>
                 {!isLoggedIn ? (
                     <Link
-                        href="/login"
+                        href={localizedHref("/login")}
                         className="text-caption hover:text-text-primary underline"
                     >
-                        로그인 후 이용
+                        {t("music.loginToUse")}
                     </Link>
                 ) : null}
             </div>
             <div className="flex flex-col gap-3">
                 {filterGroups.map((group) => (
-                    <div key={group.label}>
+                    <div key={group.labelKey}>
                         <p className="text-micro text-text-disabled mb-1.5">
-                            {group.label}
-                            {group.label === "약한 음표" ? " · 90% 미만" : ""}
+                            {t(group.labelKey)}
+                            {group.weakNoteGroup
+                                ? ` · ${t("music.filter.below90")}`
+                                : ""}
                         </p>
                         <div className="flex flex-wrap gap-2">
                             {group.filters.map((filter) => {
@@ -83,7 +98,7 @@ export default function MusicRecordFilter({
                                                 "border-chart bg-chart/15 text-chart"
                                         )}
                                     >
-                                        {filter.label}
+                                        {t(filter.labelKey)}
                                     </button>
                                 );
                             })}
@@ -93,7 +108,7 @@ export default function MusicRecordFilter({
             </div>
             {isLoggedIn ? (
                 <p className="text-micro text-text-disabled mt-2">
-                    여러 조건은 하나라도 해당하면 표시합니다.
+                    {t("music.filter.anyMatch")}
                 </p>
             ) : null}
         </div>

@@ -5,6 +5,10 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
 import {
+    useLocalizedHref,
+    useTranslations,
+} from "@/components/i18n/localeProvider";
+import {
     TIER_DIFFICULTIES,
     TIER_GOALS,
     TIER_REAL_LEVELS,
@@ -32,18 +36,14 @@ const difficultyLabels: Record<TierDifficulty, string> = {
     Real: "Real",
 };
 
-function selectionLabel(values: string[], fallback: string) {
-    if (values.length === 0) return fallback;
-    if (values.length <= 2) return values.join(", ");
-    return `${values[0]} 외 ${values.length - 1}`;
-}
-
 export default function TierControls({
     mode,
     goal,
     difficulties,
     levels,
 }: TierControlsProps) {
+    const t = useTranslations();
+    const localizedHref = useLocalizedHref();
     const router = useRouter();
     const [isPending, startTransition] = useTransition();
     const [activePanel, setActivePanel] = useState<FilterPanel>(null);
@@ -52,6 +52,14 @@ export default function TierControls({
     const [selectedDifficulties, setSelectedDifficulties] =
         useState(difficulties);
     const [selectedLevels, setSelectedLevels] = useState(levels);
+    function selectionLabel(values: string[]) {
+        if (values.length === 0) return t("tiers.all");
+        if (values.length <= 2) return values.join(", ");
+        return t("tiers.moreSelected", {
+            first: values[0],
+            count: values.length - 1,
+        });
+    }
 
     function navigate(
         nextMode: TierMode,
@@ -70,9 +78,10 @@ export default function TierControls({
         }
         const query = params.toString();
         startTransition(() => {
-            router.replace(query ? `/tiers?${query}` : "/tiers", {
-                scroll: false,
-            });
+            router.replace(
+                localizedHref(query ? `/tiers?${query}` : "/tiers"),
+                { scroll: false }
+            );
         });
     }
 
@@ -131,11 +140,11 @@ export default function TierControls({
                 "flex flex-col gap-3 transition-opacity",
                 isPending && "opacity-70"
             )}
-            aria-label="서열표 조건"
+            aria-label={t("tiers.conditions")}
         >
             <nav
                 className="bg-surface rounded-card grid grid-cols-2 p-1"
-                aria-label="서열표 모드"
+                aria-label={t("tiers.modeNav")}
             >
                 {(["basic", "recital"] as const).map((item) => (
                     <button
@@ -156,7 +165,7 @@ export default function TierControls({
             </nav>
 
             <label className="text-caption flex flex-col gap-1">
-                목표
+                {t("tiers.goal")}
                 <select
                     value={selectedGoal}
                     onChange={(event) =>
@@ -166,7 +175,9 @@ export default function TierControls({
                 >
                     {TIER_GOALS.map((item) => (
                         <option key={item} value={item}>
-                            {tierGoalLabels[item]} 서열표
+                            {t("tiers.goalOption", {
+                                goal: tierGoalLabels[item],
+                            })}
                         </option>
                     ))}
                 </select>
@@ -184,7 +195,8 @@ export default function TierControls({
                     className="border-border bg-surface text-text-secondary flex h-10 min-w-0 items-center gap-2 rounded-md border px-3 text-left text-xs font-semibold"
                 >
                     <span className="min-w-0 flex-1 truncate">
-                        난이도 · {selectionLabel(selectedDifficulties, "전체")}
+                        {t("tiers.difficulty")} ·{" "}
+                        {selectionLabel(selectedDifficulties)}
                     </span>
                     <ChevronDown className="size-3.5 shrink-0" />
                 </button>
@@ -199,11 +211,11 @@ export default function TierControls({
                     className="border-border bg-surface text-text-secondary flex h-10 min-w-0 items-center gap-2 rounded-md border px-3 text-left text-xs font-semibold"
                 >
                     <span className="min-w-0 flex-1 truncate">
-                        레벨 ·{" "}
-                        {selectionLabel(
-                            [...regularLevelLabels, ...realLevelLabels],
-                            "전체"
-                        )}
+                        {t("tiers.level")} ·{" "}
+                        {selectionLabel([
+                            ...regularLevelLabels,
+                            ...realLevelLabels,
+                        ])}
                     </span>
                     <ChevronDown className="size-3.5 shrink-0" />
                 </button>
@@ -212,13 +224,15 @@ export default function TierControls({
             {activePanel === "difficulty" ? (
                 <div className="border-border bg-surface rounded-card flex flex-col gap-3 border p-3">
                     <div className="flex items-center justify-between">
-                        <strong className="text-sm">난이도</strong>
+                        <strong className="text-sm">
+                            {t("tiers.difficulty")}
+                        </strong>
                         <button
                             type="button"
                             onClick={clearDifficulties}
                             className="text-caption hover:text-text-primary"
                         >
-                            전체 선택
+                            {t("tiers.selectAll")}
                         </button>
                     </div>
                     <div className="grid grid-cols-2 gap-2">
@@ -252,13 +266,15 @@ export default function TierControls({
             {activePanel === "level" ? (
                 <div className="border-border bg-surface rounded-card flex flex-col gap-3 border p-3">
                     <div className="flex items-center justify-between">
-                        <strong className="text-sm">공식 레벨</strong>
+                        <strong className="text-sm">
+                            {t("tiers.officialLevel")}
+                        </strong>
                         <button
                             type="button"
                             onClick={clearLevels}
                             className="text-caption hover:text-text-primary"
                         >
-                            전체 선택
+                            {t("tiers.selectAll")}
                         </button>
                     </div>
                     <div className="flex flex-col gap-2">

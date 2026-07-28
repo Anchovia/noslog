@@ -1,4 +1,5 @@
 import type { DetailTab, Difficulty } from "./musicDetailTypes";
+import type { MessageKey } from "@/lib/i18n/messages";
 
 export const difficultyStyles: Record<Difficulty, string> = {
     Normal: "text-normal",
@@ -7,11 +8,11 @@ export const difficultyStyles: Record<Difficulty, string> = {
     Real: "text-real",
 };
 
-export const detailTabs: { value: DetailTab; label: string }[] = [
-    { value: "record", label: "내 기록" },
-    { value: "detail", label: "악곡 정보" },
-    { value: "ranking", label: "랭킹" },
-    { value: "tier", label: "서열 및 투표" },
+export const detailTabs: { value: DetailTab; labelKey: MessageKey }[] = [
+    { value: "record", labelKey: "music.tab.record" },
+    { value: "detail", labelKey: "music.tab.info" },
+    { value: "ranking", labelKey: "music.tab.ranking" },
+    { value: "tier", labelKey: "music.tab.tier" },
 ];
 
 export const rankAssetNames: Record<string, string> = {

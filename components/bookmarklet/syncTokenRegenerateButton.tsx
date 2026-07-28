@@ -2,18 +2,21 @@
 
 import { regenerateSyncToken } from "@/app/(nevigation)/bookmarklet/action";
 import Button from "@/components/ui/Button";
+import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import * as Dialog from "@radix-ui/react-dialog";
 import { KeyRound, LoaderCircle } from "lucide-react";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 
 export default function SyncTokenRegenerateButton() {
+    const locale = useLocale();
+    const t = useTranslations();
     const [open, setOpen] = useState(false);
     const [isPending, startTransition] = useTransition();
 
     function handleRegenerate() {
         startTransition(async () => {
-            const result = await regenerateSyncToken();
+            const result = await regenerateSyncToken(locale);
 
             if (result.success) {
                 setOpen(false);
@@ -38,8 +41,8 @@ export default function SyncTokenRegenerateButton() {
                     type="button"
                     variant="ghost"
                     size="icon"
-                    aria-label="연동 토큰 재발급"
-                    title="연동 토큰 재발급"
+                    aria-label={t("sync.regenerate")}
+                    title={t("sync.regenerate")}
                 >
                     <KeyRound size={16} aria-hidden />
                 </Button>
@@ -48,15 +51,14 @@ export default function SyncTokenRegenerateButton() {
                 <Dialog.Overlay className="fixed inset-0 z-40 bg-black/75" />
                 <Dialog.Content className="border-border bg-bg fixed top-1/2 left-1/2 z-50 w-[calc(100vw-2rem)] max-w-90 -translate-x-1/2 -translate-y-1/2 rounded-lg border p-4 shadow-2xl focus:outline-none">
                     <Dialog.Title className="text-section">
-                        연동 토큰 재발급
+                        {t("sync.regenerate")}
                     </Dialog.Title>
                     <Dialog.Description className="text-caption mt-1">
-                        기존 북마클릿이 즉시 만료됩니다.
+                        {t("sync.regenerateDescription")}
                     </Dialog.Description>
 
                     <p className="border-score/30 bg-score/5 text-body-muted rounded-card mt-4 border p-3">
-                        재발급 후 아래의 NosLog 동기화 버튼을 북마크바에 다시
-                        등록해주세요.
+                        {t("sync.regenerateHelp")}
                     </p>
 
                     <div className="mt-4 grid grid-cols-2 gap-2">
@@ -66,7 +68,7 @@ export default function SyncTokenRegenerateButton() {
                                 variant="secondary"
                                 disabled={isPending}
                             >
-                                취소
+                                {t("sync.cancel")}
                             </Button>
                         </Dialog.Close>
                         <Button
@@ -81,10 +83,10 @@ export default function SyncTokenRegenerateButton() {
                                         className="size-4 animate-spin"
                                         aria-hidden
                                     />
-                                    재발급 중
+                                    {t("sync.regenerating")}
                                 </>
                             ) : (
-                                "재발급"
+                                t("sync.regenerateAction")
                             )}
                         </Button>
                     </div>

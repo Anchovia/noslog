@@ -4,6 +4,11 @@ import Link from "next/link";
 import type { RankingRow } from "./musicRankingTypes";
 import RankImage from "./rankImage";
 import RankingUserAvatar from "./rankingUserAvatar";
+import {
+    useLocale,
+    useLocalizedHref,
+    useTranslations,
+} from "@/components/i18n/localeProvider";
 
 interface MusicRankingListProps {
     rows: RankingRow[];
@@ -19,6 +24,10 @@ export default function MusicRankingList({
     page,
     pageSize,
 }: MusicRankingListProps) {
+    const locale = useLocale();
+    const localizedHref = useLocalizedHref();
+    const t = useTranslations();
+
     return (
         <section className="bg-surface rounded-card overflow-hidden">
             {rows.length > 0 ? (
@@ -44,10 +53,13 @@ export default function MusicRankingList({
                                 </span>
                                 <RankingUserAvatar user={row.user} />
                                 <Link
-                                    href={`/profile/${row.user.id}`}
+                                    href={localizedHref(
+                                        `/profile/${row.user.id}`
+                                    )}
                                     className="text-text-primary min-w-0 truncate text-sm font-semibold"
                                 >
-                                    {row.user.username || "이름 없는 유저"}
+                                    {row.user.username ||
+                                        t("common.unnamedUser")}
                                 </Link>
                                 <RankImage rank={row.rank} />
                                 <strong
@@ -58,7 +70,7 @@ export default function MusicRankingList({
                                             : "text-text-primary"
                                     )}
                                 >
-                                    {row.score.toLocaleString("ko-KR")}
+                                    {row.score.toLocaleString(locale)}
                                 </strong>
                                 {row.fc_type >= 2 ? (
                                     <span className="border-rank-fc/40 text-rank-fc rounded border py-0.5 text-center text-[10px] leading-none font-black">
@@ -73,7 +85,7 @@ export default function MusicRankingList({
                 </ol>
             ) : (
                 <div className="text-text-disabled flex h-32 items-center justify-center text-sm">
-                    등록된 랭킹 기록이 없습니다.
+                    {t("music.ranking.empty")}
                 </div>
             )}
         </section>

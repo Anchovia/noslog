@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "@/components/i18n/localeProvider";
 import UserRankingTable from "@/components/rankings/userRankingTable";
 import type {
     UserRankingMetric,
@@ -19,20 +20,14 @@ const rankingModes: { value: UserRankingMode; label: string }[] = [
     { value: "recital", label: "Recital" },
 ];
 
-const rankingMetrics: { value: UserRankingMetric; label: string }[] = [
-    { value: "grade", label: "공식 Grd" },
-    { value: "rating", label: "NosLog 레이팅" },
-];
-
 const rankingRegions: {
     value: UserRankingRegion;
-    label: string;
     icon?: "kr" | "jp" | "global";
 }[] = [
-    { value: "all", label: "전체" },
-    { value: "kr", label: "KR", icon: "kr" },
-    { value: "jp", label: "JP", icon: "jp" },
-    { value: "global", label: "GLO", icon: "global" },
+    { value: "all" },
+    { value: "kr", icon: "kr" },
+    { value: "jp", icon: "jp" },
+    { value: "global", icon: "global" },
 ];
 
 interface RankingBrowserProps {
@@ -80,6 +75,11 @@ export default function RankingBrowser({
     initialRegion,
     initialData,
 }: RankingBrowserProps) {
+    const t = useTranslations();
+    const rankingMetrics: { value: UserRankingMetric; label: string }[] = [
+        { value: "grade", label: t("rankings.metric.grade") },
+        { value: "rating", label: t("rankings.metric.rating") },
+    ];
     const [view, setView] = useState({
         mode: initialMode,
         metric: initialMetric,
@@ -150,7 +150,7 @@ export default function RankingBrowser({
             const response = await fetch(`/api/rankings?${params}`, {
                 cache: "no-store",
             });
-            if (!response.ok) throw new Error("랭킹을 불러오지 못했습니다.");
+            if (!response.ok) throw new Error("ranking request failed");
 
             const result = (await response.json()) as UserRankingPayload;
             cache.current.set(
@@ -163,7 +163,7 @@ export default function RankingBrowser({
             updateUrl(mode, metric, region, result.page);
         } catch {
             if (currentRequestId === requestId.current) {
-                setError("랭킹을 불러오지 못했습니다. 다시 시도해주세요.");
+                setError(t("rankings.loadError"));
             }
         } finally {
             if (currentRequestId === requestId.current) setIsLoading(false);
@@ -174,7 +174,7 @@ export default function RankingBrowser({
         <>
             <nav
                 className="bg-surface-muted rounded-card grid grid-cols-2 p-1"
-                aria-label="랭킹 모드"
+                aria-label={t("rankings.modeNav")}
             >
                 {rankingModes.map((item) => (
                     <button
@@ -205,7 +205,7 @@ export default function RankingBrowser({
 
             <nav
                 className="border-border rounded-card grid grid-cols-2 overflow-hidden border"
-                aria-label="랭킹 평가 기준"
+                aria-label={t("rankings.metricNav")}
             >
                 {rankingMetrics.map((item) => (
                     <button
@@ -233,14 +233,12 @@ export default function RankingBrowser({
             </nav>
 
             {view.metric === "rating" ? (
-                <p className="text-caption px-1">
-                    현재 Basic Pianist 서열 상수 · 상위 70곡 · 10,000점 만점
-                </p>
+                <p className="text-caption px-1">{t("rankings.ratingBasis")}</p>
             ) : null}
 
             <nav
                 className="border-border rounded-card grid grid-cols-4 overflow-hidden border"
-                aria-label="랭킹 지역"
+                aria-label={t("rankings.regionNav")}
             >
                 {rankingRegions.map((item) => (
                     <button
@@ -258,7 +256,11 @@ export default function RankingBrowser({
                         )}
                     >
                         <RegionIcon icon={item.icon} />
-                        {item.label}
+                        {item.value === "all"
+                            ? t("rankings.region.all")
+                            : item.value === "global"
+                              ? "GLO"
+                              : item.value.toUpperCase()}
                     </button>
                 ))}
             </nav>

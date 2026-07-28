@@ -42,19 +42,26 @@ export function formatProfileGrade(value: number | null | undefined) {
     return value ? Math.round(value / 100).toLocaleString("ko-KR") : "-";
 }
 
-export function formatProfileDate(value: string | null) {
-    if (!value) return "기록 없음";
+export function formatProfileDate(
+    value: string | null,
+    locale: "ko" | "ja" | "en" = "ko",
+    emptyLabel = "기록 없음"
+) {
+    if (!value) return emptyLabel;
 
     const date = new Date(value);
     if (Number.isNaN(date.getTime())) {
         return value.split(" ")[0].replaceAll("-", ".");
     }
 
-    return new Intl.DateTimeFormat("ko-KR", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-    })
+    return new Intl.DateTimeFormat(
+        locale === "ja" ? "ja-JP" : locale === "en" ? "en-US" : "ko-KR",
+        {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+        }
+    )
         .format(date)
         .replaceAll(". ", ".")
         .replace(/\.$/, "");

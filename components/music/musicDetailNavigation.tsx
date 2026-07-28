@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import { detailTabs, difficultyStyles } from "./musicDetailConfig";
 import type { DetailTab, Difficulty, MusicInfo } from "./musicDetailTypes";
+import { useTranslations } from "@/components/i18n/localeProvider";
 
 interface MusicDetailNavigationProps {
     music: MusicInfo;
@@ -21,6 +22,7 @@ export default function MusicDetailNavigation({
     isLoading = false,
     onNavigate,
 }: MusicDetailNavigationProps) {
+    const t = useTranslations();
     const difficultyLevels: Record<Difficulty, number | null> = {
         Normal: music.normal,
         Hard: music.hard,
@@ -107,7 +109,7 @@ export default function MusicDetailNavigation({
                                 : "bg-surface text-text-secondary hover:bg-surface-muted hover:text-text-primary"
                         )}
                     >
-                        {tab.label}
+                        {t(tab.labelKey)}
                     </button>
                 ))}
             </nav>

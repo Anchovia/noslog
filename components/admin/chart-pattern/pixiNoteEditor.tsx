@@ -10,6 +10,7 @@ import {
 } from "react";
 import type { Application, Graphics } from "pixi.js";
 
+import { chartPianoColors } from "@/lib/chart-pattern/piano";
 import {
     chartNoteContainsPoint,
     chartNoteIntersectsRect,
@@ -166,9 +167,6 @@ const colors = {
     preview: 0xfacc15,
     selection: 0xf2c75c,
     conflict: 0xf0646d,
-    pianoWhite: 0xe7e6e1,
-    pianoWhiteAlt: 0xd2d4d4,
-    pianoBlack: 0x161820,
     pianoRail: 0x252a34,
     pianoEdge: 0x969aa5,
 };
@@ -278,10 +276,12 @@ function drawEditorPiano(
                 color:
                     activeHand === undefined
                         ? lane % 2 === 0
-                            ? colors.pianoWhite
-                            : colors.pianoWhiteAlt
-                        : colorForHand(activeHand),
-                alpha: activeHand === undefined ? 0.96 : 0.82,
+                            ? chartPianoColors.white
+                            : chartPianoColors.whiteAlt
+                        : activeHand === "left"
+                          ? chartPianoColors.pressedLeft
+                          : chartPianoColors.pressedRight,
+                alpha: activeHand === undefined ? 0.96 : 0.9,
             })
             .stroke({ color: 0x565a63, width: 0.65, alpha: 0.72 });
     }
@@ -297,7 +297,7 @@ function drawEditorPiano(
                 laneWidth * 0.44,
                 pianoHeight * 0.56
             )
-            .fill({ color: colors.pianoBlack, alpha: 0.98 });
+            .fill({ color: chartPianoColors.black, alpha: 0.98 });
     }
 
     graphics

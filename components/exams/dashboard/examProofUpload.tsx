@@ -1,5 +1,6 @@
 import { Upload } from "lucide-react";
 
+import { useTranslations } from "@/components/i18n/localeProvider";
 import { cn } from "@/lib/utils";
 
 import type { ExamDashboardItem } from "./examDashboardTypes";
@@ -22,6 +23,7 @@ export default function ExamProofUpload({
     message,
     onUpload,
 }: ExamProofUploadProps) {
+    const t = useTranslations();
     const inputId = `exam-proof-${exam.id}`;
 
     return (
@@ -41,13 +43,14 @@ export default function ExamProofUpload({
             {exam.submissionStatus === "rejected" ? (
                 <div className="border-danger/40 bg-danger/5 mb-2 rounded-md border px-3 py-2">
                     <p className="text-danger text-xs font-semibold">
-                        인증이 반려되었습니다.
+                        {t("exams.proof.rejected")}
                     </p>
                     <p className="text-text-secondary mt-1 text-xs leading-relaxed whitespace-pre-wrap">
-                        {`사유: "${
-                            exam.submissionReviewerNote ||
-                            "등록된 반려 사유가 없습니다. 증빙 이미지를 확인한 뒤 다시 제출해주세요."
-                        }"`}
+                        {t("exams.proof.reason", {
+                            reason:
+                                exam.submissionReviewerNote ||
+                                t("exams.proof.defaultReason"),
+                        })}
                     </p>
                 </div>
             ) : null}
@@ -65,22 +68,22 @@ export default function ExamProofUpload({
             >
                 {exam.isAchieved ? null : <Upload className="size-4" />}
                 {isUploading
-                    ? "업로드 중..."
+                    ? t("exams.proof.uploading")
                     : exam.isAchieved
-                      ? "합격 인증 완료"
+                      ? t("exams.proof.completed")
                       : exam.submissionStatus === "pending"
-                        ? "인증 심사 중"
+                        ? t("exams.proof.reviewing")
                         : exam.submissionStatus === "rejected"
-                          ? "합격 스크린샷 다시 제출"
+                          ? t("exams.proof.resubmit")
                           : isAuthenticated
-                            ? "합격 스크린샷 업로드"
-                            : "로그인 후 인증 가능"}
+                            ? t("exams.proof.upload")
+                            : t("exams.proof.login")}
             </label>
             {message ? (
                 <p
                     className={cn(
                         "mt-2 text-xs",
-                        message.includes("제출")
+                        message === t("exams.proof.submitted")
                             ? "text-success"
                             : "text-danger"
                     )}

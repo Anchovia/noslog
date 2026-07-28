@@ -14,6 +14,7 @@ import type {
     UserPlayData,
 } from "./musicDetailTypes";
 import ScoreTrend from "./scoreTrend";
+import { useTranslations } from "@/components/i18n/localeProvider";
 
 interface MusicJudgementAccordionProps {
     userPlayData: UserPlayData | null;
@@ -30,6 +31,7 @@ export default function MusicJudgementAccordion({
     peerComparison,
     peerNoteRates,
 }: MusicJudgementAccordionProps) {
+    const t = useTranslations();
     const [expanded, setExpanded] = useState(false);
 
     return (
@@ -42,9 +44,13 @@ export default function MusicJudgementAccordion({
                     onClick={() => setExpanded((value) => !value)}
                     type="button"
                 >
-                    <span className="text-section">판정 상세</span>
+                    <span className="text-section">
+                        {t("music.judgement.details")}
+                    </span>
                     <span className="text-caption flex items-center gap-1">
-                        {expanded ? "접기" : "상세 보기"}
+                        {expanded
+                            ? t("music.judgement.collapse")
+                            : t("music.judgement.expand")}
                         <ChevronDown
                             aria-hidden
                             className={`size-4 transition-transform ${
@@ -81,9 +87,13 @@ export default function MusicJudgementAccordion({
 
                     <div className="border-divider mt-4 border-t pt-4">
                         <header className="flex items-center justify-between gap-3">
-                            <h3 className="text-section">최근 판정 추이</h3>
+                            <h3 className="text-section">
+                                {t("music.judgement.recentTrend")}
+                            </h3>
                             <span className="text-micro">
-                                {performanceTrend.length}플레이 기준
+                                {t("music.judgement.playBasis", {
+                                    count: performanceTrend.length,
+                                })}
                             </span>
                         </header>
                         <ScoreTrend

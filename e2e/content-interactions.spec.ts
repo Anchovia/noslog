@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 import { expectNoHorizontalOverflow, expectPageLoaded } from "./helpers";
 
 test("빙고 상태 필터와 진행순 정렬을 변경한다", async ({ page }) => {
-    await page.goto("/bingo");
+    await page.goto("/ko/bingo");
     await expectPageLoaded(page);
 
     const sortButton = page.getByRole("button", {
@@ -24,7 +24,7 @@ test("빙고 상태 필터와 진행순 정렬을 변경한다", async ({ page }
 });
 
 test("검정 선택 항목을 아코디언으로 열고 닫는다", async ({ page }) => {
-    await page.goto("/exams");
+    await page.goto("/ko/exams");
     await expectPageLoaded(page);
 
     await expect(
@@ -59,7 +59,7 @@ test("검정 선택 항목을 아코디언으로 열고 닫는다", async ({ pag
 test("비로그인 통합 서열표에서 모드와 목표 필터를 제공한다", async ({
     page,
 }) => {
-    await page.goto("/tiers");
+    await page.goto("/ko/tiers");
     await expectPageLoaded(page);
 
     await expect(
@@ -84,7 +84,7 @@ test("비로그인 통합 서열표에서 모드와 목표 필터를 제공한�
 
     await expect(tierRegion.getByRole("heading").first()).toBeVisible();
     await goalSelect.selectOption("fc");
-    await expect(page).toHaveURL(/\/tiers\?goal=fc$/);
+    await expect(page).toHaveURL(/\/ko\/tiers\?goal=fc$/);
     await expect(goalSelect).toHaveValue("fc");
     await expectNoHorizontalOverflow(page);
 });

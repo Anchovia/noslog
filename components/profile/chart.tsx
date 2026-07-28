@@ -1,6 +1,7 @@
 "use client";
 
 import { Line, LineChart, ResponsiveContainer, Tooltip, YAxis } from "recharts";
+import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 
 export interface GradeHistoryPoint {
     besttime: string;
@@ -19,18 +20,25 @@ export default function ProfileGradeChart({
     data: GradeHistoryPoint[];
     mode: "basic" | "recital";
 }) {
+    const locale = useLocale();
+    const t = useTranslations();
     const dataKey = mode === "basic" ? "grade_basic" : "grade_recital";
+    const numberLocale =
+        locale === "ja" ? "ja-JP" : locale === "en" ? "en-US" : "ko-KR";
 
     if (data.length < 2) {
         return (
             <div className="text-text-disabled flex h-24 items-center justify-center text-sm">
-                Grd 추이를 표시할 기록이 부족합니다.
+                {t("profile.gradeTrendEmpty")}
             </div>
         );
     }
 
     return (
-        <div className="h-24 w-full" aria-label={`${mode} Grd 추이 차트`}>
+        <div
+            className="h-24 w-full"
+            aria-label={t("profile.gradeTrendAria", { mode })}
+        >
             <ResponsiveContainer width="100%" height="100%">
                 <LineChart
                     data={data}
@@ -56,7 +64,7 @@ export default function ProfileGradeChart({
                                 : "";
                         }}
                         formatter={(value) => [
-                            Number(value).toLocaleString("ko-KR"),
+                            Number(value).toLocaleString(numberLocale),
                             "Grd",
                         ]}
                     />

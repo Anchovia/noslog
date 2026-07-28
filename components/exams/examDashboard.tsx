@@ -9,6 +9,7 @@ import {
     requestExamProofUpload,
     submitExamProof,
 } from "@/app/(nevigation)/exams/actions";
+import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import ExamModeTabs from "@/components/exams/dashboard/examModeTabs";
 import ExamOverview from "@/components/exams/dashboard/examOverview";
 import ExamProofUpload from "@/components/exams/dashboard/examProofUpload";
@@ -36,6 +37,8 @@ export default function ExamDashboard({
     exams: ExamDashboardItem[];
     isAuthenticated: boolean;
 }) {
+    const locale = useLocale();
+    const t = useTranslations();
     const router = useRouter();
     const initialMode: ExamMode = "basic";
     const [mode, setMode] = useState<ExamMode>(initialMode);
@@ -97,11 +100,11 @@ export default function ExamDashboard({
                 file.type
             )
         ) {
-            setUploadMessage("JPG, PNG, WebP 이미지만 업로드할 수 있습니다.");
+            setUploadMessage(t("exams.proof.invalidImage"));
             return;
         }
         if (file.size > 4 * 1024 * 1024) {
-            setUploadMessage("이미지는 4MB 이하로 선택해주세요.");
+            setUploadMessage(t("exams.proof.imageTooLarge"));
             return;
         }
 
@@ -111,7 +114,8 @@ export default function ExamDashboard({
         try {
             const upload = await requestExamProofUpload(
                 selectedExam.id,
-                file.type
+                file.type,
+                locale
             );
             if (!upload.success) {
                 setUploadMessage(upload.message);
@@ -125,9 +129,13 @@ export default function ExamDashboard({
             });
             uploadedBlobUrl = blob.url;
 
-            const submit = await submitExamProof(selectedExam.id, blob.url);
+            const submit = await submitExamProof(
+                selectedExam.id,
+                blob.url,
+                locale
+            );
             setUploadMessage(
-                submit.success ? "합격 인증을 제출했습니다." : submit.message
+                submit.success ? t("exams.proof.submitted") : submit.message
             );
             if (submit.success) router.refresh();
         } catch {
@@ -137,7 +145,7 @@ export default function ExamDashboard({
                     uploadedBlobUrl
                 ).catch(() => null);
             }
-            setUploadMessage("업로드 중 오류가 발생했습니다.");
+            setUploadMessage(t("exams.proof.uploadError"));
         } finally {
             setIsUploading(false);
         }
@@ -149,7 +157,7 @@ export default function ExamDashboard({
 
             {modeExams.length === 0 ? (
                 <section className="bg-surface rounded-card text-caption flex min-h-52 items-center justify-center px-6 text-center">
-                    등록된 검정이 없습니다.
+                    {t("exams.empty")}
                 </section>
             ) : (
                 <>
@@ -160,17 +168,17 @@ export default function ExamDashboard({
                                     htmlFor="exam-advice-switch"
                                     className="text-label font-semibold"
                                 >
-                                    플레이 조언
+                                    {t("exams.advice")}
                                 </label>
                                 <p className="text-caption mt-0.5">
                                     {isAuthenticated
-                                        ? "내 기록으로 합격 준비도와 연습할 곡을 확인합니다."
-                                        : "로그인하면 내 기록 기반 조언을 확인할 수 있습니다."}
+                                        ? t("exams.advice.auth")
+                                        : t("exams.advice.guest")}
                                 </p>
                             </div>
                             <Switch
                                 id="exam-advice-switch"
-                                aria-label="플레이 조언"
+                                aria-label={t("exams.advice")}
                                 checked={showAdvice}
                                 onCheckedChange={setShowAdvice}
                                 disabled={!isAuthenticated}

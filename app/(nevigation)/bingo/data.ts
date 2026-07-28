@@ -16,7 +16,22 @@ export const getCachedPublishedBingos = unstable_cache(
                 startsAt: true,
                 endsAt: true,
                 coverMusic: {
-                    select: { title: true, background: true },
+                    select: {
+                        title: true,
+                        title_kana: true,
+                        background: true,
+                        translations: {
+                            where: {
+                                status: "approved",
+                                locale: { in: ["ko", "en"] },
+                            },
+                            select: {
+                                locale: true,
+                                title: true,
+                                status: true,
+                            },
+                        },
+                    },
                 },
                 cells: {
                     select: { id: true, position: true },
@@ -32,7 +47,7 @@ export const getCachedPublishedBingos = unstable_cache(
             endsAt: bingo.endsAt?.toISOString() ?? null,
         }));
     },
-    ["published-bingos", "op3-20260719"],
+    ["published-bingos", "i18n-v1"],
     {
         revalidate: 3600,
         tags: [CACHE_TAGS.bingos],
@@ -56,8 +71,20 @@ export const getCachedBingoDetail = unstable_cache(
                 coverMusic: {
                     select: {
                         title: true,
+                        title_kana: true,
                         background: true,
                         description: true,
+                        translations: {
+                            where: {
+                                status: "approved",
+                                locale: { in: ["ko", "en"] },
+                            },
+                            select: {
+                                locale: true,
+                                title: true,
+                                status: true,
+                            },
+                        },
                     },
                 },
                 cells: {
@@ -68,6 +95,23 @@ export const getCachedBingoDetail = unstable_cache(
                         musicIndex: true,
                         position: true,
                         categoryShort: true,
+                        music: {
+                            select: {
+                                title: true,
+                                title_kana: true,
+                                translations: {
+                                    where: {
+                                        status: "approved",
+                                        locale: { in: ["ko", "en"] },
+                                    },
+                                    select: {
+                                        locale: true,
+                                        title: true,
+                                        status: true,
+                                    },
+                                },
+                            },
+                        },
                     },
                     orderBy: { position: "asc" },
                 },
@@ -82,7 +126,7 @@ export const getCachedBingoDetail = unstable_cache(
               }
             : null;
     },
-    ["bingo-detail", "op3-20260719"],
+    ["bingo-detail", "i18n-v1"],
     {
         revalidate: 3600,
         tags: [CACHE_TAGS.bingos],

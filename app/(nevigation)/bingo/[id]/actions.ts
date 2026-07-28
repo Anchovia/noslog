@@ -3,6 +3,8 @@
 import { revalidatePath } from "next/cache";
 
 import db from "@/lib/db";
+import { createTranslator, getMessages } from "@/lib/i18n/messages";
+import { isLocale } from "@/lib/i18n/routing";
 import getSession from "@/lib/session";
 
 export interface ToggleBingoCellResult {
@@ -14,14 +16,17 @@ export interface ToggleBingoCellResult {
 // 현재 로그인한 사용자의 빙고 칸을 요청한 완료 상태로 저장함
 export async function setBingoCellCompletion(
     bingoCellId: number,
-    isCompleted: boolean
+    isCompleted: boolean,
+    requestedLocale = "ko"
 ): Promise<ToggleBingoCellResult> {
+    const locale = isLocale(requestedLocale) ? requestedLocale : "ko";
+    const t = createTranslator(getMessages(locale));
     const session = await getSession();
 
     if (!session.id) {
         return {
             success: false,
-            message: "로그인 후 빙고 진행 상태를 저장할 수 있습니다.",
+            message: t("bingo.loginToSave"),
         };
     }
 
@@ -30,7 +35,7 @@ export async function setBingoCellCompletion(
         bingoCellId < 1 ||
         typeof isCompleted !== "boolean"
     ) {
-        return { success: false, message: "잘못된 빙고 칸입니다." };
+        return { success: false, message: t("bingo.invalidCell") };
     }
 
     const cell = await db.bingoCell.findUnique({
@@ -48,7 +53,7 @@ export async function setBingoCellCompletion(
     });
 
     if (!cell) {
-        return { success: false, message: "빙고 칸을 찾을 수 없습니다." };
+        return { success: false, message: t("bingo.cellNotFound") };
     }
 
     const now = new Date();
@@ -58,7 +63,7 @@ export async function setBingoCellCompletion(
         (cell.bingo.endsAt && cell.bingo.endsAt < now);
 
     if (isUnavailable) {
-        return { success: false, message: "현재 진행할 수 없는 빙고입니다." };
+        return { success: false, message: t("bingo.unavailable") };
     }
 
     await db.bingoCellProgress.upsert({

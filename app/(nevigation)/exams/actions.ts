@@ -9,6 +9,8 @@ import {
     isValidPrivateImageBlob,
 } from "@/lib/blob";
 import db from "@/lib/db";
+import { createTranslator, getMessages } from "@/lib/i18n/messages";
+import { isLocale } from "@/lib/i18n/routing";
 import getSession from "@/lib/session";
 import {
     claimUploadTokenQuota,
@@ -59,21 +61,27 @@ async function getAvailableExam(examId: number, userId: number) {
 
 export async function requestExamProofUpload(
     examId: number,
-    contentType: string
+    contentType: string,
+    requestedLocale = "ko"
 ) {
+    const locale = isLocale(requestedLocale) ? requestedLocale : "ko";
+    const t = createTranslator(getMessages(locale));
     const session = await getSession();
 
     if (!session.id) {
-        return { success: false as const, message: "로그인이 필요합니다." };
+        return {
+            success: false as const,
+            message: t("onboarding.error.loginRequired"),
+        };
     }
     const userId = session.id;
     if (!Number.isInteger(examId)) {
-        return { success: false as const, message: "잘못된 검정입니다." };
+        return { success: false as const, message: t("exams.error.invalid") };
     }
     if (!isImageContentType(contentType)) {
         return {
             success: false as const,
-            message: "JPG, PNG, WebP 이미지만 사용할 수 있습니다.",
+            message: t("exams.proof.invalidImage"),
         };
     }
 
@@ -81,14 +89,17 @@ export async function requestExamProofUpload(
     if (!exam) {
         return {
             success: false as const,
-            message: "현재 응시할 수 없는 검정입니다.",
+            message: t("exams.error.unavailable"),
         };
     }
     if (exam.achievements.length > 0) {
-        return { success: false as const, message: "이미 합격한 검정입니다." };
+        return {
+            success: false as const,
+            message: t("exams.error.alreadyPassed"),
+        };
     }
     if (exam.submissions.length > 0) {
-        return { success: false as const, message: "현재 심사 중입니다." };
+        return { success: false as const, message: t("exams.error.pending") };
     }
     let grantId: number | null = null;
     try {
@@ -96,7 +107,10 @@ export async function requestExamProofUpload(
         if (!quota.allowed) {
             return {
                 success: false as const,
-                message: getUploadLimitMessage(),
+                message:
+                    locale === "ko"
+                        ? getUploadLimitMessage()
+                        : t("exams.error.uploadLimit"),
             };
         }
         grantId = quota.grantId;
@@ -109,7 +123,7 @@ export async function requestExamProofUpload(
             await releaseUploadTokenQuota(userId, grantId).catch(() => null);
             return {
                 success: false as const,
-                message: "JPG, PNG, WebP 이미지만 사용할 수 있습니다.",
+                message: t("exams.proof.invalidImage"),
             };
         }
 
@@ -120,20 +134,29 @@ export async function requestExamProofUpload(
         }
         return {
             success: false as const,
-            message: "이미지 업로드 요청을 처리하지 못했습니다.",
+            message: t("exams.error.uploadRequest"),
         };
     }
 }
 
-export async function submitExamProof(examId: number, proofImageUrl: string) {
+export async function submitExamProof(
+    examId: number,
+    proofImageUrl: string,
+    requestedLocale = "ko"
+) {
+    const locale = isLocale(requestedLocale) ? requestedLocale : "ko";
+    const t = createTranslator(getMessages(locale));
     const session = await getSession();
 
     if (!session.id) {
-        return { success: false as const, message: "로그인이 필요합니다." };
+        return {
+            success: false as const,
+            message: t("onboarding.error.loginRequired"),
+        };
     }
     const userId = session.id;
     if (!Number.isInteger(examId)) {
-        return { success: false as const, message: "잘못된 검정입니다." };
+        return { success: false as const, message: t("exams.error.invalid") };
     }
 
     if (
@@ -144,7 +167,7 @@ export async function submitExamProof(examId: number, proofImageUrl: string) {
     ) {
         return {
             success: false as const,
-            message: "허용되지 않은 이미지 주소입니다.",
+            message: t("exams.error.invalidUrl"),
         };
     }
 
@@ -154,16 +177,19 @@ export async function submitExamProof(examId: number, proofImageUrl: string) {
         await deleteBlobIfOwned(proofImageUrl);
         return {
             success: false as const,
-            message: "현재 응시할 수 없는 검정입니다.",
+            message: t("exams.error.unavailable"),
         };
     }
     if (exam.achievements.length > 0) {
         await deleteBlobIfOwned(proofImageUrl);
-        return { success: false as const, message: "이미 합격한 검정입니다." };
+        return {
+            success: false as const,
+            message: t("exams.error.alreadyPassed"),
+        };
     }
     if (exam.submissions.length > 0) {
         await deleteBlobIfOwned(proofImageUrl);
-        return { success: false as const, message: "현재 심사 중입니다." };
+        return { success: false as const, message: t("exams.error.pending") };
     }
 
     const rejectedSubmissions = await db.examSubmission.findMany({
@@ -198,7 +224,7 @@ export async function submitExamProof(examId: number, proofImageUrl: string) {
         await deleteBlobIfOwned(proofImageUrl);
         return {
             success: false as const,
-            message: "합격 인증 제출에 실패했습니다.",
+            message: t("exams.error.submit"),
         };
     }
 

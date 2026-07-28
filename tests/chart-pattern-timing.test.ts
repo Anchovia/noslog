@@ -5,6 +5,8 @@ import {
     formatBpm,
     formatRevisionDateTime,
     getBeatMarkers,
+    getMeasureMarkers,
+    getMeasurePanels,
     getSnapGridMarkers,
     getSnapGridSubdivision,
     millisecondsToTick,
@@ -94,6 +96,102 @@ describe("채보 타이밍 계산", () => {
         ]);
     });
 
+    it("타이밍 포인트를 새 마디로 번호 매기고 변경 정보만 표시한다", () => {
+        const markers = getMeasureMarkers(timingPoints, 480, 5_001);
+
+        expect(
+            markers.map(
+                ({
+                    timeMs,
+                    measureNumber,
+                    bpm,
+                    numerator,
+                    denominator,
+                    showBpm,
+                    showTimeSignature,
+                }) => ({
+                    timeMs,
+                    measureNumber,
+                    bpm,
+                    signature: `${numerator}/${denominator}`,
+                    showBpm,
+                    showTimeSignature,
+                })
+            )
+        ).toEqual([
+            {
+                timeMs: 0,
+                measureNumber: 1,
+                bpm: 120,
+                signature: "4/4",
+                showBpm: true,
+                showTimeSignature: true,
+            },
+            {
+                timeMs: 2_000,
+                measureNumber: 2,
+                bpm: 60,
+                signature: "3/4",
+                showBpm: true,
+                showTimeSignature: true,
+            },
+            {
+                timeMs: 5_000,
+                measureNumber: 3,
+                bpm: 60,
+                signature: "3/4",
+                showBpm: false,
+                showTimeSignature: false,
+            },
+        ]);
+    });
+
+    it("같은 설정으로 다시 잡은 타이밍 포인트도 새 마디로 센다", () => {
+        const markers = getMeasureMarkers(
+            [
+                timingPoints[0],
+                {
+                    ...timingPoints[0],
+                    id: "timing-reset",
+                    tick: 960,
+                    timeMs: 1_000,
+                },
+            ],
+            480,
+            3_001
+        );
+
+        expect(
+            markers.map(
+                ({ timeMs, measureNumber, showBpm, showTimeSignature }) => ({
+                    timeMs,
+                    measureNumber,
+                    showBpm,
+                    showTimeSignature,
+                })
+            )
+        ).toEqual([
+            {
+                timeMs: 0,
+                measureNumber: 1,
+                showBpm: true,
+                showTimeSignature: true,
+            },
+            {
+                timeMs: 1_000,
+                measureNumber: 2,
+                showBpm: false,
+                showTimeSignature: false,
+            },
+            {
+                timeMs: 3_000,
+                measureNumber: 3,
+                showBpm: false,
+                showTimeSignature: false,
+            },
+        ]);
+    });
+
     it("3/4 박자는 4분음표 세 박자마다 강박을 만든다", () => {
         const threeFourTiming = [
             {
@@ -138,6 +236,82 @@ describe("채보 타이밍 계산", () => {
         expect(accentTicks.has(0)).toBe(true);
         expect(accentTicks.has(1_920)).toBe(false);
         expect(accentTicks.has(3_840)).toBe(false);
+    });
+
+    it("실제 박자표를 기준으로 한 열을 4마디씩 나눈다", () => {
+        const panels = getMeasurePanels([timingPoints[0]], 480, 20_000);
+
+        expect(panels).toEqual([
+            { index: 0, startMs: 0, endMs: 8_000 },
+            { index: 1, startMs: 8_000, endMs: 16_000 },
+            { index: 2, startMs: 16_000, endMs: 20_000 },
+        ]);
+    });
+
+    it("BPM과 박자표가 바뀌어도 실제 4마디 단위로 나눈다", () => {
+        const panels = getMeasurePanels(timingPoints, 480, 16_000);
+
+        expect(panels).toEqual([
+            { index: 0, startMs: 0, endMs: 11_000 },
+            { index: 1, startMs: 11_000, endMs: 16_000 },
+        ]);
+    });
+
+    it("양수 오프셋 앞의 여백을 유지하고 4마디 뒤에서 열을 나눈다", () => {
+        const panels = getMeasurePanels(
+            [{ ...timingPoints[0], timeMs: 500 }],
+            480,
+            10_000
+        );
+
+        expect(panels).toEqual([
+            { index: 0, startMs: 0, endMs: 8_500 },
+            { index: 1, startMs: 8_500, endMs: 10_000 },
+        ]);
+    });
+
+    it("음수 오프셋에서 시작한 첫 마디를 포함해 4마디씩 나눈다", () => {
+        const panels = getMeasurePanels(
+            [{ ...timingPoints[0], timeMs: -100 }],
+            480,
+            10_000
+        );
+
+        expect(panels).toEqual([
+            { index: 0, startMs: 0, endMs: 7_900 },
+            { index: 1, startMs: 7_900, endMs: 10_000 },
+        ]);
+    });
+
+    it("마지막 내용이 속한 4마디 열의 끝까지 완성한다", () => {
+        expect(
+            getMeasurePanels([timingPoints[0]], 480, 9_000, 4, {
+                completeLastPanel: true,
+            })
+        ).toEqual([
+            { index: 0, startMs: 0, endMs: 8_000 },
+            { index: 1, startMs: 8_000, endMs: 16_000 },
+        ]);
+    });
+
+    it("내용이 없어도 첫 4마디 열을 제공한다", () => {
+        expect(
+            getMeasurePanels([timingPoints[0]], 480, 0, 4, {
+                completeLastPanel: true,
+            })
+        ).toEqual([{ index: 0, startMs: 0, endMs: 8_000 }]);
+    });
+
+    it("양수 오프셋을 포함해 마지막 4마디 열을 완성한다", () => {
+        expect(
+            getMeasurePanels(
+                [{ ...timingPoints[0], timeMs: 500 }],
+                480,
+                1_000,
+                4,
+                { completeLastPanel: true }
+            )
+        ).toEqual([{ index: 0, startMs: 0, endMs: 8_500 }]);
     });
 
     it("저장 이력 시간을 서버 환경과 무관한 KST 24시간제로 표시한다", () => {

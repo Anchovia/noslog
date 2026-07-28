@@ -16,6 +16,8 @@ model User {
   discord_username        String?
   avatar                  String?
   country                 String                    @default("ko-KR")
+  locale                  String                    @default("ko")
+  show_localized_music_title Boolean                @default(true)
   profile_completed_at    DateTime?
   preferred_arcade_id     Int?
   hide_nostalgia_name     Boolean                   @default(false)
@@ -181,6 +183,23 @@ model Music {
   charts         MusicChart[]
   examStages     ExamStage[]
   examRewards    ExamReward[]
+  translations   MusicTranslation[]
+}
+
+// 검수 상태를 포함한 악곡 번역 제목을 언어별로 관리함
+model MusicTranslation {
+  id          Int      @id @default(autoincrement())
+  musicIndex  String   @map("music_index")
+  locale      String
+  title       String
+  status      String   @default("draft")
+  reviewedAt  DateTime? @map("reviewed_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  music       Music    @relation(fields: [musicIndex], references: [index], onDelete: Cascade)
+
+  @@unique([musicIndex, locale])
+  @@index([locale, status, title])
 }
 
 // 사용자 연동에서 감지한 공식 악곡 카탈로그 변경 후보와 처리 이력을 보존함

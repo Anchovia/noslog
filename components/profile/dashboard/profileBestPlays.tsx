@@ -1,6 +1,10 @@
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 
+import {
+    useLocalizedHref,
+    useTranslations,
+} from "@/components/i18n/localeProvider";
 import { cn, formatToComma } from "@/lib/utils";
 
 import ProfileJacket from "./profileJacket";
@@ -21,24 +25,28 @@ export default function ProfileBestPlays({
     expanded,
     onToggle,
 }: ProfileBestPlaysProps) {
+    const href = useLocalizedHref();
+    const t = useTranslations();
     const visiblePlays = expanded ? plays : plays.slice(0, 5);
 
     return (
         <section className="bg-surface rounded-card overflow-hidden">
             <div className="border-divider flex items-center justify-between border-b px-4 py-3">
-                <h2 className="text-section font-bold">베스트 성과</h2>
+                <h2 className="text-section font-bold">
+                    {t("profile.bestPlays")}
+                </h2>
                 {plays.length > 5 ? (
                     <button
                         type="button"
                         onClick={onToggle}
                         aria-label={
                             expanded
-                                ? "베스트 성과 접기"
-                                : "베스트 성과 전체 보기"
+                                ? t("profile.bestCollapse")
+                                : t("profile.bestExpand")
                         }
                         className="text-caption hover:bg-surface-muted hover:text-text-primary focus-visible:ring-focus/40 flex cursor-pointer items-center gap-1 rounded px-1.5 py-1 transition-colors focus-visible:ring-2 focus-visible:outline-none"
                     >
-                        {expanded ? "접기" : "전체"}
+                        {expanded ? t("profile.collapse") : t("profile.all")}
                         <ChevronRight
                             size={13}
                             className={cn(
@@ -48,7 +56,9 @@ export default function ProfileBestPlays({
                         />
                     </button>
                 ) : (
-                    <span className="text-caption">Grd 기여 상위 5곡</span>
+                    <span className="text-caption">
+                        {t("profile.bestTopFive")}
+                    </span>
                 )}
             </div>
 
@@ -66,7 +76,9 @@ export default function ProfileBestPlays({
                                 className="border-divider border-t first:border-t-0"
                             >
                                 <Link
-                                    href={`/music/${play.music_idx}/${play.difficulty.toLowerCase()}`}
+                                    href={href(
+                                        `/music/${play.music_idx}/${play.difficulty.toLowerCase()}`
+                                    )}
                                     className="flex min-h-14 items-center gap-3 px-3 py-2"
                                 >
                                     <span
@@ -90,6 +102,11 @@ export default function ProfileBestPlays({
                                         <p className="text-text-primary truncate text-sm font-semibold">
                                             {play.music.title}
                                         </p>
+                                        {play.music.localizedTitle ? (
+                                            <p className="text-caption truncate">
+                                                {play.music.localizedTitle}
+                                            </p>
+                                        ) : null}
                                         <p
                                             className={cn(
                                                 "mt-0.5 text-xs",
@@ -116,7 +133,7 @@ export default function ProfileBestPlays({
                 </ol>
             ) : (
                 <p className="text-text-disabled flex h-24 items-center justify-center text-sm">
-                    베스트 성과 기록이 없습니다.
+                    {t("profile.bestEmpty")}
                 </p>
             )}
         </section>

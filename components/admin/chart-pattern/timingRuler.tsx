@@ -7,7 +7,10 @@ import {
     CHART_TICKS_PER_QUARTER,
     isChartLaneGroupBoundary,
 } from "@/lib/chart-pattern/schema";
-import { getChartEditorVerticalLayout } from "@/lib/chart-pattern/editor";
+import {
+    getChartEditorNavigationDurationMs,
+    getChartEditorVerticalLayout,
+} from "@/lib/chart-pattern/editor";
 import {
     formatBpm,
     formatEditorTime,
@@ -82,9 +85,8 @@ export default function TimingRuler({
 }) {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const currentTimeMs = useChartEditorStore((state) => state.currentTimeMs);
-    const durationMs = useChartEditorStore(
-        (state) => state.document.durationMs
-    );
+    const chartDocument = useChartEditorStore((state) => state.document);
+    const durationMs = getChartEditorNavigationDurationMs(chartDocument);
     const timingPoints = useChartEditorStore(
         (state) => state.document.timingPoints
     );

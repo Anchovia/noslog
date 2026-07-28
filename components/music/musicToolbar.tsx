@@ -2,6 +2,10 @@
 
 import { ArrowDown, ArrowUp, Grid2X2, List } from "lucide-react";
 
+import {
+    useTranslations,
+    type MessageKey,
+} from "@/components/i18n/localeProvider";
 import type { MusicSort } from "@/app/(nevigation)/music/query";
 import { cn } from "@/lib/utils";
 
@@ -18,11 +22,15 @@ interface MusicToolbarProps {
     onViewModeChange: (mode: ViewMode) => void;
 }
 
-const sortOptions: { value: SortMode; label: string; personal?: boolean }[] = [
-    { value: "name", label: "이름" },
-    { value: "level", label: "레벨" },
-    { value: "recent", label: "최근", personal: true },
-    { value: "weakness", label: "취약", personal: true },
+const sortOptions: {
+    value: SortMode;
+    labelKey: MessageKey;
+    personal?: boolean;
+}[] = [
+    { value: "name", labelKey: "music.sort.name" },
+    { value: "level", labelKey: "music.sort.level" },
+    { value: "recent", labelKey: "music.sort.recent", personal: true },
+    { value: "weakness", labelKey: "music.sort.weakness", personal: true },
 ];
 
 export default function MusicToolbar({
@@ -33,6 +41,7 @@ export default function MusicToolbar({
     onSortModeChange,
     onViewModeChange,
 }: MusicToolbarProps) {
+    const t = useTranslations();
     const SortArrow = sortOrder === "asc" ? ArrowUp : ArrowDown;
 
     return (
@@ -52,7 +61,7 @@ export default function MusicToolbar({
                                     : "text-text-secondary hover:bg-surface-muted hover:text-text-primary"
                             )}
                         >
-                            <span>{option.label}</span>
+                            <span>{t(option.labelKey)}</span>
                             {sortMode === option.value && (
                                 <SortArrow size={12} />
                             )}
@@ -63,7 +72,7 @@ export default function MusicToolbar({
             <div className="border-border rounded-card flex h-6 overflow-hidden border">
                 <button
                     type="button"
-                    aria-label="리스트 보기"
+                    aria-label={t("music.listView")}
                     aria-pressed={viewMode === "list"}
                     onClick={() => onViewModeChange("list")}
                     className={cn(
@@ -77,7 +86,7 @@ export default function MusicToolbar({
                 </button>
                 <button
                     type="button"
-                    aria-label="그리드 보기"
+                    aria-label={t("music.gridView")}
                     aria-pressed={viewMode === "grid"}
                     onClick={() => onViewModeChange("grid")}
                     className={cn(

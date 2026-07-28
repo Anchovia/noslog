@@ -1,5 +1,6 @@
 import type { UseFormRegisterReturn } from "react-hook-form";
 import { Search } from "lucide-react";
+import { useTranslations } from "@/components/i18n/localeProvider";
 
 interface MusicSearchBarProps {
     registration: UseFormRegisterReturn;
@@ -13,6 +14,8 @@ export default function MusicSearchBar({
     filterOpen,
     onToggleFilter,
 }: MusicSearchBarProps) {
+    const t = useTranslations();
+
     return (
         <div className="flex min-w-0 gap-2">
             <div className="border-border bg-surface rounded-card focus-within:border-focus focus-within:ring-focus/20 flex h-11 min-w-0 flex-1 items-center gap-2 border px-3 transition focus-within:ring-2">
@@ -21,7 +24,7 @@ export default function MusicSearchBar({
                     aria-hidden="true"
                 />
                 <input
-                    placeholder="곡 제목 · 아티스트 검색"
+                    placeholder={t("home.searchPlaceholder")}
                     className="text-input placeholder:text-text-disabled h-full min-w-0 flex-1 bg-transparent outline-none"
                     {...registration}
                 />
@@ -32,7 +35,7 @@ export default function MusicSearchBar({
                 aria-expanded={filterOpen}
                 className="bg-surface-muted text-label hover:bg-border focus-visible:ring-focus/40 rounded-card flex h-11 min-w-14 shrink-0 items-center justify-center px-3 whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:outline-none"
             >
-                필터
+                {t("music.filter")}
             </button>
         </div>
     );

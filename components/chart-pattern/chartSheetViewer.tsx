@@ -10,6 +10,7 @@ import {
     useSyncExternalStore,
 } from "react";
 
+import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import {
     getBrowserSupportSnapshot,
     getServerBrowserSupportSnapshot,
@@ -19,6 +20,7 @@ import {
     getChartNoteRenderPoints,
     getGlissandoSnapRenderPoints,
 } from "@/lib/chart-pattern/editor";
+import { getChartPlaybackDurationMs } from "@/lib/chart-pattern/playback";
 import {
     CHART_LANE_COUNT,
     isChartLaneGroupBoundary,
@@ -27,15 +29,20 @@ import {
     type ChartNote,
 } from "@/lib/chart-pattern/schema";
 import {
+    formatBpm,
     formatEditorTime,
     getBeatMarkers,
+    getMeasureMarkers,
+    getMeasurePanels,
     tickToMilliseconds,
+    type MeasureMarker,
 } from "@/lib/chart-pattern/timing";
 
 import FallingChartViewer from "./fallingChartViewer";
 
 interface ChartSheetViewerProps {
     title: string;
+    localizedTitle?: string | null;
     artist: string | null;
     difficulty: string;
     level: number;
@@ -46,19 +53,23 @@ interface ChartSheetViewerProps {
     preview?: boolean;
 }
 
-const PANEL_DURATION_MS = 12_000;
-const PANEL_WIDTH = 220;
+const CHART_WIDTH = 220;
+const MEASURE_GUTTER_WIDTH = 56;
+const PANEL_WIDTH = CHART_WIDTH + MEASURE_GUTTER_WIDTH;
 const PANEL_HEIGHT = 720;
 const PADDING_TOP = 30;
 const PADDING_BOTTOM = 34;
+const PANEL_NOTE_EDGE_INSET = 4;
+const PANEL_MEASURE_EDGE_INSET = 5;
+const PANEL_BOUNDARY_EPSILON_MS = 0.001;
 
 const handColors: Record<ChartHand, string> = {
     left: "#62d4e8",
     right: "#f06b68",
 };
 
-function chartDuration(document: ChartDocument) {
-    const noteEnd = document.notes.reduce((maximum, note) => {
+function chartContentEnd(document: ChartDocument) {
+    return document.notes.reduce((maximum, note) => {
         const time = tickToMilliseconds(
             note.tick + note.durationTicks,
             document.timingPoints,
@@ -66,11 +77,11 @@ function chartDuration(document: ChartDocument) {
         );
         return Math.max(maximum, time);
     }, 0);
-    return Math.max(document.durationMs, Math.ceil(noteEnd + 1_000), 1_000);
 }
 
 export default function ChartSheetViewer({
     title,
+    localizedTitle,
     artist,
     difficulty,
     level,
@@ -80,6 +91,10 @@ export default function ChartSheetViewer({
     jacketUrl,
     preview = false,
 }: ChartSheetViewerProps) {
+    const locale = useLocale();
+    const t = useTranslations();
+    const numberLocale =
+        locale === "ja" ? "ja-JP" : locale === "en" ? "en-US" : "ko-KR";
     const [viewMode, setViewMode] = useState<"falling" | "sheet">("falling");
     const browserSupport = useSyncExternalStore(
         subscribeBrowserSupport,
@@ -88,26 +103,30 @@ export default function ChartSheetViewer({
     );
     const effectiveViewMode =
         browserSupport === "supported" ? viewMode : "sheet";
-    const durationMs = useMemo(() => chartDuration(document), [document]);
+    const playbackDurationMs = useMemo(
+        () => getChartPlaybackDurationMs(document),
+        [document]
+    );
+    const contentEndMs = useMemo(() => chartContentEnd(document), [document]);
     const panels = useMemo(
         () =>
-            Array.from(
-                {
-                    length: Math.max(
-                        1,
-                        Math.ceil(durationMs / PANEL_DURATION_MS)
-                    ),
-                },
-                (_, index) => ({
-                    index,
-                    startMs: index * PANEL_DURATION_MS,
-                    endMs: Math.min(
-                        durationMs,
-                        (index + 1) * PANEL_DURATION_MS
-                    ),
-                })
+            getMeasurePanels(
+                document.timingPoints,
+                document.ticksPerQuarter,
+                contentEndMs,
+                4,
+                { completeLastPanel: true }
             ),
-        [durationMs]
+        [contentEndMs, document.ticksPerQuarter, document.timingPoints]
+    );
+    const measureMarkers = useMemo(
+        () =>
+            getMeasureMarkers(
+                document.timingPoints,
+                document.ticksPerQuarter,
+                panels.at(-1)?.endMs ?? contentEndMs
+            ),
+        [contentEndMs, document.ticksPerQuarter, document.timingPoints, panels]
     );
 
     return (
@@ -115,7 +134,7 @@ export default function ChartSheetViewer({
             <header className="mx-auto flex w-full max-w-7xl items-start gap-3">
                 <Link
                     href={backHref}
-                    aria-label="악곡 상세로 돌아가기"
+                    aria-label={t("chart.back")}
                     className="border-border bg-surface hover:bg-surface-muted flex size-10 shrink-0 items-center justify-center rounded-md border"
                 >
                     <ArrowLeft className="size-4" />
@@ -128,20 +147,34 @@ export default function ChartSheetViewer({
                         </span>
                         {preview ? (
                             <span className="border-chart/40 text-chart rounded border px-2 py-1 text-[11px] font-semibold">
-                                관리자 초안 미리보기
+                                {t("chart.preview")}
                             </span>
                         ) : null}
                     </div>
+                    {localizedTitle ? (
+                        <p className="text-caption mt-1 truncate">
+                            {localizedTitle}
+                        </p>
+                    ) : null}
                     <p className="text-body-muted mt-1 truncate">
-                        {artist ?? "아티스트 정보 없음"}
+                        {artist ?? t("chart.unknownArtist")}
                     </p>
                     <p className="text-caption mt-2">
-                        노트 {document.notes.length.toLocaleString("ko-KR")}개
+                        {t("chart.noteCount", {
+                            count: document.notes.length.toLocaleString(
+                                numberLocale
+                            ),
+                        })}
                         {revision === null
                             ? ""
-                            : ` · ${preview ? "저장" : "공개"} v${revision}`}
+                            : ` · ${t(
+                                  preview
+                                      ? "chart.savedRevision"
+                                      : "chart.publishedRevision",
+                                  { revision }
+                              )}`}
                         {" · "}
-                        {formatEditorTime(durationMs)}
+                        {formatEditorTime(playbackDurationMs)}
                     </p>
                 </div>
             </header>
@@ -149,7 +182,7 @@ export default function ChartSheetViewer({
             <section className="mx-auto mt-4 w-full max-w-7xl">
                 <div
                     role="tablist"
-                    aria-label="채보 보기 방식"
+                    aria-label={t("chart.viewMode")}
                     className="border-border bg-surface inline-flex rounded-md border p-1"
                 >
                     <button
@@ -164,7 +197,7 @@ export default function ChartSheetViewer({
                                 : "text-text-secondary hover:bg-surface-muted"
                         }`}
                     >
-                        낙하형
+                        {t("chart.falling")}
                     </button>
                     <button
                         type="button"
@@ -177,59 +210,55 @@ export default function ChartSheetViewer({
                                 : "text-text-secondary hover:bg-surface-muted"
                         }`}
                     >
-                        전체 악보
+                        {t("chart.sheet")}
                     </button>
                 </div>
 
                 <div className="border-border bg-surface text-caption flex items-start gap-2 rounded-md border px-3 py-2.5">
                     <Info className="mt-0.5 size-3.5 shrink-0" />
                     {browserSupport === "safari" ? (
-                        <p>
-                            Safari에서는 낙하형 뷰어를 지원하지 않아 전체 악보로
-                            표시합니다. 낙하형은 Chrome 또는 Edge에서
-                            확인해주세요.
-                        </p>
+                        <p>{t("chart.safariHelp")}</p>
                     ) : effectiveViewMode === "falling" ? (
-                        <p>
-                            노트가 판정선에 도착하는 흐름을 재생합니다. 로컬
-                            음원을 불러오면 브라우저에서만 사용되며 서버에는
-                            전송되지 않습니다.
-                        </p>
+                        <p>{t("chart.fallingHelp")}</p>
                     ) : (
-                        <p>
-                            각 열은 아래에서 위로 진행합니다. 화면을 가로로
-                            스크롤하면 곡 전체 채보를 순서대로 확인할 수
-                            있습니다.
-                        </p>
+                        <p>{t("chart.sheetHelp")}</p>
                     )}
                 </div>
 
                 <div className="mt-3 flex items-center gap-4 px-1 text-xs">
-                    <Legend color={handColors.left} label="왼손 안내" />
-                    <Legend color={handColors.right} label="오른손 안내" />
+                    <Legend
+                        color={handColors.left}
+                        label={t("chart.leftHand")}
+                    />
+                    <Legend
+                        color={handColors.right}
+                        label={t("chart.rightHand")}
+                    />
                     <span className="text-text-disabled ml-auto">
-                        28칸 · 열당 12초
+                        {t("chart.layout")}
                     </span>
                 </div>
             </section>
 
-            {document.notes.length === 0 ? (
-                <div className="border-border bg-surface text-text-secondary mx-auto mt-4 flex min-h-64 w-full max-w-7xl items-center justify-center rounded-md border text-sm">
-                    표시할 노트가 없습니다.
-                </div>
-            ) : browserSupport === "checking" ? (
+            {browserSupport === "checking" ? (
                 <div className="border-border bg-surface mx-auto mt-4 min-h-64 w-full max-w-7xl rounded-md border" />
             ) : effectiveViewMode === "falling" ? (
-                <section className="mx-auto mt-4 w-full max-w-5xl">
-                    <FallingChartViewer
-                        document={document}
-                        jacketUrl={jacketUrl}
-                    />
-                </section>
+                document.notes.length === 0 ? (
+                    <div className="border-border bg-surface text-text-secondary mx-auto mt-4 flex min-h-64 w-full max-w-7xl items-center justify-center rounded-md border text-sm">
+                        {t("chart.empty")}
+                    </div>
+                ) : (
+                    <section className="mx-auto mt-4 w-full max-w-5xl">
+                        <FallingChartViewer
+                            document={document}
+                            jacketUrl={jacketUrl}
+                        />
+                    </section>
+                )
             ) : (
                 <section
                     tabIndex={0}
-                    aria-label="전체 채보 가로 스크롤"
+                    aria-label={t("chart.sheetScroll")}
                     className="border-border bg-surface focus:border-text-secondary mt-4 overflow-x-auto rounded-lg border p-3 outline-none"
                 >
                     <div className="flex w-max gap-3">
@@ -240,6 +269,7 @@ export default function ChartSheetViewer({
                                 startMs={panel.startMs}
                                 endMs={panel.endMs}
                                 document={document}
+                                measureMarkers={measureMarkers}
                             />
                         ))}
                     </div>
@@ -266,12 +296,15 @@ function ChartSheetPanel({
     startMs,
     endMs,
     document,
+    measureMarkers,
 }: {
     index: number;
     startMs: number;
     endMs: number;
     document: ChartDocument;
+    measureMarkers: MeasureMarker[];
 }) {
+    const t = useTranslations();
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
     useEffect(() => {
@@ -283,13 +316,13 @@ function ChartSheetPanel({
         const context = canvas.getContext("2d");
         if (!context) return;
         context.setTransform(ratio, 0, 0, ratio, 0, 0);
-        drawPanel(context, { startMs, endMs, document });
-    }, [document, endMs, startMs]);
+        drawPanel(context, { startMs, endMs, document, measureMarkers });
+    }, [document, endMs, measureMarkers, startMs]);
 
     return (
         <figure className="shrink-0">
             <figcaption className="text-micro mb-1.5 flex items-center justify-between px-1">
-                <span>{index + 1}열</span>
+                <span>{t("chart.column", { count: index + 1 })}</span>
                 <span className="font-mono tabular-nums">
                     {formatEditorTime(startMs)}–{formatEditorTime(endMs)}
                 </span>
@@ -297,8 +330,12 @@ function ChartSheetPanel({
             <canvas
                 ref={canvasRef}
                 role="img"
-                aria-label={`${index + 1}열 ${formatEditorTime(startMs)}부터 ${formatEditorTime(endMs)}까지`}
-                className="border-border h-[720px] w-[220px] rounded-sm border"
+                aria-label={t("chart.columnAria", {
+                    count: index + 1,
+                    start: formatEditorTime(startMs),
+                    end: formatEditorTime(endMs),
+                })}
+                className="border-border h-[720px] w-[276px] rounded-sm border"
             />
         </figure>
     );
@@ -310,19 +347,22 @@ function drawPanel(
         startMs,
         endMs,
         document,
+        measureMarkers,
     }: {
         startMs: number;
         endMs: number;
         document: ChartDocument;
+        measureMarkers: MeasureMarker[];
     }
 ) {
     const chartHeight = PANEL_HEIGHT - PADDING_TOP - PADDING_BOTTOM;
-    const laneWidth = PANEL_WIDTH / CHART_LANE_COUNT;
+    const laneWidth = CHART_WIDTH / CHART_LANE_COUNT;
     const panelDuration = Math.max(1, endMs - startMs);
+    const chartBottom = PANEL_HEIGHT - PADDING_BOTTOM;
     const yForTime = (timeMs: number) =>
-        PANEL_HEIGHT -
-        PADDING_BOTTOM -
-        ((timeMs - startMs) / panelDuration) * chartHeight;
+        chartBottom - ((timeMs - startMs) / panelDuration) * chartHeight;
+    const yForMeasureTime = (timeMs: number) =>
+        Math.min(chartBottom - PANEL_MEASURE_EDGE_INSET, yForTime(timeMs));
 
     context.clearRect(0, 0, PANEL_WIDTH, PANEL_HEIGHT);
     context.fillStyle = "#0b0b10";
@@ -334,7 +374,7 @@ function drawPanel(
     context.clip();
 
     for (let lane = 0; lane <= CHART_LANE_COUNT; lane += 1) {
-        const x = lane * laneWidth + 0.5;
+        const x = MEASURE_GUTTER_WIDTH + lane * laneWidth + 0.5;
         const isGroupBoundary = isChartLaneGroupBoundary(lane);
         context.strokeStyle = isGroupBoundary ? "#343441" : "#20202a";
         context.lineWidth = isGroupBoundary ? 1 : 0.5;
@@ -351,11 +391,15 @@ function drawPanel(
         endMs
     );
     for (const beat of beats) {
-        const y = yForTime(beat.timeMs) + 0.5;
+        if (beat.timeMs >= endMs - PANEL_BOUNDARY_EPSILON_MS) continue;
+        const y =
+            (beat.accent
+                ? yForMeasureTime(beat.timeMs)
+                : yForTime(beat.timeMs)) + 0.5;
         context.strokeStyle = beat.accent ? "#656574" : "#2a2a34";
         context.lineWidth = beat.accent ? 1.2 : 0.7;
         context.beginPath();
-        context.moveTo(0, y);
+        context.moveTo(beat.accent ? 3 : MEASURE_GUTTER_WIDTH, y);
         context.lineTo(PANEL_WIDTH, y);
         context.stroke();
     }
@@ -371,11 +415,20 @@ function drawPanel(
             document.timingPoints,
             document.ticksPerQuarter
         );
-        if (noteEnd < startMs || noteStart > endMs) continue;
+        const hasDuration = noteEnd > noteStart + PANEL_BOUNDARY_EPSILON_MS;
+        const overlapsPanel = hasDuration
+            ? noteEnd > startMs + PANEL_BOUNDARY_EPSILON_MS &&
+              noteStart < endMs - PANEL_BOUNDARY_EPSILON_MS
+            : noteStart >= startMs - PANEL_BOUNDARY_EPSILON_MS &&
+              noteStart < endMs - PANEL_BOUNDARY_EPSILON_MS;
+        if (!overlapsPanel) continue;
         drawSheetNote(context, {
             note,
             laneWidth,
+            chartLeft: MEASURE_GUTTER_WIDTH,
             yForTime,
+            chartTop: PADDING_TOP,
+            chartBottom,
             document,
         });
     }
@@ -392,12 +445,65 @@ function drawPanel(
     context.fillStyle = "#8e8e9a";
     context.font = "10px ui-monospace, monospace";
     context.textBaseline = "middle";
-    context.fillText(formatEditorTime(endMs), 6, PADDING_TOP / 2);
     context.fillText(
-        formatEditorTime(startMs),
-        6,
-        PANEL_HEIGHT - PADDING_BOTTOM / 2
+        formatEditorTime(endMs),
+        MEASURE_GUTTER_WIDTH + 6,
+        PADDING_TOP / 2
     );
+    drawMeasureAnnotations(context, {
+        markers: measureMarkers,
+        startMs,
+        endMs,
+        yForMeasureTime,
+    });
+}
+
+function drawMeasureAnnotations(
+    context: CanvasRenderingContext2D,
+    {
+        markers,
+        startMs,
+        endMs,
+        yForMeasureTime,
+    }: {
+        markers: MeasureMarker[];
+        startMs: number;
+        endMs: number;
+        yForMeasureTime: (timeMs: number) => number;
+    }
+) {
+    const visibleMarkers = markers.filter(
+        (marker) =>
+            marker.timeMs >= startMs - PANEL_BOUNDARY_EPSILON_MS &&
+            marker.timeMs < endMs - PANEL_BOUNDARY_EPSILON_MS
+    );
+
+    context.save();
+    context.textAlign = "left";
+    for (const marker of visibleMarkers) {
+        const y = yForMeasureTime(marker.timeMs) + 0.5;
+        context.fillStyle = "#c2c2cc";
+        context.font = "600 8px ui-monospace, monospace";
+        context.textBaseline = "bottom";
+        context.fillText(String(marker.measureNumber), 4, y - 2);
+
+        let detailY = y + 2;
+        context.fillStyle = "#90909d";
+        context.font = "9px ui-monospace, monospace";
+        context.textBaseline = "top";
+        if (marker.showBpm) {
+            context.fillText(`BPM ${formatBpm(marker.bpm)}`, 4, detailY);
+            detailY += 10;
+        }
+        if (marker.showTimeSignature) {
+            context.fillText(
+                `${marker.numerator}/${marker.denominator}`,
+                4,
+                detailY
+            );
+        }
+    }
+    context.restore();
 }
 
 function drawSheetNote(
@@ -405,12 +511,18 @@ function drawSheetNote(
     {
         note,
         laneWidth,
+        chartLeft,
         yForTime,
+        chartTop,
+        chartBottom,
         document,
     }: {
         note: ChartNote;
         laneWidth: number;
+        chartLeft: number;
         yForTime: (timeMs: number) => number;
+        chartTop: number;
+        chartBottom: number;
         document: ChartDocument;
     }
 ) {
@@ -422,6 +534,16 @@ function drawSheetNote(
                 document.ticksPerQuarter
             )
         );
+    const yForRenderedTick = (tick: number) => {
+        const rawY = yForTick(tick);
+        return rawY >= chartTop - PANEL_BOUNDARY_EPSILON_MS &&
+            rawY <= chartBottom + PANEL_BOUNDARY_EPSILON_MS
+            ? Math.min(
+                  chartBottom - PANEL_NOTE_EDGE_INSET,
+                  Math.max(chartTop + PANEL_NOTE_EDGE_INSET, rawY)
+              )
+            : rawY;
+    };
     const drawHead = (
         lane: number,
         width: number,
@@ -431,8 +553,8 @@ function drawSheetNote(
     ) =>
         drawSheetCap(
             context,
-            lane * laneWidth,
-            yForTick(tick),
+            chartLeft + lane * laneWidth,
+            yForRenderedTick(tick),
             width * laneWidth,
             handColors[hand],
             small
@@ -469,34 +591,40 @@ function drawSheetNote(
             context.strokeStyle = "rgba(255,255,255,.42)";
             context.lineWidth = 0.7;
             context.beginPath();
-            context.moveTo(fromLane * laneWidth + 1, yForTick(startTick) - 1);
-            context.lineTo(
-                (fromLane + fromWidth) * laneWidth - 1,
-                yForTick(startTick) - 1
+            context.moveTo(
+                chartLeft + fromLane * laneWidth + 1,
+                yForRenderedTick(startTick) - 1
             );
             context.lineTo(
-                (toLane + toWidth) * laneWidth - 1,
-                yForTick(endTick) + 1
+                chartLeft + (fromLane + fromWidth) * laneWidth - 1,
+                yForRenderedTick(startTick) - 1
             );
-            context.lineTo(toLane * laneWidth + 1, yForTick(endTick) + 1);
+            context.lineTo(
+                chartLeft + (toLane + toWidth) * laneWidth - 1,
+                yForRenderedTick(endTick) + 1
+            );
+            context.lineTo(
+                chartLeft + toLane * laneWidth + 1,
+                yForRenderedTick(endTick) + 1
+            );
             context.closePath();
             context.fill();
             context.stroke();
             context.restore();
         }
         drawHead(note.lane, note.width, note.tick);
-        const centerX = (note.lane + note.width / 2) * laneWidth;
+        const centerX = chartLeft + (note.lane + note.width / 2) * laneWidth;
         drawSheetDiamond(
             context,
             centerX,
-            yForTick(note.tick) - 1,
+            yForRenderedTick(note.tick) - 1,
             3.3,
             "#f2c75c"
         );
         drawSheetDiamond(
             context,
             centerX + 5,
-            yForTick(note.tick) - 5,
+            yForRenderedTick(note.tick) - 5,
             2.4,
             "#f2c75c"
         );
@@ -513,16 +641,22 @@ function drawSheetNote(
         context.strokeStyle = handColors[second.hand];
         context.lineWidth = 0.8;
         context.beginPath();
-        context.moveTo(first.lane * laneWidth + 1, yForTick(first.tick));
-        context.lineTo(
-            (first.lane + first.width) * laneWidth - 1,
-            yForTick(first.tick)
+        context.moveTo(
+            chartLeft + first.lane * laneWidth + 1,
+            yForRenderedTick(first.tick)
         );
         context.lineTo(
-            (second.lane + second.width) * laneWidth - 1,
-            yForTick(second.tick)
+            chartLeft + (first.lane + first.width) * laneWidth - 1,
+            yForRenderedTick(first.tick)
         );
-        context.lineTo(second.lane * laneWidth + 1, yForTick(second.tick));
+        context.lineTo(
+            chartLeft + (second.lane + second.width) * laneWidth - 1,
+            yForRenderedTick(second.tick)
+        );
+        context.lineTo(
+            chartLeft + second.lane * laneWidth + 1,
+            yForRenderedTick(second.tick)
+        );
         context.closePath();
         context.fill();
         context.stroke();
@@ -531,12 +665,12 @@ function drawSheetNote(
         context.lineWidth = 0.9;
         context.beginPath();
         context.moveTo(
-            (first.lane + first.width / 2) * laneWidth,
-            yForTick(first.tick)
+            chartLeft + (first.lane + first.width / 2) * laneWidth,
+            yForRenderedTick(first.tick)
         );
         context.lineTo(
-            (second.lane + second.width / 2) * laneWidth,
-            yForTick(second.tick)
+            chartLeft + (second.lane + second.width / 2) * laneWidth,
+            yForRenderedTick(second.tick)
         );
         context.stroke();
         context.restore();
@@ -565,7 +699,7 @@ function drawSheetCap(
     handColor: string,
     small = false
 ) {
-    const height = small ? 4 : 6;
+    const height = small ? 3 : 4;
     const bevel = Math.min(3.5, Math.max(1, width * 0.08));
     const left = x + 1.5;
     const right = x + width - 1.5;
@@ -574,10 +708,10 @@ function drawSheetCap(
 
     context.save();
     context.shadowColor = handColor;
-    context.shadowBlur = 4;
+    context.shadowBlur = 2;
     context.fillStyle = "rgba(247,247,242,.96)";
     context.strokeStyle = handColor;
-    context.lineWidth = 1;
+    context.lineWidth = 0.7;
     context.beginPath();
     context.moveTo(left + bevel, top);
     context.lineTo(right - bevel, top);
@@ -591,6 +725,7 @@ function drawSheetCap(
     context.shadowBlur = 0;
     context.globalAlpha = 0.32;
     context.strokeStyle = handColor;
+    context.lineWidth = 0.6;
     context.beginPath();
     context.moveTo(left + bevel + 1, centerY + 1);
     context.lineTo(right - bevel - 1, centerY + 1);

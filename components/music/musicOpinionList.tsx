@@ -4,6 +4,11 @@ import { cn } from "@/lib/utils";
 import { ThumbsDown, ThumbsUp, Trash2 } from "lucide-react";
 import Link from "next/link";
 import type { EvaluationOpinion } from "./musicTierVoteTypes";
+import {
+    useLocale,
+    useLocalizedHref,
+    useTranslations,
+} from "@/components/i18n/localeProvider";
 
 interface MusicOpinionListProps {
     opinionCount: number;
@@ -13,8 +18,8 @@ interface MusicOpinionListProps {
     onDelete: (evaluationId: number) => void;
 }
 
-function formatDate(value: string) {
-    return new Intl.DateTimeFormat("ko-KR", {
+function formatDate(value: string, locale: string) {
+    return new Intl.DateTimeFormat(locale, {
         month: "2-digit",
         day: "2-digit",
     })
@@ -31,11 +36,17 @@ export default function MusicOpinionList({
     onReact,
     onDelete,
 }: MusicOpinionListProps) {
+    const locale = useLocale();
+    const localizedHref = useLocalizedHref();
+    const t = useTranslations();
+
     return (
         <section className="bg-surface rounded-card overflow-hidden">
             <header className="bg-surface-muted flex h-10 items-center px-4">
                 <h2 className="text-section">
-                    의견 {opinionCount.toLocaleString("ko-KR")}
+                    {t("music.opinion.title", {
+                        count: opinionCount.toLocaleString(locale),
+                    })}
                 </h2>
             </header>
             {opinions.length > 0 ? (
@@ -47,19 +58,26 @@ export default function MusicOpinionList({
                         >
                             <div className="flex items-center gap-2">
                                 <Link
-                                    href={`/profile/${opinion.user.id}`}
+                                    href={localizedHref(
+                                        `/profile/${opinion.user.id}`
+                                    )}
                                     className="text-text-primary text-sm font-bold"
                                 >
-                                    {opinion.user.username || "이름 없는 유저"}
+                                    {opinion.user.username ||
+                                        t("common.unnamedUser")}
                                 </Link>
                                 <span className="text-caption tabular-nums">
-                                    체감 {opinion.perceivedConstant.toFixed(1)}
+                                    {t("music.opinion.perceived", {
+                                        value: opinion.perceivedConstant.toFixed(
+                                            1
+                                        ),
+                                    })}
                                 </span>
                                 <time
                                     className="text-caption"
                                     dateTime={opinion.updatedAt}
                                 >
-                                    {formatDate(opinion.updatedAt)}
+                                    {formatDate(opinion.updatedAt, locale)}
                                 </time>
                             </div>
                             <p className="text-body mt-1">{opinion.comment}</p>
@@ -68,7 +86,7 @@ export default function MusicOpinionList({
                                     type="button"
                                     disabled={isPending}
                                     onClick={() => onReact(opinion.id, 1)}
-                                    aria-label="의견 추천"
+                                    aria-label={t("music.opinion.upvote")}
                                     className={cn(
                                         "flex h-8 items-center gap-1 rounded-md px-2 text-xs",
                                         opinion.viewerReaction === 1
@@ -83,7 +101,7 @@ export default function MusicOpinionList({
                                     type="button"
                                     disabled={isPending}
                                     onClick={() => onReact(opinion.id, -1)}
-                                    aria-label="의견 비추천"
+                                    aria-label={t("music.opinion.downvote")}
                                     className={cn(
                                         "flex h-8 items-center gap-1 rounded-md px-2 text-xs",
                                         opinion.viewerReaction === -1
@@ -99,8 +117,8 @@ export default function MusicOpinionList({
                                         type="button"
                                         disabled={isPending}
                                         onClick={() => onDelete(opinion.id)}
-                                        aria-label="내 투표와 의견 삭제"
-                                        title="내 투표와 의견 삭제"
+                                        aria-label={t("music.opinion.delete")}
+                                        title={t("music.opinion.delete")}
                                         className="text-text-secondary hover:bg-danger/15 hover:text-danger ml-auto flex size-8 items-center justify-center rounded-md disabled:opacity-50"
                                     >
                                         <Trash2 size={14} aria-hidden />
@@ -112,7 +130,7 @@ export default function MusicOpinionList({
                 </ol>
             ) : (
                 <p className="text-body-muted flex h-24 items-center justify-center">
-                    아직 등록된 의견이 없습니다.
+                    {t("music.opinion.empty")}
                 </p>
             )}
         </section>

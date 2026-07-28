@@ -14,6 +14,7 @@ import type {
     CommunityEvaluation,
     ConstantHistoryItem,
 } from "./musicTierVoteTypes";
+import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 
 interface MusicTierSummaryProps {
     tierConstant: number | null;
@@ -30,6 +31,8 @@ export default function MusicTierSummary({
     constantHistory,
     community,
 }: MusicTierSummaryProps) {
+    const locale = useLocale();
+    const t = useTranslations();
     const histogram = useMemo(() => {
         if (community.distribution.length === 0) return [];
 
@@ -74,7 +77,7 @@ export default function MusicTierSummary({
         <>
             <section className="bg-surface rounded-card p-4">
                 <header className="flex items-center gap-2">
-                    <h2 className="text-section">서열 상수 변동</h2>
+                    <h2 className="text-section">{t("music.tier.history")}</h2>
                     {tierConstant !== null ? (
                         <strong className="text-text-primary text-base tabular-nums">
                             {tierConstant.toFixed(1)}
@@ -122,7 +125,7 @@ export default function MusicTierSummary({
                                     }}
                                     formatter={(value) => [
                                         Number(value).toFixed(1),
-                                        "서열 상수",
+                                        t("music.tier.constant"),
                                     ]}
                                     labelFormatter={(value) =>
                                         formatMonth(String(value))
@@ -150,31 +153,35 @@ export default function MusicTierSummary({
                         <div className="text-text-disabled -mt-4 flex justify-between text-xs">
                             <span>
                                 {formatMonth(constantHistory[0].effectiveAt)}{" "}
-                                등재
+                                {t("music.tier.listed")}
                             </span>
                             <span>
                                 {formatMonth(
                                     constantHistory.at(-1)!.effectiveAt
                                 )}{" "}
-                                현재
+                                {t("music.tier.current")}
                             </span>
                         </div>
                     </div>
                 ) : (
                     <p className="text-body-muted flex h-20 items-center justify-center">
-                        등록된 서열 상수 이력이 없습니다.
+                        {t("music.tier.noHistory")}
                     </p>
                 )}
             </section>
 
             <section className="bg-surface rounded-card p-4">
                 <header className="flex items-baseline gap-2">
-                    <h2 className="text-section">커뮤니티 체감</h2>
+                    <h2 className="text-section">
+                        {t("music.tier.community")}
+                    </h2>
                     <strong className="text-real text-xl font-extrabold tabular-nums">
                         {community.average?.toFixed(2) ?? "-"}
                     </strong>
                     <span className="text-caption ml-auto">
-                        투표 {community.count.toLocaleString("ko-KR")}
+                        {t("music.tier.votes", {
+                            count: community.count.toLocaleString(locale),
+                        })}
                     </span>
                 </header>
                 {histogram.length > 0 ? (
@@ -223,7 +230,7 @@ export default function MusicTierSummary({
                     </div>
                 ) : (
                     <p className="text-body-muted flex h-14 items-center justify-center">
-                        아직 등록된 체감 난이도 투표가 없습니다.
+                        {t("music.tier.noVotes")}
                     </p>
                 )}
             </section>

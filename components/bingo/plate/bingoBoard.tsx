@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { useTranslations } from "@/components/i18n/localeProvider";
 
 import type { BingoCellItem } from "./bingoPlateTypes";
 import { getBingoCellLabel, getBingoLineCoordinates } from "./bingoPlateUtils";
@@ -23,6 +24,7 @@ export default function BingoBoard({
     selectedCellId,
     onSelect,
 }: BingoBoardProps) {
+    const t = useTranslations();
     return (
         <section className="relative grid grid-cols-5 gap-1">
             {cells.map((cell) => {
@@ -72,7 +74,7 @@ export default function BingoBoard({
                         )}
                         {isRich ? (
                             <span className="bg-score text-bg absolute -top-1 -right-1 rounded px-1 py-0.5 text-[9px] leading-none font-extrabold whitespace-nowrap">
-                                빙고 찬스
+                                {t("bingo.filter.chance")}
                             </span>
                         ) : null}
                     </button>

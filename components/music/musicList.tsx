@@ -7,10 +7,12 @@ import { cn } from "@/lib/utils";
 import MusicCard from "./musicCard";
 import MusicGridCard from "./musicGridCard";
 import type { ViewMode } from "./musicToolbar";
+import { useTranslations } from "@/components/i18n/localeProvider";
 
 export interface MusicItem {
     index: string;
     title: string;
+    localizedTitle: string | null;
     artist: string | null;
     category_short: string;
     background: string | null;
@@ -34,6 +36,7 @@ export default function MusicList({
     searchParams,
     viewMode,
 }: MusicListProps) {
+    const t = useTranslations();
     const [musics, setMusics] = useState<MusicItem[]>(initialPage.items);
     const [cursor, setCursor] = useState<string | null>(initialPage.nextCursor);
     const [isLoading, setIsLoading] = useState(false);
@@ -94,7 +97,7 @@ export default function MusicList({
                         viewMode === "grid" && "col-span-2"
                     )}
                 >
-                    조건에 맞는 악곡이 없습니다.
+                    {t("music.empty")}
                 </p>
             ) : null}
 
@@ -114,7 +117,7 @@ export default function MusicList({
                         viewMode === "grid" && "col-span-2"
                     )}
                 >
-                    {isLoading ? "로딩 중..." : "스크롤하면 계속 로드 ..."}
+                    {isLoading ? t("common.loading") : t("music.scrollForMore")}
                 </span>
             )}
         </section>

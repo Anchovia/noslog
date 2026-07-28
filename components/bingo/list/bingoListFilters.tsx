@@ -1,5 +1,7 @@
 import { cn } from "@/lib/utils";
 import { ArrowDown, ArrowUp } from "lucide-react";
+import { useTranslations } from "@/components/i18n/localeProvider";
+import type { MessageKey } from "@/lib/i18n/messages";
 
 import type {
     BingoSortDirection,
@@ -24,6 +26,16 @@ export default function BingoListFilters({
     onFilterChange,
     onSortDirectionChange,
 }: BingoListFiltersProps) {
+    const t = useTranslations();
+    const labelKeys: Record<BingoStatusFilter, MessageKey> = {
+        all: "bingo.filter.all",
+        progress: "bingo.filter.progress",
+        rich: "bingo.filter.chance",
+        completed: "bingo.filter.completed",
+    };
+    const nextOrder =
+        sortDirection === "desc" ? t("bingo.sort.low") : t("bingo.sort.high");
+
     return (
         <div className="flex items-center justify-between gap-2">
             <div className="flex min-w-0 items-center gap-1 overflow-x-auto">
@@ -43,7 +55,7 @@ export default function BingoListFilters({
                                     : "bg-surface text-text-secondary hover:bg-surface-muted hover:text-text-primary"
                             )}
                         >
-                            {item.label}
+                            {t(labelKeys[item.value])}
                             {count !== null ? ` ${count}` : ""}
                         </button>
                     );
@@ -53,14 +65,16 @@ export default function BingoListFilters({
                 type="button"
                 onClick={onSortDirectionChange}
                 className="text-caption hover:bg-surface-muted hover:text-text-primary focus-visible:ring-focus/40 flex h-8 shrink-0 cursor-pointer items-center gap-1 rounded px-1.5 transition-colors focus-visible:ring-2 focus-visible:outline-none"
-                aria-label={`진행률 ${sortDirection === "desc" ? "낮은 순" : "높은 순"}으로 변경`}
+                aria-label={t("bingo.sort.changeAria", {
+                    order: nextOrder,
+                })}
                 title={
                     sortDirection === "desc"
-                        ? "진행률 높은 순"
-                        : "진행률 낮은 순"
+                        ? t("bingo.sort.high")
+                        : t("bingo.sort.low")
                 }
             >
-                진행순
+                {t("bingo.sort.progress")}
                 {sortDirection === "desc" ? (
                     <ArrowDown className="size-3.5" />
                 ) : (

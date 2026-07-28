@@ -7,6 +7,8 @@ import {
     completeOnboarding,
 } from "@/app/(auth)/onboarding/actions";
 import { PROFILE_COUNTRIES } from "@/app/(nevigation)/profile/settings/schema";
+import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
+import type { MessageKey } from "@/lib/i18n/messages";
 
 const initialState: OnboardingActionState | null = null;
 
@@ -18,15 +20,23 @@ function FieldError({ messages }: { messages?: string[] }) {
 
 // 최초 로그인에 필요한 공개 프로필 정보를 한 번에 설정함
 export default function OnboardingForm() {
+    const locale = useLocale();
+    const t = useTranslations();
     const [state, action, isPending] = useActionState(
         completeOnboarding,
         initialState
     );
+    const countryLabelKeys: Record<string, MessageKey> = {
+        "ko-KR": "onboarding.country.kr",
+        "ja-JP": "onboarding.country.jp",
+        global: "onboarding.country.global",
+    };
 
     return (
         <form action={action} className="mt-8 flex w-full flex-col gap-5">
+            <input type="hidden" name="locale" value={locale} />
             <label className="text-text-secondary text-xs font-semibold">
-                NosLog 닉네임
+                {t("onboarding.nickname")}
                 <input
                     name="username"
                     type="text"
@@ -34,7 +44,7 @@ export default function OnboardingForm() {
                     maxLength={20}
                     required
                     autoFocus
-                    placeholder="1~20자 닉네임"
+                    placeholder={t("onboarding.nicknamePlaceholder")}
                     aria-invalid={Boolean(state?.fieldErrors?.username)}
                     className="border-border bg-surface text-input placeholder:text-text-disabled focus:border-focus focus:ring-focus/20 rounded-card mt-1.5 h-11 w-full border px-3 transition outline-none focus:ring-2"
                 />
@@ -43,7 +53,7 @@ export default function OnboardingForm() {
 
             <fieldset>
                 <legend className="text-text-secondary text-xs font-semibold">
-                    국가
+                    {t("onboarding.country")}
                 </legend>
                 <div className="mt-1.5 grid grid-cols-3 gap-2">
                     {PROFILE_COUNTRIES.map((country) => (
@@ -60,7 +70,7 @@ export default function OnboardingForm() {
                             />
                             <span className="text-sm">{country.code}</span>
                             <span className="mt-0.5 text-[11px] font-normal">
-                                {country.label}
+                                {t(countryLabelKeys[country.value])}
                             </span>
                         </label>
                     ))}
@@ -79,7 +89,7 @@ export default function OnboardingForm() {
                 disabled={isPending}
                 className="bg-text-primary text-bg hover:bg-text-primary/90 focus-visible:ring-focus/40 rounded-card flex h-12 cursor-pointer items-center justify-center text-sm font-bold transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
             >
-                {isPending ? "설정 중" : "NosLog 시작하기"}
+                {isPending ? t("onboarding.setting") : t("onboarding.start")}
             </button>
         </form>
     );

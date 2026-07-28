@@ -1,3 +1,7 @@
+import {
+    useLocalizedHref,
+    useTranslations,
+} from "@/components/i18n/localeProvider";
 import type {
     UserRankingMetric,
     UserRankingMode,
@@ -23,6 +27,8 @@ export default function UserRankingRow({
     metric,
     row,
 }: UserRankingRowProps) {
+    const t = useTranslations();
+    const localizedHref = useLocalizedHref();
     return (
         <li className="border-divider flex min-h-13 items-center gap-3 border-t px-3 first:border-t-0">
             <span
@@ -40,10 +46,10 @@ export default function UserRankingRow({
                         <CountryMark country={row.country} />
                     </span>
                     <Link
-                        href={`/profile/${row.id}`}
+                        href={localizedHref(`/profile/${row.id}`)}
                         className="text-text-primary min-w-0 truncate text-sm font-semibold"
                     >
-                        {row.username || "이름 없는 유저"}
+                        {row.username || t("common.unnamedUser")}
                     </Link>
                     <ExamBadge mode={mode} exam={row.exam} />
                 </div>

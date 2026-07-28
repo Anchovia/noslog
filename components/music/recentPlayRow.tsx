@@ -8,6 +8,7 @@ import { ChevronDown } from "lucide-react";
 import Image from "next/image";
 import { rankAssetNames } from "./musicDetailConfig";
 import type { RecentChartPlay } from "./musicDetailTypes";
+import { useTranslations } from "@/components/i18n/localeProvider";
 
 interface RecentPlayRowProps {
     play: RecentChartPlay;
@@ -22,6 +23,7 @@ const judgementRows = [
 ] as const;
 
 export default function RecentPlayRow({ play }: RecentPlayRowProps) {
+    const t = useTranslations();
     const rankName = rankAssetNames[play.rank.toUpperCase()];
     const scoreDifference = getBestScoreDifference(play.score, play.best_score);
     const timingBias = getTimingBias(play.fast_count, play.slow_count);
@@ -38,7 +40,10 @@ export default function RecentPlayRow({ play }: RecentPlayRowProps) {
         <li>
             <details className="group">
                 <summary
-                    aria-label={`${play.play_time} ${formatToComma(play.score)}점 플레이 상세`}
+                    aria-label={t("music.recent.detailLabel", {
+                        date: play.play_time,
+                        score: formatToComma(play.score),
+                    })}
                     className="hover:bg-surface-muted flex h-11 cursor-pointer list-none items-center gap-2 px-4 transition-colors [&::-webkit-details-marker]:hidden"
                 >
                     <time className="text-caption text-text-disabled w-[68px] shrink-0 tabular-nums">
@@ -48,7 +53,9 @@ export default function RecentPlayRow({ play }: RecentPlayRowProps) {
                         {rankName ? (
                             <Image
                                 src={`https://p.eagate.573.jp/game/nostalgia/op3/img/pdata/music_data/grade/grade_${rankName}.png`}
-                                alt={`${play.rank} 랭크`}
+                                alt={t("music.record.rankLabel", {
+                                    rank: play.rank,
+                                })}
                                 width={20}
                                 height={20}
                             />
@@ -117,7 +124,9 @@ export default function RecentPlayRow({ play }: RecentPlayRowProps) {
                     </div>
 
                     <div className="border-divider mt-3 border-t pt-3">
-                        <h3 className="text-caption font-semibold">판정</h3>
+                        <h3 className="text-caption font-semibold">
+                            {t("music.recent.judgement")}
+                        </h3>
                         {hasJudgements ? (
                             <dl className="mt-2 grid grid-cols-5 gap-1 text-center">
                                 {judgementRows.map((row) => (
@@ -138,8 +147,7 @@ export default function RecentPlayRow({ play }: RecentPlayRowProps) {
                             </dl>
                         ) : (
                             <p className="text-caption mt-2">
-                                다시 연동하면 플레이별 판정을 확인할 수
-                                있습니다.
+                                {t("music.recent.syncRequired")}
                             </p>
                         )}
                     </div>

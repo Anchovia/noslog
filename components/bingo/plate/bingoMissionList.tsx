@@ -1,4 +1,8 @@
 import { cn } from "@/lib/utils";
+import {
+    useLocalizedHref,
+    useTranslations,
+} from "@/components/i18n/localeProvider";
 import { Check, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import BingoTermHelp from "../bingoTermHelp";
@@ -6,7 +10,7 @@ import BingoTermHelp from "../bingoTermHelp";
 import type { BingoCellItem } from "./bingoPlateTypes";
 import {
     getBingoCellLabel,
-    getBingoMissionDescription,
+    getBingoMissionDescriptionKey,
     getBingoMissionLink,
 } from "./bingoPlateUtils";
 
@@ -32,6 +36,8 @@ export default function BingoMissionList({
     onSelect,
     onToggle,
 }: BingoMissionListProps) {
+    const t = useTranslations();
+    const localizedHref = useLocalizedHref();
     return (
         <section className="bg-surface rounded-card overflow-hidden">
             {cells.length > 0 ? (
@@ -73,20 +79,27 @@ export default function BingoMissionList({
                                 >
                                     <BingoTermHelp text={cell.challenge} />
                                 </p>
+                                {cell.localizedMusicTitle ? (
+                                    <p className="text-micro mt-0.5 truncate">
+                                        {cell.localizedMusicTitle}
+                                    </p>
+                                ) : null}
                                 <div className="text-caption mt-0.5 flex items-center gap-2">
                                     <span>
-                                        {getBingoMissionDescription(
-                                            cell,
-                                            isCompleted,
-                                            isRich
+                                        {t(
+                                            getBingoMissionDescriptionKey(
+                                                cell,
+                                                isCompleted,
+                                                isRich
+                                            )
                                         )}
                                     </span>
                                     {missionLink ? (
                                         <Link
-                                            href={missionLink}
+                                            href={localizedHref(missionLink)}
                                             className="hover:text-text-primary inline-flex items-center gap-0.5 underline"
                                         >
-                                            이동
+                                            {t("bingo.move")}
                                             <ExternalLink className="size-3" />
                                         </Link>
                                     ) : null}
@@ -99,7 +112,12 @@ export default function BingoMissionList({
                                     onToggle(cell.id);
                                 }}
                                 disabled={!canEdit || isPending}
-                                aria-label={`${cell.challenge} ${isCompleted ? "완료 해제" : "완료 처리"}`}
+                                aria-label={t(
+                                    isCompleted
+                                        ? "bingo.uncompleteAria"
+                                        : "bingo.completeAria",
+                                    { challenge: cell.challenge }
+                                )}
                                 className={cn(
                                     "border-border flex size-7 shrink-0 items-center justify-center rounded-full border disabled:cursor-not-allowed",
                                     isCompleted &&
@@ -115,7 +133,7 @@ export default function BingoMissionList({
                 })
             ) : (
                 <div className="text-caption flex min-h-24 items-center justify-center px-4 text-center">
-                    해당 상태의 미션이 없습니다.
+                    {t("bingo.noMissions")}
                 </div>
             )}
         </section>

@@ -1,4 +1,5 @@
 import { formatToComma } from "@/lib/utils";
+import { useTranslations } from "@/components/i18n/localeProvider";
 
 import type { ProfileUser } from "./profileTypes";
 import { formatProfileGrade, getProfileCountryCode } from "./profileUtils";
@@ -17,10 +18,12 @@ export default function ProfileSummary({
     globalRank,
     countryRank,
 }: ProfileSummaryProps) {
+    const t = useTranslations();
+
     return (
         <section className="grid grid-cols-2 gap-2">
             <article className="bg-surface rounded-card flex min-w-0 flex-col justify-center p-4">
-                <p className="text-caption">그레이드</p>
+                <p className="text-caption">{t("profile.grade")}</p>
                 <p className="mt-1 flex items-baseline gap-1.5 tabular-nums">
                     <strong className="text-score-display text-score">
                         {formatProfileGrade(grade)}
@@ -31,7 +34,7 @@ export default function ProfileSummary({
                 </p>
             </article>
             <article className="bg-surface rounded-card flex min-w-0 flex-col justify-center p-4">
-                <p className="text-caption">순위</p>
+                <p className="text-caption">{t("profile.rank")}</p>
                 <p className="text-text-primary mt-1 text-2xl leading-none font-black tabular-nums">
                     {globalRank ? `#${formatToComma(globalRank)}` : "-"}
                 </p>
@@ -42,7 +45,7 @@ export default function ProfileSummary({
                     <span>
                         {countryRank
                             ? `#${formatToComma(countryRank)}`
-                            : "순위 없음"}
+                            : t("profile.noRank")}
                     </span>
                 </p>
             </article>

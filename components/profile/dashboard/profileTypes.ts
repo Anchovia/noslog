@@ -48,7 +48,11 @@ export interface BestPlayItem {
     fc_type: number;
     grade_basic?: number;
     grade_recital?: number;
-    music: { title: string; background: string | null };
+    music: {
+        title: string;
+        localizedTitle?: string | null;
+        background: string | null;
+    };
 }
 
 export interface RecentPlayItem {
@@ -60,7 +64,11 @@ export interface RecentPlayItem {
     difficulty: string;
     level: number;
     music_idx: string;
-    music: { title: string; background: string | null };
+    music: {
+        title: string;
+        localizedTitle?: string | null;
+        background: string | null;
+    };
 }
 
 export interface ProfileDashboardProps {

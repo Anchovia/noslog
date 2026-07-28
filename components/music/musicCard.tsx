@@ -1,5 +1,9 @@
 import Link from "next/link";
 
+import {
+    useLocalizedHref,
+    useTranslations,
+} from "@/components/i18n/localeProvider";
 import { cn } from "@/lib/utils";
 import MusicJacket from "./musicJacket";
 
@@ -8,6 +12,7 @@ type Difficulty = "Normal" | "Hard" | "Expert" | "Real";
 interface MusicCardProps {
     index: string;
     title: string;
+    localizedTitle: string | null;
     artist: string | null;
     background: string | null;
     category_short: string;
@@ -74,14 +79,19 @@ const difficultyBadges: {
 ];
 
 export default function MusicCard(props: MusicCardProps) {
-    const { index, title, artist, background, category_short } = props;
+    const { index, title, localizedTitle, artist, background, category_short } =
+        props;
+    const localizedHref = useLocalizedHref();
+    const t = useTranslations();
     const categoryClassName = categoryStyle[category_short] ?? {
         text: "text-text-secondary",
     };
     const defaultDifficulty: Difficulty = "Normal";
     return (
         <Link
-            href={`/music/${index}/${defaultDifficulty.toLowerCase()}`}
+            href={localizedHref(
+                `/music/${index}/${defaultDifficulty.toLowerCase()}`
+            )}
             className="bg-surface rounded-card hover:bg-surface-muted flex min-h-16 w-full overflow-hidden transition-colors"
         >
             <MusicJacket
@@ -93,12 +103,17 @@ export default function MusicCard(props: MusicCardProps) {
 
             <div className="flex min-w-0 flex-1 items-center justify-between gap-3 px-3 py-2.5">
                 <div className="flex min-w-0 flex-col gap-1">
+                    {localizedTitle ? (
+                        <p className="text-caption truncate">
+                            {localizedTitle}
+                        </p>
+                    ) : null}
                     <h2 className="text-text-primary truncate text-sm leading-snug font-semibold">
                         {title}
                     </h2>
                     <p className="flex min-w-0 items-center text-xs leading-normal">
                         <span className="text-text-secondary truncate">
-                            {artist || "아티스트 미상"}
+                            {artist || t("music.unknownArtist")}
                         </span>
                         <span className="text-text-disabled shrink-0"> · </span>
                         <span

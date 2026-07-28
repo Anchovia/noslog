@@ -1,13 +1,17 @@
 "use client";
 
-import { Gauge, Pause, Play, RotateCcw, Upload } from "lucide-react";
+import { Gauge, Pause, Play, RotateCcw, Upload, Volume2 } from "lucide-react";
 import { type ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import type { Application, Graphics } from "pixi.js";
 
+import { useTranslations } from "@/components/i18n/localeProvider";
+import { getMetronomePeakGain } from "@/lib/chart-pattern/metronome";
+import { chartPianoColors } from "@/lib/chart-pattern/piano";
 import {
     getActivePlaybackPianoRanges,
     getApproachDurationMs,
     getChartPlaybackDurationMs,
+    getPlaybackVisualScale,
     getPlaybackRibbonVisibleEndMs,
     prepareChartPlaybackNotes,
     projectPlaybackLane,
@@ -22,8 +26,10 @@ import {
     type ChartDocument,
     type ChartHand,
 } from "@/lib/chart-pattern/schema";
-import { formatEditorTime } from "@/lib/chart-pattern/timing";
+import { formatEditorTime, getBeatMarkers } from "@/lib/chart-pattern/timing";
 
+import { useMetronomeVolume } from "./useMetronomeVolume";
+import { useStrictPerformance } from "./useStrictPerformance";
 interface FallingChartViewerProps {
     document: ChartDocument;
     jacketUrl: string | null;
@@ -49,11 +55,6 @@ const colors = {
     judgment: 0xf2f0e9,
     judgmentEdge: 0x8f929d,
     guideStrong: 0x727786,
-    pianoWhite: 0xe7e6e1,
-    pianoWhiteAlt: 0xd2d4d4,
-    pianoBlack: 0x161820,
-    pianoPressedLeft: 0x91e5ef,
-    pianoPressedRight: 0xf3a2a2,
 };
 
 function colorForHand(hand: ChartHand) {
@@ -130,10 +131,14 @@ function capPolygon(
     left: number,
     right: number,
     centerY: number,
-    height: number
+    height: number,
+    visualScale: number
 ) {
     const width = Math.max(2, right - left);
-    const bevel = Math.min(8, Math.max(2, width * 0.08));
+    const bevel = Math.min(
+        8 * visualScale,
+        Math.max(2 * visualScale, width * 0.08)
+    );
     return [
         left + bevel,
         centerY - height / 2,
@@ -155,57 +160,74 @@ function drawPlaybackCap(
     projected: ProjectedRange,
     hand: ChartHand,
     alpha: number,
+    visualScale: number,
     small = false
 ) {
-    const height = (small ? 6 : 10) + projected.depth * (small ? 3 : 5);
+    const height =
+        ((small ? 6 : 10) + projected.depth * (small ? 3 : 5)) * visualScale;
     const handColor = colorForHand(hand);
     graphics
         .poly(
             capPolygon(
-                projected.left - 2,
-                projected.right + 2,
+                projected.left - 2 * visualScale,
+                projected.right + 2 * visualScale,
                 projected.y,
-                height + 5
+                height + 5 * visualScale,
+                visualScale
             ),
             true
         )
         .fill({ color: handColor, alpha: alpha * 0.2 });
     graphics
         .poly(
-            capPolygon(projected.left, projected.right, projected.y, height),
+            capPolygon(
+                projected.left,
+                projected.right,
+                projected.y,
+                height,
+                visualScale
+            ),
             true
         )
         .fill({ color: colors.noteFace, alpha })
-        .stroke({ color: handColor, width: 1.5, alpha });
+        .stroke({ color: handColor, width: 1.5 * visualScale, alpha });
     graphics
-        .moveTo(projected.left + 5, projected.y + 1)
-        .lineTo(projected.right - 5, projected.y + 1)
-        .stroke({ color: handColor, width: 1, alpha: alpha * 0.45 });
+        .moveTo(projected.left + 5 * visualScale, projected.y + visualScale)
+        .lineTo(projected.right - 5 * visualScale, projected.y + visualScale)
+        .stroke({
+            color: handColor,
+            width: visualScale,
+            alpha: alpha * 0.45,
+        });
 }
 
 function drawHitGlow(
     graphics: Graphics,
     projected: ProjectedRange,
     hand: ChartHand,
-    distanceMs: number
+    distanceMs: number,
+    visualScale: number
 ) {
     if (Math.abs(distanceMs) > 95) return;
     const strength = 1 - Math.abs(distanceMs) / 95;
     const noteWidth = projected.right - projected.left;
-    const glowWidth = Math.min(48, Math.max(12, noteWidth * 0.45));
+    const glowWidth = Math.min(
+        48 * visualScale,
+        Math.max(12 * visualScale, noteWidth * 0.45)
+    );
     graphics
         .ellipse(
             projected.center,
             projected.y,
             glowWidth * (1 + strength * 0.15),
-            8 + strength * 10
+            (8 + strength * 10) * visualScale
         )
         .fill({
             color: colorForHand(hand),
             alpha: 0.1 + strength * 0.18,
         });
     graphics
-        .circle(projected.center, projected.y, 3 + strength * 5)
+        .circle(projected.center, projected.y, (3 + strength * 5) * visualScale)
         .fill({ color: colors.noteFace, alpha: strength * 0.42 });
 }
 
@@ -213,29 +235,40 @@ function drawRibbon(
     graphics: Graphics,
     points: ProjectedRange[],
     hand: ChartHand,
+    visualScale: number,
     alpha = 0.62
 ) {
     if (points.length < 2) return;
     const leftEdge = points.flatMap((point) => {
-        const inset = Math.min(2, (point.right - point.left) * 0.08);
+        const inset = Math.min(
+            2 * visualScale,
+            (point.right - point.left) * 0.08
+        );
         return [point.left + inset, point.y];
     });
     const rightEdge = [...points].reverse().flatMap((point) => {
-        const inset = Math.min(2, (point.right - point.left) * 0.08);
+        const inset = Math.min(
+            2 * visualScale,
+            (point.right - point.left) * 0.08
+        );
         return [point.right - inset, point.y];
     });
     const handColor = colorForHand(hand);
     graphics
         .poly([...leftEdge, ...rightEdge], true)
         .fill({ color: handColor, alpha })
-        .stroke({ color: handColor, width: 1, alpha: alpha * 0.9 });
+        .stroke({
+            color: handColor,
+            width: visualScale,
+            alpha: alpha * 0.9,
+        });
     graphics.moveTo(points[0].center, points[0].y);
     for (let index = 1; index < points.length; index += 1) {
         graphics.lineTo(points[index].center, points[index].y);
     }
     graphics.stroke({
         color: colors.noteFace,
-        width: 1.1,
+        width: 1.1 * visualScale,
         alpha: alpha * 0.72,
     });
 }
@@ -299,7 +332,8 @@ function drawPiano(
     height: number,
     judgmentY: number,
     currentTimeMs: number,
-    notes: PreparedPlaybackNote[]
+    notes: PreparedPlaybackNote[],
+    strictPerformance: boolean
 ) {
     const left = width * 0.03;
     const right = width * 0.97;
@@ -308,7 +342,11 @@ function drawPiano(
     const laneWidth = (right - left) / CHART_LANE_COUNT;
     const activeLaneHands = new Map<number, ChartHand>();
 
-    for (const range of getActivePlaybackPianoRanges(notes, currentTimeMs)) {
+    for (const range of getActivePlaybackPianoRanges(
+        notes,
+        currentTimeMs,
+        strictPerformance
+    )) {
         for (
             let lane = Math.floor(range.lane);
             lane < Math.ceil(range.lane + range.width);
@@ -329,12 +367,12 @@ function drawPiano(
             .fill({
                 color:
                     activeHand === "left"
-                        ? colors.pianoPressedLeft
+                        ? chartPianoColors.pressedLeft
                         : activeHand === "right"
-                          ? colors.pianoPressedRight
+                          ? chartPianoColors.pressedRight
                           : lane % 2 === 0
-                            ? colors.pianoWhite
-                            : colors.pianoWhiteAlt,
+                            ? chartPianoColors.white
+                            : chartPianoColors.whiteAlt,
                 alpha: activeHand === undefined ? 0.96 : 0.9,
             })
             .stroke({ color: 0x565a63, width: 0.65, alpha: 0.7 });
@@ -351,7 +389,7 @@ function drawPiano(
                 laneWidth * 0.44,
                 (pianoBottom - pianoTop) * 0.56
             )
-            .fill({ color: colors.pianoBlack, alpha: 0.98 });
+            .fill({ color: chartPianoColors.black, alpha: 0.98 });
     }
 }
 
@@ -380,6 +418,7 @@ function drawPreparedNote({
     width,
     horizonY,
     judgmentY,
+    visualScale,
 }: {
     graphics: Graphics;
     note: PreparedPlaybackNote;
@@ -388,6 +427,7 @@ function drawPreparedNote({
     width: number;
     horizonY: number;
     judgmentY: number;
+    visualScale: number;
 }) {
     const visibleEnd =
         note.type === "standard"
@@ -419,9 +459,10 @@ function drawPreparedNote({
             graphics,
             projected,
             point.hand,
-            point.timeMs - currentTimeMs
+            point.timeMs - currentTimeMs,
+            visualScale
         );
-        drawPlaybackCap(graphics, projected, point.hand, alpha);
+        drawPlaybackCap(graphics, projected, point.hand, alpha, visualScale);
         return;
     }
 
@@ -441,6 +482,7 @@ function drawPreparedNote({
                 graphics,
                 sampleProjectedSegment(first, second, project),
                 note.hand,
+                visualScale,
                 0.74
             );
         }
@@ -456,9 +498,10 @@ function drawPreparedNote({
                 graphics,
                 projected,
                 point.hand,
-                point.timeMs - currentTimeMs
+                point.timeMs - currentTimeMs,
+                visualScale
             );
-            drawPlaybackCap(graphics, projected, point.hand, 0.98);
+            drawPlaybackCap(graphics, projected, point.hand, 0.98, visualScale);
         }
         return;
     }
@@ -475,6 +518,7 @@ function drawPreparedNote({
             graphics,
             sampleProjectedSegment(clipped.first, clipped.second, project),
             clipped.first.hand,
+            visualScale,
             note.type === "glissando" ? 0.7 : 0.62
         );
     }
@@ -493,13 +537,15 @@ function drawPreparedNote({
             graphics,
             projected,
             point.hand,
-            point.timeMs - currentTimeMs
+            point.timeMs - currentTimeMs,
+            visualScale
         );
         drawPlaybackCap(
             graphics,
             projected,
             point.hand,
             0.98,
+            visualScale,
             note.type === "glissando" &&
                 point.timeMs !== note.startTimeMs &&
                 point.timeMs !== note.endTimeMs
@@ -514,6 +560,7 @@ function renderPlaybackFrame({
     approachDurationMs,
     width,
     height,
+    strictPerformance,
 }: {
     graphics: Graphics;
     notes: PreparedPlaybackNote[];
@@ -521,9 +568,11 @@ function renderPlaybackFrame({
     approachDurationMs: number;
     width: number;
     height: number;
+    strictPerformance: boolean;
 }) {
     const horizonY = Math.max(40, height * 0.12);
     const judgmentY = height * 0.79;
+    const visualScale = getPlaybackVisualScale(width);
     graphics.clear();
     drawPlayfield(graphics, width, height, horizonY, judgmentY);
 
@@ -536,10 +585,19 @@ function renderPlaybackFrame({
             width,
             horizonY,
             judgmentY,
+            visualScale,
         });
     }
 
-    drawPiano(graphics, width, height, judgmentY, currentTimeMs, notes);
+    drawPiano(
+        graphics,
+        width,
+        height,
+        judgmentY,
+        currentTimeMs,
+        notes,
+        strictPerformance
+    );
     drawJudgmentLine(graphics, width, judgmentY);
 }
 
@@ -547,6 +605,7 @@ export default function FallingChartViewer({
     document,
     jacketUrl,
 }: FallingChartViewerProps) {
+    const t = useTranslations();
     const hostRef = useRef<HTMLDivElement | null>(null);
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const objectUrlRef = useRef<string | null>(null);
@@ -554,12 +613,18 @@ export default function FallingChartViewer({
     const currentTimeRef = useRef(0);
     const durationRef = useRef(getChartPlaybackDurationMs(document));
     const noteSpeedRef = useRef(2);
+    const strictPerformanceRef = useRef(false);
     const clockAnchorRef = useRef<PlaybackClockAnchor | null>(null);
     const lastUiUpdateRef = useRef(0);
+    const metronomeContextRef = useRef<AudioContext | null>(null);
+    const scheduledThroughMsRef = useRef(0);
     const [currentTimeMs, setCurrentTimeMs] = useState(0);
     const [audioDurationMs, setAudioDurationMs] = useState(0);
     const [isPlaying, setIsPlaying] = useState(false);
     const [noteSpeed, setNoteSpeed] = useState(2);
+    const [metronomeEnabled, setMetronomeEnabled] = useState(false);
+    const [metronomeVolume, setMetronomeVolume] = useMetronomeVolume();
+    const [strictPerformance, setStrictPerformance] = useStrictPerformance();
     const [fileName, setFileName] = useState<string | null>(null);
     const [audioError, setAudioError] = useState<string | null>(null);
     const preparedNotes = useMemo(
@@ -579,6 +644,10 @@ export default function FallingChartViewer({
     useEffect(() => {
         noteSpeedRef.current = noteSpeed;
     }, [noteSpeed]);
+
+    useEffect(() => {
+        strictPerformanceRef.current = strictPerformance;
+    }, [strictPerformance]);
 
     useEffect(() => {
         const host = hostRef.current;
@@ -639,6 +708,7 @@ export default function FallingChartViewer({
                     ),
                     width: application.screen.width,
                     height: application.screen.height,
+                    strictPerformance: strictPerformanceRef.current,
                 });
             });
         })();
@@ -655,9 +725,87 @@ export default function FallingChartViewer({
             if (objectUrlRef.current) {
                 URL.revokeObjectURL(objectUrlRef.current);
             }
+            void metronomeContextRef.current?.close();
+            metronomeContextRef.current = null;
         },
         []
     );
+
+    useEffect(() => {
+        if (!isPlaying || !metronomeEnabled) return;
+
+        const interval = window.setInterval(() => {
+            const context = metronomeContextRef.current;
+            if (!context) return;
+
+            const audio = audioRef.current;
+            let playbackTimeMs = currentTimeRef.current;
+            if (audio && fileName && !audio.paused) {
+                playbackTimeMs = audio.currentTime * 1_000;
+            } else if (clockAnchorRef.current) {
+                playbackTimeMs =
+                    clockAnchorRef.current.offsetMs +
+                    (performance.now() - clockAnchorRef.current.startedAt);
+            }
+
+            const startMs = Math.max(
+                playbackTimeMs,
+                scheduledThroughMsRef.current
+            );
+            const endMs = playbackTimeMs + 180;
+            const beats = getBeatMarkers(
+                document.timingPoints,
+                document.ticksPerQuarter,
+                startMs,
+                endMs
+            );
+
+            for (const beat of beats) {
+                const peakGain = getMetronomePeakGain(
+                    metronomeVolume,
+                    beat.accent
+                );
+                if (peakGain <= 0) continue;
+                const scheduledTime = Math.max(
+                    context.currentTime,
+                    context.currentTime + (beat.timeMs - playbackTimeMs) / 1_000
+                );
+                const oscillator = context.createOscillator();
+                const gain = context.createGain();
+                oscillator.frequency.value = beat.accent ? 1_320 : 880;
+                gain.gain.setValueAtTime(0.0001, scheduledTime);
+                gain.gain.exponentialRampToValueAtTime(
+                    peakGain,
+                    scheduledTime + 0.002
+                );
+                gain.gain.exponentialRampToValueAtTime(
+                    0.0001,
+                    scheduledTime + 0.045
+                );
+                oscillator.connect(gain);
+                gain.connect(context.destination);
+                oscillator.start(scheduledTime);
+                oscillator.stop(scheduledTime + 0.05);
+            }
+            scheduledThroughMsRef.current = endMs + 0.001;
+        }, 40);
+
+        return () => window.clearInterval(interval);
+    }, [
+        document.ticksPerQuarter,
+        document.timingPoints,
+        fileName,
+        isPlaying,
+        metronomeEnabled,
+        metronomeVolume,
+    ]);
+
+    function getMetronomeContext() {
+        if (!metronomeContextRef.current) {
+            metronomeContextRef.current = new AudioContext();
+        }
+        return metronomeContextRef.current;
+    }
 
     function pausePlayback() {
         const audio = audioRef.current;
@@ -679,6 +827,10 @@ export default function FallingChartViewer({
         if (currentTimeRef.current >= durationRef.current - 10) {
             seek(0);
         }
+        if (metronomeEnabled) {
+            await getMetronomeContext().resume();
+        }
+        scheduledThroughMsRef.current = currentTimeRef.current - 1;
         const audio = audioRef.current;
         if (audio && fileName) {
             audio.currentTime = Math.min(
@@ -688,7 +840,7 @@ export default function FallingChartViewer({
             try {
                 await audio.play();
             } catch {
-                setAudioError("브라우저에서 이 음원을 재생할 수 없습니다.");
+                setAudioError(t("chart.audioError"));
                 return;
             }
         } else {
@@ -704,6 +856,7 @@ export default function FallingChartViewer({
     function seek(nextTimeMs: number) {
         const next = Math.min(durationRef.current, Math.max(0, nextTimeMs));
         currentTimeRef.current = next;
+        scheduledThroughMsRef.current = next - 1;
         setCurrentTimeMs(next);
         const audio = audioRef.current;
         if (audio && fileName && Number.isFinite(audio.duration)) {
@@ -715,6 +868,14 @@ export default function FallingChartViewer({
                 offsetMs: next,
             };
         }
+    }
+
+    async function updateMetronomeEnabled(enabled: boolean) {
+        if (enabled) {
+            await getMetronomeContext().resume();
+            scheduledThroughMsRef.current = currentTimeRef.current - 1;
+        }
+        setMetronomeEnabled(enabled);
     }
 
     function loadAudio(event: ChangeEvent<HTMLInputElement>) {
@@ -755,7 +916,9 @@ export default function FallingChartViewer({
                 <div
                     ref={hostRef}
                     role="img"
-                    aria-label={`28칸 낙하형 채보. 현재 ${formatEditorTime(currentTimeMs)}`}
+                    aria-label={t("chart.fallingAria", {
+                        time: formatEditorTime(currentTimeMs),
+                    })}
                     className="absolute inset-0"
                 />
             </div>
@@ -768,7 +931,9 @@ export default function FallingChartViewer({
                             isPlaying ? pausePlayback() : void startPlayback()
                         }
                         className="bg-text-primary text-bg flex size-10 shrink-0 items-center justify-center rounded-full"
-                        aria-label={isPlaying ? "일시정지" : "재생"}
+                        aria-label={
+                            isPlaying ? t("chart.pause") : t("chart.play")
+                        }
                     >
                         {isPlaying ? (
                             <Pause className="size-4" fill="currentColor" />
@@ -786,7 +951,7 @@ export default function FallingChartViewer({
                             seek(0);
                         }}
                         className="border-border hover:bg-surface-muted flex size-9 shrink-0 items-center justify-center rounded-md border"
-                        aria-label="처음으로 이동"
+                        aria-label={t("chart.restart")}
                     >
                         <RotateCcw className="size-3.5" />
                     </button>
@@ -800,7 +965,7 @@ export default function FallingChartViewer({
                         step="10"
                         value={Math.min(currentTimeMs, durationMs)}
                         onChange={(event) => seek(Number(event.target.value))}
-                        aria-label="채보 재생 위치"
+                        aria-label={t("chart.position")}
                         className="accent-primary min-w-0 flex-1"
                     />
                     <span className="text-caption w-14 shrink-0 font-mono tabular-nums">
@@ -811,7 +976,7 @@ export default function FallingChartViewer({
                 <div className="mt-3 flex flex-wrap items-center gap-2">
                     <label className="border-border hover:bg-surface-muted flex h-9 cursor-pointer items-center gap-1.5 rounded-md border px-3 text-xs font-semibold">
                         <Upload className="size-3.5" />
-                        로컬 음원
+                        {t("chart.localAudio")}
                         <input
                             type="file"
                             accept="audio/mpeg,audio/ogg,audio/wav,audio/flac,audio/mp4"
@@ -821,14 +986,16 @@ export default function FallingChartViewer({
                     </label>
                     <label className="border-border flex h-9 items-center gap-2 rounded-md border px-3 text-xs">
                         <Gauge className="text-text-secondary size-3.5" />
-                        <span className="text-text-secondary">노트 속도</span>
+                        <span className="text-text-secondary">
+                            {t("chart.noteSpeed")}
+                        </span>
                         <select
                             value={noteSpeed}
                             onChange={(event) =>
                                 setNoteSpeed(Number(event.target.value))
                             }
                             className="bg-transparent font-semibold outline-none"
-                            aria-label="노트 속도"
+                            aria-label={t("chart.noteSpeed")}
                         >
                             {Array.from({ length: 31 }, (_, index) => {
                                 const value = 1 + index * 0.1;
@@ -844,9 +1011,53 @@ export default function FallingChartViewer({
                             })}
                         </select>
                     </label>
+                    <label className="border-border hover:bg-surface-muted flex h-9 items-center gap-2 rounded-md border px-3 text-xs font-semibold">
+                        <input
+                            type="checkbox"
+                            checked={metronomeEnabled}
+                            onChange={(event) =>
+                                void updateMetronomeEnabled(
+                                    event.target.checked
+                                )
+                            }
+                            className="accent-text-primary size-3.5"
+                        />
+                        {t("chart.metronome")}
+                    </label>
+                    <label className="border-border flex h-9 items-center gap-1.5 rounded-md border px-2">
+                        <Volume2
+                            className="text-text-secondary size-3.5"
+                            aria-hidden
+                        />
+                        <input
+                            type="range"
+                            min="0"
+                            max="100"
+                            step="5"
+                            value={metronomeVolume}
+                            onChange={(event) =>
+                                setMetronomeVolume(Number(event.target.value))
+                            }
+                            aria-label={t("chart.metronomeVolume")}
+                            className="accent-text-primary w-20"
+                        />
+                        <span className="text-micro w-8 text-right tabular-nums">
+                            {metronomeVolume}%
+                        </span>
+                    </label>
+                    <label className="border-border hover:bg-surface-muted flex h-9 items-center gap-2 rounded-md border px-3 text-xs font-semibold">
+                        <input
+                            type="checkbox"
+                            checked={strictPerformance}
+                            onChange={(event) =>
+                                setStrictPerformance(event.target.checked)
+                            }
+                            className="accent-text-primary size-3.5"
+                        />
+                        {t("chart.strictPerformance")}
+                    </label>
                     <p className="text-micro min-w-0 flex-1 truncate sm:text-right">
-                        {fileName ??
-                            "음원 없이도 재생할 수 있습니다. 음원은 업로드되지 않습니다."}
+                        {fileName ?? t("chart.audioHelp")}
                     </p>
                 </div>
                 {audioError ? (

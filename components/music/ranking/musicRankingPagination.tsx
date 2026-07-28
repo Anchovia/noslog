@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import { getVisibleRankingPages } from "./musicRankingUtils";
+import { useTranslations } from "@/components/i18n/localeProvider";
 
 interface MusicRankingPaginationProps {
     page: number;
@@ -17,6 +18,7 @@ export default function MusicRankingPagination({
     totalCount,
     onPageChange,
 }: MusicRankingPaginationProps) {
+    const t = useTranslations();
     const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
 
     if (totalPages <= 1) {
@@ -25,12 +27,15 @@ export default function MusicRankingPagination({
 
     const visiblePages = getVisibleRankingPages(page, totalPages);
     return (
-        <nav className="flex justify-center gap-1" aria-label="랭킹 페이지">
+        <nav
+            className="flex justify-center gap-1"
+            aria-label={t("music.ranking.pagination")}
+        >
             {page > 1 ? (
                 <button
                     type="button"
                     onClick={() => onPageChange?.(page - 1)}
-                    aria-label="이전 페이지"
+                    aria-label={t("common.previousPage")}
                     className="border-border text-text-secondary flex size-7 items-center justify-center rounded-md border"
                 >
                     <ChevronLeft size={14} aria-hidden />
@@ -62,7 +67,7 @@ export default function MusicRankingPagination({
                 <button
                     type="button"
                     onClick={() => onPageChange?.(page + 1)}
-                    aria-label="다음 페이지"
+                    aria-label={t("common.nextPage")}
                     className="border-border text-text-secondary flex size-7 items-center justify-center rounded-md border"
                 >
                     <ChevronRight size={14} aria-hidden />

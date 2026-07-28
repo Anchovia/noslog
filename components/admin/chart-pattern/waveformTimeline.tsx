@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef } from "react";
 
+import { getChartEditorNavigationDurationMs } from "@/lib/chart-pattern/editor";
 import { formatEditorTime } from "@/lib/chart-pattern/timing";
 
 import { useChartEditorStore } from "./chartEditorStore";
@@ -25,9 +26,8 @@ export default function WaveformTimeline({
     onSeek,
 }: WaveformTimelineProps) {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
-    const durationMs = useChartEditorStore(
-        (state) => state.document.durationMs
-    );
+    const chartDocument = useChartEditorStore((state) => state.document);
+    const durationMs = getChartEditorNavigationDurationMs(chartDocument);
     const timingPoints = useChartEditorStore(
         (state) => state.document.timingPoints
     );

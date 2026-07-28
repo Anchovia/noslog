@@ -212,7 +212,7 @@ describe("Discord OAuth", () => {
                 discord_name: "Discord User",
                 discord_username: "discord-user",
             }),
-            select: { id: true },
+            select: { id: true, locale: true },
         });
         expect(mocks.session.id).toBe(7);
         expect(mocks.session.profileCompleted).toBe(false);

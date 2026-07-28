@@ -1,5 +1,11 @@
 import BingoList, { type BingoListItem } from "@/components/bingo/bingoList";
 import { getBingoProgress } from "@/lib/bingo";
+import {
+    getLocalizedMusicTitle,
+    getMusicTitleDisplayPreference,
+} from "@/lib/i18n/musicTitle";
+import { getServerI18n } from "@/lib/i18n/server";
+import { localizePath } from "@/lib/i18n/routing";
 import { createPageMetadata } from "@/lib/metadata/site";
 import getSession from "@/lib/session";
 import {
@@ -8,18 +14,22 @@ import {
     isBingoAvailable,
 } from "./data";
 
-export const metadata = createPageMetadata({
-    title: "미션 빙고",
-    description:
-        "노스텔지어 미션 빙고의 과제와 진행 조건, 완성 보상을 확인하고 진행 상황을 기록합니다.",
-    path: "/bingo",
-});
+export async function generateMetadata() {
+    const { locale, t } = await getServerI18n();
+
+    return createPageMetadata({
+        title: t("bingo.title"),
+        path: localizePath("/bingo", locale),
+    });
+}
 
 export default async function BingoPage() {
+    const { locale } = await getServerI18n();
     const [session, publishedBingos] = await Promise.all([
         getSession(),
         getCachedPublishedBingos(),
     ]);
+    const showLocalizedTitle = await getMusicTitleDisplayPreference(session.id);
     const bingos = publishedBingos.filter((bingo) => isBingoAvailable(bingo));
     const cellIds = bingos.flatMap((bingo) =>
         bingo.cells.map((cell) => cell.id)
@@ -56,6 +66,14 @@ export default async function BingoPage() {
         return {
             id: bingo.id,
             title: bingo.title || bingo.coverMusic.title,
+            localizedTitle:
+                !bingo.title || bingo.title === bingo.coverMusic.title
+                    ? getLocalizedMusicTitle(
+                          bingo.coverMusic,
+                          locale,
+                          showLocalizedTitle
+                      )
+                    : null,
             musicIndex: bingo.coverMusicIndex,
             background: bingo.coverMusic.background,
             reward: bingo.rewardNos,

@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { useTranslations } from "@/components/i18n/localeProvider";
 
 import {
     MUSIC_DIFFICULTIES,
@@ -16,9 +17,13 @@ export default function MusicDifficultyFilter({
     selected,
     onToggle,
 }: MusicDifficultyFilterProps) {
+    const t = useTranslations();
+
     return (
         <div className="flex flex-col gap-2">
-            <span className="text-caption font-semibold">난이도</span>
+            <span className="text-caption font-semibold">
+                {t("music.difficulty")}
+            </span>
             <div className="flex flex-wrap gap-2">
                 {MUSIC_DIFFICULTIES.map((difficulty) => (
                     <button

@@ -2,6 +2,8 @@
 
 import { RotateCcw } from "lucide-react";
 import { useEffect } from "react";
+import { useTranslations } from "@/components/i18n/localeProvider";
+import { recordClientError } from "@/lib/observability/client";
 
 export default function ErrorPage({
     error,
@@ -10,17 +12,17 @@ export default function ErrorPage({
     error: Error & { digest?: string };
     reset: () => void;
 }) {
+    const t = useTranslations();
     useEffect(() => {
+        recordClientError(error, "route-error-boundary");
         console.error(error);
     }, [error]);
 
     return (
         <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 px-6 text-center">
             <div>
-                <h1 className="text-title">페이지를 불러오지 못했습니다.</h1>
-                <p className="text-body-muted mt-2">
-                    잠시 후 다시 시도해주세요.
-                </p>
+                <h1 className="text-title">{t("common.pageError")}</h1>
+                <p className="text-body-muted mt-2">{t("common.retryLater")}</p>
             </div>
             <button
                 type="button"
@@ -28,7 +30,7 @@ export default function ErrorPage({
                 className="border-border bg-surface text-text-primary flex h-10 cursor-pointer items-center gap-2 rounded-md border px-4 text-sm font-semibold"
             >
                 <RotateCcw className="size-4" aria-hidden />
-                다시 시도
+                {t("common.retry")}
             </button>
         </div>
     );

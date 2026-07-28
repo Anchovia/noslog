@@ -17,6 +17,7 @@ import {
     Save,
     Undo2,
     Upload,
+    Volume2,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -56,6 +57,7 @@ import {
     formatEditorTime,
     formatRevisionDateTime,
 } from "@/lib/chart-pattern/timing";
+import { useMetronomeVolume } from "@/components/chart-pattern/useMetronomeVolume";
 
 import {
     type ChartPlaybackRate,
@@ -225,6 +227,7 @@ function ChartTimingEditorWorkspace({
     const setMetronomeEnabled = useChartEditorStore(
         (state) => state.setMetronomeEnabled
     );
+    const [metronomeVolume, setMetronomeVolume] = useMetronomeVolume();
     const audioInputRef = useRef<HTMLInputElement | null>(null);
     const importInputRef = useRef<HTMLInputElement | null>(null);
     const [pixelsPerSecond, setPixelsPerSecond] = useState(150);
@@ -243,12 +246,11 @@ function ChartTimingEditorWorkspace({
         waveformPeaks,
         isDecoding,
         isPlaying,
-        isReady,
         error: audioError,
         loadFile,
         togglePlayback,
         seek,
-    } = useChartAudio();
+    } = useChartAudio(metronomeVolume);
 
     const hasUnsavedChanges = changeSerial > persistedSerial;
 
@@ -975,7 +977,6 @@ function ChartTimingEditorWorkspace({
                         </button>
                         <EditorButton
                             label={isPlaying ? "일시정지" : "재생"}
-                            disabled={!isReady}
                             onClick={() => void togglePlayback()}
                         >
                             {isPlaying ? (
@@ -986,7 +987,7 @@ function ChartTimingEditorWorkspace({
                         </EditorButton>
                         <EditorButton
                             label="처음으로 이동"
-                            disabled={chartDocument.durationMs <= 0}
+                            disabled={currentTimeMs <= 0}
                             onClick={() => void seek(0)}
                         >
                             <RotateCcw className="size-4" />
@@ -1043,6 +1044,30 @@ function ChartTimingEditorWorkspace({
                                 className="accent-text-primary size-3.5"
                             />
                             메트로놈
+                        </label>
+
+                        <label className="border-border flex h-8 items-center gap-1.5 rounded-md border px-2">
+                            <Volume2
+                                className="text-text-secondary size-3.5"
+                                aria-hidden
+                            />
+                            <input
+                                type="range"
+                                min="0"
+                                max="100"
+                                step="5"
+                                value={metronomeVolume}
+                                onChange={(event) =>
+                                    setMetronomeVolume(
+                                        Number(event.target.value)
+                                    )
+                                }
+                                aria-label="메트로놈 음량"
+                                className="accent-text-primary w-16"
+                            />
+                            <span className="text-micro w-8 text-right tabular-nums">
+                                {metronomeVolume}%
+                            </span>
                         </label>
 
                         <label className="hover:bg-surface-muted flex h-8 items-center gap-2 rounded-md px-2 text-xs font-semibold">

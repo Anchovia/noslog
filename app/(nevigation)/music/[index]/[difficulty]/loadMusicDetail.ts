@@ -15,6 +15,8 @@ import {
     getUserChartPerformanceTrend,
     getUserChartScoreTrend,
 } from "./data";
+import type { Locale } from "@/lib/i18n/routing";
+import { getLocalizedMusicTitle } from "@/lib/i18n/musicTitle";
 
 export const MUSIC_DIFFICULTIES: Difficulty[] = [
     "Normal",
@@ -56,7 +58,9 @@ export async function loadMusicDetail(
     difficulty: Difficulty,
     activeTab: DetailTab,
     rankingPage: number,
-    userId?: number
+    userId: number | undefined,
+    locale: Locale,
+    showLocalizedTitle: boolean
 ): Promise<MusicDetailProps | null> {
     const { music, chart } = await getCachedMusicDetail(index, difficulty);
     if (!music || !chart) return null;
@@ -68,6 +72,11 @@ export async function loadMusicDetail(
         index: music.index,
         background: music.background,
         title: music.title,
+        localizedTitle: await getLocalizedMusicTitle(
+            music,
+            locale,
+            showLocalizedTitle
+        ),
         artist: music.artist,
         category_short: music.category_short,
         normal: chartLevels.get("Normal") ?? 0,

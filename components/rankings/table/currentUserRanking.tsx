@@ -1,3 +1,4 @@
+import { useTranslations } from "@/components/i18n/localeProvider";
 import type {
     UserRankingMetric,
     UserRankingMode,
@@ -17,10 +18,11 @@ export default function CurrentUserRanking({
     metric,
     currentUser,
 }: CurrentUserRankingProps) {
+    const t = useTranslations();
     if (!currentUser) {
         return (
             <section className="border-border text-text-secondary rounded-card flex min-h-15 items-center justify-center border px-4 text-sm">
-                선택한 조건의 내 랭킹 기록이 없습니다.
+                {t("rankings.noMine")}
             </section>
         );
     }
@@ -38,11 +40,11 @@ export default function CurrentUserRanking({
             <div className="min-w-0 flex-1">
                 <div className="flex min-w-0 items-center gap-2">
                     <p className="text-text-primary truncate text-sm font-bold">
-                        {currentUser.username || "이름 없는 유저"}
+                        {currentUser.username || t("common.unnamedUser")}
                     </p>
                     <ExamBadge mode={mode} exam={currentUser.exam} />
                 </div>
-                <p className="text-caption mt-0.5">내 순위</p>
+                <p className="text-caption mt-0.5">{t("rankings.myRank")}</p>
             </div>
             {metric === "rating" ? (
                 <strong className="text-text-primary shrink-0 text-sm tabular-nums">

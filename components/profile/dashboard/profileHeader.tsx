@@ -1,6 +1,11 @@
 import { MapPin, Settings } from "lucide-react";
 import Link from "next/link";
 
+import {
+    useLocale,
+    useLocalizedHref,
+    useTranslations,
+} from "@/components/i18n/localeProvider";
 import Badge from "@/components/ui/Badge";
 import DiscordIcon from "@/components/ui/DiscordIcon";
 import ProfileAvatar from "@/components/profile/profileAvatar";
@@ -21,6 +26,10 @@ export default function ProfileHeader({
     isOwner,
     mode,
 }: ProfileHeaderProps) {
+    const locale = useLocale();
+    const href = useLocalizedHref();
+    const t = useTranslations();
+
     return (
         <>
             <section className="flex items-center gap-3">
@@ -35,7 +44,7 @@ export default function ProfileHeader({
                             {getProfileCountryCode(user.country)}
                         </span>
                         <h1 className="text-title min-w-0 flex-1 break-words">
-                            {user.username || "이름 없는 유저"}
+                            {user.username || t("common.unnamedUser")}
                         </h1>
                         <div className="flex shrink-0 gap-1.5">
                             {isOwner ? (
@@ -45,9 +54,9 @@ export default function ProfileHeader({
                                         mode={mode}
                                     />
                                     <Link
-                                        href="/profile/settings"
+                                        href={href("/profile/settings")}
                                         className="border-border text-text-secondary hover:bg-surface-muted hover:text-text-primary focus-visible:ring-focus/40 flex size-9 cursor-pointer items-center justify-center rounded-md border transition-colors focus-visible:ring-2 focus-visible:outline-none"
-                                        aria-label="프로필 설정"
+                                        aria-label={t("profile.settings")}
                                     >
                                         <Settings size={16} />
                                     </Link>
@@ -58,18 +67,37 @@ export default function ProfileHeader({
                     <div className="mt-1 flex flex-wrap gap-1.5">
                         {user.exam_basic ? (
                             <Badge variant="basic" className="h-5 px-1.5">
-                                Basic {user.exam_basic}급
+                                {t("rankings.examBadge", {
+                                    mode: "Basic",
+                                    exam: user.exam_basic,
+                                })}
                             </Badge>
                         ) : null}
                         {user.exam_recital ? (
                             <Badge variant="recital" className="h-5 px-1.5">
-                                Recital {user.exam_recital}급
+                                {t("rankings.examBadge", {
+                                    mode: "Recital",
+                                    exam: user.exam_recital,
+                                })}
                             </Badge>
                         ) : null}
                     </div>
                     <p className="text-caption mt-1.5 whitespace-nowrap">
-                        {formatProfileDate(user.created_at)} 가입 ·{" "}
-                        {formatProfileDate(user.last_played_at)} 마지막 플레이
+                        {t("profile.joined", {
+                            date: formatProfileDate(
+                                user.created_at,
+                                locale,
+                                t("profile.noRecord")
+                            ),
+                        })}
+                        {" · "}
+                        {t("profile.lastPlayed", {
+                            date: formatProfileDate(
+                                user.last_played_at,
+                                locale,
+                                t("profile.noRecord")
+                            ),
+                        })}
                     </p>
                 </div>
             </section>
@@ -82,7 +110,7 @@ export default function ProfileHeader({
                         </span>
                         <span className="text-text-primary truncate">
                             {user.hide_nostalgia_name
-                                ? "비공개"
+                                ? t("profile.private")
                                 : user.nostalgia_name}
                         </span>
                     </span>
@@ -94,7 +122,7 @@ export default function ProfileHeader({
                         <DiscordIcon className="text-discord size-3.5" />
                         <span className="truncate">
                             {user.hide_discord_name
-                                ? "비공개"
+                                ? t("profile.private")
                                 : [
                                       user.discord_name,
                                       user.discord_username
@@ -108,7 +136,9 @@ export default function ProfileHeader({
                 ) : null}
                 <span
                     className="bg-surface text-caption flex min-w-0 items-center gap-1.5 rounded-md px-2.5 py-1.5"
-                    title={user.preferredArcade?.name ?? "선호 오락실 미설정"}
+                    title={
+                        user.preferredArcade?.name ?? t("profile.arcadeUnset")
+                    }
                 >
                     <MapPin className="text-chart size-3.5 shrink-0" />
                     <span
@@ -118,7 +148,7 @@ export default function ProfileHeader({
                                 : "text-text-disabled truncate"
                         }
                     >
-                        {user.preferredArcade?.name ?? "미설정"}
+                        {user.preferredArcade?.name ?? t("profile.unset")}
                     </span>
                 </span>
             </div>

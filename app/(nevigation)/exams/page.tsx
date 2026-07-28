@@ -1,19 +1,28 @@
 import ExamDashboard, {
     type ExamDashboardItem,
 } from "@/components/exams/examDashboard";
+import {
+    getLocalizedMusicTitle,
+    getMusicTitleDisplayPreference,
+} from "@/lib/i18n/musicTitle";
+import { getServerI18n } from "@/lib/i18n/server";
+import { localizePath } from "@/lib/i18n/routing";
 import { createPageMetadata } from "@/lib/metadata/site";
 import getSession from "@/lib/session";
 import { normalizeStoredGrade } from "@/lib/utils";
 import { getCachedPublishedExams, getUserExamState } from "./data";
 
-export const metadata = createPageMetadata({
-    title: "검정",
-    description:
-        "노스텔지어 Basic·Recital·Event 검정의 과제곡, 응시 조건, 합격 기준과 보상을 확인합니다.",
-    path: "/exams",
-});
+export async function generateMetadata() {
+    const { locale, t } = await getServerI18n();
+
+    return createPageMetadata({
+        title: t("exams.title"),
+        path: localizePath("/exams", locale),
+    });
+}
 
 export default async function ExamsPage() {
+    const { locale, t } = await getServerI18n();
     const [session, exams] = await Promise.all([
         getSession(),
         getCachedPublishedExams(),
@@ -34,6 +43,7 @@ export default async function ExamsPage() {
               chartIds
           )
         : null;
+    const showLocalizedTitle = await getMusicTitleDisplayPreference(session.id);
     const user = userState?.user ?? null;
     const records = userState?.records ?? [];
     const achievedExamIds = new Set(
@@ -85,7 +95,16 @@ export default async function ExamsPage() {
             rewards: exam.rewards.map((reward) => ({
                 id: reward.id,
                 type: reward.type,
-                label: reward.label ?? reward.music?.title ?? "보상",
+                label: reward.label ?? reward.music?.title ?? t("exams.reward"),
+                localizedTitle:
+                    reward.music &&
+                    (!reward.label || reward.label === reward.music.title)
+                        ? getLocalizedMusicTitle(
+                              reward.music,
+                              locale,
+                              showLocalizedTitle
+                          )
+                        : null,
                 musicIndex: reward.music?.index ?? null,
             })),
             isAchieved: achievedExamIds.has(exam.id) || isLegacyAchievement,
@@ -132,6 +151,11 @@ export default async function ExamsPage() {
                         : null,
                     musicIndex: stage.music.index,
                     title: stage.music.title,
+                    localizedTitle: getLocalizedMusicTitle(
+                        stage.music,
+                        locale,
+                        showLocalizedTitle
+                    ),
                     artist: stage.music.artist,
                     charts: stage.allowedCharts
                         .map((item) => ({
@@ -147,7 +171,7 @@ export default async function ExamsPage() {
 
     return (
         <div className="flex flex-col gap-3 px-4 py-3">
-            <h1 className="text-title">검정</h1>
+            <h1 className="text-title">{t("exams.title")}</h1>
             <ExamDashboard
                 exams={items}
                 isAuthenticated={Boolean(session.id)}

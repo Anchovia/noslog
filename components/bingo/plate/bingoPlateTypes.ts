@@ -3,6 +3,8 @@ export interface BingoCellItem {
     challenge: string;
     missionType: string;
     musicIndex: string | null;
+    musicTitle?: string | null;
+    localizedMusicTitle?: string | null;
     position: number;
     categoryShort: string | null;
 }

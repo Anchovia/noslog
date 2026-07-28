@@ -2,6 +2,7 @@ import { verifySyncToken } from "@/lib/bookmarklet";
 import { CACHE_TAGS, getUserProfileTag } from "@/lib/cacheTags";
 import db from "@/lib/db";
 import { updateDummy } from "@/lib/dummy/bingo";
+import { isLocale, type Locale } from "@/lib/i18n/routing";
 import { processBemaniCatalogUpdates } from "@/lib/services/music/catalogSync";
 import { type SyncMusicInput } from "@/lib/services/music/updateMusic";
 import { updateGrade } from "@/lib/services/user/updateGrade";
@@ -16,6 +17,58 @@ const EAGATE_ORIGIN = "https://p.eagate.573.jp";
 const MAX_SYNC_BODY_BYTES = 8 * 1024 * 1024;
 const SYNC_COOLDOWN_MS = 30 * 1000;
 const SYNC_PROCESSING_TIMEOUT_MS = 15 * 60 * 1000;
+const responseCopy = {
+    ko: {
+        forbidden: "허용되지 않은 요청입니다.",
+        jsonOnly: "JSON 형식의 요청만 허용됩니다.",
+        tooLarge: "전송된 데이터가 너무 큽니다.",
+        invalidPayload: "전송된 데이터 형식이 올바르지 않습니다.",
+        invalidToken: "연동 토큰이 올바르지 않습니다.",
+        expiredToken: "연동 토큰이 만료되었습니다. 다시 등록해주세요.",
+        loginRequired: "NOSTALGIA 로그인 상태를 확인해주세요.",
+        processing:
+            "이미 동기화를 처리하고 있습니다. 잠시 후 다시 시도해주세요.",
+        cooldown: "동기화 요청이 너무 빠릅니다. 잠시 후 다시 시도해주세요.",
+        fullComplete: "전체 기록 동기화가 완료되었습니다.",
+        recentComplete: "최근 기록 동기화가 완료되었습니다.",
+        processFailed: "데이터 처리 중 오류가 발생했습니다.",
+    },
+    ja: {
+        forbidden: "許可されていないリクエストです。",
+        jsonOnly: "JSON形式のリクエストのみ許可されています。",
+        tooLarge: "送信されたデータが大きすぎます。",
+        invalidPayload: "送信されたデータ形式が正しくありません。",
+        invalidToken: "連携トークンが正しくありません。",
+        expiredToken: "連携トークンの期限が切れました。再登録してください。",
+        loginRequired: "NOSTALGIAのログイン状態を確認してください。",
+        processing: "同期を処理中です。しばらくしてから再試行してください。",
+        cooldown:
+            "同期リクエストが早すぎます。しばらくしてから再試行してください。",
+        fullComplete: "全記録の同期が完了しました。",
+        recentComplete: "最近の記録の同期が完了しました。",
+        processFailed: "データ処理中にエラーが発生しました。",
+    },
+    en: {
+        forbidden: "This request is not allowed.",
+        jsonOnly: "Only JSON requests are allowed.",
+        tooLarge: "The submitted data is too large.",
+        invalidPayload: "The submitted data format is invalid.",
+        invalidToken: "The sync token is invalid.",
+        expiredToken: "The sync token has expired. Please register it again.",
+        loginRequired: "Please check that you are signed in to NOSTALGIA.",
+        processing: "A sync is already in progress. Please try again shortly.",
+        cooldown: "Sync requests are too frequent. Please try again shortly.",
+        fullComplete: "All records have been synced.",
+        recentComplete: "Recent records have been synced.",
+        processFailed: "An error occurred while processing the data.",
+    },
+} as const satisfies Record<Locale, Record<string, string>>;
+
+function getResponseCopy(request: NextRequest) {
+    const locale = request.nextUrl.searchParams.get("locale");
+    return responseCopy[isLocale(locale) ? locale : "ko"];
+}
+
 const shortText = z.string().min(1).max(256);
 const nullableShortText = z.string().max(256).nullable();
 const difficultySchema = z.enum(["Normal", "Hard", "Expert", "Real"]);
@@ -280,28 +333,30 @@ async function createSyncAttempt(
 }
 
 export async function POST(request: NextRequest) {
+    const copy = getResponseCopy(request);
+
     if (request.headers.get("origin") !== EAGATE_ORIGIN) {
-        return json("허용되지 않은 요청입니다.", 403);
+        return json(copy.forbidden, 403);
     }
 
     if (!request.headers.get("content-type")?.startsWith("application/json")) {
-        return json("JSON 형식의 요청만 허용됩니다.", 415);
+        return json(copy.jsonOnly, 415);
     }
 
     const contentLength = Number(request.headers.get("content-length"));
     if (Number.isFinite(contentLength) && contentLength > MAX_SYNC_BODY_BYTES) {
-        return json("전송된 데이터가 너무 큽니다.", 413);
+        return json(copy.tooLarge, 413);
     }
 
     const body = await request.json().catch(() => null);
     const parsed = syncRequestSchema.safeParse(body);
     if (!parsed.success) {
-        return json("전송된 데이터 형식이 올바르지 않습니다.", 400);
+        return json(copy.invalidPayload, 400);
     }
 
     const tokenPayload = verifySyncToken(parsed.data.token);
     if (!tokenPayload) {
-        return json("연동 토큰이 올바르지 않습니다.", 401);
+        return json(copy.invalidToken, 401);
     }
 
     const user = await db.user.findUnique({
@@ -309,7 +364,7 @@ export async function POST(request: NextRequest) {
         select: { id: true, sync_token_version: true, role: true },
     });
     if (!user || user.sync_token_version !== tokenPayload.version) {
-        return json("연동 토큰이 만료되었습니다. 다시 등록해주세요.", 401);
+        return json(copy.expiredToken, 401);
     }
 
     const { playerData, recentData, totalData } = parsed.data;
@@ -320,7 +375,7 @@ export async function POST(request: NextRequest) {
         recentData.data.status !== 0 ||
         (totalData && (totalData.status !== 0 || totalData.data.status !== 0))
     ) {
-        return json("NOSTALGIA 로그인 상태를 확인해주세요.", 400);
+        return json(copy.loginRequired, 400);
     }
 
     const player = playerData.data.player;
@@ -336,8 +391,8 @@ export async function POST(request: NextRequest) {
     if (!syncAttempt.allowed) {
         return json(
             syncAttempt.reason === "processing"
-                ? "이미 동기화를 처리하고 있습니다. 잠시 후 다시 시도해주세요."
-                : "동기화 요청이 너무 빠릅니다. 잠시 후 다시 시도해주세요.",
+                ? copy.processing
+                : copy.cooldown,
             syncAttempt.reason === "processing" ? 409 : 429,
             { retryAfter: syncAttempt.retryAfter },
             { "Retry-After": String(syncAttempt.retryAfter) }
@@ -396,19 +451,13 @@ export async function POST(request: NextRequest) {
             }
         }
 
-        return json(
-            music
-                ? "전체 기록 동기화가 완료되었습니다."
-                : "최근 기록 동기화가 완료되었습니다.",
-            200,
-            {
-                syncScope: music ? "full" : "recent",
-                receivedPlays: history.length,
-                insertedPlays,
-                changedRecords,
-                catalogUpdates,
-            }
-        );
+        return json(music ? copy.fullComplete : copy.recentComplete, 200, {
+            syncScope: music ? "full" : "recent",
+            receivedPlays: history.length,
+            insertedPlays,
+            changedRecords,
+            catalogUpdates,
+        });
     } catch (error) {
         console.error("BEMANI data synchronization failed", error);
 
@@ -422,7 +471,7 @@ export async function POST(request: NextRequest) {
             },
         });
 
-        return json("데이터 처리 중 오류가 발생했습니다.", 500);
+        return json(copy.processFailed, 500);
     }
 }
 

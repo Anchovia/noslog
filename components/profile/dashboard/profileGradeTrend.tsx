@@ -1,4 +1,5 @@
 import ProfileGradeChart, { type GradeHistoryPoint } from "../chart";
+import { useTranslations } from "@/components/i18n/localeProvider";
 import type { ProfileMode } from "./profileTypes";
 
 // 프로필 그레이드 변화 차트를 한곳에서 표시함
@@ -9,10 +10,14 @@ export default function ProfileGradeTrend({
     data: GradeHistoryPoint[];
     mode: ProfileMode;
 }) {
+    const t = useTranslations();
+
     return (
         <section className="bg-surface rounded-card p-4">
             <div className="mb-2">
-                <h2 className="text-section font-bold">그레이드 추이</h2>
+                <h2 className="text-section font-bold">
+                    {t("profile.gradeTrend")}
+                </h2>
             </div>
             <ProfileGradeChart data={data} mode={mode} />
             {data.length > 1 ? (

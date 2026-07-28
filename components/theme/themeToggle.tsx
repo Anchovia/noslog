@@ -4,6 +4,7 @@ import { Sun } from "lucide-react";
 import { useSyncExternalStore } from "react";
 
 import { Switch } from "@/components/ui/Switch";
+import { useTranslations } from "@/components/i18n/localeProvider";
 
 type Theme = "dark" | "light";
 
@@ -54,15 +55,16 @@ function useTheme() {
 }
 
 export function ThemeSetting() {
+    const t = useTranslations();
     const { theme, setTheme } = useTheme();
     const isLight = theme === "light";
 
     return (
         <section className="bg-surface rounded-card flex flex-col gap-4 p-4">
             <div>
-                <h2 className="text-section">화면 설정</h2>
+                <h2 className="text-section">{t("settings.appearance")}</h2>
                 <p className="text-caption mt-1">
-                    이 브라우저에서 사용할 화면 테마를 선택합니다.
+                    {t("settings.appearanceDescription")}
                 </p>
             </div>
             <label className="border-border bg-bg rounded-card flex cursor-pointer items-center justify-between gap-4 border p-3">
@@ -72,10 +74,10 @@ export function ThemeSetting() {
                     </span>
                     <span className="min-w-0">
                         <span className="text-body block text-sm font-semibold">
-                            화이트 테마
+                            {t("settings.lightTheme")}
                         </span>
                         <span className="text-caption mt-0.5 block">
-                            밝은 배경과 어두운 텍스트를 사용합니다.
+                            {t("settings.lightThemeDescription")}
                         </span>
                     </span>
                 </span>
@@ -84,7 +86,7 @@ export function ThemeSetting() {
                     onCheckedChange={(checked) =>
                         setTheme(checked ? "light" : "dark")
                     }
-                    aria-label="화이트 테마"
+                    aria-label={t("settings.lightTheme")}
                 />
             </label>
         </section>

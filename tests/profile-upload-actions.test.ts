@@ -14,6 +14,7 @@ const mocks = vi.hoisted(() => ({
     session: {
         id: 2,
         profileCompleted: true,
+        locale: "ko" as "ko" | "ja" | "en",
         save: vi.fn(),
     },
 }));
@@ -67,6 +68,8 @@ function profileForm(
     formData.set("username", username);
     formData.set("avatar", avatar);
     formData.set("country", country);
+    formData.set("locale", "ko");
+    formData.set("showLocalizedMusicTitle", "true");
     formData.set("discordName", "병훈");
     formData.set("discordUsername", "hoonie71");
     formData.set("preferredArcadeId", "");
@@ -81,6 +84,7 @@ describe("프로필 이미지 업로드 토큰", () => {
         vi.clearAllMocks();
         mocks.session.id = 2;
         mocks.session.profileCompleted = true;
+        mocks.session.locale = "ko";
         mocks.getSession.mockResolvedValue(mocks.session);
         mocks.claimUploadTokenQuota.mockResolvedValue({
             allowed: true,
@@ -154,6 +158,8 @@ describe("프로필 이미지 업로드 토큰", () => {
             data: {
                 username: "CAROL",
                 country: "ko-KR",
+                locale: "ko",
+                show_localized_music_title: true,
                 avatar: newAvatar,
                 discord_name: "병훈",
                 discord_username: "hoonie71",
@@ -166,7 +172,8 @@ describe("프로필 이미지 업로드 토큰", () => {
         expect(mocks.deleteBlobIfOwned).toHaveBeenCalledWith(oldAvatar);
         expect(mocks.updateTag).toHaveBeenCalledWith("user-rankings");
         expect(mocks.updateTag).toHaveBeenCalledWith("user-profile-2");
-        expect(mocks.redirect).toHaveBeenCalledWith("/profile/2");
+        expect(mocks.session.save).toHaveBeenCalledOnce();
+        expect(mocks.redirect).toHaveBeenCalledWith("/ko/profile/2");
     });
 
     it("중복 닉네임이면 새 Blob만 삭제하고 기존 프로필을 유지한다", async () => {

@@ -1,4 +1,6 @@
 import { getTierBandForUser } from "@/app/(nevigation)/tiers/data";
+import { getMusicTitleDisplayPreference } from "@/lib/i18n/musicTitle";
+import { isLocale } from "@/lib/i18n/routing";
 import { getUser } from "@/lib/user";
 import {
     isTierDifficulty,
@@ -31,12 +33,17 @@ export async function GET(request: Request, { params }: TierBandRouteProps) {
         .map((value) => value.trim())
         .filter(isTierLevelFilter);
     const user = await getUser();
+    const requestedLocale = searchParams.get("locale");
+    const locale = isLocale(requestedLocale) ? requestedLocale : "ko";
+    const showLocalizedTitle = await getMusicTitleDisplayPreference(user?.id);
     const band = await getTierBandForUser(
         slug,
         bandId,
         user?.id,
         difficulties,
-        levels
+        levels,
+        locale,
+        showLocalizedTitle
     );
     if (!band) {
         return NextResponse.json(

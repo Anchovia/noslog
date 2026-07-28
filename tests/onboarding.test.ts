@@ -5,6 +5,7 @@ const mocks = vi.hoisted(() => ({
     session: {
         id: 9 as number | undefined,
         profileCompleted: false as boolean | undefined,
+        locale: undefined as "ko" | "ja" | "en" | undefined,
         save: vi.fn(),
     },
     getSession: vi.fn(),
@@ -42,6 +43,7 @@ describe("최초 프로필 설정", () => {
         vi.clearAllMocks();
         mocks.session.id = 9;
         mocks.session.profileCompleted = false;
+        mocks.session.locale = undefined;
         mocks.getSession.mockResolvedValue(mocks.session);
         mocks.userFindUnique.mockResolvedValue({
             profile_completed_at: new Date("2026-07-19"),
@@ -57,12 +59,13 @@ describe("최초 프로필 설정", () => {
             data: {
                 username: "CAROL",
                 country: "ko-KR",
+                locale: "ko",
                 profile_completed_at: expect.any(Date),
             },
         });
         expect(mocks.session.profileCompleted).toBe(true);
         expect(mocks.session.save).toHaveBeenCalledOnce();
-        expect(mocks.redirect).toHaveBeenCalledWith("/");
+        expect(mocks.redirect).toHaveBeenCalledWith("/ko");
     });
 
     it("한 글자 닉네임을 허용한다", async () => {
@@ -73,6 +76,7 @@ describe("최초 프로필 설정", () => {
             data: {
                 username: "N",
                 country: "ko-KR",
+                locale: "ko",
                 profile_completed_at: expect.any(Date),
             },
         });
@@ -93,16 +97,28 @@ describe("최초 프로필 설정", () => {
         );
 
         expect(response?.headers.get("location")).toBe(
-            "http://localhost:3000/onboarding"
+            "http://localhost:3000/en/onboarding"
         );
     });
 
-    it("미완료 사용자는 온보딩 화면에 접근할 수 있다", async () => {
+    it("미완료 사용자의 기존 온보딩 경로를 언어 경로로 보낸다", async () => {
         const response = await proxy(
             new NextRequest("http://localhost:3000/onboarding")
         );
 
-        expect(response).toBeUndefined();
+        expect(response?.headers.get("location")).toBe(
+            "http://localhost:3000/en/onboarding"
+        );
+    });
+
+    it("미완료 사용자는 언어별 온보딩 화면에 접근할 수 있다", async () => {
+        const response = await proxy(
+            new NextRequest("http://localhost:3000/ko/onboarding")
+        );
+
+        expect(response?.headers.get("x-middleware-rewrite")).toBe(
+            "http://localhost:3000/onboarding"
+        );
     });
 
     it("완료된 프로필 상태를 Route Handler에서 세션에 반영한다", async () => {

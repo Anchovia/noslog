@@ -1,7 +1,15 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { headers } from "next/headers";
 import Script from "next/script";
 import AppToaster from "@/components/ui/AppToaster";
+import { LocaleProvider } from "@/components/i18n/localeProvider";
+import { getMessages } from "@/lib/i18n/messages";
+import {
+    DEFAULT_LOCALE,
+    isLocale,
+    LOCALE_REQUEST_HEADER,
+} from "@/lib/i18n/routing";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/metadata/site";
 import "./globals.css";
 
@@ -76,14 +84,18 @@ export const metadata: Metadata = {
     manifest: "/manifest.webmanifest",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+    const requestHeaders = await headers();
+    const requestLocale = requestHeaders.get(LOCALE_REQUEST_HEADER);
+    const locale = isLocale(requestLocale) ? requestLocale : DEFAULT_LOCALE;
+
     return (
         <html
-            lang="ko"
+            lang={locale}
             data-theme="dark"
             suppressHydrationWarning
             className={`${pretendard.variable} bg-bg text-text-primary`}
@@ -96,8 +108,10 @@ export default function RootLayout({
                 />
             </head>
             <body className="font-sans">
-                {children}
-                <AppToaster />
+                <LocaleProvider locale={locale} messages={getMessages(locale)}>
+                    {children}
+                    <AppToaster />
+                </LocaleProvider>
             </body>
         </html>
     );

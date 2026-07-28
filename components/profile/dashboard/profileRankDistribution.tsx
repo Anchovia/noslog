@@ -1,6 +1,7 @@
 import { ChevronDown } from "lucide-react";
 
 import { cn, formatToComma } from "@/lib/utils";
+import { useTranslations } from "@/components/i18n/localeProvider";
 
 import type { ProfileRankRow } from "./profileTypes";
 import {
@@ -25,18 +26,21 @@ export default function ProfileRankDistribution({
     expanded,
     onToggle,
 }: ProfileRankDistributionProps) {
+    const t = useTranslations();
     const maxCount = Math.max(...rows.map((row) => row.value), 1);
 
     return (
         <section className="bg-surface rounded-card p-4">
             <div className="mb-3 flex items-center justify-between">
-                <h2 className="text-section font-bold">랭크 분포</h2>
+                <h2 className="text-section font-bold">
+                    {t("profile.rankDistribution")}
+                </h2>
                 <button
                     type="button"
                     onClick={onToggle}
                     className="text-caption hover:bg-surface-muted hover:text-text-primary focus-visible:ring-focus/40 flex cursor-pointer items-center gap-1 rounded px-1.5 py-1 transition-colors focus-visible:ring-2 focus-visible:outline-none"
                 >
-                    {expanded ? "접기" : "전체"}
+                    {expanded ? t("profile.collapse") : t("profile.all")}
                     <ChevronDown
                         size={13}
                         className={cn(
@@ -58,7 +62,9 @@ export default function ProfileRankDistribution({
                                 backgroundImage: `url(${PROFILE_RANK_ICON_BASE_URL}/grade_${PROFILE_RANK_ICON_NAMES[index]}.png)`,
                             }}
                             role="img"
-                            aria-label={`${row.label} 랭크`}
+                            aria-label={t("profile.rankAria", {
+                                rank: row.label,
+                            })}
                         />
                         <span className="bg-divider h-1.5 overflow-hidden rounded-full">
                             <span
@@ -78,10 +84,11 @@ export default function ProfileRankDistribution({
                 ))}
             </div>
             <p className="text-caption mt-3">
-                플레이{" "}
                 {isPlayCountPrivate
-                    ? "비공개"
-                    : `${formatToComma(playCount)}회`}
+                    ? t("profile.playCountPrivate")
+                    : t("profile.playCount", {
+                          count: formatToComma(playCount),
+                      })}
             </p>
         </section>
     );
