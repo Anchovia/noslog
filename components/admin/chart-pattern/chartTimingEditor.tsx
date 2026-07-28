@@ -563,7 +563,7 @@ function ChartTimingEditorWorkspace({
 
     return (
         <>
-            <div className="bg-bg fixed inset-0 z-[100] hidden min-h-0 flex-col min-[1024px]:flex">
+            <div className="bg-bg fixed inset-0 z-[100] hidden min-h-0 flex-col lg:flex">
                 <header className="border-divider bg-surface flex h-14 shrink-0 items-center gap-3 border-b px-3">
                     <Link
                         href={`/admin/music/${encodeURIComponent(metadata.musicIndex)}`}
@@ -1072,7 +1072,7 @@ function ChartTimingEditorWorkspace({
                 </footer>
             </div>
 
-            <div className="bg-bg fixed inset-0 z-[100] flex items-center justify-center p-6 min-[1024px]:hidden">
+            <div className="bg-bg fixed inset-0 z-[100] flex items-center justify-center p-6 lg:hidden">
                 <div className="max-w-sm text-center">
                     <div className="bg-surface mx-auto flex size-12 items-center justify-center rounded-full">
                         <Maximize2 className="size-5" />
