@@ -15,6 +15,7 @@ import {
     localizePath,
     stripLocaleFromPath,
 } from "@/lib/i18n/routing";
+import { getMessages } from "@/lib/i18n/messages";
 import { proxy } from "@/proxy";
 
 describe("언어 경로 유틸리티", () => {
@@ -49,6 +50,15 @@ describe("언어 경로 유틸리티", () => {
         expect(isNonLocalizedPath("/api/rankings")).toBe(true);
         expect(isNonLocalizedPath("/manifest.webmanifest")).toBe(true);
         expect(isNonLocalizedPath("/music")).toBe(false);
+    });
+});
+
+describe("언어별 메시지 카탈로그", () => {
+    it("모든 언어가 같은 메시지 키를 제공한다", () => {
+        const koKeys = Object.keys(getMessages("ko")).sort();
+
+        expect(Object.keys(getMessages("ja")).sort()).toEqual(koKeys);
+        expect(Object.keys(getMessages("en")).sort()).toEqual(koKeys);
     });
 });
 

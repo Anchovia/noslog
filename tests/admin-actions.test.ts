@@ -8,6 +8,7 @@ const mocks = vi.hoisted(() => ({
     musicChartFindUnique: vi.fn(),
     musicChartUpdate: vi.fn(),
     constantHistoryCreate: vi.fn(),
+    musicTranslationUpdateMany: vi.fn(),
     evaluationDelete: vi.fn(),
     examFindUnique: vi.fn(),
     examDelete: vi.fn(),
@@ -51,6 +52,9 @@ vi.mock("@/lib/db", () => ({
             updateMany: mocks.musicChartUpdateMany,
             findUnique: mocks.musicChartFindUnique,
         },
+        musicTranslation: {
+            updateMany: mocks.musicTranslationUpdateMany,
+        },
         chartEvaluation: { delete: mocks.evaluationDelete },
         exam: {
             findUnique: mocks.examFindUnique,
@@ -83,6 +87,7 @@ vi.mock("next/navigation", () => ({
 import { deleteEvaluation } from "@/app/admin/community/actions";
 import { deleteExam } from "@/app/admin/exams/actions";
 import {
+    approveMusicTranslation,
     saveChartMetadata,
     saveMusicMetadata,
 } from "@/app/admin/music/actions";
@@ -101,6 +106,7 @@ describe("관리자 액션", () => {
         mocks.musicChartUpdateMany.mockResolvedValue({ count: 4 });
         mocks.musicChartUpdate.mockResolvedValue({ id: 10 });
         mocks.constantHistoryCreate.mockResolvedValue({ id: 1 });
+        mocks.musicTranslationUpdateMany.mockResolvedValue({ count: 1 });
         mocks.evaluationDelete.mockResolvedValue({ id: 20 });
         mocks.examDelete.mockResolvedValue({ id: 30 });
         mocks.bingoDelete.mockResolvedValue({ id: 40 });
@@ -173,6 +179,24 @@ describe("관리자 액션", () => {
         expect(mocks.constantHistoryCreate).toHaveBeenCalledWith({
             data: { chart_id: 10, value: 11.2 },
         });
+    });
+
+    it("초안 번역을 승인하고 번역 캐시를 갱신한다", async () => {
+        const formData = new FormData();
+        formData.set("musicIndex", "test-music");
+        formData.set("locale", "en");
+
+        await approveMusicTranslation(formData);
+
+        expect(mocks.musicTranslationUpdateMany).toHaveBeenCalledWith({
+            where: { musicIndex: "test-music", locale: "en" },
+            data: {
+                status: "approved",
+                reviewedAt: expect.any(Date),
+            },
+        });
+        expect(mocks.updateTag).toHaveBeenCalledWith("music-catalog");
+        expect(mocks.updateTag).toHaveBeenCalledWith("music-details");
     });
 
     it("평가 전체 삭제 후 의견 캐시를 갱신한다", async () => {

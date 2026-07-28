@@ -71,7 +71,12 @@ export default async function BookmarkletPage() {
             ? process.env.VERCEL_AUTOMATION_BYPASS_SECRET
             : undefined;
     const bookmarkletHref = token
-        ? createBookmarkletHref(appOrigin, token, protectionBypassSecret)
+        ? createBookmarkletHref(
+              appOrigin,
+              token,
+              protectionBypassSecret,
+              locale
+          )
         : null;
     const syncDate = latestSync?.completedAt ?? latestSync?.startedAt;
     const dateLocale = locale === "ja" ? ja : locale === "en" ? enUS : ko;

@@ -3,6 +3,7 @@
 import { RotateCcw } from "lucide-react";
 import { useEffect } from "react";
 import { useTranslations } from "@/components/i18n/localeProvider";
+import { recordClientError } from "@/lib/observability/client";
 
 export default function ErrorPage({
     error,
@@ -13,6 +14,7 @@ export default function ErrorPage({
 }) {
     const t = useTranslations();
     useEffect(() => {
+        recordClientError(error, "route-error-boundary");
         console.error(error);
     }, [error]);
 

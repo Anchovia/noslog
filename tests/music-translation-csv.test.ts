@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { parseMusicTranslationCsv } from "@/lib/musicTranslations/csv";
+import { serializeMusicTranslationCsv } from "@/lib/musicTranslations/export";
 
 describe("parseMusicTranslationCsv", () => {
     it("index 기준 번역 행과 따옴표 안의 쉼표를 읽는다", () => {
@@ -58,5 +59,43 @@ describe("parseMusicTranslationCsv", () => {
                 "index,locale,title,status\nmusic-1,ko,제목,published"
             ).errors
         ).toContain("2행: status는 draft 또는 approved여야 합니다.");
+    });
+});
+
+describe("serializeMusicTranslationCsv", () => {
+    it("원제와 읽기 제목을 포함한 UTF-8 CSV를 만든다", () => {
+        const csv = serializeMusicTranslationCsv([
+            {
+                index: "music-1",
+                originalTitle: '제목, "부제"',
+                titleKana: "ヨミ",
+                locale: "en",
+                title: "English title",
+                status: "approved",
+            },
+        ]);
+
+        expect(csv.startsWith("\uFEFF")).toBe(true);
+        expect(csv).toContain(
+            "index,original_title,title_kana,locale,title,status"
+        );
+        expect(csv).toContain('"제목, ""부제"""');
+        expect(csv).toContain('"English title","approved"');
+    });
+
+    it("스프레드시트 수식으로 해석될 수 있는 값을 무력화한다", () => {
+        const csv = serializeMusicTranslationCsv([
+            {
+                index: "music-2",
+                originalTitle: "=IMPORTXML()",
+                titleKana: "",
+                locale: "ko",
+                title: "+SUM(1,2)",
+                status: "draft",
+            },
+        ]);
+
+        expect(csv).toContain('"\'=IMPORTXML()"');
+        expect(csv).toContain('"\'+SUM(1,2)"');
     });
 });

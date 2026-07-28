@@ -18,6 +18,7 @@ import {
     useTranslations,
     type MessageKey,
 } from "@/components/i18n/localeProvider";
+import LocaleSwitcher from "@/components/i18n/localeSwitcher";
 import { stripLocaleFromPath } from "@/lib/i18n/routing";
 import { cn } from "@/lib/utils";
 
@@ -96,7 +97,13 @@ export function HeaderPrimaryNavigation() {
     );
 }
 
-export default function HeaderMenu({ isAdmin = false }: { isAdmin?: boolean }) {
+export default function HeaderMenu({
+    isAdmin = false,
+    showLocaleSwitcher = false,
+}: {
+    isAdmin?: boolean;
+    showLocaleSwitcher?: boolean;
+}) {
     const pathname = usePathname();
     const { localizedHref, t } = useNavigationI18n();
     const menuButtonRef = useRef<HTMLButtonElement>(null);
@@ -192,6 +199,11 @@ export default function HeaderMenu({ isAdmin = false }: { isAdmin?: boolean }) {
                                 </Link>
                             );
                         })}
+                        {showLocaleSwitcher ? (
+                            <LocaleSwitcher
+                                onNavigate={() => setOpenPathname(null)}
+                            />
+                        ) : null}
                     </nav>
                 </>
             ) : null}

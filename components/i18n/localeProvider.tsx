@@ -10,14 +10,14 @@ import {
 
 import {
     createTranslator,
+    type ClientMessages,
     type MessageKey,
-    type Messages,
 } from "@/lib/i18n/messages";
 import { getLocalizedHref, type Locale } from "@/lib/i18n/routing";
 
 interface LocaleContextValue {
     locale: Locale;
-    messages: Messages;
+    messages: ClientMessages;
 }
 
 const LocaleContext = createContext<LocaleContextValue | null>(null);
@@ -29,7 +29,7 @@ export function LocaleProvider({
 }: {
     children: ReactNode;
     locale: Locale;
-    messages: Messages;
+    messages: ClientMessages;
 }) {
     return (
         <LocaleContext.Provider value={{ locale, messages }}>

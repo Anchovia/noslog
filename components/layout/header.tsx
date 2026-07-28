@@ -50,7 +50,10 @@ export default async function Header() {
                             {t("common.login")}
                         </Link>
                     )}
-                    <HeaderMenu isAdmin={user?.role === "admin"} />
+                    <HeaderMenu
+                        isAdmin={user?.role === "admin"}
+                        showLocaleSwitcher={!user}
+                    />
                 </div>
             </div>
         </ScrollAwareHeader>

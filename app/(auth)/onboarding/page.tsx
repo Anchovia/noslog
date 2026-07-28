@@ -22,7 +22,11 @@ export default async function OnboardingPage() {
     }
 
     return (
-        <main className="mx-auto flex min-h-dvh w-full max-w-97.5 flex-col px-6 py-8">
+        <main
+            id="main-content"
+            tabIndex={-1}
+            className="mx-auto flex min-h-dvh w-full max-w-97.5 flex-col px-6 py-8"
+        >
             <section className="flex flex-1 flex-col items-center justify-center pb-12">
                 <span className="border-text-primary flex size-15 items-center justify-center rounded-full border-2 text-2xl font-extrabold">
                     N

@@ -253,3 +253,31 @@ export async function saveMusicTranslation(formData: FormData) {
     updateTag(CACHE_TAGS.musicDetails);
     revalidatePath(`/admin/music/${encodeURIComponent(musicIndex)}`);
 }
+
+export async function approveMusicTranslation(formData: FormData) {
+    await requireAdmin();
+    const musicIndex = String(formData.get("musicIndex") ?? "").trim();
+    const locale = String(formData.get("locale") ?? "").trim();
+
+    if (
+        !musicIndex ||
+        !MUSIC_TRANSLATION_LOCALES.includes(
+            locale as (typeof MUSIC_TRANSLATION_LOCALES)[number]
+        )
+    ) {
+        return;
+    }
+
+    await db.musicTranslation.updateMany({
+        where: { musicIndex, locale },
+        data: {
+            status: "approved",
+            reviewedAt: new Date(),
+        },
+    });
+
+    updateTag(CACHE_TAGS.musicCatalog);
+    updateTag(CACHE_TAGS.musicDetails);
+    revalidatePath("/admin/music");
+    revalidatePath(`/admin/music/${encodeURIComponent(musicIndex)}`);
+}

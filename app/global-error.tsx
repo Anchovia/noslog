@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { recordClientError } from "@/lib/observability/client";
 
 const errorCopy = {
     ko: {
@@ -20,10 +21,17 @@ const errorCopy = {
     },
 } as const;
 
-export default function GlobalError({ reset }: { reset: () => void }) {
+export default function GlobalError({
+    error,
+    reset,
+}: {
+    error: Error & { digest?: string };
+    reset: () => void;
+}) {
     const [locale, setLocale] = useState<keyof typeof errorCopy>("en");
 
     useEffect(() => {
+        recordClientError(error, "global-error-boundary");
         const documentLocale = document.documentElement.lang;
         // 전역 오류 경계는 LocaleProvider 밖에 있어 문서 언어를 마운트 후 반영함
         // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -32,7 +40,7 @@ export default function GlobalError({ reset }: { reset: () => void }) {
                 ? documentLocale
                 : "en"
         );
-    }, []);
+    }, [error]);
     const copy = errorCopy[locale];
 
     return (

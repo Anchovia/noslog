@@ -32,7 +32,11 @@ export default async function LoginPage({
     const errorMessageKey = error ? errorMessageKeys[error] : null;
 
     return (
-        <main className="mx-auto flex min-h-dvh w-full max-w-97.5 flex-col px-6 py-8">
+        <main
+            id="main-content"
+            tabIndex={-1}
+            className="mx-auto flex min-h-dvh w-full max-w-97.5 flex-col px-6 py-8"
+        >
             <section className="flex flex-1 flex-col items-center justify-center pb-12 text-center">
                 <Link
                     href={homeHref}
