@@ -225,3 +225,22 @@ html[data-theme="light"] {
 @utility text-input {
     @apply text-text-primary text-base leading-normal font-medium;
 }
+
+/* Safari에서도 rem·임의 클래스 해석에 영향받지 않도록 편집기 표시 기준을 px로 고정 */
+.chart-pattern-editor-shell {
+    display: none;
+}
+
+.chart-pattern-screen-warning {
+    display: flex;
+}
+
+@media (min-width: 1024px) {
+    .chart-pattern-editor-shell {
+        display: flex;
+    }
+
+    .chart-pattern-screen-warning {
+        display: none;
+    }
+}
