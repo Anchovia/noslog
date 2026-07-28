@@ -72,6 +72,46 @@ describe("낙하형 채보 재생 계산", () => {
         expect(getChartPlaybackDurationMs(document)).toBe(3_000);
     });
 
+    it("트릴의 반복 간격과 좌우 교대 경로를 재생 구간으로 변환한다", () => {
+        const prepared = prepareChartPlaybackNotes({
+            ...document,
+            notes: [
+                {
+                    id: "trill",
+                    type: "trill",
+                    hand: "right",
+                    tick: 2_400,
+                    durationTicks: 960,
+                    lane: 20,
+                    width: 2,
+                    pairLane: 24,
+                    pairWidth: 3,
+                    trillSnapDivisor: 8,
+                    points: [],
+                },
+            ],
+        });
+        const trill = prepared[0];
+
+        expect(trill.type).toBe("trill");
+        expect(trill.startTimeMs).toBe(2_500);
+        expect(trill.endTimeMs).toBe(3_500);
+        expect(trill.trillSegments).toHaveLength(4);
+        expect(
+            trill.trillSegments.map((segment) => ({
+                fromLane: segment.fromLane,
+                toLane: segment.toLane,
+                fromWidth: segment.fromWidth,
+                toWidth: segment.toWidth,
+            }))
+        ).toEqual([
+            { fromLane: 20, toLane: 24, fromWidth: 2, toWidth: 3 },
+            { fromLane: 24, toLane: 20, fromWidth: 3, toWidth: 2 },
+            { fromLane: 20, toLane: 24, fromWidth: 2, toWidth: 3 },
+            { fromLane: 24, toLane: 20, fromWidth: 3, toWidth: 2 },
+        ]);
+    });
+
     it("새 2.0 속도는 직전 4.0 기준의 접근 시간을 사용하고 4.0까지 지원한다", () => {
         expect(getApproachDurationMs(1)).toBe(2_000);
         expect(getApproachDurationMs(2)).toBe(1_000);
