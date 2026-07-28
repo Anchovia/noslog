@@ -7,6 +7,7 @@ import {
     useRef,
     useState,
 } from "react";
+import { usePathname } from "next/navigation";
 
 const DESKTOP_MEDIA_QUERY = "(min-width: 1024px)";
 const TOP_SCROLL_THRESHOLD = 8;
@@ -18,6 +19,16 @@ export default function ScrollAwareHeader({
 }: {
     children: ReactNode;
 }) {
+    const pathname = usePathname();
+
+    return (
+        <ScrollAwareHeaderContent key={pathname}>
+            {children}
+        </ScrollAwareHeaderContent>
+    );
+}
+
+function ScrollAwareHeaderContent({ children }: { children: ReactNode }) {
     const previousScrollYRef = useRef(0);
     const animationFrameRef = useRef<number | null>(null);
     const [isVisible, setIsVisible] = useState(true);
