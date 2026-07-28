@@ -5,6 +5,7 @@ import {
     formatBpm,
     formatRevisionDateTime,
     getBeatMarkers,
+    getMeasureMarkers,
     getMeasurePanels,
     getSnapGridMarkers,
     getSnapGridSubdivision,
@@ -92,6 +93,102 @@ describe("채보 타이밍 계산", () => {
             { timeMs: 1_000, accent: false },
             { timeMs: 1_500, accent: false },
             { timeMs: 2_000, accent: true },
+        ]);
+    });
+
+    it("타이밍 포인트를 새 마디로 번호 매기고 변경 정보만 표시한다", () => {
+        const markers = getMeasureMarkers(timingPoints, 480, 5_001);
+
+        expect(
+            markers.map(
+                ({
+                    timeMs,
+                    measureNumber,
+                    bpm,
+                    numerator,
+                    denominator,
+                    showBpm,
+                    showTimeSignature,
+                }) => ({
+                    timeMs,
+                    measureNumber,
+                    bpm,
+                    signature: `${numerator}/${denominator}`,
+                    showBpm,
+                    showTimeSignature,
+                })
+            )
+        ).toEqual([
+            {
+                timeMs: 0,
+                measureNumber: 1,
+                bpm: 120,
+                signature: "4/4",
+                showBpm: true,
+                showTimeSignature: true,
+            },
+            {
+                timeMs: 2_000,
+                measureNumber: 2,
+                bpm: 60,
+                signature: "3/4",
+                showBpm: true,
+                showTimeSignature: true,
+            },
+            {
+                timeMs: 5_000,
+                measureNumber: 3,
+                bpm: 60,
+                signature: "3/4",
+                showBpm: false,
+                showTimeSignature: false,
+            },
+        ]);
+    });
+
+    it("같은 설정으로 다시 잡은 타이밍 포인트도 새 마디로 센다", () => {
+        const markers = getMeasureMarkers(
+            [
+                timingPoints[0],
+                {
+                    ...timingPoints[0],
+                    id: "timing-reset",
+                    tick: 960,
+                    timeMs: 1_000,
+                },
+            ],
+            480,
+            3_001
+        );
+
+        expect(
+            markers.map(
+                ({ timeMs, measureNumber, showBpm, showTimeSignature }) => ({
+                    timeMs,
+                    measureNumber,
+                    showBpm,
+                    showTimeSignature,
+                })
+            )
+        ).toEqual([
+            {
+                timeMs: 0,
+                measureNumber: 1,
+                showBpm: true,
+                showTimeSignature: true,
+            },
+            {
+                timeMs: 1_000,
+                measureNumber: 2,
+                showBpm: false,
+                showTimeSignature: false,
+            },
+            {
+                timeMs: 3_000,
+                measureNumber: 3,
+                showBpm: false,
+                showTimeSignature: false,
+            },
         ]);
     });
 

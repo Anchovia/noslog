@@ -28,10 +28,13 @@ import {
     type ChartNote,
 } from "@/lib/chart-pattern/schema";
 import {
+    formatBpm,
     formatEditorTime,
     getBeatMarkers,
+    getMeasureMarkers,
     getMeasurePanels,
     tickToMilliseconds,
+    type MeasureMarker,
 } from "@/lib/chart-pattern/timing";
 
 import FallingChartViewer from "./fallingChartViewer";
@@ -48,7 +51,9 @@ interface ChartSheetViewerProps {
     preview?: boolean;
 }
 
-const PANEL_WIDTH = 220;
+const CHART_WIDTH = 220;
+const MEASURE_GUTTER_WIDTH = 56;
+const PANEL_WIDTH = CHART_WIDTH + MEASURE_GUTTER_WIDTH;
 const PANEL_HEIGHT = 720;
 const PADDING_TOP = 30;
 const PADDING_BOTTOM = 34;
@@ -105,6 +110,15 @@ export default function ChartSheetViewer({
                 { completeLastPanel: true }
             ),
         [contentEndMs, document.ticksPerQuarter, document.timingPoints]
+    );
+    const measureMarkers = useMemo(
+        () =>
+            getMeasureMarkers(
+                document.timingPoints,
+                document.ticksPerQuarter,
+                panels.at(-1)?.endMs ?? contentEndMs
+            ),
+        [contentEndMs, document.ticksPerQuarter, document.timingPoints, panels]
     );
 
     return (
@@ -239,6 +253,7 @@ export default function ChartSheetViewer({
                                 startMs={panel.startMs}
                                 endMs={panel.endMs}
                                 document={document}
+                                measureMarkers={measureMarkers}
                             />
                         ))}
                     </div>
@@ -265,11 +280,13 @@ function ChartSheetPanel({
     startMs,
     endMs,
     document,
+    measureMarkers,
 }: {
     index: number;
     startMs: number;
     endMs: number;
     document: ChartDocument;
+    measureMarkers: MeasureMarker[];
 }) {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -282,8 +299,8 @@ function ChartSheetPanel({
         const context = canvas.getContext("2d");
         if (!context) return;
         context.setTransform(ratio, 0, 0, ratio, 0, 0);
-        drawPanel(context, { startMs, endMs, document });
-    }, [document, endMs, startMs]);
+        drawPanel(context, { startMs, endMs, document, measureMarkers });
+    }, [document, endMs, measureMarkers, startMs]);
 
     return (
         <figure className="shrink-0">
@@ -297,7 +314,7 @@ function ChartSheetPanel({
                 ref={canvasRef}
                 role="img"
                 aria-label={`${index + 1}열 ${formatEditorTime(startMs)}부터 ${formatEditorTime(endMs)}까지`}
-                className="border-border h-[720px] w-[220px] rounded-sm border"
+                className="border-border h-[720px] w-[276px] rounded-sm border"
             />
         </figure>
     );
@@ -309,14 +326,16 @@ function drawPanel(
         startMs,
         endMs,
         document,
+        measureMarkers,
     }: {
         startMs: number;
         endMs: number;
         document: ChartDocument;
+        measureMarkers: MeasureMarker[];
     }
 ) {
     const chartHeight = PANEL_HEIGHT - PADDING_TOP - PADDING_BOTTOM;
-    const laneWidth = PANEL_WIDTH / CHART_LANE_COUNT;
+    const laneWidth = CHART_WIDTH / CHART_LANE_COUNT;
     const panelDuration = Math.max(1, endMs - startMs);
     const chartBottom = PANEL_HEIGHT - PADDING_BOTTOM;
     const yForTime = (timeMs: number) =>
@@ -332,7 +351,7 @@ function drawPanel(
     context.clip();
 
     for (let lane = 0; lane <= CHART_LANE_COUNT; lane += 1) {
-        const x = lane * laneWidth + 0.5;
+        const x = MEASURE_GUTTER_WIDTH + lane * laneWidth + 0.5;
         const isGroupBoundary = isChartLaneGroupBoundary(lane);
         context.strokeStyle = isGroupBoundary ? "#343441" : "#20202a";
         context.lineWidth = isGroupBoundary ? 1 : 0.5;
@@ -354,7 +373,7 @@ function drawPanel(
         context.strokeStyle = beat.accent ? "#656574" : "#2a2a34";
         context.lineWidth = beat.accent ? 1.2 : 0.7;
         context.beginPath();
-        context.moveTo(0, y);
+        context.moveTo(beat.accent ? 3 : MEASURE_GUTTER_WIDTH, y);
         context.lineTo(PANEL_WIDTH, y);
         context.stroke();
     }
@@ -380,6 +399,7 @@ function drawPanel(
         drawSheetNote(context, {
             note,
             laneWidth,
+            chartLeft: MEASURE_GUTTER_WIDTH,
             yForTime,
             chartTop: PADDING_TOP,
             chartBottom,
@@ -399,12 +419,65 @@ function drawPanel(
     context.fillStyle = "#8e8e9a";
     context.font = "10px ui-monospace, monospace";
     context.textBaseline = "middle";
-    context.fillText(formatEditorTime(endMs), 6, PADDING_TOP / 2);
     context.fillText(
-        formatEditorTime(startMs),
-        6,
-        PANEL_HEIGHT - PADDING_BOTTOM / 2
+        formatEditorTime(endMs),
+        MEASURE_GUTTER_WIDTH + 6,
+        PADDING_TOP / 2
     );
+    drawMeasureAnnotations(context, {
+        markers: measureMarkers,
+        startMs,
+        endMs,
+        yForTime,
+    });
+}
+
+function drawMeasureAnnotations(
+    context: CanvasRenderingContext2D,
+    {
+        markers,
+        startMs,
+        endMs,
+        yForTime,
+    }: {
+        markers: MeasureMarker[];
+        startMs: number;
+        endMs: number;
+        yForTime: (timeMs: number) => number;
+    }
+) {
+    const visibleMarkers = markers.filter(
+        (marker) =>
+            marker.timeMs >= startMs - PANEL_BOUNDARY_EPSILON_MS &&
+            marker.timeMs < endMs - PANEL_BOUNDARY_EPSILON_MS
+    );
+
+    context.save();
+    context.textAlign = "left";
+    for (const marker of visibleMarkers) {
+        const y = yForTime(marker.timeMs) + 0.5;
+        context.fillStyle = "#c2c2cc";
+        context.font = "600 8px ui-monospace, monospace";
+        context.textBaseline = "bottom";
+        context.fillText(String(marker.measureNumber), 4, y - 2);
+
+        let detailY = y + 2;
+        context.fillStyle = "#90909d";
+        context.font = "9px ui-monospace, monospace";
+        context.textBaseline = "top";
+        if (marker.showBpm) {
+            context.fillText(`BPM ${formatBpm(marker.bpm)}`, 4, detailY);
+            detailY += 10;
+        }
+        if (marker.showTimeSignature) {
+            context.fillText(
+                `${marker.numerator}/${marker.denominator}`,
+                4,
+                detailY
+            );
+        }
+    }
+    context.restore();
 }
 
 function drawSheetNote(
@@ -412,6 +485,7 @@ function drawSheetNote(
     {
         note,
         laneWidth,
+        chartLeft,
         yForTime,
         chartTop,
         chartBottom,
@@ -419,6 +493,7 @@ function drawSheetNote(
     }: {
         note: ChartNote;
         laneWidth: number;
+        chartLeft: number;
         yForTime: (timeMs: number) => number;
         chartTop: number;
         chartBottom: number;
@@ -433,32 +508,31 @@ function drawSheetNote(
                 document.ticksPerQuarter
             )
         );
+    const yForRenderedTick = (tick: number) => {
+        const rawY = yForTick(tick);
+        return rawY >= chartTop - PANEL_BOUNDARY_EPSILON_MS &&
+            rawY <= chartBottom + PANEL_BOUNDARY_EPSILON_MS
+            ? Math.min(
+                  chartBottom - PANEL_NOTE_EDGE_INSET,
+                  Math.max(chartTop + PANEL_NOTE_EDGE_INSET, rawY)
+              )
+            : rawY;
+    };
     const drawHead = (
         lane: number,
         width: number,
         tick: number,
         hand: ChartHand = note.hand,
         small = false
-    ) => {
-        const rawY = yForTick(tick);
-        const centerY =
-            rawY >= chartTop - PANEL_BOUNDARY_EPSILON_MS &&
-            rawY <= chartBottom + PANEL_BOUNDARY_EPSILON_MS
-                ? Math.min(
-                      chartBottom - PANEL_NOTE_EDGE_INSET,
-                      Math.max(chartTop + PANEL_NOTE_EDGE_INSET, rawY)
-                  )
-                : rawY;
-
+    ) =>
         drawSheetCap(
             context,
-            lane * laneWidth,
-            centerY,
+            chartLeft + lane * laneWidth,
+            yForRenderedTick(tick),
             width * laneWidth,
             handColors[hand],
             small
         );
-    };
 
     if (note.type === "standard") {
         drawHead(note.lane, note.width, note.tick);
@@ -491,34 +565,40 @@ function drawSheetNote(
             context.strokeStyle = "rgba(255,255,255,.42)";
             context.lineWidth = 0.7;
             context.beginPath();
-            context.moveTo(fromLane * laneWidth + 1, yForTick(startTick) - 1);
-            context.lineTo(
-                (fromLane + fromWidth) * laneWidth - 1,
-                yForTick(startTick) - 1
+            context.moveTo(
+                chartLeft + fromLane * laneWidth + 1,
+                yForRenderedTick(startTick) - 1
             );
             context.lineTo(
-                (toLane + toWidth) * laneWidth - 1,
-                yForTick(endTick) + 1
+                chartLeft + (fromLane + fromWidth) * laneWidth - 1,
+                yForRenderedTick(startTick) - 1
             );
-            context.lineTo(toLane * laneWidth + 1, yForTick(endTick) + 1);
+            context.lineTo(
+                chartLeft + (toLane + toWidth) * laneWidth - 1,
+                yForRenderedTick(endTick) + 1
+            );
+            context.lineTo(
+                chartLeft + toLane * laneWidth + 1,
+                yForRenderedTick(endTick) + 1
+            );
             context.closePath();
             context.fill();
             context.stroke();
             context.restore();
         }
         drawHead(note.lane, note.width, note.tick);
-        const centerX = (note.lane + note.width / 2) * laneWidth;
+        const centerX = chartLeft + (note.lane + note.width / 2) * laneWidth;
         drawSheetDiamond(
             context,
             centerX,
-            yForTick(note.tick) - 1,
+            yForRenderedTick(note.tick) - 1,
             3.3,
             "#f2c75c"
         );
         drawSheetDiamond(
             context,
             centerX + 5,
-            yForTick(note.tick) - 5,
+            yForRenderedTick(note.tick) - 5,
             2.4,
             "#f2c75c"
         );
@@ -535,16 +615,22 @@ function drawSheetNote(
         context.strokeStyle = handColors[second.hand];
         context.lineWidth = 0.8;
         context.beginPath();
-        context.moveTo(first.lane * laneWidth + 1, yForTick(first.tick));
-        context.lineTo(
-            (first.lane + first.width) * laneWidth - 1,
-            yForTick(first.tick)
+        context.moveTo(
+            chartLeft + first.lane * laneWidth + 1,
+            yForRenderedTick(first.tick)
         );
         context.lineTo(
-            (second.lane + second.width) * laneWidth - 1,
-            yForTick(second.tick)
+            chartLeft + (first.lane + first.width) * laneWidth - 1,
+            yForRenderedTick(first.tick)
         );
-        context.lineTo(second.lane * laneWidth + 1, yForTick(second.tick));
+        context.lineTo(
+            chartLeft + (second.lane + second.width) * laneWidth - 1,
+            yForRenderedTick(second.tick)
+        );
+        context.lineTo(
+            chartLeft + second.lane * laneWidth + 1,
+            yForRenderedTick(second.tick)
+        );
         context.closePath();
         context.fill();
         context.stroke();
@@ -553,12 +639,12 @@ function drawSheetNote(
         context.lineWidth = 0.9;
         context.beginPath();
         context.moveTo(
-            (first.lane + first.width / 2) * laneWidth,
-            yForTick(first.tick)
+            chartLeft + (first.lane + first.width / 2) * laneWidth,
+            yForRenderedTick(first.tick)
         );
         context.lineTo(
-            (second.lane + second.width / 2) * laneWidth,
-            yForTick(second.tick)
+            chartLeft + (second.lane + second.width / 2) * laneWidth,
+            yForRenderedTick(second.tick)
         );
         context.stroke();
         context.restore();

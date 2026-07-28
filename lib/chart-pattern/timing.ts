@@ -93,6 +93,15 @@ export interface MeasurePanel {
     endMs: number;
 }
 
+export interface MeasureMarker extends BeatMarker {
+    measureNumber: number;
+    bpm: number;
+    numerator: number;
+    denominator: number;
+    showBpm: boolean;
+    showTimeSignature: boolean;
+}
+
 function greatestCommonDivisor(first: number, second: number) {
     let left = Math.abs(Math.round(first));
     let right = Math.abs(Math.round(second));
@@ -213,6 +222,62 @@ export function getBeatMarkers(
     }
 
     return markers;
+}
+
+export function getMeasureMarkers(
+    points: ChartTimingPoint[],
+    ticksPerQuarter: number,
+    endMs: number
+) {
+    if (points.length === 0) {
+        return [] satisfies MeasureMarker[];
+    }
+
+    const sorted = sortTimingPoints(points);
+    if (endMs <= sorted[0].timeMs) {
+        return [] satisfies MeasureMarker[];
+    }
+    const rangeStartMs = Math.min(0, sorted[0].timeMs);
+    const boundaries = getBeatMarkers(
+        sorted,
+        ticksPerQuarter,
+        rangeStartMs,
+        endMs
+    ).filter((marker) => marker.accent);
+
+    return boundaries.map((marker, index) => {
+        const timingPointIndex = sorted.findIndex(
+            (point) =>
+                Math.abs(point.tick - marker.tick) <= 0.000001 &&
+                Math.abs(point.timeMs - marker.timeMs) <= 0.001
+        );
+        const activePoint =
+            timingPointIndex >= 0
+                ? sorted[timingPointIndex]
+                : ([...sorted]
+                      .reverse()
+                      .find((point) => point.tick <= marker.tick) ?? sorted[0]);
+        const previousPoint =
+            timingPointIndex > 0 ? sorted[timingPointIndex - 1] : null;
+        const isTimingPoint = timingPointIndex >= 0;
+
+        return {
+            ...marker,
+            measureNumber: index + 1,
+            bpm: activePoint.bpm,
+            numerator: activePoint.numerator,
+            denominator: activePoint.denominator,
+            showBpm:
+                isTimingPoint &&
+                (previousPoint === null ||
+                    activePoint.bpm !== previousPoint.bpm),
+            showTimeSignature:
+                isTimingPoint &&
+                (previousPoint === null ||
+                    activePoint.numerator !== previousPoint.numerator ||
+                    activePoint.denominator !== previousPoint.denominator),
+        };
+    });
 }
 
 export function getMeasurePanels(
