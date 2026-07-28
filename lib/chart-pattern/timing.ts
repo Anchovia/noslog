@@ -219,11 +219,12 @@ export function getMeasurePanels(
     points: ChartTimingPoint[],
     ticksPerQuarter: number,
     durationMs: number,
-    measuresPerPanel = 4
+    measuresPerPanel = 4,
+    { completeLastPanel = false }: { completeLastPanel?: boolean } = {}
 ) {
     const chartEndMs = Math.max(0, durationMs);
     if (
-        chartEndMs === 0 ||
+        (chartEndMs === 0 && !completeLastPanel) ||
         points.length === 0 ||
         !Number.isFinite(ticksPerQuarter) ||
         ticksPerQuarter <= 0
@@ -237,7 +238,26 @@ export function getMeasurePanels(
         ] satisfies MeasurePanel[];
     }
 
-    const sorted = sortTimingPoints(points);
+    const allSorted = sortTimingPoints(points);
+    const sorted = completeLastPanel
+        ? allSorted.filter((point) => point.timeMs <= chartEndMs + 0.001)
+        : allSorted;
+    if (sorted.length === 0) {
+        sorted.push(allSorted[0]);
+    }
+    const panelMeasureCount = Math.max(1, Math.round(measuresPerPanel));
+    const activePoint =
+        [...sorted]
+            .reverse()
+            .find((point) => point.timeMs <= chartEndMs + 0.001) ?? sorted[0];
+    const measureDurationMs =
+        (MINUTES_TO_MILLISECONDS / activePoint.bpm) *
+        ((4 * activePoint.numerator) / activePoint.denominator);
+    const boundarySearchEndMs = completeLastPanel
+        ? Math.max(chartEndMs, activePoint.timeMs, sorted[0].timeMs) +
+          measureDurationMs * panelMeasureCount +
+          1
+        : chartEndMs;
     const rangeStartMs = Math.min(0, sorted[0].timeMs);
     const measureBoundaries: number[] = [];
 
@@ -246,8 +266,8 @@ export function getMeasurePanels(
         const nextPoint = sorted[index + 1];
         const segmentStartMs = Math.max(rangeStartMs, point.timeMs);
         const segmentEndMs = Math.min(
-            chartEndMs,
-            nextPoint?.timeMs ?? chartEndMs
+            boundarySearchEndMs,
+            nextPoint?.timeMs ?? boundarySearchEndMs
         );
         if (segmentEndMs < segmentStartMs) continue;
 
@@ -292,7 +312,6 @@ export function getMeasurePanels(
         ] satisfies MeasurePanel[];
     }
 
-    const panelMeasureCount = Math.max(1, Math.round(measuresPerPanel));
     const lastBoundaryAtOrBeforeStart = boundaries.findLastIndex(
         (timeMs) => timeMs <= 0.001
     );
@@ -308,7 +327,9 @@ export function getMeasurePanels(
         measureCount += 1;
         if (measureCount < panelMeasureCount) continue;
 
-        const panelEndMs = Math.min(chartEndMs, boundaryMs);
+        const panelEndMs = completeLastPanel
+            ? boundaryMs
+            : Math.min(chartEndMs, boundaryMs);
         if (panelEndMs > panelStartMs + 0.001) {
             panels.push({
                 index: panels.length,
@@ -321,7 +342,10 @@ export function getMeasurePanels(
         if (panelStartMs >= chartEndMs - 0.001) break;
     }
 
-    if (panelStartMs < chartEndMs - 0.001 || panels.length === 0) {
+    if (
+        (!completeLastPanel && panelStartMs < chartEndMs - 0.001) ||
+        panels.length === 0
+    ) {
         panels.push({
             index: panels.length,
             startMs: panelStartMs,

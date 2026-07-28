@@ -1,9 +1,10 @@
 "use client";
 
-import { Gauge, Pause, Play, RotateCcw, Upload } from "lucide-react";
+import { Gauge, Pause, Play, RotateCcw, Upload, Volume2 } from "lucide-react";
 import { type ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import type { Application, Graphics } from "pixi.js";
 
+import { getMetronomePeakGain } from "@/lib/chart-pattern/metronome";
 import {
     getActivePlaybackPianoRanges,
     getApproachDurationMs,
@@ -23,8 +24,9 @@ import {
     type ChartDocument,
     type ChartHand,
 } from "@/lib/chart-pattern/schema";
-import { formatEditorTime } from "@/lib/chart-pattern/timing";
+import { formatEditorTime, getBeatMarkers } from "@/lib/chart-pattern/timing";
 
+import { useMetronomeVolume } from "./useMetronomeVolume";
 interface FallingChartViewerProps {
     document: ChartDocument;
     jacketUrl: string | null;
@@ -599,10 +601,14 @@ export default function FallingChartViewer({
     const noteSpeedRef = useRef(2);
     const clockAnchorRef = useRef<PlaybackClockAnchor | null>(null);
     const lastUiUpdateRef = useRef(0);
+    const metronomeContextRef = useRef<AudioContext | null>(null);
+    const scheduledThroughMsRef = useRef(0);
     const [currentTimeMs, setCurrentTimeMs] = useState(0);
     const [audioDurationMs, setAudioDurationMs] = useState(0);
     const [isPlaying, setIsPlaying] = useState(false);
     const [noteSpeed, setNoteSpeed] = useState(2);
+    const [metronomeEnabled, setMetronomeEnabled] = useState(false);
+    const [metronomeVolume, setMetronomeVolume] = useMetronomeVolume();
     const [fileName, setFileName] = useState<string | null>(null);
     const [audioError, setAudioError] = useState<string | null>(null);
     const preparedNotes = useMemo(
@@ -698,9 +704,87 @@ export default function FallingChartViewer({
             if (objectUrlRef.current) {
                 URL.revokeObjectURL(objectUrlRef.current);
             }
+            void metronomeContextRef.current?.close();
+            metronomeContextRef.current = null;
         },
         []
     );
+
+    useEffect(() => {
+        if (!isPlaying || !metronomeEnabled) return;
+
+        const interval = window.setInterval(() => {
+            const context = metronomeContextRef.current;
+            if (!context) return;
+
+            const audio = audioRef.current;
+            let playbackTimeMs = currentTimeRef.current;
+            if (audio && fileName && !audio.paused) {
+                playbackTimeMs = audio.currentTime * 1_000;
+            } else if (clockAnchorRef.current) {
+                playbackTimeMs =
+                    clockAnchorRef.current.offsetMs +
+                    (performance.now() - clockAnchorRef.current.startedAt);
+            }
+
+            const startMs = Math.max(
+                playbackTimeMs,
+                scheduledThroughMsRef.current
+            );
+            const endMs = playbackTimeMs + 180;
+            const beats = getBeatMarkers(
+                document.timingPoints,
+                document.ticksPerQuarter,
+                startMs,
+                endMs
+            );
+
+            for (const beat of beats) {
+                const peakGain = getMetronomePeakGain(
+                    metronomeVolume,
+                    beat.accent
+                );
+                if (peakGain <= 0) continue;
+                const scheduledTime = Math.max(
+                    context.currentTime,
+                    context.currentTime + (beat.timeMs - playbackTimeMs) / 1_000
+                );
+                const oscillator = context.createOscillator();
+                const gain = context.createGain();
+                oscillator.frequency.value = beat.accent ? 1_320 : 880;
+                gain.gain.setValueAtTime(0.0001, scheduledTime);
+                gain.gain.exponentialRampToValueAtTime(
+                    peakGain,
+                    scheduledTime + 0.002
+                );
+                gain.gain.exponentialRampToValueAtTime(
+                    0.0001,
+                    scheduledTime + 0.045
+                );
+                oscillator.connect(gain);
+                gain.connect(context.destination);
+                oscillator.start(scheduledTime);
+                oscillator.stop(scheduledTime + 0.05);
+            }
+            scheduledThroughMsRef.current = endMs + 0.001;
+        }, 40);
+
+        return () => window.clearInterval(interval);
+    }, [
+        document.ticksPerQuarter,
+        document.timingPoints,
+        fileName,
+        isPlaying,
+        metronomeEnabled,
+        metronomeVolume,
+    ]);
+
+    function getMetronomeContext() {
+        if (!metronomeContextRef.current) {
+            metronomeContextRef.current = new AudioContext();
+        }
+        return metronomeContextRef.current;
+    }
 
     function pausePlayback() {
         const audio = audioRef.current;
@@ -722,6 +806,10 @@ export default function FallingChartViewer({
         if (currentTimeRef.current >= durationRef.current - 10) {
             seek(0);
         }
+        if (metronomeEnabled) {
+            await getMetronomeContext().resume();
+        }
+        scheduledThroughMsRef.current = currentTimeRef.current - 1;
         const audio = audioRef.current;
         if (audio && fileName) {
             audio.currentTime = Math.min(
@@ -747,6 +835,7 @@ export default function FallingChartViewer({
     function seek(nextTimeMs: number) {
         const next = Math.min(durationRef.current, Math.max(0, nextTimeMs));
         currentTimeRef.current = next;
+        scheduledThroughMsRef.current = next - 1;
         setCurrentTimeMs(next);
         const audio = audioRef.current;
         if (audio && fileName && Number.isFinite(audio.duration)) {
@@ -758,6 +847,14 @@ export default function FallingChartViewer({
                 offsetMs: next,
             };
         }
+    }
+
+    async function updateMetronomeEnabled(enabled: boolean) {
+        if (enabled) {
+            await getMetronomeContext().resume();
+            scheduledThroughMsRef.current = currentTimeRef.current - 1;
+        }
+        setMetronomeEnabled(enabled);
     }
 
     function loadAudio(event: ChangeEvent<HTMLInputElement>) {
@@ -886,6 +983,40 @@ export default function FallingChartViewer({
                                 );
                             })}
                         </select>
+                    </label>
+                    <label className="border-border hover:bg-surface-muted flex h-9 items-center gap-2 rounded-md border px-3 text-xs font-semibold">
+                        <input
+                            type="checkbox"
+                            checked={metronomeEnabled}
+                            onChange={(event) =>
+                                void updateMetronomeEnabled(
+                                    event.target.checked
+                                )
+                            }
+                            className="accent-text-primary size-3.5"
+                        />
+                        메트로놈
+                    </label>
+                    <label className="border-border flex h-9 items-center gap-1.5 rounded-md border px-2">
+                        <Volume2
+                            className="text-text-secondary size-3.5"
+                            aria-hidden
+                        />
+                        <input
+                            type="range"
+                            min="0"
+                            max="100"
+                            step="5"
+                            value={metronomeVolume}
+                            onChange={(event) =>
+                                setMetronomeVolume(Number(event.target.value))
+                            }
+                            aria-label="메트로놈 음량"
+                            className="accent-text-primary w-20"
+                        />
+                        <span className="text-micro w-8 text-right tabular-nums">
+                            {metronomeVolume}%
+                        </span>
                     </label>
                     <p className="text-micro min-w-0 flex-1 truncate sm:text-right">
                         {fileName ??

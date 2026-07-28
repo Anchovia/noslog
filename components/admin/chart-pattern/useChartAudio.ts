@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { getChartEditorNavigationDurationMs } from "@/lib/chart-pattern/editor";
+import { getMetronomePeakGain } from "@/lib/chart-pattern/metronome";
 import { getBeatMarkers } from "@/lib/chart-pattern/timing";
 
 import {
@@ -45,7 +46,7 @@ interface PlaybackAnchor {
     rate: number;
 }
 
-export function useChartAudio() {
+export function useChartAudio(metronomeVolume: number) {
     const store = useChartEditorStoreApi();
     const playbackRate = useChartEditorStore((state) => state.playbackRate);
     const metronomeEnabled = useChartEditorStore(
@@ -57,7 +58,6 @@ export function useChartAudio() {
     );
     const [isDecoding, setIsDecoding] = useState(false);
     const [isPlaying, setIsPlaying] = useState(false);
-    const [isReady, setIsReady] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const contextRef = useRef<AudioContext | null>(null);
     const bufferRef = useRef<AudioBuffer | null>(null);
@@ -115,10 +115,15 @@ export function useChartAudio() {
     const runPlayhead = useCallback(() => {
         const update = () => {
             const buffer = bufferRef.current;
-            if (!buffer || !anchorRef.current) return;
+            if (!anchorRef.current) return;
 
             const nextTime = readPlaybackTime();
-            const durationMs = buffer.duration * 1_000;
+            const durationMs =
+                buffer?.duration === undefined
+                    ? getChartEditorNavigationDurationMs(
+                          store.getState().document
+                      )
+                    : buffer.duration * 1_000;
             if (nextTime >= durationMs) {
                 stopSource(durationMs);
                 setIsPlaying(false);
@@ -133,36 +138,39 @@ export function useChartAudio() {
     const startPlaybackAt = useCallback(
         async (timeMs: number, rate: number) => {
             const buffer = bufferRef.current;
-            if (!buffer) return;
-
             const context = getContext();
             await context.resume();
             stopSource();
 
-            const clampedTime = Math.min(
-                Math.max(0, timeMs),
-                buffer.duration * 1_000
-            );
-            const source = context.createBufferSource();
-            source.buffer = buffer;
-            source.playbackRate.value = rate;
-            source.connect(context.destination);
-
-            const generation = sourceGenerationRef.current + 1;
-            sourceGenerationRef.current = generation;
-            sourceRef.current = source;
+            const durationMs =
+                buffer?.duration === undefined
+                    ? getChartEditorNavigationDurationMs(
+                          store.getState().document
+                      )
+                    : buffer.duration * 1_000;
+            const clampedTime = Math.min(Math.max(0, timeMs), durationMs);
             anchorRef.current = {
                 contextTime: context.currentTime,
                 offsetMs: clampedTime,
                 rate,
             };
             scheduledThroughMsRef.current = clampedTime - 1;
-            source.onended = () => {
-                if (sourceGenerationRef.current !== generation) return;
-                stopSource(buffer.duration * 1_000);
-                setIsPlaying(false);
-            };
-            source.start(0, clampedTime / 1_000);
+            if (buffer) {
+                const source = context.createBufferSource();
+                source.buffer = buffer;
+                source.playbackRate.value = rate;
+                source.connect(context.destination);
+
+                const generation = sourceGenerationRef.current + 1;
+                sourceGenerationRef.current = generation;
+                sourceRef.current = source;
+                source.onended = () => {
+                    if (sourceGenerationRef.current !== generation) return;
+                    stopSource(durationMs);
+                    setIsPlaying(false);
+                };
+                source.start(0, clampedTime / 1_000);
+            }
             store.getState().setCurrentTimeMs(clampedTime);
             setIsPlaying(true);
             runPlayhead();
@@ -181,7 +189,6 @@ export function useChartAudio() {
                 const arrayBuffer = await file.arrayBuffer();
                 const audioBuffer = await context.decodeAudioData(arrayBuffer);
                 bufferRef.current = audioBuffer;
-                setIsReady(true);
                 setFileName(file.name);
                 setWaveformPeaks(calculateWaveformPeaks(audioBuffer));
                 store
@@ -189,7 +196,6 @@ export function useChartAudio() {
                     .setDurationMs(Math.round(audioBuffer.duration * 1_000));
             } catch {
                 bufferRef.current = null;
-                setIsReady(false);
                 setFileName(null);
                 setWaveformPeaks(null);
                 setError(
@@ -203,7 +209,6 @@ export function useChartAudio() {
     );
 
     const togglePlayback = useCallback(async () => {
-        if (!bufferRef.current) return;
         if (isPlaying) {
             const time = readPlaybackTime();
             stopSource(time);
@@ -226,7 +231,7 @@ export function useChartAudio() {
                       )
                     : buffer.duration * 1_000;
             const clamped = Math.min(Math.max(0, timeMs), durationMs);
-            if (isPlaying && buffer) {
+            if (isPlaying) {
                 await startPlaybackAt(clamped, store.getState().playbackRate);
             } else {
                 store.getState().setCurrentTimeMs(clamped);
@@ -236,9 +241,12 @@ export function useChartAudio() {
     );
 
     useEffect(() => {
-        if (!isPlaying || !bufferRef.current) return;
+        if (!isPlaying) return;
         const currentTime = readPlaybackTime();
-        void startPlaybackAt(currentTime, playbackRate);
+        const timer = window.setTimeout(() => {
+            void startPlaybackAt(currentTime, playbackRate);
+        }, 0);
+        return () => window.clearTimeout(timer);
     }, [playbackRate]); // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
@@ -262,6 +270,11 @@ export function useChartAudio() {
             );
 
             for (const beat of beats) {
+                const peakGain = getMetronomePeakGain(
+                    metronomeVolume,
+                    beat.accent
+                );
+                if (peakGain <= 0) continue;
                 const delaySeconds =
                     (beat.timeMs - currentMs) / 1_000 / anchor.rate;
                 const scheduledTime = Math.max(
@@ -273,7 +286,7 @@ export function useChartAudio() {
                 oscillator.frequency.value = beat.accent ? 1_320 : 880;
                 gain.gain.setValueAtTime(0.0001, scheduledTime);
                 gain.gain.exponentialRampToValueAtTime(
-                    beat.accent ? 0.16 : 0.08,
+                    peakGain,
                     scheduledTime + 0.002
                 );
                 gain.gain.exponentialRampToValueAtTime(
@@ -289,7 +302,14 @@ export function useChartAudio() {
         }, 40);
 
         return () => window.clearInterval(interval);
-    }, [isPlaying, metronomeEnabled, readPlaybackTime, store, playbackRate]);
+    }, [
+        isPlaying,
+        metronomeEnabled,
+        metronomeVolume,
+        readPlaybackTime,
+        store,
+        playbackRate,
+    ]);
 
     useEffect(
         () => () => {
@@ -305,7 +325,6 @@ export function useChartAudio() {
         waveformPeaks,
         isDecoding,
         isPlaying,
-        isReady,
         error,
         loadFile,
         togglePlayback,

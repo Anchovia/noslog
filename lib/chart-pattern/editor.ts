@@ -7,7 +7,7 @@ import {
 } from "./schema";
 import { snapTick, tickToMilliseconds } from "./timing";
 
-const DEFAULT_CHART_EDITOR_DURATION_MS = 10 * 60 * 1_000;
+export const DEFAULT_CHART_EDITOR_DURATION_MS = 5 * 60 * 1_000;
 const DEFAULT_JUDGMENT_LINE_RATIO = 0.76;
 const PIANO_HEIGHT_RATIO = 0.18;
 const MIN_PIANO_HEIGHT = 84;

@@ -186,6 +186,37 @@ describe("채보 타이밍 계산", () => {
         ]);
     });
 
+    it("마지막 내용이 속한 4마디 열의 끝까지 완성한다", () => {
+        expect(
+            getMeasurePanels([timingPoints[0]], 480, 9_000, 4, {
+                completeLastPanel: true,
+            })
+        ).toEqual([
+            { index: 0, startMs: 0, endMs: 8_000 },
+            { index: 1, startMs: 8_000, endMs: 16_000 },
+        ]);
+    });
+
+    it("내용이 없어도 첫 4마디 열을 제공한다", () => {
+        expect(
+            getMeasurePanels([timingPoints[0]], 480, 0, 4, {
+                completeLastPanel: true,
+            })
+        ).toEqual([{ index: 0, startMs: 0, endMs: 8_000 }]);
+    });
+
+    it("양수 오프셋을 포함해 마지막 4마디 열을 완성한다", () => {
+        expect(
+            getMeasurePanels(
+                [{ ...timingPoints[0], timeMs: 500 }],
+                480,
+                1_000,
+                4,
+                { completeLastPanel: true }
+            )
+        ).toEqual([{ index: 0, startMs: 0, endMs: 8_500 }]);
+    });
+
     it("저장 이력 시간을 서버 환경과 무관한 KST 24시간제로 표시한다", () => {
         expect(formatRevisionDateTime("2026-07-27T17:26:00.000Z")).toBe(
             "07. 28. 02:26"

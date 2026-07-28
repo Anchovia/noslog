@@ -19,6 +19,7 @@ import {
     getChartNoteRenderPoints,
     getGlissandoSnapRenderPoints,
 } from "@/lib/chart-pattern/editor";
+import { getChartPlaybackDurationMs } from "@/lib/chart-pattern/playback";
 import {
     CHART_LANE_COUNT,
     isChartLaneGroupBoundary,
@@ -57,8 +58,8 @@ const handColors: Record<ChartHand, string> = {
     right: "#f06b68",
 };
 
-function chartDuration(document: ChartDocument) {
-    const noteEnd = document.notes.reduce((maximum, note) => {
+function chartContentEnd(document: ChartDocument) {
+    return document.notes.reduce((maximum, note) => {
         const time = tickToMilliseconds(
             note.tick + note.durationTicks,
             document.timingPoints,
@@ -66,7 +67,6 @@ function chartDuration(document: ChartDocument) {
         );
         return Math.max(maximum, time);
     }, 0);
-    return Math.max(document.durationMs, Math.ceil(noteEnd + 1_000), 1_000);
 }
 
 export default function ChartSheetViewer({
@@ -88,15 +88,21 @@ export default function ChartSheetViewer({
     );
     const effectiveViewMode =
         browserSupport === "supported" ? viewMode : "sheet";
-    const durationMs = useMemo(() => chartDuration(document), [document]);
+    const playbackDurationMs = useMemo(
+        () => getChartPlaybackDurationMs(document),
+        [document]
+    );
+    const contentEndMs = useMemo(() => chartContentEnd(document), [document]);
     const panels = useMemo(
         () =>
             getMeasurePanels(
                 document.timingPoints,
                 document.ticksPerQuarter,
-                durationMs
+                contentEndMs,
+                4,
+                { completeLastPanel: true }
             ),
-        [document.ticksPerQuarter, document.timingPoints, durationMs]
+        [contentEndMs, document.ticksPerQuarter, document.timingPoints]
     );
 
     return (
@@ -130,7 +136,7 @@ export default function ChartSheetViewer({
                             ? ""
                             : ` · ${preview ? "저장" : "공개"} v${revision}`}
                         {" · "}
-                        {formatEditorTime(durationMs)}
+                        {formatEditorTime(playbackDurationMs)}
                     </p>
                 </div>
             </header>
@@ -202,19 +208,21 @@ export default function ChartSheetViewer({
                 </div>
             </section>
 
-            {document.notes.length === 0 ? (
-                <div className="border-border bg-surface text-text-secondary mx-auto mt-4 flex min-h-64 w-full max-w-7xl items-center justify-center rounded-md border text-sm">
-                    표시할 노트가 없습니다.
-                </div>
-            ) : browserSupport === "checking" ? (
+            {browserSupport === "checking" ? (
                 <div className="border-border bg-surface mx-auto mt-4 min-h-64 w-full max-w-7xl rounded-md border" />
             ) : effectiveViewMode === "falling" ? (
-                <section className="mx-auto mt-4 w-full max-w-5xl">
-                    <FallingChartViewer
-                        document={document}
-                        jacketUrl={jacketUrl}
-                    />
-                </section>
+                document.notes.length === 0 ? (
+                    <div className="border-border bg-surface text-text-secondary mx-auto mt-4 flex min-h-64 w-full max-w-7xl items-center justify-center rounded-md border text-sm">
+                        표시할 노트가 없습니다.
+                    </div>
+                ) : (
+                    <section className="mx-auto mt-4 w-full max-w-5xl">
+                        <FallingChartViewer
+                            document={document}
+                            jacketUrl={jacketUrl}
+                        />
+                    </section>
+                )
             ) : (
                 <section
                     tabIndex={0}
