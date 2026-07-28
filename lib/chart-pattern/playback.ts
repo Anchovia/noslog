@@ -224,11 +224,76 @@ function playbackPathPointAtTime(
     };
 }
 
-export function getActivePlaybackPianoRanges(
-    notes: PreparedPlaybackNote[],
+function singlePianoLaneForRange(range: PlaybackPianoRange) {
+    const firstLane = Math.floor(range.lane);
+    const lastLane = Math.ceil(range.lane + range.width) - 1;
+    const laneCount = Math.max(1, lastLane - firstLane + 1);
+    const centerOffset = Math.floor(laneCount / 2);
+    return (
+        firstLane +
+        centerOffset -
+        (laneCount % 2 === 0 && range.hand === "right" ? 1 : 0)
+    );
+}
+
+function trillPianoLaneForRange(
+    lane: number,
+    width: number,
+    side: "left" | "right"
+) {
+    const laneCount = Math.max(1, Math.round(width));
+    if (laneCount === 1) return Math.round(lane);
+
+    const halfWidth = Math.floor(laneCount / 2);
+    const offset =
+        side === "left"
+            ? Math.floor(halfWidth / 2)
+            : laneCount - 1 - Math.floor(halfWidth / 2);
+    return Math.round(lane) + offset;
+}
+
+function getStrictTrillPianoRange(
+    note: PreparedPlaybackNote,
     currentTimeMs: number
 ): PlaybackPianoRange[] {
+    const activeSegment = note.trillSegments
+        .map((segment, index) => ({
+            segment,
+            index,
+            distanceMs: Math.abs(segment.startTimeMs - currentTimeMs),
+        }))
+        .filter(({ distanceMs }) => distanceMs <= PIANO_HIT_WINDOW_MS)
+        .sort(
+            (first, second) =>
+                first.distanceMs - second.distanceMs ||
+                second.segment.startTimeMs - first.segment.startTimeMs
+        )[0];
+    if (!activeSegment) return [];
+
+    const side = activeSegment.index % 2 === 0 ? "left" : "right";
+    return [
+        {
+            lane: trillPianoLaneForRange(
+                activeSegment.segment.fromLane,
+                activeSegment.segment.fromWidth,
+                side
+            ),
+            width: 1,
+            hand: note.hand,
+        },
+    ];
+}
+
+export function getActivePlaybackPianoRanges(
+    notes: PreparedPlaybackNote[],
+    currentTimeMs: number,
+    strictPerformance = false
+): PlaybackPianoRange[] {
     return notes.flatMap((note) => {
+        if (strictPerformance && note.type === "trill") {
+            return getStrictTrillPianoRange(note, currentTimeMs);
+        }
+
         const isHeldNote = note.type === "tenuto" || note.type === "glissando";
         const isActive = isHeldNote
             ? currentTimeMs >= note.startTimeMs - PIANO_HIT_WINDOW_MS &&
@@ -239,15 +304,23 @@ export function getActivePlaybackPianoRanges(
         const point = isHeldNote
             ? playbackPathPointAtTime(note.pathPoints, currentTimeMs)
             : note.pathPoints[0];
-        return point
-            ? [
-                  {
-                      lane: point.lane,
-                      width: point.width,
-                      hand: point.hand,
-                  },
-              ]
-            : [];
+        if (!point) return [];
+
+        const range = {
+            lane: point.lane,
+            width: point.width,
+            hand: point.hand,
+        };
+        if (!strictPerformance || note.type === "glissando") {
+            return [range];
+        }
+        return [
+            {
+                lane: singlePianoLaneForRange(range),
+                width: 1,
+                hand: range.hand,
+            },
+        ];
     });
 }
 

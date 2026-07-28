@@ -5,6 +5,7 @@ import { type ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import type { Application, Graphics } from "pixi.js";
 
 import { getMetronomePeakGain } from "@/lib/chart-pattern/metronome";
+import { chartPianoColors } from "@/lib/chart-pattern/piano";
 import {
     getActivePlaybackPianoRanges,
     getApproachDurationMs,
@@ -27,6 +28,7 @@ import {
 import { formatEditorTime, getBeatMarkers } from "@/lib/chart-pattern/timing";
 
 import { useMetronomeVolume } from "./useMetronomeVolume";
+import { useStrictPerformance } from "./useStrictPerformance";
 interface FallingChartViewerProps {
     document: ChartDocument;
     jacketUrl: string | null;
@@ -52,11 +54,6 @@ const colors = {
     judgment: 0xf2f0e9,
     judgmentEdge: 0x8f929d,
     guideStrong: 0x727786,
-    pianoWhite: 0xe7e6e1,
-    pianoWhiteAlt: 0xd2d4d4,
-    pianoBlack: 0x161820,
-    pianoPressedLeft: 0x91e5ef,
-    pianoPressedRight: 0xf3a2a2,
 };
 
 function colorForHand(hand: ChartHand) {
@@ -334,7 +331,8 @@ function drawPiano(
     height: number,
     judgmentY: number,
     currentTimeMs: number,
-    notes: PreparedPlaybackNote[]
+    notes: PreparedPlaybackNote[],
+    strictPerformance: boolean
 ) {
     const left = width * 0.03;
     const right = width * 0.97;
@@ -343,7 +341,11 @@ function drawPiano(
     const laneWidth = (right - left) / CHART_LANE_COUNT;
     const activeLaneHands = new Map<number, ChartHand>();
 
-    for (const range of getActivePlaybackPianoRanges(notes, currentTimeMs)) {
+    for (const range of getActivePlaybackPianoRanges(
+        notes,
+        currentTimeMs,
+        strictPerformance
+    )) {
         for (
             let lane = Math.floor(range.lane);
             lane < Math.ceil(range.lane + range.width);
@@ -364,12 +366,12 @@ function drawPiano(
             .fill({
                 color:
                     activeHand === "left"
-                        ? colors.pianoPressedLeft
+                        ? chartPianoColors.pressedLeft
                         : activeHand === "right"
-                          ? colors.pianoPressedRight
+                          ? chartPianoColors.pressedRight
                           : lane % 2 === 0
-                            ? colors.pianoWhite
-                            : colors.pianoWhiteAlt,
+                            ? chartPianoColors.white
+                            : chartPianoColors.whiteAlt,
                 alpha: activeHand === undefined ? 0.96 : 0.9,
             })
             .stroke({ color: 0x565a63, width: 0.65, alpha: 0.7 });
@@ -386,7 +388,7 @@ function drawPiano(
                 laneWidth * 0.44,
                 (pianoBottom - pianoTop) * 0.56
             )
-            .fill({ color: colors.pianoBlack, alpha: 0.98 });
+            .fill({ color: chartPianoColors.black, alpha: 0.98 });
     }
 }
 
@@ -557,6 +559,7 @@ function renderPlaybackFrame({
     approachDurationMs,
     width,
     height,
+    strictPerformance,
 }: {
     graphics: Graphics;
     notes: PreparedPlaybackNote[];
@@ -564,6 +567,7 @@ function renderPlaybackFrame({
     approachDurationMs: number;
     width: number;
     height: number;
+    strictPerformance: boolean;
 }) {
     const horizonY = Math.max(40, height * 0.12);
     const judgmentY = height * 0.79;
@@ -584,7 +588,15 @@ function renderPlaybackFrame({
         });
     }
 
-    drawPiano(graphics, width, height, judgmentY, currentTimeMs, notes);
+    drawPiano(
+        graphics,
+        width,
+        height,
+        judgmentY,
+        currentTimeMs,
+        notes,
+        strictPerformance
+    );
     drawJudgmentLine(graphics, width, judgmentY);
 }
 
@@ -599,6 +611,7 @@ export default function FallingChartViewer({
     const currentTimeRef = useRef(0);
     const durationRef = useRef(getChartPlaybackDurationMs(document));
     const noteSpeedRef = useRef(2);
+    const strictPerformanceRef = useRef(false);
     const clockAnchorRef = useRef<PlaybackClockAnchor | null>(null);
     const lastUiUpdateRef = useRef(0);
     const metronomeContextRef = useRef<AudioContext | null>(null);
@@ -609,6 +622,7 @@ export default function FallingChartViewer({
     const [noteSpeed, setNoteSpeed] = useState(2);
     const [metronomeEnabled, setMetronomeEnabled] = useState(false);
     const [metronomeVolume, setMetronomeVolume] = useMetronomeVolume();
+    const [strictPerformance, setStrictPerformance] = useStrictPerformance();
     const [fileName, setFileName] = useState<string | null>(null);
     const [audioError, setAudioError] = useState<string | null>(null);
     const preparedNotes = useMemo(
@@ -628,6 +642,10 @@ export default function FallingChartViewer({
     useEffect(() => {
         noteSpeedRef.current = noteSpeed;
     }, [noteSpeed]);
+
+    useEffect(() => {
+        strictPerformanceRef.current = strictPerformance;
+    }, [strictPerformance]);
 
     useEffect(() => {
         const host = hostRef.current;
@@ -688,6 +706,7 @@ export default function FallingChartViewer({
                     ),
                     width: application.screen.width,
                     height: application.screen.height,
+                    strictPerformance: strictPerformanceRef.current,
                 });
             });
         })();
@@ -1017,6 +1036,17 @@ export default function FallingChartViewer({
                         <span className="text-micro w-8 text-right tabular-nums">
                             {metronomeVolume}%
                         </span>
+                    </label>
+                    <label className="border-border hover:bg-surface-muted flex h-9 items-center gap-2 rounded-md border px-3 text-xs font-semibold">
+                        <input
+                            type="checkbox"
+                            checked={strictPerformance}
+                            onChange={(event) =>
+                                setStrictPerformance(event.target.checked)
+                            }
+                            className="accent-text-primary size-3.5"
+                        />
+                        엄밀한 연주 켜기
                     </label>
                     <p className="text-micro min-w-0 flex-1 truncate sm:text-right">
                         {fileName ??

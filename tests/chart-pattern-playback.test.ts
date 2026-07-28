@@ -205,6 +205,133 @@ describe("낙하형 채보 재생 계산", () => {
         expect(getActivePlaybackPianoRanges(notes, 4_096)).toEqual([]);
     });
 
+    it("엄밀한 연주는 일반 노트와 테누토를 한 건반으로 줄이고 글리산도 폭은 유지한다", () => {
+        const prepared = prepareChartPlaybackNotes({
+            ...document,
+            notes: [
+                {
+                    id: "left-even",
+                    type: "standard",
+                    hand: "left",
+                    tick: 480,
+                    durationTicks: 0,
+                    lane: 0,
+                    width: 4,
+                    points: [],
+                },
+                {
+                    id: "right-even",
+                    type: "standard",
+                    hand: "right",
+                    tick: 480,
+                    durationTicks: 0,
+                    lane: 8,
+                    width: 4,
+                    points: [],
+                },
+                {
+                    id: "odd",
+                    type: "standard",
+                    hand: "left",
+                    tick: 480,
+                    durationTicks: 0,
+                    lane: 16,
+                    width: 3,
+                    points: [],
+                },
+                {
+                    id: "tenuto",
+                    type: "tenuto",
+                    hand: "right",
+                    tick: 960,
+                    durationTicks: 480,
+                    lane: 4,
+                    width: 2,
+                    points: [],
+                },
+                document.notes[1],
+            ],
+        });
+
+        expect(getActivePlaybackPianoRanges(prepared, 500, true)).toEqual([
+            { lane: 2, width: 1, hand: "left" },
+            { lane: 17, width: 1, hand: "left" },
+            { lane: 9, width: 1, hand: "right" },
+        ]);
+        expect(getActivePlaybackPianoRanges(prepared, 1_250, true)).toEqual([
+            { lane: 10, width: 2.75, hand: "right" },
+            { lane: 4, width: 1, hand: "right" },
+        ]);
+    });
+
+    it("엄밀한 트릴은 각 절반의 가운데를 저장된 반복 간격으로 교대한다", () => {
+        const expectedLanes = [
+            { width: 1, left: 0, right: 0 },
+            { width: 2, left: 0, right: 1 },
+            { width: 3, left: 0, right: 2 },
+            { width: 4, left: 1, right: 2 },
+            { width: 5, left: 1, right: 3 },
+            { width: 6, left: 1, right: 4 },
+        ];
+
+        for (const expected of expectedLanes) {
+            const prepared = prepareChartPlaybackNotes({
+                ...document,
+                notes: [
+                    {
+                        id: `trill-${expected.width}`,
+                        type: "trill",
+                        hand: "left",
+                        tick: 0,
+                        durationTicks: 960,
+                        lane: 0,
+                        width: expected.width,
+                        pairLane: 0,
+                        pairWidth: expected.width,
+                        trillSnapDivisor: 8,
+                        points: [],
+                    },
+                ],
+            });
+
+            expect(getActivePlaybackPianoRanges(prepared, 0, true)).toEqual([
+                { lane: expected.left, width: 1, hand: "left" },
+            ]);
+            expect(getActivePlaybackPianoRanges(prepared, 250, true)).toEqual([
+                { lane: expected.right, width: 1, hand: "left" },
+            ]);
+        }
+
+        const separatedRanges = prepareChartPlaybackNotes({
+            ...document,
+            notes: [
+                {
+                    id: "separated-trill",
+                    type: "trill",
+                    hand: "right",
+                    tick: 0,
+                    durationTicks: 960,
+                    lane: 0,
+                    width: 3,
+                    pairLane: 6,
+                    pairWidth: 3,
+                    trillSnapDivisor: 4,
+                    points: [],
+                },
+            ],
+        });
+
+        expect(getActivePlaybackPianoRanges(separatedRanges, 0, true)).toEqual([
+            { lane: 0, width: 1, hand: "right" },
+        ]);
+        expect(
+            getActivePlaybackPianoRanges(separatedRanges, 250, true)
+        ).toEqual([]);
+        expect(
+            getActivePlaybackPianoRanges(separatedRanges, 500, true)
+        ).toEqual([{ lane: 8, width: 1, hand: "right" }]);
+    });
+
     it("판정선으로 접근할수록 노트 폭이 넓어지고 판정선에 도착한다", () => {
         const far = projectPlaybackRange({
             lane: 4,
