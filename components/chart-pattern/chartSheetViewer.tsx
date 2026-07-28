@@ -2,8 +2,19 @@
 
 import { ArrowLeft, Info } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+    useSyncExternalStore,
+} from "react";
 
+import {
+    getBrowserSupportSnapshot,
+    getServerBrowserSupportSnapshot,
+    subscribeBrowserSupport,
+} from "@/lib/browserSupport";
 import {
     getChartNoteRenderPoints,
     getGlissandoSnapRenderPoints,
@@ -70,6 +81,13 @@ export default function ChartSheetViewer({
     preview = false,
 }: ChartSheetViewerProps) {
     const [viewMode, setViewMode] = useState<"falling" | "sheet">("falling");
+    const browserSupport = useSyncExternalStore(
+        subscribeBrowserSupport,
+        getBrowserSupportSnapshot,
+        getServerBrowserSupportSnapshot
+    );
+    const effectiveViewMode =
+        browserSupport === "supported" ? viewMode : "sheet";
     const durationMs = useMemo(() => chartDuration(document), [document]);
     const panels = useMemo(
         () =>
@@ -137,10 +155,11 @@ export default function ChartSheetViewer({
                     <button
                         type="button"
                         role="tab"
-                        aria-selected={viewMode === "falling"}
+                        aria-selected={effectiveViewMode === "falling"}
+                        disabled={browserSupport !== "supported"}
                         onClick={() => setViewMode("falling")}
-                        className={`h-8 rounded px-3 text-xs font-semibold ${
-                            viewMode === "falling"
+                        className={`h-8 rounded px-3 text-xs font-semibold disabled:cursor-not-allowed disabled:opacity-40 ${
+                            effectiveViewMode === "falling"
                                 ? "bg-text-primary text-bg"
                                 : "text-text-secondary hover:bg-surface-muted"
                         }`}
@@ -150,10 +169,10 @@ export default function ChartSheetViewer({
                     <button
                         type="button"
                         role="tab"
-                        aria-selected={viewMode === "sheet"}
+                        aria-selected={effectiveViewMode === "sheet"}
                         onClick={() => setViewMode("sheet")}
                         className={`h-8 rounded px-3 text-xs font-semibold ${
-                            viewMode === "sheet"
+                            effectiveViewMode === "sheet"
                                 ? "bg-text-primary text-bg"
                                 : "text-text-secondary hover:bg-surface-muted"
                         }`}
@@ -164,7 +183,13 @@ export default function ChartSheetViewer({
 
                 <div className="border-border bg-surface text-caption flex items-start gap-2 rounded-md border px-3 py-2.5">
                     <Info className="mt-0.5 size-3.5 shrink-0" />
-                    {viewMode === "falling" ? (
+                    {browserSupport === "safari" ? (
+                        <p>
+                            Safari에서는 낙하형 뷰어를 지원하지 않아 전체 악보로
+                            표시합니다. 낙하형은 Chrome 또는 Edge에서
+                            확인해주세요.
+                        </p>
+                    ) : effectiveViewMode === "falling" ? (
                         <p>
                             노트가 판정선에 도착하는 흐름을 재생합니다. 로컬
                             음원을 불러오면 브라우저에서만 사용되며 서버에는
@@ -192,7 +217,9 @@ export default function ChartSheetViewer({
                 <div className="border-border bg-surface text-text-secondary mx-auto mt-4 flex min-h-64 w-full max-w-7xl items-center justify-center rounded-md border text-sm">
                     표시할 노트가 없습니다.
                 </div>
-            ) : viewMode === "falling" ? (
+            ) : browserSupport === "checking" ? (
+                <div className="border-border bg-surface mx-auto mt-4 min-h-64 w-full max-w-7xl rounded-md border" />
+            ) : effectiveViewMode === "falling" ? (
                 <section className="mx-auto mt-4 w-full max-w-5xl">
                     <FallingChartViewer
                         document={document}

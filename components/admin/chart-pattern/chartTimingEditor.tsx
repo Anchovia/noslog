@@ -38,6 +38,11 @@ import {
     restoreChartPatternRevision,
     saveChartPatternDraft,
 } from "@/app/admin/music/[index]/[difficulty]/pattern/actions";
+import {
+    getBrowserSupportSnapshot,
+    getServerBrowserSupportSnapshot,
+    subscribeBrowserSupport,
+} from "@/lib/browserSupport";
 import { findChartNoteConflicts } from "@/lib/chart-pattern/editor";
 import {
     chartDocumentSchema,
@@ -563,7 +568,7 @@ function ChartTimingEditorWorkspace({
 
     return (
         <>
-            <div className="chart-pattern-editor-shell bg-bg fixed inset-0 z-[100] min-h-0 flex-col">
+            <div className="bg-bg fixed inset-0 z-[100] hidden min-h-0 flex-col min-[1024px]:flex">
                 <header className="border-divider bg-surface flex h-14 shrink-0 items-center gap-3 border-b px-3">
                     <Link
                         href={`/admin/music/${encodeURIComponent(metadata.musicIndex)}`}
@@ -1072,7 +1077,7 @@ function ChartTimingEditorWorkspace({
                 </footer>
             </div>
 
-            <div className="chart-pattern-screen-warning bg-bg fixed inset-0 z-[100] items-center justify-center p-6">
+            <div className="bg-bg fixed inset-0 z-[100] flex items-center justify-center p-6 min-[1024px]:hidden">
                 <div className="max-w-sm text-center">
                     <div className="bg-surface mx-auto flex size-12 items-center justify-center rounded-full">
                         <Maximize2 className="size-5" />
@@ -1097,6 +1102,41 @@ function ChartTimingEditorWorkspace({
 }
 
 export default function ChartTimingEditor(props: ChartTimingEditorProps) {
+    const browserSupport = useSyncExternalStore(
+        subscribeBrowserSupport,
+        getBrowserSupportSnapshot,
+        getServerBrowserSupportSnapshot
+    );
+
+    if (browserSupport === "checking") {
+        return <div className="bg-bg fixed inset-0 z-[100]" aria-hidden />;
+    }
+
+    if (browserSupport === "safari") {
+        return (
+            <div className="bg-bg fixed inset-0 z-[100] flex items-center justify-center p-6">
+                <div className="max-w-sm text-center">
+                    <div className="bg-surface mx-auto flex size-12 items-center justify-center rounded-full">
+                        <Maximize2 className="size-5" />
+                    </div>
+                    <h1 className="text-title mt-4">
+                        Safari에서는 편집할 수 없습니다
+                    </h1>
+                    <p className="text-body-muted mt-2">
+                        채보 편집기는 Chrome 또는 Edge를 지원합니다. macOS에서도
+                        Chrome으로 다시 열어주세요.
+                    </p>
+                    <Link
+                        href={`/admin/music/${encodeURIComponent(props.metadata.musicIndex)}`}
+                        className="border-border mt-5 inline-flex h-10 items-center rounded-md border px-4 text-sm font-semibold"
+                    >
+                        악곡 관리로 돌아가기
+                    </Link>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <ChartEditorStoreProvider
             initialState={{
