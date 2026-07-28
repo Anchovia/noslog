@@ -52,6 +52,8 @@ const PANEL_WIDTH = 220;
 const PANEL_HEIGHT = 720;
 const PADDING_TOP = 30;
 const PADDING_BOTTOM = 34;
+const PANEL_NOTE_EDGE_INSET = 4;
+const PANEL_BOUNDARY_EPSILON_MS = 0.001;
 
 const handColors: Record<ChartHand, string> = {
     left: "#62d4e8",
@@ -316,10 +318,9 @@ function drawPanel(
     const chartHeight = PANEL_HEIGHT - PADDING_TOP - PADDING_BOTTOM;
     const laneWidth = PANEL_WIDTH / CHART_LANE_COUNT;
     const panelDuration = Math.max(1, endMs - startMs);
+    const chartBottom = PANEL_HEIGHT - PADDING_BOTTOM;
     const yForTime = (timeMs: number) =>
-        PANEL_HEIGHT -
-        PADDING_BOTTOM -
-        ((timeMs - startMs) / panelDuration) * chartHeight;
+        chartBottom - ((timeMs - startMs) / panelDuration) * chartHeight;
 
     context.clearRect(0, 0, PANEL_WIDTH, PANEL_HEIGHT);
     context.fillStyle = "#0b0b10";
@@ -348,6 +349,7 @@ function drawPanel(
         endMs
     );
     for (const beat of beats) {
+        if (beat.timeMs >= endMs - PANEL_BOUNDARY_EPSILON_MS) continue;
         const y = yForTime(beat.timeMs) + 0.5;
         context.strokeStyle = beat.accent ? "#656574" : "#2a2a34";
         context.lineWidth = beat.accent ? 1.2 : 0.7;
@@ -368,11 +370,19 @@ function drawPanel(
             document.timingPoints,
             document.ticksPerQuarter
         );
-        if (noteEnd < startMs || noteStart > endMs) continue;
+        const hasDuration = noteEnd > noteStart + PANEL_BOUNDARY_EPSILON_MS;
+        const overlapsPanel = hasDuration
+            ? noteEnd > startMs + PANEL_BOUNDARY_EPSILON_MS &&
+              noteStart < endMs - PANEL_BOUNDARY_EPSILON_MS
+            : noteStart >= startMs - PANEL_BOUNDARY_EPSILON_MS &&
+              noteStart < endMs - PANEL_BOUNDARY_EPSILON_MS;
+        if (!overlapsPanel) continue;
         drawSheetNote(context, {
             note,
             laneWidth,
             yForTime,
+            chartTop: PADDING_TOP,
+            chartBottom,
             document,
         });
     }
@@ -403,11 +413,15 @@ function drawSheetNote(
         note,
         laneWidth,
         yForTime,
+        chartTop,
+        chartBottom,
         document,
     }: {
         note: ChartNote;
         laneWidth: number;
         yForTime: (timeMs: number) => number;
+        chartTop: number;
+        chartBottom: number;
         document: ChartDocument;
     }
 ) {
@@ -425,15 +439,26 @@ function drawSheetNote(
         tick: number,
         hand: ChartHand = note.hand,
         small = false
-    ) =>
+    ) => {
+        const rawY = yForTick(tick);
+        const centerY =
+            rawY >= chartTop - PANEL_BOUNDARY_EPSILON_MS &&
+            rawY <= chartBottom + PANEL_BOUNDARY_EPSILON_MS
+                ? Math.min(
+                      chartBottom - PANEL_NOTE_EDGE_INSET,
+                      Math.max(chartTop + PANEL_NOTE_EDGE_INSET, rawY)
+                  )
+                : rawY;
+
         drawSheetCap(
             context,
             lane * laneWidth,
-            yForTick(tick),
+            centerY,
             width * laneWidth,
             handColors[hand],
             small
         );
+    };
 
     if (note.type === "standard") {
         drawHead(note.lane, note.width, note.tick);
