@@ -5,6 +5,7 @@ import {
     formatBpm,
     formatRevisionDateTime,
     getBeatMarkers,
+    getMeasurePanels,
     getSnapGridMarkers,
     getSnapGridSubdivision,
     millisecondsToTick,
@@ -138,6 +139,51 @@ describe("채보 타이밍 계산", () => {
         expect(accentTicks.has(0)).toBe(true);
         expect(accentTicks.has(1_920)).toBe(false);
         expect(accentTicks.has(3_840)).toBe(false);
+    });
+
+    it("실제 박자표를 기준으로 한 열을 4마디씩 나눈다", () => {
+        const panels = getMeasurePanels([timingPoints[0]], 480, 20_000);
+
+        expect(panels).toEqual([
+            { index: 0, startMs: 0, endMs: 8_000 },
+            { index: 1, startMs: 8_000, endMs: 16_000 },
+            { index: 2, startMs: 16_000, endMs: 20_000 },
+        ]);
+    });
+
+    it("BPM과 박자표가 바뀌어도 실제 4마디 단위로 나눈다", () => {
+        const panels = getMeasurePanels(timingPoints, 480, 16_000);
+
+        expect(panels).toEqual([
+            { index: 0, startMs: 0, endMs: 11_000 },
+            { index: 1, startMs: 11_000, endMs: 16_000 },
+        ]);
+    });
+
+    it("양수 오프셋 앞의 여백을 유지하고 4마디 뒤에서 열을 나눈다", () => {
+        const panels = getMeasurePanels(
+            [{ ...timingPoints[0], timeMs: 500 }],
+            480,
+            10_000
+        );
+
+        expect(panels).toEqual([
+            { index: 0, startMs: 0, endMs: 8_500 },
+            { index: 1, startMs: 8_500, endMs: 10_000 },
+        ]);
+    });
+
+    it("음수 오프셋에서 시작한 첫 마디를 포함해 4마디씩 나눈다", () => {
+        const panels = getMeasurePanels(
+            [{ ...timingPoints[0], timeMs: -100 }],
+            480,
+            10_000
+        );
+
+        expect(panels).toEqual([
+            { index: 0, startMs: 0, endMs: 7_900 },
+            { index: 1, startMs: 7_900, endMs: 10_000 },
+        ]);
     });
 
     it("저장 이력 시간을 서버 환경과 무관한 KST 24시간제로 표시한다", () => {

@@ -57,6 +57,8 @@ export interface PlaybackPianoRange {
 }
 
 const PIANO_HIT_WINDOW_MS = 95;
+const PLAYBACK_VISUAL_REFERENCE_WIDTH = 960;
+const PLAYBACK_VISUAL_MIN_SCALE = 0.62;
 
 export function getChartPlaybackDurationMs(document: ChartDocument) {
     const lastNoteMs = document.notes.reduce(
@@ -252,6 +254,19 @@ export function getActivePlaybackPianoRanges(
 export function getApproachDurationMs(noteSpeed: number) {
     const clampedSpeed = Math.min(4, Math.max(1, noteSpeed));
     return 2_000 / clampedSpeed;
+}
+
+export function getPlaybackVisualScale(canvasWidth: number) {
+    if (!Number.isFinite(canvasWidth) || canvasWidth <= 0) {
+        return PLAYBACK_VISUAL_MIN_SCALE;
+    }
+    return Math.min(
+        1,
+        Math.max(
+            PLAYBACK_VISUAL_MIN_SCALE,
+            Math.sqrt(canvasWidth / PLAYBACK_VISUAL_REFERENCE_WIDTH)
+        )
+    );
 }
 
 export function getPlaybackRibbonVisibleEndMs(

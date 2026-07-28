@@ -87,6 +87,12 @@ export interface SnapGridMarker {
     subdivision: number;
 }
 
+export interface MeasurePanel {
+    index: number;
+    startMs: number;
+    endMs: number;
+}
+
 function greatestCommonDivisor(first: number, second: number) {
     let left = Math.abs(Math.round(first));
     let right = Math.abs(Math.round(second));
@@ -207,6 +213,123 @@ export function getBeatMarkers(
     }
 
     return markers;
+}
+
+export function getMeasurePanels(
+    points: ChartTimingPoint[],
+    ticksPerQuarter: number,
+    durationMs: number,
+    measuresPerPanel = 4
+) {
+    const chartEndMs = Math.max(0, durationMs);
+    if (
+        chartEndMs === 0 ||
+        points.length === 0 ||
+        !Number.isFinite(ticksPerQuarter) ||
+        ticksPerQuarter <= 0
+    ) {
+        return [
+            {
+                index: 0,
+                startMs: 0,
+                endMs: chartEndMs,
+            },
+        ] satisfies MeasurePanel[];
+    }
+
+    const sorted = sortTimingPoints(points);
+    const rangeStartMs = Math.min(0, sorted[0].timeMs);
+    const measureBoundaries: number[] = [];
+
+    for (let index = 0; index < sorted.length; index += 1) {
+        const point = sorted[index];
+        const nextPoint = sorted[index + 1];
+        const segmentStartMs = Math.max(rangeStartMs, point.timeMs);
+        const segmentEndMs = Math.min(
+            chartEndMs,
+            nextPoint?.timeMs ?? chartEndMs
+        );
+        if (segmentEndMs < segmentStartMs) continue;
+
+        const beatTicks = (ticksPerQuarter * 4) / point.denominator;
+        const measureTicks = beatTicks * point.numerator;
+        const firstVisibleTick = millisecondsToTick(
+            segmentStartMs,
+            [point],
+            ticksPerQuarter
+        );
+        const firstMeasureIndex = Math.max(
+            0,
+            Math.ceil((firstVisibleTick - point.tick - 0.000001) / measureTicks)
+        );
+
+        for (let measureIndex = firstMeasureIndex; ; measureIndex += 1) {
+            const tick = point.tick + measureIndex * measureTicks;
+            const timeMs = tickToMilliseconds(tick, [point], ticksPerQuarter);
+            if (timeMs > segmentEndMs + 0.001) break;
+            if (
+                timeMs >= rangeStartMs - 0.001 &&
+                (!nextPoint || timeMs < nextPoint.timeMs - 0.001)
+            ) {
+                measureBoundaries.push(timeMs);
+            }
+        }
+    }
+
+    const boundaries = measureBoundaries
+        .sort((first, second) => first - second)
+        .filter(
+            (timeMs, index, values) =>
+                index === 0 || Math.abs(timeMs - values[index - 1]) > 0.001
+        );
+    if (boundaries.length === 0) {
+        return [
+            {
+                index: 0,
+                startMs: 0,
+                endMs: chartEndMs,
+            },
+        ] satisfies MeasurePanel[];
+    }
+
+    const panelMeasureCount = Math.max(1, Math.round(measuresPerPanel));
+    const lastBoundaryAtOrBeforeStart = boundaries.findLastIndex(
+        (timeMs) => timeMs <= 0.001
+    );
+    const anchorIndex =
+        lastBoundaryAtOrBeforeStart >= 0 ? lastBoundaryAtOrBeforeStart : 0;
+    const panels: MeasurePanel[] = [];
+    let panelStartMs = 0;
+    let measureCount = 0;
+
+    for (let index = anchorIndex + 1; index < boundaries.length; index += 1) {
+        const boundaryMs = boundaries[index];
+        if (boundaryMs <= 0.001) continue;
+        measureCount += 1;
+        if (measureCount < panelMeasureCount) continue;
+
+        const panelEndMs = Math.min(chartEndMs, boundaryMs);
+        if (panelEndMs > panelStartMs + 0.001) {
+            panels.push({
+                index: panels.length,
+                startMs: panelStartMs,
+                endMs: panelEndMs,
+            });
+            panelStartMs = panelEndMs;
+        }
+        measureCount = 0;
+        if (panelStartMs >= chartEndMs - 0.001) break;
+    }
+
+    if (panelStartMs < chartEndMs - 0.001 || panels.length === 0) {
+        panels.push({
+            index: panels.length,
+            startMs: panelStartMs,
+            endMs: chartEndMs,
+        });
+    }
+
+    return panels;
 }
 
 export function formatEditorTime(timeMs: number) {

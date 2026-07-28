@@ -4,6 +4,7 @@ import {
     getActivePlaybackPianoRanges,
     getApproachDurationMs,
     getChartPlaybackDurationMs,
+    getPlaybackVisualScale,
     getPlaybackRibbonVisibleEndMs,
     prepareChartPlaybackNotes,
     projectPlaybackLane,
@@ -118,6 +119,14 @@ describe("낙하형 채보 재생 계산", () => {
         expect(getApproachDurationMs(3)).toBeCloseTo(2_000 / 3);
         expect(getApproachDurationMs(4)).toBe(500);
         expect(getApproachDurationMs(5)).toBe(500);
+    });
+
+    it("화면 너비에 따라 노트 시각 두께를 부드럽게 조절한다", () => {
+        expect(getPlaybackVisualScale(960)).toBe(1);
+        expect(getPlaybackVisualScale(1_280)).toBe(1);
+        expect(getPlaybackVisualScale(600)).toBeCloseTo(Math.sqrt(600 / 960));
+        expect(getPlaybackVisualScale(390)).toBeCloseTo(Math.sqrt(390 / 960));
+        expect(getPlaybackVisualScale(320)).toBe(0.62);
     });
 
     it("롱노트 리본은 궤적 정점 이후 구간만 표시한다", () => {

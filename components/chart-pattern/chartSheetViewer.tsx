@@ -29,6 +29,7 @@ import {
 import {
     formatEditorTime,
     getBeatMarkers,
+    getMeasurePanels,
     tickToMilliseconds,
 } from "@/lib/chart-pattern/timing";
 
@@ -46,7 +47,6 @@ interface ChartSheetViewerProps {
     preview?: boolean;
 }
 
-const PANEL_DURATION_MS = 12_000;
 const PANEL_WIDTH = 220;
 const PANEL_HEIGHT = 720;
 const PADDING_TOP = 30;
@@ -91,23 +91,12 @@ export default function ChartSheetViewer({
     const durationMs = useMemo(() => chartDuration(document), [document]);
     const panels = useMemo(
         () =>
-            Array.from(
-                {
-                    length: Math.max(
-                        1,
-                        Math.ceil(durationMs / PANEL_DURATION_MS)
-                    ),
-                },
-                (_, index) => ({
-                    index,
-                    startMs: index * PANEL_DURATION_MS,
-                    endMs: Math.min(
-                        durationMs,
-                        (index + 1) * PANEL_DURATION_MS
-                    ),
-                })
+            getMeasurePanels(
+                document.timingPoints,
+                document.ticksPerQuarter,
+                durationMs
             ),
-        [durationMs]
+        [document.ticksPerQuarter, document.timingPoints, durationMs]
     );
 
     return (
@@ -208,7 +197,7 @@ export default function ChartSheetViewer({
                     <Legend color={handColors.left} label="왼손 안내" />
                     <Legend color={handColors.right} label="오른손 안내" />
                     <span className="text-text-disabled ml-auto">
-                        28칸 · 열당 12초
+                        28칸 · 열당 4마디
                     </span>
                 </div>
             </section>
@@ -565,7 +554,7 @@ function drawSheetCap(
     handColor: string,
     small = false
 ) {
-    const height = small ? 4 : 6;
+    const height = small ? 3 : 4;
     const bevel = Math.min(3.5, Math.max(1, width * 0.08));
     const left = x + 1.5;
     const right = x + width - 1.5;
@@ -574,10 +563,10 @@ function drawSheetCap(
 
     context.save();
     context.shadowColor = handColor;
-    context.shadowBlur = 4;
+    context.shadowBlur = 2;
     context.fillStyle = "rgba(247,247,242,.96)";
     context.strokeStyle = handColor;
-    context.lineWidth = 1;
+    context.lineWidth = 0.7;
     context.beginPath();
     context.moveTo(left + bevel, top);
     context.lineTo(right - bevel, top);
@@ -591,6 +580,7 @@ function drawSheetCap(
     context.shadowBlur = 0;
     context.globalAlpha = 0.32;
     context.strokeStyle = handColor;
+    context.lineWidth = 0.6;
     context.beginPath();
     context.moveTo(left + bevel + 1, centerY + 1);
     context.lineTo(right - bevel - 1, centerY + 1);

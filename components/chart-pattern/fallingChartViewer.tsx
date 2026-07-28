@@ -8,6 +8,7 @@ import {
     getActivePlaybackPianoRanges,
     getApproachDurationMs,
     getChartPlaybackDurationMs,
+    getPlaybackVisualScale,
     getPlaybackRibbonVisibleEndMs,
     prepareChartPlaybackNotes,
     projectPlaybackLane,
@@ -130,10 +131,14 @@ function capPolygon(
     left: number,
     right: number,
     centerY: number,
-    height: number
+    height: number,
+    visualScale: number
 ) {
     const width = Math.max(2, right - left);
-    const bevel = Math.min(8, Math.max(2, width * 0.08));
+    const bevel = Math.min(
+        8 * visualScale,
+        Math.max(2 * visualScale, width * 0.08)
+    );
     return [
         left + bevel,
         centerY - height / 2,
@@ -155,57 +160,74 @@ function drawPlaybackCap(
     projected: ProjectedRange,
     hand: ChartHand,
     alpha: number,
+    visualScale: number,
     small = false
 ) {
-    const height = (small ? 6 : 10) + projected.depth * (small ? 3 : 5);
+    const height =
+        ((small ? 6 : 10) + projected.depth * (small ? 3 : 5)) * visualScale;
     const handColor = colorForHand(hand);
     graphics
         .poly(
             capPolygon(
-                projected.left - 2,
-                projected.right + 2,
+                projected.left - 2 * visualScale,
+                projected.right + 2 * visualScale,
                 projected.y,
-                height + 5
+                height + 5 * visualScale,
+                visualScale
             ),
             true
         )
         .fill({ color: handColor, alpha: alpha * 0.2 });
     graphics
         .poly(
-            capPolygon(projected.left, projected.right, projected.y, height),
+            capPolygon(
+                projected.left,
+                projected.right,
+                projected.y,
+                height,
+                visualScale
+            ),
             true
         )
         .fill({ color: colors.noteFace, alpha })
-        .stroke({ color: handColor, width: 1.5, alpha });
+        .stroke({ color: handColor, width: 1.5 * visualScale, alpha });
     graphics
-        .moveTo(projected.left + 5, projected.y + 1)
-        .lineTo(projected.right - 5, projected.y + 1)
-        .stroke({ color: handColor, width: 1, alpha: alpha * 0.45 });
+        .moveTo(projected.left + 5 * visualScale, projected.y + visualScale)
+        .lineTo(projected.right - 5 * visualScale, projected.y + visualScale)
+        .stroke({
+            color: handColor,
+            width: visualScale,
+            alpha: alpha * 0.45,
+        });
 }
 
 function drawHitGlow(
     graphics: Graphics,
     projected: ProjectedRange,
     hand: ChartHand,
-    distanceMs: number
+    distanceMs: number,
+    visualScale: number
 ) {
     if (Math.abs(distanceMs) > 95) return;
     const strength = 1 - Math.abs(distanceMs) / 95;
     const noteWidth = projected.right - projected.left;
-    const glowWidth = Math.min(48, Math.max(12, noteWidth * 0.45));
+    const glowWidth = Math.min(
+        48 * visualScale,
+        Math.max(12 * visualScale, noteWidth * 0.45)
+    );
     graphics
         .ellipse(
             projected.center,
             projected.y,
             glowWidth * (1 + strength * 0.15),
-            8 + strength * 10
+            (8 + strength * 10) * visualScale
         )
         .fill({
             color: colorForHand(hand),
             alpha: 0.1 + strength * 0.18,
         });
     graphics
-        .circle(projected.center, projected.y, 3 + strength * 5)
+        .circle(projected.center, projected.y, (3 + strength * 5) * visualScale)
         .fill({ color: colors.noteFace, alpha: strength * 0.42 });
 }
 
@@ -213,29 +235,40 @@ function drawRibbon(
     graphics: Graphics,
     points: ProjectedRange[],
     hand: ChartHand,
+    visualScale: number,
     alpha = 0.62
 ) {
     if (points.length < 2) return;
     const leftEdge = points.flatMap((point) => {
-        const inset = Math.min(2, (point.right - point.left) * 0.08);
+        const inset = Math.min(
+            2 * visualScale,
+            (point.right - point.left) * 0.08
+        );
         return [point.left + inset, point.y];
     });
     const rightEdge = [...points].reverse().flatMap((point) => {
-        const inset = Math.min(2, (point.right - point.left) * 0.08);
+        const inset = Math.min(
+            2 * visualScale,
+            (point.right - point.left) * 0.08
+        );
         return [point.right - inset, point.y];
     });
     const handColor = colorForHand(hand);
     graphics
         .poly([...leftEdge, ...rightEdge], true)
         .fill({ color: handColor, alpha })
-        .stroke({ color: handColor, width: 1, alpha: alpha * 0.9 });
+        .stroke({
+            color: handColor,
+            width: visualScale,
+            alpha: alpha * 0.9,
+        });
     graphics.moveTo(points[0].center, points[0].y);
     for (let index = 1; index < points.length; index += 1) {
         graphics.lineTo(points[index].center, points[index].y);
     }
     graphics.stroke({
         color: colors.noteFace,
-        width: 1.1,
+        width: 1.1 * visualScale,
         alpha: alpha * 0.72,
     });
 }
@@ -380,6 +413,7 @@ function drawPreparedNote({
     width,
     horizonY,
     judgmentY,
+    visualScale,
 }: {
     graphics: Graphics;
     note: PreparedPlaybackNote;
@@ -388,6 +422,7 @@ function drawPreparedNote({
     width: number;
     horizonY: number;
     judgmentY: number;
+    visualScale: number;
 }) {
     const visibleEnd =
         note.type === "standard"
@@ -419,9 +454,10 @@ function drawPreparedNote({
             graphics,
             projected,
             point.hand,
-            point.timeMs - currentTimeMs
+            point.timeMs - currentTimeMs,
+            visualScale
         );
-        drawPlaybackCap(graphics, projected, point.hand, alpha);
+        drawPlaybackCap(graphics, projected, point.hand, alpha, visualScale);
         return;
     }
 
@@ -441,6 +477,7 @@ function drawPreparedNote({
                 graphics,
                 sampleProjectedSegment(first, second, project),
                 note.hand,
+                visualScale,
                 0.74
             );
         }
@@ -456,9 +493,10 @@ function drawPreparedNote({
                 graphics,
                 projected,
                 point.hand,
-                point.timeMs - currentTimeMs
+                point.timeMs - currentTimeMs,
+                visualScale
             );
-            drawPlaybackCap(graphics, projected, point.hand, 0.98);
+            drawPlaybackCap(graphics, projected, point.hand, 0.98, visualScale);
         }
         return;
     }
@@ -475,6 +513,7 @@ function drawPreparedNote({
             graphics,
             sampleProjectedSegment(clipped.first, clipped.second, project),
             clipped.first.hand,
+            visualScale,
             note.type === "glissando" ? 0.7 : 0.62
         );
     }
@@ -493,13 +532,15 @@ function drawPreparedNote({
             graphics,
             projected,
             point.hand,
-            point.timeMs - currentTimeMs
+            point.timeMs - currentTimeMs,
+            visualScale
         );
         drawPlaybackCap(
             graphics,
             projected,
             point.hand,
             0.98,
+            visualScale,
             note.type === "glissando" &&
                 point.timeMs !== note.startTimeMs &&
                 point.timeMs !== note.endTimeMs
@@ -524,6 +565,7 @@ function renderPlaybackFrame({
 }) {
     const horizonY = Math.max(40, height * 0.12);
     const judgmentY = height * 0.79;
+    const visualScale = getPlaybackVisualScale(width);
     graphics.clear();
     drawPlayfield(graphics, width, height, horizonY, judgmentY);
 
@@ -536,6 +578,7 @@ function renderPlaybackFrame({
             width,
             horizonY,
             judgmentY,
+            visualScale,
         });
     }
 
