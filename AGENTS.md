@@ -30,7 +30,11 @@ Sections:
 
 ## Implementation Rules
 
-- Do not redesign the UI.
+- For maintenance work outside the NosLog 2.0 initiative, do not redesign the UI
+  unless the user explicitly requests it.
+- NosLog 2.0 is an explicitly authorized, production-level UI/UX redesign. For
+  2.0 design work, treat the current UI as a functional inventory and usability
+  baseline, not as a visual constraint.
 - Preserve the dark NOSTORY visual direction.
 - Use the existing project stack, components, routing, and styling conventions.
 - Treat the Figma as a wireframe/source of layout intent, not pixel-perfect final artwork.
@@ -98,3 +102,84 @@ This is the most important working rule for this project:
 - Preserve NosLog's records, rankings, archive, chart editor, and chart viewer focus.
 - Keep responsive chart visualizations readable based on their actual display area
   rather than relying only on fixed pixel sizes.
+
+## NosLog 2.0 Design Initiative
+
+NosLog 2.0 is the planned production-complete release for the service's new
+interface. It is not a cosmetic refresh. The work may redefine information
+architecture, navigation, typography, hierarchy, layout, component patterns,
+responsive behavior, and the visual system while preserving the verified product
+features, data, and domain logic.
+
+The design guide must be completed before broad screen-by-screen implementation.
+Do not reduce its scope to an arbitrary page or frame limit. It may become a long
+document if that detail is necessary to make decisions explicit and reusable.
+
+### Design Working Principles
+
+- Begin with product and reference research, not typography or component drawing.
+- Base decisions on cited references, observed user context, current UI evidence,
+  product requirements, and accessibility guidance. Do not present personal taste
+  or unverified assumptions as design rationale.
+- Discuss findings, open questions, alternatives, and tradeoffs with the user.
+  Resolve meaningful uncertainty before fixing a guideline or starting implementation.
+- Use references to extract transferable principles such as proportion, hierarchy,
+  rhythm, density, grid behavior, and interaction patterns. Do not copy a reference's
+  surface styling without a NosLog-specific reason.
+- Keep the initial design system deliberately lean and revisable. Establish enough
+  foundations and components to test representative screens, then refine the system
+  using those results instead of over-investing in an unvalidated library.
+- Treat typography, color, spacing, grid, and component proportions as one system;
+  do not finalize them independently without representative content.
+- Document rejected alternatives and the reason for the final choice when the
+  decision materially affects the product.
+
+### Device Strategy
+
+- Mobile is the primary context because NosLog is commonly used around arcade play.
+- Design the mobile experience first, centered on the existing 390px baseline, then
+  extend the same hierarchy and component logic to wider layouts.
+- Desktop support remains required even if current traffic is small. Use the extra
+  space intentionally for comparison, dense record analysis, chart viewing/editing,
+  and administrative workflows rather than merely enlarging the mobile canvas.
+- Decide responsive changes from content needs and component space, not device names
+  alone. Use viewport breakpoints and container queries where each is appropriate.
+
+### Page Brief Requirement
+
+Before designing a page family, create and agree on a page brief that covers:
+
+1. page purpose and primary user context;
+2. primary task and success condition;
+3. information priority and content that can be removed or progressively disclosed;
+4. main and secondary actions;
+5. real data requirements and representative content lengths;
+6. loading, empty, error, disabled, permission, and destructive states;
+7. mobile and desktop layout behavior;
+8. keyboard, focus, contrast, semantics, and other accessibility needs;
+9. Korean, Japanese, and English localization constraints;
+10. acceptance criteria and browser verification targets.
+
+### Reference Roles
+
+Use multiple reference classes and keep their roles distinct:
+
+- **Principles and evaluation:** Figma UI design principles, WCAG, and other
+  authoritative usability/accessibility guidance.
+- **Typography and editorial hierarchy:** MUSINSA brand pages, Plus X portfolio and
+  comparable Korean production work.
+- **Art direction and layout exploration:** TURN.STUDIO and curated Behance projects.
+- **Responsive implementation:** official Tailwind CSS responsive, grid, and container
+  query documentation.
+- **Secondary learning material:** practitioner articles such as the supplied
+  responsive web design guide; verify important claims against primary sources.
+
+Starting reference set:
+
+- https://www.figma.com/ko-kr/resource-library/ui-design-principles/
+- https://www.behance.net/gallery/252216015/Creative-Agency-Website-TURNSTUDIO
+- https://www.behance.net/search/projects/Responsive%20web?field=ui/ux
+- https://dx.plusx.kr/
+- https://medium.com/@canon.minjoo/풀스택-개발자를-위한-반응형-웹디자인-가이드-44967d967bdf
+- https://tailwindcss.com/docs/grid-template-columns
+- https://tailwindcss.com/docs/responsive-design
