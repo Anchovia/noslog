@@ -18,7 +18,7 @@ test("악곡 목록의 정렬과 보기 방식을 URL에 반영한다", async ({
     await expect(page).toHaveURL(/(?:\?|&)view=grid(?:&|$)/);
     await expect(gridView).toHaveAttribute("aria-pressed", "true");
 
-    await page.getByRole("button", { name: /레벨순/ }).click();
+    await page.getByRole("button", { name: "레벨", exact: true }).click();
     await expect(page).toHaveURL(/(?:\?|&)sort=level(?:&|$)/);
     await expect(page).toHaveURL(/(?:\?|&)order=desc(?:&|$)/);
     await expectNoHorizontalOverflow(page);

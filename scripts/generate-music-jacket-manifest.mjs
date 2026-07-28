@@ -15,6 +15,6 @@ const jacketIndexes = (await readdir(jacketDirectory))
     .map((fileName) => path.parse(fileName).name)
     .sort();
 
-await writeFile(manifestPath, `${JSON.stringify(jacketIndexes, null, 2)}\n`);
+await writeFile(manifestPath, `${JSON.stringify(jacketIndexes, null, 4)}\n`);
 
 console.info(`Generated music jacket manifest (${jacketIndexes.length} files)`);
