@@ -3,6 +3,7 @@
 import { Minus, Plus } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
+import { useTranslations } from "@/components/i18n/localeProvider";
 import { type KakaoMapInstance, loadKakaoMaps } from "@/lib/kakaoMaps";
 
 interface ArcadeMiniMapProps {
@@ -18,6 +19,7 @@ export default function ArcadeMiniMap({
     latitude,
     longitude,
 }: ArcadeMiniMapProps) {
+    const t = useTranslations();
     const containerRef = useRef<HTMLDivElement>(null);
     const mapRef = useRef<KakaoMapInstance | null>(null);
     const [hasError, setHasError] = useState(false);
@@ -58,7 +60,7 @@ export default function ArcadeMiniMap({
     if (hasError) {
         return (
             <div className="bg-surface-muted text-body-muted flex h-44 items-center justify-center">
-                지도를 불러오지 못했습니다.
+                {t("arcades.mapLoadError")}
             </div>
         );
     }
@@ -75,18 +77,18 @@ export default function ArcadeMiniMap({
                 ref={containerRef}
                 className="bg-surface-muted size-full"
                 role="img"
-                aria-label={`${name} 위치 지도`}
+                aria-label={t("arcades.locationMap", { name })}
             />
             <div
                 className="border-border bg-surface absolute right-2 bottom-2 z-10 flex flex-col overflow-hidden rounded-md border shadow-md"
                 role="group"
-                aria-label="지도 확대 및 축소"
+                aria-label={t("arcades.zoomControls")}
             >
                 <button
                     type="button"
                     onClick={() => changeZoom(-1)}
                     className="hover:bg-surface-muted focus-visible:ring-focus/40 flex size-8 items-center justify-center focus-visible:ring-2 focus-visible:outline-none"
-                    aria-label="지도 확대"
+                    aria-label={t("arcades.zoomIn")}
                 >
                     <Plus className="size-4" aria-hidden="true" />
                 </button>
@@ -94,7 +96,7 @@ export default function ArcadeMiniMap({
                     type="button"
                     onClick={() => changeZoom(1)}
                     className="border-divider hover:bg-surface-muted focus-visible:ring-focus/40 flex size-8 items-center justify-center border-t focus-visible:ring-2 focus-visible:outline-none"
-                    aria-label="지도 축소"
+                    aria-label={t("arcades.zoomOut")}
                 >
                     <Minus className="size-4" aria-hidden="true" />
                 </button>

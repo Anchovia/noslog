@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 
+import { useTranslations } from "@/components/i18n/localeProvider";
 import { type KakaoOverlay, loadKakaoMaps } from "@/lib/kakaoMaps";
 
 import type {
@@ -67,6 +68,7 @@ export default function ArcadeBubbleMap({
     selectedId,
     onSelect,
 }: ArcadeBubbleMapProps) {
+    const t = useTranslations();
     const containerRef = useRef<HTMLDivElement>(null);
     const bubblesRef = useRef(new Map<number, HTMLButtonElement>());
     const onSelectRef = useRef(onSelect);
@@ -131,9 +133,15 @@ export default function ArcadeBubbleMap({
                         "text-caption focus-visible:ring-focus rounded-full border-2 font-bold shadow-lg transition-transform focus-visible:ring-2 focus-visible:outline-none";
                     bubble.setAttribute(
                         "aria-label",
-                        `${arcade.name}, 선호 ${arcade.preferredCount}명`
+                        t("arcades.bubbleAria", {
+                            name: arcade.name,
+                            count: arcade.preferredCount,
+                        })
                     );
-                    bubble.title = `${arcade.name} · 선호 ${arcade.preferredCount}명`;
+                    bubble.title = t("arcades.bubbleAria", {
+                        name: arcade.name,
+                        count: arcade.preferredCount,
+                    });
                     bubble.textContent = String(arcade.preferredCount);
                     bubble.style.width = `${size}px`;
                     bubble.style.height = `${size}px`;
@@ -178,7 +186,7 @@ export default function ArcadeBubbleMap({
             cleanupListeners.forEach((cleanup) => cleanup());
             bubbles.clear();
         };
-    }, [appKey, mappedArcades, scope]);
+    }, [appKey, mappedArcades, scope, t]);
 
     useEffect(() => {
         bubblesRef.current.forEach((bubble, arcadeId) => {
@@ -195,22 +203,21 @@ export default function ArcadeBubbleMap({
             <div
                 ref={containerRef}
                 className="bg-surface-muted size-full"
-                aria-label="NOSTALGIA 오락실 분포 지도"
+                aria-label={t("arcades.distributionMap")}
             />
             {isLoading ? (
                 <div className="bg-surface-muted text-body-muted absolute inset-0 flex items-center justify-center">
-                    지도를 불러오는 중입니다.
+                    {t("arcades.mapLoading")}
                 </div>
             ) : null}
             {hasError ? (
                 <div className="bg-surface-muted text-body-muted absolute inset-0 flex items-center justify-center px-6 text-center">
-                    지도를 불러오지 못했습니다. 오락실 목록은 계속 확인할 수
-                    있습니다.
+                    {t("arcades.mapListFallback")}
                 </div>
             ) : null}
             {!isLoading && !hasError && mappedArcades.length === 0 ? (
                 <p className="bg-surface/90 text-caption absolute top-3 left-1/2 -translate-x-1/2 rounded-full px-3 py-1.5 whitespace-nowrap">
-                    해당 지역에 등록된 위치가 없습니다.
+                    {t("arcades.noLocations")}
                 </p>
             ) : null}
         </div>

@@ -4,6 +4,11 @@ import { getRankingTopPercent } from "./musicRankingUtils";
 import type { CurrentUserRanking as CurrentUserRankingData } from "./musicRankingTypes";
 import RankImage from "./rankImage";
 import RankingUserAvatar from "./rankingUserAvatar";
+import {
+    useLocale,
+    useLocalizedHref,
+    useTranslations,
+} from "@/components/i18n/localeProvider";
 
 interface CurrentUserRankingProps {
     isLoggedIn: boolean;
@@ -17,17 +22,21 @@ export default function CurrentUserRanking({
     currentUser,
     totalCount,
 }: CurrentUserRankingProps) {
+    const locale = useLocale();
+    const localizedHref = useLocalizedHref();
+    const t = useTranslations();
+
     if (!isLoggedIn) {
         return (
             <section className="border-border bg-surface-muted rounded-card flex min-h-14 items-center justify-between gap-3 border px-3">
                 <p className="text-text-secondary text-sm">
-                    로그인 후 내 랭킹을 확인할 수 있습니다.
+                    {t("music.ranking.loginRequired")}
                 </p>
                 <Link
-                    href="/login"
+                    href={localizedHref("/login")}
                     className="bg-text-primary text-bg rounded-card flex h-8 shrink-0 items-center justify-center px-3 text-xs font-bold"
                 >
-                    로그인
+                    {t("common.login")}
                 </Link>
             </section>
         );
@@ -36,7 +45,7 @@ export default function CurrentUserRanking({
     if (!currentUser?.rank) {
         return (
             <section className="border-border text-text-secondary rounded-card flex h-14 items-center justify-center border text-sm">
-                이 채보의 플레이 기록이 없어 순위가 없습니다.
+                {t("music.ranking.noMyRank")}
             </section>
         );
     }
@@ -49,16 +58,21 @@ export default function CurrentUserRanking({
             <RankingUserAvatar user={currentUser.user} size={30} />
             <div className="min-w-0 flex-1">
                 <p className="text-text-primary truncate text-sm font-bold">
-                    {currentUser.user.username || "이름 없는 유저"}
+                    {currentUser.user.username || t("common.unnamedUser")}
                 </p>
                 <p className="text-caption">
-                    상위 {getRankingTopPercent(currentUser.rank, totalCount)}% ·
-                    전체 {totalCount}명
+                    {t("music.ranking.summary", {
+                        percent: getRankingTopPercent(
+                            currentUser.rank,
+                            totalCount
+                        ),
+                        count: totalCount.toLocaleString(locale),
+                    })}
                 </p>
             </div>
             <RankImage rank={currentUser.clearRank} size={18} />
             <strong className="text-text-primary w-18 text-right text-sm tabular-nums">
-                {currentUser.score.toLocaleString("ko-KR")}
+                {currentUser.score.toLocaleString(locale)}
             </strong>
         </section>
     );

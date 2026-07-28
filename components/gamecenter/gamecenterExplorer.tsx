@@ -14,7 +14,13 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState, useTransition } from "react";
 
 import { setPreferredArcade } from "@/app/(nevigation)/gamecenter/actions";
+import {
+    useLocale,
+    useLocalizedHref,
+    useTranslations,
+} from "@/components/i18n/localeProvider";
 import Button from "@/components/ui/Button";
+import type { MessageKey } from "@/lib/i18n/messages";
 import {
     ARCADE_MACHINE_STATUS_META,
     isArcadeMachineStatus,
@@ -54,6 +60,15 @@ const MAP_SCOPE_LABELS: Record<GamecenterMapScope, string> = {
     daegu: "대구",
 };
 
+const MAP_SCOPE_LABEL_KEYS: Record<GamecenterMapScope, MessageKey> = {
+    nationwide: "arcades.scope.nationwide",
+    seoul: "arcades.scope.seoul",
+    gyeonggi: "arcades.scope.gyeonggi",
+    daejeon: "arcades.scope.daejeon",
+    gwangju: "arcades.scope.gwangju",
+    daegu: "arcades.scope.daegu",
+};
+
 const REGION_ORDER = [...ARCADE_REGIONS];
 
 interface GamecenterExplorerProps {
@@ -85,6 +100,9 @@ export default function GamecenterExplorer({
     isAuthenticated,
     initialPreferredArcadeId,
 }: GamecenterExplorerProps) {
+    const locale = useLocale();
+    const t = useTranslations();
+    const localizedHref = useLocalizedHref();
     const router = useRouter();
     const [query, setQuery] = useState("");
     const [mapScope, setMapScope] = useState<GamecenterMapScope>("nationwide");
@@ -148,7 +166,7 @@ export default function GamecenterExplorer({
     function choosePreferredArcade(arcade: GamecenterArcade) {
         setNotice(null);
         startTransition(async () => {
-            const result = await setPreferredArcade(arcade.id);
+            const result = await setPreferredArcade(arcade.id, locale);
             if (result.success) {
                 setPreferredArcadeId(arcade.id);
                 router.refresh();
@@ -180,9 +198,9 @@ export default function GamecenterExplorer({
     return (
         <div className="flex flex-col gap-4">
             <section className="flex items-center justify-between gap-3">
-                <h1 className="text-title">오락실</h1>
+                <h1 className="text-title">{t("arcades.title")}</h1>
                 <label>
-                    <span className="sr-only">지도 지역</span>
+                    <span className="sr-only">{t("arcades.mapRegion")}</span>
                     <select
                         value={mapScope}
                         onChange={(event) =>
@@ -192,12 +210,13 @@ export default function GamecenterExplorer({
                         }
                         className="border-border bg-surface text-label focus:border-focus h-9 rounded-md border px-3 outline-none"
                     >
-                        <option value="nationwide">전체</option>
-                        <option value="seoul">서울</option>
-                        <option value="gyeonggi">경기</option>
-                        <option value="daejeon">대전</option>
-                        <option value="gwangju">광주</option>
-                        <option value="daegu">대구</option>
+                        {Object.entries(MAP_SCOPE_LABEL_KEYS).map(
+                            ([value, labelKey]) => (
+                                <option key={value} value={value}>
+                                    {t(labelKey)}
+                                </option>
+                            )
+                        )}
                     </select>
                 </label>
             </section>
@@ -211,7 +230,9 @@ export default function GamecenterExplorer({
                 />
                 <div className="px-3 py-2">
                     <p className="text-caption">
-                        {MAP_SCOPE_LABELS[mapScope]} NOSTALGIA 오락실 선호 분포
+                        {t("arcades.distribution", {
+                            region: t(MAP_SCOPE_LABEL_KEYS[mapScope]),
+                        })}
                     </p>
                 </div>
             </section>
@@ -221,16 +242,19 @@ export default function GamecenterExplorer({
                     className="text-text-disabled size-5 shrink-0"
                     aria-hidden="true"
                 />
-                <span className="sr-only">오락실 검색</span>
+                <span className="sr-only">{t("arcades.search")}</span>
                 <input
                     value={query}
                     onChange={(event) => setQuery(event.target.value)}
-                    placeholder="오락실 이름 · 지역 · 주소 검색"
+                    placeholder={t("arcades.searchPlaceholder")}
                     className="text-input placeholder:text-text-disabled h-full min-w-0 flex-1 bg-transparent outline-none"
                 />
             </label>
 
-            <section className="flex flex-col gap-2" aria-label="오락실 목록">
+            <section
+                className="flex flex-col gap-2"
+                aria-label={t("arcades.list")}
+            >
                 {filteredArcades.map((arcade, index) => {
                     const isOpen = openArcadeId === arcade.id;
                     const isPreferred = preferredArcadeId === arcade.id;
@@ -284,14 +308,14 @@ export default function GamecenterExplorer({
                                         </span>
                                         {isPreferred ? (
                                             <span className="bg-success/15 text-success text-badge shrink-0 rounded px-1.5 py-1">
-                                                선호
+                                                {t("arcades.preferred")}
                                             </span>
                                         ) : null}
                                     </span>
                                     <span className="text-caption mt-1 block truncate">
                                         {arcade.region ??
                                             arcade.address ??
-                                            "지역 정보 준비 중"}
+                                            t("arcades.regionPending")}
                                     </span>
                                 </span>
                                 <span className="text-caption flex shrink-0 items-center gap-1">
@@ -299,7 +323,9 @@ export default function GamecenterExplorer({
                                         className="size-3.5"
                                         aria-hidden="true"
                                     />
-                                    {arcade.preferredCount}명
+                                    {t("arcades.people", {
+                                        count: arcade.preferredCount,
+                                    })}
                                 </span>
                                 <ChevronDown
                                     className={`text-text-disabled size-4 shrink-0 transition-transform ${isOpen ? "rotate-180" : ""}`}
@@ -323,16 +349,20 @@ export default function GamecenterExplorer({
                                         />
                                     ) : (
                                         <div className="bg-surface-muted text-body-muted flex h-44 items-center justify-center">
-                                            지도 위치를 준비하고 있습니다.
+                                            {t("arcades.mapPending")}
                                         </div>
                                     )}
                                     <div className="flex flex-col gap-3 p-4">
                                         <div>
-                                            <p className="text-label">주소</p>
+                                            <p className="text-label">
+                                                {t("arcades.address")}
+                                            </p>
                                             <div className="mt-1 flex items-center justify-between gap-2">
                                                 <p className="text-body-muted min-w-0 flex-1">
                                                     {arcade.address ??
-                                                        "주소 정보 준비 중"}
+                                                        t(
+                                                            "arcades.addressPending"
+                                                        )}
                                                 </p>
                                                 {arcade.address ? (
                                                     <button
@@ -346,14 +376,22 @@ export default function GamecenterExplorer({
                                                         aria-label={
                                                             copiedAddressId ===
                                                             arcade.id
-                                                                ? "주소 복사됨"
-                                                                : "주소 복사"
+                                                                ? t(
+                                                                      "arcades.addressCopied"
+                                                                  )
+                                                                : t(
+                                                                      "arcades.copyAddress"
+                                                                  )
                                                         }
                                                         title={
                                                             copiedAddressId ===
                                                             arcade.id
-                                                                ? "복사됨"
-                                                                : "주소 복사"
+                                                                ? t(
+                                                                      "arcades.copied"
+                                                                  )
+                                                                : t(
+                                                                      "arcades.copyAddress"
+                                                                  )
                                                         }
                                                     >
                                                         {copiedAddressId ===
@@ -374,30 +412,49 @@ export default function GamecenterExplorer({
                                         </div>
                                         <div>
                                             <p className="text-label">
-                                                운영 정보
+                                                {t("arcades.operation")}
                                             </p>
                                             <div className="mt-2 grid grid-cols-2 gap-2">
                                                 <div className="bg-surface-muted rounded-card p-3">
                                                     <p className="text-caption">
-                                                        플레이 요금
+                                                        {t("arcades.price")}
                                                     </p>
                                                     <p className="text-label mt-1">
                                                         {arcade.playPrice !==
                                                             null &&
                                                         arcade.coinCount !==
                                                             null
-                                                            ? `${arcade.playPrice.toLocaleString("ko-KR")}원 / ${arcade.coinCount}코인`
-                                                            : "미확인"}
+                                                            ? t(
+                                                                  "arcades.priceValue",
+                                                                  {
+                                                                      price: arcade.playPrice.toLocaleString(
+                                                                          locale
+                                                                      ),
+                                                                      coins: arcade.coinCount,
+                                                                  }
+                                                              )
+                                                            : t(
+                                                                  "arcades.unknown"
+                                                              )}
                                                     </p>
                                                 </div>
                                                 <div className="bg-surface-muted rounded-card p-3">
                                                     <p className="text-caption">
-                                                        기체 수
+                                                        {t(
+                                                            "arcades.machineCount"
+                                                        )}
                                                     </p>
                                                     <p className="text-label mt-1">
                                                         {arcade.machineCount
-                                                            ? `${arcade.machineCount}대`
-                                                            : "미확인"}
+                                                            ? t(
+                                                                  "arcades.machineCountValue",
+                                                                  {
+                                                                      count: arcade.machineCount,
+                                                                  }
+                                                              )
+                                                            : t(
+                                                                  "arcades.unknown"
+                                                              )}
                                                     </p>
                                                 </div>
                                             </div>
@@ -405,12 +462,26 @@ export default function GamecenterExplorer({
                                         <div className="bg-surface-muted rounded-card p-3">
                                             <div className="flex items-center justify-between gap-2">
                                                 <p className="text-label">
-                                                    기체 상태
+                                                    {t("arcades.machineStatus")}
                                                 </p>
                                                 <span
                                                     className={`text-badge rounded px-2 py-1 ${statusMeta.className}`}
                                                 >
-                                                    {statusMeta.label}
+                                                    {t(
+                                                        arcade.machineStatus ===
+                                                            "good"
+                                                            ? "arcades.status.good"
+                                                            : arcade.machineStatus ===
+                                                                "normal"
+                                                              ? "arcades.status.normal"
+                                                              : arcade.machineStatus ===
+                                                                  "caution"
+                                                                ? "arcades.status.caution"
+                                                                : arcade.machineStatus ===
+                                                                    "unavailable"
+                                                                  ? "arcades.status.unavailable"
+                                                                  : "arcades.unknown"
+                                                    )}
                                                 </span>
                                             </div>
                                             {arcade.statusNote ? (
@@ -425,7 +496,7 @@ export default function GamecenterExplorer({
                                         {arcade.notes ? (
                                             <div>
                                                 <p className="text-label">
-                                                    비고
+                                                    {t("arcades.notes")}
                                                 </p>
                                                 <p className="text-body-muted mt-1 whitespace-pre-wrap">
                                                     {arcade.notes}
@@ -438,7 +509,9 @@ export default function GamecenterExplorer({
                                                     className="size-4"
                                                     aria-hidden="true"
                                                 />
-                                                선호 {arcade.preferredCount}명
+                                                {t("arcades.preferredPeople", {
+                                                    count: arcade.preferredCount,
+                                                })}
                                             </span>
                                             {mapUrl ? (
                                                 <a
@@ -447,7 +520,7 @@ export default function GamecenterExplorer({
                                                     rel="noreferrer"
                                                     className="text-chart focus-visible:ring-focus/40 flex items-center gap-1 text-sm font-semibold focus-visible:ring-2 focus-visible:outline-none"
                                                 >
-                                                    카카오맵에서 보기
+                                                    {t("arcades.viewKakao")}
                                                     <ExternalLink
                                                         className="size-3.5"
                                                         aria-hidden="true"
@@ -481,15 +554,21 @@ export default function GamecenterExplorer({
                                                     />
                                                 ) : null}
                                                 {isPreferred
-                                                    ? "현재 선호 오락실"
-                                                    : "선호 오락실로 지정"}
+                                                    ? t(
+                                                          "arcades.currentPreferred"
+                                                      )
+                                                    : t("arcades.setPreferred")}
                                             </Button>
                                         ) : (
                                             <Link
-                                                href="/discord/start?returnTo=/gamecenter"
+                                                href={`/discord/start?returnTo=${encodeURIComponent(
+                                                    localizedHref("/gamecenter")
+                                                )}`}
                                                 className="bg-interactive text-on-interactive rounded-card focus-visible:ring-focus/40 hover:bg-interactive/90 flex h-10 w-full items-center justify-center text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none"
                                             >
-                                                로그인 후 선호 오락실 지정
+                                                {t(
+                                                    "arcades.loginToSetPreferred"
+                                                )}
                                             </Link>
                                         )}
 
@@ -510,7 +589,7 @@ export default function GamecenterExplorer({
 
                 {filteredArcades.length === 0 ? (
                     <p className="bg-surface text-body-muted rounded-card py-12 text-center">
-                        검색 결과가 없습니다.
+                        {t("arcades.noResults")}
                     </p>
                 ) : null}
             </section>

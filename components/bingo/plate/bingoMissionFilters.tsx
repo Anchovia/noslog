@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { useTranslations } from "@/components/i18n/localeProvider";
 
 import type { MissionFilter } from "./bingoPlateTypes";
 
@@ -18,6 +19,7 @@ export default function BingoMissionFilters({
     richCount,
     onChange,
 }: BingoMissionFiltersProps) {
+    const t = useTranslations();
     return (
         <div className="flex items-center gap-1">
             <button
@@ -30,7 +32,7 @@ export default function BingoMissionFilters({
                         : "bg-surface text-text-secondary hover:bg-surface-muted hover:text-text-primary"
                 )}
             >
-                미완료 {incompleteCount}
+                {t("bingo.incomplete", { count: incompleteCount })}
             </button>
             <button
                 type="button"
@@ -42,7 +44,7 @@ export default function BingoMissionFilters({
                         : "bg-surface text-text-secondary hover:bg-surface-muted hover:text-text-primary"
                 )}
             >
-                완료 {completedCount}
+                {t("bingo.completed", { count: completedCount })}
             </button>
             <button
                 type="button"
@@ -54,7 +56,7 @@ export default function BingoMissionFilters({
                         : "bg-surface text-score hover:bg-surface-muted"
                 )}
             >
-                빙고 찬스 {richCount}
+                {t("bingo.chance", { count: richCount })}
             </button>
         </div>
     );

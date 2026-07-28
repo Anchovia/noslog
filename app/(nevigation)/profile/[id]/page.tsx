@@ -1,4 +1,10 @@
 import ProfileDashboard from "@/components/profile/profile";
+import {
+    getLocalizedMusicTitle,
+    getMusicTitleDisplayPreference,
+} from "@/lib/i18n/musicTitle";
+import { localizePath } from "@/lib/i18n/routing";
+import { getServerI18n } from "@/lib/i18n/server";
 import { createPageMetadata } from "@/lib/metadata/site";
 import getSession from "@/lib/session";
 import type { Metadata } from "next";
@@ -10,7 +16,10 @@ export async function generateMetadata({
 }: {
     params: Promise<{ id: string }>;
 }): Promise<Metadata> {
-    const { id: rawId } = await params;
+    const [{ id: rawId }, { locale, t }] = await Promise.all([
+        params,
+        getServerI18n(),
+    ]);
     const id = Number(rawId);
     const profile = Number.isInteger(id)
         ? await getCachedProfileData(id)
@@ -18,10 +27,13 @@ export async function generateMetadata({
 
     return createPageMetadata({
         title: profile?.user.username
-            ? `${profile.user.username} 프로필`
-            : "유저 프로필",
-        description: "NosLog 유저의 노스텔지어 플레이 기록과 성과입니다.",
-        path: Number.isInteger(id) ? `/profile/${id}` : "/profile",
+            ? t("profile.metaTitle", { name: profile.user.username })
+            : t("profile.fallbackTitle"),
+        description: t("profile.metaDescription"),
+        path: localizePath(
+            Number.isInteger(id) ? `/profile/${id}` : "/profile",
+            locale
+        ),
         noIndex: true,
     });
 }
@@ -36,7 +48,8 @@ export default async function ProfilePage({
 
     if (!Number.isInteger(id) || id < 1) notFound();
 
-    const [profileData, session] = await Promise.all([
+    const [{ locale }, profileData, session] = await Promise.all([
+        getServerI18n(),
         getCachedProfileData(id),
         getSession(),
     ]);
@@ -44,13 +57,42 @@ export default async function ProfilePage({
     if (!profileData) notFound();
 
     const isOwner = session.id === profileData.user.id;
-    const ownerAnalytics = isOwner
-        ? await getProfileOwnerAnalytics(profileData.user.id)
-        : null;
+    const [ownerAnalytics, showLocalizedTitle] = await Promise.all([
+        isOwner ? getProfileOwnerAnalytics(profileData.user.id) : null,
+        getMusicTitleDisplayPreference(session.id),
+    ]);
+    const localizePlay = <
+        T extends {
+            music: {
+                title: string;
+                title_kana: string;
+                translations: {
+                    locale: string;
+                    title: string;
+                    status: string;
+                }[];
+            };
+        },
+    >(
+        play: T
+    ) => ({
+        ...play,
+        music: {
+            ...play.music,
+            localizedTitle: getLocalizedMusicTitle(
+                play.music,
+                locale,
+                showLocalizedTitle
+            ),
+        },
+    });
 
     return (
         <ProfileDashboard
             {...profileData}
+            basicBestPlays={profileData.basicBestPlays.map(localizePlay)}
+            recitalBestPlays={profileData.recitalBestPlays.map(localizePlay)}
+            recentPlays={profileData.recentPlays.map(localizePlay)}
             isOwner={isOwner}
             ownerAnalytics={ownerAnalytics}
         />

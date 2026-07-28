@@ -4,6 +4,7 @@ import { CACHE_TAGS } from "@/lib/cacheTags";
 import db from "@/lib/db";
 import { Prisma } from "@prisma/client";
 import { unstable_cache } from "next/cache";
+import type { Locale } from "@/lib/i18n/routing";
 import {
     normalizeMusicQuery,
     type MusicSearchParams,
@@ -15,6 +16,7 @@ const PAGE_SIZE = 20;
 interface MusicRow {
     index: string;
     title: string;
+    localized_title: string | null;
     artist: string | null;
     category_short: string;
     background: string | null;
@@ -67,9 +69,18 @@ function buildWhere(query: NormalizedMusicQuery, userId: number | null) {
 
     if (query.q) {
         const keyword = `%${query.q}%`;
-        conditions.push(
-            Prisma.sql`(music."title" ILIKE ${keyword} OR music."artist" ILIKE ${keyword})`
-        );
+        conditions.push(Prisma.sql`(
+            music."title" ILIKE ${keyword}
+            OR music."title_kana" ILIKE ${keyword}
+            OR music."artist" ILIKE ${keyword}
+            OR EXISTS (
+                SELECT 1
+                FROM "MusicTranslation" AS translation
+                WHERE translation."music_index" = music."index"
+                  AND translation."status" = 'approved'
+                  AND translation."title" ILIKE ${keyword}
+            )
+        )`);
     }
     if (query.categories.length > 0) {
         conditions.push(
@@ -452,7 +463,9 @@ function buildOrderBy(query: NormalizedMusicQuery) {
 async function queryMusicPage(
     query: NormalizedMusicQuery,
     cursorValue: string | null,
-    userId: number | null = null
+    userId: number | null,
+    locale: Locale,
+    showLocalizedTitle: boolean
 ) {
     const cursor = decodeCursor(cursorValue);
     const selectedDifficulties = query.difficulties.map(
@@ -465,6 +478,19 @@ async function queryMusicPage(
             SELECT
                 music."index",
                 music."title",
+                CASE
+                    WHEN ${showLocalizedTitle} = FALSE THEN NULL
+                    WHEN ${locale} = 'ja'
+                    THEN NULLIF(NULLIF(TRIM(music."title_kana"), ''), music."title")
+                    ELSE (
+                        SELECT NULLIF(NULLIF(TRIM(translation."title"), ''), music."title")
+                        FROM "MusicTranslation" AS translation
+                        WHERE translation."music_index" = music."index"
+                          AND translation."locale" = ${locale}
+                          AND translation."status" = 'approved'
+                        LIMIT 1
+                    )
+                END AS "localized_title",
                 music."artist",
                 music."category_short",
                 music."background",
@@ -484,6 +510,7 @@ async function queryMusicPage(
             GROUP BY
                 music."index",
                 music."title",
+                music."title_kana",
                 music."artist",
                 music."category_short",
                 music."background"
@@ -507,6 +534,7 @@ async function queryMusicPage(
         items: visibleRows.map((row) => ({
             index: row.index,
             title: row.title,
+            localizedTitle: row.localized_title,
             artist: row.artist,
             category_short: row.category_short,
             background: row.background,
@@ -534,14 +562,22 @@ const getCachedMusicPage = unstable_cache(
 export async function getMusicPage(
     searchParams: MusicSearchParams,
     cursor: string | null = null,
-    userId: number | null = null
+    userId: number | null = null,
+    locale: Locale = "ko",
+    showLocalizedTitle = true
 ) {
     const query = normalizeMusicQuery(searchParams);
     const usesPersonalSort =
         query.sort === "recent" || query.sort === "weakness";
 
     if (userId && (query.recordFilters.length > 0 || usesPersonalSort)) {
-        return queryMusicPage(query, cursor, userId);
+        return queryMusicPage(
+            query,
+            cursor,
+            userId,
+            locale,
+            showLocalizedTitle
+        );
     }
 
     const publicQuery = usesPersonalSort
@@ -553,5 +589,11 @@ export async function getMusicPage(
           }
         : { ...query, recordFilters: [] };
 
-    return getCachedMusicPage(publicQuery, cursor);
+    return getCachedMusicPage(
+        publicQuery,
+        cursor,
+        null,
+        locale,
+        showLocalizedTitle
+    );
 }

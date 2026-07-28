@@ -17,8 +17,17 @@ export const getCachedMusicDetail = unstable_cache(
                     index: true,
                     background: true,
                     title: true,
+                    title_kana: true,
                     artist: true,
                     category_short: true,
+                    translations: {
+                        where: { status: "approved" },
+                        select: {
+                            locale: true,
+                            title: true,
+                            status: true,
+                        },
+                    },
                     charts: {
                         select: { difficulty: true, level: true },
                     },

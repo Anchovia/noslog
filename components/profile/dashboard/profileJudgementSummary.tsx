@@ -1,5 +1,6 @@
 import { formatMetricPercentage } from "@/lib/music/judgementStats";
 import type { ProfileSJustAnalytics } from "@/lib/profile/profileAnalytics";
+import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 
 interface ProfileJudgementSummaryProps {
     analytics: ProfileSJustAnalytics;
@@ -8,9 +9,14 @@ interface ProfileJudgementSummaryProps {
 export default function ProfileJudgementSummary({
     analytics,
 }: ProfileJudgementSummaryProps) {
+    const locale = useLocale();
+    const t = useTranslations();
+    const numberLocale =
+        locale === "ja" ? "ja-JP" : locale === "en" ? "en-US" : "ko-KR";
+
     return (
         <section className="bg-surface rounded-card p-4">
-            <h2 className="text-section">판정 상세</h2>
+            <h2 className="text-section">{t("profile.judgementDetails")}</h2>
             <div className="bg-surface-muted rounded-card mt-3 flex items-center justify-between gap-3 p-3">
                 <span className="text-caption">S-Just</span>
                 <strong className="text-label tabular-nums">
@@ -19,8 +25,12 @@ export default function ProfileJudgementSummary({
             </div>
             <p className="text-micro mt-2">
                 {analytics.chartCount > 0
-                    ? `${analytics.chartCount.toLocaleString("ko-KR")}개 채보의 베스트 기록 기준`
-                    : "연동된 판정 기록이 없습니다."}
+                    ? t("profile.judgementBasis", {
+                          count: analytics.chartCount.toLocaleString(
+                              numberLocale
+                          ),
+                      })
+                    : t("profile.judgementEmpty")}
             </p>
         </section>
     );

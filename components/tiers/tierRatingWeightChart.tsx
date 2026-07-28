@@ -1,5 +1,6 @@
 "use client";
 
+import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import {
     CartesianGrid,
     Line,
@@ -31,6 +32,8 @@ export default function TierRatingWeightChart({
     theoreticalMax: number;
     goal: TierGoal;
 }) {
+    const locale = useLocale();
+    const t = useTranslations();
     const data = tierConstants.map((tierConstant) => ({
         tierConstant,
         maxContribution: Number(
@@ -47,20 +50,22 @@ export default function TierRatingWeightChart({
             <div className="flex items-start justify-between gap-3">
                 <div>
                     <h3 className="text-label font-semibold">
-                        서열 상수별 최대 기여 점수
+                        {t("tiers.weight.title")}
                     </h3>
                     <p className="text-micro mt-0.5">
-                        Basic {goalLabel} · 1곡 기준
+                        {t("tiers.weight.perSong", { goal: goalLabel })}
                     </p>
                 </div>
                 <span className="text-caption shrink-0">
-                    총 {BASIC_RATING_MAX.toLocaleString("ko-KR")}점
+                    {t("tiers.weight.total", {
+                        score: BASIC_RATING_MAX.toLocaleString(locale),
+                    })}
                 </span>
             </div>
 
             <div
                 className="mt-3 h-48 w-full"
-                aria-label="서열 상수 1.0부터 14.5까지의 최대 레이팅 기여 점수 그래프"
+                aria-label={t("tiers.weight.chartAria")}
             >
                 <ResponsiveContainer width="100%" height="100%">
                     <LineChart
@@ -87,9 +92,7 @@ export default function TierRatingWeightChart({
                         <YAxis
                             domain={[0, "auto"]}
                             tickFormatter={(value) =>
-                                Math.round(Number(value)).toLocaleString(
-                                    "ko-KR"
-                                )
+                                Math.round(Number(value)).toLocaleString(locale)
                             }
                             tick={{
                                 fill: "var(--color-text-disabled)",
@@ -115,11 +118,17 @@ export default function TierRatingWeightChart({
                                 color: "var(--color-text-secondary)",
                             }}
                             labelFormatter={(value) =>
-                                `서열 ${Number(value).toFixed(1)}`
+                                t("tiers.weight.tier", {
+                                    value: Number(value).toFixed(1),
+                                })
                             }
                             formatter={(value) => [
-                                `${Number(value).toFixed(2)}점`,
-                                `${goalLabel} 최대 기여`,
+                                t("music.record.points", {
+                                    count: Number(value).toFixed(2),
+                                }),
+                                t("tiers.weight.maxContribution", {
+                                    goal: goalLabel,
+                                }),
                             ]}
                         />
                         <Line
@@ -139,20 +148,24 @@ export default function TierRatingWeightChart({
             </div>
 
             <p className="text-micro mt-1">
-                서열 상수² ÷ 상위 {BASIC_RATING_TOP_COUNT}곡 이론값 ×{" "}
-                {BASIC_RATING_MAX.toLocaleString("ko-KR")}
+                {t("tiers.weight.formula", {
+                    count: BASIC_RATING_TOP_COUNT,
+                    score: BASIC_RATING_MAX.toLocaleString(locale),
+                })}
             </p>
 
             {goal === "pianist" ? (
                 <div className="border-divider mt-3 border-t pt-3">
-                    <p className="text-micro mb-2">점수별 반영 비율</p>
+                    <p className="text-micro mb-2">
+                        {t("tiers.weight.scoreRatio")}
+                    </p>
                     <dl className="grid grid-cols-3 gap-2">
                         {scoreAnchors.map(([score, coefficient]) => (
                             <div key={score}>
                                 <dt className="text-micro tabular-nums">
                                     {score === 1_000_000
                                         ? "Pianist"
-                                        : score.toLocaleString("ko-KR")}
+                                        : score.toLocaleString(locale)}
                                 </dt>
                                 <dd className="text-caption text-text-primary tabular-nums">
                                     {Math.round(coefficient * 100)}%
@@ -164,8 +177,8 @@ export default function TierRatingWeightChart({
             ) : (
                 <p className="border-divider text-micro mt-3 border-t pt-3">
                     {goal === "s"
-                        ? "S 달성 기준은 950,000점 이상입니다."
-                        : "Full Combo 달성 여부를 기준으로 합니다."}
+                        ? t("tiers.weight.sRequirement")
+                        : t("tiers.weight.fcRequirement")}
                 </p>
             )}
         </section>

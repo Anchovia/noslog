@@ -1,8 +1,11 @@
 "use client";
 
 import { Toaster } from "sonner";
+import { useTranslations } from "@/components/i18n/localeProvider";
 
 export default function AppToaster() {
+    const t = useTranslations();
+
     return (
         <Toaster
             position="bottom-center"
@@ -10,7 +13,7 @@ export default function AppToaster() {
             visibleToasts={3}
             offset={16}
             mobileOffset={16}
-            containerAriaLabel="알림"
+            containerAriaLabel={t("common.notifications")}
             toastOptions={{
                 unstyled: true,
                 classNames: {

@@ -1,3 +1,4 @@
+import { useTranslations } from "@/components/i18n/localeProvider";
 import type {
     UserRankingMetric,
     UserRankingMode,
@@ -16,6 +17,7 @@ export default function UserRankingList({
     metric,
     rows,
 }: UserRankingListProps) {
+    const t = useTranslations();
     return (
         <section className="bg-surface rounded-card overflow-hidden">
             {rows.length > 0 ? (
@@ -31,7 +33,7 @@ export default function UserRankingList({
                 </ol>
             ) : (
                 <div className="text-text-disabled flex h-32 items-center justify-center text-sm">
-                    선택한 조건의 랭킹 기록이 없습니다.
+                    {t("rankings.empty")}
                 </div>
             )}
         </section>

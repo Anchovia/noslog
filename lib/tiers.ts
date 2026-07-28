@@ -89,6 +89,7 @@ export interface PublicTierBandEntry {
         music: {
             index: string;
             title: string;
+            localizedTitle: string | null;
             background: string | null;
         };
     };
@@ -152,8 +153,11 @@ export function getTierRecordStatus(
     return "played";
 }
 
-export function formatTierDate(date: Date | string) {
-    return new Intl.DateTimeFormat("ko-KR", {
+export function formatTierDate(date: Date | string, locale = "ko") {
+    const localeTag =
+        locale === "ja" ? "ja-JP" : locale === "en" ? "en-US" : "ko-KR";
+
+    return new Intl.DateTimeFormat(localeTag, {
         month: "2-digit",
         day: "2-digit",
         timeZone: "Asia/Seoul",

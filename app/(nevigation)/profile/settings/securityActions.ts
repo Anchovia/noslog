@@ -2,19 +2,29 @@
 
 import { deleteBlobStrict } from "@/lib/blob";
 import db from "@/lib/db";
+import { createTranslator, getMessages } from "@/lib/i18n/messages";
+import { type Locale } from "@/lib/i18n/routing";
 import getSession from "@/lib/session";
 
-const DELETE_CONFIRMATION = "회원 탈퇴";
-
-export async function deleteAccount(confirmationInput: string) {
+export async function deleteAccount(
+    confirmationInput: string,
+    locale: Locale = "ko"
+) {
+    const t = createTranslator(getMessages(locale));
+    const deleteConfirmation = t("settings.deleteConfirmation");
     const session = await getSession();
     if (!session.id) {
-        return { success: false as const, message: "로그인이 필요합니다." };
-    }
-    if (confirmationInput.trim() !== DELETE_CONFIRMATION) {
         return {
             success: false as const,
-            message: `확인을 위해 '${DELETE_CONFIRMATION}'를 정확히 입력해주세요.`,
+            message: t("settings.loginRequired"),
+        };
+    }
+    if (confirmationInput.trim() !== deleteConfirmation) {
+        return {
+            success: false as const,
+            message: t("settings.deleteConfirmationError", {
+                confirmation: deleteConfirmation,
+            }),
         };
     }
 
@@ -52,8 +62,7 @@ export async function deleteAccount(confirmationInput: string) {
         console.error("회원 탈퇴 처리에 실패했습니다.", error);
         return {
             success: false as const,
-            message:
-                "회원 탈퇴를 완료하지 못했습니다. 잠시 후 다시 시도하거나 운영자에게 문의해주세요.",
+            message: t("settings.deleteError"),
         };
     }
 }

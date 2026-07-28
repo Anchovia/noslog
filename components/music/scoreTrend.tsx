@@ -21,6 +21,7 @@ import type {
     PerformanceTrendPoint,
     ScoreTrendPoint,
 } from "./musicDetailTypes";
+import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 
 type TrendMetric = "score" | "missNear" | "sjust" | "timing";
 type TrendVariant = "score" | "judgement";
@@ -46,13 +47,6 @@ const judgementMetricOptions: { key: TrendMetric; label: string }[] = [
     { key: "timing", label: "FAST/SLOW" },
 ];
 
-const metricLabels: Record<TrendMetric, string> = {
-    score: "점수",
-    missNear: "Miss+Near",
-    sjust: "S-Just",
-    timing: "타이밍",
-};
-
 function getTrendDomain(metric: TrendMetric, values: number[]) {
     const minimum = Math.min(...values);
     const maximum = Math.max(...values);
@@ -77,10 +71,10 @@ function getTrendDomain(metric: TrendMetric, values: number[]) {
     return [Math.max(0, minimum - padding), maximum + padding];
 }
 
-function formatTrendValue(value: number, metric: TrendMetric) {
-    if (metric === "score") return value.toLocaleString("ko-KR");
+function formatTrendValue(value: number, metric: TrendMetric, locale: string) {
+    if (metric === "score") return value.toLocaleString(locale);
     if (metric === "sjust") return `${value.toFixed(1)}%`;
-    return value.toLocaleString("ko-KR");
+    return value.toLocaleString(locale);
 }
 
 export default function ScoreTrend({
@@ -88,6 +82,8 @@ export default function ScoreTrend({
     performancePoints,
     variant,
 }: ScoreTrendProps) {
+    const locale = useLocale();
+    const t = useTranslations();
     const [activeMetric, setActiveMetric] = useState<TrendMetric>(
         variant === "score" ? "score" : "sjust"
     );
@@ -170,12 +166,20 @@ export default function ScoreTrend({
             : activeMetric === "sjust"
               ? "var(--color-score)"
               : "var(--color-chart)";
+    const activeMetricLabel =
+        activeMetric === "score"
+            ? t("music.trend.score")
+            : activeMetric === "timing"
+              ? t("music.trend.timing")
+              : activeMetric === "missNear"
+                ? "Miss+Near"
+                : "S-Just";
 
     return (
         <div className="mt-3">
             {variant === "judgement" ? (
                 <div
-                    aria-label="최근 판정 추이 지표"
+                    aria-label={t("music.trend.selector")}
                     className="bg-surface-muted grid grid-cols-3 gap-1 rounded-md p-1"
                     role="tablist"
                 >
@@ -204,8 +208,9 @@ export default function ScoreTrend({
 
             {chartPoints.length === 0 ? (
                 <div className="text-caption flex h-40 items-center justify-center text-center">
-                    {metricLabels[activeMetric]} 추이를 확인할 수 있는 기록이
-                    없습니다.
+                    {t("music.trend.noData", {
+                        metric: activeMetricLabel,
+                    })}
                 </div>
             ) : (
                 <div
@@ -217,7 +222,7 @@ export default function ScoreTrend({
                     chartPoints.some((point) => point.isBest) ? (
                         <div className="text-micro pointer-events-none absolute top-1 right-1 z-10 flex items-center gap-1.5">
                             <span className="bg-score size-1.5 rounded-full" />
-                            현재 최고점
+                            {t("music.trend.currentBest")}
                         </div>
                     ) : null}
                     {activeMetric === "timing" ? (
@@ -261,7 +266,8 @@ export default function ScoreTrend({
                                     formatter={(value, name) => [
                                         formatTrendValue(
                                             Number(value),
-                                            activeMetric
+                                            activeMetric,
+                                            locale
                                         ),
                                         name,
                                     ]}
@@ -306,7 +312,7 @@ export default function ScoreTrend({
                                             strokeWidth: 2,
                                         }}
                                         isAnimationActive={false}
-                                        name={metricLabels[activeMetric]}
+                                        name={activeMetricLabel}
                                         stroke={lineColor}
                                         strokeWidth={2}
                                         type="linear"

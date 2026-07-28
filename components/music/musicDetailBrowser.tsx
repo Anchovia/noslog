@@ -7,6 +7,8 @@ import type {
     Difficulty,
     MusicDetailProps,
 } from "./musicDetailTypes";
+import { useLocale } from "@/components/i18n/localeProvider";
+import { getLocalizedHref, type Locale } from "@/lib/i18n/routing";
 
 function cacheKey(
     index: string,
@@ -21,13 +23,17 @@ function detailUrl(
     index: string,
     difficulty: Difficulty,
     tab: DetailTab,
-    page: number
+    page: number,
+    locale: Locale
 ) {
     const query = new URLSearchParams();
     if (tab !== "record") query.set("tab", tab);
     if (tab === "ranking" && page > 1) query.set("page", String(page));
     const suffix = query.size ? `?${query}` : "";
-    return `/music/${index}/${difficulty.toLowerCase()}${suffix}`;
+    return getLocalizedHref(
+        `/music/${index}/${difficulty.toLowerCase()}${suffix}`,
+        locale
+    );
 }
 
 interface MusicDetailBrowserProps {
@@ -37,6 +43,7 @@ interface MusicDetailBrowserProps {
 export default function MusicDetailBrowser({
     initialData,
 }: MusicDetailBrowserProps) {
+    const locale = useLocale();
     const [data, setData] = useState(initialData);
     const [isLoading, setIsLoading] = useState(false);
     const requestId = useRef(0);
@@ -63,7 +70,7 @@ export default function MusicDetailBrowser({
         ) => {
             const index = initialData.music.index;
             const key = cacheKey(index, difficulty, tab, page);
-            const url = detailUrl(index, difficulty, tab, page);
+            const url = detailUrl(index, difficulty, tab, page, locale);
 
             if (options?.replaceUrl !== false) {
                 window.history.pushState(null, "", url);
@@ -86,6 +93,7 @@ export default function MusicDetailBrowser({
                     difficulty: difficulty.toLowerCase(),
                     tab,
                     page: String(page),
+                    locale,
                 });
                 const response = await fetch(`/api/music-detail?${query}`, {
                     credentials: "same-origin",
@@ -102,7 +110,7 @@ export default function MusicDetailBrowser({
                 if (currentRequest === requestId.current) setIsLoading(false);
             }
         },
-        [initialData.music.index]
+        [initialData.music.index, locale]
     );
 
     useEffect(() => {

@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { useTranslations } from "@/components/i18n/localeProvider";
 
 import type { ProfileMode } from "./profileTypes";
 
@@ -12,10 +13,12 @@ export default function ProfileModeTabs({
     mode,
     onChange,
 }: ProfileModeTabsProps) {
+    const t = useTranslations();
+
     return (
         <nav
             className="bg-surface rounded-card grid grid-cols-2 p-1"
-            aria-label="프로필 모드"
+            aria-label={t("profile.modeAria")}
         >
             {(["basic", "recital"] as const).map((item) => (
                 <button

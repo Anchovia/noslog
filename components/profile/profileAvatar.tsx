@@ -1,4 +1,7 @@
+"use client";
+
 import { cn } from "@/lib/utils";
+import { useTranslations } from "@/components/i18n/localeProvider";
 
 interface ProfileAvatarProps {
     avatar: string | null;
@@ -14,6 +17,8 @@ export default function ProfileAvatar({
     size = 32,
     className,
 }: ProfileAvatarProps) {
+    const t = useTranslations();
+
     return (
         <span
             className={cn(
@@ -29,7 +34,9 @@ export default function ProfileAvatar({
                 backgroundImage: avatar ? `url(${avatar})` : undefined,
                 fontSize: Math.max(9, Math.round(size * 0.38)),
             }}
-            aria-label={`${username || "이름 없는 유저"} 프로필 이미지`}
+            aria-label={t("common.profileImage", {
+                name: username || t("common.unnamedUser"),
+            })}
         >
             {!avatar ? "N" : null}
         </span>

@@ -1,4 +1,5 @@
 import { ChevronDown, Megaphone } from "lucide-react";
+import { getServerI18n } from "@/lib/i18n/server";
 
 interface HomeAnnouncementsProps {
     announcements: {
@@ -9,22 +10,26 @@ interface HomeAnnouncementsProps {
     }[];
 }
 
-const dateFormatter = new Intl.DateTimeFormat("ko-KR", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-});
-
-export default function HomeAnnouncements({
+export default async function HomeAnnouncements({
     announcements,
 }: HomeAnnouncementsProps) {
     if (announcements.length === 0) return null;
+
+    const { locale, t } = await getServerI18n();
+    const dateFormatter = new Intl.DateTimeFormat(
+        locale === "ko" ? "ko-KR" : locale === "ja" ? "ja-JP" : "en-US",
+        {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+        }
+    );
 
     return (
         <section className="bg-surface rounded-card overflow-hidden">
             <header className="border-divider flex h-10 items-center gap-2 border-b px-3">
                 <Megaphone className="text-basic size-4" aria-hidden="true" />
-                <h2 className="text-section">공지사항</h2>
+                <h2 className="text-section">{t("home.announcements")}</h2>
             </header>
             {announcements.map((announcement, index) => (
                 <details

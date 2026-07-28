@@ -1,3 +1,4 @@
+import { useTranslations } from "@/components/i18n/localeProvider";
 import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { getPaginationItems } from "./rankingTableUtils";
@@ -15,6 +16,7 @@ export default function RankingPagination({
     totalCount,
     onPageChange,
 }: RankingPaginationProps) {
+    const t = useTranslations();
     const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
     if (totalPages <= 1) return null;
 
@@ -22,13 +24,13 @@ export default function RankingPagination({
     return (
         <nav
             className="flex justify-center gap-1"
-            aria-label="유저 랭킹 페이지"
+            aria-label={t("rankings.pagination")}
         >
             {page > 1 ? (
                 <button
                     type="button"
                     onClick={() => onPageChange(page - 1)}
-                    aria-label="이전 페이지"
+                    aria-label={t("common.previousPage")}
                     className="border-border text-text-secondary flex size-8 cursor-pointer items-center justify-center rounded-md border"
                 >
                     <ChevronLeft size={15} aria-hidden />
@@ -69,7 +71,7 @@ export default function RankingPagination({
                 <button
                     type="button"
                     onClick={() => onPageChange(page + 1)}
-                    aria-label="다음 페이지"
+                    aria-label={t("common.nextPage")}
                     className="border-border text-text-secondary flex size-8 cursor-pointer items-center justify-center rounded-md border"
                 >
                     <ChevronRight size={15} aria-hidden />

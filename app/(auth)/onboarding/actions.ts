@@ -6,6 +6,13 @@ import { redirect } from "next/navigation";
 import { onboardingSchema } from "@/app/(nevigation)/profile/settings/schema";
 import { CACHE_TAGS, getUserProfileTag } from "@/lib/cacheTags";
 import db from "@/lib/db";
+import { createTranslator, getMessages } from "@/lib/i18n/messages";
+import {
+    DEFAULT_LOCALE,
+    isLocale,
+    localeFromCountry,
+    localizePath,
+} from "@/lib/i18n/routing";
 import getSession from "@/lib/session";
 
 export interface OnboardingActionState {
@@ -20,9 +27,14 @@ export async function completeOnboarding(
     _previousState: OnboardingActionState | null,
     formData: FormData
 ): Promise<OnboardingActionState | never> {
+    const requestedLocale = String(formData.get("locale") ?? "");
+    const formLocale = isLocale(requestedLocale)
+        ? requestedLocale
+        : DEFAULT_LOCALE;
+    const t = createTranslator(getMessages(formLocale));
     const session = await getSession();
     if (!session.id) {
-        return { message: "로그인이 필요합니다." };
+        return { message: t("onboarding.error.loginRequired") };
     }
 
     const result = onboardingSchema.safeParse({
@@ -30,11 +42,33 @@ export async function completeOnboarding(
         country: String(formData.get("country") ?? ""),
     });
     if (!result.success) {
+        const usernameIssue = result.error.issues.find(
+            (issue) => issue.path[0] === "username"
+        );
+        const countryIssue = result.error.issues.find(
+            (issue) => issue.path[0] === "country"
+        );
+
         return {
-            message: "입력한 정보를 확인해주세요.",
-            fieldErrors: result.error.flatten().fieldErrors,
+            message: t("onboarding.error.invalid"),
+            fieldErrors: {
+                username: usernameIssue
+                    ? [
+                          t(
+                              usernameIssue.code === "too_big"
+                                  ? "onboarding.error.nicknameMax"
+                                  : "onboarding.error.nicknameRequired"
+                          ),
+                      ]
+                    : undefined,
+                country: countryIssue
+                    ? [t("onboarding.error.countryRequired")]
+                    : undefined,
+            },
         };
     }
+
+    const locale = localeFromCountry(result.data.country);
 
     try {
         await db.user.update({
@@ -42,6 +76,7 @@ export async function completeOnboarding(
             data: {
                 username: result.data.username,
                 country: result.data.country,
+                locale,
                 profile_completed_at: new Date(),
             },
         });
@@ -54,14 +89,15 @@ export async function completeOnboarding(
         return {
             message:
                 code === "P2002"
-                    ? "이미 사용 중인 닉네임입니다."
-                    : "프로필 설정을 완료하지 못했습니다.",
+                    ? t("onboarding.error.nicknameTaken")
+                    : t("onboarding.error.generic"),
         };
     }
 
     session.profileCompleted = true;
+    session.locale = locale;
     await session.save();
     updateTag(CACHE_TAGS.userRankings);
     updateTag(getUserProfileTag(session.id));
-    redirect("/");
+    redirect(localizePath("/", locale));
 }

@@ -1,5 +1,7 @@
 import { CACHE_TAGS } from "@/lib/cacheTags";
 import db from "@/lib/db";
+import { getLocalizedMusicTitle } from "@/lib/i18n/musicTitle";
+import type { Locale } from "@/lib/i18n/routing";
 import {
     BASIC_RATING_TOP_COUNT,
     calculateBasicRatingTheoreticalMax,
@@ -174,7 +176,19 @@ export const getCachedTierBand = unstable_cache(
                                     select: {
                                         index: true,
                                         title: true,
+                                        title_kana: true,
                                         background: true,
+                                        translations: {
+                                            where: {
+                                                status: "approved",
+                                                locale: { in: ["ko", "en"] },
+                                            },
+                                            select: {
+                                                locale: true,
+                                                title: true,
+                                                status: true,
+                                            },
+                                        },
                                     },
                                 },
                             },
@@ -184,7 +198,7 @@ export const getCachedTierBand = unstable_cache(
             },
         });
     },
-    ["public-tier-band", "goal-v1"],
+    ["public-tier-band", "goal-v2"],
     {
         revalidate: 3600,
         tags: [CACHE_TAGS.tierLists],
@@ -299,7 +313,9 @@ export async function getTierBandForUser(
     bandId: number,
     userId?: number,
     difficulties: TierDifficulty[] = [],
-    levels: string[] = []
+    levels: string[] = [],
+    locale: Locale = "ko",
+    showLocalizedTitle = true
 ): Promise<PublicTierBandPayload | null> {
     const band = await getCachedTierBand(slug, bandId, difficulties, levels);
     if (!band) return null;
@@ -324,6 +340,19 @@ export async function getTierBandForUser(
         ...band,
         entries: band.entries.map((entry) => ({
             ...entry,
+            chart: {
+                ...entry.chart,
+                music: {
+                    index: entry.chart.music.index,
+                    title: entry.chart.music.title,
+                    localizedTitle: getLocalizedMusicTitle(
+                        entry.chart.music,
+                        locale,
+                        showLocalizedTitle
+                    ),
+                    background: entry.chart.music.background,
+                },
+            },
             record: recordByChartId.has(entry.chartId)
                 ? {
                       ...recordByChartId.get(entry.chartId)!,

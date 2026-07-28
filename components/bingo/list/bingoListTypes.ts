@@ -1,6 +1,7 @@
 export interface BingoListItem {
     id: number;
     title: string;
+    localizedTitle?: string | null;
     musicIndex: string;
     background: string | null;
     reward: number;

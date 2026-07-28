@@ -4,20 +4,28 @@ import { revalidatePath, updateTag } from "next/cache";
 
 import { CACHE_TAGS, getUserProfileTag } from "@/lib/cacheTags";
 import db from "@/lib/db";
+import { createTranslator, getMessages } from "@/lib/i18n/messages";
+import { isLocale, localizePath } from "@/lib/i18n/routing";
 import getSession from "@/lib/session";
 
 export type PreferredArcadeActionResult =
     { success: true; message: string } | { success: false; message: string };
 
 export async function setPreferredArcade(
-    arcadeId: number
+    arcadeId: number,
+    requestedLocale = "ko"
 ): Promise<PreferredArcadeActionResult> {
+    const locale = isLocale(requestedLocale) ? requestedLocale : "ko";
+    const t = createTranslator(getMessages(locale));
     const session = await getSession();
     if (!session.id) {
-        return { success: false, message: "로그인이 필요합니다." };
+        return {
+            success: false,
+            message: t("onboarding.error.loginRequired"),
+        };
     }
     if (!Number.isInteger(arcadeId)) {
-        return { success: false, message: "오락실을 다시 선택해주세요." };
+        return { success: false, message: t("arcades.error.select") };
     }
 
     const arcade = await db.arcade.findFirst({
@@ -27,7 +35,7 @@ export async function setPreferredArcade(
     if (!arcade) {
         return {
             success: false,
-            message: "선택한 오락실을 찾을 수 없습니다.",
+            message: t("arcades.error.notFound"),
         };
     }
 
@@ -40,11 +48,12 @@ export async function setPreferredArcade(
     updateTag(CACHE_TAGS.userProfiles);
     updateTag(getUserProfileTag(session.id));
     revalidatePath("/gamecenter");
+    revalidatePath(localizePath("/gamecenter", locale));
     revalidatePath(`/profile/${session.id}`);
     revalidatePath("/profile/settings");
 
     return {
         success: true,
-        message: `${arcade.name}을(를) 선호 오락실로 지정했습니다.`,
+        message: t("arcades.preferredSaved", { name: arcade.name }),
     };
 }

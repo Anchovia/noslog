@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 
+import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
+import type { MessageKey } from "@/lib/i18n/messages";
 import {
     ARCADE_WEEKDAYS,
     type ArcadeBusinessHours,
@@ -26,17 +28,6 @@ const weekdayByShortName: Record<string, ArcadeWeekday> = {
 function minutesFromTime(value: string) {
     const [hour, minute] = value.split(":").map(Number);
     return hour * 60 + minute;
-}
-
-function koreanTime(value: string) {
-    const [hour, minute] = value.split(":").map(Number);
-    const period = hour < 12 ? "오전" : "오후";
-    const displayHour = hour % 12 || 12;
-    return `${period} ${displayHour}:${String(minute).padStart(2, "0")}`;
-}
-
-function scheduleText(schedule: { open: string; close: string }) {
-    return `${koreanTime(schedule.open)} - ${koreanTime(schedule.close)}`;
 }
 
 function seoulNow(date: Date) {
@@ -88,6 +79,29 @@ function activeSchedule(
 export default function ArcadeBusinessHours({
     value,
 }: ArcadeBusinessHoursProps) {
+    const locale = useLocale();
+    const t = useTranslations();
+    const weekdayLabelKeys: Record<ArcadeWeekday, MessageKey> = {
+        monday: "arcades.weekday.mon",
+        tuesday: "arcades.weekday.tue",
+        wednesday: "arcades.weekday.wed",
+        thursday: "arcades.weekday.thu",
+        friday: "arcades.weekday.fri",
+        saturday: "arcades.weekday.sat",
+        sunday: "arcades.weekday.sun",
+    };
+    function localizedTime(value: string) {
+        const [hour, minute] = value.split(":").map(Number);
+        const period = t(hour < 12 ? "arcades.am" : "arcades.pm");
+        const displayHour = hour % 12 || 12;
+        const time = `${displayHour}:${String(minute).padStart(2, "0")}`;
+        return locale === "en" ? `${time} ${period}` : `${period} ${time}`;
+    }
+    function scheduleText(schedule: { open: string; close: string }) {
+        return `${localizedTime(schedule.open)} - ${localizedTime(
+            schedule.close
+        )}`;
+    }
     const businessHours = useMemo(
         () => normalizeArcadeBusinessHours(value),
         [value]
@@ -106,8 +120,10 @@ export default function ArcadeBusinessHours({
     if (!businessHours) {
         return (
             <div>
-                <p className="text-label">영업시간</p>
-                <p className="text-body-muted mt-1">영업시간 정보 미확인</p>
+                <p className="text-label">{t("arcades.hours")}</p>
+                <p className="text-body-muted mt-1">
+                    {t("arcades.hoursUnknown")}
+                </p>
             </div>
         );
     }
@@ -117,7 +133,7 @@ export default function ArcadeBusinessHours({
     ) {
         return (
             <div>
-                <p className="text-label">영업시간</p>
+                <p className="text-label">{t("arcades.hours")}</p>
                 <p className="text-body-muted mt-1 whitespace-pre-wrap">
                     {businessHours.legacyNote}
                 </p>
@@ -144,7 +160,7 @@ export default function ArcadeBusinessHours({
 
     return (
         <div>
-            <p className="text-label">영업시간</p>
+            <p className="text-label">{t("arcades.hours")}</p>
             <div className="mt-2 flex flex-wrap items-center gap-1.5">
                 {current ? (
                     <span
@@ -154,7 +170,7 @@ export default function ArcadeBusinessHours({
                                 : "text-text-secondary text-label"
                         }
                     >
-                        {openSchedule ? "영업 중" : "영업 종료"}
+                        {openSchedule ? t("arcades.open") : t("arcades.closed")}
                     </span>
                 ) : null}
                 {current && summarySchedule ? (
@@ -165,27 +181,35 @@ export default function ArcadeBusinessHours({
                         {scheduleText(summarySchedule)}
                     </span>
                 ) : current ? (
-                    <span className="text-body-muted">오늘 휴무</span>
+                    <span className="text-body-muted">
+                        {t("arcades.closedToday")}
+                    </span>
                 ) : null}
             </div>
             <dl className="border-divider mt-3 divide-y">
-                {orderedDays.map(({ key, label }) => {
+                {orderedDays.map(({ key }) => {
                     const schedule = businessHours.weekly[key];
                     return (
                         <div
                             key={key}
                             className="flex items-center justify-between gap-3 py-2"
                         >
-                            <dt className="text-label shrink-0">{label}</dt>
+                            <dt className="text-label shrink-0">
+                                {t(weekdayLabelKeys[key])}
+                            </dt>
                             <dd className="text-body-muted text-right">
-                                {schedule ? scheduleText(schedule) : "휴무"}
+                                {schedule
+                                    ? scheduleText(schedule)
+                                    : t("arcades.dayOff")}
                             </dd>
                         </div>
                     );
                 })}
             </dl>
             {businessHours.openEveryDay ? (
-                <p className="text-success text-label mt-2">연중무휴</p>
+                <p className="text-success text-label mt-2">
+                    {t("arcades.openEveryDay")}
+                </p>
             ) : null}
         </div>
     );

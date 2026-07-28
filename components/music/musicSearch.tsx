@@ -26,6 +26,7 @@ import {
     MUSIC_RECORD_FILTERS,
     type MusicRecordFilter,
 } from "@/app/(nevigation)/music/query";
+import { useLocalizedHref } from "@/components/i18n/localeProvider";
 
 export type { MusicSearchProps } from "@/components/music/search/musicSearchTypes";
 
@@ -35,6 +36,7 @@ export default function MusicSearch({
     isLoggedIn,
 }: MusicSearchProps) {
     const router = useRouter();
+    const localizedHref = useLocalizedHref();
     const rangeUpdateTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [selectedCategories, setSelectedCategories] = useState<
@@ -90,7 +92,9 @@ export default function MusicSearch({
             recordFilters,
         });
 
-        router.replace(`/music?${params.toString()}`, { scroll: false });
+        router.replace(localizedHref(`/music?${params.toString()}`), {
+            scroll: false,
+        });
     }
 
     function handleRecordToggle(filter: MusicRecordFilter) {
@@ -107,7 +111,9 @@ export default function MusicSearch({
             currentParams: searchParams,
             recordFilters: nextFilters,
         });
-        router.replace(`/music?${params.toString()}`, { scroll: false });
+        router.replace(localizedHref(`/music?${params.toString()}`), {
+            scroll: false,
+        });
     }
 
     function handleCategoryToggle(category: MusicCategory) {

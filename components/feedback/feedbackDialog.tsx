@@ -7,6 +7,11 @@ import Link from "next/link";
 import { ChangeEvent, useRef, useState } from "react";
 
 import {
+    useLocale,
+    useLocalizedHref,
+    useTranslations,
+} from "@/components/i18n/localeProvider";
+import {
     discardFeedbackImage,
     requestFeedbackImageUpload,
     submitFeedbackReport,
@@ -17,6 +22,9 @@ export default function FeedbackDialog({
 }: {
     isAuthenticated: boolean;
 }) {
+    const localizedHref = useLocalizedHref();
+    const locale = useLocale();
+    const t = useTranslations();
     const [open, setOpen] = useState(false);
     const [content, setContent] = useState("");
     const [file, setFile] = useState<File | null>(null);
@@ -31,12 +39,12 @@ export default function FeedbackDialog({
         if (
             !["image/jpeg", "image/png", "image/webp"].includes(nextFile.type)
         ) {
-            setMessage("JPG, PNG, WebP 이미지만 첨부할 수 있습니다.");
+            setMessage(t("feedback.invalidImage"));
             event.target.value = "";
             return;
         }
         if (nextFile.size > 4 * 1024 * 1024) {
-            setMessage("이미지는 4MB 이하로 선택해주세요.");
+            setMessage(t("feedback.imageTooLarge"));
             event.target.value = "";
             return;
         }
@@ -52,7 +60,10 @@ export default function FeedbackDialog({
 
         try {
             if (file) {
-                const upload = await requestFeedbackImageUpload(file.type);
+                const upload = await requestFeedbackImageUpload(
+                    file.type,
+                    locale
+                );
                 if (!upload.success) {
                     setMessage(upload.message);
                     return;
@@ -65,7 +76,11 @@ export default function FeedbackDialog({
                 uploadedUrl = blob.url;
             }
 
-            const result = await submitFeedbackReport(content, uploadedUrl);
+            const result = await submitFeedbackReport(
+                content,
+                uploadedUrl,
+                locale
+            );
             if (!result.success && uploadedUrl) {
                 await discardFeedbackImage(uploadedUrl).catch(() => null);
             }
@@ -80,7 +95,7 @@ export default function FeedbackDialog({
             if (uploadedUrl) {
                 await discardFeedbackImage(uploadedUrl).catch(() => null);
             }
-            setMessage("제보 처리 중 오류가 발생했습니다.");
+            setMessage(t("feedback.error"));
         } finally {
             setIsSubmitting(false);
         }
@@ -100,7 +115,7 @@ export default function FeedbackDialog({
             <Dialog.Trigger asChild>
                 <button className="border-border text-text-secondary hover:bg-surface-muted hover:text-text-primary focus-visible:ring-focus/40 rounded-card flex h-10 w-full cursor-pointer items-center justify-center gap-2 border text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none">
                     <MessageSquareWarning className="size-4" aria-hidden />
-                    피드백 · 오류 제보
+                    {t("feedback.title")}
                 </button>
             </Dialog.Trigger>
             <Dialog.Portal>
@@ -108,24 +123,24 @@ export default function FeedbackDialog({
                 <Dialog.Content className="border-border bg-bg fixed top-1/2 left-1/2 z-50 w-[calc(100vw-2rem)] max-w-90 -translate-x-1/2 -translate-y-1/2 rounded-lg border p-4 shadow-2xl focus:outline-none">
                     <div className="flex items-center justify-between gap-3">
                         <Dialog.Title className="text-section">
-                            피드백 · 오류 제보
+                            {t("feedback.title")}
                         </Dialog.Title>
                         <Dialog.Close className="text-text-secondary hover:text-text-primary flex size-9 cursor-pointer items-center justify-center rounded-md">
                             <X className="size-5" aria-hidden />
-                            <span className="sr-only">닫기</span>
+                            <span className="sr-only">{t("common.close")}</span>
                         </Dialog.Close>
                     </div>
 
                     {!isAuthenticated ? (
                         <div className="mt-5 flex flex-col gap-4 text-center">
                             <p className="text-body-muted">
-                                로그인 후 피드백을 남길 수 있습니다.
+                                {t("feedback.loginRequired")}
                             </p>
                             <Link
-                                href="/login"
+                                href={localizedHref("/login")}
                                 className="bg-text-primary text-bg rounded-card flex h-11 items-center justify-center text-sm font-bold"
                             >
-                                로그인
+                                {t("common.login")}
                             </Link>
                         </div>
                     ) : submitted ? (
@@ -134,14 +149,13 @@ export default function FeedbackDialog({
                                 {message}
                             </p>
                             <Dialog.Close className="bg-text-primary text-bg rounded-card h-11 cursor-pointer text-sm font-bold">
-                                확인
+                                {t("common.confirm")}
                             </Dialog.Close>
                         </div>
                     ) : (
                         <div className="mt-4 flex flex-col gap-3">
                             <p className="text-caption">
-                                문제가 발생한 화면과 상황을 구체적으로
-                                적어주세요.
+                                {t("feedback.description")}
                             </p>
                             <textarea
                                 value={content}
@@ -150,12 +164,12 @@ export default function FeedbackDialog({
                                 }
                                 maxLength={1000}
                                 rows={6}
-                                placeholder="제보 내용을 입력해주세요."
+                                placeholder={t("feedback.placeholder")}
                                 className="border-border bg-surface text-input placeholder:text-text-disabled focus:border-focus focus:ring-focus/20 rounded-card w-full resize-none border px-3 py-2 outline-none focus:ring-2"
                             />
                             <label className="border-border hover:bg-surface-muted rounded-card flex h-10 cursor-pointer items-center justify-center gap-2 border text-sm font-semibold transition-colors">
                                 <ImagePlus className="size-4" aria-hidden />
-                                {file ? file.name : "이미지 첨부 (선택)"}
+                                {file ? file.name : t("feedback.attachImage")}
                                 <input
                                     ref={fileInputRef}
                                     type="file"
@@ -175,7 +189,9 @@ export default function FeedbackDialog({
                                 }
                                 className="bg-text-primary text-bg rounded-card h-11 cursor-pointer text-sm font-bold disabled:cursor-not-allowed disabled:opacity-50"
                             >
-                                {isSubmitting ? "제출 중" : "제출"}
+                                {isSubmitting
+                                    ? t("feedback.submitting")
+                                    : t("feedback.submit")}
                             </button>
                         </div>
                     )}

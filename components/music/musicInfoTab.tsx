@@ -3,6 +3,11 @@ import { Play, ScanSearch } from "lucide-react";
 import Link from "next/link";
 import type { ChartDetail, Difficulty } from "./musicDetailTypes";
 import PatternProfileChart from "./patternProfileChart";
+import {
+    useLocalizedHref,
+    useTranslations,
+    type MessageKey,
+} from "@/components/i18n/localeProvider";
 
 interface MusicInfoTabProps {
     musicIndex: string;
@@ -15,6 +20,8 @@ export default function MusicInfoTab({
     difficulty,
     chartDetail,
 }: MusicInfoTabProps) {
+    const localizedHref = useLocalizedHref();
+    const t = useTranslations();
     const bpm =
         chartDetail.bpm_min === null
             ? "-"
@@ -42,14 +49,17 @@ export default function MusicInfoTab({
                 {[
                     ["BPM", bpm],
                     [
-                        "노트 수",
+                        t("music.info.noteCount"),
                         chartDetail.note_count === null
                             ? "-"
                             : formatToComma(chartDetail.note_count),
                     ],
-                    ["곡 길이", duration],
-                    ["수록일", releasedAt],
-                    ["언락 조건", chartDetail.unlock_condition || "-"],
+                    [t("music.info.duration"), duration],
+                    [t("music.info.releaseDate"), releasedAt],
+                    [
+                        t("music.info.unlock"),
+                        chartDetail.unlock_condition || "-",
+                    ],
                 ].map(([label, value]) => (
                     <div
                         key={label}
@@ -67,9 +77,14 @@ export default function MusicInfoTab({
 
             <section className="bg-surface rounded-card p-4">
                 <header className="flex items-center justify-between gap-3">
-                    <h2 className="text-section">패턴 경향</h2>
+                    <h2 className="text-section">
+                        {t("music.info.patternTrend")}
+                    </h2>
                     <span className="text-caption">
-                        {difficulty} · 투표 {chartDetail.evaluationCount}
+                        {difficulty} ·{" "}
+                        {t("music.info.votes", {
+                            count: chartDetail.evaluationCount,
+                        })}
                     </span>
                 </header>
 
@@ -79,25 +94,36 @@ export default function MusicInfoTab({
                             values={chartDetail.patternAverages}
                         />
                         <dl className="flex w-1/2 flex-col gap-2">
-                            {[
-                                ["계단", chartDetail.patternAverages.stairs],
+                            {(
                                 [
-                                    "연타",
-                                    chartDetail.patternAverages.repetition,
-                                ],
-                                ["폴리리듬", chartDetail.patternAverages.chord],
-                                ["즈레", chartDetail.patternAverages.trill],
-                                [
-                                    "글리산도",
-                                    chartDetail.patternAverages.glissando,
-                                ],
-                            ].map(([label, value]) => (
+                                    [
+                                        "music.pattern.stairs",
+                                        chartDetail.patternAverages.stairs,
+                                    ],
+                                    [
+                                        "music.pattern.repetition",
+                                        chartDetail.patternAverages.repetition,
+                                    ],
+                                    [
+                                        "music.pattern.chord",
+                                        chartDetail.patternAverages.chord,
+                                    ],
+                                    [
+                                        "music.pattern.trill",
+                                        chartDetail.patternAverages.trill,
+                                    ],
+                                    [
+                                        "music.pattern.glissando",
+                                        chartDetail.patternAverages.glissando,
+                                    ],
+                                ] satisfies [MessageKey, number][]
+                            ).map(([labelKey, value]) => (
                                 <div
-                                    key={label}
+                                    key={labelKey}
                                     className="flex items-center gap-2 text-xs"
                                 >
                                     <dt className="text-text-secondary w-14 shrink-0">
-                                        {label}
+                                        {t(labelKey)}
                                     </dt>
                                     <div className="bg-surface-muted h-1.5 min-w-0 flex-1 overflow-hidden rounded-full">
                                         <div
@@ -116,23 +142,30 @@ export default function MusicInfoTab({
                     </div>
                 ) : (
                     <div className="text-text-disabled flex h-32 items-center justify-center text-sm">
-                        아직 등록된 패턴 투표가 없습니다.
+                        {t("music.info.noPatternVotes")}
                     </div>
                 )}
 
                 <Link
-                    href={`/music/${musicIndex}/${difficulty.toLowerCase()}?tab=tier`}
+                    href={localizedHref(
+                        `/music/${musicIndex}/${difficulty.toLowerCase()}?tab=tier`
+                    )}
                     className="text-text-secondary mt-2 block text-right text-xs font-semibold"
                 >
-                    패턴 투표 →
+                    {t("music.info.votePattern")}
                 </Link>
             </section>
 
             <section className="bg-surface rounded-card p-4">
                 <header className="flex items-center justify-between gap-3">
-                    <h2 className="text-section">점수 분포</h2>
+                    <h2 className="text-section">
+                        {t("music.info.scoreDistribution")}
+                    </h2>
                     <span className="text-caption">
-                        {difficulty} · 전체 {chartDetail.playerCount}명
+                        {difficulty} ·{" "}
+                        {t("music.info.totalPlayers", {
+                            count: chartDetail.playerCount,
+                        })}
                     </span>
                 </header>
 
@@ -159,7 +192,10 @@ export default function MusicInfoTab({
                                                     ? 0
                                                     : `${Math.max(4, (item.count / maxDistributionCount) * 56)}px`,
                                         }}
-                                        title={`${item.label}: ${item.count}명`}
+                                        title={`${item.label}: ${t(
+                                            "music.info.players",
+                                            { count: item.count }
+                                        )}`}
                                     />
                                     <span
                                         className={cn(
@@ -176,13 +212,15 @@ export default function MusicInfoTab({
                         </div>
                         <p className="text-caption mt-3">
                             {chartDetail.userTopPercent === null
-                                ? "로그인 후 내 위치를 확인할 수 있습니다."
-                                : `내 기록 기준 상위 ${chartDetail.userTopPercent}%`}
+                                ? t("music.info.loginForPosition")
+                                : t("music.info.topPercent", {
+                                      percent: chartDetail.userTopPercent,
+                                  })}
                         </p>
                     </>
                 ) : (
                     <div className="text-text-disabled flex h-24 items-center justify-center text-sm">
-                        집계할 플레이 기록이 없습니다.
+                        {t("music.info.noPlayData")}
                     </div>
                 )}
             </section>
@@ -195,19 +233,24 @@ export default function MusicInfoTab({
                         rel="noreferrer"
                         className="border-border rounded-card flex h-10 items-center justify-center gap-2 border text-sm font-semibold"
                     >
-                        <Play size={15} aria-hidden /> 플레이 영상
+                        <Play size={15} aria-hidden />{" "}
+                        {t("music.info.playVideo")}
                     </a>
                 ) : (
                     <span className="border-border text-text-disabled rounded-card flex h-10 items-center justify-center gap-2 border text-sm font-semibold opacity-60">
-                        <Play size={15} aria-hidden /> 플레이 영상
+                        <Play size={15} aria-hidden />{" "}
+                        {t("music.info.playVideo")}
                     </span>
                 )}
                 {chartDetail.has_published_pattern ? (
                     <Link
-                        href={`/music/${musicIndex}/${difficulty.toLowerCase()}/pattern`}
+                        href={localizedHref(
+                            `/music/${musicIndex}/${difficulty.toLowerCase()}/pattern`
+                        )}
                         className="border-border rounded-card flex h-10 items-center justify-center gap-2 border text-sm font-semibold"
                     >
-                        <ScanSearch size={15} aria-hidden /> 채보 확인
+                        <ScanSearch size={15} aria-hidden />{" "}
+                        {t("music.info.viewChart")}
                     </Link>
                 ) : chartDetail.chart_preview_url ? (
                     <a
@@ -216,11 +259,13 @@ export default function MusicInfoTab({
                         rel="noreferrer"
                         className="border-border rounded-card flex h-10 items-center justify-center gap-2 border text-sm font-semibold"
                     >
-                        <ScanSearch size={15} aria-hidden /> 외부 채보
+                        <ScanSearch size={15} aria-hidden />{" "}
+                        {t("music.info.externalChart")}
                     </a>
                 ) : (
                     <span className="border-border text-text-disabled rounded-card flex h-10 items-center justify-center gap-2 border text-sm font-semibold opacity-60">
-                        <ScanSearch size={15} aria-hidden /> 채보 확인
+                        <ScanSearch size={15} aria-hidden />{" "}
+                        {t("music.info.viewChart")}
                     </span>
                 )}
             </div>

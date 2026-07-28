@@ -14,6 +14,7 @@ import type {
     EvaluationFormValues,
     MusicTierVoteProps,
 } from "./musicTierVoteTypes";
+import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 
 // 악곡별 서열 투표 상태와 서버 액션을 한곳에서 관리함
 export default function MusicTierVote({
@@ -29,6 +30,8 @@ export default function MusicTierVote({
     opinionCount,
     opinions,
 }: MusicTierVoteProps) {
+    const locale = useLocale();
+    const t = useTranslations();
     const [isPending, startTransition] = useTransition();
     const [message, setMessage] = useState<string | null>(null);
     const [isCommentExpanded, setIsCommentExpanded] = useState(false);
@@ -89,21 +92,24 @@ export default function MusicTierVote({
 
     const submitVote = (data: EvaluationFormValues) => {
         if (!canVote) {
-            setMessage("해당 채보의 플레이 기록 연동 후 투표할 수 있습니다.");
+            setMessage(t("music.tier.playRequired"));
             return;
         }
 
         startTransition(async () => {
-            const result = await submitChartEvaluation({
-                chartId,
-                perceivedConstant: data.perceivedConstant,
-                stairs: data.stairs!,
-                chord: data.chord!,
-                trill: data.trill!,
-                glissando: data.glissando!,
-                repetition: data.repetition!,
-                comment: data.comment,
-            });
+            const result = await submitChartEvaluation(
+                {
+                    chartId,
+                    perceivedConstant: data.perceivedConstant,
+                    stairs: data.stairs!,
+                    chord: data.chord!,
+                    trill: data.trill!,
+                    glissando: data.glissando!,
+                    repetition: data.repetition!,
+                    comment: data.comment,
+                },
+                locale
+            );
 
             setMessage(result.message);
             if (result.success) refreshDetail();
@@ -112,10 +118,10 @@ export default function MusicTierVote({
 
     const reactToOpinion = (evaluationId: number, value: 1 | -1) => {
         startTransition(async () => {
-            const result = await toggleChartEvaluationReaction({
-                evaluationId,
-                value,
-            });
+            const result = await toggleChartEvaluationReaction(
+                { evaluationId, value },
+                locale
+            );
 
             setMessage(result.message);
             if (result.success) refreshDetail();
@@ -123,11 +129,13 @@ export default function MusicTierVote({
     };
 
     const deleteEvaluation = (evaluationId: number) => {
-        if (!window.confirm("체감 난이도, 패턴 투표와 의견을 모두 삭제할까요?"))
-            return;
+        if (!window.confirm(t("music.tier.confirmDelete"))) return;
 
         startTransition(async () => {
-            const result = await deleteChartEvaluation({ evaluationId });
+            const result = await deleteChartEvaluation(
+                { evaluationId },
+                locale
+            );
 
             setMessage(result.message);
             if (result.success) {
@@ -148,26 +156,25 @@ export default function MusicTierVote({
 
     const perceivedConstantField = register("perceivedConstant", {
         valueAsNumber: true,
-        required: "체감 난이도를 입력해 주세요.",
+        required: t("music.tier.required"),
         min: {
             value: 1,
-            message: "체감 난이도는 1.0 이상이어야 합니다.",
+            message: t("music.tier.min"),
         },
         max: {
             value: 14,
-            message: "체감 난이도는 14.0 이하여야 합니다.",
+            message: t("music.tier.max"),
         },
         validate: (value) =>
-            Number.isInteger(value * 10) ||
-            "체감 난이도는 0.1 단위로 입력해 주세요.",
+            Number.isInteger(value * 10) || t("music.tier.step"),
     });
     const commentField = register("comment", {
-        required: "코멘트를 입력해 주세요.",
+        required: t("music.tier.commentRequired"),
         validate: (value) =>
-            value.trim().length > 0 || "코멘트를 입력해 주세요.",
+            value.trim().length > 0 || t("music.tier.commentRequired"),
         maxLength: {
             value: 120,
-            message: "코멘트는 120자 이하로 입력해 주세요.",
+            message: t("music.tier.commentMax"),
         },
     });
 

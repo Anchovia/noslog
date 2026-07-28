@@ -15,7 +15,22 @@ const bestPlaySelect = {
     music_idx: true,
     fc_type: true,
     music: {
-        select: { title: true, background: true },
+        select: {
+            title: true,
+            title_kana: true,
+            background: true,
+            translations: {
+                where: {
+                    status: "approved",
+                    locale: { in: ["ko", "en"] as string[] },
+                },
+                select: {
+                    locale: true,
+                    title: true,
+                    status: true,
+                },
+            },
+        },
     },
 } as const;
 
@@ -88,7 +103,22 @@ async function queryProfileData(id: number) {
                             level: true,
                             music_idx: true,
                             music: {
-                                select: { title: true, background: true },
+                                select: {
+                                    title: true,
+                                    title_kana: true,
+                                    background: true,
+                                    translations: {
+                                        where: {
+                                            status: "approved",
+                                            locale: { in: ["ko", "en"] },
+                                        },
+                                        select: {
+                                            locale: true,
+                                            title: true,
+                                            status: true,
+                                        },
+                                    },
+                                },
                             },
                         },
                     },

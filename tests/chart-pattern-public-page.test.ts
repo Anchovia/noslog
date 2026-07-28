@@ -19,6 +19,12 @@ vi.mock("@/lib/db", () => ({
 vi.mock("@/lib/musicJackets", () => ({
     getJacketUrl: mocks.getJacketUrl,
 }));
+vi.mock("@/lib/session", () => ({
+    default: vi.fn().mockResolvedValue({}),
+}));
+vi.mock("@/lib/i18n/server", () => ({
+    getServerI18n: vi.fn().mockResolvedValue({ locale: "ko" }),
+}));
 
 import PublicChartPatternPage from "@/app/(nevigation)/music/[index]/[difficulty]/pattern/page";
 
@@ -80,7 +86,7 @@ describe("공개 채보 페이지", () => {
             revision: 3,
             document: publishedDocument,
             jacketUrl: "/jackets/music.webp",
-            backHref: "/music/music-index/normal?tab=detail",
+            backHref: "/ko/music/music-index/normal?tab=detail",
         });
         expect(mocks.findFirst).toHaveBeenCalledWith(
             expect.objectContaining({

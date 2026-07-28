@@ -1,9 +1,12 @@
 import { getIronSession } from "iron-session";
 import { cookies } from "next/headers";
 
+import type { Locale } from "@/lib/i18n/routing";
+
 interface SessionContent {
     id?: number;
     profileCompleted?: boolean;
+    locale?: Locale;
     discordOAuthState?: string;
     discordOAuthReturnTo?: string;
 }

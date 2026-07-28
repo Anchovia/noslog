@@ -3,12 +3,14 @@
 import * as Popover from "@radix-ui/react-popover";
 import { CircleHelp } from "lucide-react";
 import { Fragment, useRef, useState } from "react";
+import { useTranslations } from "@/components/i18n/localeProvider";
+import type { MessageKey } from "@/lib/i18n/messages";
 
-const BINGO_TERMS = {
-    테누토: "노트가 표시된 시간 동안 건반을 누르고 연주하는 노트입니다.",
-    글리산도: "건반 위를 미끄러뜨리듯 여러 음을 연속으로 입력하는 노트입니다.",
-    트릴: "인접한 음을 빠르게 번갈아 연주하는 노트입니다.",
-    "◆Just": "판정 타이밍을 매우 정확하게 맞췄을 때 받는 상위 Just 판정입니다.",
+const BINGO_TERMS: Record<string, MessageKey> = {
+    테누토: "bingo.term.tenuto",
+    글리산도: "bingo.term.glissando",
+    트릴: "bingo.term.trill",
+    "◆Just": "bingo.term.sjust",
 } as const;
 
 const termPattern = new RegExp(
@@ -20,6 +22,7 @@ const termPattern = new RegExp(
 );
 
 function BingoTerm({ term }: { term: keyof typeof BINGO_TERMS }) {
+    const t = useTranslations();
     const [open, setOpen] = useState(false);
     const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -47,7 +50,7 @@ function BingoTerm({ term }: { term: keyof typeof BINGO_TERMS }) {
                 <Popover.Trigger asChild>
                     <button
                         type="button"
-                        aria-label={`${term} 설명`}
+                        aria-label={t("bingo.termAria", { term })}
                         className="text-text-disabled hover:text-text-primary inline-flex cursor-help align-middle transition-colors"
                         onFocus={() => setOpen(true)}
                     >
@@ -67,7 +70,7 @@ function BingoTerm({ term }: { term: keyof typeof BINGO_TERMS }) {
                     <strong className="text-text-primary mb-1 block text-sm">
                         {term}
                     </strong>
-                    {BINGO_TERMS[term]}
+                    {t(BINGO_TERMS[term])}
                     <Popover.Arrow className="fill-border" />
                 </Popover.Content>
             </Popover.Portal>

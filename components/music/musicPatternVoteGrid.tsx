@@ -2,8 +2,9 @@
 
 import { cn } from "@/lib/utils";
 import { Controller, type Control, type FieldErrors } from "react-hook-form";
-import { patternItems, patternLevels } from "./musicTierVoteConfig";
+import { patternItems, patternLevelKeys } from "./musicTierVoteConfig";
 import type { EvaluationFormValues } from "./musicTierVoteTypes";
+import { useTranslations } from "@/components/i18n/localeProvider";
 
 interface MusicPatternVoteGridProps {
     canVote: boolean;
@@ -16,6 +17,7 @@ export default function MusicPatternVoteGrid({
     control,
     errors,
 }: MusicPatternVoteGridProps) {
+    const t = useTranslations();
     const hasPatternError = patternItems.some(
         ({ key }) => errors[key] !== undefined
     );
@@ -23,20 +25,22 @@ export default function MusicPatternVoteGrid({
     return (
         <div className="border-divider mt-4 border-t pt-3">
             <div className="flex items-baseline gap-2">
-                <h3 className="text-section">패턴 투표</h3>
-                <span className="text-caption">필수 · 제출 시 함께 반영</span>
+                <h3 className="text-section">{t("music.tier.patternVote")}</h3>
+                <span className="text-caption">
+                    {t("music.tier.patternRequired")}
+                </span>
             </div>
             <div className="mt-3 grid grid-cols-[4rem_repeat(5,minmax(0,1fr))] items-center">
                 <span />
-                {patternLevels.map((label) => (
+                {patternLevelKeys.map((labelKey) => (
                     <span
-                        key={label}
+                        key={labelKey}
                         className="text-text-disabled text-center text-xs"
                     >
-                        {label}
+                        {t(labelKey)}
                     </span>
                 ))}
-                {patternItems.map(({ key, label }) => (
+                {patternItems.map(({ key, labelKey }) => (
                     <Controller
                         key={key}
                         name={key}
@@ -44,23 +48,23 @@ export default function MusicPatternVoteGrid({
                         rules={{
                             validate: (value) =>
                                 value !== null ||
-                                "다섯 패턴 항목을 모두 선택해 주세요.",
+                                t("music.tier.patternMissing"),
                         }}
                         render={({ field }) => (
                             <div className="contents">
                                 <span className="text-text-secondary text-sm">
-                                    {label}
+                                    {t(labelKey)}
                                 </span>
-                                {patternLevels.map((option, value) => (
+                                {patternLevelKeys.map((optionKey, value) => (
                                     <label
-                                        key={option}
+                                        key={optionKey}
                                         className={cn(
                                             "flex h-9 items-center justify-center",
                                             canVote
                                                 ? "cursor-pointer"
                                                 : "cursor-not-allowed opacity-40"
                                         )}
-                                        title={`${label} ${option}`}
+                                        title={`${t(labelKey)} ${t(optionKey)}`}
                                     >
                                         <input
                                             ref={
@@ -97,7 +101,7 @@ export default function MusicPatternVoteGrid({
             </div>
             {hasPatternError ? (
                 <p className="text-danger mt-2 text-xs" role="alert">
-                    다섯 패턴 항목을 모두 선택해 주세요.
+                    {t("music.tier.patternMissing")}
                 </p>
             ) : null}
         </div>

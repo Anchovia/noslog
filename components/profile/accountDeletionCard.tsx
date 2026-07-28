@@ -5,23 +5,30 @@ import { Trash2, X } from "lucide-react";
 import { useState } from "react";
 
 import { deleteAccount } from "@/app/(nevigation)/profile/settings/securityActions";
-
-const DELETE_CONFIRMATION = "회원 탈퇴";
+import {
+    useLocale,
+    useLocalizedHref,
+    useTranslations,
+} from "@/components/i18n/localeProvider";
 
 export default function AccountDeletionCard() {
+    const locale = useLocale();
+    const href = useLocalizedHref();
+    const t = useTranslations();
+    const deleteConfirmation = t("settings.deleteConfirmation");
     const [open, setOpen] = useState(false);
     const [confirmation, setConfirmation] = useState("");
     const [message, setMessage] = useState("");
     const [isDeleting, setIsDeleting] = useState(false);
 
     async function submitDeletion() {
-        if (isDeleting || confirmation !== DELETE_CONFIRMATION) return;
+        if (isDeleting || confirmation !== deleteConfirmation) return;
 
         setIsDeleting(true);
         setMessage("");
-        const result = await deleteAccount(confirmation);
+        const result = await deleteAccount(confirmation, locale);
         if (result.success) {
-            window.location.assign("/");
+            window.location.assign(href("/"));
             return;
         }
         setMessage(result.message);
@@ -30,9 +37,11 @@ export default function AccountDeletionCard() {
 
     return (
         <section className="border-danger/35 bg-surface rounded-card border p-4">
-            <h2 className="text-danger text-section">회원 탈퇴</h2>
+            <h2 className="text-danger text-section">
+                {t("settings.deleteTitle")}
+            </h2>
             <p className="text-caption mt-1">
-                계정과 모든 기록, 제출 자료를 영구 삭제합니다.
+                {t("settings.deleteDescription")}
             </p>
 
             <Dialog.Root
@@ -52,7 +61,7 @@ export default function AccountDeletionCard() {
                         className="border-danger/40 text-danger hover:bg-danger/10 focus-visible:ring-danger/30 rounded-card mt-4 flex h-10 w-full items-center justify-center gap-2 border text-sm font-bold transition-colors focus-visible:ring-2 focus-visible:outline-none"
                     >
                         <Trash2 className="size-4" aria-hidden />
-                        회원 탈퇴
+                        {t("settings.deleteTitle")}
                     </button>
                 </Dialog.Trigger>
                 <Dialog.Portal>
@@ -61,30 +70,28 @@ export default function AccountDeletionCard() {
                         <div className="flex items-start justify-between gap-3">
                             <div>
                                 <Dialog.Title className="text-danger text-section">
-                                    회원 탈퇴
+                                    {t("settings.deleteTitle")}
                                 </Dialog.Title>
                                 <Dialog.Description className="text-caption mt-1">
-                                    삭제한 정보는 복구할 수 없습니다.
+                                    {t("settings.deleteIrreversible")}
                                 </Dialog.Description>
                             </div>
                             <Dialog.Close className="text-text-secondary hover:text-text-primary flex size-9 shrink-0 items-center justify-center rounded-md">
                                 <X className="size-5" aria-hidden />
-                                <span className="sr-only">닫기</span>
+                                <span className="sr-only">
+                                    {t("common.close")}
+                                </span>
                             </Dialog.Close>
                         </div>
 
                         <div className="mt-4 flex flex-col gap-3">
                             <div className="border-danger/30 bg-danger/10 text-body-muted rounded-card border p-3">
-                                계정, 프로필, 플레이·동기화 기록, 커뮤니티 활동,
-                                피드백, 검정 제출과 업로드 이미지가 즉시 영구
-                                삭제됩니다.
+                                {t("settings.deleteWarning")}
                             </div>
                             <label className="text-text-secondary text-xs font-semibold">
-                                계속하려면{" "}
-                                <span className="text-text-primary">
-                                    {DELETE_CONFIRMATION}
-                                </span>
-                                를 입력해주세요.
+                                {t("settings.deletePrompt", {
+                                    confirmation: deleteConfirmation,
+                                })}
                                 <input
                                     type="text"
                                     value={confirmation}
@@ -104,11 +111,13 @@ export default function AccountDeletionCard() {
                                 onClick={() => void submitDeletion()}
                                 disabled={
                                     isDeleting ||
-                                    confirmation !== DELETE_CONFIRMATION
+                                    confirmation !== deleteConfirmation
                                 }
                                 className="bg-danger text-text-primary rounded-card h-11 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-40"
                             >
-                                {isDeleting ? "삭제 중" : "모든 정보 영구 삭제"}
+                                {isDeleting
+                                    ? t("settings.deleting")
+                                    : t("settings.deleteEverything")}
                             </button>
                         </div>
                     </Dialog.Content>

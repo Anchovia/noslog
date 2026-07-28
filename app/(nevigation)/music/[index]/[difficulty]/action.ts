@@ -2,6 +2,8 @@
 
 import db from "@/lib/db";
 import { CACHE_TAGS } from "@/lib/cacheTags";
+import { createTranslator, getMessages } from "@/lib/i18n/messages";
+import { isLocale, localizePath, type Locale } from "@/lib/i18n/routing";
 import getSession from "@/lib/session";
 import { revalidatePath, updateTag } from "next/cache";
 import {
@@ -20,12 +22,15 @@ interface EvaluationActionResult {
 
 // 사용자별 채보 투표를 최초 등록하거나 기존 값으로 갱신함
 export async function submitChartEvaluation(
-    input: ChartEvaluationInput
+    input: ChartEvaluationInput,
+    requestedLocale?: Locale
 ): Promise<EvaluationActionResult> {
+    const locale = isLocale(requestedLocale) ? requestedLocale : "ko";
+    const t = createTranslator(getMessages(locale));
     const session = await getSession();
 
     if (!session.id) {
-        return { success: false, message: "로그인 후 투표할 수 있습니다." };
+        return { success: false, message: t("music.action.voteLogin") };
     }
 
     const parsed = chartEvaluationSchema.safeParse(input);
@@ -33,8 +38,7 @@ export async function submitChartEvaluation(
     if (!parsed.success) {
         return {
             success: false,
-            message:
-                parsed.error.issues[0]?.message ?? "투표 값을 확인해 주세요.",
+            message: t("music.action.voteInvalid"),
         };
     }
 
@@ -44,7 +48,7 @@ export async function submitChartEvaluation(
     });
 
     if (!chart) {
-        return { success: false, message: "채보 정보를 찾을 수 없습니다." };
+        return { success: false, message: t("music.action.chartNotFound") };
     }
 
     const playData = await db.playData.findFirst({
@@ -59,7 +63,7 @@ export async function submitChartEvaluation(
     if (!playData) {
         return {
             success: false,
-            message: "해당 채보의 플레이 기록 연동 후 투표할 수 있습니다.",
+            message: t("music.action.playRequired"),
         };
     }
 
@@ -89,27 +93,30 @@ export async function submitChartEvaluation(
     });
 
     updateTag(CACHE_TAGS.chartEvaluations);
-    revalidatePath(
-        `/music/${chart.music_idx}/${chart.difficulty.toLowerCase()}`
-    );
+    const chartPath = `/music/${chart.music_idx}/${chart.difficulty.toLowerCase()}`;
+    revalidatePath(chartPath);
+    revalidatePath(localizePath(chartPath, locale));
 
-    return { success: true, message: "투표가 반영되었습니다." };
+    return { success: true, message: t("music.action.voteSaved") };
 }
 
 // 같은 반응을 다시 누르면 취소하고 다른 반응이면 값을 교체함
 export async function toggleChartEvaluationReaction(
-    input: ChartEvaluationReactionInput
+    input: ChartEvaluationReactionInput,
+    requestedLocale?: Locale
 ): Promise<EvaluationActionResult> {
+    const locale = isLocale(requestedLocale) ? requestedLocale : "ko";
+    const t = createTranslator(getMessages(locale));
     const session = await getSession();
 
     if (!session.id) {
-        return { success: false, message: "로그인 후 반응할 수 있습니다." };
+        return { success: false, message: t("music.action.reactionLogin") };
     }
 
     const parsed = chartEvaluationReactionSchema.safeParse(input);
 
     if (!parsed.success) {
-        return { success: false, message: "반응 값을 확인해 주세요." };
+        return { success: false, message: t("music.action.reactionInvalid") };
     }
 
     const evaluation = await db.chartEvaluation.findUnique({
@@ -121,7 +128,7 @@ export async function toggleChartEvaluationReaction(
     });
 
     if (!evaluation) {
-        return { success: false, message: "의견을 찾을 수 없습니다." };
+        return { success: false, message: t("music.action.opinionNotFound") };
     }
 
     const existing = await db.chartEvaluationReaction.findUnique({
@@ -156,27 +163,30 @@ export async function toggleChartEvaluationReaction(
     }
 
     updateTag(CACHE_TAGS.chartEvaluations);
-    revalidatePath(
-        `/music/${evaluation.chart.music_idx}/${evaluation.chart.difficulty.toLowerCase()}`
-    );
+    const chartPath = `/music/${evaluation.chart.music_idx}/${evaluation.chart.difficulty.toLowerCase()}`;
+    revalidatePath(chartPath);
+    revalidatePath(localizePath(chartPath, locale));
 
-    return { success: true, message: "반응이 반영되었습니다." };
+    return { success: true, message: t("music.action.reactionSaved") };
 }
 
 // 사용자가 제출한 체감 난이도, 패턴 투표와 의견을 함께 삭제함
 export async function deleteChartEvaluation(
-    input: ChartEvaluationDeleteInput
+    input: ChartEvaluationDeleteInput,
+    requestedLocale?: Locale
 ): Promise<EvaluationActionResult> {
+    const locale = isLocale(requestedLocale) ? requestedLocale : "ko";
+    const t = createTranslator(getMessages(locale));
     const session = await getSession();
 
     if (!session.id) {
-        return { success: false, message: "로그인 후 삭제할 수 있습니다." };
+        return { success: false, message: t("music.action.deleteLogin") };
     }
 
     const parsed = chartEvaluationDeleteSchema.safeParse(input);
 
     if (!parsed.success) {
-        return { success: false, message: "삭제할 투표를 확인해 주세요." };
+        return { success: false, message: t("music.action.deleteInvalid") };
     }
 
     const evaluation = await db.chartEvaluation.findFirst({
@@ -193,16 +203,16 @@ export async function deleteChartEvaluation(
     if (!evaluation) {
         return {
             success: false,
-            message: "삭제할 수 있는 본인 투표를 찾지 못했습니다.",
+            message: t("music.action.deleteNotFound"),
         };
     }
 
     await db.chartEvaluation.delete({ where: { id: evaluation.id } });
 
     updateTag(CACHE_TAGS.chartEvaluations);
-    revalidatePath(
-        `/music/${evaluation.chart.music_idx}/${evaluation.chart.difficulty.toLowerCase()}`
-    );
+    const chartPath = `/music/${evaluation.chart.music_idx}/${evaluation.chart.difficulty.toLowerCase()}`;
+    revalidatePath(chartPath);
+    revalidatePath(localizePath(chartPath, locale));
 
-    return { success: true, message: "투표와 의견이 삭제되었습니다." };
+    return { success: true, message: t("music.action.deleted") };
 }

@@ -3,6 +3,8 @@ import Link from "next/link";
 import TierBandBrowser from "@/components/tiers/tierBandBrowser";
 import TierControls from "@/components/tiers/tierControls";
 import TierRatingWeightChart from "@/components/tiers/tierRatingWeightChart";
+import { getMusicTitleDisplayPreference } from "@/lib/i18n/musicTitle";
+import { getServerI18n } from "@/lib/i18n/server";
 import { createPageMetadata } from "@/lib/metadata/site";
 import {
     formatTierDate,
@@ -22,12 +24,14 @@ import {
     getTierBandForUser,
 } from "./data";
 
-export const metadata = createPageMetadata({
-    title: "악곡 서열표",
-    description:
-        "노스텔지어 Basic·Recital의 S·Full Combo·Pianist 목표별 통합 서열표를 확인합니다.",
-    path: "/tiers",
-});
+export async function generateMetadata() {
+    const { locale, t } = await getServerI18n();
+
+    return createPageMetadata({
+        title: t("tiers.title"),
+        path: `/${locale}/tiers`,
+    });
+}
 
 interface TiersPageProps {
     searchParams: Promise<{
@@ -50,6 +54,7 @@ function splitParam(value?: string | string[]) {
 }
 
 export default async function TiersPage({ searchParams }: TiersPageProps) {
+    const { locale, t } = await getServerI18n();
     const query = await searchParams;
     const requestedMode = firstParam(query.mode) ?? "basic";
     const requestedGoal = firstParam(query.goal) ?? "s";
@@ -63,6 +68,7 @@ export default async function TiersPage({ searchParams }: TiersPageProps) {
         getUser(),
         getCachedGoalTierOverview(mode, goal, difficulties, levels),
     ]);
+    const showLocalizedTitle = await getMusicTitleDisplayPreference(user?.id);
     const showRatingWeight = mode === "basic" && Boolean(tierList);
     const [initialBand, ratingTheoreticalMax] = tierList
         ? await Promise.all([
@@ -72,7 +78,9 @@ export default async function TiersPage({ searchParams }: TiersPageProps) {
                         tierList.bands[0].id,
                         user?.id,
                         difficulties,
-                        levels
+                        levels,
+                        locale,
+                        showLocalizedTitle
                     )
                   : Promise.resolve(null),
               showRatingWeight
@@ -85,13 +93,13 @@ export default async function TiersPage({ searchParams }: TiersPageProps) {
     return (
         <div className="flex flex-col gap-4 px-4 py-5">
             <div className="flex items-center justify-between gap-3">
-                <h1 className="text-title">서열표</h1>
+                <h1 className="text-title">{t("tiers.title")}</h1>
                 {user?.role === "admin" && tierList ? (
                     <Link
                         href={`/admin/tiers/${tierList.id}`}
                         className="text-caption hover:text-text-primary"
                     >
-                        현재 서열표 편집
+                        {t("tiers.editCurrent")}
                     </Link>
                 ) : null}
             </div>
@@ -108,7 +116,9 @@ export default async function TiersPage({ searchParams }: TiersPageProps) {
                 <>
                     <details className="bg-surface rounded-card group px-3 py-3">
                         <summary className="text-body cursor-pointer list-none font-semibold">
-                            {tierGoalLabels[goal]} 서열표 안내
+                            {t("tiers.guide", {
+                                goal: tierGoalLabels[goal],
+                            })}
                         </summary>
                         <div className="border-divider text-body-muted mt-3 flex flex-col gap-2 border-t pt-3">
                             {ratingTheoreticalMax ? (
@@ -118,12 +128,14 @@ export default async function TiersPage({ searchParams }: TiersPageProps) {
                                 />
                             ) : null}
                             <p>{tierList.description}</p>
-                            <p>
-                                난이도와 공식 레벨은 채보를 찾기 위한 필터이며,
-                                서열 배치는 목표별로 독립적으로 관리됩니다.
-                            </p>
+                            <p>{t("tiers.filterHelp")}</p>
                             <p className="text-caption">
-                                업데이트 {formatTierDate(tierList.updatedAt)}
+                                {t("tiers.updated", {
+                                    date: formatTierDate(
+                                        tierList.updatedAt,
+                                        locale
+                                    ),
+                                })}
                             </p>
                         </div>
                     </details>
@@ -141,7 +153,7 @@ export default async function TiersPage({ searchParams }: TiersPageProps) {
                 </>
             ) : (
                 <div className="bg-surface text-text-disabled rounded-card flex min-h-32 items-center justify-center px-4 text-center text-sm">
-                    선택한 목표의 공개 서열표가 없습니다.
+                    {t("tiers.noPublished")}
                 </div>
             )}
         </div>

@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 
+import { useTranslations } from "@/components/i18n/localeProvider";
 import BingoListCard from "./list/bingoListCard";
 import BingoListFilters from "./list/bingoListFilters";
 import type {
@@ -20,6 +21,7 @@ export type { BingoListItem } from "./list/bingoListTypes";
 
 // 빙고 목록의 상태 필터와 진행순 정렬을 관리함
 export default function BingoList({ bingos }: { bingos: BingoListItem[] }) {
+    const t = useTranslations();
     const [filter, setFilter] = useState<BingoStatusFilter>("all");
     const [sortDirection, setSortDirection] =
         useState<BingoSortDirection>("desc");
@@ -33,8 +35,10 @@ export default function BingoList({ bingos }: { bingos: BingoListItem[] }) {
     return (
         <div className="flex flex-col gap-4 px-4 py-4">
             <div className="flex items-end justify-between">
-                <h1 className="text-title">빙고</h1>
-                <p className="text-caption">해금 완료 {counts.completed}</p>
+                <h1 className="text-title">{t("bingo.title")}</h1>
+                <p className="text-caption">
+                    {t("bingo.completedCount", { count: counts.completed })}
+                </p>
             </div>
 
             {continueBingo ? <ContinueBingoCard bingo={continueBingo} /> : null}
@@ -59,7 +63,7 @@ export default function BingoList({ bingos }: { bingos: BingoListItem[] }) {
                 </section>
             ) : (
                 <div className="bg-surface rounded-card text-caption flex min-h-32 items-center justify-center text-center">
-                    해당 상태의 빙고가 없습니다.
+                    {t("bingo.empty")}
                 </div>
             )}
         </div>

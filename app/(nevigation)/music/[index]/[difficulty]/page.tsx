@@ -9,19 +9,25 @@ import {
     normalizeMusicDetailTab,
     normalizeMusicDifficulty,
 } from "./loadMusicDetail";
+import { getServerI18n } from "@/lib/i18n/server";
+import { getLocalizedHref, localizePath } from "@/lib/i18n/routing";
+import { getMusicTitleDisplayPreference } from "@/lib/i18n/musicTitle";
 
 export async function generateMetadata({
     params,
 }: {
     params: Promise<{ index: string; difficulty: string }>;
 }): Promise<Metadata> {
-    const { index, difficulty } = await params;
+    const [{ index, difficulty }, { locale, t }] = await Promise.all([
+        params,
+        getServerI18n(),
+    ]);
     const selectedDifficulty = normalizeMusicDifficulty(difficulty);
 
     if (!selectedDifficulty) {
         return createPageMetadata({
-            title: "악곡을 찾을 수 없습니다",
-            path: "/music",
+            title: t("music.notFound"),
+            path: localizePath("/music", locale),
             noIndex: true,
         });
     }
@@ -32,8 +38,8 @@ export async function generateMetadata({
     );
     if (!music || !chart) {
         return createPageMetadata({
-            title: "악곡을 찾을 수 없습니다",
-            path: "/music",
+            title: t("music.notFound"),
+            path: localizePath("/music", locale),
             noIndex: true,
         });
     }
@@ -41,8 +47,16 @@ export async function generateMetadata({
     const artist = music.artist ? ` · ${music.artist}` : "";
     return createPageMetadata({
         title: `${music.title} ${selectedDifficulty}`,
-        description: `${music.title}${artist}의 노스텔지어 ${selectedDifficulty} Lv ${chart.level} 채보 정보, 랭킹, 서열과 커뮤니티 평가를 확인합니다.`,
-        path: `/music/${encodeURIComponent(index)}/${selectedDifficulty.toLowerCase()}`,
+        description: t("music.detailMetaDescription", {
+            title: music.title,
+            artist,
+            difficulty: selectedDifficulty,
+            level: chart.level,
+        }),
+        path: localizePath(
+            `/music/${encodeURIComponent(index)}/${selectedDifficulty.toLowerCase()}`,
+            locale
+        ),
     });
 }
 
@@ -50,11 +64,14 @@ export default async function MusicDetailPage(props: {
     params: Promise<{ index: string; difficulty: string }>;
     searchParams: Promise<{ tab?: string; page?: string }>;
 }) {
-    const [{ index, difficulty }, searchParams, session] = await Promise.all([
-        props.params,
-        props.searchParams,
-        getSession(),
-    ]);
+    const [{ index, difficulty }, searchParams, session, { locale }] =
+        await Promise.all([
+            props.params,
+            props.searchParams,
+            getSession(),
+            getServerI18n(),
+        ]);
+    const showLocalizedTitle = await getMusicTitleDisplayPreference(session.id);
     const selectedDifficulty = normalizeMusicDifficulty(difficulty);
     if (!selectedDifficulty) notFound();
 
@@ -70,7 +87,10 @@ export default async function MusicDetailPage(props: {
             query.set("page", String(rankingPage));
         }
         redirect(
-            `/music/${index}/${selectedDifficulty.toLowerCase()}${query.size ? `?${query}` : ""}`
+            getLocalizedHref(
+                `/music/${index}/${selectedDifficulty.toLowerCase()}${query.size ? `?${query}` : ""}`,
+                locale
+            )
         );
     }
 
@@ -79,7 +99,9 @@ export default async function MusicDetailPage(props: {
         selectedDifficulty,
         activeTab,
         rankingPage,
-        session.id
+        session.id,
+        locale,
+        showLocalizedTitle
     );
     if (!data) notFound();
 

@@ -9,6 +9,7 @@ import type {
 } from "react-hook-form";
 import MusicPatternVoteGrid from "./musicPatternVoteGrid";
 import type { EvaluationFormValues } from "./musicTierVoteTypes";
+import { useTranslations } from "@/components/i18n/localeProvider";
 
 interface MusicEvaluationFormProps {
     canVote: boolean;
@@ -39,12 +40,14 @@ export default function MusicEvaluationForm({
     onCommentExpandedChange,
     onSubmit,
 }: MusicEvaluationFormProps) {
+    const t = useTranslations();
+
     return (
         <section className="bg-surface rounded-card p-4">
-            <h2 className="text-section">체감 난이도 투표</h2>
+            <h2 className="text-section">{t("music.tier.voteTitle")}</h2>
             {!canVote ? (
                 <p className="bg-danger/10 text-danger mt-3 rounded-md px-3 py-2 text-xs font-medium">
-                    해당 채보의 플레이 기록 연동 후 투표할 수 있습니다.
+                    {t("music.tier.playRequired")}
                 </p>
             ) : null}
             <div
@@ -64,7 +67,7 @@ export default function MusicEvaluationForm({
                         <button
                             type="button"
                             disabled={!canVote}
-                            aria-label="체감 난이도 0.1 낮추기"
+                            aria-label={t("music.tier.decrease")}
                             className="text-text-secondary hover:bg-surface-muted flex w-10 items-center justify-center disabled:opacity-40"
                             onClick={() => onChangeConstant(-0.1)}
                         >
@@ -78,14 +81,14 @@ export default function MusicEvaluationForm({
                             step="0.1"
                             inputMode="decimal"
                             disabled={!canVote}
-                            aria-label="체감 난이도 직접 입력"
+                            aria-label={t("music.tier.directInput")}
                             aria-invalid={Boolean(errors.perceivedConstant)}
                             className="bg-surface-muted text-text-primary h-full w-16 appearance-none px-1 text-center text-base font-extrabold tabular-nums outline-none disabled:opacity-40 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                         />
                         <button
                             type="button"
                             disabled={!canVote}
-                            aria-label="체감 난이도 0.1 높이기"
+                            aria-label={t("music.tier.increase")}
                             className="text-text-secondary hover:bg-surface-muted flex w-10 items-center justify-center disabled:opacity-40"
                             onClick={() => onChangeConstant(0.1)}
                         >
@@ -98,8 +101,8 @@ export default function MusicEvaluationForm({
                     disabled={!canVote}
                     maxLength={120}
                     rows={isCommentExpanded ? 4 : 1}
-                    placeholder="짧은 코멘트"
-                    aria-label="체감 난이도 코멘트"
+                    placeholder={t("music.tier.commentPlaceholder")}
+                    aria-label={t("music.tier.commentLabel")}
                     aria-invalid={Boolean(errors.comment)}
                     onFocus={() => onCommentExpandedChange(true)}
                     onBlur={(event) => {
@@ -125,10 +128,10 @@ export default function MusicEvaluationForm({
                             <Check size={14} aria-hidden />
                         ) : null}
                         {isPending
-                            ? "처리 중"
+                            ? t("music.tier.processing")
                             : hasCurrentEvaluation
-                              ? "수정"
-                              : "제출"}
+                              ? t("music.tier.edit")
+                              : t("music.tier.submit")}
                     </button>
                 ) : null}
             </div>

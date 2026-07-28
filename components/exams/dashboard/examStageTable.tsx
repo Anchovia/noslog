@@ -1,6 +1,12 @@
 import Link from "next/link";
 
+import {
+    useLocale,
+    useLocalizedHref,
+    useTranslations,
+} from "@/components/i18n/localeProvider";
 import { formatNoteSuccessRate } from "@/lib/music/judgementStats";
+import type { MessageKey } from "@/lib/i18n/messages";
 import { cn, formatToComma } from "@/lib/utils";
 
 import type { ExamStageResult } from "./examDashboardTypes";
@@ -14,6 +20,13 @@ interface ExamStageTableProps {
     stages: ExamStageResult[];
     scoringType: string;
     showBest?: boolean;
+}
+
+function getNoteLabelKey(label: string): MessageKey {
+    if (label === "테누토") return "music.filter.tenuto";
+    if (label === "글리산도") return "music.filter.glissando";
+    if (label === "트릴") return "music.filter.trill";
+    return "music.filter.standard";
 }
 
 function getRecordBadge(stage: ExamStageResult) {
@@ -37,6 +50,9 @@ function StageCard({
     scoringType: string;
     showBest: boolean;
 }) {
+    const locale = useLocale();
+    const t = useTranslations();
+    const localizedHref = useLocalizedHref();
     const firstChart = stage.charts[0];
     const record = stage.bestRecord;
     const missNear =
@@ -77,7 +93,9 @@ function StageCard({
                                 : "text-text-disabled"
                         )}
                     >
-                        {stage.isPassed ? "누적 통과" : "점수 부족"}
+                        {stage.isPassed
+                            ? t("exams.stage.passed")
+                            : t("exams.stage.insufficient")}
                     </span>
                 ) : null}
             </header>
@@ -85,6 +103,11 @@ function StageCard({
             <h3 className="text-body mt-2 truncate font-semibold">
                 {stage.title}
             </h3>
+            {stage.localizedTitle ? (
+                <p className="text-micro mt-0.5 truncate">
+                    {stage.localizedTitle}
+                </p>
+            ) : null}
             {stage.artist ? (
                 <p className="text-caption mt-0.5 truncate">{stage.artist}</p>
             ) : null}
@@ -93,16 +116,21 @@ function StageCard({
                 <>
                     <dl className="mt-3 grid grid-cols-2 gap-2">
                         <div className="bg-bg rounded-md px-3 py-2">
-                            <dt className="text-micro">연습 기준</dt>
+                            <dt className="text-micro">
+                                {t("exams.stage.practiceTarget")}
+                            </dt>
                             <dd className="text-label mt-0.5 tabular-nums">
                                 {formatExamValue(
                                     stage.individualTargetValue,
-                                    scoringType
+                                    scoringType,
+                                    locale
                                 )}
                             </dd>
                         </div>
                         <div className="bg-bg rounded-md px-3 py-2">
-                            <dt className="text-micro">내 베스트</dt>
+                            <dt className="text-micro">
+                                {t("exams.stage.myBest")}
+                            </dt>
                             <dd
                                 className={cn(
                                     "text-label mt-0.5 tabular-nums",
@@ -112,59 +140,78 @@ function StageCard({
                                 {stage.bestValue
                                     ? formatExamValue(
                                           stage.bestValue,
-                                          scoringType
+                                          scoringType,
+                                          locale
                                       )
-                                    : "기록 없음"}
+                                    : t("exams.stage.noRecord")}
                             </dd>
                         </div>
                     </dl>
                     <div className="text-caption mt-2 flex flex-wrap items-center gap-x-2 gap-y-1">
                         {stage.individualGapValue > 0 ? (
                             <span className="text-score tabular-nums">
-                                연습 기준까지{" "}
-                                {formatToComma(stage.individualGapValue)}점
+                                {t("exams.stage.gap", {
+                                    value: formatToComma(
+                                        stage.individualGapValue
+                                    ),
+                                })}
                             </span>
                         ) : (
-                            <span className="text-success">연습 기준 달성</span>
+                            <span className="text-success">
+                                {t("exams.stage.targetMet")}
+                            </span>
                         )}
                         {recordBadge ? <span>{recordBadge}</span> : null}
                         {record ? (
                             <span className="tabular-nums">
-                                최대 콤보{" "}
-                                {record.maxCombo.toLocaleString("ko-KR")}
+                                {t("exams.stage.maxCombo", {
+                                    value: record.maxCombo.toLocaleString(
+                                        locale
+                                    ),
+                                })}
                             </span>
                         ) : null}
                         {missNear !== null ? (
                             <span className="tabular-nums">
-                                Miss/Near {missNear.toLocaleString("ko-KR")}
+                                Miss/Near {missNear.toLocaleString(locale)}
                             </span>
                         ) : null}
                     </div>
                     {stage.weakestNote && stage.weakestNote.rate < 9000 ? (
                         <p className="text-caption mt-1">
-                            약한 음표{" "}
+                            {t("exams.stage.weakNote")}{" "}
                             <strong className="text-text-primary">
-                                {stage.weakestNote.label}{" "}
+                                {t(getNoteLabelKey(stage.weakestNote.label))}{" "}
                                 {formatNoteSuccessRate(stage.weakestNote.rate)}
                             </strong>
                         </p>
                     ) : null}
                     {stage.requirementType === "cumulative" ? (
                         <p className="text-micro mt-2 tabular-nums">
-                            현재 누적{" "}
-                            {formatExamValue(
-                                stage.comparisonValue,
-                                scoringType
-                            )}{" "}
-                            / 통과{" "}
-                            {formatExamValue(stage.requiredValue, scoringType)}
+                            {t("exams.stage.cumulative", {
+                                current: formatExamValue(
+                                    stage.comparisonValue,
+                                    scoringType,
+                                    locale
+                                ),
+                                required: formatExamValue(
+                                    stage.requiredValue,
+                                    scoringType,
+                                    locale
+                                ),
+                            })}
                         </p>
                     ) : null}
                 </>
             ) : (
                 <p className="text-caption mt-2 tabular-nums">
-                    통과 조건{" "}
-                    {formatExamValue(stage.requiredValue, scoringType)}
+                    {t("exams.stage.requirement", {
+                        value: formatExamValue(
+                            stage.requiredValue,
+                            scoringType,
+                            locale
+                        ),
+                    })}
                 </p>
             )}
         </article>
@@ -172,7 +219,9 @@ function StageCard({
 
     return firstChart ? (
         <Link
-            href={`/music/${stage.musicIndex}/${firstChart.difficulty.toLowerCase()}`}
+            href={localizedHref(
+                `/music/${stage.musicIndex}/${firstChart.difficulty.toLowerCase()}`
+            )}
             className="focus-visible:ring-focus/40 rounded-card focus-visible:ring-2 focus-visible:outline-none"
         >
             {content}
@@ -188,13 +237,18 @@ export default function ExamStageTable({
     scoringType,
     showBest = true,
 }: ExamStageTableProps) {
+    const t = useTranslations();
     return (
         <section>
             <div className="mb-2 flex items-center justify-between">
-                <h2 className="text-section">과제곡</h2>
+                <h2 className="text-section">{t("exams.stage.title")}</h2>
                 <span className="text-caption">
-                    {stages.length}곡 ·{" "}
-                    {showBest ? "누적 합격선 기준" : "공식 조건"}
+                    {t(
+                        showBest
+                            ? "exams.stage.summaryAdvice"
+                            : "exams.stage.summaryOfficial",
+                        { count: stages.length }
+                    )}
                 </span>
             </div>
             <div className="flex flex-col gap-2">

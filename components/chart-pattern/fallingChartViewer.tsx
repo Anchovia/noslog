@@ -4,6 +4,7 @@ import { Gauge, Pause, Play, RotateCcw, Upload, Volume2 } from "lucide-react";
 import { type ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import type { Application, Graphics } from "pixi.js";
 
+import { useTranslations } from "@/components/i18n/localeProvider";
 import { getMetronomePeakGain } from "@/lib/chart-pattern/metronome";
 import { chartPianoColors } from "@/lib/chart-pattern/piano";
 import {
@@ -604,6 +605,7 @@ export default function FallingChartViewer({
     document,
     jacketUrl,
 }: FallingChartViewerProps) {
+    const t = useTranslations();
     const hostRef = useRef<HTMLDivElement | null>(null);
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const objectUrlRef = useRef<string | null>(null);
@@ -838,7 +840,7 @@ export default function FallingChartViewer({
             try {
                 await audio.play();
             } catch {
-                setAudioError("브라우저에서 이 음원을 재생할 수 없습니다.");
+                setAudioError(t("chart.audioError"));
                 return;
             }
         } else {
@@ -914,7 +916,9 @@ export default function FallingChartViewer({
                 <div
                     ref={hostRef}
                     role="img"
-                    aria-label={`28칸 낙하형 채보. 현재 ${formatEditorTime(currentTimeMs)}`}
+                    aria-label={t("chart.fallingAria", {
+                        time: formatEditorTime(currentTimeMs),
+                    })}
                     className="absolute inset-0"
                 />
             </div>
@@ -927,7 +931,9 @@ export default function FallingChartViewer({
                             isPlaying ? pausePlayback() : void startPlayback()
                         }
                         className="bg-text-primary text-bg flex size-10 shrink-0 items-center justify-center rounded-full"
-                        aria-label={isPlaying ? "일시정지" : "재생"}
+                        aria-label={
+                            isPlaying ? t("chart.pause") : t("chart.play")
+                        }
                     >
                         {isPlaying ? (
                             <Pause className="size-4" fill="currentColor" />
@@ -945,7 +951,7 @@ export default function FallingChartViewer({
                             seek(0);
                         }}
                         className="border-border hover:bg-surface-muted flex size-9 shrink-0 items-center justify-center rounded-md border"
-                        aria-label="처음으로 이동"
+                        aria-label={t("chart.restart")}
                     >
                         <RotateCcw className="size-3.5" />
                     </button>
@@ -959,7 +965,7 @@ export default function FallingChartViewer({
                         step="10"
                         value={Math.min(currentTimeMs, durationMs)}
                         onChange={(event) => seek(Number(event.target.value))}
-                        aria-label="채보 재생 위치"
+                        aria-label={t("chart.position")}
                         className="accent-primary min-w-0 flex-1"
                     />
                     <span className="text-caption w-14 shrink-0 font-mono tabular-nums">
@@ -970,7 +976,7 @@ export default function FallingChartViewer({
                 <div className="mt-3 flex flex-wrap items-center gap-2">
                     <label className="border-border hover:bg-surface-muted flex h-9 cursor-pointer items-center gap-1.5 rounded-md border px-3 text-xs font-semibold">
                         <Upload className="size-3.5" />
-                        로컬 음원
+                        {t("chart.localAudio")}
                         <input
                             type="file"
                             accept="audio/mpeg,audio/ogg,audio/wav,audio/flac,audio/mp4"
@@ -980,14 +986,16 @@ export default function FallingChartViewer({
                     </label>
                     <label className="border-border flex h-9 items-center gap-2 rounded-md border px-3 text-xs">
                         <Gauge className="text-text-secondary size-3.5" />
-                        <span className="text-text-secondary">노트 속도</span>
+                        <span className="text-text-secondary">
+                            {t("chart.noteSpeed")}
+                        </span>
                         <select
                             value={noteSpeed}
                             onChange={(event) =>
                                 setNoteSpeed(Number(event.target.value))
                             }
                             className="bg-transparent font-semibold outline-none"
-                            aria-label="노트 속도"
+                            aria-label={t("chart.noteSpeed")}
                         >
                             {Array.from({ length: 31 }, (_, index) => {
                                 const value = 1 + index * 0.1;
@@ -1014,7 +1022,7 @@ export default function FallingChartViewer({
                             }
                             className="accent-text-primary size-3.5"
                         />
-                        메트로놈
+                        {t("chart.metronome")}
                     </label>
                     <label className="border-border flex h-9 items-center gap-1.5 rounded-md border px-2">
                         <Volume2
@@ -1030,7 +1038,7 @@ export default function FallingChartViewer({
                             onChange={(event) =>
                                 setMetronomeVolume(Number(event.target.value))
                             }
-                            aria-label="메트로놈 음량"
+                            aria-label={t("chart.metronomeVolume")}
                             className="accent-text-primary w-20"
                         />
                         <span className="text-micro w-8 text-right tabular-nums">
@@ -1046,11 +1054,10 @@ export default function FallingChartViewer({
                             }
                             className="accent-text-primary size-3.5"
                         />
-                        엄밀한 연주 켜기
+                        {t("chart.strictPerformance")}
                     </label>
                     <p className="text-micro min-w-0 flex-1 truncate sm:text-right">
-                        {fileName ??
-                            "음원 없이도 재생할 수 있습니다. 음원은 업로드되지 않습니다."}
+                        {fileName ?? t("chart.audioHelp")}
                     </p>
                 </div>
                 {audioError ? (

@@ -8,6 +8,7 @@ import {
     RadarChart,
     ResponsiveContainer,
 } from "recharts";
+import { useTranslations } from "@/components/i18n/localeProvider";
 
 interface PatternProfileChartProps {
     values: {
@@ -22,12 +23,13 @@ interface PatternProfileChartProps {
 export default function PatternProfileChart({
     values,
 }: PatternProfileChartProps) {
+    const t = useTranslations();
     const data = [
-        { label: "계단", value: values.stairs },
-        { label: "연타", value: values.repetition },
-        { label: "폴리리듬", value: values.chord },
-        { label: "즈레", value: values.trill },
-        { label: "글리산도", value: values.glissando },
+        { label: t("music.pattern.stairs"), value: values.stairs },
+        { label: t("music.pattern.repetition"), value: values.repetition },
+        { label: t("music.pattern.chord"), value: values.chord },
+        { label: t("music.pattern.trill"), value: values.trill },
+        { label: t("music.pattern.glissando"), value: values.glissando },
     ];
 
     return (

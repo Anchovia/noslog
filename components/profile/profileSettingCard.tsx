@@ -1,6 +1,6 @@
 "use client";
 
-import { Camera, MapPin, Save } from "lucide-react";
+import { Camera, Languages, MapPin, Save } from "lucide-react";
 import Link from "next/link";
 import { ChangeEvent, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -12,6 +12,7 @@ import {
 } from "@/app/(nevigation)/profile/settings/actions";
 import {
     PROFILE_COUNTRIES,
+    PROFILE_LANGUAGES,
     SettingType,
     settingSchema,
 } from "@/app/(nevigation)/profile/settings/schema";
@@ -20,6 +21,11 @@ import DiscordIcon from "@/components/ui/DiscordIcon";
 import ProfileAvatar from "@/components/profile/profileAvatar";
 import { Switch } from "@/components/ui/Switch";
 import { ThemeSetting } from "@/components/theme/themeToggle";
+import {
+    useLocale,
+    useLocalizedHref,
+    useTranslations,
+} from "@/components/i18n/localeProvider";
 
 interface ProfileSettingCardProps {
     user: {
@@ -27,6 +33,8 @@ interface ProfileSettingCardProps {
         avatar: string | null;
         username: string | null;
         country: string;
+        locale: string;
+        show_localized_music_title: boolean;
         discord_id: string | null;
         discord_name: string | null;
         discord_username: string | null;
@@ -42,8 +50,15 @@ const inputClass =
     "border-border bg-bg text-input placeholder:text-text-disabled focus:border-focus focus:ring-focus/20 h-11 w-full rounded-card border px-3 outline-none transition focus:ring-2";
 
 function FieldError({ message }: { message?: string }) {
-    return message ? (
-        <p className="text-danger mt-1 text-xs">{message}</p>
+    const locale = useLocale();
+    const t = useTranslations();
+    const visibleMessage =
+        message && locale !== "ko" && /[가-힣]/.test(message)
+            ? t("settings.checkInput")
+            : message;
+
+    return visibleMessage ? (
+        <p className="text-danger mt-1 text-xs">{visibleMessage}</p>
     ) : null;
 }
 
@@ -52,6 +67,14 @@ export default function ProfileSettingCard({
     user,
     arcades,
 }: ProfileSettingCardProps) {
+    const locale = useLocale();
+    const href = useLocalizedHref();
+    const t = useTranslations();
+    const countryLabels = {
+        "ko-KR": t("settings.countryKorea"),
+        "ja-JP": t("settings.countryJapan"),
+        global: t("settings.countryGlobal"),
+    };
     const [preview, setPreview] = useState(user.avatar ?? "");
     const [file, setFile] = useState<File | null>(null);
     const [fileError, setFileError] = useState("");
@@ -71,6 +94,11 @@ export default function ProfileSettingCard({
                 user.country === "ko-KR" || user.country === "ja-JP"
                     ? user.country
                     : "global",
+            locale:
+                user.locale === "ja" || user.locale === "en"
+                    ? user.locale
+                    : "ko",
+            showLocalizedMusicTitle: user.show_localized_music_title,
             discordName: user.discord_name ?? "",
             discordUsername: user.discord_username ?? "",
             preferredArcadeId: user.preferred_arcade_id?.toString() ?? "",
@@ -95,12 +123,12 @@ export default function ProfileSettingCard({
                 selectedFile.type
             )
         ) {
-            setFileError("JPG, PNG, WebP 이미지만 사용할 수 있습니다.");
+            setFileError(t("settings.invalidImage"));
             event.target.value = "";
             return;
         }
         if (selectedFile.size > 4 * 1024 * 1024) {
-            setFileError("이미지는 4MB 이하로 선택해주세요.");
+            setFileError(t("settings.imageTooLarge"));
             event.target.value = "";
             return;
         }
@@ -115,7 +143,7 @@ export default function ProfileSettingCard({
         let avatar = data.avatar;
 
         if (file) {
-            const upload = await requestProfileAvatarUpload(file.type);
+            const upload = await requestProfileAvatarUpload(file.type, locale);
             if (!upload.success) {
                 setSubmitError(upload.message);
                 return;
@@ -129,7 +157,7 @@ export default function ProfileSettingCard({
                 });
                 avatar = blob.url;
             } catch {
-                setSubmitError("프로필 이미지 업로드에 실패했습니다.");
+                setSubmitError(t("settings.imageUploadError"));
                 return;
             }
         }
@@ -138,6 +166,11 @@ export default function ProfileSettingCard({
         formData.set("avatar", avatar);
         formData.set("username", data.username);
         formData.set("country", data.country);
+        formData.set("locale", data.locale);
+        formData.set(
+            "showLocalizedMusicTitle",
+            String(data.showLocalizedMusicTitle)
+        );
         formData.set("discordName", data.discordName);
         formData.set("discordUsername", data.discordUsername);
         formData.set("preferredArcadeId", data.preferredArcadeId);
@@ -168,13 +201,13 @@ export default function ProfileSettingCard({
                     size={72}
                 />
                 <div className="min-w-0 flex-1">
-                    <h2 className="text-section">프로필 이미지</h2>
+                    <h2 className="text-section">{t("settings.avatar")}</h2>
                     <p className="text-caption mt-1">
-                        JPG, PNG, WebP · 최대 4MB
+                        {t("settings.avatarFormat")}
                     </p>
                     <label className="border-border text-text-primary hover:bg-surface-muted focus-within:ring-focus/40 rounded-card mt-3 inline-flex h-10 cursor-pointer items-center gap-2 border px-3 text-sm font-semibold transition-colors focus-within:ring-2">
                         <Camera className="size-4" aria-hidden />
-                        사진 변경
+                        {t("settings.changePhoto")}
                         <input
                             type="file"
                             accept="image/jpeg,image/png,image/webp"
@@ -191,19 +224,67 @@ export default function ProfileSettingCard({
             <section className="bg-surface rounded-card flex flex-col gap-4 p-4">
                 <div>
                     <h2 className="text-section flex items-center gap-2">
-                        <MapPin className="text-chart size-4" /> 선호 오락실
+                        <Languages className="text-chart size-4" />{" "}
+                        {t("settings.languageTitle")}
                     </h2>
                     <p className="text-caption mt-1">
-                        프로필에 표시할 오락실을 선택합니다.
+                        {t("settings.languageDescription")}
                     </p>
                 </div>
                 <label className="text-text-secondary text-xs font-semibold">
-                    오락실
+                    {t("settings.displayLanguage")}
+                    <select
+                        className={`${inputClass} mt-1.5`}
+                        {...register("locale")}
+                    >
+                        {PROFILE_LANGUAGES.map((language) => (
+                            <option key={language.value} value={language.value}>
+                                {language.label}
+                            </option>
+                        ))}
+                    </select>
+                    <FieldError message={errors.locale?.message} />
+                </label>
+                <Controller
+                    name="showLocalizedMusicTitle"
+                    control={control}
+                    render={({ field }) => (
+                        <label className="border-border bg-bg rounded-card flex cursor-pointer items-center justify-between gap-4 border p-3">
+                            <span className="min-w-0">
+                                <span className="text-body block text-sm font-semibold">
+                                    {t("settings.localizedTitle")}
+                                </span>
+                                <span className="text-caption mt-0.5 block">
+                                    {t("settings.localizedTitleDescription")}
+                                </span>
+                            </span>
+                            <Switch
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                                aria-label={t("settings.localizedTitle")}
+                            />
+                        </label>
+                    )}
+                />
+            </section>
+
+            <section className="bg-surface rounded-card flex flex-col gap-4 p-4">
+                <div>
+                    <h2 className="text-section flex items-center gap-2">
+                        <MapPin className="text-chart size-4" />{" "}
+                        {t("settings.preferredArcade")}
+                    </h2>
+                    <p className="text-caption mt-1">
+                        {t("settings.preferredArcadeDescription")}
+                    </p>
+                </div>
+                <label className="text-text-secondary text-xs font-semibold">
+                    {t("settings.arcade")}
                     <select
                         className={`${inputClass} mt-1.5`}
                         {...register("preferredArcadeId")}
                     >
-                        <option value="">설정 안 함</option>
+                        <option value="">{t("settings.none")}</option>
                         {arcades.map((arcade) => (
                             <option key={arcade.id} value={arcade.id}>
                                 {arcade.region
@@ -218,17 +299,17 @@ export default function ProfileSettingCard({
 
             <section className="bg-surface rounded-card flex flex-col gap-4 p-4">
                 <div>
-                    <h2 className="text-section">기본 정보</h2>
+                    <h2 className="text-section">{t("settings.basicInfo")}</h2>
                     <p className="text-caption mt-1">
-                        닉네임은 프로필과 랭킹에 표시됩니다.
+                        {t("settings.basicInfoDescription")}
                     </p>
                 </div>
                 <label className="text-text-secondary text-xs font-semibold">
-                    닉네임
+                    {t("settings.nickname")}
                     <input
                         type="text"
                         autoComplete="nickname"
-                        placeholder="닉네임"
+                        placeholder={t("settings.nickname")}
                         className={`${inputClass} mt-1.5`}
                         {...register("username")}
                     />
@@ -236,7 +317,7 @@ export default function ProfileSettingCard({
                 </label>
                 <fieldset>
                     <legend className="text-text-secondary text-xs font-semibold">
-                        국가
+                        {t("settings.country")}
                     </legend>
                     <div className="mt-1.5 grid grid-cols-3 gap-2">
                         {PROFILE_COUNTRIES.map((country) => (
@@ -251,7 +332,9 @@ export default function ProfileSettingCard({
                                     {...register("country")}
                                 />
                                 <span>{country.code}</span>
-                                <span className="sr-only">{country.label}</span>
+                                <span className="sr-only">
+                                    {countryLabels[country.value]}
+                                </span>
                             </label>
                         ))}
                     </div>
@@ -261,9 +344,9 @@ export default function ProfileSettingCard({
 
             <section className="bg-surface rounded-card flex flex-col gap-4 p-4">
                 <div>
-                    <h2 className="text-section">공개 설정</h2>
+                    <h2 className="text-section">{t("settings.privacy")}</h2>
                     <p className="text-caption mt-1">
-                        다른 사용자에게 표시할 플레이 정보를 선택합니다.
+                        {t("settings.privacyDescription")}
                     </p>
                 </div>
                 <Controller
@@ -273,16 +356,16 @@ export default function ProfileSettingCard({
                         <label className="border-border bg-bg rounded-card flex cursor-pointer items-center justify-between gap-4 border p-3">
                             <span className="min-w-0">
                                 <span className="text-body block text-sm font-semibold">
-                                    인게임 닉네임 비공개
+                                    {t("settings.hideNostalgia")}
                                 </span>
                                 <span className="text-caption mt-0.5 block">
-                                    프로필의 NOSTALGIA ID를 비공개로 표시합니다.
+                                    {t("settings.hideNostalgiaDescription")}
                                 </span>
                             </span>
                             <Switch
                                 checked={field.value}
                                 onCheckedChange={field.onChange}
-                                aria-label="인게임 닉네임 비공개"
+                                aria-label={t("settings.hideNostalgia")}
                             />
                         </label>
                     )}
@@ -294,17 +377,16 @@ export default function ProfileSettingCard({
                         <label className="border-border bg-bg rounded-card flex cursor-pointer items-center justify-between gap-4 border p-3">
                             <span className="min-w-0">
                                 <span className="text-body block text-sm font-semibold">
-                                    Discord 닉네임 비공개
+                                    {t("settings.hideDiscord")}
                                 </span>
                                 <span className="text-caption mt-0.5 block">
-                                    프로필의 Discord 닉네임을 비공개로
-                                    표시합니다.
+                                    {t("settings.hideDiscordDescription")}
                                 </span>
                             </span>
                             <Switch
                                 checked={field.value}
                                 onCheckedChange={field.onChange}
-                                aria-label="Discord 닉네임 비공개"
+                                aria-label={t("settings.hideDiscord")}
                             />
                         </label>
                     )}
@@ -316,16 +398,16 @@ export default function ProfileSettingCard({
                         <label className="border-border bg-bg rounded-card flex cursor-pointer items-center justify-between gap-4 border p-3">
                             <span className="min-w-0">
                                 <span className="text-body block text-sm font-semibold">
-                                    플레이 횟수 비공개
+                                    {t("settings.hidePlayCount")}
                                 </span>
                                 <span className="text-caption mt-0.5 block">
-                                    프로필과 공유 카드의 플레이 횟수를 숨깁니다.
+                                    {t("settings.hidePlayCountDescription")}
                                 </span>
                             </span>
                             <Switch
                                 checked={field.value}
                                 onCheckedChange={field.onChange}
-                                aria-label="플레이 횟수 비공개"
+                                aria-label={t("settings.hidePlayCount")}
                             />
                         </label>
                     )}
@@ -336,24 +418,24 @@ export default function ProfileSettingCard({
                 <div>
                     <h2 className="text-section">Discord</h2>
                     <p className="text-caption mt-1">
-                        로그인 계정과 프로필에 표시할 정보를 관리합니다.
+                        {t("settings.discordDescription")}
                     </p>
                 </div>
                 {user.discord_id ? (
                     <div className="grid gap-3">
                         <label className="text-text-secondary text-xs font-semibold">
-                            Discord 닉네임
+                            {t("settings.discordName")}
                             <input
                                 type="text"
                                 autoComplete="off"
-                                placeholder="Discord 표시 이름"
+                                placeholder={t("settings.discordDisplayName")}
                                 className={`${inputClass} mt-1.5`}
                                 {...register("discordName")}
                             />
                             <FieldError message={errors.discordName?.message} />
                         </label>
                         <label className="text-text-secondary text-xs font-semibold">
-                            Discord 태그
+                            {t("settings.discordTag")}
                             <input
                                 type="text"
                                 autoComplete="off"
@@ -381,20 +463,25 @@ export default function ProfileSettingCard({
                                           : null,
                                   ]
                                       .filter(Boolean)
-                                      .join(" ") || "Discord 연결됨"
-                                : "Discord 연결 필요"}
+                                      .join(" ") ||
+                                  t("settings.discordConnected")
+                                : t("settings.discordRequired")}
                         </p>
                         <p className="text-caption mt-0.5">
                             {user.discord_id
-                                ? "로그인 계정으로 연결되어 있습니다."
-                                : "현재 NosLog 계정을 유지한 채 연결됩니다."}
+                                ? t("settings.discordAccountConnected")
+                                : t("settings.discordAccountPreserved")}
                         </p>
                     </div>
                     <a
-                        href="/discord/start?returnTo=/profile/settings"
+                        href={`/discord/start?returnTo=${encodeURIComponent(
+                            href("/profile/settings")
+                        )}`}
                         className="border-border text-text-primary hover:bg-surface-muted focus-visible:ring-focus/40 rounded-card flex h-10 shrink-0 items-center border px-3 text-sm font-bold transition-colors focus-visible:ring-2 focus-visible:outline-none"
                     >
-                        {user.discord_id ? "다시 연결" : "연결"}
+                        {user.discord_id
+                            ? t("settings.reconnect")
+                            : t("settings.connect")}
                     </a>
                 </div>
             </section>
@@ -407,10 +494,10 @@ export default function ProfileSettingCard({
 
             <div className="grid grid-cols-2 gap-2">
                 <Link
-                    href={`/profile/${user.id}`}
+                    href={href(`/profile/${user.id}`)}
                     className="border-border text-text-secondary hover:bg-surface-muted hover:text-text-primary focus-visible:ring-focus/40 rounded-card flex h-11 cursor-pointer items-center justify-center border text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none"
                 >
-                    취소
+                    {t("settings.cancel")}
                 </Link>
                 <button
                     type="submit"
@@ -418,7 +505,7 @@ export default function ProfileSettingCard({
                     className="bg-text-primary text-bg hover:bg-text-primary/90 focus-visible:ring-focus/40 rounded-card flex h-11 cursor-pointer items-center justify-center gap-2 text-sm font-bold transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                 >
                     <Save className="size-4" aria-hidden />
-                    {isSubmitting ? "저장 중" : "저장"}
+                    {isSubmitting ? t("settings.saving") : t("settings.save")}
                 </button>
             </div>
         </form>

@@ -2,6 +2,7 @@ import { ChevronRight, Search } from "lucide-react";
 import Link from "next/link";
 
 import db from "@/lib/db";
+import MusicTranslationCsvImport from "@/components/admin/musicTranslationCsvImport";
 
 export default async function AdminMusicPage({
     searchParams,
@@ -44,6 +45,7 @@ export default async function AdminMusicPage({
                     채보별 상세 정보와 공식 레벨 상수를 관리합니다.
                 </p>
             </section>
+            <MusicTranslationCsvImport />
             <form className="relative">
                 <Search className="text-text-disabled pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2" />
                 <input

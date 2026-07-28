@@ -7,6 +7,7 @@ import { type ReactNode, useState } from "react";
 
 import { getJacketCandidates } from "@/lib/musicJackets";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "@/components/i18n/localeProvider";
 
 interface MusicJacketProps {
     index: string;
@@ -26,6 +27,7 @@ export default function MusicJacket({
     children,
     fallback,
 }: MusicJacketProps) {
+    const t = useTranslations();
     const jacketCandidates = getJacketCandidates(index, background);
     const [failedUrls, setFailedUrls] = useState<string[]>([]);
     const jacketUrl = jacketCandidates.find(
@@ -38,7 +40,7 @@ export default function MusicJacket({
                 "bg-surface-muted relative flex overflow-hidden",
                 className
             )}
-            aria-label={`${title} 자켓`}
+            aria-label={t("common.jacket", { title })}
         >
             {jacketUrl ? (
                 <img

@@ -10,6 +10,7 @@ import {
     useSyncExternalStore,
 } from "react";
 
+import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import {
     getBrowserSupportSnapshot,
     getServerBrowserSupportSnapshot,
@@ -41,6 +42,7 @@ import FallingChartViewer from "./fallingChartViewer";
 
 interface ChartSheetViewerProps {
     title: string;
+    localizedTitle?: string | null;
     artist: string | null;
     difficulty: string;
     level: number;
@@ -79,6 +81,7 @@ function chartContentEnd(document: ChartDocument) {
 
 export default function ChartSheetViewer({
     title,
+    localizedTitle,
     artist,
     difficulty,
     level,
@@ -88,6 +91,10 @@ export default function ChartSheetViewer({
     jacketUrl,
     preview = false,
 }: ChartSheetViewerProps) {
+    const locale = useLocale();
+    const t = useTranslations();
+    const numberLocale =
+        locale === "ja" ? "ja-JP" : locale === "en" ? "en-US" : "ko-KR";
     const [viewMode, setViewMode] = useState<"falling" | "sheet">("falling");
     const browserSupport = useSyncExternalStore(
         subscribeBrowserSupport,
@@ -127,7 +134,7 @@ export default function ChartSheetViewer({
             <header className="mx-auto flex w-full max-w-7xl items-start gap-3">
                 <Link
                     href={backHref}
-                    aria-label="악곡 상세로 돌아가기"
+                    aria-label={t("chart.back")}
                     className="border-border bg-surface hover:bg-surface-muted flex size-10 shrink-0 items-center justify-center rounded-md border"
                 >
                     <ArrowLeft className="size-4" />
@@ -140,18 +147,32 @@ export default function ChartSheetViewer({
                         </span>
                         {preview ? (
                             <span className="border-chart/40 text-chart rounded border px-2 py-1 text-[11px] font-semibold">
-                                관리자 초안 미리보기
+                                {t("chart.preview")}
                             </span>
                         ) : null}
                     </div>
+                    {localizedTitle ? (
+                        <p className="text-caption mt-1 truncate">
+                            {localizedTitle}
+                        </p>
+                    ) : null}
                     <p className="text-body-muted mt-1 truncate">
-                        {artist ?? "아티스트 정보 없음"}
+                        {artist ?? t("chart.unknownArtist")}
                     </p>
                     <p className="text-caption mt-2">
-                        노트 {document.notes.length.toLocaleString("ko-KR")}개
+                        {t("chart.noteCount", {
+                            count: document.notes.length.toLocaleString(
+                                numberLocale
+                            ),
+                        })}
                         {revision === null
                             ? ""
-                            : ` · ${preview ? "저장" : "공개"} v${revision}`}
+                            : ` · ${t(
+                                  preview
+                                      ? "chart.savedRevision"
+                                      : "chart.publishedRevision",
+                                  { revision }
+                              )}`}
                         {" · "}
                         {formatEditorTime(playbackDurationMs)}
                     </p>
@@ -161,7 +182,7 @@ export default function ChartSheetViewer({
             <section className="mx-auto mt-4 w-full max-w-7xl">
                 <div
                     role="tablist"
-                    aria-label="채보 보기 방식"
+                    aria-label={t("chart.viewMode")}
                     className="border-border bg-surface inline-flex rounded-md border p-1"
                 >
                     <button
@@ -176,7 +197,7 @@ export default function ChartSheetViewer({
                                 : "text-text-secondary hover:bg-surface-muted"
                         }`}
                     >
-                        낙하형
+                        {t("chart.falling")}
                     </button>
                     <button
                         type="button"
@@ -189,38 +210,32 @@ export default function ChartSheetViewer({
                                 : "text-text-secondary hover:bg-surface-muted"
                         }`}
                     >
-                        전체 악보
+                        {t("chart.sheet")}
                     </button>
                 </div>
 
                 <div className="border-border bg-surface text-caption flex items-start gap-2 rounded-md border px-3 py-2.5">
                     <Info className="mt-0.5 size-3.5 shrink-0" />
                     {browserSupport === "safari" ? (
-                        <p>
-                            Safari에서는 낙하형 뷰어를 지원하지 않아 전체 악보로
-                            표시합니다. 낙하형은 Chrome 또는 Edge에서
-                            확인해주세요.
-                        </p>
+                        <p>{t("chart.safariHelp")}</p>
                     ) : effectiveViewMode === "falling" ? (
-                        <p>
-                            노트가 판정선에 도착하는 흐름을 재생합니다. 로컬
-                            음원을 불러오면 브라우저에서만 사용되며 서버에는
-                            전송되지 않습니다.
-                        </p>
+                        <p>{t("chart.fallingHelp")}</p>
                     ) : (
-                        <p>
-                            각 열은 아래에서 위로 진행합니다. 화면을 가로로
-                            스크롤하면 곡 전체 채보를 순서대로 확인할 수
-                            있습니다.
-                        </p>
+                        <p>{t("chart.sheetHelp")}</p>
                     )}
                 </div>
 
                 <div className="mt-3 flex items-center gap-4 px-1 text-xs">
-                    <Legend color={handColors.left} label="왼손 안내" />
-                    <Legend color={handColors.right} label="오른손 안내" />
+                    <Legend
+                        color={handColors.left}
+                        label={t("chart.leftHand")}
+                    />
+                    <Legend
+                        color={handColors.right}
+                        label={t("chart.rightHand")}
+                    />
                     <span className="text-text-disabled ml-auto">
-                        28칸 · 열당 4마디
+                        {t("chart.layout")}
                     </span>
                 </div>
             </section>
@@ -230,7 +245,7 @@ export default function ChartSheetViewer({
             ) : effectiveViewMode === "falling" ? (
                 document.notes.length === 0 ? (
                     <div className="border-border bg-surface text-text-secondary mx-auto mt-4 flex min-h-64 w-full max-w-7xl items-center justify-center rounded-md border text-sm">
-                        표시할 노트가 없습니다.
+                        {t("chart.empty")}
                     </div>
                 ) : (
                     <section className="mx-auto mt-4 w-full max-w-5xl">
@@ -243,7 +258,7 @@ export default function ChartSheetViewer({
             ) : (
                 <section
                     tabIndex={0}
-                    aria-label="전체 채보 가로 스크롤"
+                    aria-label={t("chart.sheetScroll")}
                     className="border-border bg-surface focus:border-text-secondary mt-4 overflow-x-auto rounded-lg border p-3 outline-none"
                 >
                     <div className="flex w-max gap-3">
@@ -289,6 +304,7 @@ function ChartSheetPanel({
     document: ChartDocument;
     measureMarkers: MeasureMarker[];
 }) {
+    const t = useTranslations();
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
     useEffect(() => {
@@ -306,7 +322,7 @@ function ChartSheetPanel({
     return (
         <figure className="shrink-0">
             <figcaption className="text-micro mb-1.5 flex items-center justify-between px-1">
-                <span>{index + 1}열</span>
+                <span>{t("chart.column", { count: index + 1 })}</span>
                 <span className="font-mono tabular-nums">
                     {formatEditorTime(startMs)}–{formatEditorTime(endMs)}
                 </span>
@@ -314,7 +330,11 @@ function ChartSheetPanel({
             <canvas
                 ref={canvasRef}
                 role="img"
-                aria-label={`${index + 1}열 ${formatEditorTime(startMs)}부터 ${formatEditorTime(endMs)}까지`}
+                aria-label={t("chart.columnAria", {
+                    count: index + 1,
+                    start: formatEditorTime(startMs),
+                    end: formatEditorTime(endMs),
+                })}
                 className="border-border h-[720px] w-[276px] rounded-sm border"
             />
         </figure>

@@ -2,6 +2,7 @@
 
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 
+import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import {
     formatTierValue,
     isTierGoalAchieved,
@@ -46,6 +47,8 @@ function TierBandSection({
     levels: string[];
     showRecords: boolean;
 }) {
+    const locale = useLocale();
+    const t = useTranslations();
     const containerRef = useRef<HTMLElement>(null);
     const [band, setBand] = useState(initialData);
     const [isLoading, setIsLoading] = useState(false);
@@ -63,6 +66,7 @@ function TierBandSection({
                 query.set("difficulty", difficulties.join(","));
             }
             if (levels.length > 0) query.set("level", levels.join(","));
+            query.set("locale", locale);
             const response = await fetch(
                 `/api/tiers/${encodeURIComponent(slug)}/bands/${summary.id}${query.size > 0 ? `?${query}` : ""}`,
                 { cache: "no-store" }
@@ -77,7 +81,7 @@ function TierBandSection({
         } finally {
             setIsLoading(false);
         }
-    }, [band, difficulties, isLoading, levels, slug, summary.id]);
+    }, [band, difficulties, isLoading, levels, locale, slug, summary.id]);
 
     useEffect(() => {
         if (band || !containerRef.current) return;
@@ -110,8 +114,13 @@ function TierBandSection({
                 </h2>
                 <span className="text-caption ml-auto">
                     {showRecords && band
-                        ? `달성 ${achievedCount}/${band.entries.length}`
-                        : `${summary.totalCount}곡`}
+                        ? t("tiers.achieved", {
+                              count: achievedCount,
+                              total: band.entries.length,
+                          })
+                        : t("tiers.songCount", {
+                              count: summary.totalCount,
+                          })}
                 </span>
             </header>
 
@@ -123,10 +132,10 @@ function TierBandSection({
                             onClick={() => void loadBand()}
                             className="border-border bg-surface-muted text-text-secondary cursor-pointer rounded-md border px-3 py-2 font-semibold"
                         >
-                            다시 불러오기
+                            {t("tiers.retry")}
                         </button>
                     ) : (
-                        "서열 데이터를 불러오는 중입니다."
+                        t("tiers.loading")
                     )}
                 </div>
             ) : band.entries.length > 0 ? (
@@ -180,7 +189,7 @@ function TierBandSection({
                 </div>
             ) : (
                 <div className="text-text-disabled flex h-24 items-center justify-center px-4 text-center text-sm">
-                    이 조건에 해당하는 채보가 없습니다.
+                    {t("tiers.noCharts")}
                 </div>
             )}
         </section>
@@ -196,16 +205,17 @@ export default function TierBandBrowser({
     levels,
     showRecords,
 }: TierBandBrowserProps) {
+    const t = useTranslations();
     if (bands.length === 0) {
         return (
             <div className="bg-surface text-text-disabled rounded-card flex h-32 items-center justify-center px-4 text-center text-sm">
-                선택한 조건에 해당하는 채보가 없습니다.
+                {t("tiers.noCharts")}
             </div>
         );
     }
 
     return (
-        <section className="flex flex-col gap-4" aria-label="서열표 구간">
+        <section className="flex flex-col gap-4" aria-label={t("tiers.bands")}>
             {bands.map((band) => (
                 <TierBandSection
                     key={`${band.id}:${difficulties.join(",")}:${levels.join(",")}`}

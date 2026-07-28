@@ -1,4 +1,5 @@
 import { normalizeMusicCategory } from "@/lib/musicCategories";
+import type { MessageKey } from "@/lib/i18n/messages";
 
 import type { BingoCellItem, MissionFilter } from "./bingoPlateTypes";
 
@@ -60,15 +61,15 @@ export function filterBingoMissions(
     });
 }
 
-export function getBingoMissionDescription(
+export function getBingoMissionDescriptionKey(
     cell: BingoCellItem,
     isCompleted: boolean,
     isRich: boolean
-) {
-    if (isCompleted) return "완료됨 · 다시 누르면 해제";
-    if (isRich) return "이 칸만 채우면 한 줄 완성";
-    if (cell.missionType === "music") return "악곡 미션";
-    if (cell.missionType === "category") return "카테고리 미션";
-    if (cell.missionType === "exam") return "검정 미션";
-    return "기록 미션";
+): MessageKey {
+    if (isCompleted) return "bingo.mission.completed";
+    if (isRich) return "bingo.mission.chance";
+    if (cell.missionType === "music") return "bingo.mission.music";
+    if (cell.missionType === "category") return "bingo.mission.category";
+    if (cell.missionType === "exam") return "bingo.mission.exam";
+    return "bingo.mission.record";
 }

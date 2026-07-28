@@ -9,6 +9,8 @@ import {
     isValidImageBlob,
 } from "@/lib/blob";
 import db from "@/lib/db";
+import { createTranslator, getMessages } from "@/lib/i18n/messages";
+import { isLocale, localizePath, type Locale } from "@/lib/i18n/routing";
 import { CACHE_TAGS, getUserProfileTag } from "@/lib/cacheTags";
 import getSession from "@/lib/session";
 import {
@@ -30,15 +32,21 @@ type SettingActionResult = {
 export async function uploadUserSetting(
     formData: FormData
 ): Promise<SettingActionResult | never> {
+    const requestedLocale = String(formData.get("locale") ?? "");
+    const locale = isLocale(requestedLocale) ? requestedLocale : "ko";
+    const t = createTranslator(getMessages(locale));
     const session = await getSession();
     if (!session.id) {
-        return { success: false, message: "로그인이 필요합니다." };
+        return { success: false, message: t("settings.loginRequired") };
     }
 
     const result = settingSchema.safeParse({
         avatar: String(formData.get("avatar") ?? ""),
         username: String(formData.get("username") ?? ""),
         country: String(formData.get("country") ?? ""),
+        locale: String(formData.get("locale") ?? ""),
+        showLocalizedMusicTitle:
+            formData.get("showLocalizedMusicTitle") === "true",
         discordName: String(formData.get("discordName") ?? ""),
         discordUsername: String(formData.get("discordUsername") ?? ""),
         preferredArcadeId: String(formData.get("preferredArcadeId") ?? ""),
@@ -50,7 +58,7 @@ export async function uploadUserSetting(
     if (!result.success) {
         return {
             success: false,
-            message: "입력한 정보를 확인해주세요.",
+            message: t("settings.checkInput"),
             fieldErrors: result.error.flatten().fieldErrors,
         };
     }
@@ -60,7 +68,7 @@ export async function uploadUserSetting(
         select: { avatar: true, discord_id: true },
     });
     if (!currentUser) {
-        return { success: false, message: "사용자 정보를 찾을 수 없습니다." };
+        return { success: false, message: t("settings.userNotFound") };
     }
 
     const submittedAvatar = result.data.avatar;
@@ -76,7 +84,7 @@ export async function uploadUserSetting(
     ) {
         return {
             success: false,
-            message: "허용되지 않은 프로필 이미지 주소입니다.",
+            message: t("settings.invalidAvatarUrl"),
         };
     }
     const nextAvatar = avatarChanged ? submittedAvatar : currentUser.avatar;
@@ -91,7 +99,7 @@ export async function uploadUserSetting(
         if (!arcade) {
             return {
                 success: false,
-                message: "선택한 오락실을 찾을 수 없습니다.",
+                message: t("settings.arcadeNotFound"),
             };
         }
     }
@@ -102,6 +110,8 @@ export async function uploadUserSetting(
             data: {
                 username: result.data.username,
                 country: result.data.country,
+                locale: result.data.locale,
+                show_localized_music_title: result.data.showLocalizedMusicTitle,
                 avatar: nextAvatar,
                 discord_name: currentUser.discord_id
                     ? result.data.discordName || null
@@ -117,6 +127,8 @@ export async function uploadUserSetting(
         });
         updateTag(CACHE_TAGS.userRankings);
         updateTag(getUserProfileTag(session.id));
+        session.locale = result.data.locale;
+        await session.save();
     } catch (error) {
         const code =
             typeof error === "object" && error !== null && "code" in error
@@ -127,28 +139,36 @@ export async function uploadUserSetting(
             if (avatarChanged) await deleteBlobIfOwned(submittedAvatar);
             return {
                 success: false,
-                message: "이미 사용 중인 닉네임입니다.",
+                message: t("settings.nicknameTaken"),
             };
         }
         if (avatarChanged) await deleteBlobIfOwned(submittedAvatar);
-        return { success: false, message: "프로필 저장에 실패했습니다." };
+        return { success: false, message: t("settings.saveError") };
     }
 
     if (avatarChanged) await deleteBlobIfOwned(currentUser.avatar);
 
-    redirect(`/profile/${session.id}`);
+    redirect(localizePath(`/profile/${session.id}`, result.data.locale));
 }
 
 // 로그인한 사용자에게 프로필 이미지 한 장 전용 업로드 토큰을 발급함
-export async function requestProfileAvatarUpload(contentType: string) {
+export async function requestProfileAvatarUpload(
+    contentType: string,
+    requestedLocale?: Locale
+) {
+    const locale = isLocale(requestedLocale) ? requestedLocale : "ko";
+    const t = createTranslator(getMessages(locale));
     const session = await getSession();
     if (!session.id) {
-        return { success: false as const, message: "로그인이 필요합니다." };
+        return {
+            success: false as const,
+            message: t("settings.loginRequired"),
+        };
     }
     if (!isImageContentType(contentType)) {
         return {
             success: false as const,
-            message: "JPG, PNG, WebP 이미지만 사용할 수 있습니다.",
+            message: t("settings.invalidImage"),
         };
     }
 
@@ -173,7 +193,7 @@ export async function requestProfileAvatarUpload(contentType: string) {
             );
             return {
                 success: false as const,
-                message: "JPG, PNG, WebP 이미지만 사용할 수 있습니다.",
+                message: t("settings.invalidImage"),
             };
         }
 
@@ -189,7 +209,7 @@ export async function requestProfileAvatarUpload(contentType: string) {
         }
         return {
             success: false as const,
-            message: "이미지 업로드 요청을 처리하지 못했습니다.",
+            message: t("settings.uploadRequestError"),
         };
     }
 }

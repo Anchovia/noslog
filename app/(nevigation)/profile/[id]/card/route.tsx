@@ -15,6 +15,12 @@ import {
     getProfileCountryCode,
 } from "@/components/profile/dashboard/profileUtils";
 import getSession from "@/lib/session";
+import { createTranslator, getMessages } from "@/lib/i18n/messages";
+import {
+    isLocale,
+    localizePath,
+    LOCALE_REQUEST_HEADER,
+} from "@/lib/i18n/routing";
 import { formatToComma } from "@/lib/utils";
 
 import { getCachedProfileData } from "../data";
@@ -186,6 +192,9 @@ export async function GET(
     }
 
     const session = await getSession();
+    const requestLocale = request.headers.get(LOCALE_REQUEST_HEADER);
+    const locale = isLocale(requestLocale) ? requestLocale : "ko";
+    const t = createTranslator(getMessages(locale));
     if (session.id !== id) {
         return new Response("Forbidden", { status: 403 });
     }
@@ -199,7 +208,10 @@ export async function GET(
     const avatar = await getAvatarDataUrl(user.avatar);
     const countryCode = getProfileCountryCode(user.country);
     const countryFlag = await getFlagDataUrl(countryCode);
-    const profileUrl = `${request.nextUrl.origin}/profile/${user.id}`;
+    const profileUrl = `${request.nextUrl.origin}${localizePath(
+        `/profile/${user.id}`,
+        locale
+    )}`;
 
     return new ImageResponse(
         <div
@@ -297,12 +309,18 @@ export async function GET(
                                     whiteSpace: "nowrap",
                                 }}
                             >
-                                {user.username || "이름 없는 유저"}
+                                {user.username || t("common.unnamedUser")}
                             </span>
                         </div>
                         <span style={{ color: "#a0a0aa", fontSize: 22 }}>
                             {modeData.label} ·{" "}
-                            {formatProfileDate(user.last_played_at)} 기준
+                            {t("profile.asOf", {
+                                date: formatProfileDate(
+                                    user.last_played_at,
+                                    locale,
+                                    t("profile.noRecord")
+                                ),
+                            })}
                         </span>
                     </div>
                 </div>
@@ -369,7 +387,7 @@ export async function GET(
                         }}
                     >
                         <span style={{ color: "#a0a0aa", fontSize: 19 }}>
-                            세계 순위
+                            {t("profile.globalRank")}
                         </span>
                         <span style={{ fontSize: 54, fontWeight: 900 }}>
                             {modeData.globalRank
@@ -398,7 +416,9 @@ export async function GET(
                                 width={25}
                                 height={17}
                             />
-                            {countryCode} 순위
+                            {t("profile.countryRank", {
+                                country: countryCode,
+                            })}
                         </span>
                         <span style={{ fontSize: 54, fontWeight: 900 }}>
                             {modeData.countryRank
@@ -435,7 +455,10 @@ export async function GET(
                                 fontWeight: 700,
                             }}
                         >
-                            Basic {user.exam_basic}급
+                            {t("rankings.examBadge", {
+                                mode: "Basic",
+                                exam: user.exam_basic,
+                            })}
                         </div>
                     ) : null}
                     {user.exam_recital ? (
@@ -452,7 +475,10 @@ export async function GET(
                                 fontWeight: 700,
                             }}
                         >
-                            Recital {user.exam_recital}급
+                            {t("rankings.examBadge", {
+                                mode: "Recital",
+                                exam: user.exam_recital,
+                            })}
                         </div>
                     ) : null}
                 </div>
@@ -468,10 +494,11 @@ export async function GET(
                     }}
                 >
                     <span>
-                        플레이{" "}
                         {user.hide_play_count
-                            ? "비공개"
-                            : `${formatToComma(user.play_count)}회`}
+                            ? t("profile.playCountPrivate")
+                            : t("profile.playCount", {
+                                  count: formatToComma(user.play_count),
+                              })}
                     </span>
                     <span>{profileUrl}</span>
                 </div>

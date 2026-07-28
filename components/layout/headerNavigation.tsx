@@ -13,43 +13,82 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
+import {
+    useLocalizedHref,
+    useTranslations,
+    type MessageKey,
+} from "@/components/i18n/localeProvider";
+import { stripLocaleFromPath } from "@/lib/i18n/routing";
 import { cn } from "@/lib/utils";
 
-const primaryItems = [
-    { href: "/music", label: "악곡" },
-    { href: "/rankings", label: "랭킹" },
-    { href: "/tiers", label: "서열" },
+const primaryItems: {
+    href: string;
+    labelKey: MessageKey;
+}[] = [
+    { href: "/music", labelKey: "header.music" },
+    { href: "/rankings", labelKey: "header.rankings" },
+    { href: "/tiers", labelKey: "header.tiers" },
 ];
 
 const secondaryItems = [
-    { href: "/bingo", label: "빙고", icon: Grid3X3 },
-    { href: "/exams", label: "검정", icon: Trophy },
-    { href: "/gamecenter", label: "오락실", icon: MapPin },
-    { href: "/bookmarklet", label: "데이터 연동", icon: RefreshCw },
-];
+    { href: "/bingo", labelKey: "header.bingo", icon: Grid3X3 },
+    { href: "/exams", labelKey: "header.exams", icon: Trophy },
+    { href: "/gamecenter", labelKey: "header.arcades", icon: MapPin },
+    {
+        href: "/bookmarklet",
+        labelKey: "header.dataSync",
+        icon: RefreshCw,
+    },
+] satisfies {
+    href: string;
+    labelKey: MessageKey;
+    icon: typeof Grid3X3;
+}[];
+
+const adminItem = {
+    href: "/admin",
+    labelKey: "header.admin",
+    icon: ShieldCheck,
+} satisfies {
+    href: string;
+    labelKey: MessageKey;
+    icon: typeof ShieldCheck;
+};
 
 function isActiveRoute(pathname: string, href: string) {
-    return pathname === href || pathname.startsWith(`${href}/`);
+    const barePathname = stripLocaleFromPath(pathname);
+    return barePathname === href || barePathname.startsWith(`${href}/`);
+}
+
+function useNavigationI18n() {
+    return {
+        localizedHref: useLocalizedHref(),
+        t: useTranslations(),
+    };
 }
 
 export function HeaderPrimaryNavigation() {
     const pathname = usePathname();
+    const { localizedHref, t } = useNavigationI18n();
 
     return (
-        <nav className="flex min-w-0 items-center" aria-label="주요 메뉴">
+        <nav
+            className="flex min-w-0 items-center"
+            aria-label={t("header.primaryNav")}
+        >
             {primaryItems.map((item) => {
                 const isActive = isActiveRoute(pathname, item.href);
                 return (
                     <Link
                         key={item.href}
-                        href={item.href}
+                        href={localizedHref(item.href)}
                         aria-current={isActive ? "page" : undefined}
                         className={cn(
-                            "text-section text-text-secondary hover:text-text-primary flex size-11 shrink-0 items-center justify-center transition-colors",
+                            "text-text-secondary hover:text-text-primary flex size-11 shrink-0 items-center justify-center text-xs font-semibold whitespace-nowrap transition-colors",
                             isActive && "text-text-primary"
                         )}
                     >
-                        {item.label}
+                        {t(item.labelKey)}
                     </Link>
                 );
             })}
@@ -59,19 +98,11 @@ export function HeaderPrimaryNavigation() {
 
 export default function HeaderMenu({ isAdmin = false }: { isAdmin?: boolean }) {
     const pathname = usePathname();
+    const { localizedHref, t } = useNavigationI18n();
     const menuButtonRef = useRef<HTMLButtonElement>(null);
     const [openPathname, setOpenPathname] = useState<string | null>(null);
     const isOpen = openPathname === pathname;
-    const menuItems = isAdmin
-        ? [
-              ...secondaryItems,
-              {
-                  href: "/admin",
-                  label: "관리자",
-                  icon: ShieldCheck,
-              },
-          ]
-        : secondaryItems;
+    const menuItems = isAdmin ? [...secondaryItems, adminItem] : secondaryItems;
     const hasActiveSecondaryItem = menuItems.some((item) =>
         isActiveRoute(pathname, item.href)
     );
@@ -100,7 +131,9 @@ export default function HeaderMenu({ isAdmin = false }: { isAdmin?: boolean }) {
             <button
                 ref={menuButtonRef}
                 type="button"
-                aria-label={isOpen ? "전체 메뉴 닫기" : "전체 메뉴 열기"}
+                aria-label={
+                    isOpen ? t("header.closeMenu") : t("header.openMenu")
+                }
                 aria-expanded={isOpen}
                 aria-controls="header-secondary-menu"
                 onClick={() =>
@@ -124,13 +157,13 @@ export default function HeaderMenu({ isAdmin = false }: { isAdmin?: boolean }) {
                 <>
                     <button
                         type="button"
-                        aria-label="전체 메뉴 닫기"
+                        aria-label={t("header.closeMenu")}
                         onClick={() => setOpenPathname(null)}
                         className="fixed inset-x-0 top-14 bottom-0 bg-black/40"
                     />
                     <nav
                         id="header-secondary-menu"
-                        aria-label="전체 메뉴"
+                        aria-label={t("header.fullMenu")}
                         className="border-divider bg-surface fixed top-14 left-1/2 grid w-full max-w-97.5 -translate-x-1/2 grid-cols-2 gap-2 border-b p-3 shadow-xl"
                     >
                         {menuItems.map((item) => {
@@ -139,7 +172,7 @@ export default function HeaderMenu({ isAdmin = false }: { isAdmin?: boolean }) {
                             return (
                                 <Link
                                     key={item.href}
-                                    href={item.href}
+                                    href={localizedHref(item.href)}
                                     aria-current={isActive ? "page" : undefined}
                                     onClick={() => setOpenPathname(null)}
                                     className={cn(
@@ -154,7 +187,7 @@ export default function HeaderMenu({ isAdmin = false }: { isAdmin?: boolean }) {
                                         aria-hidden="true"
                                     />
                                     <span className="text-section">
-                                        {item.label}
+                                        {t(item.labelKey)}
                                     </span>
                                 </Link>
                             );

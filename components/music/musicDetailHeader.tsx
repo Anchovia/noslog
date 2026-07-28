@@ -6,6 +6,7 @@ import {
 import { difficultyStyles } from "./musicDetailConfig";
 import type { Difficulty, MusicInfo } from "./musicDetailTypes";
 import MusicJacket from "./musicJacket";
+import { useTranslations } from "@/components/i18n/localeProvider";
 
 interface MusicDetailHeaderProps {
     music: MusicInfo;
@@ -18,6 +19,7 @@ export default function MusicDetailHeader({
     difficulty,
     levelConstant,
 }: MusicDetailHeaderProps) {
+    const t = useTranslations();
     const category = normalizeMusicCategory(music.category_short);
 
     return (
@@ -40,14 +42,21 @@ export default function MusicDetailHeader({
                 >
                     {music.category_short}
                 </span>
+                {music.localizedTitle ? (
+                    <p className="text-caption truncate">
+                        {music.localizedTitle}
+                    </p>
+                ) : null}
                 <h1 className="text-title truncate">{music.title}</h1>
                 <p className="text-text-secondary truncate text-sm">
-                    {music.artist || "아티스트 미상"}
+                    {music.artist || t("music.unknownArtist")}
                 </p>
             </div>
 
             <div className="shrink-0 text-right">
-                <p className="text-caption text-text-disabled">레벨 상수</p>
+                <p className="text-caption text-text-disabled">
+                    {t("music.levelConstant")}
+                </p>
                 <strong
                     className={cn(
                         "text-xl font-black tabular-nums",

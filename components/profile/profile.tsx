@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { logout } from "@/app/(nevigation)/profile/[id]/actions";
+import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import ProfileBestPlays from "@/components/profile/dashboard/profileBestPlays";
 import ProfileGradeTrend from "@/components/profile/dashboard/profileGradeTrend";
 import ProfileHeader from "@/components/profile/dashboard/profileHeader";
@@ -34,6 +35,8 @@ export default function ProfileDashboard({
     isOwner,
     ownerAnalytics,
 }: ProfileDashboardProps) {
+    const locale = useLocale();
+    const t = useTranslations();
     const [mode, setMode] = useState<ProfileMode>("basic");
     const [showAllRanks, setShowAllRanks] = useState(false);
     const [showAllBest, setShowAllBest] = useState(false);
@@ -82,12 +85,12 @@ export default function ProfileDashboard({
             />
 
             {isOwner ? (
-                <form action={logout}>
+                <form action={logout.bind(null, locale)}>
                     <button
                         type="submit"
                         className="border-danger/50 text-danger hover:bg-danger/10 focus-visible:ring-danger/30 rounded-card flex h-11 w-full cursor-pointer items-center justify-center border text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none"
                     >
-                        로그아웃
+                        {t("profile.logout")}
                     </button>
                 </form>
             ) : null}

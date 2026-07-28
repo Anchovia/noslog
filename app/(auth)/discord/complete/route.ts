@@ -1,5 +1,6 @@
 import db from "@/lib/db";
 import { CACHE_TAGS, getUserProfileTag } from "@/lib/cacheTags";
+import { isLocale } from "@/lib/i18n/routing";
 import getSession from "@/lib/session";
 import { revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
@@ -121,6 +122,7 @@ export async function GET(request: NextRequest) {
                 discord_name: true,
                 discord_username: true,
                 profile_completed_at: true,
+                locale: true,
             },
         });
 
@@ -166,7 +168,7 @@ export async function GET(request: NextRequest) {
                               ? avatar
                               : linkedUser.avatar,
                   },
-                  select: { id: true },
+                  select: { id: true, locale: true },
               })
             : await db.user.create({
                   data: {
@@ -175,7 +177,7 @@ export async function GET(request: NextRequest) {
                       discord_username: discordUser.username,
                       avatar,
                   },
-                  select: { id: true },
+                  select: { id: true, locale: true },
               });
         const profileCompleted = Boolean(linkedUser?.profile_completed_at);
 
@@ -183,6 +185,9 @@ export async function GET(request: NextRequest) {
         revalidateTag(CACHE_TAGS.userRankings, "max");
         session.id = user.id;
         session.profileCompleted = profileCompleted;
+        if (profileCompleted && isLocale(user.locale)) {
+            session.locale = user.locale;
+        }
         await session.save();
         return NextResponse.redirect(
             new URL(profileCompleted ? returnTo : "/onboarding", request.url)

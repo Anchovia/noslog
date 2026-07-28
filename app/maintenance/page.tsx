@@ -1,12 +1,19 @@
-import type { Metadata } from "next";
 import { Wrench } from "lucide-react";
+import { getServerI18n } from "@/lib/i18n/server";
+import { createPageMetadata } from "@/lib/metadata/site";
+import { localizePath } from "@/lib/i18n/routing";
 
-export const metadata: Metadata = {
-    title: "점검 중",
-    robots: { index: false, follow: false, noarchive: true },
-};
+export async function generateMetadata() {
+    const { locale, t } = await getServerI18n();
+    return createPageMetadata({
+        title: t("maintenance.title"),
+        path: localizePath("/maintenance", locale),
+        noIndex: true,
+    });
+}
 
-export default function MaintenancePage() {
+export default async function MaintenancePage() {
+    const { t } = await getServerI18n();
     return (
         <main className="bg-bg text-text-primary flex min-h-dvh items-center justify-center px-6 text-center">
             <section className="flex w-full max-w-97.5 flex-col items-center">
@@ -16,11 +23,9 @@ export default function MaintenancePage() {
                 <span className="bg-surface text-text-secondary mt-8 flex size-12 items-center justify-center rounded-full">
                     <Wrench className="size-5" aria-hidden />
                 </span>
-                <h1 className="text-title mt-5">점검 중입니다.</h1>
+                <h1 className="text-title mt-5">{t("maintenance.heading")}</h1>
                 <p className="text-body-muted mt-2 leading-relaxed">
-                    더 안정적인 서비스를 위해 잠시 점검하고 있습니다.
-                    <br />
-                    잠시 후 다시 이용해주세요.
+                    {t("maintenance.description")}
                 </p>
             </section>
         </main>

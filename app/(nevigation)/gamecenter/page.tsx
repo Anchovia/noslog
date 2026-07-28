@@ -1,14 +1,18 @@
 import GamecenterExplorer from "@/components/gamecenter/gamecenterExplorer";
 import { getGamecenterArcades } from "@/lib/arcades";
+import { getServerI18n } from "@/lib/i18n/server";
+import { localizePath } from "@/lib/i18n/routing";
 import { createPageMetadata } from "@/lib/metadata/site";
 import { getUser } from "@/lib/user";
 
-export const metadata = createPageMetadata({
-    title: "오락실",
-    description:
-        "NOSTALGIA 기기가 설치된 오락실의 위치와 선호 이용자 수를 확인합니다.",
-    path: "/gamecenter",
-});
+export async function generateMetadata() {
+    const { locale, t } = await getServerI18n();
+
+    return createPageMetadata({
+        title: t("arcades.title"),
+        path: localizePath("/gamecenter", locale),
+    });
+}
 
 export default async function GamecenterPage() {
     const [user, arcades] = await Promise.all([

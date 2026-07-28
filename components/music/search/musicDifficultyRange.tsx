@@ -1,5 +1,6 @@
 import * as Slider from "@radix-ui/react-slider";
 
+import { useTranslations } from "@/components/i18n/localeProvider";
 import { cn } from "@/lib/utils";
 
 import type {
@@ -21,13 +22,18 @@ export default function MusicDifficultyRange({
     onChange,
     onCommit,
 }: MusicDifficultyRangeProps) {
+    const t = useTranslations();
+
     return (
         <div className="flex flex-col gap-3">
             <p className="text-xs font-bold">
                 <span className={difficulty.textClassName}>
                     {difficulty.label}
                 </span>
-                <span className="text-text-secondary"> 레벨 </span>
+                <span className="text-text-secondary">
+                    {" "}
+                    {t("music.level")}{" "}
+                </span>
                 <span className="text-text-primary">
                     {range[0]} - {range[1]}
                 </span>
@@ -53,11 +59,15 @@ export default function MusicDifficultyRange({
                 </Slider.Track>
                 <Slider.Thumb
                     className="bg-interactive block size-4 rounded-full outline-none"
-                    aria-label={`${difficulty.label} 최소 레벨`}
+                    aria-label={t("music.minimumLevel", {
+                        difficulty: difficulty.label,
+                    })}
                 />
                 <Slider.Thumb
                     className="bg-interactive block size-4 rounded-full outline-none"
-                    aria-label={`${difficulty.label} 최대 레벨`}
+                    aria-label={t("music.maximumLevel", {
+                        difficulty: difficulty.label,
+                    })}
                 />
             </Slider.Root>
 

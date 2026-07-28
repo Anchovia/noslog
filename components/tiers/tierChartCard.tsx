@@ -1,6 +1,11 @@
 import Link from "next/link";
 
 import {
+    useLocale,
+    useLocalizedHref,
+    useTranslations,
+} from "@/components/i18n/localeProvider";
+import {
     formatOfficialChartLevel,
     getTierRecordStatus,
     isTierGoalAchieved,
@@ -18,6 +23,7 @@ interface TierChartCardProps {
         music: {
             index: string;
             title: string;
+            localizedTitle: string | null;
             background: string | null;
         };
     };
@@ -64,6 +70,9 @@ export default function TierChartCard({
     detailPanelId,
     onSelect,
 }: TierChartCardProps) {
+    const locale = useLocale();
+    const t = useTranslations();
+    const localizedHref = useLocalizedHref();
     const status = showRecord ? getTierRecordStatus(record) : "played";
     const rankIconName = showRecord ? getRankIconName(record) : undefined;
     const achieved = showRecord ? isTierGoalAchieved(record, goal) : true;
@@ -121,12 +130,17 @@ export default function TierChartCard({
                                   chart.level
                               )
                             : record?.score && record.score > 0
-                              ? record.score.toLocaleString("ko-KR")
-                              : "미플레이"}
+                              ? record.score.toLocaleString(locale)
+                              : t("tiers.unplayed")}
                     </span>
                 </span>
             </span>
             <span className="min-w-0 px-0.5">
+                {chart.music.localizedTitle ? (
+                    <span className="text-text-disabled block truncate text-[9px] leading-tight">
+                        {chart.music.localizedTitle}
+                    </span>
+                ) : null}
                 <strong className="text-caption text-text-primary block truncate font-semibold">
                     {chart.music.title}
                 </strong>
@@ -146,7 +160,10 @@ export default function TierChartCard({
                 type="button"
                 aria-controls={detailPanelId}
                 aria-expanded={selected}
-                aria-label={`${chart.music.title} ${chart.difficulty} 내 기록 상세`}
+                aria-label={t("tiers.recordAria", {
+                    title: chart.music.title,
+                    difficulty: chart.difficulty,
+                })}
                 className={cn(className, "cursor-pointer")}
                 onClick={onSelect}
                 data-tier-entry-id={entryId}
@@ -158,7 +175,9 @@ export default function TierChartCard({
 
     return (
         <Link
-            href={`/music/${chart.music.index}/${chart.difficulty.toLowerCase()}?tab=tier`}
+            href={localizedHref(
+                `/music/${chart.music.index}/${chart.difficulty.toLowerCase()}?tab=tier`
+            )}
             aria-label={`${chart.music.title} ${chart.difficulty} ${formatOfficialChartLevel(chart.difficulty, chart.level)}`}
             className={className}
         >

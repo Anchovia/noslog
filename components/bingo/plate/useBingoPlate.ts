@@ -1,6 +1,7 @@
 "use client";
 
 import { setBingoCellCompletion } from "@/app/(nevigation)/bingo/[id]/actions";
+import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import { getBingoProgress } from "@/lib/bingo";
 import { useMemo, useState, useTransition } from "react";
 
@@ -19,6 +20,8 @@ export function useBingoPlate({
     initialCompletedCellIds,
     canEdit,
 }: UseBingoPlateOptions) {
+    const locale = useLocale();
+    const t = useTranslations();
     const [completedCellIds, setCompletedCellIds] = useState(
         () => new Set(initialCompletedCellIds)
     );
@@ -72,7 +75,7 @@ export function useBingoPlate({
     function toggleCell(cellId: number) {
         if (!canEdit || isPending) {
             if (!canEdit) {
-                setMessage("로그인 후 빙고 진행 상태를 저장할 수 있습니다.");
+                setMessage(t("bingo.loginToSave"));
             }
             return;
         }
@@ -89,7 +92,11 @@ export function useBingoPlate({
         });
 
         startTransition(async () => {
-            const result = await setBingoCellCompletion(cellId, !wasCompleted);
+            const result = await setBingoCellCompletion(
+                cellId,
+                !wasCompleted,
+                locale
+            );
 
             if (!result.success) {
                 setCompletedCellIds((current) => {
@@ -98,9 +105,7 @@ export function useBingoPlate({
                     else next.delete(cellId);
                     return next;
                 });
-                setMessage(
-                    result.message ?? "완료 상태를 저장하지 못했습니다."
-                );
+                setMessage(result.message ?? t("bingo.saveError"));
             }
         });
     }

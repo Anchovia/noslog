@@ -16,6 +16,11 @@ import type {
     UserPlayData,
 } from "./musicDetailTypes";
 import ScoreTrend from "./scoreTrend";
+import {
+    useLocale,
+    useLocalizedHref,
+    useTranslations,
+} from "@/components/i18n/localeProvider";
 
 interface MusicRecordTabProps {
     isLoggedIn: boolean;
@@ -34,6 +39,9 @@ export default function MusicRecordTab({
     performanceTrend,
     peerScoreComparison,
 }: MusicRecordTabProps) {
+    const locale = useLocale();
+    const localizedHref = useLocalizedHref();
+    const t = useTranslations();
     const [showPeerComparison, setShowPeerComparison] = useState(false);
     const scoreProgress = userPlayData
         ? Math.min(
@@ -50,15 +58,15 @@ export default function MusicRecordTab({
             : null;
     const cumulativeStats = [
         {
-            label: "플레이",
+            label: t("music.record.play"),
             value: userPlayData?.play_count ?? null,
         },
         {
-            label: "최대 콤보",
+            label: t("music.record.maxCombo"),
             value: userPlayData?.max_combo ?? null,
         },
         {
-            label: "풀콤보",
+            label: t("music.record.fullCombo"),
             value: userPlayData?.fullcombo_count ?? null,
         },
         {
@@ -73,13 +81,13 @@ export default function MusicRecordTab({
                 <div className="bg-surface/85 rounded-card absolute inset-0 z-10 flex items-start justify-center pt-12 backdrop-blur-[1px]">
                     <div className="bg-surface-muted border-border rounded-card flex flex-col items-center gap-3 border px-5 py-4 text-center">
                         <p className="text-text-primary text-sm font-semibold">
-                            로그인 후 내 기록을 확인할 수 있습니다.
+                            {t("music.record.loginRequired")}
                         </p>
                         <Link
-                            href="/login"
+                            href={localizedHref("/login")}
                             className="bg-text-primary text-bg rounded-card flex h-10 items-center justify-center px-4 text-sm font-bold"
                         >
-                            로그인
+                            {t("common.login")}
                         </Link>
                     </div>
                 </div>
@@ -115,7 +123,9 @@ export default function MusicRecordTab({
                             rankAssetNames[userPlayData.rank] ? (
                                 <Image
                                     src={`https://p.eagate.573.jp/game/nostalgia/op3/img/pdata/music_data/grade/grade_${rankAssetNames[userPlayData.rank]}.png`}
-                                    alt={`${userPlayData.rank} 랭크`}
+                                    alt={t("music.record.rankLabel", {
+                                        rank: userPlayData.rank,
+                                    })}
                                     width={38}
                                     height={38}
                                 />
@@ -128,7 +138,9 @@ export default function MusicRecordTab({
 
                         <div className="min-w-0 flex-1">
                             <div className="flex items-center justify-between gap-2">
-                                <p className="text-caption">베스트 스코어</p>
+                                <p className="text-caption">
+                                    {t("music.record.bestScore")}
+                                </p>
                                 {peerScoreComparison ? (
                                     <button
                                         aria-checked={showPeerComparison}
@@ -142,7 +154,7 @@ export default function MusicRecordTab({
                                         type="button"
                                     >
                                         <span className="text-micro whitespace-nowrap">
-                                            비슷한 사람과 비교
+                                            {t("music.record.comparePeers")}
                                         </span>
                                         <span
                                             aria-hidden
@@ -180,7 +192,9 @@ export default function MusicRecordTab({
                     </div>
 
                     <div className="flex items-baseline justify-end gap-2">
-                        <span className="text-caption">내 그레이드</span>
+                        <span className="text-caption">
+                            {t("music.record.myGrade")}
+                        </span>
                         <strong className="text-score text-xl font-black whitespace-nowrap tabular-nums">
                             Grd{" "}
                             {userPlayData
@@ -202,10 +216,10 @@ export default function MusicRecordTab({
                                     ? formatScoreRecordDate(
                                           userPlayData.besttime
                                       )
-                                    : "기록 없음"}
+                                    : t("music.record.noRecord")}
                             </span>
                             <span className="text-text-secondary shrink-0 tabular-nums">
-                                Pianist까지{" "}
+                                {t("music.record.toPianist")}{" "}
                                 <strong
                                     className={cn(
                                         scoreToPerfect !== null &&
@@ -215,8 +229,12 @@ export default function MusicRecordTab({
                                     {scoreToPerfect === null
                                         ? "-"
                                         : scoreToPerfect === 0
-                                          ? "달성"
-                                          : `${formatToComma(scoreToPerfect)}점`}
+                                          ? t("music.record.achieved")
+                                          : t("music.record.points", {
+                                                count: formatToComma(
+                                                    scoreToPerfect
+                                                ),
+                                            })}
                                 </strong>
                             </span>
                         </div>
@@ -227,13 +245,16 @@ export default function MusicRecordTab({
                     peerScoreDifference !== null ? (
                         <div className="bg-surface-muted rounded-card flex items-center justify-between gap-3 p-3">
                             <div className="min-w-0">
-                                <p className="text-caption">비슷한 Grd 평균</p>
+                                <p className="text-caption">
+                                    {t("music.record.peerAverage")}
+                                </p>
                                 <p className="text-micro mt-1 tabular-nums">
-                                    ±{peerScoreComparison.gradeRange} ·{" "}
-                                    {peerScoreComparison.sampleCount.toLocaleString(
-                                        "ko-KR"
-                                    )}
-                                    명 기준
+                                    {t("music.record.peerBasis", {
+                                        range: peerScoreComparison.gradeRange,
+                                        count: peerScoreComparison.sampleCount.toLocaleString(
+                                            locale
+                                        ),
+                                    })}
                                 </p>
                             </div>
                             <div className="shrink-0 text-right">
@@ -250,19 +271,25 @@ export default function MusicRecordTab({
                                     )}
                                 >
                                     {peerScoreDifference === 0
-                                        ? "내 기록과 동일"
-                                        : `내 기록 ${
-                                              peerScoreDifference > 0 ? "+" : ""
-                                          }${formatToComma(
-                                              peerScoreDifference
-                                          )}점`}
+                                        ? t("music.record.sameAsMine")
+                                        : t("music.record.mineDifference", {
+                                              difference: `${
+                                                  peerScoreDifference > 0
+                                                      ? "+"
+                                                      : ""
+                                              }${formatToComma(
+                                                  peerScoreDifference
+                                              )}`,
+                                          })}
                                 </p>
                             </div>
                         </div>
                     ) : null}
 
                     <div className="border-divider border-t pt-4">
-                        <h2 className="text-section">스코어 추이</h2>
+                        <h2 className="text-section">
+                            {t("music.record.scoreTrend")}
+                        </h2>
                         <ScoreTrend
                             points={scoreTrend}
                             performancePoints={performanceTrend}
@@ -289,7 +316,7 @@ export default function MusicRecordTab({
 
                 <section className="bg-surface rounded-card overflow-hidden">
                     <h2 className="text-section bg-surface-muted px-4 py-3">
-                        최근 플레이
+                        {t("music.record.recentPlays")}
                     </h2>
                     {recentChartPlays.length > 0 ? (
                         <ul className="divide-divider divide-y">
@@ -299,7 +326,7 @@ export default function MusicRecordTab({
                         </ul>
                     ) : (
                         <div className="text-text-disabled flex h-20 items-center justify-center text-sm">
-                            최근 플레이 기록이 없습니다.
+                            {t("music.record.noRecentPlays")}
                         </div>
                     )}
                 </section>

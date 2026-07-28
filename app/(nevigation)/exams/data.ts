@@ -23,7 +23,24 @@ export const getCachedPublishedExams = unstable_cache(
                         id: true,
                         type: true,
                         label: true,
-                        music: { select: { index: true, title: true } },
+                        music: {
+                            select: {
+                                index: true,
+                                title: true,
+                                title_kana: true,
+                                translations: {
+                                    where: {
+                                        status: "approved",
+                                        locale: { in: ["ko", "en"] },
+                                    },
+                                    select: {
+                                        locale: true,
+                                        title: true,
+                                        status: true,
+                                    },
+                                },
+                            },
+                        },
                     },
                     orderBy: { position: "asc" },
                 },
@@ -35,7 +52,23 @@ export const getCachedPublishedExams = unstable_cache(
                         requirementType: true,
                         requiredValue: true,
                         music: {
-                            select: { index: true, title: true, artist: true },
+                            select: {
+                                index: true,
+                                title: true,
+                                title_kana: true,
+                                artist: true,
+                                translations: {
+                                    where: {
+                                        status: "approved",
+                                        locale: { in: ["ko", "en"] },
+                                    },
+                                    select: {
+                                        locale: true,
+                                        title: true,
+                                        status: true,
+                                    },
+                                },
+                            },
                         },
                         allowedCharts: {
                             select: {
@@ -54,7 +87,7 @@ export const getCachedPublishedExams = unstable_cache(
             },
             orderBy: [{ mode: "asc" }, { grade: "desc" }, { id: "asc" }],
         }),
-    ["published-exams"],
+    ["published-exams", "i18n-v1"],
     {
         revalidate: 3600,
         tags: [CACHE_TAGS.exams],

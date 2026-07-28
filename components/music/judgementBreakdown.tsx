@@ -12,6 +12,11 @@ import type {
     PeerJudgementComparison,
     PeerNoteRateComparison,
 } from "@/lib/music/peerScoreComparison";
+import {
+    useLocale,
+    useTranslations,
+    type MessageKey,
+} from "@/components/i18n/localeProvider";
 
 interface JudgementBreakdownProps {
     counts: JudgementCounts;
@@ -48,11 +53,14 @@ const judgementRows = [
     },
 ] as const;
 
-const noteRows = [
-    { key: "note_rate_standard", label: "일반" },
-    { key: "note_rate_tenuto", label: "테누토" },
-    { key: "note_rate_glissando", label: "글리산도" },
-    { key: "note_rate_trill", label: "트릴" },
+const noteRows: {
+    key: keyof NoteSuccessRates;
+    labelKey: MessageKey;
+}[] = [
+    { key: "note_rate_standard", labelKey: "music.filter.standard" },
+    { key: "note_rate_tenuto", labelKey: "music.filter.tenuto" },
+    { key: "note_rate_glissando", labelKey: "music.filter.glissando" },
+    { key: "note_rate_trill", labelKey: "music.filter.trill" },
 ] as const;
 
 export default function JudgementBreakdown({
@@ -61,13 +69,15 @@ export default function JudgementBreakdown({
     peerComparison,
     peerNoteRates,
 }: JudgementBreakdownProps) {
+    const locale = useLocale();
+    const t = useTranslations();
     const hasData = hasJudgementData(counts);
     const total = getJudgementTotal(counts);
 
     if (!hasData) {
         return (
             <div className="text-text-disabled flex min-h-24 items-center justify-center px-4 text-center text-sm">
-                전체 기록을 다시 연동하면 상세 판정을 확인할 수 있습니다.
+                {t("music.judgement.syncRequired")}
             </div>
         );
     }
@@ -109,10 +119,14 @@ export default function JudgementBreakdown({
                                 </span>
                                 {peerComparison ? (
                                     <span className="text-micro text-text-disabled mt-0.5 whitespace-nowrap">
-                                        평균{" "}
-                                        {formatMetricPercentage(
-                                            peerComparison.averages[row.key]
-                                        )}
+                                        {t("music.judgement.average", {
+                                            value:
+                                                formatMetricPercentage(
+                                                    peerComparison.averages[
+                                                        row.key
+                                                    ]
+                                                ) ?? "-",
+                                        })}
                                     </span>
                                 ) : null}
                             </span>
@@ -121,32 +135,37 @@ export default function JudgementBreakdown({
                 })}
                 {peerComparison ? (
                     <p className="text-micro text-right tabular-nums">
-                        유사 Grd{" "}
-                        {peerComparison.sampleCount.toLocaleString("ko-KR")}명
-                        기준
+                        {t("music.judgement.peerBasis", {
+                            count: peerComparison.sampleCount.toLocaleString(
+                                locale
+                            ),
+                        })}
                     </p>
                 ) : null}
             </div>
 
             <div className="border-divider border-t pt-3">
-                <h3 className="text-label mb-2">음표별 성공률</h3>
+                <h3 className="text-label mb-2">
+                    {t("music.judgement.noteSuccess")}
+                </h3>
                 <dl className="grid grid-cols-2 gap-2">
                     {noteRows.map((row) => (
                         <div
                             key={row.key}
                             className="bg-surface-muted rounded-md px-3 py-2"
                         >
-                            <dt className="text-caption">{row.label}</dt>
+                            <dt className="text-caption">{t(row.labelKey)}</dt>
                             <dd className="mt-0.5 tabular-nums">
                                 <strong className="text-label block">
                                     {formatNoteSuccessRate(noteRates[row.key])}
                                 </strong>
                                 {peerNoteRates ? (
                                     <span className="text-micro text-text-disabled mt-0.5 block font-normal">
-                                        평균{" "}
-                                        {formatNoteSuccessRate(
-                                            peerNoteRates.averages[row.key]
-                                        )}
+                                        {t("music.judgement.average", {
+                                            value: formatNoteSuccessRate(
+                                                peerNoteRates.averages[row.key]
+                                            ),
+                                        })}
                                     </span>
                                 ) : null}
                             </dd>

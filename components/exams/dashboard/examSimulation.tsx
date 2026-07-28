@@ -1,4 +1,6 @@
+import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import { formatNoteSuccessRate } from "@/lib/music/judgementStats";
+import type { MessageKey } from "@/lib/i18n/messages";
 import { cn, formatToComma } from "@/lib/utils";
 
 import type {
@@ -17,11 +19,20 @@ interface ExamSimulationProps {
     simulation: ExamSimulationResult;
 }
 
+function getNoteLabelKey(label: string): MessageKey {
+    if (label === "테누토") return "music.filter.tenuto";
+    if (label === "글리산도") return "music.filter.glissando";
+    if (label === "트릴") return "music.filter.trill";
+    return "music.filter.standard";
+}
+
 // 현재 기록을 기준으로 검정 합격 진행도를 표시함
 export default function ExamSimulation({
     exam,
     simulation,
 }: ExamSimulationProps) {
+    const locale = useLocale();
+    const t = useTranslations();
     const {
         stages,
         totalValue,
@@ -38,26 +49,26 @@ export default function ExamSimulation({
     const status =
         exam.scoringType !== "score"
             ? {
-                  label: "분석 준비 중",
+                  label: t("exams.simulation.preparing"),
                   className: "bg-surface-muted text-text-secondary",
               }
             : exam.isAchieved
               ? {
-                    label: "합격 완료",
+                    label: t("exams.simulation.passed"),
                     className: "bg-success/10 text-success",
                 }
               : !canEnter
                 ? {
-                      label: "응시 조건 부족",
+                      label: t("exams.simulation.notEligible"),
                       className: "bg-danger/10 text-danger",
                   }
                 : isReady
                   ? {
-                        label: "합격 가능",
+                        label: t("exams.simulation.ready"),
                         className: "bg-success/10 text-success",
                     }
                   : {
-                        label: "연습 필요",
+                        label: t("exams.simulation.practice"),
                         className: "bg-score/10 text-score",
                     };
 
@@ -76,8 +87,8 @@ export default function ExamSimulation({
                     <h2 className="text-section truncate">{exam.title}</h2>
                     <p className="text-caption mt-1">
                         {exam.scoringType === "score"
-                            ? "현재 베스트 기록을 기준으로 계산합니다."
-                            : "공식 합격 조건을 기준으로 표시합니다."}
+                            ? t("exams.simulation.bestBasis")
+                            : t("exams.simulation.officialBasis")}
                     </p>
                 </div>
                 <span
@@ -91,14 +102,25 @@ export default function ExamSimulation({
                 <>
                     <div className="mt-4 flex items-end justify-between gap-3">
                         <div>
-                            <p className="text-caption">최종 누적 점수</p>
+                            <p className="text-caption">
+                                {t("exams.simulation.total")}
+                            </p>
                             <strong className="text-section mt-0.5 block tabular-nums">
-                                {formatExamValue(totalValue, exam.scoringType)}
+                                {formatExamValue(
+                                    totalValue,
+                                    exam.scoringType,
+                                    locale
+                                )}
                             </strong>
                         </div>
                         <p className="text-caption text-right tabular-nums">
-                            목표{" "}
-                            {formatExamValue(targetValue, exam.scoringType)}
+                            {t("exams.simulation.target", {
+                                value: formatExamValue(
+                                    targetValue,
+                                    exam.scoringType,
+                                    locale
+                                ),
+                            })}
                         </p>
                     </div>
                     <div className="bg-surface-muted mt-2 h-2 overflow-hidden rounded-full">
@@ -121,75 +143,98 @@ export default function ExamSimulation({
                         )}
                     >
                         {exam.isAchieved ? (
-                            <p className="text-label">합격한 검정입니다.</p>
+                            <p className="text-label">
+                                {t("exams.simulation.alreadyPassed")}
+                            </p>
                         ) : !canEnter ? (
                             <>
                                 <p className="text-label">
-                                    요구 Grd.까지{" "}
-                                    {formatToComma(
-                                        Math.max(
-                                            exam.requiredGrade -
-                                                (exam.playerGrade ?? 0),
-                                            0
-                                        )
-                                    )}{" "}
-                                    필요
+                                    {t("exams.simulation.gradeNeeded", {
+                                        value: formatToComma(
+                                            Math.max(
+                                                exam.requiredGrade -
+                                                    (exam.playerGrade ?? 0),
+                                                0
+                                            )
+                                        ),
+                                    })}
                                 </p>
                                 <p className="text-micro mt-1 opacity-80">
-                                    현재 {formatToComma(exam.playerGrade ?? 0)}{" "}
-                                    / 요구 {formatToComma(exam.requiredGrade)}
+                                    {t("exams.simulation.gradeProgress", {
+                                        current: formatToComma(
+                                            exam.playerGrade ?? 0
+                                        ),
+                                        required: formatToComma(
+                                            exam.requiredGrade
+                                        ),
+                                    })}
                                 </p>
                             </>
                         ) : isReady ? (
                             <p className="text-label">
-                                현재 베스트 기준으로 모든 점수 조건을
-                                충족합니다.
+                                {t("exams.simulation.allMet")}
                             </p>
                         ) : priorityStage ? (
                             <>
                                 <p className="text-label">
-                                    먼저 연습할 곡 ·{" "}
-                                    {getStageLabel(
-                                        priorityStage,
-                                        stages.indexOf(priorityStage),
-                                        stages.length
-                                    )}
+                                    {t("exams.simulation.practiceFirst", {
+                                        stage: getStageLabel(
+                                            priorityStage,
+                                            stages.indexOf(priorityStage),
+                                            stages.length
+                                        ),
+                                    })}
                                 </p>
+                                {priorityStage.localizedTitle ? (
+                                    <p className="text-micro mt-1 truncate">
+                                        {priorityStage.localizedTitle}
+                                    </p>
+                                ) : null}
                                 <p className="text-body mt-1 font-semibold">
                                     {priorityStage.title}
                                 </p>
                                 <p className="text-micro mt-1 opacity-80">
-                                    연습 기준까지{" "}
-                                    {formatToComma(
-                                        priorityStage.individualGapValue
-                                    )}
-                                    점
+                                    {t("exams.simulation.practiceGap", {
+                                        value: formatToComma(
+                                            priorityStage.individualGapValue
+                                        ),
+                                    })}
                                     {priorityStage.weakestNote &&
                                     priorityStage.weakestNote.rate < 9000
-                                        ? ` · 약한 음표 ${priorityStage.weakestNote.label} ${formatNoteSuccessRate(priorityStage.weakestNote.rate)}`
+                                        ? ` · ${t("exams.simulation.weakNote", {
+                                              note: t(
+                                                  getNoteLabelKey(
+                                                      priorityStage.weakestNote
+                                                          .label
+                                                  )
+                                              ),
+                                              rate: formatNoteSuccessRate(
+                                                  priorityStage.weakestNote.rate
+                                              ),
+                                          })}`
                                         : ""}
                                 </p>
                             </>
                         ) : firstFailedStage ? (
                             <p className="text-label">
-                                {getStageLabel(
-                                    firstFailedStage,
-                                    stages.indexOf(firstFailedStage),
-                                    stages.length
-                                )}{" "}
-                                조건을 확인해주세요.
+                                {t("exams.simulation.checkStage", {
+                                    stage: getStageLabel(
+                                        firstFailedStage,
+                                        stages.indexOf(firstFailedStage),
+                                        stages.length
+                                    ),
+                                })}
                             </p>
                         ) : (
                             <p className="text-label">
-                                점수 조건을 확인해주세요.
+                                {t("exams.simulation.checkScore")}
                             </p>
                         )}
                     </div>
                 </>
             ) : (
                 <p className="text-body-muted mt-3">
-                    Recital의 4개 평가 분야와 공식 합격 계산식은 추가 확인 후
-                    제공할 예정입니다.
+                    {t("exams.simulation.recitalPending")}
                 </p>
             )}
         </section>
