@@ -108,6 +108,12 @@ A Home visit succeeds when the user can do one of the following without ambiguit
 - **Approved:** NosLog-authored notices require Korean, Japanese, and English content.
   The external official X post remains in its source language; NosLog localizes the
   surrounding heading, link, and fallback text.
+- **Approved:** Home shows the three newest routine NosLog announcements as compact
+  title-and-date links. It does not expand full announcement bodies in place.
+- **Approved:** Each routine announcement opens a localized public detail page, and an
+  “All announcements” link opens the localized announcement archive. Home omits the
+  entire routine-announcement section when no published item exists.
+- **Approved:** The three-item Home limit remains the same on mobile and desktop.
 
 ## Current Product Baseline
 
@@ -151,7 +157,7 @@ These observations identify functionality and risk. They do not approve the curr
 | Ordinary Header                 | Use the approved responsive shell; Home does not add a second global navigation system.                                             | `Approved` |
 | Service identity                | Keep a concise NosLog identity and NOSTALGIA context near the primary search.                                                       | `Approved` |
 | Service-critical notice         | Show at most the highest-impact active service notice before search; reserve no gap when none exists.                               | `Approved` |
-| Routine NosLog announcements    | Show each routine update once in a lower updates area after the primary destinations and Data Sync.                                 | `Approved` |
+| Routine NosLog announcements    | Show the newest three as compact title-and-date links in a lower updates area; link to localized detail and archive pages.          | `Approved` |
 | Music and Chart search          | Make the shared scope-aware search the strongest Home task.                                                                         | `Approved` |
 | Seven destination blocks        | Keep Music, Chart Viewer, Rankings, Tiers, Bingo, Exams, and Arcades separately discoverable.                                       | `Approved` |
 | Data Sync                       | Keep as a visually distinct play-support action after the main destination collection.                                              | `Approved` |
@@ -186,6 +192,42 @@ visual templates to copy.
 | [X Help: Embed a Timeline](https://help.x.com/en/using-x/embed-x-feed)                                    | An embedded profile timeline displays public posts from the source account on another website.                         | Retain the original official NOSTALGIA source on Home while keeping an external link fallback.                                 | The embed is a third-party runtime with privacy, performance, and availability costs.             |
 | [X Help: X for Websites and Privacy](https://help.x.com/en/x-for-websites-ads-info-and-privacy)           | Viewing embedded X content can send page, IP address, browser, operating-system, and cookie information to X.          | Treat the approved embed as optional third-party content and disclose or govern it consistently with NosLog privacy policy.    | This describes X data handling, not NosLog's final consent or privacy implementation.             |
 
+### HOME-15 Focused Reference Comparison
+
+The routine-announcement decision additionally compared twenty-one external pages across
+authoritative guidance, task-oriented production services, rhythm-game sites, and
+dedicated update archives. The sources reached saturation around a bounded recent
+collection plus a stable route to complete history.
+
+| Source                                                                                                             | Observed pattern                                                                                                         | NosLog application                                                                                       | Limitation                                                                             |
+| ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| [W3C APG: Alert](https://www.w3.org/WAI/ARIA/apg/patterns/alert/)                                                  | Alerts are brief, important, and potentially time-sensitive; frequent interruptions harm usability.                      | Routine announcements remain ordinary editorial content rather than live alerts.                         | Accessibility semantics do not define a Home collection size.                          |
+| [GOV.UK: Notification Banner](https://design-system.service.gov.uk/components/notification-banner/)                | Use banners sparingly and avoid showing more than one.                                                                   | Keep at most one service-critical message separate from routine updates.                                 | It does not prescribe an editorial archive.                                            |
+| [USWDS: Site Alert](https://designsystem.digital.gov/components/site-alert/)                                       | Site alerts communicate urgent sitewide information and should not be stacked.                                           | Do not turn multiple routine releases into top-of-page alerts.                                           | The emergency context is stronger than ordinary NosLog updates.                        |
+| [USWDS: Collection](https://designsystem.digital.gov/components/collection/)                                       | A compact related-content collection links each selective summary to its source and recommends six or fewer items.       | Use a short linked announcement collection rather than expanded article bodies.                          | Six is an upper guideline, not a reason for NosLog to show six.                        |
+| [Carbon: Notification](https://carbondesignsystem.com/components/notification/usage/)                              | Notification copy stays short; longer explanations use a “View more” destination.                                        | Move full announcement bodies to stable detail pages.                                                    | Carbon notifications are not themselves an editorial-news template.                    |
+| [Fluent 2: Message Bar](https://fluent2.microsoft.design/components/web/react/core/messagebar/usage)               | Keep messages to one or two short sentences and link longer documentation; too many interruptions overload a flow.       | Keep Home rows scannable and use a detail link for complete content.                                     | Message bars concern application state more than routine news.                         |
+| [Shopify Polaris: Banner](https://polaris-react.shopify.com/components/feedback-indicators/banner)                 | Banners are sparse, single-theme, concise, and not a regular information entry point.                                    | Routine history belongs in a normal collection and archive, not persistent banners.                      | Merchant workflows differ from an arcade companion service.                            |
+| [VA.gov: Banner](https://design.va.gov/components/banner/)                                                         | Only one banner appears at a time; short headlines and messages link to fuller pages.                                    | Preserve one urgent slot while routing longer routine content to detail pages.                           | Its health and emergency content has higher stakes than NosLog releases.               |
+| [Singapore Government Design System: System Banner](https://www.designsystem.tech.gov.sg/components/system-banner) | Routine body content should stay in normal flow; too many banner items dilute urgency and stale items should be removed. | Separate service status from the bounded routine-announcement area.                                      | Its optional auto-rotating banner is not adopted for NosLog.                           |
+| [GOV.UK Design System Home](https://design-system.service.gov.uk/)                                                 | Home features one current “What’s new” item and links to the broader updates page.                                       | A task-oriented Home can keep updates bounded while preserving full-history access.                      | A design-system site publishes at a different cadence.                                 |
+| [Scottish Government Design System Home](https://designsystem.gov.scot/)                                           | Home lists two recent updates and sends release history to another destination.                                          | Supports a small recent subset plus archive rather than an unbounded Home feed.                          | The content type is documentation updates, not game-service notices.                   |
+| [UAE Design System Home](https://designsystem.gov.ae/)                                                             | A selected latest update appears as secondary Home content after primary guidance actions.                               | Routine announcements remain below core NosLog tasks and use restrained prominence.                      | It demonstrates hierarchy more than exact quantity.                                    |
+| [CHUNITHM Japanese Home](https://chunithm.sega.jp/) and [CHUNITHM International Home](https://chunithm.sega.com/)  | Both surfaces expose three recent news items followed by a “more” or “view all” route.                                   | Three items is a domain-relevant bounded default with clear history access.                              | These are official game marketing sites, while NosLog is a companion archive.          |
+| [maimai Home](https://maimai.sega.jp/)                                                                             | A bounded notices area is paired with a “see more notices” route.                                                        | Keep the Home summary finite and make older content deliberately reachable.                              | Much of its visual news content is image-led and should not be copied.                 |
+| [Taiko.wiki Home](https://taiko.wiki/?lang=en)                                                                     | Five Wiki notices and three official notices create a dense but highly visible update block.                             | Confirms that service and official news need separate labels, while serving as a density counterexample. | Its wiki-heavy operating model prioritizes update scanning more than NosLog Home does. |
+| [DanceDanceRevolution WORLD Home](https://p.eagate.573.jp/game/ddr/ddrworld/top/index.html)                        | Many long news bodies are placed directly in the Home flow.                                                              | Treat this as a counterexample: full bodies would let routine content dominate NosLog’s primary tasks.   | The official site intentionally functions partly as a full news destination.           |
+| [SOUND VOLTEX News](https://p.eagate.573.jp/game/sdvx/vii/news/index.html)                                         | Full game updates live in a dedicated chronological news destination.                                                    | A dedicated archive can own complete and older NosLog announcements.                                     | It does not determine the number of preview items on NosLog Home.                      |
+| [Nintendo News](https://www.nintendo.com/us/whatsnew/)                                                             | A dedicated filtered news page keeps loading older articles outside the product Home.                                    | Preserve long-term discoverability through an archive rather than a growing Home section.                | Nintendo’s publishing volume is far higher than NosLog’s.                              |
+| [GitHub Changelog](https://github.blog/changelog/)                                                                 | A dedicated chronological changelog exposes dates and categories for a large history.                                    | Announcement history needs a stable browse route even when Home shows only three items.                  | Enterprise product taxonomy is unnecessary for the initial NosLog archive.             |
+| [Figma Release Notes](https://www.figma.com/release-notes/)                                                        | Release history is a dedicated destination with chronological updates and subscription access.                           | Separate ongoing history from the task-oriented Home.                                                    | Subscription and release-marketing features are outside the current decision.          |
+
+Current NosLog already fetches the newest three published announcements, but expands
+up to 2,000-character bodies in Home accordions and provides no public detail or
+archive route. The approved direction preserves the useful three-item operational
+limit while replacing unbounded in-place expansion with stable detail and archive
+access.
+
 ### Reference Synthesis
 
 The comparison converges on four requirements:
@@ -196,9 +238,9 @@ The comparison converges on four requirements:
 3. Home should hand off to deeper filtering instead of reproducing downstream screens;
 4. mobile-first does not justify retaining a fixed mobile-width canvas on desktop.
 
-The references do not determine the exact destination order, card proportions, or
-NosLog notice publishing model. Those remain user decisions. The official-news
-presentation is approved below.
+References alone do not determine the exact destination order or card proportions.
+Those remain user-approved decisions. The focused notice comparison informed the
+approved three-item summary, detail, and archive model documented below.
 
 ## Approved Information Priority
 
@@ -292,8 +334,20 @@ placement:
 - when no active service-critical notice exists, no container or gap is reserved above
   search.
 
-The exact number and presentation of routine updates remain open. Do not stack multiple
-equally urgent banners above search.
+Routine updates use the following approved presentation:
+
+- show the newest three published announcements, newest first;
+- expose the title and localized publication date as a compact link row;
+- do not place the full body in a Home accordion or expand it in place;
+- open each item on its localized public announcement-detail page;
+- provide an “All announcements” link to the localized announcement archive;
+- omit the whole routine-announcement section when there is no published item; and
+- keep the same three-item limit on mobile and desktop rather than increasing the
+  desktop count.
+
+Do not stack routine updates as equally urgent banners above search. The archive and
+detail pages preserve access to complete and older content without allowing the Home
+section to grow indefinitely.
 
 ### Official NOSTALGIA News
 
@@ -339,6 +393,8 @@ working implementation to copy unchanged.
 - Notice severity or placement classification.
 - Optional notice start and expiry times.
 - Korean, Japanese, and English announcement title and body.
+- A stable public announcement identifier or slug for localized detail URLs.
+- Published-list queries for the localized announcement archive, ordered newest first.
 - A publication-readiness check that prevents publishing when any required
   NosLog-authored translation is missing.
 
@@ -352,7 +408,8 @@ The embedded official X post remains externally hosted source content.
 | Normal                             | Search and all approved destinations are immediately available.                                                                 | `Approved` |
 | No service notice                  | No empty notice container or reserved gap appears above search.                                                                 | `Approved` |
 | Service-critical notice            | At most the highest-impact active notice precedes search without changing destination availability unless required.             | `Approved` |
-| Multiple routine notices           | Show them once in the lower NosLog updates area; they do not become equally urgent banners above search.                        | `Approved` |
+| Multiple routine notices           | Show only the newest three title-and-date links in the lower updates area; older items remain available in the archive.         | `Approved` |
+| No routine announcement            | Omit the entire routine-announcement section without reserving an empty card, heading, or gap.                                  | `Approved` |
 | No official news                   | Core tasks remain unchanged; retain the localized official-channel link without an empty feed shell.                            | `Approved` |
 | Official-news load failure         | No broken iframe or indefinite skeleton; retain the official-channel link and keep core Home usable.                            | `Approved` |
 | Empty search submission            | Open the selected browse scope.                                                                                                 | `Proposed` |
@@ -377,6 +434,8 @@ component briefs.
 - Destination labels remain readable in Korean, Japanese, and English.
 - Editorial content does not push search and destinations below unnecessary
   introductory content.
+- Routine announcements remain a three-row title-and-date collection; full bodies open
+  on their detail pages rather than expanding the mobile Home.
 
 ### Desktop Requirements
 
@@ -386,6 +445,8 @@ component briefs.
 - Preserve the same semantic hierarchy and destination meanings.
 - The destination collection may gain columns, while updates may occupy a secondary
   region after the primary search and task entry points.
+- Wider layouts keep the same three routine announcements and may recompose their
+  container without adding older items.
 - Do not move a service-critical notice into a low-priority rail.
 - Exact container width, column count, breakpoint, and secondary-region composition
   remain foundation and representative-example decisions.
@@ -415,6 +476,9 @@ may adapt reusable collections when the same component appears in a narrower reg
   requirements. Exact component dimensions belong to the foundation.
 - Do not make urgency, active scope, or destination type distinguishable by color
   alone.
+- Expose routine announcements as a semantic list. Each row must have one clear
+  localized detail-link target, and the “All announcements” control must identify that
+  it opens the complete announcement collection.
 - External official links identify their destination and opening behavior.
 - Treat the approved third-party X timeline as supplementary content. Keep a localized
   official-channel link available without requiring the widget, and never make a core
@@ -433,6 +497,9 @@ may adapt reusable collections when the same component appears in a narrower reg
   labels to unexplained icons.
 - Require Korean, Japanese, and English content for NosLog-authored notices before
   publication.
+- Localize the routine-announcement heading, “All announcements” link, detail and
+  archive page metadata, and publication dates. Preserve the same announcement identity
+  across locale routes rather than creating unrelated language-specific records.
 - Localize the official-news heading, official-channel link, and fallback text. The
   embedded official X post remains the publisher's original Japanese source content
   and is not represented as a NosLog translation.
@@ -448,7 +515,11 @@ The later design and implementation must verify:
 - Music and Chart scope selection with keyboard and pointer input;
 - query submission and empty-query browse behavior;
 - all seven destination links and Data Sync;
-- no notice, one critical notice, and multiple routine notices;
+- no service-critical notice and one service-critical notice;
+- zero, one, exactly three, and more than three published routine announcements,
+  including correct newest-first truncation and complete archive access;
+- each Home announcement link, the “All announcements” link, and their Korean,
+  Japanese, and English detail and archive destinations;
 - official-news normal, empty, and unavailable states;
 - Header scroll hide/reveal and reduced-motion behavior;
 - visible focus order, skip link, landmarks, accessible names, and console errors.
@@ -484,14 +555,16 @@ The later design and implementation must verify:
 | HOME-12 | Desktop composition                     | Expand beyond 390px; allow task and secondary regions after search while preserving semantic order.                                                      | `Proposed` |
 | HOME-13 | Routine NosLog announcement destination | Keep once on Home below the primary destinations and Data Sync, immediately before official NOSTALGIA news.                                              | `Approved` |
 | HOME-14 | Empty official-news state               | Keep the localized official-channel link without an empty feed shell; core tasks remain unchanged.                                                       | `Approved` |
-| HOME-15 | Routine announcement quantity           | Decide how many routine NosLog updates the lower area shows and how older items remain reachable.                                                        | `Open`     |
+| HOME-15 | Routine announcement presentation       | Show the newest three title-and-date links on every viewport; open localized detail pages, provide an archive link, and omit the section when empty.     | `Approved` |
 
-## First Discussion Batch
+## Next Discussion Batch
 
 The user should decide these items before the next Home brief revision:
 
-1. Decide the routine announcement quantity and older-announcement access in
-   `HOME-15`.
+1. Confirm the proposed empty-query behavior in `HOME-11`.
+2. Compare and decide the desktop composition in `HOME-12`.
+3. Resolve detailed search loading, no-result, and failure behavior without changing
+   the already approved search hierarchy.
 
-Desktop composition, exact copy, and detailed search states should be discussed in a
-later batch after these content decisions are resolved.
+Exact localized copy remains a later content-system task after the interaction and
+state decisions are approved.

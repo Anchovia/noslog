@@ -77,9 +77,10 @@ page briefs or visual design begin. It must:
   from a consistent support area in the More panel. The current dialog-based
   submission flow is retained; focused-chart-viewer access is a later viewer-brief
   decision.
-- **Confirmed:** Official news remains lower-priority editorial content on Home after
-  the core search, navigation, and Data Sync tasks. Its exact presentation is deferred
-  to the Home page brief.
+- **Confirmed:** Routine NosLog announcements and official NOSTALGIA news remain
+  lower-priority editorial content on Home after the core search, navigation, and Data
+  Sync tasks. Home shows the newest three routine announcements as title-and-date
+  links before one latest official X post.
 - **Confirmed:** Privacy and GitHub remain footer destinations and are not duplicated
   in the More panel.
 - **Confirmed:** Settings becomes one public destination for signed-out and signed-in
@@ -155,7 +156,7 @@ global-navigation labels.
 
 | Page family                       | User question or goal                                                   | Included routes and functions                                                                                                                                                             | Confirmed or proposed relationship                               |
 | --------------------------------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| Entry and orientation             | “Where can I go, and what information is immediately useful?”           | Home, announcements, global music search, direct navigation blocks, official news, feedback entry                                                                                         | Primary entry and routing hub                                    |
+| Entry and orientation             | “Where can I go, and what information is immediately useful?”           | Home, routine-announcement summary, localized announcement archive and detail, global music search, direct navigation blocks, official news, feedback entry                               | Primary entry and routing hub                                    |
 | Music discovery and understanding | “Which music am I looking for, and what do its chart and records mean?” | Music search/list, music detail, difficulty switching, chart information, personal record, chart ranking, evaluation, published chart viewer                                              | Primary product family                                           |
 | Tier-list planning                | “Which chart should I play next for this goal?”                         | Tier lists, mode/goal selection, filters, tier bands, personal record context                                                                                                             | Independent NOSTALGIA-related planning content                   |
 | Bingo unlock and rewards          | “What bingo progress unlocks music or earns NOS?”                       | Bingo list/detail, 5×5 missions, line/cell progress, music unlock and NOS reward context                                                                                                  | Independent NOSTALGIA content; not a generic challenge branch    |
@@ -338,7 +339,8 @@ Home is an orientation and routing surface, not a miniature copy of every page.
    Rankings, Tiers, Bingo, Exams, and Arcades. Do not introduce an umbrella content
    label.
 4. **Play support:** keep Data Sync directly findable in its separate home row.
-5. **Editorial content:** official news remains available after core product tasks.
+5. **Editorial content:** show the newest three routine NosLog announcement links,
+   followed by one latest official NOSTALGIA X post, after core product tasks.
 
 ### Explicitly Excluded Home Content
 
@@ -354,11 +356,16 @@ Home is an orientation and routing surface, not a miniature copy of every page.
   route.
 - **Feedback:** do not remove it. Move its existing dialog-based entry from Home to the
   consistent support area in the More panel. Do not duplicate it in the footer.
-- **Official news:** do not remove it. Keep it as editorial content below the task-first
-  home hierarchy. Compare a full X embed, a latest-news summary, and a compact official
-  channel link in the Home page brief before choosing the presentation.
+- **Routine NosLog announcements:** show only the newest three title-and-publication-date
+  links on Home, newest first. Each link opens a localized public detail page, and an
+  “All announcements” link opens the localized archive. Do not expand full bodies on
+  Home, do not add older items on wider layouts, and omit the entire section when no
+  published item exists.
+- **Official news:** retain one latest `NOSTALGIA_573` source post through X's official
+  Embedded Timeline in a distinct area immediately after routine announcements. Keep
+  the localized official-channel link as the empty and load-failure fallback.
 
-The exact block proportions and order remain open until the home page brief is approved.
+The exact block proportions remain open until representative layout work is approved.
 
 ## Important User Flows
 
@@ -371,6 +378,7 @@ The exact block proportions and order remain open until the home page brief is a
 | Take an Exam                | Home block or More → Exams          | Select Exam → inspect requirements/stages → assess or submit → title/reward state | User understands the skill assessment, NOS use, and title/reward outcome                             | Login required, no published Exam, incomplete proof, validation or upload error                |
 | Review progress             | Profile avatar, home block, or More | Profile/ranking → summary or entry → music detail                                 | User understands current standing or record and can inspect supporting plays                         | Private field, signed-out state, no plays, ranking request error                               |
 | Establish or recover sync   | Home entry or More → Data Sync      | Understand state → install/run bookmarklet → inspect result → profile             | User knows whether records are current and what changed                                              | Token regeneration, processing, stale, partial, failed, or no-history state                    |
+| Read a NosLog announcement  | Home update or announcement archive | Open summary/archive → select announcement → read localized detail                | User can read the complete current or historical NosLog notice in the selected locale                | No published items, missing translation, removed or unavailable announcement                   |
 | Inspect chart playback      | Music detail → Chart viewer         | Enter focused viewer → configure/play → optionally enter fullscreen → exit/return | User can understand chart timing and hand/path behavior without losing music context                 | Unpublished chart, fullscreen unavailable, local audio absent, narrow viewport, playback error |
 
 ## Cross-Link Requirements
@@ -388,6 +396,9 @@ The exact block proportions and order remain open until the home page brief is a
   in; authentication changes the available settings, not the destination identity.
 - Feedback and error reporting must be reachable through the More panel on ordinary
   pages. Its focused-chart-viewer entry remains a viewer-brief decision.
+- Each Home routine-announcement row must open its localized public detail page. The
+  Home “All announcements” link must open the localized chronological archive, and
+  archive entries must link to the same detail destinations.
 - Privacy must be reachable from the footer without authentication and from
   account-destructive decisions. GitHub remains a footer-only external project link.
 - No retained page may become an orphan that depends on a remembered URL.
@@ -484,37 +495,43 @@ from its content rather than copied from GOV.UK, USWDS, or Carbon.
 - **Confirmed:** Music and Chart search share the Music discovery route family. The
   active scope must be restorable through history and shareable URL state; the exact
   path-versus-query representation remains an implementation decision.
+- **Confirmed:** Routine announcement archive and detail pages are public,
+  locale-prefixed destinations in the Entry and orientation family. Exact slugs remain
+  an implementation decision and require localized canonical and shared-link handling.
 - Any route change must include redirect, canonical, shared-link, localization, and
   analytics consequences before approval.
 
 ## Decision Register
 
-| ID    | Decision                        | Resolved direction or remaining question                                                                                                               | Status     |
-| ----- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- |
-| IA-01 | Ordinary responsive navigation  | Top header: NosLog left; profile/account and More right; no bottom navigation                                                                          | `Approved` |
-| IA-02 | Chart-viewer shell              | Focused shell with reliable return path and fullscreen falling viewer                                                                                  | `Approved` |
-| IA-03 | Rankings navigation             | Access through its independent home block and More block, not a direct labeled header link                                                             | `Approved` |
-| IA-04 | Home signed-in personalization  | Do not add a stale-sync, recent-play, or unfinished-content card                                                                                       | `Rejected` |
-| IA-05 | Data Sync placement             | Keep the separate home row and a stable More entry                                                                                                     | `Approved` |
-| IA-06 | Feedback placement              | More-panel support utility on ordinary pages; retain the dialog flow, omit from Home and footer, decide focused-viewer access in its page brief        | `Approved` |
-| IA-07 | Official-news placement         | Home editorial content after core product tasks; exact presentation deferred to the Home page brief                                                    | `Approved` |
-| IA-08 | Tier/Bingo/Exam relationship    | Keep all three as independent page families and navigation blocks; no umbrella label                                                                   | `Approved` |
-| IA-09 | General desktop navigation      | Preserve the same top-header semantics; adapt More panel and content grid to available width                                                           | `Approved` |
-| IA-10 | Signed-out account control      | Show a visible Login text button in the account position                                                                                               | `Approved` |
-| IA-11 | More-panel contents and order   | Keep eight product blocks distinct, followed by Settings and Feedback utilities; exact visual order and responsive composition move to the shell brief | `Approved` |
-| IA-12 | Header scroll behavior          | Hide on downward scroll and reveal on upward scroll                                                                                                    | `Approved` |
-| IA-13 | Music/Chart search architecture | One shared search surface with a compact leading scope selector; Chart entry preselects Chart scope                                                    | `Approved` |
-| IA-14 | Persistent control density      | Avoid permanent button rows when a clear contextual selector or progressive disclosure preserves the task                                              | `Approved` |
-| IA-15 | Public Settings destination     | One `/[locale]/settings` entry for all users; guest experience preferences remain usable and account controls appear only after login                  | `Approved` |
-| IA-16 | Preference ownership            | Theme stays device-local; existing account language/title settings win after login, new accounts inherit explicit guest choices                        | `Approved` |
-| IA-17 | Footer destinations             | Keep Privacy and GitHub in the footer and do not duplicate them in More                                                                                | `Approved` |
+| ID    | Decision                        | Resolved direction or remaining question                                                                                                                 | Status     |
+| ----- | ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| IA-01 | Ordinary responsive navigation  | Top header: NosLog left; profile/account and More right; no bottom navigation                                                                            | `Approved` |
+| IA-02 | Chart-viewer shell              | Focused shell with reliable return path and fullscreen falling viewer                                                                                    | `Approved` |
+| IA-03 | Rankings navigation             | Access through its independent home block and More block, not a direct labeled header link                                                               | `Approved` |
+| IA-04 | Home signed-in personalization  | Do not add a stale-sync, recent-play, or unfinished-content card                                                                                         | `Rejected` |
+| IA-05 | Data Sync placement             | Keep the separate home row and a stable More entry                                                                                                       | `Approved` |
+| IA-06 | Feedback placement              | More-panel support utility on ordinary pages; retain the dialog flow, omit from Home and footer, decide focused-viewer access in its page brief          | `Approved` |
+| IA-07 | Official-news placement         | Show one latest `NOSTALGIA_573` source post through X's official widget after routine NosLog announcements; retain a localized official-channel fallback | `Approved` |
+| IA-08 | Tier/Bingo/Exam relationship    | Keep all three as independent page families and navigation blocks; no umbrella label                                                                     | `Approved` |
+| IA-09 | General desktop navigation      | Preserve the same top-header semantics; adapt More panel and content grid to available width                                                             | `Approved` |
+| IA-10 | Signed-out account control      | Show a visible Login text button in the account position                                                                                                 | `Approved` |
+| IA-11 | More-panel contents and order   | Keep eight product blocks distinct, followed by Settings and Feedback utilities; exact visual order and responsive composition move to the shell brief   | `Approved` |
+| IA-12 | Header scroll behavior          | Hide on downward scroll and reveal on upward scroll                                                                                                      | `Approved` |
+| IA-13 | Music/Chart search architecture | One shared search surface with a compact leading scope selector; Chart entry preselects Chart scope                                                      | `Approved` |
+| IA-14 | Persistent control density      | Avoid permanent button rows when a clear contextual selector or progressive disclosure preserves the task                                                | `Approved` |
+| IA-15 | Public Settings destination     | One `/[locale]/settings` entry for all users; guest experience preferences remain usable and account controls appear only after login                    | `Approved` |
+| IA-16 | Preference ownership            | Theme stays device-local; existing account language/title settings win after login, new accounts inherit explicit guest choices                          | `Approved` |
+| IA-17 | Footer destinations             | Keep Privacy and GitHub in the footer and do not duplicate them in More                                                                                  | `Approved` |
+| IA-18 | Routine announcement structure  | Home shows the newest three title-and-date links on every viewport; localized detail and archive retain complete history; omit the section when empty    | `Approved` |
 
 ## Phase Approval
 
 The user approved this information-architecture phase as a whole on 2026-07-30 after
 reviewing the synchronized English and Korean artifacts and the resolved decision
 register. Visual composition, exact responsive ordering, and page-specific states
-remain page-brief decisions; this approval does not silently resolve them.
+remain page-brief decisions; this approval does not silently resolve them. The
+user-approved Home brief later refined the editorial destinations recorded in `IA-07`
+and `IA-18` without changing the approved page-family hierarchy.
 
 ## Acceptance Criteria for This Artifact
 
@@ -531,8 +548,10 @@ remain page-brief decisions; this approval does not silently resolve them.
 
 ## Next Actions
 
-1. Create and agree on the Home page brief.
-2. Continue with page briefs in priority order: music discovery, music detail, tiers,
+1. Finish the remaining open Home page-brief decisions.
+2. Create a focused brief for the public announcement archive and detail templates
+   before downstream design or implementation of those routes.
+3. Continue with page briefs in priority order: music discovery, music detail, tiers,
    then the remaining page families.
-3. Preserve this approved information architecture unless a later explicitly approved
+4. Preserve this approved information architecture unless a later explicitly approved
    decision supersedes a recorded item.
