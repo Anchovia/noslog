@@ -126,6 +126,30 @@ The design guide must be completed before broad screen-by-screen implementation.
 Do not reduce its scope to an arbitrary page or frame limit. It may become a long
 document if that detail is necessary to make decisions explicit and reusable.
 
+### Session Scope and Downstream Design
+
+The objective of this Codex design session is to produce the complete, authoritative
+NosLog 2.0 design guide. It is not to create the final production website design,
+the complete high-fidelity Figma screen set, or the redesigned application itself.
+
+- The approved guide becomes the governing product and design direction for all
+  NosLog 2.0 implementation.
+- Claude Design is the downstream designer that will use the completed guide as its
+  authoritative input and create the final website design.
+- Codex may use Figma or another visual tool only when the guide itself needs visual
+  evidence or a normative example. Appropriate artifacts include color and typography
+  specimens, spacing and grid diagrams, component anatomy, interaction and state
+  examples, mandatory layout schematics, and representative examples needed to explain
+  or validate a rule.
+- Export or embed those guide visuals as PNG, PDF, or another suitable format when
+  needed so the written guide and its distributed artifacts remain understandable.
+- Guide examples may be visually detailed when precision is necessary, but do not
+  expand them into a complete final page suite or silently treat them as the final
+  production design.
+- The guide should be sufficiently explicit that the downstream designer does not need
+  to invent product behavior, content hierarchy, accessibility requirements,
+  responsive rules, states, or implementation-critical constraints.
+
 ### Design Working Principles
 
 - Begin with product and reference research, not typography or component drawing.
@@ -235,21 +259,25 @@ approval before the next phase begins:
 5. Agree on NosLog design principles and the intended product hierarchy.
 6. Create a lean `v0.1` foundation covering typography, color, spacing, grid, layout,
    borders, radius, elevation, iconography, motion, and data visualization.
-7. Test the foundation on several representative 390px mobile screens with real,
-   long, empty, error, and Korean/Japanese/English content.
+7. Test the foundation on several representative 390px guide examples or screen
+   fragments with real, long, empty, error, and Korean/Japanese/English content.
 8. Refine the foundations from those screens, then promote validated elements into
    documented components, patterns, and templates.
 9. Define desktop adaptations using the extra space for comparison, analysis,
-   visualization, editor, and administrative tasks.
-10. Design the remaining page families and required states without silently removing
-    verified product functionality.
-11. Produce screen specifications, implementation mappings, accessibility checks,
-    localization checks, and browser acceptance criteria.
+   visualization, editor, and administrative tasks, adding guide examples only where
+   necessary to make the rules unambiguous.
+10. Define the content, layout, interaction, and state requirements for the remaining
+    page families without silently removing verified product functionality or
+    producing the final high-fidelity page suite.
+11. Produce screen requirements, implementation mappings, accessibility checks,
+    localization checks, browser acceptance criteria, and the downstream design
+    handoff.
 12. Assemble and export a versioned design guide PDF only after the editable sources
     and decisions for that milestone are stable.
 
-Representative pilot screens should cover different product demands, including music
+Representative guide examples should cover different product demands, including music
 discovery/listing, music detail, a dense record or ranking view, and the chart viewer.
+They validate and communicate the guide; they are not the final production screen set.
 
 ### Design Guide Artifacts and Source of Truth
 
@@ -259,8 +287,11 @@ of truth.
 - Keep research, product audits, page inventories, page briefs, reference analysis,
   decision records, accessibility rules, localization rules, screen specifications,
   and QA checklists as version-controlled documentation under `docs/design/`.
-- Keep visual foundations, variables, component variants, patterns, templates, mobile
-  screens, desktop screens, and annotated specifications in Figma.
+- Keep visual foundations, variables, component variants, patterns, templates,
+  required mobile and desktop examples, and annotated specifications in Figma when
+  those artifacts are necessary to communicate the guide.
+- Leave the complete final high-fidelity page design and production screen suite to
+  Claude Design after the guide is complete.
 - Later implementation should map approved Figma variables and components to code
   tokens and reusable application components.
 - Export a PDF snapshot at agreed milestones. The PDF should identify its version and
@@ -304,12 +335,12 @@ Recommended Figma pages:
 2. Research
 3. Product and information architecture
 4. Foundations
-5. Components
-6. Patterns
-7. Templates
-8. Mobile screens
-9. Desktop screens
-10. Screen specifications and archive
+5. Component specimens and anatomy
+6. Patterns, interactions, and states
+7. Templates and mandatory layout diagrams
+8. Required mobile guide examples
+9. Required desktop guide examples
+10. Specifications, exports, and archive
 
 ### Reference Roles
 
