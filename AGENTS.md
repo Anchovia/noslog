@@ -69,6 +69,9 @@ This is the most important working rule for this project:
 
 ## Working Process
 
+- Before responding to any project task, reopen and read the root `AGENTS.md`
+  completely. Do not rely only on memory, prior-turn context, or a session summary for
+  project instructions.
 - Before planning or editing project work, read the root `README.md` completely and
   use its current product, setup, validation, deployment, privacy, and versioning
   guidance as the repository baseline.
@@ -126,6 +129,15 @@ document if that detail is necessary to make decisions explicit and reusable.
 ### Design Working Principles
 
 - Begin with product and reference research, not typography or component drawing.
+- Before offering any product or design opinion, direction, alternative, or
+  recommendation, first research and compare the relevant authoritative guidance,
+  production references, current NosLog evidence, and domain behavior. Present the
+  sources, transferable principles, NosLog fit, limitations, and tradeoffs before the
+  recommendation. If the evidence is not yet sufficient, state that clearly and
+  continue research instead of recommending from personal preference.
+- Do not introduce speculative features, content modules, grouping labels, or
+  navigation patterns merely because they are common elsewhere. First establish that
+  they solve an approved NosLog user need and do not distort NOSTALGIA domain meaning.
 - Base decisions on cited references, observed user context, current UI evidence,
   product requirements, and accessibility guidance. Do not present personal taste
   or unverified assumptions as design rationale.
@@ -139,6 +151,11 @@ document if that detail is necessary to make decisions explicit and reusable.
   using those results instead of over-investing in an unvalidated library.
 - Treat typography, color, spacing, grid, and component proportions as one system;
   do not finalize them independently without representative content.
+- Avoid accumulating persistent buttons, tabs, and filter controls merely to expose
+  every available action at once. Preserve visual hierarchy through contextual
+  controls, compact selectors, menus, and progressive disclosure when the action is
+  secondary or mode-dependent; do not hide genuinely primary or high-frequency
+  actions without evidence.
 - Document rejected alternatives and the reason for the final choice when the
   decision materially affects the product.
 
