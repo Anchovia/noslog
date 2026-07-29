@@ -132,10 +132,30 @@ The objective of this Codex design session is to produce the complete, authorita
 NosLog 2.0 design guide. It is not to create the final production website design,
 the complete high-fidelity Figma screen set, or the redesigned application itself.
 
+Use the following three-stage delivery pipeline:
+
+1. This Codex design session completes and packages the authoritative NosLog 2.0
+   design guide.
+2. Claude Design reads the approved guide and creates the final high-fidelity website
+   and Figma design in accordance with it.
+3. A separate future Codex implementation session reads both the approved guide and
+   the final Claude Design output, then implements and verifies NosLog 2.0 in the
+   application.
+
 - The approved guide becomes the governing product and design direction for all
   NosLog 2.0 implementation.
 - Claude Design is the downstream designer that will use the completed guide as its
   authoritative input and create the final website design.
+- In the later implementation session, treat the approved guide as the authority for
+  product behavior, hierarchy, accessibility, localization, responsive rules, states,
+  and implementation constraints. Treat the final Claude Design output as the visual
+  and layout source within those approved rules.
+- If the downstream design conflicts with the guide, omits a required state, or
+  requires a material decision that the guide did not resolve, do not silently choose
+  or implement an interpretation. Report the conflict to the user and obtain approval
+  for the necessary guide or design revision first.
+- Do not begin the downstream high-fidelity design or application implementation in
+  this design-guide session unless the user explicitly changes the session scope.
 - Codex may use Figma or another visual tool only when the guide itself needs visual
   evidence or a normative example. Appropriate artifacts include color and typography
   specimens, spacing and grid diagrams, component anatomy, interaction and state
