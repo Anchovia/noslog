@@ -179,14 +179,15 @@ Use the following three-stage delivery pipeline:
   sources, transferable principles, NosLog fit, limitations, and tradeoffs before the
   recommendation. If the evidence is not yet sufficient, state that clearly and
   continue research instead of recommending from personal preference.
-- Do not generalize from only one or two references. For a material product or design
-  decision, build a broad and diverse comparison set—normally at least six independent
-  relevant sources when that many credible sources are available—covering authoritative
-  guidance, production services, domain comparables, and current NosLog evidence.
-  Continue until additional sources no longer materially change the identified
-  patterns, alternatives, risks, or exceptions. Cite the sources, distinguish
-  convergence from disagreement, and explain applicability and limitations; do not
-  inflate the count with weak or duplicate examples.
+- Do not generalize from a small reference set. For a material product or design
+  decision, build a broad and diverse comparison set of at least twelve independent,
+  relevant sources, with fifteen or more recommended when that many credible sources
+  are available. Cover authoritative guidance, production services, domain
+  comparables, and current NosLog evidence. Continue until additional sources no
+  longer materially change the identified patterns, alternatives, risks, or
+  exceptions. Cite the sources, distinguish convergence from disagreement, and
+  explain applicability and limitations; never inflate the count with weak, duplicate,
+  or irrelevant examples merely to meet the numeric threshold.
 - Do not introduce speculative features, content modules, grouping labels, or
   navigation patterns merely because they are common elsewhere. First establish that
   they solve an approved NosLog user need and do not distort NOSTALGIA domain meaning.
