@@ -200,6 +200,76 @@ Template이 아닙니다.
 | [X Help: Embed a Timeline](https://help.x.com/en/using-x/embed-x-feed)                                    | Embed Profile Timeline은 Source 계정의 공개 게시물을 다른 웹사이트에 표시합니다.                              | 공식 NOSTALGIA 원문 Source를 홈에 유지하면서 외부 Link Fallback을 제공합니다.                                        | Embed는 개인정보, 성능 및 가용성 비용이 있는 Third-party Runtime입니다.             |
 | [X Help: X for Websites and Privacy](https://help.x.com/en/x-for-websites-ads-info-and-privacy)           | Embed된 X 콘텐츠를 보면 페이지, IP 주소, 브라우저, 운영체제 및 Cookie 정보가 X에 전달될 수 있습니다.          | 승인된 Embed를 선택적인 Third-party 콘텐츠로 취급하고 NosLog 개인정보 정책과 일관되게 공개하거나 관리합니다.         | X의 데이터 처리를 설명하며 NosLog의 최종 동의·개인정보 구현을 정하지는 않습니다.    |
 
+### HOME-12 집중 레퍼런스 비교
+
+데스크톱 구성 결정에는 권위 있는 반응형 가이드, 프로덕션 탐색 제품, 리듬게임·음악
+도메인 서비스 및 편집 Art Direction 레퍼런스에 해당하는 외부 출처 27개를
+비교했습니다. 같은 레이아웃 원칙이 반복되고 NosLog에 적용할 실질적으로 다른
+대안이 더 나오지 않을 때까지 비교를 계속했습니다.
+
+| 출처                                                                                                                                                                      | 관찰한 Pattern 또는 역할                                                                                                                                | NosLog 적용                                                                                                                            | 한계                                                                                                   |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| [W3C: CSS C32](https://www.w3.org/WAI/WCAG21/Techniques/css/C32)                                                                                                          | 반응형 영역은 2차원 스크롤 없이 Reflow되고 시각적 재배치가 의미 있는 Source·Focus 순서를 깨뜨리면 안 됩니다.                                            | 모든 너비에서 하나의 의미적 홈 순서를 유지하고 업데이트를 주 과업 앞으로 옮기지 않은 채 CSS로 영역을 재구성합니다.                     | 접근성 동작을 규정하며 선호하는 시각 Grid를 정하지는 않습니다.                                         |
+| [GOV.UK: Layout](https://design-system.service.gov.uk/styles/layout/)                                                                                                     | Mobile-first 단일 열은 제어된 2/3 또는 2/3+1/3 레이아웃이 될 수 있고 콘텐츠 너비는 필요에 맞아야 합니다.                                                | 390px 데스크톱 제약은 제거하되 모든 홈 요소를 Viewport 전체로 늘리지 않고 제한된 콘텐츠 영역을 사용합니다.                             | 정부의 Long-form 레이아웃은 NosLog 홈보다 차분하고 Text 중심입니다.                                    |
+| [USWDS: Layout Grid](https://designsystem.digital.gov/utilities/layout-grid/)                                                                                             | 중앙 정렬되고 유연한 Mobile-first 12열 Grid가 반응형 Column Span을 지원합니다.                                                                          | 주요 홈 구역은 공용 데스크톱 Grid에 정렬하고 내부 Collection은 목적에 맞는 Span을 선택하게 합니다.                                     | Utility System은 NosLog 계층이나 Breakpoint를 결정하지 않습니다.                                       |
+| [Material 3: Canonical Layouts](https://m3.material.io/foundations/layout/canonical-examples/overview)                                                                    | Feed Grid는 동등한 Collection에 적합하고 Supporting Pane은 보조 콘텐츠가 주 과업을 직접 지원할 때 적합합니다.                                           | 동등한 목적지에는 Grid를 사용하지만 검색과 관련 없는 공지를 영구 Supporting Rail에 배치하지 않습니다.                                  | 표준 Application 레이아웃은 구조 참고이며 NosLog Surface Styling이 아닙니다.                           |
+| [Atlassian: Applying Grid](https://atlassian.design/foundations/grid-beta/applying-grid/)                                                                                 | Fixed Grid와 Fluid Grid는 서로 다른 콘텐츠에 적합하며 넓은 Fixed Grid가 제약 없는 Fluid 확장보다 관계를 안정적으로 제어합니다.                          | 제한된 반응형 Container와 일관된 Keyline을 사용하고 휴대전화 Canvas나 무제한 데스크톱 너비를 유지하지 않습니다.                        | Atlassian의 기본 최대 너비를 검증 없이 NosLog Token으로 사용하면 안 됩니다.                            |
+| [Carbon: 2x Grid](https://carbondesignsystem.com/elements/2x-grid/overview/)                                                                                              | 반응형 열은 Breakpoint에 걸쳐 반복 가능한 화면 영역과 공용 Keyline을 만듭니다.                                                                          | 검색, 목적지, 데이터 연동, 업데이트 및 푸터를 하나의 레이아웃 System에 연결하면서 컴포넌트 내부 레이아웃은 다르게 유지합니다.          | Carbon의 16열 구현과 Spacing 값을 직접 채택하지 않습니다.                                              |
+| [Singapore Government Design System: Responsive Grid](https://www.designsystem.tech.gov.sg/foundations/layout/responsive-grid)                                            | 4·8·12열 레이아웃은 너비에 따라 재구성되고 Sidebar는 기본 데스크톱 요구가 아닌 Context Pattern입니다.                                                   | 데스크톱을 의도적인 Grid 확장으로 취급하며 승인된 콘텐츠가 필요로 하지 않으므로 홈에 영구 Sidebar를 두지 않습니다.                     | 지정된 Container 수치는 최종 NosLog 치수가 아닙니다.                                                   |
+| [Adobe Spectrum: Spacing](https://spectrum.adobe.com/page/spacing/), [Headers](https://spectrum.adobe.com/page/headers/), [Cards](https://spectrum.adobe.com/page/cards/) | 페이지 Shell은 Fixed 또는 Fluid Grid에 정렬되고 컴포넌트 우선순위는 반응형으로 바뀌며 카드 Group은 모든 내부 Edge를 강제하지 않고 주 Grid에 정렬됩니다. | 목적지 Collection과 편집 영역은 홈 Grid에 정렬하되 검색과 개별 블록 내부는 읽기 좋은 너비로 유지합니다.                                | 전체 생태계 System을 설명하며 NosLog의 어두운 Visual Language가 아닙니다.                              |
+| [Tailwind CSS: Responsive Design](https://tailwindcss.com/docs/responsive-design)                                                                                         | Mobile-first Variant는 넓은 레이아웃 변경을 추가하며 컴포넌트 조정은 Device 이름이 아닌 사용 가능한 공간을 따라야 합니다.                               | 모바일 기준을 유지하고 콘텐츠 관계가 요구하는 데스크톱 재구성만 추가하며 정확한 Breakpoint 값은 Foundation 검증으로 넘깁니다.          | Framework 문법은 구현 가이드이며 제품 근거가 아닙니다.                                                 |
+| [Figma: UI Design Principles](https://www.figma.com/resource-library/ui-design-principles/)                                                                               | 계층, 근접성, 정렬, 일관성 및 점진적 공개는 사용자가 주 정보와 보조 정보를 구분하도록 돕습니다.                                                         | 검색을 가장 강하게 유지하고 동등한 일곱 목적지를 Grouping하며 모든 유지 항목에 같은 비중을 주지 않고 업데이트를 핵심 과업 뒤에 둡니다. | 원칙만으로 NosLog 고유 순서나 비율을 정할 수 없습니다.                                                 |
+| [NSW Design System: Grid](https://designsystem.nsw.gov.au/core/grid/index.html)                                                                                           | 반응형 12열 System은 좁은 화면부터 넓은 화면까지 읽을 수 있고 접근 가능한 레이아웃을 지원합니다.                                                        | 공용 넓은 레이아웃 구조를 사용하면서 세 Locale과 지원하는 좁은 너비를 모두 검증합니다.                                                 | 공공 서비스 예시는 리듬게임 탐색 홈을 모델링하지 않습니다.                                             |
+| [NICE Design System: Layout](https://design-system.nice.org.uk/foundations/layout/)                                                                                       | Mobile-first Fluid Grid는 좁은 페이지 전체를 균일하게 확대하지 않고 콘텐츠가 의도적인 Span을 차지하게 합니다.                                           | Collection과 업데이트 영역만 선택적으로 확장하고 검색과 Copy는 제한된 읽기 너비를 유지합니다.                                          | 건강 정보 Context는 NosLog보다 문서 중심입니다.                                                        |
+| [Dell Design System: Grid](https://www.delldesignsystem.com/foundations/grid)                                                                                             | 반응형 Grid는 Viewport 범위에 따라 Margin, 본문 너비 및 사용 가능한 열을 조정합니다.                                                                    | 홈 구성에 390px 가정을 고정하지 않고 Container와 Gutter 동작을 Foundation 결정으로 정의합니다.                                         | Dell의 Breakpoint와 Margin 값은 NosLog 기본값이 아닙니다.                                              |
+| [Denmark Common Design System: Grid](https://designsystem.dk/styleguide/grid/)                                                                                            | 12열 Grid는 반응형 레이아웃에 가로 정렬과 세로 Rhythm을 만듭니다.                                                                                       | 주요 홈 구역에 공용 Keyline을 사용하고 검색부터 푸터까지 안정적인 세로 순서를 유지합니다.                                              | 정확한 데스크톱 너비와 정부 Visual Convention은 가져오지 않습니다.                                     |
+| [Spotify Search](https://open.spotify.com/search)                                                                                                                         | 넓은 탐색 Surface는 동등한 Browse Category를 영구 Application 내비게이션 옆의 다열 Grid로 확장합니다.                                                   | Browse Grid는 데스크톱 너비를 동등한 목적지에 사용하는 근거지만 영구 Library Rail은 승인된 NosLog 헤더 Shell에 적합하지 않습니다.      | Spotify는 훨씬 큰 영구 내비게이션 모델을 가진 재생 Application입니다.                                  |
+| [Apple Music Search](https://music.apple.com/us/search)                                                                                                                   | 검색은 간결한 너비를 유지하고 Browse Category는 넓은 콘텐츠 Pane을 다열 Collection으로 사용합니다.                                                      | 홈 검색은 읽기 좋은 제한 너비로 유지하면서 목적지 Collection은 데스크톱 Container를 더 넓게 사용합니다.                                | 구독, 미디어 재생 및 Sidebar 모델은 NosLog에 대응하지 않습니다.                                        |
+| [BeatSaver](https://www.beatsaver.com/)                                                                                                                                   | 채보 탐색은 넓은 검색·Filter 행 뒤에 밀도 높은 2열 결과 Collection을 사용합니다.                                                                        | 채보 콘텐츠가 데스크톱 너비에서 이점을 얻는다는 점을 확인하지만 전체 Filter와 결과는 홈 대신 공용 탐색 페이지에 유지합니다.            | Catalog 결과 Surface이며 홈 정보 계층 모델이 아닙니다.                                                 |
+| [osu! Titanic: Beatmapsets](https://osu.titanic.sh/beatmapsets/)                                                                                                          | 밀도 높은 채보 탐색은 데스크톱 공간을 Filter와 표 형식 비교에 사용합니다.                                                                               | 넓고 비교 중심인 레이아웃은 하위 채보 탐색에 예약하고 홈은 밀도를 복제하지 않고 해당 화면으로 안내합니다.                              | 수천 개 결과가 있는 목록 페이지이며 방향 파악 Surface가 아닙니다.                                      |
+| [Taiko.wiki Home](https://taiko.wiki/?lang=en)                                                                                                                            | 리듬게임 홈은 데스크톱 Rail, 검색, 직접 Link 및 나란한 공지를 사용하지만 결합된 밀도가 서로 주의를 경쟁합니다.                                          | 도메인 직접 접근과 서비스·공식 업데이트 구분은 유지하면서 영구 Rail과 시각적 밀도는 반례로 사용합니다.                                 | 운영, 광고 및 정보량이 NosLog와 다릅니다.                                                              |
+| [Songsterr](https://www.songsterr.com/)                                                                                                                                   | 채보 서비스는 중앙 검색 과업을 인기 콘텐츠보다 강하게 강조합니다.                                                                                       | 더 넓은 목적지 Collection 전에 NosLog 정체성과 검색을 중앙의 강한 구역으로 유지하는 근거입니다.                                        | 악기 Tab과 인기 악곡 목록은 NosLog 범위나 목적지에 직접 대응하지 않습니다.                             |
+| [MusicBrainz](https://musicbrainz.org/)                                                                                                                                   | 음악 Database는 검색을 먼저 제공하고 설명, 소식 및 Community 콘텐츠를 페이지 뒤에 배치합니다.                                                           | 과업 진입을 편집 콘텐츠보다 앞에 유지하고 일반 업데이트를 하단 의미 구역에 배치합니다.                                                 | 백과사전·기여 Platform이며 보조 과업이 다릅니다.                                                       |
+| [BeastSaber](https://bsaber.com/?s=true)                                                                                                                                  | 풍부한 리듬게임 홈은 추천 Map, Pack, Article, Event 및 Ranking을 여러 경쟁 Module로 결합합니다.                                                         | 밀도 반례로 사용합니다. NosLog 홈은 방향 파악 Surface로 유지하고 개인화·편집 Dashboard로 만들지 않습니다.                              | Curation과 Community 발행 모델이 승인된 NosLog 홈 범위보다 넓습니다.                                   |
+| [ArcadeStat](https://arcadestat.app/en/)                                                                                                                                  | 팬 제작 오락실 기록 서비스는 하나의 제품 Shell에서 여러 기록, 서열 및 음악 기능을 노출합니다.                                                           | NosLog 도메인 목적지는 직접 접근할 가치가 있지만 명확한 주 과업과 절제된 Grouping이 필요하다는 점을 확인합니다.                        | 공개적으로 관찰할 수 있는 페이지 구조가 다른 프로덕션 레퍼런스보다 상세한 시각 근거를 적게 제공합니다. |
+| [Steam Search](https://store.steampowered.com/search/)                                                                                                                    | 넓은 주 결과 목록은 해당 결과를 직접 Filter하는 컨트롤을 보조 Rail에 배치합니다.                                                                        | 데스크톱 보조 영역은 인접한 주 과업을 직접 지원해야 한다는 근거이며 NosLog 소식은 검색을 지원하지 않으므로 공지 Rail을 거절합니다.     | Commerce Filter와 결과 밀도는 홈 모델이 아닙니다.                                                      |
+| [Plus X](https://dx.plusx.kr/)                                                                                                                                            | 넓은 편집 구성은 강한 Typography 계층, 공용 Edge 및 의도적인 2열 Rhythm을 사용합니다.                                                                   | 승인된 과업 계층을 바꾸지 않으면서 이후 하단 업데이트 영역의 Typography와 편집 비율을 참고합니다.                                      | Art Direction 레퍼런스이며 제품 내비게이션 근거가 아닙니다.                                            |
+| [TURN.STUDIO](https://www.behance.net/gallery/252216015/Creative-Agency-Website-TURNSTUDIO)                                                                               | 큰 규모 구성과 제어된 여백은 넓은 레이아웃이 단순 확대가 아니라 의도적으로 느껴지게 합니다.                                                             | 구조 Grid를 검증한 뒤 데스크톱 공간의 시각 처리에 참고합니다.                                                                          | Creative Agency Showcase는 NosLog 상호작용이나 접근성 동작을 결정하지 않습니다.                        |
+| [MUSINSA Brand](https://www.musinsa.com/brand/musinsa)                                                                                                                    | 편집 콘텐츠는 넓은 화면에서 명확한 Type 계층, 이미지·Text Grouping 및 반복 정렬을 사용합니다.                                                           | NosLog 콘텐츠 순서를 유지하면서 이후 공지와 공식 소식의 편집 계층을 참고합니다.                                                        | Commerce·Brand Surface이며 기능 중심 리듬게임 홈 레퍼런스가 아닙니다.                                  |
+
+### 데스크톱 구성 대안
+
+| 대안                                | 장점                                                                                | 위험 또는 비용                                                                                              | 결정   |
+| ----------------------------------- | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | ------ |
+| 더 넓어진 단일 열                   | 가장 단순한 모바일→데스크톱 전환을 유지합니다.                                      | 데스크톱 너비를 계속 충분히 사용하지 못하고 페이지가 길어지며 동등한 목적지 비교가 약해집니다.              | `거절` |
+| 영구 주 Pane과 업데이트 Rail        | 화면을 더 풍부하게 보이게 하고 업데이트를 계속 노출합니다.                          | 관련 없는 소식을 주 검색 옆에서 과도하게 강조하고 거짓된 과업 관계와 반응형 읽기 순서 이탈 위험을 만듭니다. | `거절` |
+| Dashboard 또는 서로 다른 Bento 구성 | 즉각적인 시각 변화와 여러 강조 단계를 만들 수 있습니다.                             | 승인된 일관된 목적지 Family와 충돌하고 자의적 계층을 만들며 반응형 화면을 복잡하게 합니다.                  | `거절` |
+| 의미 구역과 구역 내부 반응형 Grid   | 모바일 순서를 보존하면서 동등한 목적지와 하단 편집 콘텐츠가 넓은 공간을 사용합니다. | 이후 대표 콘텐츠로 Container, Gutter, 열 및 전환 값을 검증해야 합니다.                                      | `승인` |
+
+승인된 데스크톱 구성은 다음과 같습니다.
+
+1. 모든 Viewport 너비에서 하나의 의미적 순서를 유지합니다.
+2. 활성 서비스 중요 공지 최대 하나를 정체성·검색 앞에 배치하고 낮은 우선순위
+   Side Rail에는 두지 않습니다.
+3. 간결한 NosLog 정체성과 범위 인식 검색을 데스크톱 홈에서 가장 강한 중앙
+   구역으로 유지하고, 전체 Container로 늘리지 않고 읽기 좋은 최대 너비를
+   사용합니다.
+4. 검색 뒤의 동등한 일곱 목적지 블록은 승인된 읽기 순서를 보존하면서 더 넓은
+   반응형 Collection에 정렬합니다.
+5. 데이터 연동은 목적지 Collection 뒤의 시각적으로 구분된 별도 행으로
+   유지합니다.
+6. 일반 NosLog 공지와 NOSTALGIA 공식 소식은 하단 편집 구역에만 배치합니다.
+7. 충분히 넓은 레이아웃에서는 두 편집 Section을 나란히 배치하고 NosLog 공지
+   Collection에 더 큰 비중을, 공식 소식에는 더 작은 동등 구역을 제공합니다.
+8. 더 좁은 레이아웃에서는 두 편집 Section을 같은 Source 순서, 즉 NosLog
+   공지 다음 NOSTALGIA 공식 소식 순서로 쌓습니다.
+9. 푸터는 편집 구역 뒤의 반응형 페이지 Container에 맞춰 정렬합니다.
+
+이 승인은 관계, 계층 및 재구성 규칙을 확정합니다. 최종 최대 너비, Breakpoint,
+열 개수, Gutter, 카드 치수 또는 두 데스크톱 편집 영역의 정확한 비율은
+확정하지 않습니다. 해당 값은 실제 한국어·일본어·영어 콘텐츠가 필요한
+Foundation 및 대표 예시 결정으로 남깁니다.
+
 ### HOME-15 집중 레퍼런스 비교
 
 일반 공지 결정에는 권위 있는 가이드, 과업 중심 프로덕션 서비스, 리듬게임 사이트
@@ -478,16 +548,23 @@ Timeline 구조에서 다시 시작해 연동 문제를 수정하고 지원 브�
 ### 데스크톱 요구사항
 
 - 현재 전역 `390px` 홈 Canvas 제약을 제거합니다.
-- 모바일 열을 단순히 확대하지 않고 사용할 수 있는 너비로 탐색, Grouping 및
-  비교를 개선합니다.
-- 같은 의미적 계층과 목적지 의미를 보존합니다.
-- 목적지 모음은 더 많은 열을 사용할 수 있고 업데이트는 주 검색·과업
-  진입점 뒤의 보조 영역에 놓을 수 있습니다.
+- 제한된 반응형 페이지 Container와 구역 내부 Grid를 사용해 모바일 열을
+  단순히 확대하지 않고 탐색, Grouping 및 비교를 개선합니다.
+- 같은 의미적 계층, Source 순서, Focus 순서 및 목적지 의미를 보존합니다.
+- 정체성·검색 구역은 가장 강한 홈 영역으로 중앙 정렬하고 제한된 너비로
+  유지하며 검색 컨트롤을 데스크톱 Container 전체로 늘리지 않습니다.
+- 검색 뒤에서 목적지 Collection은 더 많은 열을 사용할 수 있지만 하나의
+  일관된 블록 Family와 승인된 읽기 순서를 유지합니다.
+- 데이터 연동은 목적지 Collection 뒤의 별도 행으로 유지합니다.
+- 일반 공지와 NOSTALGIA 공식 소식은 검색 옆 영구 Sidebar가 아닌 하단 편집
+  구역에 유지합니다.
+- 충분히 넓은 레이아웃에서는 두 편집 Section을 나란히 배치하고 일반 NosLog
+  공지에 더 큰 비중을 제공합니다. 공간이 부족하면 Source 순서대로 쌓습니다.
 - 넓은 레이아웃도 일반 공지를 세 건으로 유지하며 과거 항목을 추가하지 않고
   Container만 재구성할 수 있습니다.
 - 서비스 중요 공지를 낮은 우선순위 Rail로 이동하면 안 됩니다.
-- 정확한 Container 너비, 열 개수, Breakpoint 및 보조 영역 구성은 Foundation
-  및 대표 예시 결정으로 남깁니다.
+- 정확한 Container 너비, 열 개수, Breakpoint, Gutter 및 편집 영역 분할
+  비율은 Foundation 및 대표 예시 결정으로 남깁니다.
 
 ### Container 동작
 
@@ -576,32 +653,31 @@ Viewport Breakpoint는 주요 셸 변경을 정의하고, 같은 컴포넌트가
 
 ## 결정 기록
 
-| ID      | 결정                    | 방향 또는 질문                                                                                                                                    | 상태   |
-| ------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
-| HOME-01 | 홈 역할                 | 모든 페이지의 축소판이나 Dashboard가 아닌 방향 파악 및 과업 이동 Surface                                                                          | `승인` |
-| HOME-02 | 주 과업                 | 공용 악곡·채보 검색을 가장 강한 홈 과업으로 사용                                                                                                  | `승인` |
-| HOME-03 | 목적지 집합             | 악곡, 채보 뷰어, 랭킹, 서열, 빙고, 검정 및 오락실을 별도로 유지                                                                                   | `승인` |
-| HOME-04 | 데이터 연동             | 별도 플레이 지원 행 유지                                                                                                                          | `승인` |
-| HOME-05 | 피드백                  | 더보기로 이동하고 홈이나 푸터에 표시하지 않음                                                                                                     | `승인` |
-| HOME-06 | 개인화 카드             | 오래된 연동, 최근 플레이 또는 미완료 콘텐츠 카드를 추가하지 않음                                                                                  | `거절` |
-| HOME-07 | 목적지 비중             | 하나의 일관된 블록 Family를 사용하고 공용 검색과 악곡 → 채보 뷰어 → 서열 → 랭킹 → 빙고 → 검정 → 오락실 순서로 우선순위를 표현                     | `승인` |
-| HOME-08 | 공지 배치 규칙          | 공지마다 역할과 위치를 하나만 지정: 활성 과업 영향 공지 최대 하나는 검색 앞, 일반 업데이트는 핵심 과업 아래 한 번만 표시                          | `승인` |
-| HOME-09 | 공식 소식 표시          | X 공식 Embedded Timeline으로 일반 NosLog 공지 뒤의 별도 Grid에 `NOSTALGIA_573` 최신 원문 게시물 하나를 한 번만 표시                               | `승인` |
-| HOME-10 | 편집 콘텐츠 다국어      | NosLog 작성 공지는 세 언어를 모두 요구하고 X Section UI는 다국어화하되 Embed 원문 언어는 보존                                                     | `승인` |
-| HOME-11 | 빈 검색 동작            | 빈 Query와 공백 Query 제출을 활성 범위 탐색 Catalog 진입으로 취급하고, 빈 `q`는 생략하며 범위는 보존하고 Catalog 기본값은 공용 탐색 기획서로 넘김 | `승인` |
-| HOME-12 | 데스크톱 구성           | 390px보다 넓게 확장하고 검색 뒤에 의미적 순서를 보존한 주 과업·보조 영역을 허용                                                                   | `제안` |
-| HOME-13 | 일반 NosLog 공지 목적지 | 주 목적지와 데이터 연동 아래, NOSTALGIA 공식 소식 바로 앞에 홈에서 한 번만 유지                                                                   | `승인` |
-| HOME-14 | 공식 소식 빈 상태       | 빈 Feed Shell 없이 다국어 공식 채널 Link를 유지하고 핵심 과업은 그대로 유지                                                                       | `승인` |
-| HOME-15 | 일반 공지 표시 방식     | 모든 Viewport에서 최신 세 건의 제목·게시일 Link를 표시하고 다국어 상세·Archive를 제공하며 빈 경우 Section을 생략                                  | `승인` |
+| ID      | 결정                    | 방향 또는 질문                                                                                                                                                                      | 상태   |
+| ------- | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| HOME-01 | 홈 역할                 | 모든 페이지의 축소판이나 Dashboard가 아닌 방향 파악 및 과업 이동 Surface                                                                                                            | `승인` |
+| HOME-02 | 주 과업                 | 공용 악곡·채보 검색을 가장 강한 홈 과업으로 사용                                                                                                                                    | `승인` |
+| HOME-03 | 목적지 집합             | 악곡, 채보 뷰어, 랭킹, 서열, 빙고, 검정 및 오락실을 별도로 유지                                                                                                                     | `승인` |
+| HOME-04 | 데이터 연동             | 별도 플레이 지원 행 유지                                                                                                                                                            | `승인` |
+| HOME-05 | 피드백                  | 더보기로 이동하고 홈이나 푸터에 표시하지 않음                                                                                                                                       | `승인` |
+| HOME-06 | 개인화 카드             | 오래된 연동, 최근 플레이 또는 미완료 콘텐츠 카드를 추가하지 않음                                                                                                                    | `거절` |
+| HOME-07 | 목적지 비중             | 하나의 일관된 블록 Family를 사용하고 공용 검색과 악곡 → 채보 뷰어 → 서열 → 랭킹 → 빙고 → 검정 → 오락실 순서로 우선순위를 표현                                                       | `승인` |
+| HOME-08 | 공지 배치 규칙          | 공지마다 역할과 위치를 하나만 지정: 활성 과업 영향 공지 최대 하나는 검색 앞, 일반 업데이트는 핵심 과업 아래 한 번만 표시                                                            | `승인` |
+| HOME-09 | 공식 소식 표시          | X 공식 Embedded Timeline으로 일반 NosLog 공지 뒤의 별도 Grid에 `NOSTALGIA_573` 최신 원문 게시물 하나를 한 번만 표시                                                                 | `승인` |
+| HOME-10 | 편집 콘텐츠 다국어      | NosLog 작성 공지는 세 언어를 모두 요구하고 X Section UI는 다국어화하되 Embed 원문 언어는 보존                                                                                       | `승인` |
+| HOME-11 | 빈 검색 동작            | 빈 Query와 공백 Query 제출을 활성 범위 탐색 Catalog 진입으로 취급하고, 빈 `q`는 생략하며 범위는 보존하고 Catalog 기본값은 공용 탐색 기획서로 넘김                                   | `승인` |
+| HOME-12 | 데스크톱 구성           | 390px보다 넓게 의미 구역과 내부 반응형 Grid 사용: 중앙의 제한된 검색, 넓은 동등 목적지, 별도 데이터 연동, 이후 공간이 충분할 때 더 큰 NosLog 업데이트와 더 작은 공식 소식 병렬 배치 | `승인` |
+| HOME-13 | 일반 NosLog 공지 목적지 | 주 목적지와 데이터 연동 아래, NOSTALGIA 공식 소식 바로 앞에 홈에서 한 번만 유지                                                                                                     | `승인` |
+| HOME-14 | 공식 소식 빈 상태       | 빈 Feed Shell 없이 다국어 공식 채널 Link를 유지하고 핵심 과업은 그대로 유지                                                                                                         | `승인` |
+| HOME-15 | 일반 공지 표시 방식     | 모든 Viewport에서 최신 세 건의 제목·게시일 Link를 표시하고 다국어 상세·Archive를 제공하며 빈 경우 Section을 생략                                                                    | `승인` |
 
 ## 다음 논의 묶음
 
 다음 홈 기획서 개정 전에 사용자가 아래 내용을 결정해야 합니다.
 
-1. `HOME-12`의 데스크톱 구성을 비교하고 결정합니다.
-2. 이미 승인된 검색 계층을 바꾸지 않으면서 상세 검색 Loading, 결과 없음 및
+1. 이미 승인된 검색 계층을 바꾸지 않으면서 상세 검색 Loading, 결과 없음 및
    실패 동작을 해결합니다.
-3. 현재 구현의 Filter·정렬 상태를 그대로 상속하지 말고 공용 탐색 기획서에서
+2. 현재 구현의 Filter·정렬 상태를 그대로 상속하지 말고 공용 탐색 기획서에서
    악곡 및 공개 채보 탐색 기본값을 정의합니다.
 
 정확한 다국어 Copy는 상호작용과 상태 결정이 승인된 이후의 콘텐츠 시스템
