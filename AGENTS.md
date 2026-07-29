@@ -134,6 +134,32 @@ document if that detail is necessary to make decisions explicit and reusable.
 - Document rejected alternatives and the reason for the final choice when the
   decision materially affects the product.
 
+### Design Decision Authority and Approval Gates
+
+The user is the final decision-maker for NosLog 2.0 product and design direction.
+Do not autonomously add or finalize product requirements, information hierarchy,
+content, interaction behavior, visual rules, or responsive behavior.
+
+- Repository and UI observations, route and feature inventories, test results, and
+  cited reference findings may be researched and recorded without prior approval.
+  Clearly distinguish observed facts from proposals and unresolved assumptions.
+- Design drafts and alternatives may be prepared to support discussion, but keep them
+  marked as draft or proposed until the user explicitly approves them.
+- Review every material decision with the user. This includes information architecture,
+  page contents and functions, content removal or progressive disclosure, navigation,
+  visual direction, foundation tokens, component behavior, responsive adaptation,
+  localization behavior, accessibility tradeoffs, and domain-specific visualization.
+- Present related decisions in small, clearly enumerated groups with evidence,
+  alternatives, tradeoffs, and a recommendation. Do not infer approval for one item
+  from approval of another item in the same phase.
+- Continue asking questions until the user confirms that the relevant requirements
+  and expected behavior are clear. Do not move a disputed or unresolved decision into
+  a downstream design artifact or implementation.
+- Maintain a decision log using statuses such as `Observed`, `Proposed`, `Approved`,
+  `Rejected`, and `Superseded`, including the rationale and relevant references.
+- Obtain explicit user agreement at the end of each major phase before beginning the
+  next phase. Approval to research or draft is not approval to finalize or implement.
+
 ### Device Strategy
 
 - Mobile is the primary context because NosLog is commonly used around arcade play.
@@ -159,6 +185,79 @@ Before designing a page family, create and agree on a page brief that covers:
 8. keyboard, focus, contrast, semantics, and other accessibility needs;
 9. Korean, Japanese, and English localization constraints;
 10. acceptance criteria and browser verification targets.
+
+### Design Guide Workflow
+
+Follow this sequence. Each phase should produce reviewable evidence and receive user
+approval before the next phase begins:
+
+1. Audit the current product: routes, page states, features, data, permissions,
+   responsive behavior, existing components, and known usability problems.
+2. Group pages into page families and document the information architecture,
+   navigation model, and important user flows.
+3. Create and agree on page briefs that define the required content, elements,
+   functions, priorities, actions, states, and success criteria.
+4. Research references by role and create a reference matrix recording the transferable
+   principle, NosLog applicability, limitations, and source.
+5. Agree on NosLog design principles and the intended product hierarchy.
+6. Create a lean `v0.1` foundation covering typography, color, spacing, grid, layout,
+   borders, radius, elevation, iconography, motion, and data visualization.
+7. Test the foundation on several representative 390px mobile screens with real,
+   long, empty, error, and Korean/Japanese/English content.
+8. Refine the foundations from those screens, then promote validated elements into
+   documented components, patterns, and templates.
+9. Define desktop adaptations using the extra space for comparison, analysis,
+   visualization, editor, and administrative tasks.
+10. Design the remaining page families and required states without silently removing
+    verified product functionality.
+11. Produce screen specifications, implementation mappings, accessibility checks,
+    localization checks, and browser acceptance criteria.
+12. Assemble and export a versioned design guide PDF only after the editable sources
+    and decisions for that milestone are stable.
+
+Representative pilot screens should cover different product demands, including music
+discovery/listing, music detail, a dense record or ranking view, and the chart viewer.
+
+### Design Guide Artifacts and Source of Truth
+
+The PDF is a versioned reading and distribution artifact, not the only editable source
+of truth.
+
+- Keep research, product audits, page inventories, page briefs, reference analysis,
+  decision records, accessibility rules, localization rules, screen specifications,
+  and QA checklists as version-controlled documentation under `docs/design/`.
+- Keep visual foundations, variables, component variants, patterns, templates, mobile
+  screens, desktop screens, and annotated specifications in Figma.
+- Later implementation should map approved Figma variables and components to code
+  tokens and reusable application components.
+- Export a PDF snapshot at agreed milestones. The PDF should identify its version and
+  date so it is not mistaken for newer Figma, documentation, or code.
+- Do not create every possible document or component as an empty placeholder. Add
+  artifacts as their corresponding research or design phase begins.
+
+Recommended version-controlled document groups:
+
+- product context and current-product audit;
+- page and feature inventory;
+- information architecture and user flows;
+- reference research and decision log;
+- page briefs grouped by page family;
+- foundations, components, patterns, and templates guidance;
+- accessibility and Korean/Japanese/English localization guidance;
+- screen specifications, implementation mapping, and QA checklists.
+
+Recommended Figma pages:
+
+1. Cover and index
+2. Research
+3. Product and information architecture
+4. Foundations
+5. Components
+6. Patterns
+7. Templates
+8. Mobile screens
+9. Desktop screens
+10. Screen specifications and archive
 
 ### Reference Roles
 
