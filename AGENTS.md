@@ -235,6 +235,25 @@ of truth.
 - Do not create every possible document or component as an empty placeholder. Add
   artifacts as their corresponding research or design phase begins.
 
+#### Bilingual Design Documentation
+
+- Write the canonical design documentation in English so it remains precise and
+  machine-readable.
+- For every canonical English document, maintain a complete Korean companion for the
+  user. Use the same base name with a `.ko.md` suffix, for example
+  `01-current-product-audit.md` and `01-current-product-audit.ko.md`.
+- The Korean companion must contain the same substantive information as the English
+  source. Do not replace it with a summary or omit tables, statuses, evidence,
+  unresolved questions, decisions, or acceptance criteria.
+- Link the two versions to each other and identify which file is canonical.
+- Update both language versions in the same task whenever content changes. If a
+  temporary synchronization gap is unavoidable, mark it clearly and do not treat the
+  affected phase as approved until both documents match.
+- Preserve code identifiers, routes, token names, decision statuses, and other
+  technical terms when translating them would make implementation mapping ambiguous.
+- Decide the language and packaging of exported milestone PDFs with the user before
+  export; do not assume that the English and Korean PDFs must use the same layout.
+
 Recommended version-controlled document groups:
 
 - product context and current-product audit;
