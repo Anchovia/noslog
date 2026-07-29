@@ -137,15 +137,18 @@ characters for a title and 2,000 characters for a body.
 
 ### Browser Evidence: 2026-07-30
 
-| Check                      | Observed result                                                                                                                   |
-| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| 390 × 844 Korean Home      | `985px` document height; no document-level horizontal overflow; one-column content.                                               |
-| 390px Japanese and English | No document-level horizontal overflow in either locale; UI labels translate, but the stored announcement remains Korean.          |
-| 1440 × 1000 Home           | Header and Main remain a centered `390px` column at `x = 525px`; available desktop width is unused.                               |
-| Current content order      | Announcement → identity and Music search → six quick links → Data Sync → Feedback → official news.                                |
-| Official X before scroll   | A localized fallback link is present and no X iframe or script has loaded.                                                        |
-| Official X after scroll    | Scripts and three X/Twitter iframes load, but the Timeline iframe remains hidden at `0 × 0` and only the fallback link is usable. |
-| Empty announcements        | The entire announcement section is omitted.                                                                                       |
+| Check                      | Observed result                                                                                                                                  |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 390 × 844 Korean Home      | `985px` document height; no document-level horizontal overflow; one-column content.                                                              |
+| 390px Japanese and English | No document-level horizontal overflow in either locale; UI labels translate, but the stored announcement remains Korean.                         |
+| 1440 × 1000 Home           | Header and Main remain a centered `390px` column at `x = 525px`; available desktop width is unused.                                              |
+| Current content order      | Announcement → identity and Music search → six quick links → Data Sync → Feedback → official news.                                               |
+| Official X before scroll   | A localized fallback link is present and no X iframe or script has loaded.                                                                       |
+| Official X after scroll    | Scripts and three X/Twitter iframes load, but the Timeline iframe remains hidden at `0 × 0` and only the fallback link is usable.                |
+| Empty announcements        | The entire announcement section is omitted.                                                                                                      |
+| Empty Music query          | Both `/ko/music` and `/ko/music?q=` open the filterable default catalog; the first loaded batch contains 20 Music links and no validation error. |
+| Whitespace Music query     | `/ko/music?q=%20%20%20` is normalized to the same default catalog and leaves the visible search field empty.                                     |
+| Specific Music query       | `/ko/music?q=Altale` preserves the visible query and narrows the first result set to the matching Music entry.                                   |
 
 These observations identify functionality and risk. They do not approve the current
 390px desktop constraint, equal card proportions, content order, or styling.
@@ -228,6 +231,25 @@ archive route. The approved direction preserves the useful three-item operationa
 limit while replacing unbounded in-place expansion with stable detail and archive
 access.
 
+### HOME-11 Focused Reference Comparison
+
+The empty-query decision additionally compared eighteen independent sources across
+authoritative interaction guidance, search-platform behavior, production catalogs,
+music and rhythm-game discovery, and a query-only counterexample.
+
+| Reference class                        | Sources                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | Transferable principle and NosLog application                                                                                                                                                                                                                                           | Limitation                                                                                                                                                             |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Interaction and accessibility guidance | [Apple Search Fields](https://developer.apple.com/design/human-interface-guidelines/search-fields), [USWDS Search](https://designsystem.digital.gov/components/search/), [MDN `input type="search"`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/search), [GOV.UK Error Message](https://design-system.service.gov.uk/components/error-message/), and [Nielsen Norman Group accessibility guidance](https://media.nngroup.com/media/reports/free/Usability_Guidelines_for_Accesible_Web_Design.pdf)                                                                                 | Search and browsing can coexist, while an empty value becomes invalid only when the product deliberately requires it. Do not show a validation error for an intentional browse action, and do not describe a queryless catalog as results for a nonexistent query.                      | These sources define semantics and failure risks, not NosLog's catalog contents or default ordering.                                                                   |
+| Search-platform behavior               | [Algolia empty search](https://support.algolia.com/hc/en-us/articles/13029120172945-What-is-an-empty-search), [Meilisearch empty-query curation](https://www.meilisearch.com/docs/capabilities/search_rules/how_to/curate_empty_query), and [Elasticsearch filtered search](https://www.elastic.co/search-labs/tutorials/search-tutorial/full-text-search/filters)                                                                                                                                                                                                                                                 | A queryless state can return an initial or filtered catalog, but its default content should be intentionally curated instead of inheriting an arbitrary engine order. NosLog may open the selected browse scope without fixing its eventual sort and filter defaults in the Home brief. | Search-engine capability is implementation evidence rather than complete UX validation.                                                                                |
+| Production browse and discovery        | [Spotify Search](https://open.spotify.com/search), [Steam Search](https://store.steampowered.com/search/), [osu! Titanic beatmap listing](https://osu.titanic.sh/beatmapsets/), [Nintendo Games](https://www.nintendo.com/us/store/games/), [PlayStation Store Browse](https://store.playstation.com/en-us/pages/browse), [Epic Games Store Browse](https://store.epicgames.com/en-US/browse), [BeatSaver](https://www.beatsaver.com/), [Discogs database search](https://support.discogs.com/hc/en-us/articles/360003622014-How-To-Browse-Search-In-The-Database), and [Bandcamp Tags](https://bandcamp.com/tags) | Music, game, and chart catalogs preserve a useful browse state before a text query and pair it with filters, categories, or curated ordering. This closely matches NosLog's shared Music/Chart discovery surface and its direct Music and Chart Viewer entries.                         | Several services expose a separate Browse route instead of interpreting an empty form submission; their surface styling and merchandising logic are not NosLog models. |
+| Query-only counterexample              | [GitHub Search](https://github.com/search?q=&type=repositories)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | A pure global text-query tool may keep an empty search as instructions rather than a result set. This supports blocking an empty query only when there is no meaningful catalog state.                                                                                                  | GitHub searches heterogeneous code and repositories; it is less analogous to NosLog's bounded Music and published-chart catalogs.                                      |
+
+The comparison converged after the catalog and counterexample patterns stopped adding
+new behavior. NosLog fits the browse-and-search model because Music and Chart Viewer
+already require direct queryless entry points into the same discovery surface. The
+Nielsen Norman Group warning still applies: the queryless destination must be labeled
+as a browse catalog, not as results generated by a blank query.
+
 ### Reference Synthesis
 
 The comparison converges on four requirements:
@@ -240,7 +262,8 @@ The comparison converges on four requirements:
 
 References alone do not determine the exact destination order or card proportions.
 Those remain user-approved decisions. The focused notice comparison informed the
-approved three-item summary, detail, and archive model documented below.
+approved three-item summary, detail, and archive model. The focused empty-query
+comparison informed the approved browse-state rules documented below.
 
 ## Approved Information Priority
 
@@ -278,12 +301,26 @@ hierarchy.
   level, difficulty, record, or availability filters.
 - Keyboard operation, visible focus, and a programmatic label are required. Placeholder
   text alone is not the label.
+- Submitting an empty or whitespace-only query explicitly opens the default browse
+  state for the active scope: Music catalog for Music and published-chart catalog for
+  Chart.
+- Treat the destination as browsing, not as results matched by an empty query. Use a
+  localized scope-aware catalog heading or state rather than an empty-results or
+  validation message.
+- Do not generate an empty `q` parameter for this transition. Preserve the selected
+  scope in restorable and shareable URL state; omit `q` when no normalized query
+  exists.
+- Only an explicit submission or direct destination activation navigates to the
+  catalog. Focusing an empty field does not navigate automatically.
+- Do not fix the default Music difficulty, filter, sort, Chart grouping, or Chart
+  ordering in this Home brief. Define those defaults in the shared Music/Chart
+  discovery brief with representative data.
 
 ### Proposed Behavior
 
-- Submitting an empty query opens the selected scope as a browseable catalog rather
-  than showing a Home validation error.
 - Search failure or unavailable data must not remove the direct destination collection.
+- Query-clearing behavior within the shared discovery surface remains a discovery-page
+  decision rather than a Home interaction rule.
 
 ## Destination Requirements
 
@@ -403,21 +440,21 @@ The embedded official X post remains externally hosted source content.
 
 ## Required States
 
-| State                              | Required outcome                                                                                                                | Status     |
-| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| Normal                             | Search and all approved destinations are immediately available.                                                                 | `Approved` |
-| No service notice                  | No empty notice container or reserved gap appears above search.                                                                 | `Approved` |
-| Service-critical notice            | At most the highest-impact active notice precedes search without changing destination availability unless required.             | `Approved` |
-| Multiple routine notices           | Show only the newest three title-and-date links in the lower updates area; older items remain available in the archive.         | `Approved` |
-| No routine announcement            | Omit the entire routine-announcement section without reserving an empty card, heading, or gap.                                  | `Approved` |
-| No official news                   | Core tasks remain unchanged; retain the localized official-channel link without an empty feed shell.                            | `Approved` |
-| Official-news load failure         | No broken iframe or indefinite skeleton; retain the official-channel link and keep core Home usable.                            | `Approved` |
-| Empty search submission            | Open the selected browse scope.                                                                                                 | `Proposed` |
-| Search service failure             | Communicate failure on the shared search surface; direct Home destinations remain usable.                                       | `Proposed` |
-| Signed out                         | Public search and destinations remain available; Header shows Login.                                                            | `Approved` |
-| Signed in                          | Header shows the profile control; Home does not add personalized cards.                                                         | `Approved` |
-| Unsupported or missing translation | Do not publish a NosLog-authored notice until all three translations exist. The external X post remains in its source language. | `Approved` |
-| Reduced motion                     | Header and other Home motion obey reduced-motion preferences; information never depends on animation.                           | `Approved` |
+| State                                 | Required outcome                                                                                                                | Status     |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| Normal                                | Search and all approved destinations are immediately available.                                                                 | `Approved` |
+| No service notice                     | No empty notice container or reserved gap appears above search.                                                                 | `Approved` |
+| Service-critical notice               | At most the highest-impact active notice precedes search without changing destination availability unless required.             | `Approved` |
+| Multiple routine notices              | Show only the newest three title-and-date links in the lower updates area; older items remain available in the archive.         | `Approved` |
+| No routine announcement               | Omit the entire routine-announcement section without reserving an empty card, heading, or gap.                                  | `Approved` |
+| No official news                      | Core tasks remain unchanged; retain the localized official-channel link without an empty feed shell.                            | `Approved` |
+| Official-news load failure            | No broken iframe or indefinite skeleton; retain the official-channel link and keep core Home usable.                            | `Approved` |
+| Empty or whitespace search submission | Open the active scope's default browse catalog without a validation error or empty-query results label.                         | `Approved` |
+| Search service failure                | Communicate failure on the shared search surface; direct Home destinations remain usable.                                       | `Proposed` |
+| Signed out                            | Public search and destinations remain available; Header shows Login.                                                            | `Approved` |
+| Signed in                             | Header shows the profile control; Home does not add personalized cards.                                                         | `Approved` |
+| Unsupported or missing translation    | Do not publish a NosLog-authored notice until all three translations exist. The external X post remains in its source language. | `Approved` |
+| Reduced motion                        | Header and other Home motion obey reduced-motion preferences; information never depends on animation.                           | `Approved` |
 
 Home has no destructive action. Authentication prompts, permission errors, feedback
 submission, and downstream empty results are specified by their respective page or
@@ -539,32 +576,33 @@ The later design and implementation must verify:
 
 ## Decision Register
 
-| ID      | Decision                                | Direction or question                                                                                                                                    | Status     |
-| ------- | --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| HOME-01 | Home role                               | Orientation and task-routing surface, not a dashboard or miniature copy of every page.                                                                   | `Approved` |
-| HOME-02 | Primary task                            | Shared Music/Chart search is the strongest Home task.                                                                                                    | `Approved` |
-| HOME-03 | Destination set                         | Music, Chart Viewer, Rankings, Tiers, Bingo, Exams, and Arcades remain separate.                                                                         | `Approved` |
-| HOME-04 | Data Sync                               | Retain a separate play-support row.                                                                                                                      | `Approved` |
-| HOME-05 | Feedback                                | Move to More; do not show on Home or duplicate in Footer.                                                                                                | `Approved` |
-| HOME-06 | Personalization card                    | Do not add stale-sync, recent-play, or incomplete-content cards.                                                                                         | `Rejected` |
-| HOME-07 | Destination prominence                  | Use one consistent block family; express priority through shared search and the order Music → Chart Viewer → Tiers → Rankings → Bingo → Exams → Arcades. | `Approved` |
-| HOME-08 | Notice placement rule                   | Give each notice one role and one placement: at most one active task-affecting notice before search; routine updates once below core tasks.              | `Approved` |
-| HOME-09 | Official-news presentation              | Use X's official Embedded Timeline to show the latest `NOSTALGIA_573` source post once in a distinct grid after routine NosLog announcements.            | `Approved` |
-| HOME-10 | Editorial localization                  | Require all three languages for NosLog-authored notices; localize the X section UI while preserving the embedded source post's original language.        | `Approved` |
-| HOME-11 | Empty search behavior                   | Open the selected scope as a browseable catalog.                                                                                                         | `Proposed` |
-| HOME-12 | Desktop composition                     | Expand beyond 390px; allow task and secondary regions after search while preserving semantic order.                                                      | `Proposed` |
-| HOME-13 | Routine NosLog announcement destination | Keep once on Home below the primary destinations and Data Sync, immediately before official NOSTALGIA news.                                              | `Approved` |
-| HOME-14 | Empty official-news state               | Keep the localized official-channel link without an empty feed shell; core tasks remain unchanged.                                                       | `Approved` |
-| HOME-15 | Routine announcement presentation       | Show the newest three title-and-date links on every viewport; open localized detail pages, provide an archive link, and omit the section when empty.     | `Approved` |
+| ID      | Decision                                | Direction or question                                                                                                                                                                        | Status     |
+| ------- | --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| HOME-01 | Home role                               | Orientation and task-routing surface, not a dashboard or miniature copy of every page.                                                                                                       | `Approved` |
+| HOME-02 | Primary task                            | Shared Music/Chart search is the strongest Home task.                                                                                                                                        | `Approved` |
+| HOME-03 | Destination set                         | Music, Chart Viewer, Rankings, Tiers, Bingo, Exams, and Arcades remain separate.                                                                                                             | `Approved` |
+| HOME-04 | Data Sync                               | Retain a separate play-support row.                                                                                                                                                          | `Approved` |
+| HOME-05 | Feedback                                | Move to More; do not show on Home or duplicate in Footer.                                                                                                                                    | `Approved` |
+| HOME-06 | Personalization card                    | Do not add stale-sync, recent-play, or incomplete-content cards.                                                                                                                             | `Rejected` |
+| HOME-07 | Destination prominence                  | Use one consistent block family; express priority through shared search and the order Music → Chart Viewer → Tiers → Rankings → Bingo → Exams → Arcades.                                     | `Approved` |
+| HOME-08 | Notice placement rule                   | Give each notice one role and one placement: at most one active task-affecting notice before search; routine updates once below core tasks.                                                  | `Approved` |
+| HOME-09 | Official-news presentation              | Use X's official Embedded Timeline to show the latest `NOSTALGIA_573` source post once in a distinct grid after routine NosLog announcements.                                                | `Approved` |
+| HOME-10 | Editorial localization                  | Require all three languages for NosLog-authored notices; localize the X section UI while preserving the embedded source post's original language.                                            | `Approved` |
+| HOME-11 | Empty search behavior                   | Treat empty and whitespace-only submission as explicit entry to the active scope's browse catalog; omit empty `q`, preserve scope, and defer catalog defaults to the shared discovery brief. | `Approved` |
+| HOME-12 | Desktop composition                     | Expand beyond 390px; allow task and secondary regions after search while preserving semantic order.                                                                                          | `Proposed` |
+| HOME-13 | Routine NosLog announcement destination | Keep once on Home below the primary destinations and Data Sync, immediately before official NOSTALGIA news.                                                                                  | `Approved` |
+| HOME-14 | Empty official-news state               | Keep the localized official-channel link without an empty feed shell; core tasks remain unchanged.                                                                                           | `Approved` |
+| HOME-15 | Routine announcement presentation       | Show the newest three title-and-date links on every viewport; open localized detail pages, provide an archive link, and omit the section when empty.                                         | `Approved` |
 
 ## Next Discussion Batch
 
 The user should decide these items before the next Home brief revision:
 
-1. Confirm the proposed empty-query behavior in `HOME-11`.
-2. Compare and decide the desktop composition in `HOME-12`.
-3. Resolve detailed search loading, no-result, and failure behavior without changing
+1. Compare and decide the desktop composition in `HOME-12`.
+2. Resolve detailed search loading, no-result, and failure behavior without changing
    the already approved search hierarchy.
+3. Define the Music and published-chart browse defaults in the shared discovery brief
+   rather than inheriting the current implementation's filter and sort state.
 
 Exact localized copy remains a later content-system task after the interaction and
 state decisions are approved.
