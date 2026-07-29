@@ -72,6 +72,18 @@ page briefs or visual design begin. It must:
   capability and discoverability.
 - **Confirmed:** Home does not add a signed-in personalization card for stale sync,
   recent plays, or unfinished content.
+- **Confirmed:** Feedback and error reporting move out of Home and remain available
+  from a consistent support area in the More panel. The current dialog-based
+  submission flow is retained; focused-chart-viewer access is a later viewer-brief
+  decision.
+- **Confirmed:** Official news remains lower-priority editorial content on Home after
+  the core search, navigation, and Data Sync tasks. Its exact presentation is deferred
+  to the Home page brief.
+- **Confirmed:** Privacy and GitHub remain footer destinations and are not duplicated
+  in the More panel.
+- **Confirmed:** Settings becomes one public destination for signed-out and signed-in
+  users. Signed-out users can configure device-level experience preferences, while
+  authenticated users see additional profile and account settings.
 - **Observed:** The chart viewer needs a different width and control model from normal
   content pages.
 - **Confirmed:** The chart viewer uses a focused shell, and the falling/curved-path
@@ -79,20 +91,27 @@ page briefs or visual design begin. It must:
 
 ## Reference Basis
 
-| Source                                                                                                                | Transferable principle                                                                                                                     | NosLog application                                                                                                                                            | Limitation                                                                                         |
-| --------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| [W3C WCAG 2.2: Multiple Ways](https://www.w3.org/WAI/WCAG22/Understanding/multiple-ways)                              | Users should have more than one way to locate content within a set of pages.                                                               | Important music, tier, ranking, bingo, exam, and profile destinations should be reachable through the home grid, the More panel, search, or contextual links. | It does not prescribe a specific navigation component.                                             |
-| [W3C WCAG 2.2: Consistent Navigation](https://www.w3.org/WAI/WCAG22/Understanding/consistent-navigation.html)         | Repeated navigation should remain in the same relative order.                                                                              | Mobile and desktop may use different layouts, but destination meaning and relative order should remain predictable.                                           | Different focused contexts may use a deliberately reduced shell when documented and tested.        |
-| [W3C WCAG 2.2: Consistent Identification](https://www.w3.org/WAI/WCAG22/Understanding/consistent-identification.html) | Repeated functions should use consistent labels and identification.                                                                        | Search, sync, profile, chart-viewer, and navigation labels must remain semantically consistent across ko, ja, and en.                                         | Translation length may require different visual space without changing meaning.                    |
-| [W3C WCAG 2.2: Bypass Blocks](https://www.w3.org/WAI/WCAG22/Understanding/bypass-blocks)                              | Repeated navigation must be bypassable for sequential navigation.                                                                          | Preserve a skip link and semantic landmarks even if the navigation becomes richer.                                                                            | This is an accessibility requirement, not a visual layout recommendation.                          |
-| [GOV.UK: Navigate a service](https://design-system.service.gov.uk/patterns/navigate-a-service/)                       | Navigation should link to the most useful top-level sections and should not become a site map.                                             | The global NosLog navigation should expose a compact set of frequent destinations; all retained features do not need equal global prominence.                 | GOV.UK is a public-service context, so its visual pattern is not a NosLog art-direction reference. |
-| [GOV.UK: Service navigation](https://design-system.service.gov.uk/components/service-navigation/)                     | A service identity and navigation menu can remain in one top system, with multi-item navigation collapsing behind a menu at narrow widths. | Keep the NosLog identity and More control in a stable top header while allowing the navigation-block panel to adapt to available width.                       | The component's branding and exact visual treatment are not applicable to NosLog.                  |
-| [USWDS: Header](https://designsystem.digital.gov/components/header/)                                                  | A header identifies the site and provides organized access to major sections; simple and expanded variants respond to available width.     | Use a restrained header shell and let the More panel carry navigation blocks instead of forcing labels into the narrow header.                                | USWDS is an implementation reference, not a visual style source.                                   |
-| [Carbon: Global header](https://carbondesignsystem.com/patterns/global-header/)                                       | A simple product can use a header-only shell, while the exact shell configuration should match information depth.                          | NosLog can preserve one semantic top-header model across mobile and desktop and adapt the opened panel rather than adding a mobile-only bottom model.         | Carbon targets enterprise products and should inform structure only.                               |
-| [Figma: UI design principles](https://www.figma.com/resource-library/ui-design-principles/)                           | Hierarchy and progressive disclosure should align visible priority with user need.                                                         | Home modules and secondary utilities should be ordered by task importance instead of rendered at equal weight.                                                | The article provides principles rather than NosLog-specific evidence.                              |
-| [Apple: Search fields](https://developer.apple.com/design/human-interface-guidelines/search-fields)                   | Clearly defined search categories may use a scope control, and the field or result area should communicate what can be searched.           | One music-search surface can switch between Music and Chart scope while changing the field cue and result behavior.                                           | Apple platform components are not copied as NosLog visual styling.                                 |
-| [Baymard: Search scope](https://baymard.com/blog/search-scope)                                                        | A manual scope selector should be self-evident, secondary to the search field, and placed close to it.                                     | Place a compact leading selector inside the field instead of adding a permanent row of search-mode buttons.                                                   | The research is e-commerce-oriented; only the scope-clarity principle transfers.                   |
-| [W3C APG: Accessible names](https://www.w3.org/WAI/ARIA/apg/practices/names-and-descriptions/)                        | Interactive controls require accessible names, and visible text is preferred when it can clarify purpose.                                  | The compact icon selector needs an accessible name, expanded state, and text labels in its opened menu; the field cue and results reinforce the active scope. | An accessible name alone does not prove that an unfamiliar icon is visually understood.            |
+| Source                                                                                                                | Transferable principle                                                                                                                     | NosLog application                                                                                                                                             | Limitation                                                                                         |
+| --------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| [W3C WCAG 2.2: Multiple Ways](https://www.w3.org/WAI/WCAG22/Understanding/multiple-ways)                              | Users should have more than one way to locate content within a set of pages.                                                               | Important music, tier, ranking, bingo, exam, and profile destinations should be reachable through the home grid, the More panel, search, or contextual links.  | It does not prescribe a specific navigation component.                                             |
+| [W3C WCAG 2.2: Consistent Navigation](https://www.w3.org/WAI/WCAG22/Understanding/consistent-navigation.html)         | Repeated navigation should remain in the same relative order.                                                                              | Mobile and desktop may use different layouts, but destination meaning and relative order should remain predictable.                                            | Different focused contexts may use a deliberately reduced shell when documented and tested.        |
+| [W3C WCAG 2.2: Consistent Identification](https://www.w3.org/WAI/WCAG22/Understanding/consistent-identification.html) | Repeated functions should use consistent labels and identification.                                                                        | Search, sync, profile, chart-viewer, and navigation labels must remain semantically consistent across ko, ja, and en.                                          | Translation length may require different visual space without changing meaning.                    |
+| [W3C WCAG 2.2: Bypass Blocks](https://www.w3.org/WAI/WCAG22/Understanding/bypass-blocks)                              | Repeated navigation must be bypassable for sequential navigation.                                                                          | Preserve a skip link and semantic landmarks even if the navigation becomes richer.                                                                             | This is an accessibility requirement, not a visual layout recommendation.                          |
+| [GOV.UK: Navigate a service](https://design-system.service.gov.uk/patterns/navigate-a-service/)                       | Navigation should link to the most useful top-level sections and should not become a site map.                                             | The global NosLog navigation should expose a compact set of frequent destinations; all retained features do not need equal global prominence.                  | GOV.UK is a public-service context, so its visual pattern is not a NosLog art-direction reference. |
+| [GOV.UK: Service navigation](https://design-system.service.gov.uk/components/service-navigation/)                     | A service identity and navigation menu can remain in one top system, with multi-item navigation collapsing behind a menu at narrow widths. | Keep the NosLog identity and More control in a stable top header while allowing the navigation-block panel to adapt to available width.                        | The component's branding and exact visual treatment are not applicable to NosLog.                  |
+| [USWDS: Header](https://designsystem.digital.gov/components/header/)                                                  | A header identifies the site and provides organized access to major sections; simple and expanded variants respond to available width.     | Use a restrained header shell and let the More panel carry navigation blocks instead of forcing labels into the narrow header.                                 | USWDS is an implementation reference, not a visual style source.                                   |
+| [Carbon: Global header](https://carbondesignsystem.com/patterns/global-header/)                                       | A simple product can use a header-only shell, while the exact shell configuration should match information depth.                          | NosLog can preserve one semantic top-header model across mobile and desktop and adapt the opened panel rather than adding a mobile-only bottom model.          | Carbon targets enterprise products and should inform structure only.                               |
+| [Carbon: Disclosures](https://carbondesignsystem.com/patterns/disclosures-pattern/)                                   | Profile and More menus should expose concise global navigation and settings without becoming overcrowded.                                  | Keep Settings and Feedback as compact utility entries after the product destinations; do not duplicate footer links or full setting controls inside the panel. | Carbon's enterprise examples do not determine NosLog's visual styling or exact labels.             |
+| [Figma: UI design principles](https://www.figma.com/resource-library/ui-design-principles/)                           | Hierarchy and progressive disclosure should align visible priority with user need.                                                         | Home modules and secondary utilities should be ordered by task importance instead of rendered at equal weight.                                                 | The article provides principles rather than NosLog-specific evidence.                              |
+| [W3C: Guiding users to translated pages](https://www.w3.org/International/questions/qa-site-conneg)                   | Automatic language negotiation should be supplemented by a manual control, and an explicit choice should be remembered.                    | Keep language selection available to signed-out users through public Settings and preserve the explicit browser-level choice.                                  | It addresses language selection, not the full settings information architecture.                   |
+| [Google Search settings](https://www.google.com/preferences)                                                          | A public settings surface can expose language, theme, and browser-scoped experience preferences before sign-in.                            | NosLog's language, theme, and localized-title display are valid signed-out settings rather than account-gated controls.                                        | Google Search has a broader preference set and different personalization model.                    |
+| [YouTube: Change language or location settings](https://support.google.com/youtube/answer/87604)                      | A service can store an explicit signed-out language choice in the browser and apply it across the site.                                    | Use browser persistence for signed-out display preferences while reserving account-specific controls for authentication.                                       | YouTube exposes some preferences directly in its profile menu rather than one public page.         |
+| [GNU: Select language](https://www.gnu.org/server/select-language.en.html)                                            | A guest choice can override browser defaults through a narrowly scoped cookie without requiring an account.                                | Treat automatic locale detection as an initial default, not as a replacement for public manual settings.                                                       | This is a single-purpose language control, not a full application settings model.                  |
+| [GOV.UK: Footer](https://design-system.service.gov.uk/components/footer/)                                             | The footer is an appropriate persistent home for secondary service and policy links.                                                       | Keep Privacy in the footer instead of duplicating it in the task-oriented More panel.                                                                          | Exact government footer content and visual treatment do not transfer.                              |
+| [USWDS: Footer](https://designsystem.digital.gov/components/footer/)                                                  | Footer content should support trust and secondary information without competing with primary navigation.                                   | Keep Privacy and the external GitHub project link in the footer and outside the core destination hierarchy.                                                    | USWDS does not prescribe whether every product should expose GitHub.                               |
+| [Apple: Search fields](https://developer.apple.com/design/human-interface-guidelines/search-fields)                   | Clearly defined search categories may use a scope control, and the field or result area should communicate what can be searched.           | One music-search surface can switch between Music and Chart scope while changing the field cue and result behavior.                                            | Apple platform components are not copied as NosLog visual styling.                                 |
+| [Baymard: Search scope](https://baymard.com/blog/search-scope)                                                        | A manual scope selector should be self-evident, secondary to the search field, and placed close to it.                                     | Place a compact leading selector inside the field instead of adding a permanent row of search-mode buttons.                                                    | The research is e-commerce-oriented; only the scope-clarity principle transfers.                   |
+| [W3C APG: Accessible names](https://www.w3.org/WAI/ARIA/apg/practices/names-and-descriptions/)                        | Interactive controls require accessible names, and visible text is preferred when it can clarify purpose.                                  | The compact icon selector needs an accessible name, expanded state, and text labels in its opened menu; the field cue and results reinforce the active scope.  | An accessible name alone does not prove that an unfamiliar icon is visually understood.            |
 
 ## Current Navigation Model
 
@@ -133,17 +152,17 @@ page briefs or visual design begin. It must:
 Page families group related user goals and screen templates. They are not automatically
 global-navigation labels.
 
-| Page family                       | User question or goal                                                   | Included routes and functions                                                                                                                             | Confirmed or proposed relationship                               |
-| --------------------------------- | ----------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| Entry and orientation             | “Where can I go, and what information is immediately useful?”           | Home, announcements, global music search, direct navigation blocks, official news, feedback entry                                                         | Primary entry and routing hub                                    |
-| Music discovery and understanding | “Which music am I looking for, and what do its chart and records mean?” | Music search/list, music detail, difficulty switching, chart information, personal record, chart ranking, evaluation, published chart viewer              | Primary product family                                           |
-| Tier-list planning                | “Which chart should I play next for this goal?”                         | Tier lists, mode/goal selection, filters, tier bands, personal record context                                                                             | Independent NOSTALGIA-related planning content                   |
-| Bingo unlock and rewards          | “What bingo progress unlocks music or earns NOS?”                       | Bingo list/detail, 5×5 missions, line/cell progress, music unlock and NOS reward context                                                                  | Independent NOSTALGIA content; not a generic challenge branch    |
-| Exam and certification            | “What is my assessed skill level and which title can I earn?”           | Exam selection, requirements, stages, allowed charts, simulation/advice, NOS use, title/reward and proof submission                                       | Independent NOSTALGIA skill-assessment content                   |
-| Records and comparison            | “How am I progressing, and how do I compare?”                           | Global rankings, public profile, grade/rating trends, best and recent plays, judgement analytics, public profile links                                    | Cross-cuts music and separate NOSTALGIA content                  |
-| Play support                      | “Where can I play, and how do I bring my records into NosLog?”          | Arcade discovery, preferred arcade, data-sync guide, token and sync state                                                                                 | Secondary but essential operational support                      |
-| Identity, preferences, and trust  | “How do I enter, configure, and trust the service?”                     | Login, onboarding, profile settings, locale, localized-title preference, privacy, account deletion, maintenance, error and not-found states               | Utility and lifecycle family                                     |
-| Focused chart experience          | “How does this chart play over time?”                                   | Chart-scoped discovery entry, falling chart view, fullscreen falling view, full-sheet view, local audio, playback controls, metronome, strict performance | Specialized child context of music with a direct discovery entry |
+| Page family                       | User question or goal                                                   | Included routes and functions                                                                                                                                                             | Confirmed or proposed relationship                               |
+| --------------------------------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| Entry and orientation             | “Where can I go, and what information is immediately useful?”           | Home, announcements, global music search, direct navigation blocks, official news, feedback entry                                                                                         | Primary entry and routing hub                                    |
+| Music discovery and understanding | “Which music am I looking for, and what do its chart and records mean?” | Music search/list, music detail, difficulty switching, chart information, personal record, chart ranking, evaluation, published chart viewer                                              | Primary product family                                           |
+| Tier-list planning                | “Which chart should I play next for this goal?”                         | Tier lists, mode/goal selection, filters, tier bands, personal record context                                                                                                             | Independent NOSTALGIA-related planning content                   |
+| Bingo unlock and rewards          | “What bingo progress unlocks music or earns NOS?”                       | Bingo list/detail, 5×5 missions, line/cell progress, music unlock and NOS reward context                                                                                                  | Independent NOSTALGIA content; not a generic challenge branch    |
+| Exam and certification            | “What is my assessed skill level and which title can I earn?”           | Exam selection, requirements, stages, allowed charts, simulation/advice, NOS use, title/reward and proof submission                                                                       | Independent NOSTALGIA skill-assessment content                   |
+| Records and comparison            | “How am I progressing, and how do I compare?”                           | Global rankings, public profile, grade/rating trends, best and recent plays, judgement analytics, public profile links                                                                    | Cross-cuts music and separate NOSTALGIA content                  |
+| Play support                      | “Where can I play, and how do I bring my records into NosLog?”          | Arcade discovery, preferred arcade, data-sync guide, token and sync state                                                                                                                 | Secondary but essential operational support                      |
+| Identity, preferences, and trust  | “How do I enter, configure, and trust the service?”                     | Login, onboarding, public settings, authenticated profile/account settings, locale, theme, localized-title preference, privacy, account deletion, maintenance, error and not-found states | Utility and lifecycle family                                     |
+| Focused chart experience          | “How does this chart play over time?”                                   | Chart-scoped discovery entry, falling chart view, fullscreen falling view, full-sheet view, local audio, playback controls, metronome, strict performance                                 | Specialized child context of music with a direct discovery entry |
 
 ### Family Rules
 
@@ -230,10 +249,44 @@ Signed-out pages use a visible Login text button in the same account position.
   distinct entry blocks. Chart Viewer routes into the shared music search with Chart
   scope selected.
 - Tier lists, Bingo, and Exams must not be combined under a shared label.
+- After the product destinations, a visually separate utility area provides Settings
+  and Feedback/Error reporting. The exact group label remains a copy decision.
+- Settings is the only settings-related More entry for both authentication states.
+  Do not add separate Language, Privacy, or GitHub entries.
 - An authorized administrator entry may remain a separate block, even though
   administrator redesign is outside the NosLog 2.0 user-interface scope.
-- Exact destination order, inclusion of utility links, column count, panel anchoring,
-  overlay behavior, and open/close motion remain page-shell design decisions.
+- Exact destination order, column count, panel anchoring, overlay behavior, and
+  open/close motion remain page-shell design decisions.
+
+### Public Settings Destination
+
+- Use one locale-prefixed Settings destination, `/[locale]/settings`, for signed-out
+  and signed-in users. Do not create a second guest-only settings route.
+- Always expose service display language, theme, and localized/reading-title
+  visibility. These preferences directly affect use of the public service.
+- A signed-out user sees only these usable experience preferences plus a compact note
+  that additional profile and account settings become available after login. Do not
+  fill the page with disabled account controls.
+- An authenticated user sees the shared experience preferences plus profile image,
+  nickname, country/region, preferred arcade, profile-visibility controls, Discord
+  connection, and account deletion.
+- One global Settings entry does not require every control to live in one long form.
+  The Settings page brief may divide the family into responsive sections or child
+  pages while preserving one predictable global entry.
+- Theme remains device-local. For language and localized-title visibility, an existing
+  account preference takes precedence after login; a newly created account is seeded
+  from the explicit guest preference. Signing out restores the saved browser-level
+  guest preference.
+- Route migration must preserve existing localized links and evaluate a compatibility
+  redirect from `/[locale]/profile/settings` before implementation.
+
+### Footer Trust and Project Links
+
+- Keep Privacy and GitHub in the ordinary-page footer.
+- Do not duplicate either link in the More panel.
+- Privacy must remain reachable while signed out and from the account-deletion context.
+- GitHub is an external project-information link and must be identified and handled as
+  external in the eventual component specification.
 
 ### Home Navigation Blocks
 
@@ -284,8 +337,7 @@ Home is an orientation and routing surface, not a miniature copy of every page.
    Rankings, Tiers, Bingo, Exams, and Arcades. Do not introduce an umbrella content
    label.
 4. **Play support:** keep Data Sync directly findable in its separate home row.
-5. **Editorial and support content:** official news and feedback remain available after
-   core product tasks.
+5. **Editorial content:** official news remains available after core product tasks.
 
 ### Explicitly Excluded Home Content
 
@@ -299,10 +351,11 @@ Home is an orientation and routing surface, not a miniature copy of every page.
 
 - **Data sync:** do not remove it. Keep the separate home row and a stable More-panel
   route.
-- **Feedback:** do not remove it. Consider a consistent support location rather than
-  giving it the same hierarchy as a primary product task.
+- **Feedback:** do not remove it. Move its existing dialog-based entry from Home to the
+  consistent support area in the More panel. Do not duplicate it in the footer.
 - **Official news:** do not remove it. Keep it as editorial content below the task-first
-  home hierarchy unless research supports a stronger role.
+  home hierarchy. Compare a full X embed, a latest-news summary, and a compact official
+  channel link in the Home page brief before choosing the presentation.
 
 The exact block proportions and order remain open until the home page brief is approved.
 
@@ -330,8 +383,12 @@ The exact block proportions and order remain open until the home page brief is a
   the home grid and More panel.
 - Profile must be reachable through the signed-in identity control and public user links.
 - Data Sync must be reachable from its separate home row and the More panel.
-- Privacy must be reachable without authentication and from account-destructive
-  decisions.
+- Settings must be reachable through one More-panel entry while signed out or signed
+  in; authentication changes the available settings, not the destination identity.
+- Feedback and error reporting must be reachable through the More panel on ordinary
+  pages. Its focused-chart-viewer entry remains a viewer-brief decision.
+- Privacy must be reachable from the footer without authentication and from
+  account-destructive decisions. GitHub remains a footer-only external project link.
 - No retained page may become an orphan that depends on a remembered URL.
 
 ## Confirmed Responsive Navigation Direction
@@ -431,30 +488,33 @@ from its content rather than copied from GOV.UK, USWDS, or Carbon.
 
 ## Decision Register
 
-| ID    | Decision                        | Resolved direction or remaining question                                                                                                         | Status     |
-| ----- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- |
-| IA-01 | Ordinary responsive navigation  | Top header: NosLog left; profile/account and More right; no bottom navigation                                                                    | `Approved` |
-| IA-02 | Chart-viewer shell              | Focused shell with reliable return path and fullscreen falling viewer                                                                            | `Approved` |
-| IA-03 | Rankings navigation             | Access through its independent home block and More block, not a direct labeled header link                                                       | `Approved` |
-| IA-04 | Home signed-in personalization  | Do not add a stale-sync, recent-play, or unfinished-content card                                                                                 | `Rejected` |
-| IA-05 | Data Sync placement             | Keep the separate home row and a stable More entry                                                                                               | `Approved` |
-| IA-06 | Feedback placement              | Stable support location outside the primary-task hierarchy                                                                                       | `Proposed` |
-| IA-07 | Official-news placement         | Editorial content after core product tasks                                                                                                       | `Proposed` |
-| IA-08 | Tier/Bingo/Exam relationship    | Keep all three as independent page families and navigation blocks; no umbrella label                                                             | `Approved` |
-| IA-09 | General desktop navigation      | Preserve the same top-header semantics; adapt More panel and content grid to available width                                                     | `Approved` |
-| IA-10 | Signed-out account control      | Show a visible Login text button in the account position                                                                                         | `Approved` |
-| IA-11 | More-panel contents and order   | Include Music, Chart Viewer, Rankings, Tiers, Bingo, Exams, Arcades, and Data Sync as distinct blocks; exact order and utility links remain open | `Open`     |
-| IA-12 | Header scroll behavior          | Hide on downward scroll and reveal on upward scroll                                                                                              | `Approved` |
-| IA-13 | Music/Chart search architecture | One shared search surface with a compact leading scope selector; Chart entry preselects Chart scope                                              | `Approved` |
-| IA-14 | Persistent control density      | Avoid permanent button rows when a clear contextual selector or progressive disclosure preserves the task                                        | `Approved` |
+| ID    | Decision                        | Resolved direction or remaining question                                                                                                               | Status     |
+| ----- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- |
+| IA-01 | Ordinary responsive navigation  | Top header: NosLog left; profile/account and More right; no bottom navigation                                                                          | `Approved` |
+| IA-02 | Chart-viewer shell              | Focused shell with reliable return path and fullscreen falling viewer                                                                                  | `Approved` |
+| IA-03 | Rankings navigation             | Access through its independent home block and More block, not a direct labeled header link                                                             | `Approved` |
+| IA-04 | Home signed-in personalization  | Do not add a stale-sync, recent-play, or unfinished-content card                                                                                       | `Rejected` |
+| IA-05 | Data Sync placement             | Keep the separate home row and a stable More entry                                                                                                     | `Approved` |
+| IA-06 | Feedback placement              | More-panel support utility on ordinary pages; retain the dialog flow, omit from Home and footer, decide focused-viewer access in its page brief        | `Approved` |
+| IA-07 | Official-news placement         | Home editorial content after core product tasks; exact presentation deferred to the Home page brief                                                    | `Approved` |
+| IA-08 | Tier/Bingo/Exam relationship    | Keep all three as independent page families and navigation blocks; no umbrella label                                                                   | `Approved` |
+| IA-09 | General desktop navigation      | Preserve the same top-header semantics; adapt More panel and content grid to available width                                                           | `Approved` |
+| IA-10 | Signed-out account control      | Show a visible Login text button in the account position                                                                                               | `Approved` |
+| IA-11 | More-panel contents and order   | Keep eight product blocks distinct, followed by Settings and Feedback utilities; exact visual order and responsive composition move to the shell brief | `Approved` |
+| IA-12 | Header scroll behavior          | Hide on downward scroll and reveal on upward scroll                                                                                                    | `Approved` |
+| IA-13 | Music/Chart search architecture | One shared search surface with a compact leading scope selector; Chart entry preselects Chart scope                                                    | `Approved` |
+| IA-14 | Persistent control density      | Avoid permanent button rows when a clear contextual selector or progressive disclosure preserves the task                                              | `Approved` |
+| IA-15 | Public Settings destination     | One `/[locale]/settings` entry for all users; guest experience preferences remain usable and account controls appear only after login                  | `Approved` |
+| IA-16 | Preference ownership            | Theme stays device-local; existing account language/title settings win after login, new accounts inherit explicit guest choices                        | `Approved` |
+| IA-17 | Footer destinations             | Keep Privacy and GitHub in the footer and do not duplicate them in More                                                                                | `Approved` |
 
-## Questions for User Review
+## Remaining Phase Approval
 
-1. Which utility and trust links, beyond the approved destination blocks, must appear
-   in the More panel, and what should their semantic order be?
-2. Should Feedback remain a stable support destination outside the primary task
-   hierarchy?
-3. Should Official News remain editorial content after the core home tasks?
+The material information-architecture decisions recorded here are resolved. The
+artifact remains `Draft for discussion` until the user reviews the synchronized
+English and Korean documents and explicitly approves this phase as a whole. Visual
+composition, exact responsive ordering, and page-specific states remain page-brief
+decisions rather than open information-architecture questions.
 
 ## Acceptance Criteria for This Artifact
 
@@ -471,9 +531,8 @@ from its content rather than copied from GOV.UK, USWDS, or Carbon.
 
 ## Next Actions
 
-1. Review and resolve IA-06, IA-07, and the remaining ordering/utility part of IA-11
-   with the user.
-2. Revise the page-family map and flows from those decisions.
-3. Mark this artifact approved when no material IA uncertainty remains.
-4. Create page briefs in priority order: home, music discovery, music detail, tiers,
-   then the remaining page families.
+1. Review the synchronized English and Korean information-architecture artifacts with
+   the user.
+2. Mark this artifact approved only after explicit whole-phase approval.
+3. After approval, create page briefs in priority order: home, music discovery, music
+   detail, tiers, then the remaining page families.
