@@ -2,10 +2,11 @@
 
 ## Document Control
 
-- Status: `Draft`
-- Evidence status: `Observed from repository`
-- Browser verification: `Pending`
+- Status: `Approved for information-architecture planning`
+- Evidence status: `Observed from repository and representative browser pass`
+- Browser verification: `Pass 1 complete; rare and unpublished states pending`
 - Date started: 2026-07-29
+- Scope decisions confirmed: 2026-07-29
 - Canonical language: English
 - Korean companion:
   [01-current-product-audit.ko.md](./01-current-product-audit.ko.md)
@@ -30,9 +31,13 @@ future decisions remain explicitly unresolved.
 - Prisma data model
 - Existing Vitest and Playwright coverage
 - Project README for the v1.6.0 feature and operating baseline
+- Signed-in browser inspection using representative development data at `390 × 844`
+  and `1440 × 900`
 
-The actual rendered UI, real-data content lengths, signed-in states, and responsive
-behavior still require browser verification.
+The first browser pass covers representative signed-in user pages, administrator
+pages, all three locales, and the chart-preview exception. Rare, destructive,
+permission-denied, loading, and unpublished states still require targeted evidence
+where they can be reproduced safely.
 
 ## Current Product Architecture
 
@@ -220,44 +225,150 @@ The Prisma schema currently contains 34 models covering these product domains:
     - absence of unhandled browser errors;
     - relaxed desktop performance boundaries.
 
-### Browser Verification Still Required
+### Browser Observation Pass 1
 
-The local development server was unavailable when the first browser pass was attempted.
-The following evidence is therefore still pending:
+The browser evidence below was collected on 2026-07-29 from the running local
+development server. It used the signed-in representative profile with ID `8`, which
+also has administrator access. The viewports were `390 × 844` and `1440 × 900`.
 
-- current screenshots and visible hierarchy for every page family;
-- signed-out and signed-in differences;
-- real content lengths and representative extreme data;
-- 390px mobile behavior;
-- desktop behavior and the effect of the current 390px shell cap;
-- header scroll behavior;
-- empty, loading, error, permission, and destructive states where they can be safely
-  reproduced;
-- chart viewer controls and visualization at mobile and desktop widths;
-- administrator workflows at desktop width.
+These are current-product observations. They do not approve a NosLog 2.0 width,
+layout, hierarchy, or component decision.
 
-## Unresolved Audit Questions
+#### Representative User Pages at 390px
+
+| Page family      | Example path                                   | Document height | Observed behavior                                                                                        |
+| ---------------- | ---------------------------------------------- | --------------- | -------------------------------------------------------------------------------------------------------- |
+| Home             | `/ko`                                          | `985px`         | Announcement, identity, search, quick links, feedback, and official-news content render in one column.   |
+| Music discovery  | `/ko/music`                                    | `1,747px`       | Search, filters, sorting, view controls, and music results fit without horizontal document overflow.     |
+| Music discovery  | `/ja/music`                                    | `2,132px`       | Japanese UI and original titles fit without horizontal overflow; the page is taller than the ko/en pass. |
+| Music discovery  | `/en/music`                                    | `1,747px`       | English controls and labels fit without horizontal document overflow.                                    |
+| Music detail     | `/ko/music/59d7…/real`                         | `1,060px`       | Difficulty controls and four content tabs render inside the 390px shell.                                 |
+| Rankings         | `/ko/rankings`                                 | `844px`         | Mode, metric, and region controls fit within the viewport width.                                         |
+| Tier lists       | `/ko/tiers`                                    | `3,953px`       | Multiple tier bands form a long single-column reading flow.                                              |
+| Bingo list       | `/ko/bingo`                                    | `6,010px`       | Filters and many bingo cards produce the longest inspected user-page scroll.                             |
+| Exams            | `/ko/exams`                                    | `913px`         | Mode, advice, grade selection, and stage content fit without horizontal overflow.                        |
+| Arcade discovery | `/ko/gamecenter`                               | `844px`         | Region and search controls plus the available arcade result fit in one column.                           |
+| Data sync        | `/ko/bookmarklet`                              | `1,346px`       | Status, token, bookmarklet, sync result, and illustrated instructions form a sequential flow.            |
+| Public profile   | `/ko/profile/8`                                | `1,758px`       | Owner controls and record analytics render in the same single-column shell.                              |
+| Profile settings | `/ko/profile/settings`, `/en/profile/settings` | `2,128–2,200px` | Eight settings groups and destructive account controls form a long settings flow in both locales.        |
+
+No horizontal document overflow was measured on these representative mobile pages.
+The different Japanese music-list height is a localization stress signal to investigate
+with representative translated content; this pass does not assign a cause or prescribe
+a layout response.
+
+#### Header Interaction at 390px
+
+- The header begins at `y = 0` with a measured height of `56px`.
+- After scrolling down to `700px`, the header moves to `y = -56px`.
+- After scrolling back up to `350px`, it returns to `y = 0`.
+- This confirms the implemented hide-on-downward-scroll and reveal-on-upward-scroll
+  behavior in the rendered UI.
+
+#### Desktop Shell at 1440px
+
+- Home, music discovery, music detail, rankings, the administrator dashboard, and
+  inspected administrator list/management pages retained a centered `390px` main
+  column. Its measured horizontal position was `x = 525px`.
+- Dense administrator tasks such as music, user, exam, bingo, arcade, and sync
+  management therefore remain vertically stacked rather than using the available
+  desktop width.
+- Representative resulting page heights included approximately `7,335px` for
+  administrator music, `3,246px` for administrator bingo, `2,990px` for administrator
+  exams, `2,365px` for administrator arcades, and `2,289px` for administrator users.
+- This confirms the existing shell constraint. It does not make `390px` the NosLog 2.0
+  desktop baseline.
+
+#### Chart Viewer Exception
+
+- The administrator chart preview intentionally escapes the normal shell width.
+- Its falling view measured `364 × 574px` inside the 390px viewport and
+  `1,022 × 612px` at the desktop width.
+- The full-sheet view uses horizontally scrollable four-measure columns. At 390px,
+  the scroll region measured `364px` wide with `1,164px` of horizontal content, and
+  each inspected chart canvas measured `274 × 718px`.
+- The preview exposes play, restart, seek, local audio, note-speed, metronome,
+  metronome-volume, and strict-performance controls.
+- The inspected chart had an administrator preview but no published public revision:
+  its public pattern URL correctly rendered the localized not-found state.
+- The administrator preview currently renders two nested `main` landmarks. This is an
+  observed accessibility-structure issue to address during the appropriate design or
+  implementation phase.
+
+#### Observed Usability Symptoms
+
+- Wide desktop viewports leave substantial unused horizontal space on ordinary user
+  and administrator pages.
+- Dense lists and management tools become very long single-column pages.
+- Information-rich user pages such as bingo, tier lists, profile, and settings also
+  rely heavily on vertical sequencing.
+- The chart viewer already requires a different responsive model from ordinary content
+  pages because its visualization has an intrinsic minimum useful width.
+- Japanese and English must be tested with real long content rather than assumed to
+  behave identically to Korean.
+
+These symptoms identify investigation targets only. They do not yet authorize a
+specific grid, breakpoint, maximum width, navigation model, or content removal.
+
+### Browser Evidence Still Required
+
+- signed-out login, browsing, and localized first-entry behavior in a clean session;
+- a published public chart revision, because the inspected chart was preview-only;
+- representative empty, loading, request-error, disabled, permission, and destructive
+  states where they can be reproduced safely;
+- long translated music titles and extreme real record values in all three locales;
+- keyboard traversal, visible focus, menu focus management, and reduced-motion behavior;
+- representative screenshots after the audit decisions determine which states must be
+  retained as formal comparison evidence.
+
+## Confirmed Audit Decisions
+
+### Priority User Page Families
+
+1. **Home is the primary entry experience.** It must help a newly landed user
+   understand where to go and obtain important information immediately.
+2. **Music discovery and music detail are primary product tasks.** Music lookup is
+   expected to be one of the most frequent behaviors for a rhythm-game service, so
+   discovery and detail must be treated as a connected high-priority journey.
+3. **Tier lists are a primary play-planning task.** Many users choose what to play by
+   following tier-list progression, so the tier experience is also a high-priority
+   page family.
+
+These priorities determine research and pilot-screen order. They do not imply that
+other verified features may be removed silently.
+
+### Feature Disposition
+
+- No existing feature is currently scheduled for removal or deferral.
+- All verified user-facing functions remain in scope unless later evidence supports a
+  change and the user explicitly approves it.
+- Information architecture may consolidate, regroup, or progressively disclose
+  functions, but this must not remove their capability or discoverability without a
+  separate approved decision.
+- Potential removal or deferral candidates discovered during page briefs or reference
+  research must be presented with evidence and tradeoffs for discussion.
+
+### Administrator Scope
+
+- Administrator functionality remains documented as part of the current product.
+- The administrator interface is excluded from the NosLog 2.0 user-interface redesign.
+- During the NosLog 2.0 user-facing work, administrator pages receive functional
+  maintenance only unless separately authorized.
+- A production-level administrator redesign may begin as a distinct post-2.0 phase.
+
+## Remaining Audit Follow-up Questions
 
 These are audit questions, not design proposals:
 
-1. Which page families currently receive the most real-world use?
-2. Which signed-in account and sample records should be treated as representative for
-   visual verification?
-3. Are any current routes or features intentionally scheduled for removal regardless
-   of the redesign?
-4. Should administrator screens remain part of the NosLog 2.0 visual redesign after
-   the user-facing product is complete, or only receive functional maintenance?
-5. Are there private or rare states that cannot be safely reproduced in the development
+1. Are there private or rare states that cannot be safely reproduced in the development
    database and should instead be documented from code?
+2. Which published chart, longest translated titles, and extreme record values should
+   become the formal stress-test fixtures?
 
 ## Next Audit Actions
 
-1. Start the existing local development server and sign in with the representative
-   development account.
-2. Verify user page families at 390px and a desktop width.
-3. Verify owner-only profile, settings, sync, bingo, exam, and chart-viewer states.
-4. Verify administrator pages at a desktop width.
-5. Add browser evidence and observed usability symptoms to this document without
-   making design decisions.
-6. Review the completed audit with the user and obtain approval before information
-   architecture or page-family decisions begin.
+1. Identify representative stress-test data and any states that must remain code-only
+   evidence.
+2. Begin the separate user-facing page-family, information-architecture, navigation,
+   and key-flow artifact using the confirmed priorities and scope.
+3. Keep administrator redesign planning outside the NosLog 2.0 user-facing artifact.

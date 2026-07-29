@@ -69,6 +69,9 @@ This is the most important working rule for this project:
 
 ## Working Process
 
+- Before planning or editing project work, read the root `README.md` completely and
+  use its current product, setup, validation, deployment, privacy, and versioning
+  guidance as the repository baseline.
 - Before editing, check the repository status and inspect existing changes.
 - Preserve the user's existing changes and do not modify or revert unrelated files.
 - When repository freshness matters, inspect the current branch and upstream state
@@ -92,6 +95,11 @@ This is the most important working rule for this project:
 - The user owns commits, pushes, branch creation or switching, and pull requests.
 - Do not commit, push, create or switch branches, or create pull requests unless the
   user explicitly changes this rule for a specific task.
+- Write every recommended commit title and every commit title created on the user's
+  behalf in Conventional Commits form: an appropriate English type such as `feat`,
+  `fix`, `docs`, `refactor`, `test`, or `chore`, followed by `: ` and a Korean
+  description. Keep product names and code identifiers in their original form when
+  necessary. Example: `docs: 2.0 정보 구조 초안 추가`.
 - At completion, report the changed scope, verification results, remaining caveats, and
   a recommended commit title.
 
