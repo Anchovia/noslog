@@ -2,9 +2,10 @@
 
 ## Document Control
 
-- Status: `Draft for discussion`
+- Status: `Approved`
 - Evidence status: `Current-product audit, repository inspection, browser evidence, and cited navigation guidance`
 - Date started: 2026-07-29
+- Date approved: 2026-07-30
 - Canonical language: English
 - Korean companion:
   [02-information-architecture.ko.md](./02-information-architecture.ko.md)
@@ -508,13 +509,12 @@ from its content rather than copied from GOV.UK, USWDS, or Carbon.
 | IA-16 | Preference ownership            | Theme stays device-local; existing account language/title settings win after login, new accounts inherit explicit guest choices                        | `Approved` |
 | IA-17 | Footer destinations             | Keep Privacy and GitHub in the footer and do not duplicate them in More                                                                                | `Approved` |
 
-## Remaining Phase Approval
+## Phase Approval
 
-The material information-architecture decisions recorded here are resolved. The
-artifact remains `Draft for discussion` until the user reviews the synchronized
-English and Korean documents and explicitly approves this phase as a whole. Visual
-composition, exact responsive ordering, and page-specific states remain page-brief
-decisions rather than open information-architecture questions.
+The user approved this information-architecture phase as a whole on 2026-07-30 after
+reviewing the synchronized English and Korean artifacts and the resolved decision
+register. Visual composition, exact responsive ordering, and page-specific states
+remain page-brief decisions; this approval does not silently resolve them.
 
 ## Acceptance Criteria for This Artifact
 
@@ -531,8 +531,8 @@ decisions rather than open information-architecture questions.
 
 ## Next Actions
 
-1. Review the synchronized English and Korean information-architecture artifacts with
-   the user.
-2. Mark this artifact approved only after explicit whole-phase approval.
-3. After approval, create page briefs in priority order: home, music discovery, music
-   detail, tiers, then the remaining page families.
+1. Create and agree on the Home page brief.
+2. Continue with page briefs in priority order: music discovery, music detail, tiers,
+   then the remaining page families.
+3. Preserve this approved information architecture unless a later explicitly approved
+   decision supersedes a recorded item.
