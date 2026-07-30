@@ -191,6 +191,18 @@ Use the following three-stage delivery pipeline:
 - Do not introduce speculative features, content modules, grouping labels, or
   navigation patterns merely because they are common elsewhere. First establish that
   they solve an approved NosLog user need and do not distort NOSTALGIA domain meaning.
+- Do not treat the current NosLog feature set as the ceiling for the 2.0 experience.
+  Actively identify, research, and propose capabilities that NosLog does not yet have
+  when they would materially improve user effectiveness, efficiency, accessibility,
+  clarity, or task completion.
+- After the user explicitly approves a well-supported new capability, include it in
+  the authoritative guide and downstream design and implementation scope even when it
+  increases development work. The absence of an existing implementation is not a
+  reason to omit a necessary 2.0 requirement.
+- This permission to add capabilities does not permit speculative feature growth.
+  Every addition must still be grounded in verified user needs, domain behavior,
+  current-product evidence, broad reference research, discussed tradeoffs, and the
+  existing approval gates.
 - Base decisions on cited references, observed user context, current UI evidence,
   product requirements, and accessibility guidance. Do not present personal taste
   or unverified assumptions as design rationale.

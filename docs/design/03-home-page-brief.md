@@ -344,9 +344,41 @@ discovery page. The approved alternative shows the highest-relevance matches wit
 internal scrolling or in-place expansion and provides a complete-results handoff only
 when more matches exist than the preview can show.
 
+### HOME-17 Focused Reference Comparison
+
+The asynchronous preview-state decision compared twenty independent sources spanning
+accessibility status semantics, loading and error guidance, production component
+systems, and search-state implementations.
+
+| Reference class                         | Sources                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | Transferable principle and NosLog application                                                                                                                                                                                                                                            | Limitation                                                                                                                                                |
+| --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Accessibility status and focus          | [W3C APG Combobox](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/), [WCAG search-results status example](https://www.w3.org/WAI/WCAG22/working-examples/aria-role-status-searchresults/), [W3C ARIA22](https://www.w3.org/WAI/WCAG21/Techniques/aria/ARIA22), [W3C F103](https://www.w3.org/WAI/WCAG22/Techniques/failures/F103.html), and [MDN `aria-busy`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-busy)                                                            | Dynamic loading, result counts, no-match messages, and failures must be programmatically exposed without moving DOM focus away from the search field. Mark an updating region busy until the current response is complete and avoid announcements from obsolete intermediate updates.    | The standards define semantics rather than visual timing, popup geometry, or NosLog copy.                                                                 |
+| Loading and application-error guidance  | [Apple Loading](https://developer.apple.com/design/human-interface-guidelines/loading), [Apple Progress Indicators](https://developer.apple.com/design/human-interface-guidelines/progress-indicators), [Material Progress Indicators](https://m2.material.io/components/progress-indicators), [Material Errors](https://m1.material.io/patterns/errors.html), and [Material UI Progress](https://mui.com/material-ui/react-progress/)                                                                                      | Fast completion should feel immediate; slower work needs local, consistent feedback. A component failure should preserve the usable remainder of the page and offer a supported recovery action. Delaying a visual loader prevents a fast response from flashing an unnecessary spinner. | Guidance differs on the exact delay before a visual loader appears, so the approved `400ms` request-time threshold is a NosLog-specific rule to validate. |
+| Asynchronous autocomplete systems       | [CMS Autocomplete](https://design.cms.gov/v/5.0.2/components/autocomplete/), [Equinor Autocomplete](https://eds.equinor.com/docs/Next/components/inputs/autocomplete/), [React Spectrum ComboBox](https://react-spectrum.adobe.com/ComboBox), [Visa Combobox](https://design.visa.com/components/combobox/usage/), [Singapore Government Combo Box](https://www.designsystem.tech.gov.sg/components/combo-box), and [Australian Agriculture Autocomplete](https://design-system.agriculture.gov.au/components/autocomplete) | Loading, no-result, invalid-input, and service-failure states are different. For NosLog, the query is not invalid when retrieval fails, so failure belongs inside the popup with concise recovery rather than on the input as validation styling.                                        | Most examples select a value from a controlled list, while NosLog also supports explicit submission to complete discovery.                                |
+| Search state and update implementations | [Scottish Government Autocomplete](https://designsystem.gov.scot/components/autocomplete), [Elastic Search UI State](https://www.elastic.co/docs/reference/search-ui/api-core-state), [Algolia multiple search states](https://www.algolia.com/doc/ui-libraries/autocomplete/guides/implementing-multiple-search-states), and [Telerik AutoComplete accessibility](https://www.telerik.com/design-system/docs/components/autocomplete/accessibility/)                                                                       | Current input, the query represented by rendered results, request identity, loading, and error are separate state. Invalidate prior matches when input changes, ignore stale responses, and announce only the state belonging to the latest normalized query and scope.                  | These sources expose implementation state but do not choose NosLog's navigation hierarchy or final visual styling.                                        |
+
+The comparison converged on an anchored, non-modal popup rather than an in-flow block.
+The popup attaches directly below the search field, appears above later Home content
+without moving it, and adds no backdrop or page-level interaction lock. Selection,
+complete-results handoff, `Escape`, clearing the query, or interaction outside the
+search region closes it; `Escape` does not clear the query.
+
+After the approved IME-safe `300ms` idle interval, the request begins immediately.
+The suggestion region becomes programmatically busy at request start, but a visible
+compact loading row appears only if that same request is still pending after `400ms`.
+Changing the normalized query or scope immediately invalidates and hides prior
+matches, clears the prior failure, and starts the next debounced cycle. An aborted or
+older response must never replace the latest state.
+
+Retrieval failure keeps the query, active scope, search control, explicit submission,
+and every other Home destination usable. It appears inside the popup as a concise
+localized message with a text retry action for the same query and scope. It is not
+styled as invalid user input and does not move focus. New input dismisses the failure
+and begins a new cycle.
+
 ### Reference Synthesis
 
-The comparison converges on five requirements:
+The comparison converges on six requirements:
 
 1. search and direct destination links should coexist;
 2. the primary task must be visually stronger than retained support and editorial
@@ -354,13 +386,18 @@ The comparison converges on five requirements:
 3. Home should hand off to deeper filtering instead of reproducing downstream screens;
 4. mobile-first does not justify retaining a fixed mobile-width canvas on desktop; and
 5. Home search preview should remain bounded and hand broader inspection to shared
-   discovery instead of adding an internally scrolling mini-results page.
+   discovery instead of adding an internally scrolling mini-results page; and
+6. asynchronous search feedback should stay anchored to the search task, preserve the
+   rest of Home, distinguish no matches from retrieval failure, and reject stale
+   results.
 
 References alone do not determine the exact destination order or card proportions.
 Those remain user-approved decisions. The focused notice comparison informed the
 approved three-item summary, detail, and archive model. The focused empty-query
 comparison informed the approved browse-state rules, and the focused autocomplete
-comparison informed the approved preview states documented below.
+comparison informed the approved preview states. The asynchronous-state comparison
+informed the approved popup, loading, invalidation, and recovery rules documented
+below.
 
 ## Approved Information Priority
 
@@ -425,13 +462,29 @@ hierarchy.
   explicit Enter or search-control submission may still open shared discovery.
 - An empty focused field stays quiet: do not open recent, trending, or placeholder
   suggestions.
+- Render preview states in a non-modal popup anchored directly below the search
+  control. It overlays later Home content without changing document flow, adding a
+  backdrop, or locking interaction with the rest of Home.
+- Close the popup after selecting a match or the complete-results handoff, pressing
+  `Escape`, clearing the query, or interacting outside the search region. `Escape`
+  preserves the query.
+- Begin retrieval after the approved IME-safe `300ms` idle interval. Mark the
+  suggestion region busy immediately, but show its compact localized loading row only
+  when the same request remains pending for an additional `400ms`.
+- A normalized query or scope change immediately hides prior matches and clears the
+  prior failure. Cancel the obsolete request when possible and always ignore a stale
+  response that does not belong to the latest query and scope.
+- Retrieval failure appears inside the popup as a concise localized message with a
+  text retry action for the same query and scope. Keep the query, scope selector,
+  explicit submission, direct destinations, and the remainder of Home usable.
+- Do not style retrieval failure as invalid input or move focus to the message. New
+  input dismisses that failure and starts the next debounced search cycle.
 - Do not fix the default Music difficulty, filter, sort, Chart grouping, or Chart
   ordering in this Home brief. Define those defaults in the shared Music/Chart
   discovery brief with representative data.
 
 ### Proposed Behavior
 
-- Search failure or unavailable data must not remove the direct destination collection.
 - Query-clearing behavior within the shared discovery surface remains a discovery-page
   decision rather than a Home interaction rule.
 
@@ -567,7 +620,10 @@ The embedded official X post remains externally hosted source content.
 | One to five preview matches           | Show only the ranked matches, up to the current preview capacity, without an internal scrollbar.                                | `Approved` |
 | More than preview capacity            | Show the highest-relevance matches plus a distinct `View all N results` handoff to shared discovery; do not expand Home.        | `Approved` |
 | No preview match                      | Preserve the query, show a concise no-match message, and omit the visible complete-results handoff.                             | `Approved` |
-| Search service failure                | Communicate failure on the shared search surface; direct Home destinations remain usable.                                       | `Proposed` |
+| Preview request under `400ms`         | Mark the suggestion region busy but show no visual loader; prior matches have already been invalidated.                         | `Approved` |
+| Preview request beyond `400ms`        | Open the anchored popup with one compact localized loading row; keep search and the remainder of Home interactive.              | `Approved` |
+| Search service failure                | Preserve query and scope; show an inline message and text retry in the popup without invalid-input styling or focus movement.   | `Approved` |
+| Obsolete preview response             | Ignore it completely; only the latest normalized query and scope may update or announce preview state.                          | `Approved` |
 | Signed out                            | Public search and destinations remain available; Header shows Login.                                                            | `Approved` |
 | Signed in                             | Header shows the profile control; Home does not add personalized cards.                                                         | `Approved` |
 | Unsupported or missing translation    | Do not publish a NosLog-authored notice until all three translations exist. The external X post remains in its source language. | `Approved` |
@@ -589,6 +645,9 @@ component briefs.
   required minimum: when the on-screen keyboard or available container height cannot
   accommodate five readable rows, show fewer ranked matches and retain the
   complete-results handoff when undisplayed matches exist.
+- Keep the non-modal popup aligned to the search control and inside the viewport. It
+  may temporarily cover later Home content but must not push destination blocks,
+  create document overflow, add a backdrop, or block the rest of Home.
 - Destination labels remain readable in Korean, Japanese, and English.
 - Editorial content does not push search and destinations below unnecessary
   introductory content.
@@ -606,6 +665,8 @@ component briefs.
   do not stretch the search control across the full desktop container.
 - Do not increase the search-preview maximum beyond five merely because desktop has
   more space. The shared discovery page owns larger result collections.
+- Keep the popup attached to the same centered, bounded search region; wider layouts
+  do not turn it into a page-width result panel.
 - Let the destination collection gain columns after search while keeping one
   consistent block family and the approved reading order.
 - Keep Data Sync as a separate row after the destination collection.
@@ -641,6 +702,12 @@ may adapt reusable collections when the same component appears in a narrower reg
   result count with appropriate combobox and listbox semantics. Keyboard and
   screen-reader users must be able to reach a preview match and the separate
   complete-results handoff without entering a nested scroll region.
+- Mark the suggestion region busy as soon as the latest request starts. Announce the
+  delayed loading state, final result count, no-match state, or retrieval failure
+  without moving focus, and suppress announcements from canceled or stale requests.
+- The retry text action must be keyboard operable and retain the latest query and
+  scope. Retrieval failure uses programmatically determinable error semantics but
+  does not mark the user's query as invalid.
 - Ensure keyboard users can change scope, submit search, traverse destinations, and
   reach footer links without a focus trap.
 - Retain the skip link and meaningful `header`, `main`, `nav`, `section`, and `footer`
@@ -665,6 +732,9 @@ may adapt reusable collections when the same component appears in a narrower reg
   NOSTALGIA News, and Feedback/Error Report.
 - Search placeholder and visible label must describe both title and artist behavior in
   natural wording for the active locale.
+- Localize the delayed loading message, result-count status, no-match message,
+  retrieval-failure message, retry action, and complete-results handoff in Korean,
+  Japanese, and English.
 - Use locale-aware dates and avoid fixed-width date assumptions.
 - Destination blocks must support Japanese and English expansion without reducing
   labels to unexplained icons.
@@ -692,6 +762,16 @@ The later design and implementation must verify:
   states, including preserved query and complete-results handoff rules;
 - preview use at compact mobile keyboard height and desktop width without an internal
   result scrollbar or automatic navigation;
+- anchored popup placement without layout shift, backdrop, document overflow, or loss
+  of access to other Home controls;
+- responses below and above the `400ms` visual-loading threshold, including immediate
+  busy semantics and no fast-response spinner flash;
+- query and scope changes during an active request, canceled requests, and deliberately
+  reordered responses to verify that stale data never appears or is announced;
+- retrieval failure, retained query and scope, keyboard-operable retry, new-input
+  recovery, explicit submission, and continued access to every direct destination;
+- popup dismissal through selection, complete-results handoff, `Escape`, query clear,
+  and outside interaction without clearing the query on `Escape`;
 - all seven destination links and Data Sync;
 - no service-critical notice and one service-critical notice;
 - zero, one, exactly three, and more than three published routine announcements,
@@ -735,15 +815,13 @@ The later design and implementation must verify:
 | HOME-14 | Empty official-news state               | Keep the localized official-channel link without an empty feed shell; core tasks remain unchanged.                                                                                                                     | `Approved` |
 | HOME-15 | Routine announcement presentation       | Show the newest three title-and-date links on every viewport; open localized detail pages, provide an archive link, and omit the section when empty.                                                                   | `Approved` |
 | HOME-16 | Search preview                          | After IME-safe `300ms` idle, show at most five ranked matches without internal scrolling or in-place expansion; use the approved four states and hand excess matches to shared discovery.                              | `Approved` |
+| HOME-17 | Async preview feedback                  | Use an anchored non-modal popup, delayed `400ms` visual loading, immediate prior-result invalidation, stale-response rejection, and inline retryable failure without blocking Home or marking the query invalid.       | `Approved` |
 
 ## Next Discussion Batch
 
-The user should decide these items before the next Home brief revision:
-
-1. Resolve detailed search loading and service-failure behavior without changing the
-   already approved search hierarchy or preview states.
-2. Define the Music and published-chart browse defaults in the shared discovery brief
-   rather than inheriting the current implementation's filter and sort state.
+Home search-state decisions are complete. The next page-brief task is to define Music
+and published-chart browse defaults in the shared discovery brief rather than
+inheriting the current implementation's filter and sort state.
 
 Exact localized copy remains a later content-system task after the interaction and
 state decisions are approved.
