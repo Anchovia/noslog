@@ -171,8 +171,20 @@ at a narrow `390px` viewport and a wide desktop viewport.
   release-date field is populated. Do not substitute Music `created_at`,
   `updated_at`, or chart-import timestamps. The data mapping for later-added
   difficulties must be reviewed before implementation.
-- The default order for a non-empty text query remains open. Relevance is a candidate,
-  but it has not been approved as a replacement for the user's selected sort.
+- A non-empty text query defaults to **Relevance** only when the user has not selected
+  another sort in the current discovery state. Relevance ranks closer and exact
+  matches across the stable Music identifier, original title, approved localized or
+  read title, and artist ahead of weaker partial matches; exact weighting and tie
+  tuning remain an implementation concern.
+- A user-selected sort persists through text and filter changes. If the query is
+  cleared while Relevance is active, return to the active scope's approved empty-query
+  order. Relevance is not an empty-query browse option.
+- Music scope offers Relevance for active text search, Japanese-reading order, newest
+  Music when the verified data gate is satisfied, level order with an explicit target
+  difficulty, and signed-in recent-play order.
+- Chart scope offers Relevance for active text search, latest published-chart order,
+  Japanese-reading order, level order with an explicit target difficulty, and
+  signed-in recent-play order.
 - Remove the current **weakness** sort. Its opaque composite score does not map to an
   approved, understandable discovery goal.
 - A level sort is valid only after the user explicitly selects its target difficulty.
@@ -181,9 +193,22 @@ at a narrow `390px` viewport and a wide desktop viewport.
 - Outside the sort control, show only the current sort summary. The target difficulty
   belongs inside progressive disclosure rather than in a permanent
   `Normal / Hard / Expert / Real` button row.
-- The exact responsive anatomy—such as a compact menu on wide layouts and a sheet on
-  narrow layouts—remains open for component-level comparison and testing. The
-  approved semantics must not be traded for a visually quieter but ambiguous control.
+- Direction controls belong inside the sort surface rather than becoming additional
+  permanent buttons. Contextual requirements such as the level-sort target appear
+  only after the corresponding sort is selected.
+
+### Approved Filter Taxonomy
+
+- Public Music and Chart discovery share only domain-relevant filters: official Music
+  category, Normal/Hard/Expert/Real difficulty, and level range for the selected
+  difficulty targets.
+- Chart scope inherits Music identity and category while restricting results to
+  published matching chart targets. Publication eligibility is intrinsic to the
+  scope, not a redundant visible filter.
+- Do not invent chart-author, community-rating, marketplace-status, or generic tag
+  filters while NosLog has no approved public data or user need for them.
+- Signed-in personal-record refinement remains a secondary disclosed group as defined
+  below. It does not change the public taxonomy.
 
 ## Search Interaction
 
@@ -212,37 +237,55 @@ at a narrow `390px` viewport and a wide desktop viewport.
 - This surface owns complete filters, sorting, batching, and result recovery; Home must
   not duplicate them.
 
-## Filter Application Model
+## Filter and Sort Application Model
 
 The approved model is responsive and task-sensitive, not one universal “instant” or
 “Apply” rule.
 
 ### Mobile and Other Result-Obscuring Layouts
 
-- Open filters in a full-screen or near-full-screen layer when the result collection
-  cannot remain meaningfully visible beside the controls.
-- Let the user stage multiple category, difficulty, range, and personal-record changes
-  without replacing the obscured result collection after every selection.
+- Provide one clearly labelled **Filter and sort** trigger rather than permanent
+  independent Filter and Sort buttons. A badge counts applied filters only; the
+  always-present sort choice is not counted as an applied filter.
+- Keep the committed result count and current sort visible outside the layer, for
+  example as the semantic equivalent of “583 Music · Relevance.” Do not make the
+  trigger the only place where the current order can be understood.
+- Open one full-screen or near-full-screen layer when the result collection cannot
+  remain meaningfully visible beside the controls.
+- Keep Sort, public filters, and the signed-in personal-record group as clearly
+  separated sections inside that layer. Place Sort first so combining the entry point
+  does not make it undiscoverable or imply that sorting is a multi-select filter.
+- Let the user stage the sort and multiple category, difficulty, range, and
+  personal-record changes without replacing the obscured result collection after
+  every selection.
 - Use one sticky primary action labelled as a return to the result task, not as
   administrative confirmation: **View results** or, when a valid count is ready,
   **View N results**.
-- The primary action simultaneously commits the staged criteria and closes the filter
-  layer. Do not require a second Close action after applying.
+- The primary action simultaneously commits the staged sort and criteria and closes
+  the layer. Do not require a second Close action after applying.
 - The generic **View results** label remains usable while a result count is pending;
   count calculation must not block completion.
 - Back or Close exits without committing staged changes and restores the previously
-  applied filter state.
+  applied sort and filter state.
 - Applied filters remain visible near the result summary after the layer closes.
+- Music's list/grid view choice remains a separate compact view control because it
+  changes presentation rather than result membership or order. Chart scope does not
+  show that control.
 
 This is not treated as an extra task step: a user in a result-obscuring layer must
 return to the results in either model, and the primary action combines that necessary
-return with filter commitment.
+return with sort/filter commitment.
 
 ### Desktop and Other Result-Visible Layouts
 
+- Keep Filter and Sort as distinct compact controls. Filter may expose an anchored
+  region or rail according to available content width; Sort uses a directly labelled
+  single-choice control.
 - Keep the main result collection visible beside or near exposed filter controls.
 - Apply discrete filter choices immediately because the user can see the resulting
   change.
+- Apply a selected sort immediately. Keep its current value visible without adding a
+  permanent row of all sort alternatives.
 - Debounce text-like or continuous controls. A range control must not issue a result
   request for every pointer pixel; update after a short settled interval or when the
   interaction is committed.
@@ -267,8 +310,12 @@ Personal-record refinement is an advanced, signed-in capability. It must remain
 secondary to public Music and Chart discovery rather than becoming a permanently
 expanded primary filter group.
 
-- Retain the domain-relevant status and goal criteria: **Unplayed**, **S**, **FC**,
-  **Pianist**, and **played in the last 30 days**.
+- Retain the domain-relevant status and goal criteria: **Unplayed**, **S**, **FC**, and
+  **Pianist**.
+- Remove **played in the last 30 days**. Its only distinct benefit is a low-evidence
+  time-window intersection with other filters, while signed-in **recent-play order**
+  already supports returning to recently played Music without another persistent
+  criterion.
 - Do not provide a **Clear** filter. NOSTALGIA does not use clear status as a useful
   discovery distinction here, so the current control does not separate a meaningful
   user goal.
@@ -278,9 +325,10 @@ expanded primary filter group.
   difficulty, not the latest play and not a combined MISS+NEAR percentage.
 - Criteria from different groups combine with `AND`; multiple values inside one group
   combine with `OR`.
-- **Unplayed** is mutually exclusive with recent-play and all achieved-record criteria.
-  Selecting either side clears or disables the conflicting side rather than producing
-  an impossible query.
+- **Unplayed** is mutually exclusive with all achieved-record criteria and has no
+  meaningful recent-play order. The controls must not produce an impossible or
+  meaningless query; the exact transition between an active Unplayed filter and
+  recent-play sort remains a small prototype decision.
 - Remove discovery filters for ◆JUST rate, MISS+NEAR rate, FAST/SLOW tendency, and
   Standard, Tenuto, Glissando, or Trill success rate. These remain analysis data for
   record-detail contexts where they are interpretable.
@@ -288,9 +336,10 @@ expanded primary filter group.
   progressively disclosed signed-in record group because it serves focused practice
   planning rather than ordinary catalog browsing.
 
-The exact control anatomy and signed-out invitation remain open for downstream
-prototyping, but the approved taxonomy and combination rules must not change without a
-new decision.
+Keep this group collapsed after public filters until a signed-in user explicitly opens
+it. For signed-out users, omit the entire personal-record group rather than showing
+disabled criteria or an embedded login invitation. Ordinary discovery remains public,
+and authentication promotion must not add noise to the refinement task.
 
 ## Explicit Progressive Loading
 
@@ -407,18 +456,19 @@ and Chart row anatomy remain open.
 | Music newest sort unavailable   | Omit or explain the option until verified official Music-level release dates are populated    | `Approved`          |
 | Level sort target missing       | Require an explicit difficulty selection; never fall back silently to Expert                  | `Approved`          |
 | Weakness sort                   | Do not provide the current opaque composite weakness order                                    | `Approved`          |
+| Active query without user sort  | Use Relevance; preserve any explicit user-selected sort through later query/filter changes    | `Approved`          |
 | Settled active search           | Replace the result set after `300ms` idle and synchronize committed URL state                 | `Approved`          |
 | Fast response                   | Update without flashing a transient loading treatment                                         | `Proposed`          |
 | Slow initial or filter response | Keep search/filter controls stable and communicate busy state in the result region            | `Proposed`          |
 | No result                       | Preserve query and applied criteria, identify the active scope, and offer reversible recovery | `Approved` / `Open` |
 | Initial retrieval failure       | Preserve controls and state; provide retry without redirecting away                           | `Proposed`          |
-| Mobile filters open             | Show staged values separately from the committed result state                                 | `Approved`          |
-| Mobile filter count pending     | Keep a usable generic **View results** action                                                 | `Approved`          |
-| Mobile filter close/back        | Discard staged changes and restore committed values                                           | `Approved`          |
-| Signed-out personal filter      | Do not pretend the filter is active; exact login invitation or omission remains open          | `Observed` / `Open` |
+| Mobile sort/filter open         | Keep Sort and filter sections distinct; stage both separately from committed result state     | `Approved`          |
+| Mobile result count pending     | Keep a usable generic **View results** action                                                 | `Approved`          |
+| Mobile layer close/back         | Discard staged changes and restore committed sort and filters                                 | `Approved`          |
+| Signed-out personal filter      | Omit the personal-record group; do not show disabled criteria or an embedded login invitation | `Approved`          |
 | Signed-in record refinement     | Keep approved record criteria in a secondary advanced group                                   | `Approved`          |
 | MISS range active               | Match the inclusive bounds against the best eligible difficulty record                        | `Approved`          |
-| Unplayed conflict               | Prevent combination with recent-play or achieved-record criteria                              | `Approved`          |
+| Unplayed conflict               | Prevent achieved-record criteria; do not leave recent-play order active as meaningful state   | `Approved` / `Open` |
 | Desktop record preview          | Reveal equivalent compact record context on pointer hover and keyboard focus                  | `Approved`          |
 | Touch result                    | Keep the resting card stable and expose full record context at the destination                | `Approved`          |
 | Load more pending               | Keep existing results, mark the action busy, and prevent duplicate activation                 | `Approved`          |
@@ -432,8 +482,9 @@ and Chart row anatomy remain open.
 
 - Preserve one strong vertical task sequence: scope-aware search, compact committed
   state, results, then explicit Load more.
-- Keep dense filters out of the permanent content column. Open them in the approved
-  result-obscuring filter layer.
+- Keep dense controls out of the permanent content column. Open Sort and Filter through
+  one labelled trigger into the approved result-obscuring layer, with the current sort
+  and applied-filter count still visible in the result summary.
 - Do not add a mobile-only bottom navigation or a persistent row of scope/filter
   buttons.
 - Ensure the software keyboard, Korean/Japanese IME composition, browser chrome, and
@@ -446,6 +497,8 @@ and Chart row anatomy remain open.
 - Do not stretch a `390px` mobile canvas across a desktop.
 - Use additional width to keep results visible with an exposed filter rail or region
   and to improve Music/difficulty comparison.
+- Keep Filter and Sort as separate directly labelled controls, with immediate
+  result-visible application.
 - Preserve one search and scope model rather than introducing desktop-only taxonomy.
 - Do not place unrelated announcements or navigation in space intended to support
   search, filtering, or result comparison.
@@ -461,8 +514,10 @@ and Chart row anatomy remain open.
 - Search updates must not move focus on every result refresh.
 - Result-count updates use restrained live-region semantics and must not announce
   intermediate stale responses.
-- The mobile filter layer requires an accessible name, contained focus while modal,
-  Escape/back behavior, and focus return to its trigger.
+- The mobile Filter-and-sort layer requires an accessible name, contained focus while
+  modal, Escape/back behavior, and focus return to its trigger.
+- The combined trigger's accessible name must communicate the feature, committed
+  applied-filter count, and current sort without treating the sort as another filter.
 - The mobile completion action must remain reachable at browser zoom and compact
   viewport heights.
 - Applying filters must provide an understandable result update. The exact focus
@@ -511,28 +566,31 @@ templates. Commerce evidence is used only where the filtering task transfers to
 NosLog; enterprise and government systems are structural and accessibility references,
 not NosLog art direction.
 
-| Source                                                                                                                   | Transferable principle                                                                                                                    | NosLog application                                                                                               | Limitation                                                                                                  |
-| ------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| [SAP Fiori: Filter Bar](https://www.sap.com/design-system/fiori-design-web/ui-elements/filter-bar/)                      | Live update is more convenient when feasible; manual update is appropriate for multiple required values or excessive traffic.             | Use live result-visible desktop filters and staged result-obscuring mobile filters.                              | Enterprise list reports are denser and more configurable than NosLog.                                       |
-| [Carbon: Filtering](https://carbondesignsystem.com/patterns/filtering/)                                                  | Instant update fits one expected choice; batch update fits several categories or slow responses.                                          | NosLog's many categories, ranges, and personal filters require more than one universal rule.                     | Carbon examples emphasize enterprise data products.                                                         |
-| [Dell Design System: Filter](https://delldesignsystem.com/patterns/filter)                                               | Dynamic filtering removes Apply but can distract; batch filtering supports complex multi-select and slow data.                            | Keep desktop feedback visible and let mobile users finish multiple changes before replacing obscured results.    | Its “batch as safe default” is not a substitute for NosLog testing.                                         |
-| [NSW Design System: Filters](https://designsystem.nsw.gov.au/components/filters/)                                        | Instant and batch models depend on expected action count; mobile batch uses a sticky Apply action that also closes the filter view.       | The NosLog mobile **View results** action combines commit and return, avoiding a separate close step.            | Government search content differs from a rhythm-game catalog.                                               |
-| [Visa Product Design System: Filters](https://design.visa.com/patterns/filters/)                                         | Repeated instant reloads can disorient; applied chips and clear state must remain explicit.                                               | Keep committed filters visible and make chip removal immediate.                                                  | Visa generally prefers Apply and may overfit transaction/data workflows.                                    |
-| [DWP Design System: Filter research](https://design-system.dwp.gov.uk/research/filters/design-notes)                     | Batch prevents repeated refresh, but pending and committed state can become unsynchronized; result count and applied tags bridge the gap. | Visually separate staged mobile values from committed result state and show count/applied criteria after return. | The published research favors batch overall and must be balanced against NosLog's faster consumer task.     |
-| [Scottish Government: Search filters](https://designsystem.gov.scot/patterns/search-results/search-filters)              | Mobile results should not update invisibly behind opened filters; desktop may update automatically.                                       | Supports responsive filter application instead of one behavior on every width.                                   | Public-service content and filtering frequency differ.                                                      |
-| [VA.gov: Search Filter](https://design.va.gov/components/search-filter)                                                  | Multi-facet results need explicit apply/reset behavior and careful focus communication.                                                   | Informs mobile commit, reset, error, and accessibility requirements.                                             | It mandates Apply more broadly than the approved NosLog desktop behavior.                                   |
-| [Maersk: Filter patterns](https://designsystem.maersk.com/guidelines/search-filter-and-sort/filter-patterns/)            | Live results are suitable when fast; batch avoids repeated loads when responses are slower or mobile results are obscured.                | Performance thresholds must be measured, while the interaction remains predictable.                              | Logistics applications have different data volume and user expertise.                                       |
-| [NICE Design System: Filters](https://design-system.nice.org.uk/components/filters/)                                     | Result summaries, applied state, and retryable filtering belong to one coherent pattern.                                                  | Keep count, committed criteria, result collection, and recovery semantically adjacent.                           | The component does not resolve NosLog card content or update mode.                                          |
-| [Australian Agriculture Design System: Search filters](https://design-system.agriculture.gov.au/patterns/search-filters) | A responsive filter drawer can batch changes and close through one Apply action.                                                          | Supports the approved result-obscuring mobile layer.                                                             | It is a government implementation pattern, not visual direction.                                            |
-| [Department for Education: Filter](https://design.education.gov.uk/design-system/components/filter)                      | Place the completion action where users finish selecting, and test mobile discoverability.                                                | Keep the mobile result action sticky and reachable after long filter groups.                                     | It derives from the Ministry of Justice pattern and is not independent visual evidence.                     |
-| [Siemens Element: Filter](https://element.siemens.io/patterns/filter/)                                                   | Choose batch for multiple changes and live update when immediate feedback is valuable.                                                    | Reinforces the responsive, task-sensitive split.                                                                 | Industrial applications differ from public music discovery.                                                 |
-| [Octopus Design System: Filtering](https://www.octopus.design/latest/patterns/ui-patterns/filtering-ib9jS2iT)            | Filter state should remain dismissible and impossible combinations should be communicated.                                                | Applied criteria need individual removal and zero-result recovery.                                               | Exact filter-control choices remain NosLog-specific.                                                        |
-| [Baymard: Ecommerce filter UI](https://baymard.com/learn/ecommerce-filter-ui)                                            | Desktop benefits from visible real-time feedback, while mobile often benefits from a results-return action and visible applied state.     | The responsive interaction pattern transfers even though NosLog does not inherit merchandising behavior.         | Ecommerce research cannot determine NosLog's fields, ordering, or visual style.                             |
-| [eBay: Filtering patterns](https://playbook.ebay.com/design-system/patterns/filtering-patterns)                          | Users need to adjust and remove criteria without restarting discovery.                                                                    | Preserve query, expose committed filters, and make recovery reversible.                                          | Marketplace inventory and commercial facets do not transfer.                                                |
-| [Algolia: Faceting](https://www.algolia.com/doc/guides/managing-results/refine-results/faceting)                         | Contextual facet values and counts can update with result state.                                                                          | Supports exact applied-state counts when performance and query design are verified.                              | Search-engine capability does not prove that live counts are always good UX.                                |
-| [Elastic Search UI](https://www.elastic.co/docs/reference/search-ui)                                                     | Search-as-you-type, faceting, and conditional facets require explicit state and request handling.                                         | Supports active text search and stale-request protection as implementation capabilities.                         | It is technical tooling guidance rather than independent user research.                                     |
-| [WAI-ARIA APG: Combobox](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/)                                             | Editable popup controls require defined keyboard, focus, selection, and popup relationships.                                              | The scope-aware search and suggestions must not rely on pointer interaction or icons alone.                      | The exact scope selector may use a menu rather than a combobox and must follow its actual semantic pattern. |
-| [WCAG 2.2: Status Messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html)                            | Dynamic results and status changes should be available to assistive technology without taking focus.                                      | Announce settled counts and failures without moving focus on every refresh.                                      | It does not prescribe debounce timing or visual presentation.                                               |
+| Source                                                                                                                              | Transferable principle                                                                                                                    | NosLog application                                                                                                   | Limitation                                                                                                  |
+| ----------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| [SAP Fiori: Filter Bar](https://www.sap.com/design-system/fiori-design-web/ui-elements/filter-bar/)                                 | Live update is more convenient when feasible; manual update is appropriate for multiple required values or excessive traffic.             | Use live result-visible desktop filters and staged result-obscuring mobile filters.                                  | Enterprise list reports are denser and more configurable than NosLog.                                       |
+| [SAP Fiori Android: Sort and filter](https://www.sap.com/design-system/fiori-design-android/v26-1/patterns/sort-and-filter/usage)   | Sort and filter may share one compact-screen full-screen dialog while remaining separate sections.                                        | Supports one explicitly labelled mobile entry and internal separation, without imposing the same anatomy on desktop. | Enterprise application frequency and terminology differ from NosLog.                                        |
+| [CXL: Mobile ecommerce guidelines](https://cxl.com/wp-content/uploads/2019/05/Mobile-CUX-Ecommerce-Report.pdf)                      | Separate controls maximize distinction, while a clearly labelled combined **Sort and filter** control remains feasible.                   | NosLog chooses the combined narrow trigger because current sort remains visible and internal sections stay distinct. | Commerce conversion evidence does not establish NOSTALGIA feature priority.                                 |
+| [Shopify: Storefront filtering UX](https://shopify.dev/docs/storefronts/themes/navigation-search/filtering/storefront-filtering-ux) | Mobile filter interfaces commonly move behind one labelled drawer or modal trigger instead of retaining a desktop sidebar.                | Supports removing dense permanent mobile controls and preserving a result-adjacent entry.                            | The guidance focuses on storefront filters and does not decide NosLog sort semantics.                       |
+| [Carbon: Filtering](https://carbondesignsystem.com/patterns/filtering/)                                                             | Instant update fits one expected choice; batch update fits several categories or slow responses.                                          | NosLog's many categories, ranges, and personal filters require more than one universal rule.                         | Carbon examples emphasize enterprise data products.                                                         |
+| [Dell Design System: Filter](https://delldesignsystem.com/patterns/filter)                                                          | Dynamic filtering removes Apply but can distract; batch filtering supports complex multi-select and slow data.                            | Keep desktop feedback visible and let mobile users finish multiple changes before replacing obscured results.        | Its “batch as safe default” is not a substitute for NosLog testing.                                         |
+| [NSW Design System: Filters](https://designsystem.nsw.gov.au/components/filters/)                                                   | Instant and batch models depend on expected action count; mobile batch uses a sticky Apply action that also closes the filter view.       | The NosLog mobile **View results** action combines commit and return, avoiding a separate close step.                | Government search content differs from a rhythm-game catalog.                                               |
+| [Visa Product Design System: Filters](https://design.visa.com/patterns/filters/)                                                    | Repeated instant reloads can disorient; applied chips and clear state must remain explicit.                                               | Keep committed filters visible and make chip removal immediate.                                                      | Visa generally prefers Apply and may overfit transaction/data workflows.                                    |
+| [DWP Design System: Filter research](https://design-system.dwp.gov.uk/research/filters/design-notes)                                | Batch prevents repeated refresh, but pending and committed state can become unsynchronized; result count and applied tags bridge the gap. | Visually separate staged mobile values from committed result state and show count/applied criteria after return.     | The published research favors batch overall and must be balanced against NosLog's faster consumer task.     |
+| [Scottish Government: Search filters](https://designsystem.gov.scot/patterns/search-results/search-filters)                         | Mobile results should not update invisibly behind opened filters; desktop may update automatically.                                       | Supports responsive filter application instead of one behavior on every width.                                       | Public-service content and filtering frequency differ.                                                      |
+| [VA.gov: Search Filter](https://design.va.gov/components/search-filter)                                                             | Multi-facet results need explicit apply/reset behavior and careful focus communication.                                                   | Informs mobile commit, reset, error, and accessibility requirements.                                                 | It mandates Apply more broadly than the approved NosLog desktop behavior.                                   |
+| [Maersk: Filter patterns](https://designsystem.maersk.com/guidelines/search-filter-and-sort/filter-patterns/)                       | Live results are suitable when fast; batch avoids repeated loads when responses are slower or mobile results are obscured.                | Performance thresholds must be measured, while the interaction remains predictable.                                  | Logistics applications have different data volume and user expertise.                                       |
+| [NICE Design System: Filters](https://design-system.nice.org.uk/components/filters/)                                                | Result summaries, applied state, and retryable filtering belong to one coherent pattern.                                                  | Keep count, committed criteria, result collection, and recovery semantically adjacent.                               | The component does not resolve NosLog card content or update mode.                                          |
+| [Australian Agriculture Design System: Search filters](https://design-system.agriculture.gov.au/patterns/search-filters)            | A responsive filter drawer can batch changes and close through one Apply action.                                                          | Supports the approved result-obscuring mobile layer.                                                                 | It is a government implementation pattern, not visual direction.                                            |
+| [Department for Education: Filter](https://design.education.gov.uk/design-system/components/filter)                                 | Place the completion action where users finish selecting, and test mobile discoverability.                                                | Keep the mobile result action sticky and reachable after long filter groups.                                         | It derives from the Ministry of Justice pattern and is not independent visual evidence.                     |
+| [Siemens Element: Filter](https://element.siemens.io/patterns/filter/)                                                              | Choose batch for multiple changes and live update when immediate feedback is valuable.                                                    | Reinforces the responsive, task-sensitive split.                                                                     | Industrial applications differ from public music discovery.                                                 |
+| [Octopus Design System: Filtering](https://www.octopus.design/latest/patterns/ui-patterns/filtering-ib9jS2iT)                       | Filter state should remain dismissible and impossible combinations should be communicated.                                                | Applied criteria need individual removal and zero-result recovery.                                                   | Exact filter-control choices remain NosLog-specific.                                                        |
+| [Baymard: Ecommerce filter UI](https://baymard.com/learn/ecommerce-filter-ui)                                                       | Desktop benefits from visible real-time feedback, while mobile often benefits from a results-return action and visible applied state.     | The responsive interaction pattern transfers even though NosLog does not inherit merchandising behavior.             | Ecommerce research cannot determine NosLog's fields, ordering, or visual style.                             |
+| [eBay: Filtering patterns](https://playbook.ebay.com/design-system/patterns/filtering-patterns)                                     | Users need to adjust and remove criteria without restarting discovery.                                                                    | Preserve query, expose committed filters, and make recovery reversible.                                              | Marketplace inventory and commercial facets do not transfer.                                                |
+| [Algolia: Faceting](https://www.algolia.com/doc/guides/managing-results/refine-results/faceting)                                    | Contextual facet values and counts can update with result state.                                                                          | Supports exact applied-state counts when performance and query design are verified.                                  | Search-engine capability does not prove that live counts are always good UX.                                |
+| [Elastic Search UI](https://www.elastic.co/docs/reference/search-ui)                                                                | Search-as-you-type, faceting, and conditional facets require explicit state and request handling.                                         | Supports active text search and stale-request protection as implementation capabilities.                             | It is technical tooling guidance rather than independent user research.                                     |
+| [WAI-ARIA APG: Combobox](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/)                                                        | Editable popup controls require defined keyboard, focus, selection, and popup relationships.                                              | The scope-aware search and suggestions must not rely on pointer interaction or icons alone.                          | The exact scope selector may use a menu rather than a combobox and must follow its actual semantic pattern. |
+| [WCAG 2.2: Status Messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html)                                       | Dynamic results and status changes should be available to assistive technology without taking focus.                                      | Announce settled counts and failures without moving focus on every refresh.                                          | It does not prescribe debounce timing or visual presentation.                                               |
 
 ### Ordering and Result-Composition Comparison
 
@@ -542,25 +600,25 @@ production design systems. No single reference determines the solution; the appr
 model follows the convergent task pattern while preserving NOSTALGIA-specific
 difficulty and data semantics.
 
-| Source                                                                                                                         | Observed pattern or evidence                                                                                           | NosLog fit and limitation                                                                                                           |
-| ------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| [Current NosLog Music toolbar](../../components/music/musicToolbar.tsx)                                                        | Sort, direction, difficulty, filters, and view choices currently compete in one control area.                          | Confirms the need to reduce persistent control density; the current arrangement is not a 2.0 layout mandate.                        |
-| [Current NosLog Music query](<../../app/(nevigation)/music/data.ts>)                                                           | Level order can depend on selected difficulties or a hidden Expert fallback, while weakness uses a composite score.    | Direct migration evidence for removing weakness and requiring an explicit level target; current semantics are not retained.         |
-| Current local dataset audit (`2026-07-30`)                                                                                     | All `583` Music entries have `title_kana`, but only `3` MusicChart rows have `released_at`; no ChartPattern is public. | Supports reading-order browse now and requires a release-data gate plus seeded Chart states before representative validation.       |
-| [KONAMI NOSTALGIA Op.3 play data](https://p.eagate.573.jp/game/nostalgia/op3/playdata/entrance.html)                           | Music identity, named difficulty, level, and record dimensions stay explicitly associated.                             | Supports preserving NOSTALGIA difficulty identity; the authenticated record page does not prescribe public catalog layout.          |
-| [maimai DX song list](https://maimai.sega.jp/song/)                                                                            | A jacket-led official catalog keeps title, artist, category, and multiple difficulty levels together.                  | Supports Music-centered grouping and optional visual browsing; maimai's categories and visual density are not copied.               |
-| [CHUNITHM song list](https://chunithm.sega.jp/music/)                                                                          | Official songs remain grouped as one identity with their difficulty data rather than independent difficulty cards.     | Supports one Music result with several difficulties; it does not cover community Chart publication.                                 |
-| [osu! beatmap listing](https://osu.ppy.sh/beatmapsets)                                                                         | Query, mode, category, explicit sorting, and grouped beatmap sets coexist.                                             | Supports explicit scope and sort state plus grouped variants; osu! terminology and ranking model do not transfer directly.          |
-| [osu! client interface](https://osu.ppy.sh/wiki/en/Client/Interface)                                                           | Grouping and sorting are separate concepts, and difficulty sorting can separate related variants.                      | Supports keeping Music grouping stable and avoiding an implicit cross-difficulty representative level.                              |
-| [BeatSaver](https://beatsaver.com/)                                                                                            | Community charts foreground newly uploaded content and expose direct difficulty targets from a song identity.          | Supports latest-published Chart browse; Beat Saber metadata and moderation semantics differ.                                        |
-| [StepManiaOnline search](https://search.stepmaniaonline.net/)                                                                  | Community packs and charts are searchable with explicit recency and difficulty context.                                | Supports publication-recency browse and difficulty visibility; pack-first structure is not NosLog's Music model.                    |
-| [Tachi](https://tachi.ac/)                                                                                                     | Rhythm-game discovery and analysis separate compact identity browsing from detailed record dimensions.                 | Supports list-first scan and progressive detail; Tachi is a multi-game tracker, not a public Chart marketplace.                     |
-| [Algolia: Relevant sorting](https://www.algolia.com/doc/guides/managing-results/refine-results/sorting/in-depth/relevant-sort) | Relevance and business/attribute ordering are distinct modes that need explicit configuration.                         | Keeps relevance as a non-empty-query candidate rather than silently overriding the user's chosen order; capability is not UX proof. |
-| [Algolia: Faceting](https://www.algolia.com/doc/guides/managing-results/refine-results/faceting)                               | Sort and refinement state can remain explicit and restorable alongside query state.                                    | Supports URL-restorable sort and target difficulty; it does not decide which NOSTALGIA sort is meaningful.                          |
-| [Baymard: Default sort type](https://baymard.com/blog/default-sort-type)                                                       | Default ordering materially shapes what users perceive as the available catalog.                                       | Supports a predictable neutral empty-browse order and rejects hidden difficulty restriction; ecommerce priorities are different.    |
-| [Carbon: Data table usage](https://carbondesignsystem.com/components/data-table/usage/)                                        | Secondary actions and view controls should preserve a clear hierarchy around the collection.                           | Supports one current sort trigger and purposeful list/grid controls; enterprise table density is not the target style.              |
-| [PatternFly: Toolbar](https://www.patternfly.org/components/toolbar/design-guidelines)                                         | Filters, sort, view, and bulk actions should be grouped by role and progressively disclosed when space is limited.     | Supports placing the level target inside sort disclosure rather than adding a permanent difficulty-button row.                      |
-| [U.S. Web Design System: Search](https://designsystem.digital.gov/components/search/)                                          | Search labels, status, and results must remain understandable without depending on icon recognition alone.             | Requires localized visible sort/scope meaning and accessible control names; government visual styling does not transfer.            |
+| Source                                                                                                                         | Observed pattern or evidence                                                                                           | NosLog fit and limitation                                                                                                               |
+| ------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| [Current NosLog Music toolbar](../../components/music/musicToolbar.tsx)                                                        | Sort, direction, difficulty, filters, and view choices currently compete in one control area.                          | Confirms the need to reduce persistent control density; the current arrangement is not a 2.0 layout mandate.                            |
+| [Current NosLog Music query](<../../app/(nevigation)/music/data.ts>)                                                           | Level order can depend on selected difficulties or a hidden Expert fallback, while weakness uses a composite score.    | Direct migration evidence for removing weakness and requiring an explicit level target; current semantics are not retained.             |
+| Current local dataset audit (`2026-07-30`)                                                                                     | All `583` Music entries have `title_kana`, but only `3` MusicChart rows have `released_at`; no ChartPattern is public. | Supports reading-order browse now and requires a release-data gate plus seeded Chart states before representative validation.           |
+| [KONAMI NOSTALGIA Op.3 play data](https://p.eagate.573.jp/game/nostalgia/op3/playdata/entrance.html)                           | Music identity, named difficulty, level, and record dimensions stay explicitly associated.                             | Supports preserving NOSTALGIA difficulty identity; the authenticated record page does not prescribe public catalog layout.              |
+| [maimai DX song list](https://maimai.sega.jp/song/)                                                                            | A jacket-led official catalog keeps title, artist, category, and multiple difficulty levels together.                  | Supports Music-centered grouping and optional visual browsing; maimai's categories and visual density are not copied.                   |
+| [CHUNITHM song list](https://chunithm.sega.jp/music/)                                                                          | Official songs remain grouped as one identity with their difficulty data rather than independent difficulty cards.     | Supports one Music result with several difficulties; it does not cover community Chart publication.                                     |
+| [osu! beatmap listing](https://osu.ppy.sh/beatmapsets)                                                                         | Query, mode, category, explicit sorting, and grouped beatmap sets coexist.                                             | Supports explicit scope and sort state plus grouped variants; osu! terminology and ranking model do not transfer directly.              |
+| [osu! client interface](https://osu.ppy.sh/wiki/en/Client/Interface)                                                           | Grouping and sorting are separate concepts, and difficulty sorting can separate related variants.                      | Supports keeping Music grouping stable and avoiding an implicit cross-difficulty representative level.                                  |
+| [BeatSaver](https://beatsaver.com/)                                                                                            | Community charts foreground newly uploaded content and expose direct difficulty targets from a song identity.          | Supports latest-published Chart browse; Beat Saber metadata and moderation semantics differ.                                            |
+| [StepManiaOnline search](https://search.stepmaniaonline.net/)                                                                  | Community packs and charts are searchable with explicit recency and difficulty context.                                | Supports publication-recency browse and difficulty visibility; pack-first structure is not NosLog's Music model.                        |
+| [Tachi](https://tachi.ac/)                                                                                                     | Rhythm-game discovery and analysis separate compact identity browsing from detailed record dimensions.                 | Supports list-first scan and progressive detail; Tachi is a multi-game tracker, not a public Chart marketplace.                         |
+| [Algolia: Relevant sorting](https://www.algolia.com/doc/guides/managing-results/refine-results/sorting/in-depth/relevant-sort) | Relevance and business/attribute ordering are distinct modes that need explicit configuration.                         | Supports active-query Relevance while preserving an explicit user order rather than silently overriding it; capability is not UX proof. |
+| [Algolia: Faceting](https://www.algolia.com/doc/guides/managing-results/refine-results/faceting)                               | Sort and refinement state can remain explicit and restorable alongside query state.                                    | Supports URL-restorable sort and target difficulty; it does not decide which NOSTALGIA sort is meaningful.                              |
+| [Baymard: Default sort type](https://baymard.com/blog/default-sort-type)                                                       | Default ordering materially shapes what users perceive as the available catalog.                                       | Supports a predictable neutral empty-browse order and rejects hidden difficulty restriction; ecommerce priorities are different.        |
+| [Carbon: Data table usage](https://carbondesignsystem.com/components/data-table/usage/)                                        | Secondary actions and view controls should preserve a clear hierarchy around the collection.                           | Supports one current sort trigger and purposeful list/grid controls; enterprise table density is not the target style.                  |
+| [PatternFly: Toolbar](https://www.patternfly.org/components/toolbar/design-guidelines)                                         | Filters, sort, view, and bulk actions should be grouped by role and progressively disclosed when space is limited.     | Supports placing the level target inside sort disclosure rather than adding a permanent difficulty-button row.                          |
+| [U.S. Web Design System: Search](https://designsystem.digital.gov/components/search/)                                          | Search labels, status, and results must remain understandable without depending on icon recognition alone.             | Requires localized visible sort/scope meaning and accessible control names; government visual styling does not transfer.                |
 
 ### Personal-Record Taxonomy Comparison
 
@@ -618,6 +676,12 @@ storefronts and derivative summaries were not counted as separate support.
 - Level ordering is understandable only when its difficulty basis is explicit.
   Hiding an Expert fallback or blending several difficulties would make equal-looking
   “level” values semantically inconsistent.
+- Combined and separate mobile Filter/Sort entry patterns are both established.
+  A combined trigger is appropriate only when its label names both functions, its
+  internal sections remain distinct, and committed sort state stays visible.
+- A recent-play time-window filter is not justified merely because recent-play order
+  exists. Without a verified intersection task, retaining both adds taxonomy without
+  a distinct high-value outcome.
 
 ### Evidence Disagreement and NosLog Resolution
 
@@ -637,8 +701,12 @@ storefronts and derivative summaries were not counted as separate support.
   more strongly foreground publication recency. NosLog applies each pattern to the
   matching scope instead of forcing one universal empty-browse order.
 - Search systems support relevance for active queries, but references disagree on when
-  it should override an explicit user order. NosLog keeps that behavior open until the
-  query/sort precedence is separately approved.
+  it should override an explicit user order. NosLog resolves this by using Relevance
+  only as the no-explicit-sort active-query default and preserving a user's selection.
+- Some guidance prefers separate mobile Filter and Sort controls for immediate
+  distinction, while SAP and comparable catalog patterns support a combined entry.
+  NosLog uses the combined narrow trigger to reduce persistent density, keeps the
+  sections separate, and retains separate controls when results remain visible.
 
 ## Rejected or Superseded Alternatives
 
@@ -682,6 +750,12 @@ storefronts and derivative summaries were not counted as separate support.
 - **Permanent difficulty button row for level sort — Rejected:** Keep the target inside
   progressive sort disclosure so the collection toolbar does not become a repeated
   control strip.
+- **Separate permanent Filter and Sort buttons on narrow layouts — Rejected:** Use one
+  explicit Filter-and-sort entry while keeping the current sort and applied-filter
+  count visible outside it. This does not merge their internal semantics.
+- **Played-in-last-30-days filter — Superseded:** Earlier retention inherited a current
+  implementation control without a verified high-value intersection task. Keep recent
+  play as a signed-in sort instead.
 - **Chart grid view — Rejected:** Published difficulty selection needs a grouped,
   scannable list under Music identity rather than an additional artwork mode.
 - **Database creation or update time as Music release date — Rejected:** Import and
@@ -692,21 +766,17 @@ storefronts and derivative summaries were not counted as separate support.
 The following decisions require a new evidence-and-approval batch before this brief can
 be approved:
 
-1. For a non-empty text query, should relevance become the initial order, or should
-   the last explicit user sort remain authoritative?
-2. Which remaining public filters and sorts belong to both scopes, and which are
-   Music- or Chart-only?
-3. What exact progressive-disclosure control should open the approved authenticated
-   personal-record group, and should signed-out users see an invitation or no control?
-4. What exact mobile and desktop anatomy should arrange the approved Music
-   list/grid, Chart grouped list, and explicit level-sort difficulty target without
-   increasing persistent control density?
-5. What batch size and Load-more copy produce the best balance of scanning, response
+1. What exact card density, proportions, and responsive result anatomy should express
+   the approved Music list/grid and Chart grouped-list models?
+2. What batch size and Load-more copy produce the best balance of scanning, response
    time, memory, and return-state restoration?
-6. Which no-result recovery actions should be ordered first for text mismatch, an
+3. Which no-result recovery actions should be ordered first for text mismatch, an
    over-constrained filter set, and no published Chart availability?
-7. After mobile filter commit, should focus remain on the returning filter trigger,
+4. After mobile Filter-and-sort commit, should focus remain on the returning trigger,
    move to the result summary, or follow a conditional rule based on input method?
+5. When Unplayed and signed-in recent-play order conflict, should selecting one disable
+   the other, replace it with the scope default, or use another explicitly tested
+   transition?
 
 ## Browser Verification Targets
 
@@ -725,16 +795,19 @@ The later implementation must verify at minimum:
 - newest-Music sorting with verified official release dates, including the unavailable
   data-gate state and no fallback to database timestamps;
 - absence of weakness sorting and explicit difficulty selection before level order;
+- active-query Relevance fallback, explicit-sort persistence, and return to the
+  scope default when a Relevance query is cleared;
 - Chart grouping with zero, one, and multiple published matching difficulties;
 - direct published-difficulty entry to the focused viewer and exact return-state
   restoration;
-- mobile filter staging, generic and counted result actions, cancel, commit, clear
-  one, and clear all;
-- desktop instant discrete filters and debounced/committed range controls;
-- signed-out and signed-in personal-filter states, including the advanced-group
-  disclosure;
-- S, FC, Pianist, recent-play, and Unplayed criteria; inclusive best-record MISS
-  bounds; within-group `OR`; cross-group `AND`; and Unplayed conflict prevention;
+- one mobile Filter-and-sort trigger, distinct internal sections, staged sort/filter
+  state, generic and counted result actions, cancel, commit, clear one, and clear all;
+- separate desktop Filter and Sort controls, instant discrete filters, immediate sort,
+  and debounced/committed range controls;
+- omission of the signed-out personal group and signed-in advanced-group disclosure;
+- S, FC, Pianist, and Unplayed criteria; absence of the 30-day-played filter;
+  signed-in recent-play order; inclusive best-record MISS bounds; within-group `OR`;
+  cross-group `AND`; and Unplayed conflict prevention;
 - Music list-default/grid switching and stable base identity with zero, one, and
   several matching difficulty records;
 - grouped-list-only Chart results with no grid toggle;
@@ -759,8 +832,9 @@ The later implementation must verify at minimum:
   order is gated by verified official release-date data.
 - Published Chart results are grouped by Music and never expose unavailable targets.
 - Weakness sort is absent, and level sort never has an implicit difficulty basis.
-- Text search, mobile filter commitment, desktop live filtering, and applied-state
-  removal have explicit non-conflicting rules.
+- Active-query Relevance, explicit-sort persistence, mobile combined Filter-and-sort
+  commitment, desktop separated live controls, and applied-state removal have explicit
+  non-conflicting rules.
 - Authenticated record refinement has an approved lean taxonomy, best-record MISS
   semantics, combination rules, and impossible-state handling.
 - Music result identity, list/grid availability, desktop hover/focus record context,
@@ -779,42 +853,46 @@ The later implementation must verify at minimum:
 
 ## Decision Register
 
-| ID      | Decision                      | Direction                                                                                                                      | Status     |
-| ------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ---------- |
-| DISC-01 | Discovery architecture        | One shared surface with Music and Chart scopes                                                                                 | `Approved` |
-| DISC-02 | Scope control                 | Compact leading selector with visible text in the opened control; no permanent mode-button row                                 | `Approved` |
-| DISC-03 | Scope entry                   | Music entries open Music scope; Chart Viewer entries open Chart scope; query and scope are shareable and restorable            | `Approved` |
-| DISC-04 | Empty Music browse            | Include the complete eligible Music catalog; remove the hidden Expert `8–12` default                                           | `Approved` |
-| DISC-05 | Chart eligibility             | Return only published matching Chart targets                                                                                   | `Approved` |
-| DISC-06 | Chart grouping                | One result unit per Music with its published matching difficulties                                                             | `Approved` |
-| DISC-07 | Chart selection               | Selecting a published difficulty opens that exact focused viewer directly                                                      | `Approved` |
-| DISC-08 | Text-query application        | IME-safe update after `300ms` idle; preserve query on no results                                                               | `Approved` |
-| DISC-09 | Mobile filter application     | Stage in a result-obscuring layer; one **View results** action commits and closes; Close/Back cancels                          | `Approved` |
-| DISC-10 | Desktop filter application    | Apply visible discrete filters immediately; debounce or commit continuous controls                                             | `Approved` |
-| DISC-11 | Applied-state removal         | Removing one criterion or clearing all applies immediately                                                                     | `Approved` |
-| DISC-12 | Progressive loading           | No automatic infinite scroll; use explicit Load more                                                                           | `Approved` |
-| DISC-13 | Progressive state             | Provide count/range, busy, retry, end, URL/history, loaded-state, and meaningful scroll restoration                            | `Approved` |
-| DISC-14 | Initial ordering              | Empty Music uses `title_kana` ascending; empty Chart uses latest published-chart group descending                              | `Approved` |
-| DISC-15 | Filter and sort taxonomy      | Weakness removal and explicit level target are approved; remaining public, shared, and scope-specific controls stay unresolved | `Open`     |
-| DISC-16 | Result composition            | Music is list-default/grid-optional and Chart is grouped-list-only; exact responsive anatomy and density stay unresolved       | `Open`     |
-| DISC-17 | Batch size and copy           | Validate batch size and exact Load-more label with performance and scan testing                                                | `Open`     |
-| DISC-18 | No-result recovery            | Determine recovery priority by query, filter, and publication cause                                                            | `Open`     |
-| DISC-19 | Mobile post-commit focus      | Validate focus destination and announcement behavior                                                                           | `Open`     |
-| DISC-20 | Authenticated record taxonomy | Keep Unplayed, S, FC, Pianist, and recent play; use one advanced MISS range; remove Clear and low-value metric filters         | `Approved` |
-| DISC-21 | MISS semantics                | Inclusive optional bounds against each eligible difficulty's best record; never combine MISS with Near                         | `Approved` |
-| DISC-22 | Record-filter logic           | `AND` across groups, `OR` within a group; Unplayed is exclusive with recent and achieved-record criteria                       | `Approved` |
-| DISC-23 | Music result identity         | Jacket, original and optional localized/read title, artist, category, all official difficulties; list and grid                 | `Approved` |
-| DISC-24 | Personal-record preview       | Identity-first resting result; desktop hover and focus preview matched records; touch opens detail without hover               | `Approved` |
-| DISC-25 | Newest Music sort             | Provide it only with verified official Music-level release dates; never substitute database maintenance timestamps             | `Approved` |
-| DISC-26 | Weakness sort                 | Remove the opaque composite weakness order                                                                                     | `Approved` |
-| DISC-27 | Level-sort basis              | Require an explicit target difficulty; never use hidden Expert fallback or a blended representative level                      | `Approved` |
-| DISC-28 | Scope result views            | Music opens as list with optional jacket grid; Chart remains one grouped list without a grid toggle                            | `Approved` |
+| ID      | Decision                        | Direction                                                                                                                 | Status       |
+| ------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| DISC-01 | Discovery architecture          | One shared surface with Music and Chart scopes                                                                            | `Approved`   |
+| DISC-02 | Scope control                   | Compact leading selector with visible text in the opened control; no permanent mode-button row                            | `Approved`   |
+| DISC-03 | Scope entry                     | Music entries open Music scope; Chart Viewer entries open Chart scope; query and scope are shareable and restorable       | `Approved`   |
+| DISC-04 | Empty Music browse              | Include the complete eligible Music catalog; remove the hidden Expert `8–12` default                                      | `Approved`   |
+| DISC-05 | Chart eligibility               | Return only published matching Chart targets                                                                              | `Approved`   |
+| DISC-06 | Chart grouping                  | One result unit per Music with its published matching difficulties                                                        | `Approved`   |
+| DISC-07 | Chart selection                 | Selecting a published difficulty opens that exact focused viewer directly                                                 | `Approved`   |
+| DISC-08 | Text-query application          | IME-safe update after `300ms` idle; preserve query on no results                                                          | `Approved`   |
+| DISC-09 | Mobile sort/filter application  | Stage both in a result-obscuring layer; one **View results** action commits and closes; Close/Back cancels                | `Approved`   |
+| DISC-10 | Desktop filter application      | Apply visible discrete filters immediately; debounce or commit continuous controls                                        | `Approved`   |
+| DISC-11 | Applied-state removal           | Removing one criterion or clearing all applies immediately                                                                | `Approved`   |
+| DISC-12 | Progressive loading             | No automatic infinite scroll; use explicit Load more                                                                      | `Approved`   |
+| DISC-13 | Progressive state               | Provide count/range, busy, retry, end, URL/history, loaded-state, and meaningful scroll restoration                       | `Approved`   |
+| DISC-14 | Initial ordering                | Empty Music uses `title_kana` ascending; empty Chart uses latest published-chart group descending                         | `Approved`   |
+| DISC-15 | Filter and sort taxonomy        | Public category/difficulty/level filters; approved scope sort sets; personal record criteria remain secondary             | `Approved`   |
+| DISC-16 | Result composition              | Music is list-default/grid-optional and Chart is grouped-list-only; exact result-card anatomy and density stay unresolved | `Open`       |
+| DISC-17 | Batch size and copy             | Validate batch size and exact Load-more label with performance and scan testing                                           | `Open`       |
+| DISC-18 | No-result recovery              | Determine recovery priority by query, filter, and publication cause                                                       | `Open`       |
+| DISC-19 | Mobile post-commit focus        | Validate focus destination and announcement behavior                                                                      | `Open`       |
+| DISC-20 | Authenticated record taxonomy   | Keep Unplayed, S, FC, Pianist, and one advanced MISS range; remove Clear, 30-day play, and low-value metric filters       | `Approved`   |
+| DISC-21 | MISS semantics                  | Inclusive optional bounds against each eligible difficulty's best record; never combine MISS with Near                    | `Approved`   |
+| DISC-22 | Record-filter logic             | `AND` across groups, `OR` within a group; Unplayed excludes achieved criteria and conflicts with recent-play order        | `Approved`   |
+| DISC-23 | Music result identity           | Jacket, original and optional localized/read title, artist, category, all official difficulties; list and grid            | `Approved`   |
+| DISC-24 | Personal-record preview         | Identity-first resting result; desktop hover and focus preview matched records; touch opens detail without hover          | `Approved`   |
+| DISC-25 | Newest Music sort               | Provide it only with verified official Music-level release dates; never substitute database maintenance timestamps        | `Approved`   |
+| DISC-26 | Weakness sort                   | Remove the opaque composite weakness order                                                                                | `Approved`   |
+| DISC-27 | Level-sort basis                | Require an explicit target difficulty; never use hidden Expert fallback or a blended representative level                 | `Approved`   |
+| DISC-28 | Scope result views              | Music opens as list with optional jacket grid; Chart remains one grouped list without a grid toggle                       | `Approved`   |
+| DISC-29 | Active-query sort precedence    | Default to Relevance without a user sort; preserve explicit sort; clear-query Relevance returns to the scope default      | `Approved`   |
+| DISC-30 | Responsive sort/filter access   | One labelled combined mobile trigger and staged layer; separate result-visible desktop controls                           | `Approved`   |
+| DISC-31 | Signed-out personal controls    | Omit the personal-record group instead of disabled criteria or an embedded login invitation                               | `Approved`   |
+| DISC-32 | 30-day play-filter retention    | Former retention is replaced by removal; recent play remains a signed-in sort                                             | `Superseded` |
+| DISC-33 | Unplayed/recent-sort transition | Preserve the approved conflict semantics; choose the exact disable/reset transition through prototype testing             | `Open`       |
 
 ## Next Discussion Batch
 
-Continue with the unresolved portions of `DISC-15` and `DISC-16`: the remaining
-public/scope-specific taxonomy and exact responsive control/result anatomy affect one
-another. Also resolve active-query sort precedence before closing this page brief. Do
-not reopen `DISC-20` through `DISC-28` or finalize card density and filter prominence
-independently of representative Music, published Chart, localized-title, and
-authenticated-record data.
+Continue with `DISC-16` result-card anatomy and density, then resolve batch size,
+no-result recovery, post-commit focus, and the Unplayed/recent-sort transition. Do not
+reopen the approved taxonomy or responsive control access without new evidence and
+user approval, and do not finalize card density independently of representative Music,
+published Chart, localized-title, and authenticated-record data.

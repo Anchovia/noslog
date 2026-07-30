@@ -163,8 +163,19 @@
   제공합니다. 악곡 `created_at`, `updated_at` 또는 채보 Import 시각으로
   대체하지 않습니다. 이후 추가된 난이도를 어떻게 Mapping할지는 구현 전에
   검토해야 합니다.
-- Text Query가 있는 경우의 기본 정렬은 미확정입니다. 관련도순은 후보지만
-  사용자가 선택한 정렬을 대체하는 규칙으로 승인하지 않았습니다.
+- Text Query가 있고 현재 탐색 상태에서 사용자가 다른 정렬을 선택하지 않았다면
+  **관련도순**을 기본으로 사용합니다. 관련도는 안정적인 악곡 식별자, 원문 제목,
+  승인된 번역·읽기 제목 및 아티스트에서 정확하고 가까운 일치를 약한 부분
+  일치보다 앞에 둡니다. 정확한 가중치와 동률 조정은 구현 단계에서 다룹니다.
+- 사용자가 선택한 정렬은 Text와 필터를 변경해도 유지합니다. 관련도순 상태에서
+  Query를 지우면 활성 범위의 승인된 빈 Query 정렬로 돌아갑니다. 관련도순은
+  빈 Query 탐색 선택지가 아닙니다.
+- 악곡 범위는 능동 Text 검색의 관련도순, 일본어 읽기순, 검증된 데이터 Gate를
+  충족한 신곡순, 명시적인 대상 난이도를 가진 레벨순 및 로그인 사용자의 최근
+  플레이순을 제공합니다.
+- 채보 범위는 능동 Text 검색의 관련도순, 최신 공개 채보순, 일본어 읽기순,
+  명시적인 대상 난이도를 가진 레벨순 및 로그인 사용자의 최근 플레이순을
+  제공합니다.
 - 현재 **취약순** 정렬은 제거합니다. 불투명한 복합 점수는 승인된 이해 가능한
   탐색 목표와 연결되지 않습니다.
 - 레벨순은 사용자가 대상 난이도를 명시적으로 선택한 뒤에만 유효합니다.
@@ -173,9 +184,22 @@
 - 정렬 컨트롤 밖에는 현재 정렬 요약만 보여줍니다. 대상 난이도는 상시
   `Normal / Hard / Expert / Real` Button 행이 아니라 점진적 공개 안에서
   선택합니다.
-- 넓은 화면의 간결한 Menu와 좁은 화면의 Sheet 같은 정확한 반응형 구조는
-  Component 단계 비교·테스트까지 미확정으로 남깁니다. 시각적으로 조용하게
-  보이기 위해 승인된 의미를 모호한 컨트롤로 바꾸면 안 됩니다.
+- 정렬 방향 컨트롤은 상시 Button을 추가하지 않고 정렬 Surface 안에 둡니다.
+  레벨순 대상처럼 Context에 따른 필수 항목은 해당 정렬을 선택한 뒤에만
+  노출합니다.
+
+### 승인된 필터 분류
+
+- 공개 악곡·채보 탐색은 도메인에 의미 있는 공식 악곡 Category,
+  Normal/Hard/Expert/Real 난이도 및 선택한 난이도 Target의 레벨 범위만
+  공유합니다.
+- 채보 범위는 악곡 정체성과 Category를 상속하면서 일치하는 공개 채보
+  Target으로 결과를 제한합니다. 공개 여부는 범위 자체의 조건이며 중복된
+  보이는 필터가 아닙니다.
+- NosLog에 승인된 공개 데이터나 사용자 요구가 없는 채보 제작자, Community
+  평점, Marketplace 상태 또는 일반 Tag 필터를 만들지 않습니다.
+- 로그인 개인 기록 세부 필터는 아래 정의처럼 부차적으로 공개되는 Group이며
+  공개 필터 분류를 바꾸지 않습니다.
 
 ## 검색 상호작용
 
@@ -204,38 +228,54 @@
 - 전체 필터, 정렬, 묶음 불러오기 및 결과 복구는 이 Surface가 담당하며 홈에서
   복제하지 않습니다.
 
-## 필터 적용 모델
+## 필터·정렬 적용 모델
 
 승인된 모델은 모든 상황에 하나의 `즉시 반영` 또는 `적용` 규칙을 사용하는
 것이 아니라 반응형이며 과업 특성에 따라 달라집니다.
 
 ### 모바일 및 결과가 가려지는 레이아웃
 
-- 결과 Collection을 컨트롤 옆에서 의미 있게 유지할 수 없다면 필터를 전체
-  화면 또는 화면 대부분을 차지하는 Layer로 엽니다.
-- 가려진 결과 Collection을 선택마다 교체하지 않고 여러 Category, 난이도,
-  범위 및 개인 기록 변경을 임시로 선택할 수 있게 합니다.
+- 필터와 정렬 Button을 각각 상시 두지 않고 명확한 **필터·정렬** Trigger 하나를
+  제공합니다. Badge는 적용된 필터만 세며 항상 존재하는 정렬 선택을 적용
+  필터로 세지 않습니다.
+- Layer 밖에 Commit된 결과 수와 현재 정렬을 계속 표시합니다. 예를 들면
+  “악곡 583개 · 관련도순”과 같은 의미 구조이며, Trigger만 보고 현재 순서를
+  추론하게 하면 안 됩니다.
+- 결과 Collection을 컨트롤 옆에서 의미 있게 유지할 수 없다면 전체 화면 또는
+  화면 대부분을 차지하는 Layer 하나로 엽니다.
+- Layer 안에서 정렬, 공개 필터 및 로그인 개인 기록 Group을 시각적으로 명확히
+  분리합니다. 진입점을 합쳐도 정렬을 찾기 어렵거나 다중 선택 필터처럼 보이지
+  않도록 정렬을 먼저 둡니다.
+- 가려진 결과 Collection을 선택마다 교체하지 않고 정렬과 여러 Category,
+  난이도, 범위 및 개인 기록 변경을 임시로 선택할 수 있게 합니다.
 - 행정적인 확인이 아니라 결과 과업으로 복귀하는 하나의 고정 주요 Action을
   사용합니다. 라벨은 **결과 보기**, 유효한 결과 수가 준비되면
   **N개 결과 보기**를 사용합니다.
-- 주요 Action은 임시 조건을 Commit하는 동시에 필터 Layer를 닫습니다. 적용
+- 주요 Action은 임시 정렬과 조건을 Commit하는 동시에 Layer를 닫습니다. 적용
   뒤에 두 번째 닫기 Action을 요구하지 않습니다.
 - 결과 수 계산 중에도 일반 **결과 보기** 라벨을 사용할 수 있어야 하며 결과
   수 계산이 완료를 막으면 안 됩니다.
 - 뒤로가기 또는 닫기는 임시 변경을 Commit하지 않고 종료하며 이전에 적용한
-  필터 상태를 복구합니다.
+  정렬과 필터 상태를 복구합니다.
 - Layer를 닫은 뒤 적용 필터를 결과 요약 근처에서 계속 확인할 수 있어야
   합니다.
+- 악곡 목록·Grid 보기는 결과 포함 여부나 순서가 아니라 표현을 바꾸므로 별도의
+  간결한 보기 컨트롤로 유지합니다. 채보 범위에는 해당 컨트롤을 표시하지
+  않습니다.
 
 이는 과업 단계를 추가한 것으로 취급하지 않습니다. 결과가 가려지는 Layer의
 사용자는 어느 모델에서든 결과로 돌아가야 하며 주요 Action이 필요한 복귀와
-필터 Commit을 하나로 합치기 때문입니다.
+정렬·필터 Commit을 하나로 합치기 때문입니다.
 
 ### 데스크톱 및 결과가 보이는 레이아웃
 
-- 노출된 필터 컨트롤 옆이나 가까이에 주요 결과 Collection을 계속 보이게
-  합니다.
+- 필터와 정렬을 서로 다른 간결한 컨트롤로 유지합니다. 필터는 이용 가능한
+  콘텐츠 너비에 따라 고정된 영역 또는 Rail을 노출할 수 있고, 정렬은 현재 값이
+  직접 Label된 단일 선택 컨트롤을 사용합니다.
+- 노출된 필터 컨트롤 옆이나 가까이에 주요 결과 Collection을 계속 보이게 합니다.
 - 사용자가 결과 변화를 볼 수 있으므로 개별 필터 선택을 즉시 반영합니다.
+- 선택한 정렬은 즉시 반영합니다. 모든 정렬 대안을 상시 Button 행으로 만들지
+  않고 현재 값을 계속 표시합니다.
 - Text와 유사하거나 연속적인 컨트롤은 Debounce합니다. 범위 컨트롤이 Pointer
   1 Pixel마다 결과 요청을 보내면 안 되며 짧은 안정 구간 이후 또는 조작
   Commit 시 갱신합니다.
@@ -259,8 +299,12 @@
 탐색보다 항상 펼쳐진 주요 필터 Group으로 승격하지 않고 부차적으로 유지해야
 합니다.
 
-- 도메인에 의미 있는 상태와 목표 조건인 **미플레이**, **S**, **FC**,
-  **Pianist**, **최근 30일 내 플레이**를 유지합니다.
+- 도메인에 의미 있는 상태와 목표 조건인 **미플레이**, **S**, **FC** 및
+  **Pianist**를 유지합니다.
+- **최근 30일 내 플레이**는 제거합니다. 다른 필터와 기간을 교차하는 근거가
+  약한 사용 사례만 별도로 지원하면서 지속적인 조건을 하나 더 만들기 때문입니다.
+  로그인 사용자의 **최근 플레이순**이 최근에 플레이한 악곡으로 돌아가는
+  목적을 이미 지원합니다.
 - **클리어** 필터는 제공하지 않습니다. NOSTALGIA에서 클리어 상태는 이 탐색
   과업을 유의미하게 구분하지 않으므로 현재 컨트롤은 실제 사용자 목표를
   나누지 못합니다.
@@ -270,9 +314,10 @@
   사용자의 최고 기록을 기준으로 계산합니다.
 - 서로 다른 Group의 조건은 `AND`, 같은 Group 안의 여러 값은 `OR`로
   결합합니다.
-- **미플레이**는 최근 플레이 및 달성 기록 조건 모두와 상호 배타적입니다.
-  불가능한 Query를 만들지 않고 한쪽을 선택하면 충돌하는 다른 쪽을
-  해제하거나 비활성화합니다.
+- **미플레이**는 모든 달성 기록 조건과 상호 배타적이며 최근 플레이순도 의미가
+  없습니다. 불가능하거나 무의미한 Query를 만들면 안 되며 활성 미플레이
+  필터와 최근 플레이순 사이의 정확한 전환 동작은 작은 Prototype 결정으로
+  남깁니다.
 - ◆JUST 비율, MISS+NEAR 비율, FAST/SLOW 경향 및 스탠다드·테누토·글리산도·
   트릴 성공률 탐색 필터를 제거합니다. 이러한 값은 해석할 수 있는 기록 상세
   Context의 분석 데이터로 유지합니다.
@@ -280,8 +325,11 @@
   아니라 집중 연습 계획을 지원하므로 점진적으로 공개되는 로그인 개인 기록
   Group에 둡니다.
 
-정확한 컨트롤 형태와 비로그인 안내 방식은 후속 Prototype에서 결정하지만,
-승인된 분류와 결합 규칙은 새로운 결정 없이 바꾸지 않습니다.
+이 Group은 공개 필터 다음에 접힌 상태로 두며 로그인 사용자가 명시적으로 열기
+전까지 펼치지 않습니다. 비로그인 사용자에게는 비활성화된 조건이나 내부 로그인
+안내를 보여주지 않고 개인 기록 Group 전체를 생략합니다. 일반 탐색은 공개
+상태를 유지하며 인증 홍보가 세부 필터 과업에 불필요한 정보를 추가하면 안
+됩니다.
 
 ## 명시적인 점진적 불러오기
 
@@ -390,31 +438,32 @@
 
 ## 상태 요구사항
 
-| 상태                      | 필수 동작                                                                | 상태              |
-| ------------------------- | ------------------------------------------------------------------------ | ----------------- |
-| 초기 악곡 탐색            | 숨은 난이도 제한 없이 전체 Catalog를 `title_kana` 오름차순으로 표시      | `승인`            |
-| 초기 채보 탐색            | 공개 악곡 Group을 가장 최근 공개 채보 시각 기준 내림차순으로 표시        | `승인`            |
-| 악곡 신곡순 사용 불가     | 검증된 공식 악곡 단위 출시일을 채울 때까지 옵션을 생략하거나 이유를 설명 | `승인`            |
-| 레벨순 Target 없음        | 난이도 선택을 명시적으로 요구하고 Expert로 조용히 대체하지 않음          | `승인`            |
-| 취약순                    | 현재 불투명한 복합 취약 정렬을 제공하지 않음                             | `승인`            |
-| 안정된 능동 검색          | `300ms` 유휴 후 결과 집합을 교체하고 Commit된 URL 상태 동기화            | `승인`            |
-| 빠른 응답                 | 잠깐 나타나는 Loading 표현을 깜빡이지 않고 갱신                          | `제안`            |
-| 느린 초기·필터 응답       | 검색·필터 컨트롤은 안정적으로 유지하고 결과 영역에서 Busy 상태 전달      | `제안`            |
-| 결과 없음                 | Query와 적용 조건을 유지하고 활성 범위를 알리며 되돌릴 수 있는 복구 제공 | `승인` / `미확정` |
-| 초기 조회 실패            | 컨트롤과 상태를 유지하고 다른 곳으로 Redirect하지 않는 재시도 제공       | `제안`            |
-| 모바일 필터 열림          | Commit된 결과 상태와 임시 값을 구분해 표시                               | `승인`            |
-| 모바일 필터 결과 수 대기  | 사용할 수 있는 일반 **결과 보기** Action 유지                            | `승인`            |
-| 모바일 필터 닫기·뒤로가기 | 임시 변경을 버리고 Commit된 값 복구                                      | `승인`            |
-| 비로그인 개인 필터        | 필터가 적용된 척하지 않으며 정확한 로그인 안내 또는 생략은 미확정        | `관찰` / `미확정` |
-| 로그인 기록 세부 필터     | 승인된 기록 조건을 부차적인 고급 Group에 유지                            | `승인`            |
-| MISS 범위 활성            | 대상 난이도의 최고 기록에 포괄 범위를 적용                               | `승인`            |
-| 미플레이 충돌             | 최근 플레이 또는 달성 기록 조건과 함께 선택하지 못하게 함                | `승인`            |
-| 데스크톱 기록 미리보기    | Pointer Hover와 Keyboard Focus에 같은 간결한 기록 Context 제공           | `승인`            |
-| Touch 결과                | 평상시 카드를 안정적으로 유지하고 목적지에서 전체 기록 Context 제공      | `승인`            |
-| 더 보기 진행 중           | 기존 결과를 유지하고 Action을 Busy로 표시하며 중복 실행 방지             | `승인`            |
-| 더 보기 실패              | 기존 결과를 유지하고 다국어 재시도 제공                                  | `승인`            |
-| 결과 끝                   | 자동 추가 불러오기 없이 완료 상태 전달                                   | `승인`            |
-| 목적지에서 복귀           | 범위, Query, Commit 조건, 정렬, 불러온 묶음 및 의미 있는 Scroll 복구     | `승인`            |
+| 상태                        | 필수 동작                                                                | 상태              |
+| --------------------------- | ------------------------------------------------------------------------ | ----------------- |
+| 초기 악곡 탐색              | 숨은 난이도 제한 없이 전체 Catalog를 `title_kana` 오름차순으로 표시      | `승인`            |
+| 초기 채보 탐색              | 공개 악곡 Group을 가장 최근 공개 채보 시각 기준 내림차순으로 표시        | `승인`            |
+| 악곡 신곡순 사용 불가       | 검증된 공식 악곡 단위 출시일을 채울 때까지 옵션을 생략하거나 이유를 설명 | `승인`            |
+| 레벨순 Target 없음          | 난이도 선택을 명시적으로 요구하고 Expert로 조용히 대체하지 않음          | `승인`            |
+| 취약순                      | 현재 불투명한 복합 취약 정렬을 제공하지 않음                             | `승인`            |
+| 사용자 정렬 없는 능동 Query | 관련도순 사용, 이후 Query·필터 변경에도 명시적으로 고른 정렬 유지        | `승인`            |
+| 안정된 능동 검색            | `300ms` 유휴 후 결과 집합을 교체하고 Commit된 URL 상태 동기화            | `승인`            |
+| 빠른 응답                   | 잠깐 나타나는 Loading 표현을 깜빡이지 않고 갱신                          | `제안`            |
+| 느린 초기·필터 응답         | 검색·필터 컨트롤은 안정적으로 유지하고 결과 영역에서 Busy 상태 전달      | `제안`            |
+| 결과 없음                   | Query와 적용 조건을 유지하고 활성 범위를 알리며 되돌릴 수 있는 복구 제공 | `승인` / `미확정` |
+| 초기 조회 실패              | 컨트롤과 상태를 유지하고 다른 곳으로 Redirect하지 않는 재시도 제공       | `제안`            |
+| 모바일 정렬·필터 열림       | 정렬·필터 Section을 구분하고 둘 다 Commit 결과 상태와 별도로 임시 선택   | `승인`            |
+| 모바일 결과 수 대기         | 사용할 수 있는 일반 **결과 보기** Action 유지                            | `승인`            |
+| 모바일 Layer 닫기·뒤로가기  | 임시 변경을 버리고 Commit된 정렬과 필터 복구                             | `승인`            |
+| 비로그인 개인 필터          | 개인 기록 Group 생략, 비활성 조건이나 내부 로그인 안내를 표시하지 않음   | `승인`            |
+| 로그인 기록 세부 필터       | 승인된 기록 조건을 부차적인 고급 Group에 유지                            | `승인`            |
+| MISS 범위 활성              | 대상 난이도의 최고 기록에 포괄 범위를 적용                               | `승인`            |
+| 미플레이 충돌               | 달성 기록 조건 방지, 최근 플레이순을 의미 있는 활성 상태로 남기지 않음   | `승인` / `미확정` |
+| 데스크톱 기록 미리보기      | Pointer Hover와 Keyboard Focus에 같은 간결한 기록 Context 제공           | `승인`            |
+| Touch 결과                  | 평상시 카드를 안정적으로 유지하고 목적지에서 전체 기록 Context 제공      | `승인`            |
+| 더 보기 진행 중             | 기존 결과를 유지하고 Action을 Busy로 표시하며 중복 실행 방지             | `승인`            |
+| 더 보기 실패                | 기존 결과를 유지하고 다국어 재시도 제공                                  | `승인`            |
+| 결과 끝                     | 자동 추가 불러오기 없이 완료 상태 전달                                   | `승인`            |
+| 목적지에서 복귀             | 범위, Query, Commit 조건, 정렬, 불러온 묶음 및 의미 있는 Scroll 복구     | `승인`            |
 
 ## 반응형 요구사항
 
@@ -422,8 +471,9 @@
 
 - 범위 인식 검색, 간결한 Commit 상태, 결과, 명시적인 더 보기 순서로 하나의
   강한 세로 과업 흐름을 유지합니다.
-- 밀도 높은 필터를 영구 콘텐츠 열에 두지 않고 승인된 결과 가림 필터 Layer로
-  엽니다.
+- 밀도 높은 컨트롤을 영구 콘텐츠 열에 두지 않습니다. 하나의 Label된 Trigger로
+  정렬·필터를 승인된 결과 가림 Layer 안에 열되, 결과 요약에는 현재 정렬과 적용
+  필터 수를 계속 표시합니다.
 - 모바일 전용 하단 내비게이션이나 범위·필터 Button 행을 상시 추가하지
   않습니다.
 - Software Keyboard, 한국어·일본어 IME 조합, 브라우저 Chrome 및 낮은
@@ -436,6 +486,8 @@
 - `390px` 모바일 Canvas를 데스크톱 전체로 늘리지 않습니다.
 - 추가 너비를 사용해 노출된 필터 Rail 또는 영역과 결과를 함께 보이게 하고
   악곡·난이도 비교를 개선합니다.
+- 필터와 정렬을 직접 Label된 별도 컨트롤로 유지하고 결과를 보면서 즉시
+  반영합니다.
 - 데스크톱 전용 분류 체계를 만들지 않고 하나의 검색·범위 모델을 보존합니다.
 - 검색, 필터 또는 결과 비교를 지원할 공간에 무관한 공지나 내비게이션을
   배치하지 않습니다.
@@ -451,8 +503,10 @@
 - 검색 갱신마다 Focus를 이동하면 안 됩니다.
 - 결과 수 갱신은 절제된 Live Region 의미를 사용하며 중간의 오래된 응답을
   읽으면 안 됩니다.
-- 모바일 필터 Layer에는 접근 가능한 이름, Modal 상태의 Focus 제한,
+- 모바일 필터·정렬 Layer에는 접근 가능한 이름, Modal 상태의 Focus 제한,
   Escape·뒤로가기 동작 및 Trigger로의 Focus 복귀가 필요합니다.
+- 통합 Trigger의 접근 가능한 이름은 정렬을 또 하나의 필터로 취급하지 않으면서
+  기능, Commit된 적용 필터 수 및 현재 정렬을 전달해야 합니다.
 - 모바일 완료 Action은 브라우저 Zoom과 낮은 Viewport 높이에서도 도달할 수
   있어야 합니다.
 - 필터 적용은 이해 가능한 결과 갱신을 제공해야 합니다. 모바일 Commit 후
@@ -501,28 +555,31 @@ Commerce 근거는 필터 과업이 NosLog에 전환되는 부분만 사용하�
 정부 Design System은 NosLog Art Direction이 아니라 구조·접근성 근거로
 사용합니다.
 
-| 출처                                                                                                                     | 전환 가능한 원칙                                                                                                 | NosLog 적용                                                                                      | 한계                                                                                         |
-| ------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------- |
-| [SAP Fiori: Filter Bar](https://www.sap.com/design-system/fiori-design-web/ui-elements/filter-bar/)                      | 가능하면 능동 갱신이 더 편리하며 여러 필수 값이나 과도한 Traffic에는 수동 갱신이 적합합니다.                     | 결과가 보이는 데스크톱은 능동 필터, 결과가 가려지는 모바일은 임시 필터를 사용합니다.             | Enterprise 목록 Report는 NosLog보다 밀도가 높고 설정 가능 항목이 많습니다.                   |
-| [Carbon: Filtering](https://carbondesignsystem.com/patterns/filtering/)                                                  | 예상 선택이 하나면 즉시 갱신, 여러 Category나 느린 응답에는 묶음 갱신이 적합합니다.                              | NosLog의 많은 Category, 범위 및 개인 필터에는 하나의 보편 규칙보다 혼합형이 필요합니다.          | Carbon 사례는 Enterprise 데이터 제품 중심입니다.                                             |
-| [Dell Design System: Filter](https://delldesignsystem.com/patterns/filter)                                               | 동적 필터는 적용을 없애지만 방해가 될 수 있고 묶음 필터는 복잡한 다중 선택과 느린 데이터에 적합합니다.           | 데스크톱은 Feedback을 보이게 유지하고 모바일은 가려진 결과를 교체하기 전에 여러 변경을 끝냅니다. | `안전한 기본값으로 묶음`이라는 입장이 NosLog 테스트를 대체하지는 않습니다.                   |
-| [NSW Design System: Filters](https://designsystem.nsw.gov.au/components/filters/)                                        | 예상 동작 수에 따라 즉시·묶음 모델을 선택하며 모바일 묶음은 필터 화면을 함께 닫는 고정 적용 Action을 사용합니다. | NosLog 모바일의 **결과 보기**가 Commit과 복귀를 합쳐 별도 닫기 단계를 피합니다.                  | 정부 검색 콘텐츠는 리듬게임 Catalog와 다릅니다.                                              |
-| [Visa Product Design System: Filters](https://design.visa.com/patterns/filters/)                                         | 반복되는 즉시 Reload는 사용자를 혼란스럽게 할 수 있고 적용 Chip과 초기화 상태를 명시해야 합니다.                 | Commit 필터를 계속 보이고 Chip 제거는 즉시 반영합니다.                                           | Visa는 대체로 적용을 선호하며 거래·데이터 Workflow에 치우칠 수 있습니다.                     |
-| [DWP Design System: Filter research](https://design-system.dwp.gov.uk/research/filters/design-notes)                     | 묶음 방식은 반복 갱신을 막지만 임시·Commit 상태가 불일치할 수 있으며 결과 수와 적용 Tag가 그 간극을 연결합니다.  | 모바일 임시 값과 Commit 결과 상태를 시각적으로 분리하고 복귀 후 결과 수·적용 조건을 표시합니다.  | 공개 연구는 전반적으로 묶음을 선호하므로 NosLog의 빠른 Consumer 과업과 함께 판단해야 합니다. |
-| [Scottish Government: Search filters](https://designsystem.gov.scot/patterns/search-results/search-filters)              | 모바일에서 열린 필터 뒤의 결과를 보이지 않게 갱신하지 않고 데스크톱에서는 자동 갱신할 수 있습니다.               | 모든 너비에 한 동작을 강요하지 않는 반응형 필터 적용을 뒷받침합니다.                             | 공공 서비스 콘텐츠와 필터 사용 빈도가 다릅니다.                                              |
-| [VA.gov: Search Filter](https://design.va.gov/components/search-filter)                                                  | 다중 Facet 결과에는 명확한 적용·초기화와 신중한 Focus 전달이 필요합니다.                                         | 모바일 Commit, 초기화, 오류 및 접근성 요구에 반영합니다.                                         | 승인된 NosLog 데스크톱 동작보다 더 넓게 적용 Button을 요구합니다.                            |
-| [Maersk: Filter patterns](https://designsystem.maersk.com/guidelines/search-filter-and-sort/filter-patterns/)            | 빠르면 능동 결과가 적합하고 느리거나 모바일 결과가 가려지면 묶음 방식이 반복 Load를 피합니다.                    | 상호작용은 예측 가능하게 유지하되 성능 Threshold를 측정해야 합니다.                              | 물류 Application은 데이터 양과 사용자 숙련도가 다릅니다.                                     |
-| [NICE Design System: Filters](https://design-system.nice.org.uk/components/filters/)                                     | 결과 요약, 적용 상태 및 재시도 가능한 필터는 하나의 일관된 Pattern에 속합니다.                                   | 결과 수, Commit 조건, 결과 Collection 및 복구를 의미상 인접하게 둡니다.                          | NosLog 카드 콘텐츠나 갱신 방식을 결정하지 않습니다.                                          |
-| [Australian Agriculture Design System: Search filters](https://design-system.agriculture.gov.au/patterns/search-filters) | 반응형 필터 Drawer는 변경을 묶어서 적용하고 하나의 적용 Action으로 닫을 수 있습니다.                             | 승인된 결과 가림 모바일 Layer를 뒷받침합니다.                                                    | 정부 구현 Pattern이며 시각 방향이 아닙니다.                                                  |
-| [Department for Education: Filter](https://design.education.gov.uk/design-system/components/filter)                      | 선택을 끝내는 위치에 완료 Action을 두고 모바일 발견 가능성을 테스트합니다.                                       | 긴 필터 Group 뒤에서도 모바일 결과 Action을 고정하고 도달 가능하게 합니다.                       | Ministry of Justice Pattern에서 파생되어 독립적인 시각 근거는 아닙니다.                      |
-| [Siemens Element: Filter](https://element.siemens.io/patterns/filter/)                                                   | 여러 변경에는 묶음, 즉시 Feedback이 유용한 경우에는 능동 갱신을 선택합니다.                                      | 반응형·과업 민감 혼합형을 추가로 뒷받침합니다.                                                   | 산업 Application은 공개 악곡 탐색과 다릅니다.                                                |
-| [Octopus Design System: Filtering](https://www.octopus.design/latest/patterns/ui-patterns/filtering-ib9jS2iT)            | 필터 상태를 각각 제거할 수 있어야 하고 불가능한 조합을 전달해야 합니다.                                          | 적용 조건을 개별 제거하고 0개 결과 복구를 제공합니다.                                            | 정확한 필터 컨트롤 선택은 NosLog에 맞게 정해야 합니다.                                       |
-| [Baymard: Ecommerce filter UI](https://baymard.com/learn/ecommerce-filter-ui)                                            | 데스크톱은 보이는 실시간 Feedback, 모바일은 결과 복귀 Action과 보이는 적용 상태가 유용합니다.                    | NosLog가 상품 판매 동작을 상속하지 않더라도 반응형 상호작용 Pattern은 전환할 수 있습니다.        | Ecommerce 연구가 NosLog Field, 정렬 또는 시각 스타일을 결정할 수 없습니다.                   |
-| [eBay: Filtering patterns](https://playbook.ebay.com/design-system/patterns/filtering-patterns)                          | 사용자가 탐색을 다시 시작하지 않고 조건을 조정·제거할 수 있어야 합니다.                                          | Query를 유지하고 Commit 필터를 노출하며 복구를 되돌릴 수 있게 합니다.                            | Marketplace 재고와 상업 Facet은 전환하지 않습니다.                                           |
-| [Algolia: Faceting](https://www.algolia.com/doc/guides/managing-results/refine-results/faceting)                         | 문맥에 따른 Facet 값과 결과 수를 결과 상태와 함께 갱신할 수 있습니다.                                            | 성능과 Query 설계를 검증했을 때 정확한 적용 상태 수를 지원합니다.                                | 검색 Engine 기능이 항상 능동 결과 수가 좋은 UX임을 입증하지는 않습니다.                      |
-| [Elastic Search UI](https://www.elastic.co/docs/reference/search-ui)                                                     | 입력 중 검색, Facet 및 조건부 Facet에는 명시적인 상태와 요청 처리가 필요합니다.                                  | 능동 Text 검색과 오래된 요청 보호를 구현할 수 있음을 뒷받침합니다.                               | 독립적인 사용자 연구가 아니라 기술 Tool 지침입니다.                                          |
-| [WAI-ARIA APG: Combobox](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/)                                             | 편집 가능한 Popup 컨트롤에는 정의된 Keyboard, Focus, 선택 및 Popup 관계가 필요합니다.                            | 범위 인식 검색과 제안은 Pointer 조작이나 아이콘에만 의존하면 안 됩니다.                          | 정확한 범위 선택기는 Menu일 수 있으며 실제 사용 Semantic Pattern을 따라야 합니다.            |
-| [WCAG 2.2: Status Messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html)                            | 동적 결과와 상태 변경은 Focus를 가져가지 않고 보조 기술에 전달되어야 합니다.                                     | 갱신마다 Focus를 옮기지 않고 안정된 결과 수와 실패를 알립니다.                                   | Debounce 시간이나 시각 표현을 규정하지 않습니다.                                             |
+| 출처                                                                                                                                | 전환 가능한 원칙                                                                                                 | NosLog 적용                                                                                      | 한계                                                                                         |
+| ----------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------- |
+| [SAP Fiori: Filter Bar](https://www.sap.com/design-system/fiori-design-web/ui-elements/filter-bar/)                                 | 가능하면 능동 갱신이 더 편리하며 여러 필수 값이나 과도한 Traffic에는 수동 갱신이 적합합니다.                     | 결과가 보이는 데스크톱은 능동 필터, 결과가 가려지는 모바일은 임시 필터를 사용합니다.             | Enterprise 목록 Report는 NosLog보다 밀도가 높고 설정 가능 항목이 많습니다.                   |
+| [SAP Fiori Android: Sort and filter](https://www.sap.com/design-system/fiori-design-android/v26-1/patterns/sort-and-filter/usage)   | 정렬과 필터는 별도 Section을 유지하면서 좁은 화면의 전체 화면 Dialog 하나를 공유할 수 있습니다.                  | 데스크톱에 같은 구조를 강요하지 않고 명시적인 모바일 진입 하나와 내부 구분을 지지합니다.         | Enterprise Application의 사용 빈도와 용어는 NosLog와 다릅니다.                               |
+| [CXL: 모바일 Ecommerce 가이드](https://cxl.com/wp-content/uploads/2019/05/Mobile-CUX-Ecommerce-Report.pdf)                          | 별도 컨트롤은 구분을 극대화하지만 명확히 Label된 **정렬·필터** 통합 컨트롤도 사용할 수 있습니다.                 | 현재 정렬을 계속 보이고 내부 Section을 분리하므로 NosLog 좁은 화면에 통합 Trigger를 적용합니다.  | Commerce 전환 근거가 NOSTALGIA 기능 우선순위를 정하지는 않습니다.                            |
+| [Shopify: Storefront filtering UX](https://shopify.dev/docs/storefronts/themes/navigation-search/filtering/storefront-filtering-ux) | 모바일 필터는 데스크톱 Sidebar를 유지하기보다 Label된 Drawer·Modal Trigger 하나 뒤로 이동하는 경우가 많습니다.   | 밀도 높은 상시 모바일 컨트롤을 제거하고 결과 가까이에 진입점을 유지하는 방향을 지지합니다.       | Storefront 필터 지침이며 NosLog 정렬 의미를 정하지 않습니다.                                 |
+| [Carbon: Filtering](https://carbondesignsystem.com/patterns/filtering/)                                                             | 예상 선택이 하나면 즉시 갱신, 여러 Category나 느린 응답에는 묶음 갱신이 적합합니다.                              | NosLog의 많은 Category, 범위 및 개인 필터에는 하나의 보편 규칙보다 혼합형이 필요합니다.          | Carbon 사례는 Enterprise 데이터 제품 중심입니다.                                             |
+| [Dell Design System: Filter](https://delldesignsystem.com/patterns/filter)                                                          | 동적 필터는 적용을 없애지만 방해가 될 수 있고 묶음 필터는 복잡한 다중 선택과 느린 데이터에 적합합니다.           | 데스크톱은 Feedback을 보이게 유지하고 모바일은 가려진 결과를 교체하기 전에 여러 변경을 끝냅니다. | `안전한 기본값으로 묶음`이라는 입장이 NosLog 테스트를 대체하지는 않습니다.                   |
+| [NSW Design System: Filters](https://designsystem.nsw.gov.au/components/filters/)                                                   | 예상 동작 수에 따라 즉시·묶음 모델을 선택하며 모바일 묶음은 필터 화면을 함께 닫는 고정 적용 Action을 사용합니다. | NosLog 모바일의 **결과 보기**가 Commit과 복귀를 합쳐 별도 닫기 단계를 피합니다.                  | 정부 검색 콘텐츠는 리듬게임 Catalog와 다릅니다.                                              |
+| [Visa Product Design System: Filters](https://design.visa.com/patterns/filters/)                                                    | 반복되는 즉시 Reload는 사용자를 혼란스럽게 할 수 있고 적용 Chip과 초기화 상태를 명시해야 합니다.                 | Commit 필터를 계속 보이고 Chip 제거는 즉시 반영합니다.                                           | Visa는 대체로 적용을 선호하며 거래·데이터 Workflow에 치우칠 수 있습니다.                     |
+| [DWP Design System: Filter research](https://design-system.dwp.gov.uk/research/filters/design-notes)                                | 묶음 방식은 반복 갱신을 막지만 임시·Commit 상태가 불일치할 수 있으며 결과 수와 적용 Tag가 그 간극을 연결합니다.  | 모바일 임시 값과 Commit 결과 상태를 시각적으로 분리하고 복귀 후 결과 수·적용 조건을 표시합니다.  | 공개 연구는 전반적으로 묶음을 선호하므로 NosLog의 빠른 Consumer 과업과 함께 판단해야 합니다. |
+| [Scottish Government: Search filters](https://designsystem.gov.scot/patterns/search-results/search-filters)                         | 모바일에서 열린 필터 뒤의 결과를 보이지 않게 갱신하지 않고 데스크톱에서는 자동 갱신할 수 있습니다.               | 모든 너비에 한 동작을 강요하지 않는 반응형 필터 적용을 뒷받침합니다.                             | 공공 서비스 콘텐츠와 필터 사용 빈도가 다릅니다.                                              |
+| [VA.gov: Search Filter](https://design.va.gov/components/search-filter)                                                             | 다중 Facet 결과에는 명확한 적용·초기화와 신중한 Focus 전달이 필요합니다.                                         | 모바일 Commit, 초기화, 오류 및 접근성 요구에 반영합니다.                                         | 승인된 NosLog 데스크톱 동작보다 더 넓게 적용 Button을 요구합니다.                            |
+| [Maersk: Filter patterns](https://designsystem.maersk.com/guidelines/search-filter-and-sort/filter-patterns/)                       | 빠르면 능동 결과가 적합하고 느리거나 모바일 결과가 가려지면 묶음 방식이 반복 Load를 피합니다.                    | 상호작용은 예측 가능하게 유지하되 성능 Threshold를 측정해야 합니다.                              | 물류 Application은 데이터 양과 사용자 숙련도가 다릅니다.                                     |
+| [NICE Design System: Filters](https://design-system.nice.org.uk/components/filters/)                                                | 결과 요약, 적용 상태 및 재시도 가능한 필터는 하나의 일관된 Pattern에 속합니다.                                   | 결과 수, Commit 조건, 결과 Collection 및 복구를 의미상 인접하게 둡니다.                          | NosLog 카드 콘텐츠나 갱신 방식을 결정하지 않습니다.                                          |
+| [Australian Agriculture Design System: Search filters](https://design-system.agriculture.gov.au/patterns/search-filters)            | 반응형 필터 Drawer는 변경을 묶어서 적용하고 하나의 적용 Action으로 닫을 수 있습니다.                             | 승인된 결과 가림 모바일 Layer를 뒷받침합니다.                                                    | 정부 구현 Pattern이며 시각 방향이 아닙니다.                                                  |
+| [Department for Education: Filter](https://design.education.gov.uk/design-system/components/filter)                                 | 선택을 끝내는 위치에 완료 Action을 두고 모바일 발견 가능성을 테스트합니다.                                       | 긴 필터 Group 뒤에서도 모바일 결과 Action을 고정하고 도달 가능하게 합니다.                       | Ministry of Justice Pattern에서 파생되어 독립적인 시각 근거는 아닙니다.                      |
+| [Siemens Element: Filter](https://element.siemens.io/patterns/filter/)                                                              | 여러 변경에는 묶음, 즉시 Feedback이 유용한 경우에는 능동 갱신을 선택합니다.                                      | 반응형·과업 민감 혼합형을 추가로 뒷받침합니다.                                                   | 산업 Application은 공개 악곡 탐색과 다릅니다.                                                |
+| [Octopus Design System: Filtering](https://www.octopus.design/latest/patterns/ui-patterns/filtering-ib9jS2iT)                       | 필터 상태를 각각 제거할 수 있어야 하고 불가능한 조합을 전달해야 합니다.                                          | 적용 조건을 개별 제거하고 0개 결과 복구를 제공합니다.                                            | 정확한 필터 컨트롤 선택은 NosLog에 맞게 정해야 합니다.                                       |
+| [Baymard: Ecommerce filter UI](https://baymard.com/learn/ecommerce-filter-ui)                                                       | 데스크톱은 보이는 실시간 Feedback, 모바일은 결과 복귀 Action과 보이는 적용 상태가 유용합니다.                    | NosLog가 상품 판매 동작을 상속하지 않더라도 반응형 상호작용 Pattern은 전환할 수 있습니다.        | Ecommerce 연구가 NosLog Field, 정렬 또는 시각 스타일을 결정할 수 없습니다.                   |
+| [eBay: Filtering patterns](https://playbook.ebay.com/design-system/patterns/filtering-patterns)                                     | 사용자가 탐색을 다시 시작하지 않고 조건을 조정·제거할 수 있어야 합니다.                                          | Query를 유지하고 Commit 필터를 노출하며 복구를 되돌릴 수 있게 합니다.                            | Marketplace 재고와 상업 Facet은 전환하지 않습니다.                                           |
+| [Algolia: Faceting](https://www.algolia.com/doc/guides/managing-results/refine-results/faceting)                                    | 문맥에 따른 Facet 값과 결과 수를 결과 상태와 함께 갱신할 수 있습니다.                                            | 성능과 Query 설계를 검증했을 때 정확한 적용 상태 수를 지원합니다.                                | 검색 Engine 기능이 항상 능동 결과 수가 좋은 UX임을 입증하지는 않습니다.                      |
+| [Elastic Search UI](https://www.elastic.co/docs/reference/search-ui)                                                                | 입력 중 검색, Facet 및 조건부 Facet에는 명시적인 상태와 요청 처리가 필요합니다.                                  | 능동 Text 검색과 오래된 요청 보호를 구현할 수 있음을 뒷받침합니다.                               | 독립적인 사용자 연구가 아니라 기술 Tool 지침입니다.                                          |
+| [WAI-ARIA APG: Combobox](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/)                                                        | 편집 가능한 Popup 컨트롤에는 정의된 Keyboard, Focus, 선택 및 Popup 관계가 필요합니다.                            | 범위 인식 검색과 제안은 Pointer 조작이나 아이콘에만 의존하면 안 됩니다.                          | 정확한 범위 선택기는 Menu일 수 있으며 실제 사용 Semantic Pattern을 따라야 합니다.            |
+| [WCAG 2.2: Status Messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html)                                       | 동적 결과와 상태 변경은 Focus를 가져가지 않고 보조 기술에 전달되어야 합니다.                                     | 갱신마다 Focus를 옮기지 않고 안정된 결과 수와 실패를 알립니다.                                   | Debounce 시간이나 시각 표현을 규정하지 않습니다.                                             |
 
 ### 정렬 및 결과 구성 비교
 
@@ -531,25 +588,25 @@ Commerce 근거는 필터 과업이 NosLog에 전환되는 부분만 사용하�
 어느 하나의 레퍼런스가 해결책을 정하지 않으며, 승인 모델은 NOSTALGIA 고유
 난이도·데이터 의미를 보존하면서 수렴하는 과업 Pattern을 따릅니다.
 
-| 출처                                                                                                                           | 관찰된 Pattern 또는 근거                                                                                            | NosLog 적합성과 한계                                                                                                 |
-| ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| [현재 NosLog 악곡 Toolbar](../../components/music/musicToolbar.tsx)                                                            | 정렬, 방향, 난이도, 필터 및 보기 선택이 현재 하나의 컨트롤 영역에서 경쟁합니다.                                     | 상시 컨트롤 밀도를 줄여야 함을 확인하며, 현재 배치는 2.0 레이아웃 규칙이 아닙니다.                                   |
-| [현재 NosLog 악곡 Query](<../../app/(nevigation)/music/data.ts>)                                                               | 레벨순은 선택 난이도 또는 숨은 Expert 대체값에 의존할 수 있고 취약순은 복합 점수를 사용합니다.                      | 취약순 제거와 명시적인 레벨 Target 요구의 직접적인 Migration 근거이며 현재 의미는 유지하지 않습니다.                 |
-| 현재 Local Dataset 감사 (`2026-07-30`)                                                                                         | 악곡 `583`개의 `title_kana`는 모두 있지만 `released_at`이 있는 MusicChart는 `3`개이고 공개 ChartPattern은 없습니다. | 지금은 읽기 순 탐색을 지원하며 대표 검증 전 출시일 데이터 Gate와 채보 상태 Seed가 필요합니다.                        |
-| [KONAMI NOSTALGIA Op.3 플레이 데이터](https://p.eagate.573.jp/game/nostalgia/op3/playdata/entrance.html)                       | 악곡 정체성, 명시된 난이도, 레벨 및 기록 차원이 서로 연결되어 유지됩니다.                                           | NOSTALGIA 난이도 정체성 보존을 지지하지만 인증 기록 페이지가 공개 Catalog 레이아웃을 규정하지는 않습니다.            |
-| [maimai DX 악곡 목록](https://maimai.sega.jp/song/)                                                                            | 재킷 중심 공식 Catalog가 제목, 아티스트, Category 및 여러 난이도 레벨을 함께 유지합니다.                            | 악곡 중심 Grouping과 선택적 시각 탐색을 지지하지만 maimai의 Category와 시각 밀도는 복사하지 않습니다.                |
-| [CHUNITHM 악곡 목록](https://chunithm.sega.jp/music/)                                                                          | 공식 악곡은 난이도별 독립 카드가 아니라 하나의 정체성과 난이도 데이터로 묶입니다.                                   | 여러 난이도를 가진 하나의 악곡 결과를 지지하지만 Community 채보 공개를 다루지 않습니다.                              |
-| [osu! Beatmap 목록](https://osu.ppy.sh/beatmapsets)                                                                            | Query, 모드, Category, 명시적 정렬 및 Grouping된 Beatmap Set이 공존합니다.                                          | 명시적인 범위·정렬 상태와 Variant Grouping을 지지하지만 osu! 용어와 Ranking 모델은 직접 전환하지 않습니다.           |
-| [osu! Client Interface](https://osu.ppy.sh/wiki/en/Client/Interface)                                                           | Grouping과 정렬은 별도 개념이며 난이도순은 서로 관련된 Variant를 분리할 수 있습니다.                                | 악곡 Grouping을 안정적으로 유지하고 난이도 간 암묵적인 대표 레벨을 만들지 않는 방향을 지지합니다.                    |
-| [BeatSaver](https://beatsaver.com/)                                                                                            | Community 채보는 최신 Upload를 강조하고 악곡 정체성에서 직접 난이도 Target을 제공합니다.                            | 최신 공개 채보 탐색을 지지하지만 Beat Saber Metadata와 검수 의미는 다릅니다.                                         |
-| [StepManiaOnline 검색](https://search.stepmaniaonline.net/)                                                                    | Community Pack·채보를 명시적인 최신성 및 난이도 Context와 함께 검색할 수 있습니다.                                  | 공개 최신성 탐색과 난이도 가시성을 지지하지만 Pack 중심 구조는 NosLog 악곡 모델이 아닙니다.                          |
-| [Tachi](https://tachi.ac/)                                                                                                     | 리듬게임 탐색과 분석이 간결한 정체성 탐색과 상세 기록 차원을 분리합니다.                                            | 목록 우선 탐색과 점진적 상세를 지지하지만 Tachi는 공개 채보 Marketplace가 아닌 다중 게임 Tracker입니다.              |
-| [Algolia: Relevant sorting](https://www.algolia.com/doc/guides/managing-results/refine-results/sorting/in-depth/relevant-sort) | 관련도와 Business·속성 정렬은 명시적 설정이 필요한 서로 다른 모드입니다.                                            | 관련도순을 사용자 선택 정렬을 조용히 덮는 규칙이 아니라 Text Query 후보로 남기며, 기능 가능성이 UX 근거는 아닙니다.  |
-| [Algolia: Faceting](https://www.algolia.com/doc/guides/managing-results/refine-results/faceting)                               | 정렬·세부 조건 상태를 Query와 함께 명시하고 복구할 수 있습니다.                                                     | URL에서 정렬과 대상 난이도를 복구하는 방향을 지지하지만 어떤 NOSTALGIA 정렬이 의미 있는지는 정하지 않습니다.         |
-| [Baymard: Default sort type](https://baymard.com/blog/default-sort-type)                                                       | 기본 정렬은 사용자가 이용 가능한 Catalog를 인식하는 방식에 큰 영향을 줍니다.                                        | 예측 가능한 중립적 빈 탐색 순서와 숨은 난이도 제한 제거를 지지하지만 Ecommerce 우선순위는 다릅니다.                  |
-| [Carbon: Data table usage](https://carbondesignsystem.com/components/data-table/usage/)                                        | 부차 Action과 보기 컨트롤은 Collection 주변의 명확한 계층을 보존해야 합니다.                                        | 현재 정렬 Trigger 하나와 목적이 분명한 목록·Grid 컨트롤을 지지하지만 Enterprise Table 밀도가 목표 스타일은 아닙니다. |
-| [PatternFly: Toolbar](https://www.patternfly.org/components/toolbar/design-guidelines)                                         | 공간이 제한될 때 필터, 정렬, 보기 및 Bulk Action을 역할별로 묶고 점진 공개합니다.                                   | 상시 난이도 Button 행을 추가하지 않고 레벨 Target을 정렬 공개 안에 넣는 방향을 지지합니다.                           |
-| [U.S. Web Design System: Search](https://designsystem.digital.gov/components/search/)                                          | 검색 라벨, 상태 및 결과는 아이콘 인식에 의존하지 않고 이해할 수 있어야 합니다.                                      | 다국어로 보이는 정렬·범위 의미와 접근 가능한 컨트롤 이름을 요구하지만 정부 시각 스타일은 전환하지 않습니다.          |
+| 출처                                                                                                                           | 관찰된 Pattern 또는 근거                                                                                            | NosLog 적합성과 한계                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| [현재 NosLog 악곡 Toolbar](../../components/music/musicToolbar.tsx)                                                            | 정렬, 방향, 난이도, 필터 및 보기 선택이 현재 하나의 컨트롤 영역에서 경쟁합니다.                                     | 상시 컨트롤 밀도를 줄여야 함을 확인하며, 현재 배치는 2.0 레이아웃 규칙이 아닙니다.                                      |
+| [현재 NosLog 악곡 Query](<../../app/(nevigation)/music/data.ts>)                                                               | 레벨순은 선택 난이도 또는 숨은 Expert 대체값에 의존할 수 있고 취약순은 복합 점수를 사용합니다.                      | 취약순 제거와 명시적인 레벨 Target 요구의 직접적인 Migration 근거이며 현재 의미는 유지하지 않습니다.                    |
+| 현재 Local Dataset 감사 (`2026-07-30`)                                                                                         | 악곡 `583`개의 `title_kana`는 모두 있지만 `released_at`이 있는 MusicChart는 `3`개이고 공개 ChartPattern은 없습니다. | 지금은 읽기 순 탐색을 지원하며 대표 검증 전 출시일 데이터 Gate와 채보 상태 Seed가 필요합니다.                           |
+| [KONAMI NOSTALGIA Op.3 플레이 데이터](https://p.eagate.573.jp/game/nostalgia/op3/playdata/entrance.html)                       | 악곡 정체성, 명시된 난이도, 레벨 및 기록 차원이 서로 연결되어 유지됩니다.                                           | NOSTALGIA 난이도 정체성 보존을 지지하지만 인증 기록 페이지가 공개 Catalog 레이아웃을 규정하지는 않습니다.               |
+| [maimai DX 악곡 목록](https://maimai.sega.jp/song/)                                                                            | 재킷 중심 공식 Catalog가 제목, 아티스트, Category 및 여러 난이도 레벨을 함께 유지합니다.                            | 악곡 중심 Grouping과 선택적 시각 탐색을 지지하지만 maimai의 Category와 시각 밀도는 복사하지 않습니다.                   |
+| [CHUNITHM 악곡 목록](https://chunithm.sega.jp/music/)                                                                          | 공식 악곡은 난이도별 독립 카드가 아니라 하나의 정체성과 난이도 데이터로 묶입니다.                                   | 여러 난이도를 가진 하나의 악곡 결과를 지지하지만 Community 채보 공개를 다루지 않습니다.                                 |
+| [osu! Beatmap 목록](https://osu.ppy.sh/beatmapsets)                                                                            | Query, 모드, Category, 명시적 정렬 및 Grouping된 Beatmap Set이 공존합니다.                                          | 명시적인 범위·정렬 상태와 Variant Grouping을 지지하지만 osu! 용어와 Ranking 모델은 직접 전환하지 않습니다.              |
+| [osu! Client Interface](https://osu.ppy.sh/wiki/en/Client/Interface)                                                           | Grouping과 정렬은 별도 개념이며 난이도순은 서로 관련된 Variant를 분리할 수 있습니다.                                | 악곡 Grouping을 안정적으로 유지하고 난이도 간 암묵적인 대표 레벨을 만들지 않는 방향을 지지합니다.                       |
+| [BeatSaver](https://beatsaver.com/)                                                                                            | Community 채보는 최신 Upload를 강조하고 악곡 정체성에서 직접 난이도 Target을 제공합니다.                            | 최신 공개 채보 탐색을 지지하지만 Beat Saber Metadata와 검수 의미는 다릅니다.                                            |
+| [StepManiaOnline 검색](https://search.stepmaniaonline.net/)                                                                    | Community Pack·채보를 명시적인 최신성 및 난이도 Context와 함께 검색할 수 있습니다.                                  | 공개 최신성 탐색과 난이도 가시성을 지지하지만 Pack 중심 구조는 NosLog 악곡 모델이 아닙니다.                             |
+| [Tachi](https://tachi.ac/)                                                                                                     | 리듬게임 탐색과 분석이 간결한 정체성 탐색과 상세 기록 차원을 분리합니다.                                            | 목록 우선 탐색과 점진적 상세를 지지하지만 Tachi는 공개 채보 Marketplace가 아닌 다중 게임 Tracker입니다.                 |
+| [Algolia: Relevant sorting](https://www.algolia.com/doc/guides/managing-results/refine-results/sorting/in-depth/relevant-sort) | 관련도와 Business·속성 정렬은 명시적 설정이 필요한 서로 다른 모드입니다.                                            | 명시적 사용자 정렬을 조용히 덮지 않고 능동 Query 관련도순을 사용하는 방향을 지지하며, 기능 가능성이 UX 근거는 아닙니다. |
+| [Algolia: Faceting](https://www.algolia.com/doc/guides/managing-results/refine-results/faceting)                               | 정렬·세부 조건 상태를 Query와 함께 명시하고 복구할 수 있습니다.                                                     | URL에서 정렬과 대상 난이도를 복구하는 방향을 지지하지만 어떤 NOSTALGIA 정렬이 의미 있는지는 정하지 않습니다.            |
+| [Baymard: Default sort type](https://baymard.com/blog/default-sort-type)                                                       | 기본 정렬은 사용자가 이용 가능한 Catalog를 인식하는 방식에 큰 영향을 줍니다.                                        | 예측 가능한 중립적 빈 탐색 순서와 숨은 난이도 제한 제거를 지지하지만 Ecommerce 우선순위는 다릅니다.                     |
+| [Carbon: Data table usage](https://carbondesignsystem.com/components/data-table/usage/)                                        | 부차 Action과 보기 컨트롤은 Collection 주변의 명확한 계층을 보존해야 합니다.                                        | 현재 정렬 Trigger 하나와 목적이 분명한 목록·Grid 컨트롤을 지지하지만 Enterprise Table 밀도가 목표 스타일은 아닙니다.    |
+| [PatternFly: Toolbar](https://www.patternfly.org/components/toolbar/design-guidelines)                                         | 공간이 제한될 때 필터, 정렬, 보기 및 Bulk Action을 역할별로 묶고 점진 공개합니다.                                   | 상시 난이도 Button 행을 추가하지 않고 레벨 Target을 정렬 공개 안에 넣는 방향을 지지합니다.                              |
+| [U.S. Web Design System: Search](https://designsystem.digital.gov/components/search/)                                          | 검색 라벨, 상태 및 결과는 아이콘 인식에 의존하지 않고 이해할 수 있어야 합니다.                                      | 다국어로 보이는 정렬·범위 의미와 접근 가능한 컨트롤 이름을 요구하지만 정부 시각 스타일은 전환하지 않습니다.             |
 
 ### 개인 기록 분류 비교
 
@@ -605,6 +662,12 @@ Commerce 근거는 필터 과업이 NosLog에 전환되는 부분만 사용하�
   시각으로 흉내 내면 안 됩니다.
 - 레벨순은 난이도 기준을 명시해야만 이해할 수 있습니다. Expert 대체값을
   숨기거나 여러 난이도를 섞으면 겉보기에 같은 “레벨” 값의 의미가 달라집니다.
+- 모바일 필터·정렬의 통합 및 분리 진입은 모두 확립된 Pattern입니다. 통합
+  Trigger는 Label이 두 기능을 모두 말하고 내부 Section을 구분하며 Commit된
+  현재 정렬을 계속 보일 때 적합합니다.
+- 최근 플레이순이 존재한다는 이유만으로 기간 필터도 정당화되지는 않습니다.
+  검증된 교차 조건 과업이 없으면 둘을 모두 두는 것은 별도 고가치 결과 없이
+  분류만 늘립니다.
 
 ### 근거의 차이와 NosLog의 해결
 
@@ -624,8 +687,12 @@ Commerce 근거는 필터 과업이 NosLog에 전환되는 부분만 사용하�
   서비스는 공개 최신성을 더 강하게 강조합니다. NosLog는 하나의 보편적인 빈
   탐색 정렬을 강요하지 않고 각 범위에 맞는 Pattern을 적용합니다.
 - 검색 System은 활성 Query 관련도순을 지원하지만 언제 명시적인 사용자 정렬을
-  덮어야 하는지는 레퍼런스마다 다릅니다. NosLog는 Query·정렬 우선순위를 별도
-  승인할 때까지 이 동작을 미확정으로 둡니다.
+  덮어야 하는지는 레퍼런스마다 다릅니다. NosLog는 명시적 정렬이 없는 능동
+  Query에만 관련도순을 사용하고 사용자의 선택을 유지하는 방식으로 해결합니다.
+- 일부 지침은 즉각적인 구분을 위해 별도 모바일 필터·정렬 컨트롤을 선호하고
+  SAP와 비교 가능한 Catalog Pattern은 통합 진입을 지원합니다. NosLog는 좁은
+  화면의 상시 밀도를 줄이기 위해 통합 Trigger를 사용하고 내부 Section은
+  분리하며 결과가 보이는 너비에서는 별도 컨트롤을 유지합니다.
 
 ## 거절되거나 대체된 대안
 
@@ -668,6 +735,12 @@ Commerce 근거는 필터 과업이 NosLog에 전환되는 부분만 사용하�
   선택한 난이도가 필요합니다.
 - **레벨순을 위한 상시 난이도 Button 행 — 거절:** Collection Toolbar가
   반복적인 컨트롤 Strip이 되지 않도록 Target을 점진적 정렬 공개 안에 둡니다.
+- **좁은 레이아웃의 상시 별도 필터·정렬 Button — 거절:** Layer 밖에 현재
+  정렬과 적용 필터 수를 계속 보이면서 하나의 명시적인 필터·정렬 진입을
+  사용합니다. 내부 의미까지 하나로 합치는 것은 아닙니다.
+- **최근 30일 내 플레이 필터 — 대체됨:** 현재 구현 컨트롤을 유지한 이전 결정은
+  가치가 검증된 교차 조건 과업 없이 가져온 것이었습니다. 최근 플레이는 로그인
+  정렬로만 유지합니다.
 - **채보 Grid 보기 — 거절:** 공개 난이도 선택에는 추가 Artwork 모드보다 악곡
   정체성 아래의 Grouping된 탐색 목록이 필요합니다.
 - **Database 생성·갱신 시각을 악곡 출시일로 사용 — 거절:** Import와 유지보수
@@ -677,21 +750,16 @@ Commerce 근거는 필터 과업이 NosLog에 전환되는 부분만 사용하�
 
 다음 결정은 이 기획서 승인 전에 새로운 근거 조사와 승인 묶음이 필요합니다.
 
-1. Text Query가 있을 때 관련도순을 초기 정렬로 사용할 것인가, 아니면 마지막
-   명시적 사용자 정렬을 우선할 것인가?
-2. 아직 정하지 않은 공개 필터·정렬 중 두 범위가 함께 쓰는 것과 악곡 또는 채보
-   전용 항목은 무엇인가?
-3. 승인된 로그인 개인 기록 Group을 어떤 점진 공개 컨트롤로 열고, 비로그인
-   사용자에게 안내를 보여줄 것인가 아니면 컨트롤을 생략할 것인가?
-4. 상시 컨트롤 밀도를 늘리지 않으면서 승인된 악곡 목록·Grid, 채보 Grouping
-   목록 및 명시적인 레벨순 난이도 Target을 어떤 정확한 모바일·데스크톱
-   구조로 배치할 것인가?
-5. 어떤 묶음 크기와 더 보기 Copy가 탐색, 응답 시간, Memory 및 복귀 상태
+1. 승인된 악곡 목록·Grid 및 채보 Grouping 목록 모델을 어떤 정확한 카드 밀도,
+   비례 및 반응형 결과 구조로 표현할 것인가?
+2. 어떤 묶음 크기와 더 보기 Copy가 탐색, 응답 시간, Memory 및 복귀 상태
    복구의 최선 균형을 만드는가?
-6. Text 불일치, 과도한 필터 조건 및 공개 채보 없음에 따라 어떤 결과 없음 복구
+3. Text 불일치, 과도한 필터 조건 및 공개 채보 없음에 따라 어떤 결과 없음 복구
    Action을 먼저 둘 것인가?
-7. 모바일 필터 Commit 후 Focus를 복귀한 필터 Trigger에 유지할지, 결과 요약으로
+4. 모바일 필터·정렬 Commit 후 Focus를 복귀한 Trigger에 유지할지, 결과 요약으로
    옮길지, 입력 방식에 따른 조건부 규칙을 사용할 것인가?
+5. 미플레이와 로그인 최근 플레이순이 충돌할 때 하나를 비활성화할지, 범위
+   기본값으로 교체할지, 다른 명시적으로 검증한 전환을 사용할 것인가?
 
 ## 브라우저 검증 대상
 
@@ -709,14 +777,18 @@ Commerce 근거는 필터 과업이 NosLog에 전환되는 부분만 사용하�
 - 검증된 공식 출시일을 사용하는 신곡순, 데이터가 없을 때의 Gate 상태 및
   Database Timestamp로 대체하지 않음
 - 취약순이 없고 레벨순 전에 난이도를 명시적으로 선택함
+- 능동 Query 관련도순 대체값, 명시적 정렬 유지 및 관련도 Query를 지웠을 때
+  범위 기본 정렬로 복귀
 - 일치하는 공개 난이도 0개, 1개 및 여러 개인 채보 Grouping
 - 공개 난이도에서 집중형 뷰어로 직접 진입하고 정확한 복귀 상태 복구
-- 모바일 필터 임시 선택, 일반·결과 수 포함 Action, 취소, Commit, 하나 제거 및
-  전체 초기화
-- 데스크톱 개별 필터 즉시 반영과 범위 컨트롤 Debounce·Commit
-- 고급 Group 공개를 포함한 비로그인·로그인 개인 필터 상태
-- S, FC, Pianist, 최근 플레이, 미플레이 조건, 최고 기록 기준 포괄 MISS 범위,
-  Group 안 `OR`, Group 간 `AND` 및 미플레이 충돌 방지
+- 하나의 모바일 필터·정렬 Trigger, 구분된 내부 Section, 임시 정렬·필터 상태,
+  일반·결과 수 포함 Action, 취소, Commit, 하나 제거 및 전체 초기화
+- 별도 데스크톱 필터·정렬 컨트롤, 개별 필터와 정렬 즉시 반영 및 범위 컨트롤
+  Debounce·Commit
+- 비로그인 개인 Group 생략 및 로그인 고급 Group 공개
+- S, FC, Pianist 및 미플레이 조건, 최근 30일 필터 없음, 로그인 최근 플레이순,
+  최고 기록 기준 포괄 MISS 범위, Group 안 `OR`, Group 간 `AND` 및 미플레이
+  충돌 방지
 - 악곡 목록 기본·Grid 전환과 일치 난이도 기록 0개·1개·여러 개에서 안정적인
   기본 정체성
 - Grid 전환이 없는 채보 Grouping 목록 전용 결과
@@ -741,8 +813,9 @@ Commerce 근거는 필터 과업이 NosLog에 전환되는 부분만 사용하�
   출시일 데이터가 있을 때만 제공합니다.
 - 공개 채보 결과를 악곡별로 묶고 사용할 수 없는 Target을 노출하지 않습니다.
 - 취약순이 없고 레벨순에 암묵적인 난이도 기준이 없습니다.
-- Text 검색, 모바일 필터 Commit, 데스크톱 능동 필터 및 적용 상태 제거에
-  충돌하지 않는 명시적인 규칙이 있습니다.
+- 능동 Query 관련도순, 명시적 정렬 유지, 모바일 통합 필터·정렬 Commit,
+  데스크톱 별도 능동 컨트롤 및 적용 상태 제거에 충돌하지 않는 명시적인 규칙이
+  있습니다.
 - 로그인 기록 세부 필터에 간결한 승인 분류, 최고 기록 MISS 의미, 결합 규칙 및
   불가능한 상태 처리가 있습니다.
 - 악곡 결과 정체성, 목록·Grid 제공, 데스크톱 Hover·Focus 기록 Context 및
@@ -760,41 +833,46 @@ Commerce 근거는 필터 과업이 NosLog에 전환되는 부분만 사용하�
 
 ## 결정 기록
 
-| ID      | 결정                   | 방향                                                                                                 | 상태     |
-| ------- | ---------------------- | ---------------------------------------------------------------------------------------------------- | -------- |
-| DISC-01 | 탐색 구조              | 악곡·채보 범위를 가진 하나의 공용 Surface                                                            | `승인`   |
-| DISC-02 | 범위 컨트롤            | 열린 컨트롤에 보이는 Text가 있는 간결한 선행 선택기, 상시 모드 Button 행 없음                        | `승인`   |
-| DISC-03 | 범위 진입              | 악곡 진입은 악곡 범위, 채보 뷰어 진입은 채보 범위, Query·범위는 공유·복구 가능                       | `승인`   |
-| DISC-04 | 빈 악곡 탐색           | 이용 가능한 전체 악곡 Catalog 포함, 숨은 Expert `8–12` 기본값 제거                                   | `승인`   |
-| DISC-05 | 채보 이용 가능성       | 일치하는 공개 채보 Target만 반환                                                                     | `승인`   |
-| DISC-06 | 채보 Grouping          | 악곡마다 하나의 결과 단위와 일치하는 공개 난이도                                                     | `승인`   |
-| DISC-07 | 채보 선택              | 공개 난이도를 선택하면 정확한 집중형 뷰어로 바로 이동                                                | `승인`   |
-| DISC-08 | Text Query 적용        | IME 안전 `300ms` 유휴 후 갱신, 결과 없음에서도 Query 유지                                            | `승인`   |
-| DISC-09 | 모바일 필터 적용       | 결과를 가리는 Layer에서 임시 선택, 하나의 **결과 보기** Action으로 Commit·닫기, 닫기·뒤로가기는 취소 | `승인`   |
-| DISC-10 | 데스크톱 필터 적용     | 보이는 개별 필터 즉시 반영, 연속 컨트롤 Debounce 또는 Commit                                         | `승인`   |
-| DISC-11 | 적용 상태 제거         | 조건 하나 제거 또는 전체 초기화를 즉시 반영                                                          | `승인`   |
-| DISC-12 | 점진적 불러오기        | 자동 무한 Scroll 없이 명시적인 더 보기 사용                                                          | `승인`   |
-| DISC-13 | 점진적 상태            | 결과 수·범위, Busy, 재시도, 끝, URL·History, 불러온 상태 및 의미 있는 Scroll 복구                    | `승인`   |
-| DISC-14 | 초기 정렬              | 빈 악곡은 `title_kana` 오름차순, 빈 채보는 최신 공개 채보 Group 내림차순                             | `승인`   |
-| DISC-15 | 필터·정렬 분류         | 취약순 제거와 명시적 레벨 Target은 승인, 나머지 공개·공용·범위 전용 컨트롤은 미확정                  | `미확정` |
-| DISC-16 | 결과 구성              | 악곡은 목록 기본·Grid 선택, 채보는 Grouping 목록 전용, 정확한 반응형 구조와 밀도는 미확정            | `미확정` |
-| DISC-17 | 묶음 크기와 Copy       | 성능·탐색 테스트로 묶음 크기와 정확한 더 보기 라벨 검증                                              | `미확정` |
-| DISC-18 | 결과 없음 복구         | Query, 필터 및 공개 여부 원인별 복구 우선순위 결정                                                   | `미확정` |
-| DISC-19 | 모바일 Commit 후 Focus | Focus 목적지와 알림 동작 검증                                                                        | `미확정` |
-| DISC-20 | 로그인 기록 분류       | 미플레이, S, FC, Pianist, 최근 플레이 유지, 고급 MISS 범위 하나 사용, 클리어와 저가치 수치 필터 제거 | `승인`   |
-| DISC-21 | MISS 의미              | 대상 난이도 최고 기록의 포괄 선택 경계 사용, MISS와 Near를 절대로 합산하지 않음                      | `승인`   |
-| DISC-22 | 기록 필터 논리         | Group 간 `AND`, Group 안 `OR`, 미플레이는 최근 및 달성 기록 조건과 상호 배타적                       | `승인`   |
-| DISC-23 | 악곡 결과 정체성       | 재킷, 원문·선택적 번역·읽기 제목, 아티스트, Category, 모든 공식 난이도, 목록·Grid 제공               | `승인`   |
-| DISC-24 | 개인 기록 미리보기     | 정체성 중심 평상시 결과, 데스크톱 Hover·Focus 일치 기록 미리보기, Touch는 Hover 없이 상세로 이동     | `승인`   |
-| DISC-25 | 악곡 신곡순            | 검증된 공식 악곡 단위 출시일이 있을 때만 제공하고 Database 유지보수 Timestamp로 대체하지 않음        | `승인`   |
-| DISC-26 | 취약순                 | 불투명한 복합 취약 정렬 제거                                                                         | `승인`   |
-| DISC-27 | 레벨순 기준            | 명시적인 대상 난이도를 요구하고 숨은 Expert 대체값이나 혼합 대표 레벨을 사용하지 않음                | `승인`   |
-| DISC-28 | 범위별 결과 보기       | 악곡은 목록 기본·재킷 Grid 선택, 채보는 Grid 전환 없는 하나의 Grouping 목록                          | `승인`   |
+| ID      | 결정                     | 방향                                                                                              | 상태     |
+| ------- | ------------------------ | ------------------------------------------------------------------------------------------------- | -------- |
+| DISC-01 | 탐색 구조                | 악곡·채보 범위를 가진 하나의 공용 Surface                                                         | `승인`   |
+| DISC-02 | 범위 컨트롤              | 열린 컨트롤에 보이는 Text가 있는 간결한 선행 선택기, 상시 모드 Button 행 없음                     | `승인`   |
+| DISC-03 | 범위 진입                | 악곡 진입은 악곡 범위, 채보 뷰어 진입은 채보 범위, Query·범위는 공유·복구 가능                    | `승인`   |
+| DISC-04 | 빈 악곡 탐색             | 이용 가능한 전체 악곡 Catalog 포함, 숨은 Expert `8–12` 기본값 제거                                | `승인`   |
+| DISC-05 | 채보 이용 가능성         | 일치하는 공개 채보 Target만 반환                                                                  | `승인`   |
+| DISC-06 | 채보 Grouping            | 악곡마다 하나의 결과 단위와 일치하는 공개 난이도                                                  | `승인`   |
+| DISC-07 | 채보 선택                | 공개 난이도를 선택하면 정확한 집중형 뷰어로 바로 이동                                             | `승인`   |
+| DISC-08 | Text Query 적용          | IME 안전 `300ms` 유휴 후 갱신, 결과 없음에서도 Query 유지                                         | `승인`   |
+| DISC-09 | 모바일 정렬·필터 적용    | 결과를 가리는 Layer에서 둘 다 임시 선택, 하나의 **결과 보기**로 Commit·닫기, 닫기·뒤로가기는 취소 | `승인`   |
+| DISC-10 | 데스크톱 필터 적용       | 보이는 개별 필터 즉시 반영, 연속 컨트롤 Debounce 또는 Commit                                      | `승인`   |
+| DISC-11 | 적용 상태 제거           | 조건 하나 제거 또는 전체 초기화를 즉시 반영                                                       | `승인`   |
+| DISC-12 | 점진적 불러오기          | 자동 무한 Scroll 없이 명시적인 더 보기 사용                                                       | `승인`   |
+| DISC-13 | 점진적 상태              | 결과 수·범위, Busy, 재시도, 끝, URL·History, 불러온 상태 및 의미 있는 Scroll 복구                 | `승인`   |
+| DISC-14 | 초기 정렬                | 빈 악곡은 `title_kana` 오름차순, 빈 채보는 최신 공개 채보 Group 내림차순                          | `승인`   |
+| DISC-15 | 필터·정렬 분류           | 공개 Category·난이도·레벨 필터, 범위별 정렬 집합, 부차적인 개인 기록 조건                         | `승인`   |
+| DISC-16 | 결과 구성                | 악곡은 목록 기본·Grid 선택, 채보는 Grouping 목록 전용, 정확한 결과 카드 구조와 밀도는 미확정      | `미확정` |
+| DISC-17 | 묶음 크기와 Copy         | 성능·탐색 테스트로 묶음 크기와 정확한 더 보기 라벨 검증                                           | `미확정` |
+| DISC-18 | 결과 없음 복구           | Query, 필터 및 공개 여부 원인별 복구 우선순위 결정                                                | `미확정` |
+| DISC-19 | 모바일 Commit 후 Focus   | Focus 목적지와 알림 동작 검증                                                                     | `미확정` |
+| DISC-20 | 로그인 기록 분류         | 미플레이, S, FC, Pianist, 고급 MISS 범위 하나 유지, 클리어·30일 플레이·저가치 수치 필터 제거      | `승인`   |
+| DISC-21 | MISS 의미                | 대상 난이도 최고 기록의 포괄 선택 경계 사용, MISS와 Near를 절대로 합산하지 않음                   | `승인`   |
+| DISC-22 | 기록 필터 논리           | Group 간 `AND`, Group 안 `OR`, 미플레이는 달성 조건과 배타적이고 최근 플레이순과 충돌             | `승인`   |
+| DISC-23 | 악곡 결과 정체성         | 재킷, 원문·선택적 번역·읽기 제목, 아티스트, Category, 모든 공식 난이도, 목록·Grid 제공            | `승인`   |
+| DISC-24 | 개인 기록 미리보기       | 정체성 중심 평상시 결과, 데스크톱 Hover·Focus 일치 기록 미리보기, Touch는 Hover 없이 상세로 이동  | `승인`   |
+| DISC-25 | 악곡 신곡순              | 검증된 공식 악곡 단위 출시일이 있을 때만 제공하고 Database 유지보수 Timestamp로 대체하지 않음     | `승인`   |
+| DISC-26 | 취약순                   | 불투명한 복합 취약 정렬 제거                                                                      | `승인`   |
+| DISC-27 | 레벨순 기준              | 명시적인 대상 난이도를 요구하고 숨은 Expert 대체값이나 혼합 대표 레벨을 사용하지 않음             | `승인`   |
+| DISC-28 | 범위별 결과 보기         | 악곡은 목록 기본·재킷 Grid 선택, 채보는 Grid 전환 없는 하나의 Grouping 목록                       | `승인`   |
+| DISC-29 | 능동 Query 정렬 우선순위 | 사용자 정렬이 없으면 관련도순, 명시적 정렬 유지, 관련도 Query 삭제 시 범위 기본 정렬로 복귀       | `승인`   |
+| DISC-30 | 반응형 정렬·필터 진입    | 모바일은 하나의 Label된 Trigger와 임시 Layer, 데스크톱은 결과가 보이는 별도 컨트롤                | `승인`   |
+| DISC-31 | 비로그인 개인 컨트롤     | 비활성 조건이나 내부 로그인 안내 대신 개인 기록 Group 생략                                        | `승인`   |
+| DISC-32 | 30일 플레이 필터 유지    | 이전 유지 결정을 제거로 교체하고 최근 플레이는 로그인 정렬로만 유지                               | `대체됨` |
+| DISC-33 | 미플레이·최근순 전환     | 승인된 충돌 의미는 유지하고 정확한 비활성화·초기화 전환은 Prototype 테스트로 선택                 | `미확정` |
 
 ## 다음 논의 묶음
 
-`DISC-15`와 `DISC-16`에서 남은 공개·범위 전용 분류와 정확한 반응형
-컨트롤·결과 구조는 서로 영향을 주므로 함께 이어서 결정합니다. 이 페이지
-기획서를 닫기 전에 활성 Query 정렬 우선순위도 해결합니다. `DISC-20`부터
-`DISC-28`을 다시 열거나 대표 악곡, 공개 채보, 다국어 제목 및 로그인 기록
-데이터와 독립적으로 카드 밀도와 필터 비중을 확정하지 않습니다.
+`DISC-16` 결과 카드 구조와 밀도를 이어서 결정한 뒤 묶음 크기, 결과 없음 복구,
+Commit 후 Focus 및 미플레이·최근 정렬 전환을 해결합니다. 새로운 근거와 사용자
+승인 없이 승인된 분류나 반응형 컨트롤 진입을 다시 열지 않으며, 대표 악곡, 공개
+채보, 다국어 제목 및 로그인 기록 데이터와 독립적으로 카드 밀도를 확정하지
+않습니다.
