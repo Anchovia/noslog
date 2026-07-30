@@ -98,6 +98,14 @@ system.
   Normal, Hard, Expert, and Real.
 - Signed-out requests ignore personal record filters and personal sorts at the data
   layer.
+- The inspected local dataset contains `583` Music entries and `2,180` MusicChart
+  entries. `title_kana` is populated for all `583` Music entries, while only `3`
+  MusicChart entries currently have `released_at`.
+- The same dataset contains no published ChartPattern and no MusicTranslation entries.
+  These are readiness constraints for representative Chart and localization testing,
+  not reasons to weaken the approved product model.
+- Music `created_at` and `updated_at` describe import or maintenance activity and must
+  not be presented as an official “new Music” date.
 
 ### Observed Browser Baseline
 
@@ -135,7 +143,7 @@ at a narrow `390px` viewport and a wide desktop viewport.
 - An empty Music-scope query exposes the complete Music catalog over explicit batches.
 - Do not silently restrict the initial catalog to Expert or to levels `8–12`.
 - “Complete catalog” means every eligible Music entry can be reached. It does not yet
-  determine initial ordering, card density, or batch size.
+  determine card density or batch size.
 - A user-selected difficulty or level range remains a filter and must be shown as
   active state rather than becoming an invisible default.
 
@@ -150,6 +158,32 @@ at a narrow `390px` viewport and a wide desktop viewport.
   when the difficulties belong to the same Music entry.
 - Do not show an unpublished difficulty as if it were selectable and then explain the
   failure after selection.
+
+### Approved Browse Ordering and Sort Semantics
+
+- With an empty query, Music scope orders the complete eligible catalog by
+  `title_kana` ascending. This Japanese-reading order remains stable regardless of
+  whether the optional translated/read-title caption is visible.
+- With an empty query, Chart scope orders Music groups by their latest published-chart
+  timestamp descending. Within a group, selectable targets remain in the stable
+  `Normal → Hard → Expert → Real` order.
+- Music scope must offer a **newest Music** sort after a verified official Music-level
+  release-date field is populated. Do not substitute Music `created_at`,
+  `updated_at`, or chart-import timestamps. The data mapping for later-added
+  difficulties must be reviewed before implementation.
+- The default order for a non-empty text query remains open. Relevance is a candidate,
+  but it has not been approved as a replacement for the user's selected sort.
+- Remove the current **weakness** sort. Its opaque composite score does not map to an
+  approved, understandable discovery goal.
+- A level sort is valid only after the user explicitly selects its target difficulty.
+  Never silently use Expert or derive one representative level from several
+  difficulties.
+- Outside the sort control, show only the current sort summary. The target difficulty
+  belongs inside progressive disclosure rather than in a permanent
+  `Normal / Hard / Expert / Real` button row.
+- The exact responsive anatomy—such as a compact menu on wide layouts and a sheet on
+  narrow layouts—remains open for component-level comparison and testing. The
+  approved semantics must not be traded for a visually quieter but ambiguous control.
 
 ## Search Interaction
 
@@ -322,6 +356,22 @@ state, results, and recovery controls must keep a clear semantic relationship.
 - Difficulty and level for every selectable target
 - A direct, unambiguous focused-viewer destination per selectable difficulty
 
+### Approved Result-View Structure
+
+- Music scope opens in the list view. Users may switch to the jacket-forward grid
+  view when visual recognition is more useful.
+- Chart scope uses one grouped list presentation only. Do not add a Chart grid toggle:
+  the primary action is selecting a published difficulty target under the correct
+  Music identity, not comparing jackets.
+- A Chart result presents Music identity first and then its published matching
+  difficulty targets in the stable difficulty order.
+- Do not add a permanent row of difficulty controls above either result collection.
+  Filters, level-sort targets, and Chart destination targets have different meanings
+  and must not be collapsed into one visually repetitive control strip.
+- Exact list density, grid proportions, jacket prominence, Chart row anatomy, and
+  responsive spacing remain open until representative mobile and desktop fragments are
+  compared.
+
 ### Approved Personal-Record Preview
 
 - Keep the resting Music result focused on Music identity. Do not add a permanent
@@ -344,16 +394,19 @@ state, results, and recovery controls must keep a clear semantic relationship.
 - Near, FAST/SLOW, and note-type success rates remain available in detailed record
   analysis but are not part of the compact discovery preview.
 
-The required Music fields and list/grid availability are approved. Exact density,
-proportions, jacket prominence inside each view, preview transition, and Chart-scope
-result presentation remain open.
+The required Music fields, list-default/grid-optional model, and Chart grouped-list
+model are approved. Exact density, proportions, jacket prominence, preview transition,
+and Chart row anatomy remain open.
 
 ## State Requirements
 
 | State                           | Required behavior                                                                             | Status              |
 | ------------------------------- | --------------------------------------------------------------------------------------------- | ------------------- |
-| Initial Music browse            | Show the complete eligible catalog in batches with no hidden Expert `8–12` restriction        | `Approved`          |
-| Initial Chart browse            | Show only entries with published charts; exact default order remains open                     | `Approved` / `Open` |
+| Initial Music browse            | Show the complete eligible catalog by `title_kana` ascending with no hidden difficulty limit  | `Approved`          |
+| Initial Chart browse            | Show published Music groups by latest published-chart timestamp descending                    | `Approved`          |
+| Music newest sort unavailable   | Omit or explain the option until verified official Music-level release dates are populated    | `Approved`          |
+| Level sort target missing       | Require an explicit difficulty selection; never fall back silently to Expert                  | `Approved`          |
+| Weakness sort                   | Do not provide the current opaque composite weakness order                                    | `Approved`          |
 | Settled active search           | Replace the result set after `300ms` idle and synchronize committed URL state                 | `Approved`          |
 | Fast response                   | Update without flashing a transient loading treatment                                         | `Proposed`          |
 | Slow initial or filter response | Keep search/filter controls stable and communicate busy state in the result region            | `Proposed`          |
@@ -445,6 +498,11 @@ result presentation remain open.
   in all three locales before the page family is accepted.
 - Query and filter URL values remain stable technical identifiers where translating
   them would break sharing or implementation mapping.
+- Empty Music browse uses `title_kana` as its technical ordering key in every locale.
+  Translation display preferences change visible secondary text, not catalog order.
+- Sort labels, direction, and an explicit level-sort difficulty target require complete
+  Korean, Japanese, and English names. Do not expose a difficulty target through color
+  or an abbreviation alone.
 
 ## Reference Comparison
 
@@ -475,6 +533,34 @@ not NosLog art direction.
 | [Elastic Search UI](https://www.elastic.co/docs/reference/search-ui)                                                     | Search-as-you-type, faceting, and conditional facets require explicit state and request handling.                                         | Supports active text search and stale-request protection as implementation capabilities.                         | It is technical tooling guidance rather than independent user research.                                     |
 | [WAI-ARIA APG: Combobox](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/)                                             | Editable popup controls require defined keyboard, focus, selection, and popup relationships.                                              | The scope-aware search and suggestions must not rely on pointer interaction or icons alone.                      | The exact scope selector may use a menu rather than a combobox and must follow its actual semantic pattern. |
 | [WCAG 2.2: Status Messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html)                            | Dynamic results and status changes should be available to assistive technology without taking focus.                                      | Announce settled counts and failures without moving focus on every refresh.                                      | It does not prescribe debounce timing or visual presentation.                                               |
+
+### Ordering and Result-Composition Comparison
+
+The ordering and result-view decision was compared across current NosLog evidence,
+official rhythm-game catalogs, community chart browsers, search guidance, and
+production design systems. No single reference determines the solution; the approved
+model follows the convergent task pattern while preserving NOSTALGIA-specific
+difficulty and data semantics.
+
+| Source                                                                                                                         | Observed pattern or evidence                                                                                           | NosLog fit and limitation                                                                                                           |
+| ------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| [Current NosLog Music toolbar](../../components/music/musicToolbar.tsx)                                                        | Sort, direction, difficulty, filters, and view choices currently compete in one control area.                          | Confirms the need to reduce persistent control density; the current arrangement is not a 2.0 layout mandate.                        |
+| [Current NosLog Music query](<../../app/(nevigation)/music/data.ts>)                                                           | Level order can depend on selected difficulties or a hidden Expert fallback, while weakness uses a composite score.    | Direct migration evidence for removing weakness and requiring an explicit level target; current semantics are not retained.         |
+| Current local dataset audit (`2026-07-30`)                                                                                     | All `583` Music entries have `title_kana`, but only `3` MusicChart rows have `released_at`; no ChartPattern is public. | Supports reading-order browse now and requires a release-data gate plus seeded Chart states before representative validation.       |
+| [KONAMI NOSTALGIA Op.3 play data](https://p.eagate.573.jp/game/nostalgia/op3/playdata/entrance.html)                           | Music identity, named difficulty, level, and record dimensions stay explicitly associated.                             | Supports preserving NOSTALGIA difficulty identity; the authenticated record page does not prescribe public catalog layout.          |
+| [maimai DX song list](https://maimai.sega.jp/song/)                                                                            | A jacket-led official catalog keeps title, artist, category, and multiple difficulty levels together.                  | Supports Music-centered grouping and optional visual browsing; maimai's categories and visual density are not copied.               |
+| [CHUNITHM song list](https://chunithm.sega.jp/music/)                                                                          | Official songs remain grouped as one identity with their difficulty data rather than independent difficulty cards.     | Supports one Music result with several difficulties; it does not cover community Chart publication.                                 |
+| [osu! beatmap listing](https://osu.ppy.sh/beatmapsets)                                                                         | Query, mode, category, explicit sorting, and grouped beatmap sets coexist.                                             | Supports explicit scope and sort state plus grouped variants; osu! terminology and ranking model do not transfer directly.          |
+| [osu! client interface](https://osu.ppy.sh/wiki/en/Client/Interface)                                                           | Grouping and sorting are separate concepts, and difficulty sorting can separate related variants.                      | Supports keeping Music grouping stable and avoiding an implicit cross-difficulty representative level.                              |
+| [BeatSaver](https://beatsaver.com/)                                                                                            | Community charts foreground newly uploaded content and expose direct difficulty targets from a song identity.          | Supports latest-published Chart browse; Beat Saber metadata and moderation semantics differ.                                        |
+| [StepManiaOnline search](https://search.stepmaniaonline.net/)                                                                  | Community packs and charts are searchable with explicit recency and difficulty context.                                | Supports publication-recency browse and difficulty visibility; pack-first structure is not NosLog's Music model.                    |
+| [Tachi](https://tachi.ac/)                                                                                                     | Rhythm-game discovery and analysis separate compact identity browsing from detailed record dimensions.                 | Supports list-first scan and progressive detail; Tachi is a multi-game tracker, not a public Chart marketplace.                     |
+| [Algolia: Relevant sorting](https://www.algolia.com/doc/guides/managing-results/refine-results/sorting/in-depth/relevant-sort) | Relevance and business/attribute ordering are distinct modes that need explicit configuration.                         | Keeps relevance as a non-empty-query candidate rather than silently overriding the user's chosen order; capability is not UX proof. |
+| [Algolia: Faceting](https://www.algolia.com/doc/guides/managing-results/refine-results/faceting)                               | Sort and refinement state can remain explicit and restorable alongside query state.                                    | Supports URL-restorable sort and target difficulty; it does not decide which NOSTALGIA sort is meaningful.                          |
+| [Baymard: Default sort type](https://baymard.com/blog/default-sort-type)                                                       | Default ordering materially shapes what users perceive as the available catalog.                                       | Supports a predictable neutral empty-browse order and rejects hidden difficulty restriction; ecommerce priorities are different.    |
+| [Carbon: Data table usage](https://carbondesignsystem.com/components/data-table/usage/)                                        | Secondary actions and view controls should preserve a clear hierarchy around the collection.                           | Supports one current sort trigger and purposeful list/grid controls; enterprise table density is not the target style.              |
+| [PatternFly: Toolbar](https://www.patternfly.org/components/toolbar/design-guidelines)                                         | Filters, sort, view, and bulk actions should be grouped by role and progressively disclosed when space is limited.     | Supports placing the level target inside sort disclosure rather than adding a permanent difficulty-button row.                      |
+| [U.S. Web Design System: Search](https://designsystem.digital.gov/components/search/)                                          | Search labels, status, and results must remain understandable without depending on icon recognition alone.             | Requires localized visible sort/scope meaning and accessible control names; government visual styling does not transfer.            |
 
 ### Personal-Record Taxonomy Comparison
 
@@ -522,6 +608,16 @@ storefronts and derivative summaries were not counted as separate support.
   must govern instead of importing IIDX's taxonomy.
 - Rich judgement and note-type breakdowns remain valuable analysis data, while a lean
   discovery surface benefits from progressively disclosing only actionable criteria.
+- Official catalogs and community-chart browsers converge on keeping related
+  difficulties under one Music identity, but they differ on whether list or artwork
+  scanning dominates. NosLog resolves this with list-default/grid-optional Music
+  results and a grouped-list-only Chart scope.
+- The complete `title_kana` field supports a neutral, deterministic empty Music browse.
+  Release-recency sorting requires trustworthy release metadata and must not be
+  simulated with database maintenance timestamps.
+- Level ordering is understandable only when its difficulty basis is explicit.
+  Hiding an Expert fallback or blending several difficulties would make equal-looking
+  “level” values semantically inconsistent.
 
 ### Evidence Disagreement and NosLog Resolution
 
@@ -537,6 +633,12 @@ storefronts and derivative summaries were not counted as separate support.
   Tachi evidence more often presents comparable statistics in score, sort, goal, or
   analysis contexts. NosLog resolves this by retaining an advanced authenticated MISS
   range without promoting it to a public primary facet.
+- Official song catalogs favor stable Music grouping, while community chart services
+  more strongly foreground publication recency. NosLog applies each pattern to the
+  matching scope instead of forcing one universal empty-browse order.
+- Search systems support relevance for active queries, but references disagree on when
+  it should override an explicit user order. NosLog keeps that behavior open until the
+  query/sort precedence is separately approved.
 
 ## Rejected or Superseded Alternatives
 
@@ -573,19 +675,32 @@ storefronts and derivative summaries were not counted as separate support.
   preview or destination detail.
 - **Pointer-only record preview — Rejected:** Any hover disclosure must have an
   equivalent keyboard-focus path and must not be required on touch.
+- **Composite weakness sort — Rejected:** Its implementation-specific weighting is not
+  an understandable or approved user goal.
+- **Hidden Expert fallback or blended representative level — Rejected:** Level order
+  requires an explicitly selected difficulty.
+- **Permanent difficulty button row for level sort — Rejected:** Keep the target inside
+  progressive sort disclosure so the collection toolbar does not become a repeated
+  control strip.
+- **Chart grid view — Rejected:** Published difficulty selection needs a grouped,
+  scannable list under Music identity rather than an additional artwork mode.
+- **Database creation or update time as Music release date — Rejected:** Import and
+  maintenance timestamps cannot support a truthful newest-Music sort.
 
 ## Open Design Questions
 
 The following decisions require a new evidence-and-approval batch before this brief can
 be approved:
 
-1. What initial ordering should Music and Chart browse use when the query is empty?
+1. For a non-empty text query, should relevance become the initial order, or should
+   the last explicit user sort remain authoritative?
 2. Which remaining public filters and sorts belong to both scopes, and which are
    Music- or Chart-only?
 3. What exact progressive-disclosure control should open the approved authenticated
    personal-record group, and should signed-out users see an invitation or no control?
-4. How should the approved Music fields and list/grid views be arranged at mobile and
-   desktop densities, and what exact composition should Chart results use?
+4. What exact mobile and desktop anatomy should arrange the approved Music
+   list/grid, Chart grouped list, and explicit level-sort difficulty target without
+   increasing persistent control density?
 5. What batch size and Load-more copy produce the best balance of scanning, response
    time, memory, and return-state restoration?
 6. Which no-result recovery actions should be ordered first for text mismatch, an
@@ -604,6 +719,12 @@ The later implementation must verify at minimum:
 - query change, scope change, and filter change during active requests, including
   deliberately reordered responses;
 - all-Music initial browse with no hidden difficulty restriction;
+- empty Music browse ordered by `title_kana` ascending in all three locales;
+- empty Chart browse ordered by each Music group's latest published-chart timestamp,
+  with targets in `Normal → Hard → Expert → Real` order;
+- newest-Music sorting with verified official release dates, including the unavailable
+  data-gate state and no fallback to database timestamps;
+- absence of weakness sorting and explicit difficulty selection before level order;
 - Chart grouping with zero, one, and multiple published matching difficulties;
 - direct published-difficulty entry to the focused viewer and exact return-state
   restoration;
@@ -614,8 +735,9 @@ The later implementation must verify at minimum:
   disclosure;
 - S, FC, Pianist, recent-play, and Unplayed criteria; inclusive best-record MISS
   bounds; within-group `OR`; cross-group `AND`; and Unplayed conflict prevention;
-- Music list/grid switching and stable base identity with zero, one, and several
-  matching difficulty records;
+- Music list-default/grid switching and stable base identity with zero, one, and
+  several matching difficulty records;
+- grouped-list-only Chart results with no grid toggle;
 - equivalent desktop pointer-hover and keyboard-focus previews, plus direct touch
   navigation without a synthetic hover step;
 - initial loading, slow response, empty result, retrieval error, incremental loading,
@@ -633,7 +755,10 @@ The later implementation must verify at minimum:
 
 - Music and Chart scope remain semantically distinct within one shared surface.
 - Initial Music browse has no hidden Expert `8–12` restriction.
+- Empty Music and Chart browse have explicit scope-appropriate orders, and newest Music
+  order is gated by verified official release-date data.
 - Published Chart results are grouped by Music and never expose unavailable targets.
+- Weakness sort is absent, and level sort never has an implicit difficulty basis.
 - Text search, mobile filter commitment, desktop live filtering, and applied-state
   removal have explicit non-conflicting rules.
 - Authenticated record refinement has an approved lean taxonomy, best-record MISS
@@ -654,37 +779,42 @@ The later implementation must verify at minimum:
 
 ## Decision Register
 
-| ID      | Decision                      | Direction                                                                                                                       | Status     |
-| ------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| DISC-01 | Discovery architecture        | One shared surface with Music and Chart scopes                                                                                  | `Approved` |
-| DISC-02 | Scope control                 | Compact leading selector with visible text in the opened control; no permanent mode-button row                                  | `Approved` |
-| DISC-03 | Scope entry                   | Music entries open Music scope; Chart Viewer entries open Chart scope; query and scope are shareable and restorable             | `Approved` |
-| DISC-04 | Empty Music browse            | Include the complete eligible Music catalog; remove the hidden Expert `8–12` default                                            | `Approved` |
-| DISC-05 | Chart eligibility             | Return only published matching Chart targets                                                                                    | `Approved` |
-| DISC-06 | Chart grouping                | One result unit per Music with its published matching difficulties                                                              | `Approved` |
-| DISC-07 | Chart selection               | Selecting a published difficulty opens that exact focused viewer directly                                                       | `Approved` |
-| DISC-08 | Text-query application        | IME-safe update after `300ms` idle; preserve query on no results                                                                | `Approved` |
-| DISC-09 | Mobile filter application     | Stage in a result-obscuring layer; one **View results** action commits and closes; Close/Back cancels                           | `Approved` |
-| DISC-10 | Desktop filter application    | Apply visible discrete filters immediately; debounce or commit continuous controls                                              | `Approved` |
-| DISC-11 | Applied-state removal         | Removing one criterion or clearing all applies immediately                                                                      | `Approved` |
-| DISC-12 | Progressive loading           | No automatic infinite scroll; use explicit Load more                                                                            | `Approved` |
-| DISC-13 | Progressive state             | Provide count/range, busy, retry, end, URL/history, loaded-state, and meaningful scroll restoration                             | `Approved` |
-| DISC-14 | Initial ordering              | Determine Music- and Chart-scope defaults with representative data                                                              | `Open`     |
-| DISC-15 | Filter and sort taxonomy      | Authenticated record subset is approved; remaining public, shared, and scope-specific controls stay unresolved                  | `Open`     |
-| DISC-16 | Result composition            | Music fields, list/grid availability, and record-preview rules are approved; exact layout and Chart composition stay unresolved | `Open`     |
-| DISC-17 | Batch size and copy           | Validate batch size and exact Load-more label with performance and scan testing                                                 | `Open`     |
-| DISC-18 | No-result recovery            | Determine recovery priority by query, filter, and publication cause                                                             | `Open`     |
-| DISC-19 | Mobile post-commit focus      | Validate focus destination and announcement behavior                                                                            | `Open`     |
-| DISC-20 | Authenticated record taxonomy | Keep Unplayed, S, FC, Pianist, and recent play; use one advanced MISS range; remove Clear and low-value metric filters          | `Approved` |
-| DISC-21 | MISS semantics                | Inclusive optional bounds against each eligible difficulty's best record; never combine MISS with Near                          | `Approved` |
-| DISC-22 | Record-filter logic           | `AND` across groups, `OR` within a group; Unplayed is exclusive with recent and achieved-record criteria                        | `Approved` |
-| DISC-23 | Music result identity         | Jacket, original and optional localized/read title, artist, category, all official difficulties; list and grid                  | `Approved` |
-| DISC-24 | Personal-record preview       | Identity-first resting result; desktop hover and focus preview matched records; touch opens detail without hover                | `Approved` |
+| ID      | Decision                      | Direction                                                                                                                      | Status     |
+| ------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ---------- |
+| DISC-01 | Discovery architecture        | One shared surface with Music and Chart scopes                                                                                 | `Approved` |
+| DISC-02 | Scope control                 | Compact leading selector with visible text in the opened control; no permanent mode-button row                                 | `Approved` |
+| DISC-03 | Scope entry                   | Music entries open Music scope; Chart Viewer entries open Chart scope; query and scope are shareable and restorable            | `Approved` |
+| DISC-04 | Empty Music browse            | Include the complete eligible Music catalog; remove the hidden Expert `8–12` default                                           | `Approved` |
+| DISC-05 | Chart eligibility             | Return only published matching Chart targets                                                                                   | `Approved` |
+| DISC-06 | Chart grouping                | One result unit per Music with its published matching difficulties                                                             | `Approved` |
+| DISC-07 | Chart selection               | Selecting a published difficulty opens that exact focused viewer directly                                                      | `Approved` |
+| DISC-08 | Text-query application        | IME-safe update after `300ms` idle; preserve query on no results                                                               | `Approved` |
+| DISC-09 | Mobile filter application     | Stage in a result-obscuring layer; one **View results** action commits and closes; Close/Back cancels                          | `Approved` |
+| DISC-10 | Desktop filter application    | Apply visible discrete filters immediately; debounce or commit continuous controls                                             | `Approved` |
+| DISC-11 | Applied-state removal         | Removing one criterion or clearing all applies immediately                                                                     | `Approved` |
+| DISC-12 | Progressive loading           | No automatic infinite scroll; use explicit Load more                                                                           | `Approved` |
+| DISC-13 | Progressive state             | Provide count/range, busy, retry, end, URL/history, loaded-state, and meaningful scroll restoration                            | `Approved` |
+| DISC-14 | Initial ordering              | Empty Music uses `title_kana` ascending; empty Chart uses latest published-chart group descending                              | `Approved` |
+| DISC-15 | Filter and sort taxonomy      | Weakness removal and explicit level target are approved; remaining public, shared, and scope-specific controls stay unresolved | `Open`     |
+| DISC-16 | Result composition            | Music is list-default/grid-optional and Chart is grouped-list-only; exact responsive anatomy and density stay unresolved       | `Open`     |
+| DISC-17 | Batch size and copy           | Validate batch size and exact Load-more label with performance and scan testing                                                | `Open`     |
+| DISC-18 | No-result recovery            | Determine recovery priority by query, filter, and publication cause                                                            | `Open`     |
+| DISC-19 | Mobile post-commit focus      | Validate focus destination and announcement behavior                                                                           | `Open`     |
+| DISC-20 | Authenticated record taxonomy | Keep Unplayed, S, FC, Pianist, and recent play; use one advanced MISS range; remove Clear and low-value metric filters         | `Approved` |
+| DISC-21 | MISS semantics                | Inclusive optional bounds against each eligible difficulty's best record; never combine MISS with Near                         | `Approved` |
+| DISC-22 | Record-filter logic           | `AND` across groups, `OR` within a group; Unplayed is exclusive with recent and achieved-record criteria                       | `Approved` |
+| DISC-23 | Music result identity         | Jacket, original and optional localized/read title, artist, category, all official difficulties; list and grid                 | `Approved` |
+| DISC-24 | Personal-record preview       | Identity-first resting result; desktop hover and focus preview matched records; touch opens detail without hover               | `Approved` |
+| DISC-25 | Newest Music sort             | Provide it only with verified official Music-level release dates; never substitute database maintenance timestamps             | `Approved` |
+| DISC-26 | Weakness sort                 | Remove the opaque composite weakness order                                                                                     | `Approved` |
+| DISC-27 | Level-sort basis              | Require an explicit target difficulty; never use hidden Expert fallback or a blended representative level                      | `Approved` |
+| DISC-28 | Scope result views            | Music opens as list with optional jacket grid; Chart remains one grouped list without a grid toggle                            | `Approved` |
 
 ## Next Discussion Batch
 
-Complete the unresolved portions of `DISC-14` through `DISC-16` together because
-initial ordering, remaining public/scope-specific controls, and exact result layout
-affect one another. Do not reopen `DISC-20` through `DISC-24` or finalize card density
-and filter prominence independently of representative Music, published Chart,
-localized-title, and authenticated-record data.
+Continue with the unresolved portions of `DISC-15` and `DISC-16`: the remaining
+public/scope-specific taxonomy and exact responsive control/result anatomy affect one
+another. Also resolve active-query sort precedence before closing this page brief. Do
+not reopen `DISC-20` through `DISC-28` or finalize card density and filter prominence
+independently of representative Music, published Chart, localized-title, and
+authenticated-record data.
