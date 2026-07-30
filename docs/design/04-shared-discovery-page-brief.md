@@ -125,9 +125,14 @@ at a narrow `390px` viewport and a wide desktop viewport.
 - The current wide layout remains visually constrained by the general `390px` shell.
 - Japanese content produced a longer page than Korean and English, reinforcing the
   need to test real localized labels and title lengths.
+- A focused `2026-07-31` progressive-loading audit found that the current first
+  `20` results occupy approximately two `390px` List viewports and three-and-a-half
+  Grid viewports. In the current List markup, the page contained `464` DOM elements
+  at `20` results, `764` at `40`, and `1,073` at `60`.
 - These observations confirm available functionality. They do not approve the current
   default Expert filter, automatic loading, visual density, card composition, or
-  desktop width.
+  desktop width. The DOM counts are a performance test baseline for the future
+  component, not a fixed 2.0 markup budget.
 
 ## Approved Discovery Model
 
@@ -150,8 +155,9 @@ at a narrow `390px` viewport and a wide desktop viewport.
 
 - An empty Music-scope query exposes the complete Music catalog over explicit batches.
 - Do not silently restrict the initial catalog to Expert or to levels `8–12`.
-- “Complete catalog” means every eligible Music entry can be reached. It does not yet
-  determine card density or batch size.
+- “Complete catalog” means every eligible Music entry can be reached through the
+  approved `20`-result progressive-loading contract. It does not determine visual card
+  density.
 - A user-selected difficulty or level range remains a filter and must be shown as
   active state rather than becoming an invisible default.
 
@@ -352,26 +358,45 @@ and authentication promotion must not add noise to the refinement task.
 ## Explicit Progressive Loading
 
 - Do not automatically load more results from scroll position.
+- Return `20` result units initially and append `20` more per activation. A Music
+  result unit is one Music entry; a Chart result unit is one Music group containing
+  its eligible published difficulty targets.
+- Keep the same logical batch size in Music and Chart scopes, List and Grid views, and
+  narrow and wide layouts. A responsive view change must not silently add or remove
+  result units.
 - Provide a clearly labelled **Load more** control after the current collection when
-  another batch exists.
-- Show the total matching count and the currently visible range when reliable data is
-  available.
-- The control should make the next action predictable. It may include the next batch
-  amount after the batch-size decision is approved.
+  another batch exists. Its visible localized label is based on the next actual
+  amount: **Load 20 more results**, or **Load 3 more results** when only three remain.
+- Show exact committed-query progress when the count is available, such as
+  **Showing 20 of 583**. While an exact count is still pending, show the visible count
+  without inventing a total.
 - Activating it appends the next batch without removing or reordering the already
   visible collection.
-- Keep the control location stable during loading and expose an appropriate busy
-  state.
+- Keep the control location stable during loading, change its label to a localized
+  **Loading…** state, mark the result region busy, and prevent duplicate activation.
+- After a successful append, move focus to the first newly added actionable result and
+  announce the amount added and new visible progress through a restrained polite
+  status message. This is a user-initiated continuation, not an automatic focus change
+  caused by ordinary search refresh.
 - An incremental-load failure leaves existing results intact and offers a retry at the
-  same location.
-- When no further result exists, remove or replace the action with an unambiguous end
-  state; do not leave a disabled control without explanation.
-- Scope, query, applied filters, sort, loaded cursor/batch state, and meaningful scroll
-  position must be restorable when returning from Music detail or the focused chart
-  viewer.
-
-The exact batch size is intentionally open and must be tested with representative card
-density, server response time, mobile memory, and return-state behavior.
+  same location while retaining focus on the failed action.
+- When no further result exists, remove the action and communicate a localized
+  **You have viewed all results** completion state; do not leave a disabled control
+  without explanation.
+- Keep durable discovery criteria—scope, query, applied filters, sort, and view—in the
+  shareable URL. Keep the loaded result count, selected-result anchor, and meaningful
+  scroll position in that browser history entry rather than adding ephemeral batch
+  state to the public URL.
+- Returning from Music detail or the focused chart viewer must rehydrate the previously
+  loaded `20`-result batches before restoring the selected-result anchor and nearby
+  reading position. Opening a copied URL in a fresh history context starts from the
+  first `20` results.
+- Validate the future 2.0 result component with `20`, `60`, and `100` accumulated
+  results on representative mobile and desktop browsers. Optimize card markup,
+  jacket lazy loading, and rendering before mandating virtualization. Introduce
+  accessible windowing only if measured interaction, memory, or DOM cost still
+  requires it; do not change the approved user-facing `20`-result batch contract
+  silently.
 
 ## Content and Functional Requirements
 
@@ -556,10 +581,11 @@ specification work rather than unresolved Music-card structure.
 | Unplayed conflict               | Prevent achieved-record criteria; do not leave recent-play order active as meaningful state   | `Approved` / `Open` |
 | Hover-capable record preview    | Reveal equivalent compact record context on fine-pointer hover and keyboard focus             | `Approved`          |
 | Touch result                    | Keep the resting card stable and expose full record context at the destination                | `Approved`          |
-| Load more pending               | Keep existing results, mark the action busy, and prevent duplicate activation                 | `Approved`          |
-| Load more failure               | Keep existing results and provide localized retry                                             | `Approved`          |
-| End of results                  | Communicate completion without automatic additional loading                                   | `Approved`          |
-| Return from destination         | Restore scope, query, committed criteria, sort, loaded batches, and meaningful scroll         | `Approved`          |
+| Load more pending               | Keep existing results, expose localized busy status, and prevent duplicate activation         | `Approved`          |
+| Load more success               | Append the next `20`-unit batch, focus its first actionable result, and announce new progress | `Approved`          |
+| Load more failure               | Keep existing results and action focus; provide localized retry at the same location          | `Approved`          |
+| End of results                  | Remove the action and communicate completion without automatic additional loading             | `Approved`          |
+| Return from destination         | Rehydrate loaded batches, then restore the selected-result anchor and nearby reading position | `Approved`          |
 
 ## Responsive Requirements
 
@@ -623,9 +649,13 @@ specification work rather than unresolved Music-card structure.
   available while hover or focus persists, preserve Enter activation of the whole-card
   link, and avoid layout movement.
 - Touch users must not need a synthetic hover step before activating a result.
-- **Load more** must be a keyboard-operable explicit control. After append, focus
-  should remain predictable and the newly added range must be understandable without
-  forcing a focus jump.
+- **Load more** must be a keyboard-operable explicit control. Because appended
+  actionable results precede the relocated control in document order, a successful
+  user-initiated append moves focus to the first new result and announces the added
+  count and visible progress. Failure retains focus on the action.
+- The result region exposes `aria-busy` only while its current update is incomplete,
+  and a polite status region announces one settled loading, success, failure, or
+  completion message without repeating intermediate states.
 - Use semantic result headings/lists and one page-level `main` landmark.
 - Meet WCAG 2.2 target-size or target-spacing requirements for scope, filter, clear,
   result, and progressive-loading controls.
@@ -646,6 +676,16 @@ specification work rather than unresolved Music-card structure.
 - Dynamic result counts, visible ranges, and Load-more amounts require locale-aware
   number and grammar handling; do not construct them through unsafe string
   concatenation.
+- Use the approved visible progressive-loading copy pattern:
+    - Korean: `결과 20개 더 보기`, `583개 중 20개 표시`,
+      `모든 결과를 확인했습니다.`
+    - Japanese: `結果をあと20件表示`, `583件中20件を表示`,
+      `すべての結果を確認しました。`
+    - English: `Load 20 more results`, `Showing 20 of 583`,
+      `You have viewed all results.`
+      Replace `20` with the actual next amount for a final partial batch. The accessible
+      action name additionally identifies the active Music- or Chart-search context
+      without lengthening the visible label.
 - Scope, filter, difficulty, result-state, retry, and end-state copy must be complete
   in all three locales before the page family is accepted.
 - Query and filter URL values remain stable technical identifiers where translating
@@ -688,6 +728,44 @@ not NosLog art direction.
 | [Elastic Search UI](https://www.elastic.co/docs/reference/search-ui)                                                                | Search-as-you-type, faceting, and conditional facets require explicit state and request handling.                                         | Supports active text search and stale-request protection as implementation capabilities.                             | It is technical tooling guidance rather than independent user research.                                     |
 | [WAI-ARIA APG: Combobox](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/)                                                        | Editable popup controls require defined keyboard, focus, selection, and popup relationships.                                              | The scope-aware search and suggestions must not rely on pointer interaction or icons alone.                          | The exact scope selector may use a menu rather than a combobox and must follow its actual semantic pattern. |
 | [WCAG 2.2: Status Messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html)                                       | Dynamic results and status changes should be available to assistive technology without taking focus.                                      | Announce settled counts and failures without moving focus on every refresh.                                          | It does not prescribe debounce timing or visual presentation.                                               |
+
+### Progressive-Loading Comparison
+
+The approved `20`-result contract follows a twenty-four-entry comparison including
+measured NosLog evidence. The sources converge on explicit user control, predictable
+quantity, visible progress, settled status communication, bounded initial work, and
+recoverable history. They disagree on one universal quantity and on whether focus
+should remain on the trigger or move to new content. NosLog therefore chooses its
+amount from its own result density and chooses first-new-result focus because every
+appended card is actionable and otherwise precedes the relocated control in keyboard
+order.
+
+| Source                                                                                                                                                               | Evidence or transferable principle                                                                                   | NosLog application and limitation                                                                                                  |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| Current NosLog query and list implementation (`2026-07-31`)                                                                                                          | Cursor queries already return `20`; an `IntersectionObserver` currently appends automatically.                       | Retain the proven query unit but replace viewport triggering with the approved explicit action. Current behavior is not approval.  |
+| Current NosLog `390px` and accumulated-DOM audit (`2026-07-31`)                                                                                                      | `20` fills about two List or 3.5 Grid viewports; DOM elements grow from `464` at 20 to `1,073` at 60.                | Supports a useful initial scan and a separate `20/60/100` performance gate; current markup is not the final component budget.      |
+| [Baymard: Number of items loaded by default](https://baymard.com/blog/number-of-items-loaded-by-default)                                                             | Appropriate quantity varies widely; mobile product lists often fall around `15–30`, with lower search thresholds.    | Places `20` inside a researched mobile range, but commerce card density cannot determine NosLog's value alone.                     |
+| [Baymard: Telco benchmark](https://baymard.com/blog/2021-telco-benchmark)                                                                                            | Explicit Load more creates a controllable break and return should restore the exact place.                           | Supports manual continuation and selected-result restoration; telecom shopping goals differ.                                       |
+| [U.S. Web Design System: Pagination](https://designsystem.digital.gov/components/pagination/)                                                                        | Set size, screen length, performance, and user preference should determine chunking; short collections may show all. | NosLog's `583`-Music catalog is not a short collection; USWDS does not prescribe Load-more copy.                                   |
+| [SAP Fiori: Smart table](https://www.sap.com/design-system/fiori-design-web/v1-108/ui-elements/smart-table/usage)                                                    | A responsive-table example starts with `20` and provides More.                                                       | A useful numeric comparator; enterprise tables are denser than NosLog cards.                                                       |
+| [SAP Fiori: Responsive table](https://www.sap.com/design-system/fiori-design-web/v1-96/ui-elements/responsive-table/usage)                                           | Growing mode loads larger sets and can show loaded and total values beside More.                                     | Supports exact progress and explicit continuation; its high-volume thresholds do not directly transfer.                            |
+| [SAP Fiori: Grid list](https://experience.sap.com/fiori-design-web/grid-list/)                                                                                       | Batch amount depends on item complexity and browser; growing controls bound initial rendering.                       | Supports measuring List and Grid with the same logical result count rather than copying a table limit.                             |
+| [SAP Commerce: Infinite scroll](https://help.sap.com/docs/SAP_COMMERCE_COMPOSABLE_STOREFRONT/eaef8c61b6d9477daf75bff9ac1b7eb4/d37bd1496c6c42d5b7a17740ba155e94.html) | Product limits and explicit Show More increments are configurable for performance.                                   | Confirms quantity is a tested contract; its `10`-item example is not a rhythm-game catalog recommendation.                         |
+| [Carbon: Pagination](https://carbondesignsystem.com/components/pagination/usage/)                                                                                    | Chunking improves control and performance when collections are large.                                                | Supports bounded retrieval as a comparison; numbered pages remain rejected for the approved continuous discovery task.             |
+| [Material Design 2: Data tables](https://m2.material.io/components/data-tables)                                                                                      | Users need rows-per-page, total, current range, and loading progress.                                                | Supports visible quantity and progress; dense tabular pagination is not the NosLog card layout.                                    |
+| [MusicBrainz API search](https://musicbrainz.org/doc/MusicBrainz_API/Search)                                                                                         | Music-entity search defaults to `25` and permits `1–100`.                                                            | Shows a nearby music-catalog batch range; an API default is not evidence of ideal visible card density.                            |
+| [Apple Music API: Library search](https://developer.apple.com/documentation/applemusicapi/search-for-library-resources)                                              | Multi-type library search defaults to `5` and caps at `25`.                                                          | Confirms search context may require smaller groups; the endpoint mixes entity types unlike one NosLog scope.                       |
+| [YouTube Data API: Search](https://developers.google.com/youtube/v3/docs/search/list)                                                                                | Search defaults to `5`, allows up to `50`, and exposes result and page metadata.                                     | Reinforces context-specific amounts and progress metadata; video search cards and quota policy differ.                             |
+| [osu! beatmap listing implementation](https://cocalc.com/github/ppy/osu/blob/master/osu.Game/Overlays/BeatmapListing/BeatmapListingFilterControl.cs)                 | Grouped beatmap results use cursor continuation and an explicit end condition.                                       | Supports cursor-backed grouped rhythm-game discovery; the client does not establish NosLog's exact amount or control copy.         |
+| [osu!web API documentation](https://osu.ppy.sh/docs/)                                                                                                                | Beatmap-set search returns a continuation cursor and `null` when complete.                                           | Supports cursor/end-state mapping while keeping Music/Chart criteria stable across requests.                                       |
+| [WCAG 2.2: Status Messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html)                                                                        | Loading, result, and failure updates must be available without requiring focus.                                      | Requires one settled polite message; it does not decide where a user-initiated continuation should place focus.                    |
+| [MDN: `aria-busy`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-busy)                                                   | A changing region remains busy until its multi-part update is complete.                                              | Prevents premature announcements and duplicate status; native control semantics remain primary.                                    |
+| [GitHub Primer: Focus management](https://primer.style/accessibility/design-guidance/focus-management/)                                                              | When Load more adds actionable content, focus can move to the first newly added item.                                | Matches NosLog's actionable cards and forward reading order; it is design-system guidance rather than a WCAG mandate.              |
+| [University of Arizona: Focus management](https://accessibility.arizona.edu/web-apps/focus-management)                                                               | An alternative pattern keeps focus on Load more and announces the update.                                            | Records genuine disagreement; rejected because NosLog's new cards precede the moved trigger and would require reverse navigation.  |
+| [Chrome: Avoid an excessive DOM size](https://developer.chrome.com/docs/lighthouse/performance/dom-size)                                                             | Large DOM trees increase load, rendering, and memory cost; create nodes when needed.                                 | Requires accumulated-result testing and lean markup; audit warning thresholds are diagnostics, not a product batch number.         |
+| [web.dev: DOM size and interactivity](https://web.dev/articles/dom-size-and-interactivity)                                                                           | DOM growth can increase layout work and interaction latency.                                                         | Requires measurement at `20/60/100`; it does not justify silently changing the visible batch contract.                             |
+| [MDN: `history.scrollRestoration`](https://developer.mozilla.org/en-US/docs/Web/API/History/scrollRestoration)                                                       | Browser history can restore scroll position on navigation.                                                           | Supports history-entry restoration, supplemented by a selected-result anchor after asynchronous rehydration.                       |
+| [Next.js: Linking and navigating](https://nextjs.org/docs/14/app/building-your-application/routing/linking-and-navigating)                                           | App Router normally preserves Back/Forward scroll while new routes start at the top.                                 | Supports separating durable URL criteria from ephemeral loaded and reading state; async result reconstruction still needs testing. |
 
 ### Ordering and Result-Composition Comparison
 
@@ -813,6 +891,13 @@ storefronts and derivative summaries were not counted as separate support.
 - Hover is an optional capability enhancement, not a mobile interaction model. The
   same-card preview therefore uses hover plus keyboard focus where supported, while
   touch follows the primary detail link immediately.
+- Progressive-loading references converge on a bounded initial request, explicit user
+  control, predictable next quantity, visible progress, clear busy/error/end states,
+  and recoverable return context. They do not provide one universal batch number.
+- The current `390px` density, existing cursor unit, catalog scale, and cross-view
+  consistency make `20` the approved NosLog result-unit contract. Accumulated DOM cost
+  is validated separately because changing one batch from `20` to `16` does not solve
+  unbounded accumulation.
 
 ### Evidence Disagreement and NosLog Resolution
 
@@ -838,6 +923,14 @@ storefronts and derivative summaries were not counted as separate support.
   distinction, while SAP and comparable catalog patterns support a combined entry.
   NosLog uses the combined narrow trigger to reduce persistent density, keeps the
   sections separate, and retains separate controls when results remain visible.
+- Progressive-loading examples range from small search groups to `20`- and
+  `25`-item catalog/API defaults, confirming that context should determine quantity.
+  NosLog uses measured card density rather than treating any external default as a
+  universal rule.
+- Primer recommends focusing newly added actionable content, while the University of
+  Arizona documents retaining focus on the Load-more control. NosLog moves focus to
+  the first new card because the appended cards precede the relocated control in
+  document order, and supplements the move with one polite settled announcement.
 
 ## Rejected or Superseded Alternatives
 
@@ -859,6 +952,23 @@ storefronts and derivative summaries were not counted as separate support.
   commits and returns.
 - **Automatic infinite scroll — Rejected:** Use explicit Load more with recoverable
   incremental states and restorable context.
+- **`16` results per batch — Rejected:** It shortens the first mobile scan but creates
+  unnecessary continuation actions in wider and denser result layouts.
+- **`24` results or a viewport-dependent batch — Rejected:** It lengthens the mobile
+  Grid and makes responsive view changes alter the logical result set. Keep one
+  predictable `20`-unit contract.
+- **Visible “20 Music” or “20 Charts” continuation copy — Rejected:** A Chart result is
+  a Music group that can contain several difficulty targets. Use localized
+  **20 more results** visibly and put the active scope in the accessible name.
+- **Keep focus on the relocated Load-more action after success — Rejected:** Newly
+  appended actionable cards precede it in document order, forcing reverse keyboard
+  navigation. Move to the first new result and announce settled progress.
+- **Public `loaded=60` or batch query parameter — Rejected:** Loaded amount and reading
+  position are ephemeral history-entry state, while the shared URL keeps durable
+  discovery criteria only.
+- **Pre-mandated virtualization — Rejected for now:** First validate the new component
+  at `20/60/100`, simplify markup and loading, and require accessible windowing only
+  if measured cost remains unacceptable.
 - **Internally scroll five-row Home preview — Rejected upstream:** Home hands complete
   discovery to this page instead of embedding a second scroll region.
 - **NOSTALGIA Clear filter — Rejected:** It does not distinguish a meaningful discovery
@@ -914,13 +1024,11 @@ storefronts and derivative summaries were not counted as separate support.
 The following decisions require a new evidence-and-approval batch before this brief can
 be approved:
 
-1. What batch size and Load-more copy produce the best balance of scanning, response
-   time, memory, and return-state restoration?
-2. Which no-result recovery actions should be ordered first for text mismatch, an
+1. Which no-result recovery actions should be ordered first for text mismatch, an
    over-constrained filter set, and no published Chart availability?
-3. After mobile Filter-and-sort commit, should focus remain on the returning trigger,
+2. After mobile Filter-and-sort commit, should focus remain on the returning trigger,
    move to the result summary, or follow a conditional rule based on input method?
-4. When Unplayed and signed-in recent-play order conflict, should selecting one disable
+3. When Unplayed and signed-in recent-play order conflict, should selecting one disable
    the other, replace it with the scope default, or use another explicitly tested
    transition?
 
@@ -967,7 +1075,15 @@ The later implementation must verify at minimum:
   navigation without first-tap, long-press, or another synthetic hover step;
 - initial loading, slow response, empty result, retrieval error, incremental loading,
   incremental error, retry, and end of results;
-- explicit Load more with no viewport-triggered request;
+- initial `20`, repeated `20`, and final partial batches in Music List, Music Grid, and
+  grouped Chart results, with no viewport-triggered request;
+- localized next-amount action, visible/total progress, busy state, first-new-result
+  focus, polite settled announcements, failure focus retention, and completion copy;
+- accumulated `20`, `60`, and `100` result performance and DOM behavior on
+  representative mobile and desktop browsers;
+- copied-URL first-batch behavior and Back/Forward rehydration of the loaded count,
+  selected-result anchor, and nearby reading position without a public batch
+  parameter;
 - narrow `390px`, compact-height mobile, browser zoom, and representative desktop
   widths without horizontal overflow;
 - long original Japanese titles, Korean and English translated captions, missing
@@ -993,8 +1109,10 @@ The later implementation must verify at minimum:
   square-jacket behavior, capability-based hover/focus record context, and direct
   touch-detail behavior are explicit. Foundation styling tokens remain downstream
   work rather than reopening the approved structure.
-- Automatic infinite scroll is absent and explicit progressive loading includes
-  loading, retry, end, and return-state requirements.
+- Automatic infinite scroll is absent. Explicit progressive loading uses a stable
+  `20`-result contract, localized next-amount and progress copy, loading, focus,
+  announcement, retry, end, history restoration, and `20/60/100` performance
+  requirements.
 - Current implementation facts are not misrepresented as approved 2.0 behavior.
 - Mobile and desktop requirements share one product model while adapting to result
   visibility and available width.
@@ -1006,46 +1124,47 @@ The later implementation must verify at minimum:
 
 ## Decision Register
 
-| ID      | Decision                        | Direction                                                                                                                                                                      | Status       |
-| ------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------ |
-| DISC-01 | Discovery architecture          | One shared surface with Music and Chart scopes                                                                                                                                 | `Approved`   |
-| DISC-02 | Scope control                   | Compact leading selector with visible text in the opened control; no permanent mode-button row                                                                                 | `Approved`   |
-| DISC-03 | Scope entry                     | Music entries open Music scope; Chart Viewer entries open Chart scope; query and scope are shareable and restorable                                                            | `Approved`   |
-| DISC-04 | Empty Music browse              | Include the complete eligible Music catalog; remove the hidden Expert `8–12` default                                                                                           | `Approved`   |
-| DISC-05 | Chart eligibility               | Return only published matching Chart targets                                                                                                                                   | `Approved`   |
-| DISC-06 | Chart grouping                  | One result unit per Music with its published matching difficulties                                                                                                             | `Approved`   |
-| DISC-07 | Chart selection                 | Selecting a published difficulty opens that exact focused viewer directly                                                                                                      | `Approved`   |
-| DISC-08 | Text-query application          | IME-safe update after `300ms` idle; preserve query on no results                                                                                                               | `Approved`   |
-| DISC-09 | Mobile sort/filter application  | Stage both in a result-obscuring layer; one **View results** action commits and closes; Close/Back cancels                                                                     | `Approved`   |
-| DISC-10 | Desktop filter application      | Apply visible discrete filters immediately; debounce or commit continuous controls                                                                                             | `Approved`   |
-| DISC-11 | Applied-state removal           | Removing one criterion or clearing all applies immediately                                                                                                                     | `Approved`   |
-| DISC-12 | Progressive loading             | No automatic infinite scroll; use explicit Load more                                                                                                                           | `Approved`   |
-| DISC-13 | Progressive state               | Provide count/range, busy, retry, end, URL/history, loaded-state, and meaningful scroll restoration                                                                            | `Approved`   |
-| DISC-14 | Initial ordering                | Empty Music uses `title_kana` ascending; empty Chart uses latest published-chart group descending                                                                              | `Approved`   |
-| DISC-15 | Filter and sort taxonomy        | Public category/difficulty/level filters; approved scope sort sets; personal record criteria remain secondary                                                                  | `Approved`   |
-| DISC-16 | Music result composition        | Compact content-driven List with trailing difficulties; square-jacket Grid with flexible information region; capability-based same-card record preview and direct touch detail | `Approved`   |
-| DISC-17 | Batch size and copy             | Validate batch size and exact Load-more label with performance and scan testing                                                                                                | `Open`       |
-| DISC-18 | No-result recovery              | Determine recovery priority by query, filter, and publication cause                                                                                                            | `Open`       |
-| DISC-19 | Mobile post-commit focus        | Validate focus destination and announcement behavior                                                                                                                           | `Open`       |
-| DISC-20 | Authenticated record taxonomy   | Keep Unplayed, S, FC, Pianist, and one advanced MISS range; remove Clear, 30-day play, and low-value metric filters                                                            | `Approved`   |
-| DISC-21 | MISS semantics                  | Inclusive optional bounds against each eligible difficulty's best record; never combine MISS with Near                                                                         | `Approved`   |
-| DISC-22 | Record-filter logic             | `AND` across groups, `OR` within a group; Unplayed excludes achieved criteria and conflicts with recent-play order                                                             | `Approved`   |
-| DISC-23 | Music result identity           | Jacket, original and optional localized/read title, artist, category, all official difficulties; list and grid                                                                 | `Approved`   |
-| DISC-24 | Personal-record preview         | Identity-first resting result; capability-gated hover and focus preview matched records; touch opens detail without hover                                                      | `Approved`   |
-| DISC-25 | Newest Music sort               | Provide it only with verified official Music-level release dates; never substitute database maintenance timestamps                                                             | `Approved`   |
-| DISC-26 | Weakness sort                   | Remove the opaque composite weakness order                                                                                                                                     | `Approved`   |
-| DISC-27 | Level-sort basis                | Require an explicit target difficulty; never use hidden Expert fallback or a blended representative level                                                                      | `Approved`   |
-| DISC-28 | Scope result views              | Music opens as list with optional jacket grid; Chart remains one grouped list without a grid toggle                                                                            | `Approved`   |
-| DISC-29 | Active-query sort precedence    | Default to Relevance without a user sort; preserve explicit sort; clear-query Relevance returns to the scope default                                                           | `Approved`   |
-| DISC-30 | Responsive sort/filter access   | One labelled combined mobile trigger and staged layer; separate result-visible desktop controls                                                                                | `Approved`   |
-| DISC-31 | Signed-out personal controls    | Omit the personal-record group instead of disabled criteria or an embedded login invitation                                                                                    | `Approved`   |
-| DISC-32 | 30-day play-filter retention    | Former retention is replaced by removal; recent play remains a signed-in sort                                                                                                  | `Superseded` |
-| DISC-33 | Unplayed/recent-sort transition | Preserve the approved conflict semantics; choose the exact disable/reset transition through prototype testing                                                                  | `Open`       |
+| ID      | Decision                        | Direction                                                                                                                                                                           | Status       |
+| ------- | ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| DISC-01 | Discovery architecture          | One shared surface with Music and Chart scopes                                                                                                                                      | `Approved`   |
+| DISC-02 | Scope control                   | Compact leading selector with visible text in the opened control; no permanent mode-button row                                                                                      | `Approved`   |
+| DISC-03 | Scope entry                     | Music entries open Music scope; Chart Viewer entries open Chart scope; query and scope are shareable and restorable                                                                 | `Approved`   |
+| DISC-04 | Empty Music browse              | Include the complete eligible Music catalog; remove the hidden Expert `8–12` default                                                                                                | `Approved`   |
+| DISC-05 | Chart eligibility               | Return only published matching Chart targets                                                                                                                                        | `Approved`   |
+| DISC-06 | Chart grouping                  | One result unit per Music with its published matching difficulties                                                                                                                  | `Approved`   |
+| DISC-07 | Chart selection                 | Selecting a published difficulty opens that exact focused viewer directly                                                                                                           | `Approved`   |
+| DISC-08 | Text-query application          | IME-safe update after `300ms` idle; preserve query on no results                                                                                                                    | `Approved`   |
+| DISC-09 | Mobile sort/filter application  | Stage both in a result-obscuring layer; one **View results** action commits and closes; Close/Back cancels                                                                          | `Approved`   |
+| DISC-10 | Desktop filter application      | Apply visible discrete filters immediately; debounce or commit continuous controls                                                                                                  | `Approved`   |
+| DISC-11 | Applied-state removal           | Removing one criterion or clearing all applies immediately                                                                                                                          | `Approved`   |
+| DISC-12 | Progressive loading             | No automatic infinite scroll; use explicit Load more                                                                                                                                | `Approved`   |
+| DISC-13 | Progressive state               | Provide count/range, busy, retry, end, URL/history, loaded-state, and meaningful scroll restoration                                                                                 | `Approved`   |
+| DISC-14 | Initial ordering                | Empty Music uses `title_kana` ascending; empty Chart uses latest published-chart group descending                                                                                   | `Approved`   |
+| DISC-15 | Filter and sort taxonomy        | Public category/difficulty/level filters; approved scope sort sets; personal record criteria remain secondary                                                                       | `Approved`   |
+| DISC-16 | Music result composition        | Compact content-driven List with trailing difficulties; square-jacket Grid with flexible information region; capability-based same-card record preview and direct touch detail      | `Approved`   |
+| DISC-17 | Batch size and copy             | Initial and appended batches use `20` result units; localize actual-next-amount and exact progress copy; focus the first new result; keep ephemeral loaded state in browser history | `Approved`   |
+| DISC-18 | No-result recovery              | Determine recovery priority by query, filter, and publication cause                                                                                                                 | `Open`       |
+| DISC-19 | Mobile post-commit focus        | Validate focus destination and announcement behavior                                                                                                                                | `Open`       |
+| DISC-20 | Authenticated record taxonomy   | Keep Unplayed, S, FC, Pianist, and one advanced MISS range; remove Clear, 30-day play, and low-value metric filters                                                                 | `Approved`   |
+| DISC-21 | MISS semantics                  | Inclusive optional bounds against each eligible difficulty's best record; never combine MISS with Near                                                                              | `Approved`   |
+| DISC-22 | Record-filter logic             | `AND` across groups, `OR` within a group; Unplayed excludes achieved criteria and conflicts with recent-play order                                                                  | `Approved`   |
+| DISC-23 | Music result identity           | Jacket, original and optional localized/read title, artist, category, all official difficulties; list and grid                                                                      | `Approved`   |
+| DISC-24 | Personal-record preview         | Identity-first resting result; capability-gated hover and focus preview matched records; touch opens detail without hover                                                           | `Approved`   |
+| DISC-25 | Newest Music sort               | Provide it only with verified official Music-level release dates; never substitute database maintenance timestamps                                                                  | `Approved`   |
+| DISC-26 | Weakness sort                   | Remove the opaque composite weakness order                                                                                                                                          | `Approved`   |
+| DISC-27 | Level-sort basis                | Require an explicit target difficulty; never use hidden Expert fallback or a blended representative level                                                                           | `Approved`   |
+| DISC-28 | Scope result views              | Music opens as list with optional jacket grid; Chart remains one grouped list without a grid toggle                                                                                 | `Approved`   |
+| DISC-29 | Active-query sort precedence    | Default to Relevance without a user sort; preserve explicit sort; clear-query Relevance returns to the scope default                                                                | `Approved`   |
+| DISC-30 | Responsive sort/filter access   | One labelled combined mobile trigger and staged layer; separate result-visible desktop controls                                                                                     | `Approved`   |
+| DISC-31 | Signed-out personal controls    | Omit the personal-record group instead of disabled criteria or an embedded login invitation                                                                                         | `Approved`   |
+| DISC-32 | 30-day play-filter retention    | Former retention is replaced by removal; recent play remains a signed-in sort                                                                                                       | `Superseded` |
+| DISC-33 | Unplayed/recent-sort transition | Preserve the approved conflict semantics; choose the exact disable/reset transition through prototype testing                                                                       | `Open`       |
 
 ## Next Discussion Batch
 
-Continue with `DISC-17` batch size and Load-more copy, then resolve no-result recovery,
-post-commit focus, and the Unplayed/recent-sort transition. Do not reopen the approved
-taxonomy, responsive control access, or Music card anatomy without new evidence and
-user approval. Foundation tokens and exact Chart-row visuals still require their
-scheduled representative specimens, but they do not reopen `DISC-16`.
+Continue with `DISC-18` no-result recovery, then resolve mobile post-commit focus and
+the Unplayed/recent-sort transition. Do not reopen the approved taxonomy, progressive
+loading contract, responsive control access, or Music card anatomy without new
+evidence and user approval. Foundation tokens and exact Chart-row visuals still
+require their scheduled representative specimens, but they do not reopen `DISC-16` or
+`DISC-17`.
