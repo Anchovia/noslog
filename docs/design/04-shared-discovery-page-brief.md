@@ -5,7 +5,8 @@
 - Status: `In progress`
 - Decision status: `Approved directions recorded; remaining page decisions open`
 - Evidence status: `Repository inspection, current-product browser audit, approved
-information architecture, approved Home handoff, and cited search/filter guidance`
+information architecture, approved Home handoff, and cited search/filter,
+rhythm-game-record, and accessibility guidance`
 - Date started: 2026-07-30
 - Canonical language: English
 - Korean companion:
@@ -226,6 +227,37 @@ return with filter commitment.
 - Request cancellation, stale-response rejection, and cache/query optimization should
   protect performance rather than adding a universal confirmation step.
 
+### Approved Authenticated Personal-Record Refinement
+
+Personal-record refinement is an advanced, signed-in capability. It must remain
+secondary to public Music and Chart discovery rather than becoming a permanently
+expanded primary filter group.
+
+- Retain the domain-relevant status and goal criteria: **Unplayed**, **S**, **FC**,
+  **Pianist**, and **played in the last 30 days**.
+- Do not provide a **Clear** filter. NOSTALGIA does not use clear status as a useful
+  discovery distinction here, so the current control does not separate a meaningful
+  user goal.
+- Provide one judgement-level numeric refinement: an inclusive **MISS count** range
+  with optional minimum and maximum bounds. An empty bound means unbounded.
+- Evaluate MISS count against the user's best stored record for each eligible
+  difficulty, not the latest play and not a combined MISS+NEAR percentage.
+- Criteria from different groups combine with `AND`; multiple values inside one group
+  combine with `OR`.
+- **Unplayed** is mutually exclusive with recent-play and all achieved-record criteria.
+  Selecting either side clears or disables the conflicting side rather than producing
+  an impossible query.
+- Remove discovery filters for ◆JUST rate, MISS+NEAR rate, FAST/SLOW tendency, and
+  Standard, Tenuto, Glissando, or Trill success rate. These remain analysis data for
+  record-detail contexts where they are interpretable.
+- Do not promote MISS count into the default public filter set. It belongs in the
+  progressively disclosed signed-in record group because it serves focused practice
+  planning rather than ordinary catalog browsing.
+
+The exact control anatomy and signed-out invitation remain open for downstream
+prototyping, but the approved taxonomy and combination rules must not change without a
+new decision.
+
 ## Explicit Progressive Loading
 
 - Do not automatically load more results from scroll position.
@@ -271,15 +303,15 @@ state, results, and recovery controls must keep a clear semantic relationship.
 #### Music Scope
 
 - Stable Music identifier
+- Jacket image
 - Original title
 - Selected approved Korean or English title, or Japanese reading, when enabled and
   available
 - Artist when available
 - Category context
-- Available difficulty and level information
+- All available official difficulty and level information
 - Enough destination context to predict that selection opens Music detail
-- Personal record context only when authenticated and relevant to approved filter or
-  sort behavior
+- User-controlled list and jacket-forward grid views
 
 #### Chart Scope
 
@@ -290,8 +322,31 @@ state, results, and recovery controls must keep a clear semantic relationship.
 - Difficulty and level for every selectable target
 - A direct, unambiguous focused-viewer destination per selectable difficulty
 
-Exact visual fields, jacket prominence, record-summary density, and list-versus-grid
-availability remain open.
+### Approved Personal-Record Preview
+
+- Keep the resting Music result focused on Music identity. Do not add a permanent
+  per-record explanation line merely because a personal filter or sort is active;
+  committed criteria remain visible in the result summary.
+- On pointer-capable desktop layouts, hovering a result may reveal a concise personal
+  record preview. Keyboard focus must expose the same information and interaction.
+- With one active difficulty filter, preview the matching difficulty record. With
+  several active difficulty filters, show the records for all difficulties that
+  actually match. With no difficulty filter, preview the user's most recently played
+  difficulty for that Music.
+- The compact record line contains the difficulty, ◆JUST rate, absolute MISS count,
+  and achieved state when available; for example:
+  `Expert · ◆JUST 92.4% · MISS 3 · FC`.
+- ◆JUST and JUST remain separate NOSTALGIA judgements. Do not rename ◆JUST as
+  “S-Just” in user-facing copy.
+- Touch layouts do not emulate hover or reveal a hidden overlay on first tap. They keep
+  the resting result information and expose the full record context after navigation
+  to Music detail.
+- Near, FAST/SLOW, and note-type success rates remain available in detailed record
+  analysis but are not part of the compact discovery preview.
+
+The required Music fields and list/grid availability are approved. Exact density,
+proportions, jacket prominence inside each view, preview transition, and Chart-scope
+result presentation remain open.
 
 ## State Requirements
 
@@ -308,6 +363,11 @@ availability remain open.
 | Mobile filter count pending     | Keep a usable generic **View results** action                                                 | `Approved`          |
 | Mobile filter close/back        | Discard staged changes and restore committed values                                           | `Approved`          |
 | Signed-out personal filter      | Do not pretend the filter is active; exact login invitation or omission remains open          | `Observed` / `Open` |
+| Signed-in record refinement     | Keep approved record criteria in a secondary advanced group                                   | `Approved`          |
+| MISS range active               | Match the inclusive bounds against the best eligible difficulty record                        | `Approved`          |
+| Unplayed conflict               | Prevent combination with recent-play or achieved-record criteria                              | `Approved`          |
+| Desktop record preview          | Reveal equivalent compact record context on pointer hover and keyboard focus                  | `Approved`          |
+| Touch result                    | Keep the resting card stable and expose full record context at the destination                | `Approved`          |
 | Load more pending               | Keep existing results, mark the action busy, and prevent duplicate activation                 | `Approved`          |
 | Load more failure               | Keep existing results and provide localized retry                                             | `Approved`          |
 | End of results                  | Communicate completion without automatic additional loading                                   | `Approved`          |
@@ -357,6 +417,10 @@ availability remain open.
   it must not unexpectedly discard the user's reading context.
 - Applied-filter removal controls must include the category and value in their
   accessible names.
+- Information revealed by pointer hover in the personal-record preview must also be
+  available on keyboard focus. The preview must not contain the only accessible name
+  or the only indication of committed filter state.
+- Touch users must not need a synthetic hover step before activating a result.
 - **Load more** must be a keyboard-operable explicit control. After append, focus
   should remain predictable and the newly added range must be understandable without
   forcing a focus jump.
@@ -412,6 +476,28 @@ not NosLog art direction.
 | [WAI-ARIA APG: Combobox](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/)                                             | Editable popup controls require defined keyboard, focus, selection, and popup relationships.                                              | The scope-aware search and suggestions must not rely on pointer interaction or icons alone.                      | The exact scope selector may use a menu rather than a combobox and must follow its actual semantic pattern. |
 | [WCAG 2.2: Status Messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html)                            | Dynamic results and status changes should be available to assistive technology without taking focus.                                      | Announce settled counts and failures without moving focus on every refresh.                                      | It does not prescribe debounce timing or visual presentation.                                               |
 
+### Personal-Record Taxonomy Comparison
+
+The personal-record decision was tested against the domain and score-product evidence
+below together with the broader filtering and accessibility sources above. The
+combined comparison exceeds fifteen independent relevant sources; duplicate
+storefronts and derivative summaries were not counted as separate support.
+
+| Source                                                                                                                    | Observed pattern                                                                                                  | NosLog fit and limitation                                                                                                               |
+| ------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| [Current NosLog record filter](../../components/music/search/musicRecordFilter.tsx)                                       | The current UI exposes 14 controls across status, judgement, timing, and note-type weakness groups.               | It is implementation inventory, not evidence that every control deserves equal 2.0 prominence.                                          |
+| [Current NosLog record query](<../../app/(nevigation)/music/data.ts>)                                                     | Current record choices within several groups are broadly combined as matches and include a Clear criterion.       | Confirms migration impact; the existing query model must not define the new domain semantics.                                           |
+| [KONAMI NOSTALGIA Op.3 play data](https://p.eagate.573.jp/game/nostalgia/op3/playdata/entrance.html)                      | Best Score, Rank, ◆JUST/Just/Good/Miss/Near, Max Combo, note-type rates, update time, and recent history coexist. | Confirms available record dimensions, while the authenticated detail page does not prove that all of them are useful discovery filters. |
+| [NosLog Op.3 Bingo source data](../../prisma/data/op3-bingos.json)                                                        | Official mission records repeatedly use absolute MISS thresholds as completion targets.                           | Strong NOSTALGIA-specific evidence that MISS count is actionable; mission criteria do not require permanent prominence in search.       |
+| [KONAMI beatmania IIDX 33 original filters](https://p.eagate.573.jp/game/2dx/33/howto/play/game_screen.html)              | Players can build goal-oriented filters including level, clear lamp, DJ level, and a `0–300` MISS COUNT range.    | Supports an absolute range for practice selection; IIDX clear-lamp semantics must not be copied into NOSTALGIA.                         |
+| [TrackBrowser App Store history](https://apps.apple.com/au/app/trackbrowser/id6753338133)                                 | An IIDX catalog tool added Miss Count filtering, custom ranges, filter summaries, and score-data integration.     | Supports progressive personal refinement and visible committed state; it remains an unofficial IIDX-specific product.                   |
+| [osu! API score model](https://osu.ppy.sh/docs/index.html#score)                                                          | Miss count is stored as an individual score statistic beside accuracy, combo, pass, and grade data.               | Shows MISS as a portable score fact, not evidence that it should be a primary song-catalog facet.                                       |
+| [ScoreSaber Reloaded score tracking](https://www.mintlify.com/RealFascinated/scoresaber-reloaded/features/score-tracking) | Score lists expose misses as detail and allow miss-count sorting for clean-score review.                          | Supports practice relevance while demonstrating that sort/detail can be enough in some products.                                        |
+| [Tachi](https://tachi.ac/)                                                                                                | A rhythm-game tracker separates score collection, detailed analysis, goals, sessions, and folders.                | Supports keeping rich metrics in analysis while exposing only task-relevant discovery controls; it is multi-game and highly modular.    |
+| [Ministry of Justice: Filter](https://design-patterns.service.justice.gov.uk/components/filter/)                          | Filters should be limited to useful criteria, show applied state, and use clear category logic.                   | Supports removing redundant Clear and low-value judgement/note-type facets rather than preserving the current count.                    |
+| [Baymard: Product-list filtering](https://baymard.com/research/ecommerce-product-lists)                                   | User-entered numeric ranges are useful for continuous values when bounds and active state are clear.              | Supports optional MISS bounds at the interaction level; commerce findings do not determine NOSTALGIA taxonomy.                          |
+| [WCAG 2.2: Content on Hover or Focus](https://www.w3.org/WAI/WCAG22/Understanding/content-on-hover-or-focus.html)         | Additional content triggered by hover must also work with focus and remain perceivable and dismissible.           | Requires the approved desktop preview to be keyboard-equivalent; it does not justify creating hover behavior on touch.                  |
+
 ### Evidence Convergence
 
 - Live update is most useful when the result remains visible, the action is simple,
@@ -424,6 +510,18 @@ not NosLog art direction.
   results must not contradict one another.
 - Performance should be protected through settled input, request cancellation,
   caching, and localized result loading before adding confirmation to every viewport.
+- NOSTALGIA exposes many record dimensions, but domain availability alone does not make
+  each metric an effective catalog filter.
+- Absolute MISS count has direct practice-goal evidence in NOSTALGIA mission data and
+  comparable rhythm-game catalog tools. It is more interpretable than a combined
+  MISS+NEAR percentage for the approved user need.
+- Comparable services disagree on whether misses belong in filtering, sorting, or
+  detail. The convergence is that misses are useful score context, not that they should
+  dominate ordinary public discovery.
+- Clear/lamp semantics vary materially by rhythm game. NOSTALGIA's own task meaning
+  must govern instead of importing IIDX's taxonomy.
+- Rich judgement and note-type breakdowns remain valuable analysis data, while a lean
+  discovery surface benefits from progressively disclosing only actionable criteria.
 
 ### Evidence Disagreement and NosLog Resolution
 
@@ -435,6 +533,10 @@ not NosLog art direction.
 - Algolia and Elastic demonstrate technical feasibility but do not by themselves
   justify an interaction. The downstream implementation must still meet measured
   latency, cancellation, and accessibility requirements.
+- IIDX and TrackBrowser provide explicit MISS filtering, whereas osu!, ScoreSaber, and
+  Tachi evidence more often presents comparable statistics in score, sort, goal, or
+  analysis contexts. NosLog resolves this by retaining an advanced authenticated MISS
+  range without promoting it to a public primary facet.
 
 ## Rejected or Superseded Alternatives
 
@@ -458,6 +560,19 @@ not NosLog art direction.
   incremental states and restorable context.
 - **Internally scroll five-row Home preview — Rejected upstream:** Home hands complete
   discovery to this page instead of embedding a second scroll region.
+- **NOSTALGIA Clear filter — Rejected:** It does not distinguish a meaningful discovery
+  outcome for this game and duplicates ordinary played-result coverage.
+- **◆JUST, MISS+NEAR, timing, and note-type weakness as search filters — Rejected:**
+  Keep rich metrics in record analysis and retain only the actionable absolute MISS
+  range in advanced discovery.
+- **Remove MISS refinement entirely — Rejected:** Absolute MISS thresholds have direct
+  NOSTALGIA practice-goal evidence and comparable catalog precedent when kept
+  secondary.
+- **Permanent matched-record line on every resting card — Rejected:** Preserve the
+  approved identity-first card and use applied-state summary plus desktop hover/focus
+  preview or destination detail.
+- **Pointer-only record preview — Rejected:** Any hover disclosure must have an
+  equivalent keyboard-focus path and must not be required on touch.
 
 ## Open Design Questions
 
@@ -465,11 +580,12 @@ The following decisions require a new evidence-and-approval batch before this br
 be approved:
 
 1. What initial ordering should Music and Chart browse use when the query is empty?
-2. Which filters and sorts belong to both scopes, and which are Music- or Chart-only?
-3. How should authenticated personal-record filters be introduced without overwhelming
-   ordinary public discovery or hiding useful capability?
-4. What information belongs on Music and Chart result cards at mobile and desktop
-   densities, and should list/grid switching remain user-controlled?
+2. Which remaining public filters and sorts belong to both scopes, and which are
+   Music- or Chart-only?
+3. What exact progressive-disclosure control should open the approved authenticated
+   personal-record group, and should signed-out users see an invitation or no control?
+4. How should the approved Music fields and list/grid views be arranged at mobile and
+   desktop densities, and what exact composition should Chart results use?
 5. What batch size and Load-more copy produce the best balance of scanning, response
    time, memory, and return-state restoration?
 6. Which no-result recovery actions should be ordered first for text mismatch, an
@@ -494,7 +610,14 @@ The later implementation must verify at minimum:
 - mobile filter staging, generic and counted result actions, cancel, commit, clear
   one, and clear all;
 - desktop instant discrete filters and debounced/committed range controls;
-- signed-out and signed-in personal-filter states;
+- signed-out and signed-in personal-filter states, including the advanced-group
+  disclosure;
+- S, FC, Pianist, recent-play, and Unplayed criteria; inclusive best-record MISS
+  bounds; within-group `OR`; cross-group `AND`; and Unplayed conflict prevention;
+- Music list/grid switching and stable base identity with zero, one, and several
+  matching difficulty records;
+- equivalent desktop pointer-hover and keyboard-focus previews, plus direct touch
+  navigation without a synthetic hover step;
 - initial loading, slow response, empty result, retrieval error, incremental loading,
   incremental error, retry, and end of results;
 - explicit Load more with no viewport-triggered request;
@@ -513,6 +636,11 @@ The later implementation must verify at minimum:
 - Published Chart results are grouped by Music and never expose unavailable targets.
 - Text search, mobile filter commitment, desktop live filtering, and applied-state
   removal have explicit non-conflicting rules.
+- Authenticated record refinement has an approved lean taxonomy, best-record MISS
+  semantics, combination rules, and impossible-state handling.
+- Music result identity, list/grid availability, desktop hover/focus record context,
+  and touch-detail behavior are explicit without treating exact visual layout as
+  approved.
 - Automatic infinite scroll is absent and explicit progressive loading includes
   loading, retry, end, and return-state requirements.
 - Current implementation facts are not misrepresented as approved 2.0 behavior.
@@ -526,31 +654,37 @@ The later implementation must verify at minimum:
 
 ## Decision Register
 
-| ID      | Decision                   | Direction                                                                                                           | Status     |
-| ------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------- | ---------- |
-| DISC-01 | Discovery architecture     | One shared surface with Music and Chart scopes                                                                      | `Approved` |
-| DISC-02 | Scope control              | Compact leading selector with visible text in the opened control; no permanent mode-button row                      | `Approved` |
-| DISC-03 | Scope entry                | Music entries open Music scope; Chart Viewer entries open Chart scope; query and scope are shareable and restorable | `Approved` |
-| DISC-04 | Empty Music browse         | Include the complete eligible Music catalog; remove the hidden Expert `8–12` default                                | `Approved` |
-| DISC-05 | Chart eligibility          | Return only published matching Chart targets                                                                        | `Approved` |
-| DISC-06 | Chart grouping             | One result unit per Music with its published matching difficulties                                                  | `Approved` |
-| DISC-07 | Chart selection            | Selecting a published difficulty opens that exact focused viewer directly                                           | `Approved` |
-| DISC-08 | Text-query application     | IME-safe update after `300ms` idle; preserve query on no results                                                    | `Approved` |
-| DISC-09 | Mobile filter application  | Stage in a result-obscuring layer; one **View results** action commits and closes; Close/Back cancels               | `Approved` |
-| DISC-10 | Desktop filter application | Apply visible discrete filters immediately; debounce or commit continuous controls                                  | `Approved` |
-| DISC-11 | Applied-state removal      | Removing one criterion or clearing all applies immediately                                                          | `Approved` |
-| DISC-12 | Progressive loading        | No automatic infinite scroll; use explicit Load more                                                                | `Approved` |
-| DISC-13 | Progressive state          | Provide count/range, busy, retry, end, URL/history, loaded-state, and meaningful scroll restoration                 | `Approved` |
-| DISC-14 | Initial ordering           | Determine Music- and Chart-scope defaults with representative data                                                  | `Open`     |
-| DISC-15 | Filter and sort taxonomy   | Determine shared, scope-specific, and authenticated controls                                                        | `Open`     |
-| DISC-16 | Result composition         | Determine mobile/desktop fields, density, jacket treatment, and list/grid availability                              | `Open`     |
-| DISC-17 | Batch size and copy        | Validate batch size and exact Load-more label with performance and scan testing                                     | `Open`     |
-| DISC-18 | No-result recovery         | Determine recovery priority by query, filter, and publication cause                                                 | `Open`     |
-| DISC-19 | Mobile post-commit focus   | Validate focus destination and announcement behavior                                                                | `Open`     |
+| ID      | Decision                      | Direction                                                                                                                       | Status     |
+| ------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| DISC-01 | Discovery architecture        | One shared surface with Music and Chart scopes                                                                                  | `Approved` |
+| DISC-02 | Scope control                 | Compact leading selector with visible text in the opened control; no permanent mode-button row                                  | `Approved` |
+| DISC-03 | Scope entry                   | Music entries open Music scope; Chart Viewer entries open Chart scope; query and scope are shareable and restorable             | `Approved` |
+| DISC-04 | Empty Music browse            | Include the complete eligible Music catalog; remove the hidden Expert `8–12` default                                            | `Approved` |
+| DISC-05 | Chart eligibility             | Return only published matching Chart targets                                                                                    | `Approved` |
+| DISC-06 | Chart grouping                | One result unit per Music with its published matching difficulties                                                              | `Approved` |
+| DISC-07 | Chart selection               | Selecting a published difficulty opens that exact focused viewer directly                                                       | `Approved` |
+| DISC-08 | Text-query application        | IME-safe update after `300ms` idle; preserve query on no results                                                                | `Approved` |
+| DISC-09 | Mobile filter application     | Stage in a result-obscuring layer; one **View results** action commits and closes; Close/Back cancels                           | `Approved` |
+| DISC-10 | Desktop filter application    | Apply visible discrete filters immediately; debounce or commit continuous controls                                              | `Approved` |
+| DISC-11 | Applied-state removal         | Removing one criterion or clearing all applies immediately                                                                      | `Approved` |
+| DISC-12 | Progressive loading           | No automatic infinite scroll; use explicit Load more                                                                            | `Approved` |
+| DISC-13 | Progressive state             | Provide count/range, busy, retry, end, URL/history, loaded-state, and meaningful scroll restoration                             | `Approved` |
+| DISC-14 | Initial ordering              | Determine Music- and Chart-scope defaults with representative data                                                              | `Open`     |
+| DISC-15 | Filter and sort taxonomy      | Authenticated record subset is approved; remaining public, shared, and scope-specific controls stay unresolved                  | `Open`     |
+| DISC-16 | Result composition            | Music fields, list/grid availability, and record-preview rules are approved; exact layout and Chart composition stay unresolved | `Open`     |
+| DISC-17 | Batch size and copy           | Validate batch size and exact Load-more label with performance and scan testing                                                 | `Open`     |
+| DISC-18 | No-result recovery            | Determine recovery priority by query, filter, and publication cause                                                             | `Open`     |
+| DISC-19 | Mobile post-commit focus      | Validate focus destination and announcement behavior                                                                            | `Open`     |
+| DISC-20 | Authenticated record taxonomy | Keep Unplayed, S, FC, Pianist, and recent play; use one advanced MISS range; remove Clear and low-value metric filters          | `Approved` |
+| DISC-21 | MISS semantics                | Inclusive optional bounds against each eligible difficulty's best record; never combine MISS with Near                          | `Approved` |
+| DISC-22 | Record-filter logic           | `AND` across groups, `OR` within a group; Unplayed is exclusive with recent and achieved-record criteria                        | `Approved` |
+| DISC-23 | Music result identity         | Jacket, original and optional localized/read title, artist, category, all official difficulties; list and grid                  | `Approved` |
+| DISC-24 | Personal-record preview       | Identity-first resting result; desktop hover and focus preview matched records; touch opens detail without hover                | `Approved` |
 
 ## Next Discussion Batch
 
-Research and decide `DISC-14` through `DISC-16` together because initial ordering,
-filter/sort taxonomy, and result-card information affect one another. Do not finalize
-card density or filter prominence independently of representative Music, published
-Chart, localized title, and authenticated-record data.
+Complete the unresolved portions of `DISC-14` through `DISC-16` together because
+initial ordering, remaining public/scope-specific controls, and exact result layout
+affect one another. Do not reopen `DISC-20` through `DISC-24` or finalize card density
+and filter prominence independently of representative Music, published Chart,
+localized-title, and authenticated-record data.
