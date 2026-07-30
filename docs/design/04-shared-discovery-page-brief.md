@@ -6,7 +6,7 @@
 - Decision status: `Approved directions recorded; remaining page decisions open`
 - Evidence status: `Repository inspection, current-product browser audit, approved
 information architecture, approved Home handoff, and cited search/filter,
-rhythm-game-record, and accessibility guidance`
+rhythm-game-record, result-card, responsive-interaction, and accessibility guidance`
 - Date started: 2026-07-30
 - Canonical language: English
 - Korean companion:
@@ -101,6 +101,14 @@ system.
 - The inspected local dataset contains `583` Music entries and `2,180` MusicChart
   entries. `title_kana` is populated for all `583` Music entries, while only `3`
   MusicChart entries currently have `released_at`.
+- The source import catalog in `prisma/data/nosdata-musics.json` contains `578` entries.
+  Original-title length has a median of `11` characters, a 90th percentile of `25`,
+  and a maximum of `54`; `178` titles contain at least `15` characters and `92`
+  contain at least `20`. Artist length has a median of `10`, a 90th percentile of
+  `34`, and a maximum of `67`; `218` artists contain at least `15` characters and
+  `172` contain at least `20`. This source-file audit is separate from the
+  `583`-row local database audit above and demonstrates that long title and artist
+  handling is a normal case rather than an edge case.
 - The same dataset contains no published ChartPattern and no MusicTranslation entries.
   These are readiness constraints for representative Chart and localization testing,
   not reasons to weaken the approved product model.
@@ -417,17 +425,90 @@ state, results, and recovery controls must keep a clear semantic relationship.
 - Do not add a permanent row of difficulty controls above either result collection.
   Filters, level-sort targets, and Chart destination targets have different meanings
   and must not be collapsed into one visually repetitive control strip.
-- Exact list density, grid proportions, jacket prominence, Chart row anatomy, and
-  responsive spacing remain open until representative mobile and desktop fragments are
-  compared.
+- Preserve the useful structural model of the current NosLog Music list and grid as
+  the 2.0 baseline, but specify it through the rules below. A screenshot or an
+  instruction to “reuse the current UI” is not a sufficient downstream specification.
+- Exact typography, spacing, color, and motion tokens remain Foundation and component-
+  specimen work. Those token choices may refine the visual expression but must not
+  silently change the approved content order, density boundaries, or interaction
+  model. Exact Chart-row visual anatomy remains part of the later Chart result
+  specification.
+
+### Approved Music Result Anatomy and Density
+
+#### Shared identity and activation
+
+- Each Music result is one whole-card link to Music detail. Official difficulty values
+  are compact information, not separate navigation buttons.
+- Keep the title group in this order:
+    1. optional approved localized title or Japanese reading, as the smallest and
+       lowest-emphasis caption;
+    2. original title, as the largest and strongest identity;
+    3. artist, as secondary identity below the title group.
+- Keep the localized/read caption visually close to the original title so they read as
+  one title group. Use a clearer separation before the artist. When the optional
+  caption is disabled or unavailable, collapse its space completely.
+- Keep category visible as a small text badge over the jacket. Do not depend on badge
+  color alone, and do not place category inline with the artist.
+- Preserve complete original title and artist values in the accessible name and Music
+  detail even when a discovery card visually truncates them.
+
+#### List view
+
+- Keep the jacket at `56px` and the compact trailing official-difficulty group at
+  approximately the current `92px` total width, using `20px` badges as the structural
+  baseline. Difficulty remains in this trailing group rather than moving to a
+  dedicated row.
+- Use content-driven card height instead of one enlarged fixed row. A short result
+  without a localized/read caption may remain near `64px`; a typical localized result
+  may grow to about `80px`; a two-line original title may grow to approximately
+  `96–100px`.
+- Limit the localized/read caption to one line, the original title to two lines, and
+  the artist to one line with ellipsis. Missing artist or localization must not leave
+  a blank structural row.
+- At the audited `390px` baseline, the result card is approximately `343px` wide and
+  the compact trailing difficulty group remains preferable to a vertical difficulty
+  row.
+- Use one List column while the result region cannot give each card approximately
+  `440–460px` of usable width. Add a second column only when both cards can preserve
+  that minimum. List view stops at two columns; denser artwork browsing belongs to
+  Grid view. This switch follows result-container capacity, not a device-name
+  breakpoint.
+
+#### Grid view
+
+- Keep every jacket exactly square with `aspect-ratio: 1 / 1`. The complete card does
+  not need to be square.
+- Let the information region below the jacket grow independently. Preserve a
+  consistent two-line artist slot across cards, truncating after the second line, so
+  difficulty positions and row alignment remain stable.
+- Use the same localized/read caption → original title → artist hierarchy as List,
+  with the category text badge over the jacket and official difficulty information
+  below the identity.
+- Use two columns at the `390px` mobile baseline. Wider result regions may add columns
+  according to a validated minimum readable card width; exact Foundation breakpoints
+  remain open, while the intended range is roughly three to five columns rather than
+  stretching two cards.
+- The audited mobile card is approximately `168 × 261px`. Reserving one additional
+  artist line may increase it to about `168 × 279px`, roughly seven percent, without
+  distorting the square jacket.
 
 ### Approved Personal-Record Preview
 
 - Keep the resting Music result focused on Music identity. Do not add a permanent
   per-record explanation line merely because a personal filter or sort is active;
   committed criteria remain visible in the result summary.
-- On pointer-capable desktop layouts, hovering a result may reveal a concise personal
-  record preview. Keyboard focus must expose the same information and interaction.
+- On devices that report both hover capability and a fine pointer, hovering a result
+  reveals a concise personal-record preview. Do not infer this capability from
+  viewport width. Keyboard focus exposes equivalent information and interaction.
+- The preview is an alternate state of the same result card, not a separate popup,
+  expanding panel, action, or replacement for only the trailing difficulty group. Its
+  appearance must not change card dimensions or shift the result layout.
+- In List view, keep the jacket image clear while dimming or obscuring the other
+  resting information, including title text, artist, category badge, and official
+  difficulties. Place the record preview in that non-jacket region.
+- In Grid view, dim or soften the complete resting card, including the jacket, and
+  place the record preview over the card.
 - With one active difficulty filter, preview the matching difficulty record. With
   several active difficulty filters, show the records for all difficulties that
   actually match. With no difficulty filter, preview the user's most recently played
@@ -437,15 +518,19 @@ state, results, and recovery controls must keep a clear semantic relationship.
   `Expert · ◆JUST 92.4% · MISS 3 · FC`.
 - ◆JUST and JUST remain separate NOSTALGIA judgements. Do not rename ◆JUST as
   “S-Just” in user-facing copy.
-- Touch layouts do not emulate hover or reveal a hidden overlay on first tap. They keep
-  the resting result information and expose the full record context after navigation
-  to Music detail.
+- Touch layouts do not emulate hover, reveal on first tap, use long press, or add a
+  record-preview button. One tap follows the whole-card link directly to Music detail,
+  where the full record context is available.
+- Keep the preview present until pointer or focus leaves or the user dismisses it with
+  Escape. Enter continues to activate the Music-detail link. Reduced-motion
+  preferences minimize the transition.
 - Near, FAST/SLOW, and note-type success rates remain available in detailed record
   analysis but are not part of the compact discovery preview.
 
-The required Music fields, list-default/grid-optional model, and Chart grouped-list
-model are approved. Exact density, proportions, jacket prominence, preview transition,
-and Chart row anatomy remain open.
+The required Music fields, list-default/grid-optional model, Music card anatomy and
+density boundaries, capability-based preview, and Chart grouped-list model are
+approved. Foundation tokens and exact Chart-row visual anatomy remain downstream
+specification work rather than unresolved Music-card structure.
 
 ## State Requirements
 
@@ -469,7 +554,7 @@ and Chart row anatomy remain open.
 | Signed-in record refinement     | Keep approved record criteria in a secondary advanced group                                   | `Approved`          |
 | MISS range active               | Match the inclusive bounds against the best eligible difficulty record                        | `Approved`          |
 | Unplayed conflict               | Prevent achieved-record criteria; do not leave recent-play order active as meaningful state   | `Approved` / `Open` |
-| Desktop record preview          | Reveal equivalent compact record context on pointer hover and keyboard focus                  | `Approved`          |
+| Hover-capable record preview    | Reveal equivalent compact record context on fine-pointer hover and keyboard focus             | `Approved`          |
 | Touch result                    | Keep the resting card stable and expose full record context at the destination                | `Approved`          |
 | Load more pending               | Keep existing results, mark the action busy, and prevent duplicate activation                 | `Approved`          |
 | Load more failure               | Keep existing results and provide localized retry                                             | `Approved`          |
@@ -491,6 +576,8 @@ and Chart row anatomy remain open.
   compact viewport height do not hide the filter completion action.
 - Result cards must tolerate long Japanese titles and multi-line translated captions
   without horizontal overflow.
+- At the `390px` baseline, use two Grid columns and one List column. Preserve square
+  Grid jackets and let only the lower information region grow for long content.
 
 ### Wide Layout
 
@@ -504,6 +591,10 @@ and Chart row anatomy remain open.
   search, filtering, or result comparison.
 - Set a readable outer content boundary after representative result-card testing;
   exact container and column tokens remain open.
+- Keep List cards at one column below approximately `440–460px` of usable width per
+  card, use two columns only when that width is available for both, and never exceed
+  two List columns. Grid may add columns from roughly three through five according to
+  validated minimum card width.
 
 ## Accessibility Requirements
 
@@ -528,6 +619,9 @@ and Chart row anatomy remain open.
 - Information revealed by pointer hover in the personal-record preview must also be
   available on keyboard focus. The preview must not contain the only accessible name
   or the only indication of committed filter state.
+- A preview that obscures resting content must be dismissible with Escape, remain
+  available while hover or focus persists, preserve Enter activation of the whole-card
+  link, and avoid layout movement.
 - Touch users must not need a synthetic hover step before activating a result.
 - **Load more** must be a keyboard-operable explicit control. After append, focus
   should remain predictable and the newly added range must be understandable without
@@ -541,9 +635,12 @@ and Chart row anatomy remain open.
 - Validate all visible and accessible labels in Korean, Japanese, and English.
 - Preserve the original Music title as the primary identity.
 - When the title-display preference is enabled, show the approved Korean/English title
-  or Japanese reading as secondary text without replacing the original title.
-- Do not truncate the only available identifying title. Multi-line treatment is
-  preferable to ambiguous clipping.
+  or Japanese reading above the original title as a smaller secondary caption without
+  replacing the original title.
+- In List, cap the caption at one line, original title at two lines, and artist at one
+  line. In Grid, reserve two artist lines. Preserve complete values in the accessible
+  name and detail destination so visual truncation never removes the only complete
+  identifying text.
 - Text search and the `300ms` idle trigger must be composition-safe for Korean and
   Japanese IME input.
 - Dynamic result counts, visible ranges, and Load-more amounts require locale-aware
@@ -620,6 +717,31 @@ difficulty and data semantics.
 | [PatternFly: Toolbar](https://www.patternfly.org/components/toolbar/design-guidelines)                                         | Filters, sort, view, and bulk actions should be grouped by role and progressively disclosed when space is limited.     | Supports placing the level target inside sort disclosure rather than adding a permanent difficulty-button row.                          |
 | [U.S. Web Design System: Search](https://designsystem.digital.gov/components/search/)                                          | Search labels, status, and results must remain understandable without depending on icon recognition alone.             | Requires localized visible sort/scope meaning and accessible control names; government visual styling does not transfer.                |
 
+### Music Result-Card Anatomy Comparison
+
+The approved Music card anatomy was tested against the seventeen-source ordering and
+result-composition set above, current narrow and wide NosLog browser evidence, the
+local source-catalog length distribution, and the focused interaction references
+below. The sources converge on stable identity, predictable whole-card activation,
+capability-based hover enhancement, and square media that does not force the entire
+card to be square. They do not prescribe NosLog's exact dimensions; the `56px`,
+`20px`, `64–100px`, and `440–460px` boundaries preserve the audited useful compactness
+and must be validated as component specimens.
+
+| Source                                                                                                            | Observed principle                                                                                                          | NosLog fit and limitation                                                                                                                 |
+| ----------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| Current NosLog Music List and Grid browser audit (`390px` and wide, `2026-07-30`)                                 | Compact List identity, trailing difficulties, square Grid jackets, and category badges already support rapid recognition.   | Approved as structural evidence, not as final styling; crowded controls and the narrow desktop shell are not retained.                    |
+| Current source-catalog length audit (`prisma/data/nosdata-musics.json`, `2026-07-31`)                             | Long artist values are common and title length varies materially across the `578` source entries.                           | Supports separating category from artist and setting intentional line budgets; source rows differ from the local database row count.      |
+| [Apple HIG: Lists and tables](https://developer.apple.com/design/human-interface-guidelines/lists-and-tables)     | Repeated rows should prioritize scannability, consistent alignment, and clear selection behavior.                           | Supports compact whole-row activation and aligned metadata; native-platform styling and control sizes do not transfer directly.           |
+| [Apple HIG: Collections](https://developer.apple.com/design/human-interface-guidelines/collections)               | Collections can adapt item count to available space while preserving recognizable item structure.                           | Supports container-driven Grid columns; Apple platform conventions do not determine NosLog's column tokens.                               |
+| [Material Design 2: Cards](https://m2.material.io/components/cards)                                               | A card groups related identity and actions, with clear hierarchy and predictable activation rather than fragmented targets. | Supports one Music-detail target and informational difficulty values; Material surface styling is not NosLog art direction.               |
+| [Fluent 2: Card usage](https://fluent2.microsoft.design/components/web/react/core/card/usage)                     | Card layouts need stable hierarchy, state treatment, and intentional interaction affordances across input methods.          | Supports same-card preview states without layout shift; Fluent visual tokens are not copied.                                              |
+| [W3C Media Queries Level 5](https://www.w3.org/TR/mediaqueries-5/)                                                | `hover` and `pointer` describe input capability independently of viewport size.                                             | Requires preview eligibility based on capability rather than a “desktop” breakpoint; reported capabilities still require browser testing. |
+| [MDN: `hover` media feature](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/hover)                       | Interfaces can condition enhancement on whether the primary input can conveniently hover.                                   | Supports excluding first-tap and long-press preview behavior; the media query does not itself provide keyboard equivalence.               |
+| [web.dev: Interaction](https://web.dev/learn/design/interaction)                                                  | Responsive interaction must account for mouse, keyboard, touch, focus, and reduced motion instead of assuming one device.   | Supports direct touch navigation and equivalent focus behavior; it does not decide NosLog record content.                                 |
+| [Apple HIG: Context menus](https://developer.apple.com/design/human-interface-guidelines/context-menus)           | Long press is associated with contextual actions and should not replace the primary, discoverable activation path.          | Supports rejecting long-press record preview; NosLog does not adopt a context menu from this evidence.                                    |
+| [WCAG 2.2: Content on Hover or Focus](https://www.w3.org/WAI/WCAG22/Understanding/content-on-hover-or-focus.html) | Hover/focus content that obscures other content must be dismissible, hoverable, and persistent, with keyboard availability. | Governs the approved same-card preview; it does not require exposing the preview on touch.                                                |
+
 ### Personal-Record Taxonomy Comparison
 
 The personal-record decision was tested against the domain and score-product evidence
@@ -640,7 +762,7 @@ storefronts and derivative summaries were not counted as separate support.
 | [Tachi](https://tachi.ac/)                                                                                                | A rhythm-game tracker separates score collection, detailed analysis, goals, sessions, and folders.                | Supports keeping rich metrics in analysis while exposing only task-relevant discovery controls; it is multi-game and highly modular.    |
 | [Ministry of Justice: Filter](https://design-patterns.service.justice.gov.uk/components/filter/)                          | Filters should be limited to useful criteria, show applied state, and use clear category logic.                   | Supports removing redundant Clear and low-value judgement/note-type facets rather than preserving the current count.                    |
 | [Baymard: Product-list filtering](https://baymard.com/research/ecommerce-product-lists)                                   | User-entered numeric ranges are useful for continuous values when bounds and active state are clear.              | Supports optional MISS bounds at the interaction level; commerce findings do not determine NOSTALGIA taxonomy.                          |
-| [WCAG 2.2: Content on Hover or Focus](https://www.w3.org/WAI/WCAG22/Understanding/content-on-hover-or-focus.html)         | Additional content triggered by hover must also work with focus and remain perceivable and dismissible.           | Requires the approved desktop preview to be keyboard-equivalent; it does not justify creating hover behavior on touch.                  |
+| [WCAG 2.2: Content on Hover or Focus](https://www.w3.org/WAI/WCAG22/Understanding/content-on-hover-or-focus.html)         | Additional content triggered by hover must also work with focus and remain perceivable and dismissible.           | Requires the approved capability-gated preview to be keyboard-equivalent; it does not justify creating hover behavior on touch.         |
 
 ### Evidence Convergence
 
@@ -682,6 +804,15 @@ storefronts and derivative summaries were not counted as separate support.
 - A recent-play time-window filter is not justified merely because recent-play order
   exists. Without a verified intersection task, retaining both adds taxonomy without
   a distinct high-value outcome.
+- Long artist strings are frequent enough that category and artist must not compete in
+  one inline row. Consistent line budgets and alignment improve scanning while detail
+  and accessible names preserve complete values.
+- List scanning and jacket scanning have different density needs. NosLog keeps a
+  compact, at-most-two-column List and a square-jacket Grid whose lower information
+  region may grow independently.
+- Hover is an optional capability enhancement, not a mobile interaction model. The
+  same-card preview therefore uses hover plus keyboard focus where supported, while
+  touch follows the primary detail link immediately.
 
 ### Evidence Disagreement and NosLog Resolution
 
@@ -739,8 +870,8 @@ storefronts and derivative summaries were not counted as separate support.
   NOSTALGIA practice-goal evidence and comparable catalog precedent when kept
   secondary.
 - **Permanent matched-record line on every resting card — Rejected:** Preserve the
-  approved identity-first card and use applied-state summary plus desktop hover/focus
-  preview or destination detail.
+  approved identity-first card and use applied-state summary plus capability-gated
+  hover/focus preview or destination detail.
 - **Pointer-only record preview — Rejected:** Any hover disclosure must have an
   equivalent keyboard-focus path and must not be required on touch.
 - **Composite weakness sort — Rejected:** Its implementation-specific weighting is not
@@ -760,21 +891,36 @@ storefronts and derivative summaries were not counted as separate support.
   scannable list under Music identity rather than an additional artwork mode.
 - **Database creation or update time as Music release date — Rejected:** Import and
   maintenance timestamps cannot support a truthful newest-Music sort.
+- **Dedicated difficulty row in Music List — Rejected:** It spends scarce vertical
+  space on compact informational values that fit a stable trailing group.
+- **Universal `96–112px` Music List row — Rejected:** Use content-driven
+  `64–100px` height so short identities remain compact and long localized content gains
+  only the space it needs.
+- **One full-width table-like desktop List — Rejected:** Add a second compact List
+  column when each card can retain approximately `440–460px`; reserve denser multi-
+  column artwork scanning for Grid.
+- **Replace only trailing difficulties with the record preview — Rejected:** It hides
+  official difficulty context yet does not provide enough room for several matching
+  records.
+- **Separate popup, expanding panel, or layout-shifting record preview — Rejected:**
+  Use an alternate state within the same card dimensions.
+- **First-tap or long-press touch preview — Rejected:** One tap opens Music detail,
+  preserving the primary action and avoiding a hidden mobile step.
+- **Distort or crop the Grid jacket to equalize complete card height — Rejected:**
+  Preserve `1 / 1` artwork and let the lower information region absorb long content.
 
 ## Open Design Questions
 
 The following decisions require a new evidence-and-approval batch before this brief can
 be approved:
 
-1. What exact card density, proportions, and responsive result anatomy should express
-   the approved Music list/grid and Chart grouped-list models?
-2. What batch size and Load-more copy produce the best balance of scanning, response
+1. What batch size and Load-more copy produce the best balance of scanning, response
    time, memory, and return-state restoration?
-3. Which no-result recovery actions should be ordered first for text mismatch, an
+2. Which no-result recovery actions should be ordered first for text mismatch, an
    over-constrained filter set, and no published Chart availability?
-4. After mobile Filter-and-sort commit, should focus remain on the returning trigger,
+3. After mobile Filter-and-sort commit, should focus remain on the returning trigger,
    move to the result summary, or follow a conditional rule based on input method?
-5. When Unplayed and signed-in recent-play order conflict, should selecting one disable
+4. When Unplayed and signed-in recent-play order conflict, should selecting one disable
    the other, replace it with the scope default, or use another explicitly tested
    transition?
 
@@ -810,9 +956,15 @@ The later implementation must verify at minimum:
   cross-group `AND`; and Unplayed conflict prevention;
 - Music list-default/grid switching and stable base identity with zero, one, and
   several matching difficulty records;
+- List title order, category badge placement, `56px` jacket, trailing difficulty group,
+  content-driven `64–100px` height, line limits, one-to-two-column switch, and no
+  horizontal overflow around the `440–460px` per-card boundary;
+- square Grid jackets, two columns at `390px`, independently growing information
+  regions, reserved two-line artist slots, and validated wider multi-column behavior;
 - grouped-list-only Chart results with no grid toggle;
-- equivalent desktop pointer-hover and keyboard-focus previews, plus direct touch
-  navigation without a synthetic hover step;
+- capability-gated pointer-hover and equivalent keyboard-focus previews in fixed card
+  dimensions; Escape dismissal, Enter activation, reduced motion, and direct touch
+  navigation without first-tap, long-press, or another synthetic hover step;
 - initial loading, slow response, empty result, retrieval error, incremental loading,
   incremental error, retry, and end of results;
 - explicit Load more with no viewport-triggered request;
@@ -837,9 +989,10 @@ The later implementation must verify at minimum:
   non-conflicting rules.
 - Authenticated record refinement has an approved lean taxonomy, best-record MISS
   semantics, combination rules, and impossible-state handling.
-- Music result identity, list/grid availability, desktop hover/focus record context,
-  and touch-detail behavior are explicit without treating exact visual layout as
-  approved.
+- Music result identity, content order, line budgets, List/Grid density boundaries,
+  square-jacket behavior, capability-based hover/focus record context, and direct
+  touch-detail behavior are explicit. Foundation styling tokens remain downstream
+  work rather than reopening the approved structure.
 - Automatic infinite scroll is absent and explicit progressive loading includes
   loading, retry, end, and return-state requirements.
 - Current implementation facts are not misrepresented as approved 2.0 behavior.
@@ -853,46 +1006,46 @@ The later implementation must verify at minimum:
 
 ## Decision Register
 
-| ID      | Decision                        | Direction                                                                                                                 | Status       |
-| ------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ------------ |
-| DISC-01 | Discovery architecture          | One shared surface with Music and Chart scopes                                                                            | `Approved`   |
-| DISC-02 | Scope control                   | Compact leading selector with visible text in the opened control; no permanent mode-button row                            | `Approved`   |
-| DISC-03 | Scope entry                     | Music entries open Music scope; Chart Viewer entries open Chart scope; query and scope are shareable and restorable       | `Approved`   |
-| DISC-04 | Empty Music browse              | Include the complete eligible Music catalog; remove the hidden Expert `8–12` default                                      | `Approved`   |
-| DISC-05 | Chart eligibility               | Return only published matching Chart targets                                                                              | `Approved`   |
-| DISC-06 | Chart grouping                  | One result unit per Music with its published matching difficulties                                                        | `Approved`   |
-| DISC-07 | Chart selection                 | Selecting a published difficulty opens that exact focused viewer directly                                                 | `Approved`   |
-| DISC-08 | Text-query application          | IME-safe update after `300ms` idle; preserve query on no results                                                          | `Approved`   |
-| DISC-09 | Mobile sort/filter application  | Stage both in a result-obscuring layer; one **View results** action commits and closes; Close/Back cancels                | `Approved`   |
-| DISC-10 | Desktop filter application      | Apply visible discrete filters immediately; debounce or commit continuous controls                                        | `Approved`   |
-| DISC-11 | Applied-state removal           | Removing one criterion or clearing all applies immediately                                                                | `Approved`   |
-| DISC-12 | Progressive loading             | No automatic infinite scroll; use explicit Load more                                                                      | `Approved`   |
-| DISC-13 | Progressive state               | Provide count/range, busy, retry, end, URL/history, loaded-state, and meaningful scroll restoration                       | `Approved`   |
-| DISC-14 | Initial ordering                | Empty Music uses `title_kana` ascending; empty Chart uses latest published-chart group descending                         | `Approved`   |
-| DISC-15 | Filter and sort taxonomy        | Public category/difficulty/level filters; approved scope sort sets; personal record criteria remain secondary             | `Approved`   |
-| DISC-16 | Result composition              | Music is list-default/grid-optional and Chart is grouped-list-only; exact result-card anatomy and density stay unresolved | `Open`       |
-| DISC-17 | Batch size and copy             | Validate batch size and exact Load-more label with performance and scan testing                                           | `Open`       |
-| DISC-18 | No-result recovery              | Determine recovery priority by query, filter, and publication cause                                                       | `Open`       |
-| DISC-19 | Mobile post-commit focus        | Validate focus destination and announcement behavior                                                                      | `Open`       |
-| DISC-20 | Authenticated record taxonomy   | Keep Unplayed, S, FC, Pianist, and one advanced MISS range; remove Clear, 30-day play, and low-value metric filters       | `Approved`   |
-| DISC-21 | MISS semantics                  | Inclusive optional bounds against each eligible difficulty's best record; never combine MISS with Near                    | `Approved`   |
-| DISC-22 | Record-filter logic             | `AND` across groups, `OR` within a group; Unplayed excludes achieved criteria and conflicts with recent-play order        | `Approved`   |
-| DISC-23 | Music result identity           | Jacket, original and optional localized/read title, artist, category, all official difficulties; list and grid            | `Approved`   |
-| DISC-24 | Personal-record preview         | Identity-first resting result; desktop hover and focus preview matched records; touch opens detail without hover          | `Approved`   |
-| DISC-25 | Newest Music sort               | Provide it only with verified official Music-level release dates; never substitute database maintenance timestamps        | `Approved`   |
-| DISC-26 | Weakness sort                   | Remove the opaque composite weakness order                                                                                | `Approved`   |
-| DISC-27 | Level-sort basis                | Require an explicit target difficulty; never use hidden Expert fallback or a blended representative level                 | `Approved`   |
-| DISC-28 | Scope result views              | Music opens as list with optional jacket grid; Chart remains one grouped list without a grid toggle                       | `Approved`   |
-| DISC-29 | Active-query sort precedence    | Default to Relevance without a user sort; preserve explicit sort; clear-query Relevance returns to the scope default      | `Approved`   |
-| DISC-30 | Responsive sort/filter access   | One labelled combined mobile trigger and staged layer; separate result-visible desktop controls                           | `Approved`   |
-| DISC-31 | Signed-out personal controls    | Omit the personal-record group instead of disabled criteria or an embedded login invitation                               | `Approved`   |
-| DISC-32 | 30-day play-filter retention    | Former retention is replaced by removal; recent play remains a signed-in sort                                             | `Superseded` |
-| DISC-33 | Unplayed/recent-sort transition | Preserve the approved conflict semantics; choose the exact disable/reset transition through prototype testing             | `Open`       |
+| ID      | Decision                        | Direction                                                                                                                                                                      | Status       |
+| ------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------ |
+| DISC-01 | Discovery architecture          | One shared surface with Music and Chart scopes                                                                                                                                 | `Approved`   |
+| DISC-02 | Scope control                   | Compact leading selector with visible text in the opened control; no permanent mode-button row                                                                                 | `Approved`   |
+| DISC-03 | Scope entry                     | Music entries open Music scope; Chart Viewer entries open Chart scope; query and scope are shareable and restorable                                                            | `Approved`   |
+| DISC-04 | Empty Music browse              | Include the complete eligible Music catalog; remove the hidden Expert `8–12` default                                                                                           | `Approved`   |
+| DISC-05 | Chart eligibility               | Return only published matching Chart targets                                                                                                                                   | `Approved`   |
+| DISC-06 | Chart grouping                  | One result unit per Music with its published matching difficulties                                                                                                             | `Approved`   |
+| DISC-07 | Chart selection                 | Selecting a published difficulty opens that exact focused viewer directly                                                                                                      | `Approved`   |
+| DISC-08 | Text-query application          | IME-safe update after `300ms` idle; preserve query on no results                                                                                                               | `Approved`   |
+| DISC-09 | Mobile sort/filter application  | Stage both in a result-obscuring layer; one **View results** action commits and closes; Close/Back cancels                                                                     | `Approved`   |
+| DISC-10 | Desktop filter application      | Apply visible discrete filters immediately; debounce or commit continuous controls                                                                                             | `Approved`   |
+| DISC-11 | Applied-state removal           | Removing one criterion or clearing all applies immediately                                                                                                                     | `Approved`   |
+| DISC-12 | Progressive loading             | No automatic infinite scroll; use explicit Load more                                                                                                                           | `Approved`   |
+| DISC-13 | Progressive state               | Provide count/range, busy, retry, end, URL/history, loaded-state, and meaningful scroll restoration                                                                            | `Approved`   |
+| DISC-14 | Initial ordering                | Empty Music uses `title_kana` ascending; empty Chart uses latest published-chart group descending                                                                              | `Approved`   |
+| DISC-15 | Filter and sort taxonomy        | Public category/difficulty/level filters; approved scope sort sets; personal record criteria remain secondary                                                                  | `Approved`   |
+| DISC-16 | Music result composition        | Compact content-driven List with trailing difficulties; square-jacket Grid with flexible information region; capability-based same-card record preview and direct touch detail | `Approved`   |
+| DISC-17 | Batch size and copy             | Validate batch size and exact Load-more label with performance and scan testing                                                                                                | `Open`       |
+| DISC-18 | No-result recovery              | Determine recovery priority by query, filter, and publication cause                                                                                                            | `Open`       |
+| DISC-19 | Mobile post-commit focus        | Validate focus destination and announcement behavior                                                                                                                           | `Open`       |
+| DISC-20 | Authenticated record taxonomy   | Keep Unplayed, S, FC, Pianist, and one advanced MISS range; remove Clear, 30-day play, and low-value metric filters                                                            | `Approved`   |
+| DISC-21 | MISS semantics                  | Inclusive optional bounds against each eligible difficulty's best record; never combine MISS with Near                                                                         | `Approved`   |
+| DISC-22 | Record-filter logic             | `AND` across groups, `OR` within a group; Unplayed excludes achieved criteria and conflicts with recent-play order                                                             | `Approved`   |
+| DISC-23 | Music result identity           | Jacket, original and optional localized/read title, artist, category, all official difficulties; list and grid                                                                 | `Approved`   |
+| DISC-24 | Personal-record preview         | Identity-first resting result; capability-gated hover and focus preview matched records; touch opens detail without hover                                                      | `Approved`   |
+| DISC-25 | Newest Music sort               | Provide it only with verified official Music-level release dates; never substitute database maintenance timestamps                                                             | `Approved`   |
+| DISC-26 | Weakness sort                   | Remove the opaque composite weakness order                                                                                                                                     | `Approved`   |
+| DISC-27 | Level-sort basis                | Require an explicit target difficulty; never use hidden Expert fallback or a blended representative level                                                                      | `Approved`   |
+| DISC-28 | Scope result views              | Music opens as list with optional jacket grid; Chart remains one grouped list without a grid toggle                                                                            | `Approved`   |
+| DISC-29 | Active-query sort precedence    | Default to Relevance without a user sort; preserve explicit sort; clear-query Relevance returns to the scope default                                                           | `Approved`   |
+| DISC-30 | Responsive sort/filter access   | One labelled combined mobile trigger and staged layer; separate result-visible desktop controls                                                                                | `Approved`   |
+| DISC-31 | Signed-out personal controls    | Omit the personal-record group instead of disabled criteria or an embedded login invitation                                                                                    | `Approved`   |
+| DISC-32 | 30-day play-filter retention    | Former retention is replaced by removal; recent play remains a signed-in sort                                                                                                  | `Superseded` |
+| DISC-33 | Unplayed/recent-sort transition | Preserve the approved conflict semantics; choose the exact disable/reset transition through prototype testing                                                                  | `Open`       |
 
 ## Next Discussion Batch
 
-Continue with `DISC-16` result-card anatomy and density, then resolve batch size,
-no-result recovery, post-commit focus, and the Unplayed/recent-sort transition. Do not
-reopen the approved taxonomy or responsive control access without new evidence and
-user approval, and do not finalize card density independently of representative Music,
-published Chart, localized-title, and authenticated-record data.
+Continue with `DISC-17` batch size and Load-more copy, then resolve no-result recovery,
+post-commit focus, and the Unplayed/recent-sort transition. Do not reopen the approved
+taxonomy, responsive control access, or Music card anatomy without new evidence and
+user approval. Foundation tokens and exact Chart-row visuals still require their
+scheduled representative specimens, but they do not reopen `DISC-16`.
