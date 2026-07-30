@@ -6,7 +6,8 @@
 - Decision status: `Approved directions recorded; remaining page decisions open`
 - Evidence status: `Repository inspection, current-product browser audit, approved
 information architecture, approved Home handoff, and cited search/filter,
-rhythm-game-record, result-card, responsive-interaction, and accessibility guidance`
+no-result-recovery, rhythm-game-record, result-card, responsive-interaction, and
+accessibility guidance`
 - Date started: 2026-07-30
 - Canonical language: English
 - Korean companion:
@@ -570,7 +571,9 @@ specification work rather than unresolved Music-card structure.
 | Settled active search           | Replace the result set after `300ms` idle and synchronize committed URL state                 | `Approved`          |
 | Fast response                   | Update without flashing a transient loading treatment                                         | `Proposed`          |
 | Slow initial or filter response | Keep search/filter controls stable and communicate busy state in the result region            | `Proposed`          |
-| No result                       | Preserve query and applied criteria, identify the active scope, and offer reversible recovery | `Approved` / `Open` |
+| No matching Music               | Preserve query and controls; show only `No matching songs.`                                   | `Approved`          |
+| Filter-constrained Music        | Preserve query and controls; show only `No songs match these conditions.`                     | `Approved`          |
+| No published Chart              | Preserve query, filters, scope control, and show only `No published charts.`                  | `Approved`          |
 | Initial retrieval failure       | Preserve controls and state; provide retry without redirecting away                           | `Proposed`          |
 | Mobile sort/filter open         | Keep Sort and filter sections distinct; stage both separately from committed result state     | `Approved`          |
 | Mobile result count pending     | Keep a usable generic **View results** action                                                 | `Approved`          |
@@ -586,6 +589,48 @@ specification work rather than unresolved Music-card structure.
 | Load more failure               | Keep existing results and action focus; provide localized retry at the same location          | `Approved`          |
 | End of results                  | Remove the action and communicate completion without automatic additional loading             | `Approved`          |
 | Return from destination         | Rehydrate loaded batches, then restore the selected-result anchor and nearby reading position | `Approved`          |
+
+### Approved No-Result Classification and Recovery
+
+The result service must classify a settled zero-result response internally before it
+selects copy. This classification supports truthful copy, analytics, and browser
+acceptance tests; it must not produce a diagnostic paragraph in the interface.
+
+1. Treat retrieval, permission, or transport failure as an error state with retry,
+   never as a no-result state.
+2. When committed filters are active, test the same committed query and scope without
+   those filters. If published results then exist, classify the state as
+   filter-constrained.
+3. In Chart scope, if the committed query and compatible filters identify Music or
+   difficulty candidates but none has an eligible published `ChartPattern`, classify
+   the state as no published Chart. Filter-constrained recovery takes precedence when
+   removing the filters would reveal published Charts.
+4. When a non-empty query still identifies no Music after filter removal, classify it
+   as a text mismatch.
+5. When query and filters are both empty, distinguish an actually empty Music catalog
+   from search mismatch. Route that service-level absence to a separate no-data state
+   instead of inventing search guidance. This approval does not define new visible
+   copy or actions for that separate state. An empty Chart catalog uses the approved
+   no-published-Chart state.
+
+Approved visible behavior:
+
+- Keep the committed query, scope, sort, view, and applied filters unchanged.
+- Keep the search field, scope selector, applied-filter chips, individual removal,
+  and the single clear-all-filters control available in their normal locations.
+- Clearing all filters removes filters only. It preserves query, scope, sort, and
+  List/Grid choice.
+- Render one short scope-appropriate result statement. Do not add supporting
+  paragraphs, recovery instructions, illustrations, recommendations, or actions
+  inside the empty result region.
+- Do not duplicate **Clear query**, **Clear filters**, **Search Music**, **View Music
+  information**, or similar actions in the empty state. The visible search, scope,
+  and filter controls already provide those recovery paths.
+- Do not silently clear or broaden the query, remove filters, switch scope, or replace
+  the empty result with popular or unrelated Music.
+- Announce only the settled one-line result state through a pre-existing polite
+  status region. Do not use an alert or move focus merely because the result count
+  became zero.
 
 ## Responsive Requirements
 
@@ -631,6 +676,9 @@ specification work rather than unresolved Music-card structure.
 - Search updates must not move focus on every result refresh.
 - Result-count updates use restrained live-region semantics and must not announce
   intermediate stale responses.
+- A settled no-result message uses the same pre-existing polite status region and
+  announces only the concise localized statement. It does not receive focus, use
+  alert semantics, or repeat visible recovery controls as prose.
 - The mobile Filter-and-sort layer requires an accessible name, contained focus while
   modal, Escape/back behavior, and focus return to its trigger.
 - The combined trigger's accessible name must communicate the feature, committed
@@ -688,6 +736,16 @@ specification work rather than unresolved Music-card structure.
       without lengthening the visible label.
 - Scope, filter, difficulty, result-state, retry, and end-state copy must be complete
   in all three locales before the page family is accepted.
+- Use the approved visible no-result copy without an explanatory subtitle:
+    - Text mismatch — Korean: `일치하는 악곡이 없습니다.`; Japanese:
+      `一致する楽曲がありません。`; English: `No matching songs.`
+    - Filter-constrained Music — Korean: `조건에 맞는 악곡이 없습니다.`; Japanese:
+      `条件に一致する楽曲がありません。`; English:
+      `No songs match these conditions.`
+    - Chart scope with zero published results — Korean:
+      `공개된 채보가 없습니다.`; Japanese: `公開された譜面がありません。`;
+      English: `No published charts.`
+      These strings are complete visible states, not headings that require body copy.
 - Query and filter URL values remain stable technical identifiers where translating
   them would break sharing or implementation mapping.
 - Empty Music browse uses `title_kana` as its technical ordering key in every locale.
@@ -728,6 +786,59 @@ not NosLog art direction.
 | [Elastic Search UI](https://www.elastic.co/docs/reference/search-ui)                                                                | Search-as-you-type, faceting, and conditional facets require explicit state and request handling.                                         | Supports active text search and stale-request protection as implementation capabilities.                             | It is technical tooling guidance rather than independent user research.                                     |
 | [WAI-ARIA APG: Combobox](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/)                                                        | Editable popup controls require defined keyboard, focus, selection, and popup relationships.                                              | The scope-aware search and suggestions must not rely on pointer interaction or icons alone.                          | The exact scope selector may use a menu rather than a combobox and must follow its actual semantic pattern. |
 | [WCAG 2.2: Status Messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html)                                       | Dynamic results and status changes should be available to assistive technology without taking focus.                                      | Announce settled counts and failures without moving focus on every refresh.                                          | It does not prescribe debounce timing or visual presentation.                                               |
+
+### No-Result Recovery Comparison
+
+The approved treatment follows a nineteen-entry comparison across the current product,
+filter-heavy systems, empty-state systems, accessibility standards, search platforms,
+and rhythm-game catalog structure. The references establish the need for truthful
+state, preserved work, and an available recovery path. They do not require NosLog to
+add explanatory copy or a new button when the relevant controls are already visible.
+
+| Source                                                                                                                                              | Transferable principle                                                                                                                                                        | NosLog application                                                                                                        | Limitation                                                                               |
+| --------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| Current NosLog code and `/ko/music` browser audit (`2026-07-31`)                                                                                    | Query and controls remain, but every cause produces one generic sentence and there is no visible applied-state recovery.                                                      | Preserve the useful stable controls while adding internal cause classification, applied chips, and filter-only reset.     | Current behavior is evidence, not an approved visual template.                           |
+| [DWP: Designing a filter component](https://design-system.dwp.gov.uk/research/filters/design-notes)                                                 | No-filter, filtered-result, and filtered-zero states are distinct; applied filters and clear-all make state explicit.                                                         | Keep removable committed chips and one clear-all control even when the result collection is empty.                        | Government casework is more procedural and often uses more explanatory copy.             |
+| [Primer: Filter](https://primer.style/product/scenario-patterns/filter/)                                                                            | A filtered zero state should name active state and make reset or revert obvious; dynamic change needs a status announcement.                                                  | The applied-state region, not a duplicated empty-state action group, provides removal and reset.                          | GitHub's dense work-management context differs from fast Music lookup.                   |
+| [Baymard: Applied filters](https://baymard.com/blog/how-to-design-applied-filters)                                                                  | An applied-filter overview prevents disorientation and makes deselection efficient.                                                                                           | Keep committed filter chips visible above both results and the empty region.                                              | Commerce conversion evidence does not justify product recommendations in NosLog.         |
+| [Ministry of Justice: Filter](https://design-patterns.service.justice.gov.uk/components/filter/)                                                    | Selected criteria should remain visible and individually removable after application.                                                                                         | Preserve immediate chip removal and filter-only clear-all across mobile and desktop models.                               | Batch-oriented government forms do not decide NosLog's visible copy length.              |
+| [Carbon: Empty states](https://preview.carbondesignsystem.com/building-blocks/core/patterns/empty-states)                                           | Explain the state and provide a next step when needed, but pick one important path and keep content contextual. Guidance may point to existing UI instead of adding a button. | Existing visible search, scope, and filter controls are the next step, so one concise statement is sufficient.            | Enterprise examples often have more space and lower-frequency empty states.              |
+| [Atlassian: Empty-state content](https://atlassian.design/foundations/content/designing-messages/empty-state)                                       | Copy should be scannable, brief, non-redundant, and cautious about multiple actions.                                                                                          | Use one line and no explanatory subtitle or empty-state action group.                                                     | Some Atlassian examples emphasize onboarding or task completion rather than search.      |
+| [SAP Fiori: Empty states](https://experience.sap.com/fiori-design-web/designing-for-empty-states/)                                                  | Search, filter, no-data, and system-error causes require different treatment; message and CTA depth depend on context.                                                        | Separate failure, mismatch, filter constraint, publication absence, and catalog absence internally.                       | Illustrated enterprise states would add unnecessary weight to NosLog discovery.          |
+| [Shopify: Empty state](https://shopify.dev/docs/api/app-home/patterns/compositions/empty-state)                                                     | A blank area should offer a clear path and should not overload primary actions.                                                                                               | Treat the persistent controls as the path instead of adding another primary button.                                       | Merchant onboarding and conversion goals are not NosLog goals.                           |
+| [PatternFly: No results](https://v5-archive.patternfly.org/components/empty-state/design-guidelines/)                                               | No-result states should be compact and tell users that criteria returned nothing.                                                                                             | Supports short state copy, but NosLog omits redundant instructions because controls remain directly adjacent.             | PatternFly's prescribed body copy is not mandatory for a high-frequency consumer lookup. |
+| [SIS Design System: Empty state](https://design.sis.gov.uk/components/feedback-progress/empty-state/)                                               | Search no-result is distinct from no data and load failure; dynamic appearance needs live-region communication.                                                               | Keep retrieval errors separate and announce only the settled result state.                                                | Intelligence-service workflows are not visual or tonal references for NosLog.            |
+| [USWDS: Search](https://designsystem.digital.gov/components/search/)                                                                                | Search terms should persist into the results experience.                                                                                                                      | Never erase the query after zero results; let the user edit it in place.                                                  | Site-wide government search is broader than the NosLog catalog.                          |
+| [W3C: `role=status`](https://www.w3.org/WAI/WCAG21/Techniques/aria/ARIA22)                                                                          | A settled result count or zero-result update can be announced politely without receiving focus.                                                                               | Use one pre-existing atomic polite status region and no alert semantics.                                                  | The technique does not prescribe visible wording or recovery controls.                   |
+| [Apple HIG: Search fields](https://developer.apple.com/design/human-interface-guidelines/search-fields)                                             | Editable search, clear affordance, immediate results, scope, and filters can remain part of one search experience.                                                            | Leave correction, clearing, and scope change in their existing controls.                                                  | Native-platform placement advice does not determine the web layout.                      |
+| [Algolia: Empty or insufficient results](https://www.algolia.com/doc/guides/managing-results/optimize-search-results/empty-or-insufficient-results) | Search systems can broaden queries or show alternatives to reduce dead ends.                                                                                                  | NosLog records the alternative but rejects silent expansion and unrelated fallback content for an exact official catalog. | The guidance is strongly influenced by ecommerce engagement and conversion.              |
+| [Elastic Search UI: Clear filters](https://www.elastic.co/docs/reference/search-ui/guides-creating-own-components)                                  | Query state and filter-clearing actions can remain separate.                                                                                                                  | Clear-all removes filters only while preserving query, scope, sort, and view.                                             | This proves implementation feasibility, not user preference.                             |
+| [Adobe React Spectrum: ListView](https://react-spectrum.adobe.com/ListView)                                                                         | A result collection can replace its rows with a dedicated no-result rendering.                                                                                                | Replace the empty list/grid body with the concise state while keeping the surrounding discovery controls stable.          | Component documentation does not define NosLog cause semantics.                          |
+| [osu!: Beatmap](https://osu.ppy.sh/wiki/en/Beatmap)                                                                                                 | A Music identity can contain multiple difficulty beatmaps with separate availability and status.                                                                              | A matching Music without an eligible published pattern is not the same as text mismatch.                                  | Domain structure is relevant, but osu! does not prescribe NosLog empty-state UI.         |
+| [Taiko.wiki: Song search](https://taiko.wiki/song?lang=en)                                                                                          | Rhythm-game discovery keeps title, artist, genre, and difficulty within a song-centered search surface.                                                                       | Supports keeping correction and refinement in the same visible discovery controls.                                        | Its current interface is a comparator, not an accessibility or visual authority.         |
+
+Evidence convergence:
+
+- Preserve the committed query and controls; do not make the user restart discovery.
+- Distinguish text mismatch, filter constraint, publication absence, catalog absence,
+  and retrieval failure even when some visible messages remain intentionally concise.
+- Keep applied criteria removable and provide one filter-only clear-all action.
+- Use a settled polite status announcement without moving focus or turning zero
+  results into an error.
+- A next step may be supplied by the surrounding controls. Explanatory body copy and
+  empty-state buttons are optional, not inherent requirements.
+
+Evidence disagreement and NosLog resolution:
+
+- Commerce search frequently recommends query expansion, related inventory, or popular
+  content. NosLog rejects those fallbacks because they can obscure exact Music and
+  publication meaning.
+- Several component systems illustrate a title, body, image, and CTA. NosLog uses
+  text only because search, scope, and applied-filter recovery remain visible and the
+  user task is a fast, repeated catalog lookup.
+- Some systems expose detailed cause explanations. NosLog keeps detailed cause logic
+  in the result service, analytics, and tests, while the interface uses the approved
+  one-line localized statements.
 
 ### Progressive-Loading Comparison
 
@@ -944,6 +1055,16 @@ storefronts and derivative summaries were not counted as separate support.
   difficulties under their Music identity.
 - **Clear the query after no results — Rejected:** Preserve the user's work and support
   correction.
+- **Instructional no-result subtitle — Rejected:** Search, scope, and filter controls
+  remain visible. Do not restate obvious recovery steps in prose.
+- **Duplicate no-result action group — Rejected:** Keep query clearing, filter
+  removal/reset, and scope change in their normal controls rather than adding
+  **Clear query**, **Clear filters**, **Search Music**, or Music-detail actions to the
+  empty region.
+- **Popular Music, unrelated recommendations, or silent query expansion after no
+  results — Rejected:** Preserve exact official-catalog and publication meaning.
+- **Render retrieval failure as no results — Rejected:** Keep unavailable data and a
+  valid zero-result response as distinct states.
 - **Universal instant filtering — Rejected:** Result-obscuring mobile layers would
   change unseen content after every selection and create repeated requests.
 - **Universal Apply filtering — Rejected:** A result-visible desktop layout would add
@@ -1024,11 +1145,9 @@ storefronts and derivative summaries were not counted as separate support.
 The following decisions require a new evidence-and-approval batch before this brief can
 be approved:
 
-1. Which no-result recovery actions should be ordered first for text mismatch, an
-   over-constrained filter set, and no published Chart availability?
-2. After mobile Filter-and-sort commit, should focus remain on the returning trigger,
+1. After mobile Filter-and-sort commit, should focus remain on the returning trigger,
    move to the result summary, or follow a conditional rule based on input method?
-3. When Unplayed and signed-in recent-play order conflict, should selecting one disable
+2. When Unplayed and signed-in recent-play order conflict, should selecting one disable
    the other, replace it with the scope default, or use another explicitly tested
    transition?
 
@@ -1075,6 +1194,13 @@ The later implementation must verify at minimum:
   navigation without first-tap, long-press, or another synthetic hover step;
 - initial loading, slow response, empty result, retrieval error, incremental loading,
   incremental error, retry, and end of results;
+- text-mismatch, filter-constrained, no-published-Chart, empty-catalog, and retrieval-
+  failure classification, including combinations of query, filters, and Chart
+  publication state;
+- exact Korean, Japanese, and English one-line no-result copy, preserved committed
+  query/scope/sort/view/filter state, removable chips, filter-only clear-all, no
+  duplicate empty-state actions, no fallback recommendations, and one polite settled
+  announcement without focus movement;
 - initial `20`, repeated `20`, and final partial batches in Music List, Music Grid, and
   grouped Chart results, with no viewport-triggered request;
 - localized next-amount action, visible/total progress, busy state, first-new-result
@@ -1113,6 +1239,10 @@ The later implementation must verify at minimum:
   `20`-result contract, localized next-amount and progress copy, loading, focus,
   announcement, retry, end, history restoration, and `20/60/100` performance
   requirements.
+- No-result handling preserves discovery work, distinguishes cause internally, uses
+  the approved one-line localized copy, keeps recovery in the existing controls, and
+  never substitutes explanatory paragraphs, duplicate actions, unrelated fallback
+  content, or an error state.
 - Current implementation facts are not misrepresented as approved 2.0 behavior.
 - Mobile and desktop requirements share one product model while adapting to result
   visibility and available width.
@@ -1124,47 +1254,47 @@ The later implementation must verify at minimum:
 
 ## Decision Register
 
-| ID      | Decision                        | Direction                                                                                                                                                                           | Status       |
-| ------- | ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
-| DISC-01 | Discovery architecture          | One shared surface with Music and Chart scopes                                                                                                                                      | `Approved`   |
-| DISC-02 | Scope control                   | Compact leading selector with visible text in the opened control; no permanent mode-button row                                                                                      | `Approved`   |
-| DISC-03 | Scope entry                     | Music entries open Music scope; Chart Viewer entries open Chart scope; query and scope are shareable and restorable                                                                 | `Approved`   |
-| DISC-04 | Empty Music browse              | Include the complete eligible Music catalog; remove the hidden Expert `8–12` default                                                                                                | `Approved`   |
-| DISC-05 | Chart eligibility               | Return only published matching Chart targets                                                                                                                                        | `Approved`   |
-| DISC-06 | Chart grouping                  | One result unit per Music with its published matching difficulties                                                                                                                  | `Approved`   |
-| DISC-07 | Chart selection                 | Selecting a published difficulty opens that exact focused viewer directly                                                                                                           | `Approved`   |
-| DISC-08 | Text-query application          | IME-safe update after `300ms` idle; preserve query on no results                                                                                                                    | `Approved`   |
-| DISC-09 | Mobile sort/filter application  | Stage both in a result-obscuring layer; one **View results** action commits and closes; Close/Back cancels                                                                          | `Approved`   |
-| DISC-10 | Desktop filter application      | Apply visible discrete filters immediately; debounce or commit continuous controls                                                                                                  | `Approved`   |
-| DISC-11 | Applied-state removal           | Removing one criterion or clearing all applies immediately                                                                                                                          | `Approved`   |
-| DISC-12 | Progressive loading             | No automatic infinite scroll; use explicit Load more                                                                                                                                | `Approved`   |
-| DISC-13 | Progressive state               | Provide count/range, busy, retry, end, URL/history, loaded-state, and meaningful scroll restoration                                                                                 | `Approved`   |
-| DISC-14 | Initial ordering                | Empty Music uses `title_kana` ascending; empty Chart uses latest published-chart group descending                                                                                   | `Approved`   |
-| DISC-15 | Filter and sort taxonomy        | Public category/difficulty/level filters; approved scope sort sets; personal record criteria remain secondary                                                                       | `Approved`   |
-| DISC-16 | Music result composition        | Compact content-driven List with trailing difficulties; square-jacket Grid with flexible information region; capability-based same-card record preview and direct touch detail      | `Approved`   |
-| DISC-17 | Batch size and copy             | Initial and appended batches use `20` result units; localize actual-next-amount and exact progress copy; focus the first new result; keep ephemeral loaded state in browser history | `Approved`   |
-| DISC-18 | No-result recovery              | Determine recovery priority by query, filter, and publication cause                                                                                                                 | `Open`       |
-| DISC-19 | Mobile post-commit focus        | Validate focus destination and announcement behavior                                                                                                                                | `Open`       |
-| DISC-20 | Authenticated record taxonomy   | Keep Unplayed, S, FC, Pianist, and one advanced MISS range; remove Clear, 30-day play, and low-value metric filters                                                                 | `Approved`   |
-| DISC-21 | MISS semantics                  | Inclusive optional bounds against each eligible difficulty's best record; never combine MISS with Near                                                                              | `Approved`   |
-| DISC-22 | Record-filter logic             | `AND` across groups, `OR` within a group; Unplayed excludes achieved criteria and conflicts with recent-play order                                                                  | `Approved`   |
-| DISC-23 | Music result identity           | Jacket, original and optional localized/read title, artist, category, all official difficulties; list and grid                                                                      | `Approved`   |
-| DISC-24 | Personal-record preview         | Identity-first resting result; capability-gated hover and focus preview matched records; touch opens detail without hover                                                           | `Approved`   |
-| DISC-25 | Newest Music sort               | Provide it only with verified official Music-level release dates; never substitute database maintenance timestamps                                                                  | `Approved`   |
-| DISC-26 | Weakness sort                   | Remove the opaque composite weakness order                                                                                                                                          | `Approved`   |
-| DISC-27 | Level-sort basis                | Require an explicit target difficulty; never use hidden Expert fallback or a blended representative level                                                                           | `Approved`   |
-| DISC-28 | Scope result views              | Music opens as list with optional jacket grid; Chart remains one grouped list without a grid toggle                                                                                 | `Approved`   |
-| DISC-29 | Active-query sort precedence    | Default to Relevance without a user sort; preserve explicit sort; clear-query Relevance returns to the scope default                                                                | `Approved`   |
-| DISC-30 | Responsive sort/filter access   | One labelled combined mobile trigger and staged layer; separate result-visible desktop controls                                                                                     | `Approved`   |
-| DISC-31 | Signed-out personal controls    | Omit the personal-record group instead of disabled criteria or an embedded login invitation                                                                                         | `Approved`   |
-| DISC-32 | 30-day play-filter retention    | Former retention is replaced by removal; recent play remains a signed-in sort                                                                                                       | `Superseded` |
-| DISC-33 | Unplayed/recent-sort transition | Preserve the approved conflict semantics; choose the exact disable/reset transition through prototype testing                                                                       | `Open`       |
+| ID      | Decision                        | Direction                                                                                                                                                                                                                                   | Status       |
+| ------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| DISC-01 | Discovery architecture          | One shared surface with Music and Chart scopes                                                                                                                                                                                              | `Approved`   |
+| DISC-02 | Scope control                   | Compact leading selector with visible text in the opened control; no permanent mode-button row                                                                                                                                              | `Approved`   |
+| DISC-03 | Scope entry                     | Music entries open Music scope; Chart Viewer entries open Chart scope; query and scope are shareable and restorable                                                                                                                         | `Approved`   |
+| DISC-04 | Empty Music browse              | Include the complete eligible Music catalog; remove the hidden Expert `8–12` default                                                                                                                                                        | `Approved`   |
+| DISC-05 | Chart eligibility               | Return only published matching Chart targets                                                                                                                                                                                                | `Approved`   |
+| DISC-06 | Chart grouping                  | One result unit per Music with its published matching difficulties                                                                                                                                                                          | `Approved`   |
+| DISC-07 | Chart selection                 | Selecting a published difficulty opens that exact focused viewer directly                                                                                                                                                                   | `Approved`   |
+| DISC-08 | Text-query application          | IME-safe update after `300ms` idle; preserve query on no results                                                                                                                                                                            | `Approved`   |
+| DISC-09 | Mobile sort/filter application  | Stage both in a result-obscuring layer; one **View results** action commits and closes; Close/Back cancels                                                                                                                                  | `Approved`   |
+| DISC-10 | Desktop filter application      | Apply visible discrete filters immediately; debounce or commit continuous controls                                                                                                                                                          | `Approved`   |
+| DISC-11 | Applied-state removal           | Removing one criterion or clearing all applies immediately                                                                                                                                                                                  | `Approved`   |
+| DISC-12 | Progressive loading             | No automatic infinite scroll; use explicit Load more                                                                                                                                                                                        | `Approved`   |
+| DISC-13 | Progressive state               | Provide count/range, busy, retry, end, URL/history, loaded-state, and meaningful scroll restoration                                                                                                                                         | `Approved`   |
+| DISC-14 | Initial ordering                | Empty Music uses `title_kana` ascending; empty Chart uses latest published-chart group descending                                                                                                                                           | `Approved`   |
+| DISC-15 | Filter and sort taxonomy        | Public category/difficulty/level filters; approved scope sort sets; personal record criteria remain secondary                                                                                                                               | `Approved`   |
+| DISC-16 | Music result composition        | Compact content-driven List with trailing difficulties; square-jacket Grid with flexible information region; capability-based same-card record preview and direct touch detail                                                              | `Approved`   |
+| DISC-17 | Batch size and copy             | Initial and appended batches use `20` result units; localize actual-next-amount and exact progress copy; focus the first new result; keep ephemeral loaded state in browser history                                                         | `Approved`   |
+| DISC-18 | No-result recovery              | Separate failure and service-level catalog absence; classify filter constraint, text mismatch, and publication absence internally; preserve committed state and show only concise scope-appropriate copy with recovery in existing controls | `Approved`   |
+| DISC-19 | Mobile post-commit focus        | Validate focus destination and announcement behavior                                                                                                                                                                                        | `Open`       |
+| DISC-20 | Authenticated record taxonomy   | Keep Unplayed, S, FC, Pianist, and one advanced MISS range; remove Clear, 30-day play, and low-value metric filters                                                                                                                         | `Approved`   |
+| DISC-21 | MISS semantics                  | Inclusive optional bounds against each eligible difficulty's best record; never combine MISS with Near                                                                                                                                      | `Approved`   |
+| DISC-22 | Record-filter logic             | `AND` across groups, `OR` within a group; Unplayed excludes achieved criteria and conflicts with recent-play order                                                                                                                          | `Approved`   |
+| DISC-23 | Music result identity           | Jacket, original and optional localized/read title, artist, category, all official difficulties; list and grid                                                                                                                              | `Approved`   |
+| DISC-24 | Personal-record preview         | Identity-first resting result; capability-gated hover and focus preview matched records; touch opens detail without hover                                                                                                                   | `Approved`   |
+| DISC-25 | Newest Music sort               | Provide it only with verified official Music-level release dates; never substitute database maintenance timestamps                                                                                                                          | `Approved`   |
+| DISC-26 | Weakness sort                   | Remove the opaque composite weakness order                                                                                                                                                                                                  | `Approved`   |
+| DISC-27 | Level-sort basis                | Require an explicit target difficulty; never use hidden Expert fallback or a blended representative level                                                                                                                                   | `Approved`   |
+| DISC-28 | Scope result views              | Music opens as list with optional jacket grid; Chart remains one grouped list without a grid toggle                                                                                                                                         | `Approved`   |
+| DISC-29 | Active-query sort precedence    | Default to Relevance without a user sort; preserve explicit sort; clear-query Relevance returns to the scope default                                                                                                                        | `Approved`   |
+| DISC-30 | Responsive sort/filter access   | One labelled combined mobile trigger and staged layer; separate result-visible desktop controls                                                                                                                                             | `Approved`   |
+| DISC-31 | Signed-out personal controls    | Omit the personal-record group instead of disabled criteria or an embedded login invitation                                                                                                                                                 | `Approved`   |
+| DISC-32 | 30-day play-filter retention    | Former retention is replaced by removal; recent play remains a signed-in sort                                                                                                                                                               | `Superseded` |
+| DISC-33 | Unplayed/recent-sort transition | Preserve the approved conflict semantics; choose the exact disable/reset transition through prototype testing                                                                                                                               | `Open`       |
 
 ## Next Discussion Batch
 
-Continue with `DISC-18` no-result recovery, then resolve mobile post-commit focus and
-the Unplayed/recent-sort transition. Do not reopen the approved taxonomy, progressive
-loading contract, responsive control access, or Music card anatomy without new
-evidence and user approval. Foundation tokens and exact Chart-row visuals still
-require their scheduled representative specimens, but they do not reopen `DISC-16` or
-`DISC-17`.
+Continue with `DISC-19` mobile post-commit focus, then resolve the
+Unplayed/recent-sort transition. Do not reopen the approved taxonomy, progressive
+loading contract, no-result recovery, responsive control access, or Music card
+anatomy without new evidence and user approval. Foundation tokens and exact Chart-row
+visuals still require their scheduled representative specimens, but they do not
+reopen `DISC-16`, `DISC-17`, or `DISC-18`.
