@@ -4,12 +4,14 @@
 
 - Status: `In progress`
 - Decision status: `Structure, entry priority, source-aware restoration, signed-out
-Record behavior, Chart Info scope, personal-record hierarchy, and localized Chart
-Info and My Record labels approved; Ranking, Tier/evaluation, state, responsive, and
-accessibility decisions remain open`
+Record behavior, Chart Info scope, personal-record hierarchy, Ranking hierarchy,
+leaderboard semantics, tie handling, score distribution, pagination, and Ranking
+states approved; Tier/evaluation, remaining state, responsive, and accessibility
+decisions remain open`
 - Evidence status: `Repository inspection, current-product audit, approved information
 architecture, approved shared-discovery handoff, and cited tabs, adaptive-layout,
-progressive-disclosure, data-visualization, rhythm-game, and infrastructure guidance`
+progressive-disclosure, leaderboard, pagination, data-visualization, NOSTALGIA
+scoring, rhythm-game, and infrastructure guidance`
 - Date started: 2026-07-31
 - Last decision update: 2026-07-31
 - Canonical language: English
@@ -131,6 +133,28 @@ information density, order, labels, or presentation.
 This demand-loaded boundary is existing implementation evidence. It is also a strong
 operational fit for the approved tabbed architecture because users do not incur every
 cross-domain query before choosing an area.
+
+### Observed Ranking Implementation
+
+- The current selected-chart Ranking loads one best-score row per user and exposes a
+  profile link, avatar, score rank, score, and Full Combo or Pianist state.
+- It uses seven rows per page and derives the visible row number from page offset. It
+  does not currently assign a shared displayed rank to equal scores.
+- The current server ordering uses score descending and user ID ascending. The
+  separate current-user rank also uses user ID to force a unique ordinal position
+  inside an equal-score group.
+- A complete current-user card appears above the list even when the same user row is
+  present on the current page, and it reports a calculated top percentage.
+- The current score distribution counts every positive-score player in the overall
+  player total but draws only `950k`, `960k`, `970k`, `980k`, `990k`, and `Pianist`
+  buckets. Records below `950,000` therefore affect the denominator without appearing
+  in a labeled bucket.
+- The current score-rank image alternative text appends a hard-coded Korean `rank`
+  label in every locale.
+
+These are implementation observations, not approved 2.0 ranking rules. The approved
+contract below resolves the duplicate current-user presentation, ranking semantics,
+distribution denominator, page size, and localized accessibility gaps.
 
 ## Approved Entity and Action Model
 
@@ -370,6 +394,164 @@ specimens.
   structured text equivalent, and never rely on color alone to convey a series or
   state.
 
+## Approved Ranking Contract
+
+### Purpose and Information Hierarchy
+
+Ranking answers two questions for the selected chart: **where is the current user?**
+and **how do public best scores compare?** It is not a second personal-record dashboard
+and does not repeat Music or difficulty facts that remain visible in the persistent
+context.
+
+Use this mobile reading order:
+
+1. conditional current-user placement;
+2. a heading equivalent to **Ranking · N participants**;
+3. the public leaderboard;
+4. explicit pagination when required; and
+5. the secondary high-skill score distribution.
+
+On desktop, preserve current-user context above the ranking content. Below it, make
+the leaderboard the primary region and allow the score distribution to occupy an
+adjacent secondary region when space and representative content support it. Preserve
+the mobile DOM and reading order even if desktop presentation places those regions
+side by side. Do not keep the current `390px` fixed canvas on a wide viewport.
+
+### Conditional Current-User Placement
+
+- When the signed-in user's row is on the current page, do not render a separate
+  current-user summary. Highlight that row in the leaderboard using more than color
+  alone.
+- When the user's row is not on the current page, show one compact summary line above
+  the list, equivalent to **My rank 37 / 120 · 976,654 · S · FC**. This summary is
+  context, not a second full profile card.
+- When the signed-in user has no score for the selected chart, show a concise state
+  equivalent to **No rank**.
+- When signed out, keep the complete public leaderboard available and provide only a
+  small contextual action equivalent to **Sign in to see my rank**. Do not replace or
+  obscure the public list with an authentication panel.
+- Do not show a relative top-percent value. Exact rank and total participant count are
+  more actionable and avoid ambiguous percentile rounding.
+- If Ranking initiates Login, preserve locale, Music, selected difficulty, Ranking,
+  and valid page context through the approved safe return path.
+
+This conditional rule avoids presenting the same complete row twice while still
+making the user's position available from a page that does not contain their row.
+
+### Leaderboard Row Contract
+
+- Show one best-score row per player.
+- On mobile, group each row semantically as **Rank | Player | Result**.
+- Player contains an avatar and linked display name. Keep the existing profile
+  destination.
+- Result makes score the primary value and score grade plus Full Combo or Pianist
+  state secondary.
+- On desktop, grade, achievement state, and score may occupy distinct visual columns,
+  but their information relationship must remain the same as mobile.
+- Do not add country, best-record date, filters, sort controls, or unrelated profile
+  fields to this selected-chart leaderboard.
+- Do not repeat Music title, jacket, difficulty, or level in every row because the
+  persistent selected-chart context already identifies them.
+- Provide visible or programmatically meaningful column labels. Right-align comparable
+  numeric values and use tabular numerals.
+- The current-user row treatment must remain identifiable without relying only on
+  color, and its name and profile action must remain fully operable.
+
+### Shared-Rank and Tie Contract
+
+- Equal best scores receive the same displayed rank.
+- Use competition ranking with gaps: `1, 2, 2, 4`.
+- Inside an equal-score group, order the earlier achievement time first, but do not
+  change the shared rank.
+- If achievement time is also equal, use a stable internal ID only as the final
+  deterministic ordering key. Do not expose that ID and do not turn it into a unique
+  rank.
+- The later implementation must map **achievement time** to the most reliable stored
+  record-improvement time available from imported NOSTALGIA data. It must not silently
+  substitute account creation time or arbitrary user ID.
+- This contract applies to the selected-chart Ranking. Consistency with the separate
+  global ranking family must be reviewed in that page brief rather than changed
+  silently here.
+
+### NOSTALGIA High-Skill Score Distribution
+
+This visualization is intentionally an **S-or-higher high-skill distribution**, not a
+whole-population score-grade histogram. NOSTALGIA performance separation becomes much
+more meaningful across the upper score milestones, so preserve these buckets:
+
+| Bucket    | Included result                                                                |
+| --------- | ------------------------------------------------------------------------------ |
+| `950k`    | `950,000–959,999`                                                              |
+| `960k`    | `960,000–969,999`                                                              |
+| `970k`    | `970,000–979,999`                                                              |
+| `980k`    | `980,000–989,999`                                                              |
+| `990k`    | `990,000–999,999`, excluding a Pianist result                                  |
+| `Pianist` | Current NosLog domain condition: score at least `1,000,000` or `fc_type === 3` |
+
+- Show the overall participant count independently, for example
+  **Participants 100**.
+- Label the visualization and its own denominator independently, for example
+  **S-or-higher score distribution · 30 players**.
+- Bucket counts and visual proportions must sum to the S-or-higher denominator, not
+  the overall participant count.
+- Show actual counts with visual proportions and provide the same values in an
+  accessible structured representation.
+- Do not add a `<950,000` bar merely to make this a whole-population histogram. Those
+  players remain included in the separate overall participant count.
+- Do not replace these focused bands with broad score-grade categories such as
+  Pianist, S, A+, A, B+, B, C, and D. That grouping collapses the meaningful
+  `950k–Pianist` separation that this analysis is intended to expose.
+- Exact chart geometry, color, and compact desktop placement remain Foundation and
+  representative-specimen decisions. The bucket meaning and denominator contract do
+  not.
+
+The approved bands are supported both by NOSTALGIA milestone behavior and NosLog's
+current rating policy: its score floor is `950,000`, its anchors advance in `10,000`
+steps through `1,000,000`, and its active mastery curve weights `990,000` and Pianist
+performance most strongly. This local product evidence corrects the previously
+proposed broad grade distribution.
+
+### Pagination and Navigation
+
+- Use a fixed page size of **25 players** on mobile and desktop.
+- Do not provide a rows-per-page selector.
+- Hide pagination when the total is `25` or fewer; show explicit pagination from the
+  twenty-sixth result onward.
+- Preserve the current page in the localized URL and browser history.
+- Use explicit pagination, not infinite scroll.
+- After a user changes page, move or restore focus and scroll context to the Ranking
+  heading or list start, and announce the updated result range to assistive
+  technology.
+- Normalize a non-numeric, negative, zero, or out-of-range page to the first valid
+  page while preserving Music, difficulty, locale, and Ranking state.
+- Page changes must not discard the current-user context or selected-chart context.
+
+Twenty-five balances repeated comparison with mobile scan length and is a common
+production table increment. The current seven-row page is observed legacy behavior,
+not a 2.0 constraint.
+
+### Loading, Empty, Error, and Accessibility States
+
+- During loading, preserve leaderboard row geometry with a restrained skeleton and
+  mark the updating region with `aria-busy`.
+- On request failure, show one concise error and an explicit Retry action. Do not
+  present silently stale rows as if they are current.
+- When no public best score exists, show one concise state equivalent to
+  **No recorded scores** (`등록된 기록이 없습니다`). Do not simultaneously show a
+  second **No rank** message for the current user.
+- Signed-out users retain the same public empty, loading, and error behavior as
+  signed-in users.
+- Preserve table or equivalent collection semantics and header associations in the
+  mobile representation; responsive styling must not turn the rows into unlabeled
+  values.
+- Treat an avatar as decorative when the adjacent linked player name already conveys
+  the same identity. Localize meaningful score-grade image alternatives; do not reuse
+  the current hard-coded Korean alternative text across locales.
+- Localize displayed numbers while retaining stable numeric meaning, right alignment,
+  and tabular figures.
+- Do not communicate current-user row, Full Combo, Pianist, grade, loading, or error
+  state by color alone.
+
 ## Reference Comparison
 
 ### Authoritative Interaction and Layout Guidance
@@ -414,6 +596,52 @@ specimens.
 | [W3C: Complex images](https://www.w3.org/WAI/tutorials/images/complex/)                                               | Charts need short identification plus a structured text representation of essential values and relationships.      | Score and pattern visualizations require exact values or an equivalent structured description.             | The exact alternative depends on the final selected chart.                    |
 | [Apple: Charts](https://developer.apple.com/design/human-interface-guidelines/charts)                                 | Charts should emphasize the relevant relationship and remain legible with accessible labels and interaction.       | Reinforces focused progress and comparison views rather than decorative duplicate graphics.                | Platform-specific interaction details are not automatically web requirements. |
 | [Texas: Data visualization guide](https://www.tdi.texas.gov/styleguide/style-guide-for-data-visualization-tools.html) | Put the most important information first; use line charts for trends and tables or labels for exact values.        | Supports Best performance before history, a line for Best-score progress, and exact value access.          | Government editorial guidance does not determine NosLog art direction.        |
+
+### Leaderboard, Table, and Pagination Guidance
+
+| Source                                                                                                                                                                                        | Transferable finding                                                                                                                  | NosLog application                                                                                             | Limitation                                                                                     |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| [W3C: Tables tutorial](https://www.w3.org/WAI/tutorials/tables/)                                                                                                                              | Related row and column data requires structural headers and associations, not visual alignment alone.                                 | Requires meaningful Rank, Player, and Result relationships at every width.                                     | It does not choose page size or visual density.                                                |
+| [W3C: Table tips](https://www.w3.org/WAI/tutorials/tables/tips/)                                                                                                                              | Tables should remain simple, with clear headings and abbreviations explained in context.                                              | Supports the three-group mobile row and excluding unrelated profile fields.                                    | Responsive styling still requires product-specific testing.                                    |
+| [USWDS: Table](https://designsystem.digital.gov/components/table/)                                                                                                                            | Numeric comparison benefits from consistent alignment, while stacked responsive rows still need labels.                               | Supports right-aligned tabular scores and persistent semantic labels on mobile.                                | Government transaction-table styling is not a NosLog visual direction.                         |
+| [GOV.UK: Table](https://design-system.service.gov.uk/components/table/)                                                                                                                       | Tables should make row-column relationships clear and align numbers for comparison.                                                   | Supports one compact comparable leaderboard rather than unrelated card fields.                                 | It does not cover game achievements or current-player context.                                 |
+| [Carbon: Data table](https://carbondesignsystem.com/components/data-table/usage/)                                                                                                             | Dense comparable records need clear hierarchy, predictable row structure, and deliberate loading or empty states.                     | Supports leaderboard-first hierarchy and stable row skeletons.                                                 | Carbon's toolbar-heavy enterprise patterns are unnecessary here.                               |
+| [Atlassian: Dynamic table](https://atlassian.design/components/dynamic-table/)                                                                                                                | Paginated data retains column meaning and exposes a clear current page rather than becoming an endless feed.                          | Supports explicit selected-chart ranking pages and a stable comparison model.                                  | Atlassian's component API and styling are not implementation requirements.                     |
+| [USWDS: Pagination](https://designsystem.digital.gov/components/pagination/)                                                                                                                  | Pagination should expose the current page, destination labels, and a predictable sequence.                                            | Supports explicit URL-backed pages and accessible page purpose.                                                | It does not recommend NosLog's exact page size.                                                |
+| [GOV.UK: Pagination](https://design-system.service.gov.uk/components/pagination/)                                                                                                             | Page navigation needs descriptive link context and should preserve a meaningful destination after activation.                         | Supports returning focus and reading context to the ranking result region.                                     | Content-page examples are less dense than a leaderboard.                                       |
+| [Carbon v10: Pagination](https://v10.carbondesignsystem.com/components/pagination/usage/)                                                                                                     | Pagination becomes useful after data exceeds the default visible range; common table increments include 10 and 25.                    | Supports a fixed 25-player increment and hiding the control for one page.                                      | Rows-per-page selection is useful in enterprise tables but rejected for this focused surface.  |
+| [MUI: Table pagination](https://mui.com/material-ui/api/table-pagination/)                                                                                                                    | Production table pagination commonly offers increments such as 10, 25, 50, and 100.                                                   | Confirms 25 as a conventional balance rather than an arbitrary NosLog-only number.                             | Component defaults do not independently establish the final choice.                            |
+| [Apple: Game Center](https://developer.apple.com/design/human-interface-guidelines/game-center)                                                                                               | Leaderboards should foreground comparable scores and a player's position without turning the surface into a full profile.             | Supports concise current-user context plus a public score list.                                                | Native-game presentation does not dictate web layout.                                          |
+| [Apple: `GKLeaderboard.Range`](https://developer.apple.com/documentation/gamekit/gkleaderboard/range)                                                                                         | Game Center leaderboard requests use bounded ranges with a default length of 25 and a maximum of 100.                                 | Provides a production precedent for the approved 25-player page.                                               | API request capacity is not itself a UX rule.                                                  |
+| [Google Play Games: `LeaderboardScores`](https://developers.google.com/resources/api-libraries/documentation/games/v1/java/latest/com/google/api/services/games/model/LeaderboardScores.html) | A leaderboard response distinguishes the current player's score from the surrounding public score collection and supports pagination. | Shows that current-user context and public rows can remain related without becoming one duplicate card system. | The API data shape does not prescribe when a duplicate row should be suppressed.               |
+| [Steamworks: Leaderboards](https://partner.steamgames.com/doc/features/leaderboards?language=english)                                                                                         | Leaderboards support global ranges and ranges around a user while retaining one score entry per user.                                 | Supports exact user position and one best result per selected chart.                                           | Steam's download modes are implementation patterns, not NosLog navigation requirements.        |
+| [osu!: Beatmap information](https://osu.ppy.sh/wiki/en/Beatmap_information)                                                                                                                   | Individual beatmaps expose a bounded top-score leaderboard within persistent beatmap and difficulty context.                          | Supports selected-chart ranking without repeating chart identity in every row.                                 | osu! commonly shows a top 50 rather than NosLog's approved 25.                                 |
+| [SOUND VOLTEX: Battle ranking](https://p.eagate.573.jp/game/sdvx/vii/ranking/battle/index.html)                                                                                               | A BEMANI ranking surface prioritizes rank, player identity, and result across a comparatively long visible list.                      | Confirms that 10 rows would be unnecessarily short for expert comparison.                                      | This is a different NOSTALGIA-adjacent competition mode and must not define scoring semantics. |
+| [ScoreSaber](https://scoresaber.com/)                                                                                                                                                         | Map-difficulty leaderboards keep the selected chart context stable while exposing comparable ranked results and player destinations.  | Reinforces chart-scoped leaderboard rows and profile links.                                                    | Beat Saber score fields and anti-cheat context differ from NosLog.                             |
+
+Across these sources, the converging pattern is a compact comparison collection with
+clear numeric alignment, bounded explicit navigation, stable selected-object context,
+and a recoverable way to find the current user. Sources disagree on whether the
+current user is duplicated outside the list and on exact page length. NosLog resolves
+those differences with a conditional summary and a fixed 25-player page because they
+fit its mobile-first repeated-checking context without sacrificing desktop comparison.
+
+### NOSTALGIA Scoring and Tie Evidence
+
+| Source                                                                                                                             | Transferable finding                                                                                                                               | NosLog application                                                                        | Limitation                                                                          |
+| ---------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| [NosLog `basicRating.ts`](../../lib/tiers/basicRating.ts)                                                                          | The current rating policy starts at `950,000`, uses `10,000`-point anchors, and applies its strongest active weighting near `990,000` and Pianist. | Directly supports preserving the six focused high-skill buckets.                          | It is NosLog policy evidence, not an official universal NOSTALGIA rule.             |
+| [NOSTALGIA milestone analysis](https://tonevoadventcalendar.hatenablog.com/entry/2021/12/05/000004)                                | Experienced players discuss S, `990,000`, and Pianist as materially different progression milestones.                                              | Confirms that a broad S bucket would conceal useful upper-score separation.               | It is practitioner analysis, not official product documentation.                    |
+| [Game*Spark: NOSTALGIA scoring overview](https://www.gamespark.jp/article/2021/02/09/105955.html)                                  | NOSTALGIA score ranks and high-score goals are distinct from merely completing a song.                                                             | Reinforces score-focused ranking and the need to respect domain-specific milestones.      | Editorial coverage is secondary evidence and does not define NosLog buckets.        |
+| [Official KAC NOSTALGIA](https://p.eagate.573.jp/game/kac/kac9th/nostalgia/index.html)                                             | Official competition treatment makes score and chronological performance rules explicit when they determine advancement.                           | Supports documenting a deterministic tie rule rather than silently using user ID as rank. | Tournament qualification rules are not automatically the public chart-ranking rule. |
+| [nosdata.info NOSTALGIA ranking](https://nosdata.info/zeta/ranking.php?code=aca2f96b4bedbdf1e59757002d93406c&diff=Real&mode=basic) | Equal scores are displayed with shared competition ranks such as `6, 6, 8`.                                                                        | Provides a direct NOSTALGIA-community precedent for `1, 2, 2, 4` semantics.               | It is an independent community service and not a NosLog data authority.             |
+| [MySQL: Window-function descriptions](https://dev.mysql.com/doc/refman/8.0/en/window-function-descriptions.html)                   | `RANK()` assigns equal values the same rank and leaves gaps after ties, unlike `ROW_NUMBER()`.                                                     | Precisely defines the approved competition-rank result.                                   | Database syntax and availability depend on the later implementation query.          |
+
+The user's NOSTALGIA domain explanation is also primary product evidence for this
+guide: reaching approximately `950,000` does not separate expert performance as much
+as the successive `960k`, `970k`, `980k`, `990k`, and Pianist milestones. The guide
+therefore rejects the earlier broad grade-histogram proposal instead of treating a
+generic visualization convention as more authoritative than the game being modeled.
 
 ### Rhythm-Game and Data-Product Evidence
 
@@ -483,16 +711,34 @@ override authoritative guidance or NosLog requirements.
 - **Use clear count as a Music-detail performance summary:** Rejected. Keep per-user,
   per-chart Play count, but do not imply that NOSTALGIA clear count differentiates a
   meaningful outcome for this purpose.
+- **Always show a complete current-user card above Ranking:** Rejected. Suppress the
+  separate summary when the current user's highlighted row is already on the page;
+  otherwise use one compact summary line.
+- **Use relative top percentage as the main current-user position:** Rejected. Show
+  exact shared rank and total participant count without ambiguous percentile rounding.
+- **Force a unique rank for equal scores with user ID:** Rejected. Equal scores share
+  competition rank; achievement time affects only order inside the tied group, and a
+  stable ID is only the final invisible ordering key.
+- **Replace the focused score bands with broad Pianist/S/A+/A/B+/B/C/D grades:**
+  Superseded and rejected. The proposal misunderstood NOSTALGIA's upper-score skill
+  separation and would hide meaningful `950k–Pianist` progression.
+- **Add a below-950k distribution bucket:** Rejected. The visualization is explicitly
+  an S-or-higher analysis with its own denominator; the separate participant count
+  still covers all positive-score players.
+- **Keep seven or reduce to ten players per page:** Rejected. Use a fixed 25-player
+  page and hide pagination when the complete list fits on one page.
+- **Add a rows-per-page selector or infinite scroll:** Rejected. Both add control or
+  navigation complexity to a focused leaderboard whose approved page length is
+  stable.
 
 ## Open Decisions for the Next Discussion
 
 The following decisions have not been approved:
 
 1. final Korean, Japanese, and English labels for Ranking and Tier/evaluation;
-2. exact information priority and progressive disclosure inside Ranking and
-   Tier/evaluation;
+2. exact information priority and progressive disclosure inside Tier/evaluation;
 3. switching, loading, stale-data, empty, permission, error, and retry behavior beyond
-   the approved signed-out Record contract;
+   the approved signed-out Record and Ranking contracts;
 4. mobile tab overflow or alternative compact control behavior;
 5. desktop use of additional width inside each selected area;
 6. keyboard focus transfer and announcements after difficulty or content-area changes;
@@ -503,47 +749,60 @@ The following decisions have not been approved:
 
 ## Decision Register
 
-| ID      | Decision                                   | Direction                                                                                                                                        | Status     |
-| ------- | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- |
-| MDET-01 | Entity model                               | Keep Music identity stable and treat the selected difficulty as active chart context                                                             | `Approved` |
-| MDET-02 | Difficulty state                           | Preserve the selected difficulty in shareable and history-restorable navigation state                                                            | `Approved` |
-| MDET-03 | Viewer entry                               | Keep View chart as a direct selected-chart action outside the Information panel, with external fallback or concise unavailable text              | `Approved` |
-| MDET-04 | Content architecture                       | Use Pattern A: one persistent context with four tabbed semantic areas and one selected panel at a time                                           | `Approved` |
-| MDET-05 | Initial data boundary                      | Do not require every cross-domain detail or summary before the user selects its area; reuse valid visited-area data                              | `Approved` |
-| MDET-06 | Long-page architecture                     | Do not render all four complete areas as one long page                                                                                           | `Rejected` |
-| MDET-07 | Overview-hub architecture                  | Do not add a cross-domain summary hub before the four detailed areas                                                                             | `Rejected` |
-| MDET-08 | Current visual inheritance                 | Current visual execution is audit evidence only and must not constrain the 2.0 redesign                                                          | `Rejected` |
-| MDET-09 | Semantic content-area order                | Information, personal Record, Ranking, then Tier/community evaluation                                                                            | `Approved` |
-| MDET-10 | Responsive and visual composition          | Define later through approved foundation and representative mobile/desktop specimens                                                             | `Open`     |
-| MDET-11 | Content, state, and accessibility contract | Continue the page-brief research and approval process                                                                                            | `Open`     |
-| MDET-12 | Remaining localized area labels            | Define Korean, Japanese, and English wording for Ranking and Tier/evaluation without changing the approved semantic order                        | `Open`     |
-| MDET-13 | General-entry default                      | Open Information for both signed-in and signed-out queryless entry                                                                               | `Approved` |
-| MDET-14 | Source-aware entry                         | Encode known Record, Ranking, Tier/evaluation, and viewer-return intent in restorable navigation state                                           | `Approved` |
-| MDET-15 | Signed-out Record                          | Keep it visible and selectable; render a compact panel-level Login state without placeholder analytics or automatic authentication               | `Approved` |
-| MDET-16 | Authentication restoration                 | Preserve locale, Music, difficulty, and Record through Login and required onboarding, then restore the exact destination                         | `Approved` |
-| MDET-17 | Hidden default memory                      | Do not vary queryless default by authentication or globally remember the last-used area                                                          | `Rejected` |
-| MDET-18 | Chart Info and My Record labels            | Use `채보 정보`/`譜面情報`/`Chart Info` and `내 기록`/`プレー記録`/`My Record`                                                                   | `Approved` |
-| MDET-19 | Chart Info factual scope                   | Always show BPM, note count, and duration; conditionally show available release and unlock facts without duplicating persistent context          | `Approved` |
-| MDET-20 | Cross-domain data ownership                | Move pattern profile to Tier/evaluation and score distribution, player count, and relative placement to Ranking; leave no previews in Chart Info | `Approved` |
-| MDET-21 | Selected-chart resource actions            | Keep View chart, Play video, and approved external chart resources outside Chart Info as selected-chart actions                                  | `Approved` |
-| MDET-22 | Personal Record hierarchy                  | Order Best performance, cumulative summary, Progress over time, Recent plays, then collapsed Judgement analysis                                  | `Approved` |
-| MDET-23 | Progress terminology                       | Use `성장 추이`/`上達の推移`/`Progress over time`, while explicitly labeling the current series `베스트 스코어`/`ベストスコア`/`Best score`      | `Approved` |
-| MDET-24 | Play-count meaning                         | Preserve per-user, per-chart `플레이 횟수`/`演奏回数`/`Play count`; exclude clear count and defer profile-wide Play count to the Profile brief   | `Approved` |
-| MDET-25 | Advanced record disclosure                 | Keep peer comparison optional and off by default; keep Judgement analysis collapsed while primary record facts remain visible                    | `Approved` |
-| MDET-26 | Duplicate pattern visualization            | Do not show identical pattern values simultaneously as radar and bar charts; choose one accessible representation in Tier/evaluation             | `Rejected` |
+| ID      | Decision                                             | Direction                                                                                                                                        | Status     |
+| ------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- |
+| MDET-01 | Entity model                                         | Keep Music identity stable and treat the selected difficulty as active chart context                                                             | `Approved` |
+| MDET-02 | Difficulty state                                     | Preserve the selected difficulty in shareable and history-restorable navigation state                                                            | `Approved` |
+| MDET-03 | Viewer entry                                         | Keep View chart as a direct selected-chart action outside the Information panel, with external fallback or concise unavailable text              | `Approved` |
+| MDET-04 | Content architecture                                 | Use Pattern A: one persistent context with four tabbed semantic areas and one selected panel at a time                                           | `Approved` |
+| MDET-05 | Initial data boundary                                | Do not require every cross-domain detail or summary before the user selects its area; reuse valid visited-area data                              | `Approved` |
+| MDET-06 | Long-page architecture                               | Do not render all four complete areas as one long page                                                                                           | `Rejected` |
+| MDET-07 | Overview-hub architecture                            | Do not add a cross-domain summary hub before the four detailed areas                                                                             | `Rejected` |
+| MDET-08 | Current visual inheritance                           | Current visual execution is audit evidence only and must not constrain the 2.0 redesign                                                          | `Rejected` |
+| MDET-09 | Semantic content-area order                          | Information, personal Record, Ranking, then Tier/community evaluation                                                                            | `Approved` |
+| MDET-10 | Responsive and visual composition                    | Define later through approved foundation and representative mobile/desktop specimens                                                             | `Open`     |
+| MDET-11 | Remaining content, state, and accessibility contract | Continue the page-brief research and approval process for unresolved areas                                                                       | `Open`     |
+| MDET-12 | Remaining localized area labels                      | Define Korean, Japanese, and English wording for Ranking and Tier/evaluation without changing the approved semantic order                        | `Open`     |
+| MDET-13 | General-entry default                                | Open Information for both signed-in and signed-out queryless entry                                                                               | `Approved` |
+| MDET-14 | Source-aware entry                                   | Encode known Record, Ranking, Tier/evaluation, and viewer-return intent in restorable navigation state                                           | `Approved` |
+| MDET-15 | Signed-out Record                                    | Keep it visible and selectable; render a compact panel-level Login state without placeholder analytics or automatic authentication               | `Approved` |
+| MDET-16 | Authentication restoration                           | Preserve locale, Music, difficulty, and Record through Login and required onboarding, then restore the exact destination                         | `Approved` |
+| MDET-17 | Hidden default memory                                | Do not vary queryless default by authentication or globally remember the last-used area                                                          | `Rejected` |
+| MDET-18 | Chart Info and My Record labels                      | Use `채보 정보`/`譜面情報`/`Chart Info` and `내 기록`/`プレー記録`/`My Record`                                                                   | `Approved` |
+| MDET-19 | Chart Info factual scope                             | Always show BPM, note count, and duration; conditionally show available release and unlock facts without duplicating persistent context          | `Approved` |
+| MDET-20 | Cross-domain data ownership                          | Move pattern profile to Tier/evaluation and score distribution, player count, and relative placement to Ranking; leave no previews in Chart Info | `Approved` |
+| MDET-21 | Selected-chart resource actions                      | Keep View chart, Play video, and approved external chart resources outside Chart Info as selected-chart actions                                  | `Approved` |
+| MDET-22 | Personal Record hierarchy                            | Order Best performance, cumulative summary, Progress over time, Recent plays, then collapsed Judgement analysis                                  | `Approved` |
+| MDET-23 | Progress terminology                                 | Use `성장 추이`/`上達の推移`/`Progress over time`, while explicitly labeling the current series `베스트 스코어`/`ベストスコア`/`Best score`      | `Approved` |
+| MDET-24 | Play-count meaning                                   | Preserve per-user, per-chart `플레이 횟수`/`演奏回数`/`Play count`; exclude clear count and defer profile-wide Play count to the Profile brief   | `Approved` |
+| MDET-25 | Advanced record disclosure                           | Keep peer comparison optional and off by default; keep Judgement analysis collapsed while primary record facts remain visible                    | `Approved` |
+| MDET-26 | Duplicate pattern visualization                      | Do not show identical pattern values simultaneously as radar and bar charts; choose one accessible representation in Tier/evaluation             | `Rejected` |
+| MDET-27 | Ranking hierarchy                                    | On mobile order conditional current-user context, participant heading, leaderboard, pagination, then secondary score distribution                | `Approved` |
+| MDET-28 | Conditional current-user placement                   | Highlight the in-page row; otherwise show one compact exact-rank summary, with concise no-record and signed-out variants                         | `Approved` |
+| MDET-29 | Relative percentile                                  | Remove top-percent ranking copy and use exact shared rank over total participants                                                                | `Rejected` |
+| MDET-30 | Leaderboard row model                                | Show one best score per player using Rank, Player, and Result groups; retain profile links and exclude unrelated row fields                      | `Approved` |
+| MDET-31 | Tie semantics                                        | Equal scores share competition rank `1, 2, 2, 4`; earlier achievement orders ties without changing rank                                          | `Approved` |
+| MDET-32 | High-skill score distribution                        | Preserve `950k`, `960k`, `970k`, `980k`, `990k`, and Pianist bands with a separate S-or-higher denominator                                       | `Approved` |
+| MDET-33 | Broad grade distribution                             | Do not replace upper score milestones with one whole-population Pianist/S/A+/A/B+/B/C/D histogram                                                | `Rejected` |
+| MDET-34 | Ranking pagination                                   | Use 25 players per page, hide one-page pagination, preserve page in URL/history, and reject infinite scroll or a page-size selector              | `Approved` |
+| MDET-35 | Ranking states and accessibility                     | Define stable loading geometry, concise retry and empty states, semantic labels, localized alternatives, focus restoration, and announcements    | `Approved` |
+| MDET-36 | Ranking responsive composition                       | Preserve mobile reading order; allow a leaderboard-primary and distribution-secondary desktop composition without a fixed 390px canvas           | `Approved` |
 
 ## Current Milestone
 
 The user approved the entity model, direct chart-viewer action, Pattern A content
 architecture, public Chart Info default, source-aware explicit entry, recoverable
 signed-out Record behavior, Chart Info boundary, selected-chart resource grouping,
-and the Personal Record hierarchy on 2026-07-31. Chart Info and My Record now have
-approved Korean, Japanese, and English labels. Chart-scoped Play count remains in the
-cumulative summary, while profile-wide Play count is explicitly deferred to the
-Profile brief.
+the Personal Record hierarchy, and the selected-chart Ranking contract on 2026-07-31.
+Chart Info and My Record now have approved Korean, Japanese, and English labels.
+Chart-scoped Play count remains in the cumulative summary, while profile-wide Play
+count is explicitly deferred to the Profile brief. Ranking now has an approved
+hierarchy, conditional current-user treatment, three-group row model, competition-rank
+tie semantics, focused high-skill score distribution, 25-player pagination, responsive
+relationship, and core state and accessibility behavior.
 
-This establishes the entry, authentication-restoration, Chart Info, and Personal
-Record content contracts. It does not approve the current page's visual design or
-complete the Music-detail page brief. The next discussion should define Ranking and
-Tier/evaluation labels and their internal content hierarchy before responsive
-composition and complete state behavior are finalized.
+This establishes the entry, authentication-restoration, Chart Info, Personal Record,
+and Ranking content contracts. It does not approve the current page's visual design or
+complete the Music-detail page brief. The next discussion should define the remaining
+area labels and Tier/evaluation contract before complete page-level responsive,
+interaction-state, and acceptance criteria are finalized.
