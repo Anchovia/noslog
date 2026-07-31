@@ -443,8 +443,8 @@ Redirect할 수 있습니다. 현재 로그인 페이지 인계가 항상 다국
 ### NOSTALGIA 상위 실력 점수 분포
 
 이 시각화는 전체 모집단의 점수 Grade Histogram이 아니라 의도적인 **S 이상 상위
-실력 분포**입니다. NOSTALGIA 성과 차이는 상위 점수 Milestone에서 훨씬 의미 있게
-벌어지므로 다음 Bucket을 유지합니다.
+실력 분포**입니다. 상위 점수 차이는 일관된 `10,000`점 해상도로 살펴볼 가치가
+있으므로 다음 동일 폭 Band를 유지합니다.
 
 | Bucket    | 포함 결과                                                              |
 | --------- | ---------------------------------------------------------------------- |
@@ -466,13 +466,25 @@ Redirect할 수 있습니다. 현재 로그인 페이지 인계가 항상 다국
 - 집중한 점수 Band를 Pianist, S, A+, A, B+, B, C, D 같은 넓은 점수 Grade
   Category로 대체하지 않습니다. 그런 Group은 이 분석이 보여줘야 할
   `950k–Pianist`의 의미 있는 차이를 뭉갭니다.
+- `950k`부터 `990k`까지의 구간 다섯 개와 마지막 Pianist Category를 여섯 개의
+  공식 게임 Rank나 커뮤니티가 보편적으로 명명한 여섯 Milestone이 아니라 분석용
+  Category로 취급합니다. 문서화된 게임 Rank는 `950,000–999,999` 전체가 S이며,
+  커뮤니티 대화는 S, `990,000`, Pianist를 가장 일관되게 큰 목표로 부르고 더
+  좁은 성장 Context에서는 `970,000` 또는 `980,000`도 사용합니다.
+- 이 분포에서 `950,000–979,999`를 하나로 합치면서 `980k`와 `990k`는
+  `10,000`점 Band로 남기지 않습니다. 해당 불균등 구간은 첫 막대가 구조적으로
+  더 커질 가능성을 높여 직접 비교를 약화합니다. 차후 누적 Milestone 달성 요약은
+  별도 Pattern이며 이 분포를 조용히 대체하면 안 됩니다.
 - 정확한 Chart Geometry, 색상 및 간결한 데스크톱 위치는 Foundation과 대표
   Specimen 결정으로 남깁니다. Bucket 의미와 분모 계약은 미루지 않습니다.
 
-승인한 Band는 NOSTALGIA Milestone 동작과 현재 NosLog Rating 정책 모두의 근거를
-가집니다. 현재 정책은 `950,000`에서 시작하고 `1,000,000`까지 `10,000` 단위
-Anchor를 사용하며 활성 숙련 곡선은 `990,000`과 Pianist 성과에 가장 큰 비중을
-둡니다. 이 로컬 제품 근거는 이전에 제안한 넓은 Grade 분포를 바로잡습니다.
+사용자는 공식 Rank 정의, 커뮤니티 성장 언어, 공개 플레이어 게시물, 커뮤니티
+Course, KAC 결과 분포 및 동일 폭 시각화 지침을 검토한 뒤 2026-08-01에 이 여섯
+Category를 재확인했습니다. 현재 NosLog Rating 정책도 추가 로컬 근거를 제공합니다.
+해당 정책은 `950,000`에서 시작하고 `1,000,000`까지 `10,000` 단위 Anchor를
+사용하며 활성 숙련 곡선은 `990,000`과 Pianist 성과에 가장 큰 비중을 둡니다.
+따라서 모든 Band를 공식 또는 보편적으로 명명한 Milestone으로 잘못 표현하지
+않으면서 유용한 분석 해상도를 유지합니다.
 
 ### Pagination 및 내비게이션
 
@@ -587,20 +599,31 @@ Context 및 현재 사용자를 찾는 복구 가능한 방법을 갖춘 간결�
 
 ### NOSTALGIA 점수 및 동점 근거
 
-| 출처                                                                                                                               | 전용할 수 있는 발견                                                                                                                    | NosLog 적용                                                                          | 한계                                                                |
-| ---------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------- |
-| [NosLog `basicRating.ts`](../../lib/tiers/basicRating.ts)                                                                          | 현재 Rating 정책은 `950,000`에서 시작하고 `10,000` 점수 Anchor를 사용하며 `990,000`과 Pianist 부근에 가장 강한 활성 비중을 적용합니다. | 여섯 개 상위 실력 Bucket을 직접 지지합니다.                                          | NosLog 정책 근거이며 공식 보편 NOSTALGIA 규칙은 아닙니다.           |
-| [NOSTALGIA Milestone 분석](https://tonevoadventcalendar.hatenablog.com/entry/2021/12/05/000004)                                    | 숙련 플레이어는 S, `990,000`, Pianist를 실질적으로 다른 성장 Milestone으로 논의합니다.                                                 | 넓은 S Bucket이 유용한 상위 점수 차이를 감춘다는 점을 확인합니다.                    | 실무자 분석이며 공식 제품 문서가 아닙니다.                          |
-| [Game*Spark: NOSTALGIA 점수 개요](https://www.gamespark.jp/article/2021/02/09/105955.html)                                         | NOSTALGIA 점수 Rank와 상위 점수 목표는 단순한 악곡 완료와 구분됩니다.                                                                  | 점수 중심 랭킹과 Domain별 Milestone 존중을 강화합니다.                               | 편집 기사인 보조 근거이며 NosLog Bucket을 정하지 않습니다.          |
-| [KAC NOSTALGIA 공식](https://p.eagate.573.jp/game/kac/kac9th/nostalgia/index.html)                                                 | 공식 대회 처리는 진출을 결정할 때 점수와 시간 순서 규칙을 명시합니다.                                                                  | 사용자 ID를 순위로 조용히 쓰지 않고 결정적 동점 규칙을 문서화하는 방향을 지지합니다. | 대회 예선 규칙이 자동으로 공개 채보 랭킹 규칙이 되지는 않습니다.    |
-| [nosdata.info NOSTALGIA ranking](https://nosdata.info/zeta/ranking.php?code=aca2f96b4bedbdf1e59757002d93406c&diff=Real&mode=basic) | 같은 점수를 `6, 6, 8` 같은 공동 경쟁 순위로 표시합니다.                                                                                | `1, 2, 2, 4` 의미의 직접적인 NOSTALGIA 커뮤니티 선례를 제공합니다.                   | 독립 커뮤니티 서비스이며 NosLog 데이터 기준은 아닙니다.             |
-| [MySQL: Window-function descriptions](https://dev.mysql.com/doc/refman/8.0/en/window-function-descriptions.html)                   | `RANK()`는 `ROW_NUMBER()`와 달리 같은 값에 같은 순위를 부여하고 동점 뒤 순위를 건너뜁니다.                                             | 승인한 경쟁 순위 결과를 정확히 정의합니다.                                           | Database 문법과 사용 가능 여부는 이후 구현 Query에 따라 달라집니다. |
+| 출처                                                                                                                                                                                  | 전용할 수 있는 발견                                                                                                                    | NosLog 적용                                                                                    | 한계                                                                 |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| [NosLog `basicRating.ts`](../../lib/tiers/basicRating.ts)                                                                                                                             | 현재 Rating 정책은 `950,000`에서 시작하고 `10,000` 점수 Anchor를 사용하며 `990,000`과 Pianist 부근에 가장 강한 활성 비중을 적용합니다. | 여섯 개 상위 실력 Bucket을 직접 지지합니다.                                                    | NosLog 정책 근거이며 공식 보편 NOSTALGIA 규칙은 아닙니다.            |
+| [NOSTALGIA Milestone 분석](https://tonevoadventcalendar.hatenablog.com/entry/2021/12/05/000004)                                                                                       | 숙련 플레이어는 S, `990,000`, Pianist를 실질적으로 다른 성장 Milestone으로 논의합니다.                                                 | 넓은 S Bucket이 유용한 상위 점수 차이를 감춘다는 점을 확인합니다.                              | 실무자 분석이며 공식 제품 문서가 아닙니다.                           |
+| [Game*Spark: NOSTALGIA 점수 개요](https://www.gamespark.jp/article/2021/02/09/105955.html)                                                                                            | NOSTALGIA 점수 Rank와 상위 점수 목표는 단순한 악곡 완료와 구분됩니다.                                                                  | 점수 중심 랭킹과 Domain별 Milestone 존중을 강화합니다.                                         | 편집 기사인 보조 근거이며 NosLog Bucket을 정하지 않습니다.           |
+| [Gamerch: NOSTALGIA 게임 상세](https://gamerch.com/nostalgia/40489)                                                                                                                   | 문서화된 결과 Rank는 `950,000–999,999`를 S, `1,000,000`을 Pianist로 취급합니다.                                                        | 여섯 분석 Category를 여섯 공식 Rank로 잘못 명명하지 않게 합니다.                               | 커뮤니티 유지 문서이며 현재 공식 규칙 페이지는 아닙니다.             |
+| [BEMANICN: NOSTALGIA 개요](https://wiki.bemani.cc/index.php?title=NOSTALGIA%E6%A6%82%E5%86%B5)                                                                                        | 점수표는 같은 S·Pianist 경계와 점수를 만드는 판정 가중치를 독립적으로 기록합니다.                                                      | 넓은 공식 Grade 경계를 확인하면서 정확한 점수 분석을 유지합니다.                               | 독립 커뮤니티 Wiki이며 NosLog 데이터 권위는 아닙니다.                |
+| [게임 카탈로그 Wiki: NOSTALGIA](https://w.atwiki.jp/gcmatome/pages/7334.html)                                                                                                         | 이 게임에서는 클리어 상태보다 점수와 Perfect Performance가 더 큰 변별력을 가집니다.                                                    | 클리어 Grade Histogram 대신 상위 점수 중심 보조 분석을 지지합니다.                             | 회고형 커뮤니티 분석이며 Bucket 명세는 아닙니다.                     |
+| [Moegirl: NOSTALGIA](https://moegirl.uk/index.php?title=Nostalgia%28%E6%B8%B8%E6%88%8F%29&variant=zh)                                                                                 | 별도 점수 개요에서도 `950,000–999,999` 전체를 S로 기록합니다.                                                                          | 다른 커뮤니티 자료군에서 Rank 경계를 다시 확인합니다.                                          | 시스템 사실을 반복하며 플레이어 언어의 빈도를 증명하지 않습니다.     |
+| [단계별 연습 글](https://note.com/f04_minesoroa/n/n5e6704d5974f)                                                                                                                      | 한 숙련 플레이어는 레벨 12 채보 평균 `980,000`을 높은 실력의 구체적 예로 사용합니다.                                                   | `980k`가 공식 Rank는 아니어도 더 좁은 성장 Context에서 의미 있음을 보여줍니다.                 | 개인 실무자의 예이며 보편 기준은 아닙니다.                           |
+| [nosdata 커뮤니티 Course](https://nosdata.info/zeta/course_detail.php?course_id=11&id=nrna)                                                                                           | 커뮤니티 제작 Course는 평균 `950,000`, `970,000`, `990,000`을 Silver, Gold, Rainbow 조건으로 사용합니다.                               | `970k`도 특정 성장 모델에서 유용할 수 있음을 보여줍니다.                                       | 하나의 Custom Course가 보편적 커뮤니티 Milestone을 정할 수 없습니다. |
+| [Yahoo가 색인한 공개 NOSTALGIA 플레이어 게시물](https://search.yahoo.co.jp/realtime/search/%E8%BF%BD%E6%86%B6%20%E8%8B%B1%E9%9B%84/?p=%E8%BF%BD%E6%86%B6+%E8%8B%B1%E9%9B%84&ei=UTF-8) | 플레이어가 `980,000` 갱신을 기뻐하고 다음 목표를 명시적으로 고민합니다.                                                                | 중간 상위 점수 목표가 실제로 사용된다는 직접 대화 근거를 제공합니다.                           | 일시적인 공개 게시물 하나이며 유행 빈도 자료는 아닙니다.             |
+| [제8회 KAC NOSTALGIA 공식 결과](https://p.eagate.573.jp/game/kac/kac8th/nostalgia/index.html)                                                                                         | 결승 채보 점수가 `950k`, `960k`, `970k`, `980k`, `990k` 구간에 걸쳐 나타납니다.                                                        | 최상위 플레이에서도 동일 `10,000`점 Band가 차이를 유지함을 보여줍니다.                         | 대회 채보와 선수는 전체 NosLog 모집단을 대표하지 않습니다.           |
+| [제9회 KAC NOSTALGIA 공식](https://p.eagate.573.jp/game/kac/kac9th/nostalgia/index.html)                                                                                              | 공식 결과가 여러 상위 `10,000`점 구간에 걸치며 대회 규칙은 시간순 동점 처리도 명시합니다.                                              | 유지한 점수 해상도와 결정적 동점 규칙을 함께 지지합니다.                                       | 대회 예선 규칙이 자동으로 공개 채보 랭킹 규칙이 되지는 않습니다.     |
+| [NIST: Histogram](https://www.itl.nist.gov/div898/handbook/eda/section3/histogra.htm)                                                                                                 | 일반적인 빈도 Histogram은 동일 크기 Bin을 사용하며 폭이 다르면 폭을 고려한 정규화가 필요합니다.                                        | 비교 가능한 `10,000`점 점수 구간 유지를 지지합니다.                                            | 통계 지침은 어떤 NOSTALGIA 범위가 제품에 중요한지 정하지 않습니다.   |
+| [NIST: Software 검증·확인 참고문서](https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication500-234.pdf)                                                                    | 불균등한 수치 구간의 막대 Chart는 막대 면적과 빈도가 직관적으로 일치하지 않아 오해를 만들 수 있습니다.                                 | 같은 분포에서 넓은 `950k–979k` Count와 좁은 `980k`·`990k` Count를 나란히 두는 안을 거절합니다. | 일반 시각화 지침이며 최종 Chart Geometry를 정하지 않습니다.          |
+| [nosdata.info NOSTALGIA ranking](https://nosdata.info/zeta/ranking.php?code=aca2f96b4bedbdf1e59757002d93406c&diff=Real&mode=basic)                                                    | 같은 점수를 `6, 6, 8` 같은 공동 경쟁 순위로 표시합니다.                                                                                | `1, 2, 2, 4` 의미의 직접적인 NOSTALGIA 커뮤니티 선례를 제공합니다.                             | 독립 커뮤니티 서비스이며 NosLog 데이터 기준은 아닙니다.              |
+| [MySQL: Window-function descriptions](https://dev.mysql.com/doc/refman/8.0/en/window-function-descriptions.html)                                                                      | `RANK()`는 `ROW_NUMBER()`와 달리 같은 값에 같은 순위를 부여하고 동점 뒤 순위를 건너뜁니다.                                             | 승인한 경쟁 순위 결과를 정확히 정의합니다.                                                     | Database 문법과 사용 가능 여부는 이후 구현 Query에 따라 달라집니다.  |
 
-사용자의 NOSTALGIA Domain 설명도 이 가이드의 주요 제품 근거입니다. 약
-`950,000` 도달 여부보다 이어지는 `960k`, `970k`, `980k`, `990k`, Pianist
-Milestone에서 숙련 성과가 더 크게 분리됩니다. 따라서 일반 시각화 관습을 모델링
-대상 게임보다 권위 있게 취급하지 않고 이전의 넓은 Grade Histogram 제안을
-거절합니다.
+사용자의 NOSTALGIA Domain 설명도 이 가이드의 주요 제품 근거입니다. 게임이 모든
+`10,000`점 구간에 공식 Rank를 부여하지 않아도 상위 점수 차이는 의미를 유지합니다.
+따라서 가이드는 동일한 `10,000`점 분석 Band 다섯 개와 마지막 Pianist Category를
+유지하고 이전의 넓은 Grade Histogram과 불균등한 `950k–979k` 통합 Bucket을 모두
+거절하며, 모든 Category를 커뮤니티가 보편적으로 명명한 Milestone이라고 주장하지
+않습니다.
 
 ### 리듬게임 및 데이터 제품 근거
 
@@ -739,15 +762,15 @@ Milestone에서 숙련 성과가 더 크게 분리됩니다. 따라서 일반 �
 | MDET-29 | 상대 백분위                  | 상위 비율 문구를 제거하고 전체 참여자 수 대비 정확한 공동 순위 사용                                                           | `거절`   |
 | MDET-30 | 리더보드 행 모델             | 플레이어별 베스트 스코어 하나를 순위·플레이어·결과 Group으로 표시하고 프로필 Link를 유지하며 무관한 필드는 제외               | `승인`   |
 | MDET-31 | 동점 의미                    | 같은 점수는 경쟁 순위 `1, 2, 2, 4`를 공유하고 먼저 달성한 기록은 순위를 바꾸지 않은 채 동점 내부 정렬만 결정                  | `승인`   |
-| MDET-32 | 상위 실력 점수 분포          | 별도 S 이상 분모와 함께 `950k`, `960k`, `970k`, `980k`, `990k`, Pianist Band 유지                                             | `승인`   |
-| MDET-33 | 넓은 Grade 분포              | 상위 점수 Milestone을 하나의 전체 모집단 Pianist/S/A+/A/B+/B/C/D Histogram으로 대체하지 않음                                  | `거절`   |
+| MDET-32 | 상위 실력 점수 분포          | 별도 S 이상 분모와 함께 동일 `950k`–`990k` 분석 Band 다섯 개 및 Pianist 유지, 2026-08-01 재확인                               | `승인`   |
+| MDET-33 | 넓거나 불균등한 점수 Group   | 상위 점수 Band를 전체 모집단 Pianist/S/A+/A/B+/B/C/D Histogram 또는 불균등한 `950k–979k` 통합 Count로 대체하지 않음           | `거절`   |
 | MDET-34 | 랭킹 Pagination              | 페이지당 25명, 한 페이지 Pagination 숨김, URL·History 페이지 보존 및 Infinite Scroll·페이지 크기 Selector 거절                | `승인`   |
 | MDET-35 | 랭킹 상태 및 접근성          | 안정적인 Loading Geometry, 간결한 재시도·빈 상태, 의미 라벨, 다국어 대체 Text, Focus 복원 및 안내 정의                        | `승인`   |
 | MDET-36 | 랭킹 반응형 구성             | 모바일 읽기 순서를 보존하고 고정 390px Canvas 없이 리더보드 주요·분포 보조 데스크톱 구성 허용                                 | `승인`   |
 
 ## 현재 마일스톤
 
-사용자는 2026-07-31에 Entity 모델, 직접 채보 뷰어 Action, A형 콘텐츠 구조,
+사용자는 2026-07-31과 2026-08-01에 걸쳐 Entity 모델, 직접 채보 뷰어 Action, A형 콘텐츠 구조,
 공개 채보 정보 기본값, 출처 인지 명시적 진입, 복구 가능한 비로그인 기록 동작,
 채보 정보 경계, 선택 채보 자료 Group, 개인 기록 계층 및 선택 채보 랭킹 계약을
 승인했습니다. 채보 정보와 내 기록에는 승인된 한국어·일본어·영어 라벨이 있습니다.
@@ -755,6 +778,9 @@ Milestone에서 숙련 성과가 더 크게 분리됩니다. 따라서 일반 �
 명시적으로 프로필 기획서로 미룹니다. 랭킹은 이제 승인된 계층, 조건부 현재 사용자
 처리, 세 Group 행 모델, 경쟁 순위 동점 의미, 집중한 상위 실력 점수 분포, 25명
 Pagination, 반응형 관계 및 핵심 상태·접근성 동작을 가집니다.
+동일 폭 상위 점수 Band 다섯 개와 마지막 Pianist Category는 폭넓은
+Domain·커뮤니티·대회·시각화 근거를 검토한 뒤 명시적으로 재확인했으며, 여섯 공식
+또는 보편적으로 명명된 Milestone이 아니라 분석용 Category입니다.
 
 이로써 진입, 인증 복원, 채보 정보, 개인 기록 및 랭킹 콘텐츠 계약이 정해졌습니다.
 현행 페이지의 시각 디자인을 승인하지 않으며 악곡 상세 페이지 기획서를 완료하지도

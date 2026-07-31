@@ -476,8 +476,9 @@ making the user's position available from a page that does not contain their row
 ### NOSTALGIA High-Skill Score Distribution
 
 This visualization is intentionally an **S-or-higher high-skill distribution**, not a
-whole-population score-grade histogram. NOSTALGIA performance separation becomes much
-more meaningful across the upper score milestones, so preserve these buckets:
+whole-population score-grade histogram. Upper-score differences remain useful to
+inspect at a consistent `10,000`-point resolution, so preserve these equal-width
+bands:
 
 | Bucket    | Included result                                                                |
 | --------- | ------------------------------------------------------------------------------ |
@@ -501,15 +502,28 @@ more meaningful across the upper score milestones, so preserve these buckets:
 - Do not replace these focused bands with broad score-grade categories such as
   Pianist, S, A+, A, B+, B, C, and D. That grouping collapses the meaningful
   `950k–Pianist` separation that this analysis is intended to expose.
+- Treat the five `950k` through `990k` intervals and terminal Pianist category as
+  analytical categories, not as six official game ranks or six universally named
+  community milestones. The documented game rank is S throughout
+  `950,000–999,999`, while community discussion most consistently names S, `990,000`,
+  and Pianist and also uses `970,000` or `980,000` in narrower progression contexts.
+- Do not merge `950,000–979,999` into one count while leaving the `980k` and `990k`
+  bands at `10,000` points in this distribution. That unequal interval would make the
+  first bar structurally more likely to dominate and would weaken direct comparison.
+  A future cumulative milestone-attainment summary would be a different pattern and
+  must not silently replace this distribution.
 - Exact chart geometry, color, and compact desktop placement remain Foundation and
   representative-specimen decisions. The bucket meaning and denominator contract do
   not.
 
-The approved bands are supported both by NOSTALGIA milestone behavior and NosLog's
-current rating policy: its score floor is `950,000`, its anchors advance in `10,000`
-steps through `1,000,000`, and its active mastery curve weights `990,000` and Pianist
-performance most strongly. This local product evidence corrects the previously
-proposed broad grade distribution.
+The user reconfirmed these six categories on 2026-08-01 after review of official rank
+definitions, community progression language, public player posts, community courses,
+KAC result spreads, and equal-bin visualization guidance. NosLog's current rating
+policy provides additional local support: its score floor is `950,000`, its anchors
+advance in `10,000` steps through `1,000,000`, and its active mastery curve weights
+`990,000` and Pianist performance most strongly. This preserves useful analytical
+resolution without misrepresenting every band as an official or universally named
+milestone.
 
 ### Pagination and Navigation
 
@@ -628,20 +642,31 @@ fit its mobile-first repeated-checking context without sacrificing desktop compa
 
 ### NOSTALGIA Scoring and Tie Evidence
 
-| Source                                                                                                                             | Transferable finding                                                                                                                               | NosLog application                                                                        | Limitation                                                                          |
-| ---------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| [NosLog `basicRating.ts`](../../lib/tiers/basicRating.ts)                                                                          | The current rating policy starts at `950,000`, uses `10,000`-point anchors, and applies its strongest active weighting near `990,000` and Pianist. | Directly supports preserving the six focused high-skill buckets.                          | It is NosLog policy evidence, not an official universal NOSTALGIA rule.             |
-| [NOSTALGIA milestone analysis](https://tonevoadventcalendar.hatenablog.com/entry/2021/12/05/000004)                                | Experienced players discuss S, `990,000`, and Pianist as materially different progression milestones.                                              | Confirms that a broad S bucket would conceal useful upper-score separation.               | It is practitioner analysis, not official product documentation.                    |
-| [Game*Spark: NOSTALGIA scoring overview](https://www.gamespark.jp/article/2021/02/09/105955.html)                                  | NOSTALGIA score ranks and high-score goals are distinct from merely completing a song.                                                             | Reinforces score-focused ranking and the need to respect domain-specific milestones.      | Editorial coverage is secondary evidence and does not define NosLog buckets.        |
-| [Official KAC NOSTALGIA](https://p.eagate.573.jp/game/kac/kac9th/nostalgia/index.html)                                             | Official competition treatment makes score and chronological performance rules explicit when they determine advancement.                           | Supports documenting a deterministic tie rule rather than silently using user ID as rank. | Tournament qualification rules are not automatically the public chart-ranking rule. |
-| [nosdata.info NOSTALGIA ranking](https://nosdata.info/zeta/ranking.php?code=aca2f96b4bedbdf1e59757002d93406c&diff=Real&mode=basic) | Equal scores are displayed with shared competition ranks such as `6, 6, 8`.                                                                        | Provides a direct NOSTALGIA-community precedent for `1, 2, 2, 4` semantics.               | It is an independent community service and not a NosLog data authority.             |
-| [MySQL: Window-function descriptions](https://dev.mysql.com/doc/refman/8.0/en/window-function-descriptions.html)                   | `RANK()` assigns equal values the same rank and leaves gaps after ties, unlike `ROW_NUMBER()`.                                                     | Precisely defines the approved competition-rank result.                                   | Database syntax and availability depend on the later implementation query.          |
+| Source                                                                                                                                                                                | Transferable finding                                                                                                                               | NosLog application                                                                                     | Limitation                                                                          |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- |
+| [NosLog `basicRating.ts`](../../lib/tiers/basicRating.ts)                                                                                                                             | The current rating policy starts at `950,000`, uses `10,000`-point anchors, and applies its strongest active weighting near `990,000` and Pianist. | Directly supports preserving the six focused high-skill buckets.                                       | It is NosLog policy evidence, not an official universal NOSTALGIA rule.             |
+| [NOSTALGIA milestone analysis](https://tonevoadventcalendar.hatenablog.com/entry/2021/12/05/000004)                                                                                   | Experienced players discuss S, `990,000`, and Pianist as materially different progression milestones.                                              | Confirms that a broad S bucket would conceal useful upper-score separation.                            | It is practitioner analysis, not official product documentation.                    |
+| [Game*Spark: NOSTALGIA scoring overview](https://www.gamespark.jp/article/2021/02/09/105955.html)                                                                                     | NOSTALGIA score ranks and high-score goals are distinct from merely completing a song.                                                             | Reinforces score-focused ranking and the need to respect domain-specific milestones.                   | Editorial coverage is secondary evidence and does not define NosLog buckets.        |
+| [Gamerch: NOSTALGIA game details](https://gamerch.com/nostalgia/40489)                                                                                                                | The documented result rank treats `950,000–999,999` as S and `1,000,000` as Pianist.                                                               | Prevents the six analytical bands from being mislabeled as six official ranks.                         | Community-maintained documentation is not a current official rule page.             |
+| [BEMANICN: NOSTALGIA overview](https://wiki.bemani.cc/index.php?title=NOSTALGIA%E6%A6%82%E5%86%B5)                                                                                    | The scoring table independently records the same S and Pianist boundaries and the judgement weights behind the score.                              | Confirms the broad official-grade boundary while preserving exact-score analysis.                      | It is an independent community wiki and not a NosLog data authority.                |
+| [Game Catalog Wiki: NOSTALGIA](https://w.atwiki.jp/gcmatome/pages/7334.html)                                                                                                          | Clear status is less discriminating than score and perfect performance in this game.                                                               | Supports a high-score-focused secondary analysis rather than a clear-grade histogram.                  | It is retrospective community analysis, not a bucket specification.                 |
+| [Moegirl: NOSTALGIA](https://moegirl.uk/index.php?title=Nostalgia%28%E6%B8%B8%E6%88%8F%29&variant=zh)                                                                                 | Its independent scoring summary also records S across `950,000–999,999`.                                                                           | Further checks the rank boundary across a different community corpus.                                  | It repeats system facts and does not establish player-language frequency.           |
+| [Progression practice essay](https://note.com/f04_minesoroa/n/n5e6704d5974f)                                                                                                          | One experienced player uses average `980,000` on level-12 charts as a concrete example of advanced performance.                                    | Shows that `980k` can be a meaningful narrower progression context without making it an official rank. | It is one practitioner's example rather than a universal threshold.                 |
+| [nosdata community course](https://nosdata.info/zeta/course_detail.php?course_id=11&id=nrna)                                                                                          | A community-authored course uses average `950,000`, `970,000`, and `990,000` as Silver, Gold, and Rainbow criteria.                                | Shows that `970k` can also be useful in a specific progression model.                                  | One custom course cannot define universal community milestones.                     |
+| [Public NOSTALGIA player post indexed by Yahoo](https://search.yahoo.co.jp/realtime/search/%E8%BF%BD%E6%86%B6%20%E8%8B%B1%E9%9B%84/?p=%E8%BF%BD%E6%86%B6+%E8%8B%B1%E9%9B%84&ei=UTF-8) | A player celebrates a `980,000` update and explicitly considers the next target.                                                                   | Provides direct discourse evidence that intermediate upper-score goals are real.                       | A single transient public post is illustrative, not prevalence data.                |
+| [Official 8th KAC NOSTALGIA results](https://p.eagate.573.jp/game/kac/kac8th/nostalgia/index.html)                                                                                    | Final-round chart scores include results in the `950k`, `960k`, `970k`, `980k`, and `990k` ranges.                                                 | Demonstrates that equal `10,000`-point bands retain separation even in elite play.                     | Tournament charts and players are not representative of the full NosLog population. |
+| [Official 9th KAC NOSTALGIA](https://p.eagate.573.jp/game/kac/kac9th/nostalgia/index.html)                                                                                            | Official results span multiple upper `10,000`-point ranges, while competition rules also make chronological tie treatment explicit.                | Supports both retained score resolution and a deterministic tie rule.                                  | Tournament qualification rules are not automatically the public chart-ranking rule. |
+| [NIST: Histogram](https://www.itl.nist.gov/div898/handbook/eda/section3/histogra.htm)                                                                                                 | A conventional frequency histogram uses equal-sized bins; width-aware normalization is needed when widths differ.                                  | Supports retaining comparable `10,000`-point score intervals.                                          | Statistical guidance does not determine which NOSTALGIA range is product-relevant.  |
+| [NIST: Software verification and validation reference](https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication500-234.pdf)                                                 | Numerical bar charts with unequal intervals can mislead because area and frequency no longer align intuitively.                                    | Rejects a `950k–979k` count beside narrower `980k` and `990k` counts in the same distribution.         | General visualization guidance does not prescribe final chart geometry.             |
+| [nosdata.info NOSTALGIA ranking](https://nosdata.info/zeta/ranking.php?code=aca2f96b4bedbdf1e59757002d93406c&diff=Real&mode=basic)                                                    | Equal scores are displayed with shared competition ranks such as `6, 6, 8`.                                                                        | Provides a direct NOSTALGIA-community precedent for `1, 2, 2, 4` semantics.                            | It is an independent community service and not a NosLog data authority.             |
+| [MySQL: Window-function descriptions](https://dev.mysql.com/doc/refman/8.0/en/window-function-descriptions.html)                                                                      | `RANK()` assigns equal values the same rank and leaves gaps after ties, unlike `ROW_NUMBER()`.                                                     | Precisely defines the approved competition-rank result.                                                | Database syntax and availability depend on the later implementation query.          |
 
 The user's NOSTALGIA domain explanation is also primary product evidence for this
-guide: reaching approximately `950,000` does not separate expert performance as much
-as the successive `960k`, `970k`, `980k`, `990k`, and Pianist milestones. The guide
-therefore rejects the earlier broad grade-histogram proposal instead of treating a
-generic visualization convention as more authoritative than the game being modeled.
+guide: upper-score differences remain meaningful even though the game does not assign
+an official rank to every `10,000`-point interval. The guide therefore retains five
+equal `10,000`-point analytical bands plus the terminal Pianist category, rejects both
+the earlier broad grade histogram and an unequal `950k–979k` merged bucket, and avoids
+claiming that every category is a universally named community milestone.
 
 ### Rhythm-Game and Data-Product Evidence
 
@@ -782,8 +807,8 @@ The following decisions have not been approved:
 | MDET-29 | Relative percentile                                  | Remove top-percent ranking copy and use exact shared rank over total participants                                                                | `Rejected` |
 | MDET-30 | Leaderboard row model                                | Show one best score per player using Rank, Player, and Result groups; retain profile links and exclude unrelated row fields                      | `Approved` |
 | MDET-31 | Tie semantics                                        | Equal scores share competition rank `1, 2, 2, 4`; earlier achievement orders ties without changing rank                                          | `Approved` |
-| MDET-32 | High-skill score distribution                        | Preserve `950k`, `960k`, `970k`, `980k`, `990k`, and Pianist bands with a separate S-or-higher denominator                                       | `Approved` |
-| MDET-33 | Broad grade distribution                             | Do not replace upper score milestones with one whole-population Pianist/S/A+/A/B+/B/C/D histogram                                                | `Rejected` |
+| MDET-32 | High-skill score distribution                        | Preserve five equal `950k`–`990k` analytical bands plus Pianist with a separate S-or-higher denominator; reconfirmed 2026-08-01                  | `Approved` |
+| MDET-33 | Broad or unequal score grouping                      | Do not replace the upper score bands with a whole-population Pianist/S/A+/A/B+/B/C/D histogram or an unequal `950k–979k` merged count            | `Rejected` |
 | MDET-34 | Ranking pagination                                   | Use 25 players per page, hide one-page pagination, preserve page in URL/history, and reject infinite scroll or a page-size selector              | `Approved` |
 | MDET-35 | Ranking states and accessibility                     | Define stable loading geometry, concise retry and empty states, semantic labels, localized alternatives, focus restoration, and announcements    | `Approved` |
 | MDET-36 | Ranking responsive composition                       | Preserve mobile reading order; allow a leaderboard-primary and distribution-secondary desktop composition without a fixed 390px canvas           | `Approved` |
@@ -793,13 +818,18 @@ The following decisions have not been approved:
 The user approved the entity model, direct chart-viewer action, Pattern A content
 architecture, public Chart Info default, source-aware explicit entry, recoverable
 signed-out Record behavior, Chart Info boundary, selected-chart resource grouping,
-the Personal Record hierarchy, and the selected-chart Ranking contract on 2026-07-31.
+the Personal Record hierarchy, and the selected-chart Ranking contract across
+2026-07-31 and 2026-08-01.
 Chart Info and My Record now have approved Korean, Japanese, and English labels.
 Chart-scoped Play count remains in the cumulative summary, while profile-wide Play
 count is explicitly deferred to the Profile brief. Ranking now has an approved
 hierarchy, conditional current-user treatment, three-group row model, competition-rank
 tie semantics, focused high-skill score distribution, 25-player pagination, responsive
 relationship, and core state and accessibility behavior.
+The five equal upper-score bands plus terminal Pianist category were explicitly
+reconfirmed after broad domain, community, competition, and visualization review;
+they are analytical categories rather than six official or universally named
+milestones.
 
 This establishes the entry, authentication-restoration, Chart Info, Personal Record,
 and Ranking content contracts. It does not approve the current page's visual design or
