@@ -3,11 +3,11 @@
 ## Document Control
 
 - Status: `In progress`
-- Decision status: `Approved directions recorded; remaining page decisions open`
+- Decision status: `All page behaviors approved; full-brief phase approval pending`
 - Evidence status: `Repository inspection, current-product browser audit, approved
 information architecture, approved Home handoff, and cited search/filter,
-no-result-recovery, rhythm-game-record, result-card, responsive-interaction, and
-accessibility guidance`
+no-result-recovery, transient-response, rhythm-game-record, result-card,
+responsive-interaction, and accessibility guidance`
 - Date started: 2026-07-30
 - Canonical language: English
 - Korean companion:
@@ -33,8 +33,9 @@ accessibility guidance`
 - **Rejected:** Considered and explicitly not selected.
 - **Superseded:** Replaced by a later approved direction.
 
-This brief is not approved as a whole while any material item in its decision register
-remains `Open` or `Proposed`.
+No material behavior remains `Open` or `Proposed`. The artifact remains in progress
+until the user explicitly approves the complete shared-discovery brief as a phase
+deliverable.
 
 ## Purpose
 
@@ -139,6 +140,12 @@ at a narrow `390px` viewport and a wide desktop viewport.
   The query then assigns every unplayed Music entry a recent metric of `0` and resolves
   ties by title, so the visible recent-order label no longer describes the actual
   ordering. This is migration evidence, not an approved fallback.
+- A focused transient-response audit on `2026-07-31` found no result-region
+  `[role="status"]` or `aria-busy` state during the current search replacement. The
+  current route awaits its first data request before rendering the page, has no
+  route-local loading boundary, and delegates an unhandled retrieval failure to the
+  wider route or global error boundary. These are migration gaps, not approved 2.0
+  behavior.
 
 ## Approved Discovery Model
 
@@ -590,36 +597,41 @@ specification work rather than unresolved Music-card structure.
 
 ## State Requirements
 
-| State                           | Required behavior                                                                                                     | Status     |
-| ------------------------------- | --------------------------------------------------------------------------------------------------------------------- | ---------- |
-| Initial Music browse            | Show the complete eligible catalog by `title_kana` ascending with no hidden difficulty limit                          | `Approved` |
-| Initial Chart browse            | Show published Music groups by latest published-chart timestamp descending                                            | `Approved` |
-| Music newest sort unavailable   | Omit or explain the option until verified official Music-level release dates are populated                            | `Approved` |
-| Level sort target missing       | Require an explicit difficulty selection; never fall back silently to Expert                                          | `Approved` |
-| Weakness sort                   | Do not provide the current opaque composite weakness order                                                            | `Approved` |
-| Active query without user sort  | Use Relevance; preserve any explicit user-selected sort through later query/filter changes                            | `Approved` |
-| Settled active search           | Replace the result set after `300ms` idle and synchronize committed URL state                                         | `Approved` |
-| Fast response                   | Update without flashing a transient loading treatment                                                                 | `Proposed` |
-| Slow initial or filter response | Keep search/filter controls stable and communicate busy state in the result region                                    | `Proposed` |
-| No matching Music               | Preserve query and controls; show only `No matching songs.`                                                           | `Approved` |
-| Filter-constrained Music        | Preserve query and controls; show only `No songs match these conditions.`                                             | `Approved` |
-| No published Chart              | Preserve query, filters, scope control, and show only `No published charts.`                                          | `Approved` |
-| Initial retrieval failure       | Preserve controls and state; provide retry without redirecting away                                                   | `Proposed` |
-| Mobile sort/filter open         | Keep Sort and filter sections distinct; stage both separately from committed result state                             | `Approved` |
-| Mobile result count pending     | Keep a usable generic **View results** action                                                                         | `Approved` |
-| Mobile View-results commit      | Commit and close; focus the result summary without auto-opening the first result                                      | `Approved` |
-| Mobile layer close/back         | Discard staged changes; restore committed state, prior context, and trigger focus                                     | `Approved` |
-| Signed-out personal filter      | Omit the personal-record group; do not show disabled criteria or an embedded login invitation                         | `Approved` |
-| Signed-in record refinement     | Keep approved record criteria in a secondary advanced group                                                           | `Approved` |
-| MISS range active               | Match the inclusive bounds against the best eligible difficulty record                                                | `Approved` |
-| Unplayed conflict               | Unplayed resets recent order to the context default; recent remains visible but unavailable until Unplayed is removed | `Approved` |
-| Hover-capable record preview    | Reveal equivalent compact record context on fine-pointer hover and keyboard focus                                     | `Approved` |
-| Touch result                    | Keep the resting card stable and expose full record context at the destination                                        | `Approved` |
-| Load more pending               | Keep existing results, expose localized busy status, and prevent duplicate activation                                 | `Approved` |
-| Load more success               | Append the next `20`-unit batch, focus its first actionable result, and announce new progress                         | `Approved` |
-| Load more failure               | Keep existing results and action focus; provide localized retry at the same location                                  | `Approved` |
-| End of results                  | Remove the action and communicate completion without automatic additional loading                                     | `Approved` |
-| Return from destination         | Rehydrate loaded batches, then restore the selected-result anchor and nearby reading position                         | `Approved` |
+| State                          | Required behavior                                                                                                     | Status     |
+| ------------------------------ | --------------------------------------------------------------------------------------------------------------------- | ---------- |
+| Initial Music browse           | Show the complete eligible catalog by `title_kana` ascending with no hidden difficulty limit                          | `Approved` |
+| Initial Chart browse           | Show published Music groups by latest published-chart timestamp descending                                            | `Approved` |
+| Music newest sort unavailable  | Omit or explain the option until verified official Music-level release dates are populated                            | `Approved` |
+| Level sort target missing      | Require an explicit difficulty selection; never fall back silently to Expert                                          | `Approved` |
+| Weakness sort                  | Do not provide the current opaque composite weakness order                                                            | `Approved` |
+| Active query without user sort | Use Relevance; preserve any explicit user-selected sort through later query/filter changes                            | `Approved` |
+| Settled active search          | Replace the result set after `300ms` idle and synchronize committed URL state                                         | `Approved` |
+| Fast response                  | If the request settles within `300ms` of starting, replace results atomically without flashing loading UI             | `Approved` |
+| Slow initial response          | After `300ms` of request time, show a result-shaped skeleton only inside the result region                            | `Approved` |
+| Slow replacement response      | After `300ms` of request time, retain and weaken old results, mark the region busy, and block stale-card activation   | `Approved` |
+| No matching Music              | Preserve query and controls; show only `No matching songs.`                                                           | `Approved` |
+| Filter-constrained Music       | Preserve query and controls; show only `No songs match these conditions.`                                             | `Approved` |
+| No published Chart             | Preserve query, filters, scope control, and show only `No published charts.`                                          | `Approved` |
+| Initial or replacement failure | Preserve committed controls and state; replace the result region with scope-specific one-line error copy and retry    | `Approved` |
+| Retry pending                  | Prevent duplicate retry, retain retry focus, and expose localized busy state                                          | `Approved` |
+| Retry success                  | Replace the error with results and move focus to the stable result summary because the retry control disappears       | `Approved` |
+| Retry failure                  | Keep focus on retry, repeat only the concise error state, and permit another attempt                                  | `Approved` |
+| Request timeout                | Before implementation, set a finite measured production timeout; never wait indefinitely or invent an arbitrary value | `Approved` |
+| Mobile sort/filter open        | Keep Sort and filter sections distinct; stage both separately from committed result state                             | `Approved` |
+| Mobile result count pending    | Keep a usable generic **View results** action                                                                         | `Approved` |
+| Mobile View-results commit     | Commit and close; focus the result summary without auto-opening the first result                                      | `Approved` |
+| Mobile layer close/back        | Discard staged changes; restore committed state, prior context, and trigger focus                                     | `Approved` |
+| Signed-out personal filter     | Omit the personal-record group; do not show disabled criteria or an embedded login invitation                         | `Approved` |
+| Signed-in record refinement    | Keep approved record criteria in a secondary advanced group                                                           | `Approved` |
+| MISS range active              | Match the inclusive bounds against the best eligible difficulty record                                                | `Approved` |
+| Unplayed conflict              | Unplayed resets recent order to the context default; recent remains visible but unavailable until Unplayed is removed | `Approved` |
+| Hover-capable record preview   | Reveal equivalent compact record context on fine-pointer hover and keyboard focus                                     | `Approved` |
+| Touch result                   | Keep the resting card stable and expose full record context at the destination                                        | `Approved` |
+| Load more pending              | Keep existing results, expose localized busy status, and prevent duplicate activation                                 | `Approved` |
+| Load more success              | Append the next `20`-unit batch, focus its first actionable result, and announce new progress                         | `Approved` |
+| Load more failure              | Keep existing results and action focus; provide localized retry at the same location                                  | `Approved` |
+| End of results                 | Remove the action and communicate completion without automatic additional loading                                     | `Approved` |
+| Return from destination        | Rehydrate loaded batches, then restore the selected-result anchor and nearby reading position                         | `Approved` |
 
 ### Approved No-Result Classification and Recovery
 
@@ -662,6 +674,57 @@ Approved visible behavior:
 - Announce only the settled one-line result state through a pre-existing polite
   status region. Do not use an alert or move focus merely because the result count
   became zero.
+
+### Approved Transient Response and Retrieval Recovery
+
+The approved `300ms` input-settling interval and the `300ms` request-visibility
+threshold are separate clocks. The first prevents a request during continued text
+entry. The second starts only after a request begins and prevents short requests from
+flashing a loading treatment.
+
+1. **Fast initial or replacement request:** If the newest request settles within
+   `300ms` of starting, replace the result collection atomically. Do not show a
+   spinner, skeleton, loading label, dimming treatment, or intermediate live-region
+   message. Preserve control focus and scroll position, then announce only the settled
+   result count or settled no-result state once.
+2. **Slow initial request:** When no committed result collection exists and the newest
+   request remains pending after `300ms`, keep the real search, scope, sort, and filter
+   controls available and replace only the result region with a compact,
+   result-shaped skeleton. Its jacket, title, and metadata blocks approximate the
+   collection structure without simulating every final detail. It must fit within a
+   representative initial viewport and must not become a full-page overlay or central
+   spinner. Exact skeleton quantity and foundation styling remain specimen work.
+3. **Slow replacement request:** When a committed result collection already exists,
+   retain it after the request crosses `300ms` instead of replacing it with a
+   skeleton. Visually weaken the collection, show one concise progress indication in
+   or adjacent to the stable result summary, and expose the result region as busy.
+   Search, scope, sort, and filter controls remain operable so the user can revise the
+   request. Once the slow state is visible, stale result cards must not activate
+   because they no longer match the committed request. Before the threshold, the
+   unchanged collection may remain normally operable because no stale visual state is
+   presented.
+4. **Request supersession:** Cancel or logically invalidate obsolete requests. Only
+   the newest request may settle the collection, update the URL-backed result state,
+   clear busy state, or announce an outcome. A canceled or obsolete request never
+   becomes a visible error.
+5. **Initial or replacement failure:** Keep the committed query, scope, sort, view,
+   and filters. Replace only the result region with the approved scope-specific
+   one-line retrieval error and one **Retry** action. Do not leave a mismatched stale
+   collection visible indefinitely, redirect to a route-wide error screen, use a
+   toast as the only recovery, add a paragraph or illustration, or misclassify the
+   failure as zero results.
+6. **Retry:** An initial error does not receive autofocus. When the user activates
+   **Retry**, retain focus on that control, prevent duplicate activation, and expose
+   the request as busy without removing the focused node. Repeated failure keeps focus
+   on **Retry** and politely announces the concise error once. Success removes the
+   retry control, restores the collection, moves focus to the stable result summary,
+   and announces the settled result once.
+7. **Finite timeout gate:** The guide does not invent a fixed timeout before production
+   latency is measured. Before implementation is accepted, choose and document a
+   finite request timeout from representative production `p95`/`p99` latency,
+   platform limits, and backend cancellation behavior. The measured value must route
+   to the same retrieval-failure and retry model; an infinite pending state is not
+   permitted.
 
 ## Responsive Requirements
 
@@ -707,6 +770,15 @@ Approved visible behavior:
 - Search updates must not move focus on every result refresh.
 - Result-count updates use restrained live-region semantics and must not announce
   intermediate stale responses.
+- Keep the result region's `aria-busy` state false for requests that settle before the
+  `300ms` visibility threshold. If a request crosses that threshold, set it true until
+  only the newest request settles as success, no results, or failure.
+- A slow replacement keeps stale content perceivable as prior content but removes its
+  result links from activation and keyboard interaction while the visible busy state
+  persists. Search, scope, sort, filter, and cancel/revision controls remain operable.
+- A result-shaped skeleton is presentational and hidden from the accessibility tree.
+  The stable result region and status semantics communicate loading without making
+  placeholder blocks sound like real Music or Chart results.
 - A settled no-result message uses the same pre-existing polite status region and
   announces only the concise localized statement. It does not receive focus, use
   alert semantics, or repeat visible recovery controls as prose.
@@ -761,6 +833,11 @@ Approved visible behavior:
 - The result region exposes `aria-busy` only while its current update is incomplete,
   and a polite status region announces one settled loading, success, failure, or
   completion message without repeating intermediate states.
+- Initial retrieval failure does not steal focus. Retry pending preserves the focused
+  retry control and prevents duplicate activation without removing that node.
+  Repeated failure keeps focus there; successful retry moves focus to the stable
+  result summary because the retry control no longer exists.
+- Canceled, superseded, and out-of-order requests never announce a failure or a result.
 - Use semantic result headings/lists and one page-level `main` landmark.
 - Meet WCAG 2.2 target-size or target-spacing requirements for scope, filter, clear,
   result, and progressive-loading controls.
@@ -793,6 +870,15 @@ Approved visible behavior:
       without lengthening the visible label.
 - Scope, filter, difficulty, result-state, retry, and end-state copy must be complete
   in all three locales before the page family is accepted.
+- Use the approved retrieval-failure and retry copy without a subtitle:
+    - Music scope — Korean: `악곡을 불러오지 못했습니다.`; Japanese:
+      `楽曲を読み込めませんでした。`; English: `Couldn’t load songs.`
+    - Chart scope — Korean: `채보를 불러오지 못했습니다.`; Japanese:
+      `譜面を読み込めませんでした。`; English: `Couldn’t load charts.`
+    - Retry — Korean: `다시 시도`; Japanese: `再試行`; English: `Try again`.
+      Native-language QA must validate punctuation, tone, and accessible busy
+      extensions before implementation acceptance, but may not expand the visible
+      state into explanatory body copy without reopening the decision.
 - Use the approved visible no-result copy without an explanatory subtitle:
     - Text mismatch — Korean: `일치하는 악곡이 없습니다.`; Japanese:
       `一致する楽曲がありません。`; English: `No matching songs.`
@@ -1087,6 +1173,54 @@ symmetrical. Selecting Unplayed replaces recent order with the context default;
 selecting a sort never removes Unplayed. This minimizes steps when narrowing results
 without allowing an ordering control to silently broaden them.
 
+### Transient Response and Retrieval-Failure Comparison
+
+The approved response model follows a comparison of current NosLog evidence and at
+least sixteen independent external source families. Search-specific systems support a
+short stall threshold; component systems distinguish first-load placeholders from
+localized in-place progress; accessibility guidance requires a stable busy region and
+settled announcements. No external source establishes a universal `300ms` value or
+NosLog's exact stale-card rule. Those are the approved product resolutions for this
+fast, repeated catalog task.
+
+| Source                                                                                                                         | Evidence or transferable principle                                                                                      | NosLog application and limitation                                                                                                           |
+| ------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| Current NosLog repository and browser audit (`2026-07-31`)                                                                     | Initial data blocks route rendering; replacement has no local busy state; an unhandled retrieval error escapes wider.   | Establishes migration gaps and exact acceptance targets; current behavior does not approve a visual treatment.                              |
+| [Nielsen Norman Group: Response-time limits](https://www.nngroup.com/articles/response-times-3-important-limits/)              | Immediate responses need no special feedback; longer waits progressively require visible feedback and interruption.     | Supports suppressing fast flashes and escalating feedback with duration; its broad `0.1/1/10s` limits do not select NosLog's threshold.     |
+| [Algolia: Loading indicator](https://www.algolia.com/doc/guides/building-search-ui/ui-and-ux-patterns/loading-indicator/react) | Search UI can delay a loading indicator so fast requests do not flash it.                                               | Supports a separate post-request visibility clock; Algolia does not prescribe NosLog's `300ms`.                                             |
+| [Elastic Search UI: Core state](https://www.elastic.co/docs/reference/search-ui/api-core-state)                                | Search state distinguishes initial loading, later loading, results, and errors.                                         | Supports different initial and replacement treatments and latest-request ownership; it is an implementation-state model, not art direction. |
+| [React: Suspense](https://react.dev/reference/react/Suspense)                                                                  | Deferred values can keep previous content visible and visually indicate that it is stale instead of hiding everything.  | Supports retained replacement results; React does not decide whether stale result links remain actionable.                                  |
+| [Next.js: Loading UI and streaming](https://nextjs.org/docs/app/building-your-application/routing/loading-ui-and-streaming)    | Loading UI should be scoped by route boundaries, remain interruptible, and preserve shared interactive layout.          | Supports a result-local boundary and usable search controls; route-level examples are broader than NosLog's collection update.              |
+| [Carbon: Loading pattern](https://carbondesignsystem.com/patterns/loading-pattern/)                                            | Skeletons communicate known initial structure, while inline loading communicates smaller or subsequent changes.         | Supports initial result-shaped skeleton and localized refresh feedback; enterprise density and visual tokens do not transfer.               |
+| [Fluent 2: Skeleton](https://fluent2.microsoft.design/components/web/react/core/skeleton/usage)                                | Skeleton geometry should approximate expected content and avoid falsely detailed placeholders.                          | Supports jacket/title/metadata blocks and presentation-only semantics; Fluent does not set NosLog's quantity or delay.                      |
+| [SAP Fiori: Busy handling](https://experience.sap.com/fiori-design-web/busy-handling/)                                         | Delay busy feedback for short operations, block only the affected area where possible, and avoid indefinite waiting.    | Supports result-region scope and a finite timeout gate; SAP's enterprise timing guidance is not copied as a fixed NosLog timeout.           |
+| [PatternFly: Spinner design guidelines](https://v5-archive.patternfly.org/components/spinner/design-guidelines/)               | Progress belongs near the affected content and needs accessible text when the context is not otherwise clear.           | Supports one result-summary progress signal rather than a full-page spinner; the archived component styling is not visual direction.        |
+| [Primer: Loading](https://primer.style/product/ui-patterns/loading/)                                                           | Choose skeleton, spinner, or no indicator according to duration and whether content structure is known.                 | Supports no flash for fast search and a skeleton only for an empty initial collection; Primer does not define NosLog response budgets.      |
+| [Adobe Spectrum: Progress circle](https://spectrum.adobe.com/page/progress-circle/)                                            | Indeterminate progress should be contextual, labelled when needed, and not multiply across one operation.               | Supports one concise busy signal and restrained announcements; it does not support replacing every result with a spinner.                   |
+| [Material Design: Progress and activity](https://m1.material.io/components/progress-activity.html)                             | Progress feedback should describe the affected operation without unnecessarily blocking unrelated interaction.          | Supports operable search/filter controls during a result refresh; older Material styling is not a NosLog visual reference.                  |
+| [Atlassian Design System: Spinner](https://atlassian.design/components/spinner/)                                               | A spinner indicates an indeterminate wait and should be sized and placed according to the affected container.           | Reinforces localized rather than global feedback; it does not establish when a result-shaped skeleton is preferable.                        |
+| [WCAG 2.2: Status Messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html)                                  | Loading, success, no-result, and error changes can be conveyed without moving focus.                                    | Requires one settled polite outcome and no autofocus for ordinary initial failure; it does not choose visible copy or timing.               |
+| [MDN: `aria-busy`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-busy)             | A changing region can remain busy until its complete update is ready, suppressing premature announcements.              | Supports latest-request-only settlement and one stable result region; native disabled and focus semantics still require separate design.    |
+| [Baymard: Number of items loaded by default](https://baymard.com/blog/number-of-items-loaded-by-default)                       | Perceived wait, initial work, content density, and progressive loading must be evaluated together rather than by habit. | Supports production latency and representative-density measurement; commerce research cannot choose NosLog's timeout or error copy.         |
+| [Adobe Spectrum: Writing for errors](https://spectrum.adobe.com/page/writing-for-errors/)                                      | Error copy should state the problem concisely and offer an actionable recovery rather than blame or diagnostic detail.  | Supports scope-specific one-line failure plus Retry; native Japanese and English wording still require localization QA.                     |
+
+Approved synthesis:
+
+- Keep the two `300ms` clocks separate: input settling precedes the request; loading
+  visibility begins only after the request starts.
+- Use no transient UI for a fast response, a result-shaped skeleton for a slow first
+  collection, and weakened retained results for a slow replacement.
+- Scope feedback and failure to the result region. Preserve discovery controls and
+  committed state.
+- Once a replacement is visibly stale, prevent result activation while continuing to
+  allow request revision. Only the newest request may settle or announce.
+- Treat retrieval failure as an error with one scope-specific line and Retry, never as
+  zero results. Preserve focus through retry and move it only when the focused control
+  disappears after success.
+- Choose a finite request timeout from measured production latency and platform
+  constraints before implementation acceptance; do not copy an arbitrary external
+  duration or allow an infinite wait.
+
 ### Evidence Convergence
 
 - Live update is most useful when the result remains visible, the action is simple,
@@ -1147,6 +1281,13 @@ without allowing an ordering control to silently broaden them.
   consistency make `20` the approved NosLog result-unit contract. Accumulated DOM cost
   is validated separately because changing one batch from `20` to `16` does not solve
   unbounded accumulation.
+- Search and component references converge on suppressing progress flashes for short
+  requests, differentiating first-load structure from replacement feedback, and
+  scoping interruption to the affected region.
+- Accessibility references converge on one stable busy region, latest-request-only
+  settlement, concise recovery, and status communication without routine autofocus.
+- The evidence supports a finite failure boundary but not one universal timeout.
+  Production measurement therefore precedes the numeric implementation decision.
 
 ### Evidence Disagreement and NosLog Resolution
 
@@ -1180,6 +1321,16 @@ without allowing an ordering control to silently broaden them.
   Arizona documents retaining focus on the Load-more control. NosLog moves focus to
   the first new card because the appended cards precede the relocated control in
   document order, and supplements the move with one polite settled announcement.
+- Search-specific guidance may show progress after roughly a few hundred milliseconds,
+  while general application systems often tolerate a longer delay. NosLog uses
+  `300ms` after request start because the task is a repeated search interaction, then
+  requires production verification instead of treating the number as universal.
+- React supports visibly stale content while SAP-style busy handling may block an
+  affected region. NosLog combines them: retain old results to prevent layout loss,
+  but block their activation only after the stale state becomes visible.
+- Some frameworks make route loading and error boundaries the primary unit. NosLog
+  keeps the shared shell and discovery controls stable because the failure concerns
+  only the result retrieval.
 
 ## Rejected or Superseded Alternatives
 
@@ -1203,6 +1354,32 @@ without allowing an ordering control to silently broaden them.
   results — Rejected:** Preserve exact official-catalog and publication meaning.
 - **Render retrieval failure as no results — Rejected:** Keep unavailable data and a
   valid zero-result response as distinct states.
+- **Show a loading treatment for every request — Rejected:** Requests that settle
+  within the post-request `300ms` threshold replace results without a progress flash.
+- **Use one full-page spinner, skeleton, or blocking overlay — Rejected:** Search,
+  scope, sort, and filter controls remain usable while only the result region reports
+  progress.
+- **Replace every refresh with a skeleton — Rejected:** A skeleton represents a slow
+  initial collection only. Later changes retain the previous collection to preserve
+  spatial context.
+- **Keep visibly stale result cards actionable — Rejected:** Once slow replacement
+  feedback appears, those cards no longer match the committed request and cannot
+  navigate truthfully.
+- **Leave mismatched stale results visible after replacement failure — Rejected:** The
+  result region becomes the concise retryable error while discovery criteria remain.
+- **Use a route-wide error screen or toast-only retrieval failure — Rejected:** The
+  failure belongs to the result region and needs a persistent adjacent Retry action.
+- **Add explanatory retrieval-error paragraphs or illustrations — Rejected:** Use one
+  scope-specific sentence and Retry; preserve diagnostic detail for logging.
+- **Autofocus the initial retrieval error — Rejected:** Announce it politely without
+  stealing the user's current control or reading position.
+- **Remove and recreate the focused Retry control while pending — Rejected:** Preserve
+  its focusable node, prevent duplicate activation, and move focus only after success
+  removes it.
+- **Adopt an arbitrary fixed timeout now — Deferred to a measured implementation
+  gate:** Choose the finite value from production latency and platform limits.
+- **Allow indefinite pending requests — Rejected:** Every accepted implementation
+  requires a measured finite timeout and retryable failure path.
 - **Universal instant filtering — Rejected:** Result-obscuring mobile layers would
   change unseen content after every selection and create repeated requests.
 - **Universal Apply filtering — Rejected:** A result-visible desktop layout would add
@@ -1305,11 +1482,12 @@ without allowing an ordering control to silently broaden them.
 
 ## Open Design Questions
 
-No material Unplayed/recent-order decision remains open. The transient response rows
-still marked `Proposed`—fast response, slow initial/filter response, and initial
-retrieval failure—form the next evidence-and-approval batch. Foundation tokens,
-result-summary row composition, and exact Chart-row visuals remain scheduled specimen
-decisions rather than reopenings of approved behavior.
+No material shared-discovery product behavior remains open. Foundation tokens, exact
+skeleton quantity and styling, result-summary row composition, and exact Chart-row
+visuals remain scheduled specimen decisions rather than reopenings of approved
+behavior. The numeric finite request timeout is an implementation-readiness gate that
+must be resolved from production measurement, not an open invitation to choose an
+arbitrary product behavior.
 
 ## Browser Verification Targets
 
@@ -1319,6 +1497,9 @@ The later implementation must verify at minimum:
 - direct Home/More entries, empty browse, query handoff, URL sharing, reload, Back, and
   Forward restoration;
 - Korean and Japanese IME composition with `300ms` settled search;
+- separate timing verification for the `300ms` input-settling clock and the additional
+  `300ms` request-visibility clock, including representative responses just below and
+  above the visibility threshold with no loading flash in the fast case;
 - query change, scope change, and filter change during active requests, including
   deliberately reordered responses;
 - all-Music initial browse with no hidden difficulty restriction;
@@ -1354,6 +1535,24 @@ The later implementation must verify at minimum:
   navigation without first-tap, long-press, or another synthetic hover step;
 - initial loading, slow response, empty result, retrieval error, incremental loading,
   incremental error, retry, and end of results;
+- slow initial loading with a result-shaped, accessibility-hidden skeleton confined to
+  the result region while all real discovery controls remain usable;
+- slow replacement with old results retained and visibly weakened, one result-region
+  busy signal, active discovery controls, stale-card activation blocked only after
+  the slow state appears, and no skeleton replacement;
+- request supersession and cancellation where only the newest request changes results,
+  URL-backed state, busy state, or announcements, and obsolete requests never surface
+  failure;
+- initial and replacement retrieval failures using exact scope-specific Korean,
+  Japanese, and English one-line copy plus Retry, preserved committed discovery state,
+  no stale mismatched results, no route-wide error replacement, and clear distinction
+  from settled zero results;
+- retry pending with duplicate activation prevented and focus retained; repeated
+  failure with focus retained and one polite error; success with the retry control
+  removed, result-summary focus, and one settled announcement;
+- production `p95`/`p99` and platform-limit evidence for a documented finite timeout,
+  simulated timeout routing to the same retryable failure, and no indefinite pending
+  state;
 - text-mismatch, filter-constrained, no-published-Chart, empty-catalog, and retrieval-
   failure classification, including combinations of query, filters, and Chart
   publication state;
@@ -1426,12 +1625,22 @@ The later implementation must verify at minimum:
   the approved one-line localized copy, keeps recovery in the existing controls, and
   never substitutes explanatory paragraphs, duplicate actions, unrelated fallback
   content, or an error state.
+- Transient response handling uses separate approved input and request clocks, avoids
+  fast-response flashes, distinguishes initial skeleton from stale-preserving
+  replacement, scopes busy and failure to results, prevents stale activation once
+  visible, and lets only the newest request settle.
+- Retrieval failure uses approved Music/Chart one-line copy and Retry in all three
+  locales, preserves committed discovery state, has explicit focus recovery, remains
+  distinct from zero results, and requires a measured finite timeout before
+  implementation acceptance.
 - Current implementation facts are not misrepresented as approved 2.0 behavior.
 - Mobile and desktop requirements share one product model while adapting to result
   visibility and available width.
 - Korean, Japanese, English, accessibility, performance, and browser-verification
   requirements are documented.
-- Every unresolved material choice remains visibly `Open` or `Proposed`.
+- No material page behavior remains `Open` or `Proposed`; scheduled specimen details
+  and the measured implementation timeout gate are identified without being mistaken
+  for unresolved product behavior.
 - The user explicitly approves the remaining decision register before the artifact is
   marked `Approved`.
 
@@ -1472,15 +1681,20 @@ The later implementation must verify at minimum:
 | DISC-31 | Signed-out personal controls    | Omit the personal-record group instead of disabled criteria or an embedded login invitation                                                                                                                                                 | `Approved`   |
 | DISC-32 | 30-day play-filter retention    | Former retention is replaced by removal; recent play remains a signed-in sort                                                                                                                                                               | `Superseded` |
 | DISC-33 | Unplayed/recent-sort transition | Selecting Unplayed resets recent order to the context default; recent remains visible but unavailable, never clears the filter, and is not silently restored                                                                                | `Approved`   |
+| DISC-34 | Transient-response threshold    | Keep the `300ms` input-settling clock separate; expose slow state only after the newest request itself remains pending for an additional `300ms`                                                                                            | `Approved`   |
+| DISC-35 | Initial and replacement loading | Fast response has no transient UI; slow initial uses a result-shaped local skeleton; slow replacement retains and weakens old results, blocks stale activation once visible, and keeps discovery controls usable                            | `Approved`   |
+| DISC-36 | Retrieval failure and retry     | Preserve committed state; show scope-specific one-line result-region error plus Retry; preserve retry focus while pending/failing and focus the result summary after success                                                                | `Approved`   |
+| DISC-37 | Request timeout                 | Require a documented finite timeout from production `p95`/`p99`, platform limits, and cancellation behavior before implementation acceptance; never invent a value now or wait indefinitely                                                 | `Approved`   |
 
 ## Next Discussion Batch
 
-Resolve the three remaining transient-response proposals next: fast response
-treatment, slow initial/filter busy treatment, and initial retrieval failure/retry.
-Then review the complete shared-discovery brief for phase approval. Do not reopen the
-approved taxonomy, Unplayed/recent-order transition, progressive-loading contract,
-no-result recovery, responsive control access, mobile post-commit focus, or Music card
-anatomy without new evidence and user approval. Foundation tokens, result-summary row
+Review the complete shared-discovery brief for explicit phase approval next. All
+material page behaviors are now approved individually; do not reopen the approved
+taxonomy, Unplayed/recent-order transition, progressive-loading contract, no-result
+and retrieval-error recovery, transient-response contract, responsive control access,
+mobile post-commit focus, or Music card anatomy without new evidence and user
+approval. Foundation tokens, skeleton specimen details, result-summary row
 composition, and exact Chart-row visuals still require their scheduled representative
-specimens, but they do not reopen `DISC-16`, `DISC-17`, `DISC-18`, `DISC-19`, or
-`DISC-33`.
+specimens, while the finite timeout requires production measurement at the
+implementation gate. None of those tasks reopens `DISC-16` through `DISC-19` or
+`DISC-33` through `DISC-37`.
