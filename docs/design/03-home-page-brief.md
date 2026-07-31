@@ -2,9 +2,10 @@
 
 ## Document Control
 
-- Status: `Draft for discussion`
+- Status: `Approved`
 - Evidence status: `Repository and browser audit complete; reference comparison complete`
 - Date started: 2026-07-30
+- Date approved: 2026-07-31
 - Canonical language: English
 - Korean companion: [03-home-page-brief.ko.md](./03-home-page-brief.ko.md)
 - Parent information architecture:
@@ -471,6 +472,12 @@ hierarchy.
 - Begin retrieval after the approved IME-safe `300ms` idle interval. Mark the
   suggestion region busy immediately, but show its compact localized loading row only
   when the same request remains pending for an additional `400ms`.
+- This `400ms` Home visual-loading threshold is intentionally different from the
+  shared discovery surface's `300ms` request-visibility threshold. Home invalidates
+  and hides its lightweight preview immediately and avoids opening a transient popup;
+  discovery preserves a primary result collection as normal and operable until its
+  threshold, then marks and weakens a still-pending replacement sooner. Do not
+  normalize these values without new evidence and user approval.
 - A normalized query or scope change immediately hides prior matches and clears the
   prior failure. Cancel the obsolete request when possible and always ignore a stale
   response that does not belong to the latest query and scope.
@@ -483,10 +490,12 @@ hierarchy.
   ordering in this Home brief. Define those defaults in the shared Music/Chart
   discovery brief with representative data.
 
-### Proposed Behavior
+### Downstream Discovery Resolution
 
-- Query-clearing behavior within the shared discovery surface remains a discovery-page
-  decision rather than a Home interaction rule.
+- Shared discovery preserves the query when no result is found and never clears it
+  automatically. The user edits or clears it through the visible search control.
+- Home hands off only the normalized query and active scope. Complete filters, sorting,
+  batching, and result recovery remain owned by shared discovery.
 
 ## Destination Requirements
 
@@ -785,15 +794,16 @@ The later design and implementation must verify:
 ## Acceptance Criteria for This Brief
 
 - The primary task and success conditions are explicit.
-- Every current Home function has an approved, proposed, open, or rejected
-  disposition.
+- Every current Home function has an approved or rejected disposition.
 - No approved information-architecture destination disappears.
 - Content priority does not equate retention with equal visual weight.
 - Mobile and desktop behavior are specified without fixing an unvalidated final grid.
 - Three-language constraints include editorial data, not only UI labels.
 - Loading, empty, error, authentication, and reduced-motion states are covered.
-- Proposed and approved decisions remain visibly distinct.
-- The user resolves the open decision register before this brief becomes approved.
+- No material Home behavior remains `Open` or `Proposed`; scheduled foundation,
+  content, and specimen details are not unresolved Home behavior.
+- The user approved the complete synchronized brief and resolved decision register on
+  2026-07-31.
 
 ## Decision Register
 
@@ -817,11 +827,23 @@ The later design and implementation must verify:
 | HOME-16 | Search preview                          | After IME-safe `300ms` idle, show at most five ranked matches without internal scrolling or in-place expansion; use the approved four states and hand excess matches to shared discovery.                              | `Approved` |
 | HOME-17 | Async preview feedback                  | Use an anchored non-modal popup, delayed `400ms` visual loading, immediate prior-result invalidation, stale-response rejection, and inline retryable failure without blocking Home or marking the query invalid.       | `Approved` |
 
+## Phase Approval
+
+The user approved the synchronized English and Korean Home brief as a complete phase
+deliverable on 2026-07-31 after reviewing the resolved decision register and
+cross-document audit. This approval fixes the documented Home hierarchy, content,
+interaction, responsive behavior, states, accessibility, localization, and downstream
+handoff contracts.
+
+Exact foundation tokens, final visual geometry and breakpoints, component styling,
+localized production copy, and scheduled representative specimens remain downstream
+design-system or content work. They do not reopen the approved Home product behavior.
+
 ## Next Discussion Batch
 
-Home search-state decisions are complete. The next page-brief task is to define Music
-and published-chart browse defaults in the shared discovery brief rather than
-inheriting the current implementation's filter and sort state.
+The next page-brief task is Music detail. It will define music identity, difficulty
+switching, record and chart data, ranking or evaluation context, chart-viewer entry and
+return states, and mobile and desktop behavior without pre-deciding their final visual
+composition.
 
-Exact localized copy remains a later content-system task after the interaction and
-state decisions are approved.
+Exact localized Home preview copy remains a later content-system task.

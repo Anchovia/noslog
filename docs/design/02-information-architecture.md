@@ -371,7 +371,7 @@ The exact block proportions remain open until representative layout work is appr
 
 | Flow                        | Entry                               | Required sequence                                                                 | Success condition                                                                                    | Important recovery or branch                                                                   |
 | --------------------------- | ----------------------------------- | --------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| Find music quickly          | Home search, Music block, or More   | Open Music scope → search/filter → music result → music detail                    | User reaches the correct music information with the original and selected localized title understood | No results, ambiguous title, unavailable difficulty, signed-out personal-record prompt         |
+| Find music quickly          | Home search, Music block, or More   | Open Music scope → search/filter → music result → music detail                    | User reaches the correct music information with the original and selected localized title understood | No results, ambiguous title, unavailable difficulty                                            |
 | Open a public chart         | Chart Viewer block or More          | Open Chart scope → search/filter → published difficulty → focused viewer          | User reaches and can play or inspect the intended published chart                                    | No published chart, filter empty state, unavailable difficulty, playback or local-audio issue  |
 | Choose what to play by tier | Home block or More → Tiers          | Select mode/goal → inspect band → select chart → music detail                     | User identifies an appropriate next chart and can inspect their record                               | No published list, missing personal record, filter empty state                                 |
 | Progress through Bingo      | Home block or More → Bingo          | Select Bingo → inspect 5×5 missions → update progress → understand unlock/NOS     | User understands progress toward music unlocks or NOS rewards                                        | Login required, unavailable Bingo, invalid mission, save failure                               |
@@ -531,7 +531,9 @@ reviewing the synchronized English and Korean artifacts and the resolved decisio
 register. Visual composition, exact responsive ordering, and page-specific states
 remain page-brief decisions; this approval does not silently resolve them. The
 user-approved Home brief later refined the editorial destinations recorded in `IA-07`
-and `IA-18` without changing the approved page-family hierarchy.
+and `IA-18` without changing the approved page-family hierarchy. The subsequently
+approved shared-discovery brief refined signed-out personal-control behavior and the
+Music/Chart scope contracts without changing that hierarchy.
 
 ## Acceptance Criteria for This Artifact
 
@@ -544,14 +546,15 @@ and `IA-18` without changing the approved page-family hierarchy.
 - Mobile and desktop use the same semantic hierarchy even if their navigation
   components differ.
 - Korean, Japanese, and English constraints are included before labels are finalized.
-- The user approves the open decision register before page briefs begin.
+- The user approved the resolved decision register before page-brief work began.
 
 ## Next Actions
 
-1. Finish the remaining open Home page-brief decisions.
+1. Continue with the Music-detail page brief, followed by Tiers and the remaining page
+   families.
 2. Create a focused brief for the public announcement archive and detail templates
    before downstream design or implementation of those routes.
-3. Continue with page briefs in priority order: music discovery, music detail, tiers,
-   then the remaining page families.
+3. Preserve the approved Home and shared-discovery contracts while defining their
+   downstream destinations and return states.
 4. Preserve this approved information architecture unless a later explicitly approved
    decision supersedes a recorded item.

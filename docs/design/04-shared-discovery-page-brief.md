@@ -2,13 +2,14 @@
 
 ## Document Control
 
-- Status: `In progress`
-- Decision status: `All page behaviors approved; full-brief phase approval pending`
+- Status: `Approved`
+- Decision status: `Complete page brief approved`
 - Evidence status: `Repository inspection, current-product browser audit, approved
 information architecture, approved Home handoff, and cited search/filter,
 no-result-recovery, transient-response, rhythm-game-record, result-card,
 responsive-interaction, and accessibility guidance`
 - Date started: 2026-07-30
+- Date approved: 2026-07-31
 - Canonical language: English
 - Korean companion:
   [04-shared-discovery-page-brief.ko.md](./04-shared-discovery-page-brief.ko.md)
@@ -33,9 +34,9 @@ responsive-interaction, and accessibility guidance`
 - **Rejected:** Considered and explicitly not selected.
 - **Superseded:** Replaced by a later approved direction.
 
-No material behavior remains `Open` or `Proposed`. The artifact remains in progress
-until the user explicitly approves the complete shared-discovery brief as a phase
-deliverable.
+No material behavior remains `Open` or `Proposed`. The synchronized
+shared-discovery brief is approved as a complete phase deliverable. Scheduled
+specimen and implementation gates do not reopen that approval.
 
 ## Purpose
 
@@ -263,6 +264,13 @@ at a narrow `390px` viewport and a wide desktop viewport.
   parameter.
 - This surface owns complete filters, sorting, batching, and result recovery; Home must
   not duplicate them.
+- Home preview follows its separately approved contract: it invalidates prior
+  suggestions immediately and waits `400ms` after request start before showing a
+  visual loading row. Discovery retains its primary result collection as normal and
+  operable until its `300ms` request-visibility threshold, then weakens the stale
+  collection and blocks its activation if the replacement is still pending. These
+  are distinct component contracts and must not be normalized without new evidence
+  and user approval.
 
 ## Filter and Sort Application Model
 
@@ -1641,8 +1649,8 @@ The later implementation must verify at minimum:
 - No material page behavior remains `Open` or `Proposed`; scheduled specimen details
   and the measured implementation timeout gate are identified without being mistaken
   for unresolved product behavior.
-- The user explicitly approves the remaining decision register before the artifact is
-  marked `Approved`.
+- The user approved the complete synchronized brief and resolved decision register on
+  2026-07-31.
 
 ## Decision Register
 
@@ -1686,15 +1694,22 @@ The later implementation must verify at minimum:
 | DISC-36 | Retrieval failure and retry     | Preserve committed state; show scope-specific one-line result-region error plus Retry; preserve retry focus while pending/failing and focus the result summary after success                                                                | `Approved`   |
 | DISC-37 | Request timeout                 | Require a documented finite timeout from production `p95`/`p99`, platform limits, and cancellation behavior before implementation acceptance; never invent a value now or wait indefinitely                                                 | `Approved`   |
 
+## Phase Approval
+
+The user approved the synchronized English and Korean shared-discovery brief as a
+complete phase deliverable on 2026-07-31 after reviewing the resolved decision
+register and cross-document audit. No material Music/Chart discovery behavior remains
+`Open` or `Proposed`.
+
+Foundation tokens, exact responsive geometry and breakpoints, skeleton styling,
+result-summary row composition, exact Chart-row visual anatomy, and a numeric
+production timeout remain scheduled specimen or implementation gates. They do not
+reopen the approved product behavior.
+
 ## Next Discussion Batch
 
-Review the complete shared-discovery brief for explicit phase approval next. All
-material page behaviors are now approved individually; do not reopen the approved
-taxonomy, Unplayed/recent-order transition, progressive-loading contract, no-result
-and retrieval-error recovery, transient-response contract, responsive control access,
-mobile post-commit focus, or Music card anatomy without new evidence and user
-approval. Foundation tokens, skeleton specimen details, result-summary row
-composition, and exact Chart-row visuals still require their scheduled representative
-specimens, while the finite timeout requires production measurement at the
-implementation gate. None of those tasks reopens `DISC-16` through `DISC-19` or
-`DISC-33` through `DISC-37`.
+The next page-brief task is Music detail. It will define music identity, difficulty
+switching, record and chart data, ranking or evaluation context, focused chart-viewer
+entry and return states, and mobile and desktop behavior without pre-deciding their
+final visual composition. The approved discovery taxonomy, result contracts, and
+transient-response behavior remain upstream constraints.
