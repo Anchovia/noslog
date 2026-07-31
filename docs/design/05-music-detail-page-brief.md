@@ -7,7 +7,7 @@
 Record behavior, Chart Info scope, personal-record hierarchy, Ranking hierarchy,
 leaderboard semantics, tie handling, score distribution, pagination, and Ranking
 states approved; Tier/evaluation labels, hierarchy, placement scope, community
-aggregation, pattern radar, and evaluation input approved; opinion-list behavior,
+aggregation, pattern radar, evaluation input, and community-opinion contract approved;
 remaining state, responsive, and page-level accessibility decisions remain open`
 - Evidence status: `Repository inspection, current-product audit, approved information
 architecture, approved shared-discovery handoff, and cited tabs, adaptive-layout,
@@ -593,8 +593,8 @@ Use this mobile reading order:
 5. community opinions.
 
 Do not turn this area into another score Ranking or repeat the factual Chart Info
-contract. The exact opinion-list, reaction, reporting, moderation, and sorting contract
-remains open for the next discussion.
+contract. The community-opinion contract below defines the list, reaction, reporting,
+moderation, sorting, and deletion behavior without approving a final visual design.
 
 ### Six Tier Placements
 
@@ -688,6 +688,140 @@ remains open for the next discussion.
   meaning, remove Glissando from the community profile without removing Glissando
   performance data, and make optional ratings genuinely nullable. Do not silently
   repurpose stored values.
+
+### Community Opinions
+
+#### Information Hierarchy and Row Content
+
+- Treat an opinion as the optional written part of one user's selected-chart
+  evaluation, not as an independent discussion post detached from the evaluation.
+- Each visible opinion exposes the author identity, the author's perceived-difficulty
+  value, written opinion, written or edited time, Helpful count and state, and a
+  contextual overflow action.
+- Make the perceived-difficulty value a primary scan value in each opinion. It must be
+  more prominent than author metadata and time, but it must not compete with the
+  opinion text or be confused with the community aggregate above the list.
+- Exact typography, weight, color, badge treatment, spacing, surfaces, and row or card
+  geometry are deferred to the approved foundations and representative mobile and
+  desktop specimens. The discussion mock-up used to approve this contract is a
+  behavioral example only and is not a visual source of truth.
+- Keep the written opinion concise and readable as the main row body. Show an edited
+  indicator when applicable without exposing a full revision history in the public
+  list.
+- Do not repeat the five pattern-axis values in every opinion row. The community radar
+  owns the aggregate, and a user's individual pattern values are not required for
+  scanning written advice.
+- Do not add nested replies, author pinning, or a second discussion hierarchy in this
+  contract. Opinions support chart evaluation and practical reading rather than a
+  general-purpose forum.
+
+#### Helpful Reaction and Eligibility
+
+- Provide one reversible positive reaction labelled equivalently to **Helpful**.
+  Display its count and the current user's selected state together.
+- Do not expose a public **Unhelpful**, dislike, or negative count. The reaction helps
+  readers surface useful chart advice; it is not a parallel correctness vote or a
+  mechanism for community punishment.
+- A user may react only when signed in and holding a verified play record for the
+  selected chart, matching evaluation eligibility. Public readers may still see the
+  count.
+- The opinion author cannot react to their own opinion. Explain unavailable self-
+  reaction through the control's disabled or omitted state and accessible context;
+  do not show an error only after an invalid submission.
+- Toggling Helpful must not move the row while the user is operating it, even when the
+  list is sorted by Helpful. Apply the changed order on the next deliberate refresh,
+  sort change, or list request so focus and reading context remain stable.
+
+#### Sorting and Explicit Continuation
+
+- Offer exactly two sorts: **Helpful** and **Newest**. Helpful is the default.
+- Helpful sorts by Helpful count descending, then written or edited recency descending
+  as the deterministic visible tie rule. Newest sorts by the opinion's current public
+  recency descending.
+- Initially render ten opinions. An explicit **Load more opinions** action appends the
+  next ten in the active sort without replacing the rows already read.
+- Hide the continuation action when no more opinions exist, and preserve already
+  loaded rows after a Helpful toggle or report submission.
+- Do not use infinite scroll, an Oldest sort, a page-size selector, or nested
+  pagination controls for this supporting list.
+
+#### Author Editing and Two Deletion Scopes
+
+- Keep opinion editing in the author's contextual overflow menu. Preserve the parent
+  evaluation and show the public edited indicator after a successful update.
+- **Delete opinion** removes only the optional written opinion. It retains the user's
+  perceived-difficulty and optional pattern ratings in valid community aggregates.
+- **Delete entire evaluation** is a separate destructive action that removes the
+  perceived-difficulty rating, any pattern-axis ratings, and the written opinion.
+- Never make a comment-labelled delete action silently remove the whole evaluation.
+- Both destructive actions require consequence-specific confirmation. The opinion-
+  only confirmation explicitly says that evaluation values remain; the entire-
+  evaluation confirmation explicitly names all data that will be removed and states
+  that the action cannot be undone.
+
+#### Reporting and Moderation
+
+- Keep **Report** in another user's contextual overflow menu instead of adding a
+  permanent action button to every row.
+- The report dialog requires one reason: irrelevant or spam; abuse, harassment, or
+  hate; sensitive, private, or dangerous content; or Other. Other may request a short
+  explanation when needed for review.
+- A successful report acknowledges receipt without publicly revealing the reporter or
+  instantly claiming that the opinion violated policy.
+- One report does not automatically hide an opinion for everyone. Administrators
+  review reports and choose one explicit result: **Keep**, **Hide written opinion**,
+  or **Exclude entire evaluation**.
+- **Hide written opinion** removes the text from public display while retaining valid
+  non-text evaluation values. **Exclude entire evaluation** removes every value from
+  public aggregation and opinion display. Preserve the moderation record and reason
+  separately from public content.
+- Rate limiting, duplicate-report prevention, audit retention, notification policy,
+  appeal policy, and exact administrator queue layout remain implementation and
+  operations decisions. They must not weaken the approved distinction between hiding
+  text and excluding an evaluation.
+
+#### Accessibility Consequences
+
+- Give every overflow trigger an author-specific accessible name and expose its open
+  state. Opening the menu moves keyboard focus into its actions; Escape closes it and
+  returns focus to the trigger.
+- Report, edit, and destructive confirmations use labelled modal-dialog semantics,
+  contain focus while open, support Escape or an explicit Cancel action, and return
+  focus to the invoking control.
+- Keep Helpful and overflow controls large or sufficiently separated for 390px touch
+  use. Do not communicate reaction, report, edited, hidden, or destructive state by
+  color alone.
+- Announce successful reaction, edit, deletion, report, and appended-result changes
+  without replacing the user's current reading position.
+
+### Community-Opinion Reference Evidence
+
+| Source                                                                                                                              | Transferable finding                                                                                                             | NosLog application                                                                                                                             | Limitation                                                                                           |
+| ----------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| [YouTube: View, organize, or delete comments](https://support.google.com/youtube/answer/6000976?hl=en)                              | Public comments expose author, time, reactions, edit/delete actions, reporting, and Top/Newest sorting.                          | Confirms that a compact row can keep primary reading content visible while moving owner and safety actions into context.                       | YouTube supports replies and broad entertainment discussion that NosLog does not need.               |
+| [YouTube: Report inappropriate content](https://support.google.com/youtube/answer/2802027)                                          | A report is opened from a comment's More menu, asks for a reason, and is reviewed rather than automatically proving a violation. | Supports contextual Report, explicit reasons, reporter privacy, and no global single-report auto-hide.                                         | YouTube's moderation scale and automation are not NosLog requirements.                               |
+| [GitHub: Reporting abuse or spam](https://docs.github.com/en/communities/maintaining-your-safety-on-github/reporting-abuse-or-spam) | In-product reports target specific discussions or comments and route them for review.                                            | Supports report attachment to the exact opinion and a separate moderation record.                                                              | GitHub limits some report capabilities by repository relationship and permissions.                   |
+| [GitHub Discussions documentation](https://docs.github.com/en/discussions)                                                          | Discussion content has explicit edit/delete and moderator actions.                                                               | Supports separating author actions from administrative moderation.                                                                             | A software-project forum is broader and more conversational than chart opinions.                     |
+| [Stack Overflow: Vote up comments](https://stackoverflow.com/help/privileges/vote-comments)                                         | One positive comment vote indicates useful and appropriate content.                                                              | Direct precedent for one Helpful signal without requiring a public negative count.                                                             | Stack Overflow's reputation model and content ranking must not be copied.                            |
+| [Stack Overflow: Flagging](https://stackoverflow.com/help/flagging)                                                                 | Flags request moderator review, use standard reasons plus a custom option, and are distinct from ordinary voting.                | Supports reasoned reports and separation of usefulness from policy violation.                                                                  | Some Stack Overflow flag thresholds can auto-delete; NosLog explicitly rejects one-report auto-hide. |
+| [Google Maps: Local Guides community guidelines](https://support.google.com/maps/answer/7358351?hl=en)                              | Helpful experiential writing should be specific and relevant, while inappropriate contributions are reported.                    | Reinforces chart-experience eligibility and a concise advice-oriented opinion body.                                                            | Place reviews are not rhythm-game chart evaluations.                                                 |
+| [WAI-ARIA APG: Menu Button](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/)                                                  | A contextual action menu needs explicit open state, keyboard entry, and focus behavior.                                          | Governs each opinion's overflow action without adding permanent buttons.                                                                       | APG defines semantics, not NosLog styling.                                                           |
+| [WAI-ARIA APG: Dialog Modal](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/)                                                | Modal dialogs contain focus, provide a label and closing action, support Escape, and restore context.                            | Governs report, edit, and destructive confirmations.                                                                                           | Exact initial focus depends on the final content and implementation.                                 |
+| [WCAG 2.2: Focus Order](https://www.w3.org/WAI/WCAG22/Understanding/focus-order.html)                                               | Sequential focus must preserve meaning and operation.                                                                            | Prevents menus, appended opinions, and dialogs from producing confusing focus jumps.                                                           | It does not choose the visible row composition.                                                      |
+| [WCAG 2.2: Target Size (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html)                             | Pointer targets need sufficient size or spacing.                                                                                 | Applies to Helpful, overflow, sort, dialog, and continuation controls at the 390px baseline.                                                   | Meeting the minimum is not enough to define hierarchy or final geometry.                             |
+| [GOV.UK: Pagination](https://design-system.service.gov.uk/components/pagination/)                                                   | Break up long collections only when it improves usability, and avoid automatic infinite scroll because it harms keyboard access. | Supports an explicit continuation action instead of unbounded automatic loading.                                                               | Page navigation is not identical to append-in-place comments.                                        |
+| [Carbon: Modal](https://carbondesignsystem.com/components/modal/usage/)                                                             | A danger modal names the consequence of irreversible loss and uses action-specific labels.                                       | Supports separate confirmations for opinion-only and entire-evaluation deletion.                                                               | Carbon's visual modal treatment is not a NosLog style source.                                        |
+| [Carbon: Remove pattern](https://carbondesignsystem.com/community/patterns/remove-pattern/)                                         | Confirmation strength should reflect whether removal is reversible and how much data is lost.                                    | Justifies stronger consequence copy for deleting the entire evaluation than for deleting optional text.                                        | The pattern covers enterprise objects rather than community evaluations.                             |
+| [Adobe Spectrum: Alert dialog](https://spectrum.adobe.com/page/alert-dialog/)                                                       | Destructive dialogs use a short outcome title, necessary consequence description, Cancel, and a specific destructive action.     | Reinforces clear, non-generic delete confirmations.                                                                                            | Spectrum's color and component anatomy are not automatically adopted.                                |
+| [Atlassian Design: Components](https://atlassian.design/components/)                                                                | Comment, dropdown menu, modal dialog, and pagination are distinct components with distinct interaction roles.                    | Supports composing opinions from reusable reading, contextual-action, confirmation, and continuation patterns rather than one overloaded card. | The component catalog does not determine NosLog's final information priority or styling.             |
+
+The reference set converges on four principles: keep reading content primary; use one
+positive usefulness signal separately from safety reporting; place secondary and
+destructive actions in context; and require explicit, accessible moderation and
+confirmation flows. NosLog narrows these patterns to verified chart participants and
+keeps evaluation data separable from its optional written opinion. None of the visual
+surface treatments in these products or the approval mock-up is adopted as NosLog's
+final design.
 
 ## Reference Comparison
 
@@ -914,23 +1048,39 @@ override authoritative guidance or NosLog requirements.
 - **Add a rows-per-page selector or infinite scroll:** Rejected. Both add control or
   navigation complexity to a focused leaderboard whose approved page length is
   stable.
+- **Expose public Unhelpful or dislike counts on opinions:** Rejected. Use one
+  reversible Helpful signal for useful chart advice and keep policy reporting as a
+  separate mechanism.
+- **Repeat every evaluator's five pattern-axis values in the opinion list:** Rejected.
+  Keep the perceived-difficulty value prominent and let the aggregate radar own
+  pattern comparison.
+- **Add nested replies or pinned opinions:** Rejected for the selected-chart
+  evaluation contract. Do not turn practical evaluation notes into a second forum.
+- **Make Delete opinion remove the complete evaluation:** Rejected. Optional written
+  text and aggregate-contributing evaluation values require separate, explicitly
+  labelled deletion scopes.
+- **Automatically hide an opinion globally after one report:** Rejected. A report
+  creates review work; it does not itself prove a violation.
+- **Use infinite scroll, Oldest sorting, or page-size controls for opinions:**
+  Rejected. Use Helpful/Newest and explicit ten-item continuation.
+- **Treat the approval mock-up as final visual design:** Rejected. It demonstrated
+  content and behavior only; foundations and representative specimens will determine
+  typography, color, spacing, and component geometry.
 
 ## Open Decisions for the Next Discussion
 
 The following decisions have not been approved:
 
-1. opinion-list presentation, helpful or unhelpful reactions, reporting, moderation,
-   and sorting inside Tier & Evaluation;
-2. exact progressive disclosure for tier-placement history and localized missing or
+1. exact progressive disclosure for tier-placement history and localized missing or
    unpublished placement states;
-3. switching, loading, stale-data, empty, permission, error, and retry behavior beyond
+2. switching, loading, stale-data, empty, permission, error, and retry behavior beyond
    the approved signed-out Record and Ranking contracts;
-4. mobile tab overflow or alternative compact control behavior;
-5. desktop use of additional width inside each selected area;
-6. keyboard focus transfer and announcements after difficulty or content-area changes;
-7. representative real, long, missing, and multilingual data cases;
-8. page acceptance criteria and browser-verification widths; and
-9. exact order, placement, copy, and responsive behavior of the approved
+3. mobile tab overflow or alternative compact control behavior;
+4. desktop use of additional width inside each selected area;
+5. keyboard focus transfer and announcements after difficulty or content-area changes;
+6. representative real, long, missing, and multilingual data cases;
+7. page acceptance criteria and browser-verification widths; and
+8. exact order, placement, copy, and responsive behavior of the approved
    selected-chart resource action group.
 
 ## Decision Register
@@ -979,7 +1129,13 @@ The following decisions have not been approved:
 | MDET-40 | Pattern-profile visualization                        | Use one fixed-order, fixed-scale five-axis community radar, one series only, with exact values and counts as structured accessible text          | `Approved` |
 | MDET-41 | Pattern-profile taxonomy                             | Use Stairs, Repetition, Polyrhythm, Offset, and Chords; retain Glissando outside the community radar                                             | `Approved` |
 | MDET-42 | Evaluation input and eligibility                     | Require verified selected-chart play and perceived difficulty; make pattern axes and comment optional, nullable, editable, and deletable         | `Approved` |
-| MDET-43 | Community-opinion contract                           | Define opinion list, reaction, reporting, moderation, and sorting behavior in the next discussion                                                | `Open`     |
+| MDET-43 | Opinion information hierarchy                        | Show author, prominent perceived difficulty, opinion, time/edit state, Helpful, and contextual actions without approving the mock-up's visuals   | `Approved` |
+| MDET-44 | Opinion reaction and eligibility                     | Use one reversible Helpful reaction; no public negative count, self-reaction, or reaction without verified selected-chart play                   | `Approved` |
+| MDET-45 | Opinion sorting and continuation                     | Default to Helpful, offer Newest, use deterministic recency ties, and append explicit batches of ten without infinite scroll                     | `Approved` |
+| MDET-46 | Opinion and evaluation deletion                      | Delete optional written opinion separately from destructive deletion of the entire evaluation, with consequence-specific confirmations           | `Approved` |
+| MDET-47 | Opinion reporting                                    | Put Report in the contextual menu and collect one relevant safety or spam reason without instant public auto-hide                                | `Approved` |
+| MDET-48 | Opinion moderation                                   | Let administrators Keep, Hide written opinion, or Exclude entire evaluation while retaining an audit record                                      | `Approved` |
+| MDET-49 | Opinion visual authority                             | Treat the discussion mock-up as behavioral evidence only; defer exact type, color, spacing, surfaces, and geometry to foundations and specimens  | `Approved` |
 
 ## Current Milestone
 
@@ -1007,8 +1163,18 @@ not a community radar axis. Evaluation requires a verified selected-chart play a
 perceived-difficulty rating; pattern axes and comment are optional and must preserve
 missing values distinctly from a valid zero rating.
 
+Community opinions now have an approved information and interaction contract. Each
+row keeps perceived difficulty prominent, shows concise author and time context, and
+offers one Helpful signal. Helpful and Newest are the only sorts; the list starts with
+ten rows and appends explicit batches of ten. Opinion-only deletion, entire-evaluation
+deletion, reporting, and the administrator's Keep/Hide text/Exclude evaluation results
+are separate operations with explicit consequences. The approval mock-up is not a
+visual design source; exact emphasis is deferred to the foundation and representative
+specimen phase.
+
 This establishes the entry, authentication-restoration, Chart Info, Personal Record,
-Ranking, and core Tier & Evaluation content contracts. It does not approve the current
-page's visual design or complete the Music-detail page brief. The next discussion
-should define the community-opinion contract and remaining states before complete
-page-level responsive, interaction-state, and acceptance criteria are finalized.
+Ranking, and Tier & Evaluation content contracts, including community opinions. It
+does not approve the current page's visual design or complete the Music-detail page
+brief. The next discussion should resolve tier-history disclosure and the remaining
+page states before complete page-level responsive, interaction-state, and acceptance
+criteria are finalized.
