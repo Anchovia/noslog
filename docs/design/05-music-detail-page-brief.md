@@ -6,14 +6,16 @@
 - Decision status: `Structure, entry priority, source-aware restoration, signed-out
 Record behavior, Chart Info scope, personal-record hierarchy, Ranking hierarchy,
 leaderboard semantics, tie handling, score distribution, pagination, and Ranking
-states approved; Tier/evaluation, remaining state, responsive, and accessibility
-decisions remain open`
+states approved; Tier/evaluation labels, hierarchy, placement scope, community
+aggregation, pattern radar, and evaluation input approved; opinion-list behavior,
+remaining state, responsive, and page-level accessibility decisions remain open`
 - Evidence status: `Repository inspection, current-product audit, approved information
 architecture, approved shared-discovery handoff, and cited tabs, adaptive-layout,
 progressive-disclosure, leaderboard, pagination, data-visualization, NOSTALGIA
-scoring, rhythm-game, and infrastructure guidance`
+scoring, chart-pattern, chord-input, community-evaluation, radar-profile,
+rhythm-game, accessibility, and infrastructure guidance`
 - Date started: 2026-07-31
-- Last decision update: 2026-07-31
+- Last decision update: 2026-08-01
 - Canonical language: English
 - Korean companion:
   [05-music-detail-page-brief.ko.md](./05-music-detail-page-brief.ko.md)
@@ -201,9 +203,9 @@ distribution denominator, page size, and localized accessibility gaps.
   requiring all cross-domain detail on initial entry.
 - Reuse already loaded area data when it remains valid. Exact cache lifetime,
   prefetch-on-intent behavior, and invalidation remain implementation decisions.
-- The localized Chart Info and My Record labels are approved below. Ranking and
-  Tier/evaluation wording, tab geometry, and responsive overflow behavior remain open.
-  Approval covers the architecture, not the current tab design.
+- Localized labels for all four semantic areas are approved in their owning contracts.
+  Tab geometry and responsive overflow behavior remain open. Approval covers the
+  architecture and wording, not the current tab design.
 
 ### Why Pattern A Fits
 
@@ -229,8 +231,8 @@ execution.
 - Place the Information semantic area first in the content-area order. The approved
   semantic order is Information, personal Record, Ranking, and Tier/community
   evaluation.
-- This approval establishes semantic order. The localized Chart Info and My Record
-  labels are now approved below; Ranking and Tier/evaluation wording remains open.
+- This approval establishes semantic order. The localized labels for all four areas
+  are now approved in the Chart Info/Record and Tier & Evaluation contracts below.
 - Do not make the same queryless URL resolve to a different default area solely because
   the user is authenticated.
 
@@ -309,8 +311,8 @@ for a new authentication architecture.
   facts in this area.
 - Keep **My Record** clearly personal and chart-scoped. Its existence does not make
   authentication the default entry rule.
-- Final Ranking and Tier/evaluation labels remain open until those area contracts are
-  approved.
+- Ranking and Tier/evaluation labels are approved in the Tier & Evaluation contract
+  below.
 
 ### Chart Info Scope
 
@@ -388,8 +390,8 @@ specimens.
   content. Best performance and the cumulative summary must never depend on expanding
   it.
 - Do not visualize the same pattern-profile values simultaneously as both radar and
-  bar charts. The later Tier/evaluation brief must select one primary representation,
-  expose exact values and vote count, and document its accessibility alternative.
+  bar charts. Use the approved five-axis community radar as the primary profile and
+  provide exact values, per-axis valid counts, and a structured text equivalent.
 - Give each chart one explicit question and metric contract. Provide exact values or a
   structured text equivalent, and never rely on color alone to convey a series or
   state.
@@ -566,6 +568,127 @@ not a 2.0 constraint.
 - Do not communicate current-user row, Full Combo, Pianist, grade, loading, or error
   state by color alone.
 
+## Approved Tier and Evaluation Contract
+
+### Purpose, Labels, and Reading Order
+
+| Meaning             | Korean      | Japanese       | English             |
+| ------------------- | ----------- | -------------- | ------------------- |
+| Public score area   | `랭킹`      | `ランキング`   | `Ranking`           |
+| Tier and evaluation | `서열·평가` | `難易度・評価` | `Tier & Evaluation` |
+
+Tier & Evaluation answers four questions for the selected chart:
+
+1. which public tier placements currently apply;
+2. how difficult the eligible community perceives the chart to be;
+3. what performance tendencies characterize its pattern; and
+4. how an eligible player can contribute or revise an evaluation.
+
+Use this mobile reading order:
+
+1. the six current tier placements;
+2. the perceived-difficulty aggregate;
+3. the community pattern-tendency radar;
+4. the current user's evaluation action or form; and
+5. community opinions.
+
+Do not turn this area into another score Ranking or repeat the factual Chart Info
+contract. The exact opinion-list, reaction, reporting, moderation, and sorting contract
+remains open for the next discussion.
+
+### Six Tier Placements
+
+- Show all six current placements without requiring a preliminary selector:
+  **Basic S**, **Basic Full Combo**, **Basic Pianist**, **Recital S**,
+  **Recital Full Combo**, and **Recital Pianist**.
+- Group the placements by Basic and Recital while retaining the association between
+  each placement value and its S, Full Combo, or Pianist goal.
+- Treat the current placement as the primary fact. Preserve verified placement-history
+  capability as secondary information, but defer its exact progressive-disclosure
+  behavior to the remaining state and interaction discussion.
+- Because the contract promises six positions, a missing or unpublished value must
+  have an explicit state rather than silently removing its position. Exact localized
+  copy for that state remains open.
+- A wide layout may use a grid or table when it improves comparison, but must preserve
+  the same information relationships and mobile reading order. Exact geometry is
+  deferred to representative specimens.
+
+### Perceived-Difficulty Aggregate
+
+- Perceived difficulty is required when an eligible user submits an evaluation.
+- Always show the exact number of valid perceived-difficulty ratings.
+- With one or two valid ratings, show an **Aggregating** state and the rating count;
+  hide the average and distribution.
+- With three or more valid ratings, show the average and value distribution together
+  with the rating count.
+- The initial threshold of three prevents an individual vote from being presented as
+  a community result. It is not a statistical-confidence claim, so the exact sample
+  size must remain visible.
+- Signed-out and ineligible users may read the public aggregate. Eligibility controls
+  contribution, not visibility.
+
+### Community Pattern-Tendency Radar
+
+- Use one five-axis radar profile as the primary visualization. Do not duplicate the
+  same values in a second bar chart.
+- Use this fixed axis order and localization on every chart and viewport:
+
+| Axis | Korean     | Japanese     | English      |
+| ---- | ---------- | ------------ | ------------ |
+| 1    | `계단`     | `階段`       | `Stairs`     |
+| 2    | `연타`     | `連打`       | `Repetition` |
+| 3    | `폴리리듬` | `ポリリズム` | `Polyrhythm` |
+| 4    | `즈레`     | `ズレ`       | `Offset`     |
+| 5    | `동시치기` | `同時押し`   | `Chords`     |
+
+- Korean explanatory copy may mention the established shorthand `동치`, but the
+  visible axis label remains the clearer `동시치기`.
+- **Chords** measures simultaneous-input burden, including simultaneous-note count,
+  span, changing shapes, repeated chords, and tenuto-chord combinations. It is not a
+  raw count of all simultaneous notes.
+- Keep the concepts distinct: **Polyrhythm** covers different rhythmic structures
+  between hands; **Offset** covers closely displaced timing; **Chords** covers notes
+  required at the same timing.
+- Do not use Glissando as a community radar axis. Preserve Glissando as a chart note
+  type and as part of personal Judgement analysis where its performance meaning is
+  useful.
+- Use one fixed `0–4` scale and fixed axis order so the shape remains comparable
+  across charts and locales.
+- Draw only the community average. Do not overlay the current user's profile on the
+  same radar.
+- Provide exact averages and valid rating counts for all five axes in compact,
+  structured text near the radar. This is the precise and accessible equivalent, not
+  a second competing visualization.
+- Pattern-axis ratings are individually optional. Store **Not rated** as missing data,
+  distinct from the valid `0` value **None**.
+- Require at least three valid ratings per axis before publishing that axis. If any
+  axis remains below the threshold, do not draw a partial or falsely complete polygon;
+  show an Aggregating state with the available per-axis counts instead.
+- Provide one shared **Pattern tendency criteria** help entry for the five definitions
+  rather than five permanent help buttons.
+- The radar requires a structured text alternative and must not depend on color alone.
+  Final size, typography, label collision behavior, and contrast are foundation and
+  specimen decisions. The current component's small geometry is observed evidence,
+  not the 2.0 baseline.
+
+### Evaluation Input and Eligibility
+
+- Only a signed-in user with a verified play record for the selected chart may submit
+  an evaluation.
+- Perceived difficulty is required. Each of the five pattern-axis ratings and the
+  comment are optional.
+- The form must offer an explicit **Not rated** state and must never prefill an omitted
+  pattern rating as `0` or **None**.
+- Keep one evaluation per user and selected chart. The user may edit or delete it.
+- Keep public aggregates readable for signed-out users and signed-in users who are not
+  eligible to submit.
+- The current input schema and form require all legacy pattern fields and a comment.
+  The 2.0 implementation must migrate that contract explicitly: separate the current
+  `chord` field that is used for Polyrhythm from the new simultaneous-input Chords
+  meaning, remove Glissando from the community profile without removing Glissando
+  performance data, and make optional ratings genuinely nullable. Do not silently
+  repurpose stored values.
+
 ## Reference Comparison
 
 ### Authoritative Interaction and Layout Guidance
@@ -610,6 +733,33 @@ not a 2.0 constraint.
 | [W3C: Complex images](https://www.w3.org/WAI/tutorials/images/complex/)                                               | Charts need short identification plus a structured text representation of essential values and relationships.      | Score and pattern visualizations require exact values or an equivalent structured description.             | The exact alternative depends on the final selected chart.                    |
 | [Apple: Charts](https://developer.apple.com/design/human-interface-guidelines/charts)                                 | Charts should emphasize the relevant relationship and remain legible with accessible labels and interaction.       | Reinforces focused progress and comparison views rather than decorative duplicate graphics.                | Platform-specific interaction details are not automatically web requirements. |
 | [Texas: Data visualization guide](https://www.tdi.texas.gov/styleguide/style-guide-for-data-visualization-tools.html) | Put the most important information first; use line charts for trends and tables or labels for exact values.        | Supports Best performance before history, a line for Best-score progress, and exact value access.          | Government editorial guidance does not determine NosLog art direction.        |
+
+### Tier, Evaluation, and Pattern-Profile Evidence
+
+| Source                                                                                                                                                               | Transferable finding                                                                                                   | NosLog application                                                                                                           | Limitation                                                                          |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| [Official NOSTALGIA Op.3: How to play](https://p.eagate.573.jp/game/nostalgia/op3/howto/entrance.html)                                                               | Glissando is a distinct playable note behavior in NOSTALGIA.                                                           | Retain Glissando in note-type and personal-performance analysis even though it is not one of the five community radar axes.  | It explains play behavior, not community evaluation taxonomy.                       |
+| [Official NOSTALGIA Op.3: PC environment](https://p.eagate.573.jp/game/eacnostalgia/op3/info/env.html)                                                               | The official PC requirements call for a keyboard that can recognize multiple simultaneous keys.                        | Confirms that simultaneous-input burden is a real NOSTALGIA chart property worth evaluating as Chords.                       | Hardware requirements do not define a rating scale.                                 |
+| [Current Prisma schema](../../prisma/schema.prisma)                                                                                                                  | The current evaluation record stores required legacy `stairs`, `chord`, `trill`, `glissando`, and `repetition` fields. | Requires an explicit nullable-field and taxonomy migration rather than a label-only redesign.                                | Current storage is observed implementation, not the 2.0 product authority.          |
+| [Current evaluation configuration](../../components/music/musicTierVoteConfig.ts)                                                                                    | The current UI maps `chord` to Polyrhythm and `trill` to Offset.                                                       | The new Chords axis cannot silently reuse the existing `chord` values; Polyrhythm and simultaneous Chords must be separated. | Existing field names are historical and semantically misleading.                    |
+| [SDVX.org: Effect Radar](https://www.sdvx.org/en/compendium/effect-radar)                                                                                            | A fixed multi-axis chart profile communicates how one rhythm-game chart concentrates different demands.                | Supports one stable five-axis community fingerprint for a selected chart.                                                    | SOUND VOLTEX axes and mechanics cannot be copied into NOSTALGIA.                    |
+| [VOLTEXES: Effect Radar](https://voltexes.com/effect-radar/)                                                                                                         | Players use a radar shape to recognize a chart's overall tendency quickly.                                             | Supports preserving the familiar at-a-glance profile rather than replacing it with a bar-only summary.                       | This is a community explanation, not controlled usability research.                 |
+| [Cloudy Boy: Effect Radar analysis](https://note.com/cloudy_boy/n/n458e55e6a91b)                                                                                     | Experienced rhythm-game players reason about charts through fixed axis definitions and the resulting shape.            | Requires stable order, shared criteria, and accessible definitions.                                                          | Expert commentary may not predict novice comprehension.                             |
+| [DDR Groove Radar overview](https://en.wikipedia.org/wiki/Dance_Dance_Revolution#Groove_Radar)                                                                       | A five-axis radar has long been used to summarize chart characteristics alongside difficulty.                          | Provides a domain precedent for a pentagonal chart fingerprint.                                                              | The source is community maintained, and DDR's axes differ from NosLog's.            |
+| [Rhythmic Footsteps: Training for the Groove Radar](https://rhythmickeystrokes.wordpress.com/2018/10/24/training-for-the-groove-radar/)                              | Players can learn to read a radar profile, but axis terminology needs explanation.                                     | Supports one shared criteria help entry and explicit localized axis names.                                                   | It is practitioner guidance rather than formal research.                            |
+| [BeatLeader: Ratings on all maps](https://www.patreon.com/posts/ratings-on-all-85371694)                                                                             | A compact multi-dimensional shape is used to communicate different map skill demands.                                  | Reinforces the value of a single profile for map selection and expectation setting.                                          | Beat Saber skill dimensions are not NOSTALGIA pattern dimensions.                   |
+| [IBM Research: Off the Radar](https://research.ibm.com/publications/off-the-radar-comparative-evaluation-of-radial-visualization-solutions-for-composite-indicators) | Radial displays can perform poorly when users must compare composite indicators precisely.                             | Restrict the radar to one chart fingerprint and pair it with exact structured values.                                        | Its comparison tasks are broader than recognizing one familiar rhythm-game profile. |
+| [Applied Ergonomics: Radar-chart efficacy](https://www.sciencedirect.com/science/article/pii/S0003687023000340)                                                      | Accuracy falls when radar charts carry multiple overlapping data series.                                               | Show only the community average and reject a personal-profile overlay.                                                       | Experimental tasks and audiences are not identical to NosLog's.                     |
+| [PubMed: Bar and line graph comprehension](https://pubmed.ncbi.nlm.nih.gov/26356929/)                                                                                | Position and length encodings support more exact quantitative comparison than shape alone.                             | Provide precise values and counts as structured text without duplicating the profile as another chart.                       | The study does not evaluate rhythm-game experts reading a familiar radar.           |
+| [Tableau: Radar Chart extension](https://exchange.tableau.com/products/1010%3Adownload)                                                                              | Radar charts are intended for same-scale multivariate profiles and make balance or skew visible.                       | Fix every axis to the same `0–4` scale and order.                                                                            | Product documentation does not establish accessibility by itself.                   |
+| [W3C: Complex images](https://www.w3.org/WAI/tutorials/images/complex/)                                                                                              | Complex charts require a textual alternative that communicates essential data and relationships.                       | Provide all five exact averages and valid counts in structured text.                                                         | Final alternative structure depends on the approved component specimen.             |
+| [USWDS: Data visualizations](https://designsystem.digital.gov/components/data-visualizations/)                                                                       | A visualization should communicate one central idea and expose data accessibly.                                        | Use the radar only for pattern tendency; do not mix tier placement or perceived difficulty into it.                          | It does not endorse a specific radar implementation.                                |
+| [UK Government Analysis Function: Charts checklist](https://analysisfunction.civilservice.gov.uk/policy-store/charts-a-checklist/)                                   | Clear labels, reduced clutter, and accessible alternatives are required for publishable charts.                        | Keep axis labels legible, avoid decorative duplication, and provide structured values.                                       | Public-statistics conventions still need adaptation for compact game data.          |
+| [Highcharts: Tables and accessibility](https://www.highcharts.com/docs/accessibility/tables)                                                                         | A data table or accessible description can expose chart values, but must remain connected to the visual.               | Treat exact-value text as an equivalent representation associated with the radar, not unrelated metadata.                    | Library-specific implementation advice does not mandate Highcharts.                 |
+| [NOSTALGIA wiki: Concertino in Blue](https://seesaawiki.jp/nstl/d/Concertino%20in%20Blue)                                                                            | Community chart analysis identifies dense multi-note simultaneous patterns as a central difficulty source.             | Supports Chords as a NOSTALGIA-relevant performance tendency.                                                                | It is a chart-specific community account, not a universal taxonomy.                 |
+| [NOSTALGIA wiki: PLEASURE STREAM](https://seesaawiki.jp/nstl/d/PLEASURE%20STREAM)                                                                                    | Changes between two- and three-note simultaneous shapes are described as miss-inducing difficulty.                     | Supports rating span and shape changes rather than merely counting simultaneous notes.                                       | One chart cannot determine the complete axis definition.                            |
+| [Gamerch: NOSTALGIA finger practice](https://gamerch.com/nostalgia/40691)                                                                                            | Simultaneous chords recur as a recognizable NOSTALGIA practice category.                                               | Confirms that players distinguish chord handling from stairs and repetition.                                                 | Community-maintained instructional content requires cautious generalization.        |
+| [IPSJ Kansai 2024: NOSTALGIA chart-feature study](https://kansai.ipsj.or.jp/guide/pages/proceedings/2024IPSJkansai_proceeding/pdf/G-41.pdf)                          | Simultaneous-note count is modeled as a chart-difficulty feature.                                                      | Provides technical support for including simultaneous input while NosLog retains a broader qualitative burden definition.    | A computational feature count is not itself a user-facing community criterion.      |
 
 ### Leaderboard, Table, and Pagination Guidance
 
@@ -730,9 +880,18 @@ override authoritative guidance or NosLog requirements.
   default back into a cross-domain preview hub.
 - **Preserve unavailable optional facts as `-` rows:** Rejected. Release date and
   unlock condition appear only when a meaningful value exists.
-- **Show the same pattern values as both radar and bar charts:** Rejected. The owning
-  Tier/evaluation area will select one primary representation and preserve exact
-  values and an accessible alternative.
+- **Show the same pattern values as both radar and bar charts:** Rejected. Use the
+  approved five-axis radar as the sole chart and pair it with exact structured values
+  and valid counts.
+- **Replace the pattern profile with bars only:** Rejected. Exact comparison remains
+  available in structured text, while the radar preserves the domain-familiar
+  at-a-glance chart fingerprint.
+- **Keep Glissando as the fifth community profile axis:** Rejected. Use Chords because
+  simultaneous-input burden is a recurring NOSTALGIA pattern demand; keep Glissando
+  in note-type and personal Judgement analysis instead.
+- **Overlay the current user's profile on the community radar:** Rejected. Multiple
+  overlapping series reduce legibility and change the question from one community
+  fingerprint to a comparison task.
 - **Use clear count as a Music-detail performance summary:** Rejected. Keep per-user,
   per-chart Play count, but do not imply that NOSTALGIA clear count differentiates a
   meaningful outcome for this purpose.
@@ -760,8 +919,10 @@ override authoritative guidance or NosLog requirements.
 
 The following decisions have not been approved:
 
-1. final Korean, Japanese, and English labels for Ranking and Tier/evaluation;
-2. exact information priority and progressive disclosure inside Tier/evaluation;
+1. opinion-list presentation, helpful or unhelpful reactions, reporting, moderation,
+   and sorting inside Tier & Evaluation;
+2. exact progressive disclosure for tier-placement history and localized missing or
+   unpublished placement states;
 3. switching, loading, stale-data, empty, permission, error, and retry behavior beyond
    the approved signed-out Record and Ranking contracts;
 4. mobile tab overflow or alternative compact control behavior;
@@ -787,7 +948,7 @@ The following decisions have not been approved:
 | MDET-09 | Semantic content-area order                          | Information, personal Record, Ranking, then Tier/community evaluation                                                                            | `Approved` |
 | MDET-10 | Responsive and visual composition                    | Define later through approved foundation and representative mobile/desktop specimens                                                             | `Open`     |
 | MDET-11 | Remaining content, state, and accessibility contract | Continue the page-brief research and approval process for unresolved areas                                                                       | `Open`     |
-| MDET-12 | Remaining localized area labels                      | Define Korean, Japanese, and English wording for Ranking and Tier/evaluation without changing the approved semantic order                        | `Open`     |
+| MDET-12 | Localized area labels                                | Use `랭킹`/`ランキング`/`Ranking` and `서열·평가`/`難易度・評価`/`Tier & Evaluation` without changing the approved semantic order                | `Approved` |
 | MDET-13 | General-entry default                                | Open Information for both signed-in and signed-out queryless entry                                                                               | `Approved` |
 | MDET-14 | Source-aware entry                                   | Encode known Record, Ranking, Tier/evaluation, and viewer-return intent in restorable navigation state                                           | `Approved` |
 | MDET-15 | Signed-out Record                                    | Keep it visible and selectable; render a compact panel-level Login state without placeholder analytics or automatic authentication               | `Approved` |
@@ -801,7 +962,7 @@ The following decisions have not been approved:
 | MDET-23 | Progress terminology                                 | Use `성장 추이`/`上達の推移`/`Progress over time`, while explicitly labeling the current series `베스트 스코어`/`ベストスコア`/`Best score`      | `Approved` |
 | MDET-24 | Play-count meaning                                   | Preserve per-user, per-chart `플레이 횟수`/`演奏回数`/`Play count`; exclude clear count and defer profile-wide Play count to the Profile brief   | `Approved` |
 | MDET-25 | Advanced record disclosure                           | Keep peer comparison optional and off by default; keep Judgement analysis collapsed while primary record facts remain visible                    | `Approved` |
-| MDET-26 | Duplicate pattern visualization                      | Do not show identical pattern values simultaneously as radar and bar charts; choose one accessible representation in Tier/evaluation             | `Rejected` |
+| MDET-26 | Duplicate pattern visualization                      | Do not show identical pattern values simultaneously as radar and bar charts; use one accessible five-axis radar plus exact structured values     | `Rejected` |
 | MDET-27 | Ranking hierarchy                                    | On mobile order conditional current-user context, participant heading, leaderboard, pagination, then secondary score distribution                | `Approved` |
 | MDET-28 | Conditional current-user placement                   | Highlight the in-page row; otherwise show one compact exact-rank summary, with concise no-record and signed-out variants                         | `Approved` |
 | MDET-29 | Relative percentile                                  | Remove top-percent ranking copy and use exact shared rank over total participants                                                                | `Rejected` |
@@ -812,14 +973,21 @@ The following decisions have not been approved:
 | MDET-34 | Ranking pagination                                   | Use 25 players per page, hide one-page pagination, preserve page in URL/history, and reject infinite scroll or a page-size selector              | `Approved` |
 | MDET-35 | Ranking states and accessibility                     | Define stable loading geometry, concise retry and empty states, semantic labels, localized alternatives, focus restoration, and announcements    | `Approved` |
 | MDET-36 | Ranking responsive composition                       | Preserve mobile reading order; allow a leaderboard-primary and distribution-secondary desktop composition without a fixed 390px canvas           | `Approved` |
+| MDET-37 | Tier/evaluation hierarchy                            | Order six tier placements, perceived difficulty, pattern radar, evaluation action or form, then community opinions                               | `Approved` |
+| MDET-38 | Tier-placement scope                                 | Show Basic and Recital S, Full Combo, and Pianist placements together without a preliminary selector                                             | `Approved` |
+| MDET-39 | Community aggregate threshold                        | Always show rating count; publish perceived-difficulty average and distribution from three valid ratings, otherwise show Aggregating             | `Approved` |
+| MDET-40 | Pattern-profile visualization                        | Use one fixed-order, fixed-scale five-axis community radar, one series only, with exact values and counts as structured accessible text          | `Approved` |
+| MDET-41 | Pattern-profile taxonomy                             | Use Stairs, Repetition, Polyrhythm, Offset, and Chords; retain Glissando outside the community radar                                             | `Approved` |
+| MDET-42 | Evaluation input and eligibility                     | Require verified selected-chart play and perceived difficulty; make pattern axes and comment optional, nullable, editable, and deletable         | `Approved` |
+| MDET-43 | Community-opinion contract                           | Define opinion list, reaction, reporting, moderation, and sorting behavior in the next discussion                                                | `Open`     |
 
 ## Current Milestone
 
 The user approved the entity model, direct chart-viewer action, Pattern A content
 architecture, public Chart Info default, source-aware explicit entry, recoverable
 signed-out Record behavior, Chart Info boundary, selected-chart resource grouping,
-the Personal Record hierarchy, and the selected-chart Ranking contract across
-2026-07-31 and 2026-08-01.
+the Personal Record hierarchy, the selected-chart Ranking contract, and the core
+Tier & Evaluation contract across 2026-07-31 and 2026-08-01.
 Chart Info and My Record now have approved Korean, Japanese, and English labels.
 Chart-scoped Play count remains in the cumulative summary, while profile-wide Play
 count is explicitly deferred to the Profile brief. Ranking now has an approved
@@ -831,8 +999,16 @@ reconfirmed after broad domain, community, competition, and visualization review
 they are analytical categories rather than six official or universally named
 milestones.
 
+Tier & Evaluation now has approved localized labels, a mobile information hierarchy,
+all six Basic/Recital placements, a three-rating publication threshold, and a
+single-series community radar. Its fixed axes are Stairs, Repetition, Polyrhythm,
+Offset, and Chords. Glissando remains a note type and personal Judgement metric but is
+not a community radar axis. Evaluation requires a verified selected-chart play and a
+perceived-difficulty rating; pattern axes and comment are optional and must preserve
+missing values distinctly from a valid zero rating.
+
 This establishes the entry, authentication-restoration, Chart Info, Personal Record,
-and Ranking content contracts. It does not approve the current page's visual design or
-complete the Music-detail page brief. The next discussion should define the remaining
-area labels and Tier/evaluation contract before complete page-level responsive,
-interaction-state, and acceptance criteria are finalized.
+Ranking, and core Tier & Evaluation content contracts. It does not approve the current
+page's visual design or complete the Music-detail page brief. The next discussion
+should define the community-opinion contract and remaining states before complete
+page-level responsive, interaction-state, and acceptance criteria are finalized.
