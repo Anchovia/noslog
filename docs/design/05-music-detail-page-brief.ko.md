@@ -7,7 +7,8 @@
 범위·개인 기록 계층·랭킹 계층·리더보드 의미 구조·동점 처리·점수 분포·페이지
 이동·랭킹 상태·서열/평가 라벨·계층·배치 범위·커뮤니티 집계·패턴 레이더·평가
 입력·커뮤니티 의견 계약과 공통 전환·Loading·Cache Freshness·빈 상태·권한·오류·
-재시도·안내 계약 승인, 나머지 반응형·페이지 승인 기준 결정은 미확정`
+재시도·안내 계약, 좁고 넓은 화면의 반응형 구성·영역 전환 의미 구조·난이도
+Control 동작 승인, 나머지 대표 데이터·자료 Action 배치·페이지 승인 기준 결정은 미확정`
 - 근거 상태: `저장소 조사, 현행 제품 감사, 승인된 정보 구조, 승인된 공용 탐색
 인계 및 인용한 탭·적응형 레이아웃·점진적 공개·리더보드·페이지 이동·데이터
 시각화·NOSTALGIA 점수 체계·채보 패턴·동시 입력·커뮤니티 평가·레이더 프로필·
@@ -174,11 +175,12 @@
 
 ## 승인된 콘텐츠 구조
 
-### A형: 하나의 지속 Context와 탭 콘텐츠
+### A형: 하나의 지속 Context와 적응형 영역 전환
 
 - 하나의 지속적인 악곡 정체성과 선택 난이도 Context를 유지합니다.
-- 그 아래에서 개인 기록, 채보 정보, 랭킹 및 서열·커뮤니티 평가의 네 가지
-  의미 영역을 탭 구조로 제공합니다.
+- 그 아래에서 채보 정보, 개인 기록, 랭킹 및 서열·커뮤니티 평가의 네 가지
+  의미 영역을 제공합니다. 승인된 다국어 라벨이 맞지 않으면 간결한 단일 선택
+  영역 Switcher를, 맞으면 탭 목록을 사용합니다.
 - 선택한 콘텐츠 Panel만 표시합니다. 네 영역의 전체 내용을 하나의 긴 읽기
   페이지로 모두 Rendering하지 않습니다.
 - 사용자가 상세 영역에 들어가기 전에 네 영역의 축약 요약을 반복해서
@@ -189,9 +191,9 @@
   영역의 상세 데이터를 요청해야 합니다.
 - 이미 불러왔고 유효한 영역 데이터는 재사용합니다. 정확한 Cache 수명,
   의도 기반 Prefetch 및 무효화는 구현 단계 결정으로 남깁니다.
-- 네 의미 영역의 다국어 라벨은 각각을 소유하는 아래 계약에서 승인했습니다. 탭
-  Geometry와 반응형 Overflow 동작은 미확정입니다. 이번 승인은 현재 탭 디자인이
-  아니라 구조와 문구에 해당합니다.
+- 네 의미 영역의 다국어 라벨은 각각을 소유하는 아래 계약에서 승인했습니다.
+  반응형 선택 Pattern은 아래에서 승인합니다. 정확한 타이포·치수·전환 너비·Surface
+  Styling은 현재 탭 디자인 승인이 아니라 Foundation 및 Specimen 단계 결정입니다.
 
 ### A형이 적합한 이유
 
@@ -206,6 +208,72 @@
 
 따라서 A형은 익숙한 상호작용 모델이면서 NosLog의 초기 데이터 작업량도 낮출
 수 있습니다. A형 승인은 현재의 답답한 시각 구현을 보존하지 않습니다.
+
+## 승인된 반응형 Context 및 영역 전환 계약
+
+### 지속 Context 순서
+
+지원하는 모든 너비에서 다음 순서를 유지합니다.
+
+1. 지속 악곡 정체성과 선택 채보 Context
+2. 네 가지 선택지 난이도 Selector
+3. 콘텐츠 영역 Switcher
+4. 선택한 의미 Panel
+
+- 난이도 Selector와 콘텐츠 영역 Switcher는 서로 다른 질문에 답하므로 별도
+  Control로 유지합니다. 하나의 Menu나 Control Surface로 합치지 않습니다.
+- 좁은 화면에서 `Normal`, `Hard`, `Expert`, `Real`을 한 행의 네 가지 선택지로
+  계속 보여줍니다. 난이도 이름은 짧고 안정적인 Domain 라벨이며, 네 개의 긴 콘텐츠
+  영역 라벨을 모두 노출하는 것보다 직접 비교에 상시 너비를 사용할 가치가 큽니다.
+- 선택 난이도와 선택 콘텐츠 영역은 승인된 복구 가능 URL 상태를 즉시 갱신합니다.
+
+### 좁은 화면 영역 Switcher
+
+- `320`, `360`, `390`, `430`px 검증 너비에서는 현재 다국어 영역 라벨과 펼침
+  Chevron을 보여주는 Container 전체 너비 Selector 하나를 사용합니다.
+- Selector를 열면 승인된 의미 순서의 다국어 라벨 네 개 전체를 Anchored Overlay
+  목록으로 표시합니다. 선택 Panel을 아래로 밀어내면 안 됩니다.
+- 현재 Option을 시각적·Programmatic하게 표시합니다. 다른 Option을 선택하면 목록을
+  닫고 URL과 현재 라벨을 갱신하며 선택 Panel을 승인된 대상별 대기 상태로 교체합니다.
+- 한국어·일본어·영어 라벨 전체를 보존합니다. 좁은 화면에서 축약·말줄임·아이콘 전용
+  선택지·여러 행 탭·가로 Scroll 탭 Strip을 사용하지 않습니다.
+- 이 Control은 지역적인 Context Switcher이며 전역 사이트 내비게이션이나 추가적인
+  상시 Button 행이 아닙니다.
+
+### 넓은 화면 탭 목록과 콘텐츠 기반 전환
+
+- 승인된 다국어 라벨 전체, 검증된 글자 크기, Touch/Click Padding, Focus 처리 및 필수
+  간격이 말줄임이나 Scroll 없이 한 행에 맞을 때만 좁은 화면 Selector를 네 개의 전체
+  Auto-width 탭으로 교체합니다.
+- Device 이름을 가정하지 말고 컴포넌트의 사용 가능한 Inline Size와 승인된 다국어
+  라벨 중 가장 긴 조합으로 전환을 결정합니다. Switcher가 서로 다른 크기의 Parent 안에
+  나타날 수 있으면 Container Query를 우선합니다.
+- 정확한 수치 전환 너비는 Foundation 타이포와 Grid Specimen에서 최종 라벨을 측정할
+  때까지 의도적으로 미룹니다. 측정 없이 관습적인 Breakpoint를 선택해도 된다는 뜻이
+  아닙니다.
+- 두 Control을 보조 기술에 동시에 노출하지 않습니다. 비활성 반응형 표현은 접근성
+  Tree에 없어야 합니다.
+
+### 넓은 화면 페이지 구성
+
+- 현행의 상시 `390px` 시각 제한을 제거합니다. 반응형 바깥 Gutter와 검증된 최대
+  콘텐츠 너비를 사용하고, 정확한 상한은 실제 악곡 상세 데이터로 Foundation Grid
+  Specimen에서 정합니다.
+- 악곡·선택 채보 Context를 위에 유지합니다. 데스크톱 너비를 채우거나 영역 Switcher를
+  반복하기 위한 상시 왼쪽 Sidebar를 추가하지 않습니다.
+- 모바일 DOM 및 읽기 순서를 보존하고 하나의 일반적인 늘어난 Column을 모든 Panel에
+  적용하지 말고 선택 Panel 콘텐츠에 따라 적응합니다.
+    - **채보 정보:** 간결한 사실 Group과 선택 채보 Action을 본래 읽기 좋은 너비로
+      유지하고 짧은 사실을 전체 Canvas 너비로 늘리지 않습니다.
+    - **내 기록:** 승인된 모바일 순서를 유지하면서 베스트·누적 비교와 더 넓은 성장
+      시각화를 허용합니다.
+    - **랭킹:** 리더보드를 주요 영역으로 유지하고 사용 가능한 너비가 받쳐주면 점수
+      분포를 보조 넓은 화면 영역에 둡니다.
+    - **서열·평가:** 승인된 의미 순서를 바꾸지 않고 여섯 위치 비교와 레이더·평가 관계에
+      추가 너비를 사용합니다.
+- Panel 적응은 사용 가능한 Panel 너비에 기반하며 적합할 때 Container Query를
+  사용합니다. 데스크톱 적응은 비교와 분석의 명확성을 더하지만 데스크톱 전용 제품
+  의미를 만들지 않습니다.
 
 ## 승인된 진입 우선순위 및 복원 계약
 
@@ -268,14 +336,15 @@ Redirect할 수 있습니다. 현재 로그인 페이지 인계가 항상 다국
 
 ### 접근성 및 예측 가능성 결과
 
-- 선택 영역은 URL 및 History 상태에 표현하고 이후 구현에서는 올바른 `tablist`,
-  `tab`, `tabpanel` 의미 구조를 제공해야 합니다.
-- 영역 활성화는 명시적 사용자 Action으로 유지합니다. 탭 Focus가 인증이나 다른
-  예상하지 못한 Context 변경을 일으키면 안 됩니다.
+- 선택 영역은 URL 및 History 상태에 표현하고 이후 구현에서는 승인된 넓은 화면의
+  `tablist`·`tab`·`tabpanel` 또는 좁은 화면의 입력 없는 단일 선택
+  `combobox`·`listbox` 의미 구조를 제공해야 합니다.
+- 영역 활성화는 명시적 사용자 Action으로 유지합니다. Focus한 탭이나 활성 Listbox
+  Option이 인증·다른 Panel 요청·예상하지 못한 Context 변경을 일으키면 안 됩니다.
 - 비로그인 기록 Panel은 선택한 Panel 안에서 사용할 수 없는 개인 콘텐츠와 로그인
   Action을 설명하므로 오해를 부르는 비활성 상태 없이 기능을 발견할 수 있습니다.
 - 아래 승인된 비동기 상태 계약에서 일반 Focus 유지, 실시간 안내, Loading, 실패 및
-  재시도 동작을 정의합니다. 모바일 Overflow와 최종 반응형 Control 구성은 미확정입니다.
+  재시도 동작을 정의합니다. 반응형 Control 구성은 위 승인 계약에서 정의했습니다.
 
 ## 승인된 비동기 상태 및 복구 계약
 
@@ -377,9 +446,23 @@ Redirect할 수 있습니다. 현재 로그인 페이지 인계가 항상 다국
 
 ### Focus, 의미 구조 및 상태 안내
 
-- 콘텐츠 영역 선택지는 `tablist`, `tab`, `tabpanel`, `aria-selected`,
-  `aria-controls` 및 Labelled Panel 관계로 구현합니다. 선택 난이도도 최종 Control
-  Pattern에 적합한 동등하게 명시적인 현재 상태 수단을 제공해야 합니다.
+- 탭 표현을 보여주는 너비에서는 콘텐츠 영역 선택지를 `tablist`, `tab`, `tabpanel`,
+  `aria-selected`, `aria-controls` 및 Labelled Panel 관계로 구현합니다. 새로 선택한
+  Panel이 원격 요청을 요구할 수 있으므로 수동 활성화를 사용합니다. 좌우 방향키는
+  Focus를 순환 이동하고 Home/End는 첫·마지막 탭으로 이동하며 Enter/Space가 Focus한
+  탭을 활성화합니다. Focus 이동만으로 다른 영역을 요청하거나 선택하면 안 됩니다.
+- 좁은 표현을 보여주는 너비에서는 `listbox` Popup, 전체 `option` 이름,
+  `aria-expanded`, `aria-controls`, `aria-activedescendant`, `aria-selected`를 갖춘 입력
+  없는 단일 선택 `combobox`를 사용합니다. Enter·Space·방향키로 Popup을 열 수 있고,
+  위아래 방향키로 Option을 살펴보며 Home/End는 첫·마지막 Option으로 이동합니다.
+  Enter/Space로 확정하고 Escape로 선택 영역을 바꾸지 않은 채 닫습니다. DOM Focus는
+  Combobox에 유지합니다. Option을 살펴보기만 할 때 해당 Panel을 요청하면 안 됩니다.
+- 좁은 화면에서 선택한 뒤 닫힌 Combobox에 Focus를 유지하고, 연결된 탭이 없는
+  `tabpanel`이 아니라 Labelled `region`으로 선택 콘텐츠를 노출합니다. 넓은 화면에서는
+  완전한 탭-`tabpanel` 관계를 보존합니다. 숨겨진 탭 목록이나 Listbox를 중복 노출하지
+  않습니다.
+- 선택 난이도도 최종 Control Pattern에 적합한 동등하게 명시적인 현재 상태 수단을
+  제공해야 합니다.
 - 일반 난이도 및 콘텐츠 영역 활성화는 사용자가 활성화한 Control에 Keyboard Focus를
   유지합니다. Loading 또는 완료 Panel로 Focus를 강제로 옮기지 않습니다.
 - **Real 채보 정보 불러오는 중**, **Real 채보 정보 표시 완료**, **Real 랭킹
@@ -390,8 +473,8 @@ Redirect할 수 있습니다. 현재 로그인 페이지 인계가 항상 다국
 - 보이는 요청 실패는 적합한 오류 의미로 한 번 안내하며 Focus는 예측 가능한 곳에
   유지하고 다시 시도는 일반 Focus 순서에서 접근할 수 있게 합니다.
 - 뒤로가기와 앞으로가기는 숨겨진 기본값을 다시 계산하지 않고 URL에 기록한 정확한
-  콘텐츠와 Focus Context를 복원합니다. 세부 방향키 동작, 모바일 Overflow 및 전체
-  Route 진입 뒤 Focus 동작은 남은 반응형·Page 승인 기준 논의에서 정합니다.
+  콘텐츠와 Focus Context를 복원합니다. 전체 Route 진입 뒤 Focus 동작은 남은 Page
+  승인 기준 논의에서 정합니다.
 
 ## 승인된 채보 정보 및 개인 기록 계약
 
@@ -957,21 +1040,32 @@ Mock-up의 시각 Surface 처리를 NosLog 최종 디자인으로 채택하지 �
 
 ### 권위 있는 상호작용 및 레이아웃 가이드
 
-| 출처                                                                                                          | 전용할 수 있는 발견                                                                                                                     | NosLog 적용                                                                                        | 한계                                                                         |
-| ------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| [W3C APG: Tabs Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/)                                       | 탭 목록은 연결된 Panel 하나를 표시하며 활성화와 Focus 동작을 명확히 해야 합니다.                                                        | 선택한 악곡 상세 콘텐츠 영역 하나를 지지하며 완전한 키보드 의미 구조가 필요합니다.                 | 동작과 의미 구조를 정의하며 시각 구성을 정하지 않습니다.                     |
-| [Carbon: Tabs](https://carbondesignsystem.com/components/tabs/usage/)                                         | 탭은 하나의 Context에서 다르지만 관련된 정보를 묶습니다. 동시 비교가 필요하면 피하고 느린 원격 콘텐츠에는 의도적인 활성화가 적합합니다. | 기록, 정보, 랭킹 및 평가는 관련 View지만 일반적으로 행 단위 동시 비교 대상은 아닙니다.             | Carbon 컴포넌트 Styling은 NosLog Art Direction이 아닙니다.                   |
-| [GOV.UK: Tabs](https://design-system.service.gov.uk/components/tabs/)                                         | 탭은 명확히 구분되는 Section과 모든 내용을 한 번에 보지 않는 반복 사용자에 적합하며 선택 상태를 URL로 표현할 수 있습니다.               | NosLog 사용자는 특정 채보 과업으로 반복 방문하며 복구 가능한 상태가 유용합니다.                    | 좁은 화면 표현은 해당 서비스에 맞춘 것이므로 테스트 없이 복사할 수 없습니다. |
-| [Atlassian: Tabs](https://atlassian.design/components/tabs/)                                                  | 탭은 같은 페이지에서 유사한 정보를 정리합니다.                                                                                          | 하나의 Entity 아래 네 가지 관련 제품 영역을 지지합니다.                                            | 공개 페이지에는 제품별 반응형 세부 내용이 제한적입니다.                      |
-| [Fluent 2: Tablist](https://fluent2.microsoft.design/components/web/react/core/tablist/usage)                 | 처음 Rendering할 때 보통 첫 탭 하나가 활성화되며 탭 순서가 기본값을 전달해야 합니다.                                                    | 공개 정보를 일반 진입 기본값으로 사용할 때 첫 번째에 배치하는 방향을 지지합니다.                   | Fluent의 좁은 레이아웃 컨트롤 대체가 자동으로 NosLog 규칙이 되지는 않습니다. |
-| [Adobe Spectrum: Tabs](https://spectrum.adobe.com/page/tabs/)                                                 | 관련된 동등 계층 Section에는 명확한 선택 상태가 필요하며 콘텐츠가 즉시 나타나지 않으면 수동 활성화가 적합합니다.                        | 세부 데이터를 필요할 때 불러오는 동안 명시적 영역 선택을 지지합니다.                               | 일부 비활성 탭 용례는 복구 가능한 NosLog 로그인 상태에 맞지 않습니다.        |
-| [Apple: Segmented controls](https://developer.apple.com/design/human-interface-guidelines/segmented-controls) | 소수의 관련되고 상호 배타적인 선택이 Context를 유지하면서 현재 View를 바꿀 수 있습니다.                                                 | 다국어 너비 테스트를 전제로 간결한 난이도 또는 View 선택을 뒷받침합니다.                           | Segmented control이 NosLog 탭의 시각 컴포넌트로 자동 결정되는 것은 아닙니다. |
-| [Apple: Tab views](https://developer.apple.com/design/human-interface-guidelines/tab-views)                   | 관련된 상호 배타적 Pane에는 명확한 선택과 간결한 라벨이 필요합니다.                                                                     | 상시 콘텐츠 선택지를 제한하고 경쟁하는 Panel을 피하는 방향을 지지합니다.                           | Platform 내비게이션 탭과 페이지 내부 탭은 동일하지 않습니다.                 |
-| [Material Design: Canonical layouts](https://m3.material.io/foundations/layout/canonical-examples/overview)   | Feed 레이아웃은 폭넓은 훑어보기에 적합하며 List-detail과 Supporting pane은 선택한 Object의 Context를 보존합니다.                        | 개요 카드 Feed는 대시보드에 더 적합하고 악곡 상세에는 안정적인 선택 Context가 필요함을 보여줍니다. | 표준 레이아웃은 시작 구조이며 최종 페이지를 강제하지 않습니다.               |
-| [WCAG 2.2: Reflow](https://www.w3.org/WAI/WCAG21/Understanding/reflow.html)                                   | 필요한 좁은 너비에서 이차원 스크롤 없이 콘텐츠가 적응해야 합니다.                                                                       | 이후 탭과 Panel은 다국어 라벨 및 390px 검증을 통과해야 합니다.                                     | 정확한 탭 Overflow Pattern을 선택하지 않습니다.                              |
-| [WCAG 2.2: Target Size](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html)                 | 상호작용 Target은 충분한 크기 또는 간격이 필요합니다.                                                                                   | 난이도와 콘텐츠 영역 컨트롤은 조밀한 상시 Button 벽 없이 신뢰할 수 있는 Touch Target이 필요합니다. | 최소 기준 충족만으로 좋은 계층 구조가 완성되지는 않습니다.                   |
-| [WCAG 2.2: On Focus](https://www.w3.org/WAI/WCAG22/Understanding/on-focus.html)                               | Focus를 받는 것만으로 예상하지 못한 Context 변경을 시작하면 안 됩니다.                                                                  | 기록 탭 Focus가 자동으로 로그인을 열면 안 되며 인증에는 명시적 Action이 필요합니다.                | 인증 문구나 시각 표현을 정의하지 않습니다.                                   |
-| [WCAG 2.2: Consistent Navigation](https://www.w3.org/WAI/WCAG21/Understanding/consistent-navigation.html)     | 반복 내비게이션 Mechanism은 예측 가능한 상대 순서를 유지해야 합니다.                                                                    | 인증 상태와 악곡이 달라도 안정적인 의미 영역 순서를 유지하는 방향을 지지합니다.                    | 어떤 NosLog 영역이 가장 중요한지는 정하지 않습니다.                          |
+| 출처                                                                                                            | 전용할 수 있는 발견                                                                                                                     | NosLog 적용                                                                                                                        | 한계                                                                              |
+| --------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| [W3C APG: Tabs Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/)                                         | 탭 목록은 연결된 Panel 하나를 표시하며 활성화와 Focus 동작을 명확히 해야 합니다.                                                        | 선택한 악곡 상세 콘텐츠 영역 하나를 지지하며 완전한 키보드 의미 구조가 필요합니다.                                                 | 동작과 의미 구조를 정의하며 시각 구성을 정하지 않습니다.                          |
+| [Carbon: Tabs](https://carbondesignsystem.com/components/tabs/usage/)                                           | 탭은 하나의 Context에서 다르지만 관련된 정보를 묶습니다. 동시 비교가 필요하면 피하고 느린 원격 콘텐츠에는 의도적인 활성화가 적합합니다. | 기록, 정보, 랭킹 및 평가는 관련 View지만 일반적으로 행 단위 동시 비교 대상은 아닙니다.                                             | Carbon 컴포넌트 Styling은 NosLog Art Direction이 아닙니다.                        |
+| [GOV.UK: Tabs](https://design-system.service.gov.uk/components/tabs/)                                           | 탭은 명확히 구분되는 Section과 모든 내용을 한 번에 보지 않는 반복 사용자에 적합하며 선택 상태를 URL로 표현할 수 있습니다.               | NosLog 사용자는 특정 채보 과업으로 반복 방문하며 복구 가능한 상태가 유용합니다.                                                    | 좁은 화면 표현은 해당 서비스에 맞춘 것이므로 테스트 없이 복사할 수 없습니다.      |
+| [Atlassian: Tabs](https://atlassian.design/components/tabs/)                                                    | 탭은 같은 페이지에서 유사한 정보를 정리합니다.                                                                                          | 하나의 Entity 아래 네 가지 관련 제품 영역을 지지합니다.                                                                            | 공개 페이지에는 제품별 반응형 세부 내용이 제한적입니다.                           |
+| [Fluent 2: Tablist](https://fluent2.microsoft.design/components/web/react/core/tablist/usage)                   | 처음 Rendering할 때 보통 첫 탭 하나가 활성화되며 탭 순서가 기본값을 전달해야 합니다.                                                    | 공개 정보를 일반 진입 기본값으로 사용할 때 첫 번째에 배치하는 방향을 지지합니다.                                                   | Fluent의 좁은 레이아웃 컨트롤 대체가 자동으로 NosLog 규칙이 되지는 않습니다.      |
+| [Adobe Spectrum: Tabs](https://spectrum.adobe.com/page/tabs/)                                                   | 관련된 동등 계층 Section에는 명확한 선택 상태가 필요하며 콘텐츠가 즉시 나타나지 않으면 수동 활성화가 적합합니다.                        | 세부 데이터를 필요할 때 불러오는 동안 명시적 영역 선택을 지지합니다.                                                               | 일부 비활성 탭 용례는 복구 가능한 NosLog 로그인 상태에 맞지 않습니다.             |
+| [W3C APG: 입력 없는 Combobox](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only/) | 편집할 수 없는 단일 선택 Control은 사용자가 Option을 살펴보는 동안 값을 확정하지 않고 Listbox를 노출할 수 있습니다.                     | 좁은 영역 Switcher의 Role·Focus 유지·명시적 선택·Escape 동작을 정의합니다.                                                         | APG 예시는 Browser와 보조 기술 검증이 필요하며 Production Code가 아닙니다.        |
+| [SEB Design Library: Tab](https://designlibrary.sebgroup.com/components/component-tab)                          | 좁은 View에서 여러 탭을 안정적으로 노출할 수 없으면 현재 탭 Control 하나로 전체 Option 목록을 열 수 있습니다.                           | 좁은 화면의 승인된 현재 영역 Selector와 전체 라벨 Overlay를 직접 뒷받침합니다.                                                     | 은행 Design System은 NosLog 시각 Styling이나 정확한 Breakpoint를 정하지 않습니다. |
+| [Nielsen Design System: Tabs](https://nielsendesignsystem.com/components/tabs/)                                 | 모바일 너비가 라벨을 수용하지 못할 때 간결한 Context Switcher가 탭 행을 대체할 수 있습니다.                                             | 상시 혼잡한 Button 행 없이 영역 이름 네 개 전체를 보존하는 방향을 지지합니다.                                                      | NosLog 다국어 라벨을 기준으로 해당 System의 Device 규칙을 다시 검증해야 합니다.   |
+| [Queensland Health: Tabs](https://www.design-system.health.qld.gov.au/components/tabs/tabs/design)              | 여러 System 비교에서는 많은 탭 집합에서 가로 Scroll이 익숙하고 Overflow Menu보다 조작 비용이 낮다는 결과도 있습니다.                    | 가장 강한 반대 Pattern을 기록합니다. NosLog는 별도 난이도 행 옆의 긴 3개 언어 동급 목적지 네 개라는 조건 때문에만 이를 기각합니다. | 연구 대상이 리듬게임 상세나 NosLog 라벨 조합에 특화되지 않았습니다.               |
+| [Primer: Navigation](https://primer.style/product/ui-patterns/navigation/)                                      | 가로 목적지 집합에는 의도적인 좁은 화면 Overflow 전략과 안정적인 직접 목적지가 필요합니다.                                              | URL로 이동 가능한 영역을 유지하면서 좁은 화면 대체가 명시적인 반응형 결정임을 확인합니다.                                          | GitHub의 내비게이션 밀도와 Action Menu Pattern은 NosLog 레이아웃 권위가 아닙니다. |
+| [Primer: Underline Panels 접근성](https://primer.style/product/components/underline-panels/accessibility/)      | Tab Panel에는 완전한 키보드 관계가 필요하며 좁고 확대된 너비에서 접근할 수 없는 가로 Overflow를 만들면 안 됩니다.                       | 넓은 화면의 완전한 탭 의미 구조와 좁은 화면 가로 Scroll 회피를 지지합니다.                                                         | 하나의 컴포넌트 구현을 설명하며 NosLog Surface 처리를 정하지 않습니다.            |
+| [SAP Fiori: Object Page](https://experience.sap.com/fiori-design-web/object-page/)                              | Object Page는 Object 정체성과 지역 내비게이션을 유지하고 Section별 콘텐츠에 따라 넓은 공간을 사용합니다.                                | Sidebar를 반복하지 않고 위쪽 악곡·채보 Context와 Panel별 넓은 화면 구성을 사용하는 방향을 지지합니다.                              | 기업용 Object Page는 NosLog의 단일 Panel보다 조밀하고 Section 중심입니다.         |
+| [Atlassian: Grid 적용](https://atlassian.design/foundations/grid-beta/applying-grid/)                           | 넓은 UI는 무제한 늘이기보다 의도적인 Gutter·제한된 콘텐츠 너비·콘텐츠별 Column Span이 유용합니다.                                       | 고정 390px Shell을 측정된 최대 너비 Grid와 Panel별 Span으로 교체하는 방향을 지지합니다.                                            | Atlassian의 정확한 Grid 값은 NosLog Token으로 전용할 수 없습니다.                 |
+| [Tailwind CSS: 반응형 디자인](https://tailwindcss.com/docs/responsive-design)                                   | Mobile-first 규칙은 Desktop을 축소하는 대신 사용 가능한 공간이 늘 때 Adaptation을 더합니다.                                             | NosLog의 390px 우선 검증과 넓은 화면 분석 레이아웃을 추가하는 방식에 맞습니다.                                                     | Utility Breakpoint 기본값은 최종 전환 너비의 근거가 아닙니다.                     |
+| [Tailwind CSS: Container Query](https://tailwindcss.com/docs/responsive-design#container-queries)               | Container Query는 Viewport만이 아니라 실제 Parent 너비에 컴포넌트를 적응시킵니다.                                                       | 사용 가능한 컴포넌트 너비에 따라 Selector/탭과 Panel 구성을 전환하는 방향을 지지합니다.                                            | Browser 지원과 Code Convention은 이후 구현 검증이 필요합니다.                     |
+| [osu! Wiki: Beatmap Information](https://osu.ppy.sh/wiki/en/Beatmap_information)                                | 리듬게임 상세는 Beatmap 정체성과 선택 난이도를 보존하면서 하위 통계 및 Ranking Context를 바꿉니다.                                      | 의미 영역이 바뀌어도 위쪽 Object Context를 안정적으로 유지하는 Domain 가치를 확인합니다.                                           | osu! 정보 구조와 Game Mechanics는 NOSTALGIA에 일대일로 대응하지 않습니다.         |
+| [Apple: Segmented controls](https://developer.apple.com/design/human-interface-guidelines/segmented-controls)   | 소수의 관련되고 상호 배타적인 선택이 Context를 유지하면서 현재 View를 바꿀 수 있습니다.                                                 | 다국어 너비 테스트를 전제로 간결한 난이도 또는 View 선택을 뒷받침합니다.                                                           | Segmented control이 NosLog 탭의 시각 컴포넌트로 자동 결정되는 것은 아닙니다.      |
+| [Apple: Tab views](https://developer.apple.com/design/human-interface-guidelines/tab-views)                     | 관련된 상호 배타적 Pane에는 명확한 선택과 간결한 라벨이 필요합니다.                                                                     | 상시 콘텐츠 선택지를 제한하고 경쟁하는 Panel을 피하는 방향을 지지합니다.                                                           | Platform 내비게이션 탭과 페이지 내부 탭은 동일하지 않습니다.                      |
+| [Material Design: Canonical layouts](https://m3.material.io/foundations/layout/canonical-examples/overview)     | Feed 레이아웃은 폭넓은 훑어보기에 적합하며 List-detail과 Supporting pane은 선택한 Object의 Context를 보존합니다.                        | 개요 카드 Feed는 대시보드에 더 적합하고 악곡 상세에는 안정적인 선택 Context가 필요함을 보여줍니다.                                 | 표준 레이아웃은 시작 구조이며 최종 페이지를 강제하지 않습니다.                    |
+| [WCAG 2.2: Reflow](https://www.w3.org/WAI/WCAG21/Understanding/reflow.html)                                     | 필요한 좁은 너비에서 이차원 스크롤 없이 콘텐츠가 적응해야 합니다.                                                                       | 이후 탭과 Panel은 다국어 라벨 및 390px 검증을 통과해야 합니다.                                                                     | 정확한 탭 Overflow Pattern을 선택하지 않습니다.                                   |
+| [WCAG 2.2: Target Size](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html)                   | 상호작용 Target은 충분한 크기 또는 간격이 필요합니다.                                                                                   | 난이도와 콘텐츠 영역 컨트롤은 조밀한 상시 Button 벽 없이 신뢰할 수 있는 Touch Target이 필요합니다.                                 | 최소 기준 충족만으로 좋은 계층 구조가 완성되지는 않습니다.                        |
+| [WCAG 2.2: On Focus](https://www.w3.org/WAI/WCAG22/Understanding/on-focus.html)                                 | Focus를 받는 것만으로 예상하지 못한 Context 변경을 시작하면 안 됩니다.                                                                  | 기록 탭 Focus가 자동으로 로그인을 열면 안 되며 인증에는 명시적 Action이 필요합니다.                                                | 인증 문구나 시각 표현을 정의하지 않습니다.                                        |
+| [WCAG 2.2: Consistent Navigation](https://www.w3.org/WAI/WCAG21/Understanding/consistent-navigation.html)       | 반복 내비게이션 Mechanism은 예측 가능한 상대 순서를 유지해야 합니다.                                                                    | 인증 상태와 악곡이 달라도 안정적인 의미 영역 순서를 유지하는 방향을 지지합니다.                                                    | 어떤 NosLog 영역이 가장 중요한지는 정하지 않습니다.                               |
 
 ### 비동기 상태, 복구 및 Cache 가이드
 
@@ -1185,6 +1279,22 @@ Context 및 현재 사용자를 찾는 복구 가능한 방법을 갖춘 간결�
 - **현재 UI를 시각 기준으로 사용:** 거절했습니다. 구조를 이어간다는 것이
   현재의 고정 너비 Shell, 타이포, 간격, 카드 밀도 또는 탭 Styling을
   승인한다는 뜻은 아닙니다.
+- **좁은 화면에서 영역 탭 가로 Scroll 유지:** Selector와 Scroll 탭 선례를 모두 비교한
+  뒤 거절했습니다. NosLog에는 동급 목적지 네 개, 별도 상시 난이도 행 및 승인된
+  한국어·일본어·영어 라벨이 있습니다. 현재 영역 Selector는 숨은 목적지를 가로
+  Gesture에 의존시키지 않으면서 전체 라벨과 하나의 보이는 계층을 보존합니다.
+- **영역 탭 네 개를 두 행 이상으로 줄바꿈:** 거절했습니다. 줄바꿈은 하나의 탭 집합
+  Geometry를 약화하고 Locale마다 상대 위치를 바꾸며 모든 선택 Panel 위의 귀한 공간을
+  사용합니다.
+- **영역 라벨 축약·말줄임·아이콘 대체:** 거절했습니다. 이 선택지는 익숙한 재생
+  Control이 아니라 서로 다른 제품 의미이며 승인된 다국어 이름을 직접 이해할 수 있어야
+  합니다.
+- **상시 데스크톱 왼쪽 Sidebar 추가:** 거절했습니다. 지역 영역 내비게이션을 반복하고
+  악곡 Context와 경쟁하며 간결한 채보 정보에서도 너비를 소비합니다. 추가 공간은 승인된
+  Panel별 넓은 화면 구성에 사용합니다.
+- **고정 390px 데스크톱 Canvas 유지 또는 일반 Column 하나를 무제한 늘이기:**
+  거절했습니다. 전자는 분석 공간을 낭비하고 후자는 읽기 좋은 행 길이와 사실 Group을
+  해칩니다. 측정된 바깥 경계와 콘텐츠별 Grid를 사용합니다.
 - **채보 보기를 채보 정보 안에 배치:** 거절했습니다. 뷰어는 직접 채보 단위
   Action이며 정보 Panel을 먼저 열도록 요구하면 안 됩니다.
 - **사용할 수 없을 때 비활성 채보 보기 Button 자리 유지:** 거절했습니다.
@@ -1265,11 +1375,13 @@ Context 및 현재 사용자를 찾는 복구 가능한 방법을 갖춘 간결�
 
 다음 결정은 아직 승인하지 않았습니다.
 
-1. 모바일 탭 Overflow 또는 대체 간결 컨트롤 동작
-2. 각 선택 영역에서 데스크톱 추가 너비를 사용하는 방식
-3. 실제 데이터, 긴 데이터, 누락 데이터 및 다국어 대표 사례
-4. 세부 방향키 동작, 전체 Route 진입 Focus, Page 승인 기준 및 브라우저 검증 너비
-5. 승인된 선택 채보 자료 Action Group의 정확한 순서, 위치, 문구 및 반응형 동작
+1. 실제 데이터, 긴 데이터, 누락 데이터 및 다국어 대표 사례
+2. 전체 Route 진입 Focus, 전체 Page 승인 기준 및 최종 브라우저 검증 너비
+3. 승인된 선택 채보 자료 Action Group의 정확한 순서, 위치, 문구 및 반응형 동작
+
+정확한 Selector-탭 전환 너비와 바깥 최대 콘텐츠 너비는 미확정 구조가 아니라 의도적으로
+미룬 측정값입니다. Downstream Design 전에 Foundation 타이포·Grid Specimen에서 이를
+확정하고 기록해야 합니다.
 
 ## 결정 기록
 
@@ -1278,13 +1390,13 @@ Context 및 현재 사용자를 찾는 복구 가능한 방법을 갖춘 간결�
 | MDET-01 | Entity 모델                  | 악곡 정체성을 안정적으로 유지하고 선택 난이도를 활성 채보 Context로 취급                                                          | `승인`   |
 | MDET-02 | 난이도 상태                  | 선택 난이도를 공유 가능하고 History에서 복구 가능한 내비게이션 상태에 유지                                                        | `승인`   |
 | MDET-03 | 뷰어 진입                    | 채보 보기를 정보 Panel 밖의 직접 선택 채보 Action으로 두고 외부 Fallback 또는 간결한 사용 불가 Text 제공                          | `승인`   |
-| MDET-04 | 콘텐츠 구조                  | A형 사용: 하나의 지속 Context 아래 네 가지 탭 의미 영역과 한 번에 하나의 선택 Panel                                               | `승인`   |
+| MDET-04 | 콘텐츠 구조                  | A형 사용: 하나의 지속 Context 아래 적응형으로 선택하는 네 가지 의미 영역과 한 번에 하나의 선택 Panel                              | `승인`   |
 | MDET-05 | 초기 데이터 경계             | 영역 선택 전에 모든 영역 상세·요약을 요구하지 않고 유효한 방문 영역 데이터 재사용                                                 | `승인`   |
 | MDET-06 | 긴 페이지 구조               | 네 가지 전체 영역을 하나의 긴 페이지로 Rendering하지 않음                                                                         | `거절`   |
 | MDET-07 | 개요 허브 구조               | 네 가지 상세 영역 앞에 영역 간 요약 허브를 추가하지 않음                                                                          | `거절`   |
 | MDET-08 | 현재 시각 계승               | 현행 시각 구현은 감사 근거일 뿐이며 2.0 재설계를 제한하지 않음                                                                    | `거절`   |
 | MDET-09 | 의미 콘텐츠 영역 순서        | 정보, 개인 기록, 랭킹, 서열·커뮤니티 평가 순서                                                                                    | `승인`   |
-| MDET-10 | 반응형 및 시각 구성          | 승인된 Foundation과 대표 모바일·데스크톱 Specimen에서 이후 정의                                                                   | `미확정` |
+| MDET-10 | 반응형 및 시각 구성          | 승인된 좁은 Switcher·별도 난이도 행·위쪽 Object Context·Panel별 넓은 구성을 사용하고 정확한 시각 Token은 이후 측정                | `승인`   |
 | MDET-11 | 남은 콘텐츠·상태·접근성 계약 | 미확정 영역의 페이지 기획서 조사와 승인 절차 계속 진행                                                                            | `미확정` |
 | MDET-12 | 다국어 영역 라벨             | 승인된 의미 순서를 바꾸지 않고 `랭킹`/`ランキング`/`Ranking`과 `서열·평가`/`難易度・評価`/`Tier & Evaluation` 사용                | `승인`   |
 | MDET-13 | 일반 진입 기본값             | 로그인·비로그인 Query 없는 진입 모두 정보 열기                                                                                    | `승인`   |
@@ -1335,8 +1447,15 @@ Context 및 현재 사용자를 찾는 복구 가능한 방법을 갖춘 간결�
 | MDET-58 | 빈 상태·인증·권한 의미       | 빈 상태를 실패·권한과 구분하고 공개 콘텐츠를 유지하며 제한된 개인 또는 Action 영역만 교체                                         | `승인`   |
 | MDET-59 | 재시도와 실패 범위           | Network·`5xx` GET을 한 번 자동 재시도한 뒤 최소 의미 영역에 정확한 수동 다시 시도를 표시하고 `4xx`·Action은 자동 재시도 안 함     | `승인`   |
 | MDET-60 | 중단 가능한 Navigation       | 유효한 Navigation을 계속 사용하고 오래된 작업을 취소·대체하며 정확한 요청을 합치고 마지막 대상만 반영                             | `승인`   |
-| MDET-61 | Focus 및 상태 안내           | 활성화 Control에 Focus를 유지하고 올바른 탭 의미 구조·Busy 영역·간결한 대상별 `polite` 상태 영역 하나 제공                        | `승인`   |
+| MDET-61 | Focus 및 상태 안내           | 활성화 Control에 Focus를 유지하고 반응형 탭 또는 Combobox 의미 구조·Busy 영역·대상별 `polite` 상태 영역 하나 제공                 | `승인`   |
 | MDET-62 | 최초 실패 및 Not Found       | 최초 Loading 실패에서 Application Shell과 정확한 다시 시도·악곡 검색 복귀를 유지하며 확인된 Entity 부재에는 다국어 Not Found 사용 | `승인`   |
+| MDET-63 | 좁은 화면 영역 Switcher      | 320/360/390/430px에서 콘텐츠를 밀지 않는 전체 너비 현재 영역 Combobox와 Anchored 네 Option Listbox 사용                           | `승인`   |
+| MDET-64 | 좁은 영역 Overflow 대안      | 가로 Scroll 탭·여러 행 탭·말줄임·축약·아이콘 전용 영역 라벨 거절                                                                  | `거절`   |
+| MDET-65 | 난이도 반응형 Control        | 좁은 화면에서 Normal·Hard·Expert·Real을 별도 한 행 네 선택지 Control로 계속 표시                                                  | `승인`   |
+| MDET-66 | 넓은 화면 Page Frame         | 상시 390px 제한 제거, Context 위쪽 유지, 측정된 Gutter·최대 너비 사용 및 상시 왼쪽 Sidebar 미사용                                 | `승인`   |
+| MDET-67 | Panel별 넓은 화면 적응       | 모바일 순서를 보존하면서 채보 정보·내 기록·랭킹·서열 및 평가를 각자의 비교·분석 요구에 맞게 적응                                  | `승인`   |
+| MDET-68 | 콘텐츠 기반 표현 전환        | 가장 긴 다국어 조합과 검증된 글자·Padding·Focus·간격이 맞을 때만 탭을 사용하고 정확한 기준은 Foundation Specimen에서 측정         | `승인`   |
+| MDET-69 | 반응형 영역 전환 접근성      | 좁은 화면은 명시적 선택 Combobox/Listbox, 필요 시 불러오는 넓은 Panel은 APG 수동 활성화 탭 사용                                   | `승인`   |
 
 ## 현재 마일스톤
 
@@ -1385,8 +1504,16 @@ Panel만 Busy가 됩니다. Fresh한 정확한 대상은 즉시 나타나고 채
 `polite` 상태 영역 하나가 중간 Skeleton 변경을 모두 노출하지 않은 채 일관되고 대상이
 분명한 진행 상황을 안내합니다.
 
+반응형 구성도 이제 제품 Pattern 수준에서 승인했습니다. 난이도는 별도로 보이는 네 선택지
+행으로 유지합니다. 좁은 너비에서는 전체 너비의 입력 없는 단일 선택 영역 Combobox와
+Anchored Listbox를 사용하고, 넓은 너비에서는 가장 긴 다국어 조합이 맞을 때만 전체
+Auto-width 수동 활성화 탭을 사용합니다. Page는 상시 390px 데스크톱 제한을 제거하고
+악곡·채보 Context를 위에 유지하며 상시 왼쪽 Sidebar를 거절하고 모바일 읽기 순서를
+보존한 채 선택 Panel별 넓은 화면 구성을 사용합니다. 측정된 전환 너비, 최대 콘텐츠
+너비, 타이포, 간격 및 시각 Surface 값은 계속 Foundation Specimen이 소유합니다.
+
 이로써 진입, 인증 복원, 채보 정보, 개인 기록, 랭킹 및 커뮤니티 의견을 포함한
-서열·평가 콘텐츠 계약과 공통 비동기 상태가 정해졌습니다.
+서열·평가 콘텐츠 계약, 공통 비동기 상태 및 반응형 영역 전환 구성이 정해졌습니다.
 현행 페이지의 시각 디자인을 승인하지 않으며 악곡 상세 페이지 기획서를 완료하지도
 않습니다. 다음 논의에서는 대표 데이터, 전체 Page 승인 기준 및 선택 채보 자료 Action
-배치를 확정하기 전에 모바일 탭 Overflow와 반응형 구성을 정해야 합니다.
+배치를 확정해야 합니다.
