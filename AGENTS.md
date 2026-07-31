@@ -4,15 +4,17 @@
 
 This project implements NosLog, a NOSTALGIA records/ranking/archive app.
 
-NosLog is the service and project name. NOSTORY is the name of the design
-reference, and NOSTALGIA is the game covered by the service.
+NosLog is the service and project name. NOSTORY is the name of the legacy
+design reference, and NOSTALGIA is the game covered by the service.
 
 ## Design Source
 
-Primary design:
+Legacy NOSTORY reference:
 https://www.figma.com/design/MigCZljcnwEdJF2JhnjKcj/Nostory?node-id=3-3
 
-Use frame `3:3`, named `NOSTORY 와이어프레임 정리`.
+Frame `3:3`, named `NOSTORY 와이어프레임 정리`, records an early wireframe
+direction. It predates substantial changes to the implemented product and the
+approved NosLog 2.0 decisions.
 
 Sections:
 
@@ -28,6 +30,20 @@ Sections:
 10. Exams
 11. Style guide
 
+- Do not treat this legacy Figma file as the current NosLog 2.0 layout, visual,
+  hierarchy, content, behavior, or component authority.
+- Do not use it to resolve an open 2.0 design decision or to override current code,
+  browser evidence, approved design-guide documents, or the decision log.
+- Consult it only when historical intent or provenance is materially useful, and label
+  any finding from it as legacy evidence.
+- The approved NosLog 2.0 design guide is the governing product and design authority.
+  After the guide is complete, the final Claude Design output becomes the visual and
+  layout source within the guide's approved rules.
+- Before accessing or modifying any Figma file, tell the user which file or artifact
+  will be used, exactly what will be inspected or changed, and why it is necessary.
+  Obtain approval before continuing when the access is not already explicit in the
+  user's request.
+
 ## Implementation Rules
 
 - For maintenance work outside the NosLog 2.0 initiative, do not redesign the UI
@@ -35,10 +51,12 @@ Sections:
 - NosLog 2.0 is an explicitly authorized, production-level UI/UX redesign. For
   2.0 design work, treat the current UI as a functional inventory and usability
   baseline, not as a visual constraint.
-- Preserve the dark NOSTORY visual direction.
+- Preserve the approved dark NosLog visual direction without copying the legacy
+  NOSTORY surface treatment.
 - Use the existing project stack, components, routing, and styling conventions.
-- Treat the Figma as a wireframe/source of layout intent, not pixel-perfect final artwork.
-- Implement mobile-first around the 390px layouts shown in Figma.
+- Do not use the legacy NOSTORY Figma as a source of current layout intent.
+- Implement mobile-first around a 390px validation baseline established by the
+  approved 2.0 device strategy, not by copying the legacy wireframe.
 - Reuse existing components before creating new ones.
 - Keep changes scoped and verifiable.
 - Run lint/typecheck/build after implementation if the project provides those commands.
@@ -58,8 +76,10 @@ This is the most important working rule for this project:
 - First investigate questions that can be answered from the repository, current UI,
   existing tests, or project documentation. Do not make the user answer facts that can
   be discovered directly.
-- Actively find relevant references, including existing project patterns, the Figma
-  source, official documentation, and suitable comparable examples.
+- Actively find relevant references, including existing project patterns, current
+  browser evidence, approved design-guide documents, official documentation, and
+  suitable comparable examples. Use the legacy Figma only under the limited conditions
+  defined in `Design Source`.
 - Share useful reference findings, possible approaches, and meaningful tradeoffs with
   the user so the direction can be decided together before implementation.
 - References should inform the implementation without overriding the existing NosLog
