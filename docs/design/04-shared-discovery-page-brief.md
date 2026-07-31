@@ -134,6 +134,11 @@ at a narrow `390px` viewport and a wide desktop viewport.
   default Expert filter, automatic loading, visual density, card composition, or
   desktop width. The DOM counts are a performance test baseline for the future
   component, not a fixed 2.0 markup budget.
+- A focused signed-in audit on `2026-07-31` confirmed that current NosLog can keep
+  **Unplayed** and **recent-play order** active together at wide and `390px` widths.
+  The query then assigns every unplayed Music entry a recent metric of `0` and resolves
+  ties by title, so the visible recent-order label no longer describes the actual
+  ordering. This is migration evidence, not an approved fallback.
 
 ## Approved Discovery Model
 
@@ -350,8 +355,25 @@ expanded primary filter group.
   combine with `OR`.
 - **Unplayed** is mutually exclusive with all achieved-record criteria and has no
   meaningful recent-play order. The controls must not produce an impossible or
-  meaningless query; the exact transition between an active Unplayed filter and
-  recent-play sort remains a small prototype decision.
+  misleading query.
+- If a user selects **Unplayed** while recent-play order is active, accept the filter
+  and reset the staged or committed sort to the current context default: Relevance
+  for an active text query, Japanese-reading order for empty Music scope, or latest
+  published-chart order for empty Chart scope.
+- While **Unplayed** remains active, keep recent-play order discoverable but
+  unavailable. Provide one concise localized reason equivalent to **Unavailable for
+  unplayed Music** rather than hiding the option.
+- A sort choice must not silently change result membership. Therefore, recent-play
+  order cannot be selected while **Unplayed** is active and must never clear the
+  Unplayed filter automatically. The user removes Unplayed first when they intend to
+  return to recent-play order.
+- Removing **Unplayed** does not restore a previously active recent-play order. Keep
+  the currently visible fallback until the user explicitly chooses another sort; do
+  not maintain a hidden sort-history stack.
+- On result-visible desktop layouts, this transition applies immediately. In the
+  result-obscuring mobile layer, it updates only the staged filter and sort together;
+  **View results** commits both, while Close, Back, or Escape restores both previously
+  committed values.
 - Remove discovery filters for ◆JUST rate, MISS+NEAR rate, FAST/SLOW tendency, and
   Standard, Tenuto, Glissando, or Trill success rate. These remain analysis data for
   record-detail contexts where they are interpretable.
@@ -568,36 +590,36 @@ specification work rather than unresolved Music-card structure.
 
 ## State Requirements
 
-| State                           | Required behavior                                                                             | Status              |
-| ------------------------------- | --------------------------------------------------------------------------------------------- | ------------------- |
-| Initial Music browse            | Show the complete eligible catalog by `title_kana` ascending with no hidden difficulty limit  | `Approved`          |
-| Initial Chart browse            | Show published Music groups by latest published-chart timestamp descending                    | `Approved`          |
-| Music newest sort unavailable   | Omit or explain the option until verified official Music-level release dates are populated    | `Approved`          |
-| Level sort target missing       | Require an explicit difficulty selection; never fall back silently to Expert                  | `Approved`          |
-| Weakness sort                   | Do not provide the current opaque composite weakness order                                    | `Approved`          |
-| Active query without user sort  | Use Relevance; preserve any explicit user-selected sort through later query/filter changes    | `Approved`          |
-| Settled active search           | Replace the result set after `300ms` idle and synchronize committed URL state                 | `Approved`          |
-| Fast response                   | Update without flashing a transient loading treatment                                         | `Proposed`          |
-| Slow initial or filter response | Keep search/filter controls stable and communicate busy state in the result region            | `Proposed`          |
-| No matching Music               | Preserve query and controls; show only `No matching songs.`                                   | `Approved`          |
-| Filter-constrained Music        | Preserve query and controls; show only `No songs match these conditions.`                     | `Approved`          |
-| No published Chart              | Preserve query, filters, scope control, and show only `No published charts.`                  | `Approved`          |
-| Initial retrieval failure       | Preserve controls and state; provide retry without redirecting away                           | `Proposed`          |
-| Mobile sort/filter open         | Keep Sort and filter sections distinct; stage both separately from committed result state     | `Approved`          |
-| Mobile result count pending     | Keep a usable generic **View results** action                                                 | `Approved`          |
-| Mobile View-results commit      | Commit and close; focus the result summary without auto-opening the first result              | `Approved`          |
-| Mobile layer close/back         | Discard staged changes; restore committed state, prior context, and trigger focus             | `Approved`          |
-| Signed-out personal filter      | Omit the personal-record group; do not show disabled criteria or an embedded login invitation | `Approved`          |
-| Signed-in record refinement     | Keep approved record criteria in a secondary advanced group                                   | `Approved`          |
-| MISS range active               | Match the inclusive bounds against the best eligible difficulty record                        | `Approved`          |
-| Unplayed conflict               | Prevent achieved-record criteria; do not leave recent-play order active as meaningful state   | `Approved` / `Open` |
-| Hover-capable record preview    | Reveal equivalent compact record context on fine-pointer hover and keyboard focus             | `Approved`          |
-| Touch result                    | Keep the resting card stable and expose full record context at the destination                | `Approved`          |
-| Load more pending               | Keep existing results, expose localized busy status, and prevent duplicate activation         | `Approved`          |
-| Load more success               | Append the next `20`-unit batch, focus its first actionable result, and announce new progress | `Approved`          |
-| Load more failure               | Keep existing results and action focus; provide localized retry at the same location          | `Approved`          |
-| End of results                  | Remove the action and communicate completion without automatic additional loading             | `Approved`          |
-| Return from destination         | Rehydrate loaded batches, then restore the selected-result anchor and nearby reading position | `Approved`          |
+| State                           | Required behavior                                                                                                     | Status     |
+| ------------------------------- | --------------------------------------------------------------------------------------------------------------------- | ---------- |
+| Initial Music browse            | Show the complete eligible catalog by `title_kana` ascending with no hidden difficulty limit                          | `Approved` |
+| Initial Chart browse            | Show published Music groups by latest published-chart timestamp descending                                            | `Approved` |
+| Music newest sort unavailable   | Omit or explain the option until verified official Music-level release dates are populated                            | `Approved` |
+| Level sort target missing       | Require an explicit difficulty selection; never fall back silently to Expert                                          | `Approved` |
+| Weakness sort                   | Do not provide the current opaque composite weakness order                                                            | `Approved` |
+| Active query without user sort  | Use Relevance; preserve any explicit user-selected sort through later query/filter changes                            | `Approved` |
+| Settled active search           | Replace the result set after `300ms` idle and synchronize committed URL state                                         | `Approved` |
+| Fast response                   | Update without flashing a transient loading treatment                                                                 | `Proposed` |
+| Slow initial or filter response | Keep search/filter controls stable and communicate busy state in the result region                                    | `Proposed` |
+| No matching Music               | Preserve query and controls; show only `No matching songs.`                                                           | `Approved` |
+| Filter-constrained Music        | Preserve query and controls; show only `No songs match these conditions.`                                             | `Approved` |
+| No published Chart              | Preserve query, filters, scope control, and show only `No published charts.`                                          | `Approved` |
+| Initial retrieval failure       | Preserve controls and state; provide retry without redirecting away                                                   | `Proposed` |
+| Mobile sort/filter open         | Keep Sort and filter sections distinct; stage both separately from committed result state                             | `Approved` |
+| Mobile result count pending     | Keep a usable generic **View results** action                                                                         | `Approved` |
+| Mobile View-results commit      | Commit and close; focus the result summary without auto-opening the first result                                      | `Approved` |
+| Mobile layer close/back         | Discard staged changes; restore committed state, prior context, and trigger focus                                     | `Approved` |
+| Signed-out personal filter      | Omit the personal-record group; do not show disabled criteria or an embedded login invitation                         | `Approved` |
+| Signed-in record refinement     | Keep approved record criteria in a secondary advanced group                                                           | `Approved` |
+| MISS range active               | Match the inclusive bounds against the best eligible difficulty record                                                | `Approved` |
+| Unplayed conflict               | Unplayed resets recent order to the context default; recent remains visible but unavailable until Unplayed is removed | `Approved` |
+| Hover-capable record preview    | Reveal equivalent compact record context on fine-pointer hover and keyboard focus                                     | `Approved` |
+| Touch result                    | Keep the resting card stable and expose full record context at the destination                                        | `Approved` |
+| Load more pending               | Keep existing results, expose localized busy status, and prevent duplicate activation                                 | `Approved` |
+| Load more success               | Append the next `20`-unit batch, focus its first actionable result, and announce new progress                         | `Approved` |
+| Load more failure               | Keep existing results and action focus; provide localized retry at the same location                                  | `Approved` |
+| End of results                  | Remove the action and communicate completion without automatic additional loading                                     | `Approved` |
+| Return from destination         | Rehydrate loaded batches, then restore the selected-result anchor and nearby reading position                         | `Approved` |
 
 ### Approved No-Result Classification and Recovery
 
@@ -714,6 +736,17 @@ Approved visible behavior:
   element either way.
 - Applied-filter removal controls must include the category and value in their
   accessible names.
+- When Unplayed resets recent-play order, update the visible selected sort in the same
+  interaction and issue one concise polite announcement that names the newly selected
+  sort. Do not announce an error or move focus solely because the dependent value
+  changed.
+- Keep the unavailable recent-play option perceivable in the sort surface. Associate
+  it programmatically with the concise Unplayed reason, expose its unavailable state
+  semantically, and prevent activation without relying on color or reduced opacity
+  alone.
+- The mobile layer's staged announcement must not claim that committed results changed.
+  If the user cancels, restore the prior committed filter and sort without a second
+  result-update announcement.
 - Information revealed by pointer hover in the personal-record preview must also be
   available on keyboard focus. The preview must not contain the only accessible name
   or the only indication of committed filter state.
@@ -1016,6 +1049,44 @@ storefronts and derivative summaries were not counted as separate support.
 | [Baymard: Product-list filtering](https://baymard.com/research/ecommerce-product-lists)                                   | User-entered numeric ranges are useful for continuous values when bounds and active state are clear.              | Supports optional MISS bounds at the interaction level; commerce findings do not determine NOSTALGIA taxonomy.                          |
 | [WCAG 2.2: Content on Hover or Focus](https://www.w3.org/WAI/WCAG22/Understanding/content-on-hover-or-focus.html)         | Additional content triggered by hover must also work with focus and remain perceivable and dismissible.           | Requires the approved capability-gated preview to be keyboard-equivalent; it does not justify creating hover behavior on touch.         |
 
+### Unplayed and Recent-Order Conflict Comparison
+
+The approved transition was checked against eighteen independent repository,
+domain, accessibility, design-system, search-platform, and collection-product
+sources. The comparison converges on truthful sort labels, discoverable temporary
+unavailability, preserved applied-state context, and explicit feedback when one
+choice changes another. General systems do not decide which of two incompatible
+NosLog controls has semantic priority; that resolution comes from the approved
+product rule that a filter determines result membership while a sort only changes
+the order of that membership.
+
+| Source                                                                                                                              | Evidence or transferable principle                                                                                     | NosLog application and limitation                                                                                                         |
+| ----------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| Current signed-in NosLog browser audit (`390px` and wide, `2026-07-31`)                                                             | Unplayed and recent-play order can remain visibly active together without explanation.                                 | Directly reproduces the misleading state to remove; current visual placement is not the 2.0 layout.                                       |
+| [Current NosLog record query](<../../app/(nevigation)/music/data.ts>)                                                               | Unplayed results receive a recent metric of `0` and are then tie-broken by title.                                      | Proves that a retained recent label is false rather than merely low-value; implementation details do not define the approved fallback.    |
+| [KONAMI NOSTALGIA Op.3 play data](https://p.eagate.573.jp/game/nostalgia/op3/playdata/entrance.html)                                | Recent history and update time are properties of recorded play, while an unplayed target has no play event to order.   | Establishes the domain incompatibility; the authenticated official page does not prescribe filter-control interaction.                    |
+| [SAP Fiori: List](https://experience.sap.com/fiori-design-web/list-overview/)                                                       | Every offered sort must have a meaningful order for its displayed data point.                                          | Rejects treating title tie-breaks as “recent”; SAP list styling and enterprise density do not transfer.                                   |
+| [PatternFly: Menu](https://www.patternfly.org/components/menus/menu/design-guidelines/)                                             | Keep a temporarily unavailable action disabled with an explanation; hide actions prohibited by a permanent rule.       | Supports a visible unavailable recent option because Unplayed is removable; a tooltip alone is insufficient for touch and screen readers. |
+| [PatternFly: Filters](https://www.patternfly.org/patterns/filters/design-guidelines/)                                               | Filter limitations need clear validation and explanatory feedback, including responsive filter contexts.               | Supports concise dependency feedback inside the filter-and-sort surface; it does not justify treating the transition as an error.         |
+| [WAI-ARIA APG: Keyboard interface](https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/)                                   | A disabled option may remain focusable when discoverability matters, with consistent semantic conventions.             | Requires an accessible unavailable state and reason; exact composite-widget focus behavior follows the final sort component.              |
+| [WCAG 2.2: On Input](https://www.w3.org/WAI/WCAG22/Understanding/on-input.html)                                                     | Changes caused by a control must remain predictable and users need advance or contextual notice for context changes.   | Supports visible synchronous sort replacement and a concise announcement; the staged value change alone is not a page-context change.     |
+| [ONS: Mutually exclusive inputs](https://service-manual.ons.gov.uk/design-system/components/mutually-exclusive)                     | Selecting an exclusive option clears incompatible answers and announces what was deselected through a live message.    | Supports atomic filter/sort normalization and one announcement; a survey “none” answer differs from a catalog filter and sort.            |
+| [Scottish Government: Checkboxes](https://designsystem.gov.scot/components/checkboxes)                                              | Selecting an exclusive checkbox clears others, while selecting another value clears the exclusive option.              | Confirms that automatic mutual exclusion can be understandable; NosLog rejects symmetric clearing because a sort must not remove filters. |
+| [Apple HIG: Toggles](https://developer.apple.com/design/human-interface-guidelines/toggles)                                         | Mutually exclusive choices should use state and labels that make the exclusivity clear.                                | Supports legible current state; Unplayed and sort remain separate semantic groups rather than one radio group.                            |
+| [USWDS: Combo box](https://designsystem.digital.gov/components/combo-box/)                                                          | Dependent options increase confusion and should be avoided or made explicit when unavoidable.                          | Supports eliminating a hidden invalid combination; a combo box is not prescribed for NosLog sorting.                                      |
+| [NSW Design System: Filters](https://designsystem.nsw.gov.au/components/filters/)                                                   | Preserve the user's selected state, label controls clearly, and make mobile staged application explicit.               | Supports paired staged restoration on cancel and committed-state visibility; it does not decide the fallback sort.                        |
+| [Shopify: Storefront filtering UX](https://shopify.dev/docs/storefronts/themes/navigation-search/filtering/storefront-filtering-ux) | Avoid dead ends, show applied filters, and disable currently zero-result values rather than allowing misleading input. | Supports temporary visible unavailability; commerce facet counts do not map directly to a personal play-history sort.                     |
+| [Algolia: Faceting](https://www.algolia.com/doc/guides/managing-results/refine-results/faceting)                                    | Facet values and counts update contextually while committed refinements remain explicit.                               | Supports coherent filter/result state; search-engine capability does not choose which product state wins a conflict.                      |
+| [Elastic Search UI: Facet](https://www.elastic.co/docs/reference/search-ui/api-react-components-facet)                              | Conjunctive and disjunctive facet behavior must be configured explicitly rather than inferred from visible controls.   | Supports an explicit incompatibility rule and tests; it does not cover ordering by missing personal data.                                 |
+| [Baymard: Applied filters](https://baymard.com/blog/how-to-design-applied-filters)                                                  | Applied-filter visibility prevents disorientation and gives users a direct way to understand and remove constraints.   | Supports keeping Unplayed visible after sort normalization; ecommerce conversion findings are not direct NOSTALGIA evidence.              |
+| [Backloggd changelog](https://backloggd.com/changelog/)                                                                             | A game collection can expose both an Unplayed state and Last Played order as separate library tools.                   | Confirms the nearby user need but does not publish its collision transition; it cannot override the NosLog domain rule.                   |
+
+NosLog therefore gives membership-defining **Unplayed** priority over the incompatible
+order, keeps the temporary dependency discoverable, and does not make the rule
+symmetrical. Selecting Unplayed replaces recent order with the context default;
+selecting a sort never removes Unplayed. This minimizes steps when narrowing results
+without allowing an ordering control to silently broaden them.
+
 ### Evidence Convergence
 
 - Live update is most useful when the result remains visible, the action is simple,
@@ -1065,6 +1136,10 @@ storefronts and derivative summaries were not counted as separate support.
 - Hover is an optional capability enhancement, not a mobile interaction model. The
   same-card preview therefore uses hover plus keyboard focus where supported, while
   touch follows the primary detail link immediately.
+- Temporary control dependencies remain discoverable with a concise reason, while
+  permanently irrelevant controls may be omitted. Because Unplayed defines result
+  membership and recent play only orders that membership, Unplayed has semantic
+  priority and the rule is intentionally asymmetric.
 - Progressive-loading references converge on a bounded initial request, explicit user
   control, predictable next quantity, visible progress, clear busy/error/end states,
   and recoverable return context. They do not provide one universal batch number.
@@ -1214,15 +1289,27 @@ storefronts and derivative summaries were not counted as separate support.
   preserving the primary action and avoiding a hidden mobile step.
 - **Distort or crop the Grid jacket to equalize complete card height — Rejected:**
   Preserve `1 / 1` artwork and let the lower information region absorb long content.
+- **Keep recent-play order active with Unplayed and use a title tie-break —
+  Rejected:** The visible sort label would no longer describe the actual result order.
+- **Hide recent-play order while Unplayed is active — Rejected:** The dependency is
+  temporary and user-removable, so the unavailable choice and its concise reason must
+  remain discoverable.
+- **Selecting recent-play order automatically removes Unplayed — Rejected:** A sort
+  control must not silently broaden result membership.
+- **Removing Unplayed automatically restores a previous recent-play order —
+  Rejected:** Hidden sort history creates an unexpected second transition. The user
+  may select recent order explicitly after removing Unplayed.
+- **Block Unplayed until the user first changes recent-play order — Rejected:** It
+  adds an avoidable step and lets a secondary ordering choice obstruct a primary
+  membership filter.
 
 ## Open Design Questions
 
-The following decisions require a new evidence-and-approval batch before this brief can
-be approved:
-
-1. When Unplayed and signed-in recent-play order conflict, should selecting one disable
-   the other, replace it with the scope default, or use another explicitly tested
-   transition?
+No material Unplayed/recent-order decision remains open. The transient response rows
+still marked `Proposed`—fast response, slow initial/filter response, and initial
+retrieval failure—form the next evidence-and-approval batch. Foundation tokens,
+result-summary row composition, and exact Chart-row visuals remain scheduled specimen
+decisions rather than reopenings of approved behavior.
 
 ## Browser Verification Targets
 
@@ -1291,6 +1378,19 @@ The later implementation must verify at minimum:
 - mobile Filter-and-sort commit with ready, pending, unchanged, and zero-result states;
   summary focus and non-duplicated announcement; Close, Back, and Escape trigger-focus
   plus reading-context restoration;
+- selecting Unplayed from recent-play order with an active query, empty Music scope,
+  and empty Chart scope, confirming the exact Relevance, Japanese-reading ascending,
+  and latest-published-chart descending fallbacks;
+- recent-play order remaining visible but unavailable with a concise localized reason
+  while Unplayed is committed, including keyboard and assistive-technology access to
+  the dependency;
+- an attempted recent-order selection never removing Unplayed, removal of Unplayed
+  making recent order available again, and no automatic restoration of the former
+  recent sort;
+- immediate desktop normalization and atomic mobile staged commit, including Close,
+  Back, and Escape restoring both the prior filter and prior sort;
+- Korean, Japanese, and English reason text plus one polite sort-change announcement,
+  with no error treatment or focus movement;
 - focus order, focus return, status announcements, landmarks, target size, reduced
   motion, and browser-console errors.
 
@@ -1311,7 +1411,9 @@ The later implementation must verify at minimum:
   same-row or split-row visual placement remains a specimen decision rather than an
   unresolved behavior.
 - Authenticated record refinement has an approved lean taxonomy, best-record MISS
-  semantics, combination rules, and impossible-state handling.
+  semantics, combination rules, Unplayed/recent-order normalization, discoverable
+  unavailable-state explanation, atomic mobile rollback, no hidden sort restoration,
+  and impossible-state handling.
 - Music result identity, content order, line budgets, List/Grid density boundaries,
   square-jacket behavior, capability-based hover/focus record context, and direct
   touch-detail behavior are explicit. Foundation styling tokens remain downstream
@@ -1369,13 +1471,16 @@ The later implementation must verify at minimum:
 | DISC-30 | Responsive sort/filter access   | One labelled combined mobile trigger and staged layer; separate result-visible desktop controls                                                                                                                                             | `Approved`   |
 | DISC-31 | Signed-out personal controls    | Omit the personal-record group instead of disabled criteria or an embedded login invitation                                                                                                                                                 | `Approved`   |
 | DISC-32 | 30-day play-filter retention    | Former retention is replaced by removal; recent play remains a signed-in sort                                                                                                                                                               | `Superseded` |
-| DISC-33 | Unplayed/recent-sort transition | Preserve the approved conflict semantics; choose the exact disable/reset transition through prototype testing                                                                                                                               | `Open`       |
+| DISC-33 | Unplayed/recent-sort transition | Selecting Unplayed resets recent order to the context default; recent remains visible but unavailable, never clears the filter, and is not silently restored                                                                                | `Approved`   |
 
 ## Next Discussion Batch
 
-Resolve the `DISC-33` Unplayed/recent-sort transition next. Do not reopen the approved
-taxonomy, progressive-loading contract, no-result recovery, responsive control access,
-mobile post-commit focus, or Music card anatomy without new evidence and user
-approval. Foundation tokens, the result-summary row composition, and exact Chart-row
-visuals still require their scheduled representative specimens, but they do not
-reopen `DISC-16`, `DISC-17`, `DISC-18`, or `DISC-19`.
+Resolve the three remaining transient-response proposals next: fast response
+treatment, slow initial/filter busy treatment, and initial retrieval failure/retry.
+Then review the complete shared-discovery brief for phase approval. Do not reopen the
+approved taxonomy, Unplayed/recent-order transition, progressive-loading contract,
+no-result recovery, responsive control access, mobile post-commit focus, or Music card
+anatomy without new evidence and user approval. Foundation tokens, result-summary row
+composition, and exact Chart-row visuals still require their scheduled representative
+specimens, but they do not reopen `DISC-16`, `DISC-17`, `DISC-18`, `DISC-19`, or
+`DISC-33`.
