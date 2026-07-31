@@ -8,7 +8,9 @@ Record behavior, Chart Info scope, personal-record hierarchy, Ranking hierarchy,
 leaderboard semantics, tie handling, score distribution, pagination, and Ranking
 states approved; Tier/evaluation labels, hierarchy, placement scope, community
 aggregation, pattern radar, evaluation input, and community-opinion contract approved;
-remaining state, responsive, and page-level accessibility decisions remain open`
+shared switching, loading, cache-freshness, empty, permission, error, retry, and
+announcement contract approved; remaining responsive and page-level acceptance
+decisions remain open`
 - Evidence status: `Repository inspection, current-product audit, approved information
 architecture, approved shared-discovery handoff, and cited tabs, adaptive-layout,
 progressive-disclosure, leaderboard, pagination, data-visualization, NOSTALGIA
@@ -295,8 +297,134 @@ for a new authentication architecture.
 - The signed-out Record panel communicates its unavailable personal content and Login
   action within the selected panel, so the control remains discoverable without a
   misleading disabled state.
-- Exact focus placement, live announcements, loading behavior, and mobile overflow
-  remain open and require a later approved interaction contract.
+- The approved asynchronous-state contract below defines ordinary focus retention,
+  live announcements, loading, failure, and retry behavior. Mobile overflow and final
+  responsive control composition remain open.
+
+## Approved Asynchronous State and Recovery Contract
+
+### Stable Context and Atomic Target Selection
+
+- Keep the shared application shell, persistent Music identity, selected-chart
+  context, difficulty choices, content-area choices, and approved selected-chart
+  resource actions available while one dynamic area is loading.
+- When the user explicitly selects another difficulty or semantic content area,
+  immediately update the selected target and its restorable URL/history state. Replace
+  the preceding semantic panel with the target panel's loading state; never present
+  Record, Ranking, Chart Info, or Tier/evaluation data from the preceding target as if
+  it belonged to the newly selected target.
+- Mark only the updating target panel busy. Do not disable every difficulty and area
+  control merely because one request is pending.
+- Keep navigation interruptible. A later valid selection supersedes an earlier pending
+  selection, cancels the obsolete request where supported, and is the only result that
+  may commit to the visible target.
+- Deduplicate repeated requests for the same Music, difficulty, content area, and
+  area-specific state.
+
+### Loading Presentation by Transition Type
+
+| Transition type                                      | Required presentation                                                                                                                                                                                                                     |
+| ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Initial Music-detail entry                           | Preserve the application shell and expose a stable route-level Music-detail placeholder. When sufficient Music identity is already available, keep that context visible and load only its unresolved selected-chart region.               |
+| Uncached difficulty or semantic-area selection       | Update the target and URL immediately, reserve the target panel's essential geometry, set the panel to `aria-busy="true"`, and expose a concise pending state on the selected control. Do not leave the preceding semantic panel visible. |
+| Fast target response                                 | Commit the target content without introducing a visually distracting animated loader.                                                                                                                                                     |
+| Perceptible request of at least approximately 300 ms | Reveal a simplified, structure-matched skeleton for the dynamic target panel. Do not skeletonize fixed tabs, the application header, or controls whose labels and values are already known.                                               |
+| Fresh visited target                                 | Display the exact cached target immediately with no loading indicator.                                                                                                                                                                    |
+| Same-list page change, such as Ranking pagination    | Retain the preceding rows as explicitly pending placeholder data, preserve row geometry, and mark only the list busy until the target page replaces them. The pending page control must not falsely announce completion.                  |
+| Append continuation, such as older opinions          | Keep every loaded item and place one local loading indicator at the continuation boundary. Never replace the complete list with a skeleton.                                                                                               |
+
+- Skeletons communicate only the stable, high-level structure of the expected panel;
+  they do not reproduce every optional field or action.
+- Loading motion must respect the future global reduced-motion contract. Meaning and
+  accessible loading text cannot depend on animation.
+- The approximately 300 ms threshold prevents avoidable flashing while still exposing
+  unmistakable feedback for a perceptible delay. Final motion curves and skeleton
+  styling remain foundation decisions.
+
+### Cache Freshness and Revalidation
+
+- A cache entry is valid only for the exact Music index, difficulty, content area, and
+  area-specific state, including Ranking page or opinion sort and continuation state
+  where applicable. Never use a cache entry from another target as current data.
+- Treat Chart Info as fresh for the lifetime of the current Music-detail page session.
+  A new route entry may fetch the current server value again.
+- Treat My Record, Ranking, and Tier/evaluation data as fresh for 60 seconds. After
+  that interval, display the exact-target cached data immediately and revalidate it in
+  the background.
+- A successful data sync, evaluation submission or edit, opinion mutation, reaction,
+  or other approved data-changing action must invalidate every affected target
+  immediately rather than waiting for the 60-second interval.
+- During background revalidation, keep exact-target content readable and expose one
+  compact Updating status without blocking unrelated interaction.
+- If background revalidation fails, preserve the exact cached content and identify it
+  as saved content with a compact equivalent of **Could not load the latest data** and
+  one **Retry** action. Do not silently imply that stale data is current, and do not
+  remove useful cached content solely because refresh failed.
+- Do not permanently show a last-updated timestamp unless a future data contract can
+  provide an accurate, user-meaningful timestamp for that domain.
+
+### Empty, Authentication, Eligibility, and Permission States
+
+- Empty is a successful request with no applicable data. It is not a loading,
+  permission, or failure state.
+- Chart Info omits unavailable optional facts rather than turning the complete panel
+  into an empty state. A missing Music or selected chart is Not Found, not empty.
+- My Record uses the approved compact Login state when signed out and a concise
+  no-record state when signed in without a play record. Do not fabricate zero-valued
+  analytics.
+- Ranking uses the approved concise no-public-record state. It does not offer Retry
+  unless the request actually failed.
+- Tier/evaluation preserves its approved distinctions among Not listed, Not published,
+  no history, no ratings, Aggregating, no opinions, and loading or failure.
+- Keep public Tier/evaluation content readable when a user cannot evaluate, react,
+  report, edit, or delete. Replace only the restricted action region with the approved
+  Login, verified-play, ownership, or moderation eligibility explanation.
+- Do not render unexplained disabled forms or use a permission message as a generic
+  substitute for absent data.
+
+### Failure Scope, Retry, and Not Found
+
+- On initial route failure, preserve the shared application shell and show a concise
+  route-level state equivalent to **Could not load Music information**, with **Retry**
+  and **Back to Music search** actions. The Retry action repeats the exact locale,
+  Music index, difficulty, content area, and valid area state.
+- A confirmed missing Music or chart uses the localized Not Found contract instead of
+  a transient error and does not offer a misleading Retry action.
+- When no usable cache exists and one selected panel request fails, keep the selected
+  target and URL and replace only that panel with a concise failure and one Retry
+  action. Do not revert silently to the preceding difficulty or area.
+- When one independently loadable subregion fails, such as a distribution or opinion
+  continuation, preserve successful sibling content and place the failure and Retry at
+  the smallest meaningful region. Do not fail the complete page.
+- Automatically retry an idempotent GET once, with a short delay, only for a network
+  failure or server `5xx` response. After that attempt, show the visible failure and
+  manual Retry. Do not automatically retry `4xx`, authentication, permission,
+  validation, or destructive-action failures.
+- Manual Retry must repeat the failed target rather than reset difficulty, area,
+  pagination, sorting, authentication return state, or scroll context.
+- Action-processing failures remain adjacent to the initiating action and follow the
+  approved evaluation, opinion, reaction, and deletion consequences. A route error
+  boundary does not replace expected action-error handling.
+
+### Focus, Semantics, and Status Announcements
+
+- Implement the content-area choices with `tablist`, `tab`, `tabpanel`,
+  `aria-selected`, `aria-controls`, and labelled-panel relationships. The selected
+  difficulty requires an equally explicit current-state mechanism appropriate to its
+  final control pattern.
+- Ordinary difficulty and content-area activation retains keyboard focus on the
+  control the user activated. Do not force focus into the loading or completed panel.
+- Use one page-level polite status region for concise, target-specific messages such
+  as **Loading Real Chart Info**, **Real Chart Info ready**, and **Updating Real
+  Ranking**. Avoid one competing live region per skeleton or card.
+- Apply `aria-busy="true"` to the updating panel or list and clear it only after the
+  coherent update is ready. Do not announce every intermediate skeleton change.
+- A visible request failure is announced once with suitable error semantics, while
+  focus remains in a predictable place and Retry is reachable in normal focus order.
+- Back and Forward restore the exact URL-addressed content and focus context without
+  recomputing a hidden default. Detailed arrow-key behavior, mobile overflow, and
+  focus behavior after full route entry remain part of the remaining responsive and
+  page-level acceptance discussion.
 
 ## Approved Chart Info and Personal Record Contract
 
@@ -918,6 +1046,40 @@ final design.
 | [WCAG 2.2: On Focus](https://www.w3.org/WAI/WCAG22/Understanding/on-focus.html)                               | Receiving focus must not initiate an unexpected change of context.                                                                                                   | Focusing Record cannot automatically open Login; authentication requires an explicit action.               | It does not define authentication copy or visual treatment.                                |
 | [WCAG 2.2: Consistent Navigation](https://www.w3.org/WAI/WCAG21/Understanding/consistent-navigation.html)     | Repeated navigation mechanisms should retain a predictable relative order.                                                                                           | Supports a stable semantic area order across authentication states and Music entries.                      | It does not determine which NosLog area is most important.                                 |
 
+### Asynchronous State, Recovery, and Cache Guidance
+
+| Source                                                                                                               | Transferable finding                                                                                                                                   | NosLog application                                                                                                         | Limitation                                                                                              |
+| -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| [W3C APG: Tabs Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/)                                              | A selected tab and its panel require explicit semantic relationships; automatic activation is appropriate only when panel latency is not noticeable.   | Requires correct selected-area semantics and clear pending behavior when remote content is not immediate.                  | APG does not prescribe visual loading treatment or cache duration.                                      |
+| [WCAG 2.1: Status Messages](https://www.w3.org/WAI/WCAG21/Understanding/status-messages.html)                        | Waiting, result, progress, and error messages that do not move focus must be programmatically exposed.                                                 | Requires concise target-specific loading, ready, update, and failure announcements without forced focus movement.          | It does not require creating unnecessary visible status copy or define exact politeness.                |
+| [MDN: `aria-busy`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-busy)   | A changing region can defer incomplete announcements until its coherent update is ready.                                                               | Mark only the selected panel or list busy and clear it after the complete target update.                                   | Browser and assistive-technology behavior still requires implementation testing.                        |
+| [React: `useTransition`](https://react.dev/reference/react/useTransition)                                            | Non-blocking transitions remain interruptible and let a later user choice supersede pending work.                                                      | Supports keeping difficulty and area navigation usable and committing only the latest selected target.                     | The React primitive does not supply fetching, cancellation, cache, or error UI by itself.               |
+| [Next.js: Loading UI and Streaming](https://nextjs.org/docs/app/getting-started/fetching-data)                       | Preserve a useful static shell and place Suspense boundaries near unresolved dynamic content.                                                          | Supports persistent Music context with a target-panel or route-level placeholder instead of a full blank page.             | The current client fetch architecture will need implementation mapping rather than documentation alone. |
+| [Next.js: Error Handling](https://nextjs.org/docs/app/getting-started/error-handling)                                | Expected request failures need explicit UI handling, and asynchronous event-handler failures are not automatically handled by render error boundaries. | Requires local request error state, exact Retry, and a separate route-level initial failure contract.                      | Framework boundaries do not decide NosLog's empty, permission, or domain-specific copy.                 |
+| [Carbon: Loading Pattern](https://carbondesignsystem.com/patterns/loading-pattern/)                                  | Skeletons fit known structured content; inline indicators fit smaller processing scopes; assistive technology needs loading and failure notification.  | Supports panel skeletons, local continuation indicators, and avoiding multiple simultaneous page loaders.                  | Carbon's timing and component styling are not NosLog foundation tokens.                                 |
+| [Fluent 2: Skeleton](https://fluent2.microsoft.design/components/web/react/core/skeleton/usage)                      | Skeletons should represent essential dynamic structure, not fixed tabs, and must preserve focus when content appears.                                  | Limits Music-detail skeletons to dynamic panel geometry and requires stable keyboard context.                              | Fluent suggests skeletons for longer waits; NosLog adopts a separately approved anti-flash threshold.   |
+| [PatternFly: Skeleton](https://www.patternfly.org/components/skeleton/design-guidelines/)                            | Use a skeleton when the final structure is known and a spinner when structure is unknown or likely to resolve to failure or empty.                     | Supports area-specific skeleton shapes while reserving compact indicators for uncertain local continuations.               | PatternFly's enterprise visual anatomy is not a NosLog art direction.                                   |
+| [Primer: Loading](https://primer.style/product/ui-patterns/loading/)                                                 | Loading feedback should be component-specific, subtle, and may use delayed indicators to avoid flashing.                                               | Supports the approximately 300 ms perceptible-delay threshold and one local indicator at an append boundary.               | Primer's exact delay props are implementation examples, not universal performance guarantees.           |
+| [Adobe Spectrum: Progress Circle](https://spectrum.adobe.com/page/progress-circle/)                                  | Indeterminate progress fits work whose duration cannot be calculated, with scale chosen for its containing region.                                     | Supports small local feedback for Retry, continuation, and action processing rather than fake percentages.                 | Native-platform scale and styling are not transferred.                                                  |
+| [SAP Fiori: Placeholder Loading](https://experience.sap.com/fiori-design-web/placeholder-loading/)                   | Responsive skeleton pages can preserve a familiar object-page frame and replace only newly loading content.                                            | Supports one stable Music-detail context across mobile and desktop while the selected panel changes.                       | Fiori floorplans and generic placeholder visuals are not copied.                                        |
+| [SAP Fiori: Empty States](https://experience.sap.com/fiori-design-web/designing-for-empty-states/)                   | No data, user-action results, permission, configuration, and system failures require different meanings and appropriately scoped next steps.           | Prevents Record, Ranking, Tier placement, permission, and request failures from collapsing into one generic empty state.   | NosLog intentionally uses shorter copy than many enterprise empty-state examples.                       |
+| [Atlassian: Designing Messages](https://atlassian.design/foundations/content/designing-messages/)                    | Empty, section, flag, and banner messages serve different scopes and severities.                                                                       | Uses panel-level messages for selected-area failures and avoids a global banner for a local request.                       | Atlassian's flag and banner placements are product-specific.                                            |
+| [USWDS: Alert](https://designsystem.digital.gov/components/alert/)                                                   | Alerts communicate important informational, warning, success, or error changes with explicit semantics.                                                | Supports one concise visible error treatment after a request finally fails.                                                | The government visual component is not adopted as NosLog styling.                                       |
+| [TanStack Query: Paginated Queries](https://tanstack.com/query/latest/docs/framework/react/guides/paginated-queries) | Previous successful rows can serve as explicitly identified placeholder data during a same-schema page change, reducing layout jumps.                  | Allows pending Ranking rows to remain only during Ranking pagination, not across different semantic areas or difficulties. | NosLog need not adopt TanStack Query; the state distinction transfers independently.                    |
+| [web.dev: Stale While Revalidate](https://web.dev/articles/stale-while-revalidate)                                   | Exact cached content can provide immediacy while an age-based background request restores freshness.                                                   | Supports exact-target Fresh/Stale semantics, 60-second dynamic data freshness, and non-blocking update state.              | HTTP examples do not determine NosLog's domain-specific invalidation events.                            |
+| [MDN: `AbortController.abort()`](https://developer.mozilla.org/en-US/docs/Web/API/AbortController/abort)             | An obsolete fetch and response-body consumption can be cancelled before completion.                                                                    | Supports latest-intent-wins difficulty and content-area navigation without wasting or committing obsolete requests.        | Cancellation does not replace request identity checks, deduplication, or visible error handling.        |
+
+The sources converge on scoped feedback, persistent stable context, semantically exact
+target data, distinct absence and failure meanings, and interruptible navigation. They
+differ on when a visual loader should appear: examples range from a short delayed
+indicator to skeletons intended for waits above roughly one second. NosLog resolves
+that disagreement by updating the target and busy semantics immediately, avoiding
+animated loader flash for sub-300 ms responses, and revealing a simplified
+structure-matched skeleton only for a perceptible delay. Previous visible data is
+retained only when it belongs to the exact target during revalidation or to the same
+schema during pagination; it is never borrowed from another semantic area or
+difficulty.
+
 ### Authentication and Return-Path Guidance
 
 | Source                                                                                                                                  | Transferable finding                                                                             | NosLog application                                                                                   | Limitation                                                                    |
@@ -1185,14 +1347,12 @@ override authoritative guidance or NosLog requirements.
 
 The following decisions have not been approved:
 
-1. switching, loading, stale-data, empty, permission, error, and retry behavior beyond
-   the approved signed-out Record and Ranking contracts;
-2. mobile tab overflow or alternative compact control behavior;
-3. desktop use of additional width inside each selected area;
-4. keyboard focus transfer and announcements after difficulty or content-area changes;
-5. representative real, long, missing, and multilingual data cases;
-6. page acceptance criteria and browser-verification widths; and
-7. exact order, placement, copy, and responsive behavior of the approved
+1. mobile tab overflow or alternative compact control behavior;
+2. desktop use of additional width inside each selected area;
+3. representative real, long, missing, and multilingual data cases;
+4. detailed arrow-key behavior, full-route entry focus, page acceptance criteria, and
+   browser-verification widths; and
+5. exact order, placement, copy, and responsive behavior of the approved
    selected-chart resource action group.
 
 ## Decision Register
@@ -1252,6 +1412,15 @@ The following decisions have not been approved:
 | MDET-51 | Placement-history disclosure                         | Keep current placements visible and use one collapsed section-level chronological history after Basic and Recital; reject six controls and line charts       | `Approved` |
 | MDET-52 | Placement-history continuation                       | Open with five newest date-grouped events and append explicit batches of ten with Show older changes; use No placement history when no event exists          | `Approved` |
 | MDET-53 | Placement-history data contract                      | Materialize six semantic slots, preserve null removal events, reconstruct transitions per mode and goal, and keep absence, publication, and failure distinct | `Approved` |
+| MDET-54 | Target transition identity                           | Update the selected difficulty or area and its restorable URL immediately; replace the preceding semantic panel with the exact target's pending state        | `Approved` |
+| MDET-55 | Loading scope and geometry                           | Preserve stable context, mark only the target region busy, avoid animated loader flash below about 300 ms, and use simplified structure-matched skeletons    | `Approved` |
+| MDET-56 | Cache freshness and revalidation                     | Keep Chart Info fresh for the page session; use 60-second freshness for Record, Ranking, and Tier/evaluation, with exact-target background revalidation      | `Approved` |
+| MDET-57 | Mutation invalidation and stale failure              | Immediately invalidate affected targets after data changes; retain exact cached data with Updating or latest-data failure disclosure and Retry               | `Approved` |
+| MDET-58 | Empty, authentication, and permission semantics      | Keep empty distinct from failure and permission; preserve public content while replacing only restricted personal or action regions                          | `Approved` |
+| MDET-59 | Retry and failure scope                              | Retry network and `5xx` GET failures once automatically, then show the smallest meaningful failure and exact manual Retry; never auto-retry `4xx` or actions | `Approved` |
+| MDET-60 | Interruptible navigation                             | Keep valid navigation operable, cancel or supersede obsolete work, deduplicate exact requests, and commit only the latest target                             | `Approved` |
+| MDET-61 | Focus and status announcements                       | Retain focus on the activated control, expose correct tab semantics, mark updating regions busy, and use one concise polite target-specific status region    | `Approved` |
+| MDET-62 | Initial failure and Not Found                        | Preserve the application shell for initial load failure with exact Retry and Music-search return; use localized Not Found for confirmed missing entities     | `Approved` |
 
 ## Current Milestone
 
@@ -1296,8 +1465,21 @@ are separate operations with explicit consequences. The approval mock-up is not 
 visual design source; exact emphasis is deferred to the foundation and representative
 specimen phase.
 
+The page now also has one approved asynchronous state and recovery contract. A target
+difficulty or area becomes the explicit URL-addressed context immediately; stable
+Music context remains available while only the target panel becomes busy. Fresh exact
+targets appear immediately, Chart Info remains fresh for the page session, and Record,
+Ranking, and Tier/evaluation use a 60-second freshness interval with non-blocking
+revalidation. Data-changing actions invalidate affected targets immediately. Empty,
+authentication, eligibility, permission, stale-refresh failure, uncached failure, and
+Not Found retain distinct meanings. Network and `5xx` GET failures receive one
+automatic retry before exact manual Retry. Navigation remains interruptible, focus
+stays on the activated control, and one polite status region announces coherent
+target-specific progress without exposing each intermediate skeleton change.
+
 This establishes the entry, authentication-restoration, Chart Info, Personal Record,
-Ranking, and Tier & Evaluation content contracts, including community opinions. It
-does not approve the current page's visual design or complete the Music-detail page
-brief. The next discussion should resolve the remaining page states before complete
-page-level responsive, interaction-state, and acceptance criteria are finalized.
+Ranking, and Tier & Evaluation content contracts, including community opinions and
+shared asynchronous states. It does not approve the current page's visual design or
+complete the Music-detail page brief. The next discussion should resolve mobile tab
+overflow and responsive composition before representative data, complete page-level
+acceptance criteria, and the selected-chart resource-action placement are finalized.
