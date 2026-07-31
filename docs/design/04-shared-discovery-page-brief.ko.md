@@ -255,6 +255,10 @@
 - Layer 밖에 Commit된 결과 수와 현재 정렬을 계속 표시합니다. 예를 들면
   “악곡 583개 · 관련도순”과 같은 의미 구조이며, Trigger만 보고 현재 순서를
   추론하게 하면 안 됩니다.
+- 결과 요약을 안정적인 독립 Semantic Focus Target으로 취급합니다. 이 요구는
+  결과 요약과 필터·정렬 Trigger를 반드시 서로 다른 시각 행에 두라는 뜻이
+  아닙니다. 같은 행 또는 분리 행 구성은 사용 가능한 너비와 한국어·일본어·영어
+  콘텐츠를 사용하는 `390px` Specimen에서 결정합니다.
 - 결과 Collection을 컨트롤 옆에서 의미 있게 유지할 수 없다면 전체 화면 또는
   화면 대부분을 차지하는 Layer 하나로 엽니다.
 - Layer 안에서 정렬, 공개 필터 및 로그인 개인 기록 Group을 시각적으로 명확히
@@ -267,10 +271,14 @@
   **N개 결과 보기**를 사용합니다.
 - 주요 Action은 임시 정렬과 조건을 Commit하는 동시에 Layer를 닫습니다. 적용
   뒤에 두 번째 닫기 Action을 요구하지 않습니다.
+- 성공적으로 Commit한 뒤에는 결과 요약 위치를 보이게 하고 복귀한 Trigger나
+  첫 결과가 아니라 결과 요약으로 Programmatic Focus를 옮깁니다. 결과를
+  자동으로 열거나 선택하면 안 됩니다.
 - 결과 수 계산 중에도 일반 **결과 보기** 라벨을 사용할 수 있어야 하며 결과
   수 계산이 완료를 막으면 안 됩니다.
 - 뒤로가기 또는 닫기는 임시 변경을 Commit하지 않고 종료하며 이전에 적용한
-  정렬과 필터 상태를 복구합니다.
+  정렬·필터 상태, 이전 Scroll Context 및 필터·정렬을 연 Trigger Focus를
+  복구합니다.
 - Layer를 닫은 뒤 적용 필터를 결과 요약 근처에서 계속 확인할 수 있어야
   합니다.
 - 악곡 목록·Grid 보기는 결과 포함 여부나 순서가 아니라 표현을 바꾸므로 별도의
@@ -556,7 +564,8 @@ Token과 정확한 채보 행 시각 구조는 악곡 카드 구조의 미확정
 | 초기 조회 실패              | 컨트롤과 상태를 유지하고 다른 곳으로 Redirect하지 않는 재시도 제공       | `제안`            |
 | 모바일 정렬·필터 열림       | 정렬·필터 Section을 구분하고 둘 다 Commit 결과 상태와 별도로 임시 선택   | `승인`            |
 | 모바일 결과 수 대기         | 사용할 수 있는 일반 **결과 보기** Action 유지                            | `승인`            |
-| 모바일 Layer 닫기·뒤로가기  | 임시 변경을 버리고 Commit된 정렬과 필터 복구                             | `승인`            |
+| 모바일 결과 보기 Commit     | Commit·닫기 후 결과 요약 Focus, 첫 결과 자동 열기 없음                   | `승인`            |
+| 모바일 Layer 닫기·뒤로가기  | 임시 변경 취소, Commit 상태·이전 Context·Trigger Focus 복구              | `승인`            |
 | 비로그인 개인 필터          | 개인 기록 Group 생략, 비활성 조건이나 내부 로그인 안내를 표시하지 않음   | `승인`            |
 | 로그인 기록 세부 필터       | 승인된 기록 조건을 부차적인 고급 Group에 유지                            | `승인`            |
 | MISS 범위 활성              | 대상 난이도의 최고 기록에 포괄 범위를 적용                               | `승인`            |
@@ -656,15 +665,29 @@ Token과 정확한 채보 행 시각 구조는 악곡 카드 구조의 미확정
 - 확정된 결과 없음 문장은 미리 존재하는 같은 Polite 상태 영역을 사용해 간결한
   다국어 문장만 알립니다. Focus를 받거나 Alert Semantic을 쓰거나 보이는 복구
   컨트롤을 문장으로 반복하지 않습니다.
-- 모바일 필터·정렬 Layer에는 접근 가능한 이름, Modal 상태의 Focus 제한,
-  Escape·뒤로가기 동작 및 Trigger로의 Focus 복귀가 필요합니다.
+- 모바일 필터·정렬 Layer에는 접근 가능한 이름과 Modal 상태의 Focus 제한이
+  필요합니다. Escape, 뒤로가기 또는 명시적인 닫기는 임시 변경을 버리고 이전
+  결과 읽기 위치를 보존하며 Layer를 연 Trigger로 Focus를 돌려보냅니다.
 - 통합 Trigger의 접근 가능한 이름은 정렬을 또 하나의 필터로 취급하지 않으면서
   기능, Commit된 적용 필터 수 및 현재 정렬을 전달해야 합니다.
 - 모바일 완료 Action은 브라우저 Zoom과 낮은 Viewport 높이에서도 도달할 수
   있어야 합니다.
-- 필터 적용은 이해 가능한 결과 갱신을 제공해야 합니다. 모바일 Commit 후
-  정확한 Focus 목적지는 접근성 Prototype의 미확정 결정이며 사용자의 읽기
-  Context를 갑자기 버리면 안 됩니다.
+- **결과 보기**는 임시 값을 Commit하고 Layer를 닫으며 안정적인 결과 요약을
+  보인 뒤 해당 요약으로 Programmatic Focus를 옮깁니다. 결과 요약은 Action이
+  되거나 첫 결과를 자동 선택하지 않으면서 Commit된 범위, 결과 수 또는 확정
+  결과 상태 및 현재 정렬을 전달합니다.
+- Touch, Keyboard 및 Screen Reader 입력에 같은 DOM Focus 목적지를 사용합니다.
+  Keyboard 이동에는 보이는 Focus 표현이 필요하며 Pointer 실행에 장식적인
+  Focus Ring이 계속 남지 않도록 `:focus-visible`을 사용할 수 있습니다.
+- Layer가 닫힐 때 확정 결과가 이미 준비됐다면 Focus된 요약이 방향을 전달하며
+  같은 결과 수를 두 번 읽으면 안 됩니다. 결과 요청이 계속 진행 중이면 결과
+  영역에 Busy 상태를 노출하고 완료 시 확정된 결과 수, 간결한 결과 없음 문장
+  또는 실패 하나만 Polite하게 알립니다. 임시 값이 바뀌지 않은 상태에서
+  제출해도 결과 요약으로 돌아가지만 결과가 변경됐다고 알리지는 않습니다.
+- 이 모바일 Commit 후 Focus 규칙은 보이는 결과 요약과 필터·정렬 Trigger가
+  같은 행을 공유하는지 규정하지 않습니다. 정확한 Grouping은 좁은 화면과
+  다국어 Specimen에서 나중에 검증하며 어느 경우든 요약은 독립 Semantic
+  요소로 유지합니다.
 - 적용 필터 제거 컨트롤의 접근 가능한 이름에는 Category와 값을 포함합니다.
 - Pointer Hover로 개인 기록 미리보기에 드러나는 정보는 Keyboard Focus에도
   제공해야 합니다. 미리보기가 접근 가능한 이름이나 Commit된 필터 상태를
@@ -762,6 +785,44 @@ Commerce 근거는 필터 과업이 NosLog에 전환되는 부분만 사용하�
 | [Elastic Search UI](https://www.elastic.co/docs/reference/search-ui)                                                                | 입력 중 검색, Facet 및 조건부 Facet에는 명시적인 상태와 요청 처리가 필요합니다.                                  | 능동 Text 검색과 오래된 요청 보호를 구현할 수 있음을 뒷받침합니다.                               | 독립적인 사용자 연구가 아니라 기술 Tool 지침입니다.                                          |
 | [WAI-ARIA APG: Combobox](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/)                                                        | 편집 가능한 Popup 컨트롤에는 정의된 Keyboard, Focus, 선택 및 Popup 관계가 필요합니다.                            | 범위 인식 검색과 제안은 Pointer 조작이나 아이콘에만 의존하면 안 됩니다.                          | 정확한 범위 선택기는 Menu일 수 있으며 실제 사용 Semantic Pattern을 따라야 합니다.            |
 | [WCAG 2.2: Status Messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html)                                       | 동적 결과와 상태 변경은 Focus를 가져가지 않고 보조 기술에 전달되어야 합니다.                                     | 갱신마다 Focus를 옮기지 않고 안정된 결과 수와 실패를 알립니다.                                   | Debounce 시간이나 시각 표현을 규정하지 않습니다.                                             |
+
+### 모바일 Commit 후 Focus 비교
+
+집중 비교에서는 일반 Dialog 닫기와 결과 중심 필터 Workflow 완료를 분리합니다.
+일반 Dialog System은 Layer를 연 Trigger로 Focus를 돌려보내는 방향에 수렴하지만,
+WAI-ARIA APG는 Dialog 과업이 다음 단계로 직접 이어지면 더 논리적인 Workflow
+목적지를 허용합니다. 필터 전용 System은 명시적인 모바일 Commit, 보이는 결과 요약
+및 갱신 결과로의 방향 제시에 수렴합니다. Primer가 개별 필터 선택마다 Focus를
+옮기지 말라고 한 내용은 NosLog와 충돌하지 않습니다. 선택 중에는 임시 상태를
+유지하고 사용자가 **결과 보기**를 실행한 뒤에만 Focus를 옮기기 때문입니다.
+
+| 출처                                                                                                                  | 근거 또는 의견 차이                                                                                                         | NosLog 적용과 한계                                                                                                                 |
+| --------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| [WAI-ARIA APG: Modal Dialog](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/)                                  | 닫기는 보통 Trigger로 복귀하지만 Dialog와 직접 연결된 다음 Workflow 단계가 더 논리적인 목적지일 수 있습니다.                | 취소는 Trigger, 성공 Commit은 결과 요약 Focus를 지지합니다. APG가 NosLog의 보이는 레이아웃을 정하지는 않습니다.                    |
+| [W3C H102: HTML dialog](https://www.w3.org/WAI/WCAG21/Techniques/html/H102)                                           | Native Modal 닫기는 보통 Layer를 연 요소를 복구합니다.                                                                      | 취소 경로에 유지할 안전한 기본값이며 APG의 Workflow 예외를 무효화하지 않습니다.                                                    |
+| [USWDS: Modal 접근성 테스트](https://designsystem.digital.gov/components/modal/accessibility-tests/)                  | Modal Focus를 내부에 제한하고 일반 닫기 뒤 예상되는 실행 요소로 복구해야 합니다.                                            | Focus 제한과 취소 QA에 반영하지만 검색 필터 Workflow 자체는 아닙니다.                                                              |
+| [Radix Dialog](https://www.radix-ui.com/primitives/docs/components/dialog)                                            | Escape는 닫고 Trigger로 복귀하며 제어된 예외를 위한 Close Autofocus를 제공합니다.                                           | 현재 Project Primitive에서 의도적인 Commit 후 Override가 필요함을 확인하지만 Library 기본값이 제품 Workflow를 정하지는 않습니다.   |
+| [Carbon: Dialog pattern](https://carbondesignsystem.com/patterns/dialog-pattern/)                                     | Modal을 닫으면 Layer를 연 요소로 Focus를 돌려보냅니다.                                                                      | 예측 가능한 취소를 뒷받침하지만 Enterprise Dialog 지침은 모바일 결과 인계를 다루지 않습니다.                                       |
+| [Fluent 2: Dialog](https://fluent2.microsoft.design/components/web/react/core/dialog/usage)                           | Dialog 닫기는 Trigger Component를 복구합니다.                                                                               | 일반 닫기와 명확한 초기·내부 Focus를 지지하지만 결과 전용 예외는 정하지 않습니다.                                                  |
+| [PatternFly: About modal 접근성](https://v4-archive.patternfly.org/v4/components/about-modal/accessibility)           | Escape 닫기 뒤 Layer를 연 요소로 Focus를 돌려보냅니다.                                                                      | 독립적인 Modal 수렴 근거지만 정보성 Modal은 NosLog 필터보다 과업성이 낮습니다.                                                     |
+| [VA.gov: Search Filter](https://design.va.gov/components/search-filter)                                               | 필터 적용 뒤 결과 Heading 또는 요약으로 Focus를 옮깁니다.                                                                   | 승인된 결과 요약 Target을 직접 지지합니다. 정부 콘텐츠와 더 넓은 Apply 선호가 NosLog 스타일이나 데스크톱 동작을 정하지는 않습니다. |
+| [VA.gov: Sort](https://design.va.gov/components/sort/)                                                                | 필터는 결과 설명·Heading으로 이동하고 결과가 보이는 정렬은 현재 컨트롤 Focus를 유지합니다.                                  | 가려진 모바일 Commit은 결과로, 보이는 데스크톱 정렬은 이동하지 않는 NosLog 반응형 분리를 지지합니다.                               |
+| [DWP: Filters](https://design-system.dwp.gov.uk/contribute/filters)                                                   | 묶음 필터는 명시적인 적용 전까지 선택을 보존하며 적용 뒤 명확한 Feedback이 필요합니다.                                      | 임시 선택마다 이동하지 않고 한 번의 Commit 후 인계하는 방향을 지지합니다. 공공 서비스의 사용 빈도는 다릅니다.                      |
+| [DWP: Filter design notes](https://design-system.dwp.gov.uk/research/filters/design-notes)                            | 모바일은 필터 컨트롤과 결과가 모두 가려질 수 있어 결과 수와 적용 필터 상태로 복귀 사용자를 안내합니다.                      | 안정적인 보이는 요약과 적용 상태를 지지하며 같은 행·분리 행 구성을 규정하지 않습니다.                                              |
+| [NSW Design System: Filters](https://designsystem.nsw.gov.au/components/filters/)                                     | 좁은 화면 묶음 적용은 필터 창을 닫고 갱신 결과를 표시합니다.                                                                | Commit과 복귀를 한 Action으로 만드는 방향을 지지하지만 정확한 Focus Node는 정하지 않습니다.                                        |
+| [Scottish Government: Search filters](https://designsystem.gov.scot/patterns/search-results/search-filters)           | 모바일은 가려진 결과를 자동 갱신하지 않고 명시적인 적용을 기다립니다.                                                       | 승인된 임시 Layer를 지지하며 정부 Copy와 컨트롤 구조는 시각 방향이 아닙니다.                                                       |
+| [Primer: Focus management](https://primer.style/accessibility/design-guidance/focus-management/)                      | 사용자가 필터를 계속 선택할 수 있으므로 개별 선택 Focus는 유지하고, 제거·Workflow 변경 뒤에는 논리적인 목적지가 필요합니다. | 임시 선택 중 이동 금지와 완료 후 한 번의 논리적 이동을 확인합니다. WCAG 의무가 아닌 Design System 지침입니다.                      |
+| [WCAG 2.2: Status Messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html)                         | 확정된 결과 수, 결과 없음 및 실패는 불필요한 Focus 방해 없이 사용할 수 있어야 합니다.                                       | 절제된 Polite 완료 메시지와 중복 알림 방지를 요구하며 모든 갱신 뒤 Focus를 옮기라고 요구하지 않습니다.                             |
+| [WCAG 2.2: Focus Order](https://www.w3.org/WAI/WCAG22/Understanding/focus-order.html)                                 | Programmatic Focus 순서는 이해·조작 가능해야 하며 Static 요소도 논리적 Context를 제공하면 Focus를 받을 수 있습니다.         | 결과 Collection 앞의 Focus 가능한 요약을 지지하되 평상시 탐색에서 혼란스러운 추가 정지점이 되면 안 됩니다.                         |
+| [WCAG 2.2: Concurrent Input Mechanisms](https://www.w3.org/WAI/WCAG22/Understanding/concurrent-input-mechanisms.html) | 콘텐츠는 Platform 사용자가 하나의 입력 방식만 계속 쓴다고 가정하면 안 됩니다.                                               | Touch, Keyboard 및 보조 기술에 논리적인 DOM 목적지 하나를 쓰는 방향을 지지하며 보이는 Focus 장식은 입력 기능에 맞출 수 있습니다.   |
+
+따라서 NosLog는 입력 방식과 무관한 DOM 규칙 하나를 사용합니다. 모바일
+**결과 보기** 성공은 안정적인 요약을 보이고 Focus하며, 취소·뒤로가기·Escape는
+Layer를 연 Trigger와 이전 읽기 Context를 복구합니다. 확정 데이터가 준비됐다면
+Focus된 요약을 한 번만 읽고, 대기 중이면 Busy 상태 뒤 확정 결과 하나만
+Polite하게 알립니다. 데스크톱과 일반 검색 갱신은 컨트롤 Focus를 유지합니다.
+요약의 같은 행·분리 행 시각 선택은 Focus 규칙이 아니라 다국어 `390px`
+Specimen 결정으로 남깁니다.
 
 ### 결과 없음 복구 비교
 
@@ -1040,6 +1101,18 @@ Focus를 Trigger에 유지할지 새 콘텐츠로 옮길지는 의견이 다릅�
   없이 확인 단계를 추가합니다.
 - **모바일에서 적용 후 닫기 두 Action — 거절:** 하나의 **결과 보기** Action이
   Commit과 복귀를 함께 수행합니다.
+- **모바일 성공 Commit 후 필터·정렬 Trigger로 복귀 — 거절:** Trigger 복귀는
+  취소에 유지합니다. 성공한 **결과 보기**는 Layer 과업을 완료하고 직접 연결된
+  결과 요약 단계로 진행합니다.
+- **모바일 Commit 후 첫 결과 Focus 또는 자동 열기 — 거절:** Commit 결과 수,
+  정렬 및 적용 상태 Context를 건너뛰고 결과 집합이 비었을 때 안정적인 Target도
+  없습니다.
+- **Touch와 Keyboard 입력에 따라 모바일 Commit Focus 선택 — 거절:** 한 기기가
+  입력 방식을 바꿀 수 있고 Screen Reader도 Touch로 동작할 수 있습니다. 논리적
+  DOM 목적지 하나를 쓰고 필요한 경우 보이는 Focus 표현만 다르게 합니다.
+- **지금 결과 요약을 별도 시각 행으로 의무화 — 이관:** 요약은 독립적으로
+  보이는 Semantic 요소여야 하지만 같은 행·분리 행 구성은 다국어 `390px`
+  Specimen 검증이 필요합니다.
 - **자동 무한 Scroll — 거절:** 복구 가능한 증분 상태와 Context 복구를 갖춘
   명시적인 더 보기를 사용합니다.
 - **묶음당 결과 `16`개 — 거절:** 첫 모바일 탐색은 짧아지지만 넓고 조밀한
@@ -1110,9 +1183,7 @@ Focus를 Trigger에 유지할지 새 콘텐츠로 옮길지는 의견이 다릅�
 
 다음 결정은 이 기획서 승인 전에 새로운 근거 조사와 승인 묶음이 필요합니다.
 
-1. 모바일 필터·정렬 Commit 후 Focus를 복귀한 Trigger에 유지할지, 결과 요약으로
-   옮길지, 입력 방식에 따른 조건부 규칙을 사용할 것인가?
-2. 미플레이와 로그인 최근 플레이순이 충돌할 때 하나를 비활성화할지, 범위
+1. 미플레이와 로그인 최근 플레이순이 충돌할 때 하나를 비활성화할지, 범위
    기본값으로 교체할지, 다른 명시적으로 검증한 전환을 사용할 것인가?
 
 ## 브라우저 검증 대상
@@ -1175,6 +1246,9 @@ Focus를 Trigger에 유지할지 새 콘텐츠로 옮길지는 의견이 다릅�
 - 긴 일본어 원문 제목, 한국어·영어 번역 Caption, 아티스트 없음, 번역 없음 및
   Real 없음 데이터
 - Keyboard만 사용하는 범위, 검색, 필터, 결과 선택, 더 보기, 재시도 및 복귀
+- 준비됨, 대기, 변경 없음 및 결과 0개 상태의 모바일 필터·정렬 Commit, 결과 요약
+  Focus와 중복 없는 알림, 닫기·뒤로가기·Escape의 Trigger Focus 및 읽기 Context
+  복구
 - Focus 순서, Focus 복귀, 상태 알림, Landmark, Target 크기, 모션 감소 및
   브라우저 Console 오류
 
@@ -1189,6 +1263,10 @@ Focus를 Trigger에 유지할지 새 콘텐츠로 옮길지는 의견이 다릅�
 - 능동 Query 관련도순, 명시적 정렬 유지, 모바일 통합 필터·정렬 Commit,
   데스크톱 별도 능동 컨트롤 및 적용 상태 제거에 충돌하지 않는 명시적인 규칙이
   있습니다.
+- 모바일 **결과 보기**는 Commit·닫기 후 보이는 결과 요약으로 Focus하고,
+  취소 경로는 Trigger와 이전 읽기 Context를 복구하며, 대기 중인 갱신은 결과
+  수를 중복해 읽지 않고 확정된 Polite 알림 하나만 제공합니다. 요약의 정확한
+  같은 행·분리 행 시각 배치는 미확정 동작이 아니라 Specimen 결정으로 남깁니다.
 - 로그인 기록 세부 필터에 간결한 승인 분류, 최고 기록 MISS 의미, 결합 규칙 및
   불가능한 상태 처리가 있습니다.
 - 악곡 결과 정체성, 콘텐츠 순서, 줄 수 제한, 목록·Grid 밀도 경계, 정사각형
@@ -1231,7 +1309,7 @@ Focus를 Trigger에 유지할지 새 콘텐츠로 옮길지는 의견이 다릅�
 | DISC-16 | 악곡 결과 구성           | 콘텐츠 기반 간결한 목록과 후행 난이도, 유연한 정보 영역의 정사각형 재킷 Grid, 기능 기반 같은 카드 기록 미리보기와 직접 Touch 상세                          | `승인`   |
 | DISC-17 | 묶음 크기와 Copy         | 초기·추가 묶음은 결과 단위 `20`개, 실제 다음 수량·정확한 진행 Copy 다국어화, 첫 새 결과 Focus, 일시적인 불러온 상태는 Browser History에 보존               | `승인`   |
 | DISC-18 | 결과 없음 복구           | 실패·서비스 단위 Catalog 부재를 분리하고 필터 조건·Text 불일치·공개 부재를 내부 분류하며 Commit 상태를 보존해 기존 컨트롤 복구와 범위별 간결한 Copy만 제공 | `승인`   |
-| DISC-19 | 모바일 Commit 후 Focus   | Focus 목적지와 알림 동작 검증                                                                                                                              | `미확정` |
+| DISC-19 | 모바일 Commit 후 Focus   | Commit은 보이는 결과 요약 Focus, 취소는 Trigger·이전 Context 복구, 대기 결과는 확정 알림 하나, 행 구성은 Specimen에서 결정                                 | `승인`   |
 | DISC-20 | 로그인 기록 분류         | 미플레이, S, FC, Pianist, 고급 MISS 범위 하나 유지, 클리어·30일 플레이·저가치 수치 필터 제거                                                               | `승인`   |
 | DISC-21 | MISS 의미                | 대상 난이도 최고 기록의 포괄 선택 경계 사용, MISS와 Near를 절대로 합산하지 않음                                                                            | `승인`   |
 | DISC-22 | 기록 필터 논리           | Group 간 `AND`, Group 안 `OR`, 미플레이는 달성 조건과 배타적이고 최근 플레이순과 충돌                                                                      | `승인`   |
@@ -1249,8 +1327,9 @@ Focus를 Trigger에 유지할지 새 콘텐츠로 옮길지는 의견이 다릅�
 
 ## 다음 논의 묶음
 
-`DISC-19` 모바일 Commit 후 Focus를 이어서 결정한 뒤 미플레이·최근 정렬 전환을
-해결합니다. 새로운 근거와 사용자 승인 없이 승인된 분류, 점진적 불러오기 규칙,
-결과 없음 복구, 반응형 컨트롤 진입 또는 악곡 카드 구조를 다시 열지 않습니다.
-Foundation Token과 정확한 채보 행 시각은 예정된 대표 Specimen이 여전히
-필요하지만 `DISC-16`, `DISC-17` 또는 `DISC-18`을 다시 열지는 않습니다.
+다음에는 `DISC-33` 미플레이·최근 정렬 전환을 해결합니다. 새로운 근거와 사용자
+승인 없이 승인된 분류, 점진적 불러오기 규칙, 결과 없음 복구, 반응형 컨트롤
+진입, 모바일 Commit 후 Focus 또는 악곡 카드 구조를 다시 열지 않습니다.
+Foundation Token, 결과 요약 행 구성 및 정확한 채보 행 시각은 예정된 대표
+Specimen이 여전히 필요하지만 `DISC-16`, `DISC-17`, `DISC-18` 또는 `DISC-19`를
+다시 열지는 않습니다.

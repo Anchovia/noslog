@@ -265,6 +265,10 @@ The approved model is responsive and task-sensitive, not one universal “instan
 - Keep the committed result count and current sort visible outside the layer, for
   example as the semantic equivalent of “583 Music · Relevance.” Do not make the
   trigger the only place where the current order can be understood.
+- Treat that result summary as its own stable semantic focus target. This requirement
+  does not force the summary and Filter-and-sort trigger into separate visual rows;
+  their same-row or split-row composition remains a `390px` specimen decision based
+  on available width and Korean, Japanese, and English content.
 - Open one full-screen or near-full-screen layer when the result collection cannot
   remain meaningfully visible beside the controls.
 - Keep Sort, public filters, and the signed-in personal-record group as clearly
@@ -278,10 +282,14 @@ The approved model is responsive and task-sensitive, not one universal “instan
   **View N results**.
 - The primary action simultaneously commits the staged sort and criteria and closes
   the layer. Do not require a second Close action after applying.
+- After that successful commit, reveal the result-summary position and move
+  programmatic focus to the summary rather than the returning trigger or first result.
+  Do not open or select a result automatically.
 - The generic **View results** label remains usable while a result count is pending;
   count calculation must not block completion.
 - Back or Close exits without committing staged changes and restores the previously
-  applied sort and filter state.
+  applied sort and filter state, prior scroll context, and focus to the invoking
+  Filter-and-sort trigger.
 - Applied filters remain visible near the result summary after the layer closes.
 - Music's list/grid view choice remains a separate compact view control because it
   changes presentation rather than result membership or order. Chart scope does not
@@ -577,7 +585,8 @@ specification work rather than unresolved Music-card structure.
 | Initial retrieval failure       | Preserve controls and state; provide retry without redirecting away                           | `Proposed`          |
 | Mobile sort/filter open         | Keep Sort and filter sections distinct; stage both separately from committed result state     | `Approved`          |
 | Mobile result count pending     | Keep a usable generic **View results** action                                                 | `Approved`          |
-| Mobile layer close/back         | Discard staged changes and restore committed sort and filters                                 | `Approved`          |
+| Mobile View-results commit      | Commit and close; focus the result summary without auto-opening the first result              | `Approved`          |
+| Mobile layer close/back         | Discard staged changes; restore committed state, prior context, and trigger focus             | `Approved`          |
 | Signed-out personal filter      | Omit the personal-record group; do not show disabled criteria or an embedded login invitation | `Approved`          |
 | Signed-in record refinement     | Keep approved record criteria in a secondary advanced group                                   | `Approved`          |
 | MISS range active               | Match the inclusive bounds against the best eligible difficulty record                        | `Approved`          |
@@ -679,15 +688,30 @@ Approved visible behavior:
 - A settled no-result message uses the same pre-existing polite status region and
   announces only the concise localized statement. It does not receive focus, use
   alert semantics, or repeat visible recovery controls as prose.
-- The mobile Filter-and-sort layer requires an accessible name, contained focus while
-  modal, Escape/back behavior, and focus return to its trigger.
+- The mobile Filter-and-sort layer requires an accessible name and contained focus
+  while modal. Escape, Back, or explicit Close discards staged changes, preserves the
+  prior result reading position, and returns focus to the invoking trigger.
 - The combined trigger's accessible name must communicate the feature, committed
   applied-filter count, and current sort without treating the sort as another filter.
 - The mobile completion action must remain reachable at browser zoom and compact
   viewport heights.
-- Applying filters must provide an understandable result update. The exact focus
-  destination after mobile commit remains an open accessibility-prototype decision;
-  it must not unexpectedly discard the user's reading context.
+- **View results** commits staged values, closes the layer, reveals the stable result
+  summary, and moves programmatic focus to that summary. The summary communicates the
+  committed scope, result count or settled result state, and current sort without
+  becoming an action or automatically selecting the first result.
+- Use the same DOM focus destination across touch, keyboard, and screen-reader input.
+  A visible focus treatment is required for keyboard navigation and may use
+  `:focus-visible` so pointer activation does not add a persistent ornamental ring.
+- If the settled result is already available when the layer closes, the focused
+  summary provides the orientation and the same count must not be announced twice. If
+  the result request is still pending, expose the result region as busy and announce
+  one settled count, concise no-result statement, or failure politely when it
+  completes. Submitting unchanged staged values still returns to the summary but does
+  not claim that the results changed.
+- This mobile post-commit focus rule does not prescribe whether the visible summary
+  shares a row with the Filter-and-sort trigger. Exact grouping is validated later
+  with narrow and localized specimens; the summary must remain a distinct semantic
+  element either way.
 - Applied-filter removal controls must include the category and value in their
   accessible names.
 - Information revealed by pointer hover in the personal-record preview must also be
@@ -786,6 +810,45 @@ not NosLog art direction.
 | [Elastic Search UI](https://www.elastic.co/docs/reference/search-ui)                                                                | Search-as-you-type, faceting, and conditional facets require explicit state and request handling.                                         | Supports active text search and stale-request protection as implementation capabilities.                             | It is technical tooling guidance rather than independent user research.                                     |
 | [WAI-ARIA APG: Combobox](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/)                                                        | Editable popup controls require defined keyboard, focus, selection, and popup relationships.                                              | The scope-aware search and suggestions must not rely on pointer interaction or icons alone.                          | The exact scope selector may use a menu rather than a combobox and must follow its actual semantic pattern. |
 | [WCAG 2.2: Status Messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html)                                       | Dynamic results and status changes should be available to assistive technology without taking focus.                                      | Announce settled counts and failures without moving focus on every refresh.                                          | It does not prescribe debounce timing or visual presentation.                                               |
+
+### Mobile Post-Commit Focus Comparison
+
+The focused comparison separates ordinary dialog dismissal from completion of a
+result-oriented filter workflow. General dialog systems converge on returning focus
+to the invoking trigger, while WAI-ARIA APG explicitly permits a more logical
+workflow destination when the dialog task leads directly to a subsequent step.
+Filter-specific systems then converge on an explicit mobile commit, a visible result
+summary, and orientation to the updated results. Primer's warning against moving focus
+after each individual filter choice does not conflict with NosLog because selections
+remain staged; focus moves only after the user activates **View results**.
+
+| Source                                                                                                                | Evidence or disagreement                                                                                                                             | NosLog application and limitation                                                                                                                      |
+| --------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [WAI-ARIA APG: Modal Dialog](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/)                                  | Close normally returns to the invoker, but a directly related next workflow step may be a more logical destination.                                  | Supports trigger return for cancel and result-summary focus for successful commit; APG does not choose NosLog's visible layout.                        |
+| [W3C H102: HTML dialog](https://www.w3.org/WAI/WCAG21/Techniques/html/H102)                                           | Native modal close ordinarily restores the invoking element.                                                                                         | Establishes the safe default that cancel paths retain; it does not override the APG workflow exception.                                                |
+| [USWDS: Modal accessibility tests](https://designsystem.digital.gov/components/modal/accessibility-tests/)            | Modal focus must remain contained and return to the expected invoking element after ordinary close.                                                  | Informs contained focus and cancellation QA; the component is not a search-filter workflow.                                                            |
+| [Radix Dialog](https://www.radix-ui.com/primitives/docs/components/dialog)                                            | Escape closes and returns focus to the trigger, with close autofocus available for controlled exceptions.                                            | Matches the current project primitive and requires an intentional post-commit override; library defaults do not decide product workflow.               |
+| [Carbon: Dialog pattern](https://carbondesignsystem.com/patterns/dialog-pattern/)                                     | Modal close returns focus to its invoker.                                                                                                            | Reinforces predictable cancel behavior; enterprise dialog guidance does not address a mobile result handoff.                                           |
+| [Fluent 2: Dialog](https://fluent2.microsoft.design/components/web/react/core/dialog/usage)                           | Dialog close restores the triggering component.                                                                                                      | Supports ordinary dismissal and clear initial/contained focus, not the result-specific exception.                                                      |
+| [PatternFly: About modal accessibility](https://v4-archive.patternfly.org/v4/components/about-modal/accessibility)    | Escape dismissal returns focus to the invoking element.                                                                                              | Adds independent modal convergence but its informational modal is less task-oriented than NosLog filtering.                                            |
+| [VA.gov: Search Filter](https://design.va.gov/components/search-filter)                                               | After filters are applied, focus moves to the result heading or summary.                                                                             | Directly supports the approved summary target; VA's government content and wider Apply preference do not determine NosLog styling or desktop behavior. |
+| [VA.gov: Sort](https://design.va.gov/components/sort/)                                                                | Filtering moves to the result description or heading, while sorting that remains visible keeps focus on its control.                                 | Supports the NosLog responsive split: obscured mobile commit moves to results, visible desktop sorting does not.                                       |
+| [DWP: Filters](https://design-system.dwp.gov.uk/contribute/filters)                                                   | Batch filtering preserves choices until deliberate Apply and requires clear feedback after filtering.                                                | Supports one post-commit handoff rather than movement after each staged choice; public-service frequency differs.                                      |
+| [DWP: Filter design notes](https://design-system.dwp.gov.uk/research/filters/design-notes)                            | Mobile can hide both filter controls and results; count and applied-filter state orient the returned user.                                           | Supports a stable visible summary and applied state; it does not prescribe same-row versus split-row composition.                                      |
+| [NSW Design System: Filters](https://designsystem.nsw.gov.au/components/filters/)                                     | Small-screen batch Apply closes the filter window and displays updated results.                                                                      | Supports commit-and-return as one action; it does not prescribe the precise focus node.                                                                |
+| [Scottish Government: Search filters](https://designsystem.gov.scot/patterns/search-results/search-filters)           | Mobile waits for an explicit Apply rather than updating obscured results automatically.                                                              | Supports the approved staged layer; government copy and control anatomy are not visual direction.                                                      |
+| [Primer: Focus management](https://primer.style/accessibility/design-guidance/focus-management/)                      | Focus should remain on an individual filter while the user may continue filtering; after removal or workflow changes it needs a logical destination. | Confirms no movement during staging and permits one logical move after completion; it is design-system guidance, not a WCAG mandate.                   |
+| [WCAG 2.2: Status Messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html)                         | Settled result counts, no-result states, and failures must be available without unnecessary focus interruption.                                      | Requires restrained polite completion messages and duplicate-announcement suppression; it does not require focus to move after every update.           |
+| [WCAG 2.2: Focus Order](https://www.w3.org/WAI/WCAG22/Understanding/focus-order.html)                                 | Programmatic focus order must remain understandable and operable; static elements may receive focus when they provide logical context.               | Supports a focusable summary before the result collection, provided it does not become a confusing extra stop during ordinary navigation.              |
+| [WCAG 2.2: Concurrent Input Mechanisms](https://www.w3.org/WAI/WCAG22/Understanding/concurrent-input-mechanisms.html) | Content must not assume that a platform user will remain with one input mechanism.                                                                   | Supports one logical DOM destination across touch, keyboard, and assistive-technology use; visible focus decoration may still follow input capability. |
+
+NosLog therefore uses one input-method-independent DOM rule: successful mobile
+**View results** reveals and focuses the stable summary; cancel, Back, and Escape
+restore the invoking trigger and prior reading context. If settled data is ready, the
+focused summary is announced once. If it is pending, one polite settled outcome follows
+the busy state. Desktop and ordinary search refreshes retain control focus. The visual
+choice between a same-row and split-row summary remains a localized `390px` specimen
+decision, not part of the focus rule.
 
 ### No-Result Recovery Comparison
 
@@ -1071,6 +1134,18 @@ storefronts and derivative summaries were not counted as separate support.
   confirmation without useful feedback.
 - **Apply and then Close as two mobile actions — Rejected:** One **View results** action
   commits and returns.
+- **Return to the Filter-and-sort trigger after successful mobile commit — Rejected:**
+  Keep trigger return for cancellation. A successful **View results** action completes
+  the layer task and proceeds to the directly related result-summary step.
+- **Focus or auto-open the first result after mobile commit — Rejected:** It skips the
+  committed count, sort, and applied-state context and has no stable target when the
+  result set is empty.
+- **Choose mobile commit focus by touch versus keyboard input — Rejected:** A device
+  may switch input methods and screen readers can operate through touch. Use one
+  logical DOM destination and vary only the visible focus treatment when appropriate.
+- **Mandate a separate visual row for the result summary now — Deferred:** The summary
+  is required as a distinct visible semantic element, but same-row versus split-row
+  composition requires localized `390px` specimen validation.
 - **Automatic infinite scroll — Rejected:** Use explicit Load more with recoverable
   incremental states and restorable context.
 - **`16` results per batch — Rejected:** It shortens the first mobile scan but creates
@@ -1145,9 +1220,7 @@ storefronts and derivative summaries were not counted as separate support.
 The following decisions require a new evidence-and-approval batch before this brief can
 be approved:
 
-1. After mobile Filter-and-sort commit, should focus remain on the returning trigger,
-   move to the result summary, or follow a conditional rule based on input method?
-2. When Unplayed and signed-in recent-play order conflict, should selecting one disable
+1. When Unplayed and signed-in recent-play order conflict, should selecting one disable
    the other, replace it with the scope default, or use another explicitly tested
    transition?
 
@@ -1215,6 +1288,9 @@ The later implementation must verify at minimum:
 - long original Japanese titles, Korean and English translated captions, missing
   artist, missing translation, and Real-unavailable data;
 - keyboard-only scope, search, filters, result selection, Load more, retry, and return;
+- mobile Filter-and-sort commit with ready, pending, unchanged, and zero-result states;
+  summary focus and non-duplicated announcement; Close, Back, and Escape trigger-focus
+  plus reading-context restoration;
 - focus order, focus return, status announcements, landmarks, target size, reduced
   motion, and browser-console errors.
 
@@ -1229,6 +1305,11 @@ The later implementation must verify at minimum:
 - Active-query Relevance, explicit-sort persistence, mobile combined Filter-and-sort
   commitment, desktop separated live controls, and applied-state removal have explicit
   non-conflicting rules.
+- Mobile **View results** commits and closes into a visible, focused result summary;
+  cancel paths restore the trigger and prior reading context; pending updates produce
+  one settled polite announcement without duplicate count speech. The summary's exact
+  same-row or split-row visual placement remains a specimen decision rather than an
+  unresolved behavior.
 - Authenticated record refinement has an approved lean taxonomy, best-record MISS
   semantics, combination rules, and impossible-state handling.
 - Music result identity, content order, line budgets, List/Grid density boundaries,
@@ -1274,7 +1355,7 @@ The later implementation must verify at minimum:
 | DISC-16 | Music result composition        | Compact content-driven List with trailing difficulties; square-jacket Grid with flexible information region; capability-based same-card record preview and direct touch detail                                                              | `Approved`   |
 | DISC-17 | Batch size and copy             | Initial and appended batches use `20` result units; localize actual-next-amount and exact progress copy; focus the first new result; keep ephemeral loaded state in browser history                                                         | `Approved`   |
 | DISC-18 | No-result recovery              | Separate failure and service-level catalog absence; classify filter constraint, text mismatch, and publication absence internally; preserve committed state and show only concise scope-appropriate copy with recovery in existing controls | `Approved`   |
-| DISC-19 | Mobile post-commit focus        | Validate focus destination and announcement behavior                                                                                                                                                                                        | `Open`       |
+| DISC-19 | Mobile post-commit focus        | Commit focuses the visible result summary; cancel restores trigger and prior context; announce one settled pending outcome; defer row composition to specimens                                                                              | `Approved`   |
 | DISC-20 | Authenticated record taxonomy   | Keep Unplayed, S, FC, Pianist, and one advanced MISS range; remove Clear, 30-day play, and low-value metric filters                                                                                                                         | `Approved`   |
 | DISC-21 | MISS semantics                  | Inclusive optional bounds against each eligible difficulty's best record; never combine MISS with Near                                                                                                                                      | `Approved`   |
 | DISC-22 | Record-filter logic             | `AND` across groups, `OR` within a group; Unplayed excludes achieved criteria and conflicts with recent-play order                                                                                                                          | `Approved`   |
@@ -1292,9 +1373,9 @@ The later implementation must verify at minimum:
 
 ## Next Discussion Batch
 
-Continue with `DISC-19` mobile post-commit focus, then resolve the
-Unplayed/recent-sort transition. Do not reopen the approved taxonomy, progressive
-loading contract, no-result recovery, responsive control access, or Music card
-anatomy without new evidence and user approval. Foundation tokens and exact Chart-row
+Resolve the `DISC-33` Unplayed/recent-sort transition next. Do not reopen the approved
+taxonomy, progressive-loading contract, no-result recovery, responsive control access,
+mobile post-commit focus, or Music card anatomy without new evidence and user
+approval. Foundation tokens, the result-summary row composition, and exact Chart-row
 visuals still require their scheduled representative specimens, but they do not
-reopen `DISC-16`, `DISC-17`, or `DISC-18`.
+reopen `DISC-16`, `DISC-17`, `DISC-18`, or `DISC-19`.
