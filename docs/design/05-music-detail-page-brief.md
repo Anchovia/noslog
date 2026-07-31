@@ -3,12 +3,13 @@
 ## Document Control
 
 - Status: `In progress`
-- Decision status: `Structure, entry priority, source-aware restoration, and signed-out
-Record behavior approved; detailed content, state, responsive, and accessibility
-decisions remain open`
+- Decision status: `Structure, entry priority, source-aware restoration, signed-out
+Record behavior, Chart Info scope, personal-record hierarchy, and localized Chart
+Info and My Record labels approved; Ranking, Tier/evaluation, state, responsive, and
+accessibility decisions remain open`
 - Evidence status: `Repository inspection, current-product audit, approved information
 architecture, approved shared-discovery handoff, and cited tabs, adaptive-layout,
-rhythm-game, and infrastructure guidance`
+progressive-disclosure, data-visualization, rhythm-game, and infrastructure guidance`
 - Date started: 2026-07-31
 - Last decision update: 2026-07-31
 - Canonical language: English
@@ -176,9 +177,9 @@ cross-domain query before choosing an area.
   requiring all cross-domain detail on initial entry.
 - Reuse already loaded area data when it remains valid. Exact cache lifetime,
   prefetch-on-intent behavior, and invalidation remain implementation decisions.
-- The exact visible tab labels, their final localized wording, tab geometry, and
-  responsive overflow behavior remain open. Approval covers the architecture, not the
-  current tab design.
+- The localized Chart Info and My Record labels are approved below. Ranking and
+  Tier/evaluation wording, tab geometry, and responsive overflow behavior remain open.
+  Approval covers the architecture, not the current tab design.
 
 ### Why Pattern A Fits
 
@@ -204,8 +205,8 @@ execution.
 - Place the Information semantic area first in the content-area order. The approved
   semantic order is Information, personal Record, Ranking, and Tier/community
   evaluation.
-- This approval establishes semantic order, not final Korean, Japanese, or English
-  labels. Final localized wording remains open.
+- This approval establishes semantic order. The localized Chart Info and My Record
+  labels are now approved below; Ranking and Tier/evaluation wording remains open.
 - Do not make the same queryless URL resolve to a different default area solely because
   the user is authenticated.
 
@@ -271,6 +272,104 @@ for a new authentication architecture.
 - Exact focus placement, live announcements, loading behavior, and mobile overflow
   remain open and require a later approved interaction contract.
 
+## Approved Chart Info and Personal Record Contract
+
+### Final Labels for the First Two Areas
+
+| Semantic area   | Korean      | Japanese     | English      |
+| --------------- | ----------- | ------------ | ------------ |
+| Chart facts     | `채보 정보` | `譜面情報`   | `Chart Info` |
+| Personal record | `내 기록`   | `プレー記録` | `My Record`  |
+
+- Use **Chart Info**, not Song Info, because the active difficulty determines the
+  facts in this area.
+- Keep **My Record** clearly personal and chart-scoped. Its existence does not make
+  authentication the default entry rule.
+- Final Ranking and Tier/evaluation labels remain open until those area contracts are
+  approved.
+
+### Chart Info Scope
+
+Chart Info is a concise factual summary of the selected chart. It is not a preview
+hub for personal Record, Ranking, or Tier/evaluation.
+
+- Always show BPM, note count, and duration.
+- Show release date and unlock condition only when a meaningful value exists. Omit an
+  unavailable optional row instead of preserving a row whose value is only `-`.
+- Do not repeat difficulty, official level, level constant, category, title, or artist
+  when the persistent Music and selected-chart context already exposes them.
+- Move pattern-profile data and its vote count to Tier/community evaluation.
+- Move score distribution, player count, and the current user's relative placement or
+  percentile to Ranking.
+- Do not leave compact pattern or score-distribution previews in Chart Info merely to
+  link to their owning areas.
+
+This boundary preserves one source of meaning for each domain and avoids reintroducing
+the rejected cross-domain Overview pattern inside the default area.
+
+### Selected-Chart Resource Actions
+
+- Treat **View chart**, **Play video**, and an approved external chart resource as
+  selected-chart actions rather than factual Chart Info rows.
+- Keep them outside the Chart Info panel in a contextual action group associated with
+  the selected difficulty.
+- Show only actions backed by a valid resource. The already approved concise
+  **No published chart** availability state applies when no internal or approved
+  external chart exists.
+- Exact action order, placement, localized copy, and responsive treatment remain open
+  for the representative layout specimen.
+
+### Personal Record Priority
+
+Use the following semantic order:
+
+1. **Best performance:** best score, rank, Full Combo or Pianist achievement state,
+   best-record date, and progress to Pianist where relevant.
+2. **Cumulative summary:** Play count, Max Combo, Full Combo count, and Pianist count.
+3. **Progress over time:** a Best score series showing only record improvements.
+4. **Recent plays:** recent chart-specific attempts, with concise row summaries and
+   optional per-play details.
+5. **Judgement analysis:** detailed judgement counts and rates, note-type success
+   rates, and recent judgement/timing trends, collapsed by default.
+
+The cumulative summary supports fast checking but must not compete visually with the
+best performance. Exact geometry is deferred to the representative mobile and desktop
+specimens.
+
+### Approved Record Terminology and Data Meaning
+
+| Meaning                        | Korean          | Japanese       | English              |
+| ------------------------------ | --------------- | -------------- | -------------------- |
+| Progress section               | `성장 추이`     | `上達の推移`   | `Progress over time` |
+| Current progress-series metric | `베스트 스코어` | `ベストスコア` | `Best score`         |
+| Per-user, per-chart play count | `플레이 횟수`   | `演奏回数`     | `Play count`         |
+
+- **Progress over time** is the section label. Because the current series contains
+  only best-score improvements, the visible series label and accessible chart title
+  must explicitly identify **Best score** rather than imply that every performance
+  metric is plotted.
+- Play count is a meaningful cumulative measure of how often this user played the
+  selected chart. Preserve it independently of clear count.
+- Do not expose clear count as a Music-detail performance metric. NOSTALGIA clear
+  status does not meaningfully distinguish the user's selected-chart outcome for this
+  product purpose.
+- Profile-level total Play count, privacy behavior, and presentation are deferred to
+  the Profile page brief and are not decided by this chart-scoped contract.
+
+### Analysis and Visualization Rules
+
+- Keep peer comparison optional and off by default. When enabled, expose its sample
+  basis and do not present a weak or unavailable sample as authoritative.
+- Keep Judgement analysis collapsed by default because it is secondary diagnostic
+  content. Best performance and the cumulative summary must never depend on expanding
+  it.
+- Do not visualize the same pattern-profile values simultaneously as both radar and
+  bar charts. The later Tier/evaluation brief must select one primary representation,
+  expose exact values and vote count, and document its accessibility alternative.
+- Give each chart one explicit question and metric contract. Provide exact values or a
+  structured text equivalent, and never rely on color alone to convey a series or
+  state.
+
 ## Reference Comparison
 
 ### Authoritative Interaction and Layout Guidance
@@ -300,18 +399,36 @@ for a new authentication architecture.
 | [WCAG 2.2: Link Purpose](https://www.w3.org/WAI/WCAG22/Understanding/link-purpose-in-context.html)                                      | A link's purpose must be understandable from its text and surrounding context.                   | Login must make clear that it unlocks personal Record and returns to the current chart context.      | It does not prescribe the final localized wording.                            |
 | [WCAG 2.2: Focus Order](https://www.w3.org/WAI/WCAG22/Understanding/focus-order.html)                                                   | Focus order must preserve meaning and operability through navigation and context changes.        | Tab order, the Login action, and restored Record content need a logical focus sequence.              | Exact focus restoration still requires representative implementation testing. |
 
+### Content Hierarchy and Data-Visualization Guidance
+
+| Source                                                                                                                | Transferable finding                                                                                               | NosLog application                                                                                         | Limitation                                                                    |
+| --------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| [Figma: UI design principles](https://www.figma.com/resource-library/ui-design-principles/)                           | Hierarchy should reflect what users need first; progressive disclosure reduces overload from secondary capability. | Best performance and core chart facts remain visible while diagnostic detail can be disclosed on demand.   | This is general design guidance and does not define NOSTALGIA data meaning.   |
+| [W3C: Presentation and progressive disclosure](https://www.w3.org/WAI/people-use-web/tools-techniques/presentation/)  | Interfaces may reduce distraction by initially showing only what is necessary for the current task.                | Supports separating factual Chart Info from Ranking and Tier/evaluation rather than mixing previews.       | Reduced presentation must not hide content that every user needs.             |
+| [GOV.UK: Summary list](https://design-system.service.gov.uk/components/summary-list/)                                 | A description list is suitable for a compact set of related key-value facts.                                       | BPM, note count, duration, and available optional facts form one concise Chart Info group.                 | The GOV.UK surface styling is not a NosLog visual direction.                  |
+| [GOV.UK: Accordion](https://design-system.service.gov.uk/components/accordion/)                                       | Accordions hide content and should be reserved for related sections that users do not all need to read.            | Supports collapsing Judgement analysis, not Best performance or the cumulative summary.                    | User testing is still required to confirm discoverability.                    |
+| [Carbon: Accordion](https://carbondesignsystem.com/components/accordion/usage/)                                       | Progressive disclosure fits secondary long content in constrained space but adds interaction cost.                 | Advanced judgement and timing diagnostics justify the cost; primary record facts do not.                   | Carbon component geometry must not be copied as a visual rule.                |
+| [USWDS: Data visualizations](https://designsystem.digital.gov/components/data-visualizations/)                        | Prefer familiar chart types and limit a visualization to one central idea with few concepts.                       | Rejects duplicating the same pattern values in radar and bar charts and requires an explicit metric.       | The examples are guidance, not a coded NosLog component.                      |
+| [ONS: Choosing a chart type](https://service-manual.ons.gov.uk/data-visualisation/chart-types/choosing-a-chart-type)  | Choose the simplest familiar chart for the relationship; separate charts can be clearer than one complex chart.    | A time series can answer Best-score progression while pattern comparison is decided separately.            | Public-statistics audiences differ from rhythm-game experts.                  |
+| [Carbon: Chart anatomy](https://carbondesignsystem.com/data-visualization/chart-anatomy/)                             | Descriptive titles, direct labels, and restrained chart frames make a chart's meaning easier to interpret.         | Requires the Progress section to identify its Best score series instead of using an ambiguous trend title. | Carbon's token and chart styling are not NosLog foundations.                  |
+| [W3C: Complex images](https://www.w3.org/WAI/tutorials/images/complex/)                                               | Charts need short identification plus a structured text representation of essential values and relationships.      | Score and pattern visualizations require exact values or an equivalent structured description.             | The exact alternative depends on the final selected chart.                    |
+| [Apple: Charts](https://developer.apple.com/design/human-interface-guidelines/charts)                                 | Charts should emphasize the relevant relationship and remain legible with accessible labels and interaction.       | Reinforces focused progress and comparison views rather than decorative duplicate graphics.                | Platform-specific interaction details are not automatically web requirements. |
+| [Texas: Data visualization guide](https://www.tdi.texas.gov/styleguide/style-guide-for-data-visualization-tools.html) | Put the most important information first; use line charts for trends and tables or labels for exact values.        | Supports Best performance before history, a line for Best-score progress, and exact value access.          | Government editorial guidance does not determine NosLog art direction.        |
+
 ### Rhythm-Game and Data-Product Evidence
 
-| Source                                                                                                                     | Transferable finding                                                                                                                               | NosLog application                                                                             | Limitation                                                                                        |
-| -------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| [Official NOSTALGIA: How to play](https://p.eagate.573.jp/game/nostalgia/op3/howto/entrance.html)                          | A Music selection is followed by a Normal, Hard, Expert, or optional Real difficulty selection.                                                    | Confirms Music-level identity with selected chart-level difficulty.                            | It documents the arcade flow, not a web detail page.                                              |
-| [Official NOSTALGIA: Play data](https://p.eagate.573.jp/game/nostalgia/op3/playdata/entrance.html)                         | Score and recent performance are authenticated player data.                                                                                        | Supports treating personal record as a conditional area rather than universal public identity. | Most detailed content requires login and cannot be fully audited anonymously.                     |
-| [osu!: Beatmap information](https://osu.ppy.sh/wiki/en/Beatmap_information)                                                | Song/map identity stays visible; difficulty selection updates statistics; leaderboard scopes use tabs and each difficulty has its own leaderboard. | This is the closest production analogue to NosLog's Music-plus-chart model.                    | osu! has different scoring, community, and moderation requirements.                               |
-| [osu!: Beatmap entity](https://osu.ppy.sh/wiki/en/Beatmap)                                                                 | A beatmapset and its individual difficulties have distinct identifiers; a selected difficulty is reflected in the URL.                             | Supports a stable Music parent with shareable selected-chart state.                            | Identifier syntax should not be copied.                                                           |
-| [ScoreSaber Reloaded: Leaderboards](https://www.mintlify.com/RealFascinated/scoresaber-reloaded/features/leaderboards)     | A selected map difficulty has its own leaderboard and map-information context.                                                                     | Supports chart-scoped ranking without loading every difficulty's ranking together.             | This is third-party documentation around a community service, not an official universal standard. |
-| [ScoreSaber Reloaded: Score tracking](https://www.mintlify.com/RealFascinated/scoresaber-reloaded/features/score-tracking) | Personal score detail and the full leaderboard are related but distinct destinations or views.                                                     | Supports separating personal performance and ranking under one chart context.                  | Its information model is Beat Saber-specific.                                                     |
-| [BeatSaver: Map detail example](https://beatsaver.com/maps/50d1e)                                                          | Shared song/map identity can expose several difficulty targets without duplicating the entire entity.                                              | Reinforces grouped Music identity and difficulty-level actions.                                | The page is map-publication oriented and does not contain NosLog personal analytics.              |
-| [Arcaea Wiki: Songs by level](https://arcaea.fandom.com/wiki/Songs_by_Level)                                               | Difficulty, chart constant, level, and version are chart-level properties that benefit from explicit association.                                  | Supports keeping selected chart facts distinct from Music-level title and artist.              | It is a community-maintained dense catalog, not a detail-page interaction standard.               |
+| Source                                                                                                                     | Transferable finding                                                                                                                                                | NosLog application                                                                                              | Limitation                                                                                        |
+| -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| [Official NOSTALGIA: How to play](https://p.eagate.573.jp/game/nostalgia/op3/howto/entrance.html)                          | A Music selection is followed by a Normal, Hard, Expert, or optional Real difficulty selection.                                                                     | Confirms Music-level identity with selected chart-level difficulty.                                             | It documents the arcade flow, not a web detail page.                                              |
+| [Official NOSTALGIA: Play data](https://p.eagate.573.jp/game/nostalgia/op3/playdata/entrance.html)                         | Authenticated chart data prioritizes Best Score and its judgement details, then exposes cumulative performance count, Full Combo count, Perfect count, and history. | Supports Best performance first and confirms per-user chart Play count as distinct from clear count.            | Most detailed content requires login and cannot be fully audited anonymously.                     |
+| [osu!: Beatmap information](https://osu.ppy.sh/wiki/en/Beatmap_information)                                                | Song/map identity stays visible; difficulty selection updates factual statistics; public play count and leaderboard data have distinct scopes.                      | Supports selected-chart facts and demonstrates that a play-count label must identify whose count it represents. | osu!'s public beatmap Play count is not the same as NosLog's per-user chart Play count.           |
+| [osu!: Client interface](https://osu.ppy.sh/wiki/en/Client/Interface)                                                      | Result and leaderboard surfaces prioritize score, accuracy or judgements, Max Combo, rank, and explicit personal position.                                          | Reinforces a dominant Best performance followed by detailed or comparative record information.                  | osu! scoring and clear semantics differ from NOSTALGIA.                                           |
+| [osu!: Ranking](https://osu.ppy.sh/wiki/en/Ranking)                                                                        | Individual beatmap ranking is presented in the beatmap context and highlights the current user's position separately.                                               | Supports owning score distribution and relative placement in Ranking rather than Chart Info.                    | It does not prescribe NosLog's ranking visualization.                                             |
+| [osu!: Beatmap entity](https://osu.ppy.sh/wiki/en/Beatmap)                                                                 | A beatmapset and its individual difficulties have distinct identifiers; a selected difficulty is reflected in the URL.                                              | Supports a stable Music parent with shareable selected-chart state.                                             | Identifier syntax should not be copied.                                                           |
+| [ScoreSaber Reloaded: Leaderboards](https://www.mintlify.com/RealFascinated/scoresaber-reloaded/features/leaderboards)     | A selected map difficulty has its own leaderboard and map-information context.                                                                                      | Supports chart-scoped ranking without loading every difficulty's ranking together.                              | This is third-party documentation around a community service, not an official universal standard. |
+| [ScoreSaber Reloaded: Score tracking](https://www.mintlify.com/RealFascinated/scoresaber-reloaded/features/score-tracking) | Personal score detail and the full leaderboard are related but distinct destinations or views.                                                                      | Supports separating personal performance and ranking under one chart context.                                   | Its information model is Beat Saber-specific.                                                     |
+| [BeatSaver: Map detail example](https://beatsaver.com/maps/50d1e)                                                          | Shared song/map identity can expose several difficulty targets without duplicating the entire entity.                                                               | Reinforces grouped Music identity and difficulty-level actions.                                                 | The page is map-publication oriented and does not contain NosLog personal analytics.              |
+| [Arcaea Wiki: Songs by level](https://arcaea.fandom.com/wiki/Songs_by_Level)                                               | Difficulty, chart constant, level, and version are chart-level properties that benefit from explicit association.                                                   | Supports keeping selected chart facts distinct from Music-level title and artist.                               | It is a community-maintained dense catalog, not a detail-page interaction standard.               |
 
 ### Operational and Cost Evidence
 
@@ -355,14 +472,25 @@ override authoritative guidance or NosLog requirements.
   data exists behind the gate and adds visual noise without helping task recovery.
 - **Return to Home after Record Login:** Rejected. Authentication must restore the
   selected Music, difficulty, and Record area through a validated return path.
+- **Keep pattern profile and score distribution inside Chart Info:** Rejected. Those
+  values belong to Tier/evaluation and Ranking respectively and would turn the public
+  default back into a cross-domain preview hub.
+- **Preserve unavailable optional facts as `-` rows:** Rejected. Release date and
+  unlock condition appear only when a meaningful value exists.
+- **Show the same pattern values as both radar and bar charts:** Rejected. The owning
+  Tier/evaluation area will select one primary representation and preserve exact
+  values and an accessible alternative.
+- **Use clear count as a Music-detail performance summary:** Rejected. Keep per-user,
+  per-chart Play count, but do not imply that NOSTALGIA clear count differentiates a
+  meaningful outcome for this purpose.
 
 ## Open Decisions for the Next Discussion
 
 The following decisions have not been approved:
 
-1. final Korean, Japanese, and English content-area labels within the approved semantic
-   order;
-2. exact information priority and progressive disclosure inside each area;
+1. final Korean, Japanese, and English labels for Ranking and Tier/evaluation;
+2. exact information priority and progressive disclosure inside Ranking and
+   Tier/evaluation;
 3. switching, loading, stale-data, empty, permission, error, and retry behavior beyond
    the approved signed-out Record contract;
 4. mobile tab overflow or alternative compact control behavior;
@@ -370,39 +498,52 @@ The following decisions have not been approved:
 6. keyboard focus transfer and announcements after difficulty or content-area changes;
 7. representative real, long, missing, and multilingual data cases;
 8. page acceptance criteria and browser-verification widths; and
-9. exact relationship between external video/chart resources and the NosLog viewer
-   action.
+9. exact order, placement, copy, and responsive behavior of the approved
+   selected-chart resource action group.
 
 ## Decision Register
 
-| ID      | Decision                                   | Direction                                                                                                                           | Status     |
-| ------- | ------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| MDET-01 | Entity model                               | Keep Music identity stable and treat the selected difficulty as active chart context                                                | `Approved` |
-| MDET-02 | Difficulty state                           | Preserve the selected difficulty in shareable and history-restorable navigation state                                               | `Approved` |
-| MDET-03 | Viewer entry                               | Keep View chart as a direct selected-chart action outside the Information panel, with external fallback or concise unavailable text | `Approved` |
-| MDET-04 | Content architecture                       | Use Pattern A: one persistent context with four tabbed semantic areas and one selected panel at a time                              | `Approved` |
-| MDET-05 | Initial data boundary                      | Do not require every cross-domain detail or summary before the user selects its area; reuse valid visited-area data                 | `Approved` |
-| MDET-06 | Long-page architecture                     | Do not render all four complete areas as one long page                                                                              | `Rejected` |
-| MDET-07 | Overview-hub architecture                  | Do not add a cross-domain summary hub before the four detailed areas                                                                | `Rejected` |
-| MDET-08 | Current visual inheritance                 | Current visual execution is audit evidence only and must not constrain the 2.0 redesign                                             | `Rejected` |
-| MDET-09 | Semantic content-area order                | Information, personal Record, Ranking, then Tier/community evaluation                                                               | `Approved` |
-| MDET-10 | Responsive and visual composition          | Define later through approved foundation and representative mobile/desktop specimens                                                | `Open`     |
-| MDET-11 | Content, state, and accessibility contract | Continue the page-brief research and approval process                                                                               | `Open`     |
-| MDET-12 | Final localized area labels                | Define Korean, Japanese, and English wording without changing the approved semantic order                                           | `Open`     |
-| MDET-13 | General-entry default                      | Open Information for both signed-in and signed-out queryless entry                                                                  | `Approved` |
-| MDET-14 | Source-aware entry                         | Encode known Record, Ranking, Tier/evaluation, and viewer-return intent in restorable navigation state                              | `Approved` |
-| MDET-15 | Signed-out Record                          | Keep it visible and selectable; render a compact panel-level Login state without placeholder analytics or automatic authentication  | `Approved` |
-| MDET-16 | Authentication restoration                 | Preserve locale, Music, difficulty, and Record through Login and required onboarding, then restore the exact destination            | `Approved` |
-| MDET-17 | Hidden default memory                      | Do not vary queryless default by authentication or globally remember the last-used area                                             | `Rejected` |
+| ID      | Decision                                   | Direction                                                                                                                                        | Status     |
+| ------- | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- |
+| MDET-01 | Entity model                               | Keep Music identity stable and treat the selected difficulty as active chart context                                                             | `Approved` |
+| MDET-02 | Difficulty state                           | Preserve the selected difficulty in shareable and history-restorable navigation state                                                            | `Approved` |
+| MDET-03 | Viewer entry                               | Keep View chart as a direct selected-chart action outside the Information panel, with external fallback or concise unavailable text              | `Approved` |
+| MDET-04 | Content architecture                       | Use Pattern A: one persistent context with four tabbed semantic areas and one selected panel at a time                                           | `Approved` |
+| MDET-05 | Initial data boundary                      | Do not require every cross-domain detail or summary before the user selects its area; reuse valid visited-area data                              | `Approved` |
+| MDET-06 | Long-page architecture                     | Do not render all four complete areas as one long page                                                                                           | `Rejected` |
+| MDET-07 | Overview-hub architecture                  | Do not add a cross-domain summary hub before the four detailed areas                                                                             | `Rejected` |
+| MDET-08 | Current visual inheritance                 | Current visual execution is audit evidence only and must not constrain the 2.0 redesign                                                          | `Rejected` |
+| MDET-09 | Semantic content-area order                | Information, personal Record, Ranking, then Tier/community evaluation                                                                            | `Approved` |
+| MDET-10 | Responsive and visual composition          | Define later through approved foundation and representative mobile/desktop specimens                                                             | `Open`     |
+| MDET-11 | Content, state, and accessibility contract | Continue the page-brief research and approval process                                                                                            | `Open`     |
+| MDET-12 | Remaining localized area labels            | Define Korean, Japanese, and English wording for Ranking and Tier/evaluation without changing the approved semantic order                        | `Open`     |
+| MDET-13 | General-entry default                      | Open Information for both signed-in and signed-out queryless entry                                                                               | `Approved` |
+| MDET-14 | Source-aware entry                         | Encode known Record, Ranking, Tier/evaluation, and viewer-return intent in restorable navigation state                                           | `Approved` |
+| MDET-15 | Signed-out Record                          | Keep it visible and selectable; render a compact panel-level Login state without placeholder analytics or automatic authentication               | `Approved` |
+| MDET-16 | Authentication restoration                 | Preserve locale, Music, difficulty, and Record through Login and required onboarding, then restore the exact destination                         | `Approved` |
+| MDET-17 | Hidden default memory                      | Do not vary queryless default by authentication or globally remember the last-used area                                                          | `Rejected` |
+| MDET-18 | Chart Info and My Record labels            | Use `채보 정보`/`譜面情報`/`Chart Info` and `내 기록`/`プレー記録`/`My Record`                                                                   | `Approved` |
+| MDET-19 | Chart Info factual scope                   | Always show BPM, note count, and duration; conditionally show available release and unlock facts without duplicating persistent context          | `Approved` |
+| MDET-20 | Cross-domain data ownership                | Move pattern profile to Tier/evaluation and score distribution, player count, and relative placement to Ranking; leave no previews in Chart Info | `Approved` |
+| MDET-21 | Selected-chart resource actions            | Keep View chart, Play video, and approved external chart resources outside Chart Info as selected-chart actions                                  | `Approved` |
+| MDET-22 | Personal Record hierarchy                  | Order Best performance, cumulative summary, Progress over time, Recent plays, then collapsed Judgement analysis                                  | `Approved` |
+| MDET-23 | Progress terminology                       | Use `성장 추이`/`上達の推移`/`Progress over time`, while explicitly labeling the current series `베스트 스코어`/`ベストスコア`/`Best score`      | `Approved` |
+| MDET-24 | Play-count meaning                         | Preserve per-user, per-chart `플레이 횟수`/`演奏回数`/`Play count`; exclude clear count and defer profile-wide Play count to the Profile brief   | `Approved` |
+| MDET-25 | Advanced record disclosure                 | Keep peer comparison optional and off by default; keep Judgement analysis collapsed while primary record facts remain visible                    | `Approved` |
+| MDET-26 | Duplicate pattern visualization            | Do not show identical pattern values simultaneously as radar and bar charts; choose one accessible representation in Tier/evaluation             | `Rejected` |
 
 ## Current Milestone
 
 The user approved the entity model, direct chart-viewer action, Pattern A content
-architecture, public Information default, source-aware explicit entry, and recoverable
-signed-out Record behavior on 2026-07-31. This establishes the entry-priority and
-authentication-restoration contract. It does not approve the current page's visual
-design or complete the Music-detail page brief.
+architecture, public Chart Info default, source-aware explicit entry, recoverable
+signed-out Record behavior, Chart Info boundary, selected-chart resource grouping,
+and the Personal Record hierarchy on 2026-07-31. Chart Info and My Record now have
+approved Korean, Japanese, and English labels. Chart-scoped Play count remains in the
+cumulative summary, while profile-wide Play count is explicitly deferred to the
+Profile brief.
 
-The next discussion should establish the final localized area labels and the detailed
-information hierarchy inside the four areas before responsive composition and complete
-state behavior are finalized.
+This establishes the entry, authentication-restoration, Chart Info, and Personal
+Record content contracts. It does not approve the current page's visual design or
+complete the Music-detail page brief. The next discussion should define Ranking and
+Tier/evaluation labels and their internal content hierarchy before responsive
+composition and complete state behavior are finalized.
