@@ -2,18 +2,16 @@
 
 ## 문서 관리
 
-- 상태: `작성 중`
-- 결정 상태: `구조·진입 우선순위·출처 인지 복원·비로그인 기록 동작·채보 정보
-범위·개인 기록 계층·랭킹 계층·리더보드 의미 구조·동점 처리·점수 분포·페이지
-이동·랭킹 상태·서열/평가 라벨·계층·배치 범위·커뮤니티 집계·패턴 레이더·평가
-입력·커뮤니티 의견 계약과 공통 전환·Loading·Cache Freshness·빈 상태·권한·오류·
-재시도·안내 계약, 좁고 넓은 화면의 반응형 구성·영역 전환 의미 구조·난이도
-Control 동작 및 선택 채보 Action 사용 가능 여부·배치 승인, 나머지 대표 데이터·
-페이지 승인 기준 결정은 미확정`
+- 상태: `승인 완료`
+- 결정 상태: `Entity 및 Action 모델, 콘텐츠 구조, 진입·복원·인증, 채보 정보,
+개인 기록, 랭킹, 서열·평가, 커뮤니티 의견, 비동기 복구, 반응형 구성, 선택 채보
+Action 사용 가능 여부, 플레이 영상의 현재 탭 이동, Route 진입 Focus, 대표 데이터·
+상태 Fixture 및 Page 단위 Browser 승인 계약까지 완성·승인`
 - 근거 상태: `저장소 조사, 현행 제품 감사, 승인된 정보 구조, 승인된 공용 탐색
 인계 및 인용한 탭·적응형 레이아웃·점진적 공개·리더보드·페이지 이동·데이터
 시각화·NOSTALGIA 점수 체계·채보 패턴·동시 입력·커뮤니티 평가·레이더 프로필·
-리듬게임·비활성 상태·미디어 사용 가능 여부·접근성·인프라 가이드`
+리듬게임·비활성 상태·미디어 사용 가능 여부·외부 Link·Focus 관리·Reflow·다국어·
+Browser 지원·보조 기술·인프라 가이드`
 - 작성 시작일: 2026-07-31
 - 최근 결정 반영일: 2026-08-01
 - 원본 언어: 영어
@@ -35,10 +33,11 @@ Control 동작 및 선택 채보 Action 사용 가능 여부·배치 승인, 나
 - **제안:** 근거를 갖춰 제시했으나 사용자의 명시 승인을 기다립니다.
 - **미확정:** 추가 조사, 대표 데이터, 테스트 또는 사용자 결정이 필요합니다.
 - **거절:** 검토했지만 명시적으로 선택하지 않았습니다.
-- **대체:** 이후 승인된 방향으로 교체했습니다.
+- **대체됨:** 이후 승인된 방향으로 교체했습니다.
 
-이 기획서는 아직 승인 완료된 단계 산출물이 아닙니다. `승인` 또는 `거절`로
-표시한 결정만 기준으로 사용합니다.
+이 기획서는 승인 완료된 악곡 상세 Page Family 산출물입니다. `승인`, `거절`,
+`대체됨`으로 표시한 결정은 명시한 범위 안에서 기준이며 정확한 Foundation Token과
+고해상도 구성은 후속 작업입니다.
 
 ## 목적
 
@@ -149,6 +148,27 @@ Control 동작 및 선택 채보 Action 사용 가능 여부·배치 승인, 나
 사용자 표현 중복, 순위 의미, 분포 분모, 페이지 크기 및 다국어 접근성 누락을
 해결합니다.
 
+### 관찰한 대표 데이터 및 브라우저 근거
+
+- 원본 Catalog에는 악곡 `578`개가 있습니다. `425`개는 표준 난이도 네 개를 모두
+  제공하고 `153`개는 Real이 없습니다. 따라서 Real 부재는 예외 오류가 아니라
+  일반적인 데이터 차이로 처리해야 합니다.
+- 현행 최장 제목은 `54`자인 **50th Memorial Songs -二人の時 ～under the cherry
+  blossoms～-** (`2f733689ec21214d6180888fe0e6b42f`)입니다. 긴 일본어 읽기도
+  있으며 Real 채보는 없습니다.
+- 현행 최장 아티스트 값은 네 난이도를 모두 제공하는 **STULTI**
+  (`bfdaadfb98501907925ecf41a076108d`)의 `67`자입니다.
+- 현행 최장 일본어 읽기는 **協奏曲第1番ホ長調 RV 269「春」より第一楽章**
+  (`eaa4047ce17fb873b19b42454b0f6f3b`)에 있습니다.
+- 현행 악곡 10개는 아티스트가 없습니다. **Happy Birthday to You**
+  (`8f655bcd097d033f7c464f96dc20223d`)는 네 난이도를 제공하는 대표 사례입니다.
+- 현행 일본어 Page는 `390px`에서 긴 읽기와 제목을 심하게 잘라냅니다. `1280px`에서도
+  주요 콘텐츠는 현행 좁은 Shell에 갇힙니다. 이는 승인된 말줄임이나 폭 동작이 아니라
+  Migration 결함입니다.
+- 현행 Client-side 영역 전환에서 랭킹을 활성화하면 DOM Focus가 `body`에 남습니다.
+  현행 플레이 영상 Link도 새 Browsing Context를 안내하지 않은 채
+  `target="_blank"`를 사용합니다. 아래 승인 계약은 두 동작을 모두 교체합니다.
+
 ## 승인된 Entity 및 Action 모델
 
 ### 악곡 정체성과 선택 채보
@@ -159,8 +179,8 @@ Control 동작 및 선택 채보 Action 사용 가능 여부·배치 승인, 나
 - 선택 난이도를 공유 가능하고 History에서 복구 가능한 URL에 유지합니다.
 - 네 가지 채보 난이도가 있다는 이유로 한 악곡을 관계없는 네 개 상세
   페이지처럼 복제하지 않습니다.
-- 정확한 난이도 컨트롤 Geometry, 위치 및 시각 표현은 이후 반응형 Specimen
-  작업까지 미확정으로 둡니다.
+- 정확한 난이도 Control Geometry, 위치 및 시각 표현은 이후 반응형 Specimen으로
+  의도적으로 미루며 미확정 제품 동작 결정이 아닙니다.
 
 ### 공개 채보 뷰어 진입
 
@@ -177,8 +197,12 @@ Control 동작 및 선택 채보 Action 사용 가능 여부·배치 승인, 나
 - NosLog에는 외부 채보 제품 Action이 없습니다. 현행 `chart_preview_url` 필드,
   관리자 입력 또는 Fallback은 2.0 구현 Mapping에서 제거할 구현 Inventory이며 제품
   요구사항이 아닙니다.
-- 정확한 시각 Token, 최종 Button Geometry, 일본어·영어 문구 및 플레이 영상을
-  현재 탭과 새 탭 중 어디에서 열지는 미확정입니다.
+- 다국어 Action 라벨은 `플레이 영상` / `プレー動画` / `Play video`를 사용합니다.
+  유효한 플레이 영상 URL은 현재 Browsing Context에서 엽니다. NosLog가
+  `target="_blank"`를 강제하거나 새 탭 안내 문구를 추가하면 안 되며 사용자는 Browser
+  Control로 별도 탭 열기를 선택할 수 있습니다. 모바일 OS가 연결된 YouTube App을
+  여는 것은 NosLog가 강제하는 Browsing Context 결정이 아니라 User Agent 동작입니다.
+- 정확한 시각 Token과 최종 Button Geometry는 Foundation 작업으로 남깁니다.
 
 ## 승인된 콘텐츠 구조
 
@@ -479,9 +503,19 @@ Redirect할 수 있습니다. 현재 로그인 페이지 인계가 항상 다국
   해제합니다. 중간 Skeleton 변경을 모두 안내하지 않습니다.
 - 보이는 요청 실패는 적합한 오류 의미로 한 번 안내하며 Focus는 예측 가능한 곳에
   유지하고 다시 시도는 일반 Focus 순서에서 접근할 수 있게 합니다.
-- 뒤로가기와 앞으로가기는 숨겨진 기본값을 다시 계산하지 않고 URL에 기록한 정확한
-  콘텐츠와 Focus Context를 복원합니다. 전체 Route 진입 뒤 Focus 동작은 남은 Page
-  승인 기준 논의에서 정합니다.
+- Hard Load, 직접 URL 진입 또는 Reload는 일반 Document Focus 동작을 따르며 Browser가
+  Document를 불러온 뒤 Focus를 강제로 옮기지 않습니다.
+- 탐색·랭킹·서열·프로필 또는 다른 제품 Route에서 다른 악곡 상세 목적지로 Client-side
+  전환하면 안정적인 정체성 Context가 준비된 뒤 다국어 Document Title을 갱신하고 악곡명
+  `h1`으로 Focus를 옮깁니다. Heading은 Programmatic Focus를 위한 `tabindex="-1"`을
+  사용할 수 있지만 일반 순차 Tab 순서에는 들어가면 안 됩니다.
+- 뒤로가기와 앞으로가기는 URL에 기록한 정확한 콘텐츠를 복원합니다. 원래 Collection으로
+  돌아가면 해당 출발점이 아직 존재하는 한 시작한 결과 또는 Action과 인근 Scroll 위치를
+  복원하며, 이 복구를 악곡명 Focus로 대체하지 않습니다.
+- 악곡 상세 안의 난이도 및 콘텐츠 영역 변경은 위 규칙대로 활성화한 Control에 Focus를
+  유지합니다. Loading 또는 완료 Panel로 Focus를 옮기지 않습니다.
+- 확인된 Not Found 또는 전체 Route 오류로 Client-side 전환하면 준비된 상태 Heading을
+  안내하고 Focus합니다. Hard Load된 오류는 일반 Document 동작을 따릅니다.
 
 ## 승인된 채보 정보 및 개인 기록 계약
 
@@ -536,7 +570,9 @@ Redirect할 수 있습니다. 현재 로그인 페이지 인계가 항상 다국
   데스크톱 Tooltip을 사용한다면 Keyboard Focus에서도 설명을 제공해야 합니다.
   Tooltip을 유일한 모바일 설명으로 의존하지 않습니다.
 - 최종 크기, 간격, 색상, 대비 및 Surface 처리는 Foundation Specimen이 소유합니다.
-  플레이 영상 외부 이동의 탭 동작은 계속 미확정입니다.
+- 유효한 **플레이 영상** Link는 현재 Browsing Context에서 실행합니다. 새 탭을 강제하지
+  않으므로 라벨에 새 탭 안내를 덧붙이지 않습니다. Command/Ctrl-click 같은 Browser
+  기본 사용자 선택은 계속 사용할 수 있습니다.
 
 ### 개인 기록 우선순위
 
@@ -1054,7 +1090,113 @@ Disclosure Control은 접근 가능한 이름, `aria-expanded` 및 제어 영역
 좁히고 평가 데이터와 선택 작성 의견을 분리해서 유지합니다. 이들 제품이나 승인용
 Mock-up의 시각 Surface 처리를 NosLog 최종 디자인으로 채택하지 않습니다.
 
+## 승인된 대표 데이터 및 Page 승인 계약
+
+### 대표 데이터 Fixture
+
+Locale·상태·Viewport·콘텐츠 차이의 모든 Cartesian Product 대신 범위를 제한한 위험
+기반 Fixture를 사용합니다. 영향받는 콘텐츠가 있는 Guide Specimen과 이후 구현 승인에는
+다음 사례가 필수입니다.
+
+| Fixture             | 필수 콘텐츠 및 차이                                                                                              | 검증 대상                                                                              |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| 긴 혼합 언어 정체성 | 실제 `2f733689ec21214d6180888fe0e6b42f`: 가장 긴 일본어·Latin 혼합 제목, 긴 일본어 읽기, 난이도 세 개, Real 없음 | 제목·읽기 계층, 줄바꿈, 전체 접근 가능 이름, 난이도 부재 상태 및 좁고 넓은 정체성 구성 |
+| 긴 아티스트         | 실제 **STULTI** (`bfdaadfb98501907925ecf41a076108d`): `67`자 아티스트와 난이도 네 개                             | 독립 제목·아티스트 행, 긴 Metadata 줄바꿈 및 완전한 난이도 Control                     |
+| 긴 일본어 읽기      | 실제 `eaa4047ce17fb873b19b42454b0f6f3b`                                                                          | 일본어 줄바꿈, 언어 선언 및 좁은 너비에서 잘림 없음                                    |
+| 아티스트 누락       | 난이도 네 개를 가진 실제 **Happy Birthday to You** (`8f655bcd097d033f7c464f96dc20223d`)                          | 빈 Placeholder나 가짜 아티스트 없이 사용할 수 없는 행 생략                             |
+| 일반적인 완전 채보  | 필수 채보 사실, 공개 NosLog 채보, 유효한 플레이 영상 URL, 난이도 네 개 및 로그인 기록을 모두 가진 대표 악곡      | 일반 계층, 활성 Action 두 개, 모든 의미 영역 및 안정적인 전환                          |
+| 다국어 제목 Variant | 승인된 긴 한국어·영어 제목 Fixture, 긴 일본어 읽기, 번역 표시 켜기·끄기 및 승인 번역 누락                        | KO/JA/EN 계층, 빈 공간 없는 생략, 줄바꿈 및 전체 Programmatic 이름                     |
+
+상태 검증은 다음처럼 범위를 제한한 경계를 포함해야 합니다. 모든 조합을 만들지 않고 각
+상태의 의미 차이를 보존하면서 위 정체성 Fixture와 Pairwise로 결합합니다.
+
+- 로그인·비로그인 및 선택 채보 플레이·미플레이
+- 랭킹 참여자 `0`, `1`, `25`, `26+`명. 동점과 현재 사용자가 보이는 Page 안팎에 있는
+  경우 포함
+- 숨긴 집계와 공개 집계를 확인하는 서열·평가 수 `0`, `1–2`, `3+`
+- 채보 보기와 플레이 영상의 네 자료 조합: 둘 다 없음, 어느 한쪽만 있음, 둘 다 있음
+- 최초 Loading, 지연 응답, Fresh Cache, Stale 재검증, 빈 결과, 인증, 자격 또는 권한
+  제한, 재시도 가능한 오류 및 확인된 Not Found
+- 정확히 승인된 범위에서만 평가·의견 파괴 Action의 확인·취소·성공·복구 가능한 실패
+
+### 반응형 및 Browser 검증 대상
+
+- 좁은 너비는 정확히 `320`, `360`, `390`, `430` CSS Pixel에서 검증합니다.
+- 전환 및 넓은 레이아웃은 `768`, `1024`, `1280`, `1440` CSS Pixel에서 검증합니다.
+- 측정한 콘텐츠 기반 영역 Switcher와 Panel 레이아웃 전환 주변을 연속 Resize합니다.
+  탭이 좁은 Combobox를 대체하는 폭은 Device 이름 Breakpoint가 아니라 Specimen
+  측정값입니다.
+- 핵심 `390x844`와 `1280x900` 경로에는 Chromium 자동화를 유지합니다. 이후 2.0 구현에서
+  `320`, `360`, `430`의 Parameterized Overflow·콘텐츠 검사를 추가하고 Chromium,
+  WebKit/Safari 동작 및 Firefox의 Release Smoke Coverage를 추가합니다.
+- 최신 iOS Safari와 Android Chrome, Desktop Chrome·Safari·Firefox에서 핵심 경로를
+  수동 검증합니다. 사용 분석 또는 배포 정책이 요구하면 Edge를 Release Smoke 범위에
+  추가합니다.
+- Keyboard-only 조작, 보이는 Focus, iOS/Safari VoiceOver, Android/Chrome TalkBack,
+  `200%` Text 확대 및 `400%` Page Zoom 또는 이에 해당하는 `320px` Reflow 상태를
+  검증합니다.
+- Browser Simulation은 반복 가능한 레이아웃 검사에 유용하지만 2.0 Release 전 최신
+  실제 Device와 보조 기술 검증을 대신하지 않습니다.
+
+### Page 단위 승인 기준
+
+악곡 상세 Page Family는 다음 조건을 모두 충족할 때만 승인합니다.
+
+1. 악곡 정체성, 선택 난이도, 자료 Action, 영역 Switcher 및 선택 Panel이 승인된 순서를
+   보존하고 현행 1.x 시각 Styling에 의존하지 않아도 이해할 수 있습니다.
+2. 원문 제목을 주요 계층으로 유지합니다. 필수 긴 값·누락 Fixture에서도 켜진 번역·읽기,
+   아티스트 및 채보 Context를 구분할 수 있어야 합니다. 의미 있는 Text가 충돌하거나
+   잘리거나 Hover에서만 제공되면 안 됩니다.
+3. 난이도와 콘텐츠 영역 상태는 공유 가능하고 History로 복원됩니다. 알고 있는 출처
+   의도는 승인된 영역을 열고 인증은 정확한 악곡·난이도·기록 목적지로 돌아옵니다.
+4. 채보 보기와 플레이 영상은 안정적인 두 자리 Map을 유지합니다. 사용 가능 여부,
+   비활성 의미, 플레이 영상의 현재 탭 이동 및 집중형 뷰어 복귀는 승인 계약을 따릅니다.
+5. Loading, Cache, 빈 상태, 인증, 권한, 오류, 재시도 및 Not Found는 가장 작은 의미
+   영역에만 영향을 주고 안정적인 정체성을 보존하며 서로 모순되는 과거 대상 콘텐츠를
+   노출하지 않습니다.
+6. Keyboard 및 보조 기술 사용자는 Page, 선택 난이도, 선택 영역, 갱신, 오류 및 현재
+   랭킹 위치를 식별할 수 있습니다. Focus는 승인된 Hard Load, Soft Entry, 내부 전환,
+   History 복귀 및 오류 규칙을 따르며 `body`로 유실되지 않습니다.
+7. 한국어·일본어·영어 콘텐츠는 올바른 Page·구문 단위 언어 의미, 승인된 다국어 라벨,
+   적합한 줄바꿈, 전체 접근 가능 이름을 사용하고 Locale별 고정 Suffix를 남기지 않습니다.
+8. 모든 필수 너비에서 Page 단위 가로 Scroll 없이 Reflow합니다. 넓은 레이아웃은 현행
+   `390px` Desktop Canvas를 유지하지 않고 각 Panel의 승인된 비교·분석 역할에 따라
+   공간을 사용합니다.
+9. 대표 상태 Suite는 처리하지 않은 Browser 오류, 깨진 History 복원, 중복 Live 안내,
+   숨겨진 주요 Action 또는 접근할 수 없는 파괴 확인 없이 통과합니다.
+10. 정확한 Color, Typography, Spacing, Radius, Elevation 및 최종 Component Geometry는
+    이후 승인된 Foundation과 Specimen으로 검증합니다. 이 값의 유보를 이유로 본
+    기획서의 콘텐츠·동작·상태·승인 계약을 바꿀 수 없습니다.
+
 ## 레퍼런스 비교
+
+### Page 승인, 외부 이동, Focus 및 검증 가이드
+
+| 출처                                                                                                                   | 전용할 수 있는 발견                                                                                                     | NosLog 적용                                                                                        | 한계                                                            |
+| ---------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| [W3C: G200](https://www.w3.org/TR/WCAG-TECHS/G200.html)                                                                | 새 Browsing Context는 필요한 경우에만 열고 사전에 안내해야 합니다.                                                      | 안내 없이 강제하는 새 탭 대신 현재 Context의 플레이 영상 이동을 지지합니다.                        | 모바일 App Link 처리는 정하지 않습니다.                         |
+| [GOV.UK: Link](https://design-system.service.gov.uk/styles/links/)                                                     | 강제 새 탭을 피하고 불가피하면 Link Text에서 동작을 안내합니다.                                                         | NosLog가 새 탭을 강제하지 않으므로 별도 새 탭 안내가 필요 없음을 확인합니다.                       | GOV.UK 콘텐츠 Style은 NosLog 시각 처리를 정하지 않습니다.       |
+| [USWDS: Link](https://designsystem.digital.gov/components/link/)                                                       | 외부 목적지와 새 Context 목적지는 일관되고 명시적인 의미가 필요합니다.                                                  | 예측 가능한 일반 외부 플레이 영상 Link를 지지합니다.                                               | USWDS Icon Styling은 채택하지 않습니다.                         |
+| [MDN: `<a>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a)                                   | 새 탭이나 Application을 여는 Link에는 접근 가능한 안내와 안전한 Attribute가 필요합니다.                                 | 현재 Context 이동으로 피하는 접근성 비용을 기록합니다.                                             | Browser·OS App 연결은 NosLog Control 밖입니다.                  |
+| [Primer: Link 접근성](https://primer.style/product/components/link/accessibility/)                                     | 기본적으로 새 탭을 강제하지 않고 사용자가 Browser Control로 선택할 수 있게 합니다.                                      | Command/Ctrl-click 선택 보존을 직접 지지합니다.                                                    | GitHub 문구와 Iconography는 NosLog 요구사항이 아닙니다.         |
+| [WCAG 2.2: Focus 순서](https://www.w3.org/WAI/WCAG22/Understanding/focus-order.html)                                   | 순차 Focus는 Context 변경에서도 의미와 조작을 보존해야 합니다.                                                          | 현행 `body` Focus 유실을 거절하고 복원 동작을 규정합니다.                                          | Framework 구현을 정하지 않습니다.                               |
+| [WAI-ARIA APG: Keyboard Interface](https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/)                      | 복합 Control은 예측 가능한 활성 Focus와 명시적 이동 규칙을 가져야 합니다.                                               | 내부 갱신 중 난이도·탭·Combobox Control Focus 유지를 지지합니다.                                   | APG 예시도 제품 테스트가 필요합니다.                            |
+| [Primer: App-like Web 경험](https://primer.style/accessibility/design-guidance/app-like-web-experiences/)              | Soft Navigation은 Document Title을 갱신하고 새 Context에 Focus하며 Hard Navigation은 Browser 동작을 사용할 수 있습니다. | Route 간 Soft Entry에서만 `h1` Focus를 사용하고 Hard Load나 내부 Panel 전환에는 사용하지 않습니다. | 정확한 Framework Hook은 구현 작업입니다.                        |
+| [Primer: Focus 관리](https://primer.style/accessibility/design-guidance/focus-management/)                             | 갱신·Context 종료 뒤 Focus는 논리적이고 보이며 복구 가능해야 합니다.                                                    | 뒤로가기 출발 결과 복원과 정확한 오류 Focus를 지지합니다.                                          | NosLog Route 상태를 정의하지 않습니다.                          |
+| [Next.js: 접근성](https://nextjs.org/docs/architecture/accessibility)                                                  | Client 전환에는 의미 있는 Title과 Route 안내가 필요합니다.                                                              | 악곡 상세 Route의 다국어 Title과 명확한 목적지 Heading을 요구합니다.                               | Next.js Route 안내만으로 출발점 Focus가 복원되지는 않습니다.    |
+| [React Router: 접근성](https://reactrouter.com/how-to/accessibility)                                                   | Client-side Routing은 명시적인 Focus와 Live 안내 검토가 필요합니다.                                                     | Soft Navigation 계약을 독립적인 Framework 근거로 확인합니다.                                       | NosLog는 React Router가 아니라 Next.js를 사용합니다.            |
+| [WCAG 2.1: Reflow](https://www.w3.org/WAI/WCAG21/Understanding/reflow.html)                                            | 콘텐츠는 유효 `320px` 너비에서 이차원 Scroll 없이 Reflow해야 합니다.                                                    | 가장 작은 필수 좁은 승인 대상과 Zoom 검사를 정합니다.                                              | 모든 중간 테스트 폭을 선택하지는 않습니다.                      |
+| [web.dev: 반응형 Web Design 기초](https://web.dev/articles/responsive-web-design-basics)                               | 유연한 콘텐츠에서 시작하고 콘텐츠가 요구할 때 Breakpoint를 선택합니다.                                                  | Device 이름 Breakpoint 대신 연속 전환 검사를 지지합니다.                                           | NosLog의 정확한 콘텐츠 폭은 정하지 않습니다.                    |
+| [MDN: 반응형 디자인](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layout/Responsive_Design) | 유연한 Grid, Media Query 및 Intrinsic 콘텐츠 동작을 함께 사용합니다.                                                    | 좁은·전환·넓은 승인 Matrix를 지지합니다.                                                           | 예시는 교육용이며 NosLog 전용이 아닙니다.                       |
+| [Tailwind CSS: 반응형 디자인](https://tailwindcss.com/docs/responsive-design)                                          | Mobile-first Variant는 공간이 늘어날 때 Adaptation을 더합니다.                                                          | 승인된 390px 우선 계층과 추가형 넓은 화면 구성에 맞습니다.                                         | 기본 Breakpoint는 승인된 NosLog Token이 아닙니다.               |
+| [MDN: Container Query](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries)          | Component는 Viewport뿐 아니라 실제 Container에 맞춰 적응할 수 있습니다.                                                 | 사용 가능한 콘텐츠 폭에서 영역 Switcher와 분석 Panel을 측정하는 근거입니다.                        | 최종 Browser 지원과 구현 선택은 기술 작업입니다.                |
+| [Playwright: Test Project](https://playwright.dev/docs/test-projects)                                                  | 하나의 Test Suite를 여러 Browser·Viewport·Device 구성에서 실행할 수 있습니다.                                           | 핵심 Chromium 검사와 Release 교차 Browser Smoke 검사를 분리합니다.                                 | 자동 Emulation은 실제 Device 검증이 아닙니다.                   |
+| [Playwright: Emulation](https://playwright.dev/docs/emulation)                                                         | Viewport, Locale, Color Scheme 및 Device 속성을 Parameterize할 수 있습니다.                                             | 반복 가능한 KO/JA/EN 및 폭 Fixture를 지지합니다.                                                   | 모든 모바일 Browser·보조 기술 동작을 재현할 수 없습니다.        |
+| [Chrome DevTools: Device Mode](https://developer.chrome.com/docs/devtools/device-mode)                                 | 반응형 Preset과 Throttling은 반복 검사를 돕지만 모바일 Device를 근사할 뿐입니다.                                        | 레이아웃에는 Simulation을 사용하면서 실제 Device Release 검사를 유지합니다.                        | Chrome Simulation은 iOS Safari를 검증할 수 없습니다.            |
+| [GOV.UK: Browser와 Device](https://www.gov.uk/service-manual/technology/designing-for-different-browsers-and-devices)  | Production Service는 사용자 근거로 최신 Mobile·Desktop Browser Family 지원을 정합니다.                                  | iOS Safari, Android Chrome 및 Desktop Browser Release Coverage를 명시합니다.                       | 최종 Version Cutoff는 Release 시점 NosLog 분석을 따라야 합니다. |
+| [GOV.UK: 보조 기술 테스트](https://www.gov.uk/service-manual/technology/testing-with-assistive-technologies)           | 핵심 여정에는 Mobile Screen Reader를 포함한 실제 보조 기술 테스트가 필요합니다.                                         | 주요 악곡 상세 여정의 VoiceOver·TalkBack 승인을 지지합니다.                                        | 실제 NosLog 사용자 테스트를 대신하지 않습니다.                  |
+| [W3C 국제화: 줄바꿈](https://www.w3.org/International/articles/typography/linebreak.en.html)                           | 일본어·한국어·영어에는 서로 다른 줄바꿈 기대가 있습니다.                                                                | 긴 제목·읽기·아티스트·번역 제목 Fixture를 규정합니다.                                              | 최종 Typography에는 Font Specimen이 필요합니다.                 |
+| [W3C 국제화: 언어 선언](https://www.w3.org/International/questions/qa-html-language-declarations)                      | Page와 혼합 언어 콘텐츠에는 올바른 `lang` 선언이 필요합니다.                                                            | 원문·번역 악곡 정체성에 Locale Page 언어와 구문 단위 언어를 요구합니다.                            | 언어 Metadata만으로 시각적 줄바꿈이 해결되지는 않습니다.        |
 
 ### 권위 있는 상호작용 및 레이아웃 가이드
 
@@ -1340,9 +1482,10 @@ Context 및 현재 사용자를 찾는 복구 가능한 방법을 갖춘 간결�
   해칩니다. 측정된 바깥 경계와 콘텐츠별 Grid를 사용합니다.
 - **채보 보기를 채보 정보 안에 배치:** 거절했습니다. 뷰어는 직접 채보 단위
   Action이며 정보 Panel을 먼저 열도록 요구하면 안 됩니다.
-- **사용할 수 없을 때 비활성 채보 보기 Button 자리 유지:** 거절했습니다.
-  사용할 수 없는 주요 컨트롤을 보존하지 않고 간결한 사용 가능 여부 Text를
-  사용합니다.
+- **사용할 수 없는 선택 채보 Action을 제거하거나 별도 사용 가능 여부 Text로
+  대체:** 거절했습니다. 승인된 안정적인 두 자리 Action Map을 유지하고, 경쟁하는
+  빈 상태 문구를 추가하지 않은 채 명확하게 비활성화된 Action 자체로 자료 부재를
+  전달합니다.
 - **로그인·비로그인 사용자에게 서로 다른 Query 없는 기본값 사용:** 거절했습니다.
   같은 URL이 숨겨진 인증 상태에 따라 다른 콘텐츠를 열어 예측 가능성과 공유 Link의
   의미를 약화합니다.
@@ -1413,19 +1556,25 @@ Context 및 현재 사용자를 찾는 복구 가능한 방법을 갖춘 간결�
   사건입니다.
 - **현재 배치를 이력 Control 안에 숨김:** 거절했습니다. 현재 배치가 주요 사실이며
   이력은 선택적인 보조 근거입니다.
+- **플레이 영상을 새 탭으로 강제:** 거절했습니다. 일반 외부 이동이고 사용자는 Browser의
+  새 탭 Control을 그대로 사용할 수 있으며 강제 Context는 추가 안내를 요구하면서
+  방향 감각을 더 흐립니다.
+- **새로 불러온 모든 내부 Panel로 Focus 이동:** 거절했습니다. 난이도와 영역 변경은
+  활성화한 Control에 Focus를 유지하며 Route 간 Client 전환만 새 Page Heading Context를
+  만듭니다.
+- **모든 Fixture의 전체 Cartesian Product 사용:** 거절했습니다. 범위를 제한한 Pairwise
+  위험 Matrix가 유지·해석하기 지나치게 큰 Suite 없이 각 의미 경계를 검증합니다.
+- **현행 `390x844`와 `1280x900` Chromium Project만 검증:** 최종 2.0 Release
+  계약으로는 거절했습니다. 핵심 자동화로 유지하되 좁은 경계·넓은 레이아웃·교차
+  Browser·실제 Device·Zoom·보조 기술 검사를 추가합니다.
 
-## 다음 논의의 미확정 결정
+## Page 기획서 승인 뒤 미룬 측정값
 
-다음 결정은 아직 승인하지 않았습니다.
-
-1. 실제 데이터, 긴 데이터, 누락 데이터 및 다국어 대표 사례
-2. 전체 Route 진입 Focus, 전체 Page 승인 기준 및 최종 브라우저 검증 너비
-3. 플레이 영상을 현재 탭에서 열지, 새 탭임을 명시하고 열지 및 이에 필요한 최종
-   일본어·영어 접근성 문구
-
-정확한 Selector-탭 전환 너비와 바깥 최대 콘텐츠 너비는 미확정 구조가 아니라 의도적으로
-미룬 측정값입니다. Downstream Design 전에 Foundation 타이포·Grid Specimen에서 이를
-확정하고 기록해야 합니다.
+이 악곡 상세 Page 기획서에는 제품·콘텐츠·동작·상태·다국어·접근성 또는 Page 단위 승인
+결정이 미확정으로 남아 있지 않습니다. 정확한 Selector-탭 전환 너비, 바깥 최대 콘텐츠
+너비, 시각 Token 및 Component Geometry는 미확정 구조가 아니라 의도적으로 미룬
+측정값입니다. Downstream 고해상도 디자인 전에 Foundation 타이포·Grid Specimen에서
+이를 측정·검증·기록해야 합니다.
 
 ## 결정 기록
 
@@ -1433,7 +1582,7 @@ Context 및 현재 사용자를 찾는 복구 가능한 방법을 갖춘 간결�
 | ------- | ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | -------- |
 | MDET-01 | Entity 모델                     | 악곡 정체성을 안정적으로 유지하고 선택 난이도를 활성 채보 Context로 취급                                                                  | `승인`   |
 | MDET-02 | 난이도 상태                     | 선택 난이도를 공유 가능하고 History에서 복구 가능한 내비게이션 상태에 유지                                                                | `승인`   |
-| MDET-03 | 뷰어 진입                       | 채보 보기를 정보 Panel 밖의 직접 선택 채보 Action으로 두고 외부 Fallback 또는 간결한 사용 불가 Text 제공                                  | `승인`   |
+| MDET-03 | 뷰어 진입                       | 채보 보기를 정보 Panel 밖의 직접 선택 채보 Action으로 두며 안정적인 배치와 사용 불가 상태는 MDET-70을 따름                                | `승인`   |
 | MDET-04 | 콘텐츠 구조                     | A형 사용: 하나의 지속 Context 아래 적응형으로 선택하는 네 가지 의미 영역과 한 번에 하나의 선택 Panel                                      | `승인`   |
 | MDET-05 | 초기 데이터 경계                | 영역 선택 전에 모든 영역 상세·요약을 요구하지 않고 유효한 방문 영역 데이터 재사용                                                         | `승인`   |
 | MDET-06 | 긴 페이지 구조                  | 네 가지 전체 영역을 하나의 긴 페이지로 Rendering하지 않음                                                                                 | `거절`   |
@@ -1441,7 +1590,7 @@ Context 및 현재 사용자를 찾는 복구 가능한 방법을 갖춘 간결�
 | MDET-08 | 현재 시각 계승                  | 현행 시각 구현은 감사 근거일 뿐이며 2.0 재설계를 제한하지 않음                                                                            | `거절`   |
 | MDET-09 | 의미 콘텐츠 영역 순서           | 정보, 개인 기록, 랭킹, 서열·커뮤니티 평가 순서                                                                                            | `승인`   |
 | MDET-10 | 반응형 및 시각 구성             | 승인된 좁은 Switcher·별도 난이도 행·위쪽 Object Context·Panel별 넓은 구성을 사용하고 정확한 시각 Token은 이후 측정                        | `승인`   |
-| MDET-11 | 남은 콘텐츠·상태·접근성 계약    | 미확정 영역의 페이지 기획서 조사와 승인 절차 계속 진행                                                                                    | `미확정` |
+| MDET-11 | 완성된 Page 기획서 계약         | MDET-74까지 콘텐츠·상태·접근성·대표 데이터 및 승인 결정을 완성                                                                            | `승인`   |
 | MDET-12 | 다국어 영역 라벨                | 승인된 의미 순서를 바꾸지 않고 `랭킹`/`ランキング`/`Ranking`과 `서열·평가`/`難易度・評価`/`Tier & Evaluation` 사용                        | `승인`   |
 | MDET-13 | 일반 진입 기본값                | 로그인·비로그인 Query 없는 진입 모두 정보 열기                                                                                            | `승인`   |
 | MDET-14 | 출처 인지 진입                  | 알고 있는 기록·랭킹·서열·평가 및 뷰어 복귀 의도를 복원 가능한 내비게이션 상태로 표현                                                      | `승인`   |
@@ -1501,6 +1650,10 @@ Context 및 현재 사용자를 찾는 복구 가능한 방법을 갖춘 간결�
 | MDET-68 | 콘텐츠 기반 표현 전환           | 가장 긴 다국어 조합과 검증된 글자·Padding·Focus·간격이 맞을 때만 탭을 사용하고 정확한 기준은 Foundation Specimen에서 측정                 | `승인`   |
 | MDET-69 | 반응형 영역 전환 접근성         | 좁은 화면은 명시적 선택 Combobox/Listbox, 필요 시 불러오는 넓은 Panel은 APG 수동 활성화 탭 사용                                           | `승인`   |
 | MDET-70 | 선택 채보 Action 사용 가능 여부 | 선택 난이도 가까이에 채보 보기·플레이 영상을 안정된 두 자리로 유지하고 자료가 없으면 별도 빈 상태 문구 없이 비활성화하며 외부 채보는 제외 | `승인`   |
+| MDET-71 | 플레이 영상 외부 이동           | `플레이 영상`/`プレー動画`/`Play video`를 사용하고 새 탭 안내를 강제하지 않은 채 현재 Browsing Context에서 이동                           | `승인`   |
+| MDET-72 | Route 진입 및 복원 Focus        | Hard Load는 Browser 기본, Route 간 Soft Entry는 악곡명 `h1`, Back은 출발점, 내부 전환은 Control, Soft Error는 상태 Heading에 Focus        | `승인`   |
+| MDET-73 | 대표 Fixture Matrix             | 전체 Cartesian Suite 대신 승인된 실제 긴 값·누락 Catalog 사례, 다국어 Variant 및 범위를 제한한 Pairwise 상태 경계 사용                    | `승인`   |
+| MDET-74 | Page 승인 및 검증               | 320/360/390/430/768/1024/1280/1440, 콘텐츠 기반 전환, 핵심 자동화, 교차 Browser·실제 Device Smoke, Zoom, Keyboard 및 Mobile AT 검증       | `승인`   |
 
 ## 현재 마일스톤
 
@@ -1560,11 +1713,16 @@ Auto-width 수동 활성화 탭을 사용합니다. Page는 상시 390px 데스�
 선택 채보 Action 계약도 승인했습니다. **채보 보기**와 **플레이 영상**은 선택 난이도
 바로 뒤이자 콘텐츠 영역 전환보다 앞의 안정적인 두 자리를 사용하고, 콘텐츠 영역을
 바꿔도 유지하며 대응 자료가 없으면 명확하게 비활성화합니다. 별도의 **공개 채보 없음**
-문구와 외부 채보 Action은 사용하지 않습니다. 최종 시각 Token과 플레이 영상의 외부
-이동 탭 동작은 계속 미룹니다.
+문구와 외부 채보 Action은 사용하지 않습니다. 플레이 영상은 승인된 다국어 라벨을
+사용하고 새 탭을 강제하지 않은 채 현재 Browsing Context에서 이동합니다.
 
 이로써 진입, 인증 복원, 채보 정보, 개인 기록, 랭킹 및 커뮤니티 의견을 포함한
-서열·평가 콘텐츠 계약, 공통 비동기 상태 및 반응형 영역 전환 구성이 정해졌습니다.
-현행 페이지의 시각 디자인을 승인하지 않으며 악곡 상세 페이지 기획서를 완료하지도
-않습니다. 다음 논의에서는 대표 데이터, 전체 Page 승인 기준 및 플레이 영상 외부 이동
-동작을 확정해야 합니다.
+서열·평가 콘텐츠 계약, 공통 비동기 상태 및 반응형 영역 전환 구성이 정해졌습니다. 또한
+Hard·Soft Route Focus, 출발점 복원, 실제 Catalog와 범위를 제한한 상태 Fixture Matrix,
+정확한 좁은·전환·넓은 검증 너비, Release Browser·보조 기술 범위 및 Page 단위 승인
+기준 열 개를 확정했습니다.
+
+따라서 악곡 상세 Page 기획서는 2026-08-01 기준으로 완성·승인했습니다. 이 승인은 현행
+Page의 시각 디자인을 채택하거나 Foundation 값과 최종 Claude Design 구성을 미리
+승인하지 않습니다. Foundation 및 대표 Specimen 단계에서는 이 승인된 제품 계약을
+바꾸지 않고 의도적으로 미룬 시각 값을 측정해야 합니다.

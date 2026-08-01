@@ -2,22 +2,19 @@
 
 ## Document Control
 
-- Status: `In progress`
-- Decision status: `Structure, entry priority, source-aware restoration, signed-out
-Record behavior, Chart Info scope, personal-record hierarchy, Ranking hierarchy,
-leaderboard semantics, tie handling, score distribution, pagination, and Ranking
-states approved; Tier/evaluation labels, hierarchy, placement scope, community
-aggregation, pattern radar, evaluation input, and community-opinion contract approved;
-shared switching, loading, cache-freshness, empty, permission, error, retry, and
-announcement contract approved; compact and wide responsive composition, area-switch
-semantics, difficulty-control behavior, and selected-chart action availability and
-placement approved; remaining representative-data and page-level acceptance decisions
-remain open`
+- Status: `Approved`
+- Decision status: `Complete page brief approved: entity and action model, content
+architecture, entry and restoration, authentication, Chart Info, personal Record,
+Ranking, Tier/evaluation, community opinions, asynchronous recovery, responsive
+composition, selected-chart action availability, current-tab Play-video navigation,
+route-entry focus, representative data and state fixtures, and page-level browser
+acceptance contract`
 - Evidence status: `Repository inspection, current-product audit, approved information
 architecture, approved shared-discovery handoff, and cited tabs, adaptive-layout,
 progressive-disclosure, leaderboard, pagination, data-visualization, NOSTALGIA
 scoring, chart-pattern, chord-input, community-evaluation, radar-profile,
-rhythm-game, disabled-state, media-availability, accessibility, and infrastructure
+rhythm-game, disabled-state, media-availability, external-link, focus-management,
+reflow, localization, browser-support, assistive-technology, and infrastructure
 guidance`
 - Date started: 2026-07-31
 - Last decision update: 2026-08-01
@@ -46,8 +43,9 @@ guidance`
 - **Rejected:** Considered and explicitly not selected.
 - **Superseded:** Replaced by a later approved direction.
 
-This brief is not yet a complete approved phase deliverable. Only the decisions marked
-`Approved` or `Rejected` are authoritative.
+This brief is the approved Music-detail page-family deliverable. Decisions marked
+`Approved`, `Rejected`, or `Superseded` are authoritative within their stated scope;
+exact foundation tokens and high-fidelity composition remain downstream work.
 
 ## Purpose
 
@@ -163,6 +161,28 @@ These are implementation observations, not approved 2.0 ranking rules. The appro
 contract below resolves the duplicate current-user presentation, ranking semantics,
 distribution denominator, page size, and localized accessibility gaps.
 
+### Observed Representative Data and Browser Evidence
+
+- The source catalog contains `578` Music entries. `425` provide all four standard
+  difficulties and `153` omit Real. Real availability must therefore be treated as
+  ordinary data variation rather than an exceptional error.
+- The longest current title is `54` characters:
+  **50th Memorial Songs -二人の時 ～under the cherry blossoms～-**
+  (`2f733689ec21214d6180888fe0e6b42f`). It also carries a long Japanese reading and
+  has no Real chart.
+- The longest current artist value is `67` characters on **STULTI**
+  (`bfdaadfb98501907925ecf41a076108d`), which provides all four difficulties.
+- The longest Japanese reading belongs to **協奏曲第1番ホ長調 RV
+  269「春」より第一楽章** (`eaa4047ce17fb873b19b42454b0f6f3b`).
+- Ten current Music entries omit artist. **Happy Birthday to You**
+  (`8f655bcd097d033f7c464f96dc20223d`) is a four-difficulty representative.
+- At `390px`, the current Japanese page clips the long reading and title aggressively.
+  At `1280px`, the page still confines the principal content to the current compact
+  shell. These are migration defects, not approved truncation or width behavior.
+- In the current client-side area switch, activating Ranking leaves DOM focus on
+  `body`. The current Play-video link also uses `target="_blank"` without announcing
+  the new browsing context. The approved contract below replaces both behaviors.
+
 ## Approved Entity and Action Model
 
 ### Music Identity and Selected Chart
@@ -174,8 +194,9 @@ distribution denominator, page size, and localized accessibility gaps.
 - Preserve the selected difficulty in a shareable and history-restorable URL.
 - Do not duplicate the Music entry as four unrelated detail pages merely because it
   has four chart difficulties.
-- Exact difficulty-control geometry, position, and visual treatment remain open for a
-  later responsive specimen.
+- Exact difficulty-control geometry, position, and visual treatment are deliberately
+  deferred to a later responsive specimen; this is not an open product-behavior
+  decision.
 
 ### Published Chart Viewer Entry
 
@@ -194,8 +215,12 @@ distribution denominator, page size, and localized accessibility gaps.
 - NosLog has no external-chart product action. A current `chart_preview_url` field,
   administrator input, or fallback is implementation inventory to remove during the
   2.0 implementation mapping, not a product requirement.
-- Exact visual tokens, final button geometry, localized Japanese/English copy, and
-  whether Play video opens in the current or a new tab remain open.
+- Use `플레이 영상` / `プレー動画` / `Play video` for the localized action label.
+  A valid Play-video URL opens in the current browsing context. NosLog must not force
+  `target="_blank"` or add new-tab copy; users retain browser controls for opening a
+  separate tab. Mobile operating-system handling of an associated YouTube app is a
+  user-agent behavior, not a NosLog-forced browsing-context decision.
+- Exact visual tokens and final button geometry remain foundation work.
 
 ## Approved Content Architecture
 
@@ -517,9 +542,21 @@ for a new authentication architecture.
   coherent update is ready. Do not announce every intermediate skeleton change.
 - A visible request failure is announced once with suitable error semantics, while
   focus remains in a predictable place and Retry is reachable in normal focus order.
-- Back and Forward restore the exact URL-addressed content and focus context without
-  recomputing a hidden default. Focus behavior after full route entry remains part of
-  the page-level acceptance discussion.
+- A hard load, direct URL entry, or reload follows normal document focus behavior;
+  do not force focus after the browser has loaded the document.
+- A client-side transition from discovery, Ranking, Tier, profile, or another product
+  route into a different Music-detail destination updates the localized document title
+  and moves focus to the Music-title `h1` after stable identity context is ready. The
+  heading may use `tabindex="-1"` for programmatic focus and must not enter ordinary
+  sequential tab order.
+- Back and Forward restore the exact URL-addressed content. Returning to an origin
+  collection restores its initiating result or action and nearby scroll position when
+  that origin still exists; it does not replace that recovery with Music-title focus.
+- Difficulty and content-area changes within Music detail keep focus on the activated
+  control as specified above. They never move focus into a loading or completed panel.
+- A client-side transition to a confirmed Not Found or full-route error announces and
+  focuses that state heading after it is ready. A hard-loaded error follows ordinary
+  document behavior.
 
 ## Approved Chart Info and Personal Record Contract
 
@@ -578,7 +615,10 @@ the rejected cross-domain Overview pattern inside the default area.
   programmatically, and, if a desktop tooltip is used, make the explanation available
   on keyboard focus as well. Do not rely on a tooltip as the only mobile explanation.
 - Foundation specimens own final dimensions, spacing, color, contrast, and surface
-  treatment. The Play-video external-navigation target remains an open behavior.
+  treatment.
+- Activate a valid **Play video** link in the current browsing context. Do not force a
+  new tab and therefore do not append a new-tab warning to the label. Browser-native
+  user choice such as Command/Ctrl-click remains available.
 
 ### Personal Record Priority
 
@@ -1133,7 +1173,127 @@ keeps evaluation data separable from its optional written opinion. None of the v
 surface treatments in these products or the approval mock-up is adopted as NosLog's
 final design.
 
+## Approved Representative Data and Page Acceptance Contract
+
+### Representative Data Fixtures
+
+Use a bounded, risk-based fixture set rather than the Cartesian product of every
+locale, state, viewport, and content variation. The following cases are mandatory for
+guide specimens and later implementation acceptance where the affected content is
+present:
+
+| Fixture                  | Required content and variation                                                                                                                         | What it validates                                                                                                        |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| Long mixed identity      | Actual `2f733689ec21214d6180888fe0e6b42f`: longest mixed Japanese/Latin title, long Japanese reading, three difficulties, no Real                      | Title/reading hierarchy, wrapping, full accessible name, missing-difficulty state, and compact/wide identity composition |
+| Long artist              | Actual **STULTI** (`bfdaadfb98501907925ecf41a076108d`): `67`-character artist and all four difficulties                                                | Independent title/artist rows, long metadata wrapping, and complete difficulty controls                                  |
+| Long Japanese reading    | Actual `eaa4047ce17fb873b19b42454b0f6f3b`                                                                                                              | Japanese line breaking, language declaration, and no clipping at compact widths                                          |
+| Missing artist           | Actual **Happy Birthday to You** (`8f655bcd097d033f7c464f96dc20223d`) with all four difficulties                                                       | Omit the unavailable row without a blank placeholder or invented artist                                                  |
+| Typical complete chart   | A representative Music entry with all required chart facts, a published NosLog chart, a valid Play-video URL, four difficulties, and signed-in records | Normal hierarchy, both active actions, all semantic areas, and stable switching                                          |
+| Localized title variants | Approved long Korean and English title fixtures, the long Japanese reading, translation display on/off, and missing approved translation               | KO/JA/EN hierarchy, omission without blank space, wrapping, and full programmatic names                                  |
+
+State coverage must include the following bounded seams. Do not create every possible
+combination; combine them pairwise with the identity fixtures above while preserving
+the semantic distinction of each state.
+
+- signed in and signed out; played and unplayed selected chart;
+- Ranking participant counts `0`, `1`, `25`, and `26+`, including ties and the current
+  user both inside and outside the visible page;
+- Tier/evaluation counts `0`, `1–2`, and `3+` to cover hidden versus published
+  aggregates;
+- the four resource combinations for View chart and Play video: neither, either one,
+  or both available;
+- initial loading, delayed response, fresh cache, stale revalidation, empty result,
+  authentication, eligibility or permission restriction, retryable error, and
+  confirmed Not Found; and
+- destructive evaluation and opinion actions only in the precise approved scopes,
+  including confirmation, cancellation, success, and recoverable failure.
+
+### Responsive and Browser Verification Targets
+
+- Verify compact widths at exactly `320`, `360`, `390`, and `430` CSS pixels.
+- Verify transition and wide layouts at `768`, `1024`, `1280`, and `1440` CSS pixels.
+- Continuously resize around the measured content-driven area-switcher and panel-layout
+  transitions. The width at which tabs replace the compact combobox is a specimen
+  measurement, not a device-name breakpoint.
+- Retain Chromium automation for the core `390x844` and `1280x900` paths. During the
+  later 2.0 implementation, add parameterized overflow/content checks at `320`, `360`,
+  and `430`, plus release smoke coverage in Chromium, WebKit/Safari behavior, and
+  Firefox.
+- Manually verify the critical path on current iOS Safari and Android Chrome, plus
+  desktop Chrome, Safari, and Firefox. Add Edge to release smoke coverage when usage
+  analytics or deployment policy requires it.
+- Verify keyboard-only operation, visible focus, VoiceOver on iOS/Safari, TalkBack on
+  Android/Chrome, `200%` text enlargement, and `400%` page zoom or its effective
+  `320px` reflow condition.
+- Browser simulation is useful for repeatable layout checks but does not replace
+  current real-device and assistive-technology verification before the 2.0 release.
+
+### Page-Level Acceptance Criteria
+
+The Music-detail page family is accepted only when all of the following hold:
+
+1. Music identity, selected difficulty, resource actions, area switcher, and selected
+   panel preserve the approved order and remain understandable without relying on the
+   current 1.x visual styling.
+2. The original title remains primary; enabled translation/reading, artist, and chart
+   context remain distinguishable with the mandatory long and missing fixtures. No
+   meaningful text collides, clips, or becomes available only on hover.
+3. Difficulty and content-area state are shareable and restored by history. Known
+   source intent opens the approved area, and authentication returns to the exact
+   Music, difficulty, and Record destination.
+4. View chart and Play video retain their stable two-position map. Availability,
+   disabled semantics, current-tab Play-video navigation, and focused viewer return
+   follow the approved contracts.
+5. Loading, cached, empty, authentication, permission, error, retry, and Not Found
+   states affect only the smallest meaningful region, preserve stable identity, and
+   never expose contradictory stale target content.
+6. Keyboard and assistive-technology users can identify the page, selected difficulty,
+   selected area, updates, errors, and current Ranking position. Focus follows the
+   approved hard-load, soft-entry, internal-switch, history-return, and error rules and
+   is never lost to `body`.
+7. Korean, Japanese, and English content uses correct page and phrase-level language
+   semantics, approved localized labels, suitable line breaking, full accessible
+   names, and no locale-specific hard-coded suffixes.
+8. All required widths reflow without page-level horizontal scrolling. Wide layouts
+   use available space according to each panel's approved comparison or analysis role
+   instead of retaining the current `390px` desktop canvas.
+9. The representative state suite passes without uncaught browser errors, broken
+   history restoration, duplicate live announcements, hidden primary actions, or
+   inaccessible destructive confirmations.
+10. Exact color, typography, spacing, radius, elevation, and final component geometry
+    are validated later through approved foundations and specimens; their deferral
+    does not permit changing the content, behavior, state, or acceptance contracts in
+    this brief.
+
 ## Reference Comparison
+
+### Page Acceptance, External Navigation, Focus, and Validation Guidance
+
+| Source                                                                                                                          | Transferable finding                                                                                                                 | NosLog application                                                                                     | Limitation                                                                        |
+| ------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------- |
+| [W3C: G200](https://www.w3.org/TR/WCAG-TECHS/G200.html)                                                                         | Opening a new browsing context should be limited to cases where it is necessary and warned in advance.                               | Supports current-context Play-video navigation rather than an unannounced forced tab.                  | The technique does not decide mobile app-link handling.                           |
+| [GOV.UK: Links](https://design-system.service.gov.uk/styles/links/)                                                             | Avoid forced new tabs; when unavoidable, disclose the behavior in link text.                                                         | Confirms that no new-tab warning is needed because NosLog does not force one.                          | GOV.UK content style does not set NosLog's visual treatment.                      |
+| [USWDS: Link](https://designsystem.digital.gov/components/link/)                                                                | External and new-context destinations need consistent, explicit meaning.                                                             | Supports a normal external Play-video link with predictable behavior.                                  | USWDS icon styling is not adopted.                                                |
+| [MDN: `<a>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a)                                            | Links that open a new tab or application require accessible warning and safe attributes.                                             | Records the accessibility cost avoided by current-context navigation.                                  | Browser or OS app association remains outside NosLog control.                     |
+| [Primer: Link accessibility](https://primer.style/product/components/link/accessibility/)                                       | Do not force a new tab by default; users can choose one with browser controls.                                                       | Directly supports preserving Command/Ctrl-click choice.                                                | GitHub's copy and iconography are not NosLog requirements.                        |
+| [WCAG 2.2: Focus Order](https://www.w3.org/WAI/WCAG22/Understanding/focus-order.html)                                           | Sequential focus must preserve meaning and operability across context changes.                                                       | Rejects the current focus loss to `body` and governs restoration.                                      | It does not prescribe a framework implementation.                                 |
+| [WAI-ARIA APG: Keyboard Interface](https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/)                               | Composite controls keep a predictable active focus and require explicit movement rules.                                              | Supports retaining focus on difficulty, tab, and combobox controls during internal updates.            | APG examples still require product testing.                                       |
+| [Primer: App-like web experiences](https://primer.style/accessibility/design-guidance/app-like-web-experiences/)                | Soft navigation should update the document title and place focus at the new context, while hard navigation can use browser behavior. | Supports `h1` focus on cross-route soft entry but not on hard load or internal panel switches.         | Exact framework hooks remain implementation work.                                 |
+| [Primer: Focus management](https://primer.style/accessibility/design-guidance/focus-management/)                                | Focus should remain logical, visible, and recoverable after updates and dismissed contexts.                                          | Supports origin-result restoration on Back and precise error focus.                                    | The guide does not define NosLog route state.                                     |
+| [Next.js: Accessibility](https://nextjs.org/docs/architecture/accessibility)                                                    | Client transitions need meaningful titles and route announcements.                                                                   | Requires localized titles and one clear destination heading for Music-detail routes.                   | Next.js route announcing alone does not restore origin focus.                     |
+| [React Router: Accessibility](https://reactrouter.com/how-to/accessibility)                                                     | Client-side routing requires explicit focus and live-announcement consideration.                                                     | Provides independent framework confirmation of the soft-navigation contract.                           | NosLog uses Next.js rather than React Router.                                     |
+| [WCAG 2.1: Reflow](https://www.w3.org/WAI/WCAG21/Understanding/reflow.html)                                                     | Content must reflow at an effective `320px` width without two-dimensional scrolling.                                                 | Establishes the smallest required compact acceptance target and zoom check.                            | It does not select every intermediate test width.                                 |
+| [web.dev: Responsive web design basics](https://web.dev/articles/responsive-web-design-basics)                                  | Start from flexible content and choose breakpoints when content requires them.                                                       | Supports continuous transition testing instead of device-name breakpoints.                             | The article does not define NosLog's exact content widths.                        |
+| [MDN: Responsive design](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layout/Responsive_Design)      | Flexible grids, media queries, and intrinsic content behavior work together.                                                         | Supports the compact, transition, and wide acceptance matrix.                                          | Examples are educational rather than NosLog-specific.                             |
+| [Tailwind CSS: Responsive design](https://tailwindcss.com/docs/responsive-design)                                               | Mobile-first variants layer adaptations as space increases.                                                                          | Matches the approved 390px-first hierarchy and additive wide composition.                              | Default breakpoints are not approved NosLog tokens.                               |
+| [MDN: Container queries](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries)                 | Components can adapt to their actual container rather than only the viewport.                                                        | Supports measuring the area switcher and analytical panels from available content width.               | Final browser support and implementation choice remain technical work.            |
+| [Playwright: Test projects](https://playwright.dev/docs/test-projects)                                                          | One test suite can run across browsers, viewports, and device configurations.                                                        | Supports separating core Chromium checks from release cross-browser smoke coverage.                    | Automated emulation is not real-device validation.                                |
+| [Playwright: Emulation](https://playwright.dev/docs/emulation)                                                                  | Viewport, locale, color scheme, and device properties can be parameterized.                                                          | Supports repeatable KO/JA/EN and width fixtures.                                                       | Emulation cannot reproduce every mobile browser or assistive-technology behavior. |
+| [Chrome DevTools: Device mode](https://developer.chrome.com/docs/devtools/device-mode)                                          | Responsive presets and throttling aid repeatable inspection but only approximate mobile devices.                                     | Supports using simulation for layout while retaining real-device release checks.                       | Chrome simulation cannot validate iOS Safari.                                     |
+| [GOV.UK: Browsers and devices](https://www.gov.uk/service-manual/technology/designing-for-different-browsers-and-devices)       | Production services define supported current mobile and desktop browser families from audience evidence.                             | Supports explicit iOS Safari, Android Chrome, and desktop browser release coverage.                    | Final version cutoffs should follow NosLog analytics near release.                |
+| [GOV.UK: Testing with assistive technologies](https://www.gov.uk/service-manual/technology/testing-with-assistive-technologies) | Critical journeys require real assistive-technology testing, including mobile screen readers.                                        | Supports VoiceOver and TalkBack acceptance on the primary Music-detail journey.                        | It does not replace testing with actual NosLog users.                             |
+| [W3C Internationalization: Line breaking](https://www.w3.org/International/articles/typography/linebreak.en.html)               | Japanese, Korean, and English have different line-breaking expectations.                                                             | Governs the long title, reading, artist, and translated-title fixtures.                                | Final typography still requires font specimens.                                   |
+| [W3C Internationalization: Language declarations](https://www.w3.org/International/questions/qa-html-language-declarations)     | Page and mixed-language content need correct `lang` declarations.                                                                    | Requires localized page language and phrase-level language for original and translated Music identity. | Language metadata does not by itself solve visual wrapping.                       |
 
 ### Authoritative Interaction and Layout Guidance
 
@@ -1425,8 +1585,10 @@ override authoritative guidance or NosLog requirements.
   length and fact grouping. Use measured outer bounds and content-specific grids.
 - **Put View chart inside Chart information:** Rejected. The viewer is a direct
   chart-level action and should not require opening an informational panel first.
-- **Reserve a disabled View chart button when unavailable:** Rejected. Use concise
-  availability text instead of preserving an unusable primary control.
+- **Remove an unavailable selected-chart action or replace it with separate
+  availability text:** Rejected. Preserve the approved stable two-position action
+  map and communicate missing resources through the clearly disabled action itself,
+  without adding competing empty-state copy.
 - **Use different queryless defaults for signed-in and signed-out users:** Rejected.
   The same URL would open different content according to hidden authentication state,
   weakening predictability and shared-link meaning.
@@ -1503,95 +1665,107 @@ override authoritative guidance or NosLog requirements.
   that a compact line chart cannot communicate accurately.
 - **Hide current placements inside the history control:** Rejected. Current placement
   is the primary fact and history is optional secondary evidence.
+- **Force Play video into a new tab:** Rejected. It is a normal external navigation,
+  users retain native new-tab controls, and a forced context would require additional
+  warning while increasing disorientation.
+- **Move focus into every newly loaded internal panel:** Rejected. Difficulty and area
+  changes retain focus on their activated controls; only a cross-route client
+  transition establishes a new page heading context.
+- **Use an exhaustive Cartesian product of all fixtures:** Rejected. A bounded,
+  pairwise risk matrix covers each meaningful semantic seam without creating a suite
+  too large to maintain or interpret.
+- **Validate only the existing `390x844` and `1280x900` Chromium projects:** Rejected
+  as the final 2.0 release contract. Keep them as core automation while adding compact
+  boundary, wide-layout, cross-browser, real-device, zoom, and assistive-technology
+  checks.
 
-## Open Decisions for the Next Discussion
+## Deferred Measurements after Page-Brief Approval
 
-The following decisions have not been approved:
-
-1. representative real, long, missing, and multilingual data cases;
-2. full-route entry focus, complete page acceptance criteria, and final
-   browser-verification widths; and
-3. whether Play video uses current-tab navigation or an explicitly announced new tab,
-   plus final Japanese/English accessible copy for that behavior.
-
-The exact selector-to-tab transition width and outer maximum content width are
-deliberately deferred measurements, not unresolved architecture. Foundation
-typography/grid specimens must resolve and record them before downstream design.
+No product, content, behavior, state, localization, accessibility, or page-level
+acceptance decision remains open in this Music-detail page brief. The exact
+selector-to-tab transition width, outer maximum content width, visual tokens, and
+component geometry are deliberately deferred measurements rather than unresolved
+architecture. Foundation typography/grid specimens must resolve, test, and record
+them before downstream high-fidelity design.
 
 ## Decision Register
 
-| ID      | Decision                                             | Direction                                                                                                                                                                 | Status       |
-| ------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
-| MDET-01 | Entity model                                         | Keep Music identity stable and treat the selected difficulty as active chart context                                                                                      | `Approved`   |
-| MDET-02 | Difficulty state                                     | Preserve the selected difficulty in shareable and history-restorable navigation state                                                                                     | `Approved`   |
-| MDET-03 | Viewer entry                                         | Keep View chart as a direct selected-chart action outside the Information panel, with external fallback or concise unavailable text                                       | `Approved`   |
-| MDET-04 | Content architecture                                 | Use Pattern A: one persistent context with four adaptively selected semantic areas and one selected panel at a time                                                       | `Approved`   |
-| MDET-05 | Initial data boundary                                | Do not require every cross-domain detail or summary before the user selects its area; reuse valid visited-area data                                                       | `Approved`   |
-| MDET-06 | Long-page architecture                               | Do not render all four complete areas as one long page                                                                                                                    | `Rejected`   |
-| MDET-07 | Overview-hub architecture                            | Do not add a cross-domain summary hub before the four detailed areas                                                                                                      | `Rejected`   |
-| MDET-08 | Current visual inheritance                           | Current visual execution is audit evidence only and must not constrain the 2.0 redesign                                                                                   | `Rejected`   |
-| MDET-09 | Semantic content-area order                          | Information, personal Record, Ranking, then Tier/community evaluation                                                                                                     | `Approved`   |
-| MDET-10 | Responsive and visual composition                    | Use the approved compact switcher, separate difficulty row, top object context, and panel-specific wide composition; measure exact visual tokens later                    | `Approved`   |
-| MDET-11 | Remaining content, state, and accessibility contract | Continue the page-brief research and approval process for unresolved areas                                                                                                | `Open`       |
-| MDET-12 | Localized area labels                                | Use `랭킹`/`ランキング`/`Ranking` and `서열·평가`/`難易度・評価`/`Tier & Evaluation` without changing the approved semantic order                                         | `Approved`   |
-| MDET-13 | General-entry default                                | Open Information for both signed-in and signed-out queryless entry                                                                                                        | `Approved`   |
-| MDET-14 | Source-aware entry                                   | Encode known Record, Ranking, Tier/evaluation, and viewer-return intent in restorable navigation state                                                                    | `Approved`   |
-| MDET-15 | Signed-out Record                                    | Keep it visible and selectable; render a compact panel-level Login state without placeholder analytics or automatic authentication                                        | `Approved`   |
-| MDET-16 | Authentication restoration                           | Preserve locale, Music, difficulty, and Record through Login and required onboarding, then restore the exact destination                                                  | `Approved`   |
-| MDET-17 | Hidden default memory                                | Do not vary queryless default by authentication or globally remember the last-used area                                                                                   | `Rejected`   |
-| MDET-18 | Chart Info and My Record labels                      | Use `채보 정보`/`譜面情報`/`Chart Info` and `내 기록`/`プレー記録`/`My Record`                                                                                            | `Approved`   |
-| MDET-19 | Chart Info factual scope                             | Always show BPM, note count, and duration; conditionally show available release and unlock facts without duplicating persistent context                                   | `Approved`   |
-| MDET-20 | Cross-domain data ownership                          | Move pattern profile to Tier/evaluation and score distribution, player count, and relative placement to Ranking; leave no previews in Chart Info                          | `Approved`   |
-| MDET-21 | Selected-chart resource actions                      | Earlier wording incorrectly treated a current external-preview field as an approved external-chart product action; replaced by MDET-70                                    | `Superseded` |
-| MDET-22 | Personal Record hierarchy                            | Order Best performance, cumulative summary, Progress over time, Recent plays, then collapsed Judgement analysis                                                           | `Approved`   |
-| MDET-23 | Progress terminology                                 | Use `성장 추이`/`上達の推移`/`Progress over time`, while explicitly labeling the current series `베스트 스코어`/`ベストスコア`/`Best score`                               | `Approved`   |
-| MDET-24 | Play-count meaning                                   | Preserve per-user, per-chart `플레이 횟수`/`演奏回数`/`Play count`; exclude clear count and defer profile-wide Play count to the Profile brief                            | `Approved`   |
-| MDET-25 | Advanced record disclosure                           | Keep peer comparison optional and off by default; keep Judgement analysis collapsed while primary record facts remain visible                                             | `Approved`   |
-| MDET-26 | Duplicate pattern visualization                      | Do not show identical pattern values simultaneously as radar and bar charts; use one accessible five-axis radar plus exact structured values                              | `Rejected`   |
-| MDET-27 | Ranking hierarchy                                    | On mobile order conditional current-user context, participant heading, leaderboard, pagination, then secondary score distribution                                         | `Approved`   |
-| MDET-28 | Conditional current-user placement                   | Highlight the in-page row; otherwise show one compact exact-rank summary, with concise no-record and signed-out variants                                                  | `Approved`   |
-| MDET-29 | Relative percentile                                  | Remove top-percent ranking copy and use exact shared rank over total participants                                                                                         | `Rejected`   |
-| MDET-30 | Leaderboard row model                                | Show one best score per player using Rank, Player, and Result groups; retain profile links and exclude unrelated row fields                                               | `Approved`   |
-| MDET-31 | Tie semantics                                        | Equal scores share competition rank `1, 2, 2, 4`; earlier achievement orders ties without changing rank                                                                   | `Approved`   |
-| MDET-32 | High-skill score distribution                        | Preserve five equal `950k`–`990k` analytical bands plus Pianist with a separate S-or-higher denominator; reconfirmed 2026-08-01                                           | `Approved`   |
-| MDET-33 | Broad or unequal score grouping                      | Do not replace the upper score bands with a whole-population Pianist/S/A+/A/B+/B/C/D histogram or an unequal `950k–979k` merged count                                     | `Rejected`   |
-| MDET-34 | Ranking pagination                                   | Use 25 players per page, hide one-page pagination, preserve page in URL/history, and reject infinite scroll or a page-size selector                                       | `Approved`   |
-| MDET-35 | Ranking states and accessibility                     | Define stable loading geometry, concise retry and empty states, semantic labels, localized alternatives, focus restoration, and announcements                             | `Approved`   |
-| MDET-36 | Ranking responsive composition                       | Preserve mobile reading order; allow a leaderboard-primary and distribution-secondary desktop composition without a fixed 390px canvas                                    | `Approved`   |
-| MDET-37 | Tier/evaluation hierarchy                            | Order six tier placements, perceived difficulty, pattern radar, evaluation action or form, then community opinions                                                        | `Approved`   |
-| MDET-38 | Tier-placement scope                                 | Show Basic and Recital S, Full Combo, and Pianist placements together without a preliminary selector                                                                      | `Approved`   |
-| MDET-39 | Community aggregate threshold                        | Always show rating count; publish perceived-difficulty average and distribution from three valid ratings, otherwise show Aggregating                                      | `Approved`   |
-| MDET-40 | Pattern-profile visualization                        | Use one fixed-order, fixed-scale five-axis community radar, one series only, with exact values and counts as structured accessible text                                   | `Approved`   |
-| MDET-41 | Pattern-profile taxonomy                             | Use Stairs, Repetition, Polyrhythm, Offset, and Chords; retain Glissando outside the community radar                                                                      | `Approved`   |
-| MDET-42 | Evaluation input and eligibility                     | Require verified selected-chart play and perceived difficulty; make pattern axes and comment optional, nullable, editable, and deletable                                  | `Approved`   |
-| MDET-43 | Opinion information hierarchy                        | Show author, prominent perceived difficulty, opinion, time/edit state, Helpful, and contextual actions without approving the mock-up's visuals                            | `Approved`   |
-| MDET-44 | Opinion reaction and eligibility                     | Use one reversible Helpful reaction; no public negative count, self-reaction, or reaction without verified selected-chart play                                            | `Approved`   |
-| MDET-45 | Opinion sorting and continuation                     | Default to Helpful, offer Newest, use deterministic recency ties, and append explicit batches of ten without infinite scroll                                              | `Approved`   |
-| MDET-46 | Opinion and evaluation deletion                      | Delete optional written opinion separately from destructive deletion of the entire evaluation, with consequence-specific confirmations                                    | `Approved`   |
-| MDET-47 | Opinion reporting                                    | Put Report in the contextual menu and collect one relevant safety or spam reason without instant public auto-hide                                                         | `Approved`   |
-| MDET-48 | Opinion moderation                                   | Let administrators Keep, Hide written opinion, or Exclude entire evaluation while retaining an audit record                                                               | `Approved`   |
-| MDET-49 | Opinion visual authority                             | Treat the discussion mock-up as behavioral evidence only; defer exact type, color, spacing, surfaces, and geometry to foundations and specimens                           | `Approved`   |
-| MDET-50 | Placement-state semantics                            | Keep six positions and distinguish numeric placement, Not listed, Not published, loading, and load failure with approved Korean/Japanese/English copy                     | `Approved`   |
-| MDET-51 | Placement-history disclosure                         | Keep current placements visible and use one collapsed section-level chronological history after Basic and Recital; reject six controls and line charts                    | `Approved`   |
-| MDET-52 | Placement-history continuation                       | Open with five newest date-grouped events and append explicit batches of ten with Show older changes; use No placement history when no event exists                       | `Approved`   |
-| MDET-53 | Placement-history data contract                      | Materialize six semantic slots, preserve null removal events, reconstruct transitions per mode and goal, and keep absence, publication, and failure distinct              | `Approved`   |
-| MDET-54 | Target transition identity                           | Update the selected difficulty or area and its restorable URL immediately; replace the preceding semantic panel with the exact target's pending state                     | `Approved`   |
-| MDET-55 | Loading scope and geometry                           | Preserve stable context, mark only the target region busy, avoid animated loader flash below about 300 ms, and use simplified structure-matched skeletons                 | `Approved`   |
-| MDET-56 | Cache freshness and revalidation                     | Keep Chart Info fresh for the page session; use 60-second freshness for Record, Ranking, and Tier/evaluation, with exact-target background revalidation                   | `Approved`   |
-| MDET-57 | Mutation invalidation and stale failure              | Immediately invalidate affected targets after data changes; retain exact cached data with Updating or latest-data failure disclosure and Retry                            | `Approved`   |
-| MDET-58 | Empty, authentication, and permission semantics      | Keep empty distinct from failure and permission; preserve public content while replacing only restricted personal or action regions                                       | `Approved`   |
-| MDET-59 | Retry and failure scope                              | Retry network and `5xx` GET failures once automatically, then show the smallest meaningful failure and exact manual Retry; never auto-retry `4xx` or actions              | `Approved`   |
-| MDET-60 | Interruptible navigation                             | Keep valid navigation operable, cancel or supersede obsolete work, deduplicate exact requests, and commit only the latest target                                          | `Approved`   |
-| MDET-61 | Focus and status announcements                       | Retain focus on the activated control, expose responsive tab or combobox semantics, mark updating regions busy, and use one polite target-specific status region          | `Approved`   |
-| MDET-62 | Initial failure and Not Found                        | Preserve the application shell for initial load failure with exact Retry and Music-search return; use localized Not Found for confirmed missing entities                  | `Approved`   |
-| MDET-63 | Compact area switcher                                | At 320/360/390/430px use one full-width current-area select-only combobox and anchored four-option listbox without pushing content                                        | `Approved`   |
-| MDET-64 | Compact area overflow alternatives                   | Reject horizontal-scroll tabs, wrapped tab rows, truncation, abbreviation, and icon-only area labels                                                                      | `Rejected`   |
-| MDET-65 | Difficulty responsive control                        | Keep Normal, Hard, Expert, and Real visible as a separate one-row four-choice control at narrow widths                                                                    | `Approved`   |
-| MDET-66 | Wide page frame                                      | Remove the permanent 390px constraint; keep context on top, use measured gutters/max width, and do not add a permanent left sidebar                                       | `Approved`   |
-| MDET-67 | Panel-specific wide adaptation                       | Preserve mobile order while adapting Chart Info, My Record, Ranking, and Tier & Evaluation to their own comparison and analysis needs                                     | `Approved`   |
-| MDET-68 | Content-driven representation transition             | Show tabs only when the longest localized set and validated type, padding, focus, and gaps fit; measure the exact threshold in Foundation specimens                       | `Approved`   |
-| MDET-69 | Responsive area-switch accessibility                 | Use a select-only combobox/listbox with explicit compact selection and manual-activation APG tabs for demand-loaded wide panels                                           | `Approved`   |
-| MDET-70 | Selected-chart action availability                   | Keep View chart then Play video in two stable positions near selected difficulty; disable missing resources without visible empty-state copy, and exclude external charts | `Approved`   |
+| ID      | Decision                                        | Direction                                                                                                                                                                                   | Status       |
+| ------- | ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| MDET-01 | Entity model                                    | Keep Music identity stable and treat the selected difficulty as active chart context                                                                                                        | `Approved`   |
+| MDET-02 | Difficulty state                                | Preserve the selected difficulty in shareable and history-restorable navigation state                                                                                                       | `Approved`   |
+| MDET-03 | Viewer entry                                    | Keep View chart as a direct selected-chart action outside the Information panel; its stable placement and unavailable state follow MDET-70                                                  | `Approved`   |
+| MDET-04 | Content architecture                            | Use Pattern A: one persistent context with four adaptively selected semantic areas and one selected panel at a time                                                                         | `Approved`   |
+| MDET-05 | Initial data boundary                           | Do not require every cross-domain detail or summary before the user selects its area; reuse valid visited-area data                                                                         | `Approved`   |
+| MDET-06 | Long-page architecture                          | Do not render all four complete areas as one long page                                                                                                                                      | `Rejected`   |
+| MDET-07 | Overview-hub architecture                       | Do not add a cross-domain summary hub before the four detailed areas                                                                                                                        | `Rejected`   |
+| MDET-08 | Current visual inheritance                      | Current visual execution is audit evidence only and must not constrain the 2.0 redesign                                                                                                     | `Rejected`   |
+| MDET-09 | Semantic content-area order                     | Information, personal Record, Ranking, then Tier/community evaluation                                                                                                                       | `Approved`   |
+| MDET-10 | Responsive and visual composition               | Use the approved compact switcher, separate difficulty row, top object context, and panel-specific wide composition; measure exact visual tokens later                                      | `Approved`   |
+| MDET-11 | Complete page-brief contract                    | Complete content, state, accessibility, representative-data, and acceptance decisions through MDET-74                                                                                       | `Approved`   |
+| MDET-12 | Localized area labels                           | Use `랭킹`/`ランキング`/`Ranking` and `서열·평가`/`難易度・評価`/`Tier & Evaluation` without changing the approved semantic order                                                           | `Approved`   |
+| MDET-13 | General-entry default                           | Open Information for both signed-in and signed-out queryless entry                                                                                                                          | `Approved`   |
+| MDET-14 | Source-aware entry                              | Encode known Record, Ranking, Tier/evaluation, and viewer-return intent in restorable navigation state                                                                                      | `Approved`   |
+| MDET-15 | Signed-out Record                               | Keep it visible and selectable; render a compact panel-level Login state without placeholder analytics or automatic authentication                                                          | `Approved`   |
+| MDET-16 | Authentication restoration                      | Preserve locale, Music, difficulty, and Record through Login and required onboarding, then restore the exact destination                                                                    | `Approved`   |
+| MDET-17 | Hidden default memory                           | Do not vary queryless default by authentication or globally remember the last-used area                                                                                                     | `Rejected`   |
+| MDET-18 | Chart Info and My Record labels                 | Use `채보 정보`/`譜面情報`/`Chart Info` and `내 기록`/`プレー記録`/`My Record`                                                                                                              | `Approved`   |
+| MDET-19 | Chart Info factual scope                        | Always show BPM, note count, and duration; conditionally show available release and unlock facts without duplicating persistent context                                                     | `Approved`   |
+| MDET-20 | Cross-domain data ownership                     | Move pattern profile to Tier/evaluation and score distribution, player count, and relative placement to Ranking; leave no previews in Chart Info                                            | `Approved`   |
+| MDET-21 | Selected-chart resource actions                 | Earlier wording incorrectly treated a current external-preview field as an approved external-chart product action; replaced by MDET-70                                                      | `Superseded` |
+| MDET-22 | Personal Record hierarchy                       | Order Best performance, cumulative summary, Progress over time, Recent plays, then collapsed Judgement analysis                                                                             | `Approved`   |
+| MDET-23 | Progress terminology                            | Use `성장 추이`/`上達の推移`/`Progress over time`, while explicitly labeling the current series `베스트 스코어`/`ベストスコア`/`Best score`                                                 | `Approved`   |
+| MDET-24 | Play-count meaning                              | Preserve per-user, per-chart `플레이 횟수`/`演奏回数`/`Play count`; exclude clear count and defer profile-wide Play count to the Profile brief                                              | `Approved`   |
+| MDET-25 | Advanced record disclosure                      | Keep peer comparison optional and off by default; keep Judgement analysis collapsed while primary record facts remain visible                                                               | `Approved`   |
+| MDET-26 | Duplicate pattern visualization                 | Do not show identical pattern values simultaneously as radar and bar charts; use one accessible five-axis radar plus exact structured values                                                | `Rejected`   |
+| MDET-27 | Ranking hierarchy                               | On mobile order conditional current-user context, participant heading, leaderboard, pagination, then secondary score distribution                                                           | `Approved`   |
+| MDET-28 | Conditional current-user placement              | Highlight the in-page row; otherwise show one compact exact-rank summary, with concise no-record and signed-out variants                                                                    | `Approved`   |
+| MDET-29 | Relative percentile                             | Remove top-percent ranking copy and use exact shared rank over total participants                                                                                                           | `Rejected`   |
+| MDET-30 | Leaderboard row model                           | Show one best score per player using Rank, Player, and Result groups; retain profile links and exclude unrelated row fields                                                                 | `Approved`   |
+| MDET-31 | Tie semantics                                   | Equal scores share competition rank `1, 2, 2, 4`; earlier achievement orders ties without changing rank                                                                                     | `Approved`   |
+| MDET-32 | High-skill score distribution                   | Preserve five equal `950k`–`990k` analytical bands plus Pianist with a separate S-or-higher denominator; reconfirmed 2026-08-01                                                             | `Approved`   |
+| MDET-33 | Broad or unequal score grouping                 | Do not replace the upper score bands with a whole-population Pianist/S/A+/A/B+/B/C/D histogram or an unequal `950k–979k` merged count                                                       | `Rejected`   |
+| MDET-34 | Ranking pagination                              | Use 25 players per page, hide one-page pagination, preserve page in URL/history, and reject infinite scroll or a page-size selector                                                         | `Approved`   |
+| MDET-35 | Ranking states and accessibility                | Define stable loading geometry, concise retry and empty states, semantic labels, localized alternatives, focus restoration, and announcements                                               | `Approved`   |
+| MDET-36 | Ranking responsive composition                  | Preserve mobile reading order; allow a leaderboard-primary and distribution-secondary desktop composition without a fixed 390px canvas                                                      | `Approved`   |
+| MDET-37 | Tier/evaluation hierarchy                       | Order six tier placements, perceived difficulty, pattern radar, evaluation action or form, then community opinions                                                                          | `Approved`   |
+| MDET-38 | Tier-placement scope                            | Show Basic and Recital S, Full Combo, and Pianist placements together without a preliminary selector                                                                                        | `Approved`   |
+| MDET-39 | Community aggregate threshold                   | Always show rating count; publish perceived-difficulty average and distribution from three valid ratings, otherwise show Aggregating                                                        | `Approved`   |
+| MDET-40 | Pattern-profile visualization                   | Use one fixed-order, fixed-scale five-axis community radar, one series only, with exact values and counts as structured accessible text                                                     | `Approved`   |
+| MDET-41 | Pattern-profile taxonomy                        | Use Stairs, Repetition, Polyrhythm, Offset, and Chords; retain Glissando outside the community radar                                                                                        | `Approved`   |
+| MDET-42 | Evaluation input and eligibility                | Require verified selected-chart play and perceived difficulty; make pattern axes and comment optional, nullable, editable, and deletable                                                    | `Approved`   |
+| MDET-43 | Opinion information hierarchy                   | Show author, prominent perceived difficulty, opinion, time/edit state, Helpful, and contextual actions without approving the mock-up's visuals                                              | `Approved`   |
+| MDET-44 | Opinion reaction and eligibility                | Use one reversible Helpful reaction; no public negative count, self-reaction, or reaction without verified selected-chart play                                                              | `Approved`   |
+| MDET-45 | Opinion sorting and continuation                | Default to Helpful, offer Newest, use deterministic recency ties, and append explicit batches of ten without infinite scroll                                                                | `Approved`   |
+| MDET-46 | Opinion and evaluation deletion                 | Delete optional written opinion separately from destructive deletion of the entire evaluation, with consequence-specific confirmations                                                      | `Approved`   |
+| MDET-47 | Opinion reporting                               | Put Report in the contextual menu and collect one relevant safety or spam reason without instant public auto-hide                                                                           | `Approved`   |
+| MDET-48 | Opinion moderation                              | Let administrators Keep, Hide written opinion, or Exclude entire evaluation while retaining an audit record                                                                                 | `Approved`   |
+| MDET-49 | Opinion visual authority                        | Treat the discussion mock-up as behavioral evidence only; defer exact type, color, spacing, surfaces, and geometry to foundations and specimens                                             | `Approved`   |
+| MDET-50 | Placement-state semantics                       | Keep six positions and distinguish numeric placement, Not listed, Not published, loading, and load failure with approved Korean/Japanese/English copy                                       | `Approved`   |
+| MDET-51 | Placement-history disclosure                    | Keep current placements visible and use one collapsed section-level chronological history after Basic and Recital; reject six controls and line charts                                      | `Approved`   |
+| MDET-52 | Placement-history continuation                  | Open with five newest date-grouped events and append explicit batches of ten with Show older changes; use No placement history when no event exists                                         | `Approved`   |
+| MDET-53 | Placement-history data contract                 | Materialize six semantic slots, preserve null removal events, reconstruct transitions per mode and goal, and keep absence, publication, and failure distinct                                | `Approved`   |
+| MDET-54 | Target transition identity                      | Update the selected difficulty or area and its restorable URL immediately; replace the preceding semantic panel with the exact target's pending state                                       | `Approved`   |
+| MDET-55 | Loading scope and geometry                      | Preserve stable context, mark only the target region busy, avoid animated loader flash below about 300 ms, and use simplified structure-matched skeletons                                   | `Approved`   |
+| MDET-56 | Cache freshness and revalidation                | Keep Chart Info fresh for the page session; use 60-second freshness for Record, Ranking, and Tier/evaluation, with exact-target background revalidation                                     | `Approved`   |
+| MDET-57 | Mutation invalidation and stale failure         | Immediately invalidate affected targets after data changes; retain exact cached data with Updating or latest-data failure disclosure and Retry                                              | `Approved`   |
+| MDET-58 | Empty, authentication, and permission semantics | Keep empty distinct from failure and permission; preserve public content while replacing only restricted personal or action regions                                                         | `Approved`   |
+| MDET-59 | Retry and failure scope                         | Retry network and `5xx` GET failures once automatically, then show the smallest meaningful failure and exact manual Retry; never auto-retry `4xx` or actions                                | `Approved`   |
+| MDET-60 | Interruptible navigation                        | Keep valid navigation operable, cancel or supersede obsolete work, deduplicate exact requests, and commit only the latest target                                                            | `Approved`   |
+| MDET-61 | Focus and status announcements                  | Retain focus on the activated control, expose responsive tab or combobox semantics, mark updating regions busy, and use one polite target-specific status region                            | `Approved`   |
+| MDET-62 | Initial failure and Not Found                   | Preserve the application shell for initial load failure with exact Retry and Music-search return; use localized Not Found for confirmed missing entities                                    | `Approved`   |
+| MDET-63 | Compact area switcher                           | At 320/360/390/430px use one full-width current-area select-only combobox and anchored four-option listbox without pushing content                                                          | `Approved`   |
+| MDET-64 | Compact area overflow alternatives              | Reject horizontal-scroll tabs, wrapped tab rows, truncation, abbreviation, and icon-only area labels                                                                                        | `Rejected`   |
+| MDET-65 | Difficulty responsive control                   | Keep Normal, Hard, Expert, and Real visible as a separate one-row four-choice control at narrow widths                                                                                      | `Approved`   |
+| MDET-66 | Wide page frame                                 | Remove the permanent 390px constraint; keep context on top, use measured gutters/max width, and do not add a permanent left sidebar                                                         | `Approved`   |
+| MDET-67 | Panel-specific wide adaptation                  | Preserve mobile order while adapting Chart Info, My Record, Ranking, and Tier & Evaluation to their own comparison and analysis needs                                                       | `Approved`   |
+| MDET-68 | Content-driven representation transition        | Show tabs only when the longest localized set and validated type, padding, focus, and gaps fit; measure the exact threshold in Foundation specimens                                         | `Approved`   |
+| MDET-69 | Responsive area-switch accessibility            | Use a select-only combobox/listbox with explicit compact selection and manual-activation APG tabs for demand-loaded wide panels                                                             | `Approved`   |
+| MDET-70 | Selected-chart action availability              | Keep View chart then Play video in two stable positions near selected difficulty; disable missing resources without visible empty-state copy, and exclude external charts                   | `Approved`   |
+| MDET-71 | Play-video external navigation                  | Use `플레이 영상`/`プレー動画`/`Play video` and navigate in the current browsing context without a forced new-tab warning                                                                   | `Approved`   |
+| MDET-72 | Route-entry and restoration focus               | Use browser-default focus on hard load, Music-title `h1` focus on cross-route soft entry, origin restoration on Back, control retention internally, and state-heading focus for soft errors | `Approved`   |
+| MDET-73 | Representative fixture matrix                   | Use the approved actual long/missing catalog cases, localized variants, and bounded pairwise state seams rather than an exhaustive Cartesian suite                                          | `Approved`   |
+| MDET-74 | Page-level acceptance and verification          | Verify the complete contract at 320/360/390/430/768/1024/1280/1440, content-driven transitions, core automation, cross-browser and real-device smoke, zoom, keyboard, and mobile AT         | `Approved`   |
 
 ## Current Milestone
 
@@ -1662,12 +1836,18 @@ The selected-chart action contract is also approved. **View chart** and **Play v
 occupy two stable positions immediately after selected difficulty and before content-
 area switching, remain available across content areas, and become clearly disabled
 when their corresponding resource is absent. No separate **No published chart** copy
-or external-chart action is used. Final visual tokens and Play video's external-
-navigation target remain deferred.
+or external-chart action is used. Play video uses the approved localized label and
+navigates in the current browsing context without forcing a new tab.
 
 This establishes the entry, authentication-restoration, Chart Info, Personal Record,
 Ranking, and Tier & Evaluation content contracts, including community opinions and
-shared asynchronous states and responsive area-switching composition. It does not
-approve the current page's visual design or complete the Music-detail page brief. The
-next discussion should resolve representative data, complete page-level acceptance
-criteria, and Play video's external-navigation behavior.
+shared asynchronous states and responsive area-switching composition. The brief also
+now fixes hard-versus-soft route focus, origin restoration, a real-catalog and bounded
+state fixture matrix, exact compact/transition/wide validation widths, release browser
+and assistive-technology coverage, and ten page-level acceptance criteria.
+
+The Music-detail page brief is therefore complete and approved as of 2026-08-01. This
+approval does not adopt the current page's visual design and does not pre-approve
+foundation values or the final Claude Design composition. The foundation and
+representative-specimen phases must measure the deliberately deferred visual values
+without changing this approved product contract.
