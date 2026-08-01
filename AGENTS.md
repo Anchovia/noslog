@@ -55,8 +55,10 @@ Sections:
   NOSTORY surface treatment.
 - Use the existing project stack, components, routing, and styling conventions.
 - Do not use the legacy NOSTORY Figma as a source of current layout intent.
-- Implement mobile-first around a 390px validation baseline established by the
-  approved 2.0 device strategy, not by copying the legacy wireframe.
+- Implement mobile-first, using `390px` as a representative mobile design and
+  validation canvas rather than a fixed width or universal breakpoint. Verify
+  accessible reflow down to `320 CSS px`, and choose actual layout transitions from
+  content and component constraints rather than by copying the legacy wireframe.
 - Reuse existing components before creating new ones.
 - Keep changes scoped and verifiable.
 - Run lint/typecheck/build after implementation if the project provides those commands.
@@ -273,8 +275,13 @@ content, interaction behavior, visual rules, or responsive behavior.
 ### Device Strategy
 
 - Mobile is the primary context because NosLog is commonly used around arcade play.
-- Design the mobile experience first, centered on the existing 390px baseline, then
-  extend the same hierarchy and component logic to wider layouts.
+- Design the mobile experience first and use `390px` as its representative review
+  canvas because it maps to a common current phone viewport. It is not an industry
+  standard, fixed application width, minimum supported width, or breakpoint.
+- Require information and functionality to reflow without two-dimensional scrolling
+  at `320 CSS px` except for content whose meaning genuinely requires two dimensions.
+  Test intermediate widths instead of assuming that a successful `390px` specimen
+  represents every compact viewport.
 - Desktop support remains required even if current traffic is small. Use the extra
   space intentionally for comparison, dense record analysis, chart viewing/editing,
   and administrative workflows rather than merely enlarging the mobile canvas.
@@ -312,8 +319,10 @@ approval before the next phase begins:
 5. Agree on NosLog design principles and the intended product hierarchy.
 6. Create a lean `v0.1` foundation covering typography, color, spacing, grid, layout,
    borders, radius, elevation, iconography, motion, and data visualization.
-7. Test the foundation on several representative 390px guide examples or screen
-   fragments with real, long, empty, error, and Korean/Japanese/English content.
+7. Test the foundation on several representative `390px` guide examples or screen
+   fragments with real, long, empty, error, and Korean/Japanese/English content, then
+   verify `320 CSS px` reflow and the intermediate widths where content changes the
+   composition.
 8. Refine the foundations from those screens, then promote validated elements into
    documented components, patterns, and templates.
 9. Define desktop adaptations using the extra space for comparison, analysis,
