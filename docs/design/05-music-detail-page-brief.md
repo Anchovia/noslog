@@ -5,19 +5,21 @@
 - Status: `Approved`
 - Decision status: `Complete page brief approved: entity and action model, content
 architecture, entry and restoration, authentication, Chart Info, personal Record,
-Ranking, Tier/evaluation, community opinions, asynchronous recovery, responsive
+Ranking, goal-qualified Tier voting, evaluation, community opinions, administrator
+disagreement review, asynchronous recovery, responsive
 composition, selected-chart action availability, current-tab Play-video navigation,
 route-entry focus, representative data and state fixtures, and page-level browser
 acceptance contract`
 - Evidence status: `Repository inspection, current-product audit, approved information
 architecture, approved shared-discovery handoff, and cited tabs, adaptive-layout,
 progressive-disclosure, leaderboard, pagination, data-visualization, NOSTALGIA
-scoring, chart-pattern, chord-input, community-evaluation, radar-profile,
+scoring, chart-pattern, chord-input, community-evaluation, robust aggregation,
+review governance, radar-profile,
 rhythm-game, disabled-state, media-availability, external-link, focus-management,
 reflow, localization, browser-support, assistive-technology, and infrastructure
 guidance`
 - Date started: 2026-07-31
-- Last decision update: 2026-08-01
+- Last decision update: 2026-08-02
 - Canonical language: English
 - Korean companion:
   [05-music-detail-page-brief.ko.md](./05-music-detail-page-brief.ko.md)
@@ -852,20 +854,22 @@ not a 2.0 constraint.
 | Public score area   | `랭킹`      | `ランキング`   | `Ranking`           |
 | Tier and evaluation | `서열·평가` | `難易度・評価` | `Tier & Evaluation` |
 
-Tier & Evaluation answers four questions for the selected chart:
+Tier & Evaluation answers five questions for the selected chart:
 
 1. which public tier placements currently apply;
-2. how difficult the eligible community perceives the chart to be;
-3. what performance tendencies characterize its pattern; and
-4. how an eligible player can contribute or revise an evaluation.
+2. where goal-qualified players place the chart in each applicable tier scope;
+3. what performance tendencies characterize its pattern;
+4. how an eligible player can contribute or revise a tier vote or chart evaluation;
+   and
+5. what practical opinions verified players have shared.
 
 Use this mobile reading order:
 
 1. the six current tier placements followed by their one integrated history
    disclosure;
-2. the perceived-difficulty aggregate;
+2. the six goal-specific community tier-vote aggregates;
 3. the community pattern-tendency radar;
-4. the current user's evaluation action or form; and
+4. the current user's eligible tier-vote and chart-evaluation actions or forms; and
 5. community opinions.
 
 Do not turn this area into another score Ranking or repeat the factual Chart Info
@@ -963,19 +967,121 @@ results need a concise accessible update.
   public query that omits null-valued removal events are observed legacy behavior and
   must be replaced during the later 2.0 implementation.
 
-### Perceived-Difficulty Aggregate
+### Goal-Specific Community Tier Votes
 
-- Perceived difficulty is required when an eligible user submits an evaluation.
-- Always show the exact number of valid perceived-difficulty ratings.
-- With one or two valid ratings, show an **Aggregating** state and the rating count;
-  hide the average and distribution.
-- With three or more valid ratings, show the average and value distribution together
-  with the rating count.
-- The initial threshold of three prevents an individual vote from being presented as
-  a community result. It is not a statistical-confidence claim, so the exact sample
-  size must remain visible.
-- Signed-out and ineligible users may read the public aggregate. Eligibility controls
-  contribution, not visibility.
+#### Scope and Public Aggregate
+
+- Replace the ambiguous single perceived-difficulty rating with six independent vote
+  scopes: **Basic S**, **Basic Full Combo**, **Basic Pianist**, **Recital S**,
+  **Recital Full Combo**, and **Recital Pianist**.
+- A vote states where the selected chart belongs on the approved NosLog tier-value
+  scale for exactly one mode and goal. Accept values from `1.0` through `14.5` in
+  `0.1` increments so the vote vocabulary maps to the existing tier-band domain.
+- Keep one vote per user, selected chart, mode, and goal. The user may edit or delete
+  each scope independently.
+- Always show the exact valid-vote count for the scope being read.
+- With one or two valid votes, show **Aggregating** and the count; do not expose a
+  representative result or distribution.
+- With three or more valid votes, publish the **median**, complete value distribution,
+  and exact count. Do not make the arithmetic mean the public headline because a
+  small number of extreme values can move it disproportionately.
+- The threshold of three prevents one person's input from being presented as a
+  community result. It is not a statistical-confidence claim; the exact sample size
+  must remain visible.
+- Signed-out and ineligible users may read every published aggregate. Eligibility
+  controls contribution, not public visibility.
+- Community votes are advisory evidence. They never change an official NosLog tier
+  placement automatically, even when the median differs from the current placement.
+
+#### Contribution Eligibility
+
+- Enforce eligibility on the server for both creation and update. A disabled or
+  omitted client control is not sufficient authorization.
+- The user must be signed in and have a verified record for the exact selected chart.
+- For **Basic**, apply the existing goal predicates to that record:
+    - S: score at least `950,000`;
+    - Full Combo: `fc_type >= 2` or a `1,000,000` score; and
+    - Pianist: `fc_type === 3` or a `1,000,000` score.
+- For **Recital**, require the same goal predicate plus `grade_recital > 0` on the
+  exact selected chart. The current data proves Recital participation and the best
+  goal result separately; it does not prove that both occurred in the same play.
+  Treat this as the minimum verifiable 2.0 rule and tighten it only when future
+  mode-specific history can prove the Recital achievement directly.
+- Higher outcomes qualify only through the explicit predicate. Pianist qualifies for
+  Full Combo and S; Full Combo does not qualify for S when its score is below
+  `950,000`.
+- A user who lacks one scope may still vote in another scope for which they qualify.
+  Do not convert eligibility into a single all-or-nothing chart permission.
+- Do not award NOS, rating, badges, progression, or another incentive for voting.
+  Contribution must remain voluntary and must not create pressure to submit a value.
+
+#### Data Separation and Migration
+
+- Store goal votes separately from the general chart evaluation. Use a stable unique
+  scope equivalent to `(chart_id, user_id, mode, goal)` so votes survive official-list
+  revisions and cannot overwrite one another.
+- Do not attach a vote to a draft or published `TierList` row. The vote concerns the
+  chart, mode, and goal; official list versions remain administrator-owned output.
+- Migrate the existing `perceived_constant` data only through an explicit reviewed
+  policy. Its single unspecific value cannot be inferred as six goal-specific votes
+  and must not be copied into every scope.
+- Keep vote create, edit, and delete audit facts sufficient for eligibility review and
+  aggregate recomputation without exposing private play evidence publicly.
+
+#### Administrator Review Signal
+
+- Create a persistent administrator review candidate only when a scope has at least
+  five valid votes and the current numeric official placement lies outside the middle
+  `50%` of the vote distribution, the interquartile range (IQR).
+- This threshold is an operational triage rule, not proof that the official placement
+  is wrong. A numeric official placement is required for this comparison; an absent or
+  unpublished placement is not silently classified as disagreement.
+- Deduplicate the candidate by selected chart, mode, and goal. Later votes update the
+  same candidate instead of creating repeated alerts or transient toasts.
+- The administrator review surface must expose the current official placement, vote
+  count, median, arithmetic mean, complete distribution, mode, goal, and chart
+  identity. The mean is diagnostic context, not the public representative value.
+- Support persistent states and explicit actions equivalent to **In review**,
+  **Keep current**, **Change placement**, and **Review later**.
+- **Change placement** must use the normal administrator tier-placement workflow and
+  preserve `TierPlacementHistory`. No review action directly mutates public placement
+  outside that workflow.
+- Do not remove or down-weight an outlying vote merely because it is far from the
+  majority. Suspected invalid input requires explicit administrator audit; statistical
+  disagreement alone is not misconduct.
+- Exact administrator-page visual composition remains outside this public page brief,
+  but the queue, deduplication, evidence, states, and action consequences are required
+  downstream functionality.
+
+#### Tier-Vote and Review Reference Evidence
+
+| Source                                                                                                                 | Transferable finding                                                                                                  | NosLog application                                                                                         | Limitation                                                                       |
+| ---------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| [Current goal predicate](../../lib/tiers.ts)                                                                           | NosLog already defines exact S, Full Combo, and Pianist achievement predicates.                                       | Reuse the same domain rule for Basic vote eligibility instead of inventing another threshold.              | Current logic does not establish Recital proof by itself.                        |
+| [Current Prisma evaluation](../../prisma/schema.prisma)                                                                | One legacy row combines one perceived constant, pattern values, and comment per chart/user.                           | Requires an explicit split between six scoped votes and one goal-neutral chart evaluation.                 | The legacy schema is observed implementation, not product authority.             |
+| [Official NOSTALGIA mode guidance](https://p.eagate.573.jp/game/nostalgia/op2/howto/entrance.html)                     | Basic and Recital are distinct play modes.                                                                            | Prevents collapsing votes from the two modes into one community value.                                     | It does not define third-party community voting.                                 |
+| [ArcadeStat tier example](https://arcadestat.app/en/pump/tier/s22)                                                     | A rhythm-game community tier product can restrict votes to players who cleared the exact chart.                       | Supports achievement-backed first-hand voting instead of unrestricted opinion.                             | Its automatic aggregate and Pump scoring rules are not adopted.                  |
+| [V-ARCHIVE grade manual](https://v-archive.net/info/manual/grade)                                                      | A rhythm-game service ties a feature to an exact result criterion rather than generic participation.                  | Supports separate S, Full Combo, and Pianist eligibility gates.                                            | DJMAX criteria do not map directly to NOSTALGIA.                                 |
+| [Steam user reviews](https://partner.steamgames.com/doc/store/reviews?l=english)                                       | Verified product usage and visible context improve review provenance, while manipulation remains an operational risk. | Supports server-verified chart participation and editable user contributions.                              | Playtime is broader and weaker than an exact chart achievement.                  |
+| [Google Play ratings policy](https://support.google.com/googleplay/android-developer/answer/9898684?hl=en)             | Ratings should reflect authentic experience and must not be manipulated through incentives.                           | Supports no rewards for votes and explicit anti-manipulation enforcement.                                  | The policy governs app-store ratings, not chart tiers.                           |
+| [Google Play ratings behavior](https://support.google.com/googleplay/android-developer/answer/138230?hl=en)            | A person can maintain and revise their own rating, while displayed aggregates may use product-specific weighting.     | Supports one editable vote per exact scope and a documented NosLog aggregate.                              | Google does not disclose an algorithm NosLog should copy.                        |
+| [Airbnb review policy](https://www.airbnb.com/help/article/2673)                                                       | Reviews should be relevant, authentic, and based on first-hand experience.                                            | Reinforces exact-chart experience as the contribution boundary.                                            | Accommodation reviews are not skill-gated game evaluations.                      |
+| [NIST: Measures of location](https://itl.nist.gov/div898/handbook/eda/section3/eda351.htm)                             | Median is less sensitive than mean to extreme distribution tails.                                                     | Makes median the public representative value while preserving mean for administrator diagnosis.            | Median alone does not express sample quality or disagreement.                    |
+| [NIST: Detection of outliers](https://www.itl.nist.gov/div898/handbook/prc/section1/prc16.htm)                         | Outliers require investigation and should not be discarded automatically.                                             | Keeps unusual votes valid until explicit audit rather than deleting them by distance.                      | The handbook does not define community moderation policy.                        |
+| [IMDb ratings FAQ](https://help.imdb.com/article/imdb/track-movies-tv/-/G3RC8ZNFAGWNTX4L)                              | A rating product may show raw distribution while using a robust representative calculation.                           | Supports complete distribution, exact count, and transparent separation of summary from underlying votes.  | IMDb's proprietary weighting is neither reproducible nor appropriate here.       |
+| [BoardGameGeek ratings](https://boardgamegeek.com/wiki/page/ratings)                                                   | Community rankings distinguish raw user ratings from a separately computed ranked result.                             | Supports keeping community evidence separate from administrator-owned official tiers.                      | Bayesian ranking across games is a different problem from one chart's placement. |
+| [Management Science: The Wisdom of Smaller, Smarter Crowds](https://pubsonline.informs.org/doi/10.1287/mnsc.2015.2364) | Small knowledgeable groups can be useful, but group composition matters.                                              | Supports skill-qualified voters while retaining exact sample counts and a cautious low-count state.        | It does not validate three or five as universal statistical thresholds.          |
+| [Social influence and crowd independence](https://pmc.ncbi.nlm.nih.gov/articles/PMC5495222/)                           | Visible prior opinions can reduce independence and amplify convergence.                                               | Requires distribution transparency and prevents community consensus from silently becoming official truth. | The research setting is not a rhythm-game tier interface.                        |
+| [Google SRE: On-call](https://sre.google/workbook/on-call/)                                                            | Operational signals should be actionable and maintain a high signal-to-noise ratio.                                   | Supports a persistent thresholded review queue rather than notifying on every difference.                  | Reliability incidents are more urgent than editorial tier review.                |
+| [Google SRE: Practical alerting](https://sre.google/sre-book/practical-alerting/)                                      | Alerts should correspond to conditions that require a defined human response.                                         | Supports explicit Keep, Change, and Defer outcomes with evidence attached.                                 | Service-health alert thresholds do not define vote statistics.                   |
+| [PagerDuty alerts](https://support.pagerduty.com/main/docs/alerts)                                                     | Deduplication groups repeated signals into one evolving operational item.                                             | Supports one candidate per chart, mode, and goal that updates as votes change.                             | PagerDuty's incident severity and escalation model are not adopted.              |
+
+The evidence converges on four rules: contributors need relevant first-hand proof;
+goal and mode scopes must remain explicit; a robust public summary must retain count
+and distribution; and disagreement should create a high-signal human review task
+rather than an automatic content change. No reference establishes NosLog's exact
+three-vote publication or five-vote IQR review thresholds. Those are conservative,
+user-approved initial operating rules and must remain measurable after release.
 
 ### Community Pattern-Tendency Radar
 
@@ -1021,23 +1127,26 @@ results need a concise accessible update.
   specimen decisions. The current component's small geometry is observed evidence,
   not the 2.0 baseline.
 
-### Evaluation Input and Eligibility
+### General Chart Evaluation Input and Eligibility
 
+- Keep the goal-specific tier vote and the general chart evaluation as separate
+  contributions with separate controls and consequences.
 - Only a signed-in user with a verified play record for the selected chart may submit
-  an evaluation.
-- Perceived difficulty is required. Each of the five pattern-axis ratings and the
-  comment are optional.
+  the general chart evaluation.
+- Each of the five pattern-axis ratings and the written opinion is optional. The
+  general evaluation has no required perceived-difficulty field.
 - The form must offer an explicit **Not rated** state and must never prefill an omitted
   pattern rating as `0` or **None**.
-- Keep one evaluation per user and selected chart. The user may edit or delete it.
+- Keep one general evaluation per user and selected chart. The user may edit or delete
+  it independently from any goal-specific votes.
 - Keep public aggregates readable for signed-out users and signed-in users who are not
   eligible to submit.
 - The current input schema and form require all legacy pattern fields and a comment.
   The 2.0 implementation must migrate that contract explicitly: separate the current
   `chord` field that is used for Polyrhythm from the new simultaneous-input Chords
   meaning, remove Glissando from the community profile without removing Glissando
-  performance data, and make optional ratings genuinely nullable. Do not silently
-  repurpose stored values.
+  performance data, remove the general `perceived_constant` requirement, and make
+  optional ratings genuinely nullable. Do not silently repurpose stored values.
 
 ### Community Opinions
 
@@ -1045,12 +1154,11 @@ results need a concise accessible update.
 
 - Treat an opinion as the optional written part of one user's selected-chart
   evaluation, not as an independent discussion post detached from the evaluation.
-- Each visible opinion exposes the author identity, the author's perceived-difficulty
-  value, written opinion, written or edited time, Helpful count and state, and a
-  contextual overflow action.
-- Make the perceived-difficulty value a primary scan value in each opinion. It must be
-  more prominent than author metadata and time, but it must not compete with the
-  opinion text or be confused with the community aggregate above the list.
+- Each visible opinion exposes the author identity, written opinion, written or edited
+  time, Helpful count and state, and a contextual overflow action.
+- Do not attach one of the author's six goal-vote values to the opinion row. Goal votes
+  belong to their scoped aggregate, while the opinion remains goal-neutral practical
+  chart commentary.
 - Exact typography, weight, color, badge treatment, spacing, surfaces, and row or card
   geometry are deferred to the approved foundations and representative mobile and
   desktop specimens. The discussion mock-up used to approve this contract is a
@@ -1100,14 +1208,17 @@ results need a concise accessible update.
 - Keep opinion editing in the author's contextual overflow menu. Preserve the parent
   evaluation and show the public edited indicator after a successful update.
 - **Delete opinion** removes only the optional written opinion. It retains the user's
-  perceived-difficulty and optional pattern ratings in valid community aggregates.
-- **Delete entire evaluation** is a separate destructive action that removes the
-  perceived-difficulty rating, any pattern-axis ratings, and the written opinion.
+  optional pattern ratings and every separate goal-specific vote.
+- **Delete chart evaluation** is a separate destructive action that removes any
+  pattern-axis ratings and the written opinion, but does not remove goal-specific tier
+  votes.
+- Each goal-specific vote has its own edit and delete action in its exact mode-and-goal
+  scope. Deleting one vote does not delete the general chart evaluation or another
+  vote.
 - Never make a comment-labelled delete action silently remove the whole evaluation.
-- Both destructive actions require consequence-specific confirmation. The opinion-
-  only confirmation explicitly says that evaluation values remain; the entire-
-  evaluation confirmation explicitly names all data that will be removed and states
-  that the action cannot be undone.
+- Every destructive action requires consequence-specific confirmation. Opinion-only,
+  chart-evaluation, and tier-vote confirmations must name exactly which data remains
+  and which data is removed; none may imply that unrelated contributions are deleted.
 
 #### Reporting and Moderation
 
@@ -1123,8 +1234,11 @@ results need a concise accessible update.
   or **Exclude entire evaluation**.
 - **Hide written opinion** removes the text from public display while retaining valid
   non-text evaluation values. **Exclude entire evaluation** removes every value from
-  public aggregation and opinion display. Preserve the moderation record and reason
-  separately from public content.
+  the general chart evaluation from public aggregation and opinion display, but it
+  does not silently remove separate goal-specific votes. Preserve the moderation
+  record and reason separately from public content.
+- Goal-vote validity is a separate administrator audit concern. An outlier alone is
+  not grounds for exclusion, and any excluded vote must retain an audit reason.
 - Rate limiting, duplicate-report prevention, audit retention, notification policy,
   appeal policy, and exact administrator queue layout remain implementation and
   operations decisions. They must not weaken the approved distinction between hiding
@@ -1198,15 +1312,19 @@ the semantic distinction of each state.
 - signed in and signed out; played and unplayed selected chart;
 - Ranking participant counts `0`, `1`, `25`, and `26+`, including ties and the current
   user both inside and outside the visible page;
-- Tier/evaluation counts `0`, `1–2`, and `3+` to cover hidden versus published
-  aggregates;
+- each Basic/Recital × S/Full Combo/Pianist vote scope at counts `0`, `1–2`, `3–4`,
+  and `5+`, including eligible, ineligible, edited, deleted, and server-rejected vote
+  attempts;
+- an official placement inside and outside the IQR at `5+` votes, repeated updates to
+  one deduplicated administrator candidate, and each approved review outcome;
 - the four resource combinations for View chart and Play video: neither, either one,
   or both available;
 - initial loading, delayed response, fresh cache, stale revalidation, empty result,
   authentication, eligibility or permission restriction, retryable error, and
   confirmed Not Found; and
-- destructive evaluation and opinion actions only in the precise approved scopes,
-  including confirmation, cancellation, success, and recoverable failure.
+- destructive tier-vote, chart-evaluation, and opinion actions only in the precise
+  approved scopes, including confirmation, cancellation, success, and recoverable
+  failure.
 
 ### Responsive and Browser Verification Targets
 
@@ -1260,7 +1378,11 @@ The Music-detail page family is accepted only when all of the following hold:
 9. The representative state suite passes without uncaught browser errors, broken
    history restoration, duplicate live announcements, hidden primary actions, or
    inaccessible destructive confirmations.
-10. Exact color, typography, spacing, radius, elevation, and final component geometry
+10. Tier votes enforce exact chart, mode, and goal eligibility on the server; public
+    aggregates use the approved thresholds and median; no vote or administrator
+    review candidate changes an official placement without the normal administrator
+    placement workflow.
+11. Exact color, typography, spacing, radius, elevation, and final component geometry
     are validated later through approved foundations and specimens; their deferral
     does not permit changing the content, behavior, state, or acceptance contracts in
     this brief.
@@ -1643,13 +1765,25 @@ override authoritative guidance or NosLog requirements.
   reversible Helpful signal for useful chart advice and keep policy reporting as a
   separate mechanism.
 - **Repeat every evaluator's five pattern-axis values in the opinion list:** Rejected.
-  Keep the perceived-difficulty value prominent and let the aggregate radar own
-  pattern comparison.
+  Let the aggregate radar own pattern comparison and keep goal-specific tier votes
+  outside the goal-neutral opinion row.
 - **Add nested replies or pinned opinions:** Rejected for the selected-chart
   evaluation contract. Do not turn practical evaluation notes into a second forum.
 - **Make Delete opinion remove the complete evaluation:** Rejected. Optional written
   text and aggregate-contributing evaluation values require separate, explicitly
   labelled deletion scopes.
+- **Use one unrestricted perceived-difficulty vote for every goal:** Superseded. Use
+  six goal-qualified mode-and-goal scopes so an S result cannot stand in for Pianist
+  experience and Basic cannot stand in for Recital.
+- **Use arithmetic mean as the public community placement:** Rejected. Publish median,
+  complete distribution, and count; retain mean only as administrator diagnostic
+  evidence.
+- **Automatically rewrite official placement from community votes:** Rejected. A
+  thresholded disagreement creates administrator review work and never bypasses the
+  normal placement workflow.
+- **Automatically delete or down-weight statistical outliers:** Rejected. Unusual
+  input remains valid until explicit audit establishes an eligibility or integrity
+  problem.
 - **Automatically hide an opinion globally after one report:** Rejected. A report
   creates review work; it does not itself prove a violation.
 - **Use infinite scroll, Oldest sorting, or page-size controls for opinions:**
@@ -1702,7 +1836,7 @@ them before downstream high-fidelity design.
 | MDET-08 | Current visual inheritance                      | Current visual execution is audit evidence only and must not constrain the 2.0 redesign                                                                                                     | `Rejected`   |
 | MDET-09 | Semantic content-area order                     | Information, personal Record, Ranking, then Tier/community evaluation                                                                                                                       | `Approved`   |
 | MDET-10 | Responsive and visual composition               | Use the approved compact switcher, separate difficulty row, top object context, and panel-specific wide composition; measure exact visual tokens later                                      | `Approved`   |
-| MDET-11 | Complete page-brief contract                    | Complete content, state, accessibility, representative-data, and acceptance decisions through MDET-74                                                                                       | `Approved`   |
+| MDET-11 | Complete page-brief contract                    | Complete content, state, accessibility, representative-data, and acceptance decisions through MDET-80                                                                                       | `Approved`   |
 | MDET-12 | Localized area labels                           | Use `랭킹`/`ランキング`/`Ranking` and `서열·평가`/`難易度・評価`/`Tier & Evaluation` without changing the approved semantic order                                                           | `Approved`   |
 | MDET-13 | General-entry default                           | Open Information for both signed-in and signed-out queryless entry                                                                                                                          | `Approved`   |
 | MDET-14 | Source-aware entry                              | Encode known Record, Ranking, Tier/evaluation, and viewer-return intent in restorable navigation state                                                                                      | `Approved`   |
@@ -1728,18 +1862,18 @@ them before downstream high-fidelity design.
 | MDET-34 | Ranking pagination                              | Use 25 players per page, hide one-page pagination, preserve page in URL/history, and reject infinite scroll or a page-size selector                                                         | `Approved`   |
 | MDET-35 | Ranking states and accessibility                | Define stable loading geometry, concise retry and empty states, semantic labels, localized alternatives, focus restoration, and announcements                                               | `Approved`   |
 | MDET-36 | Ranking responsive composition                  | Preserve mobile reading order; allow a leaderboard-primary and distribution-secondary desktop composition without a fixed 390px canvas                                                      | `Approved`   |
-| MDET-37 | Tier/evaluation hierarchy                       | Order six tier placements, perceived difficulty, pattern radar, evaluation action or form, then community opinions                                                                          | `Approved`   |
+| MDET-37 | Tier/evaluation hierarchy                       | Earlier hierarchy used one perceived-difficulty aggregate; replaced by the six-scope hierarchy in MDET-75                                                                                   | `Superseded` |
 | MDET-38 | Tier-placement scope                            | Show Basic and Recital S, Full Combo, and Pianist placements together without a preliminary selector                                                                                        | `Approved`   |
-| MDET-39 | Community aggregate threshold                   | Always show rating count; publish perceived-difficulty average and distribution from three valid ratings, otherwise show Aggregating                                                        | `Approved`   |
+| MDET-39 | Community aggregate threshold                   | Earlier rule published one perceived-difficulty mean from three ratings; replaced by MDET-76                                                                                                | `Superseded` |
 | MDET-40 | Pattern-profile visualization                   | Use one fixed-order, fixed-scale five-axis community radar, one series only, with exact values and counts as structured accessible text                                                     | `Approved`   |
 | MDET-41 | Pattern-profile taxonomy                        | Use Stairs, Repetition, Polyrhythm, Offset, and Chords; retain Glissando outside the community radar                                                                                        | `Approved`   |
-| MDET-42 | Evaluation input and eligibility                | Require verified selected-chart play and perceived difficulty; make pattern axes and comment optional, nullable, editable, and deletable                                                    | `Approved`   |
-| MDET-43 | Opinion information hierarchy                   | Show author, prominent perceived difficulty, opinion, time/edit state, Helpful, and contextual actions without approving the mock-up's visuals                                              | `Approved`   |
+| MDET-42 | Evaluation input and eligibility                | Earlier rule required one perceived-difficulty field in the general evaluation; replaced by the split contracts in MDET-77                                                                  | `Superseded` |
+| MDET-43 | Opinion information hierarchy                   | Earlier row made perceived difficulty prominent; replaced by the goal-neutral opinion hierarchy in MDET-77                                                                                  | `Superseded` |
 | MDET-44 | Opinion reaction and eligibility                | Use one reversible Helpful reaction; no public negative count, self-reaction, or reaction without verified selected-chart play                                                              | `Approved`   |
 | MDET-45 | Opinion sorting and continuation                | Default to Helpful, offer Newest, use deterministic recency ties, and append explicit batches of ten without infinite scroll                                                                | `Approved`   |
-| MDET-46 | Opinion and evaluation deletion                 | Delete optional written opinion separately from destructive deletion of the entire evaluation, with consequence-specific confirmations                                                      | `Approved`   |
+| MDET-46 | Opinion and evaluation deletion                 | Earlier two-scope deletion did not account for separate tier votes; replaced by MDET-78                                                                                                     | `Superseded` |
 | MDET-47 | Opinion reporting                               | Put Report in the contextual menu and collect one relevant safety or spam reason without instant public auto-hide                                                                           | `Approved`   |
-| MDET-48 | Opinion moderation                              | Let administrators Keep, Hide written opinion, or Exclude entire evaluation while retaining an audit record                                                                                 | `Approved`   |
+| MDET-48 | Opinion moderation                              | Let administrators Keep, Hide written opinion, or Exclude the general chart evaluation while retaining an audit record; tier votes remain a separate audit scope                            | `Approved`   |
 | MDET-49 | Opinion visual authority                        | Treat the discussion mock-up as behavioral evidence only; defer exact type, color, spacing, surfaces, and geometry to foundations and specimens                                             | `Approved`   |
 | MDET-50 | Placement-state semantics                       | Keep six positions and distinguish numeric placement, Not listed, Not published, loading, and load failure with approved Korean/Japanese/English copy                                       | `Approved`   |
 | MDET-51 | Placement-history disclosure                    | Keep current placements visible and use one collapsed section-level chronological history after Basic and Recital; reject six controls and line charts                                      | `Approved`   |
@@ -1766,6 +1900,12 @@ them before downstream high-fidelity design.
 | MDET-72 | Route-entry and restoration focus               | Use browser-default focus on hard load, Music-title `h1` focus on cross-route soft entry, origin restoration on Back, control retention internally, and state-heading focus for soft errors | `Approved`   |
 | MDET-73 | Representative fixture matrix                   | Use the approved actual long/missing catalog cases, localized variants, and bounded pairwise state seams rather than an exhaustive Cartesian suite                                          | `Approved`   |
 | MDET-74 | Page-level acceptance and verification          | Verify the complete contract at 320/360/390/430/768/1024/1280/1440, content-driven transitions, core automation, cross-browser and real-device smoke, zoom, keyboard, and mobile AT         | `Approved`   |
+| MDET-75 | Goal-specific tier-vote hierarchy               | Replace one perceived-difficulty value with six independent Basic/Recital × S/Full Combo/Pianist vote aggregates between official placements and the pattern radar                          | `Approved`   |
+| MDET-76 | Public tier-vote aggregate                      | Show exact count; keep 1–2 votes Aggregating; from 3 publish median and complete distribution; never use the vote result to change official placement automatically                         | `Approved`   |
+| MDET-77 | Vote eligibility and evaluation separation      | Enforce exact chart/mode/goal achievement server-side, use Recital participation proof, and store scoped votes separately from one goal-neutral pattern/opinion evaluation                  | `Approved`   |
+| MDET-78 | Contribution deletion and moderation scopes     | Keep opinion-only, general-evaluation, and per-scope tier-vote edit/delete consequences independent; moderation never silently removes unrelated contributions                              | `Approved`   |
+| MDET-79 | Administrator disagreement review               | At 5+ votes and official placement outside IQR, maintain one persistent chart/mode/goal candidate with full evidence and explicit Keep, Change, or Defer workflow                           | `Approved`   |
+| MDET-80 | Vote integrity and official authority           | Do not incentivize votes, remove outliers automatically, or bypass administrator action and normal placement history                                                                        | `Approved`   |
 
 ## Current Milestone
 
@@ -1773,7 +1913,7 @@ The user approved the entity model, direct chart-viewer action, Pattern A conten
 architecture, public Chart Info default, source-aware explicit entry, recoverable
 signed-out Record behavior, Chart Info boundary, selected-chart resource grouping,
 the Personal Record hierarchy, the selected-chart Ranking contract, and the core
-Tier & Evaluation contract across 2026-07-31 and 2026-08-01.
+Tier & Evaluation contract across 2026-07-31 through 2026-08-02.
 Chart Info and My Record now have approved Korean, Japanese, and English labels.
 Chart-scoped Play count remains in the cumulative summary, while profile-wide Play
 count is explicitly deferred to the Profile brief. Ranking now has an approved
@@ -1786,12 +1926,23 @@ they are analytical categories rather than six official or universally named
 milestones.
 
 Tier & Evaluation now has approved localized labels, a mobile information hierarchy,
-all six Basic/Recital placements, a three-rating publication threshold, and a
-single-series community radar. Its fixed axes are Stairs, Repetition, Polyrhythm,
-Offset, and Chords. Glissando remains a note type and personal Judgement metric but is
-not a community radar axis. Evaluation requires a verified selected-chart play and a
-perceived-difficulty rating; pattern axes and comment are optional and must preserve
-missing values distinctly from a valid zero rating.
+all six Basic/Recital placements, six corresponding goal-qualified community-vote
+scopes, and a single-series community radar. A scope stays Aggregating at one or two
+votes and publishes its median, complete distribution, and exact count from three.
+Basic eligibility uses the exact S, Full Combo, or Pianist achievement predicate;
+Recital also requires verified Recital participation on the selected chart. Votes are
+stored separately from the one goal-neutral general chart evaluation. The radar's
+fixed axes are Stairs, Repetition, Polyrhythm, Offset, and Chords. Glissando remains a
+note type and personal Judgement metric but is not a community radar axis. General
+pattern-axis values and the written opinion are optional and preserve missing values
+distinctly from a valid zero rating.
+
+Community voting is advisory rather than self-executing governance. At five or more
+valid votes, an official placement outside the vote IQR creates one persistent,
+deduplicated administrator review candidate for the exact chart, mode, and goal. The
+candidate exposes count, median, mean, and the full distribution; only an explicit
+administrator placement action may change the official list and its history. Outliers
+are never removed automatically.
 
 The six tier positions now also have approved current-state semantics and localized
 copy for numeric placement, Not listed, Not published, loading, and failure. One
@@ -1802,11 +1953,12 @@ history. The public data contract must preserve null-valued removal events and e
 six explicit mode-and-goal slots rather than one recent placement.
 
 Community opinions now have an approved information and interaction contract. Each
-row keeps perceived difficulty prominent, shows concise author and time context, and
-offers one Helpful signal. Helpful and Newest are the only sorts; the list starts with
-ten rows and appends explicit batches of ten. Opinion-only deletion, entire-evaluation
-deletion, reporting, and the administrator's Keep/Hide text/Exclude evaluation results
-are separate operations with explicit consequences. The approval mock-up is not a
+goal-neutral row shows concise author and time context and offers one Helpful signal;
+it does not repeat a goal-specific tier vote. Helpful and Newest are the only sorts;
+the list starts with ten rows and appends explicit batches of ten. Opinion-only,
+general-evaluation, and per-scope tier-vote deletion remain independent. Reporting and
+the administrator's Keep/Hide text/Exclude general evaluation results have explicit
+consequences and do not silently remove tier votes. The approval mock-up is not a
 visual design source; exact emphasis is deferred to the foundation and representative
 specimen phase.
 
@@ -1844,9 +1996,9 @@ Ranking, and Tier & Evaluation content contracts, including community opinions a
 shared asynchronous states and responsive area-switching composition. The brief also
 now fixes hard-versus-soft route focus, origin restoration, a real-catalog and bounded
 state fixture matrix, exact compact/transition/wide validation widths, release browser
-and assistive-technology coverage, and ten page-level acceptance criteria.
+and assistive-technology coverage, and eleven page-level acceptance criteria.
 
-The Music-detail page brief is therefore complete and approved as of 2026-08-01. This
+The Music-detail page brief is therefore complete and approved as of 2026-08-02. This
 approval does not adopt the current page's visual design and does not pre-approve
 foundation values or the final Claude Design composition. The foundation and
 representative-specimen phases must measure the deliberately deferred visual values

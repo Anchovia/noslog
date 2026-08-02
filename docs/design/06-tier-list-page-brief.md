@@ -5,14 +5,14 @@
 - Status: `Approved`
 - Decision status: `Core page contract approved: task model, mode and goal
 selection, band navigation, filters, personal progress, compact and detailed
-result views, per-chart metrics, direct Music-detail navigation, restoration, and
-responsive behavior`
+result views, per-chart metrics, direct goal-context Music-detail navigation,
+relationship to scoped community voting, restoration, and responsive behavior`
 - Evidence status: `Repository inspection, current-product audit, approved
 information architecture, approved Music-detail contract, cited NOSTALGIA domain
 guidance, rhythm-game comparables, responsive systems, accessibility guidance, and
 the user-approved decision record`
 - Date started: 2026-08-01
-- Last decision update: 2026-08-01
+- Last decision update: 2026-08-02
 - Canonical language: English
 - Korean companion:
   [06-tier-list-page-brief.ko.md](./06-tier-list-page-brief.ko.md)
@@ -22,8 +22,9 @@ the user-approved decision record`
   [05-music-detail-page-brief.md](./05-music-detail-page-brief.md)
 - Scope: Public `/[locale]/tiers` planning experience, with personal record and
   rating enhancements after authentication
-- Excluded: Administrator tier-list editing, final foundation tokens, exact
-  high-fidelity composition, and production implementation in this design session
+- Excluded: Exact administrator tier-list or vote-review interface composition,
+  final foundation tokens, exact high-fidelity composition, and production
+  implementation in this design session
 
 ## Decision Labels
 
@@ -285,7 +286,11 @@ personal completion context.
 ## Card Navigation and Restoration
 
 - The entire chart card is one semantic link to
-  `/[locale]/music/[index]/[difficulty]` with the Tier source context.
+  `/[locale]/music/[index]/[difficulty]` with the Tier source context, selected mode,
+  and selected goal.
+- A Tier-list card opens the exact Music difficulty with **Tier & Evaluation** selected
+  so the official placement, matching community scope, and eligible contribution
+  action are available without making the user rediscover the goal context.
 - Signed-in and signed-out users use the same direct-navigation model.
 - Do not open an intermediate record expansion, popover, drawer, or modal before
   Music detail.
@@ -296,6 +301,27 @@ personal completion context.
   compact/detailed preference, compact density, and practical scroll position.
 - The restored page must not unexpectedly return to the first band or refetch already
   valid results in a way that destroys context.
+
+## Relationship to Goal-Specific Community Voting
+
+- The public Tier-list page remains the administrator-owned official planning surface.
+  Community vote medians never replace band values, reorder cards, or mutate a
+  published list automatically.
+- The six public list contexts map one-to-one to the six vote scopes:
+  `Basic/Recital × S/Full Combo/Pianist`.
+- Do not add inline voting controls, vote distributions, disagreement badges, or an
+  intermediate vote modal to the Tier card collection. Those additions would compete
+  with the approved scanning task and have not been approved as Tier-card content.
+- The exact selected chart's **Tier & Evaluation** area owns reading, creating,
+  editing, and deleting a vote. Its eligibility, median, distribution, count,
+  administrator review, and data-separation rules are defined by
+  [the Music-detail brief](./05-music-detail-page-brief.md).
+- Preserve the selected mode and goal in source/restoration state. A user who returns
+  after reading or voting must recover the same mode, goal, band, committed filters,
+  view preference, density, and practical scroll position.
+- Submitting or editing a vote invalidates the exact community aggregate and derived
+  administrator candidate. It must not invalidate or rewrite the published Tier list
+  unless an administrator later completes the normal placement workflow.
 
 ## Responsive Contract
 
@@ -392,12 +418,18 @@ changes in the current design-guide session.
   active-band collection plus mobile selector or desktop rail.
 - Refactor `TierChartCard` so authenticated cards are links like public cards rather
   than inline record-expansion buttons.
+- Encode the selected Tier mode, goal, active band, and return context when linking to
+  Music detail; open the destination's Tier & Evaluation area rather than its generic
+  default panel.
 - Retire `TierRecordDetail` from the Tier scanning surface; retain useful record data
   for Music detail or other approved destinations.
 - Add the selected-mode per-chart official Grd contribution and eligible Basic
   Pianist NosLog contribution to the detailed payload.
 - Reuse existing published-band caching and local retry boundaries where they still
   satisfy the new state contract.
+- Keep the scoped vote entity independent from `TierList` and `TierBandEntry`. The
+  official collection reads only administrator-published placement data; community
+  aggregate and review-candidate invalidation follow the Music-detail contract.
 - Do not source achievement icons from unstable external URLs without an approved
   asset and licensing strategy.
 
@@ -417,7 +449,9 @@ Validation must include:
 - no published list, no filtered matches, loading, replacement loading, request
   failure, and successful retry;
 - direct navigation to Music detail and Back restoration from a card near the end of
-  a non-default band.
+  a non-default band; and
+- eligible and ineligible card origins for all six mode-goal contexts, verifying that
+  Music detail restores the exact vote scope without exposing an inline Tier-card vote.
 
 ## Browser Acceptance Contract
 
@@ -436,6 +470,8 @@ Validation must include:
 - No essential content is hover-only, and touch requires only one activation to open
   the exact Music difficulty.
 - Back restores the full planning context and practical scroll position.
+- Music detail receives the exact mode and goal, opens Tier & Evaluation, enforces the
+  scoped vote contract, and returns to the unchanged official Tier-list context.
 - Long Korean, Japanese, and English content does not overlap, clip controls, distort
   jackets, or create a fixed-height failure.
 - Loading, empty, error, retry, and no-published-list states stay within the correct
@@ -453,7 +489,11 @@ as a template.
 | [Current band browser](../../components/tiers/tierBandBrowser.tsx)                                                         | Band boundaries, progressive requests, local retry, and goal achievement are implemented.              | Preserve data boundaries while changing navigation.                    | Stacked bands and inline record expansion are rejected for 2.0.  |
 | [Approved IA](./02-information-architecture.md)                                                                            | Tier planning is independent and directly leads to exact Music detail.                                 | Keeps the page task and direct destination stable.                     | It does not define card geometry.                                |
 | [Approved Music-detail brief](./05-music-detail-page-brief.md)                                                             | Music plus selected difficulty is the stable detailed destination.                                     | Every Tier card can be one exact direct link.                          | Detail-page panels do not dictate Tier scanning density.         |
+| [Current goal predicate](../../lib/tiers.ts)                                                                               | S, Full Combo, and Pianist achievement conditions already have explicit domain logic.                  | Keeps progress and downstream vote eligibility semantically aligned.   | Recital requires additional participation proof.                 |
 | [NOSTALGIA official mode guidance](https://p.eagate.573.jp/game/nostalgia/op2/howto/entrance.html)                         | Basic and Recital are distinct play modes.                                                             | Retain them as primary context.                                        | It does not define a community Tier interface.                   |
+| [ArcadeStat tier example](https://arcadestat.app/en/pump/tier/s22)                                                         | A rhythm-game tier product may require exact-chart achievement before voting.                          | Supports moving a qualified vote into exact chart context.             | Its public layout and automatic aggregate are not adopted.       |
+| [NIST: Measures of location](https://itl.nist.gov/div898/handbook/eda/section3/eda351.htm)                                 | Median is less sensitive than mean to extreme tails.                                                   | Supports the downstream public median without changing official bands. | It does not define Tier-list card content.                       |
+| [Google SRE: On-call](https://sre.google/workbook/on-call/)                                                                | Human review signals should be actionable and high-signal.                                             | Supports keeping disagreement in an administrator queue, not cards.    | Reliability alerts are more urgent than editorial tier review.   |
 | [Apple HIG: Layout](https://developer.apple.com/design/human-interface-guidelines/layout)                                  | Several common iPhones are 390pt wide, while many other widths coexist.                                | Supports 390 as a representative canvas only.                          | Native points are not a universal web breakpoint.                |
 | [W3C WCAG: Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html)                                                | Content should preserve information and function at 320 CSS px except genuine two-dimensional content. | Establishes the compact minimum validation boundary.                   | It does not prescribe card columns or art direction.             |
 | [web.dev: Responsive design basics](https://web.dev/articles/responsive-web-design-basics)                                 | Start small and add breakpoints when content needs them, not for named devices.                        | Makes Tier transitions content-driven.                                 | Exact NosLog thresholds still require specimens.                 |
@@ -486,6 +526,9 @@ as a template.
 - No source establishes NosLog's exact mode/goal semantics, achievement thresholds,
   rating policy, or card information. Those come from verified NOSTALGIA data,
   current NosLog logic, and explicit user decisions.
+- Voting evidence converges on qualification, scoped context, robust aggregation, and
+  human review; it does not justify replacing the official planning collection or
+  adding more persistent card controls.
 
 ## Rejected and Superseded Alternatives
 
@@ -517,30 +560,38 @@ as a template.
   same task-critical content.
 - **Fix one desktop column count — Rejected:** card minimum width and container space
   govern desktop density.
+- **Vote directly inside each Tier card — Rejected:** it overloads the scanning
+  collection and bypasses the exact Music-detail evaluation context.
+- **Reorder official bands from community medians — Rejected:** votes remain advisory
+  and require explicit administrator review and normal placement history.
 
 ## Decision Log
 
-| ID      | Decision                                                                              | Status     |
-| ------- | ------------------------------------------------------------------------------------- | ---------- |
-| TIER-01 | Tier lists remain an independent play-planning page family                            | `Approved` |
-| TIER-02 | Basic/Recital stay as always-visible primary mode buttons                             | `Approved` |
-| TIER-03 | S/Full Combo/Pianist use one goal selector                                            | `Approved` |
-| TIER-04 | Keep one secondary calculation-guide disclosure                                       | `Approved` |
-| TIER-05 | Mobile selects one band; desktop uses an adjacent visible navigator                   | `Approved` |
-| TIER-06 | Progress uses current mode, goal, committed filters, and authenticated records        | `Approved` |
-| TIER-07 | Filters are difficulty and official level only                                        | `Approved` |
-| TIER-08 | Mobile stages filters and commits with a result action; desktop applies immediately   | `Approved` |
-| TIER-09 | Compact is default, with three columns and optional four-column density at 390px      | `Approved` |
-| TIER-10 | Detailed view uses two columns at 390px and the approved identity/metric order        | `Approved` |
-| TIER-11 | Show actual S/FC/Pianist only; no inferred challenge state                            | `Approved` |
-| TIER-12 | Official per-chart Grd is detailed context; NosLog contribution is Basic Pianist only | `Approved` |
-| TIER-13 | Do not expose top-70 inclusion or calculation-debug badges                            | `Rejected` |
-| TIER-14 | The whole card directly opens exact Music detail for every authentication state       | `Approved` |
-| TIER-15 | Browser Back restores planning controls, band, view, density, and scroll context      | `Approved` |
-| TIER-16 | No essential hover-only content or mobile first-tap preview                           | `Approved` |
-| TIER-17 | 390px is a representative canvas, not a standard, breakpoint, or fixed width          | `Approved` |
-| TIER-18 | Require 320 CSS px Reflow and content-driven transitions                              | `Approved` |
-| TIER-19 | Desktop card columns are container-driven rather than one fixed count                 | `Approved` |
+| ID      | Decision                                                                                 | Status     |
+| ------- | ---------------------------------------------------------------------------------------- | ---------- |
+| TIER-01 | Tier lists remain an independent play-planning page family                               | `Approved` |
+| TIER-02 | Basic/Recital stay as always-visible primary mode buttons                                | `Approved` |
+| TIER-03 | S/Full Combo/Pianist use one goal selector                                               | `Approved` |
+| TIER-04 | Keep one secondary calculation-guide disclosure                                          | `Approved` |
+| TIER-05 | Mobile selects one band; desktop uses an adjacent visible navigator                      | `Approved` |
+| TIER-06 | Progress uses current mode, goal, committed filters, and authenticated records           | `Approved` |
+| TIER-07 | Filters are difficulty and official level only                                           | `Approved` |
+| TIER-08 | Mobile stages filters and commits with a result action; desktop applies immediately      | `Approved` |
+| TIER-09 | Compact is default, with three columns and optional four-column density at 390px         | `Approved` |
+| TIER-10 | Detailed view uses two columns at 390px and the approved identity/metric order           | `Approved` |
+| TIER-11 | Show actual S/FC/Pianist only; no inferred challenge state                               | `Approved` |
+| TIER-12 | Official per-chart Grd is detailed context; NosLog contribution is Basic Pianist only    | `Approved` |
+| TIER-13 | Do not expose top-70 inclusion or calculation-debug badges                               | `Rejected` |
+| TIER-14 | The whole card directly opens exact Music detail for every authentication state          | `Approved` |
+| TIER-15 | Browser Back restores planning controls, band, view, density, and scroll context         | `Approved` |
+| TIER-16 | No essential hover-only content or mobile first-tap preview                              | `Approved` |
+| TIER-17 | 390px is a representative canvas, not a standard, breakpoint, or fixed width             | `Approved` |
+| TIER-18 | Require 320 CSS px Reflow and content-driven transitions                                 | `Approved` |
+| TIER-19 | Desktop card columns are container-driven rather than one fixed count                    | `Approved` |
+| TIER-20 | Tier mode and goal map one-to-one to six independent community-vote scopes               | `Approved` |
+| TIER-21 | Cards open exact Music-detail Tier & Evaluation with source mode and goal preserved      | `Approved` |
+| TIER-22 | Keep voting and distributions out of Tier cards; exact Music detail owns contribution    | `Approved` |
+| TIER-23 | Community medians never replace or reorder official published Tier content automatically | `Approved` |
 
 ## Handoff Boundary
 
@@ -551,3 +602,6 @@ acceptance contract above. A later Codex implementation session must compare the
 Claude output with this brief and request a guide or design revision if the output
 removes a required state, changes domain meaning, introduces a mandatory modal, fixes
 the product to 390px, or conflicts with the approved responsive behavior.
+It must also preserve the official-versus-community boundary: no inline Tier-card
+voting, no community-driven automatic reordering, and exact mode-and-goal context when
+opening Tier & Evaluation.
