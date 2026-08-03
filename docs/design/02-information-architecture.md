@@ -12,6 +12,8 @@
 - Input audit: [01-current-product-audit.md](./01-current-product-audit.md)
 - Approved shared-shell contract:
   [15-shared-shell-navigation-brief.md](./15-shared-shell-navigation-brief.md)
+- Approved authentication and onboarding contract:
+  [17-authentication-onboarding-page-brief.md](./17-authentication-onboarding-page-brief.md)
 - Scope: User-facing NosLog 2.0 page families, information architecture,
   navigation, and important cross-page flows
 - Excluded: Administrator-interface redesign, page-level visual composition,
@@ -376,17 +378,18 @@ The exact block proportions remain open until representative layout work is appr
 
 ## Important User Flows
 
-| Flow                        | Entry                               | Required sequence                                                                 | Success condition                                                                                    | Important recovery or branch                                                                   |
-| --------------------------- | ----------------------------------- | --------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| Find music quickly          | Home search, Music block, or More   | Open Music scope → search/filter → music result → music detail                    | User reaches the correct music information with the original and selected localized title understood | No results, ambiguous title, unavailable difficulty                                            |
-| Open a public chart         | Chart Viewer block or More          | Open Chart scope → search/filter → published difficulty → focused viewer          | User reaches and can play or inspect the intended published chart                                    | No published chart, filter empty state, unavailable difficulty, playback or local-audio issue  |
-| Choose what to play by tier | Home block or More → Tiers          | Select mode/goal → inspect band → select chart → music detail                     | User identifies an appropriate next chart and can inspect their record                               | No published list, missing personal record, filter empty state                                 |
-| Progress through Bingo      | Home block or More → Bingo          | Select Bingo → inspect 5×5 missions → update progress → understand unlock/NOS     | User understands progress toward music unlocks or NOS rewards                                        | Login required, invalid Bingo or mission, save failure                                         |
-| Take an Exam                | Home block or More → Exams          | Select Exam → inspect requirements/stages → assess or submit → title/reward state | User understands the skill assessment, NOS use, and title/reward outcome                             | Login required, no published Exam, incomplete proof, validation or upload error                |
-| Review progress             | Profile avatar, home block, or More | Profile/ranking → summary or entry → music detail                                 | User understands current standing or record and can inspect supporting plays                         | Private field, signed-out state, no plays, ranking request error                               |
-| Establish or recover sync   | Home entry or More → Data Sync      | Understand state → install/run bookmarklet → inspect result → profile             | User knows whether records are current and what changed                                              | Token regeneration, processing, stale, partial, failed, or no-history state                    |
-| Read a NosLog announcement  | Home update or announcement archive | Open summary/archive → select announcement → read localized detail                | User can read the complete current or historical NosLog notice in the selected locale                | No published items, missing translation, removed or unavailable announcement                   |
-| Inspect chart playback      | Music detail → Chart viewer         | Enter focused viewer → configure/play → optionally enter fullscreen → exit/return | User can understand chart timing and hand/path behavior without losing music context                 | Unpublished chart, fullscreen unavailable, local audio absent, narrow viewport, playback error |
+| Flow                                 | Entry                               | Required sequence                                                                 | Success condition                                                                                    | Important recovery or branch                                                                   |
+| ------------------------------------ | ----------------------------------- | --------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| Find music quickly                   | Home search, Music block, or More   | Open Music scope → search/filter → music result → music detail                    | User reaches the correct music information with the original and selected localized title understood | No results, ambiguous title, unavailable difficulty                                            |
+| Open a public chart                  | Chart Viewer block or More          | Open Chart scope → search/filter → published difficulty → focused viewer          | User reaches and can play or inspect the intended published chart                                    | No published chart, filter empty state, unavailable difficulty, playback or local-audio issue  |
+| Choose what to play by tier          | Home block or More → Tiers          | Select mode/goal → inspect band → select chart → music detail                     | User identifies an appropriate next chart and can inspect their record                               | No published list, missing personal record, filter empty state                                 |
+| Progress through Bingo               | Home block or More → Bingo          | Select Bingo → inspect 5×5 missions → update progress → understand unlock/NOS     | User understands progress toward music unlocks or NOS rewards                                        | Login required, invalid Bingo or mission, save failure                                         |
+| Take an Exam                         | Home block or More → Exams          | Select Exam → inspect requirements/stages → assess or submit → title/reward state | User understands the skill assessment, NOS use, and title/reward outcome                             | Login required, no published Exam, incomplete proof, validation or upload error                |
+| Review progress                      | Profile avatar, home block, or More | Profile/ranking → summary or entry → music detail                                 | User understands current standing or record and can inspect supporting plays                         | Private field, signed-out state, no plays, ranking request error                               |
+| Establish or recover sync            | Home entry or More → Data Sync      | Understand state → install/run bookmarklet → inspect result → profile             | User knows whether records are current and what changed                                              | Token regeneration, processing, stale, partial, failed, or no-history state                    |
+| Read a NosLog announcement           | Home update or announcement archive | Open summary/archive → select announcement → read localized detail                | User can read the complete current or historical NosLog notice in the selected locale                | No published items, missing translation, removed or unavailable announcement                   |
+| Inspect chart playback               | Music detail → Chart viewer         | Enter focused viewer → configure/play → optionally enter fullscreen → exit/return | User can understand chart timing and hand/path behavior without losing music context                 | Unpublished chart, fullscreen unavailable, local audio absent, narrow viewport, playback error |
+| Authenticate and complete an account | Header Login or account-only action | Contextual Login → Discord OAuth → minimal Onboarding when new → safe return      | User reaches the original validated destination with a complete NosLog identity                      | OAuth cancellation/expiry, provider failure, nickname conflict, logout and public browsing     |
 
 ## Cross-Link Requirements
 
@@ -401,6 +404,9 @@ The exact block proportions remain open until representative layout work is appr
 - Data Sync must be reachable from its separate home row and the More panel.
 - Settings must be reachable through one More-panel entry while signed out or signed
   in; authentication changes the available settings, not the destination identity.
+- Login must preserve one validated internal destination through Discord OAuth and
+  any required Onboarding. An incomplete account is redirected to Onboarding with a
+  concise destination reason and can explicitly log out to public Home.
 - Feedback and error reporting must be reachable through the More panel on ordinary
   pages. Its focused-chart-viewer entry remains a viewer-brief decision.
 - Each Home routine-announcement row must open its localized public detail page. The
@@ -531,6 +537,7 @@ from its content rather than copied from GOV.UK, USWDS, or Carbon.
 | IA-16 | Preference ownership            | Theme stays device-local; existing account language/title settings win after login, new accounts inherit explicit guest choices                          | `Approved` |
 | IA-17 | Footer destinations             | Keep Privacy and GitHub in the footer and do not duplicate them in More                                                                                  | `Approved` |
 | IA-18 | Routine announcement structure  | Home shows the newest three title-and-date links on every viewport; localized detail and archive retain complete history; omit the section when empty    | `Approved` |
+| IA-19 | Authentication and onboarding   | One Discord action, public-browse alternative, two-field completion, incomplete-profile gate, logout escape, and validated destination return            | `Approved` |
 
 ## Phase Approval
 
@@ -545,8 +552,10 @@ approved shared-discovery brief refined signed-out personal-control behavior and
 Music/Chart scope contracts without changing that hierarchy. The subsequently approved
 shared-shell brief resolved the global destination order, compact modal, wide popover,
 header visibility, shell variants, and footer ownership while preserving the same
-information architecture. Page-specific composition and states remain governed by
-their page briefs.
+information architecture. The subsequently approved authentication and onboarding
+brief resolved the Discord entry, public-browse alternative, minimal completion gate,
+safe return, and recovery without changing the public page hierarchy. Page-specific
+composition and states remain governed by their page briefs.
 
 ## Acceptance Criteria for This Artifact
 
@@ -571,3 +580,5 @@ their page briefs.
    destinations and return states.
 4. Preserve this approved information architecture unless a later explicitly approved
    decision supersedes a recorded item.
+5. Apply the approved authentication and onboarding contract to every account-only
+   action without duplicating provider or completion logic inside destination pages.

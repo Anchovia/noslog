@@ -22,6 +22,8 @@ references; and the user-approved decision record`
   [02-information-architecture.md](./02-information-architecture.md)
 - Shared-shell contract:
   [15-shared-shell-navigation-brief.md](./15-shared-shell-navigation-brief.md)
+- Authentication and onboarding contract:
+  [17-authentication-onboarding-page-brief.md](./17-authentication-onboarding-page-brief.md)
 - Profile contract: [09-profile-page-brief.md](./09-profile-page-brief.md)
 - Scope: public settings entry, category structure, preference ownership and saving,
   signed-out and signed-in behavior, profile editing, privacy, Discord connection,

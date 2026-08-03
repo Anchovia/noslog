@@ -18,6 +18,8 @@
   [15-shared-shell-navigation-brief.md](./15-shared-shell-navigation-brief.md)
 - 상위 정보 구조:
   [02-information-architecture.ko.md](./02-information-architecture.ko.md)
+- 인증 및 온보딩 계약:
+  [17-authentication-onboarding-page-brief.ko.md](./17-authentication-onboarding-page-brief.ko.md)
 - 집중형 뷰어 계약:
   [07-chart-viewer-page-brief.ko.md](./07-chart-viewer-page-brief.ko.md)
 - 범위: 반복되는 사용자 공개 셸, 일반 헤더, 계정·내비게이션 컨트롤, 열린
@@ -309,8 +311,10 @@ Panel이 혼잡, 잘림 또는 사용할 수 없는 Pointer·Keyboard Target 없
 - 건너뛰기 경로, 정확히 하나의 `main` 및 일반 신뢰 푸터를 유지합니다.
 - 사용자가 Browser Back에 의존하지 않고 인증을 나와 홈으로 돌아갈 수 있어야
   합니다.
-- 페이지 고유 Login 방식, 동의 문구, 오류 및 선택적인 문맥 개인정보처리방침
-  Link는 인증 기획서 결정으로 남깁니다.
+- Login 방식, Discord 고지, Inline 문맥 개인정보처리방침 Link, 온보딩 콘텐츠,
+  미완료 프로필 Gate, 안전한 복귀 및 인증 복구는
+  [17-authentication-onboarding-page-brief.ko.md](./17-authentication-onboarding-page-brief.ko.md)를
+  따릅니다.
 
 ## 집중형 채보 뷰어 셸 경계
 
@@ -509,32 +513,32 @@ Motion 및 반응형 Overflow를 다뤄야 합니다. 브라우저 점검으로 
 
 ## 결정 기록
 
-| ID       | 결정                                                                                        | 상태   |
-| -------- | ------------------------------------------------------------------------------------------- | ------ |
-| SHELL-01 | 하나의 반응형 상단 셸 Taxonomy 사용, 상시 하단 내비게이션 추가 안 함                        | `승인` |
-| SHELL-02 | 일반 헤더에는 NosLog, 계정 상태 및 하나의 내비게이션 Trigger만 포함                         | `승인` |
-| SHELL-03 | 비로그인 계정 위치에 보이는 Login Text Control 사용                                         | `승인` |
-| SHELL-04 | Ellipsis가 아니라 내비게이션·Hamburger Trigger 사용                                         | `승인` |
-| SHELL-05 | 승인된 행과 의미적 순서로 8개 제품 목적지 유지                                              | `승인` |
-| SHELL-06 | 설정과 피드백 · 오류 제보를 그룹 제목 없이 Divider 뒤에 배치                                | `승인` |
-| SHELL-07 | 관리자는 일반 유틸리티 뒤에서 조건부·독립적으로 유지                                        | `승인` |
-| SHELL-08 | 아이콘과 간결한 Text Label 사용, 설명 추가 안 함                                            | `승인` |
-| SHELL-09 | Compact 내비게이션은 헤더 아래 Full-width 2열 Modal                                         | `승인` |
-| SHELL-10 | Compact 열린 상태에 Scrim, Body Lock, Focus containment 및 신뢰 가능한 닫기·Focus 복귀 사용 | `승인` |
-| SHELL-11 | Wide 내비게이션은 Body Lock 없는 오른쪽 Anchored 2열 Non-modal Popover                      | `승인` |
-| SHELL-12 | Modal·Popover 전환은 현재 `1024px` 구현이 아니라 콘텐츠 Fit에서 선택                        | `승인` |
-| SHELL-13 | Compact 헤더는 아래에서 숨고 위에서 표시, Wide Desktop 헤더는 계속 보이는 Sticky            | `승인` |
-| SHELL-14 | 열린 내비게이션, Header·Panel Focus 및 Route 진입 중 헤더 표시                              | `승인` |
-| SHELL-15 | Reduced Motion에서 헤더 Slide 제거                                                          | `승인` |
-| SHELL-16 | 일반 푸터가 개인정보처리방침, GitHub 및 Copyright 소유                                      | `승인` |
-| SHELL-17 | 개인정보처리방침과 GitHub를 헤더나 더보기 Panel에 넣지 않음                                 | `승인` |
-| SHELL-18 | Login·Onboarding은 더보기·프로필 없는 최소 정체성+푸터 셸 사용                              | `승인` |
-| SHELL-19 | Login 본문 문맥 개인정보처리방침 Link 위치는 인증 기획서 결정                               | `승인` |
-| SHELL-20 | 집중형 채보 뷰어에서 일반 헤더·푸터 생략                                                    | `승인` |
-| SHELL-21 | 점검과 치명적 오류에서 최소 정체성·복구 셸 사용                                             | `승인` |
-| SHELL-22 | 열린 목적지는 ARIA Menu Semantics가 아닌 Native Link Navigation으로 유지                    | `승인` |
-| SHELL-23 | ko, ja, en에서 동일한 목적지 정체성과 의미적 순서 보존                                      | `승인` |
-| SHELL-24 | 정확한 Foundation Token, 치수, Breakpoint 및 최종 다국어 문자열은 후속 작업                 | `승인` |
+| ID       | 결정                                                                                           | 상태   |
+| -------- | ---------------------------------------------------------------------------------------------- | ------ |
+| SHELL-01 | 하나의 반응형 상단 셸 Taxonomy 사용, 상시 하단 내비게이션 추가 안 함                           | `승인` |
+| SHELL-02 | 일반 헤더에는 NosLog, 계정 상태 및 하나의 내비게이션 Trigger만 포함                            | `승인` |
+| SHELL-03 | 비로그인 계정 위치에 보이는 Login Text Control 사용                                            | `승인` |
+| SHELL-04 | Ellipsis가 아니라 내비게이션·Hamburger Trigger 사용                                            | `승인` |
+| SHELL-05 | 승인된 행과 의미적 순서로 8개 제품 목적지 유지                                                 | `승인` |
+| SHELL-06 | 설정과 피드백 · 오류 제보를 그룹 제목 없이 Divider 뒤에 배치                                   | `승인` |
+| SHELL-07 | 관리자는 일반 유틸리티 뒤에서 조건부·독립적으로 유지                                           | `승인` |
+| SHELL-08 | 아이콘과 간결한 Text Label 사용, 설명 추가 안 함                                               | `승인` |
+| SHELL-09 | Compact 내비게이션은 헤더 아래 Full-width 2열 Modal                                            | `승인` |
+| SHELL-10 | Compact 열린 상태에 Scrim, Body Lock, Focus containment 및 신뢰 가능한 닫기·Focus 복귀 사용    | `승인` |
+| SHELL-11 | Wide 내비게이션은 Body Lock 없는 오른쪽 Anchored 2열 Non-modal Popover                         | `승인` |
+| SHELL-12 | Modal·Popover 전환은 현재 `1024px` 구현이 아니라 콘텐츠 Fit에서 선택                           | `승인` |
+| SHELL-13 | Compact 헤더는 아래에서 숨고 위에서 표시, Wide Desktop 헤더는 계속 보이는 Sticky               | `승인` |
+| SHELL-14 | 열린 내비게이션, Header·Panel Focus 및 Route 진입 중 헤더 표시                                 | `승인` |
+| SHELL-15 | Reduced Motion에서 헤더 Slide 제거                                                             | `승인` |
+| SHELL-16 | 일반 푸터가 개인정보처리방침, GitHub 및 Copyright 소유                                         | `승인` |
+| SHELL-17 | 개인정보처리방침과 GitHub를 헤더나 더보기 Panel에 넣지 않음                                    | `승인` |
+| SHELL-18 | Login·Onboarding은 더보기·프로필 없는 최소 정체성+푸터 셸 사용                                 | `승인` |
+| SHELL-19 | 인증 기획서에 따라 Login 본문에 간결한 Discord 데이터 고지와 Inline 개인정보처리방침 Link 포함 | `승인` |
+| SHELL-20 | 집중형 채보 뷰어에서 일반 헤더·푸터 생략                                                       | `승인` |
+| SHELL-21 | 점검과 치명적 오류에서 최소 정체성·복구 셸 사용                                                | `승인` |
+| SHELL-22 | 열린 목적지는 ARIA Menu Semantics가 아닌 Native Link Navigation으로 유지                       | `승인` |
+| SHELL-23 | ko, ja, en에서 동일한 목적지 정체성과 의미적 순서 보존                                         | `승인` |
+| SHELL-24 | 정확한 Foundation Token, 치수, Breakpoint 및 최종 다국어 문자열은 후속 작업                    | `승인` |
 
 ## Handoff 경계
 
