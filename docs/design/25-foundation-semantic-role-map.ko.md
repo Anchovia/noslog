@@ -2,7 +2,7 @@
 
 ## 문서 관리
 
-- 상태: `승인된 Semantic-role 구조·글꼴 Family·Type 하한·물리 Scale·하위 Line-height 축·공용 Weight 어휘·Tracking 규칙 — 나머지 Composite 값 미확정`
+- 상태: `승인된 Semantic-role 구조·글꼴 Family·Type 하한·물리 Scale·Line-height 축·공용 Weight 어휘·Tracking 규칙 — 나머지 Composite 값 미확정`
 - 승인일: 2026-08-03
 - 마지막 결정 갱신일: 2026-08-04
 - 원본 언어: 영어
@@ -14,17 +14,18 @@
 - 입력: 승인된 문서 `01`–`24`, 현재 저장소 Typography utility, 문서 `24`에
   기록된 현재 Browser 근거, 아래 Reference 비교 및 2026-08-03의 명시적 사용자
   승인
-- 제외: 나머지 Role-to-step 및 Role-to-weight 배정, 상위 Line-height 및 반응형
-  동작, Fallback 및 Delivery 세부, Color, Spacing, Grid, Component 치수, 최종
+- 제외: 나머지 Role-to-step 및 Role-to-weight 배정, 반응형 Type 동작,
+  Fallback 및 Delivery 세부, Color, Spacing, Grid, Component 치수, 최종
   Figma style, Production screen 및 Application 구현
 
 이 문서는 각 공유 Typography 역할의 의미와 관리 방식, 공용 Family 및 전역
 하한을 승인합니다. 후속 Batch B 문서 `26`은 제한된
 `12/14/16/20/24/32px` 일반 물리 Ramp, Gate를 둔 `40px` Display step,
-`16/20/24px` 하위 Line-height primitive 축, `400/500/600/700` 공용 Weight
-어휘, 자연/기본 Tracking 규칙 및 그 사용·검증 제약을 승인합니다. 여기에 역할
-이름이 있다는 이유로 임의 Composite style을 선택하거나 해당 Step 또는 Weight
-중 하나를 자동 배정하거나 현재 구현 값을 재사용해서는 안 됩니다.
+`16/20/24px` 하위 및 `28/32/40/48px` 상위 Line-height primitive 축,
+`400/500/600/700` 공용 Weight 어휘, 자연/기본 Tracking 규칙 및 그 사용·검증
+제약을 승인합니다. 여기에 역할 이름이 있다는 이유로 임의 Composite style을
+선택하거나 해당 Step 또는 Weight 중 하나를 자동 배정하거나 현재 구현 값을
+재사용해서는 안 됩니다.
 
 ## 관련 문서
 
@@ -111,8 +112,9 @@ NosLog에는 일반 System이 정의하지 않는 Domain 제약이 추가됩니�
   primitive입니다. `18px`, `28px`, `36px`은 공유 v0.1 Primitive가 아닙니다.
   새 공유 Size에는 Local Page 사용이 아니라 대표 다국어·반응형 Specimen 근거와
   명시적 승인이 필요합니다.
-- 정확한 Role mapping, 상위 Line-height Pairing 및 반응형 Title 동작은
-  미확정입니다. 공용 Weight 어휘는 승인됐지만 12개 Role 전체에 대한 정확한
+- 기본 상위 Pairing은 `20/28`, `24/32`, `32/40`, `40/48`입니다. 정확한 Role
+  mapping 및 반응형 Title 동작은 미확정입니다. 공용 Weight 어휘는 승인됐지만
+  12개 Role 전체에 대한 정확한
   배정은 승인되지 않았습니다. 자연/기본 Tracking과 Kerning 유지는 이후 명시적
   예외가 승인되지 않는 한 모든 공용 Role에 적용됩니다.
 - 공간 부족은 Type 축소 전에 Content 우선순위, 줄바꿈, Reflow, Spacing,
@@ -123,11 +125,11 @@ NosLog에는 일반 System이 정의하지 않는 Domain 제약이 추가됩니�
 ### Layer 1 — Primitive 값
 
 문서 `26`은 `12/14/16/20/24/32px` 일반 물리 Ramp, Gate를 둔 `40px` Display
-step, `16/20/24px` 하위 Line-height 축, `400/500/600/700` 공용 Weight 어휘 및
-자연/기본 Tracking을 승인합니다. 미래 Primitive에는 승인된 Pretendard JP
-Family 아래의 상위 Line-height step 및 OpenType 기능이 포함될 수 있으며 그 외
-Primitive 이름과 값은 미확정입니다. Product 작성자와 Downstream designer는
-Page content에 Primitive를 직접 적용하면 안 됩니다.
+step, `16/20/24px` 하위 및 `28/32/40/48px` 상위 Line-height 축,
+`400/500/600/700` 공용 Weight 어휘 및 자연/기본 Tracking을 승인합니다. 미래
+Primitive에는 승인된 Pretendard JP Family 아래의 OpenType 기능이 포함될 수
+있으며 그 외 Primitive 이름과 값은 미확정입니다. Product 작성자와 Downstream
+designer는 Page content에 Primitive를 직접 적용하면 안 됩니다.
 
 ### Layer 2 — Composite 물리 Style
 
@@ -138,9 +140,9 @@ Semantic role이 의도적으로 같은 Composite style을 가리킬 수 있습�
 
 Composite style은 Batch B specimen이 실제 NosLog content에서 동작함을
 입증한 뒤에만 승인합니다. 그 전까지 현재 App 또는 외부 Design system에
-보이는 어떤 Role 크기·Role-to-weight mapping·행간도 권위 있는 값이 아니며
-승인된 `12px` 하한, 공용 Weight 어휘 및 자연/기본 Tracking 규칙은 계속
-적용됩니다.
+보이는 어떤 Role 크기·Role-to-weight mapping·Role-to-pairing 배정도 권위 있는
+값이 아니며 승인된 물리·Line-height 축, `12px` 하한, 공용 Weight 어휘 및
+자연/기본 Tracking 규칙은 계속 적용됩니다.
 
 ### Layer 3 — 공유 Semantic role
 
@@ -456,6 +458,7 @@ Content·고밀도·Empty·Error·Disabled·Permission·Destructive fixture를
 | `FSR-15` | 모든 Semantic role에 최종 Composite style을 배정하지 않고 문서 `26`의 승인된 `400/500/600/700` 공용 Weight 어휘를 인정함        | `Approved`   |
 | `FSR-16` | 모든 드문 예외를 명시적으로 관리하면서 문서 `26`의 승인된 자연/기본 Tracking과 공용 Role 전반의 Kerning 유지를 인정함           | `Approved`   |
 | `FSR-17` | 최종 Semantic composite를 배정하지 않고 문서 `26`의 승인된 `20/24/32px` 일반 상위 Core와 Gate를 둔 `40px` Display step을 인정함 | `Approved`   |
+| `FSR-18` | 최종 Semantic composite를 배정하지 않고 문서 `26`의 승인된 `28/32/40/48px` 상위 Line-height 축과 기본 상위 Pairing을 인정함     | `Approved`   |
 
 ## 완료 체크리스트
 
@@ -480,7 +483,8 @@ Content·고밀도·Empty·Error·Disabled·Permission·Destructive fixture를
       승인하고 명시적 예외 관리 방식을 유지했습니다.
 - [x] 최종 Semantic-role 배정 없이 절제된 `20/24/32px` 일반 상위 물리 Core와
       Gate를 둔 `40px` Display step을 승인했습니다.
-- [ ] 나머지 Role mapping, 상위 Line-height 및 Responsive title behavior를
-      비교합니다.
+- [x] 최종 Semantic-role 배정 없이 절제된 `28/32/40/48px` 상위 Line-height 축과
+      기본 `20/28`, `24/32`, `32/40`, `40/48` Pairing을 승인했습니다.
+- [ ] 나머지 Role mapping 및 Responsive title behavior를 비교합니다.
 - [ ] 통합 `S1`–`S6` Specimen을 사용자와 검토합니다.
 - [ ] 승인된 물리 값을 Foundation v0.1로 승격합니다.

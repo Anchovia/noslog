@@ -2,7 +2,7 @@
 
 ## Document Control
 
-- Status: `Approved semantic-role architecture, font family, type floor, physical scale, lower line-height axis, shared weight vocabulary, and tracking rule — remaining composite values unresolved`
+- Status: `Approved semantic-role architecture, font family, type floor, physical scale, line-height axes, shared weight vocabulary, and tracking rule — remaining composite values unresolved`
 - Approval date: 2026-08-03
 - Last decision update: 2026-08-04
 - Canonical language: English
@@ -14,19 +14,19 @@
 - Inputs: approved documents `01`–`24`, current repository typography utilities,
   current-browser evidence recorded in document `24`, the reference comparison below,
   and explicit user approval on 2026-08-03
-- Excluded: remaining role-to-step and role-to-weight assignments, upper line-height
-  and responsive behavior, fallback and delivery details, color, spacing, grid,
+- Excluded: remaining role-to-step and role-to-weight assignments, responsive type
+  behavior, fallback and delivery details, color, spacing, grid,
   component dimensions, final Figma styles, production screens, and application
   implementation
 
 This document approves what each shared typography role means, how it is governed,
 the shared family, and the global lower bound. Batch B document `26` subsequently
 approves the bounded `12/14/16/20/24/32px` ordinary physical ramp, gated `40px`
-display step, `16/20/24px` lower line-height primitive axis, `400/500/600/700` shared
-weight vocabulary, natural/default tracking rule, and their usage and validation
-constraints. A role name appearing here must not be interpreted as permission to
-select an arbitrary composite style, automatically assign one of those steps or
-weights, or reuse the current implementation value.
+display step, `16/20/24px` lower and `28/32/40/48px` upper line-height primitive
+axes, `400/500/600/700` shared weight vocabulary, natural/default tracking rule, and
+their usage and validation constraints. A role name appearing here must not be
+interpreted as permission to select an arbitrary composite style, automatically
+assign one of those steps or weights, or reuse the current implementation value.
 
 ## Related Documents
 
@@ -110,8 +110,9 @@ NOSTALGIA meaning.
   `metric-display` composites. `18px`, `28px`, and `36px` are not shared v0.1
   primitives. A new shared size requires representative multilingual and responsive
   specimen evidence and explicit approval rather than local page-level use.
-- Exact role mappings, upper line-height pairings, and responsive title behavior
-  remain unresolved. The shared weight vocabulary is approved, but its exact
+- The default upper pairings are `20/28`, `24/32`, `32/40`, and `40/48`. Exact role
+  mappings and responsive title behavior remain unresolved. The shared weight
+  vocabulary is approved, but its exact
   assignment across the twelve roles is not. Natural/default tracking and retained
   kerning apply to every shared role unless a later explicit exception is approved.
 - Space pressure must be solved through content priority, wrapping, reflow, spacing,
@@ -123,9 +124,9 @@ NOSTALGIA meaning.
 ### Layer 1 — Primitive values
 
 Document `26` approves the `12/14/16/20/24/32px` ordinary physical ramp, gated `40px`
-display step, `16/20/24px` lower line-height axis, `400/500/600/700` shared weight
-vocabulary, and natural/default tracking. Future primitives may include approved
-upper line-height steps and OpenType features under the Pretendard JP family; all
+display step, `16/20/24px` lower and `28/32/40/48px` upper line-height axes,
+`400/500/600/700` shared weight vocabulary, and natural/default tracking. Future
+primitives may include approved OpenType features under the Pretendard JP family; all
 other primitive names and values remain unresolved. Product authors and downstream
 designers must not apply primitives directly to page content.
 
@@ -137,9 +138,9 @@ semantic roles therefore does not require twelve different font sizes.
 
 Composite styles are approved only after Batch B specimens demonstrate that they work
 with real NosLog content. Until then, no role size, role-to-weight mapping, or
-line-height shown in the current app or an external design system is authoritative;
-the approved `12px` floor, shared weight vocabulary, and natural/default tracking
-rule still apply.
+role-to-pairing assignment shown in the current app or an external design system is
+authoritative; the approved physical and line-height axes, `12px` floor, shared
+weight vocabulary, and natural/default tracking rule still apply.
 
 ### Layer 3 — Shared semantic roles
 
@@ -446,6 +447,7 @@ permission, and destructive fixtures at `320px`, `390px`, intermediate widths,
 | `FSR-15` | Recognize document `26`'s approved `400/500/600/700` shared weight vocabulary without assigning every semantic role a final composite style          | `Approved`   |
 | `FSR-16` | Recognize document `26`'s approved natural/default tracking and retained kerning across shared roles while governing every rare exception explicitly | `Approved`   |
 | `FSR-17` | Recognize document `26`'s approved `20/24/32px` ordinary upper core and gated `40px` display step without assigning final semantic composites        | `Approved`   |
+| `FSR-18` | Recognize document `26`'s approved `28/32/40/48px` upper line-height axis and default upper pairings without assigning final semantic composites     | `Approved`   |
 
 ## Completion Checklist
 
@@ -469,7 +471,8 @@ permission, and destructive fixtures at `320px`, `390px`, intermediate widths,
       or negative tracking tokens and explicit exception governance.
 - [x] Restrained `20/24/32px` ordinary upper physical core and gated `40px` display
       step approved without final semantic-role assignment.
-- [ ] Remaining role mapping, upper line-height, and responsive title behavior
-      compared.
+- [x] Restrained `28/32/40/48px` upper line-height axis and default `20/28`, `24/32`,
+      `32/40`, and `40/48` pairings approved without final semantic-role assignment.
+- [ ] Remaining role mapping and responsive title behavior compared.
 - [ ] Integrated `S1`–`S6` specimens reviewed with the user.
 - [ ] Approved physical values promoted to Foundation v0.1.

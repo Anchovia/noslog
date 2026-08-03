@@ -2,7 +2,7 @@
 
 ## Document Control
 
-- Status: `In progress — lower and upper type scales, lower line-height, weight, and tracking axes approved; remaining composite and layout values unresolved`
+- Status: `In progress — physical type scale, lower and upper line-height, weight, and tracking axes approved; remaining composite and layout values unresolved`
 - Research date: 2026-08-04
 - Last decision update: 2026-08-04
 - Canonical language: English
@@ -13,8 +13,8 @@
 - Inputs: approved documents `01`–`25`, current repository typography evidence,
   maintained design systems and standards, rhythm-game domain products, and explicit
   user approval on 2026-08-04
-- Excluded at this decision point: upper line-height and responsive behavior,
-  role-to-step assignments beyond the approved size- and weight-usage boundaries,
+- Excluded at this decision point: responsive type behavior, role-to-step assignments
+  beyond the approved size-, line-height-, and weight-usage boundaries,
   metric-display composites, spacing, grid, containers, component dimensions, color,
   material treatment, final Figma styles, production screens, and application
   implementation
@@ -38,9 +38,9 @@ requirements.
 
 - Research and discuss one bounded material decision at a time.
 - Record observations separately from proposals and approved requirements.
-- Do not infer approval of upper line-height, responsive behavior, metric
-  composites, exact composite-role mapping, or layout from approval of the physical
-  size, lower line-height, weight, and tracking axes.
+- Do not infer approval of responsive behavior, metric composites, exact
+  composite-role mapping, or layout from approval of the physical size, line-height,
+  weight, and tracking axes.
 - Validate the eventual composite styles with the approved `S1`–`S6` multilingual and
   responsive specimens before Foundation v0.1 promotion.
 - Update this English source and its Korean companion in the same task.
@@ -358,9 +358,11 @@ shared meanings.
   can be proposed only after a representative multilingual and responsive specimen
   demonstrates that the approved steps cannot express a necessary semantic
   distinction. A page or component author must never add a local size preemptively.
-- Approval of the physical sizes does not approve their line heights, weights,
+- Approval of the physical sizes alone did not approve their line heights, weights,
   responsive substitutions, exact role mapping, maximum line count, truncation, or
-  metric behavior. Those remain subsequent bounded decisions.
+  metric behavior. The subsequent section approves only the default upper
+  size-to-line-height pairings and its stated boundaries; the remaining concerns stay
+  unresolved.
 - `20px` as a font-size primitive and `20px` as an already approved line-height
   primitive remain distinct token namespaces and must not be conflated in Figma or
   code.
@@ -368,6 +370,83 @@ shared meanings.
   `32px` or `40px` composite must be approved as part of that composite after Korean,
   Japanese, English, mixed-script, `320px`, `390px`, intermediate-width, and wide
   specimens.
+
+## Approved Upper Line-height Axis
+
+### Focused line-height research
+
+This review compared fifteen independent maintained design systems plus W3C
+accessibility and Korean/Japanese composition guidance. It evaluated authored heading
+leading separately from the WCAG requirement to survive user spacing overrides. The
+systems differ in typeface, platform, and density, but converge on progressively
+tighter leading as title size increases, with additional room retained for smaller
+headings that may wrap.
+
+| Independent source                                                                                          | Transferable finding                                                                                                  | NosLog implication                                                                                       | Limitation                                                                    |
+| ----------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| [Tailwind CSS font size](https://tailwindcss.com/docs/font-size)                                            | The existing stack pairs `20/28` and `24/32` by default                                                               | Provides implementation-aligned candidates for the two upper sizes most likely to wrap                   | Tailwind defaults are conveniences, not design authority                      |
+| [Material 3 typography](https://developer.android.com/develop/ui/compose/designsystems/material3)           | Uses `24/32` and `32/40` for headline styles and reduces relative leading as sizes rise                               | Directly supports the middle of the proposed progression                                                 | Roboto and native `sp` values are not Pretendard JP CSS tokens                |
+| [Fluent 2 typography](https://fluent2.microsoft.design/typography)                                          | Web titles include `20/26`, `24/32`, `32/40`, and `40/52`                                                             | Confirms stable functional zones while showing that the largest display leading remains product-specific | Segoe UI metrics and Fluent's `40/52` do not determine NosLog display density |
+| [Carbon type sets](https://carbondesignsystem.com/elements/typography/type-sets/)                           | Product headings include `20/28` and `32/40`, while larger expressive roles tighten further                           | Supports room for wrapping at `20px` and tighter dominant headings                                       | IBM Plex and Carbon's productive/expressive split are not copied              |
+| [Atlassian product type scale](https://atlassian.design/foundations/typography/product-typefaces-and-scale) | Heading leading targets about `1.2` and rounds to four-pixel rhythm                                                   | Supports `40/48` for a rare short display and four-pixel alignment                                       | Applying `1.2` to every smaller multilingual title would be too tight         |
+| [GOV.UK type scale](https://design-system.service.gov.uk/styles/type-scale/)                                | Uses tested size/line-height pairs such as `24/30` and `36/40`, with explicit responsive behavior                     | Confirms that title leading is a governed composite rather than a local choice                           | Its font, public-service reading context, and five-pixel rhythm differ        |
+| [USWDS typography](https://designsystem.digital.gov/components/typography/)                                 | Recommends roughly `1–1.35` for headings no longer than one or two lines                                              | Supports reducing relative leading as titles become larger and shorter                                   | It provides a range rather than Pretendard JP values                          |
+| [Primer typography primitives](https://primer.style/product/primitives/typography/)                         | Couples size and line height in semantic shorthand tokens and gives medium titles more room than display              | Supports composite governance and content-dependent density                                              | Primer's current title ratios are roomier than NosLog needs to copy           |
+| [Shopify Polaris Text](https://polaris-react.shopify.com/components/typography/text)                        | Responsive heading variants map predetermined size and line-height tokens                                             | Supports preventing arbitrary per-page pairings                                                          | Commerce roles and token values do not define NosLog semantics                |
+| [Ant Design font system](https://ant.design/docs/spec/font/)                                                | Treats size and line height as one ordered system and recommends only three to five non-display sizes                 | Supports a small approved axis rather than generic tight/normal utilities                                | The public page does not expose every upper numeric pair as text              |
+| [GitLab type fundamentals](https://design.gitlab.com/product-foundations/type-fundamentals)                 | Governs dynamic heading sizes and exposes a heading line-height token around `1.25`                                   | Supports `32/40` and keeping responsive behavior separate from the fixed default pairing                 | GitLab Sans and its fluid scale are not direct NosLog mappings                |
+| [Adobe Spectrum typography data](https://opensource.adobe.com/spectrum-design-data/tokens/typography/)      | Maintains coordinated font-size and line-height scale sets and validates platform differences                         | Supports explicit primitive namespaces and later specimen testing                                        | Adobe Clean metrics and Spectrum's larger mobile scale differ                 |
+| [Apple typography](https://developer.apple.com/design/human-interface-guidelines/typography)                | Default title styles become relatively tighter as size grows and tight leading is discouraged for three or more lines | Supports a gradual ratio and a line-count boundary                                                       | Native point sizes and Dynamic Type are directional for responsive web        |
+| [LINE Global typography](https://designsystem.line.me/LDSG/foundation/typography-en)                        | Separates tighter title styles from more readable text styles and provides language packs including Japanese          | Supports validating the same pairings in actual East-Asian scripts                                       | Public tokens do not provide Pretendard JP measurements                       |
+| [SAP Fiori typography](https://experience.sap.com/fiori-design-web/typography/)                             | Treats titles as controlled UI roles and explicitly accounts for language fallback and truncation                     | Supports real localized title testing instead of Latin-only specimens                                    | SAP 72 metrics and enterprise controls differ                                 |
+| [WCAG Text Spacing](https://www.w3.org/WAI/WCAG22/Understanding/text-spacing.html)                          | Requires no content or functionality loss when users override line height to at least `1.5` times the font size       | Requires resilient containers and reflow without making authored headings `1.5` by default               | It is an override-survival criterion, not a default heading scale             |
+| [W3C KLReq](https://www.w3.org/TR/klreq/) and [JLReq](https://www.w3.org/TR/jlreq/)                         | Hangul, Kana, Kanji, Latin mixtures, punctuation, and line composition require script-aware testing                   | Requires real Korean/Japanese/mixed-script specimens before promotion                                    | Print and vertical-writing material transfers only where relevant             |
+
+The numerical convergence is strongest at `20/28`, `24/32`, and `32/40`. For the
+gated `40px` display step, systems range from roughly `1.2` to `1.3`; NosLog's
+approved requirement that this step remain rare and short supports the tighter
+`40/48` default, subject to actual Pretendard JP specimens.
+
+### Candidate comparison
+
+| Candidate                              | Pairings                           | Benefit                                                                                                                                   | Cost and risk                                                                                                    | Recommendation |
+| -------------------------------------- | ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | -------------- |
+| `A` — progressively tighter upper axis | `20/28`, `24/32`, `32/40`, `40/48` | Protects wrap-prone multilingual titles at `20–24px`, then tightens dominant and rare display text gradually; preserves four-pixel rhythm | Requires the `40px` gate and line-count constraints to remain enforced                                           | `Approved`     |
+| `B` — tight small headings             | `20/24`, `24/28`, `32/40`, `40/48` | Produces compact single-line UI headings                                                                                                  | `20/24` and `24/28` are too tight for long Japanese Music titles and mixed-script wrapping                       | `Rejected`     |
+| `C` — relaxed display                  | `20/28`, `24/32`, `32/40`, `40/52` | Gives a multi-line editorial display more room                                                                                            | Adds a `52px` primitive and weakens the approved short, rare display boundary without a demonstrated NosLog need | `Rejected`     |
+
+### Approved pairings and boundaries
+
+| Font size | Default line height | Relative pairing   | Intended boundary                                                                              |
+| --------- | ------------------- | ------------------ | ---------------------------------------------------------------------------------------------- |
+| `20px`    | `28px` (`1.75rem`)  | `20/28` (`1.4`)    | Compact or entity-title candidates that may wrap in Korean, Japanese, English, or mixed script |
+| `24px`    | `32px` (`2rem`)     | `24/32` (`1.333…`) | Principal identity candidates that may require a controlled second line                        |
+| `32px`    | `40px` (`2.5rem`)   | `32/40` (`1.25`)   | Dominant short title or major-metric candidates                                                |
+| `40px`    | `48px` (`3rem`)     | `40/48` (`1.2`)    | Gated, rare, short display or metric-display candidates only                                   |
+
+The complete shared line-height primitive axis is therefore
+`16/20/24/28/32/40/48px`. These are default pairings, not a public menu for arbitrary
+font-size and line-height combinations.
+
+- `20/28` and `24/32` protect titles that can legitimately reach two lines. They do
+  not approve unlimited line counts or the final wrap/truncation policy.
+- `32/40` and `40/48` are intended for short dominant content. A specimen requiring
+  three or more lines must not keep a tight upper style merely because it fits the
+  hierarchy; its content priority, width, size, role, or composition must return to
+  review.
+- `36px`, `44px`, and `52px` are not shared Foundation v0.1 line-height primitives.
+  A new value requires representative multilingual and responsive evidence plus
+  explicit user approval; page and component authors may not add local leading.
+- The pairings remain in relative implementation units and must preserve browser text
+  scaling. Pixel notation documents the design target only.
+- This decision does not assign semantic roles, weights, maximum line counts,
+  truncation rules, responsive size substitutions, or metric-display behavior.
+- No mobile-only line-height compression is approved. Responsive role substitutions
+  remain a later bounded decision after composite-role mapping.
+- Pretendard JP specimens must test original Japanese Music titles, localized/read
+  titles, long artist credits, Korean and English page identity, tabular metrics, and
+  mixed punctuation at `320px`, `390px`, intermediate widths, wide layouts, `200%`
+  text enlargement, and WCAG Text Spacing overrides before Foundation promotion.
 
 ## Alternatives Not Selected
 
@@ -388,6 +467,8 @@ shared meanings.
 | Adjust tracking by locale or viewport as an initial strategy                 | `Rejected` | It multiplies wrapping and QA variation and conflicts with stable localized composition                                                                                                  |
 | Add `18px`, `28px`, or `36px` to the initial shared ramp preemptively        | `Rejected` | These adjacent steps add author choice and validation cost before a representative specimen demonstrates a missing semantic distinction                                                  |
 | Allow `40px` as a routine page, card, dialog, or section title               | `Rejected` | It would collapse the approved rare-display boundary and recreate page-level emphasis drift                                                                                              |
+| Use tight `20/24` and `24/28` upper pairings                                 | `Rejected` | The ratios suit short single-line UI labels but do not protect long Japanese Music titles or mixed-script identity when they wrap                                                        |
+| Add `52px` leading for the gated `40px` display by default                   | `Rejected` | It assumes multi-line editorial display behavior that NosLog has not approved and adds another primitive without specimen evidence                                                       |
 
 ## Decision Log
 
@@ -398,13 +479,15 @@ shared meanings.
 | `FTL-03` | Use only `400`, `500`, `600`, and `700` as shared weight primitives with the semantic, frequency, responsive, and validation constraints above                          | `Approved`                         |
 | `FTL-04` | Use natural/default spacing for every shared UI role, keep kerning enabled, expose no positive or negative shared tracking token, and govern rare exceptions explicitly | `Approved`                         |
 | `FTL-05` | Use `20px`, `24px`, and `32px` as the ordinary upper core and gate `40px` to separately approved display or metric-display composites                                   | `Approved`                         |
-| `FTL-06` | Select upper line-height pairings and responsive behavior                                                                                                               | `Observed need — not yet proposed` |
+| `FTL-06` | Use `28px`, `32px`, `40px`, and `48px` as upper line-height primitives, defaulting to `20/28`, `24/32`, `32/40`, and `40/48`, with the boundaries above                 | `Approved`                         |
 | `FTL-07` | Map the twelve semantic roles, including metric roles, to complete composite styles                                                                                     | `Observed need — not yet proposed` |
 | `FTL-08` | Select spacing, grid, container, density, and target geometry values                                                                                                    | `Observed need — not yet proposed` |
+| `FTL-09` | Select responsive title and display substitutions after composite-role mapping                                                                                          | `Observed need — not yet proposed` |
 
 ## Next Approval Gate
 
-The next bounded decision is the upper line-height axis and default pairings for the
-approved `20/24/32px` ordinary upper core and gated `40px` display step. This next
-gate must not silently assign the twelve semantic roles or approve responsive
-substitutions.
+The next bounded decision is the exact composite mapping of the twelve semantic roles,
+including the boundary between heading-like roles and `metric-inline` or
+`metric-display`. That gate must use the approved physical axes without silently
+approving responsive substitutions, line-count policy, truncation, or component
+geometry.

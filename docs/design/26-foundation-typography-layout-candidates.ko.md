@@ -2,7 +2,7 @@
 
 ## 문서 관리
 
-- 상태: `진행 중 — 하위·상위 Type scale, 하위 Line-height, Weight 및 Tracking 축 승인, 나머지 Composite·Layout 값 미확정`
+- 상태: `진행 중 — 물리 Type scale, 하위·상위 Line-height, Weight 및 Tracking 축 승인, 나머지 Composite·Layout 값 미확정`
 - 조사일: 2026-08-04
 - 마지막 결정 갱신일: 2026-08-04
 - 원본 언어: 영어
@@ -13,7 +13,7 @@
 - 입력: 승인된 문서 `01`–`25`, 현재 저장소 Typography 근거, 유지 관리되는
   Design system과 Standard, Rhythm-game domain product 및 2026-08-04의 명시적
   사용자 승인
-- 이번 결정에서 제외: 상위 Line-height 및 반응형 동작, 승인된 Size·Weight 사용
+- 이번 결정에서 제외: 반응형 Type 동작, 승인된 Size·Line-height·Weight 사용
   경계를 넘어서는 Role-to-step 배정, Metric-display Composite, Spacing, Grid,
   Container, Component 치수, Color, Material treatment, 최종 Figma style,
   Production screen 및 Application 구현
@@ -36,9 +36,8 @@ Reference 값 및 현재 Code 값은 NosLog 요구사항이 아니라 근거로 
 
 - 제한된 Material decision을 한 번에 하나씩 조사하고 논의합니다.
 - 관찰 사실과 제안 및 승인된 요구사항을 구분하여 기록합니다.
-- 물리 Size, 하위 Line-height, Weight 및 Tracking 축 승인에서 상위 Line-height,
-  반응형 동작, Metric composite, 정확한 Composite-role mapping 또는 Layout 승인을
-  추론하지 않습니다.
+- 물리 Size, Line-height, Weight 및 Tracking 축 승인에서 반응형 동작, Metric
+  composite, 정확한 Composite-role mapping 또는 Layout 승인을 추론하지 않습니다.
 - 향후 Composite style은 Foundation v0.1 승격 전에 승인된 `S1`–`S6` 다국어
   및 반응형 Specimen으로 검증합니다.
 - 영어 원본과 한국어 Companion을 같은 작업에서 갱신합니다.
@@ -356,15 +355,92 @@ family를 지원하기 때문입니다. NosLog에는 아직 이 인접 Pair가 �
   반응형 Specimen에서 승인된 Step으로 필요한 Semantic distinction을 표현할 수
   없음이 입증된 뒤에만 새 공유 Size를 제안할 수 있습니다. Page 또는 Component
   작성자가 미리 Local size를 추가하면 안 됩니다.
-- 물리 Size 승인은 해당 Line height, Weight, Responsive substitution, 정확한 Role
-  mapping, 최대 Line count, Truncation 또는 Metric 동작을 승인하지 않습니다.
-  이는 이후의 제한된 결정으로 남습니다.
+- 물리 Size 승인만으로 해당 Line height, Weight, Responsive substitution, 정확한
+  Role mapping, 최대 Line count, Truncation 또는 Metric 동작을 승인한 것은
+  아닙니다. 아래 후속 Section은 기본 상위 Size-to-line-height Pairing과 명시된
+  경계만 승인하며 나머지 사항은 계속 미확정입니다.
 - Font-size primitive `20px`과 이미 승인된 Line-height primitive `20px`은 서로
   다른 Token namespace이며 Figma나 Code에서 혼동하면 안 됩니다.
 - 단순히 Fit을 위해 Mobile에서 상위 Role을 축소하면 안 됩니다. 향후 `32px` 또는
   `40px` Composite의 반응형 변화는 한국어·일본어·영어·혼합 Script, `320px`,
   `390px`, 중간 Width 및 Wide specimen을 거친 해당 Composite 결정에서 승인해야
   합니다.
+
+## 승인된 상위 Line-height 축
+
+### 상위 Line-height 집중 조사
+
+이번 검토는 독립적으로 유지 관리되는 Design system 15개와 W3C 접근성 및
+한국어·일본어 조판 지침을 비교했습니다. 작성자가 지정하는 Heading leading과
+사용자 Spacing override를 견뎌야 한다는 WCAG 요구사항을 분리해 평가했습니다.
+Typeface, Platform 및 Density는 서로 다르지만 Title size가 커질수록 상대 Leading을
+점진적으로 조이고, 줄바꿈 가능성이 있는 작은 Heading에는 여유를 남긴다는 방향은
+수렴했습니다.
+
+| 독립 출처                                                                                                   | 전이 가능한 발견                                                                                        | NosLog 적용                                                                  | 한계                                                                        |
+| ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| [Tailwind CSS Font size](https://tailwindcss.com/docs/font-size)                                            | 현재 Stack이 기본적으로 `20/28`, `24/32`를 Pairing함                                                    | 줄바꿈 가능성이 가장 높은 두 상위 Size에 구현 친화적인 후보를 제공함         | Tailwind 기본값은 편의값이지 Design authority가 아님                        |
+| [Material 3 Typography](https://developer.android.com/develop/ui/compose/designsystems/material3)           | Headline style에 `24/32`, `32/40`을 사용하고 Size가 커질수록 상대 Leading을 줄임                        | 제안한 진행의 중간 구간을 직접 지지함                                        | Roboto와 Native `sp` 값은 Pretendard JP CSS token이 아님                    |
+| [Fluent 2 Typography](https://fluent2.microsoft.design/typography)                                          | Web title에 `20/26`, `24/32`, `32/40`, `40/52`가 포함됨                                                 | 안정적인 기능 구간을 확인하면서 최대 Display leading은 Product별임을 보여줌  | Segoe UI metric과 Fluent의 `40/52`가 NosLog Display density를 결정하지 않음 |
+| [Carbon Type set](https://carbondesignsystem.com/elements/typography/type-sets/)                            | Product heading에 `20/28`, `32/40`이 포함되고 더 큰 Expressive role은 더 조여짐                         | `20px` 줄바꿈 여유와 더 조밀한 Dominant heading을 지지함                     | IBM Plex 및 Carbon의 Productive/Expressive 분리를 복사하지 않음             |
+| [Atlassian Product type scale](https://atlassian.design/foundations/typography/product-typefaces-and-scale) | Heading leading을 약 `1.2`로 잡고 4 Pixel rhythm에 맞춰 반올림함                                        | 드물고 짧은 Display의 `40/48`과 4 Pixel 정렬을 지지함                        | 모든 작은 다국어 Title에 `1.2`를 적용하면 너무 조밀함                       |
+| [GOV.UK Type scale](https://design-system.service.gov.uk/styles/type-scale/)                                | `24/30`, `36/40` 같은 검증된 Size/Line-height Pair와 명시적 반응형 동작을 사용함                        | Title leading은 Local choice가 아니라 관리되는 Composite임을 확인함          | Font, 공공 서비스 Reading context 및 5 Pixel rhythm이 다름                  |
+| [USWDS Typography](https://designsystem.digital.gov/components/typography/)                                 | 한두 줄 이하 Heading에 대략 `1–1.35`를 권함                                                             | Title이 커지고 짧아질수록 상대 Leading을 줄이는 방향을 지지함                | Pretendard JP 값이 아니라 범위를 제공함                                     |
+| [Primer Typography primitive](https://primer.style/product/primitives/typography/)                          | Size와 Line height를 Semantic shorthand token으로 결합하고 Medium title에 Display보다 더 많은 여유를 둠 | Composite 관리와 Content별 Density를 지지함                                  | 현재 Primer Title 비율을 NosLog에 복사하기에는 더 여유로움                  |
+| [Shopify Polaris Text](https://polaris-react.shopify.com/components/typography/text)                        | Responsive heading variant가 미리 정한 Size와 Line-height token을 Mapping함                             | Page별 임의 Pairing을 막는 방향을 지지함                                     | Commerce role과 Token 값은 NosLog Semantic을 결정하지 않음                  |
+| [Ant Design Font system](https://ant.design/docs/spec/font/)                                                | Size와 Line height를 하나의 질서 있는 System으로 다루고 비 Display Size를 3~5개로 제한하도록 권함       | Generic tight/normal utility가 아니라 작은 승인 축을 지지함                  | 공개 Page는 모든 상위 숫자 Pair를 Text로 노출하지 않음                      |
+| [GitLab Type fundamentals](https://design.gitlab.com/product-foundations/type-fundamentals)                 | Dynamic heading size를 관리하고 약 `1.25`의 Heading line-height token을 노출함                          | `32/40`과 Responsive 동작을 고정 기본 Pairing에서 분리하는 방향을 지지함     | GitLab Sans와 Fluid scale은 직접적인 NosLog Mapping이 아님                  |
+| [Adobe Spectrum Typography data](https://opensource.adobe.com/spectrum-design-data/tokens/typography/)      | 조정된 Font-size와 Line-height Scale set을 유지하고 Platform 차이를 검증함                              | 명시적 Primitive namespace와 후속 Specimen 검증을 지지함                     | Adobe Clean metric 및 Spectrum의 더 큰 Mobile scale이 다름                  |
+| [Apple Typography](https://developer.apple.com/design/human-interface-guidelines/typography)                | 기본 Title style은 Size가 커질수록 상대적으로 조밀해지고 세 줄 이상에는 Tight leading을 피하도록 함     | 점진적 비율과 Line-count 경계를 지지함                                       | Native point size와 Dynamic Type은 Responsive web에 방향성만 제공함         |
+| [LINE Global Typography](https://designsystem.line.me/LDSG/foundation/typography-en)                        | 더 조밀한 Title style과 읽기 쉬운 Text style을 분리하고 일본어를 포함한 Language pack을 제공함          | 실제 동아시아 Script에서 같은 Pairing을 검증하는 방향을 지지함               | 공개 Token은 Pretendard JP 측정값을 제공하지 않음                           |
+| [SAP Fiori Typography](https://experience.sap.com/fiori-design-web/typography/)                             | Title을 관리되는 UI role로 취급하고 언어 Fallback과 Truncation을 명시적으로 고려함                      | Latin 전용 예시가 아니라 실제 Localized title 검증을 지지함                  | SAP 72 metric과 Enterprise control이 다름                                   |
+| [WCAG Text Spacing](https://www.w3.org/WAI/WCAG22/Understanding/text-spacing.html)                          | 사용자가 Line height를 Font size의 최소 `1.5`배로 Override해도 Content나 기능 손실이 없어야 함          | 작성 Heading을 기본 `1.5`로 만들지 않고도 견고한 Container와 Reflow를 요구함 | 기본 Heading scale이 아니라 Override 생존 기준임                            |
+| [W3C KLReq](https://www.w3.org/TR/klreq/) 및 [JLReq](https://www.w3.org/TR/jlreq/)                          | 한글, Kana, Kanji, Latin 혼합, 문장 부호 및 Line composition은 Script-aware 검증이 필요함               | 승격 전에 실제 한국어·일본어·혼합 Script Specimen을 요구함                   | 인쇄 및 세로쓰기 내용은 관련 있는 부분만 전이함                             |
+
+숫자상 수렴은 `20/28`, `24/32`, `32/40`에서 가장 강합니다. Gate를 둔 `40px`
+Display step은 System별로 약 `1.2–1.3` 범위지만, 해당 Step을 드물고 짧게
+유지한다는 승인 요구사항에 따라 실제 Pretendard JP Specimen 검증을 조건으로 더
+조밀한 `40/48` 기본값이 적합합니다.
+
+### 후보 비교
+
+| 후보                              | Pairing                            | 이점                                                                                                                   | 비용과 위험                                                                                | 추천       |
+| --------------------------------- | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ | ---------- |
+| `A` — 점진적으로 조여지는 상위 축 | `20/28`, `24/32`, `32/40`, `40/48` | `20–24px`의 줄바꿈 가능한 다국어 Title을 보호한 뒤 Dominant와 드문 Display를 점진적으로 조이고 4 Pixel rhythm을 유지함 | `40px` Gate와 Line-count 경계를 계속 엄격히 적용해야 함                                    | `Approved` |
+| `B` — 조밀한 작은 Heading         | `20/24`, `24/28`, `32/40`, `40/48` | 한 줄 UI Heading을 Compact하게 만듦                                                                                    | `20/24`, `24/28`은 긴 일본어 Music title과 혼합 Script identity가 줄바꿈될 때 너무 조밀함  | `Rejected` |
+| `C` — 여유로운 Display            | `20/28`, `24/32`, `32/40`, `40/52` | 여러 줄 Editorial display에 더 많은 여유를 줌                                                                          | `52px` Primitive를 추가하고 입증된 NosLog 필요 없이 승인된 짧고 드문 Display 경계를 약화함 | `Rejected` |
+
+### 승인된 Pairing과 경계
+
+| Font size | 기본 Line height   | 상대 Pairing       | 의도한 경계                                                                        |
+| --------- | ------------------ | ------------------ | ---------------------------------------------------------------------------------- |
+| `20px`    | `28px` (`1.75rem`) | `20/28` (`1.4`)    | 한국어·일본어·영어 또는 혼합 Script에서 줄바꿈될 수 있는 Compact·Entity-title 후보 |
+| `24px`    | `32px` (`2rem`)    | `24/32` (`1.333…`) | 통제된 두 번째 줄이 필요할 수 있는 주 Identity 후보                                |
+| `32px`    | `40px` (`2.5rem`)  | `32/40` (`1.25`)   | Dominant short title 또는 Major-metric 후보                                        |
+| `40px`    | `48px` (`3rem`)    | `40/48` (`1.2`)    | Gate를 둔 드물고 짧은 Display 또는 Metric-display 후보만 해당                      |
+
+따라서 전체 공유 Line-height primitive 축은
+`16/20/24/28/32/40/48px`입니다. 이는 기본 Pairing이며 임의의 Font-size와
+Line-height 조합을 위한 공개 Menu가 아닙니다.
+
+- `20/28`, `24/32`는 정당하게 두 줄이 될 수 있는 Title을 보호합니다. 무제한 Line
+  count나 최종 Wrap/Truncation 정책을 승인하지는 않습니다.
+- `32/40`, `40/48`은 짧은 Dominant content용입니다. 세 줄 이상이 필요한
+  Specimen은 Hierarchy에 맞는다는 이유만으로 조밀한 상위 Style을 유지하면 안 되며
+  Content priority, Width, Size, Role 또는 Composition을 다시 검토해야 합니다.
+- `36px`, `44px`, `52px`은 Foundation v0.1 공유 Line-height primitive가
+  아닙니다. 새 값은 대표 다국어·반응형 근거와 명시적 사용자 승인이 필요하며 Page
+  또는 Component 작성자가 Local leading을 추가하면 안 됩니다.
+- Pairing은 상대 구현 단위를 사용하고 Browser text scaling을 보존해야 합니다.
+  Pixel 표기는 Design target을 문서화할 뿐입니다.
+- 이번 결정은 Semantic role, Weight, 최대 Line count, Truncation 규칙,
+  Responsive size substitution 또는 Metric-display 동작을 배정하지 않습니다.
+- Mobile 전용 Line-height 압축은 승인하지 않습니다. Responsive role
+  substitution은 Composite-role mapping 이후의 별도 제한된 결정입니다.
+- Pretendard JP Specimen은 원문 일본어 Music title, Localized/read title, 긴
+  Artist credit, 한국어·영어 Page identity, Tabular metric 및 혼합 문장 부호를
+  `320px`, `390px`, 중간 Width, Wide layout, `200%` Text 확대 및 WCAG Text
+  Spacing override에서 검증한 뒤 Foundation으로 승격해야 합니다.
 
 ## 선택하지 않은 대안
 
@@ -385,6 +461,8 @@ family를 지원하기 때문입니다. NosLog에는 아직 이 인접 Pair가 �
 | 초기 전략으로 Locale 또는 Viewport별 Tracking 조정                | `Rejected` | 줄바꿈과 QA 변형을 늘리고 안정적인 Localized composition과 충돌함                                                                   |
 | 초기 공유 Ramp에 `18px`, `28px`, `36px`을 미리 추가               | `Rejected` | 대표 Specimen에서 빠진 Semantic distinction을 입증하기 전에 인접 Step이 작성자 선택과 검증 비용을 늘림                              |
 | `40px`을 일반 Page, Card, Dialog 또는 Section title에 허용        | `Rejected` | 승인된 드문 Display 경계를 무너뜨리고 Page별 강조 분산을 다시 만듦                                                                  |
+| 조밀한 상위 Pairing `20/24`, `24/28` 사용                         | `Rejected` | 짧은 한 줄 UI Label에는 맞지만 긴 일본어 Music title이나 혼합 Script identity의 줄바꿈을 보호하지 못함                              |
+| Gate를 둔 `40px` Display에 기본 `52px` Leading 추가               | `Rejected` | NosLog가 승인하지 않은 여러 줄 Editorial display 동작을 가정하고 Specimen 근거 없이 Primitive를 하나 더 추가함                      |
 
 ## 결정 기록
 
@@ -395,12 +473,14 @@ family를 지원하기 때문입니다. NosLog에는 아직 이 인접 Pair가 �
 | `FTL-03` | 위 Semantic, 사용 빈도, 반응형 및 검증 제약과 함께 `400`, `500`, `600`, `700`만 공유 Weight primitive로 사용함                               | `Approved`                           |
 | `FTL-04` | 모든 공용 UI Role에 자연/기본 간격을 사용하고 Kerning을 유지하며 공유 양수·음수 Tracking token을 노출하지 않고 드문 예외를 명시적으로 관리함 | `Approved`                           |
 | `FTL-05` | `20px`, `24px`, `32px`을 일반 상위 Core로 사용하고 `40px`은 별도 승인된 Display 또는 Metric-display composite에만 Gate를 두어 사용함         | `Approved`                           |
-| `FTL-06` | 상위 Line-height pairing 및 반응형 동작을 선택함                                                                                             | `Observed need — 아직 제안하지 않음` |
+| `FTL-06` | 위 경계와 함께 `28px`, `32px`, `40px`, `48px`을 상위 Line-height primitive로 사용하고 `20/28`, `24/32`, `32/40`, `40/48`을 기본으로 함       | `Approved`                           |
 | `FTL-07` | Metric role을 포함한 12개 Semantic role을 완전한 Composite style에 Mapping함                                                                 | `Observed need — 아직 제안하지 않음` |
 | `FTL-08` | Spacing, Grid, Container, Density 및 Target geometry 값을 선택함                                                                             | `Observed need — 아직 제안하지 않음` |
+| `FTL-09` | Composite-role mapping 이후 Responsive title 및 Display substitution을 선택함                                                                | `Observed need — 아직 제안하지 않음` |
 
 ## 다음 승인 Gate
 
-다음 제한된 결정은 승인된 일반 상위 Core `20/24/32px`과 Gate를 둔 `40px`
-Display step의 상위 Line-height 축 및 기본 Pairing입니다. 다음 Gate에서도 12개
-Semantic role을 조용히 배정하거나 반응형 대체를 승인하면 안 됩니다.
+다음 제한된 결정은 Heading 성격 Role과 `metric-inline` 또는 `metric-display`의
+경계를 포함한 12개 Semantic role의 정확한 Composite mapping입니다. 해당 Gate는
+Responsive substitution, Line-count 정책, Truncation 또는 Component geometry를
+조용히 승인하지 않고 승인된 물리 축을 사용해야 합니다.
