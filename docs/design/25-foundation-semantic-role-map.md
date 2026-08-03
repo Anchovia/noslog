@@ -1,0 +1,407 @@
+# NosLog 2.0 Foundation Semantic Role Map
+
+## Document Control
+
+- Status: `Approved semantic-role architecture — physical values unresolved`
+- Approval date: 2026-08-03
+- Canonical language: English
+- Korean companion:
+  [25-foundation-semantic-role-map.ko.md](./25-foundation-semantic-role-map.ko.md)
+- Scope: the shared typography-role architecture, role usage, aliases, metric
+  behavior, multilingual constraints, exception governance, current-code migration
+  map, and Batch B entry criteria for NosLog 2.0 Foundation v0.1
+- Inputs: approved documents `01`–`24`, current repository typography utilities,
+  current-browser evidence recorded in document `24`, the reference comparison below,
+  and explicit user approval on 2026-08-03
+- Excluded: final font family, font size, line height, weight, tracking, responsive
+  type behavior, color, spacing, grid, component dimensions, final Figma styles,
+  production screens, and application implementation
+
+This document approves what each shared typography role means and how it is governed.
+It does not approve the physical appearance of any role. A role name appearing here
+must not be interpreted as permission to select an arbitrary size or to reuse the
+current implementation value.
+
+## Related Documents
+
+- [Foundation v0.1 research brief](./24-foundation-v0.1-research-brief.md)
+- [Cross-cutting reference matrix](./22-cross-cutting-reference-matrix.md)
+- [Design-guide consistency audit](./21-design-guide-consistency-audit.md)
+- [Shared discovery page brief](./04-shared-discovery-page-brief.md)
+- [Music Detail page brief](./05-music-detail-page-brief.md)
+- [Chart Viewer page brief](./07-chart-viewer-page-brief.md)
+- [Global Rankings page brief](./08-global-rankings-page-brief.md)
+- [Profile page brief](./09-profile-page-brief.md)
+- [Shared shell and navigation brief](./15-shared-shell-navigation-brief.md)
+- [Chart Editor and contribution page brief](./20-chart-editor-contribution-page-brief.md)
+
+## Purpose
+
+NosLog currently combines semantic utilities with numerous local size decisions. The
+2.0 Foundation must prevent the same drift from returning while still supporting
+music identity, multilingual titles, dense records, exact metrics, system controls,
+the Viewer, and the future user-facing Editor.
+
+The approved model therefore separates four concerns:
+
+1. **primitives** hold future physical font values;
+2. **composite styles** combine primitives into a limited set of tested physical
+   treatments;
+3. **semantic roles** describe why text exists and are the required authoring API; and
+4. **component aliases** give domain or component names to existing semantic roles
+   without creating new physical values.
+
+Only the semantic roles and alias-governance model are approved in this document.
+Primitives and composite values remain Batch B decisions.
+
+## Research Convergence
+
+The comparison included more than fifteen independent standards, maintained systems,
+production products, and domain references. The sources disagree on exact sizes,
+families, scales, and platform density. They converge on the following transferable
+principles:
+
+- name and apply text by purpose rather than by a raw numeric size;
+- keep the physical scale restrained even when semantic roles are specific;
+- use shared roles across pages and specialize only through governed aliases;
+- reserve display treatment for rare high-impact moments;
+- distinguish metric emphasis from headings and body copy;
+- use small text sparingly and never as the ordinary control or reading default;
+- preserve semantic heading structure independently from visual styling;
+- test real content, language, width, zoom, and spacing instead of alphabet samples;
+- use relative, scalable implementation values after visual validation; and
+- allow Korean, Japanese, and English to reflow without creating separate information
+  hierarchies for each locale.
+
+NosLog adds domain constraints that general systems do not define: the original Music
+title remains the primary identity, an enabled translated title or Japanese reading
+appears above it at lower visual prominence, performance values need stable numeric
+comparison, and BPM, time, measure, difficulty, hand, Grd, and Rating retain exact
+NOSTALGIA meaning.
+
+## Approved Architecture
+
+### Layer 1 — Primitive values
+
+Future primitives may include font families, weights, size steps, line-height steps,
+tracking, and OpenType features. Their names and values are not approved here. Product
+authors and downstream designers must not apply primitives directly to page content.
+
+### Layer 2 — Composite physical styles
+
+Future composite styles will combine primitive values into tested treatments. Several
+semantic roles may intentionally resolve to the same composite style. The number of
+semantic roles therefore does not require twelve different font sizes.
+
+Composite styles are approved only after Batch B specimens demonstrate that they work
+with real NosLog content. Until then, no size, weight, or line-height shown in the
+current app or an external design system is authoritative.
+
+### Layer 3 — Shared semantic roles
+
+The following twelve roles are the approved shared role inventory.
+
+| Role               | Meaning                                                                      | Typical NosLog use                                                                      | Required constraint                                                                        |
+| ------------------ | ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| `display`          | Rare expressive text that creates one deliberate high-impact moment          | A bounded Home identity or exceptional editorial lead, if a later specimen justifies it | Never the default page heading, card title, metric, or empty-state treatment               |
+| `page-title`       | Primary heading that identifies the current page or focused task             | Music, Rankings, Tier list, Profile, Viewer, Settings                                   | One clear page-level identity; visual style does not replace correct heading semantics     |
+| `section-title`    | Heading for a major region within a page                                     | Recent plays, Community evaluation, Performance history                                 | Must express a real content boundary, not decorate an arbitrary card                       |
+| `component-title`  | Heading inside a contained component or transient layer                      | Dialog, drawer, panel, grouped result module                                            | Must remain subordinate to the page and enclosing section                                  |
+| `entity-title`     | Primary identity of a domain object                                          | Original Music title, username, arcade name, exam name                                  | Preserves the canonical object identity and supports real long content                     |
+| `entity-companion` | Optional supporting identity paired with an entity title                     | Approved Korean/English Music title or Japanese reading                                 | May appear above the original title but remains visually subordinate and never replaces it |
+| `body`             | Default readable content and ordinary system message                         | Descriptions, instructions, announcement body, empty/error message                      | Must remain comfortable for multi-line reading and text resizing                           |
+| `body-secondary`   | Supporting explanation or secondary identity                                 | Artist, concise supporting description, contextual note                                 | Must not become the only location for task-critical meaning through low prominence         |
+| `control`          | Visible text that names or contains an interaction                           | Button, tab, filter, menu item, input value or label                                    | Must remain readable, localized, and aligned with its control and icon                     |
+| `metadata`         | Compact secondary fact or short status descriptor                            | Date, category, level context, timestamp, badge text, chart axis or measure annotation  | Not a replacement for body copy or ordinary controls; small treatment remains exceptional  |
+| `metric-display`   | One locally dominant quantitative result                                     | Best score, Official Grd, NosLog Rating, another approved summary metric                | Emphasizes a value without masquerading as a page heading or losing its label and unit     |
+| `metric-value`     | Comparable quantitative value within a row, group, control, or visualization | Rank value, score row, BPM, time, measure, Play count, judgement value                  | Uses stable numeric alignment and retains explicit context, unit, and scope                |
+
+### Layer 4 — Component aliases
+
+Aliases improve mapping clarity but do not create independent styles. The following
+initial aliases are approved:
+
+| Alias or content                                        | Maps to                        | Notes                                                                              |
+| ------------------------------------------------------- | ------------------------------ | ---------------------------------------------------------------------------------- |
+| Header wordmark                                         | Bounded brand-component alias  | It may have brand-specific treatment but does not create a general text-scale step |
+| Artist                                                  | `body-secondary`               | Remains separated from the paired title group by composition, not a new type role  |
+| Button, tab, filter, menu, field label, field value     | `control`                      | Component variants may alter layout or state, not invent local typography          |
+| Badge and short status                                  | `metadata` or `control`        | Interactive badges use `control`; descriptive badges use `metadata`                |
+| Metric label and unit                                   | `metadata` or `body-secondary` | The value uses a metric role; its context remains readable and explicit            |
+| Chart axis, tick, legend label, measure number          | `metadata`                     | Exact values remain available without relying on hover alone                       |
+| Viewer time, BPM, time signature, measure value         | `metric-value`                 | Numeric treatment is shared even when renderer placement is specialized            |
+| Empty, loading, error, permission, and recovery message | `body` or `body-secondary`     | State meaning comes from content and semantic state, not a unique font size        |
+| Code, JSON, or technical identifier                     | Bounded technical alias        | Monospace may be evaluated only for genuinely technical text, not ordinary metrics |
+
+## Role Application by Product Family
+
+### Shared shell and Home
+
+- NosLog wordmark uses the bounded brand alias.
+- Each page destination and More-panel action uses `control`.
+- A page or Home identity uses `page-title` unless a later validated specimen proves
+  that one rare `display` moment is necessary.
+- Announcement titles use an appropriate title role according to their actual
+  container; dates use `metadata`; announcement bodies use `body`.
+- Empty, maintenance, and recovery messages do not become display typography merely
+  to attract attention.
+
+### Music discovery and Music Detail
+
+- Enabled translated title or Japanese reading: `entity-companion`.
+- Original Music title: `entity-title`.
+- Artist: `body-secondary`.
+- Category, difficulty context, level, release data, and dates: `metadata`, except
+  interactive selectors, which use `control`.
+- Best score or another locally dominant result: `metric-display`.
+- Score rows, judgement values, percentages, rank, combo, and Play count:
+  `metric-value` with visible contextual labels.
+- Existing page-brief rules for line count, wrapping, hover, mobile disclosure, and
+  accessibility remain authoritative; this map does not reopen them.
+
+### Rankings, Tier lists, and Profile
+
+- Username, Tier target, and other canonical object names use `entity-title`.
+- Country, exam, mode, difficulty, achievement, and status facts normally use
+  `metadata` unless they are interactive controls.
+- Official Grd, NosLog Rating, score, rank, distribution band, and Play count use the
+  appropriate metric role.
+- A metric value must remain paired with its label, mode, population, unit, or scope.
+  Size alone must never carry the distinction between Official Grd and NosLog Rating.
+- Dense rows may share one physical composite style across several semantic roles if
+  spacing, position, weight, and labeling preserve the approved hierarchy.
+
+### Chart Viewer and Chart Editor
+
+- Focused Music identity retains the `entity-companion` → `entity-title` hierarchy.
+- Transport, mode, metronome, strict-performance, tool, property, and submission
+  labels use `control`.
+- Time, BPM, time signature, measure number, lane value, offset, width, and numeric
+  property values use `metric-value` or a `metadata` label paired with it.
+- Canvas/WebGL geometry may require renderer-specific placement, but it does not
+  authorize a separate page-wide scale.
+- If Canvas or WebGL text cannot consume the shared token directly, its renderer alias
+  must document the shared role it represents and be validated at the actual rendered
+  size and display area.
+
+## Multilingual Contract
+
+Korean, Japanese, and English use the same twelve semantic roles and the same content
+priority. Locale may affect font fallback, glyph metrics, line height, wrapping,
+punctuation, and occupied space; it does not create a different semantic hierarchy.
+
+Required behavior:
+
+- mark text with the correct language where content language differs from the page;
+- preserve the original Music title as `entity-title` in every locale;
+- when enabled, place the localized title or Japanese reading above the original as
+  `entity-companion`, while keeping it smaller or otherwise less prominent in the
+  future validated composite system;
+- test mixed Hangul, Kana, Kanji, Latin, numerals, punctuation, symbols, and long
+  classical titles using real records;
+- allow role containers to grow or recompose instead of clipping required content to
+  preserve a fixed card height;
+- avoid relying on italics or all-caps as the sole distinction for Korean/Japanese
+  hierarchy;
+- preserve semantic order and useful content under text resizing and spacing
+  adjustment; and
+- evaluate fallback metrics and slow font loading so a font swap does not break the
+  approved hierarchy or controls.
+
+## Metric and Numeral Contract
+
+`metric-display` and `metric-value` are semantic metric roles, not permission to use a
+decorative display face.
+
+Approved behavior:
+
+- use tabular figures where changing digit width would disrupt comparison or layout;
+- retain the current domain value rather than abbreviating away meaningful precision;
+- preserve separators, decimals, percentages, signs, units, rank symbols, time
+  punctuation, BPM, and time signatures according to the approved content contract;
+- align comparable values consistently within their local comparison region;
+- keep the label, unit, denominator, mode, or scope visible or programmatically
+  associated; and
+- use ordinary language typography with numeric features for metrics by default.
+
+Monospaced typography is not approved for ordinary score, rank, time, BPM, Grd,
+Rating, Play count, or judgement values. It remains a bounded candidate only for real
+code, JSON, exported technical data, or identifiers where fixed character width is
+meaningful.
+
+## Mandatory Use and Exception Governance
+
+### Default rule
+
+Every ordinary text element must use one of the approved semantic roles. Downstream
+Figma work and production implementation must not introduce page-specific font sizes,
+weights, line heights, tracking, or font families merely because a mockup appears to
+need more emphasis or fit.
+
+The following are not valid reasons for an exception:
+
+- a title is long;
+- the viewport is narrow;
+- a card has limited height;
+- a designer wants more variety;
+- an external reference uses another size;
+- a one-off state feels insufficiently prominent; or
+- an existing arbitrary value is convenient to preserve.
+
+These cases must first be solved through the approved role, wrapping, reflow,
+composition, spacing, progressive disclosure, or component layout.
+
+### Alias versus exception
+
+An **alias** gives a component-specific name to an existing semantic role and resolves
+to the same approved composite style. It does not require a new visual value.
+
+An **exception** changes one or more physical values outside the approved composite
+styles. It is allowed only when all of the following are satisfied:
+
+1. the exact product or renderer need is documented;
+2. every existing role has been tested and shown to fail that need;
+3. the exception is bounded to a named component or specialized contract;
+4. Korean, Japanese, English, `320 CSS px`, representative mobile, desktop, zoom,
+   contrast, and text-spacing impact are tested where applicable;
+5. the fallback and implementation mapping are documented;
+6. it does not introduce a parallel page hierarchy; and
+7. the user explicitly approves the exception and its scope.
+
+A repeated need across multiple unrelated components is evidence that the shared role
+map may need revision; it must not be copied as repeated local exceptions.
+
+### Initially recognized bounded candidates
+
+The following areas may justify a bounded alias or later exception review, but no
+physical exception is approved yet:
+
+- the NosLog wordmark;
+- actual code, JSON, or technical export text;
+- Canvas/WebGL renderer labels whose rasterization or projection produces a verified
+  legibility constraint; and
+- a rare `display` moment validated in an integrated specimen.
+
+## Current-Code Migration Map
+
+Current utilities provide inventory evidence only. Their current values do not carry
+forward automatically.
+
+| Current utility or pattern                     | Foundation destination                                              | Migration rule                                                     |
+| ---------------------------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| `text-display`                                 | `display`                                                           | Re-evaluate every use; retain only rare approved moments           |
+| `text-score-display`                           | `metric-display`                                                    | Replace score-specific naming with the shared metric role          |
+| `text-title`                                   | `page-title`, `section-title`, `component-title`, or `entity-title` | Classify by meaning instead of retaining one ambiguous title style |
+| `text-wordmark`                                | Header wordmark alias                                               | Keep bounded to the brand component                                |
+| `text-section`                                 | `section-title` or `component-title`                                | Select according to actual document hierarchy                      |
+| `text-body`                                    | `body`                                                              | Physical value must be revalidated                                 |
+| `text-body-muted`                              | `body-secondary`                                                    | Muted color is not inherent to every supporting text use           |
+| `text-label` and `text-input`                  | `control`                                                           | Component anatomy and state may vary; typography remains shared    |
+| `text-caption`                                 | `metadata`                                                          | Confirm that content is genuinely secondary and compact            |
+| `text-badge`                                   | `metadata` or `control`                                             | Choose by descriptive versus interactive behavior                  |
+| `text-micro` and direct `10px` values          | No default successor                                                | Audit and remove; any retained case requires the exception process |
+| Local `text-xs`, `text-sm`, or arbitrary sizes | Classify into a semantic role                                       | Do not translate raw current sizes into future semantic tokens     |
+
+## Accessibility and Responsive Requirements
+
+- Semantic heading order and accessible names must remain correct regardless of the
+  visual role selected.
+- Text must support browser zoom and at least `200%` text resizing without loss of
+  required content or operation.
+- At the `320 CSS px` reflow target, ordinary text must not require document-level
+  two-dimensional scrolling; specialized two-dimensional Viewer or Editor content
+  follows its approved bounded contract.
+- User text-spacing adjustments must not overlap, clip, or hide text.
+- Small metadata must meet the applicable text contrast requirement in every approved
+  appearance; disabled-state exceptions cannot be reused for active supporting text.
+- Weight, color, and size may work together, but no required distinction may depend on
+  color or font size alone.
+- Long labels, titles, names, and translated content should wrap or cause intentional
+  layout recomposition before truncation removes the only useful version.
+- Touch target geometry is governed by component foundations; reducing type does not
+  authorize a smaller target.
+
+## Batch B Entry and Validation
+
+The role architecture is ready for physical candidate work. Batch B must compare font,
+metric typography, size, line height, weight, tracking, spacing, layout, container,
+density, and target geometry together rather than approving isolated type swatches.
+
+The approved minimum specimens remain:
+
+| Specimen                         | Required role stress                                                                                        |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `S1` Music discovery             | `entity-companion`, long `entity-title`, artist, metadata, controls, dense levels, empty and loading states |
+| `S2` Music Detail                | Page and section hierarchy, dominant and inline metrics, chart labels, long multilingual identity           |
+| `S3` Global Rankings             | Repeated identity, rank and metric alignment, country/exam metadata, pagination and selectors               |
+| `S4` Chart Viewer                | Focused identity, transport controls, BPM/time/measure data, renderer labels and Full-sheet annotations     |
+| `S5` Home                        | Restrained page identity, search control, destinations, notices, editorial content, recovery state          |
+| `S6` User-facing Editor fragment | Dense tool labels, property values, timing data, panel resizing, validation and submission states           |
+
+Before any physical type value is approved, candidates must be compared with real
+Korean, Japanese, English, mixed-script, long, dense, empty, error, disabled,
+permission, and destructive fixtures at `320px`, `390px`, intermediate widths,
+`1280px`, and `1440px`, plus text resize and spacing conditions.
+
+## Reference Matrix
+
+| Independent source                                                                                                                       | Transferable principle                                                                                          | NosLog application                                                                | Limitation                                                        |
+| ---------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| [W3C WCAG 2.2](https://www.w3.org/TR/WCAG22/)                                                                                            | Contrast, resize, reflow, and text-spacing requirements constrain every role                                    | Makes legibility and reflow blocking validation conditions                        | Does not select typeface or hierarchy values                      |
+| [W3C KLReq](https://www.w3.org/TR/klreq/) and [JLReq](https://www.w3.org/TR/jlreq/)                                                      | Korean/Japanese composition, punctuation, mixed-script, and line-breaking differ from Latin defaults            | Requires real Hangul, Kana, Kanji, Latin, numeral, and punctuation specimens      | Print and vertical-writing details transfer only where relevant   |
+| [Atlassian Typography](https://atlassian.design/foundations/typography/)                                                                 | Heading, body, metric, and code styles use coordinated semantic tokens                                          | Supports separate metric roles and restrained small body use                      | Enterprise values are not NosLog values                           |
+| [Fluent 2 Typography](https://fluent2.microsoft.design/typography)                                                                       | A semantic type ramp creates scannable hierarchy across platforms                                               | Supports shared roles with platform-aware testing                                 | Its exact ramp and Segoe identity do not transfer                 |
+| [Carbon type strategies](https://carbondesignsystem.com/elements/typography/style-strategies/)                                           | Productive and expressive moments should match the task and stay consistent within a region                     | Supports rare display use and denser task typography without page-specific scales | IBM's two type sets are not a NosLog template                     |
+| [Primer Typography](https://primer.style/product/getting-started/foundations/typography/)                                                | Semantic markup, rem tokens, restrained hierarchy, and readable alignment work in a dense web product           | Supports semantic-role authoring and later relative values                        | GitHub content and brand differ                                   |
+| [Adobe Spectrum International Design](https://spectrum.adobe.com/page/international-design/)                                             | CJK scripts can need different metrics and emphasis behavior while preserving meaning                           | Requires multilingual composition rather than Latin-only substitution             | Adobe platform scales do not decide NosLog values                 |
+| [Apple Typography](https://developer.apple.com/design/human-interface-guidelines/typography)                                             | Text styles convey hierarchy and must adapt to larger accessibility sizes                                       | Supports role consistency, reflow, and avoiding thin small text                   | Native point sizes and system fonts are not web tokens            |
+| [USWDS Typography](https://designsystem.digital.gov/components/typography/)                                                              | Comfortable body text, restrained small text, measure, line height, and tabular numerals support readability    | Supports reserving compact metadata and aligning metrics                          | Government reading defaults differ from dense score views         |
+| [GOV.UK Typography](https://design-system.service.gov.uk/styles/typography/)                                                             | A limited content-first hierarchy reduces inconsistency                                                         | Supports mandatory shared roles instead of local visual invention                 | Public-service tone and sizes do not define NosLog identity       |
+| [Ant Design Font](https://ant.design/docs/spec/font/)                                                                                    | Limit the physical scale and plan primary, secondary, title, and display uses systematically                    | Supports many semantic roles resolving to few physical styles                     | Its 14px base and exact scale are not approved                    |
+| [SAP Fiori Typography](https://experience.sap.com/fiori-design-web/typography/)                                                          | Page, object, list, form, table, chart, and KPI contexts share governed styles; small text is exceptional       | Supports entity, control, metadata, and metric distinctions                       | Enterprise controls and proprietary font do not transfer          |
+| [GitLab design tokens](https://design.gitlab.com/product-foundations/design-tokens/)                                                     | Semantic token names codify intent across tools                                                                 | Supports aliases and future Figma/code mapping                                    | It does not define NosLog role priority                           |
+| [Figma UI design principles](https://www.figma.com/resource-library/ui-design-principles/)                                               | Hierarchy, contrast, proximity, consistency, and progressive disclosure must reflect user priority              | Provides specimen-review language for detecting competing text                    | It is not a token specification                                   |
+| [Shopify Polaris typography tokens](https://polaris-react.shopify.com/design/typography/typography-tokens)                               | Primitive values can compose semantic text tokens                                                               | Supports the approved layered architecture                                        | Commerce roles do not determine music or score hierarchy          |
+| [Pretendard](https://github.com/orioncactus/pretendard)                                                                                  | A variable cross-platform family supports Korean, Latin, and Japanese-aware variants and practical web delivery | Keeps Pretendard as an incumbent candidate for real-content comparison            | Project claims and incumbency are not final font approval         |
+| [osu! beatmap information](https://osu.ppy.sh/wiki/en/Beatmap_information) and [Taiko.wiki song search](https://taiko.wiki/song?lang=en) | Rhythm-game discovery must preserve song identity, difficulty, metadata, and comparable performance context     | Confirms the need for entity and metric roles in compact domain surfaces          | Their terminology, hierarchy, and visual styling cannot be copied |
+
+## Rejected Alternatives
+
+| Alternative                                                    | Decision   | Reason                                                                                |
+| -------------------------------------------------------------- | ---------- | ------------------------------------------------------------------------------------- |
+| Give each page its own type scale                              | `Rejected` | It recreates the current inconsistency and weakens cross-page hierarchy               |
+| Use raw size names as the page-authoring API                   | `Rejected` | Authors would choose appearance instead of content meaning                            |
+| Create twelve independent physical sizes for twelve roles      | `Rejected` | Semantic specificity does not require visual-style proliferation                      |
+| Preserve `micro` as an ordinary shared UI role                 | `Rejected` | It would normalize unreadably small metadata and controls                             |
+| Use monospace for all scores and timing values                 | `Rejected` | Tabular figures provide alignment without making ordinary domain data look like code  |
+| Promote every component label to a new typography token        | `Rejected` | Governed aliases provide mapping clarity without parallel scales                      |
+| Permit local exceptions when text does not fit                 | `Rejected` | Fit problems must first be solved through content and responsive composition          |
+| Treat current Pretendard or current utility values as approved | `Rejected` | Incumbent evidence must pass integrated multilingual and responsive candidate testing |
+
+## Decision Log
+
+| ID       | Decision                                                                                                                    | Status     |
+| -------- | --------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| `FSR-01` | Use the twelve shared semantic roles defined in this document                                                               | `Approved` |
+| `FSR-02` | Keep all physical type values unresolved until Batch B integrated specimen review                                           | `Approved` |
+| `FSR-03` | Require ordinary text to use approved roles and govern every physical exception explicitly                                  | `Approved` |
+| `FSR-04` | Keep `display` rare and prohibit it as the default page, card, metric, or state style                                       | `Approved` |
+| `FSR-05` | Do not retain a global ordinary-UI `micro` role                                                                             | `Approved` |
+| `FSR-06` | Use tabular figures for comparable metrics and do not use monospace for ordinary domain values                              | `Approved` |
+| `FSR-07` | Keep enabled localized/read title above but visually subordinate to the original Music title                                | `Approved` |
+| `FSR-08` | Treat wordmark, artist, controls, badges, chart labels, and renderer data as governed aliases rather than new shared scales | `Approved` |
+| `FSR-09` | Keep Pretendard as an incumbent candidate without selecting the final font                                                  | `Approved` |
+
+## Completion Checklist
+
+- [x] Gate 0 approval recorded in document `24`.
+- [x] More than fifteen independent evidence sources compared.
+- [x] Twelve shared semantic roles approved.
+- [x] Alias and physical-exception governance approved.
+- [x] Multilingual title hierarchy and metric behavior mapped.
+- [x] Current typography utilities mapped without carrying forward their values.
+- [x] English canonical and Korean companion written together.
+- [ ] Font family and fallback candidate values compared in Batch B.
+- [ ] Physical size, line height, weight, tracking, and responsive behavior compared.
+- [ ] Integrated `S1`–`S6` specimens reviewed with the user.
+- [ ] Approved physical values promoted to Foundation v0.1.

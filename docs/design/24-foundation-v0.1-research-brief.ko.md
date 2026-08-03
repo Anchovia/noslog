@@ -2,7 +2,7 @@
 
 ## 문서 관리
 
-- 상태: `제안된 조사 프로토콜 — 사용자 승인 대기`
+- 상태: `승인된 조사 프로토콜 — Gate 0 완료`
 - 조사일: 2026-08-03
 - 원본 언어: 영어
 - 영어 원본:
@@ -575,30 +575,32 @@ Color expression 및 Motion character에는 의견이 다릅니다. 이 차이�
 Specimen을 아직 제작·비교하지 않았으므로 값 선택의 포화에는 도달하지
 않았습니다.
 
-## 제안된 결정 기록
+## 결정 기록
 
 | ID       | 항목                                                                                                                              | 상태       |
 | -------- | --------------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| `FBR-01` | 시각 값을 선택하지 않으면서 이 문서로 Foundation v0.1 조사를 관리합니다.                                                          | `Proposed` |
-| `FBR-02` | 실제 콘텐츠와 연결된 Specimen으로 결합된 7개 Track을 평가합니다.                                                                  | `Proposed` |
-| `FBR-03` | Pretendard를 자동 최종 글꼴이 아니라 Incumbent candidate로 취급합니다.                                                            | `Proposed` |
-| `FBR-04` | 광범위한 관리자 화면을 2.0 Foundation specimen 범위 밖에 두되 공유 Primitive와 승인된 미래 사용자용 Editor fragment를 시험합니다. | `Proposed` |
-| `FBR-05` | `S1`–`S5`를 최소 Specimen 집합으로 사용하고 Professional editor 제약을 위해 `S6`을 추가합니다.                                    | `Proposed` |
-| `FBR-06` | 프로토콜, 구조, Appearance/Material, Icon/Motion/Visualization 및 통합 검증의 명시적 Gate로 후보를 검토합니다.                    | `Proposed` |
-| `FBR-07` | 작성된 후보 값과 비교 필요가 정당화할 때만 Figma Guide artifact를 만들고 이번 세션에서 Final production screen을 만들지 않습니다. | `Proposed` |
+| `FBR-01` | 시각 값을 선택하지 않으면서 이 문서로 Foundation v0.1 조사를 관리합니다.                                                          | `Approved` |
+| `FBR-02` | 실제 콘텐츠와 연결된 Specimen으로 결합된 7개 Track을 평가합니다.                                                                  | `Approved` |
+| `FBR-03` | Pretendard를 자동 최종 글꼴이 아니라 Incumbent candidate로 취급합니다.                                                            | `Approved` |
+| `FBR-04` | 광범위한 관리자 화면을 2.0 Foundation specimen 범위 밖에 두되 공유 Primitive와 승인된 미래 사용자용 Editor fragment를 시험합니다. | `Approved` |
+| `FBR-05` | `S1`–`S5`를 최소 Specimen 집합으로 사용하고 Professional editor 제약을 위해 `S6`을 추가합니다.                                    | `Approved` |
+| `FBR-06` | 프로토콜, 구조, Appearance/Material, Icon/Motion/Visualization 및 통합 검증의 명시적 Gate로 후보를 검토합니다.                    | `Approved` |
+| `FBR-07` | 작성된 후보 값과 비교 필요가 정당화할 때만 Figma Guide artifact를 만들고 이번 세션에서 Final production screen을 만들지 않습니다. | `Approved` |
 
-## 후보 작업 전 필요한 사용자 결정
+## Gate 0 승인 기록
 
-1. 7개 조사 Track, Specimen 집합, Content suite, Validation matrix 및 Candidate
-   rubric을 승인하거나 수정합니다.
-2. Pretendard가 최종 선택을 전제하지 않는 Incumbent candidate로 남아야 하는지
-   결정합니다.
-3. 관리자 관리 화면은 제외하면서 제안된 `S6` 사용자용 Editor fragment를
-   Foundation v0.1 검증에 포함할지 결정합니다.
-4. 제안된 Decision-batch 순서와 Editable-artifact 계획을 승인하거나
-   수정합니다.
+2026-08-03에 사용자는 다음 프로토콜 결정을 승인했습니다.
 
-이 네 항목을 해결하기 전에는 Foundation 후보 값을 작성하지 않습니다.
+1. 결합된 7개 조사 Track, Specimen 집합, Content suite, Validation matrix 및
+   Candidate rubric을 유지합니다.
+2. Pretendard를 최종 선택을 전제하지 않는 Incumbent candidate로 유지합니다.
+3. 광범위한 관리자 관리 화면은 제외하고 `S6` 사용자용 Editor fragment를
+   Foundation v0.1 검증에 포함합니다.
+4. 제안된 Decision-batch 순서와 Editable-artifact 계획을 유지합니다.
+
+Gate 0은 완료되었습니다. Batch A Semantic-role 작업을 진행할 수 있지만 이
+프로토콜의 승인은 글꼴 Family, 숫자 Token 값, Palette, Spacing, Layout,
+Material, Icon, Motion 또는 Visualization 후보를 선택한 것이 아닙니다.
 
 ## 단계 체크리스트
 
@@ -609,5 +611,5 @@ Specimen을 아직 제작·비교하지 않았으므로 값 선택의 포화에�
       Compact/Wide viewport에서 확인했습니다.
 - [x] 독립적이고 공식 또는 유지 관리되는 근거 출처 15개 이상을 비교했습니다.
 - [x] 영어 원본과 한국어 Companion을 함께 작성했습니다.
-- [ ] 사용자가 조사 프로토콜을 승인하거나 수정합니다.
-- [ ] 승인 후에만 Semantic-role 및 Candidate 작업을 시작합니다.
+- [x] 사용자가 2026-08-03에 조사 프로토콜을 승인했습니다.
+- [x] Gate 0 승인 후 Batch A Semantic-role 작업을 시작했습니다.

@@ -2,7 +2,7 @@
 
 ## Document Control
 
-- Status: `Proposed research protocol — awaiting user approval`
+- Status: `Approved research protocol — Gate 0 complete`
 - Research date: 2026-08-03
 - Canonical language: English
 - Korean companion:
@@ -570,29 +570,32 @@ The review has reached sufficient breadth to propose the research protocol. It h
 not reached value-selection saturation because no integrated candidate specimens have
 yet been produced or compared.
 
-## Proposed Decision Log
+## Decision Log
 
 | ID       | Entry                                                                                                                                                             | Status     |
 | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| `FBR-01` | Use this document to govern Foundation v0.1 research without selecting visual values.                                                                             | `Proposed` |
-| `FBR-02` | Evaluate seven coupled tracks through real content and connected specimens.                                                                                       | `Proposed` |
-| `FBR-03` | Treat Pretendard as an incumbent candidate, not an automatic final font.                                                                                          | `Proposed` |
-| `FBR-04` | Keep broad administrator surfaces outside the 2.0 foundation specimen scope, while testing shared primitives and the approved future user-facing editor fragment. | `Proposed` |
-| `FBR-05` | Use `S1`–`S5` as the minimum specimen set and add `S6` for professional editor constraints.                                                                       | `Proposed` |
-| `FBR-06` | Review candidates in four explicit gates: protocol, structural, appearance/material, and icon/motion/visualization, followed by integrated validation.            | `Proposed` |
-| `FBR-07` | Create Figma guide artifacts only when written candidate values and comparison needs justify them; do not create final production screens in this session.        | `Proposed` |
+| `FBR-01` | Use this document to govern Foundation v0.1 research without selecting visual values.                                                                             | `Approved` |
+| `FBR-02` | Evaluate seven coupled tracks through real content and connected specimens.                                                                                       | `Approved` |
+| `FBR-03` | Treat Pretendard as an incumbent candidate, not an automatic final font.                                                                                          | `Approved` |
+| `FBR-04` | Keep broad administrator surfaces outside the 2.0 foundation specimen scope, while testing shared primitives and the approved future user-facing editor fragment. | `Approved` |
+| `FBR-05` | Use `S1`–`S5` as the minimum specimen set and add `S6` for professional editor constraints.                                                                       | `Approved` |
+| `FBR-06` | Review candidates in four explicit gates: protocol, structural, appearance/material, and icon/motion/visualization, followed by integrated validation.            | `Approved` |
+| `FBR-07` | Create Figma guide artifacts only when written candidate values and comparison needs justify them; do not create final production screens in this session.        | `Approved` |
 
-## User Decisions Required Before Candidate Work
+## Gate 0 Approval Record
 
-1. Approve or revise the seven research tracks, specimen set, content suite,
-   validation matrix, and candidate rubric.
-2. Decide whether Pretendard should remain an incumbent candidate with no presumption
-   of final selection.
-3. Decide whether the proposed `S6` user-facing editor fragment belongs in Foundation
-   v0.1 validation while administrator management screens remain excluded.
-4. Approve or revise the proposed decision-batch order and editable-artifact plan.
+On 2026-08-03, the user approved the following protocol decisions:
 
-No foundation candidate values should be drafted until these four items are resolved.
+1. retain the seven coupled research tracks, specimen set, content suite, validation
+   matrix, and candidate rubric;
+2. retain Pretendard as an incumbent candidate with no presumption of final selection;
+3. include the `S6` user-facing editor fragment in Foundation v0.1 validation while
+   excluding broad administrator management screens; and
+4. retain the proposed decision-batch order and editable-artifact plan.
+
+Gate 0 is complete. Batch A semantic-role work may proceed, but approval of this
+protocol still does not select any font family, numeric token value, palette, spacing,
+layout, material, icon, motion, or visualization candidate.
 
 ## Phase Checklist
 
@@ -603,5 +606,5 @@ No foundation candidate values should be drafted until these four items are reso
       representative compact and/or wide viewports.
 - [x] More than fifteen independent official or maintained evidence sources compared.
 - [x] English canonical and Korean companion drafted together.
-- [ ] User approves or revises the research protocol.
-- [ ] Semantic-role and candidate work begins only after approval.
+- [x] User approved the research protocol on 2026-08-03.
+- [x] Batch A semantic-role work began after Gate 0 approval.
