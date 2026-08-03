@@ -2,8 +2,9 @@
 
 ## 문서 관리
 
-- 상태: `승인된 조사 프로토콜 — Gate 0 완료`
+- 상태: `승인된 조사 프로토콜 — Gate 0 완료, 이후 Font 및 하한 결정 기록`
 - 조사일: 2026-08-03
+- 마지막 결정 갱신일: 2026-08-04
 - 원본 언어: 영어
 - 영어 원본:
   [24-foundation-v0.1-research-brief.md](./24-foundation-v0.1-research-brief.md)
@@ -12,14 +13,15 @@
 - 입력: 승인된 문서 `01`–`23`, 현재 저장소 token과 component, 현재 로컬
   브라우저 근거, 현행 표준, 유지 관리되는 디자인 시스템 및 문서 `22`의 명시적
   Foundation 진입 Gate
-- 제외: 최종 글꼴, Palette 값, 간격 단위, Grid, Breakpoint, Radius, Shadow,
-  Icon 스타일, Motion 시간, Chart 스타일, Component anatomy, High-fidelity
-  화면, Figma Production 화면 및 Application 구현
+- 제외: 나머지 Role별 Typography 값, Palette 값, 간격 단위, Grid, Breakpoint,
+  Radius, Shadow, Icon 스타일, Motion 시간, Chart 스타일, Component anatomy,
+  High-fidelity 화면, Figma Production 화면 및 Application 구현
 
-이 브리프는 시각 시스템을 승인하지 않습니다. 후보를 어떻게 조사하고,
+이 브리프는 완전한 시각 시스템을 승인하지 않습니다. 후보를 어떻게 조사하고,
 결합하고, 시험하고, 비교하고, 사용자 결정 대상으로 올릴지를 정의합니다.
-현재 값, Reference 값, Tailwind 기본값 또는 후보는 이 문서에 등장했다는
-이유만으로 권위 있는 값이 되지 않습니다.
+아래에 명시적으로 기록한 이후의 제한된 Pretendard JP 및 `12px` 하한 결정을
+제외하면 현재 값, Reference 값, Tailwind 기본값 또는 후보는 이 문서에
+등장했다는 이유만으로 권위 있는 값이 되지 않습니다.
 
 ## 관련 문서
 
@@ -114,7 +116,7 @@ Token이 되지 않습니다.
 
 | 영역               | 관찰한 구현                                                                                                                                                             | 조사에 주는 의미                                                                                                                 |
 | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| 글꼴               | `app/layout.tsx`가 `next/font/local`로 로컬 `PretendardVariable.woff2`를 불러오며 Weight `45 920`, `swap`을 사용합니다.                                                 | Pretendard는 현행 후보이며 귀중한 Production 근거를 제공합니다. 최종 선택으로 자동 확정되지는 않습니다.                          |
+| 글꼴               | `app/layout.tsx`가 `next/font/local`로 로컬 `PretendardVariable.woff2`를 불러오며 Weight `45 920`, `swap`을 사용합니다.                                                 | 현재 Pretendard 파일은 Migration 근거이며 Delivery와 Fallback 검증 전에는 이후 승인된 Pretendard JP Family와 동일하지 않습니다.  |
 | Type role          | `app/globals.css`는 Display, Score display, Title, Wordmark, Section, Body, Muted body, Label, Caption, Micro, Badge, Input Utility를 정의합니다.                       | Semantic role 발상은 재사용할 수 있지만 현재 값과 이름은 실제 콘텐츠 검증이 필요합니다.                                          |
 | 현재 Type 사용     | 넓은 `app` + `components` Scan에서 `text-sm` 164회, `text-xs` 149회, 명시적 `10px` 11회와 여러 다른 직접 크기를 확인했습니다.                                           | Token utility와 많은 로컬 선택이 공존합니다. 빈도는 Debt를 설명하지만 미래 Scale을 선택하지 않습니다.                            |
 | Color              | Dark·Light CSS Variable이 Neutral surface, Text, Interaction, State, Rank, Difficulty, Basic/Recital, Genre 및 Discord를 다룹니다.                                      | Role inventory는 유용하지만 Ownership·Collision 규칙은 불완전하고 각 Appearance를 검증해야 합니다.                               |
@@ -184,8 +186,10 @@ Style은 재사용하지 않습니다.
 
 #### 필수 후보 근거
 
-- Incumbent Pretendard 후보와 Glyph coverage, License, Web delivery, 언어
-  형태, Metric 및 Performance로 정당화된 신뢰할 수 있는 대안
+- Glyph coverage, License, Web delivery, 언어 형태, Metric 및 Performance로
+  정당화된 승인 Pretendard JP Family의 신뢰할 수 있는 Delivery, Subsetting 및
+  Fallback 구성. 차단 수준의 기술 실패가 발견되고 사용자가 Family 결정을
+  명시적으로 다시 열지 않는 한 다른 Family는 비교하지 않습니다.
 - 같은 Semantic role을 사용하는 한국어, 일본어, 영어, 혼합 문자 및 Metric
   Specimen
 - Alphabet sample만이 아니라 실제 긴 악곡 제목과 Artist
@@ -480,8 +484,8 @@ Track, Source, Specimen 집합, Content suite, Rubric, Decision batch 및 관리
 
 - Typography, Spacing, Color, Surface, Icon, Motion 및 Visualization anatomy의
   공유 Semantic role inventory를 승인합니다.
-- Pretendard가 최종 글꼴로 가정되지 않는 Incumbent candidate로 남을지
-  결정합니다.
+- 비교를 위해 현행 Pretendard 기준선을 기록합니다. Family 질문은 이후
+  `FBR-08`에서 Pretendard JP로 해결됐습니다.
 - 후보 비교에 사용할 Test fixture와 Current-code mapping을 승인합니다.
 
 ### Batch B — 구조 후보
@@ -567,9 +571,10 @@ Artifact를 추가합니다.
 Reference 집합은 값 이름보다 Semantic token, 제한되고 목적 있는 Scale, 실제
 Content validation, 조율된 Foundation, Responsive container, 접근 가능한
 Appearance mode, 절제된 Elevation, 명시적 Icon/Motion role 및 구조화된 정확한
-Visualization 근거에 수렴합니다. 정확한 Type size, Spacing base, Grid, Radius,
-Color expression 및 Motion character에는 의견이 다릅니다. 이 차이는 유용한
-후보 차원이며 아직 열려 있습니다.
+Visualization 근거에 수렴합니다. 이후 승인된 사용자 표시용 `12px` 하한 위의
+정확한 Role별 Type size, Spacing base, Grid, Radius, Color expression 및 Motion
+character에는 의견이 다릅니다. 이 차이는 유용한 후보 차원이며 아직 열려
+있습니다.
 
 검토는 조사 프로토콜을 제안하기에 충분한 폭에 도달했습니다. 통합 후보
 Specimen을 아직 제작·비교하지 않았으므로 값 선택의 포화에는 도달하지
@@ -577,15 +582,17 @@ Specimen을 아직 제작·비교하지 않았으므로 값 선택의 포화에�
 
 ## 결정 기록
 
-| ID       | 항목                                                                                                                              | 상태       |
-| -------- | --------------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| `FBR-01` | 시각 값을 선택하지 않으면서 이 문서로 Foundation v0.1 조사를 관리합니다.                                                          | `Approved` |
-| `FBR-02` | 실제 콘텐츠와 연결된 Specimen으로 결합된 7개 Track을 평가합니다.                                                                  | `Approved` |
-| `FBR-03` | Pretendard를 자동 최종 글꼴이 아니라 Incumbent candidate로 취급합니다.                                                            | `Approved` |
-| `FBR-04` | 광범위한 관리자 화면을 2.0 Foundation specimen 범위 밖에 두되 공유 Primitive와 승인된 미래 사용자용 Editor fragment를 시험합니다. | `Approved` |
-| `FBR-05` | `S1`–`S5`를 최소 Specimen 집합으로 사용하고 Professional editor 제약을 위해 `S6`을 추가합니다.                                    | `Approved` |
-| `FBR-06` | 프로토콜, 구조, Appearance/Material, Icon/Motion/Visualization 및 통합 검증의 명시적 Gate로 후보를 검토합니다.                    | `Approved` |
-| `FBR-07` | 작성된 후보 값과 비교 필요가 정당화할 때만 Figma Guide artifact를 만들고 이번 세션에서 Final production screen을 만들지 않습니다. | `Approved` |
+| ID       | 항목                                                                                                                                 | 상태         |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------ | ------------ |
+| `FBR-01` | 시각 값을 선택하지 않으면서 이 문서로 초기 Gate 0 Foundation v0.1 조사를 관리합니다.                                                 | `Approved`   |
+| `FBR-02` | 실제 콘텐츠와 연결된 Specimen으로 결합된 7개 Track을 평가합니다.                                                                     | `Approved`   |
+| `FBR-03` | Pretendard를 자동 최종 글꼴이 아니라 Incumbent candidate로 취급합니다.                                                               | `Superseded` |
+| `FBR-04` | 광범위한 관리자 화면을 2.0 Foundation specimen 범위 밖에 두되 공유 Primitive와 승인된 미래 사용자용 Editor fragment를 시험합니다.    | `Approved`   |
+| `FBR-05` | `S1`–`S5`를 최소 Specimen 집합으로 사용하고 Professional editor 제약을 위해 `S6`을 추가합니다.                                       | `Approved`   |
+| `FBR-06` | 프로토콜, 구조, Appearance/Material, Icon/Motion/Visualization 및 통합 검증의 명시적 Gate로 후보를 검토합니다.                       | `Approved`   |
+| `FBR-07` | 작성된 후보 값과 비교 필요가 정당화할 때만 Figma Guide artifact를 만들고 이번 세션에서 Final production screen을 만들지 않습니다.    | `Approved`   |
+| `FBR-08` | Pretendard JP를 NosLog 2.0 공용 글꼴 Family로 선택하되 Production 승격 전에 다국어·Loading·Fallback·Layout 검증을 유지합니다.        | `Approved`   |
+| `FBR-09` | `12px`를 공용 사용자 표시용 타이포그래피 전역 하한으로 정하되 특정 Semantic role에 배정하거나 나머지 물리 Scale을 선택하지 않습니다. | `Approved`   |
 
 ## Gate 0 승인 기록
 
@@ -602,6 +609,16 @@ Gate 0은 완료되었습니다. Batch A Semantic-role 작업을 진행할 수 �
 프로토콜의 승인은 글꼴 Family, 숫자 Token 값, Palette, Spacing, Layout,
 Material, Icon, Motion 또는 Visualization 후보를 선택한 것이 아닙니다.
 
+### 이후 승인된 보완 — 2026-08-04
+
+위 Gate 0 기록 이후 사용자는 Pretendard JP를 NosLog 2.0 공용 글꼴 Family로,
+`12px`를 공용 사용자 표시용 타이포그래피의 전역 하한으로 승인했습니다. 이
+결정은 `FBR-03`의 미확정 Family 전제와 숫자 하한이 없던 상태만 대체합니다.
+Batch B 검증을 면제하거나 Role별 크기, 행간, 굵기, 자간, 반응형 Type 동작,
+Fallback metric 또는 Font delivery 세부를 선택하지 않습니다. 검증된 Role은
+`12px`보다 크게 결정될 수 있지만 일반 공용 Role은 그보다 작게 결정될 수
+없습니다.
+
 ## 단계 체크리스트
 
 - [x] Root 프로젝트 지침과 저장소 기준선을 다시 읽었습니다.
@@ -613,3 +630,7 @@ Material, Icon, Motion 또는 Visualization 후보를 선택한 것이 아닙니
 - [x] 영어 원본과 한국어 Companion을 함께 작성했습니다.
 - [x] 사용자가 2026-08-03에 조사 프로토콜을 승인했습니다.
 - [x] Gate 0 승인 후 Batch A Semantic-role 작업을 시작했습니다.
+- [x] 사용자가 2026-08-04에 Pretendard JP와 공용 사용자 표시용 `12px` 하한을
+      선택했습니다.
+- [ ] Production 승격 전에 필수 다국어 통합 Specimen에서 Pretendard JP
+      delivery, fallback metric 및 하한을 검증합니다.

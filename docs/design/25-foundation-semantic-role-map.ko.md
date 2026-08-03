@@ -2,8 +2,9 @@
 
 ## 문서 관리
 
-- 상태: `승인된 Semantic-role 구조 — 물리 값 미확정`
+- 상태: `승인된 Semantic-role 구조·글꼴 Family·Type 하한 — 나머지 물리 값 미확정`
 - 승인일: 2026-08-03
+- 마지막 결정 갱신일: 2026-08-04
 - 원본 언어: 영어
 - 영어 원본:
   [25-foundation-semantic-role-map.md](./25-foundation-semantic-role-map.md)
@@ -13,13 +14,14 @@
 - 입력: 승인된 문서 `01`–`24`, 현재 저장소 Typography utility, 문서 `24`에
   기록된 현재 Browser 근거, 아래 Reference 비교 및 2026-08-03의 명시적 사용자
   승인
-- 제외: 최종 글꼴 Family, 글꼴 크기, 행간, 굵기, 자간, 반응형 Type 동작,
-  Color, Spacing, Grid, Component 치수, 최종 Figma style, Production screen 및
-  Application 구현
+- 제외: Role별 글꼴 크기, 행간, 굵기, 자간, 반응형 Type 동작, Fallback 및
+  Delivery 세부, Color, Spacing, Grid, Component 치수, 최종 Figma style,
+  Production screen 및 Application 구현
 
-이 문서는 각 공유 Typography 역할의 의미와 관리 방식을 승인합니다. 어떤
-역할의 물리적 외형도 승인하지 않습니다. 여기에 역할 이름이 있다는 이유로
-임의 크기를 선택하거나 현재 구현 값을 재사용해서는 안 됩니다.
+이 문서는 각 공유 Typography 역할의 의미와 관리 방식, 공용 Family 및 전역
+하한을 승인합니다. Role별 물리적 외형은 승인하지 않습니다. 여기에 역할
+이름이 있다는 이유로 임의 크기를 선택하거나 현재 구현 값을 재사용해서는 안
+됩니다.
 
 ## 관련 문서
 
@@ -51,7 +53,8 @@ control, Viewer 및 미래 사용자용 Editor를 지원하면서도 같은 분�
 4. **Component alias**는 새 물리 값을 만들지 않고 기존 Semantic role에
    Domain 또는 Component 이름을 부여합니다.
 
-이 문서에서는 Semantic role과 Alias 관리 모델만 승인합니다. Primitive와
+이 문서에서는 Semantic role, Alias 관리 모델, Pretendard JP Family 선택 및
+공용 사용자 표시용 `12px` 전역 하한을 승인합니다. Role별 Primitive와
 Composite 값은 Batch B 결정으로 남습니다.
 
 ## 조사 수렴점
@@ -83,12 +86,30 @@ NosLog에는 일반 System이 정의하지 않는 Domain 제약이 추가됩니�
 
 ## 승인된 구조
 
+### 승인된 Family와 전역 하한
+
+- Pretendard JP를 한국어·일본어·영어 NosLog 2.0 사용자 UI의 공용 글꼴
+  Family로 사용합니다.
+- 올바른 `lang` Metadata, 혼합 문자 동작, Font delivery, Fallback metric,
+  Loading 및 Layout 안정성은 계속 Batch B에서 반드시 검증합니다. 검증은
+  Delivery와 Fallback 구현을 다듬을 수 있지만 Family 선택을 다시 열지 않습니다.
+- 기본 Root 크기에서 일반 공용 사용자 표시용 타이포그래피 Token은 `12px`
+  미만으로 결정될 수 없습니다. 이는 전역 하한이며 `metadata`,
+  `entity-companion` 또는 다른 Role에 `12px`를 배정한 것이 아닙니다.
+- 검증된 Role은 `12px` 또는 그보다 큰 승인된 Scale step으로 결정될 수
+  있습니다. 정확한 Role 크기, 행간, 굵기, 자간 및 반응형 동작은 미확정입니다.
+- 공간 부족은 Type 축소 전에 Content 우선순위, 줄바꿈, Reflow, Spacing,
+  Progressive disclosure 또는 Component composition으로 해결해야 합니다.
+- Canvas 또는 WebGL Text에는 자동 예외가 없습니다. 더 작은 Render 값은 기존
+  명시적 예외 절차와 핵심 정보의 동등하고 읽을 수 있는 표현을 요구합니다.
+
 ### Layer 1 — Primitive 값
 
-미래 Primitive에는 글꼴 Family, 굵기, Size step, Line-height step, Tracking 및
-OpenType 기능이 포함될 수 있습니다. 이름과 값은 이 문서에서 승인하지
-않습니다. Product 작성자와 Downstream designer는 Page content에 Primitive를
-직접 적용하면 안 됩니다.
+미래 Primitive에는 승인된 Pretendard JP Family 아래의 굵기, Size step,
+Line-height step, Tracking 및 OpenType 기능이 포함될 수 있습니다. 전역
+`12px` 하한을 제외한 이름과 값은 이 문서에서 승인하지 않습니다. Product
+작성자와 Downstream designer는 Page content에 Primitive를 직접 적용하면 안
+됩니다.
 
 ### Layer 2 — Composite 물리 Style
 
@@ -99,7 +120,8 @@ Semantic role이 의도적으로 같은 Composite style을 가리킬 수 있습�
 
 Composite style은 Batch B specimen이 실제 NosLog content에서 동작함을
 입증한 뒤에만 승인합니다. 그 전까지 현재 App 또는 외부 Design system에
-보이는 어떤 크기·굵기·행간도 권위 있는 값이 아닙니다.
+보이는 어떤 Role 크기·굵기·행간도 권위 있는 값이 아니며 승인된 `12px`
+하한은 계속 적용됩니다.
 
 ### Layer 3 — 공유 Semantic role
 
@@ -249,6 +271,9 @@ Downstream Figma 작업과 Production 구현은 Mockup에서 더 강조하거나
 해 보인다는 이유만으로 Page-specific font size, Weight, Line height, Tracking
 또는 Font family를 추가하면 안 됩니다.
 
+일반 공용 사용자 표시용 Text를 Layout에 맞추기 위해 `12px`보다 작게 만들면
+안 됩니다. 대신 Role 배정과 승인된 Composition을 수정해야 합니다.
+
 다음은 유효한 예외 사유가 아닙니다.
 
 - 제목이 깁니다.
@@ -358,52 +383,55 @@ Content·고밀도·Empty·Error·Disabled·Permission·Destructive fixture를
 
 ## Reference Matrix
 
-| 독립 출처                                                                                                                               | 전이 가능한 원칙                                                                                        | NosLog 적용                                                                  | 한계                                                         |
-| --------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------ |
-| [W3C WCAG 2.2](https://www.w3.org/TR/WCAG22/)                                                                                           | Contrast, Resize, Reflow 및 Text-spacing 요구사항이 모든 Role을 제약함                                  | 가독성과 Reflow를 차단 조건으로 사용함                                       | Typeface 또는 계층 값을 선택하지 않음                        |
-| [W3C KLReq](https://www.w3.org/TR/klreq/) 및 [JLReq](https://www.w3.org/TR/jlreq/)                                                      | 한국어·일본어 Composition, Punctuation, Mixed-script 및 Line breaking은 Latin 기본값과 다름             | 실제 Hangul, Kana, Kanji, Latin, Numeral 및 Punctuation specimen을 요구함    | Print 및 Vertical-writing 세부는 관련 부분만 전이함          |
-| [Atlassian Typography](https://atlassian.design/foundations/typography/)                                                                | Heading, Body, Metric 및 Code style이 조정된 Semantic token을 사용함                                    | 별도 Metric role과 절제된 Small body 사용을 지지함                           | Enterprise 값은 NosLog 값이 아님                             |
-| [Fluent 2 Typography](https://fluent2.microsoft.design/typography)                                                                      | Semantic type ramp가 Platform 간 Scannable hierarchy를 만듦                                             | Platform-aware 시험을 포함한 공유 Role을 지지함                              | 정확한 Ramp와 Segoe identity는 전이하지 않음                 |
-| [Carbon Type strategies](https://carbondesignsystem.com/elements/typography/style-strategies/)                                          | Productive·Expressive moment가 Task에 맞고 한 영역 안에서 일관되어야 함                                 | Page-specific scale 없이 드문 Display 사용과 고밀도 Task typography를 지지함 | IBM의 두 Type set은 NosLog template가 아님                   |
-| [Primer Typography](https://primer.style/product/getting-started/foundations/typography/)                                               | Semantic markup, rem token, 절제된 계층 및 읽기 쉬운 Alignment가 고밀도 Web product에서 동작함          | Semantic-role authoring과 이후 상대 값을 지지함                              | GitHub content와 Brand는 다름                                |
-| [Adobe Spectrum International Design](https://spectrum.adobe.com/page/international-design/)                                            | CJK script는 의미를 유지하면서 다른 Metric과 Emphasis 동작이 필요할 수 있음                             | Latin-only 치환이 아니라 다국어 Composition을 요구함                         | Adobe platform scale은 NosLog 값을 결정하지 않음             |
-| [Apple Typography](https://developer.apple.com/design/human-interface-guidelines/typography)                                            | Text style이 계층을 전달하고 더 큰 Accessibility size에 적응해야 함                                     | Role 일관성, Reflow 및 작은 Thin text 회피를 지지함                          | Native point size와 System font는 Web token이 아님           |
-| [USWDS Typography](https://designsystem.digital.gov/components/typography/)                                                             | 편안한 Body text, 절제된 Small text, Measure, Line height 및 Tabular numerals가 가독성을 지원함         | Compact metadata 제한과 Metric 정렬을 지지함                                 | Government reading 기본값은 고밀도 Score view와 다름         |
-| [GOV.UK Typography](https://design-system.service.gov.uk/styles/typography/)                                                            | 제한된 Content-first hierarchy가 불일치를 줄임                                                          | Local visual invention 대신 필수 공유 Role을 지지함                          | Public-service tone과 Size는 NosLog identity를 정의하지 않음 |
-| [Ant Design Font](https://ant.design/docs/spec/font/)                                                                                   | 물리 Scale을 제한하고 Primary, Secondary, Title 및 Display 사용을 체계적으로 계획함                     | 많은 Semantic role이 적은 Physical style을 가리키는 구조를 지지함            | 14px Base와 정확한 Scale은 승인되지 않음                     |
-| [SAP Fiori Typography](https://experience.sap.com/fiori-design-web/typography/)                                                         | Page, Object, List, Form, Table, Chart 및 KPI context가 관리된 Style을 공유하고 Small text는 예외임     | Entity, Control, Metadata 및 Metric 구분을 지지함                            | Enterprise control과 Proprietary font는 전이하지 않음        |
-| [GitLab Design tokens](https://design.gitlab.com/product-foundations/design-tokens/)                                                    | Semantic token name이 Tool 간 Intent를 Codify함                                                         | Alias와 미래 Figma·Code mapping을 지지함                                     | NosLog Role priority를 정의하지 않음                         |
-| [Figma UI design principles](https://www.figma.com/resource-library/ui-design-principles/)                                              | Hierarchy, Contrast, Proximity, Consistency 및 Progressive disclosure가 사용자 우선순위를 반영해야 함   | 경쟁하는 Text를 찾기 위한 Specimen review 언어를 제공함                      | Token specification이 아님                                   |
-| [Shopify Polaris Typography tokens](https://polaris-react.shopify.com/design/typography/typography-tokens)                              | Primitive value가 Semantic text token을 구성할 수 있음                                                  | 승인된 Layered architecture를 지지함                                         | Commerce role은 Music 또는 Score hierarchy를 결정하지 않음   |
-| [Pretendard](https://github.com/orioncactus/pretendard)                                                                                 | Variable cross-platform family가 한국어, Latin 및 일본어 인식 Variant와 실용적 Web delivery를 지원함    | 실제 Content 비교를 위한 Incumbent candidate로 유지함                        | Project claim과 Incumbency는 최종 Font 승인이 아님           |
-| [osu! Beatmap information](https://osu.ppy.sh/wiki/en/Beatmap_information) 및 [Taiko.wiki Song search](https://taiko.wiki/song?lang=en) | Rhythm-game discovery가 Song identity, Difficulty, Metadata 및 비교 가능한 Performance context를 보존함 | Compact domain surface에 Entity 및 Metric role이 필요함을 확인함             | Terminology, Hierarchy 및 Visual styling을 복사할 수 없음    |
+| 독립 출처                                                                                                                               | 전이 가능한 원칙                                                                                        | NosLog 적용                                                                  | 한계                                                                     |
+| --------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| [W3C WCAG 2.2](https://www.w3.org/TR/WCAG22/)                                                                                           | Contrast, Resize, Reflow 및 Text-spacing 요구사항이 모든 Role을 제약함                                  | 가독성과 Reflow를 차단 조건으로 사용함                                       | Typeface 또는 계층 값을 선택하지 않음                                    |
+| [W3C KLReq](https://www.w3.org/TR/klreq/) 및 [JLReq](https://www.w3.org/TR/jlreq/)                                                      | 한국어·일본어 Composition, Punctuation, Mixed-script 및 Line breaking은 Latin 기본값과 다름             | 실제 Hangul, Kana, Kanji, Latin, Numeral 및 Punctuation specimen을 요구함    | Print 및 Vertical-writing 세부는 관련 부분만 전이함                      |
+| [Atlassian Typography](https://atlassian.design/foundations/typography/)                                                                | Heading, Body, Metric 및 Code style이 조정된 Semantic token을 사용함                                    | 별도 Metric role과 절제된 Small body 사용을 지지함                           | Enterprise 값은 NosLog 값이 아님                                         |
+| [Fluent 2 Typography](https://fluent2.microsoft.design/typography)                                                                      | Semantic type ramp가 Platform 간 Scannable hierarchy를 만듦                                             | Platform-aware 시험을 포함한 공유 Role을 지지함                              | 정확한 Ramp와 Segoe identity는 전이하지 않음                             |
+| [Carbon Type strategies](https://carbondesignsystem.com/elements/typography/style-strategies/)                                          | Productive·Expressive moment가 Task에 맞고 한 영역 안에서 일관되어야 함                                 | Page-specific scale 없이 드문 Display 사용과 고밀도 Task typography를 지지함 | IBM의 두 Type set은 NosLog template가 아님                               |
+| [Primer Typography](https://primer.style/product/getting-started/foundations/typography/)                                               | Semantic markup, rem token, 절제된 계층 및 읽기 쉬운 Alignment가 고밀도 Web product에서 동작함          | Semantic-role authoring과 이후 상대 값을 지지함                              | GitHub content와 Brand는 다름                                            |
+| [Adobe Spectrum International Design](https://spectrum.adobe.com/page/international-design/)                                            | CJK script는 의미를 유지하면서 다른 Metric과 Emphasis 동작이 필요할 수 있음                             | Latin-only 치환이 아니라 다국어 Composition을 요구함                         | Adobe platform scale은 NosLog 값을 결정하지 않음                         |
+| [Apple Typography](https://developer.apple.com/design/human-interface-guidelines/typography)                                            | Text style이 계층을 전달하고 더 큰 Accessibility size에 적응해야 함                                     | Role 일관성, Reflow 및 작은 Thin text 회피를 지지함                          | Native point size와 System font는 Web token이 아님                       |
+| [USWDS Typography](https://designsystem.digital.gov/components/typography/)                                                             | 편안한 Body text, 절제된 Small text, Measure, Line height 및 Tabular numerals가 가독성을 지원함         | Compact metadata 제한과 Metric 정렬을 지지함                                 | Government reading 기본값은 고밀도 Score view와 다름                     |
+| [GOV.UK Typography](https://design-system.service.gov.uk/styles/typography/)                                                            | 제한된 Content-first hierarchy가 불일치를 줄임                                                          | Local visual invention 대신 필수 공유 Role을 지지함                          | Public-service tone과 Size는 NosLog identity를 정의하지 않음             |
+| [Ant Design Font](https://ant.design/docs/spec/font/)                                                                                   | 물리 Scale을 제한하고 Primary, Secondary, Title 및 Display 사용을 체계적으로 계획함                     | 많은 Semantic role이 적은 Physical style을 가리키는 구조를 지지함            | 14px Base와 정확한 Scale은 승인되지 않음                                 |
+| [SAP Fiori Typography](https://experience.sap.com/fiori-design-web/typography/)                                                         | Page, Object, List, Form, Table, Chart 및 KPI context가 관리된 Style을 공유하고 Small text는 예외임     | Entity, Control, Metadata 및 Metric 구분을 지지함                            | Enterprise control과 Proprietary font는 전이하지 않음                    |
+| [GitLab Design tokens](https://design.gitlab.com/product-foundations/design-tokens/)                                                    | Semantic token name이 Tool 간 Intent를 Codify함                                                         | Alias와 미래 Figma·Code mapping을 지지함                                     | NosLog Role priority를 정의하지 않음                                     |
+| [Figma UI design principles](https://www.figma.com/resource-library/ui-design-principles/)                                              | Hierarchy, Contrast, Proximity, Consistency 및 Progressive disclosure가 사용자 우선순위를 반영해야 함   | 경쟁하는 Text를 찾기 위한 Specimen review 언어를 제공함                      | Token specification이 아님                                               |
+| [Shopify Polaris Typography tokens](https://polaris-react.shopify.com/design/typography/typography-tokens)                              | Primitive value가 Semantic text token을 구성할 수 있음                                                  | 승인된 Layered architecture를 지지함                                         | Commerce role은 Music 또는 Score hierarchy를 결정하지 않음               |
+| [Pretendard](https://github.com/orioncactus/pretendard)                                                                                 | Pretendard JP가 한국어·Latin·일본어를 위한 하나의 Variable Family와 실용적 Web delivery를 제공함        | 승인된 공용 Family 방향과 필수 실제 Content 검증을 뒷받침함                  | Project claim은 NosLog Delivery, Fallback 및 Layout 시험을 대체하지 않음 |
+| [osu! Beatmap information](https://osu.ppy.sh/wiki/en/Beatmap_information) 및 [Taiko.wiki Song search](https://taiko.wiki/song?lang=en) | Rhythm-game discovery가 Song identity, Difficulty, Metadata 및 비교 가능한 Performance context를 보존함 | Compact domain surface에 Entity 및 Metric role이 필요함을 확인함             | Terminology, Hierarchy 및 Visual styling을 복사할 수 없음                |
 
 ## 거부된 대안
 
-| 대안                                                      | 결정       | 이유                                                                   |
-| --------------------------------------------------------- | ---------- | ---------------------------------------------------------------------- |
-| Page마다 자체 Type scale 제공                             | `Rejected` | 현재 불일치를 재현하고 Page 간 계층을 약화함                           |
-| Raw size name을 Page-authoring API로 사용                 | `Rejected` | 작성자가 Content meaning 대신 Appearance를 선택하게 됨                 |
-| 12개 Role에 독립 Physical size 12개 생성                  | `Rejected` | Semantic specificity는 Visual-style proliferation을 요구하지 않음      |
-| `micro`를 일반 공유 UI role로 유지                        | `Rejected` | 읽기 어려울 정도로 작은 Metadata와 Control을 정상화함                  |
-| 모든 Score 및 Timing value에 Monospace 사용               | `Rejected` | Tabular figure가 일반 Domain data를 Code처럼 만들지 않고 정렬을 제공함 |
-| 모든 Component label을 새 Typography token으로 승격       | `Rejected` | 관리되는 Alias가 Parallel scale 없이 Mapping 명확성을 제공함           |
-| Text가 맞지 않을 때 Local exception 허용                  | `Rejected` | Fit 문제는 먼저 Content와 Responsive composition으로 해결해야 함       |
-| 현재 Pretendard 또는 현재 Utility 값을 승인된 것으로 취급 | `Rejected` | Incumbent 근거는 통합 다국어·반응형 Candidate 시험을 통과해야 함       |
+| 대안                                                                          | 결정       | 이유                                                                               |
+| ----------------------------------------------------------------------------- | ---------- | ---------------------------------------------------------------------------------- |
+| Page마다 자체 Type scale 제공                                                 | `Rejected` | 현재 불일치를 재현하고 Page 간 계층을 약화함                                       |
+| Raw size name을 Page-authoring API로 사용                                     | `Rejected` | 작성자가 Content meaning 대신 Appearance를 선택하게 됨                             |
+| 12개 Role에 독립 Physical size 12개 생성                                      | `Rejected` | Semantic specificity는 Visual-style proliferation을 요구하지 않음                  |
+| `micro`를 일반 공유 UI role로 유지                                            | `Rejected` | 읽기 어려울 정도로 작은 Metadata와 Control을 정상화함                              |
+| 모든 Score 및 Timing value에 Monospace 사용                                   | `Rejected` | Tabular figure가 일반 Domain data를 Code처럼 만들지 않고 정렬을 제공함             |
+| 모든 Component label을 새 Typography token으로 승격                           | `Rejected` | 관리되는 Alias가 Parallel scale 없이 Mapping 명확성을 제공함                       |
+| Text가 맞지 않을 때 Local exception 허용                                      | `Rejected` | Fit 문제는 먼저 Content와 Responsive composition으로 해결해야 함                   |
+| 현재 Pretendard 구현을 Migration 검증 없이 승인된 Pretendard JP와 같다고 취급 | `Rejected` | Family는 선택됐지만 Delivery, Fallback 및 혼합 문자 Migration은 통합 시험이 필요함 |
 
 ## 결정 기록
 
-| ID       | 결정                                                                                                          | 상태       |
-| -------- | ------------------------------------------------------------------------------------------------------------- | ---------- |
-| `FSR-01` | 이 문서의 공유 Semantic role 12개를 사용함                                                                    | `Approved` |
-| `FSR-02` | Batch B 통합 Specimen 검토 전까지 모든 물리 Type 값을 미확정으로 유지함                                       | `Approved` |
-| `FSR-03` | 일반 Text에 승인된 Role 사용을 의무화하고 모든 물리 예외를 명시적으로 관리함                                  | `Approved` |
-| `FSR-04` | `display`를 드물게 유지하고 기본 Page, Card, Metric 또는 State style로 사용하지 않음                          | `Approved` |
-| `FSR-05` | 전역 일반 UI `micro` role을 유지하지 않음                                                                     | `Approved` |
-| `FSR-06` | 비교 Metric에 Tabular figures를 사용하고 일반 Domain value에 Monospace를 사용하지 않음                        | `Approved` |
-| `FSR-07` | 활성화된 Localized/read title을 원문 Music title 위에 두되 시각적으로 하위로 유지함                           | `Approved` |
-| `FSR-08` | Wordmark, Artist, Control, Badge, Chart label 및 Renderer data를 새 공유 Scale이 아닌 관리되는 Alias로 취급함 | `Approved` |
-| `FSR-09` | 최종 Font를 선택하지 않고 Pretendard를 Incumbent candidate로 유지함                                           | `Approved` |
+| ID       | 결정                                                                                                          | 상태         |
+| -------- | ------------------------------------------------------------------------------------------------------------- | ------------ |
+| `FSR-01` | 이 문서의 공유 Semantic role 12개를 사용함                                                                    | `Approved`   |
+| `FSR-02` | Batch B 통합 Specimen 검토 전까지 모든 물리 Type 값을 미확정으로 유지함                                       | `Superseded` |
+| `FSR-03` | 일반 Text에 승인된 Role 사용을 의무화하고 모든 물리 예외를 명시적으로 관리함                                  | `Approved`   |
+| `FSR-04` | `display`를 드물게 유지하고 기본 Page, Card, Metric 또는 State style로 사용하지 않음                          | `Approved`   |
+| `FSR-05` | 전역 일반 UI `micro` role을 유지하지 않음                                                                     | `Approved`   |
+| `FSR-06` | 비교 Metric에 Tabular figures를 사용하고 일반 Domain value에 Monospace를 사용하지 않음                        | `Approved`   |
+| `FSR-07` | 활성화된 Localized/read title을 원문 Music title 위에 두되 시각적으로 하위로 유지함                           | `Approved`   |
+| `FSR-08` | Wordmark, Artist, Control, Badge, Chart label 및 Renderer data를 새 공유 Scale이 아닌 관리되는 Alias로 취급함 | `Approved`   |
+| `FSR-09` | 최종 Font를 선택하지 않고 Pretendard를 Incumbent candidate로 유지함                                           | `Superseded` |
+| `FSR-10` | Pretendard JP를 한국어·일본어·영어 NosLog 2.0 공용 글꼴 Family로 선택하되 Production 검증을 유지함            | `Approved`   |
+| `FSR-11` | 일반 공용 사용자 표시용 타이포그래피의 `12px` 미만을 금지하고 `12px`를 Role 배정이 아닌 하한으로 취급함       | `Approved`   |
+| `FSR-12` | Role별 크기, 행간, 굵기, 자간, 반응형 동작, Fallback 및 Delivery를 Batch B까지 미확정으로 유지함              | `Approved`   |
 
 ## 완료 체크리스트
 
@@ -414,7 +442,10 @@ Content·고밀도·Empty·Error·Disabled·Permission·Destructive fixture를
 - [x] 다국어 Title hierarchy와 Metric 동작을 Mapping했습니다.
 - [x] 현재 Typography utility 값을 그대로 이어가지 않고 Mapping했습니다.
 - [x] 영어 원본과 한국어 Companion을 함께 작성했습니다.
-- [ ] Batch B에서 Font family와 Fallback 후보 값을 비교합니다.
+- [x] Pretendard JP를 공용 Family로 선택했으며 Production delivery와 Fallback
+      검증은 Batch B에 남아 있습니다.
+- [x] 특정 Role에 배정하지 않고 `12px`를 공용 사용자 표시용 하한으로
+      승인했습니다.
 - [ ] Physical size, Line height, Weight, Tracking 및 Responsive behavior를
       비교합니다.
 - [ ] 통합 `S1`–`S6` Specimen을 사용자와 검토합니다.

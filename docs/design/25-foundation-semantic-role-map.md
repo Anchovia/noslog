@@ -2,8 +2,9 @@
 
 ## Document Control
 
-- Status: `Approved semantic-role architecture — physical values unresolved`
+- Status: `Approved semantic-role architecture, font family, and type floor — remaining physical values unresolved`
 - Approval date: 2026-08-03
+- Last decision update: 2026-08-04
 - Canonical language: English
 - Korean companion:
   [25-foundation-semantic-role-map.ko.md](./25-foundation-semantic-role-map.ko.md)
@@ -13,14 +14,14 @@
 - Inputs: approved documents `01`–`24`, current repository typography utilities,
   current-browser evidence recorded in document `24`, the reference comparison below,
   and explicit user approval on 2026-08-03
-- Excluded: final font family, font size, line height, weight, tracking, responsive
-  type behavior, color, spacing, grid, component dimensions, final Figma styles,
-  production screens, and application implementation
+- Excluded: role-specific font size, line height, weight, tracking, responsive type
+  behavior, fallback and delivery details, color, spacing, grid, component dimensions,
+  final Figma styles, production screens, and application implementation
 
-This document approves what each shared typography role means and how it is governed.
-It does not approve the physical appearance of any role. A role name appearing here
-must not be interpreted as permission to select an arbitrary size or to reuse the
-current implementation value.
+This document approves what each shared typography role means, how it is governed,
+the shared family, and the global lower bound. It does not approve the role-specific
+physical appearance. A role name appearing here must not be interpreted as permission
+to select an arbitrary size or to reuse the current implementation value.
 
 ## Related Documents
 
@@ -51,8 +52,9 @@ The approved model therefore separates four concerns:
 4. **component aliases** give domain or component names to existing semantic roles
    without creating new physical values.
 
-Only the semantic roles and alias-governance model are approved in this document.
-Primitives and composite values remain Batch B decisions.
+The semantic roles, alias-governance model, Pretendard JP family selection, and global
+`12px` shared user-facing floor are approved in this document. Role-specific
+primitives and composite values remain Batch B decisions.
 
 ## Research Convergence
 
@@ -81,11 +83,30 @@ NOSTALGIA meaning.
 
 ## Approved Architecture
 
+### Approved family and global floor
+
+- Pretendard JP is the shared font family for Korean, Japanese, and English NosLog 2.0
+  user interfaces.
+- Correct `lang` metadata, mixed-script behavior, font delivery, fallback metrics,
+  loading, and layout stability remain mandatory Batch B validation. Validation may
+  refine delivery and fallback implementation but does not reopen the family choice.
+- No ordinary shared user-facing typography token may resolve below `12px` at the
+  default root size. This is a global lower bound, not an assignment of `12px` to
+  `metadata`, `entity-companion`, or any other role.
+- A validated role may resolve to `12px` or a larger approved scale step. Exact role
+  sizes, line heights, weights, tracking, and responsive behavior remain unresolved.
+- Space pressure must be solved through content priority, wrapping, reflow, spacing,
+  progressive disclosure, or component composition before reducing type.
+- Canvas or WebGL text has no automatic exception. A smaller rendered value requires
+  the existing explicit exception process and an equivalent readable presentation of
+  essential information.
+
 ### Layer 1 — Primitive values
 
-Future primitives may include font families, weights, size steps, line-height steps,
-tracking, and OpenType features. Their names and values are not approved here. Product
-authors and downstream designers must not apply primitives directly to page content.
+Future primitives may include weights, size steps, line-height steps, tracking, and
+OpenType features under the approved Pretendard JP family. Their names and values are
+not approved here except for the global `12px` lower bound. Product authors and
+downstream designers must not apply primitives directly to page content.
 
 ### Layer 2 — Composite physical styles
 
@@ -94,8 +115,9 @@ semantic roles may intentionally resolve to the same composite style. The number
 semantic roles therefore does not require twelve different font sizes.
 
 Composite styles are approved only after Batch B specimens demonstrate that they work
-with real NosLog content. Until then, no size, weight, or line-height shown in the
-current app or an external design system is authoritative.
+with real NosLog content. Until then, no role size, weight, or line-height shown in the
+current app or an external design system is authoritative; the approved `12px` floor
+still applies.
 
 ### Layer 3 — Shared semantic roles
 
@@ -238,6 +260,9 @@ Figma work and production implementation must not introduce page-specific font s
 weights, line heights, tracking, or font families merely because a mockup appears to
 need more emphasis or fit.
 
+No ordinary shared user-facing text may be made smaller than `12px` to make a layout
+fit. The role assignment and approved composition must be corrected instead.
+
 The following are not valid reasons for an exception:
 
 - a title is long;
@@ -345,52 +370,55 @@ permission, and destructive fixtures at `320px`, `390px`, intermediate widths,
 
 ## Reference Matrix
 
-| Independent source                                                                                                                       | Transferable principle                                                                                          | NosLog application                                                                | Limitation                                                        |
-| ---------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
-| [W3C WCAG 2.2](https://www.w3.org/TR/WCAG22/)                                                                                            | Contrast, resize, reflow, and text-spacing requirements constrain every role                                    | Makes legibility and reflow blocking validation conditions                        | Does not select typeface or hierarchy values                      |
-| [W3C KLReq](https://www.w3.org/TR/klreq/) and [JLReq](https://www.w3.org/TR/jlreq/)                                                      | Korean/Japanese composition, punctuation, mixed-script, and line-breaking differ from Latin defaults            | Requires real Hangul, Kana, Kanji, Latin, numeral, and punctuation specimens      | Print and vertical-writing details transfer only where relevant   |
-| [Atlassian Typography](https://atlassian.design/foundations/typography/)                                                                 | Heading, body, metric, and code styles use coordinated semantic tokens                                          | Supports separate metric roles and restrained small body use                      | Enterprise values are not NosLog values                           |
-| [Fluent 2 Typography](https://fluent2.microsoft.design/typography)                                                                       | A semantic type ramp creates scannable hierarchy across platforms                                               | Supports shared roles with platform-aware testing                                 | Its exact ramp and Segoe identity do not transfer                 |
-| [Carbon type strategies](https://carbondesignsystem.com/elements/typography/style-strategies/)                                           | Productive and expressive moments should match the task and stay consistent within a region                     | Supports rare display use and denser task typography without page-specific scales | IBM's two type sets are not a NosLog template                     |
-| [Primer Typography](https://primer.style/product/getting-started/foundations/typography/)                                                | Semantic markup, rem tokens, restrained hierarchy, and readable alignment work in a dense web product           | Supports semantic-role authoring and later relative values                        | GitHub content and brand differ                                   |
-| [Adobe Spectrum International Design](https://spectrum.adobe.com/page/international-design/)                                             | CJK scripts can need different metrics and emphasis behavior while preserving meaning                           | Requires multilingual composition rather than Latin-only substitution             | Adobe platform scales do not decide NosLog values                 |
-| [Apple Typography](https://developer.apple.com/design/human-interface-guidelines/typography)                                             | Text styles convey hierarchy and must adapt to larger accessibility sizes                                       | Supports role consistency, reflow, and avoiding thin small text                   | Native point sizes and system fonts are not web tokens            |
-| [USWDS Typography](https://designsystem.digital.gov/components/typography/)                                                              | Comfortable body text, restrained small text, measure, line height, and tabular numerals support readability    | Supports reserving compact metadata and aligning metrics                          | Government reading defaults differ from dense score views         |
-| [GOV.UK Typography](https://design-system.service.gov.uk/styles/typography/)                                                             | A limited content-first hierarchy reduces inconsistency                                                         | Supports mandatory shared roles instead of local visual invention                 | Public-service tone and sizes do not define NosLog identity       |
-| [Ant Design Font](https://ant.design/docs/spec/font/)                                                                                    | Limit the physical scale and plan primary, secondary, title, and display uses systematically                    | Supports many semantic roles resolving to few physical styles                     | Its 14px base and exact scale are not approved                    |
-| [SAP Fiori Typography](https://experience.sap.com/fiori-design-web/typography/)                                                          | Page, object, list, form, table, chart, and KPI contexts share governed styles; small text is exceptional       | Supports entity, control, metadata, and metric distinctions                       | Enterprise controls and proprietary font do not transfer          |
-| [GitLab design tokens](https://design.gitlab.com/product-foundations/design-tokens/)                                                     | Semantic token names codify intent across tools                                                                 | Supports aliases and future Figma/code mapping                                    | It does not define NosLog role priority                           |
-| [Figma UI design principles](https://www.figma.com/resource-library/ui-design-principles/)                                               | Hierarchy, contrast, proximity, consistency, and progressive disclosure must reflect user priority              | Provides specimen-review language for detecting competing text                    | It is not a token specification                                   |
-| [Shopify Polaris typography tokens](https://polaris-react.shopify.com/design/typography/typography-tokens)                               | Primitive values can compose semantic text tokens                                                               | Supports the approved layered architecture                                        | Commerce roles do not determine music or score hierarchy          |
-| [Pretendard](https://github.com/orioncactus/pretendard)                                                                                  | A variable cross-platform family supports Korean, Latin, and Japanese-aware variants and practical web delivery | Keeps Pretendard as an incumbent candidate for real-content comparison            | Project claims and incumbency are not final font approval         |
-| [osu! beatmap information](https://osu.ppy.sh/wiki/en/Beatmap_information) and [Taiko.wiki song search](https://taiko.wiki/song?lang=en) | Rhythm-game discovery must preserve song identity, difficulty, metadata, and comparable performance context     | Confirms the need for entity and metric roles in compact domain surfaces          | Their terminology, hierarchy, and visual styling cannot be copied |
+| Independent source                                                                                                                       | Transferable principle                                                                                       | NosLog application                                                                 | Limitation                                                                  |
+| ---------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| [W3C WCAG 2.2](https://www.w3.org/TR/WCAG22/)                                                                                            | Contrast, resize, reflow, and text-spacing requirements constrain every role                                 | Makes legibility and reflow blocking validation conditions                         | Does not select typeface or hierarchy values                                |
+| [W3C KLReq](https://www.w3.org/TR/klreq/) and [JLReq](https://www.w3.org/TR/jlreq/)                                                      | Korean/Japanese composition, punctuation, mixed-script, and line-breaking differ from Latin defaults         | Requires real Hangul, Kana, Kanji, Latin, numeral, and punctuation specimens       | Print and vertical-writing details transfer only where relevant             |
+| [Atlassian Typography](https://atlassian.design/foundations/typography/)                                                                 | Heading, body, metric, and code styles use coordinated semantic tokens                                       | Supports separate metric roles and restrained small body use                       | Enterprise values are not NosLog values                                     |
+| [Fluent 2 Typography](https://fluent2.microsoft.design/typography)                                                                       | A semantic type ramp creates scannable hierarchy across platforms                                            | Supports shared roles with platform-aware testing                                  | Its exact ramp and Segoe identity do not transfer                           |
+| [Carbon type strategies](https://carbondesignsystem.com/elements/typography/style-strategies/)                                           | Productive and expressive moments should match the task and stay consistent within a region                  | Supports rare display use and denser task typography without page-specific scales  | IBM's two type sets are not a NosLog template                               |
+| [Primer Typography](https://primer.style/product/getting-started/foundations/typography/)                                                | Semantic markup, rem tokens, restrained hierarchy, and readable alignment work in a dense web product        | Supports semantic-role authoring and later relative values                         | GitHub content and brand differ                                             |
+| [Adobe Spectrum International Design](https://spectrum.adobe.com/page/international-design/)                                             | CJK scripts can need different metrics and emphasis behavior while preserving meaning                        | Requires multilingual composition rather than Latin-only substitution              | Adobe platform scales do not decide NosLog values                           |
+| [Apple Typography](https://developer.apple.com/design/human-interface-guidelines/typography)                                             | Text styles convey hierarchy and must adapt to larger accessibility sizes                                    | Supports role consistency, reflow, and avoiding thin small text                    | Native point sizes and system fonts are not web tokens                      |
+| [USWDS Typography](https://designsystem.digital.gov/components/typography/)                                                              | Comfortable body text, restrained small text, measure, line height, and tabular numerals support readability | Supports reserving compact metadata and aligning metrics                           | Government reading defaults differ from dense score views                   |
+| [GOV.UK Typography](https://design-system.service.gov.uk/styles/typography/)                                                             | A limited content-first hierarchy reduces inconsistency                                                      | Supports mandatory shared roles instead of local visual invention                  | Public-service tone and sizes do not define NosLog identity                 |
+| [Ant Design Font](https://ant.design/docs/spec/font/)                                                                                    | Limit the physical scale and plan primary, secondary, title, and display uses systematically                 | Supports many semantic roles resolving to few physical styles                      | Its 14px base and exact scale are not approved                              |
+| [SAP Fiori Typography](https://experience.sap.com/fiori-design-web/typography/)                                                          | Page, object, list, form, table, chart, and KPI contexts share governed styles; small text is exceptional    | Supports entity, control, metadata, and metric distinctions                        | Enterprise controls and proprietary font do not transfer                    |
+| [GitLab design tokens](https://design.gitlab.com/product-foundations/design-tokens/)                                                     | Semantic token names codify intent across tools                                                              | Supports aliases and future Figma/code mapping                                     | It does not define NosLog role priority                                     |
+| [Figma UI design principles](https://www.figma.com/resource-library/ui-design-principles/)                                               | Hierarchy, contrast, proximity, consistency, and progressive disclosure must reflect user priority           | Provides specimen-review language for detecting competing text                     | It is not a token specification                                             |
+| [Shopify Polaris typography tokens](https://polaris-react.shopify.com/design/typography/typography-tokens)                               | Primitive values can compose semantic text tokens                                                            | Supports the approved layered architecture                                         | Commerce roles do not determine music or score hierarchy                    |
+| [Pretendard](https://github.com/orioncactus/pretendard)                                                                                  | Pretendard JP provides one variable family for Korean, Latin, and Japanese with practical web delivery       | Supports the approved shared-family direction and required real-content validation | Project claims do not replace NosLog delivery, fallback, and layout testing |
+| [osu! beatmap information](https://osu.ppy.sh/wiki/en/Beatmap_information) and [Taiko.wiki song search](https://taiko.wiki/song?lang=en) | Rhythm-game discovery must preserve song identity, difficulty, metadata, and comparable performance context  | Confirms the need for entity and metric roles in compact domain surfaces           | Their terminology, hierarchy, and visual styling cannot be copied           |
 
 ## Rejected Alternatives
 
-| Alternative                                                    | Decision   | Reason                                                                                |
-| -------------------------------------------------------------- | ---------- | ------------------------------------------------------------------------------------- |
-| Give each page its own type scale                              | `Rejected` | It recreates the current inconsistency and weakens cross-page hierarchy               |
-| Use raw size names as the page-authoring API                   | `Rejected` | Authors would choose appearance instead of content meaning                            |
-| Create twelve independent physical sizes for twelve roles      | `Rejected` | Semantic specificity does not require visual-style proliferation                      |
-| Preserve `micro` as an ordinary shared UI role                 | `Rejected` | It would normalize unreadably small metadata and controls                             |
-| Use monospace for all scores and timing values                 | `Rejected` | Tabular figures provide alignment without making ordinary domain data look like code  |
-| Promote every component label to a new typography token        | `Rejected` | Governed aliases provide mapping clarity without parallel scales                      |
-| Permit local exceptions when text does not fit                 | `Rejected` | Fit problems must first be solved through content and responsive composition          |
-| Treat current Pretendard or current utility values as approved | `Rejected` | Incumbent evidence must pass integrated multilingual and responsive candidate testing |
+| Alternative                                                                                                      | Decision   | Reason                                                                                                      |
+| ---------------------------------------------------------------------------------------------------------------- | ---------- | ----------------------------------------------------------------------------------------------------------- |
+| Give each page its own type scale                                                                                | `Rejected` | It recreates the current inconsistency and weakens cross-page hierarchy                                     |
+| Use raw size names as the page-authoring API                                                                     | `Rejected` | Authors would choose appearance instead of content meaning                                                  |
+| Create twelve independent physical sizes for twelve roles                                                        | `Rejected` | Semantic specificity does not require visual-style proliferation                                            |
+| Preserve `micro` as an ordinary shared UI role                                                                   | `Rejected` | It would normalize unreadably small metadata and controls                                                   |
+| Use monospace for all scores and timing values                                                                   | `Rejected` | Tabular figures provide alignment without making ordinary domain data look like code                        |
+| Promote every component label to a new typography token                                                          | `Rejected` | Governed aliases provide mapping clarity without parallel scales                                            |
+| Permit local exceptions when text does not fit                                                                   | `Rejected` | Fit problems must first be solved through content and responsive composition                                |
+| Treat the current Pretendard implementation as equivalent to approved Pretendard JP without migration validation | `Rejected` | The family is selected, but delivery, fallback, and mixed-script migration still require integrated testing |
 
 ## Decision Log
 
-| ID       | Decision                                                                                                                    | Status     |
-| -------- | --------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| `FSR-01` | Use the twelve shared semantic roles defined in this document                                                               | `Approved` |
-| `FSR-02` | Keep all physical type values unresolved until Batch B integrated specimen review                                           | `Approved` |
-| `FSR-03` | Require ordinary text to use approved roles and govern every physical exception explicitly                                  | `Approved` |
-| `FSR-04` | Keep `display` rare and prohibit it as the default page, card, metric, or state style                                       | `Approved` |
-| `FSR-05` | Do not retain a global ordinary-UI `micro` role                                                                             | `Approved` |
-| `FSR-06` | Use tabular figures for comparable metrics and do not use monospace for ordinary domain values                              | `Approved` |
-| `FSR-07` | Keep enabled localized/read title above but visually subordinate to the original Music title                                | `Approved` |
-| `FSR-08` | Treat wordmark, artist, controls, badges, chart labels, and renderer data as governed aliases rather than new shared scales | `Approved` |
-| `FSR-09` | Keep Pretendard as an incumbent candidate without selecting the final font                                                  | `Approved` |
+| ID       | Decision                                                                                                                      | Status       |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| `FSR-01` | Use the twelve shared semantic roles defined in this document                                                                 | `Approved`   |
+| `FSR-02` | Keep all physical type values unresolved until Batch B integrated specimen review                                             | `Superseded` |
+| `FSR-03` | Require ordinary text to use approved roles and govern every physical exception explicitly                                    | `Approved`   |
+| `FSR-04` | Keep `display` rare and prohibit it as the default page, card, metric, or state style                                         | `Approved`   |
+| `FSR-05` | Do not retain a global ordinary-UI `micro` role                                                                               | `Approved`   |
+| `FSR-06` | Use tabular figures for comparable metrics and do not use monospace for ordinary domain values                                | `Approved`   |
+| `FSR-07` | Keep enabled localized/read title above but visually subordinate to the original Music title                                  | `Approved`   |
+| `FSR-08` | Treat wordmark, artist, controls, badges, chart labels, and renderer data as governed aliases rather than new shared scales   | `Approved`   |
+| `FSR-09` | Keep Pretendard as an incumbent candidate without selecting the final font                                                    | `Superseded` |
+| `FSR-10` | Select Pretendard JP as the shared Korean, Japanese, and English NosLog 2.0 font family while retaining production validation | `Approved`   |
+| `FSR-11` | Prohibit ordinary shared user-facing typography below `12px`; treat `12px` as a floor rather than a role assignment           | `Approved`   |
+| `FSR-12` | Keep role sizes, line heights, weights, tracking, responsive behavior, fallback, and delivery unresolved until Batch B        | `Approved`   |
 
 ## Completion Checklist
 
@@ -401,7 +429,9 @@ permission, and destructive fixtures at `320px`, `390px`, intermediate widths,
 - [x] Multilingual title hierarchy and metric behavior mapped.
 - [x] Current typography utilities mapped without carrying forward their values.
 - [x] English canonical and Korean companion written together.
-- [ ] Font family and fallback candidate values compared in Batch B.
+- [x] Pretendard JP selected as the shared family; production delivery and fallback
+      validation remain in Batch B.
+- [x] `12px` approved as the shared user-facing floor without assigning it to a role.
 - [ ] Physical size, line height, weight, tracking, and responsive behavior compared.
 - [ ] Integrated `S1`–`S6` specimens reviewed with the user.
 - [ ] Approved physical values promoted to Foundation v0.1.

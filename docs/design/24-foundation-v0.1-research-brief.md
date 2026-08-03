@@ -2,8 +2,9 @@
 
 ## Document Control
 
-- Status: `Approved research protocol — Gate 0 complete`
+- Status: `Approved research protocol — Gate 0 complete; later font and floor decisions recorded`
 - Research date: 2026-08-03
+- Last decision update: 2026-08-04
 - Canonical language: English
 - Korean companion:
   [24-foundation-v0.1-research-brief.ko.md](./24-foundation-v0.1-research-brief.ko.md)
@@ -13,14 +14,16 @@
 - Inputs: approved documents `01`–`23`, current repository tokens and components,
   current local-browser evidence, current standards, maintained design systems, and
   the explicit Foundation entry gate in document `22`
-- Excluded: final fonts, palette values, spacing units, grids, breakpoints, radii,
-  shadows, icon style, motion durations, chart styling, component anatomy,
-  high-fidelity screens, Figma production screens, and application implementation
+- Excluded: remaining role-specific typography values, palette values, spacing units,
+  grids, breakpoints, radii, shadows, icon style, motion durations, chart styling,
+  component anatomy, high-fidelity screens, Figma production screens, and application
+  implementation
 
-This brief does not approve a visual system. It defines how candidates must be
-researched, combined, tested, compared, and brought to the user for decisions. No
-current value, reference value, Tailwind default, or candidate becomes authoritative
-because it appears in this document.
+This brief does not approve a complete visual system. It defines how candidates must
+be researched, combined, tested, compared, and brought to the user for decisions.
+Except for the later bounded Pretendard JP and `12px` floor decisions explicitly
+recorded below, no current value, reference value, Tailwind default, or candidate
+becomes authoritative because it appears in this document.
 
 ## Related Documents
 
@@ -113,19 +116,19 @@ approval of the next.
 The current implementation is evidence of existing content and inconsistency, not a
 visual authority for NosLog 2.0.
 
-| Area                 | Observed implementation                                                                                                                                                            | Research implication                                                                                                                  |
-| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| Font                 | `app/layout.tsx` loads local `PretendardVariable.woff2` through `next/font/local`, with weights `45 920` and `swap`.                                                               | Pretendard is the incumbent candidate and provides valuable production evidence. It is not automatically the final selection.         |
-| Type roles           | `app/globals.css` defines utilities for display, score display, title, wordmark, section, body, muted body, label, caption, micro, badge, and input.                               | The semantic-role idea is reusable; the current values and names require real-content validation.                                     |
-| Current type usage   | A broad `app` + `components` scan found `text-sm` 164 times, `text-xs` 149 times, explicit `10px` 11 times, and several other direct sizes.                                        | Token utilities coexist with many local choices. Frequency describes debt; it does not select the future scale.                       |
-| Color                | Dark and light CSS variables cover neutral surfaces, text, interaction, state, ranks, difficulty, Basic/Recital, genres, and Discord.                                              | The role inventory is useful, but ownership and collision rules are incomplete and each appearance needs validation.                  |
-| Theme behavior       | CSS contains dark and light values, while the early root script currently resolves only explicit `light` or fallback `dark`.                                                       | The approved System/Dark/Light contract is not yet fully represented by current behavior. Foundation research must specify all three. |
-| Spacing and density  | The code repeatedly uses `gap-1` through `gap-4`, several half steps, direct padding/margin values, and control heights from `h-8` through `h-12` and beyond.                      | Repetition suggests useful clusters, but no approved spacing, density, or target scale can be inferred from counts alone.             |
-| Radius and elevation | A `0.5rem` card radius exists, while the broad scan found `rounded-md` 233 times, `rounded-card` 196 times, `rounded-full` 66 times, other radii, and several shadow levels.       | Surface vocabulary is partially tokenized but not governed by purpose. Candidate work must reduce arbitrary depth and corner use.     |
-| Icons                | `lucide-react` is the primary code dependency, supplemented by rank images, flags, jacket images, and custom Canvas/WebGL marks.                                                   | Test a coherent functional icon grammar without forcing domain art or renderer graphics into the same icon set.                       |
-| Motion               | The product uses many local color, opacity, and transform transitions plus spinners and renderer animation. No complete semantic motion and reduced-motion token model is visible. | Separate functional feedback, spatial continuity, loading, and expressive motion before choosing duration or easing.                  |
-| Visualization        | Recharts renders line, radar, bar, and other charts; PixiJS renders the falling viewer and editor.                                                                                 | Chart anatomy and renderer styling must share semantics while respecting the approved specialized contracts.                          |
-| Layout               | The public navigation shell uses `max-w-97.5` (`390px`). Some inner pages also declare larger maximum widths, but the outer shell prevents them from using that space.             | The existing shell is a verified implementation gap, not the new desktop container.                                                   |
+| Area                 | Observed implementation                                                                                                                                                            | Research implication                                                                                                                                       |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Font                 | `app/layout.tsx` loads local `PretendardVariable.woff2` through `next/font/local`, with weights `45 920` and `swap`.                                                               | The current Pretendard file is migration evidence; it is not equivalent to the later-approved Pretendard JP family until delivery and fallback validation. |
+| Type roles           | `app/globals.css` defines utilities for display, score display, title, wordmark, section, body, muted body, label, caption, micro, badge, and input.                               | The semantic-role idea is reusable; the current values and names require real-content validation.                                                          |
+| Current type usage   | A broad `app` + `components` scan found `text-sm` 164 times, `text-xs` 149 times, explicit `10px` 11 times, and several other direct sizes.                                        | Token utilities coexist with many local choices. Frequency describes debt; it does not select the future scale.                                            |
+| Color                | Dark and light CSS variables cover neutral surfaces, text, interaction, state, ranks, difficulty, Basic/Recital, genres, and Discord.                                              | The role inventory is useful, but ownership and collision rules are incomplete and each appearance needs validation.                                       |
+| Theme behavior       | CSS contains dark and light values, while the early root script currently resolves only explicit `light` or fallback `dark`.                                                       | The approved System/Dark/Light contract is not yet fully represented by current behavior. Foundation research must specify all three.                      |
+| Spacing and density  | The code repeatedly uses `gap-1` through `gap-4`, several half steps, direct padding/margin values, and control heights from `h-8` through `h-12` and beyond.                      | Repetition suggests useful clusters, but no approved spacing, density, or target scale can be inferred from counts alone.                                  |
+| Radius and elevation | A `0.5rem` card radius exists, while the broad scan found `rounded-md` 233 times, `rounded-card` 196 times, `rounded-full` 66 times, other radii, and several shadow levels.       | Surface vocabulary is partially tokenized but not governed by purpose. Candidate work must reduce arbitrary depth and corner use.                          |
+| Icons                | `lucide-react` is the primary code dependency, supplemented by rank images, flags, jacket images, and custom Canvas/WebGL marks.                                                   | Test a coherent functional icon grammar without forcing domain art or renderer graphics into the same icon set.                                            |
+| Motion               | The product uses many local color, opacity, and transform transitions plus spinners and renderer animation. No complete semantic motion and reduced-motion token model is visible. | Separate functional feedback, spatial continuity, loading, and expressive motion before choosing duration or easing.                                       |
+| Visualization        | Recharts renders line, radar, bar, and other charts; PixiJS renders the falling viewer and editor.                                                                                 | Chart anatomy and renderer styling must share semantics while respecting the approved specialized contracts.                                               |
+| Layout               | The public navigation shell uses `max-w-97.5` (`390px`). Some inner pages also declare larger maximum widths, but the outer shell prevents them from using that space.             | The existing shell is a verified implementation gap, not the new desktop container.                                                                        |
 
 The raw counts above cover both user and administrator code and are used only to show
 the breadth of current variation. Administrator screens remain outside the broad 2.0
@@ -184,8 +187,10 @@ every candidate review.
 
 #### Required candidate evidence
 
-- At least the incumbent Pretendard candidate and credible alternatives justified by
-  glyph coverage, licensing, web delivery, language form, metrics, and performance.
+- The approved Pretendard JP family with credible delivery, subsetting, and fallback
+  configurations justified by glyph coverage, licensing, web delivery, language form,
+  metrics, and performance. Another family is not compared unless a blocking technical
+  failure is found and the user explicitly reopens the family decision.
 - Separate Korean, Japanese, English, mixed-script, and metric specimens using the
   same semantic roles.
 - Real long music titles and artists, not alphabet samples alone.
@@ -476,8 +481,8 @@ batches, and administrator boundary. No candidate values are selected at this ga
 
 - Approve the shared semantic role inventory for typography, spacing, color, surface,
   icon, motion, and visualization anatomy.
-- Decide whether Pretendard remains an incumbent candidate rather than an assumed
-  final font.
+- Record the incumbent Pretendard baseline for comparison. The family question was
+  later resolved by `FBR-08` in favor of Pretendard JP.
 - Approve the test fixtures and current-code mapping used to compare candidates.
 
 ### Batch B — Structural candidate
@@ -562,9 +567,10 @@ source, not extra independent votes.
 The reference set converges on semantic rather than value-named tokens, limited and
 purposeful scales, real-content validation, coordinated foundations, responsive
 containers, accessible appearance modes, restrained elevation, explicit icon/motion
-roles, and exact structured visualization evidence. It disagrees on exact type sizes,
-spacing bases, grids, radius, color expression, and motion character. Those
-disagreements are useful candidate dimensions and remain open.
+roles, and exact structured visualization evidence. It disagrees on exact role type
+sizes above the later-approved `12px` user-facing floor, spacing bases, grids, radius,
+color expression, and motion character. Those disagreements are useful candidate
+dimensions and remain open.
 
 The review has reached sufficient breadth to propose the research protocol. It has
 not reached value-selection saturation because no integrated candidate specimens have
@@ -572,15 +578,17 @@ yet been produced or compared.
 
 ## Decision Log
 
-| ID       | Entry                                                                                                                                                             | Status     |
-| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| `FBR-01` | Use this document to govern Foundation v0.1 research without selecting visual values.                                                                             | `Approved` |
-| `FBR-02` | Evaluate seven coupled tracks through real content and connected specimens.                                                                                       | `Approved` |
-| `FBR-03` | Treat Pretendard as an incumbent candidate, not an automatic final font.                                                                                          | `Approved` |
-| `FBR-04` | Keep broad administrator surfaces outside the 2.0 foundation specimen scope, while testing shared primitives and the approved future user-facing editor fragment. | `Approved` |
-| `FBR-05` | Use `S1`–`S5` as the minimum specimen set and add `S6` for professional editor constraints.                                                                       | `Approved` |
-| `FBR-06` | Review candidates in four explicit gates: protocol, structural, appearance/material, and icon/motion/visualization, followed by integrated validation.            | `Approved` |
-| `FBR-07` | Create Figma guide artifacts only when written candidate values and comparison needs justify them; do not create final production screens in this session.        | `Approved` |
+| ID       | Entry                                                                                                                                                             | Status       |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| `FBR-01` | Use this document to govern the initial Gate 0 Foundation v0.1 research without selecting visual values.                                                          | `Approved`   |
+| `FBR-02` | Evaluate seven coupled tracks through real content and connected specimens.                                                                                       | `Approved`   |
+| `FBR-03` | Treat Pretendard as an incumbent candidate, not an automatic final font.                                                                                          | `Superseded` |
+| `FBR-04` | Keep broad administrator surfaces outside the 2.0 foundation specimen scope, while testing shared primitives and the approved future user-facing editor fragment. | `Approved`   |
+| `FBR-05` | Use `S1`–`S5` as the minimum specimen set and add `S6` for professional editor constraints.                                                                       | `Approved`   |
+| `FBR-06` | Review candidates in four explicit gates: protocol, structural, appearance/material, and icon/motion/visualization, followed by integrated validation.            | `Approved`   |
+| `FBR-07` | Create Figma guide artifacts only when written candidate values and comparison needs justify them; do not create final production screens in this session.        | `Approved`   |
+| `FBR-08` | Select Pretendard JP as the shared NosLog 2.0 font family while retaining multilingual, loading, fallback, and layout validation before production promotion.     | `Approved`   |
+| `FBR-09` | Set `12px` as the global floor for shared user-facing typography without assigning that value to a semantic role or selecting the remaining physical scale.       | `Approved`   |
 
 ## Gate 0 Approval Record
 
@@ -597,6 +605,16 @@ Gate 0 is complete. Batch A semantic-role work may proceed, but approval of this
 protocol still does not select any font family, numeric token value, palette, spacing,
 layout, material, icon, motion, or visualization candidate.
 
+### Subsequent approved refinement — 2026-08-04
+
+After the Gate 0 record above, the user approved Pretendard JP as the shared NosLog
+2.0 font family and `12px` as the global lower bound for shared user-facing type.
+Those decisions supersede only the open-family assumption in `FBR-03` and the absence
+of a numeric lower bound. They do not waive Batch B validation or select role sizes,
+line heights, weights, tracking, responsive type behavior, fallback metrics, or font
+delivery details. A validated role may resolve above `12px`; no ordinary shared role
+may resolve below it.
+
 ## Phase Checklist
 
 - [x] Root project instructions and repository baseline reread.
@@ -608,3 +626,7 @@ layout, material, icon, motion, or visualization candidate.
 - [x] English canonical and Korean companion drafted together.
 - [x] User approved the research protocol on 2026-08-03.
 - [x] Batch A semantic-role work began after Gate 0 approval.
+- [x] User selected Pretendard JP and the `12px` shared user-facing floor on
+      2026-08-04.
+- [ ] Validate Pretendard JP delivery, fallback metrics, and the floor in the required
+      multilingual integrated specimens before production promotion.
