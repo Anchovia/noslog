@@ -2,7 +2,7 @@
 
 ## Document Control
 
-- Status: `Approved semantic-role architecture, font family, and type floor — remaining physical values unresolved`
+- Status: `Approved semantic-role architecture, font family, type floor, physical scale, lower line-height axis, shared weight vocabulary, and tracking rule — remaining composite values unresolved`
 - Approval date: 2026-08-03
 - Last decision update: 2026-08-04
 - Canonical language: English
@@ -14,18 +14,24 @@
 - Inputs: approved documents `01`–`24`, current repository typography utilities,
   current-browser evidence recorded in document `24`, the reference comparison below,
   and explicit user approval on 2026-08-03
-- Excluded: role-specific font size, line height, weight, tracking, responsive type
-  behavior, fallback and delivery details, color, spacing, grid, component dimensions,
-  final Figma styles, production screens, and application implementation
+- Excluded: remaining role-to-step and role-to-weight assignments, upper line-height
+  and responsive behavior, fallback and delivery details, color, spacing, grid,
+  component dimensions, final Figma styles, production screens, and application
+  implementation
 
 This document approves what each shared typography role means, how it is governed,
-the shared family, and the global lower bound. It does not approve the role-specific
-physical appearance. A role name appearing here must not be interpreted as permission
-to select an arbitrary size or to reuse the current implementation value.
+the shared family, and the global lower bound. Batch B document `26` subsequently
+approves the bounded `12/14/16/20/24/32px` ordinary physical ramp, gated `40px`
+display step, `16/20/24px` lower line-height primitive axis, `400/500/600/700` shared
+weight vocabulary, natural/default tracking rule, and their usage and validation
+constraints. A role name appearing here must not be interpreted as permission to
+select an arbitrary composite style, automatically assign one of those steps or
+weights, or reuse the current implementation value.
 
 ## Related Documents
 
 - [Foundation v0.1 research brief](./24-foundation-v0.1-research-brief.md)
+- [Foundation typography and layout candidates](./26-foundation-typography-layout-candidates.md)
 - [Cross-cutting reference matrix](./22-cross-cutting-reference-matrix.md)
 - [Design-guide consistency audit](./21-design-guide-consistency-audit.md)
 - [Shared discovery page brief](./04-shared-discovery-page-brief.md)
@@ -53,8 +59,10 @@ The approved model therefore separates four concerns:
    without creating new physical values.
 
 The semantic roles, alias-governance model, Pretendard JP family selection, and global
-`12px` shared user-facing floor are approved in this document. Role-specific
-primitives and composite values remain Batch B decisions.
+`12px` shared user-facing floor are approved in this document. Batch B document `26`
+later approves the restrained `12/14/16/20/24/32px` ordinary physical ramp and gated
+`40px` display step without automatically assigning every role. Remaining role
+mappings and composite values remain Batch B decisions.
 
 ## Research Convergence
 
@@ -93,8 +101,19 @@ NOSTALGIA meaning.
 - No ordinary shared user-facing typography token may resolve below `12px` at the
   default root size. This is a global lower bound, not an assignment of `12px` to
   `metadata`, `entity-companion`, or any other role.
-- A validated role may resolve to `12px` or a larger approved scale step. Exact role
-  sizes, line heights, weights, tracking, and responsive behavior remain unresolved.
+- The approved lower physical core is `12px`, `14px`, and `16px`. `12px` is restricted
+  to eligible short tertiary support, `14px` is the compact product-UI step, and
+  `16px` is the ordinary reading/body step. These boundaries do not automatically
+  assign a role to a step.
+- The approved ordinary upper physical core is `20px`, `24px`, and `32px`; `40px` is
+  a gated display primitive eligible only for later-approved `display` or
+  `metric-display` composites. `18px`, `28px`, and `36px` are not shared v0.1
+  primitives. A new shared size requires representative multilingual and responsive
+  specimen evidence and explicit approval rather than local page-level use.
+- Exact role mappings, upper line-height pairings, and responsive title behavior
+  remain unresolved. The shared weight vocabulary is approved, but its exact
+  assignment across the twelve roles is not. Natural/default tracking and retained
+  kerning apply to every shared role unless a later explicit exception is approved.
 - Space pressure must be solved through content priority, wrapping, reflow, spacing,
   progressive disclosure, or component composition before reducing type.
 - Canvas or WebGL text has no automatic exception. A smaller rendered value requires
@@ -103,10 +122,12 @@ NOSTALGIA meaning.
 
 ### Layer 1 — Primitive values
 
-Future primitives may include weights, size steps, line-height steps, tracking, and
-OpenType features under the approved Pretendard JP family. Their names and values are
-not approved here except for the global `12px` lower bound. Product authors and
-downstream designers must not apply primitives directly to page content.
+Document `26` approves the `12/14/16/20/24/32px` ordinary physical ramp, gated `40px`
+display step, `16/20/24px` lower line-height axis, `400/500/600/700` shared weight
+vocabulary, and natural/default tracking. Future primitives may include approved
+upper line-height steps and OpenType features under the Pretendard JP family; all
+other primitive names and values remain unresolved. Product authors and downstream
+designers must not apply primitives directly to page content.
 
 ### Layer 2 — Composite physical styles
 
@@ -115,9 +136,10 @@ semantic roles may intentionally resolve to the same composite style. The number
 semantic roles therefore does not require twelve different font sizes.
 
 Composite styles are approved only after Batch B specimens demonstrate that they work
-with real NosLog content. Until then, no role size, weight, or line-height shown in the
-current app or an external design system is authoritative; the approved `12px` floor
-still applies.
+with real NosLog content. Until then, no role size, role-to-weight mapping, or
+line-height shown in the current app or an external design system is authoritative;
+the approved `12px` floor, shared weight vocabulary, and natural/default tracking
+rule still apply.
 
 ### Layer 3 — Shared semantic roles
 
@@ -405,20 +427,25 @@ permission, and destructive fixtures at `320px`, `390px`, intermediate widths,
 
 ## Decision Log
 
-| ID       | Decision                                                                                                                      | Status       |
-| -------- | ----------------------------------------------------------------------------------------------------------------------------- | ------------ |
-| `FSR-01` | Use the twelve shared semantic roles defined in this document                                                                 | `Approved`   |
-| `FSR-02` | Keep all physical type values unresolved until Batch B integrated specimen review                                             | `Superseded` |
-| `FSR-03` | Require ordinary text to use approved roles and govern every physical exception explicitly                                    | `Approved`   |
-| `FSR-04` | Keep `display` rare and prohibit it as the default page, card, metric, or state style                                         | `Approved`   |
-| `FSR-05` | Do not retain a global ordinary-UI `micro` role                                                                               | `Approved`   |
-| `FSR-06` | Use tabular figures for comparable metrics and do not use monospace for ordinary domain values                                | `Approved`   |
-| `FSR-07` | Keep enabled localized/read title above but visually subordinate to the original Music title                                  | `Approved`   |
-| `FSR-08` | Treat wordmark, artist, controls, badges, chart labels, and renderer data as governed aliases rather than new shared scales   | `Approved`   |
-| `FSR-09` | Keep Pretendard as an incumbent candidate without selecting the final font                                                    | `Superseded` |
-| `FSR-10` | Select Pretendard JP as the shared Korean, Japanese, and English NosLog 2.0 font family while retaining production validation | `Approved`   |
-| `FSR-11` | Prohibit ordinary shared user-facing typography below `12px`; treat `12px` as a floor rather than a role assignment           | `Approved`   |
-| `FSR-12` | Keep role sizes, line heights, weights, tracking, responsive behavior, fallback, and delivery unresolved until Batch B        | `Approved`   |
+| ID       | Decision                                                                                                                                             | Status       |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| `FSR-01` | Use the twelve shared semantic roles defined in this document                                                                                        | `Approved`   |
+| `FSR-02` | Keep all physical type values unresolved until Batch B integrated specimen review                                                                    | `Superseded` |
+| `FSR-03` | Require ordinary text to use approved roles and govern every physical exception explicitly                                                           | `Approved`   |
+| `FSR-04` | Keep `display` rare and prohibit it as the default page, card, metric, or state style                                                                | `Approved`   |
+| `FSR-05` | Do not retain a global ordinary-UI `micro` role                                                                                                      | `Approved`   |
+| `FSR-06` | Use tabular figures for comparable metrics and do not use monospace for ordinary domain values                                                       | `Approved`   |
+| `FSR-07` | Keep enabled localized/read title above but visually subordinate to the original Music title                                                         | `Approved`   |
+| `FSR-08` | Treat wordmark, artist, controls, badges, chart labels, and renderer data as governed aliases rather than new shared scales                          | `Approved`   |
+| `FSR-09` | Keep Pretendard as an incumbent candidate without selecting the final font                                                                           | `Superseded` |
+| `FSR-10` | Select Pretendard JP as the shared Korean, Japanese, and English NosLog 2.0 font family while retaining production validation                        | `Approved`   |
+| `FSR-11` | Prohibit ordinary shared user-facing typography below `12px`; treat `12px` as a floor rather than a role assignment                                  | `Approved`   |
+| `FSR-12` | Keep role sizes, line heights, weights, tracking, responsive behavior, fallback, and delivery unresolved until Batch B                               | `Approved`   |
+| `FSR-13` | Recognize document `26`'s approved `12/14/16px` lower physical core without automatically assigning semantic roles                                   | `Approved`   |
+| `FSR-14` | Recognize document `26`'s approved `16/20/24px` lower line-height axis and default lower pairings without assigning full semantic composite styles   | `Approved`   |
+| `FSR-15` | Recognize document `26`'s approved `400/500/600/700` shared weight vocabulary without assigning every semantic role a final composite style          | `Approved`   |
+| `FSR-16` | Recognize document `26`'s approved natural/default tracking and retained kerning across shared roles while governing every rare exception explicitly | `Approved`   |
+| `FSR-17` | Recognize document `26`'s approved `20/24/32px` ordinary upper core and gated `40px` display step without assigning final semantic composites        | `Approved`   |
 
 ## Completion Checklist
 
@@ -432,6 +459,17 @@ permission, and destructive fixtures at `320px`, `390px`, intermediate widths,
 - [x] Pretendard JP selected as the shared family; production delivery and fallback
       validation remain in Batch B.
 - [x] `12px` approved as the shared user-facing floor without assigning it to a role.
-- [ ] Physical size, line height, weight, tracking, and responsive behavior compared.
+- [x] Restrained `12/14/16px` lower physical core approved without automatic role
+      assignment.
+- [x] Restrained `16/20/24px` lower line-height axis and default lower pairings
+      approved with validation constraints.
+- [x] Restrained `400/500/600/700` shared weight vocabulary approved with semantic,
+      frequency, responsive, and validation constraints.
+- [x] Natural/default tracking and retained kerning approved with no shared positive
+      or negative tracking tokens and explicit exception governance.
+- [x] Restrained `20/24/32px` ordinary upper physical core and gated `40px` display
+      step approved without final semantic-role assignment.
+- [ ] Remaining role mapping, upper line-height, and responsive title behavior
+      compared.
 - [ ] Integrated `S1`–`S6` specimens reviewed with the user.
 - [ ] Approved physical values promoted to Foundation v0.1.

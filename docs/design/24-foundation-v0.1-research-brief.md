@@ -2,7 +2,7 @@
 
 ## Document Control
 
-- Status: `Approved research protocol — Gate 0 complete; later font and floor decisions recorded`
+- Status: `Approved research protocol — Gate 0 complete; later font, floor, physical-scale, lower-line-height, shared-weight, and tracking decisions recorded`
 - Research date: 2026-08-03
 - Last decision update: 2026-08-04
 - Canonical language: English
@@ -14,16 +14,21 @@
 - Inputs: approved documents `01`–`23`, current repository tokens and components,
   current local-browser evidence, current standards, maintained design systems, and
   the explicit Foundation entry gate in document `22`
-- Excluded: remaining role-specific typography values, palette values, spacing units,
-  grids, breakpoints, radii, shadows, icon style, motion durations, chart styling,
-  component anatomy, high-fidelity screens, Figma production screens, and application
+- Excluded: remaining typography composites beyond the approved physical scale,
+  default lower line-height axis, shared weight vocabulary, and natural-tracking rule;
+  upper line-height and responsive behavior; palette values, spacing units, grids,
+  breakpoints, radii, shadows, icon style, motion durations, chart styling, component
+  anatomy, high-fidelity screens, Figma production screens, and application
   implementation
 
 This brief does not approve a complete visual system. It defines how candidates must
 be researched, combined, tested, compared, and brought to the user for decisions.
-Except for the later bounded Pretendard JP and `12px` floor decisions explicitly
-recorded below, no current value, reference value, Tailwind default, or candidate
-becomes authoritative because it appears in this document.
+Except for the later bounded Pretendard JP, `12px` floor,
+`12/14/16/20/24/32px` ordinary physical ramp, gated `40px` display step,
+`16/20/24px` lower-line-height, `400/500/600/700` shared-weight, and natural-tracking
+decisions explicitly recorded below and in document `26`, no current value, reference
+value, Tailwind default, or candidate becomes authoritative because it appears in this
+document.
 
 ## Related Documents
 
@@ -578,17 +583,22 @@ yet been produced or compared.
 
 ## Decision Log
 
-| ID       | Entry                                                                                                                                                             | Status       |
-| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
-| `FBR-01` | Use this document to govern the initial Gate 0 Foundation v0.1 research without selecting visual values.                                                          | `Approved`   |
-| `FBR-02` | Evaluate seven coupled tracks through real content and connected specimens.                                                                                       | `Approved`   |
-| `FBR-03` | Treat Pretendard as an incumbent candidate, not an automatic final font.                                                                                          | `Superseded` |
-| `FBR-04` | Keep broad administrator surfaces outside the 2.0 foundation specimen scope, while testing shared primitives and the approved future user-facing editor fragment. | `Approved`   |
-| `FBR-05` | Use `S1`–`S5` as the minimum specimen set and add `S6` for professional editor constraints.                                                                       | `Approved`   |
-| `FBR-06` | Review candidates in four explicit gates: protocol, structural, appearance/material, and icon/motion/visualization, followed by integrated validation.            | `Approved`   |
-| `FBR-07` | Create Figma guide artifacts only when written candidate values and comparison needs justify them; do not create final production screens in this session.        | `Approved`   |
-| `FBR-08` | Select Pretendard JP as the shared NosLog 2.0 font family while retaining multilingual, loading, fallback, and layout validation before production promotion.     | `Approved`   |
-| `FBR-09` | Set `12px` as the global floor for shared user-facing typography without assigning that value to a semantic role or selecting the remaining physical scale.       | `Approved`   |
+| ID       | Entry                                                                                                                                                                | Status       |
+| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| `FBR-01` | Use this document to govern the initial Gate 0 Foundation v0.1 research without selecting visual values.                                                             | `Approved`   |
+| `FBR-02` | Evaluate seven coupled tracks through real content and connected specimens.                                                                                          | `Approved`   |
+| `FBR-03` | Treat Pretendard as an incumbent candidate, not an automatic final font.                                                                                             | `Superseded` |
+| `FBR-04` | Keep broad administrator surfaces outside the 2.0 foundation specimen scope, while testing shared primitives and the approved future user-facing editor fragment.    | `Approved`   |
+| `FBR-05` | Use `S1`–`S5` as the minimum specimen set and add `S6` for professional editor constraints.                                                                          | `Approved`   |
+| `FBR-06` | Review candidates in four explicit gates: protocol, structural, appearance/material, and icon/motion/visualization, followed by integrated validation.               | `Approved`   |
+| `FBR-07` | Create Figma guide artifacts only when written candidate values and comparison needs justify them; do not create final production screens in this session.           | `Approved`   |
+| `FBR-08` | Select Pretendard JP as the shared NosLog 2.0 font family while retaining multilingual, loading, fallback, and layout validation before production promotion.        | `Approved`   |
+| `FBR-09` | Set `12px` as the global floor for shared user-facing typography without assigning that value to a semantic role or selecting the remaining physical scale.          | `Approved`   |
+| `FBR-10` | Recognize document `26`'s approved `12/14/16px` lower physical core and its semantic usage boundaries without selecting remaining composite values.                  | `Approved`   |
+| `FBR-11` | Recognize document `26`'s approved `16/20/24px` lower line-height primitives and default `12/16`, `14/20`, and `16/24` pairings with their validation constraints.   | `Approved`   |
+| `FBR-12` | Recognize document `26`'s approved `400/500/600/700` shared weight vocabulary, semantic boundaries, expected-frequency hierarchy, and validation constraints.        | `Approved`   |
+| `FBR-13` | Recognize document `26`'s approved natural/default tracking rule, retained kerning, prohibition of shared positive or negative tracking tokens, and exception gate.  | `Approved`   |
+| `FBR-14` | Recognize document `26`'s approved `20/24/32px` ordinary upper core, gated `40px` display step, and specimen-gated process for proposing any additional shared size. | `Approved`   |
 
 ## Gate 0 Approval Record
 
@@ -615,6 +625,36 @@ line heights, weights, tracking, responsive type behavior, fallback metrics, or 
 delivery details. A validated role may resolve above `12px`; no ordinary shared role
 may resolve below it.
 
+Later on 2026-08-04, the user approved `12px`, `14px`, and `16px` as the restrained
+lower physical core with the usage boundaries recorded in document `26`. This does
+not automatically assign semantic roles or select weight, tracking, upper
+title/display steps, metric typography, or layout values.
+
+The user then approved `16px`, `20px`, and `24px` as the restrained lower line-height
+primitive axis, with default `12/16`, `14/20`, and `16/24` pairings and the validation
+constraints recorded in document `26`. This does not select weights, tracking, upper
+sizes, exact semantic composite-role mappings, or component geometry.
+
+The user then approved `400`, `500`, `600`, and `700` as the only shared UI weight
+vocabulary, with the semantic boundaries, expected-frequency hierarchy, responsive
+stability, and validation constraints recorded in document `26`. This does not select
+tracking, upper sizes, exact composite-role mappings, or component geometry.
+
+The user then approved natural/default spacing for all shared UI roles, retained
+proper kerning, prohibited shared positive or negative tracking tokens, and kept rare
+wordmark, display, renderer, or fallback adjustments behind explicit exception review
+as recorded in document `26`. This does not select upper sizes, responsive title
+behavior, exact composite-role mappings, or component geometry.
+
+The user then approved `20px`, `24px`, and `32px` as the ordinary upper physical core
+and `40px` as a gated display primitive, producing the restrained shared ramp
+`12/14/16/20/24/32px` plus the exceptional display step. `40px` is not a routine
+page, card, dialog, or section-title option. A new shared size may be proposed only
+after representative multilingual and responsive specimens prove that the approved
+steps cannot express a necessary semantic distinction. This does not select upper
+line heights, responsive substitutions, exact composite-role mappings, or metric
+behavior.
+
 ## Phase Checklist
 
 - [x] Root project instructions and repository baseline reread.
@@ -628,5 +668,16 @@ may resolve below it.
 - [x] Batch A semantic-role work began after Gate 0 approval.
 - [x] User selected Pretendard JP and the `12px` shared user-facing floor on
       2026-08-04.
+- [x] User approved the bounded `12/14/16px` lower physical core in document `26` on
+      2026-08-04.
+- [x] User approved the bounded `16/20/24px` lower line-height axis and default lower
+      pairings in document `26` on 2026-08-04.
+- [x] User approved the bounded `400/500/600/700` shared weight vocabulary and its
+      usage constraints in document `26` on 2026-08-04.
+- [x] User approved natural/default tracking, retained kerning, no shared positive or
+      negative tracking tokens, and explicit exception governance in document `26` on
+      2026-08-04.
+- [x] User approved the restrained `20/24/32px` ordinary upper physical core and gated
+      `40px` display step in document `26` on 2026-08-04.
 - [ ] Validate Pretendard JP delivery, fallback metrics, and the floor in the required
       multilingual integrated specimens before production promotion.

@@ -2,7 +2,7 @@
 
 ## 문서 관리
 
-- 상태: `승인된 Semantic-role 구조·글꼴 Family·Type 하한 — 나머지 물리 값 미확정`
+- 상태: `승인된 Semantic-role 구조·글꼴 Family·Type 하한·물리 Scale·하위 Line-height 축·공용 Weight 어휘·Tracking 규칙 — 나머지 Composite 값 미확정`
 - 승인일: 2026-08-03
 - 마지막 결정 갱신일: 2026-08-04
 - 원본 언어: 영어
@@ -14,18 +14,22 @@
 - 입력: 승인된 문서 `01`–`24`, 현재 저장소 Typography utility, 문서 `24`에
   기록된 현재 Browser 근거, 아래 Reference 비교 및 2026-08-03의 명시적 사용자
   승인
-- 제외: Role별 글꼴 크기, 행간, 굵기, 자간, 반응형 Type 동작, Fallback 및
-  Delivery 세부, Color, Spacing, Grid, Component 치수, 최종 Figma style,
-  Production screen 및 Application 구현
+- 제외: 나머지 Role-to-step 및 Role-to-weight 배정, 상위 Line-height 및 반응형
+  동작, Fallback 및 Delivery 세부, Color, Spacing, Grid, Component 치수, 최종
+  Figma style, Production screen 및 Application 구현
 
 이 문서는 각 공유 Typography 역할의 의미와 관리 방식, 공용 Family 및 전역
-하한을 승인합니다. Role별 물리적 외형은 승인하지 않습니다. 여기에 역할
-이름이 있다는 이유로 임의 크기를 선택하거나 현재 구현 값을 재사용해서는 안
-됩니다.
+하한을 승인합니다. 후속 Batch B 문서 `26`은 제한된
+`12/14/16/20/24/32px` 일반 물리 Ramp, Gate를 둔 `40px` Display step,
+`16/20/24px` 하위 Line-height primitive 축, `400/500/600/700` 공용 Weight
+어휘, 자연/기본 Tracking 규칙 및 그 사용·검증 제약을 승인합니다. 여기에 역할
+이름이 있다는 이유로 임의 Composite style을 선택하거나 해당 Step 또는 Weight
+중 하나를 자동 배정하거나 현재 구현 값을 재사용해서는 안 됩니다.
 
 ## 관련 문서
 
 - [Foundation v0.1 조사 브리프](./24-foundation-v0.1-research-brief.ko.md)
+- [Foundation Typography 및 Layout Candidate](./26-foundation-typography-layout-candidates.ko.md)
 - [Cross-cutting Reference Matrix](./22-cross-cutting-reference-matrix.ko.md)
 - [Design-guide 일관성 감사](./21-design-guide-consistency-audit.ko.md)
 - [공유 Discovery 페이지 브리프](./04-shared-discovery-page-brief.ko.md)
@@ -54,8 +58,10 @@ control, Viewer 및 미래 사용자용 Editor를 지원하면서도 같은 분�
    Domain 또는 Component 이름을 부여합니다.
 
 이 문서에서는 Semantic role, Alias 관리 모델, Pretendard JP Family 선택 및
-공용 사용자 표시용 `12px` 전역 하한을 승인합니다. Role별 Primitive와
-Composite 값은 Batch B 결정으로 남습니다.
+공용 사용자 표시용 `12px` 전역 하한을 승인합니다. 후속 Batch B 문서 `26`은
+모든 Role을 자동 배정하지 않고 절제된 `12/14/16/20/24/32px` 일반 물리 Ramp와
+Gate를 둔 `40px` Display step을 승인합니다. 나머지 Role mapping과 Composite
+값은 Batch B 결정으로 남습니다.
 
 ## 조사 수렴점
 
@@ -96,8 +102,19 @@ NosLog에는 일반 System이 정의하지 않는 Domain 제약이 추가됩니�
 - 기본 Root 크기에서 일반 공용 사용자 표시용 타이포그래피 Token은 `12px`
   미만으로 결정될 수 없습니다. 이는 전역 하한이며 `metadata`,
   `entity-companion` 또는 다른 Role에 `12px`를 배정한 것이 아닙니다.
-- 검증된 Role은 `12px` 또는 그보다 큰 승인된 Scale step으로 결정될 수
-  있습니다. 정확한 Role 크기, 행간, 굵기, 자간 및 반응형 동작은 미확정입니다.
+- 승인된 하위 물리 Core는 `12px`, `14px`, `16px`입니다. `12px`는 사용
+  자격이 있는 짧은 Tertiary support로 제한하고, `14px`는 Compact product-UI
+  Step, `16px`는 일반 Reading/Body Step으로 사용합니다. 이 경계는 Role을
+  Step에 자동 배정하지 않습니다.
+- 승인된 일반 상위 물리 Core는 `20px`, `24px`, `32px`이며 `40px`은 추후 승인된
+  `display` 또는 `metric-display` Composite에만 후보가 되는 Gate display
+  primitive입니다. `18px`, `28px`, `36px`은 공유 v0.1 Primitive가 아닙니다.
+  새 공유 Size에는 Local Page 사용이 아니라 대표 다국어·반응형 Specimen 근거와
+  명시적 승인이 필요합니다.
+- 정확한 Role mapping, 상위 Line-height Pairing 및 반응형 Title 동작은
+  미확정입니다. 공용 Weight 어휘는 승인됐지만 12개 Role 전체에 대한 정확한
+  배정은 승인되지 않았습니다. 자연/기본 Tracking과 Kerning 유지는 이후 명시적
+  예외가 승인되지 않는 한 모든 공용 Role에 적용됩니다.
 - 공간 부족은 Type 축소 전에 Content 우선순위, 줄바꿈, Reflow, Spacing,
   Progressive disclosure 또는 Component composition으로 해결해야 합니다.
 - Canvas 또는 WebGL Text에는 자동 예외가 없습니다. 더 작은 Render 값은 기존
@@ -105,11 +122,12 @@ NosLog에는 일반 System이 정의하지 않는 Domain 제약이 추가됩니�
 
 ### Layer 1 — Primitive 값
 
-미래 Primitive에는 승인된 Pretendard JP Family 아래의 굵기, Size step,
-Line-height step, Tracking 및 OpenType 기능이 포함될 수 있습니다. 전역
-`12px` 하한을 제외한 이름과 값은 이 문서에서 승인하지 않습니다. Product
-작성자와 Downstream designer는 Page content에 Primitive를 직접 적용하면 안
-됩니다.
+문서 `26`은 `12/14/16/20/24/32px` 일반 물리 Ramp, Gate를 둔 `40px` Display
+step, `16/20/24px` 하위 Line-height 축, `400/500/600/700` 공용 Weight 어휘 및
+자연/기본 Tracking을 승인합니다. 미래 Primitive에는 승인된 Pretendard JP
+Family 아래의 상위 Line-height step 및 OpenType 기능이 포함될 수 있으며 그 외
+Primitive 이름과 값은 미확정입니다. Product 작성자와 Downstream designer는
+Page content에 Primitive를 직접 적용하면 안 됩니다.
 
 ### Layer 2 — Composite 물리 Style
 
@@ -120,8 +138,9 @@ Semantic role이 의도적으로 같은 Composite style을 가리킬 수 있습�
 
 Composite style은 Batch B specimen이 실제 NosLog content에서 동작함을
 입증한 뒤에만 승인합니다. 그 전까지 현재 App 또는 외부 Design system에
-보이는 어떤 Role 크기·굵기·행간도 권위 있는 값이 아니며 승인된 `12px`
-하한은 계속 적용됩니다.
+보이는 어떤 Role 크기·Role-to-weight mapping·행간도 권위 있는 값이 아니며
+승인된 `12px` 하한, 공용 Weight 어휘 및 자연/기본 Tracking 규칙은 계속
+적용됩니다.
 
 ### Layer 3 — 공유 Semantic role
 
@@ -418,20 +437,25 @@ Content·고밀도·Empty·Error·Disabled·Permission·Destructive fixture를
 
 ## 결정 기록
 
-| ID       | 결정                                                                                                          | 상태         |
-| -------- | ------------------------------------------------------------------------------------------------------------- | ------------ |
-| `FSR-01` | 이 문서의 공유 Semantic role 12개를 사용함                                                                    | `Approved`   |
-| `FSR-02` | Batch B 통합 Specimen 검토 전까지 모든 물리 Type 값을 미확정으로 유지함                                       | `Superseded` |
-| `FSR-03` | 일반 Text에 승인된 Role 사용을 의무화하고 모든 물리 예외를 명시적으로 관리함                                  | `Approved`   |
-| `FSR-04` | `display`를 드물게 유지하고 기본 Page, Card, Metric 또는 State style로 사용하지 않음                          | `Approved`   |
-| `FSR-05` | 전역 일반 UI `micro` role을 유지하지 않음                                                                     | `Approved`   |
-| `FSR-06` | 비교 Metric에 Tabular figures를 사용하고 일반 Domain value에 Monospace를 사용하지 않음                        | `Approved`   |
-| `FSR-07` | 활성화된 Localized/read title을 원문 Music title 위에 두되 시각적으로 하위로 유지함                           | `Approved`   |
-| `FSR-08` | Wordmark, Artist, Control, Badge, Chart label 및 Renderer data를 새 공유 Scale이 아닌 관리되는 Alias로 취급함 | `Approved`   |
-| `FSR-09` | 최종 Font를 선택하지 않고 Pretendard를 Incumbent candidate로 유지함                                           | `Superseded` |
-| `FSR-10` | Pretendard JP를 한국어·일본어·영어 NosLog 2.0 공용 글꼴 Family로 선택하되 Production 검증을 유지함            | `Approved`   |
-| `FSR-11` | 일반 공용 사용자 표시용 타이포그래피의 `12px` 미만을 금지하고 `12px`를 Role 배정이 아닌 하한으로 취급함       | `Approved`   |
-| `FSR-12` | Role별 크기, 행간, 굵기, 자간, 반응형 동작, Fallback 및 Delivery를 Batch B까지 미확정으로 유지함              | `Approved`   |
+| ID       | 결정                                                                                                                            | 상태         |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| `FSR-01` | 이 문서의 공유 Semantic role 12개를 사용함                                                                                      | `Approved`   |
+| `FSR-02` | Batch B 통합 Specimen 검토 전까지 모든 물리 Type 값을 미확정으로 유지함                                                         | `Superseded` |
+| `FSR-03` | 일반 Text에 승인된 Role 사용을 의무화하고 모든 물리 예외를 명시적으로 관리함                                                    | `Approved`   |
+| `FSR-04` | `display`를 드물게 유지하고 기본 Page, Card, Metric 또는 State style로 사용하지 않음                                            | `Approved`   |
+| `FSR-05` | 전역 일반 UI `micro` role을 유지하지 않음                                                                                       | `Approved`   |
+| `FSR-06` | 비교 Metric에 Tabular figures를 사용하고 일반 Domain value에 Monospace를 사용하지 않음                                          | `Approved`   |
+| `FSR-07` | 활성화된 Localized/read title을 원문 Music title 위에 두되 시각적으로 하위로 유지함                                             | `Approved`   |
+| `FSR-08` | Wordmark, Artist, Control, Badge, Chart label 및 Renderer data를 새 공유 Scale이 아닌 관리되는 Alias로 취급함                   | `Approved`   |
+| `FSR-09` | 최종 Font를 선택하지 않고 Pretendard를 Incumbent candidate로 유지함                                                             | `Superseded` |
+| `FSR-10` | Pretendard JP를 한국어·일본어·영어 NosLog 2.0 공용 글꼴 Family로 선택하되 Production 검증을 유지함                              | `Approved`   |
+| `FSR-11` | 일반 공용 사용자 표시용 타이포그래피의 `12px` 미만을 금지하고 `12px`를 Role 배정이 아닌 하한으로 취급함                         | `Approved`   |
+| `FSR-12` | Role별 크기, 행간, 굵기, 자간, 반응형 동작, Fallback 및 Delivery를 Batch B까지 미확정으로 유지함                                | `Approved`   |
+| `FSR-13` | Semantic role을 자동 배정하지 않고 문서 `26`의 승인된 `12/14/16px` 하위 물리 Core를 인정함                                      | `Approved`   |
+| `FSR-14` | 전체 Semantic composite style을 배정하지 않고 문서 `26`의 승인된 `16/20/24px` 하위 Line-height 축과 기본 하위 Pairing을 인정함  | `Approved`   |
+| `FSR-15` | 모든 Semantic role에 최종 Composite style을 배정하지 않고 문서 `26`의 승인된 `400/500/600/700` 공용 Weight 어휘를 인정함        | `Approved`   |
+| `FSR-16` | 모든 드문 예외를 명시적으로 관리하면서 문서 `26`의 승인된 자연/기본 Tracking과 공용 Role 전반의 Kerning 유지를 인정함           | `Approved`   |
+| `FSR-17` | 최종 Semantic composite를 배정하지 않고 문서 `26`의 승인된 `20/24/32px` 일반 상위 Core와 Gate를 둔 `40px` Display step을 인정함 | `Approved`   |
 
 ## 완료 체크리스트
 
@@ -446,7 +470,17 @@ Content·고밀도·Empty·Error·Disabled·Permission·Destructive fixture를
       검증은 Batch B에 남아 있습니다.
 - [x] 특정 Role에 배정하지 않고 `12px`를 공용 사용자 표시용 하한으로
       승인했습니다.
-- [ ] Physical size, Line height, Weight, Tracking 및 Responsive behavior를
+- [x] Semantic role 자동 배정 없이 절제된 `12/14/16px` 하위 물리 Core를
+      승인했습니다.
+- [x] 검증 제약과 함께 절제된 `16/20/24px` 하위 Line-height 축과 기본 하위
+      Pairing을 승인했습니다.
+- [x] Semantic·빈도·Responsive·검증 제약과 함께 절제된 `400/500/600/700` 공용
+      Weight 어휘를 승인했습니다.
+- [x] 공용 양수·음수 Tracking token 없이 자연/기본 Tracking과 Kerning 유지를
+      승인하고 명시적 예외 관리 방식을 유지했습니다.
+- [x] 최종 Semantic-role 배정 없이 절제된 `20/24/32px` 일반 상위 물리 Core와
+      Gate를 둔 `40px` Display step을 승인했습니다.
+- [ ] 나머지 Role mapping, 상위 Line-height 및 Responsive title behavior를
       비교합니다.
 - [ ] 통합 `S1`–`S6` Specimen을 사용자와 검토합니다.
 - [ ] 승인된 물리 값을 Foundation v0.1로 승격합니다.

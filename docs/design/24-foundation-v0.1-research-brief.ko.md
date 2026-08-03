@@ -2,7 +2,7 @@
 
 ## 문서 관리
 
-- 상태: `승인된 조사 프로토콜 — Gate 0 완료, 이후 Font 및 하한 결정 기록`
+- 상태: `승인된 조사 프로토콜 — Gate 0 완료, 이후 Font·하한·물리 Scale·하위 Line-height·공용 Weight·Tracking 결정 기록`
 - 조사일: 2026-08-03
 - 마지막 결정 갱신일: 2026-08-04
 - 원본 언어: 영어
@@ -13,14 +13,18 @@
 - 입력: 승인된 문서 `01`–`23`, 현재 저장소 token과 component, 현재 로컬
   브라우저 근거, 현행 표준, 유지 관리되는 디자인 시스템 및 문서 `22`의 명시적
   Foundation 진입 Gate
-- 제외: 나머지 Role별 Typography 값, Palette 값, 간격 단위, Grid, Breakpoint,
-  Radius, Shadow, Icon 스타일, Motion 시간, Chart 스타일, Component anatomy,
-  High-fidelity 화면, Figma Production 화면 및 Application 구현
+- 제외: 승인된 물리 Scale, 기본 하위 Line-height 축, 공용 Weight 어휘 및 자연
+  Tracking 규칙을 넘어서는 나머지 Typography Composite, 상위 Line-height 및
+  반응형 동작, Palette 값, 간격 단위, Grid, Breakpoint, Radius, Shadow, Icon
+  스타일, Motion 시간, Chart 스타일, Component anatomy, High-fidelity 화면,
+  Figma Production 화면 및 Application 구현
 
 이 브리프는 완전한 시각 시스템을 승인하지 않습니다. 후보를 어떻게 조사하고,
 결합하고, 시험하고, 비교하고, 사용자 결정 대상으로 올릴지를 정의합니다.
-아래에 명시적으로 기록한 이후의 제한된 Pretendard JP 및 `12px` 하한 결정을
-제외하면 현재 값, Reference 값, Tailwind 기본값 또는 후보는 이 문서에
+아래와 문서 `26`에 명시적으로 기록한 이후의 제한된 Pretendard JP, `12px`
+하한, `12/14/16/20/24/32px` 일반 물리 Ramp, Gate를 둔 `40px` Display step,
+`16/20/24px` 하위 Line-height, `400/500/600/700` 공용 Weight 및 자연 Tracking
+결정을 제외하면 현재 값, Reference 값, Tailwind 기본값 또는 후보는 이 문서에
 등장했다는 이유만으로 권위 있는 값이 되지 않습니다.
 
 ## 관련 문서
@@ -582,17 +586,22 @@ Specimen을 아직 제작·비교하지 않았으므로 값 선택의 포화에�
 
 ## 결정 기록
 
-| ID       | 항목                                                                                                                                 | 상태         |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------ | ------------ |
-| `FBR-01` | 시각 값을 선택하지 않으면서 이 문서로 초기 Gate 0 Foundation v0.1 조사를 관리합니다.                                                 | `Approved`   |
-| `FBR-02` | 실제 콘텐츠와 연결된 Specimen으로 결합된 7개 Track을 평가합니다.                                                                     | `Approved`   |
-| `FBR-03` | Pretendard를 자동 최종 글꼴이 아니라 Incumbent candidate로 취급합니다.                                                               | `Superseded` |
-| `FBR-04` | 광범위한 관리자 화면을 2.0 Foundation specimen 범위 밖에 두되 공유 Primitive와 승인된 미래 사용자용 Editor fragment를 시험합니다.    | `Approved`   |
-| `FBR-05` | `S1`–`S5`를 최소 Specimen 집합으로 사용하고 Professional editor 제약을 위해 `S6`을 추가합니다.                                       | `Approved`   |
-| `FBR-06` | 프로토콜, 구조, Appearance/Material, Icon/Motion/Visualization 및 통합 검증의 명시적 Gate로 후보를 검토합니다.                       | `Approved`   |
-| `FBR-07` | 작성된 후보 값과 비교 필요가 정당화할 때만 Figma Guide artifact를 만들고 이번 세션에서 Final production screen을 만들지 않습니다.    | `Approved`   |
-| `FBR-08` | Pretendard JP를 NosLog 2.0 공용 글꼴 Family로 선택하되 Production 승격 전에 다국어·Loading·Fallback·Layout 검증을 유지합니다.        | `Approved`   |
-| `FBR-09` | `12px`를 공용 사용자 표시용 타이포그래피 전역 하한으로 정하되 특정 Semantic role에 배정하거나 나머지 물리 Scale을 선택하지 않습니다. | `Approved`   |
+| ID       | 항목                                                                                                                                    | 상태         |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| `FBR-01` | 시각 값을 선택하지 않으면서 이 문서로 초기 Gate 0 Foundation v0.1 조사를 관리합니다.                                                    | `Approved`   |
+| `FBR-02` | 실제 콘텐츠와 연결된 Specimen으로 결합된 7개 Track을 평가합니다.                                                                        | `Approved`   |
+| `FBR-03` | Pretendard를 자동 최종 글꼴이 아니라 Incumbent candidate로 취급합니다.                                                                  | `Superseded` |
+| `FBR-04` | 광범위한 관리자 화면을 2.0 Foundation specimen 범위 밖에 두되 공유 Primitive와 승인된 미래 사용자용 Editor fragment를 시험합니다.       | `Approved`   |
+| `FBR-05` | `S1`–`S5`를 최소 Specimen 집합으로 사용하고 Professional editor 제약을 위해 `S6`을 추가합니다.                                          | `Approved`   |
+| `FBR-06` | 프로토콜, 구조, Appearance/Material, Icon/Motion/Visualization 및 통합 검증의 명시적 Gate로 후보를 검토합니다.                          | `Approved`   |
+| `FBR-07` | 작성된 후보 값과 비교 필요가 정당화할 때만 Figma Guide artifact를 만들고 이번 세션에서 Final production screen을 만들지 않습니다.       | `Approved`   |
+| `FBR-08` | Pretendard JP를 NosLog 2.0 공용 글꼴 Family로 선택하되 Production 승격 전에 다국어·Loading·Fallback·Layout 검증을 유지합니다.           | `Approved`   |
+| `FBR-09` | `12px`를 공용 사용자 표시용 타이포그래피 전역 하한으로 정하되 특정 Semantic role에 배정하거나 나머지 물리 Scale을 선택하지 않습니다.    | `Approved`   |
+| `FBR-10` | 나머지 Composite 값을 선택하지 않고 문서 `26`의 승인된 `12/14/16px` 하위 물리 Core와 Semantic 사용 경계를 인정합니다.                   | `Approved`   |
+| `FBR-11` | 문서 `26`의 승인된 `16/20/24px` 하위 Line-height primitive와 기본 `12/16`, `14/20`, `16/24` Pairing 및 검증 제약을 인정합니다.          | `Approved`   |
+| `FBR-12` | 문서 `26`의 승인된 `400/500/600/700` 공용 Weight 어휘, Semantic 경계, 예상 사용 빈도 위계 및 검증 제약을 인정합니다.                    | `Approved`   |
+| `FBR-13` | 문서 `26`의 승인된 자연/기본 Tracking 규칙, Kerning 유지, 공용 양수·음수 Tracking token 금지 및 예외 Gate를 인정합니다.                 | `Approved`   |
+| `FBR-14` | 문서 `26`의 승인된 `20/24/32px` 일반 상위 Core, Gate를 둔 `40px` Display step 및 추가 공유 Size를 위한 Specimen Gate 절차를 인정합니다. | `Approved`   |
 
 ## Gate 0 승인 기록
 
@@ -619,6 +628,35 @@ Fallback metric 또는 Font delivery 세부를 선택하지 않습니다. 검증
 `12px`보다 크게 결정될 수 있지만 일반 공용 Role은 그보다 작게 결정될 수
 없습니다.
 
+이후 2026-08-04에 사용자는 문서 `26`에 기록된 사용 경계와 함께 `12px`,
+`14px`, `16px`을 절제된 하위 물리 Core로 승인했습니다. 이는 Semantic role을
+자동 배정하거나 Weight, Tracking, 상위 Title/Display step, Metric typography
+또는 Layout 값을 선택하지 않습니다.
+
+그다음 사용자는 문서 `26`의 검증 제약과 함께 `16px`, `20px`, `24px`을 절제된
+하위 Line-height primitive 축으로, `12/16`, `14/20`, `16/24`를 기본 Pairing으로
+승인했습니다. 이는 Weight, Tracking, 상위 Size, 정확한 Semantic composite-role
+mapping 또는 Component geometry를 선택하지 않습니다.
+
+그다음 사용자는 문서 `26`에 기록된 Semantic 경계, 예상 사용 빈도 위계,
+Responsive 안정성 및 검증 제약과 함께 `400`, `500`, `600`, `700`을 유일한 공용
+UI Weight 어휘로 승인했습니다. 이는 Tracking, 상위 Size, 정확한 Composite-role
+mapping 또는 Component geometry를 선택하지 않습니다.
+
+그다음 사용자는 문서 `26`에 기록된 대로 모든 공용 UI Role에 자연/기본 간격을
+사용하고, 올바른 Kerning을 유지하며, 공용 양수·음수 Tracking token을 금지하고,
+드문 Wordmark·Display·Renderer·Fallback 조정은 명시적 예외 검토 뒤에 두는
+방향을 승인했습니다. 이는 상위 Size, Responsive title 동작, 정확한
+Composite-role mapping 또는 Component geometry를 선택하지 않습니다.
+
+그다음 사용자는 `20px`, `24px`, `32px`을 일반 상위 물리 Core로, `40px`을 Gate를
+둔 Display primitive로 승인하여 절제된 공유 Ramp `12/14/16/20/24/32px`과 예외적
+Display step을 구성했습니다. `40px`은 일반 Page, Card, Dialog 또는 Section-title
+선택지가 아닙니다. 대표 다국어·반응형 Specimen에서 승인된 Step으로 필요한
+Semantic distinction을 표현할 수 없음이 입증된 뒤에만 새 공유 Size를 제안할 수
+있습니다. 이는 상위 Line-height, 반응형 대체, 정확한 Composite-role mapping 또는
+Metric 동작을 선택하지 않습니다.
+
 ## 단계 체크리스트
 
 - [x] Root 프로젝트 지침과 저장소 기준선을 다시 읽었습니다.
@@ -632,5 +670,15 @@ Fallback metric 또는 Font delivery 세부를 선택하지 않습니다. 검증
 - [x] Gate 0 승인 후 Batch A Semantic-role 작업을 시작했습니다.
 - [x] 사용자가 2026-08-04에 Pretendard JP와 공용 사용자 표시용 `12px` 하한을
       선택했습니다.
+- [x] 사용자가 2026-08-04에 문서 `26`의 제한된 `12/14/16px` 하위 물리 Core를
+      승인했습니다.
+- [x] 사용자가 2026-08-04에 문서 `26`의 제한된 `16/20/24px` 하위 Line-height
+      축과 기본 하위 Pairing을 승인했습니다.
+- [x] 사용자가 2026-08-04에 문서 `26`의 제한된 `400/500/600/700` 공용 Weight
+      어휘와 사용 제약을 승인했습니다.
+- [x] 사용자가 2026-08-04에 문서 `26`의 자연/기본 Tracking, Kerning 유지, 공용
+      양수·음수 Tracking token 금지 및 명시적 예외 관리를 승인했습니다.
+- [x] 사용자가 2026-08-04에 문서 `26`의 절제된 `20/24/32px` 일반 상위 물리
+      Core와 Gate를 둔 `40px` Display step을 승인했습니다.
 - [ ] Production 승격 전에 필수 다국어 통합 Specimen에서 Pretendard JP
       delivery, fallback metric 및 하한을 검증합니다.
