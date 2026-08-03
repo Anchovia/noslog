@@ -1,0 +1,386 @@
+# NosLog 2.0 교차 영역 레퍼런스 매트릭스
+
+## 문서 관리
+
+- 상태: `조사 초안 — 단계 검토 대기`
+- 조사일: 2026-08-03
+- 정본 언어: 영어
+- 영어 정본:
+  [22-cross-cutting-reference-matrix.md](./22-cross-cutting-reference-matrix.md)
+- 범위: NosLog 2.0 제품 계층, 시각 파운데이션, 반응형 시스템, 다국어
+  타이포그래피, 상호작용 상태, 모션, 데이터 시각화를 위한 교차 영역 근거
+- 입력: 문서 `01`–`21`의 승인된 제품 감사, 정보 구조, 페이지 브리프,
+  일관성 감사; 현재의 주요 표준; 공식 디자인 시스템; 현행 프로덕션 제품;
+  리듬게임 도메인 레퍼런스
+- 제외: 최종 폰트, 색상, 토큰 값, 브레이크포인트, 컴포넌트 스타일,
+  하이파이 화면, 애플리케이션 구현
+
+이 문서만으로 시각 방향을 승인하지 않는다. 근거를 분류하고, 수렴점과
+불일치를 기록하며, 다음 디자인 원칙 단계에서 사용자와 함께 해결해야 할
+질문을 정의한다.
+
+## 관련 문서
+
+- [현재 제품 감사](./01-current-product-audit.ko.md)
+- [정보 구조](./02-information-architecture.ko.md)
+- [디자인 가이드 일관성 감사](./21-design-guide-consistency-audit.ko.md)
+
+## 조사 방법
+
+### 근거 역할
+
+레퍼런스는 서로 바꿔 쓸 수 없다. 각 출처는 합리적으로 뒷받침할 수 있는
+역할에만 사용한다.
+
+| 역할 | 근거 분류                                      | 올바른 사용                                                              | 잘못된 사용                                            |
+| ---- | ---------------------------------------------- | ------------------------------------------------------------------------ | ------------------------------------------------------ |
+| `A`  | 규범 표준과 권위 있는 접근성·국제화 지침       | 타협할 수 없는 접근성, 시맨틱, 언어, 리플로우, 사용자 선호 요구사항      | 시각 아트 디렉션 또는 NosLog 도메인 의미               |
+| `B`  | 유지 관리되는 공식 디자인 시스템과 플랫폼 지침 | 검증된 파운데이션 모델, 토큰 역할, 반응형 패턴, 상호작용 구조, 구현 제약 | 브랜드 값, 정확한 브레이크포인트, 컴포넌트 스타일 복사 |
+| `C`  | 현재 운영 중인 프로덕션 서비스                 | 정보 밀도, 계층, 콘텐츠 리듬, 적응 방식, 실사용 절충 관찰                | 하나의 라이브 페이지를 보편 표준으로 취급              |
+| `D`  | 공식 게임 자료와 리듬게임 제품                 | 도메인 용어, 점수 관계, 자켓·채보 정체성, 비교 과업, 아케이드 맥락 확립  | 다른 게임의 메커니즘, 라벨, 시각 표면 이식             |
+| `E`  | 편집 디자인과 아트 디렉션 레퍼런스             | 비례, 타이포그래피 대비, 페이싱, 구성, 이미지, 브랜드 표현 연구          | 접근성, 내비게이션 동작, 고밀도 제품 상호작용 결정     |
+
+### 독립성과 포화 규칙
+
+1. 현지화 사본, 미러, 검색 결과 페이지, 같은 규칙을 되풀이하는 여러 URL은
+   독립 근거로 세지 않는다.
+2. 표준과 프로덕션 사례는 서로 다른 이유로 같은 원칙을 뒷받침할 수 있다.
+   빈도를 증명으로 취급하지 않고 두 역할을 모두 기록한다.
+3. 기존 문서 `01`–`21`에는 200개가 넘는 도메인에서 가져온 수백 개의 인용
+   URL이 있다. 이 매트릭스는 여러 페이지 패밀리 또는 향후 파운데이션 결정에
+   영향을 주는 출처만 추린다.
+4. 앞으로의 중요 결정은 여전히 독립적이고 관련성 있는 출처를 최소 12개,
+   신뢰할 만한 근거가 더 있을 경우 15개 이상 비교해야 한다. 이 매트릭스는
+   재사용 가능한 출발 자료이지 면제 조건이 아니다.
+5. 현재의 마케팅·제품 페이지는 조사일 기준으로 검토했으며 변경될 수 있다.
+   이후 표본을 확정하기 전에 관찰한 시각 동작을 다시 확인해야 한다.
+6. 레거시 NOSTORY Figma는 지배 근거에서 의도적으로 제외했다. 루트
+   `AGENTS.md` 제약 아래에서 역사적 근거로만 남는다.
+
+## 조사 범위 요약
+
+| 클러스터                       | 핵심 질문                                                                                          | 근거 조합          | 이 단계의 결과                                                 |
+| ------------------------------ | -------------------------------------------------------------------------------------------------- | ------------------ | -------------------------------------------------------------- |
+| 접근성과 국제화                | 무엇이 지각 가능하고, 조작 가능하고, 이해 가능하고, 견고하며, 언어적으로 올바르게 유지돼야 하는가? | `A`, `B` 보조      | 제약을 식별함. 정확한 시각 처리는 열어 둠                      |
+| 반응형 레이아웃과 밀도         | 하나의 제품이 `320 CSS px`부터 넓은 분석 레이아웃까지 어떻게 적응해야 하는가?                      | `A`, `B`, `C`      | 콘텐츠 중심 적응은 수렴함. 브레이크포인트 값은 열어 둠         |
+| 타이포그래피와 계층            | 한국어, 일본어, 영어, 제목, 수치, 고밀도 메타데이터가 어떻게 공존해야 하는가?                      | `A`, `B`, `C`, `E` | 시맨틱 역할과 시험 방법은 수렴함. 서체와 스케일은 열어 둠      |
+| 다크 색상, 표면, 상태          | NosLog를 어떻게 어둡고, 읽기 쉽고, 계층적이며, 시맨틱하게 일관되게 만들 것인가?                    | `A`, `B`, `C`      | 역할 기반 중립 레이어는 수렴함. 팔레트 값은 열어 둠            |
+| 간격, 엘리베이션, 아이콘, 모션 | 리듬, 그룹화, 깊이, 행동 인식, 변화를 어떻게 표현할 것인가?                                        | `A`, `B`, `E`      | 목적 중심 시스템은 수렴함. 기본 단위와 표현은 열어 둠          |
+| 데이터 시각화와 고밀도 비교    | 점수 이력, 분포, 랭킹, 레이더 프로필, 채보 콘텐츠를 어떻게 비교할 것인가?                          | `A`, `B`, `C`, `D` | 중복 인코딩과 과업별 형식은 수렴함. 차트별 처리는 열어 둠      |
+| 리듬게임 도메인과 아트 디렉션  | 다른 서비스나 레거시 표면을 복사하지 않고 무엇을 NosLog답게 만들 것인가?                           | `C`, `D`, `E`      | 도메인 진실성과 절제된 표현은 수렴함. 최종 시각 언어는 열어 둠 |
+
+## 매트릭스 A — 접근성과 국제화
+
+| 출처                                                                                                                                 | 역할 | 전이 가능한 근거                                                                                              | NosLog 적용성과 한계                                                                                       |
+| ------------------------------------------------------------------------------------------------------------------------------------ | ---- | ------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| [WCAG 2.2](https://www.w3.org/TR/WCAG22/)                                                                                            | `A`  | 대비, 리플로우, 크기 조절, 포커스, 타깃 크기, 키보드 접근, 드래그 대안, 상태, 입력 동작의 AA 기준을 정의한다. | 모든 공개·인증 화면을 지배한다. NosLog 스타일은 정하지 않는다.                                             |
+| [WAI: Designing for Web Accessibility](https://www.w3.org/WAI/tips/designing/)                                                       | `A`  | 구조, 라벨, 대비, 대안, 예측 가능한 상호작용, 이해 가능한 피드백을 디자인 과정에 통합한다.                    | 접근성을 코드 단계로 미루지 않고 표본과 브리프에서 확인하게 한다.                                          |
+| [WCAG: Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html)                                                              | `A`  | 두 차원이 본질적인 경우를 제외하면 정의된 줌 대응 폭에서 2차원 스크롤 없이 콘텐츠가 리플로우돼야 한다.        | 승인된 `320 CSS px` 계약을 지지하면서, 본질적인 2차원 채보·에디터 영역은 경계 안에서 유지한다.             |
+| [WCAG: Text Spacing](https://www.w3.org/WAI/WCAG22/Understanding/text-spacing.html)                                                  | `A`  | 사용자가 행간, 문단, 단어, 자간을 조절해도 콘텐츠나 기능이 깨지지 않아야 한다.                                | 긴 한국어·일본어·영어 라벨을 잘리는 고정 높이 셸에 의존할 수 없다.                                         |
+| [WCAG: Contrast (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html)                                        | `A`  | 일반 텍스트는 최소 `4.5:1`, 조건을 만족하는 큰 텍스트는 `3:1`이 필요하다.                                     | 다크 표면, 캡션, 메타데이터, 차트 라벨, 비활성 문구에 적용한다. 팔레트가 아니라 최저선이다.                |
+| [WCAG: Non-text Contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html)                                        | `A`  | 상호작용 경계, 포커스 표시, 본질적인 그래픽 객체에는 충분한 대비가 필요하다.                                  | 손 구분 테두리, 차트 선, 선택 상태, 입력 윤곽, 데이터 마크를 독립적으로 검증해야 한다.                     |
+| [WCAG: Content on Hover or Focus](https://www.w3.org/WAI/WCAG22/Understanding/content-on-hover-or-focus.html)                        | `A`  | 추가 hover/focus 콘텐츠는 필요한 경우 닫을 수 있고, hover할 수 있고, 유지되며, 키보드로 접근 가능해야 한다.   | 승인된 데스크톱 기록 미리보기를 지배한다. 터치에서 hover를 재현해야 한다는 뜻은 아니다.                    |
+| [WCAG: Target Size (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html)                                  | `A`  | 포인터 타깃은 최소 유효 영역 또는 정당한 간격·시맨틱 예외가 필요하다.                                         | 리듬게임 데이터를 시각적으로 조밀하게 유지해도 조작 타깃은 사용 가능해야 한다.                             |
+| [WCAG: Animation from Interactions](https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html)                    | `A`  | 상호작용으로 발생하는 비필수 모션이 전정기관 불편을 일으킬 수 있으면 비활성 방법이 필요하다.                  | 모션 토큰은 필요한 상태 변화와 표현적 움직임을 구분해야 한다.                                              |
+| [WAI-ARIA APG: Keyboard Interface](https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/)                                    | `A`  | 복합 컨트롤은 예측 가능한 포커스, 보이는 포커스, 키보드 조작, 명확한 비활성 동작이 필요하다.                  | 범위 선택기, 필터, 메뉴, 탭, 뷰어, 다이얼로그, 에디터 컨트롤에 적용한다. 정확한 컴포넌트는 열어 둔다.      |
+| [한국어 텍스트 레이아웃 및 타이포그래피 요구사항](https://www.w3.org/TR/klreq/)                                                      | `A`  | 한국어 조판에는 고유한 줄바꿈, 문장부호, 간격, 혼합 문자 요구사항이 있다.                                     | 한국어를 번역 문자열만 넣은 라틴 텍스트처럼 다루지 않게 한다. 실제 한글 콘텐츠 표본이 필요하다.            |
+| [일본어 조판 요구사항](https://www.w3.org/TR/jlreq/)                                                                                 | `A`  | 일본어 조판에는 적절한 줄바꿈, 문장부호 처리, 가나, 라틴 혼합, 루비를 고려한 결정이 필요하다.                 | 원문 제목과 공식 읽기에 관련된다. NosLog는 가로 UI이므로 인쇄·세로쓰기 규칙은 선택적으로 전이한다.         |
+| [CSS Text Module Level 3](https://www.w3.org/TR/css-text-3/)                                                                         | `A`  | 언어별 줄바꿈, 단어 경계, 공백, 정렬, 양끝 맞춤 동작을 정의한다.                                              | 명시적 언어 태그와 `line-break`/`word-break` 시험을 지지한다. 제목 말줄임 정책까지 단독으로 정하지 않는다. |
+| [Unicode LDML](https://www.unicode.org/reports/tr35/)                                                                                | `A`  | 로케일 데이터는 식별자, 날짜, 숫자, 정렬, 표시명, 줄바꿈 선호를 지배한다.                                     | 한국어·일본어·영어 점수·날짜 형식은 로케일에 맞추되 게임 용어와 식별자는 안정적으로 유지한다.              |
+| [W3C: 번역 페이지로 사용자 안내](https://www.w3.org/International/questions/qa-site-conneg)                                          | `A`  | 브라우저 언어 협상은 초기 힌트이며, 명시적 언어 선택을 제공하고 기억해야 한다.                                | 승인된 로케일 경로와 공개 설정을 지지하며 자동 감지를 되돌릴 수 없게 만들지 않는다.                        |
+| [MDN: `prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/%40media/prefers-reduced-motion) | `B`  | 확립된 미디어 기능으로 사용자의 비필수 모션 축소·대체 요청을 감지한다.                                        | 모션 파운데이션의 구현 수단을 제공한다. 브라우저 지원이 어떤 NosLog 모션이 필수인지는 정하지 않는다.       |
+
+### 매트릭스 A 종합
+
+- 접근성은 최종 감사 계층이 아니라 타이포그래피, 레이아웃, 상태, 모션,
+  차트, 콘텐츠의 구조적 입력이다.
+- NosLog는 캡션, 타깃, 차트 선, 포커스 표시를 지각하기 어려운 수준으로
+  줄여서 조밀함을 해결할 수 없다.
+- 한국어, 일본어, 영어는 하나의 고정 상자에 넣는 세 문자열이 아니라 서로
+  다른 조판 시스템으로 시험해야 한다.
+- 채보 뷰어와 미래 에디터는 정말로 2차원인 작업 영역을 유지할 수 있지만,
+  주변 컨트롤, 설명, 내비게이션은 여전히 리플로우돼야 한다.
+
+## 매트릭스 B — 반응형 레이아웃, 그리드, 밀도
+
+| 출처                                                                                                                | 역할 | 전이 가능한 근거                                                                                                             | NosLog 적용성과 한계                                                                                          |
+| ------------------------------------------------------------------------------------------------------------------- | ---- | ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| [Tailwind CSS: Responsive Design](https://tailwindcss.com/docs/responsive-design)                                   | `B`  | 모바일 우선 변형과 컨테이너 쿼리로 실제 뷰포트 또는 부모 공간에 맞춰 적응하며 기본 브레이크포인트는 변경 가능하다.           | 프로젝트 스택에 맞는다. Tailwind 기본값은 구현 편의이지 승인된 NosLog 브레이크포인트가 아니다.                |
+| [Tailwind CSS: Grid Template Columns](https://tailwindcss.com/docs/grid-template-columns)                           | `B`  | 시맨틱 순서를 바꾸지 않고 열 수, span, intrinsic sizing을 바꿀 수 있다.                                                      | 홈 링크, 악곡 그리드, 랭킹, 프로필 모듈에 유용하다. 열 수는 실제 콘텐츠 시험이 필요하다.                      |
+| [MDN: CSS Container Queries](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries) | `B`  | 컴포넌트가 기기 폭을 추정하는 대신 자신에게 배정된 컨테이너에 적응할 수 있다.                                                | 같은 악곡 카드, 지표, 컨트롤이 다른 페이지 구성에 나타날 때 중요하다.                                         |
+| [CSS Containment Level 3](https://www.w3.org/TR/css-contain-3/)                                                     | `A`  | 컨테이너 크기·스타일 쿼리와 containment 영향을 정의한다.                                                                     | 표준 근거를 제공한다. intrinsic sizing이나 overlay를 깨는 containment는 피해야 한다.                          |
+| [Apple HIG: Layout](https://developer.apple.com/design/human-interface-guidelines/layout)                           | `B`  | 화면, 방향, 크기 조절 창, 텍스트 크기, 로케일, safe area에 자연스럽게 적응하면서도 알아볼 수 있어야 한다.                    | 폭이 달라도 하나의 일관된 제품을 지지한다. Apple 플랫폼 치수는 웹 토큰이 아니다.                              |
+| [Fluent 2: Layout](https://fluent2.microsoft.design/layout)                                                         | `B`  | 간격은 관계를 표현하며 그리드는 고정·유동·혼합일 수 있고, reflow·resize·reposition·show/hide는 다른 전략이다.                | 콘텐츠 중심 적응과 의도적인 데스크톱 공간을 지지한다. 브레이크포인트 범위는 비교 자료일 뿐이다.               |
+| [Primer: Layout](https://primer.style/product/getting-started/foundations/layout/)                                  | `B`  | 복잡한 제품에는 집중되고 차분한 레이아웃과 세밀한 반응형 시나리오가 필요하며 `320px`은 지원 하한이지 디자인 캔버스가 아니다. | NosLog의 고밀도 웹 제품 요구와 가깝다. Primer 폭과 패딩 값은 가져오지 않는다.                                 |
+| [Carbon: 2x Grid](https://carbondesignsystem.com/elements/2x-grid/overview/)                                        | `B`  | 그리드는 여러 밀도와 표현 맥락을 지원하며 글자, 컴포넌트, 페이지 영역을 정렬한다.                                            | 체계적 정렬에 유용하다. Carbon의 엔터프라이즈 구성은 NosLog 템플릿이 아니다.                                  |
+| [USWDS: Layout Grid](https://designsystem.digital.gov/utilities/layout-grid/)                                       | `B`  | 모바일 우선 그리드는 컨테이너, 행, 열, 거터, 최대 폭 결정을 분리한다.                                                        | 명시적 레이아웃 구조와 가변 페이지 폭을 지지한다. 기본 12열/1024px을 자동 채택하지 않는다.                    |
+| [GOV.UK: Layout](https://design-system.service.gov.uk/styles/layout/)                                               | `B`  | 작은 화면 단일 열에서 시작하고 읽기 폭을 제한하며 콘텐츠가 필요할 때만 넓힌다.                                               | 정책·온보딩 콘텐츠의 가독성을 지지한다. 고밀도 채보, 랭킹, 에디터는 다른 데스크톱 폭이 정당하다.              |
+| [GOV.UK: Spacing](https://design-system.service.gov.uk/styles/spacing/)                                             | `B`  | 작은 간격은 안정적으로 유지하고 큰 섹션 간격은 화면 크기에 반응할 수 있다.                                                   | 조밀한 컨트롤과 큰 데스크톱 리듬의 비교에 유용하다. `5px` 스케일은 하나의 보편 base를 가정하지 말라는 근거다. |
+| [Atlassian: Spacing](https://atlassian.design/foundations/spacing)                                                  | `B`  | 제한된 스케일이 리듬과 그룹을 만들지만 시각적 보정은 필요할 수 있다.                                                         | 토큰과 문서화된 예외를 지지한다. `8px` base는 `4px`·`5px` 시스템과 생산적으로 충돌하며 아직 선택하지 않는다.  |
+| [Atlassian: Elevation](https://atlassian.design/foundations/elevation/)                                             | `B`  | 평면, raised, overlay 레이어는 의도적이어야 하며 다크 환경에서는 그림자만 약하므로 표면 변화가 필요하다.                     | 다크 카드, 메뉴, 다이얼로그, 뷰어 컨트롤에 관련된다. raised 카드 남용은 노이즈를 만든다.                      |
+| [Bootstrap: Grid](https://getbootstrap.com/docs/5.3/layout/grid/)                                                   | `B`  | 널리 배포된 반응형 시스템은 사전 정의 브레이크포인트, 컨테이너, 거터의 유용성과 한계를 보여준다.                             | 비교 기준으로만 쓴다. NosLog가 스택을 바꾸거나 Bootstrap 값을 상속하지 않는다.                                |
+| [Radix Themes: Layout](https://www.radix-ui.com/themes/docs/overview/layout)                                        | `B`  | 레이아웃 primitive는 접근 가능한 컴포넌트 주변에 예측 가능한 flex, grid, section, container, spacing 동작을 제공한다.        | 현 Radix 기반 스택과 관련된다. 테마 미학은 NosLog 시각 방향이 아니다.                                         |
+| [web.dev: Responsive Design](https://web.dev/learn/design/)                                                         | `B`  | 반응형 작업은 미디어 쿼리뿐 아니라 콘텐츠, 타이포그래피, 입력 방식, 이미지, 레이아웃, 사용자 선호를 포함한다.                | 중간 폭에서 터치, 키보드, 포인터, 로케일, reduced motion 시험을 지지한다.                                     |
+
+### 매트릭스 B 종합
+
+- `390px`은 승인된 대표 검토 캔버스이지 고정 애플리케이션 폭이나
+  브레이크포인트가 아니다.
+- 반응형 동작은 컴포넌트·페이지 패밀리별로 `reflow`, `resize`,
+  `reposition`, `progressive disclosure`, 본질적인 제한 overflow 중 무엇인지
+  선언해야 한다.
+- 데스크톱은 확대한 모바일 페이지가 아니다. 승인된 페이지 브리프의 과업에
+  따라 비교, 스캔, 채보 보기, 에디터 생산성을 향상해야 한다.
+- 그리드는 콘텐츠를 정렬하지만 정보 우선순위를 정하지 않는다. 읽기 페이지,
+  탐색 그리드, 랭킹 표, 채보 뷰어는 하나의 간격·정렬 시스템 안에서 서로 다른
+  컨테이너 전략을 사용할 수 있다.
+
+## 매트릭스 C — 타이포그래피, 색상, 표면, 아이콘, 모션
+
+| 출처                                                                                              | 역할 | 전이 가능한 근거                                                                                                         | NosLog 적용성과 한계                                                                                                 |
+| ------------------------------------------------------------------------------------------------- | ---- | ------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------- |
+| [Carbon: Typography](https://carbondesignsystem.com/elements/typography/overview/)                | `B`  | 시맨틱 역할과 계층을 유지하면서 생산적 과업 타이포그래피와 표현적 편집 타이포그래피를 구분한다.                          | 절제된 고밀도 UI와 제한된 표현적 순간을 함께 지원한다. IBM Plex와 Carbon 크기는 선택하지 않는다.                     |
+| [Carbon: Color](https://carbondesignsystem.com/elements/color/overview/)                          | `B`  | 중립 레이어가 지배하며 시맨틱 토큰이 raw hex 대신 텍스트, 표면, 테두리, 포커스, 상태, 상호작용을 설명한다.               | NosLog 다크 표면과 손·상태 분리에 강한 모델이다. Carbon 팔레트를 복사하지 않는다.                                    |
+| [Carbon: Motion](https://carbondesignsystem.com/elements/motion/overview/)                        | `B`  | 모션에는 일관된 easing·duration 역할이 필요하며 계층, 연속성, 원인을 명확히 해야 한다.                                   | 간결한 모션 어휘를 지지한다. 풍부한 브랜드 모션은 별도 근거와 축소 대안이 필요하다.                                  |
+| [Fluent 2: Typography](https://fluent2.microsoft.design/typography)                               | `B`  | 시맨틱 타입 램프와 신뢰할 수 있는 시스템 fallback이 플랫폼 간 계층을 만들고 문장형 표기와 baseline 정렬이 스캔을 돕는다. | UI와 수치 혼합에 유용하다. Fluent 서체와 라틴 중심 예시는 CJK 검증이 필요하다.                                       |
+| [Fluent 2: Color](https://fluent2.microsoft.design/color)                                         | `B`  | 중립, 브랜드, 공용, 시맨틱 색은 역할이 다르며 상태는 색상만 의존할 수 없고 다크 팔레트에는 역할별 이동이 필요하다.       | 절제된 브랜드 사용과 명시적 상태 채널을 지지한다. Microsoft 브랜드 역할은 NosLog 역할이 아니다.                      |
+| [Fluent 2: Motion](https://fluent2.microsoft.design/motion)                                       | `B`  | 모션은 일관된 매개변수로 관계, 내비게이션, 진입, 이탈, 피드백을 전달한다.                                                | 메뉴, disclosure, 결과 교체, 집중형 뷰어 컨트롤에 유용하다. 값은 아직 승인하지 않는다.                               |
+| [Apple HIG: Typography](https://developer.apple.com/design/human-interface-guidelines/typography) | `B`  | 가독성, 확장 가능한 텍스트 스타일, 적은 서체 수, 절제된 weight, 계층 유지, 확대 시험이 핵심이다.                         | 조밀하지만 읽기 쉬운 타입 시스템을 지지한다. 네이티브 point와 Dynamic Type API는 웹 CSS에 직접 대응하지 않는다.      |
+| [Apple HIG: Color](https://developer.apple.com/design/human-interface-guidelines/color)           | `B`  | 색상은 일관되게 소통하고 맥락에 적응하며 중복 의미를 피하고 유일한 상태 채널이 되어서는 안 된다.                         | 시맨틱 손·상태 색을 라벨, 아이콘, 형태, 위치와 함께 쓰게 한다. Apple 시스템 팔레트를 복사하지 않는다.                |
+| [Apple HIG: Dark Mode](https://developer.apple.com/design/human-interface-guidelines/dark-mode)   | `B`  | 다크 외형은 단순 반전이 아니며 전경, 이미지, 사용자 색상, 대비, elevated 표면을 별도로 다뤄야 한다.                      | 승인된 다크 방향과 직접 관련된다. NosLog는 Apple 외형 모델을 그대로 따르지 않고 dark-first일 수 있다.                |
+| [Apple HIG: Motion](https://developer.apple.com/design/human-interface-guidelines/motion)         | `B`  | 모션은 콘텐츠를 가리거나 불편을 일으키지 않으면서 피드백과 공간 연속성을 제공해야 한다.                                  | 기능적 채보·뷰어 모션과 절제된 셸 모션을 지지한다. 네이티브 전환은 웹 처방이 아니다.                                 |
+| [Atlassian: Typography](https://atlassian.design/foundations/typography)                          | `B`  | 타이포그래피 토큰은 크기, 행간, weight, 간격, 색, 수치 강조를 조율하고 상대 단위는 사용자 확대를 지원한다.               | 점수·지표 역할과 고밀도 라벨 분리에 유용하다. 가장 작은 제품 크기는 NosLog 가독성 시험이 필요하다.                   |
+| [Atlassian: Iconography](https://atlassian.design/foundations/iconography)                        | `B`  | 아이콘은 인식 가능한 은유, 일관된 기하, 읽을 수 있는 기본 크기, 목적 있는 사용, 불명확할 때 텍스트 지원이 필요하다.      | 장식 아이콘을 줄이고 낯선 채보·모드·기여 행동에 라벨을 붙이게 한다. 정확한 stroke/style은 열어 둔다.                 |
+| [Atlassian: Motion](https://atlassian.design/foundations/motion)                                  | `B`  | 시맨틱 모션 토큰은 raw duration 대신 의도를 설명하며 명료성이 장식보다 우선한다.                                         | 향후 코드/Figma 매핑을 지지한다. 시스템이 발전 중이므로 단독 권위로 쓸 수 없다.                                      |
+| [Primer: Foundations](https://primer.style/product/getting-started/foundations/)                  | `B`  | 색상, 콘텐츠, 아이콘, 레이아웃, 반응형, 타이포그래피가 하나의 제품 파운데이션으로 작동한다.                              | 고밀도 데이터 웹 제품에 강한 비교다. GitHub 시각 정체성은 NosLog 목표가 아니다.                                      |
+| [USWDS: Typography](https://designsystem.digital.gov/components/typography/)                      | `B`  | 대부분의 본문에는 편안한 기본 크기, 절제된 작은 글자, 한쪽 정렬, 의미 있는 행간, 여백 기반 그룹화가 유리하다.            | 정책·설명 콘텐츠를 읽기 쉽게 한다. 전문 점수 메타데이터는 대비와 짧은 길이가 검증될 때만 더 작을 수 있다.            |
+| [GOV.UK: Type Scale](https://design-system.service.gov.uk/styles/type-scale/)                     | `B`  | 검증된 타입 스케일은 폭 전반에서 글자 크기, 행간, 상대 단위, 수직 리듬을 조율한다.                                       | 스케일 규율을 보여준다. 서체, 정확한 값, 공공 서비스 어조는 전이하지 않는다.                                         |
+| [GOV.UK: Colour](https://design-system.service.gov.uk/styles/colour/)                             | `B`  | 기능 색 이름은 hex 복사보다 예측 가능한 의미와 접근성을 더 잘 유지한다.                                                  | 시맨틱 토큰과 일관된 상태 사용을 지지한다. GOV.UK의 밝은 시각 정체성은 적용하지 않는다.                              |
+| [Material 3: Typography](https://m3.material.io/styles/typography/overview)                       | `B`  | 역할 기반 display, headline, title, body, label 패밀리가 컴포넌트 전반의 계층을 조율한다.                                | 비교용 분류로 유용하다. 현 공식 사이트는 JavaScript가 필요하며 Material 스케일을 채택하지 않는다.                    |
+| [Material 3: Color](https://m3.material.io/styles/color/overview)                                 | `B`  | tonal 역할이 외형 맥락에 따라 표면, 컨테이너, 콘텐츠, 윤곽, accent, 상태를 분리한다.                                     | 다크 tonal 레이어 모델에 유용하다. dynamic color와 Material 컴포넌트 표현은 범위 밖이다.                             |
+| [Adobe Spectrum: Foundations](https://spectrum.adobe.com/page/typography/)                        | `B`  | Spectrum은 고밀도 크로스 플랫폼 도구를 위해 타이포그래피, 색상, 레이아웃, 모션을 조율한다.                               | 에디터·제품 비교에 유용하다. 현 사이트가 JavaScript 의존이므로 접근 불가능한 시각 예시만으로 규칙을 승인하지 않는다. |
+| [Figma: UI Design Principles](https://www.figma.com/resource-library/ui-design-principles/)       | `B`  | 계층, 점진적 공개, 일관성, 대비, 근접성, 접근성, 정렬이 함께 인지 부담을 줄인다.                                         | NosLog 표본의 평가 언어를 제공한다. 토큰 사양이나 도메인 출처는 아니다.                                              |
+| [Google Noto](https://fonts.google.com/noto)                                                      | `B`  | 조율된 글로벌 서체 패밀리가 폭넓은 문자 지원과 호환되는 다국어 질감을 목표로 한다.                                       | 한국어·일본어·라틴 지원 후보군으로 유용하다. 실제 서체, 로딩 비용, metric, 브랜드 적합성은 열어 둔다.                |
+
+### 매트릭스 C 종합
+
+- 파운데이션 시스템은 고립된 값을 hardcode하기보다 역할에 이름을 붙인다.
+  NosLog는 결국 Figma와 코드 사이에서 같은 시맨틱 역할을 매핑해야 한다.
+- 고밀도 과업 UI와 표현적 편집 순간은 공존할 수 있지만, 표현이 통제되지 않은
+  두 번째 타입·색상 시스템을 만들면 안 된다.
+- 다크 레이어링은 중립 표면 단계, 테두리, 선택적 그림자로 수렴한다. 그림자만
+  사용해서는 충분하지 않다.
+- 색상이 손, 난이도, 랭크, 성공, 선택, 상호작용을 동시에 뜻하면 안 된다.
+  향후 팔레트에는 충돌 정책이 필요하다.
+- 타입 스케일을 승격하기 전에 실제 긴 NOSTALGIA 제목, 긴 아티스트명,
+  일본어 읽기, 한국어 번역, 영어 라벨, tabular score, 사용자 텍스트 확대를
+  함께 검증해야 한다.
+
+## 매트릭스 D — 데이터 시각화와 고밀도 비교
+
+| 출처                                                                                                                                  | 역할 | 전이 가능한 근거                                                                                                               | NosLog 적용성과 한계                                                                                               |
+| ------------------------------------------------------------------------------------------------------------------------------------- | ---- | ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------ |
+| [USWDS: Data Visualizations](https://designsystem.digital.gov/components/data-visualizations/)                                        | `B`  | 익숙한 형식을 우선하고, 하나의 중심 아이디어를 전달하며, 맥락을 유지하고, 색상을 단순화하고, 접근 가능한 대안·설명을 제공한다. | 성장 차트, 점수 분포, 랭킹 요약, 오락실 상태를 지배한다. 도메인에 익숙한 레이더를 금지하지 않는다.                 |
+| [Carbon: Data-visualization Color Palettes](https://carbondesignsystem.com/data-visualization/color-palettes/)                        | `B`  | 범주형, 순차형, 발산형, 경고 데이터에는 서로 다른 팔레트 논리가 필요하며 이웃 mark를 의도적으로 분리해야 한다.                 | 분포, 이력, 커뮤니티 레이더에 관련된다. Carbon 팔레트 값은 가져오지 않는다.                                        |
+| [Tableau: Visual Best Practices](https://help.tableau.com/current/blueprint/en-us/bp_visual_best_practices.htm)                       | `B`  | 계층, 중립 중심 색상, 제한된 accent, 기기별 구성, 일관된 인코딩이 분석을 향상한다.                                             | 중요한 지표 우선과 절제된 주목 색을 지지한다. 대시보드 밀도를 통째로 복사하지 않는다.                              |
+| [Tableau: Accessible Views](https://help.tableau.com/current/pro/desktop/en-us/accessibility_best_practice.htm)                       | `B`  | 색상은 라벨, 형태, 크기, 위치, 선 처리로 보강해야 하며 기반 데이터와 키보드 접근이 중요하다.                                   | 점수 이력, 랭크 구간, 손 색상, 레이더 축에 적용한다. 텍스트·데이터 대안을 제공해야 한다.                           |
+| [Observable: Crafting Data Colors](https://observablehq.com/blog/crafting-data-colors)                                                | `B`  | 팔레트는 작은 mark에서도 지각적으로 분리되고 색각 시험, 소통 가능한 이름, 라이트·다크 시험을 거쳐야 한다.                      | 가는 차트 선과 커뮤니티 축에 유용하다. 한 제품의 팔레트 사례이지 표준은 아니다.                                    |
+| [Highcharts: Accessibility](https://www.highcharts.com/docs/accessibility/accessibility-module)                                       | `B`  | 대화형 차트는 키보드 내비게이션, 스크린리더 설명, sonification, 데이터 표 대안을 제공할 수 있다.                               | 향후 차트 라이브러리 구현 비교에 유용하다. 현 WebGL 뷰어는 시맨틱과 성능 요구가 다르다.                            |
+| [Apache ECharts: ARIA](https://echarts.apache.org/handbook/en/best-practices/aria/)                                                   | `B`  | 자동 설명과 decal 패턴이 색상과 시각 mark를 보완할 수 있다.                                                                    | 텍스트 요약과 비색상 구분을 지지한다. 자동 문장도 정확한 NosLog 용어가 필요하다.                                   |
+| [Vega: Accessibility](https://vega.github.io/vega/docs/config/#accessibility-properties)                                              | `B`  | 시각화 grammar는 차트 사양 안에 접근 가능한 설명, 역할, 상호작용 메타데이터를 넣을 수 있다.                                    | 구현 매핑에 유용하다. NosLog는 Vega를 선택하지 않았다.                                                             |
+| [Microsoft Power BI: Accessibility](https://learn.microsoft.com/en-us/power-bi/create-reports/desktop-accessibility-creating-reports) | `B`  | 탭 순서, 제목, 대체 텍스트, 색 대비, marker, 읽을 수 있는 데이터가 분석 보고서 접근성을 돕는다.                                | 고밀도 데스크톱 표면의 작성된 읽기 순서와 비색상 신호를 지지한다. 엔터프라이즈 보고서 관습은 아트 디렉션이 아니다. |
+| [WCAG: Non-text Contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html)                                         | `A`  | 본질적인 mark와 상태 경계는 인접 색과 대비돼야 한다.                                                                           | 보기 좋은 swatch만으로 차트 팔레트를 승인할 수 없다. 선, 채움, grid, 라벨, focus 조합을 측정한 표본이 필요하다.    |
+| [SDVX.org: Effect Radar](https://www.sdvx.org/en/compendium/effect-radar)                                                             | `D`  | 안정적인 다축 fingerprint는 채보 요구를 학습된 리듬게임 약어로 전달할 수 있다.                                                 | 승인된 NOSTALGIA 전용 커뮤니티 레이더 개념을 지지한다. SOUND VOLTEX 축과 값은 복사할 수 없다.                      |
+| [공식 SOUND VOLTEX: Skill Analyzer](https://p.eagate.573.jp/game/sdvx/vii/howto/skill.html)                                           | `D`  | 리듬게임 분석은 일반 차트만이 아니라 구조화된 모드, 코스, 스킬, 결과 맥락을 사용한다.                                          | 도메인이 전문적 고밀도 시각을 수용함을 확인한다. 접근 가능한 대안을 무효화하지 않는다.                             |
+| [osu!: Beatmap Information](https://osu.ppy.sh/wiki/en/Beatmap_information)                                                           | `D`  | 선택 채보 사실, 랭킹, 개인 위치, 상세 점수 맥락이 안정된 beatmap 정체성 아래 공존한다.                                         | 안정된 채보 맥락과 점진적 상세를 지지한다. osu! 메커니즘과 카드 디자인은 전이하지 않는다.                          |
+| [Tachi](https://tachi.ac/)                                                                                                            | `D`  | 세션, 목표, 베스트 지표, 폴더, 이력 비교는 서로 다른 분석 과업이다.                                                            | 요약, 탐색, 상세 근거를 하나의 과밀 대시보드가 아니라 분리하게 한다.                                               |
+
+### 매트릭스 D 종합
+
+- 가장 접근 가능한 기본 차트가 항상 도메인 효율이 가장 높은 차트는 아니다.
+  승인된 과업에 맞으면 학습된 레이더 fingerprint를 유지할 수 있지만, 형태나
+  색상만 의존하지 않고 라벨, 정확한 값, 키보드·포커스 동작, 텍스트 요약,
+  데이터 대안을 추가해야 한다.
+- 장식 색보다 위치와 정렬된 숫자가 비교를 우선적으로 전달해야 한다.
+- 데이터 색 역할은 전역 행동, 오류, 손, 난이도 역할과 분리하거나 안전한
+  재사용을 명시적으로 문서화해야 한다.
+- 모바일은 비교를 요약하거나 순차화할 수 있지만 사용자의 과업이나 결과를
+  설명하는 지표를 조용히 제거하면 안 된다.
+
+## 매트릭스 E — 리듬게임 도메인과 제품 비교
+
+| 출처                                                                                                    | 역할 | 전이 가능한 근거                                                                           | NosLog 적용성과 한계                                                                            |
+| ------------------------------------------------------------------------------------------------------- | ---- | ------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------- |
+| [공식 NOSTALGIA Op.3](https://www.konami.com/arcadegames/products/am_nostalgia_op3/)                    | `D`  | 대상 게임의 피아노 정체성, 공식 명칭, 아케이드 맥락, 표현 자료를 확립한다.                 | 도메인 충실성과 attribution을 지배하며 NosLog 레이아웃·브랜딩은 정하지 않는다.                  |
+| [공식 NOSTALGIA: How to Play](https://p.eagate.573.jp/game/nostalgia/op3/howto/entrance.html)           | `D`  | 모드, 난이도, 노트 동작, 손 상호작용, 플레이 흐름을 확립한다.                              | 일반 리듬게임 추정을 막는다. 아케이드 순서를 웹 내비게이션에 복사하지 않는다.                   |
+| [공식 NOSTALGIA: Play Data](https://p.eagate.573.jp/game/nostalgia/op3/playdata/entrance.html)          | `D`  | Best Score, 판정 상세, 이력, Play count, Full Combo, Perfect, 채보별 기록 관계를 확립한다. | 사실적 기록 계층을 정의한다. 인증된 공식 UI는 공개 디자인 템플릿이 아니다.                      |
+| [Taiko.wiki](https://taiko.wiki/?lang=en)                                                               | `D`  | 팬 서비스에서 직접 도메인 목적지, 악곡 탐색, 공지, 다국어 접근을 결합한다.                 | 구조 비교와 밀도 반례에 유용하다. Taiko 용어와 상시 컨트롤은 전이하지 않는다.                   |
+| [Taiko.wiki: Song Search](https://taiko.wiki/song?lang=en)                                              | `D`  | 악곡 중심 탐색 안에 제목, 아티스트, 장르, 레벨, 채보 필터를 함께 둔다.                     | 공용 악곡·채보 탐색 맥락을 지지한다. 정확한 컨트롤 양은 채택하지 않는다.                        |
+| [V-ARCHIVE](https://v-archive.net/)                                                                     | `D`  | 한국 리듬게임 아카이브가 기록 관리, 티어, 검색, 프로필, 반응형 내비게이션을 결합한다.      | 강한 지역·도메인 비교다. DJMAX 버튼 모드, 티어, 표면 스타일은 다르다.                           |
+| [V-ARCHIVE: Tier Guide](https://v-archive.net/info/manual/tier)                                         | `D`  | 티어, 최고 성과 근거, 성장 이력, 정확한 점수 논리를 연결되지만 구분된 계층으로 설명한다.   | 투명한 파생 NosLog Rating과 티어 이력을 지지한다. 공식은 NosLog를 정의할 수 없다.               |
+| [Tachi](https://tachi.ac/)                                                                              | `D`  | 모듈형 tracker가 점수 수집, 분석, 세션, 목표, 프로필 근거, 연동을 분리한다.                | 일관된 페이지 패밀리와 이력 보존을 지지한다. 다중 게임 범위는 더 넓다.                          |
+| [osu!: Ranking](https://osu.ppy.sh/wiki/en/Ranking)                                                     | `D`  | 전역 performance 랭킹과 beatmap별 점수 랭킹은 서로 다른 비교 모집단이다.                   | 명확한 scope 라벨과 선택 채보 랭킹을 지지한다. osu! PP는 Grd나 NosLog Rating과 다르다.          |
+| [osu!: Beatmap Information](https://osu.ppy.sh/wiki/en/Beatmap_information)                             | `D`  | 악곡 정체성, 난이도 맥락, 채보 사실, 랭킹, 개인 점수가 함께 연결된다.                      | 악곡·채보 계층과 집중된 상세를 지지한다. 게임 다운로드 행동은 범위 밖이다.                      |
+| [ScoreSaber](https://scoresaber.com/)                                                                   | `D`  | 사용자·맵 랭킹이 순위, 정체성, performance 값, 정확도, 채보 맥락을 우선한다.               | 조밀한 랭킹 근거에 유용하다. Beat Saber PP와 anti-cheat 맥락은 다르다.                          |
+| [ScoreSaber Ranking System](https://wiki.scoresaber.com/ranking-system.html)                            | `D`  | 설명되지 않은 숫자 대신 가중 performance, 전역 순위, 국가 순위를 설명한다.                 | 투명한 파생 지표와 프로필 비교를 지지한다. 알고리즘은 재사용하지 않는다.                        |
+| [BeatLeader](https://beatleader.com/)                                                                   | `D`  | 랭킹, 점수 상세, replay, 맵 요구, 사용자 성장을 결합한다.                                  | 요약 뒤의 풍부한 근거를 지지한다. replay와 custom map 시스템은 NosLog 범위를 넘는다.            |
+| [ArcadeStat](https://arcadestat.app/en/)                                                                | `D`  | 아케이드 기록 서비스가 게임, 기록, 티어, 투표, 프로필 기능을 하나의 셸에서 제공한다.       | 아케이드 내비게이션과 성과 검증 투표에 유용하다. 충돌하는 자동 집계 규칙은 거부한다.            |
+| [KONAMI IIDX: Play Screen and Filters](https://p.eagate.573.jp/game/2dx/33/howto/play/game_screen.html) | `D`  | 목표 중심 선택은 레벨, 결과 상태, grade, MISS 수 조건을 포함할 수 있다.                    | 의미 있는 개인 refinement를 지지하면서 IIDX lamp 분류를 복사하면 안 된다는 점도 확인한다.       |
+| [SOUND VOLTEX: News](https://p.eagate.573.jp/game/sdvx/vii/news/index.html)                             | `D`  | 전용 공식 아카이브가 시간순 게임 업데이트를 플레이 화면과 분리한다.                        | NosLog 공지 계층과 공식 출처 분리를 지지한다. 홍보 어조와 이미지는 NosLog 편집 스타일이 아니다. |
+
+### 매트릭스 E 종합
+
+- 악곡, 채보, 모드, 난이도, 개인 기록, 랭킹, 서열, 커뮤니티 평가는 연결되지만
+  서로 바꿀 수 없는 엔티티다.
+- 자켓은 안정된 악곡 정체성 앵커이며 정사각형을 유지한다. 계층이나 점진적
+  공개 없이 모든 기록과 상태를 동시에 담을 수 없다.
+- 비교 대상을 안정적으로 유지하고 값을 정렬하면 전문 사용자는 고밀도 근거를
+  수용한다. scope, provenance, 우선순위가 불명확한 밀도는 여전히 노이즈다.
+- NosLog의 고유 가치는 일반 리듬게임 스킨이 아니라 NOSTALGIA 기록, 서열,
+  아카이브, 공식 채보 기여, 낙하형·전체 채보 뷰어의 조합이다.
+
+## 매트릭스 F — 편집 디자인과 아트 디렉션 레퍼런스
+
+이 출처들은 동작에 대한 권위가 의도적으로 낮다. 비례, 리듬, 계층, 이미지,
+표현을 관찰하는 대상으로만 사용한다.
+
+| 출처                                                                                                                  | 역할 | 전이 가능한 근거                                                                                             | NosLog 적용성과 한계                                                                            |
+| --------------------------------------------------------------------------------------------------------------------- | ---- | ------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------- |
+| [Plus X](https://dx.plusx.kr/)                                                                                        | `E`  | 강한 한국어 타이포그래피, 프로젝트 중심 페이싱, 통제된 대비, 성긴 섹션과 이미지 중심 섹션의 전환을 보여준다. | 계층과 편집 리듬에 유용하다. 포트폴리오의 spectacle과 모션이 과업 속도를 압도하면 안 된다.      |
+| [MUSINSA Updates](https://updates.musinsa.com/)                                                                       | `E`  | 한국어 편집 계층이 조밀한 메타데이터, 강한 제목, 이미지, 반복 콘텐츠 시스템을 다룬다.                        | 한국어 글자 비례와 스캔에 유용하다. 커머스·패션 콘텐츠는 도메인 구조가 아니다.                  |
+| [MUSINSA Newsroom: Store BI](https://newsroom.musinsa.com/newsroom-menu/2025-1022)                                    | `E`  | 규율 있는 시스템으로 글로벌, 리테일, 디지털, 편집 맥락 전반에서 브랜드를 알아볼 수 있게 유지할 수 있다.      | 하나의 로고를 넘어선 일관된 NosLog 정체성을 지지한다. MUSINSA 브랜드 자산은 복사하지 않는다.    |
+| [TURN.STUDIO — Creative Agency Website](https://www.behance.net/gallery/252216015/Creative-Agency-Website-TURNSTUDIO) | `E`  | 대형 타이포그래피, 비대칭, 이미지 시퀀싱, 다크·라이트 대비, 반응형 구성을 탐색한다.                          | 표현적 표본과 페이싱에 유용하다. concept·portfolio 레퍼런스이지 검증된 제품 동작이 아니다.      |
+| [Linear](https://linear.app/)                                                                                         | `C`  | 다크 제품·마케팅 시스템이 조용한 중립색, 정밀한 타입 계층, 통제된 accent, 고밀도 제품 근거를 함께 사용한다.  | 편집 표현과 생산적 밀도를 잇는 데 유용하다. 단색 tech 정체성은 NosLog 정체성이 아니다.          |
+| [Vercel](https://vercel.com/)                                                                                         | `C`  | 강한 그리드, 높은 대비, 절제된 그래픽 언어, 모듈형 콘텐츠가 확장 가능한 인식 체계를 만든다.                  | 정렬과 절제에 유용하다. 흑백 브랜드를 모방해 NosLog를 만들 수 없다.                             |
+| [Stripe](https://stripe.com/)                                                                                         | `C`  | 복잡한 인프라를 계층, 색상, 다이어그램, 제품 이미지, 점진적 설명 섹션으로 나눈다.                            | 복잡한 연동·기여 흐름 설명에 유용하다. 마케팅 밀도와 gradient를 기본값으로 쓰지 않는다.         |
+| [Arc](https://arc.net/)                                                                                               | `C`  | 모든 기능을 컨트롤로 노출하지 않고도 타이포그래피, 색상, 이미지, 모션으로 제품 개성을 표현한다.              | 절제된 컨트롤과 고유한 표현을 지지한다. 브라우저 소비자 마케팅은 아카이브 패턴이 아니다.        |
+| [Raycast](https://www.raycast.com/)                                                                                   | `C`  | 다크 표면, 명령 중심 계층, 조밀한 제품 이미지, 절제된 accent가 공존한다.                                     | 다크 UI 레이어와 집중 행동에 유용하다. command palette 모델은 NosLog 내비게이션이 아니다.       |
+| [Pitch](https://pitch.com/)                                                                                           | `C`  | 편집 스토리텔링, 모듈형 예시, 제품 시연이 하나의 시각 언어 안에서 서로 다른 밀도를 사용한다.                 | 가이드·PDF 페이싱과 설명 모듈에 유용하다. 프레젠테이션 워크플로는 전이하지 않는다.              |
+| [Framer](https://www.framer.com/)                                                                                     | `C`  | 반응형 마케팅 구성이 유연한 type, grid, card, 실시간 제품 예시를 보여준다.                                   | 적응과 표본 제시에 유용하다. template 시장의 시각 유행은 제품 사용성 근거가 아니다.             |
+| [Aesop](https://www.aesop.com/)                                                                                       | `C`  | 절제된 색, 측정된 타이포그래피, 여백, 이미지, 편집 어조로 과도한 컨트롤 없이 강한 정체성을 만든다.           | 고밀도 리듬게임 레퍼런스의 균형추로 유용하다. 낮은 정보 밀도가 랭킹·채보 도구를 지배할 수 없다. |
+
+### 매트릭스 F 종합
+
+- NosLog는 상시 컨트롤이나 장식 카드 추가 없이도 비례, 타이포그래피, 자켓
+  이미지, 리듬, 목적 있는 모션으로 표현적일 수 있다.
+- 편집 레퍼런스는 홈, 공지, 온보딩, 가이드 예시, 정보 단계 사이 전환에 가장
+  유용하다. 필터, 설정, 랭킹, 기록 상세, 뷰어, 에디터는 제품 파운데이션이
+  계속 지배한다.
+- 다크 시각 방향은 pure black, neon glow, 반투명 카드, 일반적인 gaming
+  aesthetic과 동의어가 아니다.
+- 최종 Claude Design은 승인된 제약 안에서 구성을 탐색할 수 있지만, 아트
+  디렉션 레퍼런스를 근거로 제품 동작을 발명하거나 상태를 제거하면 안 된다.
+
+## 출처 간 수렴점
+
+아래 결과는 독립적인 근거 분류에서 강하게 지지된다. 조사 결과이며 아직
+승인된 NosLog 디자인 원칙은 아니다.
+
+| ID        | 수렴 결과                                                                                                                   | 근거 분류          | 다음에 시험할 의미                                                                               |
+| --------- | --------------------------------------------------------------------------------------------------------------------------- | ------------------ | ------------------------------------------------------------------------------------------------ |
+| `CONV-01` | 모든 항목을 버튼이나 카드로 만들지 않고 크기, weight, 간격, 위치, 대비, disclosure로 정보 우선순위를 보여줘야 한다.         | `A`, `B`, `C`, `E` | 하나의 명백한 주 과업과 조용한 보조 utility가 있는 표본을 만든다.                                |
+| `CONV-02` | 반응형 시스템은 기기 라벨만이 아니라 콘텐츠, 컨테이너, 언어, 입력, 사용자 선호에 반응해야 한다.                             | `A`, `B`, `C`      | `320`, `390`, 중간 폭, 데스크톱에서 관찰한 실패점으로 컴포넌트 전환을 정한다.                    |
+| `CONV-03` | 타이포그래피, 간격, 그리드, 색상, 표면, 아이콘, 모션 역할을 함께 디자인하고 시험해야 한다.                                  | `B`, `C`, `E`      | 대표 NosLog 콘텐츠 없이 고립된 팔레트나 타입 스케일을 승인하지 않는다.                           |
+| `CONV-04` | 다크 인터페이스에는 중립색 중심의 계층 표면, 측정된 대비, 절제된 목적성 accent가 필요하다.                                  | `A`, `B`, `C`      | 하나의 다크 표본에서 표면 단계, 테두리, focus, 텍스트, 손 색, 시맨틱 상태, 자켓을 함께 시험한다. |
+| `CONV-05` | 색상만으로 상태나 비교를 전달하면 안 된다.                                                                                  | `A`, `B`, `D`      | 색상과 라벨, 아이콘, 형태, 위치, 테두리 처리, 숫자 값을 함께 쓴다.                               |
+| `CONV-06` | scope가 안정되고 값이 정렬되며 계층이 명확하고 점진적 상세가 결과 이유를 숨기지 않을 때 고밀도 전문 데이터는 사용 가능하다. | `B`, `C`, `D`      | 동시 컨트롤을 줄이면서 비교 가능한 점수와 채보 맥락을 보존한다.                                  |
+| `CONV-07` | 모션은 인과, 연속성, focus, 피드백을 명확히 하는 계층이며 장식 모션은 종속적이고 축소 가능해야 한다.                        | `A`, `B`, `C`      | 값보다 의도 기반 모션 역할과 reduced-motion 대체를 먼저 만든다.                                  |
+| `CONV-08` | 다국어 품질에는 실제 문자 콘텐츠, 언어별 줄바꿈, 확장 가능한 컨테이너, 로케일별 형식이 필요하다.                            | `A`, `B`, `D`      | 세 로케일에서 실제 긴 제목, 읽기, 번역, 라벨, 날짜, 숫자를 시험한다.                             |
+| `CONV-09` | 도메인에 익숙한 전문 시각화는 전문가 과업에서 일반적 단순화보다 뛰어날 수 있지만 접근 가능한 중복 표현이 필요하다.          | `A`, `B`, `D`      | 정확한 값, 라벨, 요약, 대안을 포함해 승인된 레이더·뷰어 개념을 유지한다.                         |
+| `CONV-10` | 브랜드 표현은 레퍼런스 표면 효과 복사가 아니라 일관된 시스템과 콘텐츠에서 나와야 한다.                                      | `B`, `C`, `D`, `E` | 같은 콘텐츠와 기능 제약으로 여러 NosLog 전용 구성을 탐색한다.                                    |
+
+## 열어 둬야 하는 근거 충돌
+
+| ID        | 충돌                                                                                      | 아직 결론을 승인하지 않는 이유                                                                                     | 필요한 다음 근거                                                                |
+| --------- | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------- |
+| `OPEN-01` | 성숙한 시스템의 간격 base가 `4px`, `5px`, `8px`, hybrid scale로 다르다.                   | 유행하는 base 복사보다 일관성이 중요하며 CJK metric과 고밀도 뷰어·에디터 컨트롤에는 optical need가 다르다.         | 그룹과 터치 타깃을 측정한 대표 컴포넌트·페이지 fragment.                        |
+| `OPEN-02` | 작은 생산적 글자 범위가 시스템마다 대략 `12px`–`16px`로 다르다.                           | nominal size보다 서체 metric, weight, 대비, 문자, 행 길이, 과업이 중요하다.                                        | 텍스트 확대를 포함한 한국어·일본어·영어·tabular score 후보 서체 표본.           |
+| `OPEN-03` | 시스템마다 브레이크포인트, 최대 폭, 열 수가 다르다.                                       | 각 값은 자기 콘텐츠와 플랫폼을 반영한다.                                                                           | `320`, `390`, 중간 폭, 넓은 비교 레이아웃의 NosLog 콘텐츠 실패 관찰.            |
+| `OPEN-04` | 다크 elevation에 표면 밝기 변화, 테두리, 그림자, 투명도 또는 조합을 쓴다.                 | 자켓 이미지, WebGL 콘텐츠, 브라우저 합성, 대비 때문에 같은 처리가 다르게 작동할 수 있다.                           | 카드, 메뉴, 다이얼로그, sticky control, viewer chrome을 포함한 표면 stack 표본. |
+| `OPEN-05` | 제품 시스템은 절제된 타이포그래피를 선호하고 편집 레퍼런스는 표현적 스케일과 구성을 쓴다. | NosLog에는 과업 속도와 고유 정체성이 모두 필요하지만 페이지 패밀리마다 강도가 다르다.                              | 홈, 탐색, 랭킹, 뷰어 fragment에 적용한 productive·expressive type-set 후보.     |
+| `OPEN-06` | 일반 차트는 보편 이해를 높이고 학습된 레이더 profile은 리듬게임 전문가 인식을 높인다.     | 승인된 커뮤니티 레이더는 도메인 가치가 있으나 형태·색상만으로는 접근 불가하며 작은 모바일 렌더링이 실패할 수 있다. | 레이더, 정확한 값 목록, 텍스트 요약, focus 순서, `320px` 비교 표본.             |
+| `OPEN-07` | 고밀도 데스크톱은 비교를 높이지만 열 추가만 하면 읽기와 키보드 순서를 조각낼 수 있다.     | 페이지 패밀리마다 비교 과업과 시맨틱 순서가 다르다.                                                                | 모바일 계층 검증 후 페이지 패밀리별 데스크톱 적응 규칙.                         |
+| `OPEN-08` | 표현적 모션은 정체성을 강화하지만 편안함, 성능, 뷰어 focus에 영향을 준다.                 | WebGL 뷰어에는 이미 의미 있는 모션이 있으므로 주변 UI 모션의 주의 예산이 낮다.                                     | 모션 인벤토리, 의도 분류, 성능 제약, reduced-motion 대안.                       |
+
+## 레퍼런스가 바꿀 수 없는 NosLog 제약
+
+다음 사실과 승인은 문서 `01`–`21`과 NOSTALGIA 도메인에서 왔다. 인기 있는
+레퍼런스가 이를 대체할 수 없다.
+
+1. 모바일은 아케이드 현장 중심의 주요 맥락이며, 데스크톱은 필수 분석,
+   뷰어, 미래 에디터 환경으로 남는다.
+2. 제품은 한국어, 일본어, 영어를 지원하며 일본어 원문 악곡 제목과 승인된
+   번역·읽기 제목 동작을 유지한다.
+3. Basic과 Recital은 서로 다른 모드다. Normal, Hard, Expert, 선택적 Real은
+   일반 태그가 아니라 채보 난이도다.
+4. 왼손·오른손 채보 색 의미, 자켓 정체성, 점수·랭크 의미, 판정 상세, 서열,
+   Bingo, Exam, NOSTALGIA 공식 grade는 승인된 도메인 의미를 유지해야 한다.
+5. 낙하형·전체 채보 WebGL 뷰어는 집중형 NosLog 기능이다. 디자인 가이드는
+   진입, chrome, 상태, 전체화면 동작을 재설계할 수 있지만 렌더링 모델을
+   조용히 교체하면 안 된다.
+6. 미래 사용자 에디터는 draft, immutable submission, 검토, 관리자 공개를
+   통해 하나의 canonical 공식 채보에 기여한다. 공개 alternate-chart catalog가
+   아니다.
+7. 승인된 다크 방향은 유지하지만 레거시 NOSTORY 표면 스타일은 권위가 아니다.
+8. 시각적 단순화를 위해 검증된 페이지 기능과 상태를 제거할 수 없다. 승인된
+   브리프 아래에서만 우선순위를 바꾸거나 점진적으로 공개할 수 있다.
+
+## 제안된 디자인 원칙 후보
+
+다음은 매트릭스에서 도출한 논의 후보다. 상태는 `Approved`가 아니라
+`Proposed`다.
+
+| ID      | 후보                                  | 실무 의미                                                                                                    | 상태       |
+| ------- | ------------------------------------- | ------------------------------------------------------------------------------------------------------------ | ---------- |
+| `PR-01` | **장식보다 과업 명료성**              | 시각 표현을 추가하기 전에 현재 목적, 주 행동, scope, 결과를 명확히 한다.                                     | `Proposed` |
+| `PR-02` | **일반 관습보다 도메인 진실성**       | 익숙한 웹 패턴을 쓰되 NOSTALGIA 고유 모드, 기록, 서열, 코스, 채보 동작을 평탄화하지 않는다.                  | `Proposed` |
+| `PR-03` | **원인을 보존하는 점진적 깊이**       | 기본 보기는 간결하게 유지하되 결과가 나타난 이유를 설명하는 값, scope, 상태는 숨기지 않는다.                 | `Proposed` |
+| `PR-04` | **어둡고, 계층적이며, 목적 있게**     | 중립 다크 계층을 먼저 만들고 색, elevation, glow, motion은 명확한 시맨틱·표현 역할에만 쓴다.                 | `Proposed` |
+| `PR-05` | **하나의 다국어 타이포그래피 시스템** | 한국어, 일본어, 영어, 읽기, 점수, 메타데이터를 별도 사후 요소가 아니라 하나의 검증된 계층 역할로 디자인한다. | `Proposed` |
+| `PR-06` | **가용한 의미에 반응**                | 기기 고정관념이 아니라 콘텐츠·컨테이너 제약으로 재구성하며 시맨틱 순서와 과업 동등성을 보존한다.             | `Proposed` |
+| `PR-07` | **정렬과 근거를 통한 비교**           | 장식 시각화보다 안정된 scope, 정렬된 지표, 정확한 값, 접근 가능한 중복 인코딩을 먼저 사용한다.               | `Proposed` |
+| `PR-08` | **컨트롤 과밀 없는 표현**             | 상시 버튼 대신 type, 비례, 자켓 이미지, 리듬, material, 절제된 모션으로 NosLog 정체성을 만든다.              | `Proposed` |
+| `PR-09` | **구조 단계부터 접근 가능**           | focus, 키보드, 타깃 크기, 대비, reflow, 언어, 텍스트 확대, reduced motion을 파운데이션 입력으로 취급한다.    | `Proposed` |
+| `PR-10` | **우연한 drift가 아닌 문서화된 예외** | 전문 뷰어·에디터·데이터 동작은 목적, 경계, fallback, 시험이 명시될 때만 허용한다.                            | `Proposed` |
+
+## 다음 단계 조사 게이트
+
+매트릭스는 다음 순서를 뒷받침하지만, 사용자가 이 근거 구성을 승인하고 후보를
+논의하기 전에는 다음 단계를 허가하지 않는다.
+
+1. 제안된 디자인 원칙 후보 10개를 검토하고 수정한다.
+2. 홈, 탐색, 상세, 고밀도 데이터, 집중형 채보 맥락 전반에서 원칙이 지켜야
+   할 승인된 제품 계층을 정의한다.
+3. 값을 선택하기 전에 foundation v0.1 조사 브리프를 만든다.
+    - 다국어 타이포그래피와 metric 타이포그래피
+    - 중립 다크 레이어, 시맨틱 색, 손·난이도·데이터 충돌 정책
+    - 간격, 그리드, 컨테이너, 밀도
+    - 테두리, radius, elevation, material 처리
+    - 아이콘 역할과 라벨
+    - reduced-motion 동작을 포함한 기능적·표현적 모션
+    - 데이터 시각화 구조와 접근 가능한 대안
+4. 고립된 swatch 대신 실제 콘텐츠가 있는 대표 fragment에 후보를 적용한다.
+   공용 탐색, 악곡 상세·기록 비교, 랭킹, 채보 뷰어, 조밀한 편집형 홈·공지
+   fragment를 포함한다.
+5. 토큰이나 컴포넌트를 `Approved`로 승격하기 전에 `320`, 대표 `390`, 중간
+   전환 폭, 데스크톱 비교 레이아웃을 검증한다.
+
+## 결정 로그
+
+| ID        | 항목                                                                                                                     | 상태       |
+| --------- | ------------------------------------------------------------------------------------------------------------------------ | ---------- |
+| `REF-D01` | 모든 레퍼런스를 동등하게 취급하지 않고 역할별 근거 분류와 한계를 사용한다.                                               | `Proposed` |
+| `REF-D02` | 이 매트릭스를 교차 영역 출처 풀로 취급하며 집중된 12~15개 출처 결정 조사를 대신하지 않는다.                              | `Proposed` |
+| `REF-D03` | 승인된 페이지 브리프와 NOSTALGIA 의미를 레퍼런스가 바꿀 수 없는 제약으로 유지한다.                                       | `Observed` |
+| `REF-D04` | 이 단계에서 서체, 팔레트 값, 간격 base, 그리드 폭, 브레이크포인트, radius, elevation, 아이콘, 모션 값을 선택하지 않는다. | `Observed` |
+| `REF-D05` | foundation v0.1을 작성하기 전에 10개 원칙 후보를 사용자 검토로 가져간다.                                                 | `Proposed` |
+
+## 단계 승인 체크리스트
+
+- [ ] 사용자가 근거 역할 모델을 승인하거나 수정한다.
+- [ ] 사용자가 매트릭스를 최종 시각 방향으로 취급하지 않으면서 디자인 원칙
+      결정을 시작하기에 충분히 폭넓은지 확인한다.
+- [ ] 제안된 모든 원칙을 개별적으로 승인, 수정, 거부하거나 열어 둔다.
+- [ ] 영어·한국어 문서의 실질 내용이 동기화돼 있다.
+- [ ] 이 조사 초안만으로 파운데이션 값이나 하이파이 디자인을 승인된 것으로
+      취급하지 않는다.

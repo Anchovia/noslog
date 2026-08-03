@@ -1,0 +1,391 @@
+# NosLog 2.0 Cross-Cutting Reference Matrix
+
+## Document Control
+
+- Status: `Research draft — awaiting phase review`
+- Research date: 2026-08-03
+- Canonical language: English
+- Korean companion:
+  [22-cross-cutting-reference-matrix.ko.md](./22-cross-cutting-reference-matrix.ko.md)
+- Scope: cross-cutting evidence for the NosLog 2.0 product hierarchy, visual
+  foundations, responsive system, multilingual typography, interaction states,
+  motion, and data visualization
+- Inputs: the approved product audit, information architecture, page briefs, and
+  consistency audit in documents `01`–`21`; current primary standards; official
+  design systems; current production products; and rhythm-game domain references
+- Excluded: final fonts, colors, token values, breakpoints, component styling,
+  high-fidelity screens, and application implementation
+
+This document does not approve a visual direction by itself. It classifies evidence,
+records convergence and disagreement, and defines the questions that the next design-
+principles phase must resolve with the user.
+
+## Related Documents
+
+- [Current-product audit](./01-current-product-audit.md)
+- [Information architecture](./02-information-architecture.md)
+- [Design-guide consistency audit](./21-design-guide-consistency-audit.md)
+
+## Research Method
+
+### Evidence roles
+
+References are not interchangeable. Each source is used only for the role it can
+reasonably support.
+
+| Role | Evidence class                                                                       | Valid use                                                                                                         | Invalid use                                                               |
+| ---- | ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| `A`  | Normative standards and authoritative accessibility or internationalization guidance | Non-negotiable accessibility, semantics, language, reflow, and user-preference requirements                       | Visual art direction or NosLog domain meaning                             |
+| `B`  | Maintained official design systems and platform guidance                             | Tested foundation models, token roles, responsive patterns, interaction anatomy, and implementation constraints   | Copying brand values, exact breakpoints, or component styling             |
+| `C`  | Current production services                                                          | Observing information density, hierarchy, content rhythm, adaptation, and real-world tradeoffs                    | Treating one live page as a universal standard                            |
+| `D`  | Official game material and rhythm-game products                                      | Establishing domain terminology, score relationships, jacket/chart identity, comparison tasks, and arcade context | Importing another game's mechanics, labels, or visual surface             |
+| `E`  | Editorial and art-direction references                                               | Studying proportion, typography contrast, pacing, composition, imagery, and brand expression                      | Deciding accessibility, navigation behavior, or dense product interaction |
+
+### Independence and saturation rules
+
+1. Localized copies, mirrors, search-result pages, and multiple URLs that restate the
+   same rule are not counted as independent evidence.
+2. A standard and a production example may support the same principle for different
+   reasons; the document records both instead of treating frequency as proof.
+3. Existing documents `01`–`21` contain hundreds of cited URLs across more than two
+   hundred domains. This matrix distills only sources that affect multiple page
+   families or a future foundation decision.
+4. A future material decision still requires its own focused comparison of at least
+   twelve independent relevant sources, with fifteen or more preferred when credible
+   evidence remains available. This matrix is a reusable starting pool, not a waiver.
+5. Current marketing and product pages were reviewed on the research date and may
+   change. Their observed visual behavior must be rechecked before a later specimen is
+   finalized.
+6. The legacy NOSTORY Figma is intentionally absent from the governing evidence. It
+   remains historical evidence only under the root `AGENTS.md` constraints.
+
+## Coverage Summary
+
+| Cluster                                 | Primary question                                                                                  | Evidence mix          | Result at this phase                                                               |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------- | --------------------- | ---------------------------------------------------------------------------------- |
+| Accessibility and internationalization  | What must remain perceivable, operable, understandable, robust, and linguistically correct?       | `A`, supported by `B` | Constraints identified; exact visual treatment open                                |
+| Responsive layout and density           | How should one product adapt from `320 CSS px` through wide analytical layouts?                   | `A`, `B`, `C`         | Content-driven adaptation converges; breakpoint values open                        |
+| Typography and hierarchy                | How should Korean, Japanese, English, titles, metrics, and dense metadata coexist?                | `A`, `B`, `C`, `E`    | Semantic roles and testing method converge; family and scale open                  |
+| Dark color, surfaces, and state         | How can NosLog remain dark, readable, layered, and semantically consistent?                       | `A`, `B`, `C`         | Role-based neutral layers converge; palette values open                            |
+| Spacing, elevation, icons, and motion   | How should rhythm, grouping, depth, action recognition, and change be expressed?                  | `A`, `B`, `E`         | Purposeful systems converge; base unit and expression open                         |
+| Data visualization and dense comparison | How should score history, distributions, rankings, radar profiles, and chart content be compared? | `A`, `B`, `C`, `D`    | Redundant encoding and task-specific forms converge; chart-specific treatment open |
+| Rhythm-game domain and art direction    | What is distinctively NosLog without copying another service or the legacy surface?               | `C`, `D`, `E`         | Domain truth and restrained expression converge; final visual language open        |
+
+## Matrix A — Accessibility and Internationalization
+
+| Source                                                                                                                               | Role | Transferable evidence                                                                                                                           | NosLog applicability and limitation                                                                                                   |
+| ------------------------------------------------------------------------------------------------------------------------------------ | ---- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| [WCAG 2.2](https://www.w3.org/TR/WCAG22/)                                                                                            | `A`  | Defines the AA baseline for contrast, reflow, resizing, focus, target size, keyboard access, dragging alternatives, status, and input behavior. | Governs every public and authenticated surface. It does not prescribe NosLog styling.                                                 |
+| [WAI: Designing for Web Accessibility](https://www.w3.org/WAI/tips/designing/)                                                       | `A`  | Integrates structure, labels, contrast, alternatives, predictable interaction, and understandable feedback into the design process.             | Requires accessibility to be visible in specimens and briefs rather than deferred to code.                                            |
+| [WCAG: Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html)                                                              | `A`  | Content must reflow without two-dimensional scrolling at the defined zoom-equivalent width except where two dimensions are essential.           | Supports the approved `320 CSS px` contract while preserving bounded two-dimensional chart/editor regions.                            |
+| [WCAG: Text Spacing](https://www.w3.org/WAI/WCAG22/Understanding/text-spacing.html)                                                  | `A`  | User-adjusted line, paragraph, word, and letter spacing must not destroy content or function.                                                   | Long Korean, Japanese, and English labels cannot rely on clipped fixed-height shells.                                                 |
+| [WCAG: Contrast (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html)                                        | `A`  | Normal text requires at least `4.5:1`; qualifying large text requires `3:1`.                                                                    | Applies to dark surfaces, captions, metadata, chart labels, and disabled-state wording. It is a floor, not a palette.                 |
+| [WCAG: Non-text Contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html)                                        | `A`  | Interactive boundaries, focus indicators, and essential graphical objects require sufficient contrast.                                          | Hand borders, chart lines, selected states, input outlines, and data marks need independent validation.                               |
+| [WCAG: Content on Hover or Focus](https://www.w3.org/WAI/WCAG22/Understanding/content-on-hover-or-focus.html)                        | `A`  | Additional hover/focus content must be dismissible, hoverable, persistent, and keyboard available when applicable.                              | Governs approved desktop record previews; it does not justify recreating hover on touch.                                              |
+| [WCAG: Target Size (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html)                                  | `A`  | Pointer targets need a minimum effective area or a valid spacing/semantic exception.                                                            | Compact rhythm-game data may stay visually dense while interaction targets remain operable.                                           |
+| [WCAG: Animation from Interactions](https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html)                    | `A`  | Non-essential motion triggered by interaction needs a way to disable it when it can cause vestibular discomfort.                                | Motion tokens must distinguish required state change from expressive movement.                                                        |
+| [WAI-ARIA APG: Keyboard Interface](https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/)                                    | `A`  | Composite controls require predictable focus, visible focus, keyboard operation, and clear disabled behavior.                                   | Applies to scope selectors, filters, menus, tabs, viewers, dialogs, and editor controls. Exact components remain open.                |
+| [Requirements for Hangul Text Layout and Typography](https://www.w3.org/TR/klreq/)                                                   | `A`  | Korean composition has script-specific line-breaking, punctuation, spacing, and mixed-script requirements.                                      | Prevents treating Korean as Latin text with translated strings only; specimens need real Hangul content.                              |
+| [Requirements for Japanese Text Layout](https://www.w3.org/TR/jlreq/)                                                                | `A`  | Japanese composition requires appropriate line breaks, punctuation treatment, kana, mixed Latin, and ruby-aware decisions.                      | Relevant to original titles and official readings. NosLog is horizontal UI, so print and vertical-writing rules transfer selectively. |
+| [CSS Text Module Level 3](https://www.w3.org/TR/css-text-3/)                                                                         | `A`  | Defines language-sensitive line breaking, word boundaries, white-space, alignment, and justification behavior.                                  | Supports explicit language tagging and testing `line-break`/`word-break`; it does not choose title truncation policy alone.           |
+| [Unicode LDML](https://www.unicode.org/reports/tr35/)                                                                                | `A`  | Locale data governs identifiers, dates, numbers, collation, display names, and line-break preferences.                                          | Korean, Japanese, and English score/date formatting must be locale-aware while game terms and identifiers stay stable.                |
+| [W3C: Guiding users to translated pages](https://www.w3.org/International/questions/qa-site-conneg)                                  | `A`  | Browser negotiation is an initial hint; explicit language choice must remain available and remembered.                                          | Supports approved locale routes and public Settings without making automatic detection irreversible.                                  |
+| [MDN: `prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/%40media/prefers-reduced-motion) | `B`  | The established media feature detects a user's request to reduce or replace non-essential motion.                                               | Gives the implementation mechanism for the motion foundation; browser support does not decide which NosLog motion is essential.       |
+
+### Matrix A synthesis
+
+- Accessibility is a structural input to typography, layout, state, motion, charting,
+  and content, not a final audit layer.
+- NosLog cannot solve compactness by shrinking captions, targets, chart lines, or
+  focus indicators below perceivable levels.
+- Korean, Japanese, and English must be tested as different composition systems, not
+  as three strings pasted into one fixed box.
+- The chart viewer and future editor may retain genuinely two-dimensional working
+  regions, but surrounding controls, explanations, and navigation must still reflow.
+
+## Matrix B — Responsive Layout, Grid, and Density
+
+| Source                                                                                                              | Role | Transferable evidence                                                                                                                       | NosLog applicability and limitation                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| [Tailwind CSS: Responsive Design](https://tailwindcss.com/docs/responsive-design)                                   | `B`  | Mobile-first variants and container queries allow adaptation from actual viewport or parent space; default breakpoints are customizable.    | Fits the project stack. Tailwind defaults are implementation conveniences, not approved NosLog breakpoints.                            |
+| [Tailwind CSS: Grid Template Columns](https://tailwindcss.com/docs/grid-template-columns)                           | `B`  | Grid composition can change column count, span, and intrinsic sizing without changing semantic order.                                       | Useful for Home links, music grids, rankings, and profile modules; column counts require real content tests.                           |
+| [MDN: CSS Container Queries](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries) | `B`  | Components can adapt to their allocated container rather than infer space from device width.                                                | Important when the same music card, metric, or control appears in different page compositions.                                         |
+| [CSS Containment Level 3](https://www.w3.org/TR/css-contain-3/)                                                     | `A`  | Defines container size and style queries and their containment implications.                                                                | Provides the standards basis; implementation must avoid containment that breaks intrinsic sizing or overlays.                          |
+| [Apple HIG: Layout](https://developer.apple.com/design/human-interface-guidelines/layout)                           | `B`  | Layout should adapt gracefully to screen, orientation, resizable windows, text size, locale, and safe areas while staying recognizable.     | Supports one coherent product across widths; Apple platform dimensions do not become web tokens.                                       |
+| [Fluent 2: Layout](https://fluent2.microsoft.design/layout)                                                         | `B`  | Spacing expresses relationship; grids may be fixed, fluid, or hybrid; reflow, resize, reposition, and show/hide are distinct strategies.    | Supports content-driven adaptations and purposeful desktop space. Its breakpoint ranges are comparison data only.                      |
+| [Primer: Layout](https://primer.style/product/getting-started/foundations/layout/)                                  | `B`  | Complex products need focused, calm layouts and fine-grained responsive scenarios; `320px` is a supported lower range, not a design canvas. | Closely matches NosLog's dense web-product needs. Primer widths and padding values are not imported.                                   |
+| [Carbon: 2x Grid](https://carbondesignsystem.com/elements/2x-grid/overview/)                                        | `B`  | A grid can align type, components, and page regions while supporting multiple density and expressive contexts.                              | Useful for systematic alignment; Carbon's enterprise compositions are not NosLog templates.                                            |
+| [USWDS: Layout Grid](https://designsystem.digital.gov/utilities/layout-grid/)                                       | `B`  | A mobile-first grid separates containers, rows, columns, gutters, and max-width decisions.                                                  | Supports explicit layout anatomy and variable page widths; the default 12-column/1024px setup is not adopted automatically.            |
+| [GOV.UK: Layout](https://design-system.service.gov.uk/styles/layout/)                                               | `B`  | Start small-screen single-column, constrain reading measure, and widen only when content requires it.                                       | Supports readable policy/onboarding content. Dense charts, rankings, and editor surfaces legitimately need different desktop widths.   |
+| [GOV.UK: Spacing](https://design-system.service.gov.uk/styles/spacing/)                                             | `B`  | Small spacing can stay stable while larger section spacing responds to screen size.                                                         | Useful comparison for compact controls plus larger desktop rhythm. Its `5px` scale is evidence against assuming one universal base.    |
+| [Atlassian: Spacing](https://atlassian.design/foundations/spacing)                                                  | `B`  | A limited scale creates rhythm and grouping, but optical correction may still be necessary.                                                 | Supports tokens plus documented exceptions. Its `8px` base conflicts productively with `4px` and `5px` systems and remains unselected. |
+| [Atlassian: Elevation](https://atlassian.design/foundations/elevation/)                                             | `B`  | Flat, raised, and overlay layers should be intentional; dark elevation needs surface shifts because shadows alone weaken.                   | Relevant to dark cards, menus, dialogs, and viewer controls. Frequent raised cards would add noise.                                    |
+| [Bootstrap: Grid](https://getbootstrap.com/docs/5.3/layout/grid/)                                                   | `B`  | A widely deployed responsive system shows the utility and limits of predefined breakpoints, containers, and gutters.                        | Serves as a comparison baseline only; NosLog does not change stacks or inherit Bootstrap values.                                       |
+| [Radix Themes: Layout](https://www.radix-ui.com/themes/docs/overview/layout)                                        | `B`  | Layout primitives expose predictable flex, grid, section, container, and spacing behavior around accessible components.                     | Relevant to the current Radix-based stack; its theme aesthetics are not the NosLog visual direction.                                   |
+| [web.dev: Responsive Design](https://web.dev/learn/design/)                                                         | `B`  | Responsive work includes content, typography, interaction modality, images, layout, and user preferences, not media queries alone.          | Supports testing touch, keyboard, pointer, locale, and reduced motion across intermediate widths.                                      |
+
+### Matrix B synthesis
+
+- `390px` is an approved representative review canvas, not a fixed application width
+  or breakpoint.
+- Responsive behavior should be declared per component and page family as `reflow`,
+  `resize`, `reposition`, `progressive disclosure`, or an essential bounded overflow.
+- Desktop is not a magnified mobile page. It should improve comparison, scanning,
+  chart viewing, and editor productivity where the approved page brief benefits.
+- Grid systems align content but do not decide information priority. Reading pages,
+  discovery grids, ranking tables, and the chart viewer may use different container
+  strategies within one spacing and alignment system.
+
+## Matrix C — Typography, Color, Surface, Iconography, and Motion
+
+| Source                                                                                            | Role | Transferable evidence                                                                                                                                   | NosLog applicability and limitation                                                                                                      |
+| ------------------------------------------------------------------------------------------------- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| [Carbon: Typography](https://carbondesignsystem.com/elements/typography/overview/)                | `B`  | Separates productive task typography from expressive editorial typography while keeping semantic roles and hierarchy consistent.                        | Supports restrained dense UI plus limited expressive moments. IBM Plex and Carbon sizes are not selected.                                |
+| [Carbon: Color](https://carbondesignsystem.com/elements/color/overview/)                          | `B`  | Neutral layers dominate; semantic tokens describe text, surface, border, focus, state, and interaction rather than raw hex values.                      | Strong model for NosLog dark surfaces and hand/state separation. Exact Carbon palette is not copied.                                     |
+| [Carbon: Motion](https://carbondesignsystem.com/elements/motion/overview/)                        | `B`  | Motion needs consistent easing and duration roles and should clarify hierarchy, continuity, and cause.                                                  | Supports a lean motion vocabulary; richer brand motion requires separate evidence and reduced-motion alternatives.                       |
+| [Fluent 2: Typography](https://fluent2.microsoft.design/typography)                               | `B`  | A semantic type ramp and reliable system fallbacks create hierarchy across platforms; sentence case and baseline alignment improve scan.                | Useful for mixed UI and metrics. Fluent's typeface and Latin-specific examples need CJK validation.                                      |
+| [Fluent 2: Color](https://fluent2.microsoft.design/color)                                         | `B`  | Neutral, brand, shared, and semantic colors have different jobs; state cannot rely on color alone; dark palettes require role-aware shifts.             | Supports sparse brand use and explicit state channels. Microsoft brand roles are not NosLog roles.                                       |
+| [Fluent 2: Motion](https://fluent2.microsoft.design/motion)                                       | `B`  | Motion communicates relationship, navigation, entrance, exit, and feedback using consistent parameters.                                                 | Useful for menus, disclosures, result replacement, and focused viewer controls; no values are approved yet.                              |
+| [Apple HIG: Typography](https://developer.apple.com/design/human-interface-guidelines/typography) | `B`  | Legibility, scalable text styles, few typefaces, weight restraint, hierarchy preservation, and testing at enlarged sizes are central.                   | Supports a compact but readable type system. Native point sizes and Dynamic Type APIs do not map directly to web CSS.                    |
+| [Apple HIG: Color](https://developer.apple.com/design/human-interface-guidelines/color)           | `B`  | Color should communicate consistently, adapt to context, avoid duplicate meanings, and never be the only state channel.                                 | Reinforces semantic hand/status colors with label, icon, shape, or position. Apple's system palette is not copied.                       |
+| [Apple HIG: Dark Mode](https://developer.apple.com/design/human-interface-guidelines/dark-mode)   | `B`  | Dark appearance is not a simple inversion; foregrounds, images, custom colors, contrast, and elevated surfaces need separate treatment.                 | Directly relevant to the approved dark direction. NosLog may remain dark-first rather than mirror Apple's appearance model.              |
+| [Apple HIG: Motion](https://developer.apple.com/design/human-interface-guidelines/motion)         | `B`  | Motion should provide feedback and spatial continuity without obscuring content or causing discomfort.                                                  | Supports functional chart/viewer motion and restrained shell motion. Native transitions are not web prescriptions.                       |
+| [Atlassian: Typography](https://atlassian.design/foundations/typography)                          | `B`  | Typography tokens coordinate size, line height, weight, space, color, and metric emphasis; relative units support user scaling.                         | Useful for separate score/metric roles and dense labels. The smallest product sizes require NosLog-specific readability tests.           |
+| [Atlassian: Iconography](https://atlassian.design/foundations/iconography)                        | `B`  | Icons need recognized metaphors, consistent geometry, legible default size, purposeful use, and text support where meaning is unclear.                  | Supports reducing decorative icons and labelling unfamiliar chart, mode, and contribution actions. Exact stroke/style remains open.      |
+| [Atlassian: Motion](https://atlassian.design/foundations/motion)                                  | `B`  | Semantic motion tokens describe intent instead of raw duration; clarity takes precedence over decoration.                                               | Supports future code/Figma mapping. The system is evolving and cannot be used as sole authority.                                         |
+| [Primer: Foundations](https://primer.style/product/getting-started/foundations/)                  | `B`  | Color, content, icons, layout, responsive behavior, and typography operate as one product foundation.                                                   | Strong comparison for a dense, data-rich web product. GitHub's visual identity is not a NosLog target.                                   |
+| [USWDS: Typography](https://designsystem.digital.gov/components/typography/)                      | `B`  | Most body content benefits from a comfortable base size, restrained small text, flush alignment, meaningful line height, and whitespace-based grouping. | Supports readable policy and descriptive content; specialized score metadata may be smaller only with validated contrast and brevity.    |
+| [GOV.UK: Type Scale](https://design-system.service.gov.uk/styles/type-scale/)                     | `B`  | A tested type scale coordinates font size, line height, relative units, and vertical rhythm across widths.                                              | Demonstrates scale discipline. Its font, exact values, and public-service voice do not transfer.                                         |
+| [GOV.UK: Colour](https://design-system.service.gov.uk/styles/colour/)                             | `B`  | Functional color names preserve predictable meaning and accessibility better than copying hex values.                                                   | Supports semantic tokens and consistent state use. GOV.UK's light visual identity is not applicable.                                     |
+| [Material 3: Typography](https://m3.material.io/styles/typography/overview)                       | `B`  | Role-based display, headline, title, body, and label families coordinate hierarchy across components.                                                   | Useful comparative taxonomy. The current official site requires JavaScript and Material's visual scale is not adopted.                   |
+| [Material 3: Color](https://m3.material.io/styles/color/overview)                                 | `B`  | Tonal roles separate surfaces, containers, content, outlines, accents, and states across appearance contexts.                                           | Useful model for dark tonal layers. Dynamic color and Material component expression are outside current scope.                           |
+| [Adobe Spectrum: Foundations](https://spectrum.adobe.com/page/typography/)                        | `B`  | Spectrum documents coordinated typography, color, layout, and motion for a dense cross-platform tool system.                                            | Useful editor/product comparison. The current site is JavaScript-dependent; no rule is accepted from inaccessible visual examples alone. |
+| [Figma: UI Design Principles](https://www.figma.com/resource-library/ui-design-principles/)       | `B`  | Hierarchy, progressive disclosure, consistency, contrast, proximity, accessibility, and alignment jointly reduce cognitive load.                        | Gives evaluation language for NosLog specimens. It is not a token specification or domain source.                                        |
+| [Google Noto](https://fonts.google.com/noto)                                                      | `B`  | A coordinated global type family aims for broad script coverage and compatible multilingual texture.                                                    | A useful font candidate family for Korean/Japanese/Latin coverage; actual font choice, loading cost, metrics, and brand fit remain open. |
+
+### Matrix C synthesis
+
+- Foundation systems consistently name roles rather than hardcode isolated values.
+  NosLog should eventually map the same semantic roles between Figma and code.
+- Dense task UI and expressive editorial moments can coexist, but expression must not
+  produce a second uncontrolled type or color system.
+- Dark layering converges on neutral surface steps, borders, and selective shadows;
+  shadows alone are not enough.
+- Color must not simultaneously mean hand, difficulty, rank, success, selection, and
+  interactivity. The future palette needs a documented collision policy.
+- Typography must be validated with actual long NOSTALGIA titles, long artist names,
+  Japanese readings, Korean translations, English labels, tabular scores, and user
+  text scaling before any scale is promoted.
+
+## Matrix D — Data Visualization and Dense Comparison
+
+| Source                                                                                                                                | Role | Transferable evidence                                                                                                                 | NosLog applicability and limitation                                                                                                   |
+| ------------------------------------------------------------------------------------------------------------------------------------- | ---- | ------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| [USWDS: Data Visualizations](https://designsystem.digital.gov/components/data-visualizations/)                                        | `B`  | Prefer familiar forms, communicate one main idea, keep context, simplify color, and provide accessible alternatives and explanations. | Governs growth charts, score distribution, ranking summaries, and venue status. It does not ban domain-familiar radar charts.         |
+| [Carbon: Data-visualization Color Palettes](https://carbondesignsystem.com/data-visualization/color-palettes/)                        | `B`  | Categorical, sequential, diverging, and alert data need different palette logic; neighboring marks need deliberate separation.        | Relevant to distributions, histories, and community radar. Carbon's palette values are not imported.                                  |
+| [Tableau: Visual Best Practices](https://help.tableau.com/current/blueprint/en-us/bp_visual_best_practices.htm)                       | `B`  | Hierarchy, neutral-dominant color, limited accents, device-aware composition, and consistent encodings improve analysis.              | Supports important metrics first and sparse attention color. Dashboard density should not be copied wholesale.                        |
+| [Tableau: Accessible Views](https://help.tableau.com/current/pro/desktop/en-us/accessibility_best_practice.htm)                       | `B`  | Color needs reinforcement through label, shape, size, position, or line treatment; underlying data and keyboard access matter.        | Applies to score history, rank bands, hand colors, and radar axes. NosLog must provide a textual/data equivalent.                     |
+| [Observable: Crafting Data Colors](https://observablehq.com/blog/crafting-data-colors)                                                | `B`  | Palettes need perceptual separation in small marks, color-vision checks, names people can discuss, and light/dark testing.            | Useful for fine chart lines and community axes; it is one product's palette case study, not a standard.                               |
+| [Highcharts: Accessibility](https://www.highcharts.com/docs/accessibility/accessibility-module)                                       | `B`  | Interactive charts can expose keyboard navigation, screen-reader descriptions, sonification, and data-table alternatives.             | Useful implementation comparison for future chart libraries; the current WebGL viewer has different semantics and performance needs.  |
+| [Apache ECharts: ARIA](https://echarts.apache.org/handbook/en/best-practices/aria/)                                                   | `B`  | Generated descriptions and decal patterns can supplement color and visual marks.                                                      | Supports textual summaries and non-color differentiation; automated prose still needs accurate NosLog terminology.                    |
+| [Vega: Accessibility](https://vega.github.io/vega/docs/config/#accessibility-properties)                                              | `B`  | Visualization grammar can encode accessible descriptions, roles, and interaction metadata with the chart specification.               | Useful for implementation mapping; NosLog has not selected Vega.                                                                      |
+| [Microsoft Power BI: Accessibility](https://learn.microsoft.com/en-us/power-bi/create-reports/desktop-accessibility-creating-reports) | `B`  | Tab order, titles, alt text, color contrast, markers, and readable data support accessible analytical reports.                        | Reinforces authored reading order and non-color cues on dense desktop surfaces. Enterprise report conventions are not art direction.  |
+| [WCAG: Non-text Contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html)                                         | `A`  | Essential marks and state boundaries require contrast against adjacent colors.                                                        | A chart palette cannot be approved from attractive swatches; line, fill, grid, label, and focus combinations need measured specimens. |
+| [SDVX.org: Effect Radar](https://www.sdvx.org/en/compendium/effect-radar)                                                             | `D`  | A stable multi-axis fingerprint can be a learned rhythm-game shorthand for chart demands.                                             | Supports the approved NOSTALGIA-specific community radar concept. SOUND VOLTEX axes and values cannot be copied.                      |
+| [Official SOUND VOLTEX: Skill Analyzer](https://p.eagate.573.jp/game/sdvx/vii/howto/skill.html)                                       | `D`  | Rhythm-game analysis uses structured mode, course, skill, and outcome context rather than generic charts alone.                       | Confirms the domain's tolerance for dense specialized visuals. It does not override accessible alternatives.                          |
+| [osu!: Beatmap Information](https://osu.ppy.sh/wiki/en/Beatmap_information)                                                           | `D`  | Selected chart facts, leaderboards, personal position, and detailed score context coexist under one stable beatmap identity.          | Supports stable chart context and progressive detail. osu! mechanics and card design do not transfer.                                 |
+| [Tachi](https://tachi.ac/)                                                                                                            | `D`  | Sessions, goals, best metrics, folders, and historical comparison are distinct analytical jobs.                                       | Supports separating summary, exploration, and detailed evidence instead of one overloaded dashboard.                                  |
+
+### Matrix D synthesis
+
+- The most accessible default chart is not always the most domain-efficient chart.
+  NosLog may retain a learned radar fingerprint when it is the approved task fit, but
+  must add labels, exact values, keyboard/focus behavior, textual summary, and a data
+  equivalent rather than relying on shape or color alone.
+- Position and aligned numbers should carry comparison before decorative color.
+- Data color roles must be separate from global action, error, hand, and difficulty
+  roles or explicitly document safe reuse.
+- Mobile may summarize or sequence a comparison, but it must not silently remove the
+  metric that explains the user's task or result.
+
+## Matrix E — Rhythm-Game Domain and Product Comparables
+
+| Source                                                                                                  | Role | Transferable evidence                                                                                                     | NosLog applicability and limitation                                                                                                           |
+| ------------------------------------------------------------------------------------------------------- | ---- | ------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Official NOSTALGIA Op.3](https://www.konami.com/arcadegames/products/am_nostalgia_op3/)                | `D`  | Establishes the covered game's piano identity, official naming, arcade context, and expressive source material.           | Governs domain fidelity and attribution, not NosLog layout or branding.                                                                       |
+| [Official NOSTALGIA: How to Play](https://p.eagate.573.jp/game/nostalgia/op3/howto/entrance.html)       | `D`  | Establishes modes, difficulties, note behaviors, hand interaction, and play flow.                                         | Prevents generic rhythm-game assumptions. The arcade sequence is not copied into web navigation.                                              |
+| [Official NOSTALGIA: Play Data](https://p.eagate.573.jp/game/nostalgia/op3/playdata/entrance.html)      | `D`  | Establishes Best Score, judgement detail, history, play count, Full Combo, Perfect, and chart-level record relationships. | Defines factual record hierarchy; authenticated official UI is not a public design template.                                                  |
+| [Taiko.wiki](https://taiko.wiki/?lang=en)                                                               | `D`  | Combines direct domain destinations, song discovery, notices, and multilingual access in a fan service.                   | Useful structural comparator and density counterexample; Taiko terminology and persistent controls do not transfer.                           |
+| [Taiko.wiki: Song Search](https://taiko.wiki/song?lang=en)                                              | `D`  | Song-centered discovery keeps title, artist, genre, level, and chart filters together.                                    | Supports shared music/chart discovery context. Its exact control volume is not adopted.                                                       |
+| [V-ARCHIVE](https://v-archive.net/)                                                                     | `D`  | A Korean rhythm-game archive combines record management, tiers, search, profiles, and responsive navigation.              | Strong regional/domain comparator. DJMAX button modes, tiers, and surface styling differ.                                                     |
+| [V-ARCHIVE: Tier Guide](https://v-archive.net/info/manual/tier)                                         | `D`  | Tier, best-result evidence, growth history, and exact scoring logic are explained as connected but separate layers.       | Supports transparent derived NosLog Rating and tier history. Its formula cannot define NosLog.                                                |
+| [Tachi](https://tachi.ac/)                                                                              | `D`  | A modular tracker separates score collection, analysis, sessions, goals, profile evidence, and integration.               | Supports coherent page families and historical preservation. Its multi-game scope is broader.                                                 |
+| [osu!: Ranking](https://osu.ppy.sh/wiki/en/Ranking)                                                     | `D`  | Global performance ranking and beatmap-specific score ranking are separate comparison populations.                        | Supports clear scope labels and selected-chart ranking. osu! PP semantics do not map to Grd or NosLog Rating.                                 |
+| [osu!: Beatmap Information](https://osu.ppy.sh/wiki/en/Beatmap_information)                             | `D`  | Music identity, difficulty context, chart facts, leaderboard, and personal score remain associated.                       | Supports music-versus-chart hierarchy and focused detail. Gameplay download actions are out of scope.                                         |
+| [ScoreSaber](https://scoresaber.com/)                                                                   | `D`  | Player and map leaderboards prioritize rank, identity, performance value, accuracy, and chart context.                    | Useful for compact ranking evidence. Beat Saber PP and anti-cheat context differ.                                                             |
+| [ScoreSaber Ranking System](https://wiki.scoresaber.com/ranking-system.html)                            | `D`  | Explains weighted performance, global rank, and country rank rather than presenting an unexplained number.                | Supports transparent derived metrics and profile comparison. Its algorithm is not reusable.                                                   |
+| [BeatLeader](https://beatleader.com/)                                                                   | `D`  | Combines rankings, score detail, replays, map demands, and player progression.                                            | Supports rich evidence behind summaries. Replay and custom-map systems exceed NosLog scope.                                                   |
+| [ArcadeStat](https://arcadestat.app/en/)                                                                | `D`  | An arcade records service exposes games, records, tiers, voting, and profile functions from one shell.                    | Useful for arcade-specific navigation and verified-achievement voting. Its automatic aggregate rules are rejected where they conflict.        |
+| [KONAMI IIDX: Play Screen and Filters](https://p.eagate.573.jp/game/2dx/33/howto/play/game_screen.html) | `D`  | Goal-oriented selection may include level, result status, grade, and MISS-count criteria.                                 | Supports meaningful personal refinement while confirming that IIDX lamp taxonomy must not be copied.                                          |
+| [SOUND VOLTEX: News](https://p.eagate.573.jp/game/sdvx/vii/news/index.html)                             | `D`  | A dedicated official archive separates chronological game updates from play surfaces.                                     | Supports NosLog announcement hierarchy and official-source separation. Its promotional voice and images do not define NosLog editorial style. |
+
+### Matrix E synthesis
+
+- Music, chart, mode, difficulty, personal record, ranking, tier, and community
+  evaluation are related but not interchangeable entities.
+- Jackets are stable music identity anchors and remain square; they cannot carry every
+  record and status at once without hierarchy or progressive disclosure.
+- Expert users tolerate dense evidence when the comparison target is stable and
+  values align. Density without clear scope, provenance, or priority is still noise.
+- NosLog's distinct value is the combination of NOSTALGIA records, tiers, archive,
+  official-chart contribution, and the falling/full-chart viewer—not a generic rhythm-
+  game skin.
+
+## Matrix F — Editorial and Art-Direction References
+
+These sources are intentionally lower-authority for behavior. They are observation
+targets for proportion, rhythm, hierarchy, imagery, and expression only.
+
+| Source                                                                                                                | Role | Transferable evidence                                                                                                                | NosLog applicability and limitation                                                                                      |
+| --------------------------------------------------------------------------------------------------------------------- | ---- | ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| [Plus X](https://dx.plusx.kr/)                                                                                        | `E`  | Strong Korean typography, project-led pacing, controlled contrast, and transitions between sparse and image-rich sections.           | Useful for hierarchy and editorial rhythm. Portfolio spectacle and motion cannot override task speed.                    |
+| [MUSINSA Updates](https://updates.musinsa.com/)                                                                       | `E`  | Korean editorial hierarchy handles compact metadata, strong titles, imagery, and repeated content systems.                           | Useful for Korean type proportion and scan. Commerce and fashion content are not domain structure.                       |
+| [MUSINSA Newsroom: Store BI](https://newsroom.musinsa.com/newsroom-menu/2025-1022)                                    | `E`  | Brand identity can remain recognizable across global, retail, digital, and editorial contexts through a disciplined system.          | Supports a coherent NosLog identity beyond one logo. MUSINSA's brand assets are not copied.                              |
+| [TURN.STUDIO — Creative Agency Website](https://www.behance.net/gallery/252216015/Creative-Agency-Website-TURNSTUDIO) | `E`  | Explores large-scale type, asymmetry, image sequencing, dark/light contrast, and responsive composition.                             | Useful for expressive specimens and pacing. It is a concept/portfolio reference, not tested product behavior.            |
+| [Linear](https://linear.app/)                                                                                         | `C`  | A dark product/marketing system uses quiet neutrals, precise type hierarchy, controlled accent, and embedded dense product evidence. | Useful bridge between editorial expression and productive density. Its monochrome tech identity is not NosLog's.         |
+| [Vercel](https://vercel.com/)                                                                                         | `C`  | Strong grid, high contrast, sparse graphic language, and modular content create a recognizable scalable system.                      | Useful for alignment and restraint. Its black/white brand cannot become NosLog by imitation.                             |
+| [Stripe](https://stripe.com/)                                                                                         | `C`  | Complex infrastructure is staged through hierarchy, color, diagrams, product imagery, and progressive explanatory sections.          | Useful for explaining complex sync/contribution flows. Its marketing density and gradients are not defaults.             |
+| [Arc](https://arc.net/)                                                                                               | `C`  | Product personality is expressed through typography, color, imagery, and motion without exposing every function as a control.        | Supports distinctive expression with restrained controls. Browser consumer marketing is not an archive pattern.          |
+| [Raycast](https://www.raycast.com/)                                                                                   | `C`  | Dark surfaces, command-focused hierarchy, compact product imagery, and accent restraint coexist.                                     | Useful for dark UI layering and focused actions. Its command-palette model is not NosLog navigation.                     |
+| [Pitch](https://pitch.com/)                                                                                           | `C`  | Editorial storytelling, modular examples, and product demonstrations use different density levels within one visual language.        | Useful for guide/PDF pacing and explanatory modules. Presentation software workflows do not transfer.                    |
+| [Framer](https://www.framer.com/)                                                                                     | `C`  | Responsive marketing composition demonstrates flexible type, grid, cards, and live product examples.                                 | Useful for adaptation and specimen presentation. Template-market visual trends are not evidence of product usability.    |
+| [Aesop](https://www.aesop.com/)                                                                                       | `C`  | Restrained color, measured typography, whitespace, imagery, and editorial voice create strong identity without excessive controls.   | Useful counterweight to dense rhythm-game references. Its low information density cannot govern rankings or chart tools. |
+
+### Matrix F synthesis
+
+- NosLog can be expressive through proportion, typography, jacket imagery, rhythm,
+  and purposeful motion without adding more persistent controls or decorative cards.
+- Editorial references are most useful for Home, announcements, onboarding, guide
+  examples, and transitions between information levels. Product foundations still
+  govern filters, settings, rankings, record detail, viewer, and editor surfaces.
+- A dark visual direction is not synonymous with pure black, neon glow, translucent
+  cards, or a generic gaming aesthetic.
+- The final Claude Design may explore composition inside approved constraints, but it
+  must not use an art-direction reference to invent product behavior or remove states.
+
+## Cross-Source Convergence
+
+The following findings are strongly supported across independent evidence classes.
+They are research findings, not yet the approved NosLog design principles.
+
+| ID        | Convergent finding                                                                                                                                   | Evidence classes   | Implication to test next                                                                                     |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ | ------------------------------------------------------------------------------------------------------------ |
+| `CONV-01` | Information priority must be visible through size, weight, spacing, position, contrast, and disclosure—not by giving every item a button or card.    | `A`, `B`, `C`, `E` | Build specimens with one unmistakable primary task and quiet secondary utilities.                            |
+| `CONV-02` | Responsive systems should react to content, container, language, input, and user preference rather than device labels alone.                         | `A`, `B`, `C`      | Define component transitions from failure points observed at `320`, `390`, intermediate, and desktop widths. |
+| `CONV-03` | Typography, spacing, grid, color, surface, icon, and motion roles must be designed and tested together.                                              | `B`, `C`, `E`      | Do not approve isolated palettes or type scales without representative NosLog content.                       |
+| `CONV-04` | Dark interfaces need neutral-dominant layered surfaces, measured contrast, and sparse purposeful accent.                                             | `A`, `B`, `C`      | Test surface steps, borders, focus, text, hand colors, semantic states, and jackets in one dark specimen.    |
+| `CONV-05` | Color alone cannot carry state or comparison.                                                                                                        | `A`, `B`, `D`      | Pair color with label, icon, shape, position, border treatment, or numeric value.                            |
+| `CONV-06` | Dense expert data is usable when scope is stable, values align, hierarchy is explicit, and progressive detail does not hide the reason for a result. | `B`, `C`, `D`      | Preserve comparable scores and chart context while reducing simultaneous controls.                           |
+| `CONV-07` | Motion is a clarifying layer for causality, continuity, focus, and feedback; decorative motion must remain subordinate and reducible.                | `A`, `B`, `C`      | Create intent-based motion roles and reduced-motion replacements before values.                              |
+| `CONV-08` | Multilingual quality requires real-script content, language-aware line breaking, scalable containers, and locale-aware formatting.                   | `A`, `B`, `D`      | Test long actual titles, readings, translations, labels, dates, and numbers in all three locales.            |
+| `CONV-09` | Domain-familiar specialized visuals can outperform generic simplification for expert tasks, but need accessible redundant representations.           | `A`, `B`, `D`      | Retain approved radar/viewer concepts with exact values, labels, summaries, and alternatives.                |
+| `CONV-10` | Brand expression should come from a coherent system and content, not surface effects copied from a reference.                                        | `B`, `C`, `D`, `E` | Explore multiple NosLog-specific compositions using the same content and functional constraints.             |
+
+## Evidence Conflicts That Must Remain Open
+
+| ID        | Conflict                                                                                                          | Why no conclusion is approved yet                                                                                            | Required next evidence                                                                                     |
+| --------- | ----------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `OPEN-01` | Spacing bases vary across mature systems (`4px`, `5px`, `8px`, and hybrid scales).                                | Consistency matters more than copying a fashionable base; CJK metrics and dense viewer/editor controls change optical needs. | Representative components and page fragments with measured grouping and touch targets.                     |
+| `OPEN-02` | Small productive type ranges from roughly `12px` to `16px` across systems.                                        | Typeface metrics, weight, contrast, script, line length, and task matter more than nominal size.                             | Candidate-font specimens in Korean, Japanese, English, and tabular scores at text zoom.                    |
+| `OPEN-03` | Systems use different breakpoint sets, max widths, and column counts.                                             | Those values reflect their own content and platforms.                                                                        | NosLog content-failure observations across `320`, `390`, intermediate widths, and wide comparison layouts. |
+| `OPEN-04` | Dark elevation may use surface lightening, borders, shadows, translucency, or combinations.                       | Jacket imagery, WebGL content, browser compositing, and contrast can make the same treatment behave differently.             | One surface-stack specimen including cards, menus, dialogs, sticky controls, and viewer chrome.            |
+| `OPEN-05` | Product systems favor restrained typography while editorial references use expressive scale and composition.      | NosLog needs both task speed and a distinctive identity, but page families need different intensity.                         | Productive and expressive type-set candidates applied to Home, discovery, ranking, and viewer fragments.   |
+| `OPEN-06` | Common charts improve general comprehension, while learned radar profiles improve expert rhythm-game recognition. | The approved community radar has domain value but shape/color alone is inaccessible and small mobile rendering may fail.     | Radar, exact-value list, textual summary, focus order, and `320px` comparison specimen.                    |
+| `OPEN-07` | Dense desktop layouts improve comparison, but simply adding columns can fragment reading and keyboard order.      | Each page family has a different comparison task and semantic sequence.                                                      | Page-family desktop adaptation rules after mobile hierarchy is validated.                                  |
+| `OPEN-08` | Expressive motion can strengthen identity, but motion also affects comfort, performance, and viewer focus.        | The WebGL viewer already contains meaningful motion, so surrounding UI motion has a lower attention budget.                  | Motion inventory, intent taxonomy, performance constraints, and reduced-motion alternatives.               |
+
+## NosLog Constraints That References Cannot Override
+
+The following facts and approvals come from documents `01`–`21` and the NOSTALGIA
+domain. A popular reference cannot replace them.
+
+1. Mobile is the primary arcade-side context; desktop remains a required analytical,
+   viewer, and future-editor environment.
+2. The product supports Korean, Japanese, and English, with original Japanese music
+   titles and approved translated/reading-title behavior.
+3. Basic and Recital are distinct modes. Normal, Hard, Expert, and optional Real are
+   chart difficulties, not generic tags.
+4. Left-hand and right-hand chart color meaning, jacket identity, score/rank meaning,
+   judgement details, tiers, Bingo, Exams, and NOSTALGIA official grade must retain
+   their approved domain semantics.
+5. The falling and full-chart WebGL viewer is a focused NosLog capability; the design
+   guide may redesign entry, chrome, states, and full-screen behavior without silently
+   replacing the rendering model.
+6. The future user editor contributes to one canonical official chart through drafts,
+   immutable submissions, review, and administrator publication; it is not a public
+   alternate-chart catalog.
+7. The approved dark direction is retained, but the legacy NOSTORY surface styling is
+   not an authority.
+8. Verified page functions and states cannot be removed for visual simplicity. They
+   may be reprioritized or progressively disclosed only under their approved briefs.
+
+## Proposed Design-Principle Candidates
+
+These are discussion candidates derived from the matrix. Their status is `Proposed`,
+not `Approved`.
+
+| ID      | Candidate                                       | Practical meaning                                                                                                                        | Status     |
+| ------- | ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| `PR-01` | **Task clarity before ornament**                | Make the current purpose, primary action, scope, and result obvious before adding visual expression.                                     | `Proposed` |
+| `PR-02` | **Domain truth before generic convention**      | Use familiar web patterns without flattening NOSTALGIA-specific modes, records, tiers, courses, or chart behavior.                       | `Proposed` |
+| `PR-03` | **Progressive depth, preserved cause**          | Keep the default view concise, but never hide the value, scope, or state that explains why a result appears.                             | `Proposed` |
+| `PR-04` | **Dark, layered, and purposeful**               | Build a neutral dark hierarchy first; reserve color, elevation, glow, and motion for explicit semantic or expressive jobs.               | `Proposed` |
+| `PR-05` | **One multilingual typographic system**         | Design Korean, Japanese, English, readings, scores, and metadata as tested roles within one hierarchy, not separate afterthoughts.       | `Proposed` |
+| `PR-06` | **Responsive to available meaning**             | Recompose from content and container constraints while preserving semantic order and task parity, not from device stereotypes.           | `Proposed` |
+| `PR-07` | **Comparison through alignment and evidence**   | Use stable scope, aligned metrics, exact values, and accessible redundant encoding before decorative visualization.                      | `Proposed` |
+| `PR-08` | **Expression without control clutter**          | Create NosLog identity through type, proportion, jacket imagery, rhythm, materials, and restrained motion instead of persistent buttons. | `Proposed` |
+| `PR-09` | **Accessible by construction**                  | Treat focus, keyboard, target size, contrast, reflow, language, text scaling, and reduced motion as foundation inputs.                   | `Proposed` |
+| `PR-10` | **Documented exceptions, not accidental drift** | Allow specialized viewer/editor/data behavior only when its purpose, boundary, fallback, and test are explicit.                          | `Proposed` |
+
+## Next-Phase Research Gates
+
+The matrix supports the following order, but does not authorize the next phase until
+the user approves this evidence framing and discusses the candidates.
+
+1. Review and revise the ten proposed design-principle candidates.
+2. Define the approved product hierarchy those principles must protect across Home,
+   discovery, detail, dense data, and focused chart contexts.
+3. Build a foundation-v0.1 research brief before selecting values:
+    - multilingual typography and metric typography;
+    - neutral dark layers, semantic colors, hand/difficulty/data collision policy;
+    - spacing, grid, containers, and density;
+    - borders, radius, elevation, and material treatment;
+    - icon roles and labels;
+    - functional and expressive motion with reduced-motion behavior;
+    - data-visualization anatomy and accessible alternatives.
+4. Apply candidates to representative real-content fragments rather than isolated
+   swatches: shared discovery, Music detail/record comparison, rankings, chart viewer,
+   and a compact editorial Home/announcement fragment.
+5. Validate `320`, representative `390`, intermediate transition widths, and desktop
+   comparison layouts before promoting any token or component to `Approved`.
+
+## Decision Log
+
+| ID        | Entry                                                                                                                                   | Status     |
+| --------- | --------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| `REF-D01` | Use role-separated evidence classes and record limitations instead of treating all references as equal.                                 | `Proposed` |
+| `REF-D02` | Treat this matrix as a cross-cutting source pool, not a substitute for focused twelve-to-fifteen-source decisions.                      | `Proposed` |
+| `REF-D03` | Preserve the approved page briefs and NOSTALGIA semantics as constraints references cannot override.                                    | `Observed` |
+| `REF-D04` | Do not select fonts, palette values, spacing bases, grid widths, breakpoints, radius, elevation, icons, or motion values in this phase. | `Observed` |
+| `REF-D05` | Carry the ten principle candidates into user review before drafting foundation v0.1.                                                    | `Proposed` |
+
+## Phase Acceptance Checklist
+
+- [ ] The user approves or revises the evidence-role model.
+- [ ] The user confirms that the matrix is broad enough to begin design-principle
+      decisions without treating the matrix as final visual direction.
+- [ ] Every proposed principle is individually approved, revised, rejected, or left
+      open.
+- [ ] The English and Korean documents remain substantively synchronized.
+- [ ] No foundation value or high-fidelity design is treated as approved from this
+      research draft.
