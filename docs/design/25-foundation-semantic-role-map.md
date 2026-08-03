@@ -2,7 +2,7 @@
 
 ## Document Control
 
-- Status: `Approved semantic-role architecture, font family, type floor, physical scale, line-height axes, shared weight vocabulary, and tracking rule — remaining composite values unresolved`
+- Status: `Approved semantic-role architecture and exact default composite mapping — responsive substitutions and integrated validation remain open`
 - Approval date: 2026-08-03
 - Last decision update: 2026-08-04
 - Canonical language: English
@@ -14,19 +14,20 @@
 - Inputs: approved documents `01`–`24`, current repository typography utilities,
   current-browser evidence recorded in document `24`, the reference comparison below,
   and explicit user approval on 2026-08-03
-- Excluded: remaining role-to-step and role-to-weight assignments, responsive type
-  behavior, fallback and delivery details, color, spacing, grid,
-  component dimensions, final Figma styles, production screens, and application
-  implementation
+- Excluded: responsive type substitutions and wide-screen enlargement, maximum line
+  counts, wrapping and truncation policy, fallback and delivery details, color,
+  spacing, grid, component dimensions, final Figma styles, production screens, and
+  application implementation
 
 This document approves what each shared typography role means, how it is governed,
 the shared family, and the global lower bound. Batch B document `26` subsequently
 approves the bounded `12/14/16/20/24/32px` ordinary physical ramp, gated `40px`
 display step, `16/20/24px` lower and `28/32/40/48px` upper line-height primitive
-axes, `400/500/600/700` shared weight vocabulary, natural/default tracking rule, and
-their usage and validation constraints. A role name appearing here must not be
-interpreted as permission to select an arbitrary composite style, automatically
-assign one of those steps or weights, or reuse the current implementation value.
+axes, `400/500/600/700` shared weight vocabulary, natural/default tracking rule,
+the exact role-to-composite mapping, and its precedence rules. A role name appearing
+here is the authoring API: it resolves to the approved composite and must not be used
+as permission to select arbitrary primitive values or reuse a current implementation
+value.
 
 ## Related Documents
 
@@ -60,9 +61,9 @@ The approved model therefore separates four concerns:
 
 The semantic roles, alias-governance model, Pretendard JP family selection, and global
 `12px` shared user-facing floor are approved in this document. Batch B document `26`
-later approves the restrained `12/14/16/20/24/32px` ordinary physical ramp and gated
-`40px` display step without automatically assigning every role. Remaining role
-mappings and composite values remain Batch B decisions.
+later approves the restrained physical axes and exact default mapping of the twelve
+roles to nine composites. Responsive substitutions, integrated specimen promotion,
+and the other excluded boundaries remain later decisions.
 
 ## Research Convergence
 
@@ -103,18 +104,17 @@ NOSTALGIA meaning.
   `metadata`, `entity-companion`, or any other role.
 - The approved lower physical core is `12px`, `14px`, and `16px`. `12px` is restricted
   to eligible short tertiary support, `14px` is the compact product-UI step, and
-  `16px` is the ordinary reading/body step. These boundaries do not automatically
-  assign a role to a step.
+  `16px` is the ordinary reading/body step. The exact role resolutions are recorded
+  in Layer 2 and are not selected locally.
 - The approved ordinary upper physical core is `20px`, `24px`, and `32px`; `40px` is
-  a gated display primitive eligible only for later-approved `display` or
-  `metric-display` composites. `18px`, `28px`, and `36px` are not shared v0.1
-  primitives. A new shared size requires representative multilingual and responsive
-  specimen evidence and explicit approval rather than local page-level use.
+  a gated primitive assigned only to rare `display`; `metric-display` resolves to
+  `32px`. `18px`, `28px`, and `36px` are not shared v0.1 primitives. A new shared size
+  requires representative multilingual and responsive specimen evidence and explicit
+  approval rather than local page-level use.
 - The default upper pairings are `20/28`, `24/32`, `32/40`, and `40/48`. Exact role
-  mappings and responsive title behavior remain unresolved. The shared weight
-  vocabulary is approved, but its exact
-  assignment across the twelve roles is not. Natural/default tracking and retained
-  kerning apply to every shared role unless a later explicit exception is approved.
+  mappings and weight assignments are approved in Layer 2; responsive title and
+  display behavior remains unresolved. Natural/default tracking and retained kerning
+  apply to every shared role unless a later explicit exception is approved.
 - Space pressure must be solved through content priority, wrapping, reflow, spacing,
   progressive disclosure, or component composition before reducing type.
 - Canvas or WebGL text has no automatic exception. A smaller rendered value requires
@@ -132,15 +132,29 @@ designers must not apply primitives directly to page content.
 
 ### Layer 2 — Composite physical styles
 
-Future composite styles will combine primitive values into tested treatments. Several
-semantic roles may intentionally resolve to the same composite style. The number of
-semantic roles therefore does not require twelve different font sizes.
+Document `26` approves nine complete physical composites for the twelve semantic
+roles. Several roles intentionally share a treatment; semantic precision does not
+require twelve font sizes or twelve independent styles.
 
-Composite styles are approved only after Batch B specimens demonstrate that they work
-with real NosLog content. Until then, no role size, role-to-weight mapping, or
-role-to-pairing assignment shown in the current app or an external design system is
-authoritative; the approved physical and line-height axes, `12px` floor, shared
-weight vocabulary, and natural/default tracking rule still apply.
+| Semantic role      | Approved default composite | Numeric feature |
+| ------------------ | -------------------------- | --------------- |
+| `display`          | `40/48 · 700`              | Proportional    |
+| `page-title`       | `24/32 · 700`              | Proportional    |
+| `section-title`    | `20/28 · 600`              | Proportional    |
+| `component-title`  | `16/24 · 600`              | Proportional    |
+| `entity-title`     | `16/24 · 600`              | Proportional    |
+| `entity-companion` | `14/20 · 400`              | Proportional    |
+| `body`             | `16/24 · 400`              | Proportional    |
+| `body-secondary`   | `14/20 · 400`              | Proportional    |
+| `control`          | `14/20 · 500`              | Proportional    |
+| `metadata`         | `12/16 · 400`              | Proportional    |
+| `metric-display`   | `32/40 · 700`              | Tabular figures |
+| `metric-value`     | `14/20 · 500`              | Tabular figures |
+
+Natural/default tracking and retained kerning apply to every composite. These values
+must be consumed through the semantic roles or approved aliases, not as page-local
+size, leading, weight, or tracking choices. Responsive substitutions and integrated
+specimen promotion remain separate gates.
 
 ### Layer 3 — Shared semantic roles
 
@@ -156,7 +170,7 @@ The following twelve roles are the approved shared role inventory.
 | `entity-companion` | Optional supporting identity paired with an entity title                     | Approved Korean/English Music title or Japanese reading                                 | May appear above the original title but remains visually subordinate and never replaces it |
 | `body`             | Default readable content and ordinary system message                         | Descriptions, instructions, announcement body, empty/error message                      | Must remain comfortable for multi-line reading and text resizing                           |
 | `body-secondary`   | Supporting explanation or secondary identity                                 | Artist, concise supporting description, contextual note                                 | Must not become the only location for task-critical meaning through low prominence         |
-| `control`          | Visible text that names or contains an interaction                           | Button, tab, filter, menu item, input value or label                                    | Must remain readable, localized, and aligned with its control and icon                     |
+| `control`          | Visible text that names an action or available choice                        | Button, tab, filter, menu item, field label                                             | Must remain readable, localized, and aligned with its control and icon                     |
 | `metadata`         | Compact secondary fact or short status descriptor                            | Date, category, level context, timestamp, badge text, chart axis or measure annotation  | Not a replacement for body copy or ordinary controls; small treatment remains exceptional  |
 | `metric-display`   | One locally dominant quantitative result                                     | Best score, Official Grd, NosLog Rating, another approved summary metric                | Emphasizes a value without masquerading as a page heading or losing its label and unit     |
 | `metric-value`     | Comparable quantitative value within a row, group, control, or visualization | Rank value, score row, BPM, time, measure, Play count, judgement value                  | Uses stable numeric alignment and retains explicit context, unit, and scope                |
@@ -170,7 +184,9 @@ initial aliases are approved:
 | ------------------------------------------------------- | ------------------------------ | ---------------------------------------------------------------------------------- |
 | Header wordmark                                         | Bounded brand-component alias  | It may have brand-specific treatment but does not create a general text-scale step |
 | Artist                                                  | `body-secondary`               | Remains separated from the paired title group by composition, not a new type role  |
-| Button, tab, filter, menu, field label, field value     | `control`                      | Component variants may alter layout or state, not invent local typography          |
+| Button, tab, filter, menu, and field label              | `control`                      | Visible action and available-choice labels use `14/20 · 500`                       |
+| Entered or selected value inside a text-like field      | `body`                         | Readable content uses `16/24 · 400`; this does not create an input-value style     |
+| Focused page entity identity                            | `page-title`                   | Retains entity semantics while its visible primary heading uses `24/32 · 700`      |
 | Badge and short status                                  | `metadata` or `control`        | Interactive badges use `control`; descriptive badges use `metadata`                |
 | Metric label and unit                                   | `metadata` or `body-secondary` | The value uses a metric role; its context remains readable and explicit            |
 | Chart axis, tick, legend label, measure number          | `metadata`                     | Exact values remain available without relying on hover alone                       |
@@ -319,6 +335,20 @@ styles. It is allowed only when all of the following are satisfied:
 A repeated need across multiple unrelated components is evidence that the shared role
 map may need revision; it must not be copied as repeated local exceptions.
 
+### Approved precedence rules
+
+- A Music title, username, arcade name, exam name, or other domain entity uses
+  `entity-title` in an ordinary list or card. When that entity owns the focused page
+  or task, its primary visible identity uses the `page-title` composite while retaining
+  its canonical entity meaning. This is an alias precedence rule, not a new role.
+- A visible action or available choice uses `control`. A user's entered value or the
+  selected value shown inside a text-like field uses `body`. Component state, icon,
+  border, and geometry may communicate interactivity but may not invent another text
+  composite.
+- Metric roles use tabular figures. A heading role that happens to contain a number
+  remains proportional unless its semantic job is actually a comparable metric.
+- Correct HTML heading order is independent from the visual composite selected.
+
 ### Initially recognized bounded candidates
 
 The following areas may justify a bounded alias or later exception review, but no
@@ -344,7 +374,8 @@ forward automatically.
 | `text-section`                                 | `section-title` or `component-title`                                | Select according to actual document hierarchy                      |
 | `text-body`                                    | `body`                                                              | Physical value must be revalidated                                 |
 | `text-body-muted`                              | `body-secondary`                                                    | Muted color is not inherent to every supporting text use           |
-| `text-label` and `text-input`                  | `control`                                                           | Component anatomy and state may vary; typography remains shared    |
+| `text-label`                                   | `control`                                                           | Visible action or field labels use the approved control composite  |
+| `text-input`                                   | `body`                                                              | Entered or selected values use the approved body composite         |
 | `text-caption`                                 | `metadata`                                                          | Confirm that content is genuinely secondary and compact            |
 | `text-badge`                                   | `metadata` or `control`                                             | Choose by descriptive versus interactive behavior                  |
 | `text-micro` and direct `10px` values          | No default successor                                                | Audit and remove; any retained case requires the exception process |
@@ -428,26 +459,27 @@ permission, and destructive fixtures at `320px`, `390px`, intermediate widths,
 
 ## Decision Log
 
-| ID       | Decision                                                                                                                                             | Status       |
-| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
-| `FSR-01` | Use the twelve shared semantic roles defined in this document                                                                                        | `Approved`   |
-| `FSR-02` | Keep all physical type values unresolved until Batch B integrated specimen review                                                                    | `Superseded` |
-| `FSR-03` | Require ordinary text to use approved roles and govern every physical exception explicitly                                                           | `Approved`   |
-| `FSR-04` | Keep `display` rare and prohibit it as the default page, card, metric, or state style                                                                | `Approved`   |
-| `FSR-05` | Do not retain a global ordinary-UI `micro` role                                                                                                      | `Approved`   |
-| `FSR-06` | Use tabular figures for comparable metrics and do not use monospace for ordinary domain values                                                       | `Approved`   |
-| `FSR-07` | Keep enabled localized/read title above but visually subordinate to the original Music title                                                         | `Approved`   |
-| `FSR-08` | Treat wordmark, artist, controls, badges, chart labels, and renderer data as governed aliases rather than new shared scales                          | `Approved`   |
-| `FSR-09` | Keep Pretendard as an incumbent candidate without selecting the final font                                                                           | `Superseded` |
-| `FSR-10` | Select Pretendard JP as the shared Korean, Japanese, and English NosLog 2.0 font family while retaining production validation                        | `Approved`   |
-| `FSR-11` | Prohibit ordinary shared user-facing typography below `12px`; treat `12px` as a floor rather than a role assignment                                  | `Approved`   |
-| `FSR-12` | Keep role sizes, line heights, weights, tracking, responsive behavior, fallback, and delivery unresolved until Batch B                               | `Approved`   |
-| `FSR-13` | Recognize document `26`'s approved `12/14/16px` lower physical core without automatically assigning semantic roles                                   | `Approved`   |
-| `FSR-14` | Recognize document `26`'s approved `16/20/24px` lower line-height axis and default lower pairings without assigning full semantic composite styles   | `Approved`   |
-| `FSR-15` | Recognize document `26`'s approved `400/500/600/700` shared weight vocabulary without assigning every semantic role a final composite style          | `Approved`   |
-| `FSR-16` | Recognize document `26`'s approved natural/default tracking and retained kerning across shared roles while governing every rare exception explicitly | `Approved`   |
-| `FSR-17` | Recognize document `26`'s approved `20/24/32px` ordinary upper core and gated `40px` display step without assigning final semantic composites        | `Approved`   |
-| `FSR-18` | Recognize document `26`'s approved `28/32/40/48px` upper line-height axis and default upper pairings without assigning final semantic composites     | `Approved`   |
+| ID       | Decision                                                                                                                                               | Status       |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------ |
+| `FSR-01` | Use the twelve shared semantic roles defined in this document                                                                                          | `Approved`   |
+| `FSR-02` | Keep all physical type values unresolved until Batch B integrated specimen review                                                                      | `Superseded` |
+| `FSR-03` | Require ordinary text to use approved roles and govern every physical exception explicitly                                                             | `Approved`   |
+| `FSR-04` | Keep `display` rare and prohibit it as the default page, card, metric, or state style                                                                  | `Approved`   |
+| `FSR-05` | Do not retain a global ordinary-UI `micro` role                                                                                                        | `Approved`   |
+| `FSR-06` | Use tabular figures for comparable metrics and do not use monospace for ordinary domain values                                                         | `Approved`   |
+| `FSR-07` | Keep enabled localized/read title above but visually subordinate to the original Music title                                                           | `Approved`   |
+| `FSR-08` | Treat wordmark, artist, controls, badges, chart labels, and renderer data as governed aliases rather than new shared scales                            | `Approved`   |
+| `FSR-09` | Keep Pretendard as an incumbent candidate without selecting the final font                                                                             | `Superseded` |
+| `FSR-10` | Select Pretendard JP as the shared Korean, Japanese, and English NosLog 2.0 font family while retaining production validation                          | `Approved`   |
+| `FSR-11` | Prohibit ordinary shared user-facing typography below `12px`; treat `12px` as a floor rather than a role assignment                                    | `Approved`   |
+| `FSR-12` | Keep role sizes, line heights, weights, tracking, responsive behavior, fallback, and delivery unresolved until Batch B                                 | `Superseded` |
+| `FSR-13` | Recognize document `26`'s approved `12/14/16px` lower physical core without automatically assigning semantic roles                                     | `Approved`   |
+| `FSR-14` | Recognize document `26`'s approved `16/20/24px` lower line-height axis and default lower pairings without assigning full semantic composite styles     | `Approved`   |
+| `FSR-15` | Recognize document `26`'s approved `400/500/600/700` shared weight vocabulary without assigning every semantic role a final composite style            | `Approved`   |
+| `FSR-16` | Recognize document `26`'s approved natural/default tracking and retained kerning across shared roles while governing every rare exception explicitly   | `Approved`   |
+| `FSR-17` | Recognize document `26`'s approved `20/24/32px` ordinary upper core and gated `40px` display step without assigning final semantic composites          | `Approved`   |
+| `FSR-18` | Recognize document `26`'s approved `28/32/40/48px` upper line-height axis and default upper pairings without assigning final semantic composites       | `Approved`   |
+| `FSR-19` | Use document `26`'s exact twelve-role-to-nine-composite map, focused-entity and field-value precedence, tabular metric behavior, and rare display gate | `Approved`   |
 
 ## Completion Checklist
 
@@ -473,6 +505,8 @@ permission, and destructive fixtures at `320px`, `390px`, intermediate widths,
       step approved without final semantic-role assignment.
 - [x] Restrained `28/32/40/48px` upper line-height axis and default `20/28`, `24/32`,
       `32/40`, and `40/48` pairings approved without final semantic-role assignment.
-- [ ] Remaining role mapping and responsive title behavior compared.
+- [x] Twelve semantic roles mapped to nine complete default composites with focused
+      entity, field-value, metric, display, and semantic-heading precedence rules.
+- [ ] Responsive title and display substitutions compared.
 - [ ] Integrated `S1`–`S6` specimens reviewed with the user.
 - [ ] Approved physical values promoted to Foundation v0.1.

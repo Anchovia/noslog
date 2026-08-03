@@ -2,7 +2,7 @@
 
 ## Document Control
 
-- Status: `Approved research protocol — Gate 0 complete; later font, floor, physical-scale, line-height, shared-weight, and tracking decisions recorded`
+- Status: `Approved research protocol — Gate 0 complete; later typography axes and exact semantic composite mapping recorded`
 - Research date: 2026-08-03
 - Last decision update: 2026-08-04
 - Canonical language: English
@@ -14,21 +14,21 @@
 - Inputs: approved documents `01`–`23`, current repository tokens and components,
   current local-browser evidence, current standards, maintained design systems, and
   the explicit Foundation entry gate in document `22`
-- Excluded: remaining typography composites beyond the approved physical scale,
-  lower and upper line-height axes, shared weight vocabulary, and natural-tracking
-  rule; responsive type behavior; palette values, spacing units, grids,
-  breakpoints, radii, shadows, icon style, motion durations, chart styling, component
-  anatomy, high-fidelity screens, Figma production screens, and application
-  implementation
+- Excluded: responsive type substitutions and wide-screen enlargement, maximum line
+  counts, wrapping and truncation policy, fallback and delivery details; palette
+  values, spacing units, grids, breakpoints, radii, shadows, icon style, motion
+  durations, chart styling, component anatomy, high-fidelity screens, Figma
+  production screens, and application implementation
 
 This brief does not approve a complete visual system. It defines how candidates must
 be researched, combined, tested, compared, and brought to the user for decisions.
 Except for the later bounded Pretendard JP, `12px` floor,
 `12/14/16/20/24/32px` ordinary physical ramp, gated `40px` display step,
 `16/20/24px` lower-line-height and `28/32/40/48px` upper-line-height axes,
-`400/500/600/700` shared-weight, and natural-tracking decisions explicitly recorded
-below and in document `26`, no current value, reference value, Tailwind default, or
-candidate becomes authoritative because it appears in this document.
+`400/500/600/700` shared-weight, natural-tracking, and exact twelve-role-to-nine-
+composite mapping decisions explicitly recorded below and in document `26`, no
+current value, reference value, Tailwind default, or candidate becomes authoritative
+because it appears in this document.
 
 ## Related Documents
 
@@ -600,6 +600,7 @@ yet been produced or compared.
 | `FBR-13` | Recognize document `26`'s approved natural/default tracking rule, retained kerning, prohibition of shared positive or negative tracking tokens, and exception gate.     | `Approved`   |
 | `FBR-14` | Recognize document `26`'s approved `20/24/32px` ordinary upper core, gated `40px` display step, and specimen-gated process for proposing any additional shared size.    | `Approved`   |
 | `FBR-15` | Recognize document `26`'s approved `28/32/40/48px` upper line-height axis and default `20/28`, `24/32`, `32/40`, and `40/48` pairings without assigning semantic roles. | `Approved`   |
+| `FBR-16` | Recognize document `26`'s exact twelve-role-to-nine-composite map, focused-entity and field-value precedence, tabular metric behavior, and rare display gate.           | `Approved`   |
 
 ## Gate 0 Approval Record
 
@@ -662,6 +663,20 @@ pairings and the usage, multilingual, accessibility, and exception boundaries in
 document `26`. This does not assign semantic roles, weights, maximum line counts,
 truncation, responsive substitutions, or metric-display behavior.
 
+The user then approved the exact default semantic composite map:
+`display` `40/48 · 700`, `page-title` `24/32 · 700`, `section-title`
+`20/28 · 600`, `component-title` and ordinary `entity-title` `16/24 · 600`,
+`entity-companion` and `body-secondary` `14/20 · 400`, `body` `16/24 · 400`,
+`control` and `metric-value` `14/20 · 500`, `metadata` `12/16 · 400`, and
+`metric-display` `32/40 · 700`. Metric composites use tabular figures; other roles
+remain proportional by default. A domain entity that owns the focused page uses the
+`page-title` composite while retaining its entity meaning, and an entered or selected
+field value uses `body` while visible action and choice labels use `control`. The
+twelve roles intentionally share nine physical composites. This decision does not
+approve responsive substitutions, wide-screen enlargement, maximum line counts,
+wrapping, truncation, component geometry, spacing, color, layout, automatic display
+placement, or final Figma/token naming.
+
 ## Phase Checklist
 
 - [x] Root project instructions and repository baseline reread.
@@ -689,5 +704,8 @@ truncation, responsive substitutions, or metric-display behavior.
 - [x] User approved the restrained `28/32/40/48px` upper line-height axis and default
       `20/28`, `24/32`, `32/40`, and `40/48` pairings in document `26` on
       2026-08-04.
+- [x] User approved the exact twelve-role-to-nine-composite map and its focused-entity,
+      field-value, metric, display, and semantic-heading precedence rules in document
+      `26` on 2026-08-04.
 - [ ] Validate Pretendard JP delivery, fallback metrics, and the floor in the required
       multilingual integrated specimens before production promotion.

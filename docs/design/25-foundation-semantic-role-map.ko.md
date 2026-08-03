@@ -2,7 +2,7 @@
 
 ## 문서 관리
 
-- 상태: `승인된 Semantic-role 구조·글꼴 Family·Type 하한·물리 Scale·Line-height 축·공용 Weight 어휘·Tracking 규칙 — 나머지 Composite 값 미확정`
+- 상태: `승인된 Semantic-role 구조와 정확한 기본 Composite mapping — Responsive substitution 및 통합 검증 미완료`
 - 승인일: 2026-08-03
 - 마지막 결정 갱신일: 2026-08-04
 - 원본 언어: 영어
@@ -14,18 +14,18 @@
 - 입력: 승인된 문서 `01`–`24`, 현재 저장소 Typography utility, 문서 `24`에
   기록된 현재 Browser 근거, 아래 Reference 비교 및 2026-08-03의 명시적 사용자
   승인
-- 제외: 나머지 Role-to-step 및 Role-to-weight 배정, 반응형 Type 동작,
-  Fallback 및 Delivery 세부, Color, Spacing, Grid, Component 치수, 최종
-  Figma style, Production screen 및 Application 구현
+- 제외: Responsive type substitution 및 Wide-screen 확대, 최대 Line count,
+  Wrapping 및 Truncation 정책, Fallback 및 Delivery 세부, Color, Spacing, Grid,
+  Component 치수, 최종 Figma style, Production screen 및 Application 구현
 
 이 문서는 각 공유 Typography 역할의 의미와 관리 방식, 공용 Family 및 전역
 하한을 승인합니다. 후속 Batch B 문서 `26`은 제한된
 `12/14/16/20/24/32px` 일반 물리 Ramp, Gate를 둔 `40px` Display step,
 `16/20/24px` 하위 및 `28/32/40/48px` 상위 Line-height primitive 축,
-`400/500/600/700` 공용 Weight 어휘, 자연/기본 Tracking 규칙 및 그 사용·검증
-제약을 승인합니다. 여기에 역할 이름이 있다는 이유로 임의 Composite style을
-선택하거나 해당 Step 또는 Weight 중 하나를 자동 배정하거나 현재 구현 값을
-재사용해서는 안 됩니다.
+`400/500/600/700` 공용 Weight 어휘, 자연/기본 Tracking 규칙, 정확한
+Role-to-composite mapping 및 우선순위 규칙을 승인합니다. 여기에 있는 Role
+이름이 작성 API이며 승인 Composite로 해석됩니다. 이를 이유로 임의 Primitive
+값을 선택하거나 현재 구현 값을 재사용해서는 안 됩니다.
 
 ## 관련 문서
 
@@ -60,9 +60,9 @@ control, Viewer 및 미래 사용자용 Editor를 지원하면서도 같은 분�
 
 이 문서에서는 Semantic role, Alias 관리 모델, Pretendard JP Family 선택 및
 공용 사용자 표시용 `12px` 전역 하한을 승인합니다. 후속 Batch B 문서 `26`은
-모든 Role을 자동 배정하지 않고 절제된 `12/14/16/20/24/32px` 일반 물리 Ramp와
-Gate를 둔 `40px` Display step을 승인합니다. 나머지 Role mapping과 Composite
-값은 Batch B 결정으로 남습니다.
+절제된 물리 축과 12개 Role을 9개 Composite에 배정한 정확한 기본 Mapping을
+승인합니다. Responsive substitution, 통합 Specimen 승격 및 그 밖의 제외 경계는
+후속 결정으로 남습니다.
 
 ## 조사 수렴점
 
@@ -105,18 +105,17 @@ NosLog에는 일반 System이 정의하지 않는 Domain 제약이 추가됩니�
   `entity-companion` 또는 다른 Role에 `12px`를 배정한 것이 아닙니다.
 - 승인된 하위 물리 Core는 `12px`, `14px`, `16px`입니다. `12px`는 사용
   자격이 있는 짧은 Tertiary support로 제한하고, `14px`는 Compact product-UI
-  Step, `16px`는 일반 Reading/Body Step으로 사용합니다. 이 경계는 Role을
-  Step에 자동 배정하지 않습니다.
+  Step, `16px`는 일반 Reading/Body Step으로 사용합니다. 정확한 Role 해석은
+  Layer 2에 기록하며 Local에서 선택하지 않습니다.
 - 승인된 일반 상위 물리 Core는 `20px`, `24px`, `32px`이며 `40px`은 추후 승인된
-  `display` 또는 `metric-display` Composite에만 후보가 되는 Gate display
-  primitive입니다. `18px`, `28px`, `36px`은 공유 v0.1 Primitive가 아닙니다.
-  새 공유 Size에는 Local Page 사용이 아니라 대표 다국어·반응형 Specimen 근거와
-  명시적 승인이 필요합니다.
+  드문 `display`에만 배정된 Gate primitive이고 `metric-display`는 `32px`로
+  해석됩니다. `18px`, `28px`, `36px`은 공유 v0.1 Primitive가 아닙니다. 새 공유
+  Size에는 Local Page 사용이 아니라 대표 다국어·반응형 Specimen 근거와 명시적
+  승인이 필요합니다.
 - 기본 상위 Pairing은 `20/28`, `24/32`, `32/40`, `40/48`입니다. 정확한 Role
-  mapping 및 반응형 Title 동작은 미확정입니다. 공용 Weight 어휘는 승인됐지만
-  12개 Role 전체에 대한 정확한
-  배정은 승인되지 않았습니다. 자연/기본 Tracking과 Kerning 유지는 이후 명시적
-  예외가 승인되지 않는 한 모든 공용 Role에 적용됩니다.
+  mapping과 Weight 배정은 Layer 2에서 승인했으며 Responsive title 및 Display
+  동작은 미확정입니다. 자연/기본 Tracking과 Kerning 유지는 이후 명시적 예외가
+  승인되지 않는 한 모든 공용 Role에 적용됩니다.
 - 공간 부족은 Type 축소 전에 Content 우선순위, 줄바꿈, Reflow, Spacing,
   Progressive disclosure 또는 Component composition으로 해결해야 합니다.
 - Canvas 또는 WebGL Text에는 자동 예외가 없습니다. 더 작은 Render 값은 기존
@@ -133,16 +132,29 @@ designer는 Page content에 Primitive를 직접 적용하면 안 됩니다.
 
 ### Layer 2 — Composite 물리 Style
 
-미래 Composite style은 Primitive 값을 시험된 Treatment로 결합합니다. 여러
-Semantic role이 의도적으로 같은 Composite style을 가리킬 수 있습니다.
-따라서 Semantic role이 12개라고 해서 서로 다른 글꼴 크기 12개가 필요한 것은
-아닙니다.
+문서 `26`은 12개 Semantic role에 9개의 완전한 물리 Composite를 승인합니다.
+여러 Role이 의도적으로 Treatment를 공유합니다. Semantic 정밀도에는 12개의 Font
+size나 12개의 독립 Style이 필요하지 않습니다.
 
-Composite style은 Batch B specimen이 실제 NosLog content에서 동작함을
-입증한 뒤에만 승인합니다. 그 전까지 현재 App 또는 외부 Design system에
-보이는 어떤 Role 크기·Role-to-weight mapping·Role-to-pairing 배정도 권위 있는
-값이 아니며 승인된 물리·Line-height 축, `12px` 하한, 공용 Weight 어휘 및
-자연/기본 Tracking 규칙은 계속 적용됩니다.
+| Semantic role      | 승인된 기본 Composite | 숫자 기능       |
+| ------------------ | --------------------- | --------------- |
+| `display`          | `40/48 · 700`         | Proportional    |
+| `page-title`       | `24/32 · 700`         | Proportional    |
+| `section-title`    | `20/28 · 600`         | Proportional    |
+| `component-title`  | `16/24 · 600`         | Proportional    |
+| `entity-title`     | `16/24 · 600`         | Proportional    |
+| `entity-companion` | `14/20 · 400`         | Proportional    |
+| `body`             | `16/24 · 400`         | Proportional    |
+| `body-secondary`   | `14/20 · 400`         | Proportional    |
+| `control`          | `14/20 · 500`         | Proportional    |
+| `metadata`         | `12/16 · 400`         | Proportional    |
+| `metric-display`   | `32/40 · 700`         | Tabular figures |
+| `metric-value`     | `14/20 · 500`         | Tabular figures |
+
+모든 Composite에 자연/기본 Tracking과 Kerning 유지가 적용됩니다. 이 값들은
+Page-local Size, Leading, Weight 또는 Tracking 선택이 아니라 Semantic role이나
+승인된 Alias를 통해 사용해야 합니다. Responsive substitution과 통합 Specimen
+승격은 별도 Gate로 남습니다.
 
 ### Layer 3 — 공유 Semantic role
 
@@ -158,7 +170,7 @@ Composite style은 Batch B specimen이 실제 NosLog content에서 동작함을
 | `entity-companion` | Entity title과 짝을 이루는 선택적 Supporting identity                        | 승인된 한국어·영어 Music title 또는 일본어 읽기                                          | 원문 위에 올 수 있지만 시각적으로 하위이며 원문을 대체하지 않음                                    |
 | `body`             | 기본 읽기 Content와 일반 System message                                      | 설명, 안내, 공지 본문, Empty/Error message                                               | 여러 줄 읽기와 Text resizing에서 편안함을 유지함                                                   |
 | `body-secondary`   | 보조 설명 또는 Secondary identity                                            | Artist, 간결한 보조 설명, Contextual note                                                | 낮은 중요도 때문에 Task-critical meaning의 유일한 위치가 되면 안 됨                                |
-| `control`          | Interaction을 이름 짓거나 그 안에 포함되는 Visible text                      | Button, Tab, Filter, Menu item, Input value 또는 Label                                   | Control 및 Icon과 정렬되고 읽을 수 있으며 Localization 가능해야 함                                 |
+| `control`          | Action 또는 사용 가능한 Choice를 이름 짓는 Visible text                      | Button, Tab, Filter, Menu item, Field label                                              | Control 및 Icon과 정렬되고 읽을 수 있으며 Localization 가능해야 함                                 |
 | `metadata`         | 간결한 Secondary fact 또는 짧은 Status descriptor                            | Date, Category, Level context, Timestamp, Badge text, Chart axis 또는 Measure annotation | Body copy나 일반 Control을 대신하지 않으며 작은 Treatment는 예외적으로 유지함                      |
 | `metric-display`   | 한 지역에서 우세한 Quantitative result 하나                                  | Best score, Official Grd, NosLog Rating, 기타 승인된 Summary metric                      | Page heading처럼 가장하지 않으면서 값을 강조하고 Label과 Unit을 잃지 않음                          |
 | `metric-value`     | Row, Group, Control 또는 Visualization 안에서 비교 가능한 Quantitative value | Rank value, Score row, BPM, Time, Measure, Play count, Judgement value                   | 안정적인 숫자 정렬을 사용하고 명시적 Context, Unit 및 Scope를 보존함                               |
@@ -168,17 +180,19 @@ Composite style은 Batch B specimen이 실제 NosLog content에서 동작함을
 Alias는 Mapping 명확성을 높이지만 독립 Style을 만들지 않습니다. 다음 초기
 Alias를 승인합니다.
 
-| Alias 또는 Content                                    | Mapping                          | 비고                                                                                  |
-| ----------------------------------------------------- | -------------------------------- | ------------------------------------------------------------------------------------- |
-| Header wordmark                                       | 제한된 Brand-component alias     | Brand-specific treatment를 가질 수 있지만 일반 Type-scale step을 만들지 않음          |
-| Artist                                                | `body-secondary`                 | 새 Type role이 아니라 Composition으로 짝지은 Title group과 분리함                     |
-| Button, Tab, Filter, Menu, Field label, Field value   | `control`                        | Component variant는 Layout 또는 State를 바꿀 수 있으나 Local typography를 만들지 않음 |
-| Badge 및 짧은 Status                                  | `metadata` 또는 `control`        | Interactive badge는 `control`, Descriptive badge는 `metadata` 사용                    |
-| Metric label 및 Unit                                  | `metadata` 또는 `body-secondary` | 값은 Metric role을 사용하고 Context는 읽을 수 있고 명시적으로 유지함                  |
-| Chart axis, Tick, Legend label, Measure number        | `metadata`                       | Hover에만 의존하지 않고 정확한 값을 사용할 수 있어야 함                               |
-| Viewer time, BPM, Time signature, Measure value       | `metric-value`                   | Renderer 배치가 특수해도 숫자 Treatment는 공유함                                      |
-| Empty, Loading, Error, Permission 및 Recovery message | `body` 또는 `body-secondary`     | State 의미는 독립 Font size가 아니라 Content와 Semantic state에서 옴                  |
-| Code, JSON 또는 Technical identifier                  | 제한된 Technical alias           | Monospace는 일반 Metric이 아니라 실제 Technical text에만 평가 가능함                  |
+| Alias 또는 Content                                    | Mapping                          | 비고                                                                         |
+| ----------------------------------------------------- | -------------------------------- | ---------------------------------------------------------------------------- |
+| Header wordmark                                       | 제한된 Brand-component alias     | Brand-specific treatment를 가질 수 있지만 일반 Type-scale step을 만들지 않음 |
+| Artist                                                | `body-secondary`                 | 새 Type role이 아니라 Composition으로 짝지은 Title group과 분리함            |
+| Button, Tab, Filter, Menu 및 Field label              | `control`                        | 보이는 Action 및 사용 가능한 Choice label은 `14/20 · 500` 사용               |
+| Text 성격 Field 안의 입력 또는 선택 값                | `body`                           | 읽는 Content는 `16/24 · 400` 사용, Input-value style을 새로 만들지 않음      |
+| Focused page entity identity                          | `page-title`                     | Entity semantic을 유지하면서 보이는 Primary heading은 `24/32 · 700` 사용     |
+| Badge 및 짧은 Status                                  | `metadata` 또는 `control`        | Interactive badge는 `control`, Descriptive badge는 `metadata` 사용           |
+| Metric label 및 Unit                                  | `metadata` 또는 `body-secondary` | 값은 Metric role을 사용하고 Context는 읽을 수 있고 명시적으로 유지함         |
+| Chart axis, Tick, Legend label, Measure number        | `metadata`                       | Hover에만 의존하지 않고 정확한 값을 사용할 수 있어야 함                      |
+| Viewer time, BPM, Time signature, Measure value       | `metric-value`                   | Renderer 배치가 특수해도 숫자 Treatment는 공유함                             |
+| Empty, Loading, Error, Permission 및 Recovery message | `body` 또는 `body-secondary`     | State 의미는 독립 Font size가 아니라 Content와 Semantic state에서 옴         |
+| Code, JSON 또는 Technical identifier                  | 제한된 Technical alias           | Monospace는 일반 Metric이 아니라 실제 Technical text에만 평가 가능함         |
 
 ## Product family별 역할 적용
 
@@ -328,6 +342,21 @@ Progressive disclosure 또는 Component layout으로 해결해야 합니다.
 서로 관계없는 여러 Component에서 같은 필요가 반복되면 공유 Role map 수정이
 필요하다는 근거입니다. 반복 Local exception으로 복사하면 안 됩니다.
 
+### 승인된 우선순위 규칙
+
+- Music title, Username, Arcade name, Exam name 또는 다른 Domain entity는 일반
+  List나 Card에서 `entity-title`을 사용합니다. 해당 Entity가 Focused page 또는
+  Task를 소유하면 Primary visible identity는 Canonical entity 의미를 유지하면서
+  `page-title` Composite를 사용합니다. 이는 새 Role이 아니라 Alias 우선순위
+  규칙입니다.
+- 보이는 Action 또는 사용 가능한 Choice는 `control`을 사용합니다. 사용자가
+  입력한 값이나 Text 성격 Field에 표시된 선택 값은 `body`를 사용합니다.
+  Component state, Icon, Border 및 Geometry가 Interactivity를 전달할 수 있지만
+  다른 Text composite를 만들 수는 없습니다.
+- Metric role은 Tabular figures를 사용합니다. 숫자를 포함한 Heading role은
+  실제 Semantic 작업이 비교 Metric이 아니라면 Proportional을 유지합니다.
+- 올바른 HTML Heading 순서는 선택한 시각 Composite와 독립적입니다.
+
 ### 처음 인식된 제한 후보
 
 다음 영역은 제한된 Alias 또는 이후 예외 검토를 정당화할 수 있지만 물리적
@@ -344,20 +373,21 @@ Progressive disclosure 또는 Component layout으로 해결해야 합니다.
 현재 Utility는 Inventory 근거만 제공합니다. 현재 값은 자동으로 이어지지
 않습니다.
 
-| 현재 Utility 또는 Pattern                 | Foundation 목적지                                                    | 이관 규칙                                                        |
-| ----------------------------------------- | -------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| `text-display`                            | `display`                                                            | 모든 사용처를 다시 평가하고 드문 승인 순간만 유지함              |
-| `text-score-display`                      | `metric-display`                                                     | Score-specific 이름을 공유 Metric role로 교체함                  |
-| `text-title`                              | `page-title`, `section-title`, `component-title` 또는 `entity-title` | 하나의 모호한 Title style을 유지하지 않고 의미로 분류함          |
-| `text-wordmark`                           | Header wordmark alias                                                | Brand component로 제한함                                         |
-| `text-section`                            | `section-title` 또는 `component-title`                               | 실제 Document hierarchy에 따라 선택함                            |
-| `text-body`                               | `body`                                                               | 물리 값을 다시 검증해야 함                                       |
-| `text-body-muted`                         | `body-secondary`                                                     | Muted color는 모든 Supporting text 사용에 내재하지 않음          |
-| `text-label` 및 `text-input`              | `control`                                                            | Component anatomy와 State는 달라질 수 있으나 Typography는 공유함 |
-| `text-caption`                            | `metadata`                                                           | Content가 실제로 Secondary이고 Compact한지 확인함                |
-| `text-badge`                              | `metadata` 또는 `control`                                            | Descriptive 동작과 Interactive 동작에 따라 선택함                |
-| `text-micro` 및 직접 `10px` 값            | 기본 후속 Role 없음                                                  | 감사 후 제거하며 유지할 경우 예외 절차가 필요함                  |
-| Local `text-xs`, `text-sm` 또는 임의 Size | Semantic role로 분류                                                 | 현재 원시 크기를 미래 Semantic token으로 번역하지 않음           |
+| 현재 Utility 또는 Pattern                 | Foundation 목적지                                                    | 이관 규칙                                                    |
+| ----------------------------------------- | -------------------------------------------------------------------- | ------------------------------------------------------------ |
+| `text-display`                            | `display`                                                            | 모든 사용처를 다시 평가하고 드문 승인 순간만 유지함          |
+| `text-score-display`                      | `metric-display`                                                     | Score-specific 이름을 공유 Metric role로 교체함              |
+| `text-title`                              | `page-title`, `section-title`, `component-title` 또는 `entity-title` | 하나의 모호한 Title style을 유지하지 않고 의미로 분류함      |
+| `text-wordmark`                           | Header wordmark alias                                                | Brand component로 제한함                                     |
+| `text-section`                            | `section-title` 또는 `component-title`                               | 실제 Document hierarchy에 따라 선택함                        |
+| `text-body`                               | `body`                                                               | 물리 값을 다시 검증해야 함                                   |
+| `text-body-muted`                         | `body-secondary`                                                     | Muted color는 모든 Supporting text 사용에 내재하지 않음      |
+| `text-label`                              | `control`                                                            | 보이는 Action 또는 Field label은 승인 Control composite 사용 |
+| `text-input`                              | `body`                                                               | 입력 또는 선택 값은 승인 Body composite 사용                 |
+| `text-caption`                            | `metadata`                                                           | Content가 실제로 Secondary이고 Compact한지 확인함            |
+| `text-badge`                              | `metadata` 또는 `control`                                            | Descriptive 동작과 Interactive 동작에 따라 선택함            |
+| `text-micro` 및 직접 `10px` 값            | 기본 후속 Role 없음                                                  | 감사 후 제거하며 유지할 경우 예외 절차가 필요함              |
+| Local `text-xs`, `text-sm` 또는 임의 Size | Semantic role로 분류                                                 | 현재 원시 크기를 미래 Semantic token으로 번역하지 않음       |
 
 ## 접근성 및 반응형 요구사항
 
@@ -439,26 +469,27 @@ Content·고밀도·Empty·Error·Disabled·Permission·Destructive fixture를
 
 ## 결정 기록
 
-| ID       | 결정                                                                                                                            | 상태         |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------- | ------------ |
-| `FSR-01` | 이 문서의 공유 Semantic role 12개를 사용함                                                                                      | `Approved`   |
-| `FSR-02` | Batch B 통합 Specimen 검토 전까지 모든 물리 Type 값을 미확정으로 유지함                                                         | `Superseded` |
-| `FSR-03` | 일반 Text에 승인된 Role 사용을 의무화하고 모든 물리 예외를 명시적으로 관리함                                                    | `Approved`   |
-| `FSR-04` | `display`를 드물게 유지하고 기본 Page, Card, Metric 또는 State style로 사용하지 않음                                            | `Approved`   |
-| `FSR-05` | 전역 일반 UI `micro` role을 유지하지 않음                                                                                       | `Approved`   |
-| `FSR-06` | 비교 Metric에 Tabular figures를 사용하고 일반 Domain value에 Monospace를 사용하지 않음                                          | `Approved`   |
-| `FSR-07` | 활성화된 Localized/read title을 원문 Music title 위에 두되 시각적으로 하위로 유지함                                             | `Approved`   |
-| `FSR-08` | Wordmark, Artist, Control, Badge, Chart label 및 Renderer data를 새 공유 Scale이 아닌 관리되는 Alias로 취급함                   | `Approved`   |
-| `FSR-09` | 최종 Font를 선택하지 않고 Pretendard를 Incumbent candidate로 유지함                                                             | `Superseded` |
-| `FSR-10` | Pretendard JP를 한국어·일본어·영어 NosLog 2.0 공용 글꼴 Family로 선택하되 Production 검증을 유지함                              | `Approved`   |
-| `FSR-11` | 일반 공용 사용자 표시용 타이포그래피의 `12px` 미만을 금지하고 `12px`를 Role 배정이 아닌 하한으로 취급함                         | `Approved`   |
-| `FSR-12` | Role별 크기, 행간, 굵기, 자간, 반응형 동작, Fallback 및 Delivery를 Batch B까지 미확정으로 유지함                                | `Approved`   |
-| `FSR-13` | Semantic role을 자동 배정하지 않고 문서 `26`의 승인된 `12/14/16px` 하위 물리 Core를 인정함                                      | `Approved`   |
-| `FSR-14` | 전체 Semantic composite style을 배정하지 않고 문서 `26`의 승인된 `16/20/24px` 하위 Line-height 축과 기본 하위 Pairing을 인정함  | `Approved`   |
-| `FSR-15` | 모든 Semantic role에 최종 Composite style을 배정하지 않고 문서 `26`의 승인된 `400/500/600/700` 공용 Weight 어휘를 인정함        | `Approved`   |
-| `FSR-16` | 모든 드문 예외를 명시적으로 관리하면서 문서 `26`의 승인된 자연/기본 Tracking과 공용 Role 전반의 Kerning 유지를 인정함           | `Approved`   |
-| `FSR-17` | 최종 Semantic composite를 배정하지 않고 문서 `26`의 승인된 `20/24/32px` 일반 상위 Core와 Gate를 둔 `40px` Display step을 인정함 | `Approved`   |
-| `FSR-18` | 최종 Semantic composite를 배정하지 않고 문서 `26`의 승인된 `28/32/40/48px` 상위 Line-height 축과 기본 상위 Pairing을 인정함     | `Approved`   |
+| ID       | 결정                                                                                                                                         | 상태         |
+| -------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| `FSR-01` | 이 문서의 공유 Semantic role 12개를 사용함                                                                                                   | `Approved`   |
+| `FSR-02` | Batch B 통합 Specimen 검토 전까지 모든 물리 Type 값을 미확정으로 유지함                                                                      | `Superseded` |
+| `FSR-03` | 일반 Text에 승인된 Role 사용을 의무화하고 모든 물리 예외를 명시적으로 관리함                                                                 | `Approved`   |
+| `FSR-04` | `display`를 드물게 유지하고 기본 Page, Card, Metric 또는 State style로 사용하지 않음                                                         | `Approved`   |
+| `FSR-05` | 전역 일반 UI `micro` role을 유지하지 않음                                                                                                    | `Approved`   |
+| `FSR-06` | 비교 Metric에 Tabular figures를 사용하고 일반 Domain value에 Monospace를 사용하지 않음                                                       | `Approved`   |
+| `FSR-07` | 활성화된 Localized/read title을 원문 Music title 위에 두되 시각적으로 하위로 유지함                                                          | `Approved`   |
+| `FSR-08` | Wordmark, Artist, Control, Badge, Chart label 및 Renderer data를 새 공유 Scale이 아닌 관리되는 Alias로 취급함                                | `Approved`   |
+| `FSR-09` | 최종 Font를 선택하지 않고 Pretendard를 Incumbent candidate로 유지함                                                                          | `Superseded` |
+| `FSR-10` | Pretendard JP를 한국어·일본어·영어 NosLog 2.0 공용 글꼴 Family로 선택하되 Production 검증을 유지함                                           | `Approved`   |
+| `FSR-11` | 일반 공용 사용자 표시용 타이포그래피의 `12px` 미만을 금지하고 `12px`를 Role 배정이 아닌 하한으로 취급함                                      | `Approved`   |
+| `FSR-12` | Role별 크기, 행간, 굵기, 자간, 반응형 동작, Fallback 및 Delivery를 Batch B까지 미확정으로 유지함                                             | `Superseded` |
+| `FSR-13` | Semantic role을 자동 배정하지 않고 문서 `26`의 승인된 `12/14/16px` 하위 물리 Core를 인정함                                                   | `Approved`   |
+| `FSR-14` | 전체 Semantic composite style을 배정하지 않고 문서 `26`의 승인된 `16/20/24px` 하위 Line-height 축과 기본 하위 Pairing을 인정함               | `Approved`   |
+| `FSR-15` | 모든 Semantic role에 최종 Composite style을 배정하지 않고 문서 `26`의 승인된 `400/500/600/700` 공용 Weight 어휘를 인정함                     | `Approved`   |
+| `FSR-16` | 모든 드문 예외를 명시적으로 관리하면서 문서 `26`의 승인된 자연/기본 Tracking과 공용 Role 전반의 Kerning 유지를 인정함                        | `Approved`   |
+| `FSR-17` | 최종 Semantic composite를 배정하지 않고 문서 `26`의 승인된 `20/24/32px` 일반 상위 Core와 Gate를 둔 `40px` Display step을 인정함              | `Approved`   |
+| `FSR-18` | 최종 Semantic composite를 배정하지 않고 문서 `26`의 승인된 `28/32/40/48px` 상위 Line-height 축과 기본 상위 Pairing을 인정함                  | `Approved`   |
+| `FSR-19` | 문서 `26`의 정확한 12개 Role-to-9개 Composite Map, Focused-entity 및 Field-value 우선순위, Tabular metric 동작 및 드문 Display Gate를 사용함 | `Approved`   |
 
 ## 완료 체크리스트
 
@@ -485,6 +516,8 @@ Content·고밀도·Empty·Error·Disabled·Permission·Destructive fixture를
       Gate를 둔 `40px` Display step을 승인했습니다.
 - [x] 최종 Semantic-role 배정 없이 절제된 `28/32/40/48px` 상위 Line-height 축과
       기본 `20/28`, `24/32`, `32/40`, `40/48` Pairing을 승인했습니다.
-- [ ] 나머지 Role mapping 및 Responsive title behavior를 비교합니다.
+- [x] 12개 Semantic role을 9개 완전한 기본 Composite에 Mapping하고 Focused entity,
+      Field-value, Metric, Display 및 Semantic-heading 우선순위 규칙을 승인했습니다.
+- [ ] Responsive title 및 Display substitution을 비교합니다.
 - [ ] 통합 `S1`–`S6` Specimen을 사용자와 검토합니다.
 - [ ] 승인된 물리 값을 Foundation v0.1로 승격합니다.

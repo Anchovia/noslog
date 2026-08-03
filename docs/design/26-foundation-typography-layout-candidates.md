@@ -2,7 +2,7 @@
 
 ## Document Control
 
-- Status: `In progress — physical type scale, lower and upper line-height, weight, and tracking axes approved; remaining composite and layout values unresolved`
+- Status: `In progress — physical type axes and exact semantic composite mapping approved; responsive substitutions and layout values unresolved`
 - Research date: 2026-08-04
 - Last decision update: 2026-08-04
 - Canonical language: English
@@ -13,11 +13,10 @@
 - Inputs: approved documents `01`–`25`, current repository typography evidence,
   maintained design systems and standards, rhythm-game domain products, and explicit
   user approval on 2026-08-04
-- Excluded at this decision point: responsive type behavior, role-to-step assignments
-  beyond the approved size-, line-height-, and weight-usage boundaries,
-  metric-display composites, spacing, grid, containers, component dimensions, color,
-  material treatment, final Figma styles, production screens, and application
-  implementation
+- Excluded at this decision point: responsive type substitutions and wide-screen
+  enlargement, maximum line counts, wrapping and truncation policy, spacing, grid,
+  containers, component dimensions, color, material treatment, final Figma styles,
+  production screens, and application implementation
 
 This document records the bounded decisions made during Batch B. A value becomes
 authoritative only when its decision-log entry is `Approved`. Unresolved values,
@@ -38,10 +37,10 @@ requirements.
 
 - Research and discuss one bounded material decision at a time.
 - Record observations separately from proposals and approved requirements.
-- Do not infer approval of responsive behavior, metric composites, exact
-  composite-role mapping, or layout from approval of the physical size, line-height,
-  weight, and tracking axes.
-- Validate the eventual composite styles with the approved `S1`–`S6` multilingual and
+- Do not infer approval of responsive substitutions, line-count policy, truncation,
+  component geometry, or layout from approval of the physical axes and exact
+  semantic composite mapping.
+- Validate the approved composite styles with the `S1`–`S6` multilingual and
   responsive specimens before Foundation v0.1 promotion.
 - Update this English source and its Korean companion in the same task.
 
@@ -114,20 +113,20 @@ semantic three-step lower core rather than one universal base.
 
 The approved lower physical size core is:
 
-| Step                                   | Approved boundary                                                                                                                | Not yet approved                                                                                                             |
-| -------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| `12px` (`0.75rem` at the default root) | Lowest shared user-facing step; only eligible for short, genuinely tertiary metadata, captions, or comparable supporting content | It is not automatically assigned to the `metadata` or `entity-companion` role; line height, weight, and tracking remain open |
-| `14px` (`0.875rem`)                    | Compact product-UI step for controls, dense results and rows, and most secondary information where specimens confirm readability | It is not the universal body size and no role mapping is automatic yet                                                       |
-| `16px` (`1rem`)                        | Ordinary reading/body step and the upper step of the shared lower core                                                           | It does not force every entity title, control, ranking row, or metric to use `16px`                                          |
+| Step                                   | Approved boundary                                                                                                                | Approved role resolution recorded later in this document                         |
+| -------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| `12px` (`0.75rem` at the default root) | Lowest shared user-facing step; only eligible for short, genuinely tertiary metadata, captions, or comparable supporting content | `metadata` resolves to `12/16 · 400`; `entity-companion` does not use this floor |
+| `14px` (`0.875rem`)                    | Compact product-UI step for controls, dense results and rows, and most secondary information where specimens confirm readability | Supports the approved `14/20 · 400` and `14/20 · 500` composites                 |
+| `16px` (`1rem`)                        | Ordinary reading/body step and the upper step of the shared lower core                                                           | Supports the approved `16/24 · 400` and `16/24 · 600` composites                 |
 
 ### Usage constraints
 
 - No ordinary shared HTML user-facing typography may resolve below `12px`.
 - `12px` must not carry a primary action, primary search result identity, essential
   comparison value, or long explanatory copy.
-- A semantic role does not automatically inherit a step because its common name sounds
-  small. `metadata` and `entity-companion` may resolve above `12px` when importance,
-  language, or composition requires it.
+- A page or component author does not choose a step because a role sounds small. The
+  approved composite map resolves `metadata` to `12px` and `entity-companion` to
+  `14px`; changing either requires the explicit exception process.
 - `14px` is the compact product step, not permission to compress all body copy.
 - `16px` is the ordinary reading step, not permission to inflate every dense row.
 - The `12/14/16px` lower core remains numerically stable across compact and wide
@@ -204,9 +203,9 @@ The approved shared weight primitives are:
   meaning.
 - Weight values remain stable across compact and wide viewports. Responsive fit must
   not make text lighter or heavier.
-- Exact weight assignment for each of the twelve semantic roles remains open until
-  composite styles are reviewed. The boundaries above prevent misuse but do not make
-  every entity title `600` or every page title `700` automatically.
+- The exact role-to-weight assignments are approved in the semantic composite section
+  below. The frequency and misuse boundaries above still apply across the complete
+  system rather than authorizing local weight changes.
 - Pretendard JP and every production fallback must be tested for Korean, Japanese,
   English, mixed-script, numeric, small-size, dark-surface, and Bold Text or equivalent
   accessibility behavior. Browser-synthesized weights must not silently replace the
@@ -342,12 +341,12 @@ shared meanings.
 
 - The ordinary upper physical core is `20px`, `24px`, and `32px`. The complete shared
   physical ramp is therefore `12/14/16/20/24/32px`, plus the gated display step below.
-- `20px` is eligible for compact section, component, and entity-title composites. It
-  is not automatically assigned to all three roles.
-- `24px` is eligible for principal page identity and high-priority section or entity
-  identity. It is not automatically the visual style of every semantic `h1`.
-- `32px` is eligible for a dominant short title or major metric. It must not become an
-  ordinary card, dialog, or section heading.
+- `20px` resolves to the approved `section-title` composite. Component and ordinary
+  entity titles use `16px`; authors must not promote them locally.
+- `24px` resolves to `page-title`, including the focused-entity precedence rule. It
+  does not automatically determine the semantic HTML heading level.
+- `32px` resolves to `metric-display`. It must not become an ordinary title, card,
+  dialog, or section heading.
 - `40px` is a gated display primitive, not part of routine title selection. Only the
   `display` or `metric-display` role may be considered for it, and either mapping still
   requires separate specimen review and approval.
@@ -439,14 +438,127 @@ font-size and line-height combinations.
   explicit user approval; page and component authors may not add local leading.
 - The pairings remain in relative implementation units and must preserve browser text
   scaling. Pixel notation documents the design target only.
-- This decision does not assign semantic roles, weights, maximum line counts,
-  truncation rules, responsive size substitutions, or metric-display behavior.
+- The subsequent semantic composite decision assigns roles, weights, and metric
+  behavior. Maximum line counts, truncation rules, and responsive size substitutions
+  remain unresolved.
 - No mobile-only line-height compression is approved. Responsive role substitutions
   remain a later bounded decision after composite-role mapping.
 - Pretendard JP specimens must test original Japanese Music titles, localized/read
   titles, long artist credits, Korean and English page identity, tabular metrics, and
   mixed punctuation at `320px`, `390px`, intermediate widths, wide layouts, `200%`
   text enlargement, and WCAG Text Spacing overrides before Foundation promotion.
+
+## Approved Semantic Composite Map
+
+### Focused role-mapping research
+
+The exact mapping review compared sixteen independent official or maintained systems.
+The systems use different fonts, platforms, and naming schemes, so their surface
+tokens were not copied. The stable transferable pattern is that semantic roles may
+outnumber physical composites, ordinary product hierarchy often combines a restrained
+size ramp with weight, metrics deserve purpose-built numeral behavior, and visual
+heading treatment remains independent from document semantics.
+
+| Independent source                                                                                    | Transferable finding                                                                                              | NosLog implication                                                                                  | Limitation                                                                |
+| ----------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| [Material 3 typography](https://developer.android.com/develop/ui/compose/designsystems/material3)     | Its full type scale is optional; product themes may keep only the styles they need                                | Twelve NosLog meanings do not require twelve independent physical styles                            | Native `sp`, Roboto, and Material role names are not NosLog values        |
+| [Fluent 2 typography](https://fluent2.microsoft.design/typography)                                    | Shared body sizes use weight and hierarchy changes instead of a new size for every use                            | Supports shared composites for `body`, `control`, identity, and supporting roles                    | Segoe UI metrics and Fluent platform ramps do not transfer directly       |
+| [Carbon type sets](https://carbondesignsystem.com/elements/typography/type-sets/)                     | Productive and expressive styles reuse coordinated physical values across semantic contexts                       | Supports a lean physical vocabulary with rare display treatment                                     | IBM Plex and Carbon's productive/expressive split are not copied          |
+| [Atlassian Typography](https://atlassian.design/foundations/typography/)                              | Distinguishes body, heading, and metric use while reusing a constrained system                                    | Supports distinct metric roles without treating them as headings                                    | Atlassian density and font metrics are not NosLog values                  |
+| [Primer Typography](https://primer.style/product/getting-started/foundations/typography/)             | Composite tokens and semantic markup prevent arbitrary local selection                                            | Supports fixed role-to-composite mapping and semantic heading independence                          | GitHub's content hierarchy is not a NosLog page template                  |
+| [GitLab type fundamentals](https://design.gitlab.com/product-foundations/type-fundamentals/)          | Body and label hierarchy can share sizes and differ through governed weight and context                           | Supports `14/20` regular and medium variants without adding another size                            | GitLab includes physical steps that NosLog intentionally omitted          |
+| [Ant Design Font](https://ant.design/docs/spec/font/)                                                 | Ordinary product interfaces should restrain the active size count, commonly to about three to five                | Supports nine composites built from seven approved pairings rather than role-specific proliferation | Its logarithmic scale and `14px` base are not copied                      |
+| [USWDS Typography](https://designsystem.digital.gov/components/typography/)                           | Readable body, restrained small text, and tabular numbers solve different jobs                                    | Supports `16/24` body, exceptional `12/16` metadata, and tabular metrics                            | Government reading defaults are roomier than dense score surfaces         |
+| [GOV.UK Typography](https://design-system.service.gov.uk/styles/typography/)                          | A small, content-first hierarchy and semantic HTML remain separate concerns                                       | Supports visual-role consistency without making every visual title the matching HTML heading level  | Public-service tone and responsive values do not determine NosLog styling |
+| [SAP Fiori Typography](https://experience.sap.com/fiori-design-web/typography/)                       | Object, list, control, chart, and KPI contexts share governed styles; KPI values retain labels and units          | Supports entity, control, metadata, and metric distinctions within one restrained system            | Enterprise control density and SAP 72 metrics differ                      |
+| [Apple Typography](https://developer.apple.com/design/human-interface-guidelines/typography)          | Text styles communicate hierarchy while larger accessibility sizes require recomposition                          | Supports stable role meaning and later responsive/accessibility gates rather than local shrinkage   | Native Dynamic Type does not map directly to CSS composites               |
+| [Japan Digital Agency Design System typography](https://design.digital.go.jp/foundations/typography/) | Japanese body/UI text prioritizes legibility; smaller text is constrained and heading semantics remain structured | Supports `16/24` ordinary reading, restrained `14/20`, and real Japanese specimen validation        | Its font family and government content do not determine NosLog identity   |
+| [LINE Design System typography](https://designsystem.line.me/LDSG/foundation/typography-en)           | Consistent role families span Japanese and other language packs while accounting for script metrics               | Supports one semantic map across Korean, Japanese, English, and mixed-script content                | LINE's exact public tokens are not Pretendard JP measurements             |
+| [Radix Themes typography](https://www.radix-ui.com/themes/docs/theme/typography)                      | A concise size scale combines with weight and semantic component APIs                                             | Supports composing a small physical ramp rather than exposing page-local values                     | Radix defaults are implementation options, not NosLog design evidence     |
+| [Tailwind CSS font size](https://tailwindcss.com/docs/font-size)                                      | Size and line height can be paired and implemented as relative, reusable tokens                                   | Supports deterministic code mapping for the approved composites                                     | Framework defaults are conveniences rather than design authority          |
+| [VA Design System typography](https://design.va.gov/foundation/typography)                            | Visual typography style and accessible heading level are related but not interchangeable                          | Supports applying `page-title` or other composites while preserving correct document outline        | Its public-service content and font do not determine NosLog role priority |
+
+The strongest convergence is architectural rather than numerical: use semantic names
+for authoring, reuse a small number of complete physical treatments, use weight only as
+part of a governed composite, keep comparable numbers tabular, and preserve correct
+HTML heading order independently from visual style. The approved NosLog values below
+come from the already approved physical axes plus the user-reviewed product hierarchy,
+not from copying any one source.
+
+### Approved role-to-composite mapping
+
+Every shared role resolves to the following complete default composite. Natural or
+default tracking and retained kerning apply throughout.
+
+| Semantic role      | Approved default composite | Numeric feature | Governing boundary                                                                                                  |
+| ------------------ | -------------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `display`          | `40/48 · 700`              | Proportional    | Rare, short, separately justified expressive moment; no automatic page assignment                                   |
+| `page-title`       | `24/32 · 700`              | Proportional    | Default page or focused-task identity; `32px` is not its default compact or wide value                              |
+| `section-title`    | `20/28 · 600`              | Proportional    | A real major content boundary, not a decorative card label                                                          |
+| `component-title`  | `16/24 · 600`              | Proportional    | Dialog, drawer, panel, or grouped-module identity subordinate to its section                                        |
+| `entity-title`     | `16/24 · 600`              | Proportional    | Ordinary list/card entity identity; focused-page entity identity follows the precedence rule below                  |
+| `entity-companion` | `14/20 · 400`              | Proportional    | Optional localized/read identity; subordinate to but legible beside the canonical entity title                      |
+| `body`             | `16/24 · 400`              | Proportional    | Ordinary reading, explanation, and system message                                                                   |
+| `body-secondary`   | `14/20 · 400`              | Proportional    | Supporting identity or concise contextual text; not the only carrier of task-critical meaning                       |
+| `control`          | `14/20 · 500`              | Proportional    | Visible action or choice label; entered and selected field values follow the precedence rule below                  |
+| `metadata`         | `12/16 · 400`              | Proportional    | Short, genuinely tertiary fact or annotation only                                                                   |
+| `metric-display`   | `32/40 · 700`              | Tabular figures | One locally dominant approved quantitative result with an explicit label, unit, and scope                           |
+| `metric-value`     | `14/20 · 500`              | Tabular figures | Comparable quantitative value in a row, group, control, or visualization; never an unlabeled number without context |
+
+The twelve roles intentionally share nine physical composites:
+
+1. `40/48 · 700`;
+2. `32/40 · 700`;
+3. `24/32 · 700`;
+4. `20/28 · 600`;
+5. `16/24 · 600`;
+6. `16/24 · 400`;
+7. `14/20 · 500`;
+8. `14/20 · 400`; and
+9. `12/16 · 400`.
+
+These are governed composite styles, not a menu of independent size, leading, and
+weight values. A page or component author selects a semantic role or approved alias,
+not a physical combination.
+
+### Approved precedence and alias rules
+
+1. **Focused entity identity:** when a domain entity is the identity of the focused
+   page or task, its visible primary heading uses the `page-title` composite
+   `24/32 · 700` while retaining the entity's semantic meaning and canonical name.
+   Examples include the original Music title on Music Detail, a username on Profile,
+   and the primary arcade or exam identity where that entity owns the page. The same
+   entity in an ordinary list or card uses `entity-title` at `16/24 · 600`. This is a
+   governed precedence rule, not a thirteenth role or a new physical style.
+2. **Action labels versus field values:** text that names an action or available
+   choice—button, tab, filter, menu item, field label—uses `control` at
+   `14/20 · 500`. A user's entered value or the selected value displayed inside a
+   text-like field uses the existing `body` composite `16/24 · 400`. This preserves
+   readable content and avoids inventing a separate input-value style.
+3. **Metric numerals:** `metric-display` and `metric-value` enable tabular figures for
+   comparable numerals. Other roles remain proportional by default and do not inherit
+   tabular figures merely because they contain a date or occasional number.
+4. **Display gate:** the physical `40/48 · 700` composite exists, but `display` remains
+   rare and has no automatic page-family assignment. A normative specimen and explicit
+   approval are still required before a production surface uses it.
+5. **Semantic outline:** visual composite selection never changes the required HTML
+   heading level. A `page-title` treatment may appear on an entity, while the document
+   outline and accessible name remain correct for the actual page structure.
+
+### Boundaries not approved by this mapping
+
+This decision does not approve:
+
+- a responsive substitution for any role;
+- wide-screen enlargement of `page-title`, `metric-display`, or `display`;
+- maximum line counts, wrapping priority, or truncation behavior;
+- component height, padding, target geometry, or surrounding spacing;
+- color, opacity, material, alignment, or final layout;
+- automatic `display` placement; or
+- final Figma/token naming beyond the semantic role identifiers recorded here.
+
+Those values remain separate gates and must be validated with the integrated
+multilingual specimens before Foundation v0.1 promotion.
 
 ## Alternatives Not Selected
 
@@ -469,6 +581,13 @@ font-size and line-height combinations.
 | Allow `40px` as a routine page, card, dialog, or section title               | `Rejected` | It would collapse the approved rare-display boundary and recreate page-level emphasis drift                                                                                              |
 | Use tight `20/24` and `24/28` upper pairings                                 | `Rejected` | The ratios suit short single-line UI labels but do not protect long Japanese Music titles or mixed-script identity when they wrap                                                        |
 | Add `52px` leading for the gated `40px` display by default                   | `Rejected` | It assumes multi-line editorial display behavior that NosLog has not approved and adds another primitive without specimen evidence                                                       |
+| Give every semantic role an independent physical composite                   | `Rejected` | It mistakes semantic precision for visual variety and recreates the local-style drift the Foundation is intended to prevent                                                              |
+| Make `page-title` use `32/40 · 700` by default                               | `Rejected` | It overstates routine page identity on compact screens and consumes the dominant step needed for major quantitative results                                                              |
+| Use `20/28 · 600` for every `entity-title`                                   | `Rejected` | It would over-expand repeated discovery, ranking, and archive surfaces; focused entities already receive the governed `page-title` precedence                                            |
+| Reduce `entity-companion` to `12/16 · 400`                                   | `Rejected` | Localized/read identity remains useful content rather than tertiary metadata and must stay legible in Korean, Japanese, English, and mixed-script results                                |
+| Use one composite for both action labels and entered field values            | `Rejected` | The jobs differ: compact medium-weight labels signal interaction, while entered or selected content benefits from ordinary readable body treatment                                       |
+| Use `40/48 · 700` for dominant metrics                                       | `Rejected` | It would collapse the boundary between a rare expressive display moment and the bounded quantitative hierarchy provided by `metric-display` at `32/40 · 700`                             |
+| Style metric values with heading roles                                       | `Rejected` | Metrics need tabular alignment, explicit labels and units, and stable comparison behavior rather than document-heading semantics                                                         |
 
 ## Decision Log
 
@@ -478,16 +597,16 @@ font-size and line-height combinations.
 | `FTL-02` | Use `16px`, `20px`, and `24px` as the lower line-height primitives, defaulting to `12/16`, `14/20`, and `16/24`, subject to the validation constraints above            | `Approved`                         |
 | `FTL-03` | Use only `400`, `500`, `600`, and `700` as shared weight primitives with the semantic, frequency, responsive, and validation constraints above                          | `Approved`                         |
 | `FTL-04` | Use natural/default spacing for every shared UI role, keep kerning enabled, expose no positive or negative shared tracking token, and govern rare exceptions explicitly | `Approved`                         |
-| `FTL-05` | Use `20px`, `24px`, and `32px` as the ordinary upper core and gate `40px` to separately approved display or metric-display composites                                   | `Approved`                         |
+| `FTL-05` | Use `20px`, `24px`, and `32px` as the ordinary upper core and gate `40px` to a separately approved composite; the final map assigns it only to `display`                | `Approved`                         |
 | `FTL-06` | Use `28px`, `32px`, `40px`, and `48px` as upper line-height primitives, defaulting to `20/28`, `24/32`, `32/40`, and `40/48`, with the boundaries above                 | `Approved`                         |
-| `FTL-07` | Map the twelve semantic roles, including metric roles, to complete composite styles                                                                                     | `Observed need — not yet proposed` |
+| `FTL-07` | Map the twelve semantic roles to the nine approved composites above, including focused-entity and field-value precedence, metric tabular figures, and the display gate  | `Approved`                         |
 | `FTL-08` | Select spacing, grid, container, density, and target geometry values                                                                                                    | `Observed need — not yet proposed` |
 | `FTL-09` | Select responsive title and display substitutions after composite-role mapping                                                                                          | `Observed need — not yet proposed` |
 
 ## Next Approval Gate
 
-The next bounded decision is the exact composite mapping of the twelve semantic roles,
-including the boundary between heading-like roles and `metric-inline` or
-`metric-display`. That gate must use the approved physical axes without silently
-approving responsive substitutions, line-count policy, truncation, or component
-geometry.
+The next bounded decision is responsive substitution behavior for `page-title`,
+`metric-display`, and the gated `display` role, including whether any approved role
+may enlarge at a content-driven wide-layout threshold. That gate must use only the
+approved composites and must not silently approve maximum line counts, truncation,
+component geometry, spacing, or layout.

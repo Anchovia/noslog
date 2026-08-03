@@ -2,7 +2,7 @@
 
 ## 문서 관리
 
-- 상태: `승인된 조사 프로토콜 — Gate 0 완료, 이후 Font·하한·물리 Scale·Line-height·공용 Weight·Tracking 결정 기록`
+- 상태: `승인된 조사 프로토콜 — Gate 0 완료, 이후 Typography 축과 정확한 Semantic composite mapping 기록`
 - 조사일: 2026-08-03
 - 마지막 결정 갱신일: 2026-08-04
 - 원본 언어: 영어
@@ -13,20 +13,19 @@
 - 입력: 승인된 문서 `01`–`23`, 현재 저장소 token과 component, 현재 로컬
   브라우저 근거, 현행 표준, 유지 관리되는 디자인 시스템 및 문서 `22`의 명시적
   Foundation 진입 Gate
-- 제외: 승인된 물리 Scale, 하위·상위 Line-height 축, 공용 Weight 어휘 및 자연
-  Tracking 규칙을 넘어서는 나머지 Typography Composite, 반응형 Type 동작,
-  Palette 값, 간격 단위, Grid, Breakpoint, Radius, Shadow, Icon
-  스타일, Motion 시간, Chart 스타일, Component anatomy, High-fidelity 화면,
-  Figma Production 화면 및 Application 구현
+- 제외: Responsive type substitution 및 Wide-screen 확대, 최대 Line count,
+  Wrapping 및 Truncation 정책, Fallback 및 Delivery 세부, Palette 값, 간격 단위,
+  Grid, Breakpoint, Radius, Shadow, Icon 스타일, Motion 시간, Chart 스타일,
+  Component anatomy, High-fidelity 화면, Figma Production 화면 및 Application 구현
 
 이 브리프는 완전한 시각 시스템을 승인하지 않습니다. 후보를 어떻게 조사하고,
 결합하고, 시험하고, 비교하고, 사용자 결정 대상으로 올릴지를 정의합니다.
 아래와 문서 `26`에 명시적으로 기록한 이후의 제한된 Pretendard JP, `12px`
 하한, `12/14/16/20/24/32px` 일반 물리 Ramp, Gate를 둔 `40px` Display step,
 `16/20/24px` 하위 Line-height와 `28/32/40/48px` 상위 Line-height 축,
-`400/500/600/700` 공용 Weight 및 자연 Tracking 결정을 제외하면 현재 값,
-Reference 값, Tailwind 기본값 또는 후보는 이 문서에 등장했다는 이유만으로 권위
-있는 값이 되지 않습니다.
+`400/500/600/700` 공용 Weight, 자연 Tracking 및 정확한 12개 Role-to-9개
+Composite mapping 결정을 제외하면 현재 값, Reference 값, Tailwind 기본값 또는
+후보는 이 문서에 등장했다는 이유만으로 권위 있는 값이 되지 않습니다.
 
 ## 관련 문서
 
@@ -604,6 +603,7 @@ Specimen을 아직 제작·비교하지 않았으므로 값 선택의 포화에�
 | `FBR-13` | 문서 `26`의 승인된 자연/기본 Tracking 규칙, Kerning 유지, 공용 양수·음수 Tracking token 금지 및 예외 Gate를 인정합니다.                              | `Approved`   |
 | `FBR-14` | 문서 `26`의 승인된 `20/24/32px` 일반 상위 Core, Gate를 둔 `40px` Display step 및 추가 공유 Size를 위한 Specimen Gate 절차를 인정합니다.              | `Approved`   |
 | `FBR-15` | Semantic role을 배정하지 않고 문서 `26`의 승인된 `28/32/40/48px` 상위 Line-height 축과 기본 `20/28`, `24/32`, `32/40`, `40/48` Pairing을 인정합니다. | `Approved`   |
+| `FBR-16` | 문서 `26`의 정확한 12개 Role-to-9개 Composite Map, Focused-entity 및 Field-value 우선순위, Tabular metric 동작 및 드문 Display Gate를 인정합니다.    | `Approved`   |
 
 ## Gate 0 승인 기록
 
@@ -665,6 +665,20 @@ Composite-role mapping 또는 Metric 동작을 선택하지 않았습니다.
 Semantic role, Weight, 최대 Line count, Truncation, Responsive substitution 또는
 Metric-display 동작을 배정하지 않습니다.
 
+그다음 사용자는 정확한 기본 Semantic composite map을 승인했습니다.
+`display` `40/48 · 700`, `page-title` `24/32 · 700`, `section-title`
+`20/28 · 600`, `component-title` 및 일반 `entity-title` `16/24 · 600`,
+`entity-companion` 및 `body-secondary` `14/20 · 400`, `body` `16/24 · 400`,
+`control` 및 `metric-value` `14/20 · 500`, `metadata` `12/16 · 400`,
+`metric-display` `32/40 · 700`입니다. Metric composite는 Tabular figures를
+사용하며 다른 Role은 기본적으로 Proportional을 유지합니다. Domain entity가
+Focused page를 소유하면 Entity 의미를 유지하면서 `page-title` Composite를
+사용하고, 입력 또는 선택된 Field value는 `body`, 보이는 Action 및 Choice label은
+`control`을 사용합니다. 12개 Role은 의도적으로 9개 물리 Composite를 공유합니다.
+이번 결정은 Responsive substitution, Wide-screen 확대, 최대 Line count,
+Wrapping, Truncation, Component geometry, Spacing, Color, Layout, 자동 Display
+배치 또는 최종 Figma/Token 명명을 승인하지 않습니다.
+
 ## 단계 체크리스트
 
 - [x] Root 프로젝트 지침과 저장소 기준선을 다시 읽었습니다.
@@ -691,5 +705,8 @@ Metric-display 동작을 배정하지 않습니다.
 - [x] 사용자가 2026-08-04에 문서 `26`의 절제된 `28/32/40/48px` 상위
       Line-height 축과 기본 `20/28`, `24/32`, `32/40`, `40/48` Pairing을
       승인했습니다.
+- [x] 사용자가 2026-08-04에 문서 `26`의 정확한 12개 Role-to-9개 Composite
+      Map과 Focused-entity, Field-value, Metric, Display 및 Semantic-heading
+      우선순위 규칙을 승인했습니다.
 - [ ] Production 승격 전에 필수 다국어 통합 Specimen에서 Pretendard JP
       delivery, fallback metric 및 하한을 검증합니다.

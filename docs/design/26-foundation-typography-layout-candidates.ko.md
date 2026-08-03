@@ -2,7 +2,7 @@
 
 ## 문서 관리
 
-- 상태: `진행 중 — 물리 Type scale, 하위·상위 Line-height, Weight 및 Tracking 축 승인, 나머지 Composite·Layout 값 미확정`
+- 상태: `진행 중 — 물리 Type 축과 정확한 Semantic composite mapping 승인, Responsive substitution 및 Layout 값 미확정`
 - 조사일: 2026-08-04
 - 마지막 결정 갱신일: 2026-08-04
 - 원본 언어: 영어
@@ -13,10 +13,10 @@
 - 입력: 승인된 문서 `01`–`25`, 현재 저장소 Typography 근거, 유지 관리되는
   Design system과 Standard, Rhythm-game domain product 및 2026-08-04의 명시적
   사용자 승인
-- 이번 결정에서 제외: 반응형 Type 동작, 승인된 Size·Line-height·Weight 사용
-  경계를 넘어서는 Role-to-step 배정, Metric-display Composite, Spacing, Grid,
-  Container, Component 치수, Color, Material treatment, 최종 Figma style,
-  Production screen 및 Application 구현
+- 이번 결정에서 제외: Responsive type substitution 및 Wide-screen 확대, 최대
+  Line count, Wrapping 및 Truncation 정책, Spacing, Grid, Container, Component
+  치수, Color, Material treatment, 최종 Figma style, Production screen 및
+  Application 구현
 
 이 문서는 Batch B에서 결정한 제한된 항목을 기록합니다. Decision log 항목이
 `Approved`인 경우에만 해당 값이 권위 있는 요구사항이 됩니다. 미확정 값, 외부
@@ -36,10 +36,11 @@ Reference 값 및 현재 Code 값은 NosLog 요구사항이 아니라 근거로 
 
 - 제한된 Material decision을 한 번에 하나씩 조사하고 논의합니다.
 - 관찰 사실과 제안 및 승인된 요구사항을 구분하여 기록합니다.
-- 물리 Size, Line-height, Weight 및 Tracking 축 승인에서 반응형 동작, Metric
-  composite, 정확한 Composite-role mapping 또는 Layout 승인을 추론하지 않습니다.
-- 향후 Composite style은 Foundation v0.1 승격 전에 승인된 `S1`–`S6` 다국어
-  및 반응형 Specimen으로 검증합니다.
+- 물리 축과 정확한 Semantic composite mapping의 승인으로 Responsive
+  substitution, Line-count 정책, Truncation, Component geometry 또는 Layout이
+  승인되었다고 추론하지 않습니다.
+- 승인된 Composite style은 Foundation v0.1 승격 전에 `S1`–`S6` 다국어 및
+  반응형 Specimen으로 검증합니다.
 - 영어 원본과 한국어 Companion을 같은 작업에서 갱신합니다.
 
 ## 현재 NosLog 근거
@@ -109,11 +110,11 @@ base가 아니라 Semantic 3단계 하위 Core를 지지합니다.
 
 승인된 하위 물리 Size core는 다음과 같습니다.
 
-| Step                            | 승인된 경계                                                                                                                   | 아직 승인하지 않은 내용                                                                        |
-| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| `12px`(기본 Root에서 `0.75rem`) | 공용 사용자 표시용 최하위 Step이며 짧고 실제로 Tertiary인 Metadata, Caption 또는 동등한 Supporting content에만 사용할 수 있음 | `metadata` 또는 `entity-companion` Role에 자동 배정하지 않으며 행간, 굵기 및 Tracking은 미확정 |
-| `14px`(`0.875rem`)              | Specimen에서 가독성이 확인된 Control, 고밀도 Result와 Row 및 대부분의 Secondary information을 위한 Compact product-UI Step    | Universal body 크기가 아니며 아직 어떤 Role mapping도 자동으로 승인하지 않음                   |
-| `16px`(`1rem`)                  | 일반 Reading/Body Step이며 공유 하위 Core의 상위 Step                                                                         | 모든 Entity title, Control, Ranking row 또는 Metric에 `16px`를 강제하지 않음                   |
+| Step                            | 승인된 경계                                                                                                                   | 이 문서 뒤에서 기록한 승인 Role 해석                                     |
+| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| `12px`(기본 Root에서 `0.75rem`) | 공용 사용자 표시용 최하위 Step이며 짧고 실제로 Tertiary인 Metadata, Caption 또는 동등한 Supporting content에만 사용할 수 있음 | `metadata`는 `12/16 · 400`, `entity-companion`은 이 하한을 사용하지 않음 |
+| `14px`(`0.875rem`)              | Specimen에서 가독성이 확인된 Control, 고밀도 Result와 Row 및 대부분의 Secondary information을 위한 Compact product-UI Step    | 승인된 `14/20 · 400` 및 `14/20 · 500` Composite를 지원함                 |
+| `16px`(`1rem`)                  | 일반 Reading/Body Step이며 공유 하위 Core의 상위 Step                                                                         | 승인된 `16/24 · 400` 및 `16/24 · 600` Composite를 지원함                 |
 
 ### 사용 제약
 
@@ -121,9 +122,9 @@ base가 아니라 Semantic 3단계 하위 Core를 지지합니다.
   없습니다.
 - `12px`가 Primary action, Primary search result identity, 필수 Comparison
   value 또는 긴 설명 Copy를 담당하면 안 됩니다.
-- Semantic role의 일반 이름이 작아 보인다는 이유로 Step을 자동 상속하지
-  않습니다. `metadata`와 `entity-companion`은 중요도, 언어 또는 Composition이
-  요구하면 `12px`보다 크게 결정될 수 있습니다.
+- Page 또는 Component 작성자는 Role 이름이 작아 보인다는 이유로 Step을 고르지
+  않습니다. 승인된 Composite map은 `metadata`를 `12px`, `entity-companion`을
+  `14px`로 해석하며 변경에는 명시적 예외 절차가 필요합니다.
 - `14px`는 Compact product step이며 모든 Body copy를 압축할 권한이 아닙니다.
 - `16px`는 일반 Reading step이며 모든 고밀도 Row를 확대할 권한이 아닙니다.
 - `12/14/16px` 하위 Core는 Compact 및 Wide viewport에서 숫자상 안정적으로
@@ -202,9 +203,9 @@ base가 아니라 Semantic 3단계 하위 Core를 지지합니다.
   함께 전달해야 합니다.
 - Weight 값은 Compact 및 Wide viewport에서 안정적으로 유지합니다. 반응형 Fit을
   위해 Text를 더 가볍거나 무겁게 만들면 안 됩니다.
-- 열두 Semantic role 각각의 정확한 Weight 배정은 Composite style 검토 전까지
-  미확정입니다. 위 경계는 오용을 막지만 모든 Entity title을 `600`, 모든 Page
-  title을 `700`으로 자동 지정하지 않습니다.
+- 정확한 Role-to-weight 배정은 아래 Semantic composite Section에서
+  승인했습니다. 위 빈도 및 오용 경계는 계속 전체 System에 적용되며 Local Weight
+  변경을 허용하지 않습니다.
 - Pretendard JP와 모든 Production fallback은 한국어, 일본어, 영어, 혼합 Script,
   숫자, Small size, Dark surface 및 Bold Text 또는 동등한 Accessibility 동작으로
   검증해야 합니다. Browser가 합성한 Weight가 승인된 전달 Face를 조용히
@@ -339,13 +340,12 @@ family를 지원하기 때문입니다. NosLog에는 아직 이 인접 Pair가 �
 
 - 일반 상위 물리 Core는 `20px`, `24px`, `32px`입니다. 따라서 전체 공유 물리
   Ramp는 아래 Gate Display step을 제외하고 `12/14/16/20/24/32px`입니다.
-- `20px`은 Compact section, Component 및 Entity-title composite 후보가 될 수
-  있습니다. 세 Role 모두에 자동 배정하는 것은 아닙니다.
-- `24px`은 주 Page identity와 우선순위가 높은 Section 또는 Entity identity
-  후보가 될 수 있습니다. 모든 Semantic `h1`의 Visual style이 자동으로 되는
-  것은 아닙니다.
-- `32px`은 Dominant short title 또는 Major metric 후보가 될 수 있습니다. 일반
-  Card, Dialog 또는 Section heading이 되면 안 됩니다.
+- `20px`은 승인된 `section-title` Composite로 해석됩니다. Component와 일반
+  Entity title은 `16px`을 사용하며 작성자가 Local에서 승격할 수 없습니다.
+- `24px`은 Focused-entity 우선순위 규칙을 포함한 `page-title`로 해석됩니다.
+  Semantic HTML Heading level을 자동 결정하지 않습니다.
+- `32px`은 `metric-display`로 해석됩니다. 일반 Title, Card, Dialog 또는 Section
+  heading이 되면 안 됩니다.
 - `40px`은 Routine title 선택에 포함되지 않는 Gate display primitive입니다.
   `display` 또는 `metric-display` role만 후보가 될 수 있으며 어느 Mapping도 별도
   Specimen 검토와 승인이 필요합니다.
@@ -433,14 +433,126 @@ Line-height 조합을 위한 공개 Menu가 아닙니다.
   또는 Component 작성자가 Local leading을 추가하면 안 됩니다.
 - Pairing은 상대 구현 단위를 사용하고 Browser text scaling을 보존해야 합니다.
   Pixel 표기는 Design target을 문서화할 뿐입니다.
-- 이번 결정은 Semantic role, Weight, 최대 Line count, Truncation 규칙,
-  Responsive size substitution 또는 Metric-display 동작을 배정하지 않습니다.
+- 후속 Semantic composite 결정에서 Role, Weight 및 Metric 동작을 배정했습니다.
+  최대 Line count, Truncation 규칙 및 Responsive size substitution은 여전히
+  미확정입니다.
 - Mobile 전용 Line-height 압축은 승인하지 않습니다. Responsive role
   substitution은 Composite-role mapping 이후의 별도 제한된 결정입니다.
 - Pretendard JP Specimen은 원문 일본어 Music title, Localized/read title, 긴
   Artist credit, 한국어·영어 Page identity, Tabular metric 및 혼합 문장 부호를
   `320px`, `390px`, 중간 Width, Wide layout, `200%` Text 확대 및 WCAG Text
   Spacing override에서 검증한 뒤 Foundation으로 승격해야 합니다.
+
+## 승인된 Semantic Composite Map
+
+### Role mapping 집중 조사
+
+정확한 Mapping 검토에서는 독립적인 공식 또는 유지 관리 System 16개를
+비교했습니다. 각 System은 Font, Platform 및 명명 체계가 다르므로 표면 Token을
+복사하지 않았습니다. 안정적으로 전이 가능한 Pattern은 Semantic role 수가 물리
+Composite 수보다 많을 수 있고, 일반 Product hierarchy는 절제된 Size ramp와
+Weight를 결합하며, Metric에는 목적에 맞는 숫자 동작이 필요하고, 시각적 Heading
+treatment는 문서 Semantics와 독립적으로 유지된다는 점입니다.
+
+| 독립 출처                                                                                         | 전이 가능한 발견                                                                                     | NosLog 적용                                                                                     | 한계                                                              |
+| ------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| [Material 3 typography](https://developer.android.com/develop/ui/compose/designsystems/material3) | 전체 Type scale은 선택 사항이며 Product theme은 필요한 Style만 유지할 수 있음                        | NosLog의 12개 의미에 12개의 독립 물리 Style이 필요하지 않음                                     | Native `sp`, Roboto 및 Material role 이름은 NosLog 값이 아님      |
+| [Fluent 2 typography](https://fluent2.microsoft.design/typography)                                | 공용 Body size는 모든 용도마다 새 Size를 만들기보다 Weight와 Hierarchy 변화를 사용함                 | `body`, `control`, Identity 및 Supporting role이 Composite를 공유하는 근거                      | Segoe UI Metric과 Fluent Platform ramp는 직접 전이되지 않음       |
+| [Carbon type sets](https://carbondesignsystem.com/elements/typography/type-sets/)                 | Productive와 Expressive style은 여러 Semantic context에서 조율된 물리 값을 재사용함                  | 드문 Display treatment를 포함한 간결한 물리 어휘의 근거                                         | IBM Plex와 Carbon의 Productive/Expressive 구분을 복사하지 않음    |
+| [Atlassian Typography](https://atlassian.design/foundations/typography/)                          | 제한된 System을 재사용하면서 Body, Heading 및 Metric 용도를 구분함                                   | Metric을 Heading으로 취급하지 않고 별도 역할로 두는 근거                                        | Atlassian Density와 Font metric은 NosLog 값이 아님                |
+| [Primer Typography](https://primer.style/product/getting-started/foundations/typography/)         | Composite token과 Semantic markup이 임의 Local 선택을 방지함                                         | 고정 Role-to-composite mapping과 Semantic heading 독립성의 근거                                 | GitHub Content hierarchy는 NosLog Page template이 아님            |
+| [GitLab type fundamentals](https://design.gitlab.com/product-foundations/type-fundamentals/)      | Body와 Label hierarchy는 Size를 공유하고 관리된 Weight 및 Context로 구분할 수 있음                   | 새 Size 없이 `14/20` Regular와 Medium 변형을 사용하는 근거                                      | GitLab에는 NosLog가 의도적으로 제외한 물리 Step이 있음            |
+| [Ant Design Font](https://ant.design/docs/spec/font/)                                             | 일반 Product interface는 사용 중인 Size 수를 대략 3~5개 정도로 절제해야 함                           | Role별 Style 증식보다 승인된 7개 Pairing으로 구성한 9개 Composite의 근거                        | Logarithmic scale과 `14px` Base를 복사하지 않음                   |
+| [USWDS Typography](https://designsystem.digital.gov/components/typography/)                       | 읽기 가능한 Body, 절제된 Small text 및 Tabular number는 서로 다른 작업을 해결함                      | `16/24` Body, 예외적인 `12/16` Metadata 및 Tabular metric의 근거                                | 정부 Reading 기본값은 고밀도 Score surface보다 여유로움           |
+| [GOV.UK Typography](https://design-system.service.gov.uk/styles/typography/)                      | 작은 Content-first hierarchy와 Semantic HTML은 서로 구분되는 관심사임                                | 시각적 Title마다 같은 HTML Heading level을 강제하지 않으면서 Visual-role 일관성을 유지하는 근거 | 공공 서비스 Tone과 Responsive 값은 NosLog Styling을 결정하지 않음 |
+| [SAP Fiori Typography](https://experience.sap.com/fiori-design-web/typography/)                   | Object, List, Control, Chart 및 KPI Context가 관리된 Style을 공유하고 KPI 값은 Label과 Unit을 유지함 | 하나의 절제된 System 안에서 Entity, Control, Metadata 및 Metric을 구분하는 근거                 | Enterprise Control density와 SAP 72 Metric은 다름                 |
+| [Apple Typography](https://developer.apple.com/design/human-interface-guidelines/typography)      | Text style은 Hierarchy를 전달하며 더 큰 접근성 Size는 Composition 변경을 요구함                      | Local 축소가 아니라 안정적인 Role 의미와 후속 Responsive/Accessibility Gate의 근거              | Native Dynamic Type은 CSS Composite에 직접 Mapping되지 않음       |
+| [일본 디지털청 Design System Typography](https://design.digital.go.jp/foundations/typography/)    | 일본어 Body/UI Text는 가독성을 우선하며 작은 Text를 제한하고 Heading Semantic을 구조적으로 유지함    | `16/24` 일반 Reading, 절제된 `14/20` 및 실제 일본어 Specimen 검증의 근거                        | 해당 Font family와 정부 Content는 NosLog Identity를 결정하지 않음 |
+| [LINE Design System typography](https://designsystem.line.me/LDSG/foundation/typography-en)       | Script metric을 고려하면서 일본어와 기타 언어 Pack 전반에 일관된 Role family를 제공함                | 한국어·일본어·영어·혼합 Script Content에 하나의 Semantic map을 쓰는 근거                        | LINE의 정확한 공개 Token은 Pretendard JP 측정값이 아님            |
+| [Radix Themes typography](https://www.radix-ui.com/themes/docs/theme/typography)                  | 간결한 Size scale을 Weight 및 Semantic component API와 결합함                                        | Page-local 값 노출보다 작은 물리 Ramp를 조합하는 근거                                           | Radix 기본값은 구현 선택지이지 NosLog Design 근거가 아님          |
+| [Tailwind CSS font size](https://tailwindcss.com/docs/font-size)                                  | Size와 Line height를 Pairing하고 상대 단위의 재사용 Token으로 구현할 수 있음                         | 승인된 Composite를 Code에 결정론적으로 Mapping하는 근거                                         | Framework 기본값은 Design authority가 아니라 편의 기능임          |
+| [VA Design System typography](https://design.va.gov/foundation/typography)                        | 시각적 Typography style과 접근 가능한 Heading level은 연관되지만 서로 대체할 수 없음                 | 올바른 문서 Outline을 유지하면서 `page-title` 또는 다른 Composite를 적용하는 근거               | 공공 서비스 Content와 Font는 NosLog Role priority를 결정하지 않음 |
+
+가장 강한 수렴은 숫자가 아니라 구조에 있습니다. 작성에는 Semantic name을 사용하고,
+적은 수의 완전한 물리 Treatment를 재사용하며, Weight는 관리된 Composite의 일부로만
+사용하고, 비교 숫자는 Tabular로 유지하며, 올바른 HTML Heading 순서는 시각 Style과
+독립적으로 보존합니다. 아래 승인된 NosLog 값은 어느 한 출처를 복사한 것이 아니라,
+이미 승인된 물리 축과 사용자가 검토한 Product hierarchy를 결합한 결과입니다.
+
+### 승인된 Role-to-composite mapping
+
+모든 공용 Role은 다음의 완전한 기본 Composite로 해석됩니다. 전체에 자연/기본
+Tracking과 Kerning 유지가 적용됩니다.
+
+| Semantic role      | 승인된 기본 Composite | 숫자 기능       | 관리 경계                                                                                      |
+| ------------------ | --------------------- | --------------- | ---------------------------------------------------------------------------------------------- |
+| `display`          | `40/48 · 700`         | Proportional    | 드물고 짧으며 별도 정당화된 표현 순간에만 사용, 자동 Page 배정 없음                            |
+| `page-title`       | `24/32 · 700`         | Proportional    | 기본 Page 또는 Focused-task identity, `32px`은 Compact나 Wide의 기본값이 아님                  |
+| `section-title`    | `20/28 · 600`         | Proportional    | 장식적 Card label이 아니라 실제 주요 Content 경계                                              |
+| `component-title`  | `16/24 · 600`         | Proportional    | 해당 Section에 종속되는 Dialog, Drawer, Panel 또는 Grouped-module identity                     |
+| `entity-title`     | `16/24 · 600`         | Proportional    | 일반 List/Card Entity identity, Focused-page Entity identity는 아래 우선순위 규칙을 따름       |
+| `entity-companion` | `14/20 · 400`         | Proportional    | 선택적 Localized/read identity, Canonical entity title보다 종속적이지만 함께 읽을 수 있어야 함 |
+| `body`             | `16/24 · 400`         | Proportional    | 일반 Reading, 설명 및 System message                                                           |
+| `body-secondary`   | `14/20 · 400`         | Proportional    | Supporting identity 또는 간결한 Context text, Task-critical 의미의 유일한 전달자가 될 수 없음  |
+| `control`          | `14/20 · 500`         | Proportional    | 보이는 Action 또는 Choice label, 입력 및 선택된 Field value는 아래 우선순위 규칙을 따름        |
+| `metadata`         | `12/16 · 400`         | Proportional    | 짧고 진정으로 3차적인 Fact 또는 Annotation만                                                   |
+| `metric-display`   | `32/40 · 700`         | Tabular figures | 명시적인 Label, Unit 및 Scope를 갖는 하나의 국소적 지배 승인 정량 결과                         |
+| `metric-value`     | `14/20 · 500`         | Tabular figures | Row, Group, Control 또는 Visualization의 비교 정량 값, Context 없는 무표식 숫자가 될 수 없음   |
+
+12개 Role은 의도적으로 다음 9개 물리 Composite를 공유합니다.
+
+1. `40/48 · 700`;
+2. `32/40 · 700`;
+3. `24/32 · 700`;
+4. `20/28 · 600`;
+5. `16/24 · 600`;
+6. `16/24 · 400`;
+7. `14/20 · 500`;
+8. `14/20 · 400`; 그리고
+9. `12/16 · 400`.
+
+이는 관리되는 Composite style이며 Size, Leading 및 Weight를 독립적으로 고르는
+메뉴가 아닙니다. Page 또는 Component 작성자는 물리 조합이 아니라 Semantic role
+또는 승인된 Alias를 선택합니다.
+
+### 승인된 우선순위 및 Alias 규칙
+
+1. **Focused entity identity:** Domain entity가 Focused page 또는 Task의
+   Identity이면 보이는 Primary heading은 Entity의 Semantic 의미와 Canonical name을
+   유지하면서 `page-title` Composite `24/32 · 700`을 사용합니다. 예시는 Music
+   Detail의 원문 Music title, Profile의 Username, 그리고 해당 Entity가 Page를
+   소유하는 경우의 주요 Arcade 또는 Exam identity입니다. 같은 Entity가 일반
+   List나 Card에 있으면 `entity-title` `16/24 · 600`을 사용합니다. 이는 관리된
+   우선순위 규칙이며 13번째 Role이나 새 물리 Style이 아닙니다.
+2. **Action label과 Field value:** Button, Tab, Filter, Menu item, Field label처럼
+   Action 또는 사용 가능한 Choice를 명명하는 Text는 `control` `14/20 · 500`을
+   사용합니다. 사용자가 입력한 값이나 Text 성격의 Field 안에 표시된 선택 값은
+   기존 `body` Composite `16/24 · 400`을 사용합니다. 이는 Content 가독성을
+   보존하며 별도 Input-value style을 만들지 않습니다.
+3. **Metric 숫자:** `metric-display`와 `metric-value`는 비교 가능한 숫자에 Tabular
+   figures를 활성화합니다. 다른 Role은 기본적으로 Proportional을 유지하며 Date나
+   가끔 등장하는 숫자를 포함한다는 이유만으로 Tabular figures를 상속하지 않습니다.
+4. **Display Gate:** 물리 `40/48 · 700` Composite는 존재하지만 `display`는 여전히
+   드물고 자동 Page-family 배정이 없습니다. Production surface에서 사용하기 전에
+   Normative specimen과 명시적 승인이 필요합니다.
+5. **Semantic outline:** 시각 Composite 선택은 필요한 HTML Heading level을
+   변경하지 않습니다. Entity에 `page-title` Treatment를 적용할 수 있지만 문서
+   Outline과 Accessible name은 실제 Page 구조에 맞게 유지해야 합니다.
+
+### 이번 Mapping으로 승인되지 않은 경계
+
+이번 결정은 다음을 승인하지 않습니다.
+
+- 어떤 Role의 Responsive substitution;
+- `page-title`, `metric-display` 또는 `display`의 Wide-screen 확대;
+- 최대 Line count, Wrapping priority 또는 Truncation 동작;
+- Component height, Padding, Target geometry 또는 주변 Spacing;
+- Color, Opacity, Material, Alignment 또는 최종 Layout;
+- 자동 `display` 배치; 또는
+- 여기에 기록된 Semantic role identifier를 넘어서는 최종 Figma/Token 명명.
+
+이 값들은 별도 Gate로 남으며 Foundation v0.1 승격 전에 통합 다국어 Specimen으로
+검증해야 합니다.
 
 ## 선택하지 않은 대안
 
@@ -463,24 +575,32 @@ Line-height 조합을 위한 공개 Menu가 아닙니다.
 | `40px`을 일반 Page, Card, Dialog 또는 Section title에 허용        | `Rejected` | 승인된 드문 Display 경계를 무너뜨리고 Page별 강조 분산을 다시 만듦                                                                  |
 | 조밀한 상위 Pairing `20/24`, `24/28` 사용                         | `Rejected` | 짧은 한 줄 UI Label에는 맞지만 긴 일본어 Music title이나 혼합 Script identity의 줄바꿈을 보호하지 못함                              |
 | Gate를 둔 `40px` Display에 기본 `52px` Leading 추가               | `Rejected` | NosLog가 승인하지 않은 여러 줄 Editorial display 동작을 가정하고 Specimen 근거 없이 Primitive를 하나 더 추가함                      |
+| 각 Semantic role에 독립 물리 Composite 부여                       | `Rejected` | Semantic 정밀도를 시각 다양성으로 오해하며 Foundation이 막으려는 Local-style 분산을 다시 만듦                                       |
+| `page-title`에 기본 `32/40 · 700` 사용                            | `Rejected` | Compact 화면에서 일반 Page identity를 과장하고 주요 정량 결과에 필요한 지배 Step을 소비함                                           |
+| 모든 `entity-title`에 `20/28 · 600` 사용                          | `Rejected` | 반복되는 Discovery, Ranking 및 Archive surface를 과도하게 확대하며 Focused entity에는 이미 관리된 `page-title` 우선순위가 있음      |
+| `entity-companion`을 `12/16 · 400`으로 축소                       | `Rejected` | Localized/read identity는 3차 Metadata가 아니라 유용한 Content이며 한국어·일본어·영어·혼합 Script 결과에서 읽을 수 있어야 함        |
+| Action label과 입력 Field value에 하나의 Composite 사용           | `Rejected` | 두 작업은 다르며 Compact Medium label은 Interaction을 알리고 입력·선택 Content는 일반 가독성 Body treatment가 적합함                |
+| 주요 Metric에 `40/48 · 700` 사용                                  | `Rejected` | 드문 표현 Display 순간과 `metric-display` `32/40 · 700`이 제공하는 제한된 정량 Hierarchy 사이의 경계를 무너뜨림                     |
+| Metric value를 Heading role로 Styling                             | `Rejected` | Metric에는 문서 Heading semantic이 아니라 Tabular alignment, 명시적 Label과 Unit 및 안정적 비교 동작이 필요함                       |
 
 ## 결정 기록
 
-| ID       | 결정                                                                                                                                         | 상태                                 |
-| -------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
-| `FTL-01` | 위 Role 경계와 반응형 제약을 포함하여 `12px`, `14px`, `16px`을 공유 하위 물리 Type core로 사용함                                             | `Approved`                           |
-| `FTL-02` | 위 검증 제약을 조건으로 `16px`, `20px`, `24px`을 하위 Line-height primitive로 사용하고 `12/16`, `14/20`, `16/24`를 기본으로 함               | `Approved`                           |
-| `FTL-03` | 위 Semantic, 사용 빈도, 반응형 및 검증 제약과 함께 `400`, `500`, `600`, `700`만 공유 Weight primitive로 사용함                               | `Approved`                           |
-| `FTL-04` | 모든 공용 UI Role에 자연/기본 간격을 사용하고 Kerning을 유지하며 공유 양수·음수 Tracking token을 노출하지 않고 드문 예외를 명시적으로 관리함 | `Approved`                           |
-| `FTL-05` | `20px`, `24px`, `32px`을 일반 상위 Core로 사용하고 `40px`은 별도 승인된 Display 또는 Metric-display composite에만 Gate를 두어 사용함         | `Approved`                           |
-| `FTL-06` | 위 경계와 함께 `28px`, `32px`, `40px`, `48px`을 상위 Line-height primitive로 사용하고 `20/28`, `24/32`, `32/40`, `40/48`을 기본으로 함       | `Approved`                           |
-| `FTL-07` | Metric role을 포함한 12개 Semantic role을 완전한 Composite style에 Mapping함                                                                 | `Observed need — 아직 제안하지 않음` |
-| `FTL-08` | Spacing, Grid, Container, Density 및 Target geometry 값을 선택함                                                                             | `Observed need — 아직 제안하지 않음` |
-| `FTL-09` | Composite-role mapping 이후 Responsive title 및 Display substitution을 선택함                                                                | `Observed need — 아직 제안하지 않음` |
+| ID       | 결정                                                                                                                                             | 상태                                 |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------ |
+| `FTL-01` | 위 Role 경계와 반응형 제약을 포함하여 `12px`, `14px`, `16px`을 공유 하위 물리 Type core로 사용함                                                 | `Approved`                           |
+| `FTL-02` | 위 검증 제약을 조건으로 `16px`, `20px`, `24px`을 하위 Line-height primitive로 사용하고 `12/16`, `14/20`, `16/24`를 기본으로 함                   | `Approved`                           |
+| `FTL-03` | 위 Semantic, 사용 빈도, 반응형 및 검증 제약과 함께 `400`, `500`, `600`, `700`만 공유 Weight primitive로 사용함                                   | `Approved`                           |
+| `FTL-04` | 모든 공용 UI Role에 자연/기본 간격을 사용하고 Kerning을 유지하며 공유 양수·음수 Tracking token을 노출하지 않고 드문 예외를 명시적으로 관리함     | `Approved`                           |
+| `FTL-05` | `20px`, `24px`, `32px`을 일반 상위 Core로 사용하고 `40px`은 별도 승인 Composite로 제한하며 최종 Map에서는 `display`에만 배정함                   | `Approved`                           |
+| `FTL-06` | 위 경계와 함께 `28px`, `32px`, `40px`, `48px`을 상위 Line-height primitive로 사용하고 `20/28`, `24/32`, `32/40`, `40/48`을 기본으로 함           | `Approved`                           |
+| `FTL-07` | 12개 Semantic role을 위 9개 승인 Composite에 Mapping하고 Focused-entity 및 Field-value 우선순위, Metric Tabular figures 및 Display Gate를 적용함 | `Approved`                           |
+| `FTL-08` | Spacing, Grid, Container, Density 및 Target geometry 값을 선택함                                                                                 | `Observed need — 아직 제안하지 않음` |
+| `FTL-09` | Composite-role mapping 이후 Responsive title 및 Display substitution을 선택함                                                                    | `Observed need — 아직 제안하지 않음` |
 
 ## 다음 승인 Gate
 
-다음 제한된 결정은 Heading 성격 Role과 `metric-inline` 또는 `metric-display`의
-경계를 포함한 12개 Semantic role의 정확한 Composite mapping입니다. 해당 Gate는
-Responsive substitution, Line-count 정책, Truncation 또는 Component geometry를
-조용히 승인하지 않고 승인된 물리 축을 사용해야 합니다.
+다음 제한된 결정은 `page-title`, `metric-display` 및 Gate를 둔 `display` Role의
+Responsive substitution 동작이며, Content 기반 Wide-layout 임계점에서 승인된
+Role이 확대될 수 있는지도 포함합니다. 해당 Gate는 승인된 Composite만 사용하고
+최대 Line count, Truncation, Component geometry, Spacing 또는 Layout을 조용히
+승인해서는 안 됩니다.
