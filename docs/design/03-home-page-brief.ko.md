@@ -776,7 +776,7 @@ Viewport Breakpoint는 주요 셸 변경을 정의하고, 같은 컴포넌트가
 - 홈의 각 공지 Link, `전체 공지` Link 및 한국어·일본어·영어 상세·Archive
   목적지
 - 공식 소식의 일반, 빈 상태 및 사용 불가 상태
-- 헤더 스크롤 숨김·재표시 및 모션 감소 동작
+- Compact 헤더 스크롤 숨김·재표시, 지속 표시 Wide 헤더 및 모션 감소 동작
 - 보이는 Focus 순서, 건너뛰기 Link, Landmark, 접근 가능한 이름 및 Console
   오류
 

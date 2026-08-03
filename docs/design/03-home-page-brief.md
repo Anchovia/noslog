@@ -788,7 +788,7 @@ The later design and implementation must verify:
 - each Home announcement link, the “All announcements” link, and their Korean,
   Japanese, and English detail and archive destinations;
 - official-news normal, empty, and unavailable states;
-- Header scroll hide/reveal and reduced-motion behavior;
+- compact Header scroll hide/reveal, persistent-wide Header, and reduced-motion behavior;
 - visible focus order, skip link, landmarks, accessible names, and console errors.
 
 ## Acceptance Criteria for This Brief

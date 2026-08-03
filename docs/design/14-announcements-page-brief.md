@@ -557,8 +557,9 @@ boundary.
 
 - At browser zoom and short heights, no fixed overlay hides the title, dates, list, or
   body.
-- The shared auto-hiding header must restore consistently and must not trap Archive or
-  Detail navigation behind viewport-height assumptions.
+- The shared header must follow the approved shell contract: compact auto-hide must
+  restore consistently, and neither compact nor persistent-wide behavior may trap
+  Archive or Detail navigation behind viewport-height assumptions.
 
 ## Accessibility Contract
 

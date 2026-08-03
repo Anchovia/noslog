@@ -10,6 +10,8 @@
 - Korean companion:
   [02-information-architecture.ko.md](./02-information-architecture.ko.md)
 - Input audit: [01-current-product-audit.md](./01-current-product-audit.md)
+- Approved shared-shell contract:
+  [15-shared-shell-navigation-brief.md](./15-shared-shell-navigation-brief.md)
 - Scope: User-facing NosLog 2.0 page families, information architecture,
   navigation, and important cross-page flows
 - Excluded: Administrator-interface redesign, page-level visual composition,
@@ -252,13 +254,15 @@ Signed-out pages use a visible Login text button in the same account position.
   scope selected.
 - Tier lists, Bingo, and Exams must not be combined under a shared label.
 - After the product destinations, a visually separate utility area provides Settings
-  and Feedback/Error reporting. The exact group label remains a copy decision.
+  and Feedback/Error reporting. Use a visual divider without a visible utility-group
+  label.
 - Settings is the only settings-related More entry for both authentication states.
   Do not add separate Language, Privacy, or GitHub entries.
 - An authorized administrator entry may remain a separate block, even though
   administrator redesign is outside the NosLog 2.0 user-interface scope.
-- Exact destination order, column count, panel anchoring, overlay behavior, and
-  open/close motion remain page-shell design decisions.
+- The exact two-column destination order, compact modal behavior, wide popover
+  behavior, scroll visibility, and shell variants are approved in
+  [15-shared-shell-navigation-brief.md](./15-shared-shell-navigation-brief.md).
 
 ### Public Settings Destination
 
@@ -412,10 +416,11 @@ The exact block proportions remain open until representative layout work is appr
 - Keep only the profile/account control and More icon at the right.
 - Activating More opens the navigation-block panel.
 - Do not add a persistent bottom navigation.
-- Hide the header on downward scroll and reveal it on upward scroll.
-- The panel may change its width, column count, anchoring, and overlay treatment based
-  on available space, but it preserves the same separate destinations and semantic
-  order.
+- On compact layouts, hide the header on downward scroll and reveal it on upward
+  scroll. On wider desktop layouts, keep it persistently visible and sticky.
+- The panel uses the same approved two-column semantic order across widths. It is a
+  full-width modal below the header in compact layouts and a right-anchored non-modal
+  popover in wide layouts.
 
 This direction is consistent with production header systems that keep service identity
 and a responsive menu in a top shell. The exact NosLog layout must still be designed
@@ -515,8 +520,8 @@ from its content rather than copied from GOV.UK, USWDS, or Carbon.
 | IA-08 | Tier/Bingo/Exam relationship    | Keep all three as independent page families and navigation blocks; no umbrella label                                                                     | `Approved` |
 | IA-09 | General desktop navigation      | Preserve the same top-header semantics; adapt More panel and content grid to available width                                                             | `Approved` |
 | IA-10 | Signed-out account control      | Show a visible Login text button in the account position                                                                                                 | `Approved` |
-| IA-11 | More-panel contents and order   | Keep eight product blocks distinct, followed by Settings and Feedback utilities; exact visual order and responsive composition move to the shell brief   | `Approved` |
-| IA-12 | Header scroll behavior          | Hide on downward scroll and reveal on upward scroll                                                                                                      | `Approved` |
+| IA-11 | More-panel contents and order   | Use the approved two-column order for eight product destinations, a divider, Settings and Feedback utilities, then conditional Admin; no group heading   | `Approved` |
+| IA-12 | Header scroll behavior          | Compact layouts hide downward and reveal upward; wider desktop layouts remain persistently visible and sticky                                            | `Approved` |
 | IA-13 | Music/Chart search architecture | One shared search surface with a compact leading scope selector; Chart entry preselects Chart scope                                                      | `Approved` |
 | IA-14 | Persistent control density      | Avoid permanent button rows when a clear contextual selector or progressive disclosure preserves the task                                                | `Approved` |
 | IA-15 | Public Settings destination     | One `/[locale]/settings` entry for all users; guest experience preferences remain usable and account controls appear only after login                    | `Approved` |
@@ -528,12 +533,17 @@ from its content rather than copied from GOV.UK, USWDS, or Carbon.
 
 The user approved this information-architecture phase as a whole on 2026-07-30 after
 reviewing the synchronized English and Korean artifacts and the resolved decision
-register. Visual composition, exact responsive ordering, and page-specific states
-remain page-brief decisions; this approval does not silently resolve them. The
+register. At that approval, visual composition, exact responsive ordering, and
+page-specific states remained page-brief decisions; the approval did not silently
+resolve them. The
 user-approved Home brief later refined the editorial destinations recorded in `IA-07`
 and `IA-18` without changing the approved page-family hierarchy. The subsequently
 approved shared-discovery brief refined signed-out personal-control behavior and the
-Music/Chart scope contracts without changing that hierarchy.
+Music/Chart scope contracts without changing that hierarchy. The subsequently approved
+shared-shell brief resolved the global destination order, compact modal, wide popover,
+header visibility, shell variants, and footer ownership while preserving the same
+information architecture. Page-specific composition and states remain governed by
+their page briefs.
 
 ## Acceptance Criteria for This Artifact
 
@@ -550,11 +560,11 @@ Music/Chart scope contracts without changing that hierarchy.
 
 ## Next Actions
 
-1. Continue with the Music-detail page brief, followed by Tiers and the remaining page
-   families.
-2. Create a focused brief for the public announcement archive and detail templates
-   before downstream design or implementation of those routes.
-3. Preserve the approved Home and shared-discovery contracts while defining their
-   downstream destinations and return states.
+1. Apply the approved shared-shell contract consistently to later page briefs,
+   Foundation specimens, downstream design, and implementation mapping.
+2. Keep page-specific content, actions, and states in their own briefs rather than
+   expanding the global shell.
+3. Preserve the approved Home and shared-discovery contracts while defining downstream
+   destinations and return states.
 4. Preserve this approved information architecture unless a later explicitly approved
    decision supersedes a recorded item.
