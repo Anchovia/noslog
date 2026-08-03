@@ -23,6 +23,8 @@
   [15-shared-shell-navigation-brief.ko.md](./15-shared-shell-navigation-brief.ko.md)
 - 설정 및 계정 계약:
   [16-settings-account-page-brief.ko.md](./16-settings-account-page-brief.ko.md)
+- 개인정보 및 데이터 처리 계약:
+  [18-privacy-data-practices-page-brief.ko.md](./18-privacy-data-practices-page-brief.ko.md)
 - 프로필 계약: [09-profile-page-brief.ko.md](./09-profile-page-brief.ko.md)
 - 범위: 비로그인 Login, Discord OAuth 진입·Callback 복구, 최초 프로필 완료,
   미완료 프로필 Gate, 안전한 목적지 복귀, 인증 셸 콘텐츠, 반응형 동작, 접근성,

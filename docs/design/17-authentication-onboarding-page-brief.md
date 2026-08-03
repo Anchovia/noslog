@@ -25,6 +25,8 @@ user-approved decision record`
   [15-shared-shell-navigation-brief.md](./15-shared-shell-navigation-brief.md)
 - Settings and account contract:
   [16-settings-account-page-brief.md](./16-settings-account-page-brief.md)
+- Privacy and data-practices contract:
+  [18-privacy-data-practices-page-brief.md](./18-privacy-data-practices-page-brief.md)
 - Profile contract: [09-profile-page-brief.md](./09-profile-page-brief.md)
 - Scope: signed-out Login, Discord OAuth entry and callback recovery, initial profile
   completion, incomplete-profile gating, safe destination return, authentication

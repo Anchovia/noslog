@@ -22,6 +22,8 @@
   [15-shared-shell-navigation-brief.ko.md](./15-shared-shell-navigation-brief.ko.md)
 - 인증 및 온보딩 계약:
   [17-authentication-onboarding-page-brief.ko.md](./17-authentication-onboarding-page-brief.ko.md)
+- 개인정보 및 데이터 처리 계약:
+  [18-privacy-data-practices-page-brief.ko.md](./18-privacy-data-practices-page-brief.ko.md)
 - 프로필 계약: [09-profile-page-brief.ko.md](./09-profile-page-brief.ko.md)
 - 범위: 공개 설정 진입, 카테고리 구조, 설정 소유권과 저장, 비로그인·로그인
   동작, 프로필 편집, 공개 범위, Discord 연동, 로그아웃, 회원 탈퇴, 반응형 적응,

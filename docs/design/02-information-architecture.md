@@ -14,6 +14,8 @@
   [15-shared-shell-navigation-brief.md](./15-shared-shell-navigation-brief.md)
 - Approved authentication and onboarding contract:
   [17-authentication-onboarding-page-brief.md](./17-authentication-onboarding-page-brief.md)
+- Approved privacy and data-practices contract:
+  [18-privacy-data-practices-page-brief.md](./18-privacy-data-practices-page-brief.md)
 - Scope: User-facing NosLog 2.0 page families, information architecture,
   navigation, and important cross-page flows
 - Excluded: Administrator-interface redesign, page-level visual composition,
@@ -554,8 +556,14 @@ shared-shell brief resolved the global destination order, compact modal, wide po
 header visibility, shell variants, and footer ownership while preserving the same
 information architecture. The subsequently approved authentication and onboarding
 brief resolved the Discord entry, public-browse alternative, minimal completion gate,
-safe return, and recovery without changing the public page hierarchy. Page-specific
-composition and states remain governed by their page briefs.
+safe return, and recovery without changing the public page hierarchy. The subsequently
+approved privacy and data-practices brief resolved the layered public-policy structure,
+fourteen-and-older account eligibility, public-data consequences, retention and
+provider disclosure, cookies and device storage, policy versioning, and rights paths.
+Legally sufficient operator identity, final legal copy, provider and deletion facts,
+and human-reviewed translation remain explicit release blockers rather than inferred
+information-architecture decisions. Page-specific composition and states remain
+governed by their page briefs.
 
 ## Acceptance Criteria for This Artifact
 
@@ -582,3 +590,6 @@ composition and states remain governed by their page briefs.
    decision supersedes a recorded item.
 5. Apply the approved authentication and onboarding contract to every account-only
    action without duplicating provider or completion logic inside destination pages.
+6. Apply the approved privacy and data-practices contract at every collection, public
+   disclosure, upload, synchronization, external-service, and account-lifecycle
+   context without representing its release blockers as resolved.
