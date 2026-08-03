@@ -22,6 +22,8 @@
   [17-authentication-onboarding-page-brief.ko.md](./17-authentication-onboarding-page-brief.ko.md)
 - 집중형 뷰어 계약:
   [07-chart-viewer-page-brief.ko.md](./07-chart-viewer-page-brief.ko.md)
+- 시스템 복구 상태 계약:
+  [19-system-recovery-states-page-brief.ko.md](./19-system-recovery-states-page-brief.ko.md)
 - 범위: 반복되는 사용자 공개 셸, 일반 헤더, 계정·내비게이션 컨트롤, 열린
   내비게이션 동작, 푸터, 건너뛰기 경로, 의미적 Landmark, 반응형 적응, 스크롤
   가시성, 인증 셸, 집중형 뷰어 셸 경계, 복구 셸, 다국어, 접근성, 상태 및 향후
@@ -337,6 +339,10 @@ Panel이 혼잡, 잘림 또는 사용할 수 없는 Pointer·Keyboard Target 없
   해당 페이지 기획서가 복구 행동을 정합니다.
 - Not-found 페이지는 Application 자체가 초기화되지 못한 경우가 아니라면 홈이나
   다른 유효 목적지로 이동할 충분한 셸 문맥을 보존합니다.
+- 콘텐츠, 행동, HTTP 의미, 시간, Locale, 진단 및 인수 조건을 포함한 Not found,
+  복구 가능한 페이지 오류, 치명적 전역 오류 및 계획된 점검의 완전한 승인 구분은
+  [19-system-recovery-states-page-brief.ko.md](./19-system-recovery-states-page-brief.ko.md)를
+  따릅니다.
 
 ## 접근성 계약
 
@@ -535,7 +541,7 @@ Motion 및 반응형 Overflow를 다뤄야 합니다. 브라우저 점검으로 
 | SHELL-18 | Login·Onboarding은 더보기·프로필 없는 최소 정체성+푸터 셸 사용                                 | `승인` |
 | SHELL-19 | 인증 기획서에 따라 Login 본문에 간결한 Discord 데이터 고지와 Inline 개인정보처리방침 Link 포함 | `승인` |
 | SHELL-20 | 집중형 채보 뷰어에서 일반 헤더·푸터 생략                                                       | `승인` |
-| SHELL-21 | 점검과 치명적 오류에서 최소 정체성·복구 셸 사용                                                | `승인` |
+| SHELL-21 | 점검과 치명적 오류에서 최소 정체성·복구 셸 사용, 정확한 상태 동작은 기획서 19를 따름           | `승인` |
 | SHELL-22 | 열린 목적지는 ARIA Menu Semantics가 아닌 Native Link Navigation으로 유지                       | `승인` |
 | SHELL-23 | ko, ja, en에서 동일한 목적지 정체성과 의미적 순서 보존                                         | `승인` |
 | SHELL-24 | 정확한 Foundation Token, 치수, Breakpoint 및 최종 다국어 문자열은 후속 작업                    | `승인` |

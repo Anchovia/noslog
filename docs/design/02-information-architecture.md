@@ -16,6 +16,8 @@
   [17-authentication-onboarding-page-brief.md](./17-authentication-onboarding-page-brief.md)
 - Approved privacy and data-practices contract:
   [18-privacy-data-practices-page-brief.md](./18-privacy-data-practices-page-brief.md)
+- Approved system-recovery states contract:
+  [19-system-recovery-states-page-brief.md](./19-system-recovery-states-page-brief.md)
 - Scope: User-facing NosLog 2.0 page families, information architecture,
   navigation, and important cross-page flows
 - Excluded: Administrator-interface redesign, page-level visual composition,
@@ -562,8 +564,10 @@ fourteen-and-older account eligibility, public-data consequences, retention and
 provider disclosure, cookies and device storage, policy versioning, and rights paths.
 Legally sufficient operator identity, final legal copy, provider and deletion facts,
 and human-reviewed translation remain explicit release blockers rather than inferred
-information-architecture decisions. Page-specific composition and states remain
-governed by their page briefs.
+information-architecture decisions. The subsequently approved system-recovery brief
+resolved the distinct ordinary-shell Not-found and recoverable-error states and the
+minimal-shell fatal-error and planned-Maintenance states without adding a navigation
+destination. Page-specific composition and states remain governed by their page briefs.
 
 ## Acceptance Criteria for This Artifact
 
@@ -593,3 +597,5 @@ governed by their page briefs.
 6. Apply the approved privacy and data-practices contract at every collection, public
    disclosure, upload, synchronization, external-service, and account-lifecycle
    context without representing its release blockers as resolved.
+7. Apply the approved system-recovery contract to Not found, page error, fatal error,
+   and planned Maintenance without turning recovery states into navigation destinations.

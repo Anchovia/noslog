@@ -24,6 +24,8 @@ the user-approved decision record`
   [17-authentication-onboarding-page-brief.md](./17-authentication-onboarding-page-brief.md)
 - Focused-viewer contract:
   [07-chart-viewer-page-brief.md](./07-chart-viewer-page-brief.md)
+- System-recovery states contract:
+  [19-system-recovery-states-page-brief.md](./19-system-recovery-states-page-brief.md)
 - Scope: repeated public-user shells, ordinary header, account and navigation
   controls, opened navigation behavior, footer, skip route, semantic landmarks,
   responsive adaptation, scroll visibility, authentication shell, focused-viewer
@@ -343,6 +345,10 @@ The ordinary footer contains only the stable trust and project layer required he
   the ordinary shell; the page brief determines its recovery action.
 - Not-found pages should preserve enough shell context to reach Home or another valid
   destination unless the application itself cannot initialize.
+- The complete approved distinction between Not found, recoverable page error, fatal
+  global error, and planned Maintenance—including content, actions, HTTP semantics,
+  timing, locale, diagnostics, and acceptance—follows
+  [19-system-recovery-states-page-brief.md](./19-system-recovery-states-page-brief.md).
 
 ## Accessibility Contract
 
@@ -543,7 +549,7 @@ are not substitutes.
 | SHELL-18 | Login and onboarding use a minimal identity-plus-footer shell without More/profile                            | `Approved` |
 | SHELL-19 | Login body includes concise Discord-data disclosure and an inline Privacy link under the authentication brief | `Approved` |
 | SHELL-20 | Focused chart viewer omits ordinary header and footer                                                         | `Approved` |
-| SHELL-21 | Maintenance and fatal errors use a minimal identity and recovery shell                                        | `Approved` |
+| SHELL-21 | Maintenance and fatal errors use a minimal identity and recovery shell; exact state behavior follows Brief 19 | `Approved` |
 | SHELL-22 | Opened destinations remain native link navigation, not ARIA menu semantics                                    | `Approved` |
 | SHELL-23 | Preserve identical destination identity and semantic order across ko, ja, and en                              | `Approved` |
 | SHELL-24 | Exact Foundation tokens, dimensions, breakpoint, and final localized strings remain downstream work           | `Approved` |

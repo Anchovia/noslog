@@ -16,6 +16,8 @@
   [17-authentication-onboarding-page-brief.ko.md](./17-authentication-onboarding-page-brief.ko.md)
 - 승인된 개인정보 및 데이터 처리 계약:
   [18-privacy-data-practices-page-brief.ko.md](./18-privacy-data-practices-page-brief.ko.md)
+- 승인된 시스템 복구 상태 계약:
+  [19-system-recovery-states-page-brief.ko.md](./19-system-recovery-states-page-brief.ko.md)
 - 범위: NosLog 2.0 사용자 페이지 패밀리, 정보 구조, 내비게이션 및 중요한
   페이지 간 흐름
 - 제외 범위: 관리자 인터페이스 재설계, 페이지 단위 시각 구성, 컴포넌트 스타일
@@ -553,8 +555,10 @@ Modal, Wide Popover, Header 가시성, 셸 변형 및 Footer 소유권을 확정
 이상 계정 자격, 공개 데이터의 결과, 보존·Provider 공개, Cookie·기기 저장소,
 방침 Versioning 및 권리 행사 경로를 확정했습니다. 법적으로 충분한 운영자 신원,
 최종 법률 문구, Provider·삭제 사실 및 사람이 검토한 번역은 정보 구조에서
-추정하지 않고 명시적인 출시 차단 조건으로 남습니다. 페이지 고유 구성과 상태는
-각 페이지 기획서의 지배를 받습니다.
+추정하지 않고 명시적인 출시 차단 조건으로 남습니다. 이후 승인된 시스템 복구
+기획서는 새로운 내비게이션 목적지를 추가하지 않으면서 일반 셸 Not-found·복구
+가능 오류와 최소 셸 치명적 오류·계획된 점검을 서로 다른 상태로 확정했습니다.
+페이지 고유 구성과 상태는 각 페이지 기획서의 지배를 받습니다.
 
 ## 이 문서의 승인 기준
 
@@ -584,3 +588,5 @@ Modal, Wide Popover, Header 가시성, 셸 변형 및 Footer 소유권을 확정
 6. 모든 수집, 공개, Upload, Sync, 외부 서비스 및 계정 Lifecycle Context에
    승인된 개인정보 및 데이터 처리 계약을 적용하고 출시 차단 조건을 해결된 것처럼
    표현하지 않습니다.
+7. 복구 상태를 내비게이션 목적지로 만들지 않고 Not found, 페이지 오류, 치명적
+   오류 및 계획된 점검에 승인된 시스템 복구 계약을 적용합니다.
