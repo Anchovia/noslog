@@ -31,6 +31,8 @@
   [09-profile-page-brief.ko.md](./09-profile-page-brief.ko.md)
 - 데이터 연동 계약:
   [13-data-sync-page-brief.ko.md](./13-data-sync-page-brief.ko.md)
+- 채보 기여 계약:
+  [20-chart-editor-contribution-page-brief.ko.md](./20-chart-editor-contribution-page-brief.ko.md)
 - 범위: 공개 개인정보처리방침 경로, 데이터 처리 공개, 공개 데이터의 결과,
   보존 및 삭제 설명, Cookie 및 기기 저장소, 처리자와 외부 서비스, 국외 이전,
   계정 연령 기준, 개인정보 권리 및 연락 경로, 방침 이력, 반응형 읽기,
@@ -211,8 +213,9 @@ NosLog가 무엇을 받거나 생성하고, 저장하고, 공개하고, 서비�
   설정됩니다. 현재 방침에는 공개되지 않았습니다.
 - **관찰:** Theme, 채보 뷰어 Metronome volume 및 Strict Performance 선호는
   Browser local storage를 사용합니다. 기기에만 남고 Account profile field가 아닙니다.
-- **관찰:** 채보 에디터 Piano visibility도 현재 관리자 Tool의 Local storage를
-  사용합니다. Editor가 사용자 기능이 되면 내부·관리자 문서 범위에서 이동시켜야 합니다.
+- **관찰 및 승인된 향후 범위:** 채보 에디터 Piano visibility도 Local storage를
+  사용합니다. 승인된 사용자 기여 에디터는 이 기기 단위 설정을 유지하며 출시 전에
+  다른 에디터 설정과 함께 공개해야 합니다.
 - **관찰:** 현재 Codebase에는 제품 Analytics, 광고 SDK, Tracking pixel 또는
   Marketing profile Dependency가 없습니다.
 - **관찰:** 배포는 `sin1`의 Vercel Functions를 사용하며, 설정된 Neon Host는
@@ -409,10 +412,15 @@ Just-in-time 안내, 방침 및 법적 근거를 갱신하고 승인해야 합�
 - 승인된 프로필 기획서에 따라 상시 공개 그룹과 사용자 제어 그룹을 열거합니다.
 - 각 기능의 승인 계약이 요구하면 Ranking, 서열 투표, 채보 평가 및 Reaction이
   사용자의 공개 NosLog 신원과 연결될 수 있음을 설명합니다.
+- 채보 Draft와 심사 제출본은 계정 비공개이며, 승인된 공식 채보 기여는 제출 전
+  고지 뒤 공개 기여자 표기를 보존함을 설명합니다.
 - 공개 Avatar가 Public Blob에 저장되고 Profile, Ranking, Comment 또는 생성된
   Share artifact에 나타날 수 있음을 설명합니다.
 - Field를 숨기면 이후 Public payload와 Share artifact에서 제외되지만 기저 Account
   field 자체가 삭제되는 것은 아님을 설명합니다.
+- 생성 프로필 카드는 승인된 공개 신원과 선택 모드 요약, 공개된 NOSTALGIA명,
+  Play count 및 선호 오락실명만 포함합니다. 숨긴 필드, Discord, 플레이 활동, NOS,
+  연동 Metadata 및 오락실 상세는 제외합니다.
 - 숨긴 Field는 방문자에게 `비공개` Placeholder로 보이지 않고 생략합니다.
 - Field를 처음 공개하기 전에 공개 범위 선택을 제공하고 설정에서 계속 바꿀 수 있어야 합니다.
 
@@ -422,6 +430,9 @@ Just-in-time 안내, 방침 및 법적 근거를 갱신하고 승인해야 합�
 - 활성 계정 데이터, 불변·누적 기록 이력, 공개 기여 데이터, 비공개 제출,
   임시 Upload control, Session cookie, 언어 Cookie, 기기 선호, Provider log,
   Backup 및 고아 Upload를 구분합니다.
+- 개인 채보 Draft, 불변 심사 Snapshot, 심사 Event, 승인 Canonical 채보 History 및
+  공개 기여자 표기를 구분합니다. 정확한 탈퇴 처리는 추정 규칙이 아니라 출시 차단
+  조건으로 유지합니다.
 - 승인된 6개월 Feedback·Exam 규칙을 보존합니다.
 - 계정 삭제를 활성 NosLog System과 연결된 알려진 Upload의 삭제로 설명하되,
   검증된 Backup·Provider 만료 및 좁게 적용되는 법적 보존을 반영합니다.
@@ -681,6 +692,8 @@ Just-in-time 안내, 방침 및 법적 근거를 갱신하고 승인해야 합�
 | PRIV-B07 | X·Kakao·기타 비필수 외부 Load의 동의 또는 Just-in-time 안내 요건                                              | 법률 검토와 Network·Browser 근거                     | `출시 차단 조건` |
 | PRIV-B08 | 법률 검토된 한국어·일본어·영어의 실질적 동등성과 우선 언어 조항                                               | 사람의 법률 번역 검토                                | `출시 차단 조건` |
 | PRIV-B09 | 만 14세 이상 계정 안내와 법적으로 충분하고 Dark pattern이 아닌 자격 확인 방식                                 | 법률 검토, 인증 디자인 및 E2E                        | `출시 차단 조건` |
+| PRIV-B10 | 채보 권리, 보증, Moderation 및 공개 기여자 표기를 다루는 기여 약관                                            | 법률 검토와 승인된 제출 문구                         | `출시 차단 조건` |
+| PRIV-B11 | 개인 채보 작업, 심사 기록, 승인 Canonical History 및 기여자 표기의 탈퇴 처리                                  | 제품 결정, 법률 검토, Schema 및 삭제 Test            | `출시 차단 조건` |
 
 Placeholder를 Styling했거나 현재 방침에 비슷한 문장이 있다는 이유만으로 차단 조건을
 `승인`으로 바꾸면 안 됩니다.
@@ -848,6 +861,9 @@ Public visibility, Screen reader, Print 및 반응형 Browser 검증을 대체�
 | PRIV-30 | 출시 전에 Log, Backup, Region, Subprocessor, Embed 및 삭제 Lifecycle 검증                         | `출시 차단 조건` |
 | PRIV-31 | 출시 전에 고아 Upload cleanup 구현과 입증                                                         | `출시 차단 조건` |
 | PRIV-32 | 사람의 법률 번역 검토와 우선 언어 조항 결정                                                       | `출시 차단 조건` |
+| PRIV-33 | 비공개 채보 작업과 공개 승인 기여자 결과 안내                                                     | `승인`           |
+| PRIV-34 | 프로필 공유 Artifact를 승인 공개 안전 필드로 제한하고 공개 설정 변경 뒤 Cache 무효화              | `승인`           |
+| PRIV-35 | 사용자 채보 기여 출시 전 기여 약관과 탈퇴 시 기여자 표기 처리 해결                                | `출시 차단 조건` |
 
 ## 후속 전달 경계
 

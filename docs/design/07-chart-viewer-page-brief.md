@@ -12,7 +12,7 @@ information architecture, approved Music-detail contract, cited music-player and
 rhythm-game comparables, rendering-platform documentation, responsive guidance,
 accessibility standards, and the user-approved decision record`
 - Date started: 2026-08-02
-- Last decision update: 2026-08-02
+- Last decision update: 2026-08-03
 - Canonical language: English
 - Korean companion:
   [07-chart-viewer-page-brief.ko.md](./07-chart-viewer-page-brief.ko.md)
@@ -20,11 +20,18 @@ accessibility standards, and the user-approved decision record`
   [02-information-architecture.md](./02-information-architecture.md)
 - Upstream entry and return contract:
   [05-music-detail-page-brief.md](./05-music-detail-page-brief.md)
+- Recital dynamics Future Work:
+  [11-exam-page-brief.md#future-work-recital-chart-authoring-and-viewing](./11-exam-page-brief.md#future-work-recital-chart-authoring-and-viewing)
 - Scope: Public localized focused viewer for one published NosLog chart and the
   equivalent administrator preview shell where explicitly noted
 - Excluded: Rewriting the PixiJS renderer or chart-timing engine, redesigning the
   chart editor, final Foundation tokens, final high-fidelity composition, and
   production implementation in this design-guide session
+
+The approved 2.0 renderer and chart-data contract is Basic-only. Recital blue/red
+background dynamics for strong and soft key pressure are separately approved Future
+Work; Claude Design and implementation must not imply that current viewers already
+encode or render those dynamics.
 
 ## Decision Labels
 
@@ -784,6 +791,7 @@ browser, or framework as a template.
 | VIEW-28 | Size Falling from available width and height; do not stretch it indefinitely on desktop                   | `Approved` |
 | VIEW-29 | Preserve exact source-aware Music-detail return; direct entry returns to Chart Info                       | `Approved` |
 | VIEW-30 | Local audio remains browser-only and is excluded from persistence, logs, reports, and server transfer     | `Approved` |
+| VIEW-31 | The 2.0 viewer remains Basic-only; Recital strong/soft dynamics stay in the linked Future Work contract   | `Approved` |
 
 ## Handoff Boundary
 

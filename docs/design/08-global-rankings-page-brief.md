@@ -12,7 +12,7 @@ information architecture, approved Tier-list rating policy, cited leaderboard an
 design-system comparables, responsive and accessibility standards, and the
 user-approved decision record`
 - Date started: 2026-08-02
-- Last decision update: 2026-08-02
+- Last decision update: 2026-08-03
 - Canonical language: English
 - Korean companion:
   [08-global-rankings-page-brief.ko.md](./08-global-rankings-page-brief.ko.md)
@@ -94,7 +94,7 @@ context.
   eligible scores at or above the approved floor, the approved mastery curve, and the
   top `70` eligible contributions. Its visible maximum is `10,000`.
 - Rating eligibility and value depend on the currently published Tier source and its
-  revision. Recital has no NosLog Rating.
+  revision. No approved Recital Rating source exists in the current product.
 - Current Official Grd ranking assigns a unique ordinal by value and user ID even when
   two visible values match.
 - Current Rating ranking sorts by unrounded Rating, raw total, and user ID, then shows
@@ -158,8 +158,9 @@ distribution charts, or multiple competing summaries.
 
 - Keep **Basic** and **Recital** as the always-visible primary exclusive choice.
 - Changing mode resets `page` to `1` and retains the current region when valid.
-- Changing to Recital deterministically selects Official Grd because Recital has no
-  NosLog Rating.
+- Changing to Recital deterministically selects Official Grd while no approved Recital
+  Rating source exists. The structure remains compatible with a separately approved
+  future Recital Rating.
 - Do not place Basic and Recital inside the region control or one mixed Select.
 
 ### Metric
@@ -484,8 +485,8 @@ Validate at minimum:
 
 - `/ko/rankings`, `/ja/rankings`, and `/en/rankings` resolve with localized metadata
   and equivalent behavior.
-- Basic shows Official Grd and NosLog Rating. Recital never exposes or activates
-  Rating.
+- Basic shows Official Grd and NosLog Rating. Recital omits Rating until an approved
+  source, formula, and ranking contract exist.
 - Region changes reset page and recalculate population rank. `Other regions` excludes
   Korea and Japan and is never labeled Global.
 - Browser Back/Forward restores prior mode, metric, region, page, and useful scroll
@@ -588,28 +589,28 @@ Validate at minimum:
 
 ## Decision Log
 
-| ID      | Decision                                                                             | Status     |
-| ------- | ------------------------------------------------------------------------------------ | ---------- |
-| RANK-01 | Global rankings remain an independent public comparison destination                  | `Approved` |
-| RANK-02 | Basic/Recital are the always-visible primary exclusive choice                        | `Approved` |
-| RANK-03 | Official Grd exists in both modes; NosLog Rating exists only in Basic                | `Approved` |
-| RANK-04 | Recital hides the metric switch and never redirects Rating to Basic                  | `Approved` |
-| RANK-05 | Region uses All/Korea/Japan/Other regions in one compact selector                    | `Approved` |
-| RANK-06 | Internal `global` is labeled Other regions, not Global                               | `Approved` |
-| RANK-07 | Conditions and page are shareable and restorable through navigable history           | `Approved` |
-| RANK-08 | Off-page personal position uses one compact summary and My-position action           | `Approved` |
-| RANK-09 | On-page personal position removes the duplicate summary and marks the row            | `Approved` |
-| RANK-10 | Equal published Grd or Rating values use shared competition rank                     | `Approved` |
-| RANK-11 | Player identity is avatar, username plus country marker, and second-line exam        | `Approved` |
-| RANK-12 | Country and exam do not become separate desktop columns                              | `Approved` |
-| RANK-13 | Korea/Japan use flags and Other regions uses a globe with accessible names           | `Approved` |
-| RANK-14 | Page size is fixed at 25 with no page-size selector                                  | `Approved` |
-| RANK-15 | Explicit pagination replaces infinite or appended scrolling                          | `Approved` |
-| RANK-16 | Loading preserves the last successful result and exposes busy state                  | `Approved` |
-| RANK-17 | Empty, error, personal-ineligible, and Rating-unavailable states stay distinct       | `Approved` |
-| RANK-18 | Compact layout reflows to 320px without document horizontal scrolling                | `Approved` |
-| RANK-19 | Wide layout uses comparison width while preserving integrated identity metadata      | `Approved` |
-| RANK-20 | The first approved ranking structure, not the state-demo layout, governs composition | `Approved` |
+| ID      | Decision                                                                                                  | Status     |
+| ------- | --------------------------------------------------------------------------------------------------------- | ---------- |
+| RANK-01 | Global rankings remain an independent public comparison destination                                       | `Approved` |
+| RANK-02 | Basic/Recital are the always-visible primary exclusive choice                                             | `Approved` |
+| RANK-03 | Official Grd exists in both modes; current NosLog Rating is Basic-only until a Recital source is approved | `Approved` |
+| RANK-04 | Recital hides the metric switch while unavailable and never redirects Rating to Basic                     | `Approved` |
+| RANK-05 | Region uses All/Korea/Japan/Other regions in one compact selector                                         | `Approved` |
+| RANK-06 | Internal `global` is labeled Other regions, not Global                                                    | `Approved` |
+| RANK-07 | Conditions and page are shareable and restorable through navigable history                                | `Approved` |
+| RANK-08 | Off-page personal position uses one compact summary and My-position action                                | `Approved` |
+| RANK-09 | On-page personal position removes the duplicate summary and marks the row                                 | `Approved` |
+| RANK-10 | Equal published Grd or Rating values use shared competition rank                                          | `Approved` |
+| RANK-11 | Player identity is avatar, username plus country marker, and second-line exam                             | `Approved` |
+| RANK-12 | Country and exam do not become separate desktop columns                                                   | `Approved` |
+| RANK-13 | Korea/Japan use flags and Other regions uses a globe with accessible names                                | `Approved` |
+| RANK-14 | Page size is fixed at 25 with no page-size selector                                                       | `Approved` |
+| RANK-15 | Explicit pagination replaces infinite or appended scrolling                                               | `Approved` |
+| RANK-16 | Loading preserves the last successful result and exposes busy state                                       | `Approved` |
+| RANK-17 | Empty, error, personal-ineligible, and Rating-unavailable states stay distinct                            | `Approved` |
+| RANK-18 | Compact layout reflows to 320px without document horizontal scrolling                                     | `Approved` |
+| RANK-19 | Wide layout uses comparison width while preserving integrated identity metadata                           | `Approved` |
+| RANK-20 | The first approved ranking structure, not the state-demo layout, governs composition                      | `Approved` |
 
 ## Handoff Boundary
 

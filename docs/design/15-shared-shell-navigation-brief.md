@@ -223,6 +223,10 @@ top-to-bottom. If CSS changes the visual tracks, it must not reorder this sequen
   the user's state.
 - Feedback / Error Report retains the approved dialog-based submission flow. It is not
   duplicated on Home or in the footer.
+- When a signed-out user submits Feedback, Login carries the exact validated current
+  locale, route, and query. After authentication and onboarding it returns to that
+  context and reopens the Feedback dialog; an unsafe or invalid destination falls back
+  to the same localized page without fabricating cross-origin state.
 - Admin appears only for authorized administrators and is visually separated as a
   conditional final destination. Its absence must not leave a confusing blank gap.
 - Privacy and GitHub never appear in this panel.
@@ -553,6 +557,7 @@ are not substitutes.
 | SHELL-22 | Opened destinations remain native link navigation, not ARIA menu semantics                                    | `Approved` |
 | SHELL-23 | Preserve identical destination identity and semantic order across ko, ja, and en                              | `Approved` |
 | SHELL-24 | Exact Foundation tokens, dimensions, breakpoint, and final localized strings remain downstream work           | `Approved` |
+| SHELL-25 | Signed-out Feedback preserves validated locale/route/query and reopens the dialog after Login                 | `Approved` |
 
 ## Handoff Boundary
 

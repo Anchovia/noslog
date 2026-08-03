@@ -6,6 +6,7 @@
 - Evidence status: `Current-product audit, repository inspection, browser evidence, and cited navigation guidance`
 - Date started: 2026-07-29
 - Date approved: 2026-07-30
+- Last decision update: 2026-08-03
 - Canonical language: English
 - Korean companion:
   [02-information-architecture.ko.md](./02-information-architecture.ko.md)
@@ -18,6 +19,8 @@
   [18-privacy-data-practices-page-brief.md](./18-privacy-data-practices-page-brief.md)
 - Approved system-recovery states contract:
   [19-system-recovery-states-page-brief.md](./19-system-recovery-states-page-brief.md)
+- Approved chart-contribution editor contract:
+  [20-chart-editor-contribution-page-brief.md](./20-chart-editor-contribution-page-brief.md)
 - Scope: User-facing NosLog 2.0 page families, information architecture,
   navigation, and important cross-page flows
 - Excluded: Administrator-interface redesign, page-level visual composition,
@@ -157,22 +160,23 @@ page briefs or visual design begin. It must:
   create contextual routes to music. These relationships are valuable and should not
   be replaced by global navigation alone.
 
-## Proposed User Page Families
+## Approved User Page Families
 
 Page families group related user goals and screen templates. They are not automatically
 global-navigation labels.
 
-| Page family                       | User question or goal                                                   | Included routes and functions                                                                                                                                                             | Confirmed or proposed relationship                               |
-| --------------------------------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| Entry and orientation             | “Where can I go, and what information is immediately useful?”           | Home, routine-announcement summary, localized announcement archive and detail, global music search, direct navigation blocks, official news, feedback entry                               | Primary entry and routing hub                                    |
-| Music discovery and understanding | “Which music am I looking for, and what do its chart and records mean?” | Music search/list, music detail, difficulty switching, chart information, personal record, chart ranking, evaluation, published chart viewer                                              | Primary product family                                           |
-| Tier-list planning                | “Which chart should I play next for this goal?”                         | Tier lists, mode/goal selection, filters, tier bands, personal record context                                                                                                             | Independent NOSTALGIA-related planning content                   |
-| Bingo unlock and rewards          | “What bingo progress unlocks music or earns NOS?”                       | Bingo list/detail, 5×5 missions, line/cell progress, music unlock and NOS reward context                                                                                                  | Independent NOSTALGIA content; not a generic challenge branch    |
-| Exam and certification            | “What is my assessed skill level and which title can I earn?”           | Exam selection, requirements, stages, allowed charts, simulation/advice, NOS use, title/reward and proof submission                                                                       | Independent NOSTALGIA skill-assessment content                   |
-| Records and comparison            | “How am I progressing, and how do I compare?”                           | Global rankings, public profile, grade/rating trends, best and recent plays, judgement analytics, public profile links                                                                    | Cross-cuts music and separate NOSTALGIA content                  |
-| Play support                      | “Where can I play, and how do I bring my records into NosLog?”          | Arcade discovery, preferred arcade, data-sync guide, token and sync state                                                                                                                 | Secondary but essential operational support                      |
-| Identity, preferences, and trust  | “How do I enter, configure, and trust the service?”                     | Login, onboarding, public settings, authenticated profile/account settings, locale, theme, localized-title preference, privacy, account deletion, maintenance, error and not-found states | Utility and lifecycle family                                     |
-| Focused chart experience          | “How does this chart play over time?”                                   | Chart-scoped discovery entry, falling chart view, fullscreen falling view, full-sheet view, local audio, playback controls, metronome, strict performance                                 | Specialized child context of music with a direct discovery entry |
+| Page family                       | User question or goal                                                   | Included routes and functions                                                                                                                                                             | Confirmed or proposed relationship                                    |
+| --------------------------------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| Entry and orientation             | “Where can I go, and what information is immediately useful?”           | Home, routine-announcement summary, localized announcement archive and detail, global music search, direct navigation blocks, official news, feedback entry                               | Primary entry and routing hub                                         |
+| Music discovery and understanding | “Which music am I looking for, and what do its chart and records mean?” | Music search/list, music detail, difficulty switching, chart information, personal record, chart ranking, evaluation, published chart viewer                                              | Primary product family                                                |
+| Tier-list planning                | “Which chart should I play next for this goal?”                         | Tier lists, mode/goal selection, filters, tier bands, personal record context                                                                                                             | Independent NOSTALGIA-related planning content                        |
+| Bingo unlock and rewards          | “What bingo progress unlocks music or earns NOS?”                       | Bingo list/detail, 5×5 missions, line/cell progress, music unlock and NOS reward context                                                                                                  | Independent NOSTALGIA content; not a generic challenge branch         |
+| Exam and certification            | “What is my assessed skill level and which title can I earn?”           | Exam selection, requirements, stages, allowed charts, simulation/advice, NOS use, title/reward and proof submission                                                                       | Independent NOSTALGIA skill-assessment content                        |
+| Records and comparison            | “How am I progressing, and how do I compare?”                           | Global rankings, public profile, grade/rating trends, best and recent plays, judgement analytics, public profile links                                                                    | Cross-cuts music and separate NOSTALGIA content                       |
+| Play support                      | “Where can I play, and how do I bring my records into NosLog?”          | Arcade discovery, preferred arcade, data-sync guide, token and sync state                                                                                                                 | Secondary but essential operational support                           |
+| Identity, preferences, and trust  | “How do I enter, configure, and trust the service?”                     | Login, onboarding, public settings, authenticated profile/account settings, locale, theme, localized-title preference, privacy, account deletion, maintenance, error and not-found states | Utility and lifecycle family                                          |
+| Focused chart experience          | “How does this chart play over time?”                                   | Chart-scoped discovery entry, falling chart view, fullscreen falling view, full-sheet view, local audio, playback controls, metronome, strict performance                                 | Specialized child context of music with a direct discovery entry      |
+| Official chart contribution       | “How can I help improve the official NosLog chart?”                     | Personal chart draft, local-audio authoring, preview, revision history, immutable review submission, change request, rejection, accepted contributor credit                               | Signed-in contribution workflow; not a public alternate-chart catalog |
 
 ### Family Rules
 
@@ -192,9 +196,13 @@ global-navigation labels.
   separate duplicate catalog.
 - The falling viewer provides fullscreen entry and exit. Full-sheet viewing remains a
   separate tab and is not silently converted into the falling-view fullscreen mode.
+- The user-facing editor reuses the chart workspace for contributions to the official
+  NosLog chart. Each author owns their draft and review submission; only an
+  administrator can replace the published canonical chart. It does not create a
+  public community-chart catalog.
 - Legacy tier URLs remain compatibility redirects and are not navigation destinations.
 
-## Proposed Structural Map
+## Approved Structural Map
 
 This map shows page-family relationships, not the final global-navigation component.
 
@@ -210,6 +218,7 @@ flowchart TD
     SUPPORT["Play support<br/>Arcades · data sync"]
     TRUST["Identity, preferences, and trust<br/>Login · onboarding · settings · privacy"]
     VIEWER["Focused chart experience<br/>Falling · full sheet"]
+    AUTHOR["Official chart contribution<br/>Personal draft · review submission"]
 
     ROOT --> HOME
     ROOT --> MUSIC
@@ -220,6 +229,7 @@ flowchart TD
     ROOT --> SUPPORT
     ROOT --> TRUST
     MUSIC --> VIEWER
+    MUSIC --> AUTHOR
     TIERS -. "chart context" .-> MUSIC
     BINGO -. "mission music" .-> MUSIC
     EXAMS -. "exam charts" .-> MUSIC
@@ -227,7 +237,7 @@ flowchart TD
     SUPPORT -. "record state" .-> RECORDS
 ```
 
-## Proposed Hierarchy
+## Approved Hierarchy
 
 ### Level 0: Service Shell
 
@@ -342,7 +352,7 @@ Signed-out pages use a visible Login text button in the same account position.
 
 Home is an orientation and routing surface, not a miniature copy of every page.
 
-### Confirmed Content Role and Proposed Ordering
+### Approved Content Role and Ordering
 
 1. **Service-critical notice:** show only when an announcement or service state
    materially affects use.
@@ -504,9 +514,9 @@ from its content rather than copied from GOV.UK, USWDS, or Carbon.
 ## URL and Routing Position
 
 - **Confirmed:** Continue locale prefixes: `/ko`, `/ja`, and `/en`.
-- **Proposed:** Preserve current user route slugs during the first design milestone
+- **Approved:** Preserve current user route slugs during the first design milestone
   unless a route prevents the agreed hierarchy or creates a clear usability problem.
-- **Proposed:** Treat `/tiers/[slug]` as compatibility behavior, not an exposed IA node.
+- **Approved:** Treat `/tiers/[slug]` as compatibility behavior, not an exposed IA node.
 - **Confirmed:** Tier lists, Bingo, and Exams do not receive a shared landing page or
   navigation grouping. Any unrelated future grouping requires separate evidence and
   explicit user approval.
@@ -542,6 +552,7 @@ from its content rather than copied from GOV.UK, USWDS, or Carbon.
 | IA-17 | Footer destinations             | Keep Privacy and GitHub in the footer and do not duplicate them in More                                                                                  | `Approved` |
 | IA-18 | Routine announcement structure  | Home shows the newest three title-and-date links on every viewport; localized detail and archive retain complete history; omit the section when empty    | `Approved` |
 | IA-19 | Authentication and onboarding   | One Discord action, public-browse alternative, two-field completion, incomplete-profile gate, logout escape, and validated destination return            | `Approved` |
+| IA-20 | Official chart contribution     | Signed-in personal draft and immutable review submission for the official chart; administrator-only canonical publication; no alternate-chart catalog    | `Approved` |
 
 ## Phase Approval
 
@@ -568,6 +579,9 @@ information-architecture decisions. The subsequently approved system-recovery br
 resolved the distinct ordinary-shell Not-found and recoverable-error states and the
 minimal-shell fatal-error and planned-Maintenance states without adding a navigation
 destination. Page-specific composition and states remain governed by their page briefs.
+The subsequently approved chart-contribution editor brief adds a signed-in child flow
+under Music without exposing the administrator shell or creating another discovery
+catalog.
 
 ## Acceptance Criteria for This Artifact
 
@@ -575,7 +589,8 @@ destination. Page-specific composition and states remain governed by their page 
 - No verified feature disappears from the page-family map or cross-link requirements.
 - Home, music, and tiers receive explicit first-class treatment.
 - Administrator redesign is not mixed into the user-facing navigation model.
-- Proposed and confirmed decisions are visibly distinguished.
+- Approved decisions, observed evidence, and unresolved release blockers are visibly
+  distinguished.
 - Important flows include success and recovery branches.
 - Mobile and desktop use the same semantic hierarchy even if their navigation
   components differ.

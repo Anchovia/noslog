@@ -5,7 +5,8 @@
 - Status: `Approved`
 - Decision status: `Core Profile contract approved: public performance identity,
 mode-scoped competitive summary, progress and record hierarchy, privacy groups,
-five-item previews with complete-list destinations, owner sync status, runtime
+five-item previews with complete-list destinations, owner sync status, public-safe
+share card, runtime
 states, responsive composition, accessibility, localization, and browser
 acceptance`
 - Evidence status: `Repository and schema inspection, authenticated and public
@@ -14,7 +15,7 @@ approved information architecture and related page briefs, cited rhythm-game,
 activity-profile, privacy, dashboard, responsive, accessibility, and
 internationalization references, and the user-approved decision record`
 - Date started: 2026-08-02
-- Last decision update: 2026-08-02
+- Last decision update: 2026-08-03
 - Canonical language: English
 - Korean companion: [09-profile-page-brief.ko.md](./09-profile-page-brief.ko.md)
 - Parent information architecture:
@@ -395,6 +396,60 @@ Provide five explicit visibility controls:
   mode during one Profile visit.
 - Do not store private fields or hidden activity values in the URL.
 
+## Profile Share Card Contract
+
+### Purpose and Content
+
+- Share is an owner-only action with a preview before any external action.
+- Generate a `1200×630` PNG for one owner-selected `Basic` or `Recital` mode. The card
+  is a concise public Profile summary, not a raw export or second Profile page.
+- Always include avatar, NosLog username, country category, selected mode, available
+  Official Grd and approved NosLog Rating, global/country rank, selected-mode Exam,
+  NosLog identity, and the localized public Profile URL.
+- Include NOSTALGIA player name, Profile-wide Play count, and preferred arcade name
+  only when each existing visibility control is enabled and the value exists.
+- Exclude Discord, Last played, Recent Plays, NOS, synchronization time, arcade address,
+  machine details, and operational metadata.
+- Hidden or missing fields are omitted from the image, accessible summary, metadata,
+  payload, and layout. Never render `Private`, `Not set`, a placeholder, or an empty
+  reserved slot.
+
+### Share, Open Graph, and Failure Behavior
+
+- The primary **Share** action uses the system share sheet with image, localized text,
+  and URL only when capability checks confirm that exact payload is shareable.
+- Secondary actions are **Save image** and, where supported, **Copy image**.
+- Cancel is not an error. Unsupported, denied, generation, and network failures remain
+  distinct and provide the applicable retry, save, or link fallback.
+- X uses an explicit official Web Intent link-share fallback. Never claim that the
+  image was automatically attached when the platform does not support it.
+- Public localized Profile metadata provides a public-safe Open Graph image so X,
+  Discord, and compatible crawlers can render a preview without owner authentication.
+- A privacy-setting change invalidates the card cache and versions the Open Graph image
+  URL so an old public image is not presented as current.
+
+### Accessibility, Localization, and Reference Basis
+
+- Provide a localized textual equivalent of the visible card content and an accessible
+  preview name. Decorative artwork is excluded from that name.
+- Follow the current `ko`, `ja`, or `en` Profile locale while preserving user and
+  official game-name spelling. Test long names, missing avatar/Exam/Rating, and every
+  independently hidden conditional field.
+- The contract applies progressive capability and privacy principles from
+  [MDN Web Share](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/share),
+  [W3C Web Share](https://www.w3.org/TR/web-share/),
+  [Apple Activity Views](https://developer.apple.com/design/human-interface-guidelines/activity-views),
+  [Android Sharesheet](https://developer.android.com/training/sharing/send),
+  [MDN ClipboardItem](https://developer.mozilla.org/en-US/docs/Web/API/ClipboardItem),
+  [X Web Intents](https://docs.x.com/x-for-websites/web-intents/overview),
+  [Open Graph](https://ogp.me/),
+  [WCAG Non-text Content](https://www.w3.org/WAI/WCAG22/Understanding/non-text-content),
+  [WCAG 2.2](https://www.w3.org/TR/WCAG22/),
+  [EDPB Privacy by Design and Default](https://www.edpb.europa.eu/topics/ai-and-technology/privacy-by-design-and-by-default_en),
+  and [ICO Data Minimisation](https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/data-protection-principles/a-guide-to-the-data-protection-principles/data-minimisation/).
+  Platform support and crawler behavior vary, so feature detection and public-safe
+  fallback are requirements rather than assumptions.
+
 ## Loading, Empty, Error, Privacy, and Unavailable States
 
 ### Initial Loading
@@ -552,22 +607,25 @@ Provide five explicit visibility controls:
 
 ## Runtime State Contract
 
-| State                 | Required visible outcome                                                                       | Interaction outcome                                       |
-| --------------------- | ---------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
-| Public Basic          | Identity, Basic competitive summary, Basic trend and Best, public record overview and activity | Basic/Recital and public record links remain usable       |
-| Public Recital        | Identity, Recital Official Grd/ranks, Recital trend and Best; no fabricated Rating             | Basic remains directly selectable                         |
-| Owner                 | Public Profile plus Share, Settings, sync state, and private-state context                     | Owner actions lead to their established destinations      |
-| Signed out            | Same public record contract without owner actions                                              | Public links remain usable; login is not required to read |
-| Play activity hidden  | No Last played, Recent preview, count, timestamps, or public recent route data                 | Owner can open Settings; visitor receives no placeholder  |
-| Optional field hidden | Visible identity/performance remains; protected metadata omitted                               | No protected value leaks through Share or payload         |
-| No records            | Identity plus one concise record-empty state                                                   | Owner gets contextual Data sync; visitor keeps navigation |
-| Partial records       | Only trustworthy available sections and local insufficiency states                             | Other sections remain usable                              |
-| One trend point       | Exact current value and concise insufficient-history text                                      | Range/metric controls remain accurate                     |
-| Updating section      | Last committed section plus busy status                                                        | Stale responses cannot win                                |
-| Initial error         | Bounded Profile error and Retry                                                                | Ordinary localized shell remains usable                   |
-| Section error         | Last committed section plus local Retry                                                        | Unaffected Profile sections remain usable                 |
-| Sync needed/failed    | Owner-only concise sync status                                                                 | Opens Data sync recovery; no internal details exposed     |
-| Missing user          | Localized not-found outcome                                                                    | No empty or private Profile is fabricated                 |
+| State                  | Required visible outcome                                                                       | Interaction outcome                                       |
+| ---------------------- | ---------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| Public Basic           | Identity, Basic competitive summary, Basic trend and Best, public record overview and activity | Basic/Recital and public record links remain usable       |
+| Public Recital         | Identity, Recital Official Grd/ranks, Recital trend and Best; no fabricated Rating             | Basic remains directly selectable                         |
+| Owner                  | Public Profile plus Share, Settings, sync state, and private-state context                     | Owner actions lead to their established destinations      |
+| Signed out             | Same public record contract without owner actions                                              | Public links remain usable; login is not required to read |
+| Play activity hidden   | No Last played, Recent preview, count, timestamps, or public recent route data                 | Owner can open Settings; visitor receives no placeholder  |
+| Optional field hidden  | Visible identity/performance remains; protected metadata omitted                               | No protected value leaks through Share or payload         |
+| Share preview          | Public-safe selected-mode card and localized text equivalent                                   | Owner may Share, save, or use supported copy              |
+| Share unsupported      | Preview remains with save and explicit link fallback                                           | No false success or claimed image attachment              |
+| Share generation error | Bounded Retry error; Profile remains usable                                                    | No stale or partially generated image is shared           |
+| No records             | Identity plus one concise record-empty state                                                   | Owner gets contextual Data sync; visitor keeps navigation |
+| Partial records        | Only trustworthy available sections and local insufficiency states                             | Other sections remain usable                              |
+| One trend point        | Exact current value and concise insufficient-history text                                      | Range/metric controls remain accurate                     |
+| Updating section       | Last committed section plus busy status                                                        | Stale responses cannot win                                |
+| Initial error          | Bounded Profile error and Retry                                                                | Ordinary localized shell remains usable                   |
+| Section error          | Last committed section plus local Retry                                                        | Unaffected Profile sections remain usable                 |
+| Sync needed/failed     | Owner-only concise sync status                                                                 | Opens Data sync recovery; no internal details exposed     |
+| Missing user           | Localized not-found outcome                                                                    | No empty or private Profile is fabricated                 |
 
 ## Implementation Mapping
 
@@ -577,6 +635,8 @@ Provide five explicit visibility controls:
 | Public data query and cache            | [`app/(nevigation)/profile/[id]/data.ts`](<../../app/(nevigation)/profile/[id]/data.ts>)                                                                                                                                                                                                                         | Add Rating/progress/public analytics, privacy-safe payloads, five-item previews, totals, and complete-list queries |
 | Profile composition and mode state     | [`components/profile/profile.tsx`](../../components/profile/profile.tsx)                                                                                                                                                                                                                                         | Scope Basic/Recital to performance, reorder approved sections, remove inline list expansion and Logout             |
 | Identity and owner actions             | [`components/profile/dashboard/profileHeader.tsx`](../../components/profile/dashboard/profileHeader.tsx)                                                                                                                                                                                                         | Remove join date/placeholders; add approved metadata privacy, last-play, and sync-status behavior                  |
+| Share preview and actions              | [`components/profile/dashboard/profileShareDialog.tsx`](../../components/profile/dashboard/profileShareDialog.tsx)                                                                                                                                                                                               | Add selected-mode preview, capability detection, save/copy fallbacks, accurate X link sharing, and accessible text |
+| Share image and Open Graph             | [`app/(nevigation)/profile/[id]/card/route.tsx`](<../../app/(nevigation)/profile/[id]/card/route.tsx>) and localized Profile metadata                                                                                                                                                                            | Produce public-safe, privacy-aware, versioned 1200×630 OG output; remove Last played and private placeholders      |
 | Competitive summary                    | [`components/profile/dashboard/profileSummary.tsx`](../../components/profile/dashboard/profileSummary.tsx)                                                                                                                                                                                                       | Integrate Official Grd, conditional Rating, global/country ranks, and unavailable states                           |
 | Mode selector                          | [`components/profile/dashboard/profileModeTabs.tsx`](../../components/profile/dashboard/profileModeTabs.tsx)                                                                                                                                                                                                     | Attach selector semantically and visually to its controlled performance region                                     |
 | Grade trend                            | [`components/profile/dashboard/profileGradeTrend.tsx`](../../components/profile/dashboard/profileGradeTrend.tsx)                                                                                                                                                                                                 | Add range and metric selectors, Rating series, exact summary, and accessible data contract                         |
@@ -780,6 +840,13 @@ Validate at minimum:
 | PROF-23 | Brooch, persistent NOS, arbitrary achievements, and social modules are excluded                                     | `Approved` |
 | PROF-24 | Compact layouts reflow without document horizontal scrolling through 320 CSS px                                     | `Approved` |
 | PROF-25 | Wide layouts use additional comparison space without becoming an unrelated dashboard                                | `Approved` |
+| PROF-26 | Use an owner-previewed 1200×630 card scoped to one selected mode                                                    | `Approved` |
+| PROF-27 | Include public identity and available selected-mode competition context                                             | `Approved` |
+| PROF-28 | Conditionally include only visible NOSTALGIA name, Play count, and preferred arcade name                            | `Approved` |
+| PROF-29 | Omit hidden/missing fields and exclude Discord, activity, NOS, sync, address, and operations data                   | `Approved` |
+| PROF-30 | Feature-detect system Share and provide save, supported copy, and accurate link fallbacks                           | `Approved` |
+| PROF-31 | Provide a public-safe localized Open Graph card and invalidate it after privacy changes                             | `Approved` |
+| PROF-32 | Provide a localized accessible equivalent and explicit loading, cancel, unsupported, and error behavior             | `Approved` |
 
 ## Handoff Boundary
 

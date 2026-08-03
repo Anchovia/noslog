@@ -5,13 +5,14 @@
 - 상태: `Approved`
 - 결정 상태: `프로필 핵심 계약 승인: 공개 성과 신원, 모드 범위 경쟁 요약,
 성장과 기록 계층, 공개 범위 그룹, 5개 미리보기와 전체 목록 목적지, 본인
-연동 상태, 런타임 상태, 반응형 구성, 접근성, 다국어 및 브라우저 수용 기준`
+연동 상태, 공개 안전 공유 카드, 런타임 상태, 반응형 구성, 접근성, 다국어 및
+브라우저 수용 기준`
 - 근거 상태: `저장소·스키마 조사, 넓은 화면·390px·320px에서 한국어·일본어·
 영어 로그인 본인 및 공개 브라우저 근거, 승인된 정보 구조와 관련 페이지
 브리프, 인용한 리듬게임·활동 프로필·프라이버시·대시보드·반응형·접근성·
 국제화 레퍼런스, 사용자 승인 결정 기록`
 - 시작일: 2026-08-02
-- 마지막 결정 갱신일: 2026-08-02
+- 마지막 결정 갱신일: 2026-08-03
 - 원본 언어: 영어
 - 영문 원본: [09-profile-page-brief.md](./09-profile-page-brief.md)
 - 상위 정보 구조:
@@ -377,6 +378,59 @@ Foundation과 이후 Claude Design 작업으로 남긴다. 이후 시각 결정�
   새로고침과 브라우저 뒤로·앞으로가 활성 성과 모드를 예기치 않게 바꾸면 안 된다.
 - 비공개 필드나 숨긴 활동 값을 URL에 저장하지 않는다.
 
+## 프로필 공유 카드 계약
+
+### 목적과 콘텐츠
+
+- 공유는 본인 전용 행동이며 외부 행동 전에 Preview를 제공합니다.
+- 본인이 선택한 `Basic` 또는 `Recital` 모드 하나에 대한 `1200×630` PNG를
+  생성합니다. 카드는 원본 Export나 두 번째 프로필 페이지가 아니라 간결한 공개
+  프로필 요약입니다.
+- 아바타, NosLog 사용자명, 국가 분류, 선택 모드, 사용 가능한 공식 Grd와 승인된
+  NosLog Rating, 전체·국가 순위, 선택 모드 검정, NosLog 정체성 및 다국어 공개
+  프로필 URL을 항상 포함합니다.
+- 기존 공개 설정이 각각 켜져 있고 값이 있을 때만 NOSTALGIA 플레이어명, 프로필
+  전체 Play count 및 선호 오락실 이름을 포함합니다.
+- Discord, 마지막 플레이, Recent Plays, NOS, 연동 시각, 오락실 주소, 기체 상세 및
+  운영 Metadata는 제외합니다.
+- 숨기거나 없는 필드는 이미지, 접근 가능한 요약, Metadata, Payload 및 Layout에서
+  생략합니다. `비공개`, `미설정`, Placeholder 또는 빈 예약 자리를 만들지 않습니다.
+
+### 공유, Open Graph 및 실패 동작
+
+- 주요 **공유** 행동은 기능 확인 결과 해당 Payload를 공유할 수 있을 때만 이미지,
+  다국어 Text 및 URL을 System Share Sheet에 전달합니다.
+- 보조 행동은 **이미지 저장**과 지원되는 경우 **이미지 복사**입니다.
+- 취소는 Error가 아닙니다. 미지원, 거부, 생성 및 Network 실패를 구분하고 해당하는
+  Retry, 저장 또는 Link Fallback을 제공합니다.
+- X는 공식 Web Intent의 명시적 Link 공유 Fallback을 사용합니다. Platform이
+  지원하지 않는데 이미지가 자동 첨부되었다고 표현하면 안 됩니다.
+- 공개 다국어 프로필 Metadata는 공개 안전 Open Graph 이미지를 제공하여 X,
+  Discord 및 호환 Crawler가 본인 인증 없이 Preview를 Render하게 합니다.
+- 공개 설정 변경은 카드 Cache를 무효화하고 Open Graph 이미지 URL을 Versioning하여
+  이전 공개 이미지가 현재 상태로 표현되지 않게 합니다.
+
+### 접근성, 다국어 및 레퍼런스 근거
+
+- 보이는 카드 콘텐츠와 동등한 다국어 Text 및 접근 가능한 Preview 이름을
+  제공합니다. 장식 Artwork는 그 이름에서 제외합니다.
+- 현재 `ko`, `ja`, `en` 프로필 Locale을 따르며 사용자명과 공식 게임명 원문을
+  보존합니다. 긴 이름, 아바타·검정·Rating 없음 및 독립적으로 숨긴 모든 조건부
+  필드를 검증합니다.
+- 이 계약은 [MDN Web Share](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/share),
+  [W3C Web Share](https://www.w3.org/TR/web-share/),
+  [Apple Activity Views](https://developer.apple.com/design/human-interface-guidelines/activity-views),
+  [Android Sharesheet](https://developer.android.com/training/sharing/send),
+  [MDN ClipboardItem](https://developer.mozilla.org/en-US/docs/Web/API/ClipboardItem),
+  [X Web Intents](https://docs.x.com/x-for-websites/web-intents/overview),
+  [Open Graph](https://ogp.me/),
+  [WCAG Non-text Content](https://www.w3.org/WAI/WCAG22/Understanding/non-text-content),
+  [WCAG 2.2](https://www.w3.org/TR/WCAG22/),
+  [EDPB Privacy by Design and Default](https://www.edpb.europa.eu/topics/ai-and-technology/privacy-by-design-and-by-default_en),
+  및 [ICO Data Minimisation](https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/data-protection-principles/a-guide-to-the-data-protection-principles/data-minimisation/)의
+  점진적 기능 지원과 개인정보 원칙을 적용합니다. Platform 지원과 Crawler 동작이
+  다르므로 기능 감지와 공개 안전 Fallback은 가정이 아니라 요구사항입니다.
+
 ## Loading, Empty, Error, Privacy와 사용 불가 상태
 
 ### 최초 Loading
@@ -534,6 +588,9 @@ Foundation과 이후 Claude Design 작업으로 남긴다. 이후 시각 결정�
 | 비로그인           | 본인 Action이 없는 동일 공개 기록 계약                                              | 공개 Link 사용 가능, 읽기에 로그인 불필요         |
 | 플레이 활동 비공개 | 마지막 플레이, Recent 미리보기, Count, Timestamp 또는 공개 Recent Route 데이터 없음 | 본인은 설정 가능, 방문자에게 Placeholder 없음     |
 | 선택 필드 비공개   | 공개 신원·성과 유지, 보호 Metadata 생략                                             | 공유나 Payload로 보호 값 누출 없음                |
+| 공유 Preview       | 공개 안전 선택 모드 카드와 다국어 Text 동등물                                       | 본인이 공유, 저장 또는 지원되는 복사 사용         |
+| 공유 미지원        | Preview와 저장·명시적 Link Fallback 유지                                            | 거짓 성공이나 이미지 첨부 주장 없음               |
+| 공유 생성 Error    | 제한된 Retry Error, 프로필 계속 사용 가능                                           | 오래되거나 일부 생성된 이미지를 공유하지 않음     |
 | 기록 없음          | 신원과 간결한 기록 없음 상태 하나                                                   | 본인은 문맥 데이터 연동, 방문자는 Navigation 유지 |
 | 부분 기록          | 신뢰할 수 있는 Section과 지역 불충분 상태만 표시                                    | 다른 Section 계속 사용 가능                       |
 | 추이 Point 하나    | 정확한 현재값과 간결한 History 불충분 Text                                          | 기간·Metric 컨트롤은 정확하게 유지                |
@@ -551,6 +608,8 @@ Foundation과 이후 Claude Design 작업으로 남긴다. 이후 시각 결정�
 | 공개 데이터 Query와 Cache     | [`app/(nevigation)/profile/[id]/data.ts`](<../../app/(nevigation)/profile/[id]/data.ts>)                                                                                                                                                                                                                     | Rating·추이·공개 Analytics, 프라이버시 안전 Payload, 5개 Preview·Total·전체 목록 Query 추가              |
 | 프로필 구성과 모드 상태       | [`components/profile/profile.tsx`](../../components/profile/profile.tsx)                                                                                                                                                                                                                                     | Basic/Recital을 성과로 제한, 승인된 Section 재정렬, Inline 목록 확장과 로그아웃 제거                     |
 | 신원과 본인 Action            | [`components/profile/dashboard/profileHeader.tsx`](../../components/profile/dashboard/profileHeader.tsx)                                                                                                                                                                                                     | 가입일·Placeholder 제거, 승인 Metadata 공개 범위·마지막 플레이·연동 상태 적용                            |
+| 공유 Preview와 행동           | [`components/profile/dashboard/profileShareDialog.tsx`](../../components/profile/dashboard/profileShareDialog.tsx)                                                                                                                                                                                           | 선택 모드 Preview, 기능 감지, 저장·복사 Fallback, 정확한 X Link 공유 및 접근 가능한 Text 추가            |
+| 공유 이미지와 Open Graph      | [`app/(nevigation)/profile/[id]/card/route.tsx`](<../../app/(nevigation)/profile/[id]/card/route.tsx>) 및 다국어 프로필 Metadata                                                                                                                                                                             | 공개 안전·프라이버시 인식·Versioned 1200×630 OG 출력, 마지막 플레이·비공개 Placeholder 제거              |
 | 경쟁 요약                     | [`components/profile/dashboard/profileSummary.tsx`](../../components/profile/dashboard/profileSummary.tsx)                                                                                                                                                                                                   | 공식 Grd, 조건부 Rating, 전체·국가 순위와 사용 불가 상태 통합                                            |
 | 모드 선택기                   | [`components/profile/dashboard/profileModeTabs.tsx`](../../components/profile/dashboard/profileModeTabs.tsx)                                                                                                                                                                                                 | 선택기를 제어 성과 영역에 의미상·시각적으로 연결                                                         |
 | Grade 추이                    | [`components/profile/dashboard/profileGradeTrend.tsx`](../../components/profile/dashboard/profileGradeTrend.tsx)                                                                                                                                                                                             | 기간·Metric 선택, Rating Series, 정확한 요약과 접근 가능한 데이터 계약 추가                              |
@@ -745,6 +804,13 @@ Foundation과 이후 Claude Design 작업으로 남긴다. 이후 시각 결정�
 | PROF-23 | Brooch, 상시 NOS, 임의 Achievement와 Social Module 제외                         | `Approved` |
 | PROF-24 | Compact Layout은 320 CSS px까지 문서 가로 스크롤 없이 Reflow                    | `Approved` |
 | PROF-25 | Wide Layout은 무관한 Dashboard가 되지 않으면서 추가 비교 공간 사용              | `Approved` |
+| PROF-26 | 선택 모드 하나에 범위가 정해진 본인 Preview 1200×630 카드 사용                  | `Approved` |
+| PROF-27 | 공개 신원과 사용 가능한 선택 모드 경쟁 문맥 포함                                | `Approved` |
+| PROF-28 | 공개된 NOSTALGIA명, Play count 및 선호 오락실명만 조건부 포함                   | `Approved` |
+| PROF-29 | 숨김·누락 필드 생략 및 Discord, 활동, NOS, 연동, 주소, 운영 데이터 제외         | `Approved` |
+| PROF-30 | System Share 기능 감지 및 저장, 지원되는 복사, 정확한 Link Fallback 제공        | `Approved` |
+| PROF-31 | 공개 안전 다국어 Open Graph 카드 제공 및 공개 설정 변경 뒤 무효화               | `Approved` |
+| PROF-32 | 다국어 접근 가능 동등물과 명시적 Loading·취소·미지원·Error 동작 제공            | `Approved` |
 
 ## 인계 경계
 

@@ -10,7 +10,7 @@
 레이팅 정책, 인용한 랭킹 및 디자인 시스템 비교 사례, 반응형·접근성 표준,
 사용자 승인 결정 기록`
 - 시작일: 2026-08-02
-- 마지막 결정 갱신일: 2026-08-02
+- 마지막 결정 갱신일: 2026-08-03
 - 원본 언어: 영어
 - 영문 원본: [08-global-rankings-page-brief.md](./08-global-rankings-page-brief.md)
 - 상위 정보 구조:
@@ -89,8 +89,8 @@ Design 작업에 남겨 둔다. 후속 시각 결정은 표현을 다듬을 수 
 - Basic NosLog Rating은 현재 공개된 Basic Pianist 서열표, 승인된 하한 이상의
   자격 점수, 승인된 숙련도 곡선과 상위 `70`개 자격 기여를 바탕으로 계산된다.
   표시 최댓값은 `10,000`이다.
-- Rating 자격과 값은 현재 공개된 서열표 원본과 revision에 의존한다. Recital에는
-  NosLog Rating이 없다.
+- Rating 자격과 값은 현재 공개된 서열표 원본과 Revision에 의존한다. 현재 제품에는
+  승인된 Recital Rating Source가 없다.
 - 현재 Official Grd 랭킹은 표시 값이 같은 두 사용자도 값과 사용자 ID로 고유
   서수를 부여한다.
 - 현재 Rating 랭킹은 반올림 전 Rating, raw total, 사용자 ID 순으로 정렬한 뒤
@@ -154,8 +154,8 @@ Design 작업에 남겨 둔다. 후속 시각 결정은 표현을 다듬을 수 
 
 - **Basic**과 **Recital**을 항상 보이는 primary exclusive choice로 유지한다.
 - 모드 변경 시 `page`를 `1`로 되돌리고 유효한 현재 지역은 유지한다.
-- Recital에는 NosLog Rating이 없으므로 Recital로 변경하면 Official Grd를
-  결정적으로 선택한다.
+- 승인된 Recital Rating Source가 없는 동안 Recital로 변경하면 Official Grd를
+  결정적으로 선택한다. 구조는 별도로 승인할 향후 Recital Rating과 호환되게 둔다.
 - Basic과 Recital을 지역 컨트롤이나 하나의 혼합 Select 안에 넣지 않는다.
 
 ### 지표
@@ -477,8 +477,8 @@ Design 작업에 남겨 둔다. 후속 시각 결정은 표현을 다듬을 수 
 
 - `/ko/rankings`, `/ja/rankings`, `/en/rankings`는 다국어 metadata와 동등한
   동작으로 열린다.
-- Basic은 Official Grd와 NosLog Rating을 보인다. Recital은 Rating을 노출하거나
-  활성화하지 않는다.
+- Basic은 Official Grd와 NosLog Rating을 보인다. Recital은 승인된 Source,
+  Formula 및 Ranking 계약이 생길 때까지 Rating을 생략한다.
 - 지역 변경은 페이지를 reset하고 모집단 순위를 다시 계산한다. `기타 지역`은
   대한민국과 일본을 제외하며 절대 Global이라고 표시하지 않는다.
 - 브라우저 Back/Forward는 이전 모드, 지표, 지역, 페이지와 유용한 스크롤 맥락을
@@ -578,28 +578,28 @@ Design 작업에 남겨 둔다. 후속 시각 결정은 표현을 다듬을 수 
 
 ## 결정 기록
 
-| ID      | 결정                                                                  | 상태       |
-| ------- | --------------------------------------------------------------------- | ---------- |
-| RANK-01 | 글로벌 랭킹은 독립적인 공개 비교 목적지로 유지                        | `Approved` |
-| RANK-02 | Basic/Recital은 항상 보이는 primary exclusive choice                  | `Approved` |
-| RANK-03 | Official Grd는 두 모드, NosLog Rating은 Basic에만 존재                | `Approved` |
-| RANK-04 | Recital은 지표 switch를 숨기며 Rating을 Basic으로 redirect하지 않음   | `Approved` |
-| RANK-05 | 지역은 selector 하나에서 전체/대한민국/일본/기타 지역 사용            | `Approved` |
-| RANK-06 | 내부 `global`은 Global이 아니라 기타 지역으로 표시                    | `Approved` |
-| RANK-07 | 조건과 페이지는 탐색 가능한 history로 공유·복원 가능                  | `Approved` |
-| RANK-08 | 다른 페이지의 내 위치는 compact summary와 내 위치 action 사용         | `Approved` |
-| RANK-09 | 현재 페이지의 내 위치는 중복 summary를 제거하고 행을 표시             | `Approved` |
-| RANK-10 | 공개 Grd 또는 Rating 값이 같으면 competition shared rank 사용         | `Approved` |
-| RANK-11 | 플레이어 신원은 아바타, 사용자명과 국가 marker, 두 번째 줄 검정       | `Approved` |
-| RANK-12 | 국가와 검정은 데스크톱에서도 독립 열이 되지 않음                      | `Approved` |
-| RANK-13 | 대한민국/일본은 국기, 기타 지역은 접근 가능한 이름이 있는 지구본 사용 | `Approved` |
-| RANK-14 | 페이지 크기는 25명 고정이며 page-size selector 없음                   | `Approved` |
-| RANK-15 | 무한 또는 추가 스크롤 대신 명시적 페이지네이션 사용                   | `Approved` |
-| RANK-16 | Loading은 마지막 성공 결과를 보존하고 busy 상태를 노출                | `Approved` |
-| RANK-17 | Empty, Error, 개인 자격 미충족, Rating 사용 불가 상태를 구분          | `Approved` |
-| RANK-18 | Compact layout은 문서 가로 스크롤 없이 320px까지 reflow               | `Approved` |
-| RANK-19 | Wide layout은 통합 신원 metadata를 유지하며 비교 너비 사용            | `Approved` |
-| RANK-20 | 상태 설명 layout이 아니라 첫 번째 승인 랭킹 구조가 구성을 지배        | `Approved` |
+| ID      | 결정                                                                                         | 상태       |
+| ------- | -------------------------------------------------------------------------------------------- | ---------- |
+| RANK-01 | 글로벌 랭킹은 독립적인 공개 비교 목적지로 유지                                               | `Approved` |
+| RANK-02 | Basic/Recital은 항상 보이는 primary exclusive choice                                         | `Approved` |
+| RANK-03 | Official Grd는 두 모드에 존재하며 현재 NosLog Rating은 Recital Source 승인 전까지 Basic 전용 | `Approved` |
+| RANK-04 | 사용할 수 없는 동안 Recital은 지표 Switch를 숨기고 Rating을 Basic으로 Redirect하지 않음      | `Approved` |
+| RANK-05 | 지역은 selector 하나에서 전체/대한민국/일본/기타 지역 사용                                   | `Approved` |
+| RANK-06 | 내부 `global`은 Global이 아니라 기타 지역으로 표시                                           | `Approved` |
+| RANK-07 | 조건과 페이지는 탐색 가능한 history로 공유·복원 가능                                         | `Approved` |
+| RANK-08 | 다른 페이지의 내 위치는 compact summary와 내 위치 action 사용                                | `Approved` |
+| RANK-09 | 현재 페이지의 내 위치는 중복 summary를 제거하고 행을 표시                                    | `Approved` |
+| RANK-10 | 공개 Grd 또는 Rating 값이 같으면 competition shared rank 사용                                | `Approved` |
+| RANK-11 | 플레이어 신원은 아바타, 사용자명과 국가 marker, 두 번째 줄 검정                              | `Approved` |
+| RANK-12 | 국가와 검정은 데스크톱에서도 독립 열이 되지 않음                                             | `Approved` |
+| RANK-13 | 대한민국/일본은 국기, 기타 지역은 접근 가능한 이름이 있는 지구본 사용                        | `Approved` |
+| RANK-14 | 페이지 크기는 25명 고정이며 page-size selector 없음                                          | `Approved` |
+| RANK-15 | 무한 또는 추가 스크롤 대신 명시적 페이지네이션 사용                                          | `Approved` |
+| RANK-16 | Loading은 마지막 성공 결과를 보존하고 busy 상태를 노출                                       | `Approved` |
+| RANK-17 | Empty, Error, 개인 자격 미충족, Rating 사용 불가 상태를 구분                                 | `Approved` |
+| RANK-18 | Compact layout은 문서 가로 스크롤 없이 320px까지 reflow                                      | `Approved` |
+| RANK-19 | Wide layout은 통합 신원 metadata를 유지하며 비교 너비 사용                                   | `Approved` |
+| RANK-20 | 상태 설명 layout이 아니라 첫 번째 승인 랭킹 구조가 구성을 지배                               | `Approved` |
 
 ## 인계 경계
 

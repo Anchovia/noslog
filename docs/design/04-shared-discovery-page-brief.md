@@ -1706,10 +1706,9 @@ result-summary row composition, exact Chart-row visual anatomy, and a numeric
 production timeout remain scheduled specimen or implementation gates. They do not
 reopen the approved product behavior.
 
-## Next Discussion Batch
+## Ongoing Handoff
 
-The next page-brief task is Music detail. It will define music identity, difficulty
-switching, record and chart data, ranking or evaluation context, focused chart-viewer
-entry and return states, and mobile and desktop behavior without pre-deciding their
-final visual composition. The approved discovery taxonomy, result contracts, and
-transient-response behavior remain upstream constraints.
+The approved discovery taxonomy, result contracts, and transient-response behavior
+remain upstream constraints for Foundation, downstream design, and implementation.
+Later briefs may add contextual entry and return behavior but must not silently reopen
+the approved shared-discovery contract.

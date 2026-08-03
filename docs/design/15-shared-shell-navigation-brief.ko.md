@@ -219,6 +219,10 @@ NosLog에는 독립적인 제품 목적지가 충분히 많아 안정적인 방�
   사용자 상태에 적응합니다.
 - 피드백 · 오류 제보는 승인된 Dialog 제출 흐름을 유지합니다. 홈이나 푸터에
   중복하지 않습니다.
+- 비로그인 사용자가 피드백을 제출하면 Login에 검증된 현재 Locale, Route 및 Query를
+  정확히 전달합니다. 인증·온보딩 뒤 해당 Context로 돌아와 피드백 Dialog를 다시
+  열며 안전하지 않거나 유효하지 않은 목적지는 Cross-origin 상태를 만들지 않고
+  같은 다국어 페이지로 Fallback합니다.
 - 관리자는 권한이 있는 관리자에게만 조건부 마지막 목적지로 시각적으로 분리해
   표시합니다. 없을 때 혼란스러운 빈 공간을 남기지 않습니다.
 - 개인정보처리방침과 GitHub는 이 Panel에 절대 넣지 않습니다.
@@ -545,6 +549,7 @@ Motion 및 반응형 Overflow를 다뤄야 합니다. 브라우저 점검으로 
 | SHELL-22 | 열린 목적지는 ARIA Menu Semantics가 아닌 Native Link Navigation으로 유지                       | `승인` |
 | SHELL-23 | ko, ja, en에서 동일한 목적지 정체성과 의미적 순서 보존                                         | `승인` |
 | SHELL-24 | 정확한 Foundation Token, 치수, Breakpoint 및 최종 다국어 문자열은 후속 작업                    | `승인` |
+| SHELL-25 | 비로그인 피드백은 검증된 Locale·Route·Query를 보존하고 Login 뒤 Dialog를 다시 엶               | `승인` |
 
 ## Handoff 경계
 

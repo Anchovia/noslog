@@ -839,11 +839,8 @@ Exact foundation tokens, final visual geometry and breakpoints, component stylin
 localized production copy, and scheduled representative specimens remain downstream
 design-system or content work. They do not reopen the approved Home product behavior.
 
-## Next Discussion Batch
+## Ongoing Handoff
 
-The next page-brief task is Music detail. It will define music identity, difficulty
-switching, record and chart data, ranking or evaluation context, chart-viewer entry and
-return states, and mobile and desktop behavior without pre-deciding their final visual
-composition.
-
-Exact localized Home preview copy remains a later content-system task.
+The approved Home contract remains an upstream constraint for Foundation, downstream
+design, implementation mapping, and localized production copy. Later approved page
+briefs supersede no Home behavior unless their decision logs say so explicitly.

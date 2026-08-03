@@ -369,6 +369,7 @@ These are audit questions, not design proposals:
 
 1. Identify representative stress-test data and any states that must remain code-only
    evidence.
-2. Begin the separate user-facing page-family, information-architecture, navigation,
-   and key-flow artifact using the confirmed priorities and scope.
-3. Keep administrator redesign planning outside the NosLog 2.0 user-facing artifact.
+2. Keep this inventory synchronized when approved 2.0 contracts add capabilities such
+   as user official-chart contribution without misrepresenting them as current code.
+3. Keep broad administrator redesign outside 2.0 while documenting the review workflow
+   required by an approved user contribution feature.

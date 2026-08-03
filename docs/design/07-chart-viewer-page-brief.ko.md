@@ -10,7 +10,7 @@ Fallback, 실패 복구, 반응형 구성, 접근성, 다국어 및 브라우저
 계약, 인용한 음악 Player 및 리듬게임 비교 사례, Rendering Platform 문서,
 반응형 지침, 접근성 표준 및 사용자 승인 결정 기록`
 - 작성 시작일: 2026-08-02
-- 최종 결정 갱신일: 2026-08-02
+- 최종 결정 갱신일: 2026-08-03
 - 기준 언어: 영어
 - 영어 기준 문서:
   [07-chart-viewer-page-brief.md](./07-chart-viewer-page-brief.md)
@@ -18,11 +18,17 @@ Fallback, 실패 복구, 반응형 구성, 접근성, 다국어 및 브라우저
   [02-information-architecture.ko.md](./02-information-architecture.ko.md)
 - 상위 진입 및 복귀 계약:
   [05-music-detail-page-brief.ko.md](./05-music-detail-page-brief.ko.md)
+- Recital 강약 Future Work:
+  [11-exam-page-brief.ko.md#future-work-recital-채보-작성-및-보기](./11-exam-page-brief.ko.md#future-work-recital-채보-작성-및-보기)
 - 범위: 공개된 NosLog 채보 하나를 위한 다국어 공개 집중형 뷰어와, 명시한 경우의
   동등한 관리자 미리보기 Shell
 - 제외 범위: PixiJS Renderer 또는 채보 Timing Engine 재작성, 채보 Editor 재설계,
   최종 Foundation Token, 최종 하이파이 구성 및 이번 디자인 가이드 세션에서의
   프로덕션 구현
+
+승인된 2.0 Renderer와 채보 데이터 계약은 Basic 전용입니다. 강한·약한 건반 압력을
+나타내는 Recital 파란색·빨간색 배경 강약은 별도로 승인된 Future Work이며 Claude
+Design과 구현은 현재 뷰어가 이미 해당 강약을 기록·Render하는 것처럼 표현하면 안 됩니다.
 
 ## 결정 상태 표기
 
@@ -739,6 +745,7 @@ Compact Layout에서는 사용자가 여는 제약된 설정 Panel을 사용한�
 | VIEW-28 | 낙하형을 가용 너비와 높이로 크기 조절하고 Desktop에서 무한히 늘리지 않음                | `Approved` |
 | VIEW-29 | 출처 인식 악곡 상세 복귀를 정확히 보존하고 직접 진입은 채보 정보로 복귀                 | `Approved` |
 | VIEW-30 | 로컬 음원을 Browser 전용으로 유지하고 저장, Log, 제보 및 Server 전송에서 제외           | `Approved` |
+| VIEW-31 | 2.0 뷰어는 Basic 전용이며 Recital 강·약 강약은 연결된 Future Work 계약으로 유지         | `Approved` |
 
 ## 인계 경계
 

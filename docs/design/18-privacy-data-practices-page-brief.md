@@ -31,6 +31,8 @@ production-service references; and the user-approved decision record`
   [17-authentication-onboarding-page-brief.md](./17-authentication-onboarding-page-brief.md)
 - Profile privacy contract: [09-profile-page-brief.md](./09-profile-page-brief.md)
 - Data Sync contract: [13-data-sync-page-brief.md](./13-data-sync-page-brief.md)
+- Chart-contribution contract:
+  [20-chart-editor-contribution-page-brief.md](./20-chart-editor-contribution-page-brief.md)
 - Scope: public Privacy route, data-practice disclosure, public-data consequences,
   retention and deletion explanation, cookies and device storage, processors and
   external services, international transfers, age eligibility, privacy rights and
@@ -231,9 +233,9 @@ The page must answer nine questions in this order:
 - **Observed:** Theme, chart-viewer metronome volume, and Strict Performance preference
   use browser local storage. These values remain on the device and are not account
   profile fields.
-- **Observed:** Chart-editor piano visibility also uses local storage in the current
-  administrator tool; it belongs in internal/admin documentation if the editor later
-  becomes a user feature.
+- **Observed and approved future scope:** Chart-editor piano visibility also uses local
+  storage. The approved user contribution editor keeps this device-local preference
+  and must disclose it alongside other editor preferences before release.
 - **Observed:** The current codebase has no product analytics, advertising SDK,
   tracking pixel, or marketing profile dependency.
 - **Observed:** The deployment uses Vercel Functions in `sin1`, and the configured Neon
@@ -456,10 +458,16 @@ not reserve that practice speculatively.
 - Explain that rankings, tier-related voting, chart evaluations, and reactions may
   associate a contribution with the user's public NosLog identity where that feature's
   approved contract requires it.
+- Explain that chart drafts and review submissions are account-private, while an
+  accepted official-chart contribution preserves public contributor credit after the
+  advance submission disclosure.
 - Explain that public avatars are stored in a public Blob and may appear in Profile,
   Rankings, comments, or generated Share artifacts.
 - Explain that hiding a field removes it from subsequent public payloads and Share
   artifacts; it does not delete the underlying account field.
+- Generated Profile cards include only the approved public identity and selected-mode
+  summary plus visible NOSTALGIA name, Play count, and preferred arcade name. They omit
+  hidden fields, Discord, play activity, NOS, sync metadata, and arcade details.
 - Hidden fields are omitted from visitors rather than displayed as a `Private`
   placeholder.
 - Visibility choices must be presented before a field is first made public and remain
@@ -473,6 +481,9 @@ not reserve that practice speculatively.
   contribution data, private submissions, temporary upload controls, session cookies,
   language cookies, local-device preferences, provider logs, backups, and abandoned
   uploads.
+- Distinguish personal chart drafts, immutable review snapshots, review events,
+  accepted canonical chart history, and public contributor attribution. Their exact
+  account-deletion treatment remains a release blocker rather than an inferred rule.
 - Preserve the approved six-month feedback and exam rules.
 - Explain account deletion as deletion from active NosLog systems and linked known
   uploads, subject to verified backup/provider expiration and any narrowly applicable
@@ -756,6 +767,8 @@ English-only copy to validate the page.
 | PRIV-B07 | X/Kakao/other nonessential external-load consent or just-in-time notice requirement                                                 | Legal review plus network/browser evidence                       | `Release blocker` |
 | PRIV-B08 | Korean/Japanese/English legally reviewed substantive parity and any governing-language clause                                       | Human legal translation review                                   | `Release blocker` |
 | PRIV-B09 | Fourteen-and-older account disclosure and a legally adequate, non-dark-pattern eligibility mechanism                                | Legal review, Auth design, and E2E                               | `Release blocker` |
+| PRIV-B10 | Contributor terms covering chart rights, warranties, moderation, and public attribution                                             | Qualified legal review and approved submission copy              | `Release blocker` |
+| PRIV-B11 | Account-deletion treatment for private chart work, review records, accepted canonical history, and contributor attribution          | Product decision, legal review, schema, and deletion tests       | `Release blocker` |
 
 The release may not convert a blocker to `Approved` merely because a placeholder has
 been styled or the current policy already contains a similar sentence.
@@ -933,6 +946,9 @@ verification.
 | PRIV-30 | Verify logs, backups, regions, subprocessors, external embeds, and deletion lifecycles before release          | `Release blocker` |
 | PRIV-31 | Implement and prove abandoned-upload cleanup before release                                                    | `Release blocker` |
 | PRIV-32 | Obtain human legal translation review and decide any governing-language clause before release                  | `Release blocker` |
+| PRIV-33 | Disclose private chart work and public accepted-contributor consequences                                       | `Approved`        |
+| PRIV-34 | Limit Profile share artifacts to approved public-safe fields and invalidate caches after visibility changes    | `Approved`        |
+| PRIV-35 | Resolve contributor terms and account-deletion attribution before user chart contribution launches             | `Release blocker` |
 
 ## Handoff Boundary
 
