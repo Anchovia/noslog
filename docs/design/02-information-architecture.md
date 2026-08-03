@@ -285,6 +285,9 @@ Signed-out pages use a visible Login text button in the same account position.
   guest preference.
 - Route migration must preserve existing localized links and evaluate a compatibility
   redirect from `/[locale]/profile/settings` before implementation.
+- The complete approved category structure, persistence boundaries, profile editing,
+  privacy, Discord identity, and account-lifecycle contract is defined in
+  [16-settings-account-page-brief.md](./16-settings-account-page-brief.md).
 
 ### Footer Trust and Project Links
 

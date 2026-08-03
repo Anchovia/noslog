@@ -279,6 +279,10 @@ flowchart TD
   복귀합니다.
 - Route Migration은 기존 다국어 링크를 보존해야 하며 구현 전에
   `/[locale]/profile/settings` 호환 Redirect를 검토해야 합니다.
+- 승인된 전체 카테고리 구조, 저장 경계, 프로필 편집, 공개 범위, Discord 신원 및
+  계정 생명주기 계약은
+  [16-settings-account-page-brief.ko.md](./16-settings-account-page-brief.ko.md)에서
+  정의합니다.
 
 ### 푸터 신뢰·프로젝트 링크
 
