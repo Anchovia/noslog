@@ -687,6 +687,32 @@ container work. This later decision does not approve line counts, wrapping,
 truncation, component geometry, color, material, final layout, or automatic `display`
 placement.
 
+The user then approved the constrained spacing primitive axis recorded as `FTL-08A`
+in document `26`: `0/2/4/8/12/16/24/32/48/64px`. Two pixels is reserved for governed
+optical or specialized-visualization correction, ordinary application spacing must
+use semantic roles rather than arbitrary values, and additional adjacent or large
+shared steps require specimen evidence. This decision does not assign page margins,
+grid gutters, container padding, responsive section steps, control geometry, target
+areas, or the content-driven wide `page-title` threshold.
+
+The user then approved the compact page-grid geometry recorded as `FTL-08B` in
+document `26`: a `320–479 CSS px` validation contract, a minimum `16px` safe-aware
+inline page margin, four equal logical columns, and `12px` gutters. Ordinary content
+must reflow without page-level horizontal scrolling, four columns remain an alignment
+contract rather than four visible phone columns, and `480px` is not an inferred
+composition breakpoint. This decision does not assign medium or wide grids,
+container classes, component insets, density, target geometry, or the wide
+`page-title` threshold.
+
+The user then approved the container and grid system recorded as `FTL-08C` in
+document `26`: `reading`, `standard`, `wide`, and `workspace` containers use `768px`,
+`1280px`, `1440px`, and fluid maximum behavior respectively, while compact,
+intermediate, and wide alignment use 4/8/12 columns, `12/16/16px` gutters, and
+safe-aware `16/24/32px` minimum inline margins. Container class describes task-space
+need and remains separate from the active alignment tier. Exact four-to-eight and
+eight-to-twelve transitions, component geometry, density, target size, panel ratios,
+and the wide `page-title` threshold remain unresolved.
+
 ## Phase Checklist
 
 - [x] Root project instructions and repository baseline reread.
@@ -720,5 +746,14 @@ placement.
 - [x] User approved the bounded stepped `page-title` substitution, fixed behavior for
       every other role, prohibition on fluid interpolation, and deferral of the exact
       content-driven threshold to `FTL-08` in document `26` on 2026-08-04.
+- [x] User approved the constrained spacing primitive axis, semantic-role requirement,
+      governed `2px` exception, and prohibition on arbitrary shared application
+      spacing as `FTL-08A` in document `26` on 2026-08-04.
+- [x] User approved the compact `16px` safe-aware page margin, four-column alignment
+      contract, `12px` gutters, and `320–479 CSS px` validation boundary as `FTL-08B`
+      in document `26` on 2026-08-04.
+- [x] User approved the four governed container classes and the compact/intermediate/
+      wide 4/8/12-column alignment models as `FTL-08C` in document `26` on
+      2026-08-04, while deferring exact content-driven transitions.
 - [ ] Validate Pretendard JP delivery, fallback metrics, and the floor in the required
       multilingual integrated specimens before production promotion.

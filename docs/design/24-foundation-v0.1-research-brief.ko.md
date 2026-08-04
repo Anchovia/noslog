@@ -689,6 +689,32 @@ Container 작업으로 넘깁니다. 이 후속 결정은 Line count, Wrapping, 
 Component geometry, Color, Material, 최종 Layout 또는 자동 `display` 배치를
 승인하지 않습니다.
 
+그다음 사용자는 문서 `26`의 `FTL-08A`로 기록한 제한된 Spacing primitive 축
+`0/2/4/8/12/16/24/32/48/64px`을 승인했습니다. `2px`은 관리되는 광학 또는 전문
+Visualization 보정에만 두고, 일반 Application spacing은 임의 값 대신 Semantic
+role을 사용해야 하며, 새 인접값이나 큰 공유 Step은 Specimen 근거가 필요합니다.
+이번 결정은 Page margin, Grid gutter, Container padding, Responsive section step,
+Control geometry, Target area 또는 Content-driven Wide `page-title` 임계점을
+배정하지 않습니다.
+
+그다음 사용자는 문서 `26`의 `FTL-08B`로 기록한 Compact Page-grid geometry를
+승인했습니다. `320–479 CSS px` 검증 계약, 최소 `16px` Safe-aware Inline page
+margin, 4개의 동일한 논리 Column 및 `12px` Gutter를 사용합니다. 일반 Content는
+Page-level 가로 Scroll 없이 Reflow해야 하고, 4개 Column은 Phone에 4개의 보이는
+Column을 만드는 것이 아니라 Alignment 계약으로 유지하며, `480px`을 Composition
+breakpoint로 추론하지 않습니다. 이번 결정은 Medium 또는 Wide grid, Container
+class, Component inset, Density, Target geometry 또는 Wide `page-title` 임계점을
+배정하지 않습니다.
+
+그다음 사용자는 문서 `26`의 `FTL-08C`로 기록한 Container 및 Grid system을
+승인했습니다. `reading`, `standard`, `wide`, `workspace` Container는 각각
+`768px`, `1280px`, `1440px`, Fluid maximum 동작을 사용하고 Compact,
+Intermediate, Wide alignment는 4/8/12 Column, `12/16/16px` Gutter 및 Safe-aware
+`16/24/32px` 최소 Inline margin을 사용합니다. Container class는 Task-space 필요를
+설명하며 활성 Alignment tier와 분리됩니다. 정확한 4→8열과 8→12열 전환,
+Component geometry, Density, Target size, Panel ratio 및 Wide `page-title` 임계점은
+여전히 미확정입니다.
+
 ## 단계 체크리스트
 
 - [x] Root 프로젝트 지침과 저장소 기준선을 다시 읽었습니다.
@@ -721,5 +747,14 @@ Component geometry, Color, Material, 최종 Layout 또는 자동 `display` 배�
 - [x] 사용자가 2026-08-04에 문서 `26`의 제한된 단계형 `page-title`
       Substitution, 다른 모든 Role의 고정 동작, Fluid 보간 금지 및 정확한
       Content-driven 임계점의 `FTL-08` 이관을 승인했습니다.
+- [x] 사용자가 2026-08-04에 문서 `26`의 `FTL-08A`로 제한된 Spacing primitive
+      축, Semantic-role 요구, 관리되는 `2px` 예외 및 임의 공유 Application
+      spacing 금지를 승인했습니다.
+- [x] 사용자가 2026-08-04에 문서 `26`의 `FTL-08B`로 Compact `16px` Safe-aware
+      Page margin, 4-Column Alignment 계약, `12px` Gutter 및 `320–479 CSS px`
+      검증 경계를 승인했습니다.
+- [x] 사용자가 2026-08-04에 문서 `26`의 `FTL-08C`로 관리되는 4개 Container
+      class와 Compact/Intermediate/Wide 4/8/12-Column Alignment model을
+      승인했고 정확한 Content-driven 전환은 이관했습니다.
 - [ ] Production 승격 전에 필수 다국어 통합 Specimen에서 Pretendard JP
       delivery, fallback metric 및 하한을 검증합니다.
