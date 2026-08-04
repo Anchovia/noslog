@@ -2,7 +2,7 @@
 
 ## 문서 관리
 
-- 상태: `진행 중 — 물리 Type 축과 정확한 Semantic composite mapping 승인, Responsive substitution 및 Layout 값 미확정`
+- 상태: `진행 중 — 물리 Type 축, 정확한 Semantic composite mapping 및 제한된 Page-title substitution 승인, Layout 값 미확정`
 - 조사일: 2026-08-04
 - 마지막 결정 갱신일: 2026-08-04
 - 원본 언어: 영어
@@ -13,10 +13,10 @@
 - 입력: 승인된 문서 `01`–`25`, 현재 저장소 Typography 근거, 유지 관리되는
   Design system과 Standard, Rhythm-game domain product 및 2026-08-04의 명시적
   사용자 승인
-- 이번 결정에서 제외: Responsive type substitution 및 Wide-screen 확대, 최대
-  Line count, Wrapping 및 Truncation 정책, Spacing, Grid, Container, Component
-  치수, Color, Material treatment, 최종 Figma style, Production screen 및
-  Application 구현
+- 이번 결정에서 제외: 정확한 Content-driven Wide-layout 임계점, 최대 Line
+  count, Wrapping 및 Truncation 정책, Spacing, Grid, Container, Component 치수,
+  Color, Material treatment, 최종 Figma style, Production screen 및 Application
+  구현
 
 이 문서는 Batch B에서 결정한 제한된 항목을 기록합니다. Decision log 항목이
 `Approved`인 경우에만 해당 값이 권위 있는 요구사항이 됩니다. 미확정 값, 외부
@@ -36,8 +36,9 @@ Reference 값 및 현재 Code 값은 NosLog 요구사항이 아니라 근거로 
 
 - 제한된 Material decision을 한 번에 하나씩 조사하고 논의합니다.
 - 관찰 사실과 제안 및 승인된 요구사항을 구분하여 기록합니다.
-- 물리 축과 정확한 Semantic composite mapping의 승인으로 Responsive
-  substitution, Line-count 정책, Truncation, Component geometry 또는 Layout이
+- Responsive 동작은 `FTL-09`의 제한된 `page-title` substitution으로만
+  적용합니다. 승인된 물리 축과 정확한 Semantic composite mapping에서 다른
+  Substitution, Line-count 정책, Truncation, Component geometry 또는 Layout이
   승인되었다고 추론하지 않습니다.
 - 승인된 Composite style은 Foundation v0.1 승격 전에 `S1`–`S6` 다국어 및
   반응형 Specimen으로 검증합니다.
@@ -357,14 +358,15 @@ family를 지원하기 때문입니다. NosLog에는 아직 이 인접 Pair가 �
   작성자가 미리 Local size를 추가하면 안 됩니다.
 - 물리 Size 승인만으로 해당 Line height, Weight, Responsive substitution, 정확한
   Role mapping, 최대 Line count, Truncation 또는 Metric 동작을 승인한 것은
-  아닙니다. 아래 후속 Section은 기본 상위 Size-to-line-height Pairing과 명시된
-  경계만 승인하며 나머지 사항은 계속 미확정입니다.
+  아닙니다. 아래 후속 Section은 기본 상위 Size-to-line-height Pairing, 정확한
+  Semantic mapping 및 하나의 `page-title` Substitution을 명시된 경계 안에서
+  승인하며, 그곳에서 명시적으로 승인하지 않은 사항은 계속 미확정입니다.
 - Font-size primitive `20px`과 이미 승인된 Line-height primitive `20px`은 서로
   다른 Token namespace이며 Figma나 Code에서 혼동하면 안 됩니다.
-- 단순히 Fit을 위해 Mobile에서 상위 Role을 축소하면 안 됩니다. 향후 `32px` 또는
-  `40px` Composite의 반응형 변화는 한국어·일본어·영어·혼합 Script, `320px`,
-  `390px`, 중간 Width 및 Wide specimen을 거친 해당 Composite 결정에서 승인해야
-  합니다.
+- 단순히 Fit을 위해 Mobile에서 상위 Role을 축소하면 안 됩니다. 후속 `FTL-09`에서
+  승인한 `page-title` Substitution을 제외한 `32px` 또는 `40px` Composite의 추가
+  반응형 변화는 한국어·일본어·영어·혼합 Script, `320px`, `390px`, 중간 Width 및
+  Wide specimen을 거친 해당 Composite 결정에서 승인해야 합니다.
 
 ## 승인된 상위 Line-height 축
 
@@ -434,10 +436,11 @@ Line-height 조합을 위한 공개 Menu가 아닙니다.
 - Pairing은 상대 구현 단위를 사용하고 Browser text scaling을 보존해야 합니다.
   Pixel 표기는 Design target을 문서화할 뿐입니다.
 - 후속 Semantic composite 결정에서 Role, Weight 및 Metric 동작을 배정했습니다.
-  최대 Line count, Truncation 규칙 및 Responsive size substitution은 여전히
-  미확정입니다.
-- Mobile 전용 Line-height 압축은 승인하지 않습니다. Responsive role
-  substitution은 Composite-role mapping 이후의 별도 제한된 결정입니다.
+  최대 Line count, Truncation 규칙 및 승인된 `page-title` Step 이외의 Responsive
+  size substitution은 여전히 미확정입니다.
+- Mobile 전용 Line-height 압축은 승인하지 않습니다. `FTL-09`가 유일하게 승인된
+  Responsive role substitution이며 추가 Substitution은 후속 제한된 결정이
+  필요합니다.
 - Pretendard JP Specimen은 원문 일본어 Music title, Localized/read title, 긴
   Artist credit, 한국어·영어 Page identity, Tabular metric 및 혼합 문장 부호를
   `320px`, `390px`, 중간 Width, Wide layout, `200%` Text 확대 및 WCAG Text
@@ -487,7 +490,7 @@ Tracking과 Kerning 유지가 적용됩니다.
 | Semantic role      | 승인된 기본 Composite | 숫자 기능       | 관리 경계                                                                                      |
 | ------------------ | --------------------- | --------------- | ---------------------------------------------------------------------------------------------- |
 | `display`          | `40/48 · 700`         | Proportional    | 드물고 짧으며 별도 정당화된 표현 순간에만 사용, 자동 Page 배정 없음                            |
-| `page-title`       | `24/32 · 700`         | Proportional    | 기본 Page 또는 Focused-task identity, `32px`은 Compact나 Wide의 기본값이 아님                  |
+| `page-title`       | `24/32 · 700`         | Proportional    | Compact/기본 Page 또는 Focused-task identity, 승인된 Wide substitution은 아래에서 별도 관리    |
 | `section-title`    | `20/28 · 600`         | Proportional    | 장식적 Card label이 아니라 실제 주요 Content 경계                                              |
 | `component-title`  | `16/24 · 600`         | Proportional    | 해당 Section에 종속되는 Dialog, Drawer, Panel 또는 Grouped-module identity                     |
 | `entity-title`     | `16/24 · 600`         | Proportional    | 일반 List/Card Entity identity, Focused-page Entity identity는 아래 우선순위 규칙을 따름       |
@@ -519,7 +522,9 @@ Tracking과 Kerning 유지가 적용됩니다.
 
 1. **Focused entity identity:** Domain entity가 Focused page 또는 Task의
    Identity이면 보이는 Primary heading은 Entity의 Semantic 의미와 Canonical name을
-   유지하면서 `page-title` Composite `24/32 · 700`을 사용합니다. 예시는 Music
+   유지하면서 `page-title` Role을 사용합니다. Compact/기본 Composition에서는
+   `24/32 · 700`으로 해석되고 Wide Composition이 활성화되면 아래의 승인된
+   Substitution을 따릅니다. 예시는 Music
    Detail의 원문 Music title, Profile의 Username, 그리고 해당 Entity가 Page를
    소유하는 경우의 주요 Arcade 또는 Exam identity입니다. 같은 Entity가 일반
    List나 Card에 있으면 `entity-title` `16/24 · 600`을 사용합니다. 이는 관리된
@@ -539,12 +544,74 @@ Tracking과 Kerning 유지가 적용됩니다.
    변경하지 않습니다. Entity에 `page-title` Treatment를 적용할 수 있지만 문서
    Outline과 Accessible name은 실제 Page 구조에 맞게 유지해야 합니다.
 
-### 이번 Mapping으로 승인되지 않은 경계
+### 승인된 Responsive `page-title` substitution
+
+Responsive 비교는 고밀도 Product system, 단계형 상위 Scale, Fluid expressive
+scale, 다국어 System, 접근성 Standard 및 반응형 구현을 아우르는 다음 18개의
+독립적이고 공식 또는 유지 관리되는 출처를 포함했습니다.
+[Carbon](https://carbondesignsystem.com/elements/typography/type-sets/),
+[Material 3](https://developer.android.com/develop/ui/compose/designsystems/material3),
+[Atlassian](https://atlassian.design/foundations/typography),
+[GOV.UK](https://design-system.service.gov.uk/styles/type-scale/),
+[Primer](https://primer.style/product/css-utilities/typography/),
+[USWDS](https://designsystem.digital.gov/components/typography/),
+[GitLab Pajamas](https://design.gitlab.com/product-foundations/type-fundamentals/),
+[일본 디지털청](https://design.digital.go.jp/dads/foundations/typography/),
+[LINE](https://designsystem.line.me/LDSG/foundation/typography-en),
+[Adobe Spectrum](https://spectrum.adobe.com/page/platform-scale/),
+[Ant Design](https://ant.design/docs/spec/font/),
+[Fluent 2](https://fluent2.microsoft.design/typography),
+[SAP Fiori](https://experience.sap.com/fiori-design-web/typography/),
+[Apple](https://developer.apple.com/design/human-interface-guidelines/typography),
+[VA Design System](https://design.va.gov/foundation/typography),
+[WCAG](https://www.w3.org/TR/WCAG21/),
+[MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/clamp), 그리고
+[Tailwind CSS](https://tailwindcss.com/docs/responsive-design)입니다.
+
+출처들은 Wide viewport에서 모든 Role을 확대하는 방향을 지지하지 않습니다.
+고밀도 Product system은 기능 Text를 안정적으로 유지하는 경우가 많으며, Size를
+바꾸는 System도 일반적으로 상위 Hierarchy에만 변화를 제한합니다. Fluid 보간은
+주로 Expressive 또는 Editorial context에 집중됩니다. NosLog는 하위 Scale을 다시
+열거나 임의 중간값을 만들지 않으면서 의도적인 Desktop composition에서 더 강한
+Page identity가 필요합니다. 따라서 하나의 단계형 Substitution만 승인합니다.
+
+| Semantic role 또는 Group             | Compact/기본 Composition | Content-driven Wide composition | 숫자 기능       |
+| ------------------------------------ | ------------------------ | ------------------------------- | --------------- |
+| `page-title`                         | `24/32 · 700`            | `32/40 · 700`                   | Proportional    |
+| `display`                            | `40/48 · 700`            | 변경 없음                       | Proportional    |
+| `metric-display`                     | `32/40 · 700`            | 변경 없음                       | Tabular figures |
+| `section-title` 및 모든 하위 UI Role | 승인된 기본 Composite    | 변경 없음                       | Role 기본값     |
+
+Substitution은 다음과 같이 관리합니다.
+
+1. `24/32 · 700`은 Mobile-first 및 Compact/기본 `page-title` Treatment로
+   유지합니다.
+2. Page가 승인된 Content-driven Wide composition에 진입하면 해당 Page의 모든
+   일반 `page-title`은 `32/40 · 700`을 사용합니다. Page 작성자는 취향에 따라
+   적용 여부를 고를 수 없으며 Focused entity도 같은 규칙을 상속합니다.
+3. 정확한 전환 임계점은 `FTL-08`에서 사용 가능한 Title 영역과 주변 Layout
+   제약을 기준으로 선택합니다. Device 이름에서 추론하거나 Framework
+   Breakpoint를 복사하거나 Desktop browser라는 이유만으로 적용하면 안 됩니다.
+4. 전환은 단계형입니다. Viewport-fluid `clamp()` 보간, 중간 Font size,
+   Locale별 Size 또는 Page-local Responsive 값은 승인하지 않습니다.
+5. `display`, `metric-display` 및 `page-title` 아래의 모든 Role은 Layout 폭과
+   관계없이 승인된 Composite를 유지합니다. Wide 공간은 전역 Type 확대가 아니라
+   비교, 분석, Column 및 Composition에 사용합니다.
+6. Wide variant는 승인된 `32/40 · 700` 물리 Size, Leading 및 Weight primitive를
+   Proportional figures와 함께 재사용합니다. 작성자가 직접 고를 수 있는 일반적인
+   10번째 Style이 아니라 관리되는 `page-title` Responsive variant입니다.
+7. Responsive composition은 접근성 확대를 대체하지 않습니다. 상대 단위,
+   `200%` Text resize, `320 CSS px` Reflow, Text-spacing override 및 한국어,
+   일본어, 영어, 혼합 Script 검증은 계속 필수입니다.
+
+### 이번 Mapping과 Substitution으로 승인되지 않은 경계
 
 이번 결정은 다음을 승인하지 않습니다.
 
-- 어떤 Role의 Responsive substitution;
-- `page-title`, `metric-display` 또는 `display`의 Wide-screen 확대;
+- 승인된 `page-title` Substitution의 정확한 Viewport 또는 Container 임계점;
+- `page-title` 이외 Role의 Responsive substitution 및 `metric-display` 또는
+  `display`의 Wide-screen 확대;
+- Fluid 보간 또는 임의 중간 Typography 값;
 - 최대 Line count, Wrapping priority 또는 Truncation 동작;
 - Component height, Padding, Target geometry 또는 주변 Spacing;
 - Color, Opacity, Material, Alignment 또는 최종 Layout;
@@ -577,6 +644,9 @@ Tracking과 Kerning 유지가 적용됩니다.
 | Gate를 둔 `40px` Display에 기본 `52px` Leading 추가               | `Rejected` | NosLog가 승인하지 않은 여러 줄 Editorial display 동작을 가정하고 Specimen 근거 없이 Primitive를 하나 더 추가함                      |
 | 각 Semantic role에 독립 물리 Composite 부여                       | `Rejected` | Semantic 정밀도를 시각 다양성으로 오해하며 Foundation이 막으려는 Local-style 분산을 다시 만듦                                       |
 | `page-title`에 기본 `32/40 · 700` 사용                            | `Rejected` | Compact 화면에서 일반 Page identity를 과장하고 주요 정량 결과에 필요한 지배 Step을 소비함                                           |
+| 모든 Composition에서 `page-title`을 `24/32 · 700`으로 유지        | `Rejected` | 일관성은 극대화하지만 NosLog가 의도적인 Wide Desktop workspace로 재구성될 때 Page identity가 너무 약해질 수 있음                    |
+| `page-title`을 `24px`과 `32px` 사이에서 Fluid 보간                | `Rejected` | 승인되지 않은 중간값, 지속적인 다국어 줄바꿈 변화 및 Product-task 이득 없는 더 넓은 QA 범위를 만듦                                  |
+| Wide 화면에서 Body, Metadata, Control 또는 반복 Entity title 확대 | `Rejected` | Desktop 공간을 비교와 분석 대신 전역 확대에 사용하고 고밀도 Product hierarchy를 불안정하게 만듦                                     |
 | 모든 `entity-title`에 `20/28 · 600` 사용                          | `Rejected` | 반복되는 Discovery, Ranking 및 Archive surface를 과도하게 확대하며 Focused entity에는 이미 관리된 `page-title` 우선순위가 있음      |
 | `entity-companion`을 `12/16 · 400`으로 축소                       | `Rejected` | Localized/read identity는 3차 Metadata가 아니라 유용한 Content이며 한국어·일본어·영어·혼합 Script 결과에서 읽을 수 있어야 함        |
 | Action label과 입력 Field value에 하나의 Composite 사용           | `Rejected` | 두 작업은 다르며 Compact Medium label은 Interaction을 알리고 입력·선택 Content는 일반 가독성 Body treatment가 적합함                |
@@ -585,22 +655,22 @@ Tracking과 Kerning 유지가 적용됩니다.
 
 ## 결정 기록
 
-| ID       | 결정                                                                                                                                             | 상태                                 |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------ |
-| `FTL-01` | 위 Role 경계와 반응형 제약을 포함하여 `12px`, `14px`, `16px`을 공유 하위 물리 Type core로 사용함                                                 | `Approved`                           |
-| `FTL-02` | 위 검증 제약을 조건으로 `16px`, `20px`, `24px`을 하위 Line-height primitive로 사용하고 `12/16`, `14/20`, `16/24`를 기본으로 함                   | `Approved`                           |
-| `FTL-03` | 위 Semantic, 사용 빈도, 반응형 및 검증 제약과 함께 `400`, `500`, `600`, `700`만 공유 Weight primitive로 사용함                                   | `Approved`                           |
-| `FTL-04` | 모든 공용 UI Role에 자연/기본 간격을 사용하고 Kerning을 유지하며 공유 양수·음수 Tracking token을 노출하지 않고 드문 예외를 명시적으로 관리함     | `Approved`                           |
-| `FTL-05` | `20px`, `24px`, `32px`을 일반 상위 Core로 사용하고 `40px`은 별도 승인 Composite로 제한하며 최종 Map에서는 `display`에만 배정함                   | `Approved`                           |
-| `FTL-06` | 위 경계와 함께 `28px`, `32px`, `40px`, `48px`을 상위 Line-height primitive로 사용하고 `20/28`, `24/32`, `32/40`, `40/48`을 기본으로 함           | `Approved`                           |
-| `FTL-07` | 12개 Semantic role을 위 9개 승인 Composite에 Mapping하고 Focused-entity 및 Field-value 우선순위, Metric Tabular figures 및 Display Gate를 적용함 | `Approved`                           |
-| `FTL-08` | Spacing, Grid, Container, Density 및 Target geometry 값을 선택함                                                                                 | `Observed need — 아직 제안하지 않음` |
-| `FTL-09` | Composite-role mapping 이후 Responsive title 및 Display substitution을 선택함                                                                    | `Observed need — 아직 제안하지 않음` |
+| ID       | 결정                                                                                                                                                                                                                             | 상태                                 |
+| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
+| `FTL-01` | 위 Role 경계와 반응형 제약을 포함하여 `12px`, `14px`, `16px`을 공유 하위 물리 Type core로 사용함                                                                                                                                 | `Approved`                           |
+| `FTL-02` | 위 검증 제약을 조건으로 `16px`, `20px`, `24px`을 하위 Line-height primitive로 사용하고 `12/16`, `14/20`, `16/24`를 기본으로 함                                                                                                   | `Approved`                           |
+| `FTL-03` | 위 Semantic, 사용 빈도, 반응형 및 검증 제약과 함께 `400`, `500`, `600`, `700`만 공유 Weight primitive로 사용함                                                                                                                   | `Approved`                           |
+| `FTL-04` | 모든 공용 UI Role에 자연/기본 간격을 사용하고 Kerning을 유지하며 공유 양수·음수 Tracking token을 노출하지 않고 드문 예외를 명시적으로 관리함                                                                                     | `Approved`                           |
+| `FTL-05` | `20px`, `24px`, `32px`을 일반 상위 Core로 사용하고 `40px`은 별도 승인 Composite로 제한하며 최종 Map에서는 `display`에만 배정함                                                                                                   | `Approved`                           |
+| `FTL-06` | 위 경계와 함께 `28px`, `32px`, `40px`, `48px`을 상위 Line-height primitive로 사용하고 `20/28`, `24/32`, `32/40`, `40/48`을 기본으로 함                                                                                           | `Approved`                           |
+| `FTL-07` | 12개 Semantic role을 위 9개 승인 Composite에 Mapping하고 Focused-entity 및 Field-value 우선순위, Metric Tabular figures 및 Display Gate를 적용함                                                                                 | `Approved`                           |
+| `FTL-08` | Spacing, Grid, Container, Density 및 Target geometry 값을 선택함                                                                                                                                                                 | `Observed need — 아직 제안하지 않음` |
+| `FTL-09` | 모든 Role은 폭에 따라 고정하되 `page-title`만 Compact/기본 Composition의 `24/32 · 700`에서 Content-driven Wide composition의 Proportional `32/40 · 700`으로 단계 전환하고, Fluid 보간은 금지하며 정확한 임계점은 `FTL-08`로 넘김 | `Approved`                           |
 
 ## 다음 승인 Gate
 
-다음 제한된 결정은 `page-title`, `metric-display` 및 Gate를 둔 `display` Role의
-Responsive substitution 동작이며, Content 기반 Wide-layout 임계점에서 승인된
-Role이 확대될 수 있는지도 포함합니다. 해당 Gate는 승인된 Composite만 사용하고
-최대 Line count, Truncation, Component geometry, Spacing 또는 Layout을 조용히
-승인해서는 안 됩니다.
+다음 제한된 결정은 `FTL-08`의 Spacing, Grid, Container, Density 및 Target
+geometry이며, 승인된 Wide `page-title` variant를 활성화하는 정확한 Content-driven
+임계점도 포함합니다. 이 작업은 `S1`–`S6` 다국어 Composition의 일부로 Typography를
+검증해야 하며 최대 Line count, Truncation, Color, Material 또는 최종 Component
+layout을 조용히 승인해서는 안 됩니다.

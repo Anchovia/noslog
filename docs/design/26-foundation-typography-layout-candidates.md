@@ -2,7 +2,7 @@
 
 ## Document Control
 
-- Status: `In progress — physical type axes and exact semantic composite mapping approved; responsive substitutions and layout values unresolved`
+- Status: `In progress — physical type axes, exact semantic composite mapping, and bounded page-title substitution approved; layout values unresolved`
 - Research date: 2026-08-04
 - Last decision update: 2026-08-04
 - Canonical language: English
@@ -13,10 +13,10 @@
 - Inputs: approved documents `01`–`25`, current repository typography evidence,
   maintained design systems and standards, rhythm-game domain products, and explicit
   user approval on 2026-08-04
-- Excluded at this decision point: responsive type substitutions and wide-screen
-  enlargement, maximum line counts, wrapping and truncation policy, spacing, grid,
-  containers, component dimensions, color, material treatment, final Figma styles,
-  production screens, and application implementation
+- Excluded at this decision point: the exact content-driven wide-layout threshold,
+  maximum line counts, wrapping and truncation policy, spacing, grid, containers,
+  component dimensions, color, material treatment, final Figma styles, production
+  screens, and application implementation
 
 This document records the bounded decisions made during Batch B. A value becomes
 authoritative only when its decision-log entry is `Approved`. Unresolved values,
@@ -37,9 +37,10 @@ requirements.
 
 - Research and discuss one bounded material decision at a time.
 - Record observations separately from proposals and approved requirements.
-- Do not infer approval of responsive substitutions, line-count policy, truncation,
-  component geometry, or layout from approval of the physical axes and exact
-  semantic composite mapping.
+- Apply responsive behavior only through the bounded `page-title` substitution in
+  `FTL-09`; do not infer any other substitution, line-count policy, truncation,
+  component geometry, or layout from the approved physical axes and exact semantic
+  composite mapping.
 - Validate the approved composite styles with the `S1`–`S6` multilingual and
   responsive specimens before Foundation v0.1 promotion.
 - Update this English source and its Korean companion in the same task.
@@ -359,16 +360,17 @@ shared meanings.
   distinction. A page or component author must never add a local size preemptively.
 - Approval of the physical sizes alone did not approve their line heights, weights,
   responsive substitutions, exact role mapping, maximum line count, truncation, or
-  metric behavior. The subsequent section approves only the default upper
-  size-to-line-height pairings and its stated boundaries; the remaining concerns stay
-  unresolved.
+  metric behavior. The subsequent sections approve the default upper
+  size-to-line-height pairings, exact semantic mapping, and the single `page-title`
+  substitution within their stated boundaries; every concern not explicitly approved
+  there remains unresolved.
 - `20px` as a font-size primitive and `20px` as an already approved line-height
   primitive remain distinct token namespaces and must not be conflated in Figma or
   code.
-- No upper role may shrink on mobile merely to fit. Any future responsive change to a
-  `32px` or `40px` composite must be approved as part of that composite after Korean,
-  Japanese, English, mixed-script, `320px`, `390px`, intermediate-width, and wide
-  specimens.
+- No upper role may shrink on mobile merely to fit. Apart from the later approved
+  `page-title` substitution in `FTL-09`, any further responsive change to a `32px` or
+  `40px` composite must be approved as part of that composite after Korean, Japanese,
+  English, mixed-script, `320px`, `390px`, intermediate-width, and wide specimens.
 
 ## Approved Upper Line-height Axis
 
@@ -439,10 +441,11 @@ font-size and line-height combinations.
 - The pairings remain in relative implementation units and must preserve browser text
   scaling. Pixel notation documents the design target only.
 - The subsequent semantic composite decision assigns roles, weights, and metric
-  behavior. Maximum line counts, truncation rules, and responsive size substitutions
-  remain unresolved.
-- No mobile-only line-height compression is approved. Responsive role substitutions
-  remain a later bounded decision after composite-role mapping.
+  behavior. Maximum line counts, truncation rules, and any responsive size
+  substitution beyond the approved `page-title` step remain unresolved.
+- No mobile-only line-height compression is approved. `FTL-09` is the only approved
+  responsive role substitution; any additional substitution requires a later bounded
+  decision.
 - Pretendard JP specimens must test original Japanese Music titles, localized/read
   titles, long artist credits, Korean and English page identity, tabular metrics, and
   mixed punctuation at `320px`, `390px`, intermediate widths, wide layouts, `200%`
@@ -493,7 +496,7 @@ default tracking and retained kerning apply throughout.
 | Semantic role      | Approved default composite | Numeric feature | Governing boundary                                                                                                  |
 | ------------------ | -------------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------- |
 | `display`          | `40/48 · 700`              | Proportional    | Rare, short, separately justified expressive moment; no automatic page assignment                                   |
-| `page-title`       | `24/32 · 700`              | Proportional    | Default page or focused-task identity; `32px` is not its default compact or wide value                              |
+| `page-title`       | `24/32 · 700`              | Proportional    | Compact/default page or focused-task identity; the approved wide substitution is governed separately below          |
 | `section-title`    | `20/28 · 600`              | Proportional    | A real major content boundary, not a decorative card label                                                          |
 | `component-title`  | `16/24 · 600`              | Proportional    | Dialog, drawer, panel, or grouped-module identity subordinate to its section                                        |
 | `entity-title`     | `16/24 · 600`              | Proportional    | Ordinary list/card entity identity; focused-page entity identity follows the precedence rule below                  |
@@ -524,8 +527,10 @@ not a physical combination.
 ### Approved precedence and alias rules
 
 1. **Focused entity identity:** when a domain entity is the identity of the focused
-   page or task, its visible primary heading uses the `page-title` composite
-   `24/32 · 700` while retaining the entity's semantic meaning and canonical name.
+   page or task, its visible primary heading uses the `page-title` role while
+   retaining the entity's semantic meaning and canonical name. It resolves to
+   `24/32 · 700` in compact/default composition and follows the approved wide
+   substitution below when that composition is active.
    Examples include the original Music title on Music Detail, a username on Profile,
    and the primary arcade or exam identity where that entity owns the page. The same
    entity in an ordinary list or card uses `entity-title` at `16/24 · 600`. This is a
@@ -545,12 +550,76 @@ not a physical combination.
    heading level. A `page-title` treatment may appear on an entity, while the document
    outline and accessible name remain correct for the actual page structure.
 
-### Boundaries not approved by this mapping
+### Approved responsive `page-title` substitution
+
+The responsive comparison covered eighteen independent official or maintained
+sources across dense product systems, stepped upper scales, fluid expressive scales,
+multilingual systems, accessibility standards, and responsive implementation:
+[Carbon](https://carbondesignsystem.com/elements/typography/type-sets/),
+[Material 3](https://developer.android.com/develop/ui/compose/designsystems/material3),
+[Atlassian](https://atlassian.design/foundations/typography),
+[GOV.UK](https://design-system.service.gov.uk/styles/type-scale/),
+[Primer](https://primer.style/product/css-utilities/typography/),
+[USWDS](https://designsystem.digital.gov/components/typography/),
+[GitLab Pajamas](https://design.gitlab.com/product-foundations/type-fundamentals/),
+[Japan Digital Agency](https://design.digital.go.jp/dads/foundations/typography/),
+[LINE](https://designsystem.line.me/LDSG/foundation/typography-en),
+[Adobe Spectrum](https://spectrum.adobe.com/page/platform-scale/),
+[Ant Design](https://ant.design/docs/spec/font/),
+[Fluent 2](https://fluent2.microsoft.design/typography),
+[SAP Fiori](https://experience.sap.com/fiori-design-web/typography/),
+[Apple](https://developer.apple.com/design/human-interface-guidelines/typography),
+[VA Design System](https://design.va.gov/foundation/typography),
+[WCAG](https://www.w3.org/TR/WCAG21/),
+[MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/clamp), and
+[Tailwind CSS](https://tailwindcss.com/docs/responsive-design).
+
+The sources do not support enlarging every role on a wide viewport. Dense product
+systems commonly keep functional text stable; systems that do change size generally
+limit the change to upper hierarchy, while fluid interpolation is concentrated in
+expressive or editorial contexts. NosLog also needs a stronger page identity in an
+intentional desktop composition without reopening the lower scale or producing
+arbitrary intermediate values. The approved result is therefore a single stepped
+substitution:
+
+| Semantic role or group                  | Compact/default composition | Content-driven wide composition | Numeric feature |
+| --------------------------------------- | --------------------------- | ------------------------------- | --------------- |
+| `page-title`                            | `24/32 · 700`               | `32/40 · 700`                   | Proportional    |
+| `display`                               | `40/48 · 700`               | unchanged                       | Proportional    |
+| `metric-display`                        | `32/40 · 700`               | unchanged                       | Tabular figures |
+| `section-title` and every lower UI role | approved default composite  | unchanged                       | role default    |
+
+The substitution is governed as follows:
+
+1. `24/32 · 700` remains the mobile-first and compact/default `page-title` treatment.
+2. When the page enters the approved content-driven wide composition, every ordinary
+   `page-title` on that page uses `32/40 · 700`. Page authors cannot opt in or out by
+   preference, and focused entities inherit the same rule.
+3. The exact transition threshold is selected with `FTL-08` from the available title
+   region and surrounding layout constraints. It must not be inferred from a device
+   name, copied from a framework breakpoint, or implemented merely because the client
+   is a desktop browser.
+4. The transition is stepped. No viewport-fluid `clamp()` interpolation, intermediate
+   font size, locale-specific size, or page-local responsive value is approved.
+5. `display`, `metric-display`, and every role below `page-title` remain at their
+   approved composites across layout widths. Wide space is used for comparison,
+   analysis, columns, and composition rather than global type enlargement.
+6. The wide variant reuses the approved `32/40 · 700` physical size, leading, and
+   weight primitives with proportional figures. It is a governed responsive variant
+   of `page-title`, not a general tenth style that authors may select directly.
+7. Responsive composition does not replace accessibility scaling. Relative units,
+   `200%` text resize, `320 CSS px` reflow, text-spacing overrides, and Korean,
+   Japanese, English, and mixed-script validation remain required.
+
+### Boundaries not approved by this mapping and substitution
 
 This decision does not approve:
 
-- a responsive substitution for any role;
-- wide-screen enlargement of `page-title`, `metric-display`, or `display`;
+- the exact viewport or container threshold for the approved `page-title`
+  substitution;
+- responsive substitution for any role other than `page-title`, including wide-screen
+  enlargement of `metric-display` or `display`;
+- fluid interpolation or arbitrary intermediate typography values;
 - maximum line counts, wrapping priority, or truncation behavior;
 - component height, padding, target geometry, or surrounding spacing;
 - color, opacity, material, alignment, or final layout;
@@ -583,6 +652,9 @@ multilingual specimens before Foundation v0.1 promotion.
 | Add `52px` leading for the gated `40px` display by default                   | `Rejected` | It assumes multi-line editorial display behavior that NosLog has not approved and adds another primitive without specimen evidence                                                       |
 | Give every semantic role an independent physical composite                   | `Rejected` | It mistakes semantic precision for visual variety and recreates the local-style drift the Foundation is intended to prevent                                                              |
 | Make `page-title` use `32/40 · 700` by default                               | `Rejected` | It overstates routine page identity on compact screens and consumes the dominant step needed for major quantitative results                                                              |
+| Keep `page-title` at `24/32 · 700` in every composition                      | `Rejected` | It maximizes consistency but can understate page identity when NosLog intentionally recomposes into a wide desktop workspace                                                             |
+| Fluidly interpolate `page-title` between `24px` and `32px`                   | `Rejected` | It creates unapproved intermediate values, continuous multilingual wrapping variation, and a broader QA surface without a product-task benefit                                           |
+| Enlarge body, metadata, controls, or repeated entity titles on wide screens  | `Rejected` | It spends desktop space on global magnification instead of comparison and analysis, and makes dense product hierarchy unstable                                                           |
 | Use `20/28 · 600` for every `entity-title`                                   | `Rejected` | It would over-expand repeated discovery, ranking, and archive surfaces; focused entities already receive the governed `page-title` precedence                                            |
 | Reduce `entity-companion` to `12/16 · 400`                                   | `Rejected` | Localized/read identity remains useful content rather than tertiary metadata and must stay legible in Korean, Japanese, English, and mixed-script results                                |
 | Use one composite for both action labels and entered field values            | `Rejected` | The jobs differ: compact medium-weight labels signal interaction, while entered or selected content benefits from ordinary readable body treatment                                       |
@@ -591,22 +663,22 @@ multilingual specimens before Foundation v0.1 promotion.
 
 ## Decision Log
 
-| ID       | Decision                                                                                                                                                                | Status                             |
-| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
-| `FTL-01` | Use `12px`, `14px`, and `16px` as the shared lower physical type core with the role boundaries and responsive constraints above                                         | `Approved`                         |
-| `FTL-02` | Use `16px`, `20px`, and `24px` as the lower line-height primitives, defaulting to `12/16`, `14/20`, and `16/24`, subject to the validation constraints above            | `Approved`                         |
-| `FTL-03` | Use only `400`, `500`, `600`, and `700` as shared weight primitives with the semantic, frequency, responsive, and validation constraints above                          | `Approved`                         |
-| `FTL-04` | Use natural/default spacing for every shared UI role, keep kerning enabled, expose no positive or negative shared tracking token, and govern rare exceptions explicitly | `Approved`                         |
-| `FTL-05` | Use `20px`, `24px`, and `32px` as the ordinary upper core and gate `40px` to a separately approved composite; the final map assigns it only to `display`                | `Approved`                         |
-| `FTL-06` | Use `28px`, `32px`, `40px`, and `48px` as upper line-height primitives, defaulting to `20/28`, `24/32`, `32/40`, and `40/48`, with the boundaries above                 | `Approved`                         |
-| `FTL-07` | Map the twelve semantic roles to the nine approved composites above, including focused-entity and field-value precedence, metric tabular figures, and the display gate  | `Approved`                         |
-| `FTL-08` | Select spacing, grid, container, density, and target geometry values                                                                                                    | `Observed need — not yet proposed` |
-| `FTL-09` | Select responsive title and display substitutions after composite-role mapping                                                                                          | `Observed need — not yet proposed` |
+| ID       | Decision                                                                                                                                                                                                                                                        | Status                             |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
+| `FTL-01` | Use `12px`, `14px`, and `16px` as the shared lower physical type core with the role boundaries and responsive constraints above                                                                                                                                 | `Approved`                         |
+| `FTL-02` | Use `16px`, `20px`, and `24px` as the lower line-height primitives, defaulting to `12/16`, `14/20`, and `16/24`, subject to the validation constraints above                                                                                                    | `Approved`                         |
+| `FTL-03` | Use only `400`, `500`, `600`, and `700` as shared weight primitives with the semantic, frequency, responsive, and validation constraints above                                                                                                                  | `Approved`                         |
+| `FTL-04` | Use natural/default spacing for every shared UI role, keep kerning enabled, expose no positive or negative shared tracking token, and govern rare exceptions explicitly                                                                                         | `Approved`                         |
+| `FTL-05` | Use `20px`, `24px`, and `32px` as the ordinary upper core and gate `40px` to a separately approved composite; the final map assigns it only to `display`                                                                                                        | `Approved`                         |
+| `FTL-06` | Use `28px`, `32px`, `40px`, and `48px` as upper line-height primitives, defaulting to `20/28`, `24/32`, `32/40`, and `40/48`, with the boundaries above                                                                                                         | `Approved`                         |
+| `FTL-07` | Map the twelve semantic roles to the nine approved composites above, including focused-entity and field-value precedence, metric tabular figures, and the display gate                                                                                          | `Approved`                         |
+| `FTL-08` | Select spacing, grid, container, density, and target geometry values                                                                                                                                                                                            | `Observed need — not yet proposed` |
+| `FTL-09` | Keep every role fixed across widths except `page-title`, which steps from `24/32 · 700` in compact/default composition to proportional `32/40 · 700` in content-driven wide composition; prohibit fluid interpolation and defer the exact threshold to `FTL-08` | `Approved`                         |
 
 ## Next Approval Gate
 
-The next bounded decision is responsive substitution behavior for `page-title`,
-`metric-display`, and the gated `display` role, including whether any approved role
-may enlarge at a content-driven wide-layout threshold. That gate must use only the
-approved composites and must not silently approve maximum line counts, truncation,
-component geometry, spacing, or layout.
+The next bounded decision is `FTL-08`: spacing, grid, container, density, and target
+geometry, including the exact content-driven threshold that activates the approved
+wide `page-title` variant. That work must test the typography as part of the `S1`–`S6`
+multilingual compositions and must not silently approve maximum line counts,
+truncation, color, material, or final component layout.

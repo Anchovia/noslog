@@ -2,7 +2,7 @@
 
 ## 문서 관리
 
-- 상태: `승인된 조사 프로토콜 — Gate 0 완료, 이후 Typography 축과 정확한 Semantic composite mapping 기록`
+- 상태: `승인된 조사 프로토콜 — Gate 0 완료, 이후 Typography 축, 정확한 Semantic composite mapping 및 제한된 Page-title substitution 기록`
 - 조사일: 2026-08-03
 - 마지막 결정 갱신일: 2026-08-04
 - 원본 언어: 영어
@@ -13,10 +13,10 @@
 - 입력: 승인된 문서 `01`–`23`, 현재 저장소 token과 component, 현재 로컬
   브라우저 근거, 현행 표준, 유지 관리되는 디자인 시스템 및 문서 `22`의 명시적
   Foundation 진입 Gate
-- 제외: Responsive type substitution 및 Wide-screen 확대, 최대 Line count,
-  Wrapping 및 Truncation 정책, Fallback 및 Delivery 세부, Palette 값, 간격 단위,
-  Grid, Breakpoint, Radius, Shadow, Icon 스타일, Motion 시간, Chart 스타일,
-  Component anatomy, High-fidelity 화면, Figma Production 화면 및 Application 구현
+- 제외: 정확한 Content-driven Wide-layout 임계점, 최대 Line count, Wrapping 및
+  Truncation 정책, Fallback 및 Delivery 세부, Palette 값, 간격 단위, Grid,
+  Breakpoint, Radius, Shadow, Icon 스타일, Motion 시간, Chart 스타일, Component
+  anatomy, High-fidelity 화면, Figma Production 화면 및 Application 구현
 
 이 브리프는 완전한 시각 시스템을 승인하지 않습니다. 후보를 어떻게 조사하고,
 결합하고, 시험하고, 비교하고, 사용자 결정 대상으로 올릴지를 정의합니다.
@@ -24,8 +24,9 @@
 하한, `12/14/16/20/24/32px` 일반 물리 Ramp, Gate를 둔 `40px` Display step,
 `16/20/24px` 하위 Line-height와 `28/32/40/48px` 상위 Line-height 축,
 `400/500/600/700` 공용 Weight, 자연 Tracking 및 정확한 12개 Role-to-9개
-Composite mapping 결정을 제외하면 현재 값, Reference 값, Tailwind 기본값 또는
-후보는 이 문서에 등장했다는 이유만으로 권위 있는 값이 되지 않습니다.
+Composite mapping 결정과 제한된 단계형 Wide `page-title` Substitution을 제외하면
+현재 값, Reference 값, Tailwind 기본값 또는 후보는 이 문서에 등장했다는 이유만으로
+권위 있는 값이 되지 않습니다.
 
 ## 관련 문서
 
@@ -679,6 +680,15 @@ Focused page를 소유하면 Entity 의미를 유지하면서 `page-title` Compo
 Wrapping, Truncation, Component geometry, Spacing, Color, Layout, 자동 Display
 배치 또는 최종 Figma/Token 명명을 승인하지 않습니다.
 
+그다음 사용자는 문서 `26`의 `FTL-09`로 기록한 하나의 Responsive 예외를
+승인했습니다. `page-title`은 Compact/기본 Composition의 Proportional
+`24/32 · 700`에서 Content-driven Wide composition의 Proportional
+`32/40 · 700`으로 단계 전환합니다. 다른 모든 Role은 고정하고 Fluid 보간과
+Page-local Responsive 값을 금지하며 정확한 임계점은 `FTL-08`의 Spacing, Grid 및
+Container 작업으로 넘깁니다. 이 후속 결정은 Line count, Wrapping, Truncation,
+Component geometry, Color, Material, 최종 Layout 또는 자동 `display` 배치를
+승인하지 않습니다.
+
 ## 단계 체크리스트
 
 - [x] Root 프로젝트 지침과 저장소 기준선을 다시 읽었습니다.
@@ -708,5 +718,8 @@ Wrapping, Truncation, Component geometry, Spacing, Color, Layout, 자동 Display
 - [x] 사용자가 2026-08-04에 문서 `26`의 정확한 12개 Role-to-9개 Composite
       Map과 Focused-entity, Field-value, Metric, Display 및 Semantic-heading
       우선순위 규칙을 승인했습니다.
+- [x] 사용자가 2026-08-04에 문서 `26`의 제한된 단계형 `page-title`
+      Substitution, 다른 모든 Role의 고정 동작, Fluid 보간 금지 및 정확한
+      Content-driven 임계점의 `FTL-08` 이관을 승인했습니다.
 - [ ] Production 승격 전에 필수 다국어 통합 Specimen에서 Pretendard JP
       delivery, fallback metric 및 하한을 검증합니다.

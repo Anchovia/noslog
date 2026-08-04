@@ -2,7 +2,7 @@
 
 ## Document Control
 
-- Status: `Approved research protocol — Gate 0 complete; later typography axes and exact semantic composite mapping recorded`
+- Status: `Approved research protocol — Gate 0 complete; later typography axes, exact semantic composite mapping, and bounded page-title substitution recorded`
 - Research date: 2026-08-03
 - Last decision update: 2026-08-04
 - Canonical language: English
@@ -14,11 +14,11 @@
 - Inputs: approved documents `01`–`23`, current repository tokens and components,
   current local-browser evidence, current standards, maintained design systems, and
   the explicit Foundation entry gate in document `22`
-- Excluded: responsive type substitutions and wide-screen enlargement, maximum line
-  counts, wrapping and truncation policy, fallback and delivery details; palette
-  values, spacing units, grids, breakpoints, radii, shadows, icon style, motion
-  durations, chart styling, component anatomy, high-fidelity screens, Figma
-  production screens, and application implementation
+- Excluded: the exact content-driven wide-layout threshold, maximum line counts,
+  wrapping and truncation policy, fallback and delivery details; palette values,
+  spacing units, grids, breakpoints, radii, shadows, icon style, motion durations,
+  chart styling, component anatomy, high-fidelity screens, Figma production screens,
+  and application implementation
 
 This brief does not approve a complete visual system. It defines how candidates must
 be researched, combined, tested, compared, and brought to the user for decisions.
@@ -26,9 +26,10 @@ Except for the later bounded Pretendard JP, `12px` floor,
 `12/14/16/20/24/32px` ordinary physical ramp, gated `40px` display step,
 `16/20/24px` lower-line-height and `28/32/40/48px` upper-line-height axes,
 `400/500/600/700` shared-weight, natural-tracking, and exact twelve-role-to-nine-
-composite mapping decisions explicitly recorded below and in document `26`, no
-current value, reference value, Tailwind default, or candidate becomes authoritative
-because it appears in this document.
+composite mapping decisions, plus the bounded stepped wide `page-title` substitution
+explicitly recorded below and in document `26`, no current value, reference value,
+Tailwind default, or candidate becomes authoritative because it appears in this
+document.
 
 ## Related Documents
 
@@ -677,6 +678,15 @@ approve responsive substitutions, wide-screen enlargement, maximum line counts,
 wrapping, truncation, component geometry, spacing, color, layout, automatic display
 placement, or final Figma/token naming.
 
+The user then approved the single responsive exception recorded as `FTL-09` in
+document `26`: `page-title` steps from proportional `24/32 · 700` in compact/default
+composition to proportional `32/40 · 700` in content-driven wide composition. Every
+other role remains fixed, fluid interpolation and page-local responsive values are
+prohibited, and the exact threshold is deferred to `FTL-08` spacing, grid, and
+container work. This later decision does not approve line counts, wrapping,
+truncation, component geometry, color, material, final layout, or automatic `display`
+placement.
+
 ## Phase Checklist
 
 - [x] Root project instructions and repository baseline reread.
@@ -707,5 +717,8 @@ placement, or final Figma/token naming.
 - [x] User approved the exact twelve-role-to-nine-composite map and its focused-entity,
       field-value, metric, display, and semantic-heading precedence rules in document
       `26` on 2026-08-04.
+- [x] User approved the bounded stepped `page-title` substitution, fixed behavior for
+      every other role, prohibition on fluid interpolation, and deferral of the exact
+      content-driven threshold to `FTL-08` in document `26` on 2026-08-04.
 - [ ] Validate Pretendard JP delivery, fallback metrics, and the floor in the required
       multilingual integrated specimens before production promotion.
