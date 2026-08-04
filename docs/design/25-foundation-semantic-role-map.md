@@ -87,8 +87,8 @@ principles:
   hierarchies for each locale.
 
 NosLog adds domain constraints that general systems do not define: the original Music
-title remains the primary identity, an enabled translated title or Japanese reading
-appears above it at lower visual prominence, performance values need stable numeric
+title remains the persistent primary identity, an approved translated title or
+Japanese reading is disclosed only on Music Detail when requested, performance values need stable numeric
 comparison, and BPM, time, measure, difficulty, hand, Grd, and Rating retain exact
 NOSTALGIA meaning.
 
@@ -183,20 +183,20 @@ gate.
 
 The following twelve roles are the approved shared role inventory.
 
-| Role               | Meaning                                                                      | Typical NosLog use                                                                      | Required constraint                                                                        |
-| ------------------ | ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| `display`          | Rare expressive text that creates one deliberate high-impact moment          | A bounded Home identity or exceptional editorial lead, if a later specimen justifies it | Never the default page heading, card title, metric, or empty-state treatment               |
-| `page-title`       | Primary heading that identifies the current page or focused task             | Music, Rankings, Tier list, Profile, Viewer, Settings                                   | One clear page-level identity; visual style does not replace correct heading semantics     |
-| `section-title`    | Heading for a major region within a page                                     | Recent plays, Community evaluation, Performance history                                 | Must express a real content boundary, not decorate an arbitrary card                       |
-| `component-title`  | Heading inside a contained component or transient layer                      | Dialog, drawer, panel, grouped result module                                            | Must remain subordinate to the page and enclosing section                                  |
-| `entity-title`     | Primary identity of a domain object                                          | Original Music title, username, arcade name, exam name                                  | Preserves the canonical object identity and supports real long content                     |
-| `entity-companion` | Optional supporting identity paired with an entity title                     | Approved Korean/English Music title or Japanese reading                                 | May appear above the original title but remains visually subordinate and never replaces it |
-| `body`             | Default readable content and ordinary system message                         | Descriptions, instructions, announcement body, empty/error message                      | Must remain comfortable for multi-line reading and text resizing                           |
-| `body-secondary`   | Supporting explanation or secondary identity                                 | Artist, concise supporting description, contextual note                                 | Must not become the only location for task-critical meaning through low prominence         |
-| `control`          | Visible text that names an action or available choice                        | Button, tab, filter, menu item, field label                                             | Must remain readable, localized, and aligned with its control and icon                     |
-| `metadata`         | Compact secondary fact or short status descriptor                            | Date, category, level context, timestamp, badge text, chart axis or measure annotation  | Not a replacement for body copy or ordinary controls; small treatment remains exceptional  |
-| `metric-display`   | One locally dominant quantitative result                                     | Best score, Official Grd, NosLog Rating, another approved summary metric                | Emphasizes a value without masquerading as a page heading or losing its label and unit     |
-| `metric-value`     | Comparable quantitative value within a row, group, control, or visualization | Rank value, score row, BPM, time, measure, Play count, judgement value                  | Uses stable numeric alignment and retains explicit context, unit, and scope                |
+| Role               | Meaning                                                                      | Typical NosLog use                                                                      | Required constraint                                                                       |
+| ------------------ | ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `display`          | Rare expressive text that creates one deliberate high-impact moment          | A bounded Home identity or exceptional editorial lead, if a later specimen justifies it | Never the default page heading, card title, metric, or empty-state treatment              |
+| `page-title`       | Primary heading that identifies the current page or focused task             | Music, Rankings, Tier list, Profile, Viewer, Settings                                   | One clear page-level identity; visual style does not replace correct heading semantics    |
+| `section-title`    | Heading for a major region within a page                                     | Recent plays, Community evaluation, Performance history                                 | Must express a real content boundary, not decorate an arbitrary card                      |
+| `component-title`  | Heading inside a contained component or transient layer                      | Dialog, drawer, panel, grouped result module                                            | Must remain subordinate to the page and enclosing section                                 |
+| `entity-title`     | Primary identity of a domain object                                          | Original Music title, username, arcade name, exam name                                  | Preserves the canonical object identity and supports real long content                    |
+| `entity-companion` | Optional supporting identity paired with an entity title                     | Approved translated/read Music title inside the Music Detail popover                    | Remains subordinate, never replaces the original, and is not repeated on collection cards |
+| `body`             | Default readable content and ordinary system message                         | Descriptions, instructions, announcement body, empty/error message                      | Must remain comfortable for multi-line reading and text resizing                          |
+| `body-secondary`   | Supporting explanation or secondary identity                                 | Artist, concise supporting description, contextual note                                 | Must not become the only location for task-critical meaning through low prominence        |
+| `control`          | Visible text that names an action or available choice                        | Button, tab, filter, menu item, field label                                             | Must remain readable, localized, and aligned with its control and icon                    |
+| `metadata`         | Compact secondary fact or short status descriptor                            | Date, category, level context, timestamp, badge text, chart axis or measure annotation  | Not a replacement for body copy or ordinary controls; small treatment remains exceptional |
+| `metric-display`   | One locally dominant quantitative result                                     | Best score, Official Grd, NosLog Rating, another approved summary metric                | Emphasizes a value without masquerading as a page heading or losing its label and unit    |
+| `metric-value`     | Comparable quantitative value within a row, group, control, or visualization | Rank value, score row, BPM, time, measure, Play count, judgement value                  | Uses stable numeric alignment and retains explicit context, unit, and scope               |
 
 ### Layer 4 — Component aliases
 
@@ -232,7 +232,9 @@ initial aliases are approved:
 
 ### Music discovery and Music Detail
 
-- Enabled translated title or Japanese reading: `entity-companion`.
+- Repeated Music discovery results do not use `entity-companion`; approved translated
+  titles and Japanese readings remain non-visible search aliases.
+- Music Detail popover translated/read title: `entity-companion`.
 - Original Music title: `entity-title`.
 - Artist: `body-secondary`.
 - Category, difficulty context, level, release data, and dates: `metadata`, except
@@ -257,7 +259,8 @@ initial aliases are approved:
 
 ### Chart Viewer and Chart Editor
 
-- Focused Music identity retains the `entity-companion` → `entity-title` hierarchy.
+- Focused Music identity uses the original `entity-title` only. The viewer does not
+  repeat the Music Detail translation disclosure.
 - Transport, mode, metronome, strict-performance, tool, property, and submission
   labels use `control`.
 - Time, BPM, time signature, measure number, lane value, offset, width, and numeric
@@ -278,9 +281,9 @@ Required behavior:
 
 - mark text with the correct language where content language differs from the page;
 - preserve the original Music title as `entity-title` in every locale;
-- when enabled, place the localized title or Japanese reading above the original as
-  `entity-companion`, while keeping it smaller or otherwise less prominent in the
-  future validated composite system;
+- expose the localized title or Japanese reading as `entity-companion` only inside
+  the Music Detail anchored popover, while keeping the original title persistently
+  visible as `entity-title`;
 - test mixed Hangul, Kana, Kanji, Latin, numerals, punctuation, symbols, and long
   classical titles using real records;
 - allow role containers to grow or recompose instead of clipping required content to
@@ -431,14 +434,14 @@ density, and target geometry together rather than approving isolated type swatch
 
 The approved minimum specimens remain:
 
-| Specimen                         | Required role stress                                                                                        |
-| -------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `S1` Music discovery             | `entity-companion`, long `entity-title`, artist, metadata, controls, dense levels, empty and loading states |
-| `S2` Music Detail                | Page and section hierarchy, dominant and inline metrics, chart labels, long multilingual identity           |
-| `S3` Global Rankings             | Repeated identity, rank and metric alignment, country/exam metadata, pagination and selectors               |
-| `S4` Chart Viewer                | Focused identity, transport controls, BPM/time/measure data, renderer labels and Full-sheet annotations     |
-| `S5` Home                        | Restrained page identity, search control, destinations, notices, editorial content, recovery state          |
-| `S6` User-facing Editor fragment | Dense tool labels, property values, timing data, panel resizing, validation and submission states           |
+| Specimen                         | Required role stress                                                                                                       |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `S1` Music discovery             | Long `entity-title`, artist, metadata, controls, dense levels, empty and loading states                                    |
+| `S2` Music Detail                | Page and section hierarchy, localized-title popover, dominant and inline metrics, chart labels, long multilingual identity |
+| `S3` Global Rankings             | Repeated identity, rank and metric alignment, country/exam metadata, pagination and selectors                              |
+| `S4` Chart Viewer                | Focused identity, transport controls, BPM/time/measure data, renderer labels and Full-sheet annotations                    |
+| `S5` Home                        | Restrained page identity, search control, destinations, notices, editorial content, recovery state                         |
+| `S6` User-facing Editor fragment | Dense tool labels, property values, timing data, panel resizing, validation and submission states                          |
 
 Before any physical type value is approved, candidates must be compared with real
 Korean, Japanese, English, mixed-script, long, dense, empty, error, disabled,
@@ -490,7 +493,7 @@ permission, and destructive fixtures at `320px`, `390px`, intermediate widths,
 | `FSR-04` | Keep `display` rare and prohibit it as the default page, card, metric, or state style                                                                                              | `Approved`   |
 | `FSR-05` | Do not retain a global ordinary-UI `micro` role                                                                                                                                    | `Approved`   |
 | `FSR-06` | Use tabular figures for comparable metrics and do not use monospace for ordinary domain values                                                                                     | `Approved`   |
-| `FSR-07` | Keep enabled localized/read title above but visually subordinate to the original Music title                                                                                       | `Approved`   |
+| `FSR-07` | Earlier direction placed enabled localized/read titles above original Music titles across supporting surfaces                                                                      | `Superseded` |
 | `FSR-08` | Treat wordmark, artist, controls, badges, chart labels, and renderer data as governed aliases rather than new shared scales                                                        | `Approved`   |
 | `FSR-09` | Keep Pretendard as an incumbent candidate without selecting the final font                                                                                                         | `Superseded` |
 | `FSR-10` | Select Pretendard JP as the shared Korean, Japanese, and English NosLog 2.0 font family while retaining production validation                                                      | `Approved`   |
@@ -504,6 +507,7 @@ permission, and destructive fixtures at `320px`, `390px`, intermediate widths,
 | `FSR-18` | Recognize document `26`'s approved `28/32/40/48px` upper line-height axis and default upper pairings without assigning final semantic composites                                   | `Approved`   |
 | `FSR-19` | Use document `26`'s exact twelve-role-to-nine-composite map, focused-entity and field-value precedence, tabular metric behavior, and rare display gate                             | `Approved`   |
 | `FSR-20` | Use document `26`'s bounded stepped `page-title` substitution and its `FTL-08E` twelve-column and measured-title-region activation conditions while keeping every other role fixed | `Approved`   |
+| `FSR-21` | Restrict `entity-companion` Music translations/readings to the Music Detail anchored popover; repeated results and Chart Viewer show original titles only                          | `Approved`   |
 
 ## Completion Checklist
 
@@ -511,7 +515,7 @@ permission, and destructive fixtures at `320px`, `390px`, intermediate widths,
 - [x] More than fifteen independent evidence sources compared.
 - [x] Twelve shared semantic roles approved.
 - [x] Alias and physical-exception governance approved.
-- [x] Multilingual title hierarchy and metric behavior mapped.
+- [x] Multilingual Music Detail disclosure and metric behavior mapped.
 - [x] Current typography utilities mapped without carrying forward their values.
 - [x] English canonical and Korean companion written together.
 - [x] Pretendard JP selected as the shared family; production delivery and fallback

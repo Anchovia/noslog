@@ -5,8 +5,8 @@
 - Status: `Approved`
 - Decision status: `Complete settings and account-management contract approved:
 one public locale-prefixed destination; responsive category navigation; guest and
-authenticated scope; immediate and explicit save ownership; language, theme, and
-localized-title behavior; profile image, NosLog nickname, NOSTALGIA identity,
+authenticated scope; immediate and explicit save ownership; language and theme
+behavior; profile image, NosLog nickname, NOSTALGIA identity,
 country/region, and preferred-arcade rules; five positive privacy controls;
 Discord identity management; logout; and permanent account deletion`
 - Evidence status: `Repository and browser inspection; approved information
@@ -14,7 +14,7 @@ architecture, profile, and shared-shell briefs; more than thirty cited
 accessibility, internationalization, design-system, platform, and production
 references; and the user-approved decision record`
 - Date started: 2026-08-03
-- Last decision update: 2026-08-03
+- Last decision update: 2026-08-04
 - Canonical language: English
 - Korean companion:
   [16-settings-account-page-brief.ko.md](./16-settings-account-page-brief.ko.md)
@@ -71,8 +71,8 @@ form:
 
 - **Approved:** Settings is an ordinary public-shell destination at
   `/[locale]/settings`, reachable from More whether signed out or signed in.
-- **Approved:** A guest succeeds when they can change language, theme, and
-  localized/reading-title visibility without encountering disabled account forms.
+- **Approved:** A guest succeeds when they can change language and theme without
+  encountering disabled account forms.
 - **Approved:** An authenticated user succeeds when they can find a category,
   understand persistence and public consequences, save changes without losing input,
   and return to the same category or view their profile.
@@ -184,7 +184,7 @@ interaction authority for NosLog 2.0.
 
 | Order | Category    | Guest | Signed in | Required contents                                                                               |
 | ----- | ----------- | ----- | --------- | ----------------------------------------------------------------------------------------------- |
-| 1     | Experience  | Yes   | Yes       | Language, theme, localized/reading-title visibility                                             |
+| 1     | Experience  | Yes   | Yes       | Language and theme                                                                              |
 | 2     | Profile     | No    | Yes       | Avatar, NosLog nickname, read-only NOSTALGIA identity context, country/region, preferred arcade |
 | 3     | Privacy     | No    | Yes       | Five positive public-visibility controls                                                        |
 | 4     | Connections | No    | Yes       | Read-only Discord identity, refresh information, change login account                           |
@@ -236,18 +236,6 @@ duplicate navigation links are progressively disclosed or omitted.
 - All three options apply immediately. No category Save action is required.
 - The approved NosLog representative art direction remains dark, while both dark and
   light modes require complete contrast, state, chart, image, and focus testing.
-
-### Localized or Reading Title Visibility
-
-- One immediate toggle controls the approved secondary music-title line:
-  Korean translation in Korean UI, official Japanese reading in Japanese UI, and
-  English translation in English UI when approved data exists.
-- The original Japanese music title always remains the primary title.
-- Default is On.
-- Signed-in selection persists to the account; signed-out selection persists in the
-  browser.
-- Turning it off removes the secondary line without changing search indexing or the
-  canonical music identity.
 
 ## Profile Category Contract
 
@@ -375,7 +363,7 @@ means NosLog withholds it from other users. Do not add a whole-profile private s
 
 - Logout is a direct account action separated from permanent deletion.
 - It clears the authenticated session but preserves device-local theme and the saved
-  signed-out browser language/title preferences.
+  signed-out browser language preference.
 - After logout, navigate to the localized Home and provide concise confirmation.
 
 ### Contextual Privacy Access
@@ -434,7 +422,7 @@ confirmation such as `OK`.
   report routes without leaving the account in a falsely completed UI state.
 - On complete success, destroy the session, clear account-sensitive client caches,
   navigate to localized Home, and show a one-time completion status.
-- Device-local guest theme, language, and localized-title preferences remain.
+- Device-local guest theme and language preferences remain.
 - Signing in later with the same Discord identity creates a new NosLog account rather
   than restoring deleted data.
 
@@ -451,17 +439,16 @@ confirmation such as `OK`.
 
 ## Persistence and Save Ownership
 
-| Control or action                  | Ownership                                | Commit timing                        | Failure behavior                                           |
-| ---------------------------------- | ---------------------------------------- | ------------------------------------ | ---------------------------------------------------------- |
-| Language                           | Account when signed in; browser as guest | Immediate                            | Stay on usable locale/context; expose retryable status     |
-| Theme                              | Device/browser                           | Immediate                            | Retain last usable theme                                   |
-| Localized/reading-title visibility | Account when signed in; browser as guest | Immediate                            | Retain previous persisted value and report failure         |
-| Avatar and Profile fields          | Account                                  | Explicit Profile Save                | Keep input/staged preview; preserve existing public avatar |
-| Five Privacy controls              | Account                                  | Explicit Privacy Save                | Keep pending controls and expose error                     |
-| Refresh Discord information        | Account connection                       | Explicit OAuth action                | Preserve existing identity                                 |
-| Change login account               | Account connection                       | Confirmed OAuth action               | Preserve existing identity                                 |
-| Logout                             | Session                                  | Explicit direct action               | Do not report logout until session invalidation succeeds   |
-| Delete account                     | Account lifecycle                        | Reauth + exact phrase + final action | Truthful partial/retry state; never false success          |
+| Control or action           | Ownership                                | Commit timing                        | Failure behavior                                           |
+| --------------------------- | ---------------------------------------- | ------------------------------------ | ---------------------------------------------------------- |
+| Language                    | Account when signed in; browser as guest | Immediate                            | Stay on usable locale/context; expose retryable status     |
+| Theme                       | Device/browser                           | Immediate                            | Retain last usable theme                                   |
+| Avatar and Profile fields   | Account                                  | Explicit Profile Save                | Keep input/staged preview; preserve existing public avatar |
+| Five Privacy controls       | Account                                  | Explicit Privacy Save                | Keep pending controls and expose error                     |
+| Refresh Discord information | Account connection                       | Explicit OAuth action                | Preserve existing identity                                 |
+| Change login account        | Account connection                       | Confirmed OAuth action               | Preserve existing identity                                 |
+| Logout                      | Session                                  | Explicit direct action               | Do not report logout until session invalidation succeeds   |
+| Delete account              | Account lifecycle                        | Reauth + exact phrase + final action | Truthful partial/retry state; never false success          |
 
 ### Explicit-Save Category Rules
 
@@ -611,7 +598,7 @@ than copy current form geometry:
 | Current `/[locale]/profile/settings` route | Compatibility redirect preserving locale and, where possible, category intent                                                |
 | New `/[locale]/settings` family            | Public overview, authenticated categories, URL-restorable detail state, ordinary shell                                       |
 | Current Settings form/action               | Split save ownership into immediate Experience controls and explicit Profile/Privacy operations                              |
-| User preference model                      | System theme migration, account/browser language/title precedence, five positive privacy concepts                            |
+| User preference model                      | System theme migration, account/browser language precedence, five positive privacy concepts                                  |
 | User identity model                        | Preserve separate NosLog nickname and synced uppercase NOSTALGIA name                                                        |
 | Nickname persistence                       | Add normalized uniqueness key without changing canonical numeric profile URLs                                                |
 | Avatar storage and action                  | Staged crop/remove, safe Blob replacement, failure rollback, user-avatar precedence over Discord                             |
@@ -638,8 +625,8 @@ Future downstream design and implementation must verify at minimum:
    stored-preference precedence, and explicit shared-locale URL behavior;
 5. System/Dark/Light application, existing-choice migration, operating-system change,
    reload persistence, and both visual themes;
-6. localized-title toggle defaults, account/browser ownership, and original-title
-   preservation;
+6. removal of the former localized-title preference without losing translated/read-
+   title search aliases or the Music Detail disclosure;
 7. avatar format/size rejection, touch and keyboard crop, preview, remove, save
    success, upload failure, and Discord-refresh non-interference;
 8. nickname Unicode rules, normalization collisions, display preservation, validation
@@ -724,8 +711,8 @@ localized responsive interactions.
 
 ## Rejected and Superseded Alternatives
 
-- **Authenticated-only Settings — Rejected:** guests need usable language, theme, and
-  title preferences without authentication.
+- **Authenticated-only Settings — Rejected:** guests need usable language and theme
+  preferences without authentication.
 - **Separate guest settings route — Rejected:** one predictable destination is clearer
   and can reveal scope by authentication state.
 - **One long authenticated form — Rejected:** unrelated persistence and consequence
@@ -776,45 +763,46 @@ localized responsive interactions.
 
 ## Decision Log
 
-| ID     | Decision                                                                                                    | Status     |
-| ------ | ----------------------------------------------------------------------------------------------------------- | ---------- |
-| SET-01 | Use one public locale-prefixed `/[locale]/settings` destination for guests and authenticated users          | `Approved` |
-| SET-02 | Preserve selected category in direct URL and browser history; exact syntax remains implementation mapping   | `Approved` |
-| SET-03 | Use Experience, Profile, Privacy, Connections, and Account in that order                                    | `Approved` |
-| SET-04 | Guests see usable Experience plus a compact sign-in note, not disabled account controls                     | `Approved` |
-| SET-05 | Compact layouts use overview-to-category navigation; wide layouts use persistent list-detail                | `Approved` |
-| SET-06 | Language is immediate, locale-prefixed, account-owned when signed in, and browser-owned as guest            | `Approved` |
-| SET-07 | Direct locale URLs render that locale without overwriting a stored explicit preference                      | `Approved` |
-| SET-08 | Theme offers System, Dark, and Light and remains device-local                                               | `Approved` |
-| SET-09 | New users default to System; migrate existing explicit dark/light choices                                   | `Approved` |
-| SET-10 | Localized/reading-title visibility defaults On and applies immediately                                      | `Approved` |
-| SET-11 | Profile and Privacy each use an explicit category Save with dirty protection                                | `Approved` |
-| SET-12 | Save remains in category and offers a separate View my profile action                                       | `Approved` |
-| SET-13 | Avatar supports JPG/PNG/WebP up to 4 MB, staged 1:1 crop, circular preview, change, and remove              | `Approved` |
-| SET-14 | Failed avatar save preserves the existing public avatar                                                     | `Approved` |
-| SET-15 | NosLog nickname is separate from NOSTALGIA official player name                                             | `Approved` |
-| SET-16 | Nickname supports approved Unicode scripts and punctuation, display preservation, and normalized uniqueness | `Approved` |
-| SET-17 | Keep numeric profile URLs canonical across nickname changes                                                 | `Approved` |
-| SET-18 | NOSTALGIA official player name stays synced, uppercase, read-only, and privacy-controlled                   | `Approved` |
-| SET-19 | Country/region means main play and regional-ranking region, independent from language                       | `Approved` |
-| SET-20 | Country change uses a short consequence confirmation without proof or long cooldown                         | `Approved` |
-| SET-21 | Preferred arcade uses searchable single-select, Clear, discovery link, and unavailable-value retention      | `Approved` |
-| SET-22 | Settings venue edits are staged; arcade-detail contextual set action may be immediate                       | `Approved` |
-| SET-23 | Use five positive privacy controls; On always means public                                                  | `Approved` |
-| SET-24 | One Play activity control owns Last played and Recent Plays                                                 | `Approved` |
-| SET-25 | Discord identity is read-only and refreshed through OAuth without overwriting NosLog profile fields         | `Approved` |
-| SET-26 | Change login account is a separate confirmed sensitive OAuth action                                         | `Approved` |
-| SET-27 | Do not expose Disconnect while Discord is the sole login method                                             | `Approved` |
-| SET-28 | Logout preserves device-local and guest browser preferences                                                 | `Approved` |
-| SET-29 | Keep Privacy globally in the footer while allowing contextual deletion access                               | `Approved` |
-| SET-30 | Account deletion is immediate, permanent, and preceded by grouped consequences and reliable counts          | `Approved` |
-| SET-31 | Require recent Discord reauthentication and an exact localized phrase before deletion                       | `Approved` |
-| SET-32 | Deletion processing prevents duplicates/dismissal and reports partial failure truthfully                    | `Approved` |
-| SET-33 | Complete deletion clears session and sensitive cache, returns to localized Home, and does not restore later | `Approved` |
-| SET-34 | Discord and official NOSTALGIA accounts remain unaffected by NosLog deletion                                | `Approved` |
-| SET-35 | Exclude raw account-data export from NosLog 2.0 Settings                                                    | `Rejected` |
-| SET-36 | Keep profile-card Share separate as a social profile feature, never relabel it as export                    | `Approved` |
-| SET-37 | Future raw export, if justified, requires its own product, privacy, and operational brief                   | `Approved` |
+| ID     | Decision                                                                                                                              | Status       |
+| ------ | ------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| SET-01 | Use one public locale-prefixed `/[locale]/settings` destination for guests and authenticated users                                    | `Approved`   |
+| SET-02 | Preserve selected category in direct URL and browser history; exact syntax remains implementation mapping                             | `Approved`   |
+| SET-03 | Use Experience, Profile, Privacy, Connections, and Account in that order                                                              | `Approved`   |
+| SET-04 | Guests see usable Experience plus a compact sign-in note, not disabled account controls                                               | `Approved`   |
+| SET-05 | Compact layouts use overview-to-category navigation; wide layouts use persistent list-detail                                          | `Approved`   |
+| SET-06 | Language is immediate, locale-prefixed, account-owned when signed in, and browser-owned as guest                                      | `Approved`   |
+| SET-07 | Direct locale URLs render that locale without overwriting a stored explicit preference                                                | `Approved`   |
+| SET-08 | Theme offers System, Dark, and Light and remains device-local                                                                         | `Approved`   |
+| SET-09 | New users default to System; migrate existing explicit dark/light choices                                                             | `Approved`   |
+| SET-10 | Earlier direction added an immediate localized/reading-title visibility preference                                                    | `Superseded` |
+| SET-11 | Profile and Privacy each use an explicit category Save with dirty protection                                                          | `Approved`   |
+| SET-12 | Save remains in category and offers a separate View my profile action                                                                 | `Approved`   |
+| SET-13 | Avatar supports JPG/PNG/WebP up to 4 MB, staged 1:1 crop, circular preview, change, and remove                                        | `Approved`   |
+| SET-14 | Failed avatar save preserves the existing public avatar                                                                               | `Approved`   |
+| SET-15 | NosLog nickname is separate from NOSTALGIA official player name                                                                       | `Approved`   |
+| SET-16 | Nickname supports approved Unicode scripts and punctuation, display preservation, and normalized uniqueness                           | `Approved`   |
+| SET-17 | Keep numeric profile URLs canonical across nickname changes                                                                           | `Approved`   |
+| SET-18 | NOSTALGIA official player name stays synced, uppercase, read-only, and privacy-controlled                                             | `Approved`   |
+| SET-19 | Country/region means main play and regional-ranking region, independent from language                                                 | `Approved`   |
+| SET-20 | Country change uses a short consequence confirmation without proof or long cooldown                                                   | `Approved`   |
+| SET-21 | Preferred arcade uses searchable single-select, Clear, discovery link, and unavailable-value retention                                | `Approved`   |
+| SET-22 | Settings venue edits are staged; arcade-detail contextual set action may be immediate                                                 | `Approved`   |
+| SET-23 | Use five positive privacy controls; On always means public                                                                            | `Approved`   |
+| SET-24 | One Play activity control owns Last played and Recent Plays                                                                           | `Approved`   |
+| SET-25 | Discord identity is read-only and refreshed through OAuth without overwriting NosLog profile fields                                   | `Approved`   |
+| SET-26 | Change login account is a separate confirmed sensitive OAuth action                                                                   | `Approved`   |
+| SET-27 | Do not expose Disconnect while Discord is the sole login method                                                                       | `Approved`   |
+| SET-28 | Logout preserves device-local and guest browser preferences                                                                           | `Approved`   |
+| SET-29 | Keep Privacy globally in the footer while allowing contextual deletion access                                                         | `Approved`   |
+| SET-30 | Account deletion is immediate, permanent, and preceded by grouped consequences and reliable counts                                    | `Approved`   |
+| SET-31 | Require recent Discord reauthentication and an exact localized phrase before deletion                                                 | `Approved`   |
+| SET-32 | Deletion processing prevents duplicates/dismissal and reports partial failure truthfully                                              | `Approved`   |
+| SET-33 | Complete deletion clears session and sensitive cache, returns to localized Home, and does not restore later                           | `Approved`   |
+| SET-34 | Discord and official NOSTALGIA accounts remain unaffected by NosLog deletion                                                          | `Approved`   |
+| SET-35 | Exclude raw account-data export from NosLog 2.0 Settings                                                                              | `Rejected`   |
+| SET-36 | Keep profile-card Share separate as a social profile feature, never relabel it as export                                              | `Approved`   |
+| SET-37 | Future raw export, if justified, requires its own product, privacy, and operational brief                                             | `Approved`   |
+| SET-38 | Remove the localized/reading-title preference; original titles are persistent and translation disclosure belongs only to Music Detail | `Approved`   |
 
 ## Handoff Boundary
 

@@ -143,8 +143,8 @@ synced NOSTALGIA field.
 - At wide desktop widths, the profile remains a narrow centered column with large
   unused margins.
 - At `320px`, current page content produces document-level horizontal scrolling.
-- Japanese reading titles add another content line to play rows, demonstrating that
-  fixed single-language row heights are unsafe.
+- Long original Japanese titles demonstrate that fixed single-language row heights
+  are unsafe even without repeated localized-title captions.
 
 ## Approved Scope and Invariants
 
@@ -309,7 +309,6 @@ Provide five explicit visibility controls:
   mix Basic and Recital contribution order.
 - Each preview item includes:
     - jacket or approved fallback;
-    - optional localized title/reading according to the user's display setting;
     - original Music title;
     - difficulty and level;
     - score;
@@ -516,8 +515,8 @@ Provide five explicit visibility controls:
   controls.
 - Summary metrics may reflow into fewer columns or stacked groups. Never reduce labels
   to unexplained icons merely to preserve one row.
-- Play items remain vertically scannable. Jacket ratio stays `1:1`; translated/reading
-  and original titles may add height rather than overlap metadata.
+- Play items remain vertically scannable. Jacket ratio stays `1:1`; long original
+  titles must not overlap metadata.
 - No essential value depends on Hover. Mobile does not add a tap-only replacement for
   decorative Hover detail.
 - Charts use their actual container width and retain text summaries outside the plot.
@@ -586,14 +585,12 @@ Provide five explicit visibility controls:
 
 ### Titles and Identity
 
-- Follow the user's localized-title setting in Profile play items.
-- When enabled, place the localized title or Japanese reading as the smallest
-  supporting line above the larger original Music title, preserving the approved
-  title-to-artist hierarchy from discovery contracts.
+- Show original Music titles only in Profile play items. Approved localized/read
+  titles remain searchable and are available on the linked Music Detail page.
 - Valid Korean, Japanese, Latin, and mixed-script usernames must wrap or truncate only
   when the complete accessible name remains available.
-- Japanese reading text and long English translations may add a line. Do not rely on
-  fixed one-line item height.
+- Long original Japanese titles and artists must not be clipped by a fixed
+  single-language assumption.
 - Discord handles, NOSTALGIA names, and arcade names retain their source spelling.
 
 ### Dates and Counts
@@ -671,8 +668,8 @@ Validate at minimum:
    detail;
 10. current sync, stale sync, syncing, partial sync, and failed sync for the owner;
 11. a valid maximum-length username and long NOSTALGIA, Discord, and arcade names;
-12. Music titles with Korean translation, Japanese reading, long original Japanese,
-    long English translation, and missing jacket;
+12. long original Japanese Music titles, translated/read-title search entry that
+    resolves to original-title-only Profile items, and missing jacket;
 13. `30 days`, `90 days`, `1 year`, and `All` trend ranges with sparse, identical,
     and changing values;
 14. initial Loading, section update, initial error, section error, Retry, missing user,
@@ -712,7 +709,7 @@ Validate at minimum:
   causes document-level horizontal overflow, clipping, or overlap.
 - Wide layouts use additional reading/comparison space without becoming an unrelated
   dashboard or exposing excluded fields.
-- Korean, Japanese reading, original title, and long English content reflow without
+- Korean UI copy, original Japanese title, and long English UI content reflow without
   semantic truncation or fixed-height collision.
 - Loading, empty, partial, privacy, unavailable, Error, sync, and not-found states are
   distinct and recoverable where recovery exists.

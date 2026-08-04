@@ -15,7 +15,7 @@ shared-shell, settings, and profile contracts; more than twenty cited accessibil
 security, design-system, production-service, and rhythm-game references; and the
 user-approved decision record`
 - Date started: 2026-08-03
-- Last decision update: 2026-08-03
+- Last decision update: 2026-08-04
 - Canonical language: English
 - Korean companion:
   [17-authentication-onboarding-page-brief.ko.md](./17-authentication-onboarding-page-brief.ko.md)
@@ -320,9 +320,8 @@ Onboarding is account completion, not a product tour or Settings substitute.
   consistent across languages.
 - Explain that this choice represents the main play and regional-ranking region.
 - Do not use it to change the interface language.
-- The initial account language and localized-title preference inherit the approved
-  explicit guest preference when one exists; otherwise they follow the approved
-  browser-locale defaults.
+- The initial account language inherits the approved explicit guest preference when
+  one exists; otherwise it follows the approved browser-locale default.
 - A later change follows the Settings country/region consequence confirmation; initial
   onboarding selection does not need that change warning.
 
@@ -336,7 +335,7 @@ Onboarding is account completion, not a product tour or Settings substitute.
 - gameplay history, rating, grade, or record import;
 - feature tour, slideshow, checklist, or celebration page;
 - notification, newsletter, or marketing consent;
-- theme and localized-title controls already inherited from guest preferences;
+- theme control already owned by the guest device preference;
 - a progress indicator for this one-screen task.
 
 ## Incomplete-Profile Gate
@@ -634,35 +633,36 @@ build checks do not substitute for this stateful browser verification.
 
 ## Decision Log
 
-| ID      | Decision                                                                                         | Status     |
-| ------- | ------------------------------------------------------------------------------------------------ | ---------- |
-| AUTH-01 | Keep Discord as the only NosLog 2.0 authentication provider                                      | `Approved` |
-| AUTH-02 | Use one “Continue with Discord” action; do not split Login and registration                      | `Approved` |
-| AUTH-03 | Keep public browsing available without authentication                                            | `Approved` |
-| AUTH-04 | Show a concise human destination context for action-triggered Login                              | `Approved` |
-| AUTH-05 | Preserve one server-validated internal destination across Login, OAuth, and Onboarding           | `Approved` |
-| AUTH-06 | Fall back to localized Home when no safe destination exists                                      | `Approved` |
-| AUTH-07 | Request only Discord `identify`; do not imply password, email, guild, or message access          | `Approved` |
-| AUTH-08 | Place concise Discord data disclosure and an inline Privacy link after the primary action        | `Approved` |
-| AUTH-09 | Do not require a separate consent checkbox unless later legal review changes the requirement     | `Approved` |
-| AUTH-10 | Use one-screen onboarding with NosLog nickname and country/region only                           | `Approved` |
-| AUTH-11 | Show Discord avatar and display name as a compact read-only connected-account confirmation       | `Approved` |
-| AUTH-12 | Reuse the Settings nickname rules and do not force uppercase                                     | `Approved` |
-| AUTH-13 | Keep country/region independent from UI language                                                 | `Approved` |
-| AUTH-14 | Inherit approved explicit guest language/title preferences for a new account                     | `Approved` |
-| AUTH-15 | Do not add a progress indicator, tour, or extra profile/setup fields                             | `Approved` |
-| AUTH-16 | Gate incomplete authenticated profiles through Onboarding before ordinary or personalized use    | `Approved` |
-| AUTH-17 | Redirect direct Profile and other account-dependent access to Onboarding without a warning modal | `Approved` |
-| AUTH-18 | Show a concise destination-aware reason inside Onboarding                                        | `Approved` |
-| AUTH-19 | Return directly to the validated destination after successful completion                         | `Approved` |
-| AUTH-20 | Provide “Log out and browse” and return to localized public Home                                 | `Approved` |
-| AUTH-21 | Resume the same incomplete account on later Login; never create a duplicate                      | `Approved` |
-| AUTH-22 | Distinguish OAuth cancellation, expiry/security, provider, and service failures                  | `Approved` |
-| AUTH-23 | Preserve form input and expose associated, programmatic error and status feedback                | `Approved` |
-| AUTH-24 | Use the minimal identity-plus-trust-footer shell without profile, More, or bottom navigation     | `Approved` |
-| AUTH-25 | Use a fluid focused task column through 320 CSS px; do not fix the shell to 390px                | `Approved` |
-| AUTH-26 | Keep the same semantic contract and recovery in Korean, Japanese, and English                    | `Approved` |
-| AUTH-27 | Require a seeded incomplete account in future browser and E2E acceptance                         | `Approved` |
+| ID      | Decision                                                                                                           | Status       |
+| ------- | ------------------------------------------------------------------------------------------------------------------ | ------------ |
+| AUTH-01 | Keep Discord as the only NosLog 2.0 authentication provider                                                        | `Approved`   |
+| AUTH-02 | Use one “Continue with Discord” action; do not split Login and registration                                        | `Approved`   |
+| AUTH-03 | Keep public browsing available without authentication                                                              | `Approved`   |
+| AUTH-04 | Show a concise human destination context for action-triggered Login                                                | `Approved`   |
+| AUTH-05 | Preserve one server-validated internal destination across Login, OAuth, and Onboarding                             | `Approved`   |
+| AUTH-06 | Fall back to localized Home when no safe destination exists                                                        | `Approved`   |
+| AUTH-07 | Request only Discord `identify`; do not imply password, email, guild, or message access                            | `Approved`   |
+| AUTH-08 | Place concise Discord data disclosure and an inline Privacy link after the primary action                          | `Approved`   |
+| AUTH-09 | Do not require a separate consent checkbox unless later legal review changes the requirement                       | `Approved`   |
+| AUTH-10 | Use one-screen onboarding with NosLog nickname and country/region only                                             | `Approved`   |
+| AUTH-11 | Show Discord avatar and display name as a compact read-only connected-account confirmation                         | `Approved`   |
+| AUTH-12 | Reuse the Settings nickname rules and do not force uppercase                                                       | `Approved`   |
+| AUTH-13 | Keep country/region independent from UI language                                                                   | `Approved`   |
+| AUTH-14 | Earlier direction inherited explicit guest language and localized-title preferences                                | `Superseded` |
+| AUTH-15 | Do not add a progress indicator, tour, or extra profile/setup fields                                               | `Approved`   |
+| AUTH-16 | Gate incomplete authenticated profiles through Onboarding before ordinary or personalized use                      | `Approved`   |
+| AUTH-17 | Redirect direct Profile and other account-dependent access to Onboarding without a warning modal                   | `Approved`   |
+| AUTH-18 | Show a concise destination-aware reason inside Onboarding                                                          | `Approved`   |
+| AUTH-19 | Return directly to the validated destination after successful completion                                           | `Approved`   |
+| AUTH-20 | Provide “Log out and browse” and return to localized public Home                                                   | `Approved`   |
+| AUTH-21 | Resume the same incomplete account on later Login; never create a duplicate                                        | `Approved`   |
+| AUTH-22 | Distinguish OAuth cancellation, expiry/security, provider, and service failures                                    | `Approved`   |
+| AUTH-23 | Preserve form input and expose associated, programmatic error and status feedback                                  | `Approved`   |
+| AUTH-24 | Use the minimal identity-plus-trust-footer shell without profile, More, or bottom navigation                       | `Approved`   |
+| AUTH-25 | Use a fluid focused task column through 320 CSS px; do not fix the shell to 390px                                  | `Approved`   |
+| AUTH-26 | Keep the same semantic contract and recovery in Korean, Japanese, and English                                      | `Approved`   |
+| AUTH-27 | Require a seeded incomplete account in future browser and E2E acceptance                                           | `Approved`   |
+| AUTH-28 | Inherit only the approved explicit guest language preference into a new account; title disclosure is not a setting | `Approved`   |
 
 ## Handoff Boundary
 

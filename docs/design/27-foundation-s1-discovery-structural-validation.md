@@ -92,16 +92,15 @@ card height or truncation is acceptable for 2.0.
 The approved `16px` compact page margin and `12px` Grid gutter yield the following
 nominal specimen geometry before the card border is deducted:
 
-| Viewport | Result width | List structure                                                                        | Grid structure | Nominal Grid card |
-| -------- | ------------ | ------------------------------------------------------------------------------------- | -------------- | ----------------- |
-| `320px`  | `288px`      | one column; square jacket = `64–84px` row height + fluid identity + `92px` difficulty | two columns    | `138px`           |
-| `390px`  | `358px`      | one column; square jacket = `64–84px` row height + fluid identity + `92px` difficulty | two columns    | `173px`           |
+| Viewport | Result width | List structure                                                                | Grid structure | Nominal Grid card |
+| -------- | ------------ | ----------------------------------------------------------------------------- | -------------- | ----------------- |
+| `320px`  | `288px`      | one column; `64px` square jacket + fluid identity + `104px` difficulty region | two columns    | `138px`           |
+| `390px`  | `358px`      | one column; `64px` square jacket + fluid identity + `104px` difficulty region | two columns    | `173px`           |
 
-The List identity region varies with its row-matched square jacket. At `320px` it is
-approximately `132px` without a caption and `112px` with an `84px` caption row; at
-`390px` those values are approximately `202px` and `182px`. The approved one-line
-identity limits must absorb that pressure without compressing type or hiding the
-difficulty group. The Grid card gains approximately `5.5px` over the measured current
+The List identity region is approximately `120px` at `320px` and `190px` at `390px`
+before borders. The approved one-line identity limits and `12px` horizontal content
+inset must absorb that pressure without compressing type or hiding the difficulty
+group. The Grid card gains approximately `5.5px` over the measured current
 card.
 
 ### Proposed Grid capacity rule for review
@@ -149,9 +148,9 @@ fixtures instead of validating only short Latin titles.
 - committed result summary, removable applied conditions, and explicit reset;
 - Music list default plus jacket-led grid; one grouped-list representation for Chart
   scope;
-- keep the localized/read caption, original title, and artist to one visible line each
-  with ellipsis in both List and Grid, preserve their complete accessible values, and
-  keep the List jacket square with its edge equal to the content-driven row height;
+- show only the original title and artist in repeated List and Grid identity, keep
+  each to one visible line with ellipsis while preserving complete accessible values,
+  and keep the List jacket square at the approved `64 × 64px` row edge;
 - keep Music difficulty values in the fixed `Normal → Hard → Expert → Real` slot
   order, omit the repeated visible `N/H/E/R` labels from each result, preserve an
   unavailable Real slot as `–`, and expose the full names and values through the
@@ -161,16 +160,15 @@ fixtures instead of validating only short Latin titles.
 
 ### Typography
 
-| Semantic role      | Approved composite                            | S1 use                                                          |
-| ------------------ | --------------------------------------------- | --------------------------------------------------------------- |
-| `page-title`       | `24/32 · 700`, or governed wide `32/40 · 700` | Discovery page identity                                         |
-| `entity-title`     | `16/24 · 600`                                 | Original Music title in repeated results                        |
-| `entity-companion` | `14/20 · 400`                                 | Enabled translation or Japanese reading                         |
-| `body`             | `16/24 · 400`                                 | Complete visible system message when body treatment is required |
-| `body-secondary`   | `14/20 · 400`                                 | Artist and concise result context                               |
-| `control-label`    | approved role map composite                   | Scope, filters, sort, view, and loading actions                 |
-| `metadata`         | `12/16 · 400`                                 | Truly tertiary short facts only                                 |
-| `metric-value`     | `14/20 · 500`, tabular figures                | Result count, levels, and comparable compact values             |
+| Semantic role    | Approved composite                            | S1 use                                                          |
+| ---------------- | --------------------------------------------- | --------------------------------------------------------------- |
+| `page-title`     | `24/32 · 700`, or governed wide `32/40 · 700` | Discovery page identity                                         |
+| `entity-title`   | `16/24 · 600`                                 | Original Music title in repeated results                        |
+| `body`           | `16/24 · 400`                                 | Complete visible system message when body treatment is required |
+| `body-secondary` | `14/20 · 400`                                 | Artist and concise result context                               |
+| `control-label`  | approved role map composite                   | Scope, filters, sort, view, and loading actions                 |
+| `metadata`       | `12/16 · 400`                                 | Truly tertiary short facts only                                 |
+| `metric-value`   | `14/20 · 500`, tabular figures                | Result count, levels, and comparable compact values             |
 
 No shared user-facing text may be introduced below `12px`. Every role remains fixed
 across widths except the governed wide `page-title` substitution.
@@ -197,11 +195,12 @@ across widths except the governed wide `page-title` substitution.
 | `ID-03` | Long Japanese/Latin title   | `50th Memorial Songs -二人の時 ～under the cherry blossoms～-`        |
 | `ID-04` | Maximum-pressure artist     | `MAX MAXIMIZER VS DJ TOTTO (Arr.by BEMANI Sound Team "Akhuta Works")` |
 | `ID-05` | Long mixed-script artist    | `Toby Fox (Arranged by BEMANI Sound Team "Sacha × Sota F.")`          |
-| `ID-06` | Missing optional data       | no localized/read title, no artist, no Real chart                     |
+| `ID-06` | Missing optional data       | no artist and no Real chart                                           |
 
-Approved Korean and English translated-title fixtures must be taken from approved
-translation data when available. Until then, any synthetic stress string must be
-marked `Fixture only` and may not be copied into production content.
+Approved Korean/English translated-title and Japanese-reading fixtures are search-
+alias inputs: the matching S1 card must still display only the original title. Any
+synthetic alias used before approved data exists must be marked `Fixture only` and
+must not be copied into production content.
 
 ### Result fixtures
 
@@ -306,17 +305,19 @@ local exception.
 
 ## Draft Status Log
 
-| ID       | Entry                                                                                                                             | Status       |
-| -------- | --------------------------------------------------------------------------------------------------------------------------------- | ------------ |
-| `S1V-01` | Use this document as the bounded S1 structural validation protocol.                                                               | `Draft`      |
-| `S1V-02` | Use `S1-A` through `S1-G` and the fixture/measurement matrices above.                                                             | `Draft`      |
-| `S1V-03` | Treat current UI and current font delivery as migration evidence only.                                                            | `Observed`   |
-| `S1V-04` | Earlier draft deferred all four First Review Gate outcomes; the compact row outcome is now approved.                              | `Superseded` |
-| `S1V-05` | Omit repeated visible `N/H/E/R` labels while preserving fixed slot order and accessible full names.                               | `Approved`   |
-| `S1V-06` | Keep committed result summary and actions in one visual row at `320px` and `390px` default text size.                             | `Approved`   |
-| `S1V-07` | Reject a permanently split default compact result-context layout.                                                                 | `Rejected`   |
-| `S1V-08` | Record the measured current `320px/390px` List and Grid baseline as migration evidence.                                           | `Observed`   |
-| `S1V-09` | Use the `138px` compact floor, `168px` preferred Grid width, `536/720/904px` capacity thresholds, and five-column ceiling.        | `Proposed`   |
-| `S1V-10` | Limit caption, original title, and artist to one visible line each in both List and Grid while preserving full accessible values. | `Approved`   |
-| `S1V-11` | Earlier draft fixed the square List jacket at `56 × 56px` independently of row height.                                            | `Superseded` |
-| `S1V-12` | Keep the List jacket square and make its edge equal the content-driven `64–84px` List-row height.                                 | `Approved`   |
+| ID       | Entry                                                                                                                      | Status       |
+| -------- | -------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| `S1V-01` | Use this document as the bounded S1 structural validation protocol.                                                        | `Draft`      |
+| `S1V-02` | Use `S1-A` through `S1-G` and the fixture/measurement matrices above.                                                      | `Draft`      |
+| `S1V-03` | Treat current UI and current font delivery as migration evidence only.                                                     | `Observed`   |
+| `S1V-04` | Earlier draft deferred all four First Review Gate outcomes; the compact row outcome is now approved.                       | `Superseded` |
+| `S1V-05` | Omit repeated visible `N/H/E/R` labels while preserving fixed slot order and accessible full names.                        | `Approved`   |
+| `S1V-06` | Keep committed result summary and actions in one visual row at `320px` and `390px` default text size.                      | `Approved`   |
+| `S1V-07` | Reject a permanently split default compact result-context layout.                                                          | `Rejected`   |
+| `S1V-08` | Record the measured current `320px/390px` List and Grid baseline as migration evidence.                                    | `Observed`   |
+| `S1V-09` | Use the `138px` compact floor, `168px` preferred Grid width, `536/720/904px` capacity thresholds, and five-column ceiling. | `Proposed`   |
+| `S1V-10` | Earlier direction reserved visible caption, original-title, and artist lines in both List and Grid.                        | `Superseded` |
+| `S1V-11` | Earlier draft fixed the square List jacket at `56 × 56px` independently of row height.                                     | `Superseded` |
+| `S1V-12` | Earlier direction allowed a content-driven `64–84px` List row to accommodate a visible localized-title caption.            | `Superseded` |
+| `S1V-13` | Show original title and artist only, each on one visible line, while translated/read-title aliases remain searchable.      | `Approved`   |
+| `S1V-14` | Keep the compact List row and its square jacket at `64px`; do not reserve caption-driven height.                           | `Approved`   |

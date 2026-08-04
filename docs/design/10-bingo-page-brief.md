@@ -231,8 +231,7 @@ complete`, and `Full board complete`.
 Each card preserves the following information contract:
 
 - board cover or defined missing-cover fallback;
-- original board/music title and approved optional translated title or Japanese
-  reading under the global title preference;
+- original board and Music titles;
 - subordinate `sourceVersion` release metadata;
 - compact 5×5 miniature that communicates board identity and, when signed in,
   personal checked cells;
@@ -456,8 +455,8 @@ permanent catalog contract.
   replace the Japanese source.
 - Display one mission language matching the page locale. Do not show original and
   translation together on every row by default.
-- Mission instructions are always localized independently of the optional translated
-  music-title preference.
+- Mission instructions are always localized independently of the Music Detail-only
+  translated-title disclosure.
 - When approved Korean or English is missing, fall back to verified official Japanese,
   mark that element `lang="ja"`, and keep the surrounding interface in the selected
   locale.
@@ -477,10 +476,10 @@ permanent catalog contract.
 
 ### Board and Music Titles
 
-- Apply the shared title contract: original title remains primary; an approved Korean
-  or English translation or Japanese reading may appear according to the user's global
-  title-display preference.
-- This preference affects titles, not mission-instruction localization.
+- Show canonical original board and Music titles on Bingo surfaces. Approved Music
+  translations/readings remain searchable and are disclosed only on Music Detail.
+- Mission-instruction localization is independent from the Music Detail translation
+  disclosure.
 - Long classical titles, long artist/context names, mixed scripts, numerals, and music
   symbols must wrap without fixed-height clipping.
 
@@ -569,8 +568,7 @@ Validate at minimum:
   toggling completion.
 - Mission instructions use the page locale when reviewed; missing KO/EN text falls
   back to verified Japanese with correct language metadata.
-- Title translation preference affects title/reading display but never suppresses
-  localized mission instructions.
+- Music-title disclosure never suppresses localized mission instructions.
 - First 12 and explicit next-12 loading preserve filters, sort, loaded count, position,
   and useful Back behavior.
 - At `320 CSS px`, no card, board, mission, reward group, filter, dialog, or action
@@ -688,7 +686,7 @@ Validate at minimum:
 | BINGO-14 | Reset clears only the user's current 25-cell board record after explicit confirmation                        | `Approved` |
 | BINGO-15 | Reset creates no attempt, retry, completion-history, or lifetime-NOS record                                  | `Approved` |
 | BINGO-16 | Verified official Japanese is canonical mission content; KO/EN are independently reviewed translations       | `Approved` |
-| BINGO-17 | Mission instructions follow page locale independently from optional music-title translation preference       | `Approved` |
+| BINGO-17 | Mission instructions follow page locale independently from the Music Detail-only translation disclosure      | `Approved` |
 | BINGO-18 | Missing approved KO/EN mission text falls back to verified Japanese with `lang="ja"`                         | `Approved` |
 | BINGO-19 | Compact layouts reflow through 320 CSS px; wide layouts use added catalog and board/mission comparison space | `Approved` |
 | BINGO-20 | Final high-fidelity styling remains Foundation and Claude Design work within this product contract           | `Approved` |

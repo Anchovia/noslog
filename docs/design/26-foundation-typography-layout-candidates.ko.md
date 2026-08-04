@@ -284,8 +284,8 @@ v0.1에서 보정을 추가할 가장 강한 이유를 없애고, NosLog의 3개
 ### 대표 Specimen에 대한 영향
 
 - `S1` Music discovery는 Control과 고밀도 Supporting row에 Compact step을
-  사용하면서 실제 설명에는 읽기 쉬운 Step을 유지할 수 있습니다. 정확한 Title
-  및 Companion-title mapping은 열어 둡니다.
+  사용하면서 실제 설명에는 읽기 쉬운 Step을 유지할 수 있습니다. 원문 제목만
+  표시하며 `entity-companion`은 악곡 상세 Popover에만 사용합니다.
 - `S2` Music Detail은 읽기 쉬운 Body를 유지하면서 모든 Judgement, Difficulty
   및 History row를 같은 크기로 강제하지 않을 수 있습니다.
 - `S3` Global Rankings는 `10px` Microcopy로 돌아가지 않고 Composition과
@@ -441,7 +441,8 @@ Line-height 조합을 위한 공개 Menu가 아닙니다.
 - Mobile 전용 Line-height 압축은 승인하지 않습니다. `FTL-09`가 유일하게 승인된
   Responsive role substitution이며 추가 Substitution은 후속 제한된 결정이
   필요합니다.
-- Pretendard JP Specimen은 원문 일본어 Music title, Localized/read title, 긴
+- Pretendard JP Specimen은 원문 일본어 Music title, 악곡 상세 Popover 안의
+  Localized/read title, 긴
   Artist credit, 한국어·영어 Page identity, Tabular metric 및 혼합 문장 부호를
   `320px`, `390px`, 중간 Width, Wide layout, `200%` Text 확대 및 WCAG Text
   Spacing override에서 검증한 뒤 Foundation으로 승격해야 합니다.
@@ -487,20 +488,20 @@ treatment는 문서 Semantics와 독립적으로 유지된다는 점입니다.
 모든 공용 Role은 다음의 완전한 기본 Composite로 해석됩니다. 전체에 자연/기본
 Tracking과 Kerning 유지가 적용됩니다.
 
-| Semantic role      | 승인된 기본 Composite | 숫자 기능       | 관리 경계                                                                                      |
-| ------------------ | --------------------- | --------------- | ---------------------------------------------------------------------------------------------- |
-| `display`          | `40/48 · 700`         | Proportional    | 드물고 짧으며 별도 정당화된 표현 순간에만 사용, 자동 Page 배정 없음                            |
-| `page-title`       | `24/32 · 700`         | Proportional    | Compact/기본 Page 또는 Focused-task identity, 승인된 Wide substitution은 아래에서 별도 관리    |
-| `section-title`    | `20/28 · 600`         | Proportional    | 장식적 Card label이 아니라 실제 주요 Content 경계                                              |
-| `component-title`  | `16/24 · 600`         | Proportional    | 해당 Section에 종속되는 Dialog, Drawer, Panel 또는 Grouped-module identity                     |
-| `entity-title`     | `16/24 · 600`         | Proportional    | 일반 List/Card Entity identity, Focused-page Entity identity는 아래 우선순위 규칙을 따름       |
-| `entity-companion` | `14/20 · 400`         | Proportional    | 선택적 Localized/read identity, Canonical entity title보다 종속적이지만 함께 읽을 수 있어야 함 |
-| `body`             | `16/24 · 400`         | Proportional    | 일반 Reading, 설명 및 System message                                                           |
-| `body-secondary`   | `14/20 · 400`         | Proportional    | Supporting identity 또는 간결한 Context text, Task-critical 의미의 유일한 전달자가 될 수 없음  |
-| `control`          | `14/20 · 500`         | Proportional    | 보이는 Action 또는 Choice label, 입력 및 선택된 Field value는 아래 우선순위 규칙을 따름        |
-| `metadata`         | `12/16 · 400`         | Proportional    | 짧고 진정으로 3차적인 Fact 또는 Annotation만                                                   |
-| `metric-display`   | `32/40 · 700`         | Tabular figures | 명시적인 Label, Unit 및 Scope를 갖는 하나의 국소적 지배 승인 정량 결과                         |
-| `metric-value`     | `14/20 · 500`         | Tabular figures | Row, Group, Control 또는 Visualization의 비교 정량 값, Context 없는 무표식 숫자가 될 수 없음   |
+| Semantic role      | 승인된 기본 Composite | 숫자 기능       | 관리 경계                                                                                           |
+| ------------------ | --------------------- | --------------- | --------------------------------------------------------------------------------------------------- |
+| `display`          | `40/48 · 700`         | Proportional    | 드물고 짧으며 별도 정당화된 표현 순간에만 사용, 자동 Page 배정 없음                                 |
+| `page-title`       | `24/32 · 700`         | Proportional    | Compact/기본 Page 또는 Focused-task identity, 승인된 Wide substitution은 아래에서 별도 관리         |
+| `section-title`    | `20/28 · 600`         | Proportional    | 장식적 Card label이 아니라 실제 주요 Content 경계                                                   |
+| `component-title`  | `16/24 · 600`         | Proportional    | 해당 Section에 종속되는 Dialog, Drawer, Panel 또는 Grouped-module identity                          |
+| `entity-title`     | `16/24 · 600`         | Proportional    | 일반 List/Card Entity identity, Focused-page Entity identity는 아래 우선순위 규칙을 따름            |
+| `entity-companion` | `14/20 · 400`         | Proportional    | 악곡 상세 Popover의 선택적 Localized/read identity, 계속 보이는 Canonical title보다 종속적이어야 함 |
+| `body`             | `16/24 · 400`         | Proportional    | 일반 Reading, 설명 및 System message                                                                |
+| `body-secondary`   | `14/20 · 400`         | Proportional    | Supporting identity 또는 간결한 Context text, Task-critical 의미의 유일한 전달자가 될 수 없음       |
+| `control`          | `14/20 · 500`         | Proportional    | 보이는 Action 또는 Choice label, 입력 및 선택된 Field value는 아래 우선순위 규칙을 따름             |
+| `metadata`         | `12/16 · 400`         | Proportional    | 짧고 진정으로 3차적인 Fact 또는 Annotation만                                                        |
+| `metric-display`   | `32/40 · 700`         | Tabular figures | 명시적인 Label, Unit 및 Scope를 갖는 하나의 국소적 지배 승인 정량 결과                              |
+| `metric-value`     | `14/20 · 500`         | Tabular figures | Row, Group, Control 또는 Visualization의 비교 정량 값, Context 없는 무표식 숫자가 될 수 없음        |
 
 12개 Role은 의도적으로 다음 9개 물리 Composite를 공유합니다.
 
@@ -1038,7 +1039,7 @@ Code 관례에 맞는 이름을 사용할 수 있지만 세 값과 Role 경계�
 | `page-title`을 `24px`과 `32px` 사이에서 Fluid 보간                | `Rejected` | 승인되지 않은 중간값, 지속적인 다국어 줄바꿈 변화 및 Product-task 이득 없는 더 넓은 QA 범위를 만듦                                                                 |
 | Wide 화면에서 Body, Metadata, Control 또는 반복 Entity title 확대 | `Rejected` | Desktop 공간을 비교와 분석 대신 전역 확대에 사용하고 고밀도 Product hierarchy를 불안정하게 만듦                                                                    |
 | 모든 `entity-title`에 `20/28 · 600` 사용                          | `Rejected` | 반복되는 Discovery, Ranking 및 Archive surface를 과도하게 확대하며 Focused entity에는 이미 관리된 `page-title` 우선순위가 있음                                     |
-| `entity-companion`을 `12/16 · 400`으로 축소                       | `Rejected` | Localized/read identity는 3차 Metadata가 아니라 유용한 Content이며 한국어·일본어·영어·혼합 Script 결과에서 읽을 수 있어야 함                                       |
+| `entity-companion`을 `12/16 · 400`으로 축소                       | `Rejected` | Localized/read identity는 3차 Metadata가 아니라 유용한 Popover Content이며 한국어·일본어·영어·혼합 Script 사례에서 읽을 수 있어야 함                               |
 | Action label과 입력 Field value에 하나의 Composite 사용           | `Rejected` | 두 작업은 다르며 Compact Medium label은 Interaction을 알리고 입력·선택 Content는 일반 가독성 Body treatment가 적합함                                               |
 | 주요 Metric에 `40/48 · 700` 사용                                  | `Rejected` | 드문 표현 Display 순간과 `metric-display` `32/40 · 700`이 제공하는 제한된 정량 Hierarchy 사이의 경계를 무너뜨림                                                    |
 | Metric value를 Heading role로 Styling                             | `Rejected` | Metric에는 문서 Heading semantic이 아니라 Tabular alignment, 명시적 Label과 Unit 및 안정적 비교 동작이 필요함                                                      |

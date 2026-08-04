@@ -285,8 +285,8 @@ three-language and mixed-script requirement increases the cost and risk of doing
 ### Representative specimen implications
 
 - `S1` Music discovery can use the compact step for controls and dense supporting
-  rows while retaining a readable step for actual descriptions. Exact title and
-  companion-title mapping remains open.
+  rows while retaining a readable step for actual descriptions. It shows original
+  titles only; `entity-companion` is reserved for the Music Detail popover.
 - `S2` Music Detail can retain a readable body without forcing every judgement,
   difficulty, and history row to the same size.
 - `S3` Global Rankings can remain dense through composition and a compact product step
@@ -447,7 +447,7 @@ font-size and line-height combinations.
   responsive role substitution; any additional substitution requires a later bounded
   decision.
 - Pretendard JP specimens must test original Japanese Music titles, localized/read
-  titles, long artist credits, Korean and English page identity, tabular metrics, and
+  titles inside the Music Detail popover, long artist credits, Korean and English page identity, tabular metrics, and
   mixed punctuation at `320px`, `390px`, intermediate widths, wide layouts, `200%`
   text enlargement, and WCAG Text Spacing overrides before Foundation promotion.
 
@@ -500,7 +500,7 @@ default tracking and retained kerning apply throughout.
 | `section-title`    | `20/28 · 600`              | Proportional    | A real major content boundary, not a decorative card label                                                          |
 | `component-title`  | `16/24 · 600`              | Proportional    | Dialog, drawer, panel, or grouped-module identity subordinate to its section                                        |
 | `entity-title`     | `16/24 · 600`              | Proportional    | Ordinary list/card entity identity; focused-page entity identity follows the precedence rule below                  |
-| `entity-companion` | `14/20 · 400`              | Proportional    | Optional localized/read identity; subordinate to but legible beside the canonical entity title                      |
+| `entity-companion` | `14/20 · 400`              | Proportional    | Optional localized/read identity inside the Music Detail popover; subordinate to the persistent canonical title     |
 | `body`             | `16/24 · 400`              | Proportional    | Ordinary reading, explanation, and system message                                                                   |
 | `body-secondary`   | `14/20 · 400`              | Proportional    | Supporting identity or concise contextual text; not the only carrier of task-critical meaning                       |
 | `control`          | `14/20 · 500`              | Proportional    | Visible action or choice label; entered and selected field values follow the precedence rule below                  |
@@ -1064,7 +1064,7 @@ preserve the three values and their role boundaries.
 | Fluidly interpolate `page-title` between `24px` and `32px`                   | `Rejected` | It creates unapproved intermediate values, continuous multilingual wrapping variation, and a broader QA surface without a product-task benefit                                           |
 | Enlarge body, metadata, controls, or repeated entity titles on wide screens  | `Rejected` | It spends desktop space on global magnification instead of comparison and analysis, and makes dense product hierarchy unstable                                                           |
 | Use `20/28 · 600` for every `entity-title`                                   | `Rejected` | It would over-expand repeated discovery, ranking, and archive surfaces; focused entities already receive the governed `page-title` precedence                                            |
-| Reduce `entity-companion` to `12/16 · 400`                                   | `Rejected` | Localized/read identity remains useful content rather than tertiary metadata and must stay legible in Korean, Japanese, English, and mixed-script results                                |
+| Reduce `entity-companion` to `12/16 · 400`                                   | `Rejected` | Localized/read identity remains useful popover content rather than tertiary metadata and must stay legible in Korean, Japanese, English, and mixed-script cases                          |
 | Use one composite for both action labels and entered field values            | `Rejected` | The jobs differ: compact medium-weight labels signal interaction, while entered or selected content benefits from ordinary readable body treatment                                       |
 | Use `40/48 · 700` for dominant metrics                                       | `Rejected` | It would collapse the boundary between a rare expressive display moment and the bounded quantitative hierarchy provided by `metric-display` at `32/40 · 700`                             |
 | Style metric values with heading roles                                       | `Rejected` | Metrics need tabular alignment, explicit labels and units, and stable comparison behavior rather than document-heading semantics                                                         |

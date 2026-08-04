@@ -348,8 +348,9 @@ domain. A popular reference cannot replace them.
 
 1. Mobile is the primary arcade-side context; desktop remains a required analytical,
    viewer, and future-editor environment.
-2. The product supports Korean, Japanese, and English, with original Japanese music
-   titles and approved translated/reading-title behavior.
+2. The product supports Korean, Japanese, and English. Original Japanese Music titles
+   remain visible; approved translations/readings stay searchable and are disclosed
+   visually only on Music Detail.
 3. Basic and Recital are distinct modes. Normal, Hard, Expert, and optional Real are
    chart difficulties, not generic tags.
 4. Left-hand and right-hand chart color meaning, jacket identity, score/rank meaning,

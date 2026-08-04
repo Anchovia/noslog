@@ -248,8 +248,7 @@ Do not collapse Grade eligibility, NOS fee, reward, and certification into one g
 Each stage preserves:
 
 - `1st`, `2nd`, or `Fin` sequence position;
-- original Music title and optional approved localized title/reading under the shared
-  preference;
+- original Music title;
 - artist where useful;
 - every allowed difficulty and level;
 - whether the threshold applies to that stage alone or cumulative performance;
@@ -565,9 +564,8 @@ analysis or proof state fails.
 - Korean and English Exam descriptions/reward explanations require reviewed localized
   fields or an equivalent localized-content model; the current single Exam text fields
   are not sufficient authority for all three locales.
-- Apply the shared Music-title contract: original title remains primary; an approved
-  Korean or English translation or Japanese reading may appear according to the global
-  title-display preference.
+- Show the original Music title only in Exam stage references. Approved translations
+  and readings remain searchable and are disclosed on the linked Music Detail page.
 - Missing reviewed Exam translation falls back deterministically to canonical
   Japanese with correct `lang="ja"`; do not present a Korean seed label as official
   Japanese.

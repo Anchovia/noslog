@@ -248,7 +248,7 @@ personal completion context.
     - a small square `1:1` jacket;
     - an actual achieved `S`, `Full Combo`, or `Pianist` status icon when available;
     - the user's best score below the jacket, or a concise localized unplayed value.
-- Do not repeat title, translated title, difficulty, Grd, or rating contribution in
+- Do not repeat title, difficulty, Grd, or rating contribution in
   the visual compact card.
 - The accessible link name still includes Music title, difficulty, official level,
   personal result when present, and destination purpose.
@@ -265,11 +265,10 @@ personal completion context.
 - Keep an achieved-state icon on the jacket and support it with a border/ring when
   useful, but never communicate state by color alone.
 - Under the jacket show, in order:
-    1. optional localized title or Japanese reading when the user setting enables it;
-    2. original Music title;
-    3. selected chart difficulty and official level;
-    4. that chart's selected-mode official Grd contribution when available; and
-    5. NosLog rating contribution only for the eligible `Basic · Pianist` context.
+    1. original Music title;
+    2. selected chart difficulty and official level;
+    3. that chart's selected-mode official Grd contribution when available; and
+    4. NosLog rating contribution only for the eligible `Basic · Pianist` context.
 - Do not show internal top-70 inclusion state, cutline debugging, projected score
   gains, full judgement diagnostics, or note-type success rates in the card.
 
@@ -394,8 +393,8 @@ but it must remain concise and preserve these distinct meanings.
 
 - Support Korean, Japanese, and English labels without relying on equal string
   lengths.
-- Preserve original Music titles. In detailed view, place the enabled localized title
-  or Japanese reading above the original title using a lower typographic level.
+- Preserve original Music titles in both compact and detailed views. Approved
+  translations/readings remain searchable and are disclosed only on Music Detail.
 - Compact view may omit visible titles for density, but the accessible name must not.
 - Do not force long titles or readings into a fixed-height jacket or distort the
   square image.
@@ -443,8 +442,8 @@ Validation must include:
 - signed out, signed in with mixed achievements, and signed in with no plays;
 - Normal, Hard, Expert, and Real, including Real 1–3;
 - no filters, one filter, and combined difficulty/level filters;
-- a long original Japanese title, a long Korean translation, a long English
-  translation, Japanese reading, and no localized title;
+- a long original Japanese title and Music entries found through Korean/English
+  translated-title or Japanese-reading aliases while still showing the original;
 - compact three-column, compact four-column, and detailed two-column mobile states;
 - no published list, no filtered matches, loading, replacement loading, request
   failure, and successful retry;

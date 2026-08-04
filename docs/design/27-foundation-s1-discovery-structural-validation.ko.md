@@ -90,15 +90,14 @@ Semantic typography 및 Layout 계약을 관리합니다. 이 검증에서 충�
 승인된 `16px` Compact Page margin과 `12px` Grid gutter는 Card Border를 빼기 전
 다음과 같은 명목 Specimen Geometry를 만듭니다.
 
-| Viewport | 결과 폭 | 목록 구조                                                              | Grid 구조 | 명목 Grid Card |
-| -------- | ------- | ---------------------------------------------------------------------- | --------- | -------------- |
-| `320px`  | `288px` | 한 열; 정사각형 재킷 = `64–84px` 행 높이 + 유동 정체성 + `92px` 난이도 | 두 열     | `138px`        |
-| `390px`  | `358px` | 한 열; 정사각형 재킷 = `64–84px` 행 높이 + 유동 정체성 + `92px` 난이도 | 두 열     | `173px`        |
+| Viewport | 결과 폭 | 목록 구조                                                       | Grid 구조 | 명목 Grid Card |
+| -------- | ------- | --------------------------------------------------------------- | --------- | -------------- |
+| `320px`  | `288px` | 한 열; `64px` 정사각형 재킷 + 유동 정체성 + `104px` 난이도 영역 | 두 열     | `138px`        |
+| `390px`  | `358px` | 한 열; `64px` 정사각형 재킷 + 유동 정체성 + `104px` 난이도 영역 | 두 열     | `173px`        |
 
-목록 정체성 영역은 행 높이에 맞춘 정사각형 재킷에 따라 달라집니다. `320px`에서
-Caption이 없으면 약 `132px`, `84px` Caption 행이면 약 `112px`이며, `390px`에서는
-각각 약 `202px`와 `182px`입니다. 승인된 한 줄 정체성 제한은 Type을 축소하거나
-난이도 Group을 숨기지 않고 이 압력을 흡수해야 합니다. Grid Card는 측정된 현재
+목록 정체성 영역은 Border를 빼기 전 `320px`에서 약 `120px`, `390px`에서 약
+`190px`입니다. 승인된 한 줄 정체성 제한과 `12px` 가로 Content inset은 Type을
+축소하거나 난이도 Group을 숨기지 않고 이 압력을 흡수해야 합니다. Grid Card는 측정된 현재
 Card보다 약 `5.5px` 넓습니다.
 
 ### 검토할 Grid 수용량 규칙 제안
@@ -145,9 +144,9 @@ Card보다 약 `5.5px` 넓습니다.
 - 결과를 계속 보이는 Desktop 노출 Filter 및 Sort Control;
 - Commit된 결과 요약, 제거 가능한 적용 조건 및 명시적인 초기화;
 - 악곡 목록 기본과 재킷 중심 Grid, 채보 범위의 하나의 Grouping 목록 표현;
-- 목록과 Grid 모두 번역·읽기 Caption, 원문 제목 및 아티스트를 각각 말줄임과 함께
-  보이는 한 줄로 제한하고 전체 접근 가능 값을 보존하며, 목록 재킷은 Card 높이에
-  맞춘 변 길이의 정사각형으로 유지;
+- 반복 목록과 Grid 정체성에는 원문 제목과 아티스트만 표시하고 각각 말줄임과 함께
+  보이는 한 줄로 제한하면서 전체 접근 가능 값을 보존하며, 목록 재킷과 행은 승인된
+  `64 × 64px` 변을 유지;
 - 악곡 난이도 값은 고정된 `Normal → Hard → Expert → Real` 칸 순서를 유지하고,
   각 결과에서 반복되는 보이는 `N/H/E/R` Label은 생략하며, Real이 없으면 해당
   칸을 `–`로 유지하고 전체 난이도명과 값은 접근 가능한 이름으로 제공;
@@ -156,16 +155,15 @@ Card보다 약 `5.5px` 넓습니다.
 
 ### Typography
 
-| Semantic role      | 승인된 Composite                              | S1 사용                                         |
-| ------------------ | --------------------------------------------- | ----------------------------------------------- |
-| `page-title`       | `24/32 · 700`, 또는 관리된 Wide `32/40 · 700` | 탐색 Page identity                              |
-| `entity-title`     | `16/24 · 600`                                 | 반복 결과의 악곡 원문 제목                      |
-| `entity-companion` | `14/20 · 400`                                 | 활성화된 번역 또는 일본어 읽기                  |
-| `body`             | `16/24 · 400`                                 | Body 처리가 필요한 완전한 보이는 System message |
-| `body-secondary`   | `14/20 · 400`                                 | 아티스트 및 간결한 결과 Context                 |
-| `control-label`    | 승인된 Role map Composite                     | 범위, Filter, Sort, 보기 및 불러오기 Action     |
-| `metadata`         | `12/16 · 400`                                 | 실제로 3차적인 짧은 Fact만 사용                 |
-| `metric-value`     | `14/20 · 500`, Tabular figures                | 결과 수, 레벨 및 비교 가능한 간결한 값          |
+| Semantic role    | 승인된 Composite                              | S1 사용                                         |
+| ---------------- | --------------------------------------------- | ----------------------------------------------- |
+| `page-title`     | `24/32 · 700`, 또는 관리된 Wide `32/40 · 700` | 탐색 Page identity                              |
+| `entity-title`   | `16/24 · 600`                                 | 반복 결과의 악곡 원문 제목                      |
+| `body`           | `16/24 · 400`                                 | Body 처리가 필요한 완전한 보이는 System message |
+| `body-secondary` | `14/20 · 400`                                 | 아티스트 및 간결한 결과 Context                 |
+| `control-label`  | 승인된 Role map Composite                     | 범위, Filter, Sort, 보기 및 불러오기 Action     |
+| `metadata`       | `12/16 · 400`                                 | 실제로 3차적인 짧은 Fact만 사용                 |
+| `metric-value`   | `14/20 · 500`, Tabular figures                | 결과 수, 레벨 및 비교 가능한 간결한 값          |
 
 새 공유 사용자 Text를 `12px` 미만으로 도입할 수 없습니다. 관리된 Wide
 `page-title` 전환을 제외하면 모든 Role은 폭에 따라 고정됩니다.
@@ -192,11 +190,11 @@ Card보다 약 `5.5px` 넓습니다.
 | `ID-03` | 긴 일본어·Latin 제목    | `50th Memorial Songs -二人の時 ～under the cherry blossoms～-`        |
 | `ID-04` | 최대 압력 아티스트      | `MAX MAXIMIZER VS DJ TOTTO (Arr.by BEMANI Sound Team "Akhuta Works")` |
 | `ID-05` | 긴 혼합 Script 아티스트 | `Toby Fox (Arranged by BEMANI Sound Team "Sacha × Sota F.")`          |
-| `ID-06` | 선택 Data 없음          | 번역·읽기 없음, 아티스트 없음, Real 채보 없음                         |
+| `ID-06` | 선택 Data 없음          | 아티스트 없음, Real 채보 없음                                         |
 
-승인된 한국어·영어 번역 제목 Fixture는 사용할 수 있을 때 승인된 번역 Data에서
-가져와야 합니다. 그 전까지 합성 Stress string은 `Fixture only`로 표시하고
-Production Content에 복사하면 안 됩니다.
+승인된 한국어·영어 번역 제목과 일본어 읽기 Fixture는 검색 별칭 입력으로 사용하며,
+일치한 S1 Card에는 원문 제목만 표시해야 합니다. 승인 Data 전 합성 별칭은
+`Fixture only`로 표시하고 Production Content에 복사하면 안 됩니다.
 
 ### 결과 Fixture
 
@@ -297,17 +295,19 @@ Fixture에서 충돌이 발생하면 다른 Layout을 조용히 승인하지 않
 
 ## 초안 상태 기록
 
-| ID       | 항목                                                                                                           | 상태         |
-| -------- | -------------------------------------------------------------------------------------------------------------- | ------------ |
-| `S1V-01` | 이 문서를 제한된 S1 구조 검증 Protocol로 사용합니다.                                                           | `Draft`      |
-| `S1V-02` | 위의 `S1-A`–`S1-G` 및 Fixture·측정 Matrix를 사용합니다.                                                        | `Draft`      |
-| `S1V-03` | 현재 UI와 현재 Font delivery를 이관 근거로만 취급합니다.                                                       | `Observed`   |
-| `S1V-04` | 이전 초안은 첫 검토 Gate의 네 결과를 모두 보류했지만 Compact 행 결과는 이제 승인되었습니다.                    | `Superseded` |
-| `S1V-05` | 고정된 칸 순서와 접근 가능한 전체 이름을 보존하면서 반복되는 보이는 `N/H/E/R` Label을 생략합니다.              | `Approved`   |
-| `S1V-06` | `320px` 및 `390px` 기본 Text size에서 Commit 결과 요약과 Action을 같은 시각 행에 둡니다.                       | `Approved`   |
-| `S1V-07` | 항상 분리된 기본 Compact 결과 Context Layout을 거절합니다.                                                     | `Rejected`   |
-| `S1V-08` | 측정된 현재 `320px/390px` 목록 및 Grid 기준선을 이관 근거로 기록합니다.                                        | `Observed`   |
-| `S1V-09` | `138px` Compact 하한, `168px` 선호 Grid 너비, `536/720/904px` 수용량 임계점 및 최대 다섯 열을 사용합니다.      | `Proposed`   |
-| `S1V-10` | 목록과 Grid 모두 Caption, 원문 제목 및 아티스트를 각각 보이는 한 줄로 제한하고 전체 접근 가능 값을 보존합니다. | `Approved`   |
-| `S1V-11` | 이전 초안은 정사각형 목록 재킷을 행 높이와 독립된 `56 × 56px`로 고정했습니다.                                  | `Superseded` |
-| `S1V-12` | 목록 재킷을 정사각형으로 유지하고 그 변을 콘텐츠 기반 `64–84px` 목록 행 높이와 같게 만듭니다.                  | `Approved`   |
+| ID       | 항목                                                                                                      | 상태         |
+| -------- | --------------------------------------------------------------------------------------------------------- | ------------ |
+| `S1V-01` | 이 문서를 제한된 S1 구조 검증 Protocol로 사용합니다.                                                      | `Draft`      |
+| `S1V-02` | 위의 `S1-A`–`S1-G` 및 Fixture·측정 Matrix를 사용합니다.                                                   | `Draft`      |
+| `S1V-03` | 현재 UI와 현재 Font delivery를 이관 근거로만 취급합니다.                                                  | `Observed`   |
+| `S1V-04` | 이전 초안은 첫 검토 Gate의 네 결과를 모두 보류했지만 Compact 행 결과는 이제 승인되었습니다.               | `Superseded` |
+| `S1V-05` | 고정된 칸 순서와 접근 가능한 전체 이름을 보존하면서 반복되는 보이는 `N/H/E/R` Label을 생략합니다.         | `Approved`   |
+| `S1V-06` | `320px` 및 `390px` 기본 Text size에서 Commit 결과 요약과 Action을 같은 시각 행에 둡니다.                  | `Approved`   |
+| `S1V-07` | 항상 분리된 기본 Compact 결과 Context Layout을 거절합니다.                                                | `Rejected`   |
+| `S1V-08` | 측정된 현재 `320px/390px` 목록 및 Grid 기준선을 이관 근거로 기록합니다.                                   | `Observed`   |
+| `S1V-09` | `138px` Compact 하한, `168px` 선호 Grid 너비, `536/720/904px` 수용량 임계점 및 최대 다섯 열을 사용합니다. | `Proposed`   |
+| `S1V-10` | 이전 방향은 목록과 Grid 모두 보이는 Caption·원문 제목·아티스트 행을 확보했습니다.                         | `Superseded` |
+| `S1V-11` | 이전 초안은 정사각형 목록 재킷을 행 높이와 독립된 `56 × 56px`로 고정했습니다.                             | `Superseded` |
+| `S1V-12` | 이전 방향은 보이는 번역 Caption을 위해 콘텐츠 기반 `64–84px` 목록 행을 허용했습니다.                      | `Superseded` |
+| `S1V-13` | 원문 제목과 아티스트만 각각 보이는 한 줄로 표시하고 번역·읽기 제목 별칭은 검색 가능하게 유지합니다.       | `Approved`   |
+| `S1V-14` | Compact 목록 행과 정사각형 재킷을 `64px`로 유지하고 Caption 높이를 예약하지 않습니다.                     | `Approved`   |

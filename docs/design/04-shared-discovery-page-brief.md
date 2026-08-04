@@ -97,8 +97,8 @@ system.
 - The current public discovery result is Music-centered. A dedicated Chart scope and
   its published-difficulty grouping do not yet exist.
 - Public result data already includes the original Music title, optional approved
-  localized title or Japanese reading, artist, category, background, and levels for
-  Normal, Hard, Expert, and Real.
+  localized title or Japanese reading for search indexing, artist, category,
+  background, and levels for Normal, Hard, Expert, and Real.
 - Signed-out requests ignore personal record filters and personal sorts at the data
   layer.
 - The inspected local dataset contains `583` Music entries and `2,180` MusicChart
@@ -190,8 +190,8 @@ at a narrow `390px` viewport and a wide desktop viewport.
 ### Approved Browse Ordering and Sort Semantics
 
 - With an empty query, Music scope orders the complete eligible catalog by
-  `title_kana` ascending. This Japanese-reading order remains stable regardless of
-  whether the optional translated/read-title caption is visible.
+  `title_kana` ascending. This Japanese-reading order remains stable even though
+  repeated result cards display only the original title.
 - With an empty query, Chart scope orders Music groups by their latest published-chart
   timestamp descending. Within a group, selectable targets remain in the stable
   `Normal → Hard → Expert → Real` order.
@@ -467,8 +467,8 @@ state, results, and recovery controls must keep a clear semantic relationship.
 - Stable Music identifier
 - Jacket image
 - Original title
-- Selected approved Korean or English title, or Japanese reading, when enabled and
-  available
+- Approved Korean or English title, or Japanese reading, as a non-visible search alias
+  when available
 - Artist when available
 - Category context
 - All available official difficulty and level information
@@ -478,7 +478,8 @@ state, results, and recovery controls must keep a clear semantic relationship.
 #### Chart Scope
 
 - Stable Music identifier and identity
-- Original and selected localized/read-title treatment
+- Original Music title; approved localized/read titles remain search aliases rather
+  than repeated visible card captions
 - Artist when useful for disambiguation
 - Only published matching difficulty targets
 - Difficulty and level for every selectable target
@@ -511,14 +512,9 @@ state, results, and recovery controls must keep a clear semantic relationship.
 
 - Each Music result is one whole-card link to Music detail. Official difficulty values
   are compact information, not separate navigation buttons.
-- Keep the title group in this order:
-    1. optional approved localized title or Japanese reading, as the smallest and
-       lowest-emphasis caption;
-    2. original title, as the largest and strongest identity;
-    3. artist, as secondary identity below the title group.
-- Keep the localized/read caption visually close to the original title so they read as
-  one title group. Use a clearer separation before the artist. When the optional
-  caption is disabled or unavailable, collapse its space completely.
+- Keep the original title as the largest and strongest card identity, followed by the
+  artist as secondary identity. Repeated discovery cards do not show translated or
+  Japanese-reading captions.
 - Keep category visible as a small text badge over the jacket. Do not depend on badge
   color alone, and do not place category inline with the artist.
 - Preserve complete original title and artist values in the accessible name and Music
@@ -526,18 +522,14 @@ state, results, and recovery controls must keep a clear semantic relationship.
 
 #### List view
 
-- Keep the jacket exactly square and match its edge to the content-driven List-card
-  height. A near-`64px` row therefore uses an approximately `64 × 64px` jacket, while
-  a localized/read-caption row near `80–84px` uses the same approximately `80–84px`
-  square edge. Keep the compact trailing official-difficulty group at approximately
+- Keep the jacket exactly square and match its edge to the compact List-card height.
+  The near-`64px` row therefore uses an approximately `64 × 64px` jacket. Keep the
+  compact trailing official-difficulty group at approximately
   the current `92px` total width, using `20px` badges as the structural baseline.
   Difficulty remains in this trailing group rather than moving to a dedicated row.
-- Use content-driven card height instead of one enlarged fixed row. A short result
-  without a localized/read caption may remain near `64px`; a localized result may grow
-  only enough to accommodate its additional caption, approximately `80–84px` under
-  the approved type roles.
-- Limit the localized/read caption, original title, and artist to one line each with
-  ellipsis. Missing artist or localization must not leave a blank structural row.
+- Keep the compact row near `64px` rather than reserving a larger caption row.
+- Limit the original title and artist to one line each with ellipsis. A missing artist
+  must not leave a blank structural row.
 - At the audited `390px` baseline, the result card is approximately `343px` wide and
   the compact trailing difficulty group remains preferable to a vertical difficulty
   row.
@@ -552,12 +544,11 @@ state, results, and recovery controls must keep a clear semantic relationship.
 - Keep every jacket exactly square with `aspect-ratio: 1 / 1`. The complete card does
   not need to be square.
 - Let the information region below the jacket grow independently, but limit the
-  localized/read caption, original title, and artist to one line each with ellipsis.
+  original title and artist to one line each with ellipsis.
   Reserve consistent single-line identity slots across cards so difficulty positions
   and row alignment remain stable without excessive card height.
-- Use the same localized/read caption → original title → artist hierarchy as List,
-  with the category text badge over the jacket and official difficulty information
-  below the identity.
+- Use the same original-title → artist hierarchy as List, with the category text badge
+  over the jacket and official difficulty information below the identity.
 - Use two columns at the `390px` mobile baseline. Wider result regions may add columns
   according to a validated minimum readable card width; exact Foundation breakpoints
   remain open, while the intended range is roughly three to five columns rather than
@@ -749,8 +740,9 @@ flashing a loading treatment.
   buttons.
 - Ensure the software keyboard, Korean/Japanese IME composition, browser chrome, and
   compact viewport height do not hide the filter completion action.
-- Result cards must tolerate long Japanese titles and multi-line translated captions
-  without horizontal overflow.
+- Result cards must tolerate long Japanese original titles without horizontal
+  overflow. Translated and read-title aliases remain searchable but are not repeated
+  as visible card captions.
 - At the `390px` baseline, use two Grid columns and one List column. Preserve square
   Grid jackets and let only the lower information region grow for long content.
 
@@ -856,12 +848,12 @@ flashing a loading treatment.
 
 - Validate all visible and accessible labels in Korean, Japanese, and English.
 - Preserve the original Music title as the primary identity.
-- When the title-display preference is enabled, show the approved Korean/English title
-  or Japanese reading above the original title as a smaller secondary caption without
-  replacing the original title.
-- In both List and Grid, cap the caption, original title, and artist at one line each.
-  Preserve complete values in the accessible name and detail destination so visual
-  truncation never removes the only complete identifying text.
+- Do not show translated or Japanese-reading captions in repeated List, Grid, or Chart
+  results. Keep approved localized/read titles in the search index so users can find a
+  Music entry with them while the result preserves the canonical original title.
+- In both List and Grid, cap the original title and artist at one line each. Preserve
+  complete values in the accessible name and detail destination so visual truncation
+  never removes the only complete identifying text.
 - Text search and the `300ms` idle trigger must be composition-safe for Korean and
   Japanese IME input.
 - Dynamic result counts, visible ranges, and Load-more amounts require locale-aware
@@ -1104,7 +1096,7 @@ result-composition set above, current narrow and wide NosLog browser evidence, t
 local source-catalog length distribution, and the focused interaction references
 below. The sources converge on stable identity, predictable whole-card activation,
 capability-based hover enhancement, and square media that does not force the entire
-card to be square. They do not prescribe NosLog's exact dimensions; the `64–84px`
+card to be square. They do not prescribe NosLog's exact dimensions; the `64px`
 square List-jacket edge, `20px` difficulty badge, and `440–460px` List-column boundary
 preserve the audited useful compactness and must be validated as component specimens.
 
@@ -1460,9 +1452,8 @@ Approved synthesis:
   maintenance timestamps cannot support a truthful newest-Music sort.
 - **Dedicated difficulty row in Music List — Rejected:** It spends scarce vertical
   space on compact informational values that fit a stable trailing group.
-- **Universal `96–112px` Music List row — Rejected:** Use content-driven
-  `64–84px` height so short identities remain compact and an enabled localized/read
-  caption gains only the space it needs.
+- **Universal `96–112px` Music List row — Rejected:** Use a compact `64px` row and
+  square jacket for the approved original-title-and-artist identity.
 - **One full-width table-like desktop List — Rejected:** Add a second compact List
   column when each card can retain approximately `440–460px`; reserve denser multi-
   column artwork scanning for Grid.
@@ -1533,12 +1524,12 @@ The later implementation must verify at minimum:
   cross-group `AND`; and Unplayed conflict prevention;
 - Music list-default/grid switching and stable base identity with zero, one, and
   several matching difficulty records;
-- List title order, category badge placement, a square jacket whose edge matches the
-  content-driven `64–84px` row height, trailing difficulty group, one-line identity
+- List title order, category badge placement, a `64 × 64px` square jacket whose edge
+  matches the row height, trailing difficulty group, one-line identity
   limits, one-to-two-column switch, and no horizontal overflow around the
   `440–460px` per-card boundary;
 - square Grid jackets, two columns at `390px`, independently growing information
-  regions, reserved single-line caption/title/artist slots, and validated wider
+  regions, reserved single-line title/artist slots, and validated wider
   multi-column behavior;
 - grouped-list-only Chart results with no grid toggle;
 - capability-gated pointer-hover and equivalent keyboard-focus previews in fixed card
@@ -1582,8 +1573,9 @@ The later implementation must verify at minimum:
   parameter;
 - narrow `390px`, compact-height mobile, browser zoom, and representative desktop
   widths without horizontal overflow;
-- long original Japanese titles, Korean and English translated captions, missing
-  artist, missing translation, and Real-unavailable data;
+- long original Japanese titles, Korean/English translated-title and Japanese-reading
+  search aliases that still resolve to original-title-only cards, missing artist, and
+  Real-unavailable data;
 - keyboard-only scope, search, filters, result selection, Load more, retry, and return;
 - mobile Filter-and-sort commit with ready, pending, unchanged, and zero-result states;
   summary focus and non-duplicated announcement; Close, Back, and Escape trigger-focus
@@ -1681,7 +1673,7 @@ The later implementation must verify at minimum:
 | DISC-20 | Authenticated record taxonomy   | Keep Unplayed, S, FC, Pianist, and one advanced MISS range; remove Clear, 30-day play, and low-value metric filters                                                                                                                         | `Approved`   |
 | DISC-21 | MISS semantics                  | Inclusive optional bounds against each eligible difficulty's best record; never combine MISS with Near                                                                                                                                      | `Approved`   |
 | DISC-22 | Record-filter logic             | `AND` across groups, `OR` within a group; Unplayed excludes achieved criteria and conflicts with recent-play order                                                                                                                          | `Approved`   |
-| DISC-23 | Music result identity           | Jacket, original and optional localized/read title, artist, category, all official difficulties; list and grid                                                                                                                              | `Approved`   |
+| DISC-23 | Music result identity           | Earlier direction repeated localized/read captions in List and Grid result identity                                                                                                                                                         | `Superseded` |
 | DISC-24 | Personal-record preview         | Identity-first resting result; capability-gated hover and focus preview matched records; touch opens detail without hover                                                                                                                   | `Approved`   |
 | DISC-25 | Newest Music sort               | Provide it only with verified official Music-level release dates; never substitute database maintenance timestamps                                                                                                                          | `Approved`   |
 | DISC-26 | Weakness sort                   | Remove the opaque composite weakness order                                                                                                                                                                                                  | `Approved`   |
@@ -1696,11 +1688,12 @@ The later implementation must verify at minimum:
 | DISC-35 | Initial and replacement loading | Fast response has no transient UI; slow initial uses a result-shaped local skeleton; slow replacement retains and weakens old results, blocks stale activation once visible, and keeps discovery controls usable                            | `Approved`   |
 | DISC-36 | Retrieval failure and retry     | Preserve committed state; show scope-specific one-line result-region error plus Retry; preserve retry focus while pending/failing and focus the result summary after success                                                                | `Approved`   |
 | DISC-37 | Request timeout                 | Require a documented finite timeout from production `p95`/`p99`, platform limits, and cancellation behavior before implementation acceptance; never invent a value now or wait indefinitely                                                 | `Approved`   |
+| DISC-38 | Localized-title discovery       | Keep approved Korean/English titles and Japanese readings searchable while showing canonical original titles only in repeated Music and Chart result cards                                                                                  | `Approved`   |
 
 ## Phase Approval
 
 The user approved the synchronized English and Korean shared-discovery brief as a
-complete phase deliverable on 2026-07-31 after reviewing the resolved decision
+complete phase deliverable, updated on 2026-08-04 after reviewing the resolved decision
 register and cross-document audit. No material Music/Chart discovery behavior remains
 `Open` or `Proposed`.
 

@@ -87,8 +87,8 @@ Platform density에는 동의하지 않습니다. 다음 전이 가능한 원칙
   허용합니다.
 
 NosLog에는 일반 System이 정의하지 않는 Domain 제약이 추가됩니다. 원문 Music
-제목은 Primary identity로 유지되고, 활성화된 번역 제목 또는 일본어 읽기는
-그 위에 더 낮은 시각적 중요도로 나타납니다. Performance 값은 안정적으로
+제목은 계속 보이는 Primary identity로 유지되고, 승인된 번역 제목 또는 일본어
+읽기는 요청 시 악곡 상세에서만 Disclosure로 제공합니다. Performance 값은 안정적으로
 숫자를 비교할 수 있어야 하며 BPM, 시간, 마디, 난이도, 손, Grd 및 Rating은
 정확한 NOSTALGIA 의미를 유지합니다.
 
@@ -189,7 +189,7 @@ Content-driven Wide composition에서 `page-title`을 Proportional
 | `section-title`    | Page 안의 주요 영역 Heading                                                  | Recent plays, Community evaluation, Performance history                                  | 임의 Card 장식이 아니라 실제 Content boundary를 표현함                                             |
 | `component-title`  | 제한된 Component 또는 일시 Layer 내부 Heading                                | Dialog, Drawer, Panel, 묶인 Result module                                                | Page와 상위 Section보다 하위 계층을 유지함                                                         |
 | `entity-title`     | Domain object의 Primary identity                                             | 원문 Music title, Username, Arcade name, Exam name                                       | Canonical object identity를 보존하고 실제 긴 Content를 지원함                                      |
-| `entity-companion` | Entity title과 짝을 이루는 선택적 Supporting identity                        | 승인된 한국어·영어 Music title 또는 일본어 읽기                                          | 원문 위에 올 수 있지만 시각적으로 하위이며 원문을 대체하지 않음                                    |
+| `entity-companion` | Entity title과 짝을 이루는 선택적 Supporting identity                        | 악곡 상세 Popover 안의 승인된 번역·읽기 Music title                                      | 하위 계층이며 원문을 대체하지 않고 Collection Card에 반복하지 않음                                 |
 | `body`             | 기본 읽기 Content와 일반 System message                                      | 설명, 안내, 공지 본문, Empty/Error message                                               | 여러 줄 읽기와 Text resizing에서 편안함을 유지함                                                   |
 | `body-secondary`   | 보조 설명 또는 Secondary identity                                            | Artist, 간결한 보조 설명, Contextual note                                                | 낮은 중요도 때문에 Task-critical meaning의 유일한 위치가 되면 안 됨                                |
 | `control`          | Action 또는 사용 가능한 Choice를 이름 짓는 Visible text                      | Button, Tab, Filter, Menu item, Field label                                              | Control 및 Icon과 정렬되고 읽을 수 있으며 Localization 가능해야 함                                 |
@@ -231,7 +231,9 @@ Alias를 승인합니다.
 
 ### Music discovery 및 Music Detail
 
-- 활성화된 번역 제목 또는 일본어 읽기: `entity-companion`.
+- 반복 악곡 탐색 결과는 `entity-companion`을 사용하지 않습니다. 승인된 번역 제목과
+  일본어 읽기는 보이지 않는 검색 별칭으로 유지합니다.
+- 악곡 상세 Popover의 번역·읽기 제목: `entity-companion`.
 - 원문 Music title: `entity-title`.
 - Artist: `body-secondary`.
 - Category, Difficulty context, Level, Release data 및 Date: `metadata`. 단,
@@ -259,8 +261,8 @@ Alias를 승인합니다.
 
 ### Chart Viewer 및 Chart Editor
 
-- 집중된 Music identity는 `entity-companion` → `entity-title` 계층을
-  유지합니다.
+- 집중된 Music identity는 원문 `entity-title`만 사용합니다. 뷰어는 악곡 상세의
+  번역 Disclosure를 반복하지 않습니다.
 - Transport, Mode, Metronome, Strict-performance, Tool, Property 및 Submission
   label은 `control`을 사용합니다.
 - Time, BPM, Time signature, Measure number, Lane value, Offset, Width 및 숫자형
@@ -283,9 +285,9 @@ Punctuation 및 차지하는 공간에 영향을 줄 수 있지만 별도 Semant
 
 - Content 언어가 Page와 다르면 올바른 Language를 Markup합니다.
 - 모든 Locale에서 원문 Music title을 `entity-title`로 보존합니다.
-- 활성화 시 Localized title 또는 일본어 읽기를 원문 위에
-  `entity-companion`으로 배치하되 미래의 검증된 Composite system에서 더
-  작거나 다른 방식으로 낮은 중요도를 유지합니다.
+- Localized title 또는 일본어 읽기는 악곡 상세 Anchored Popover 안에서만
+  `entity-companion`으로 제공하고 원문 제목은 계속 보이는 `entity-title`로
+  유지합니다.
 - 실제 Record로 Hangul, Kana, Kanji, Latin, Numeral, Punctuation, Symbol 및 긴
   Classical title 혼합을 시험합니다.
 - 고정 Card height를 유지하려고 필수 Content를 Clipping하지 않고 Role
@@ -440,14 +442,14 @@ geometry를 함께 비교해야 합니다.
 
 승인된 최소 Specimen은 다음과 같습니다.
 
-| Specimen                      | 필수 Role stress                                                                                       |
-| ----------------------------- | ------------------------------------------------------------------------------------------------------ |
-| `S1` Music discovery          | `entity-companion`, 긴 `entity-title`, Artist, Metadata, Control, 고밀도 Level, Empty 및 Loading state |
-| `S2` Music Detail             | Page·Section hierarchy, 지배적·Inline metric, Chart label, 긴 다국어 Identity                          |
-| `S3` Global Rankings          | 반복 Identity, Rank·Metric 정렬, Country·Exam metadata, Pagination 및 Selector                         |
-| `S4` Chart Viewer             | 집중 Identity, Transport control, BPM·Time·Measure data, Renderer label 및 Full-sheet annotation       |
-| `S5` Home                     | 절제된 Page identity, Search control, Destination, Notice, Editorial content, Recovery state           |
-| `S6` 사용자용 Editor fragment | 고밀도 Tool label, Property value, Timing data, Panel resizing, Validation 및 Submission state         |
+| Specimen                      | 필수 Role stress                                                                                 |
+| ----------------------------- | ------------------------------------------------------------------------------------------------ |
+| `S1` Music discovery          | 긴 `entity-title`, Artist, Metadata, Control, 고밀도 Level, Empty 및 Loading state               |
+| `S2` Music Detail             | Page·Section hierarchy, 지배적·Inline metric, Chart label, 긴 다국어 Identity                    |
+| `S3` Global Rankings          | 반복 Identity, Rank·Metric 정렬, Country·Exam metadata, Pagination 및 Selector                   |
+| `S4` Chart Viewer             | 집중 Identity, Transport control, BPM·Time·Measure data, Renderer label 및 Full-sheet annotation |
+| `S5` Home                     | 절제된 Page identity, Search control, Destination, Notice, Editorial content, Recovery state     |
+| `S6` 사용자용 Editor fragment | 고밀도 Tool label, Property value, Timing data, Panel resizing, Validation 및 Submission state   |
 
 물리 Type 값을 승인하기 전에 실제 한국어·일본어·영어·혼합 문자·긴
 Content·고밀도·Empty·Error·Disabled·Permission·Destructive fixture를
@@ -499,7 +501,7 @@ Content·고밀도·Empty·Error·Disabled·Permission·Destructive fixture를
 | `FSR-04` | `display`를 드물게 유지하고 기본 Page, Card, Metric 또는 State style로 사용하지 않음                                                            | `Approved`   |
 | `FSR-05` | 전역 일반 UI `micro` role을 유지하지 않음                                                                                                       | `Approved`   |
 | `FSR-06` | 비교 Metric에 Tabular figures를 사용하고 일반 Domain value에 Monospace를 사용하지 않음                                                          | `Approved`   |
-| `FSR-07` | 활성화된 Localized/read title을 원문 Music title 위에 두되 시각적으로 하위로 유지함                                                             | `Approved`   |
+| `FSR-07` | 이전 방향은 지원 Surface 전반에서 활성화된 Localized/read title을 원문 Music title 위에 배치했습니다.                                           | `Superseded` |
 | `FSR-08` | Wordmark, Artist, Control, Badge, Chart label 및 Renderer data를 새 공유 Scale이 아닌 관리되는 Alias로 취급함                                   | `Approved`   |
 | `FSR-09` | 최종 Font를 선택하지 않고 Pretendard를 Incumbent candidate로 유지함                                                                             | `Superseded` |
 | `FSR-10` | Pretendard JP를 한국어·일본어·영어 NosLog 2.0 공용 글꼴 Family로 선택하되 Production 검증을 유지함                                              | `Approved`   |
@@ -513,6 +515,7 @@ Content·고밀도·Empty·Error·Disabled·Permission·Destructive fixture를
 | `FSR-18` | 최종 Semantic composite를 배정하지 않고 문서 `26`의 승인된 `28/32/40/48px` 상위 Line-height 축과 기본 상위 Pairing을 인정함                     | `Approved`   |
 | `FSR-19` | 문서 `26`의 정확한 12개 Role-to-9개 Composite Map, Focused-entity 및 Field-value 우선순위, Tabular metric 동작 및 드문 Display Gate를 사용함    | `Approved`   |
 | `FSR-20` | 다른 모든 Role은 고정하고 문서 `26`의 제한된 단계형 `page-title` Substitution과 `FTL-08E`의 12-Column 및 측정 Title-region 활성화 조건을 사용함 | `Approved`   |
+| `FSR-21` | `entity-companion` 악곡 번역·읽기를 악곡 상세 Anchored Popover로 제한하고 반복 결과와 채보 뷰어에는 원문 제목만 표시함                          | `Approved`   |
 
 ## 완료 체크리스트
 
@@ -520,7 +523,7 @@ Content·고밀도·Empty·Error·Disabled·Permission·Destructive fixture를
 - [x] 독립된 근거 출처 15개 이상을 비교했습니다.
 - [x] 공유 Semantic role 12개를 승인했습니다.
 - [x] Alias와 물리 예외 관리 방식을 승인했습니다.
-- [x] 다국어 Title hierarchy와 Metric 동작을 Mapping했습니다.
+- [x] 다국어 악곡 상세 Disclosure와 Metric 동작을 Mapping했습니다.
 - [x] 현재 Typography utility 값을 그대로 이어가지 않고 Mapping했습니다.
 - [x] 영어 원본과 한국어 Companion을 함께 작성했습니다.
 - [x] Pretendard JP를 공용 Family로 선택했으며 Production delivery와 Fallback

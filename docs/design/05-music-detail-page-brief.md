@@ -108,8 +108,9 @@ and not a cross-product dashboard.
 
 The current implementation provides:
 
-- Music identity: jacket, original title, optional localized title or Japanese
-  reading, artist, category, and stable Music index;
+- Music identity: jacket, original title, artist, category, stable Music index, and
+  approved localized/read-title data available through an optional detail-only
+  disclosure;
 - selected-chart identity: difficulty, official level, and optional level constant;
 - chart information: BPM range, note count, duration, release date, unlock condition,
   video or preview links, pattern statistics, score distribution, player count, and
@@ -225,6 +226,31 @@ distribution denominator, page size, and localized accessibility gaps.
 - Exact visual tokens and final button geometry remain foundation work.
 
 ## Approved Content Architecture
+
+### On-Demand Localized Title Disclosure
+
+- Keep the original Music title as the persistent primary identity. Do not place a
+  translated title or Japanese reading in a second permanent title row.
+- When an approved Korean/English translation or Japanese reading exists, place one
+  visible language/translation icon directly beside the original-title group. Do not
+  underline the title or make the title itself an undisclosed trigger.
+- The icon opens a non-modal anchored popover containing a concise locale label and
+  the complete wrapped translated/read title. It is not a modal, sheet, or layout-
+  shifting panel.
+- Pointer hover and keyboard focus open the popover. Click and touch toggle it.
+  `Escape`, outside click/touch, focus departure according to the final popover
+  component contract, or activating the trigger again closes it.
+- The same content and relationship must be available to keyboard and assistive-
+  technology users. Hover is an enhancement, not the only access path.
+- Omit the icon and its space when no approved value exists. Never show an empty
+  popover, placeholder translation, or machine-generated value that has not passed
+  the approved content workflow.
+- This disclosure is exclusive to Music Detail. Home, Music discovery List/Grid,
+  Profile, Tier, Bingo, Exam, Chart Viewer, and other repeated Music references show
+  the original title only, while approved translations/readings remain searchable.
+- The temporary interaction example prepared during approval validates only this
+  disclosure behavior. Its jacket placement, title geometry, difficulty controls,
+  tabs, and surrounding layout are not approved visual or page-layout sources.
 
 ### Pattern A: One Persistent Context with Adaptive Area Switching
 
@@ -1296,14 +1322,14 @@ locale, state, viewport, and content variation. The following cases are mandator
 guide specimens and later implementation acceptance where the affected content is
 present:
 
-| Fixture                  | Required content and variation                                                                                                                         | What it validates                                                                                                        |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
-| Long mixed identity      | Actual `2f733689ec21214d6180888fe0e6b42f`: longest mixed Japanese/Latin title, long Japanese reading, three difficulties, no Real                      | Title/reading hierarchy, wrapping, full accessible name, missing-difficulty state, and compact/wide identity composition |
-| Long artist              | Actual **STULTI** (`bfdaadfb98501907925ecf41a076108d`): `67`-character artist and all four difficulties                                                | Independent title/artist rows, long metadata wrapping, and complete difficulty controls                                  |
-| Long Japanese reading    | Actual `eaa4047ce17fb873b19b42454b0f6f3b`                                                                                                              | Japanese line breaking, language declaration, and no clipping at compact widths                                          |
-| Missing artist           | Actual **Happy Birthday to You** (`8f655bcd097d033f7c464f96dc20223d`) with all four difficulties                                                       | Omit the unavailable row without a blank placeholder or invented artist                                                  |
-| Typical complete chart   | A representative Music entry with all required chart facts, a published NosLog chart, a valid Play-video URL, four difficulties, and signed-in records | Normal hierarchy, both active actions, all semantic areas, and stable switching                                          |
-| Localized title variants | Approved long Korean and English title fixtures, the long Japanese reading, translation display on/off, and missing approved translation               | KO/JA/EN hierarchy, omission without blank space, wrapping, and full programmatic names                                  |
+| Fixture                  | Required content and variation                                                                                                                         | What it validates                                                                                                                 |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
+| Long mixed identity      | Actual `2f733689ec21214d6180888fe0e6b42f`: longest mixed Japanese/Latin title, long Japanese reading, three difficulties, no Real                      | Original-title hierarchy, wrapping, disclosure trigger placement, missing-difficulty state, and compact/wide identity composition |
+| Long artist              | Actual **STULTI** (`bfdaadfb98501907925ecf41a076108d`): `67`-character artist and all four difficulties                                                | Independent title/artist rows, long metadata wrapping, and complete difficulty controls                                           |
+| Long Japanese reading    | Actual `eaa4047ce17fb873b19b42454b0f6f3b`                                                                                                              | Popover wrapping, language declaration, and no clipping at compact widths                                                         |
+| Missing artist           | Actual **Happy Birthday to You** (`8f655bcd097d033f7c464f96dc20223d`) with all four difficulties                                                       | Omit the unavailable row without a blank placeholder or invented artist                                                           |
+| Typical complete chart   | A representative Music entry with all required chart facts, a published NosLog chart, a valid Play-video URL, four difficulties, and signed-in records | Normal hierarchy, both active actions, all semantic areas, and stable switching                                                   |
+| Localized title variants | Approved long Korean and English title fixtures, the long Japanese reading, popover open/closed, and missing approved translation                      | Hover/focus/click/touch parity, omission without blank space, wrapping, dismissal, and full programmatic names                    |
 
 State coverage must include the following bounded seams. Do not create every possible
 combination; combine them pairwise with the identity fixtures above while preserving
@@ -1353,9 +1379,10 @@ The Music-detail page family is accepted only when all of the following hold:
 1. Music identity, selected difficulty, resource actions, area switcher, and selected
    panel preserve the approved order and remain understandable without relying on the
    current 1.x visual styling.
-2. The original title remains primary; enabled translation/reading, artist, and chart
-   context remain distinguishable with the mandatory long and missing fixtures. No
-   meaningful text collides, clips, or becomes available only on hover.
+2. The original title remains primary; artist and chart context remain persistent and
+   distinguishable with the mandatory long and missing fixtures. Optional approved
+   translation/reading is exposed only through the detail disclosure, with equivalent
+   hover, focus, click/touch, dismissal, and assistive-technology access.
 3. Difficulty and content-area state are shareable and restored by history. Known
    source intent opens the approved area, and authentication returns to the exact
    Music, difficulty, and Record destination.
@@ -1906,6 +1933,8 @@ them before downstream high-fidelity design.
 | MDET-78 | Contribution deletion and moderation scopes     | Keep opinion-only, general-evaluation, and per-scope tier-vote edit/delete consequences independent; moderation never silently removes unrelated contributions                              | `Approved`   |
 | MDET-79 | Administrator disagreement review               | At 5+ votes and official placement outside IQR, maintain one persistent chart/mode/goal candidate with full evidence and explicit Keep, Change, or Defer workflow                           | `Approved`   |
 | MDET-80 | Vote integrity and official authority           | Do not incentivize votes, remove outliers automatically, or bypass administrator action and normal placement history                                                                        | `Approved`   |
+| MDET-81 | Localized-title surface boundary                | Show original titles only on repeated Music surfaces; preserve approved translations/readings as search aliases and expose them visually only on Music Detail                               | `Approved`   |
+| MDET-82 | Localized-title disclosure interaction          | Use a visible icon and anchored non-modal popover with hover/focus opening, click/touch toggle, Escape/outside dismissal, full wrapping, and omission when no approved value exists         | `Approved`   |
 
 ## Current Milestone
 
@@ -1913,7 +1942,7 @@ The user approved the entity model, direct chart-viewer action, Pattern A conten
 architecture, public Chart Info default, source-aware explicit entry, recoverable
 signed-out Record behavior, Chart Info boundary, selected-chart resource grouping,
 the Personal Record hierarchy, the selected-chart Ranking contract, and the core
-Tier & Evaluation contract across 2026-07-31 through 2026-08-02.
+Tier & Evaluation contract across 2026-07-31 through 2026-08-04.
 Chart Info and My Record now have approved Korean, Japanese, and English labels.
 Chart-scoped Play count remains in the cumulative summary, while profile-wide Play
 count is explicitly deferred to the Profile brief. Ranking now has an approved
@@ -1998,7 +2027,7 @@ now fixes hard-versus-soft route focus, origin restoration, a real-catalog and b
 state fixture matrix, exact compact/transition/wide validation widths, release browser
 and assistive-technology coverage, and eleven page-level acceptance criteria.
 
-The Music-detail page brief is therefore complete and approved as of 2026-08-02. This
+The Music-detail page brief is therefore complete and approved as of 2026-08-04. This
 approval does not adopt the current page's visual design and does not pre-approve
 foundation values or the final Claude Design composition. The foundation and
 representative-specimen phases must measure the deliberately deferred visual values

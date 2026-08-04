@@ -90,8 +90,7 @@ Music context without losing their place.
 - The server exposes only a valid `publishedContent` document with a non-null
   `publishedRevision`; missing, unpublished, or schema-invalid content currently
   becomes Not Found.
-- The public payload includes original title, approved localized title or Japanese
-  reading according to the user's display preference, artist, difficulty, official
+- The public payload includes original title, artist, difficulty, official
   level, jacket, note count, duration, and published revision.
 - The current explicit return target is the same localized Music and difficulty. The
   approved upstream contract additionally requires restoration of a known source
@@ -220,7 +219,6 @@ Show only the information needed to remain oriented:
 
 - Back;
 - original Music title;
-- approved localized title or Japanese reading when the user setting enables it;
 - artist;
 - difficulty and official level;
 - note count and chart duration; and
@@ -521,8 +519,8 @@ switching browsers as its primary recovery.
 
 - Support Korean, Japanese, and English without fixed-width assumptions for labels,
   error messages, settings, or title metadata.
-- Preserve the original Music title. Show the enabled localized title or Japanese
-  reading as supporting identity without replacing the original.
+- Preserve the original Music title as the only visible Music title in the focused
+  viewer. Translation/read-title disclosure belongs to Music Detail.
 - Long titles may wrap within the focused header. Do not truncate the only visible
   title or let it displace Back and core playback controls.
 - Preserve domain terms such as `Basic`, `Recital`, difficulty names, `Lv`, `BPM`,
@@ -621,8 +619,8 @@ Validation must include:
   report, and failed report;
 - direct shared URL, Music-detail entry, browser Back, explicit Back, and return to a
   non-default Music-detail content area;
-- original Japanese title, long Korean translation, long English translation,
-  Japanese reading, no translation, and missing artist;
+- long original Japanese title, missing artist, and entry from a translated/read-title
+  search followed through Music Detail to the viewer;
 - `320×720`, `360px`, `390×844`, compact landscape, tablet portrait/landscape,
   `1280×720`, `1440×900`, and a wider desktop viewport;
 - keyboard-only, `200%` zoom, reduced motion, screen-reader smoke, touch, and pointer.

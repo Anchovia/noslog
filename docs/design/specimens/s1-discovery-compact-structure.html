@@ -327,15 +327,10 @@
             }
 
             .result-collection[data-view="list"] .music-card {
-                --list-row-edge: 84px;
-                min-height: var(--list-row-edge);
-                grid-template-columns: var(--list-row-edge) minmax(0, 1fr) 92px;
-                align-items: stretch;
-            }
-
-            .result-collection[data-view="list"]
-                .music-card:not(:has(.companion:not(:empty))) {
                 --list-row-edge: 64px;
+                min-height: var(--list-row-edge);
+                grid-template-columns: var(--list-row-edge) minmax(0, 1fr) 104px;
+                align-items: stretch;
             }
 
             .jacket {
@@ -378,29 +373,14 @@
                 min-width: 0;
                 align-content: center;
                 gap: 4px;
-                padding: 8px 10px;
+                padding: 8px 12px;
             }
 
-            .result-collection[data-view="list"] .identity {
-                gap: 2px;
-            }
-
-            .companion,
             .title,
             .artist {
                 overflow: hidden;
                 margin: 0;
                 text-overflow: ellipsis;
-            }
-
-            .companion {
-                display: -webkit-box;
-                color: var(--text-secondary);
-                font-size: var(--fs-14);
-                line-height: var(--lh-20);
-                font-weight: 400;
-                -webkit-box-orient: vertical;
-                -webkit-line-clamp: 1;
             }
 
             .title {
@@ -424,7 +404,7 @@
                 align-content: center;
                 justify-content: end;
                 gap: 4px;
-                padding: 8px 0;
+                padding: 8px 12px 8px 0;
             }
 
             .difficulty {
@@ -456,7 +436,7 @@
 
             .result-collection[data-view="grid"] .identity {
                 align-content: start;
-                min-height: 96px;
+                min-height: 72px;
                 padding: 12px;
             }
 
@@ -721,12 +701,6 @@
                                     <span class="category">Var</span>
                                 </div>
                                 <div class="identity">
-                                    <p
-                                        class="companion"
-                                        data-copy="companionShort"
-                                    >
-                                        알테일
-                                    </p>
                                     <h2 class="title">Altale</h2>
                                     <p class="artist">削除</p>
                                 </div>
@@ -766,12 +740,6 @@
                                     <span class="category">BM</span>
                                 </div>
                                 <div class="identity">
-                                    <p
-                                        class="companion"
-                                        data-copy="companionLong"
-                                    >
-                                        Fixture only · 긴 번역 제목 검증
-                                    </p>
                                     <h2 class="title">
                                         Lachryma《Re:Queen’M》 (BEMANI SYMPHONY
                                         NOSTALGIA mix)
@@ -834,8 +802,6 @@
                     resultCount: "악곡 583개",
                     sortValue: "읽기순",
                     filterSort: "필터·정렬",
-                    companionShort: "알테일",
-                    companionLong: "Fixture only · 긴 번역 제목 검증",
                     loadMore: "결과 20개 더 보기",
                     progress: "583개 중 20개 표시",
                 },
@@ -847,8 +813,6 @@
                     resultCount: "楽曲 583件",
                     sortValue: "読み仮名順",
                     filterSort: "絞り込み・並べ替え",
-                    companionShort: "アルタイル",
-                    companionLong: "Fixture only・長い読み仮名の検証",
                     loadMore: "結果をあと20件表示",
                     progress: "583件中20件を表示",
                 },
@@ -860,9 +824,6 @@
                     resultCount: "583 songs",
                     sortValue: "Reading order",
                     filterSort: "Filter and sort",
-                    companionShort: "Altair",
-                    companionLong:
-                        "Fixture only · long translated title validation",
                     loadMore: "Load 20 more results",
                     progress: "Showing 20 of 583",
                 },

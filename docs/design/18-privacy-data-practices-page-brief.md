@@ -163,6 +163,9 @@ The page must answer nine questions in this order:
   NosLog username, NOSTALGIA player name, avatar reference, country/region, locale,
   localized-title preference, preferred arcade, public-visibility flags, role,
   official game metrics, and synchronization metadata.
+- **Approved migration:** The localized-title preference is a current-schema field to
+  remove or retire for 2.0; it is not an ongoing user preference in the approved
+  Settings contract.
 - **Observed:** The approved Profile contract makes NosLog username, avatar,
   country-category identity, exams, competitive metrics, ranks, progress, Best Plays,
   rank distribution, and judgement summary public when data exists.
@@ -549,7 +552,7 @@ At minimum, distinguish:
 ### 8. Rights and Controls
 
 - Direct self-service controls include Profile/Settings editing, five visibility
-  groups, language and title-display preferences, Logout, and permanent account
+  groups, language preference, Logout, and permanent account
   deletion.
 - Email remains the human path for access, correction, deletion, restriction, or other
   legally applicable requests that the product cannot complete automatically.
