@@ -2,7 +2,7 @@
 
 ## Document Control
 
-- Status: `In progress — typography, spacing, container classes, and grid models approved; density, target geometry, and transition thresholds unresolved`
+- Status: `In progress — typography, spacing, container classes, grid models, density, and target geometry approved; transition thresholds unresolved`
 - Research date: 2026-08-04
 - Last decision update: 2026-08-04
 - Canonical language: English
@@ -14,9 +14,9 @@
   maintained design systems and standards, rhythm-game domain products, and explicit
   user approval on 2026-08-04
 - Excluded at this decision point: exact content-driven layout transition thresholds,
-  maximum line counts, wrapping and truncation policy, density, component dimensions,
-  color, material treatment, final Figma styles, production screens, and application
-  implementation
+  maximum line counts, wrapping and truncation policy, component dimensions beyond the
+  approved control-height and target contract, color, material treatment, final Figma
+  styles, production screens, and application implementation
 
 This document records the bounded decisions made during Batch B. A value becomes
 authoritative only when its decision-log entry is `Approved`. Unresolved values,
@@ -824,6 +824,126 @@ The container and grid model is governed as follows:
 10. This approval does not set component padding, panel ratios, card counts, sidebar
     presence, resizable-tool dimensions, target sizes, or final screen composition.
 
+### Approved density and target-geometry contract
+
+The density and target comparison covered official accessibility criteria, platform
+guidance, product systems, dense professional interfaces, rhythm-game discovery, and
+current NosLog evidence. The primary sources included
+[WCAG 2.2 Target Size Minimum](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum),
+[WCAG Target Size Enhanced](https://www.w3.org/WAI/WCAG22/Understanding/target-size-enhanced),
+[Apple Accessibility](https://developer.apple.com/design/human-interface-guidelines/accessibility),
+[Apple Buttons](https://developer.apple.com/design/human-interface-guidelines/buttons),
+[Android View Accessibility](https://developer.android.com/guide/topics/ui/accessibility/views/apps-views),
+[Android Mobile Accessibility](https://developer.android.com/design/ui/mobile/guides/foundations/accessibility),
+[Fluent 2 Layout](https://fluent2.microsoft.design/layout),
+[Japan Digital Agency Button](https://design.digital.go.jp/dads/components/button/),
+[Japan Digital Agency Button Accessibility](https://design.digital.go.jp/dads/components/button/accessibility/),
+[USWDS Search Accessibility Tests](https://designsystem.digital.gov/components/search/accessibility-tests/),
+[Adobe Spectrum Platform Scale](https://spectrum.adobe.com/page/platform-scale/),
+[Adobe Spectrum Button](https://spectrum.adobe.com/page/button/),
+[Carbon Button Style](https://carbondesignsystem.com/components/button/style/),
+[Carbon Button Usage](https://carbondesignsystem.com/components/button/usage/),
+[Primer Size Primitives](https://primer.style/product/primitives/size/),
+[Ant Design Theme Tokens](https://ant.design/docs/react/customize-theme/),
+[SAP Fiori Content Density](https://experience.sap.com/fiori-design-web/cozy-compact/),
+[osu! beatmap filter guidance](https://osu.ppy.sh/wiki/en/Beatmap/Genre_and_language),
+and [V-ARCHIVE grade guidance](https://v-archive.net/info/manual/grade).
+
+The standards distinguish a conformance floor from a comfortable operating target.
+WCAG establishes a `24 × 24 CSS px` Level AA minimum with defined exceptions and a
+`44 × 44 CSS px` enhanced target. Apple, Android, Fluent, the Japan Digital Agency,
+and USWDS converge around `44–48px` for touch-oriented interaction. Spectrum explicitly
+separates visible control geometry from cursor and touch hit areas. Carbon, Primer,
+Ant Design, and SAP separately demonstrate that `32px`, `40px`, and `44–48px` controls
+can support compact, ordinary, and touch-oriented product contexts without exposing an
+arbitrary continuum of local heights.
+
+Current NosLog evidence reinforces the need for a constrained contract rather than a
+global enlargement rule. The shared
+[`Button`](../../components/ui/Button.tsx) already uses `32px`, `40px`, and `48px`,
+while route-local controls repeat `24px`, `28px`, `36px`, and `44px` heights. Browser
+inspection found approximately `22px` sort and view targets in Music discovery,
+alongside `32px`, `40px`, and `44px` controls in the same user shell. These measurements
+are observations of the current product, not approved 2.0 geometry. Rhythm-game
+references confirm the need for dense filters and comparison surfaces, but do not
+justify shrinking the entire public interface or transferring their visual treatment.
+
+#### Shared visible control-height steps
+
+| Step          | Visible height | Approved use boundary                                                                                                                                                    |
+| ------------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `Compact`     | `32px`         | Repeated controls in an explicitly approved dense data region, Rankings comparison, Viewer toolbar, or Editor workspace; never the ordinary touch-first page default     |
+| `Standard`    | `40px`         | Default visible height for ordinary public and authenticated application controls                                                                                        |
+| `Comfortable` | `48px`         | Prominent mobile actions, Search and other high-frequency touch controls, and important sequential, confirmatory, destructive, or otherwise error-sensitive interactions |
+
+These labels are Foundation role names, not final implementation-token names. The
+implementation mapping may adopt code-convention-compatible names later, but it must
+preserve the three values and their role boundaries.
+
+#### Effective target contract
+
+1. `44px` is an effective interaction-target contract, not a fourth shared visible
+   control-height token. A `40px` visible control ordinarily occupies or receives at
+   least a `44 × 44px` effective target.
+2. An authored interactive target must never fall below the WCAG `24 × 24 CSS px`
+   Level AA floor unless a documented WCAG exception genuinely applies. The spacing
+   exception is not a routine method for retaining undersized repeated controls.
+3. Ordinary public and authenticated controls use at least a `44 × 44px` effective
+   target. `48px` remains the preferred visible and effective size for prominent,
+   frequent, sequential, destructive, or error-sensitive touch actions when the
+   composition can support it.
+4. A `32px` visible Compact control exposed to coarse-pointer or touch operation must
+   use layout spacing, a wrapper, or non-overlapping hit-area expansion to reach at
+   least `44 × 44px`. Expanded targets must not overlap or make adjacent actions
+   ambiguous.
+5. A specialized Viewer or Editor workspace may use a `32 × 32px` effective target
+   only as a governed fine-pointer exception. The region must still satisfy the WCAG
+   minimum and target-spacing contract, provide visible keyboard focus and an
+   equivalent keyboard or alternate operation, and switch to a `44px` target or a
+   Standard/Comfortable presentation for coarse-pointer use.
+6. The fine-pointer exception is prohibited for primary, destructive, difficult-to-
+   reverse, high-frequency sequential, or safety-critical actions. Viewport width
+   alone must not be used as evidence that a fine pointer is present.
+7. Visible label typography follows the approved semantic `control-label` role. A
+   smaller target or type size must not be introduced merely to keep one row from
+   wrapping; the composition must reflow, group, or disclose secondary controls.
+
+#### Density governance
+
+1. Density is assigned by product task and bounded region, not by arbitrary page-local
+   preference. Peer controls in one group use one visible-height step unless a
+   separately documented hierarchy requires a different treatment.
+2. Mobile-first does not mean every visible control is `48px`. Ordinary controls may
+   remain visually `40px`, and visually compact controls may remain `32px`, while the
+   effective touch target and spacing contract is preserved.
+3. Foundation v0.1 does not provide a global user-facing density preference. An
+   approved view-specific presentation choice may remain when it changes an actual
+   content task, such as an explicitly approved compact/detailed collection view; it
+   must not become an unrestricted application-wide Compact switch.
+4. `24px`, `28px`, `36px`, and `44px` are not shared visible control-height steps.
+   `44px` belongs to target geometry. Current `28px` and `36px` Editor controls remain
+   implementation evidence until the later user-facing Editor mapping either adopts
+   `32/40/48px` or registers a measured specialized exception.
+5. This decision does not redesign or immediately migrate the current application. It
+   defines the authoritative geometry for downstream Claude Design work and the later
+   NosLog 2.0 implementation session.
+
+#### Validation contract
+
+- Validate the three visible steps and effective targets in the integrated `S1`–`S6`
+  Korean, Japanese, English, and mixed-script specimens at `320px`, representative
+  `390px`, measured intermediate widths, and wide desktop compositions.
+- Inspect target rectangles rather than inferring usability from visible button
+  bounds. Verify that expanded targets do not overlap and that adjacent actions remain
+  distinguishable at zoom and with text-spacing overrides.
+- Test keyboard order, visible focus, coarse and fine pointers, hybrid input, and
+  `200%` text resize. A pointer media query alone is not proof that the physical device
+  supports only one input method.
+- Treat the current `22–48px` range as migration evidence. Foundation promotion must
+  demonstrate that representative discovery, ranking, Viewer, and Editor compositions
+  can use the approved contract without hiding a high-frequency action or creating
+  two-dimensional overflow on an ordinary page.
+
 ## Alternatives Not Selected
 
 | Alternative                                                                  | Status     | Reason                                                                                                                                                                                   |
@@ -868,29 +988,37 @@ The container and grid model is governed as follows:
 | Treat `768px`, `1280px`, or `1440px` as fixed canvases                       | `Rejected` | The values are ceilings; fixed canvases would conflict with mobile-first reflow, intermediate widths, safe areas, and zoom                                                               |
 | Copy framework breakpoints as the 4-to-8 and 8-to-12 transitions             | `Rejected` | Framework defaults do not prove where NosLog's multilingual content, controls, or domain visualizations require recomposition                                                            |
 | Use `workspace` merely to make a standard page feel more spacious            | `Rejected` | The unbounded class is justified only by meaning-dependent canvas, visualization, and adjustable-tool tasks                                                                              |
+| Use one universal `48px` visible height for every control                    | `Rejected` | Protects touch operation but unnecessarily expands dense comparison and professional-tool regions; the target contract can protect touch without making every visible control identical  |
+| Preserve every current `22–48px` local control height                        | `Rejected` | Retains accidental page-specific drift, leaves undersized targets, and prevents reusable component mapping                                                                               |
+| Add `44px` as a fourth shared visible control height                         | `Rejected` | Confuses touch-target geometry with visual component hierarchy and expands author choice without a distinct product role                                                                 |
+| Make Compact density the mobile default                                      | `Rejected` | Reclaims space by weakening touch operation and repeats the current tendency to solve fit through small controls instead of reflow and hierarchy                                         |
+| Provide an unrestricted global density preference in Foundation v0.1         | `Rejected` | Multiplies responsive, localization, accessibility, and QA states before a cross-product user need has been established                                                                  |
+| Permit overlapping invisible hit areas around adjacent Compact controls      | `Rejected` | Creates ambiguous activation even when each nominal rectangle is large enough                                                                                                            |
+| Treat viewport width as proof of mouse or touch input                        | `Rejected` | Fails hybrid devices and confuses available layout space with actual input capability                                                                                                    |
 
 ## Decision Log
 
-| ID        | Decision                                                                                                                                                                                                                                                                                                    | Status        |
-| --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
-| `FTL-01`  | Use `12px`, `14px`, and `16px` as the shared lower physical type core with the role boundaries and responsive constraints above                                                                                                                                                                             | `Approved`    |
-| `FTL-02`  | Use `16px`, `20px`, and `24px` as the lower line-height primitives, defaulting to `12/16`, `14/20`, and `16/24`, subject to the validation constraints above                                                                                                                                                | `Approved`    |
-| `FTL-03`  | Use only `400`, `500`, `600`, and `700` as shared weight primitives with the semantic, frequency, responsive, and validation constraints above                                                                                                                                                              | `Approved`    |
-| `FTL-04`  | Use natural/default spacing for every shared UI role, keep kerning enabled, expose no positive or negative shared tracking token, and govern rare exceptions explicitly                                                                                                                                     | `Approved`    |
-| `FTL-05`  | Use `20px`, `24px`, and `32px` as the ordinary upper core and gate `40px` to a separately approved composite; the final map assigns it only to `display`                                                                                                                                                    | `Approved`    |
-| `FTL-06`  | Use `28px`, `32px`, `40px`, and `48px` as upper line-height primitives, defaulting to `20/28`, `24/32`, `32/40`, and `40/48`, with the boundaries above                                                                                                                                                     | `Approved`    |
-| `FTL-07`  | Map the twelve semantic roles to the nine approved composites above, including focused-entity and field-value precedence, metric tabular figures, and the display gate                                                                                                                                      | `Approved`    |
-| `FTL-08`  | Select spacing, grid, container, density, and target geometry values                                                                                                                                                                                                                                        | `In progress` |
-| `FTL-08A` | Use `0/2/4/8/12/16/24/32/48/64px` as the constrained spacing primitive axis, reserve `2px` for governed optical or specialized-visualization correction, require semantic roles, and prohibit arbitrary shared application spacing                                                                          | `Approved`    |
-| `FTL-08B` | Use a compact `320–479 CSS px` validation contract with a `16px` safe-aware inline page margin, four equal logical columns, and `12px` gutters; preserve ordinary no-horizontal-overflow reflow and do not infer a `480px` transition breakpoint                                                            | `Approved`    |
-| `FTL-08C` | Use `reading`, `standard`, `wide`, and `workspace` container classes with respective `768px`, `1280px`, `1440px`, and fluid maximum behavior; use 4/8/12-column compact/intermediate/wide alignment models with `12/16/16px` gutters and `16/24/32px` safe-aware margins, while deferring exact transitions | `Approved`    |
-| `FTL-09`  | Keep every role fixed across widths except `page-title`, which steps from `24/32 · 700` in compact/default composition to proportional `32/40 · 700` in content-driven wide composition; prohibit fluid interpolation and defer the exact threshold to `FTL-08`                                             | `Approved`    |
+| ID        | Decision                                                                                                                                                                                                                                                                                                                               | Status        |
+| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| `FTL-01`  | Use `12px`, `14px`, and `16px` as the shared lower physical type core with the role boundaries and responsive constraints above                                                                                                                                                                                                        | `Approved`    |
+| `FTL-02`  | Use `16px`, `20px`, and `24px` as the lower line-height primitives, defaulting to `12/16`, `14/20`, and `16/24`, subject to the validation constraints above                                                                                                                                                                           | `Approved`    |
+| `FTL-03`  | Use only `400`, `500`, `600`, and `700` as shared weight primitives with the semantic, frequency, responsive, and validation constraints above                                                                                                                                                                                         | `Approved`    |
+| `FTL-04`  | Use natural/default spacing for every shared UI role, keep kerning enabled, expose no positive or negative shared tracking token, and govern rare exceptions explicitly                                                                                                                                                                | `Approved`    |
+| `FTL-05`  | Use `20px`, `24px`, and `32px` as the ordinary upper core and gate `40px` to a separately approved composite; the final map assigns it only to `display`                                                                                                                                                                               | `Approved`    |
+| `FTL-06`  | Use `28px`, `32px`, `40px`, and `48px` as upper line-height primitives, defaulting to `20/28`, `24/32`, `32/40`, and `40/48`, with the boundaries above                                                                                                                                                                                | `Approved`    |
+| `FTL-07`  | Map the twelve semantic roles to the nine approved composites above, including focused-entity and field-value precedence, metric tabular figures, and the display gate                                                                                                                                                                 | `Approved`    |
+| `FTL-08`  | Select spacing, grid, container, density, and target geometry values                                                                                                                                                                                                                                                                   | `In progress` |
+| `FTL-08A` | Use `0/2/4/8/12/16/24/32/48/64px` as the constrained spacing primitive axis, reserve `2px` for governed optical or specialized-visualization correction, require semantic roles, and prohibit arbitrary shared application spacing                                                                                                     | `Approved`    |
+| `FTL-08B` | Use a compact `320–479 CSS px` validation contract with a `16px` safe-aware inline page margin, four equal logical columns, and `12px` gutters; preserve ordinary no-horizontal-overflow reflow and do not infer a `480px` transition breakpoint                                                                                       | `Approved`    |
+| `FTL-08C` | Use `reading`, `standard`, `wide`, and `workspace` container classes with respective `768px`, `1280px`, `1440px`, and fluid maximum behavior; use 4/8/12-column compact/intermediate/wide alignment models with `12/16/16px` gutters and `16/24/32px` safe-aware margins, while deferring exact transitions                            | `Approved`    |
+| `FTL-08D` | Use `32/40/48px` as the constrained Compact/Standard/Comfortable visible control-height steps; treat `44px` as the ordinary effective target contract rather than a fourth visible step; permit `32px` effective targets only as governed fine-pointer Viewer/Editor exceptions; and provide no unrestricted global density preference | `Approved`    |
+| `FTL-09`  | Keep every role fixed across widths except `page-title`, which steps from `24/32 · 700` in compact/default composition to proportional `32/40 · 700` in content-driven wide composition; prohibit fluid interpolation and defer the exact threshold to `FTL-08`                                                                        | `Approved`    |
 
 ## Next Approval Gate
 
-The next bounded decision is `FTL-08D`: density and target geometry, followed by the
-measured content-failure thresholds that activate the intermediate and wide grid
-models and the approved wide `page-title` variant. That work must test typography and
-controls as part of the `S1`–`S6` multilingual compositions and must not silently
+The next bounded decision is the measured content-failure thresholds that activate the
+intermediate and wide grid models and the approved wide `page-title` variant. That
+work must test the approved typography, spacing, container, density, and target
+contracts as part of the `S1`–`S6` multilingual compositions and must not silently
 approve maximum line counts, truncation, color, material, panel ratios, or final
 component layout.

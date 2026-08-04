@@ -2,7 +2,7 @@
 
 ## 문서 관리
 
-- 상태: `진행 중 — Typography, Spacing, Container class 및 Grid model 승인, Density, Target geometry 및 전환 임계점 미확정`
+- 상태: `진행 중 — Typography, Spacing, Container class, Grid model, Density 및 Target geometry 승인, 전환 임계점 미확정`
 - 조사일: 2026-08-04
 - 마지막 결정 갱신일: 2026-08-04
 - 원본 언어: 영어
@@ -14,8 +14,9 @@
   Design system과 Standard, Rhythm-game domain product 및 2026-08-04의 명시적
   사용자 승인
 - 이번 결정에서 제외: 정확한 Content-driven Layout 전환 임계점, 최대 Line
-  count, Wrapping 및 Truncation 정책, Density, Component 치수, Color, Material
-  treatment, 최종 Figma style, Production screen 및 Application 구현
+  count, Wrapping 및 Truncation 정책, 승인된 Control height와 Target 계약 이외의
+  Component 치수, Color, Material treatment, 최종 Figma style, Production screen
+  및 Application 구현
 
 이 문서는 Batch B에서 결정한 제한된 항목을 기록합니다. Decision log 항목이
 `Approved`인 경우에만 해당 값이 권위 있는 요구사항이 됩니다. 미확정 값, 외부
@@ -810,73 +811,193 @@ Container와 Grid model은 다음 규칙을 따릅니다.
 10. 이번 승인은 Component padding, Panel ratio, Card count, Sidebar 존재 여부,
     Resizable-tool 치수, Target size 또는 최종 Screen composition을 정하지 않습니다.
 
+### 승인된 Density 및 Target geometry 계약
+
+Density와 Target 비교는 공식 접근성 기준, Platform 지침, Product system, 고밀도
+Professional interface, Rhythm-game discovery 및 현재 NosLog 근거를 다뤘습니다. 주요
+출처에는
+[WCAG 2.2 Target Size Minimum](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum),
+[WCAG Target Size Enhanced](https://www.w3.org/WAI/WCAG22/Understanding/target-size-enhanced),
+[Apple Accessibility](https://developer.apple.com/design/human-interface-guidelines/accessibility),
+[Apple Buttons](https://developer.apple.com/design/human-interface-guidelines/buttons),
+[Android View Accessibility](https://developer.android.com/guide/topics/ui/accessibility/views/apps-views),
+[Android Mobile Accessibility](https://developer.android.com/design/ui/mobile/guides/foundations/accessibility),
+[Fluent 2 Layout](https://fluent2.microsoft.design/layout),
+[일본 디지털청 Button](https://design.digital.go.jp/dads/components/button/),
+[일본 디지털청 Button Accessibility](https://design.digital.go.jp/dads/components/button/accessibility/),
+[USWDS Search Accessibility Tests](https://designsystem.digital.gov/components/search/accessibility-tests/),
+[Adobe Spectrum Platform Scale](https://spectrum.adobe.com/page/platform-scale/),
+[Adobe Spectrum Button](https://spectrum.adobe.com/page/button/),
+[Carbon Button Style](https://carbondesignsystem.com/components/button/style/),
+[Carbon Button Usage](https://carbondesignsystem.com/components/button/usage/),
+[Primer Size Primitives](https://primer.style/product/primitives/size/),
+[Ant Design Theme Tokens](https://ant.design/docs/react/customize-theme/),
+[SAP Fiori Content Density](https://experience.sap.com/fiori-design-web/cozy-compact/),
+[osu! Beatmap Filter 지침](https://osu.ppy.sh/wiki/en/Beatmap/Genre_and_language) 및
+[V-ARCHIVE 서열표 안내](https://v-archive.net/info/manual/grade)가 포함됩니다.
+
+표준은 적합성 하한과 편안한 조작 Target을 구분합니다. WCAG는 정의된 예외와 함께
+`24 × 24 CSS px` Level AA 최소값과 `44 × 44 CSS px` 강화 Target을 정합니다. Apple,
+Android, Fluent, 일본 디지털청 및 USWDS는 Touch 중심 상호작용에서 `44–48px`에
+수렴합니다. Spectrum은 보이는 Control geometry와 Cursor·Touch hit area를 명시적으로
+분리합니다. Carbon, Primer, Ant Design 및 SAP는 임의의 Local height 연속 범위를
+노출하지 않고 `32px`, `40px`, `44–48px` Control이 Compact, 일반 및 Touch 중심
+Product context를 지원할 수 있음을 각각 보여줍니다.
+
+현재 NosLog 근거는 전역 확대 규칙보다 제한된 계약이 필요함을 확인합니다. 공용
+[`Button`](../../components/ui/Button.tsx)은 이미 `32px`, `40px`, `48px`을 사용하지만
+Route-local Control은 `24px`, `28px`, `36px`, `44px` Height를 반복합니다. Browser
+검사에서는 같은 사용자 Shell 안에 `32px`, `40px`, `44px` Control과 함께 Music
+discovery의 정렬 및 보기 Target이 약 `22px`로 측정됐습니다. 이 수치는 승인된 2.0
+Geometry가 아니라 현재 Product 관찰값입니다. Rhythm-game Reference는 고밀도 Filter와
+비교 Surface 필요성을 확인하지만, 전체 Public interface를 축소하거나 해당 시각 처리를
+전이할 근거는 아닙니다.
+
+#### 공유 Visible control-height Step
+
+| Step          | 보이는 높이 | 승인된 사용 경계                                                                                                                                         |
+| ------------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Compact`     | `32px`      | 명시적으로 승인된 고밀도 Data region, Rankings 비교, Viewer toolbar 또는 Editor workspace의 반복 Control. 일반 Touch-first Page 기본값으로 사용하지 않음 |
+| `Standard`    | `40px`      | 일반 Public 및 Authenticated application Control의 기본 보이는 높이                                                                                      |
+| `Comfortable` | `48px`      | 두드러지는 Mobile action, Search와 기타 고빈도 Touch control 및 중요한 순차·확정·파괴적·오류 민감 Interaction                                            |
+
+이 Label은 최종 구현 Token 이름이 아니라 Foundation role 이름입니다. 이후 구현 Mapping은
+Code 관례에 맞는 이름을 사용할 수 있지만 세 값과 Role 경계를 보존해야 합니다.
+
+#### Effective target 계약
+
+1. `44px`은 네 번째 공유 Visible control-height token이 아니라 유효 Interaction target
+   계약입니다. 보이는 `40px` Control은 일반적으로 최소 `44 × 44px` Effective target을
+   차지하거나 제공해야 합니다.
+2. 작성된 Interactive target은 문서화된 WCAG 예외가 실제로 적용되는 경우를 제외하고
+   WCAG `24 × 24 CSS px` Level AA 하한보다 작을 수 없습니다. Spacing 예외를 작은 반복
+   Control을 유지하는 일반 수단으로 사용할 수 없습니다.
+3. 일반 Public 및 Authenticated control은 최소 `44 × 44px` Effective target을
+   사용합니다. Composition이 허용할 때 두드러지고 고빈도이며 순차적이거나 파괴적이고
+   오류에 민감한 Touch action에는 보이는 크기와 Effective target 모두 `48px`을
+   선호합니다.
+4. Coarse pointer 또는 Touch 조작에 노출되는 보이는 `32px` Compact control은 Layout
+   spacing, Wrapper 또는 겹치지 않는 Hit-area 확장을 통해 최소 `44 × 44px`에 도달해야
+   합니다. 확장된 Target은 겹치거나 인접 Action을 모호하게 만들 수 없습니다.
+5. 전문 Viewer 또는 Editor workspace는 관리된 Fine-pointer 예외로만 `32 × 32px`
+   Effective target을 사용할 수 있습니다. 해당 Region은 계속 WCAG 최소값과 Target
+   spacing 계약을 충족하고, 보이는 Keyboard focus와 동등한 Keyboard 또는 대체 조작을
+   제공하며, Coarse-pointer 사용 시 `44px` Target 또는 Standard/Comfortable 표현으로
+   전환해야 합니다.
+6. Fine-pointer 예외는 Primary, Destructive, 되돌리기 어렵거나 고빈도 순차 및
+   Safety-critical action에 금지합니다. Viewport width만으로 Fine pointer가 있다고
+   판단할 수 없습니다.
+7. 보이는 Label typography는 승인된 Semantic `control-label` Role을 따릅니다. 한 Row의
+   Wrap을 막기 위해 더 작은 Target이나 Type size를 도입할 수 없으며, Composition이
+   Reflow, Grouping 또는 Secondary control disclosure를 사용해야 합니다.
+
+#### Density 관리
+
+1. Density는 임의의 Page-local 선호가 아니라 Product task와 제한된 Region에 따라
+   배정합니다. 별도로 문서화된 Hierarchy가 다른 처리를 요구하지 않는 한 하나의 Group에
+   있는 Peer control은 하나의 Visible-height step을 사용합니다.
+2. Mobile-first는 보이는 모든 Control이 `48px`이라는 뜻이 아닙니다. 일반 Control은
+   시각적으로 `40px`, Compact control은 `32px`을 유지할 수 있지만 Effective touch
+   target과 Spacing 계약을 보존해야 합니다.
+3. Foundation v0.1은 전역 사용자 Density preference를 제공하지 않습니다. 실제 Content
+   task를 바꾸는 승인된 View-specific 표현 선택은 유지할 수 있지만, 제한 없는
+   Application-wide Compact switch가 될 수 없습니다.
+4. `24px`, `28px`, `36px`, `44px`은 공유 Visible control-height step이 아닙니다.
+   `44px`은 Target geometry에 속합니다. 현재 `28px`, `36px` Editor control은 이후
+   사용자용 Editor Mapping이 `32/40/48px`을 채택하거나 측정된 전문 예외를 등록할
+   때까지 구현 근거로 남습니다.
+5. 이번 결정은 현재 Application을 Redesign하거나 즉시 Migration하지 않습니다. 이후
+   Claude Design 작업과 별도 NosLog 2.0 구현 Session의 권위 있는 Geometry를 정합니다.
+
+#### 검증 계약
+
+- 세 Visible step과 Effective target을 `320px`, 대표 `390px`, 측정된 Intermediate
+  width 및 Wide desktop composition의 통합 `S1`–`S6` 한국어, 일본어, 영어 및 혼합
+  Script specimen에서 검증합니다.
+- 보이는 Button bound만 보고 사용성을 추론하지 말고 Target rectangle을 검사합니다.
+  확장된 Target이 겹치지 않고 인접 Action이 Zoom과 Text-spacing override에서도 구분되는지
+  확인합니다.
+- Keyboard order, 보이는 Focus, Coarse 및 Fine pointer, Hybrid input 및 `200%` Text
+  resize를 Test합니다. Pointer media query만으로 물리 Device가 하나의 Input method만
+  지원한다고 입증할 수 없습니다.
+- 현재 `22–48px` 범위는 Migration 근거로 취급합니다. Foundation 승격 전 대표
+  Discovery, Ranking, Viewer 및 Editor composition이 고빈도 Action을 숨기거나 일반
+  Page에 2차원 Overflow를 만들지 않고 승인된 계약을 사용할 수 있음을 입증해야 합니다.
+
 ## 선택하지 않은 대안
 
-| 대안                                                              | 상태       | 이유                                                                                                                                       |
-| ----------------------------------------------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| `14px`을 Universal body 및 Interface base로 사용                  | `Rejected` | Reading과 CJK content를 압축하는 현재 경향을 반복하고 광범위한 Small text를 막는 명확한 경계를 만들지 못함                                 |
-| 모든 일반 Body, Result, Control 및 고밀도 Row에 `16px` 사용       | `Rejected` | Reading은 보호하지만 Ranking, Discovery result 및 Professional-tool surface를 불필요하게 확대함                                            |
-| Density를 보존하기 위해 더 작은 Mobile scale 사용                 | `Rejected` | Mobile-first 가독성, CJK 근거 및 Reflow와 Content hierarchy로 Fit을 해결한다는 승인된 전략과 충돌함                                        |
-| 서로 무관한 별도 Mobile 및 Desktop 하위 Scale 사용                | `Rejected` | 공유 Role 의미를 불안정하게 만들고 Page 및 Breakpoint별 Typography 분산을 다시 만들 위험이 있음                                            |
-| Reading Pairing과 함께 별도 Compact `14/18`, `16/22` Pairing 추가 | `Rejected` | Carbon은 타당한 이중 System을 보여주지만 NosLog specimen이 필요성을 입증하기 전에 초기 하위 Line-height 축을 3개에서 5개로 늘림            |
-| `12/18`, `14/21`, `16/24`의 Universal `1.5` 비율 적용             | `Rejected` | 긴 Reading은 보호하지만 짧은 Tertiary 및 Product-interface text를 불필요하게 느슨하게 만들고 System 밖 `18px`, `21px` Step을 추가함        |
-| `400`과 `700`만 사용                                              | `Rejected` | 단순하지만 일반 Reading, Interactive control, Entity identity 및 최상위 강조 사이의 차이가 너무 큼                                         |
-| `400`, `500`, `700` 사용                                          | `Rejected` | 절제된 Control은 지원하지만 Compact heading과 Entity identity가 약한 Medium과 무거운 Bold 중 하나를 선택하게 함                            |
-| `400`, `600`, `700` 사용                                          | `Rejected` | 강한 Hierarchy는 지원하지만 절제된 Interactive step이 없고 현재 Semibold 과용을 유지할 위험이 있음                                         |
-| 모든 Pretendard JP Weight 또는 임의 Variable 값 노출              | `Rejected` | Font 기능은 Semantic 필요가 아니며 통제되지 않은 Page별 강조를 다시 만듦                                                                   |
-| Carbon, Material, Apple 또는 USWDS Tracking 값 가져오기           | `Rejected` | 해당 값은 다른 Font, Platform, Size 및 Composite role에 결합되어 있음                                                                      |
-| 일반 UI에 Generic `tight`, `normal`, `wide` Utility 공개          | `Rejected` | NosLog Specimen이 Semantic 필요를 입증하기 전에 통제되지 않은 Local styling 축을 만듦                                                      |
-| 초기 전략으로 Locale 또는 Viewport별 Tracking 조정                | `Rejected` | 줄바꿈과 QA 변형을 늘리고 안정적인 Localized composition과 충돌함                                                                          |
-| 초기 공유 Ramp에 `18px`, `28px`, `36px`을 미리 추가               | `Rejected` | 대표 Specimen에서 빠진 Semantic distinction을 입증하기 전에 인접 Step이 작성자 선택과 검증 비용을 늘림                                     |
-| `40px`을 일반 Page, Card, Dialog 또는 Section title에 허용        | `Rejected` | 승인된 드문 Display 경계를 무너뜨리고 Page별 강조 분산을 다시 만듦                                                                         |
-| 조밀한 상위 Pairing `20/24`, `24/28` 사용                         | `Rejected` | 짧은 한 줄 UI Label에는 맞지만 긴 일본어 Music title이나 혼합 Script identity의 줄바꿈을 보호하지 못함                                     |
-| Gate를 둔 `40px` Display에 기본 `52px` Leading 추가               | `Rejected` | NosLog가 승인하지 않은 여러 줄 Editorial display 동작을 가정하고 Specimen 근거 없이 Primitive를 하나 더 추가함                             |
-| 각 Semantic role에 독립 물리 Composite 부여                       | `Rejected` | Semantic 정밀도를 시각 다양성으로 오해하며 Foundation이 막으려는 Local-style 분산을 다시 만듦                                              |
-| `page-title`에 기본 `32/40 · 700` 사용                            | `Rejected` | Compact 화면에서 일반 Page identity를 과장하고 주요 정량 결과에 필요한 지배 Step을 소비함                                                  |
-| 모든 Composition에서 `page-title`을 `24/32 · 700`으로 유지        | `Rejected` | 일관성은 극대화하지만 NosLog가 의도적인 Wide Desktop workspace로 재구성될 때 Page identity가 너무 약해질 수 있음                           |
-| `page-title`을 `24px`과 `32px` 사이에서 Fluid 보간                | `Rejected` | 승인되지 않은 중간값, 지속적인 다국어 줄바꿈 변화 및 Product-task 이득 없는 더 넓은 QA 범위를 만듦                                         |
-| Wide 화면에서 Body, Metadata, Control 또는 반복 Entity title 확대 | `Rejected` | Desktop 공간을 비교와 분석 대신 전역 확대에 사용하고 고밀도 Product hierarchy를 불안정하게 만듦                                            |
-| 모든 `entity-title`에 `20/28 · 600` 사용                          | `Rejected` | 반복되는 Discovery, Ranking 및 Archive surface를 과도하게 확대하며 Focused entity에는 이미 관리된 `page-title` 우선순위가 있음             |
-| `entity-companion`을 `12/16 · 400`으로 축소                       | `Rejected` | Localized/read identity는 3차 Metadata가 아니라 유용한 Content이며 한국어·일본어·영어·혼합 Script 결과에서 읽을 수 있어야 함               |
-| Action label과 입력 Field value에 하나의 Composite 사용           | `Rejected` | 두 작업은 다르며 Compact Medium label은 Interaction을 알리고 입력·선택 Content는 일반 가독성 Body treatment가 적합함                       |
-| 주요 Metric에 `40/48 · 700` 사용                                  | `Rejected` | 드문 표현 Display 순간과 `metric-display` `32/40 · 700`이 제공하는 제한된 정량 Hierarchy 사이의 경계를 무너뜨림                            |
-| Metric value를 Heading role로 Styling                             | `Rejected` | Metric에는 문서 Heading semantic이 아니라 Tabular alignment, 명시적 Label과 Unit 및 안정적 비교 동작이 필요함                              |
-| Spectrum, Fluent 또는 Marketing system의 전체 Large ramp 공개     | `Rejected` | NosLog는 고밀도 Product surface이므로 대표 Composition이 빠진 관계를 입증하기 전에 `40/80/96px` 선택지를 추가하면 Local 작성자 재량이 커짐 |
-| `4px` 또는 `12px` 없는 엄격한 `8px` Scale 사용                    | `Rejected` | 유용한 Compact CJK 및 Control 관계를 제거하고 광학 또는 고밀도 Component 요구를 임의 예외로 밀어냄                                         |
-| `2px`을 일반 Layout step으로 취급                                 | `Rejected` | 감지하기 어려운 Hierarchy 차이를 만들고 현재의 Page-local Micro-spacing 난립을 다시 만듦                                                   |
-| Compact Page margin을 `12px` 또는 Viewport 비율로 축소            | `Rejected` | 작은 폭 이득이 안정적인 Edge rhythm과 Safe-area 동작을 약화하며 NosLog는 Margin 침식이 아니라 Reflow로 Fit을 해결해야 함                   |
-| Compact Gutter에 기본 `16px` 사용                                 | `Rejected` | 가능하지만 수렴하는 `12px` Gutter보다 강한 Hierarchy 이득 없이 정사각형 Card와 CJK Control의 유용한 폭을 포기함                            |
-| Compact 4-Column 계약을 4개의 보이는 Content column으로 취급      | `Rejected` | Alignment system을 Content density로 오해하며 좁은 화면에 읽기 어려운 반복 Region을 만듦                                                   |
-| `480px`을 자동 다음 Composition breakpoint로 설정                 | `Rejected` | Reference 범위는 검증 근거이지 NosLog Content가 해당 Viewport 폭에서 재구성되어야 한다는 증거가 아님                                       |
-| 모든 NosLog Page에 하나의 Maximum width 사용                      | `Rejected` | Reading, Discovery, Comparison, Mapping 및 Chart-editing task는 가로 공간 요구가 실질적으로 다름                                           |
-| 모든 Desktop Page를 Maximum 없이 확장                             | `Rejected` | Prose measure와 관계 명확성을 해치고 현재의 늘어난 Mobile column 문제를 다시 만듦                                                          |
-| 각 Page가 임의의 Local maximum width를 선택하도록 허용            | `Rejected` | 관리되는 재사용 System 대신 불일치 Keyline과 Page별 Layout 분산을 다시 만듦                                                                |
-| `768px`, `1280px`, `1440px`을 고정 Canvas로 취급                  | `Rejected` | 해당 값은 상한이며 Fixed canvas는 Mobile-first Reflow, Intermediate width, Safe area 및 Zoom과 충돌함                                      |
-| Framework breakpoint를 4→8열과 8→12열 전환으로 복사               | `Rejected` | Framework 기본값은 NosLog의 다국어 Content, Control 또는 Domain visualization이 재구성을 필요로 하는 지점을 입증하지 못함                  |
-| 단순히 Standard page를 넓어 보이게 하려고 `workspace` 사용        | `Rejected` | 무제한 Class는 의미상 필요한 Canvas, Visualization 및 조절 가능 Tool task로만 정당화됨                                                     |
+| 대안                                                              | 상태       | 이유                                                                                                                                                               |
+| ----------------------------------------------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `14px`을 Universal body 및 Interface base로 사용                  | `Rejected` | Reading과 CJK content를 압축하는 현재 경향을 반복하고 광범위한 Small text를 막는 명확한 경계를 만들지 못함                                                         |
+| 모든 일반 Body, Result, Control 및 고밀도 Row에 `16px` 사용       | `Rejected` | Reading은 보호하지만 Ranking, Discovery result 및 Professional-tool surface를 불필요하게 확대함                                                                    |
+| Density를 보존하기 위해 더 작은 Mobile scale 사용                 | `Rejected` | Mobile-first 가독성, CJK 근거 및 Reflow와 Content hierarchy로 Fit을 해결한다는 승인된 전략과 충돌함                                                                |
+| 서로 무관한 별도 Mobile 및 Desktop 하위 Scale 사용                | `Rejected` | 공유 Role 의미를 불안정하게 만들고 Page 및 Breakpoint별 Typography 분산을 다시 만들 위험이 있음                                                                    |
+| Reading Pairing과 함께 별도 Compact `14/18`, `16/22` Pairing 추가 | `Rejected` | Carbon은 타당한 이중 System을 보여주지만 NosLog specimen이 필요성을 입증하기 전에 초기 하위 Line-height 축을 3개에서 5개로 늘림                                    |
+| `12/18`, `14/21`, `16/24`의 Universal `1.5` 비율 적용             | `Rejected` | 긴 Reading은 보호하지만 짧은 Tertiary 및 Product-interface text를 불필요하게 느슨하게 만들고 System 밖 `18px`, `21px` Step을 추가함                                |
+| `400`과 `700`만 사용                                              | `Rejected` | 단순하지만 일반 Reading, Interactive control, Entity identity 및 최상위 강조 사이의 차이가 너무 큼                                                                 |
+| `400`, `500`, `700` 사용                                          | `Rejected` | 절제된 Control은 지원하지만 Compact heading과 Entity identity가 약한 Medium과 무거운 Bold 중 하나를 선택하게 함                                                    |
+| `400`, `600`, `700` 사용                                          | `Rejected` | 강한 Hierarchy는 지원하지만 절제된 Interactive step이 없고 현재 Semibold 과용을 유지할 위험이 있음                                                                 |
+| 모든 Pretendard JP Weight 또는 임의 Variable 값 노출              | `Rejected` | Font 기능은 Semantic 필요가 아니며 통제되지 않은 Page별 강조를 다시 만듦                                                                                           |
+| Carbon, Material, Apple 또는 USWDS Tracking 값 가져오기           | `Rejected` | 해당 값은 다른 Font, Platform, Size 및 Composite role에 결합되어 있음                                                                                              |
+| 일반 UI에 Generic `tight`, `normal`, `wide` Utility 공개          | `Rejected` | NosLog Specimen이 Semantic 필요를 입증하기 전에 통제되지 않은 Local styling 축을 만듦                                                                              |
+| 초기 전략으로 Locale 또는 Viewport별 Tracking 조정                | `Rejected` | 줄바꿈과 QA 변형을 늘리고 안정적인 Localized composition과 충돌함                                                                                                  |
+| 초기 공유 Ramp에 `18px`, `28px`, `36px`을 미리 추가               | `Rejected` | 대표 Specimen에서 빠진 Semantic distinction을 입증하기 전에 인접 Step이 작성자 선택과 검증 비용을 늘림                                                             |
+| `40px`을 일반 Page, Card, Dialog 또는 Section title에 허용        | `Rejected` | 승인된 드문 Display 경계를 무너뜨리고 Page별 강조 분산을 다시 만듦                                                                                                 |
+| 조밀한 상위 Pairing `20/24`, `24/28` 사용                         | `Rejected` | 짧은 한 줄 UI Label에는 맞지만 긴 일본어 Music title이나 혼합 Script identity의 줄바꿈을 보호하지 못함                                                             |
+| Gate를 둔 `40px` Display에 기본 `52px` Leading 추가               | `Rejected` | NosLog가 승인하지 않은 여러 줄 Editorial display 동작을 가정하고 Specimen 근거 없이 Primitive를 하나 더 추가함                                                     |
+| 각 Semantic role에 독립 물리 Composite 부여                       | `Rejected` | Semantic 정밀도를 시각 다양성으로 오해하며 Foundation이 막으려는 Local-style 분산을 다시 만듦                                                                      |
+| `page-title`에 기본 `32/40 · 700` 사용                            | `Rejected` | Compact 화면에서 일반 Page identity를 과장하고 주요 정량 결과에 필요한 지배 Step을 소비함                                                                          |
+| 모든 Composition에서 `page-title`을 `24/32 · 700`으로 유지        | `Rejected` | 일관성은 극대화하지만 NosLog가 의도적인 Wide Desktop workspace로 재구성될 때 Page identity가 너무 약해질 수 있음                                                   |
+| `page-title`을 `24px`과 `32px` 사이에서 Fluid 보간                | `Rejected` | 승인되지 않은 중간값, 지속적인 다국어 줄바꿈 변화 및 Product-task 이득 없는 더 넓은 QA 범위를 만듦                                                                 |
+| Wide 화면에서 Body, Metadata, Control 또는 반복 Entity title 확대 | `Rejected` | Desktop 공간을 비교와 분석 대신 전역 확대에 사용하고 고밀도 Product hierarchy를 불안정하게 만듦                                                                    |
+| 모든 `entity-title`에 `20/28 · 600` 사용                          | `Rejected` | 반복되는 Discovery, Ranking 및 Archive surface를 과도하게 확대하며 Focused entity에는 이미 관리된 `page-title` 우선순위가 있음                                     |
+| `entity-companion`을 `12/16 · 400`으로 축소                       | `Rejected` | Localized/read identity는 3차 Metadata가 아니라 유용한 Content이며 한국어·일본어·영어·혼합 Script 결과에서 읽을 수 있어야 함                                       |
+| Action label과 입력 Field value에 하나의 Composite 사용           | `Rejected` | 두 작업은 다르며 Compact Medium label은 Interaction을 알리고 입력·선택 Content는 일반 가독성 Body treatment가 적합함                                               |
+| 주요 Metric에 `40/48 · 700` 사용                                  | `Rejected` | 드문 표현 Display 순간과 `metric-display` `32/40 · 700`이 제공하는 제한된 정량 Hierarchy 사이의 경계를 무너뜨림                                                    |
+| Metric value를 Heading role로 Styling                             | `Rejected` | Metric에는 문서 Heading semantic이 아니라 Tabular alignment, 명시적 Label과 Unit 및 안정적 비교 동작이 필요함                                                      |
+| Spectrum, Fluent 또는 Marketing system의 전체 Large ramp 공개     | `Rejected` | NosLog는 고밀도 Product surface이므로 대표 Composition이 빠진 관계를 입증하기 전에 `40/80/96px` 선택지를 추가하면 Local 작성자 재량이 커짐                         |
+| `4px` 또는 `12px` 없는 엄격한 `8px` Scale 사용                    | `Rejected` | 유용한 Compact CJK 및 Control 관계를 제거하고 광학 또는 고밀도 Component 요구를 임의 예외로 밀어냄                                                                 |
+| `2px`을 일반 Layout step으로 취급                                 | `Rejected` | 감지하기 어려운 Hierarchy 차이를 만들고 현재의 Page-local Micro-spacing 난립을 다시 만듦                                                                           |
+| Compact Page margin을 `12px` 또는 Viewport 비율로 축소            | `Rejected` | 작은 폭 이득이 안정적인 Edge rhythm과 Safe-area 동작을 약화하며 NosLog는 Margin 침식이 아니라 Reflow로 Fit을 해결해야 함                                           |
+| Compact Gutter에 기본 `16px` 사용                                 | `Rejected` | 가능하지만 수렴하는 `12px` Gutter보다 강한 Hierarchy 이득 없이 정사각형 Card와 CJK Control의 유용한 폭을 포기함                                                    |
+| Compact 4-Column 계약을 4개의 보이는 Content column으로 취급      | `Rejected` | Alignment system을 Content density로 오해하며 좁은 화면에 읽기 어려운 반복 Region을 만듦                                                                           |
+| `480px`을 자동 다음 Composition breakpoint로 설정                 | `Rejected` | Reference 범위는 검증 근거이지 NosLog Content가 해당 Viewport 폭에서 재구성되어야 한다는 증거가 아님                                                               |
+| 모든 NosLog Page에 하나의 Maximum width 사용                      | `Rejected` | Reading, Discovery, Comparison, Mapping 및 Chart-editing task는 가로 공간 요구가 실질적으로 다름                                                                   |
+| 모든 Desktop Page를 Maximum 없이 확장                             | `Rejected` | Prose measure와 관계 명확성을 해치고 현재의 늘어난 Mobile column 문제를 다시 만듦                                                                                  |
+| 각 Page가 임의의 Local maximum width를 선택하도록 허용            | `Rejected` | 관리되는 재사용 System 대신 불일치 Keyline과 Page별 Layout 분산을 다시 만듦                                                                                        |
+| `768px`, `1280px`, `1440px`을 고정 Canvas로 취급                  | `Rejected` | 해당 값은 상한이며 Fixed canvas는 Mobile-first Reflow, Intermediate width, Safe area 및 Zoom과 충돌함                                                              |
+| Framework breakpoint를 4→8열과 8→12열 전환으로 복사               | `Rejected` | Framework 기본값은 NosLog의 다국어 Content, Control 또는 Domain visualization이 재구성을 필요로 하는 지점을 입증하지 못함                                          |
+| 단순히 Standard page를 넓어 보이게 하려고 `workspace` 사용        | `Rejected` | 무제한 Class는 의미상 필요한 Canvas, Visualization 및 조절 가능 Tool task로만 정당화됨                                                                             |
+| 모든 Control에 하나의 Universal `48px` Visible height 사용        | `Rejected` | Touch 조작은 보호하지만 고밀도 비교와 Professional-tool region을 불필요하게 확대함. 모든 Visible control을 같게 만들지 않고 Target 계약으로 Touch를 보호할 수 있음 |
+| 현재의 모든 `22–48px` Local control height 유지                   | `Rejected` | 우연한 Page별 분산을 유지하고 작은 Target을 남기며 재사용 Component Mapping을 방해함                                                                               |
+| `44px`을 네 번째 공유 Visible control height로 추가               | `Rejected` | Touch-target geometry와 시각 Component hierarchy를 혼동하고 별도 Product role 없이 작성자 선택을 늘림                                                              |
+| Compact density를 Mobile 기본값으로 사용                          | `Rejected` | Reflow와 Hierarchy가 아니라 작은 Control로 Fit을 해결하는 현재 경향을 반복하며 Touch 조작을 약화함                                                                 |
+| Foundation v0.1에 제한 없는 전역 Density preference 제공          | `Rejected` | 제품 전반의 사용자 필요가 확립되기 전에 Responsive, Localization, Accessibility 및 QA state를 늘림                                                                 |
+| 인접 Compact control 주변의 보이지 않는 Hit area 겹침 허용        | `Rejected` | 각 명목 Rectangle이 충분히 크더라도 모호한 Activation을 만듦                                                                                                       |
+| Viewport width를 Mouse 또는 Touch input의 증거로 취급             | `Rejected` | Hybrid device를 지원하지 못하고 사용 가능한 Layout 공간과 실제 Input capability를 혼동함                                                                           |
 
 ## 결정 기록
 
-| ID        | 결정                                                                                                                                                                                                                                                                                   | 상태          |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
-| `FTL-01`  | 위 Role 경계와 반응형 제약을 포함하여 `12px`, `14px`, `16px`을 공유 하위 물리 Type core로 사용함                                                                                                                                                                                       | `Approved`    |
-| `FTL-02`  | 위 검증 제약을 조건으로 `16px`, `20px`, `24px`을 하위 Line-height primitive로 사용하고 `12/16`, `14/20`, `16/24`를 기본으로 함                                                                                                                                                         | `Approved`    |
-| `FTL-03`  | 위 Semantic, 사용 빈도, 반응형 및 검증 제약과 함께 `400`, `500`, `600`, `700`만 공유 Weight primitive로 사용함                                                                                                                                                                         | `Approved`    |
-| `FTL-04`  | 모든 공용 UI Role에 자연/기본 간격을 사용하고 Kerning을 유지하며 공유 양수·음수 Tracking token을 노출하지 않고 드문 예외를 명시적으로 관리함                                                                                                                                           | `Approved`    |
-| `FTL-05`  | `20px`, `24px`, `32px`을 일반 상위 Core로 사용하고 `40px`은 별도 승인 Composite로 제한하며 최종 Map에서는 `display`에만 배정함                                                                                                                                                         | `Approved`    |
-| `FTL-06`  | 위 경계와 함께 `28px`, `32px`, `40px`, `48px`을 상위 Line-height primitive로 사용하고 `20/28`, `24/32`, `32/40`, `40/48`을 기본으로 함                                                                                                                                                 | `Approved`    |
-| `FTL-07`  | 12개 Semantic role을 위 9개 승인 Composite에 Mapping하고 Focused-entity 및 Field-value 우선순위, Metric Tabular figures 및 Display Gate를 적용함                                                                                                                                       | `Approved`    |
-| `FTL-08`  | Spacing, Grid, Container, Density 및 Target geometry 값을 선택함                                                                                                                                                                                                                       | `In progress` |
-| `FTL-08A` | `0/2/4/8/12/16/24/32/48/64px`을 제한된 Spacing primitive 축으로 사용하고 `2px`을 관리된 광학 또는 전문 Visualization 보정에만 두며 Semantic role을 요구하고 임의 공유 Application spacing을 금지함                                                                                     | `Approved`    |
-| `FTL-08B` | `16px` Safe-aware Inline page margin, 4개의 동일한 논리 Column 및 `12px` Gutter와 함께 Compact `320–479 CSS px` 검증 계약을 사용하고 일반적인 가로 Overflow 없는 Reflow를 유지하며 `480px` 전환 Breakpoint를 추론하지 않음                                                             | `Approved`    |
-| `FTL-08C` | 각각 `768px`, `1280px`, `1440px`, Fluid maximum 동작을 갖는 `reading`, `standard`, `wide`, `workspace` Container class를 사용하고, `12/16/16px` Gutter와 `16/24/32px` Safe-aware margin을 갖는 4/8/12-Column Compact/Intermediate/Wide Alignment model을 사용하되 정확한 전환은 이관함 | `Approved`    |
-| `FTL-09`  | 모든 Role은 폭에 따라 고정하되 `page-title`만 Compact/기본 Composition의 `24/32 · 700`에서 Content-driven Wide composition의 Proportional `32/40 · 700`으로 단계 전환하고, Fluid 보간은 금지하며 정확한 임계점은 `FTL-08`로 넘김                                                       | `Approved`    |
+| ID        | 결정                                                                                                                                                                                                                                                                                                         | 상태          |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------- |
+| `FTL-01`  | 위 Role 경계와 반응형 제약을 포함하여 `12px`, `14px`, `16px`을 공유 하위 물리 Type core로 사용함                                                                                                                                                                                                             | `Approved`    |
+| `FTL-02`  | 위 검증 제약을 조건으로 `16px`, `20px`, `24px`을 하위 Line-height primitive로 사용하고 `12/16`, `14/20`, `16/24`를 기본으로 함                                                                                                                                                                               | `Approved`    |
+| `FTL-03`  | 위 Semantic, 사용 빈도, 반응형 및 검증 제약과 함께 `400`, `500`, `600`, `700`만 공유 Weight primitive로 사용함                                                                                                                                                                                               | `Approved`    |
+| `FTL-04`  | 모든 공용 UI Role에 자연/기본 간격을 사용하고 Kerning을 유지하며 공유 양수·음수 Tracking token을 노출하지 않고 드문 예외를 명시적으로 관리함                                                                                                                                                                 | `Approved`    |
+| `FTL-05`  | `20px`, `24px`, `32px`을 일반 상위 Core로 사용하고 `40px`은 별도 승인 Composite로 제한하며 최종 Map에서는 `display`에만 배정함                                                                                                                                                                               | `Approved`    |
+| `FTL-06`  | 위 경계와 함께 `28px`, `32px`, `40px`, `48px`을 상위 Line-height primitive로 사용하고 `20/28`, `24/32`, `32/40`, `40/48`을 기본으로 함                                                                                                                                                                       | `Approved`    |
+| `FTL-07`  | 12개 Semantic role을 위 9개 승인 Composite에 Mapping하고 Focused-entity 및 Field-value 우선순위, Metric Tabular figures 및 Display Gate를 적용함                                                                                                                                                             | `Approved`    |
+| `FTL-08`  | Spacing, Grid, Container, Density 및 Target geometry 값을 선택함                                                                                                                                                                                                                                             | `In progress` |
+| `FTL-08A` | `0/2/4/8/12/16/24/32/48/64px`을 제한된 Spacing primitive 축으로 사용하고 `2px`을 관리된 광학 또는 전문 Visualization 보정에만 두며 Semantic role을 요구하고 임의 공유 Application spacing을 금지함                                                                                                           | `Approved`    |
+| `FTL-08B` | `16px` Safe-aware Inline page margin, 4개의 동일한 논리 Column 및 `12px` Gutter와 함께 Compact `320–479 CSS px` 검증 계약을 사용하고 일반적인 가로 Overflow 없는 Reflow를 유지하며 `480px` 전환 Breakpoint를 추론하지 않음                                                                                   | `Approved`    |
+| `FTL-08C` | 각각 `768px`, `1280px`, `1440px`, Fluid maximum 동작을 갖는 `reading`, `standard`, `wide`, `workspace` Container class를 사용하고, `12/16/16px` Gutter와 `16/24/32px` Safe-aware margin을 갖는 4/8/12-Column Compact/Intermediate/Wide Alignment model을 사용하되 정확한 전환은 이관함                       | `Approved`    |
+| `FTL-08D` | `32/40/48px`을 제한된 Compact/Standard/Comfortable Visible control-height step으로 사용하고, `44px`을 네 번째 Visible step이 아니라 일반 Effective target 계약으로 취급하며, `32px` Effective target은 관리된 Fine-pointer Viewer/Editor 예외로만 허용하고 제한 없는 전역 Density preference를 제공하지 않음 | `Approved`    |
+| `FTL-09`  | 모든 Role은 폭에 따라 고정하되 `page-title`만 Compact/기본 Composition의 `24/32 · 700`에서 Content-driven Wide composition의 Proportional `32/40 · 700`으로 단계 전환하고, Fluid 보간은 금지하며 정확한 임계점은 `FTL-08`로 넘김                                                                             | `Approved`    |
 
 ## 다음 승인 Gate
 
-다음 제한된 결정은 `FTL-08D`의 Density와 Target geometry입니다. 그다음
-Intermediate/Wide Grid model과 승인된 Wide `page-title` variant를 활성화하는
-측정된 Content-failure 임계점을 정합니다. 이 작업은 `S1`–`S6` 다국어
-Composition의 일부로 Typography와 Control을 검증해야 하며 최대 Line count,
-Truncation, Color, Material, Panel ratio 또는 최종 Component layout을 조용히
-승인해서는 안 됩니다.
+다음 제한된 결정은 Intermediate/Wide Grid model과 승인된 Wide `page-title`
+variant를 활성화하는 측정된 Content-failure 임계점입니다. 이 작업은 `S1`–`S6`
+다국어 Composition의 일부로 승인된 Typography, Spacing, Container, Density 및
+Target 계약을 검증해야 하며 최대 Line count, Truncation, Color, Material, Panel
+ratio 또는 최종 Component layout을 조용히 승인해서는 안 됩니다.
