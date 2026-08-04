@@ -2,7 +2,7 @@
 
 ## Document Control
 
-- Status: `In progress — typography, spacing, container classes, grid models, density, and target geometry approved; transition thresholds unresolved`
+- Status: `In progress — typography and layout contracts approved through measured grid and page-title transitions; integrated specimen validation remains open`
 - Research date: 2026-08-04
 - Last decision update: 2026-08-04
 - Canonical language: English
@@ -13,8 +13,8 @@
 - Inputs: approved documents `01`–`25`, current repository typography evidence,
   maintained design systems and standards, rhythm-game domain products, and explicit
   user approval on 2026-08-04
-- Excluded at this decision point: exact content-driven layout transition thresholds,
-  maximum line counts, wrapping and truncation policy, component dimensions beyond the
+- Excluded at this decision point: maximum line counts, wrapping and truncation policy,
+  component dimensions beyond the
   approved control-height and target contract, color, material treatment, final Figma
   styles, production screens, and application implementation
 
@@ -785,11 +785,104 @@ balanced.
 
 The shared page-alignment models are:
 
-| Grid tier    | Logical columns | Gutter | Minimum inline page margin | Approval boundary                                                                                            |
-| ------------ | --------------- | ------ | -------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| Compact      | 4               | `12px` | `16px`, safe-aware         | Already approved in `FTL-08B` for the `320–479 CSS px` validation contract; no `480px` breakpoint is implied |
-| Intermediate | 8               | `16px` | `24px`, safe-aware         | Geometry approved; the exact content-driven entry threshold remains unresolved                               |
-| Wide         | 12              | `16px` | `32px`, safe-aware         | Geometry approved; the exact content-driven entry threshold remains unresolved                               |
+| Grid tier    | Logical columns | Gutter | Minimum inline page margin | Approval boundary                                                                                                          |
+| ------------ | --------------- | ------ | -------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Compact      | 4               | `12px` | `16px`, safe-aware         | Active below a `672 CSS px` page-layout query container; the `320–479 CSS px` compact validation contract remains required |
+| Intermediate | 8               | `16px` | `24px`, safe-aware         | Activates at a `672 CSS px` page-layout query container and remains active below `1056 CSS px`                             |
+| Wide         | 12              | `16px` | `32px`, safe-aware         | Activates at a `1056 CSS px` page-layout query container                                                                   |
+
+#### Approved measured transition thresholds
+
+The threshold review compared sixteen independent official or maintained sources:
+[WCAG Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html),
+[MDN Container Queries](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries),
+[Tailwind Responsive Design](https://tailwindcss.com/docs/responsive-design),
+[Atlassian Grid](https://atlassian.design/foundations/grid-beta/applying-grid/),
+[Material 3 canonical layouts](https://m3.material.io/foundations/layout/canonical-examples/overview),
+[Fluent 2 Layout](https://fluent2.microsoft.design/layout),
+[Carbon Grid](https://carbondesignsystem.com/elements/2x-grid/overview/),
+[Primer breakpoints](https://primer.style/product/primitives/breakpoints/),
+[Shopify Polaris breakpoints](https://polaris-react.shopify.com/tokens/breakpoints),
+[GitLab Pajamas Layout](https://design.gitlab.com/product-foundations/layout/),
+[SAP Fiori Flexible Grid](https://experience.sap.com/fiori-design-web/flexible-grid/),
+[USWDS Layout Grid](https://designsystem.digital.gov/utilities/layout-grid/),
+[GOV.UK Layout](https://design-system.service.gov.uk/styles/layout/),
+[Singapore Government Design System Responsive Grid](https://www.designsystem.tech.gov.sg/foundations/layout/responsive-grid),
+[Japan Digital Agency Layout](https://design.digital.go.jp/dads/foundations/layout/),
+and [Apple Layout](https://developer.apple.com/design/human-interface-guidelines/layout).
+
+The systems cluster meaningful intermediate transitions between approximately
+`600px` and `768px`, and wide transitions between approximately `992px` and
+`1056px`, but they disagree on exact values. Their transferable convergence is that
+page alignment may use stable tiers while nested components recompose from their own
+available container space. Framework numbers therefore remain comparison evidence,
+not the reason for NosLog's values.
+
+Current-browser inspection at `320`, `390`, `479`, `600`, `768`, `900`, `1024`,
+`1280`, and `1440 CSS px` found that the implemented Home, Music discovery,
+Rankings, and Music Detail user shell stops growing at approximately `390px` from
+`479px` upward. Page titles and internal compositions also remain effectively
+unchanged at wide viewports. This is observed failure evidence, not 2.0 layout
+authority: the current breakpoints do not reveal a usable transition threshold.
+
+NosLog's approved margins and gutters produce the following entry geometry:
+
+| Entry canvas         | Calculation                  | Logical track width |
+| -------------------- | ---------------------------- | ------------------- |
+| `320px`, 4 columns   | `(320 − 2×16 − 3×12) ÷ 4`    | `63px`              |
+| `672px`, 8 columns   | `(672 − 2×24 − 7×16) ÷ 8`    | `64px`              |
+| `1056px`, 12 columns | `(1056 − 2×32 − 11×16) ÷ 12` | `68px`              |
+
+The resulting `63→64→68px` track continuity supplies a NosLog-specific measured
+reason for the two thresholds. The approved contract is:
+
+1. A page-layout query container below `672 CSS px` uses the four-column alignment
+   model.
+2. At `672 CSS px` through `1055 CSS px`, it uses the eight-column alignment model.
+3. At `1056 CSS px` and above, it uses the twelve-column alignment model.
+4. The query subject is the available page-layout canvas before its internal page
+   margins, not a device name. A bounded workspace main region or other governed
+   nested layout queries its own available inline size rather than the physical
+   display or browser width.
+5. These values switch shared page alignment only. They do not automatically change
+   card count, row anatomy, pane count, filter arrangement, or any component shape.
+   Components must use their separately measured content-failure point and, when
+   nested, a container query.
+6. The `reading` container remains capped at `768px`, so it never becomes a
+   twelve-column reading surface merely because the browser is wide.
+7. Browser zoom and window tiling naturally reduce the query-container size and may
+   return a composition to a lower tier without loss of information or function.
+
+#### Approved wide `page-title` activation
+
+The default `page-title` remains proportional `24/32 · 700`. It steps to proportional
+`32/40 · 700` only when all of the following are true:
+
+1. the owning page-layout query container is in the twelve-column tier at
+   `1056 CSS px` or wider;
+2. the title text region either spans at least eight of the twelve alignment tracks
+   or is another governed title region with at least `640 CSS px` of measured inline
+   space; and
+3. the title is not inside a `reading` composition.
+
+At the twelve-column entry canvas, eight tracks plus seven gutters provide
+approximately `656px`, which satisfies the measured title-space condition. A title
+region reduced to six tracks provides only about `488px` and therefore retains the
+default `24/32 · 700` composite even on a wide browser. Focused Music and other entity
+titles inherit the same rule. Long titles may wrap; this decision does not impose a
+maximum line count, truncation, or a one-line requirement.
+
+The repository's
+[NOSTALGIA Music source data](../../prisma/data/nosdata-musics.json) contains original
+titles up to approximately 54 characters, Japanese readings up to 49 characters, and
+artists up to 67 characters. Integrated specimens must therefore include real long
+Latin, Korean, and Japanese identities rather than short placeholder headings.
+
+Threshold verification must include `671/672/673` and `1055/1056/1057 CSS px` in
+addition to `320`, representative `390`, `479`, `480`, `768`, `1024`, `1280`, and
+`1440 CSS px`; it must also cover `200%` browser zoom, Korean/Japanese/English long
+content, safe areas, and workspace-panel changes. Passing one `390px` canvas or one
+desktop viewport does not validate the contract.
 
 The container and grid model is governed as follows:
 
@@ -814,13 +907,13 @@ The container and grid model is governed as follows:
 7. Grid columns are alignment tracks, not a mandate for the visible number of cards,
    panels, or content columns. Collection column counts follow approved minimum item
    width, content length, and task requirements.
-8. The exact transitions from four to eight and eight to twelve columns must be
-   measured with representative Korean, Japanese, and English content. Framework
-   breakpoints, device labels, or the illustrative `1600px` comparison canvas do not
-   approve those thresholds.
-9. The approved wide `page-title` substitution may activate only when a later test
-   proves that the composition has entered its content-driven wide state. Container
-   name or desktop-browser detection alone is insufficient.
+8. The approved `672px` and `1056px` transitions must be implemented against the
+   page-layout query container and verified at the adjacent boundary widths above.
+   Framework breakpoints, device labels, or an illustrative comparison canvas do not
+   replace those checks.
+9. The approved wide `page-title` substitution requires both the twelve-column tier
+   and the measured title-region condition above. Container name or desktop-browser
+   detection alone is insufficient.
 10. This approval does not set component padding, panel ratios, card counts, sidebar
     presence, resizable-tool dimensions, target sizes, or final screen composition.
 
@@ -987,6 +1080,10 @@ preserve the three values and their role boundaries.
 | Allow each page to choose an arbitrary local maximum width                   | `Rejected` | It would reproduce inconsistent keylines and page-specific layout drift instead of a governed reusable system                                                                            |
 | Treat `768px`, `1280px`, or `1440px` as fixed canvases                       | `Rejected` | The values are ceilings; fixed canvases would conflict with mobile-first reflow, intermediate widths, safe areas, and zoom                                                               |
 | Copy framework breakpoints as the 4-to-8 and 8-to-12 transitions             | `Rejected` | Framework defaults do not prove where NosLog's multilingual content, controls, or domain visualizations require recomposition                                                            |
+| Use conventional `640px` and `1024px` values without NosLog geometry         | `Rejected` | They are viable reference clusters but do not preserve the approved page-margin, gutter, and logical-track geometry as consistently as the measured `672px` and `1056px` entries         |
+| Delay the shared grid transitions to `768px` and `1280px`                    | `Rejected` | It leaves useful intermediate and comparison space underused and creates disproportionately wide logical tracks before each transition                                                   |
+| Make every component recompose at the shared page-grid thresholds            | `Rejected` | Page alignment and component anatomy solve different constraints; nested cards, filters, panes, and tools must respond to their own measured container failures                          |
+| Activate the wide `page-title` from browser width or container class alone   | `Rejected` | A wide browser can still provide a narrow title region because of actions, media, side panes, zoom, or window tiling; the title needs its approved measured space                        |
 | Use `workspace` merely to make a standard page feel more spacious            | `Rejected` | The unbounded class is justified only by meaning-dependent canvas, visualization, and adjustable-tool tasks                                                                              |
 | Use one universal `48px` visible height for every control                    | `Rejected` | Protects touch operation but unnecessarily expands dense comparison and professional-tool regions; the target contract can protect touch without making every visible control identical  |
 | Preserve every current `22–48px` local control height                        | `Rejected` | Retains accidental page-specific drift, leaves undersized targets, and prevents reusable component mapping                                                                               |
@@ -998,27 +1095,30 @@ preserve the three values and their role boundaries.
 
 ## Decision Log
 
-| ID        | Decision                                                                                                                                                                                                                                                                                                                               | Status        |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
-| `FTL-01`  | Use `12px`, `14px`, and `16px` as the shared lower physical type core with the role boundaries and responsive constraints above                                                                                                                                                                                                        | `Approved`    |
-| `FTL-02`  | Use `16px`, `20px`, and `24px` as the lower line-height primitives, defaulting to `12/16`, `14/20`, and `16/24`, subject to the validation constraints above                                                                                                                                                                           | `Approved`    |
-| `FTL-03`  | Use only `400`, `500`, `600`, and `700` as shared weight primitives with the semantic, frequency, responsive, and validation constraints above                                                                                                                                                                                         | `Approved`    |
-| `FTL-04`  | Use natural/default spacing for every shared UI role, keep kerning enabled, expose no positive or negative shared tracking token, and govern rare exceptions explicitly                                                                                                                                                                | `Approved`    |
-| `FTL-05`  | Use `20px`, `24px`, and `32px` as the ordinary upper core and gate `40px` to a separately approved composite; the final map assigns it only to `display`                                                                                                                                                                               | `Approved`    |
-| `FTL-06`  | Use `28px`, `32px`, `40px`, and `48px` as upper line-height primitives, defaulting to `20/28`, `24/32`, `32/40`, and `40/48`, with the boundaries above                                                                                                                                                                                | `Approved`    |
-| `FTL-07`  | Map the twelve semantic roles to the nine approved composites above, including focused-entity and field-value precedence, metric tabular figures, and the display gate                                                                                                                                                                 | `Approved`    |
-| `FTL-08`  | Select spacing, grid, container, density, and target geometry values                                                                                                                                                                                                                                                                   | `In progress` |
-| `FTL-08A` | Use `0/2/4/8/12/16/24/32/48/64px` as the constrained spacing primitive axis, reserve `2px` for governed optical or specialized-visualization correction, require semantic roles, and prohibit arbitrary shared application spacing                                                                                                     | `Approved`    |
-| `FTL-08B` | Use a compact `320–479 CSS px` validation contract with a `16px` safe-aware inline page margin, four equal logical columns, and `12px` gutters; preserve ordinary no-horizontal-overflow reflow and do not infer a `480px` transition breakpoint                                                                                       | `Approved`    |
-| `FTL-08C` | Use `reading`, `standard`, `wide`, and `workspace` container classes with respective `768px`, `1280px`, `1440px`, and fluid maximum behavior; use 4/8/12-column compact/intermediate/wide alignment models with `12/16/16px` gutters and `16/24/32px` safe-aware margins, while deferring exact transitions                            | `Approved`    |
-| `FTL-08D` | Use `32/40/48px` as the constrained Compact/Standard/Comfortable visible control-height steps; treat `44px` as the ordinary effective target contract rather than a fourth visible step; permit `32px` effective targets only as governed fine-pointer Viewer/Editor exceptions; and provide no unrestricted global density preference | `Approved`    |
-| `FTL-09`  | Keep every role fixed across widths except `page-title`, which steps from `24/32 · 700` in compact/default composition to proportional `32/40 · 700` in content-driven wide composition; prohibit fluid interpolation and defer the exact threshold to `FTL-08`                                                                        | `Approved`    |
+| ID        | Decision                                                                                                                                                                                                                                                                                                                                                                              | Status     |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| `FTL-01`  | Use `12px`, `14px`, and `16px` as the shared lower physical type core with the role boundaries and responsive constraints above                                                                                                                                                                                                                                                       | `Approved` |
+| `FTL-02`  | Use `16px`, `20px`, and `24px` as the lower line-height primitives, defaulting to `12/16`, `14/20`, and `16/24`, subject to the validation constraints above                                                                                                                                                                                                                          | `Approved` |
+| `FTL-03`  | Use only `400`, `500`, `600`, and `700` as shared weight primitives with the semantic, frequency, responsive, and validation constraints above                                                                                                                                                                                                                                        | `Approved` |
+| `FTL-04`  | Use natural/default spacing for every shared UI role, keep kerning enabled, expose no positive or negative shared tracking token, and govern rare exceptions explicitly                                                                                                                                                                                                               | `Approved` |
+| `FTL-05`  | Use `20px`, `24px`, and `32px` as the ordinary upper core and gate `40px` to a separately approved composite; the final map assigns it only to `display`                                                                                                                                                                                                                              | `Approved` |
+| `FTL-06`  | Use `28px`, `32px`, `40px`, and `48px` as upper line-height primitives, defaulting to `20/28`, `24/32`, `32/40`, and `40/48`, with the boundaries above                                                                                                                                                                                                                               | `Approved` |
+| `FTL-07`  | Map the twelve semantic roles to the nine approved composites above, including focused-entity and field-value precedence, metric tabular figures, and the display gate                                                                                                                                                                                                                | `Approved` |
+| `FTL-08`  | Select spacing, grid, container, density, target geometry, and measured responsive-transition values                                                                                                                                                                                                                                                                                  | `Approved` |
+| `FTL-08A` | Use `0/2/4/8/12/16/24/32/48/64px` as the constrained spacing primitive axis, reserve `2px` for governed optical or specialized-visualization correction, require semantic roles, and prohibit arbitrary shared application spacing                                                                                                                                                    | `Approved` |
+| `FTL-08B` | Use a compact `320–479 CSS px` validation contract with a `16px` safe-aware inline page margin, four equal logical columns, and `12px` gutters; preserve ordinary no-horizontal-overflow reflow and do not infer a `480px` transition breakpoint                                                                                                                                      | `Approved` |
+| `FTL-08C` | Use `reading`, `standard`, `wide`, and `workspace` container classes with respective `768px`, `1280px`, `1440px`, and fluid maximum behavior; use 4/8/12-column compact/intermediate/wide alignment models with `12/16/16px` gutters and `16/24/32px` safe-aware margins                                                                                                              | `Approved` |
+| `FTL-08D` | Use `32/40/48px` as the constrained Compact/Standard/Comfortable visible control-height steps; treat `44px` as the ordinary effective target contract rather than a fourth visible step; permit `32px` effective targets only as governed fine-pointer Viewer/Editor exceptions; and provide no unrestricted global density preference                                                | `Approved` |
+| `FTL-08E` | Activate the shared 8-column alignment at a `672 CSS px` page-layout query container and the 12-column alignment at `1056 CSS px`; keep component recomposition on separately measured container failures; activate wide `page-title` only in the 12-column tier when its text region spans at least eight tracks or measures at least `640 CSS px`, excluding `reading` compositions | `Approved` |
+| `FTL-09`  | Keep every role fixed across widths except `page-title`, which steps from `24/32 · 700` to proportional `32/40 · 700` only under the `FTL-08E` twelve-column and measured-title-region conditions; prohibit fluid interpolation                                                                                                                                                       | `Approved` |
 
 ## Next Approval Gate
 
-The next bounded decision is the measured content-failure thresholds that activate the
-intermediate and wide grid models and the approved wide `page-title` variant. That
-work must test the approved typography, spacing, container, density, and target
-contracts as part of the `S1`–`S6` multilingual compositions and must not silently
-approve maximum line counts, truncation, color, material, panel ratios, or final
-component layout.
+The next bounded gate is integrated `S1`–`S6` multilingual specimen validation of the
+approved typography and layout contracts, including the adjacent transition widths,
+`320 CSS px` reflow, `200%` zoom, safe areas, long real content, control targets, and
+workspace-panel changes. Passing this gate may refine component-specific failure
+points but must not silently change `FTL-08E`, approve maximum line counts,
+truncation, color, material, panel ratios, or final component layout. Any conflict
+must return to the user as an explicit revision decision before Foundation v0.1
+promotion.

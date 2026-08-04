@@ -2,7 +2,7 @@
 
 ## Document Control
 
-- Status: `Approved research protocol — Gate 0 complete; later typography axes, exact semantic composite mapping, and bounded page-title substitution recorded`
+- Status: `Approved research protocol — Gate 0 complete; later typography, layout, measured transition, and page-title decisions recorded`
 - Research date: 2026-08-03
 - Last decision update: 2026-08-04
 - Canonical language: English
@@ -14,8 +14,8 @@
 - Inputs: approved documents `01`–`23`, current repository tokens and components,
   current local-browser evidence, current standards, maintained design systems, and
   the explicit Foundation entry gate in document `22`
-- Excluded: the exact content-driven wide-layout threshold, maximum line counts,
-  wrapping and truncation policy, fallback and delivery details; palette values,
+- Excluded: maximum line counts, wrapping and truncation policy, fallback and delivery
+  details; palette values,
   spacing units, grids, breakpoints, radii, shadows, icon style, motion durations,
   chart styling, component anatomy, high-fidelity screens, Figma production screens,
   and application implementation
@@ -26,8 +26,9 @@ Except for the later bounded Pretendard JP, `12px` floor,
 `12/14/16/20/24/32px` ordinary physical ramp, gated `40px` display step,
 `16/20/24px` lower-line-height and `28/32/40/48px` upper-line-height axes,
 `400/500/600/700` shared-weight, natural-tracking, and exact twelve-role-to-nine-
-composite mapping decisions, plus the bounded stepped wide `page-title` substitution
-explicitly recorded below and in document `26`, no current value, reference value,
+composite mapping decisions, plus the bounded stepped wide `page-title` substitution,
+measured grid transitions, and title-region activation conditions explicitly recorded
+below and in document `26`, no current value, reference value,
 Tailwind default, or candidate becomes authoritative because it appears in this
 document.
 
@@ -709,9 +710,26 @@ document `26`: `reading`, `standard`, `wide`, and `workspace` containers use `76
 `1280px`, `1440px`, and fluid maximum behavior respectively, while compact,
 intermediate, and wide alignment use 4/8/12 columns, `12/16/16px` gutters, and
 safe-aware `16/24/32px` minimum inline margins. Container class describes task-space
-need and remains separate from the active alignment tier. Exact four-to-eight and
-eight-to-twelve transitions, component geometry, density, target size, panel ratios,
-and the wide `page-title` threshold remain unresolved.
+need and remains separate from the active alignment tier. At this point, exact
+four-to-eight and eight-to-twelve transitions, component geometry, density, target
+size, panel ratios, and the wide `page-title` threshold remained unresolved.
+
+The user then approved the density and target-geometry contract recorded as
+`FTL-08D` in document `26`: `32/40/48px` are the constrained Compact, Standard, and
+Comfortable visible control-height steps; `44px` is the ordinary effective-target
+contract rather than a fourth visible step; `32px` effective targets are allowed only
+as governed fine-pointer Viewer/Editor exceptions; and Foundation v0.1 provides no
+unrestricted global density preference.
+
+The user then approved the measured responsive-transition contract recorded as
+`FTL-08E` in document `26`. A page-layout query container uses four columns below
+`672 CSS px`, eight columns from `672` through `1055 CSS px`, and twelve columns at
+`1056 CSS px` and above. Component recomposition remains governed by separately
+measured container failures rather than those shared page-grid transitions. Wide
+`page-title` activates only in the twelve-column tier when its text region spans at
+least eight tracks or otherwise measures at least `640 CSS px`, and never inside a
+`reading` composition. This decision does not approve maximum line counts,
+truncation, component-specific layouts, color, material, or panel ratios.
 
 ## Phase Checklist
 
@@ -755,5 +773,11 @@ and the wide `page-title` threshold remain unresolved.
 - [x] User approved the four governed container classes and the compact/intermediate/
       wide 4/8/12-column alignment models as `FTL-08C` in document `26` on
       2026-08-04, while deferring exact content-driven transitions.
+- [x] User approved the constrained visible control-height, effective-target,
+      fine-pointer exception, and density-governance contract as `FTL-08D` in
+      document `26` on 2026-08-04.
+- [x] User approved the measured `672/1056 CSS px` page-grid transitions,
+      component-specific container-failure separation, and exact wide `page-title`
+      activation conditions as `FTL-08E` in document `26` on 2026-08-04.
 - [ ] Validate Pretendard JP delivery, fallback metrics, and the floor in the required
       multilingual integrated specimens before production promotion.

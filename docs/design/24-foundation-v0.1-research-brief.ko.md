@@ -2,7 +2,7 @@
 
 ## 문서 관리
 
-- 상태: `승인된 조사 프로토콜 — Gate 0 완료, 이후 Typography 축, 정확한 Semantic composite mapping 및 제한된 Page-title substitution 기록`
+- 상태: `승인된 조사 프로토콜 — Gate 0 완료, 이후 Typography, Layout, 측정 전환 및 Page-title 결정 기록`
 - 조사일: 2026-08-03
 - 마지막 결정 갱신일: 2026-08-04
 - 원본 언어: 영어
@@ -13,8 +13,8 @@
 - 입력: 승인된 문서 `01`–`23`, 현재 저장소 token과 component, 현재 로컬
   브라우저 근거, 현행 표준, 유지 관리되는 디자인 시스템 및 문서 `22`의 명시적
   Foundation 진입 Gate
-- 제외: 정확한 Content-driven Wide-layout 임계점, 최대 Line count, Wrapping 및
-  Truncation 정책, Fallback 및 Delivery 세부, Palette 값, 간격 단위, Grid,
+- 제외: 최대 Line count, Wrapping 및 Truncation 정책, Fallback 및 Delivery 세부,
+  Palette 값, 간격 단위, Grid,
   Breakpoint, Radius, Shadow, Icon 스타일, Motion 시간, Chart 스타일, Component
   anatomy, High-fidelity 화면, Figma Production 화면 및 Application 구현
 
@@ -24,9 +24,9 @@
 하한, `12/14/16/20/24/32px` 일반 물리 Ramp, Gate를 둔 `40px` Display step,
 `16/20/24px` 하위 Line-height와 `28/32/40/48px` 상위 Line-height 축,
 `400/500/600/700` 공용 Weight, 자연 Tracking 및 정확한 12개 Role-to-9개
-Composite mapping 결정과 제한된 단계형 Wide `page-title` Substitution을 제외하면
-현재 값, Reference 값, Tailwind 기본값 또는 후보는 이 문서에 등장했다는 이유만으로
-권위 있는 값이 되지 않습니다.
+Composite mapping 결정, 제한된 단계형 Wide `page-title` Substitution, 측정된 Grid
+전환 및 Title-region 활성화 조건을 제외하면 현재 값, Reference 값, Tailwind 기본값
+또는 후보는 이 문서에 등장했다는 이유만으로 권위 있는 값이 되지 않습니다.
 
 ## 관련 문서
 
@@ -711,9 +711,25 @@ class, Component inset, Density, Target geometry 또는 Wide `page-title` 임계
 `768px`, `1280px`, `1440px`, Fluid maximum 동작을 사용하고 Compact,
 Intermediate, Wide alignment는 4/8/12 Column, `12/16/16px` Gutter 및 Safe-aware
 `16/24/32px` 최소 Inline margin을 사용합니다. Container class는 Task-space 필요를
-설명하며 활성 Alignment tier와 분리됩니다. 정확한 4→8열과 8→12열 전환,
-Component geometry, Density, Target size, Panel ratio 및 Wide `page-title` 임계점은
-여전히 미확정입니다.
+설명하며 활성 Alignment tier와 분리됩니다. 이 시점에는 정확한 4→8열과 8→12열
+전환, Component geometry, Density, Target size, Panel ratio 및 Wide `page-title`
+임계점이 여전히 미확정이었습니다.
+
+그다음 사용자는 문서 `26`의 `FTL-08D`로 기록한 Density 및 Target-geometry 계약을
+승인했습니다. `32/40/48px`을 제한된 Compact, Standard, Comfortable Visible
+control-height step으로 사용하고, `44px`은 네 번째 Visible step이 아니라 일반
+Effective-target 계약으로 취급합니다. `32px` Effective target은 관리된 Fine-pointer
+Viewer/Editor 예외로만 허용하며 Foundation v0.1은 제한 없는 전역 Density
+preference를 제공하지 않습니다.
+
+그다음 사용자는 문서 `26`의 `FTL-08E`로 기록한 측정 Responsive-transition 계약을
+승인했습니다. Page-layout Query container는 `672 CSS px` 미만에서 4 Column,
+`672–1055 CSS px`에서 8 Column, `1056 CSS px` 이상에서 12 Column을 사용합니다.
+Component 재구성은 공유 Page-grid 전환이 아니라 별도로 측정한 Container 실패를
+계속 따릅니다. Wide `page-title`은 12-Column Tier에서 Text region이 최소 8개 Track을
+차지하거나 `640 CSS px` 이상으로 측정될 때만 활성화하며 `reading` Composition에서는
+활성화하지 않습니다. 이번 결정은 최대 Line count, Truncation, Component별 Layout,
+Color, Material 또는 Panel ratio를 승인하지 않습니다.
 
 ## 단계 체크리스트
 
@@ -756,5 +772,10 @@ Component geometry, Density, Target size, Panel ratio 및 Wide `page-title` 임�
 - [x] 사용자가 2026-08-04에 문서 `26`의 `FTL-08C`로 관리되는 4개 Container
       class와 Compact/Intermediate/Wide 4/8/12-Column Alignment model을
       승인했고 정확한 Content-driven 전환은 이관했습니다.
+- [x] 사용자가 2026-08-04에 문서 `26`의 `FTL-08D`로 제한된 Visible control-height,
+      Effective-target, Fine-pointer 예외 및 Density 관리 계약을 승인했습니다.
+- [x] 사용자가 2026-08-04에 문서 `26`의 `FTL-08E`로 측정된 `672/1056 CSS px`
+      Page-grid 전환, Component별 Container-failure 분리 및 정확한 Wide
+      `page-title` 활성화 조건을 승인했습니다.
 - [ ] Production 승격 전에 필수 다국어 통합 Specimen에서 Pretendard JP
       delivery, fallback metric 및 하한을 검증합니다.

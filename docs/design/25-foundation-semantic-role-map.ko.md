@@ -2,7 +2,7 @@
 
 ## 문서 관리
 
-- 상태: `승인된 Semantic-role 구조, 정확한 기본 Composite mapping 및 제한된 Page-title substitution — 통합 검증 미완료`
+- 상태: `승인된 Semantic-role 구조, 정확한 기본 Composite mapping 및 측정된 Page-title substitution — 통합 검증 미완료`
 - 승인일: 2026-08-03
 - 마지막 결정 갱신일: 2026-08-04
 - 원본 언어: 영어
@@ -13,9 +13,9 @@
   진입 기준
 - 입력: 승인된 문서 `01`–`24`, 현재 저장소 Typography utility, 문서 `24`에
   기록된 현재 Browser 근거, 아래 Reference 비교 및 2026-08-03의 명시적 사용자
-  승인
-- 제외: 정확한 Content-driven Wide-layout 임계점, 최대 Line count, Wrapping 및
-  Truncation 정책, Fallback 및 Delivery 세부, Color, Spacing, Grid, Component
+  승인과 2026-08-04의 후속 명시적 사용자 승인
+- 제외: 최대 Line count, Wrapping 및 Truncation 정책, Fallback 및 Delivery
+  세부, Color, Spacing, Grid, Component
   치수, 최종 Figma style, Production screen 및 Application 구현
 
 이 문서는 각 공유 Typography 역할의 의미와 관리 방식, 공용 Family 및 전역
@@ -61,8 +61,9 @@ control, Viewer 및 미래 사용자용 Editor를 지원하면서도 같은 분�
 이 문서에서는 Semantic role, Alias 관리 모델, Pretendard JP Family 선택 및
 공용 사용자 표시용 `12px` 전역 하한을 승인합니다. 후속 Batch B 문서 `26`은
 절제된 물리 축, 12개 Role을 9개 Composite에 배정한 정확한 기본 Mapping 및
-하나의 단계형 `page-title` Substitution을 승인합니다. 통합 Specimen 승격,
-정확한 Wide-layout 임계점 및 그 밖의 제외 경계는 후속 결정으로 남습니다.
+하나의 단계형 `page-title` Substitution을 승인합니다. 문서 `26`은 이후 Wide
+`page-title` 단계의 정확한 Page-layout 및 측정된 Title-region 조건을 승인합니다.
+통합 Specimen 승격 및 그 밖의 제외 경계는 후속 결정으로 남습니다.
 
 ## 조사 수렴점
 
@@ -157,15 +158,19 @@ size나 12개의 독립 Style이 필요하지 않습니다.
 Page-local Size, Leading, Weight 또는 Tracking 선택이 아니라 Semantic role이나
 승인된 Alias를 통해 사용해야 합니다. 승인된 유일한 Responsive variant는
 Content-driven Wide composition에서 `page-title`을 Proportional
-`32/40 · 700`으로 단계 전환하는 것입니다. 정확한 임계점과 통합 Specimen 승격은
+`32/40 · 700`으로 단계 전환하는 것입니다. 문서 `26`은 정확한 `1056 CSS px`
+12-Column 및 측정된 Title-region 활성화 조건을 정의하며 통합 Specimen 승격은
 후속 Gate로 남습니다.
 
 ### 승인된 Responsive role 동작
 
 - `page-title`은 Mobile-first Compact/기본 Composition에서 `24/32 · 700`,
   Content-driven Wide composition에서 `32/40 · 700`을 사용합니다.
-- 정확한 임계점은 `FTL-08`의 Spacing, Grid 및 Container 작업에서 선택하며
-  Device 이름 규칙이나 복사한 Framework breakpoint가 아닙니다.
+- Wide 단계는 소유 Page-layout Query container가 `1056 CSS px` 이상의 12-Column
+  Tier에 들어가고, Title text region이 최소 8개 Alignment track을 차지하거나
+  `640 CSS px` 이상으로 측정되며, Title이 `reading` Composition 안에 있지 않을 때만
+  활성화합니다. 이는 Device 이름 규칙이나 복사한 Framework breakpoint가 아니라
+  Container 및 Content 조건입니다.
 - 전환은 Fluid가 아니라 단계형입니다. `clamp()` 보간, 중간값, Locale별 Size 및
   Page-local 적용 또는 제외 선택은 승인하지 않습니다.
 - `display`, `metric-display`, `section-title` 및 모든 하위 Role은 폭과 관계없이
@@ -486,28 +491,28 @@ Content·고밀도·Empty·Error·Disabled·Permission·Destructive fixture를
 
 ## 결정 기록
 
-| ID       | 결정                                                                                                                                         | 상태         |
-| -------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
-| `FSR-01` | 이 문서의 공유 Semantic role 12개를 사용함                                                                                                   | `Approved`   |
-| `FSR-02` | Batch B 통합 Specimen 검토 전까지 모든 물리 Type 값을 미확정으로 유지함                                                                      | `Superseded` |
-| `FSR-03` | 일반 Text에 승인된 Role 사용을 의무화하고 모든 물리 예외를 명시적으로 관리함                                                                 | `Approved`   |
-| `FSR-04` | `display`를 드물게 유지하고 기본 Page, Card, Metric 또는 State style로 사용하지 않음                                                         | `Approved`   |
-| `FSR-05` | 전역 일반 UI `micro` role을 유지하지 않음                                                                                                    | `Approved`   |
-| `FSR-06` | 비교 Metric에 Tabular figures를 사용하고 일반 Domain value에 Monospace를 사용하지 않음                                                       | `Approved`   |
-| `FSR-07` | 활성화된 Localized/read title을 원문 Music title 위에 두되 시각적으로 하위로 유지함                                                          | `Approved`   |
-| `FSR-08` | Wordmark, Artist, Control, Badge, Chart label 및 Renderer data를 새 공유 Scale이 아닌 관리되는 Alias로 취급함                                | `Approved`   |
-| `FSR-09` | 최종 Font를 선택하지 않고 Pretendard를 Incumbent candidate로 유지함                                                                          | `Superseded` |
-| `FSR-10` | Pretendard JP를 한국어·일본어·영어 NosLog 2.0 공용 글꼴 Family로 선택하되 Production 검증을 유지함                                           | `Approved`   |
-| `FSR-11` | 일반 공용 사용자 표시용 타이포그래피의 `12px` 미만을 금지하고 `12px`를 Role 배정이 아닌 하한으로 취급함                                      | `Approved`   |
-| `FSR-12` | Role별 크기, 행간, 굵기, 자간, 반응형 동작, Fallback 및 Delivery를 Batch B까지 미확정으로 유지함                                             | `Superseded` |
-| `FSR-13` | Semantic role을 자동 배정하지 않고 문서 `26`의 승인된 `12/14/16px` 하위 물리 Core를 인정함                                                   | `Approved`   |
-| `FSR-14` | 전체 Semantic composite style을 배정하지 않고 문서 `26`의 승인된 `16/20/24px` 하위 Line-height 축과 기본 하위 Pairing을 인정함               | `Approved`   |
-| `FSR-15` | 모든 Semantic role에 최종 Composite style을 배정하지 않고 문서 `26`의 승인된 `400/500/600/700` 공용 Weight 어휘를 인정함                     | `Approved`   |
-| `FSR-16` | 모든 드문 예외를 명시적으로 관리하면서 문서 `26`의 승인된 자연/기본 Tracking과 공용 Role 전반의 Kerning 유지를 인정함                        | `Approved`   |
-| `FSR-17` | 최종 Semantic composite를 배정하지 않고 문서 `26`의 승인된 `20/24/32px` 일반 상위 Core와 Gate를 둔 `40px` Display step을 인정함              | `Approved`   |
-| `FSR-18` | 최종 Semantic composite를 배정하지 않고 문서 `26`의 승인된 `28/32/40/48px` 상위 Line-height 축과 기본 상위 Pairing을 인정함                  | `Approved`   |
-| `FSR-19` | 문서 `26`의 정확한 12개 Role-to-9개 Composite Map, Focused-entity 및 Field-value 우선순위, Tabular metric 동작 및 드문 Display Gate를 사용함 | `Approved`   |
-| `FSR-20` | 다른 모든 Role은 고정하고 정확한 Content-driven 임계점은 `FTL-08`로 넘기면서 문서 `26`의 제한된 단계형 `page-title` Substitution을 인정함    | `Approved`   |
+| ID       | 결정                                                                                                                                            | 상태         |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| `FSR-01` | 이 문서의 공유 Semantic role 12개를 사용함                                                                                                      | `Approved`   |
+| `FSR-02` | Batch B 통합 Specimen 검토 전까지 모든 물리 Type 값을 미확정으로 유지함                                                                         | `Superseded` |
+| `FSR-03` | 일반 Text에 승인된 Role 사용을 의무화하고 모든 물리 예외를 명시적으로 관리함                                                                    | `Approved`   |
+| `FSR-04` | `display`를 드물게 유지하고 기본 Page, Card, Metric 또는 State style로 사용하지 않음                                                            | `Approved`   |
+| `FSR-05` | 전역 일반 UI `micro` role을 유지하지 않음                                                                                                       | `Approved`   |
+| `FSR-06` | 비교 Metric에 Tabular figures를 사용하고 일반 Domain value에 Monospace를 사용하지 않음                                                          | `Approved`   |
+| `FSR-07` | 활성화된 Localized/read title을 원문 Music title 위에 두되 시각적으로 하위로 유지함                                                             | `Approved`   |
+| `FSR-08` | Wordmark, Artist, Control, Badge, Chart label 및 Renderer data를 새 공유 Scale이 아닌 관리되는 Alias로 취급함                                   | `Approved`   |
+| `FSR-09` | 최종 Font를 선택하지 않고 Pretendard를 Incumbent candidate로 유지함                                                                             | `Superseded` |
+| `FSR-10` | Pretendard JP를 한국어·일본어·영어 NosLog 2.0 공용 글꼴 Family로 선택하되 Production 검증을 유지함                                              | `Approved`   |
+| `FSR-11` | 일반 공용 사용자 표시용 타이포그래피의 `12px` 미만을 금지하고 `12px`를 Role 배정이 아닌 하한으로 취급함                                         | `Approved`   |
+| `FSR-12` | Role별 크기, 행간, 굵기, 자간, 반응형 동작, Fallback 및 Delivery를 Batch B까지 미확정으로 유지함                                                | `Superseded` |
+| `FSR-13` | Semantic role을 자동 배정하지 않고 문서 `26`의 승인된 `12/14/16px` 하위 물리 Core를 인정함                                                      | `Approved`   |
+| `FSR-14` | 전체 Semantic composite style을 배정하지 않고 문서 `26`의 승인된 `16/20/24px` 하위 Line-height 축과 기본 하위 Pairing을 인정함                  | `Approved`   |
+| `FSR-15` | 모든 Semantic role에 최종 Composite style을 배정하지 않고 문서 `26`의 승인된 `400/500/600/700` 공용 Weight 어휘를 인정함                        | `Approved`   |
+| `FSR-16` | 모든 드문 예외를 명시적으로 관리하면서 문서 `26`의 승인된 자연/기본 Tracking과 공용 Role 전반의 Kerning 유지를 인정함                           | `Approved`   |
+| `FSR-17` | 최종 Semantic composite를 배정하지 않고 문서 `26`의 승인된 `20/24/32px` 일반 상위 Core와 Gate를 둔 `40px` Display step을 인정함                 | `Approved`   |
+| `FSR-18` | 최종 Semantic composite를 배정하지 않고 문서 `26`의 승인된 `28/32/40/48px` 상위 Line-height 축과 기본 상위 Pairing을 인정함                     | `Approved`   |
+| `FSR-19` | 문서 `26`의 정확한 12개 Role-to-9개 Composite Map, Focused-entity 및 Field-value 우선순위, Tabular metric 동작 및 드문 Display Gate를 사용함    | `Approved`   |
+| `FSR-20` | 다른 모든 Role은 고정하고 문서 `26`의 제한된 단계형 `page-title` Substitution과 `FTL-08E`의 12-Column 및 측정 Title-region 활성화 조건을 사용함 | `Approved`   |
 
 ## 완료 체크리스트
 
@@ -538,5 +543,7 @@ Content·고밀도·Empty·Error·Disabled·Permission·Destructive fixture를
       Field-value, Metric, Display 및 Semantic-heading 우선순위 규칙을 승인했습니다.
 - [x] Responsive title 및 Display substitution을 비교하고 단계형 Wide
       `page-title` Variant만 승인했습니다.
+- [x] `FTL-08E`의 12-Column 및 측정 Title-region 조건으로 정확한 Wide
+      `page-title` 활성화를 승인했습니다.
 - [ ] 통합 `S1`–`S6` Specimen을 사용자와 검토합니다.
 - [ ] 승인된 물리 값을 Foundation v0.1로 승격합니다.

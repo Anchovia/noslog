@@ -2,7 +2,7 @@
 
 ## 문서 관리
 
-- 상태: `진행 중 — Typography, Spacing, Container class, Grid model, Density 및 Target geometry 승인, 전환 임계점 미확정`
+- 상태: `진행 중 — 측정된 Grid 및 Page-title 전환까지 Typography·Layout 계약 승인, 통합 Specimen 검증 미완료`
 - 조사일: 2026-08-04
 - 마지막 결정 갱신일: 2026-08-04
 - 원본 언어: 영어
@@ -13,8 +13,8 @@
 - 입력: 승인된 문서 `01`–`25`, 현재 저장소 Typography 근거, 유지 관리되는
   Design system과 Standard, Rhythm-game domain product 및 2026-08-04의 명시적
   사용자 승인
-- 이번 결정에서 제외: 정확한 Content-driven Layout 전환 임계점, 최대 Line
-  count, Wrapping 및 Truncation 정책, 승인된 Control height와 Target 계약 이외의
+- 이번 결정에서 제외: 최대 Line count, Wrapping 및 Truncation 정책, 승인된
+  Control height와 Target 계약 이외의
   Component 치수, Color, Material treatment, 최종 Figma style, Production screen
   및 Application 구현
 
@@ -773,11 +773,98 @@ Composition을 균형 있어 보이게 하려고 임의의 Local maximum width�
 
 공유 Page-alignment model은 다음과 같습니다.
 
-| Grid tier    | 논리 Column | Gutter | 최소 Inline page margin | 승인 경계                                                                                     |
-| ------------ | ----------- | ------ | ----------------------- | --------------------------------------------------------------------------------------------- |
-| Compact      | 4           | `12px` | Safe-aware `16px`       | `FTL-08B`에서 `320–479 CSS px` 검증 계약으로 이미 승인했으며 `480px` Breakpoint를 뜻하지 않음 |
-| Intermediate | 8           | `16px` | Safe-aware `24px`       | Geometry 승인, 정확한 Content-driven 진입 임계점은 미확정                                     |
-| Wide         | 12          | `16px` | Safe-aware `32px`       | Geometry 승인, 정확한 Content-driven 진입 임계점은 미확정                                     |
+| Grid tier    | 논리 Column | Gutter | 최소 Inline page margin | 승인 경계                                                                                                       |
+| ------------ | ----------- | ------ | ----------------------- | --------------------------------------------------------------------------------------------------------------- |
+| Compact      | 4           | `12px` | Safe-aware `16px`       | `672 CSS px` 미만의 Page-layout Query container에서 활성화하며 `320–479 CSS px` Compact 검증 계약을 계속 요구함 |
+| Intermediate | 8           | `16px` | Safe-aware `24px`       | `672 CSS px` Page-layout Query container에서 활성화하고 `1056 CSS px` 미만까지 유지함                           |
+| Wide         | 12          | `16px` | Safe-aware `32px`       | `1056 CSS px` Page-layout Query container에서 활성화함                                                          |
+
+#### 승인된 측정 전환 임계점
+
+임계점 검토는 다음 16개의 독립적인 공식 또는 유지 관리 출처를 비교했습니다.
+[WCAG Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html),
+[MDN Container Queries](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries),
+[Tailwind Responsive Design](https://tailwindcss.com/docs/responsive-design),
+[Atlassian Grid](https://atlassian.design/foundations/grid-beta/applying-grid/),
+[Material 3 canonical layouts](https://m3.material.io/foundations/layout/canonical-examples/overview),
+[Fluent 2 Layout](https://fluent2.microsoft.design/layout),
+[Carbon Grid](https://carbondesignsystem.com/elements/2x-grid/overview/),
+[Primer breakpoints](https://primer.style/product/primitives/breakpoints/),
+[Shopify Polaris breakpoints](https://polaris-react.shopify.com/tokens/breakpoints),
+[GitLab Pajamas Layout](https://design.gitlab.com/product-foundations/layout/),
+[SAP Fiori Flexible Grid](https://experience.sap.com/fiori-design-web/flexible-grid/),
+[USWDS Layout Grid](https://designsystem.digital.gov/utilities/layout-grid/),
+[GOV.UK Layout](https://design-system.service.gov.uk/styles/layout/),
+[Singapore Government Design System Responsive Grid](https://www.designsystem.tech.gov.sg/foundations/layout/responsive-grid),
+[Japan Digital Agency Layout](https://design.digital.go.jp/dads/foundations/layout/),
+[Apple Layout](https://developer.apple.com/design/human-interface-guidelines/layout)입니다.
+
+각 System은 유의미한 Intermediate 전환을 대략 `600–768px`, Wide 전환을 대략
+`992–1056px`에 모으지만 정확한 값에는 동의하지 않습니다. Page alignment는 안정된
+Tier를 사용할 수 있고 Nested component는 자기 Container의 실제 가용 공간에서
+재구성한다는 원칙에 수렴합니다. 따라서 Framework 숫자는 비교 근거로 남으며 NosLog
+값을 선택한 이유가 되지 않습니다.
+
+`320`, `390`, `479`, `600`, `768`, `900`, `1024`, `1280`, `1440 CSS px`에서
+현재 Browser를 검사한 결과, 구현된 Home, Music discovery, Rankings 및 Music Detail
+사용자 Shell은 `479px`부터 약 `390px`에서 확장을 멈춥니다. Page title과 내부
+Composition도 Wide viewport에서 사실상 바뀌지 않습니다. 이는 2.0 Layout 권위가
+아니라 관찰된 실패 근거입니다. 현재 Breakpoint로는 사용할 수 있는 전환 임계점을
+도출할 수 없습니다.
+
+NosLog에서 승인한 Margin과 Gutter를 적용하면 다음 진입 Geometry가 나옵니다.
+
+| 진입 Canvas         | 계산                         | 논리 Track 폭 |
+| ------------------- | ---------------------------- | ------------- |
+| `320px`, 4 Column   | `(320 − 2×16 − 3×12) ÷ 4`    | `63px`        |
+| `672px`, 8 Column   | `(672 − 2×24 − 7×16) ÷ 8`    | `64px`        |
+| `1056px`, 12 Column | `(1056 − 2×32 − 11×16) ÷ 12` | `68px`        |
+
+결과인 `63→64→68px` Track 연속성이 두 임계점의 NosLog 고유 측정 근거입니다.
+승인 계약은 다음과 같습니다.
+
+1. `672 CSS px` 미만의 Page-layout Query container는 4-Column Alignment model을
+   사용합니다.
+2. `672 CSS px`부터 `1055 CSS px`까지는 8-Column Alignment model을 사용합니다.
+3. `1056 CSS px` 이상에서는 12-Column Alignment model을 사용합니다.
+4. Query 대상은 Device 이름이 아니라 내부 Page margin을 적용하기 전의 사용 가능한
+   Page-layout canvas입니다. 제한된 Workspace main region 또는 관리되는 다른 Nested
+   layout은 실제 Display나 Browser 폭이 아니라 자체 가용 Inline size를 Query합니다.
+5. 이 값은 공유 Page alignment만 전환합니다. Card count, Row anatomy, Pane count,
+   Filter arrangement 또는 Component shape를 자동으로 바꾸지 않습니다. Component는
+   별도로 측정한 Content-failure 지점을 사용하고 Nested 상태에서는 Container query를
+   사용해야 합니다.
+6. `reading` Container는 최대 `768px`이므로 Browser가 넓다는 이유만으로 12-Column
+   Reading surface가 되지 않습니다.
+7. Browser zoom과 Window tiling으로 Query-container가 줄면 정보나 기능 손실 없이
+   더 낮은 Tier로 돌아갈 수 있습니다.
+
+#### 승인된 Wide `page-title` 활성화
+
+기본 `page-title`은 Proportional `24/32 · 700`을 유지합니다. 다음 조건을 모두
+만족할 때만 Proportional `32/40 · 700`으로 단계 전환합니다.
+
+1. 소유 Page-layout Query container가 `1056 CSS px` 이상인 12-Column Tier에 있음
+2. Title text region이 12개 Alignment track 중 최소 8개를 차지하거나, 다른 관리되는
+   Title region에서 측정된 Inline 공간이 최소 `640 CSS px`임
+3. Title이 `reading` Composition 안에 있지 않음
+
+12-Column 진입 Canvas에서 8개 Track과 7개 Gutter는 약 `656px`을 제공하여 측정된
+Title-space 조건을 만족합니다. 6개 Track으로 줄어든 Title region은 약 `488px`만
+제공하므로 Wide browser에서도 기본 `24/32 · 700` Composite를 유지합니다. Focused
+Music 및 다른 Entity title도 같은 규칙을 상속합니다. 긴 제목은 줄바꿈할 수 있으며,
+이번 결정은 최대 Line count, Truncation 또는 한 줄 요구사항을 정하지 않습니다.
+
+Repository의
+[NOSTALGIA Music source data](../../prisma/data/nosdata-musics.json)에는 원문 제목 약
+54자, 일본어 읽기 49자, Artist 67자까지 존재합니다. 따라서 통합 Specimen은 짧은
+Placeholder heading이 아니라 실제 긴 Latin, 한국어 및 일본어 Identity를 포함해야
+합니다.
+
+임계점 검증은 `320`, 대표 `390`, `479`, `480`, `768`, `1024`, `1280`, `1440 CSS px`
+외에 `671/672/673`, `1055/1056/1057 CSS px`을 포함해야 합니다. 또한 Browser `200%`
+Zoom, 한국어·일본어·영어 긴 Content, Safe area 및 Workspace panel 변경을 다룹니다.
+하나의 `390px` Canvas나 Desktop viewport 하나를 통과하는 것은 계약 검증이 아닙니다.
 
 Container와 Grid model은 다음 규칙을 따릅니다.
 
@@ -802,12 +889,12 @@ Container와 Grid model은 다음 규칙을 따릅니다.
 7. Grid column은 보이는 Card, Panel 또는 Content column 개수를 강제하지 않는
    Alignment track입니다. Collection column 수는 승인된 Minimum item width, Content
    length 및 Task 요구사항을 따릅니다.
-8. 4→8열과 8→12열의 정확한 전환은 대표 한국어, 일본어 및 영어 Content로 측정해야
-   합니다. Framework breakpoint, Device label 또는 예시에 사용한 `1600px` 비교
-   Canvas는 해당 임계점을 승인하지 않습니다.
-9. 승인된 Wide `page-title` Substitution은 이후 Test에서 Composition이
-   Content-driven Wide state에 진입했다고 입증할 때만 활성화할 수 있습니다.
-   Container 이름이나 Desktop browser 감지만으로는 부족합니다.
+8. 승인된 `672px` 및 `1056px` 전환은 Page-layout Query container에 구현하고 위의
+   인접 경계 폭에서 검증해야 합니다. Framework breakpoint, Device label 또는 예시
+   Comparison canvas는 해당 검사를 대체하지 않습니다.
+9. 승인된 Wide `page-title` Substitution에는 12-Column Tier와 위에서 측정한
+   Title-region 조건이 모두 필요합니다. Container 이름이나 Desktop browser 감지만으로는
+   부족합니다.
 10. 이번 승인은 Component padding, Panel ratio, Card count, Sidebar 존재 여부,
     Resizable-tool 치수, Target size 또는 최종 Screen composition을 정하지 않습니다.
 
@@ -967,6 +1054,10 @@ Code 관례에 맞는 이름을 사용할 수 있지만 세 값과 Role 경계�
 | 각 Page가 임의의 Local maximum width를 선택하도록 허용            | `Rejected` | 관리되는 재사용 System 대신 불일치 Keyline과 Page별 Layout 분산을 다시 만듦                                                                                        |
 | `768px`, `1280px`, `1440px`을 고정 Canvas로 취급                  | `Rejected` | 해당 값은 상한이며 Fixed canvas는 Mobile-first Reflow, Intermediate width, Safe area 및 Zoom과 충돌함                                                              |
 | Framework breakpoint를 4→8열과 8→12열 전환으로 복사               | `Rejected` | Framework 기본값은 NosLog의 다국어 Content, Control 또는 Domain visualization이 재구성을 필요로 하는 지점을 입증하지 못함                                          |
+| NosLog Geometry 없이 관습적인 `640px`, `1024px` 값 사용           | `Rejected` | 유효한 Reference 군집이지만 측정한 `672px`, `1056px` 진입만큼 승인된 Page margin, Gutter 및 논리 Track geometry를 일관되게 보존하지 못함                           |
+| 공유 Grid 전환을 `768px`, `1280px`까지 지연                       | `Rejected` | 유용한 Intermediate·Comparison 공간을 사용하지 못하고 각 전환 전에 논리 Track을 불균형하게 크게 만듦                                                               |
+| 모든 Component를 공유 Page-grid 임계점에서 재구성                 | `Rejected` | Page alignment와 Component anatomy는 서로 다른 제약을 해결함. Nested card, Filter, Pane 및 Tool은 자체적으로 측정한 Container 실패에 반응해야 함                   |
+| Browser 폭 또는 Container class만으로 Wide `page-title` 활성화    | `Rejected` | Action, Media, Side pane, Zoom 또는 Window tiling 때문에 Wide browser에서도 Title region이 좁을 수 있으므로 승인된 측정 공간이 필요함                              |
 | 단순히 Standard page를 넓어 보이게 하려고 `workspace` 사용        | `Rejected` | 무제한 Class는 의미상 필요한 Canvas, Visualization 및 조절 가능 Tool task로만 정당화됨                                                                             |
 | 모든 Control에 하나의 Universal `48px` Visible height 사용        | `Rejected` | Touch 조작은 보호하지만 고밀도 비교와 Professional-tool region을 불필요하게 확대함. 모든 Visible control을 같게 만들지 않고 Target 계약으로 Touch를 보호할 수 있음 |
 | 현재의 모든 `22–48px` Local control height 유지                   | `Rejected` | 우연한 Page별 분산을 유지하고 작은 Target을 남기며 재사용 Component Mapping을 방해함                                                                               |
@@ -978,26 +1069,29 @@ Code 관례에 맞는 이름을 사용할 수 있지만 세 값과 Role 경계�
 
 ## 결정 기록
 
-| ID        | 결정                                                                                                                                                                                                                                                                                                         | 상태          |
-| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------- |
-| `FTL-01`  | 위 Role 경계와 반응형 제약을 포함하여 `12px`, `14px`, `16px`을 공유 하위 물리 Type core로 사용함                                                                                                                                                                                                             | `Approved`    |
-| `FTL-02`  | 위 검증 제약을 조건으로 `16px`, `20px`, `24px`을 하위 Line-height primitive로 사용하고 `12/16`, `14/20`, `16/24`를 기본으로 함                                                                                                                                                                               | `Approved`    |
-| `FTL-03`  | 위 Semantic, 사용 빈도, 반응형 및 검증 제약과 함께 `400`, `500`, `600`, `700`만 공유 Weight primitive로 사용함                                                                                                                                                                                               | `Approved`    |
-| `FTL-04`  | 모든 공용 UI Role에 자연/기본 간격을 사용하고 Kerning을 유지하며 공유 양수·음수 Tracking token을 노출하지 않고 드문 예외를 명시적으로 관리함                                                                                                                                                                 | `Approved`    |
-| `FTL-05`  | `20px`, `24px`, `32px`을 일반 상위 Core로 사용하고 `40px`은 별도 승인 Composite로 제한하며 최종 Map에서는 `display`에만 배정함                                                                                                                                                                               | `Approved`    |
-| `FTL-06`  | 위 경계와 함께 `28px`, `32px`, `40px`, `48px`을 상위 Line-height primitive로 사용하고 `20/28`, `24/32`, `32/40`, `40/48`을 기본으로 함                                                                                                                                                                       | `Approved`    |
-| `FTL-07`  | 12개 Semantic role을 위 9개 승인 Composite에 Mapping하고 Focused-entity 및 Field-value 우선순위, Metric Tabular figures 및 Display Gate를 적용함                                                                                                                                                             | `Approved`    |
-| `FTL-08`  | Spacing, Grid, Container, Density 및 Target geometry 값을 선택함                                                                                                                                                                                                                                             | `In progress` |
-| `FTL-08A` | `0/2/4/8/12/16/24/32/48/64px`을 제한된 Spacing primitive 축으로 사용하고 `2px`을 관리된 광학 또는 전문 Visualization 보정에만 두며 Semantic role을 요구하고 임의 공유 Application spacing을 금지함                                                                                                           | `Approved`    |
-| `FTL-08B` | `16px` Safe-aware Inline page margin, 4개의 동일한 논리 Column 및 `12px` Gutter와 함께 Compact `320–479 CSS px` 검증 계약을 사용하고 일반적인 가로 Overflow 없는 Reflow를 유지하며 `480px` 전환 Breakpoint를 추론하지 않음                                                                                   | `Approved`    |
-| `FTL-08C` | 각각 `768px`, `1280px`, `1440px`, Fluid maximum 동작을 갖는 `reading`, `standard`, `wide`, `workspace` Container class를 사용하고, `12/16/16px` Gutter와 `16/24/32px` Safe-aware margin을 갖는 4/8/12-Column Compact/Intermediate/Wide Alignment model을 사용하되 정확한 전환은 이관함                       | `Approved`    |
-| `FTL-08D` | `32/40/48px`을 제한된 Compact/Standard/Comfortable Visible control-height step으로 사용하고, `44px`을 네 번째 Visible step이 아니라 일반 Effective target 계약으로 취급하며, `32px` Effective target은 관리된 Fine-pointer Viewer/Editor 예외로만 허용하고 제한 없는 전역 Density preference를 제공하지 않음 | `Approved`    |
-| `FTL-09`  | 모든 Role은 폭에 따라 고정하되 `page-title`만 Compact/기본 Composition의 `24/32 · 700`에서 Content-driven Wide composition의 Proportional `32/40 · 700`으로 단계 전환하고, Fluid 보간은 금지하며 정확한 임계점은 `FTL-08`로 넘김                                                                             | `Approved`    |
+| ID        | 결정                                                                                                                                                                                                                                                                                                                                      | 상태       |
+| --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| `FTL-01`  | 위 Role 경계와 반응형 제약을 포함하여 `12px`, `14px`, `16px`을 공유 하위 물리 Type core로 사용함                                                                                                                                                                                                                                          | `Approved` |
+| `FTL-02`  | 위 검증 제약을 조건으로 `16px`, `20px`, `24px`을 하위 Line-height primitive로 사용하고 `12/16`, `14/20`, `16/24`를 기본으로 함                                                                                                                                                                                                            | `Approved` |
+| `FTL-03`  | 위 Semantic, 사용 빈도, 반응형 및 검증 제약과 함께 `400`, `500`, `600`, `700`만 공유 Weight primitive로 사용함                                                                                                                                                                                                                            | `Approved` |
+| `FTL-04`  | 모든 공용 UI Role에 자연/기본 간격을 사용하고 Kerning을 유지하며 공유 양수·음수 Tracking token을 노출하지 않고 드문 예외를 명시적으로 관리함                                                                                                                                                                                              | `Approved` |
+| `FTL-05`  | `20px`, `24px`, `32px`을 일반 상위 Core로 사용하고 `40px`은 별도 승인 Composite로 제한하며 최종 Map에서는 `display`에만 배정함                                                                                                                                                                                                            | `Approved` |
+| `FTL-06`  | 위 경계와 함께 `28px`, `32px`, `40px`, `48px`을 상위 Line-height primitive로 사용하고 `20/28`, `24/32`, `32/40`, `40/48`을 기본으로 함                                                                                                                                                                                                    | `Approved` |
+| `FTL-07`  | 12개 Semantic role을 위 9개 승인 Composite에 Mapping하고 Focused-entity 및 Field-value 우선순위, Metric Tabular figures 및 Display Gate를 적용함                                                                                                                                                                                          | `Approved` |
+| `FTL-08`  | Spacing, Grid, Container, Density, Target geometry 및 측정된 Responsive-transition 값을 선택함                                                                                                                                                                                                                                            | `Approved` |
+| `FTL-08A` | `0/2/4/8/12/16/24/32/48/64px`을 제한된 Spacing primitive 축으로 사용하고 `2px`을 관리된 광학 또는 전문 Visualization 보정에만 두며 Semantic role을 요구하고 임의 공유 Application spacing을 금지함                                                                                                                                        | `Approved` |
+| `FTL-08B` | `16px` Safe-aware Inline page margin, 4개의 동일한 논리 Column 및 `12px` Gutter와 함께 Compact `320–479 CSS px` 검증 계약을 사용하고 일반적인 가로 Overflow 없는 Reflow를 유지하며 `480px` 전환 Breakpoint를 추론하지 않음                                                                                                                | `Approved` |
+| `FTL-08C` | 각각 `768px`, `1280px`, `1440px`, Fluid maximum 동작을 갖는 `reading`, `standard`, `wide`, `workspace` Container class를 사용하고, `12/16/16px` Gutter와 `16/24/32px` Safe-aware margin을 갖는 4/8/12-Column Compact/Intermediate/Wide Alignment model을 사용함                                                                           | `Approved` |
+| `FTL-08D` | `32/40/48px`을 제한된 Compact/Standard/Comfortable Visible control-height step으로 사용하고, `44px`을 네 번째 Visible step이 아니라 일반 Effective target 계약으로 취급하며, `32px` Effective target은 관리된 Fine-pointer Viewer/Editor 예외로만 허용하고 제한 없는 전역 Density preference를 제공하지 않음                              | `Approved` |
+| `FTL-08E` | Page-layout Query container가 `672 CSS px`이면 공유 8-Column Alignment, `1056 CSS px`이면 12-Column Alignment를 활성화하고, Component 재구성은 별도로 측정한 Container 실패를 따르며, Wide `page-title`은 12-Column Tier에서 Text region이 최소 8개 Track을 차지하거나 `640 CSS px` 이상일 때만 활성화하고 `reading` Composition은 제외함 | `Approved` |
+| `FTL-09`  | 다른 모든 Role은 폭에 따라 고정하고 `page-title`만 `FTL-08E`의 12-Column 및 측정 Title-region 조건에서 `24/32 · 700`에서 Proportional `32/40 · 700`으로 단계 전환하며 Fluid 보간을 금지함                                                                                                                                                 | `Approved` |
 
 ## 다음 승인 Gate
 
-다음 제한된 결정은 Intermediate/Wide Grid model과 승인된 Wide `page-title`
-variant를 활성화하는 측정된 Content-failure 임계점입니다. 이 작업은 `S1`–`S6`
-다국어 Composition의 일부로 승인된 Typography, Spacing, Container, Density 및
-Target 계약을 검증해야 하며 최대 Line count, Truncation, Color, Material, Panel
-ratio 또는 최종 Component layout을 조용히 승인해서는 안 됩니다.
+다음 제한된 Gate는 승인된 Typography 및 Layout 계약을 통합 `S1`–`S6` 다국어
+Specimen에서 검증하는 것입니다. 인접 전환 폭, `320 CSS px` Reflow, `200%` Zoom,
+Safe area, 실제 긴 Content, Control target 및 Workspace-panel 변경을 포함합니다.
+이 Gate를 통과하면서 Component별 Failure point를 다듬을 수 있지만 `FTL-08E`를
+조용히 변경하거나 최대 Line count, Truncation, Color, Material, Panel ratio 또는
+최종 Component layout을 승인할 수 없습니다. 충돌이 생기면 Foundation v0.1 승격
+전에 명시적 수정 결정으로 사용자에게 되돌려야 합니다.

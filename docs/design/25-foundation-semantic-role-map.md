@@ -2,7 +2,7 @@
 
 ## Document Control
 
-- Status: `Approved semantic-role architecture, exact default composite mapping, and bounded page-title substitution — integrated validation remains open`
+- Status: `Approved semantic-role architecture, exact default composite mapping, and measured page-title substitution — integrated validation remains open`
 - Approval date: 2026-08-03
 - Last decision update: 2026-08-04
 - Canonical language: English
@@ -13,9 +13,9 @@
   map, and Batch B entry criteria for NosLog 2.0 Foundation v0.1
 - Inputs: approved documents `01`–`24`, current repository typography utilities,
   current-browser evidence recorded in document `24`, the reference comparison below,
-  and explicit user approval on 2026-08-03
-- Excluded: the exact content-driven wide-layout threshold, maximum line counts,
-  wrapping and truncation policy, fallback and delivery details, color, spacing,
+  and explicit user approvals on 2026-08-03 and 2026-08-04
+- Excluded: maximum line counts, wrapping and truncation policy, fallback and
+  delivery details, color, spacing,
   grid, component dimensions, final Figma styles, production screens, and application
   implementation
 
@@ -63,8 +63,9 @@ The semantic roles, alias-governance model, Pretendard JP family selection, and 
 `12px` shared user-facing floor are approved in this document. Batch B document `26`
 later approves the restrained physical axes, exact default mapping of the twelve roles
 to nine composites, and the single stepped `page-title` substitution. Integrated
-specimen promotion, the exact wide-layout threshold, and the other excluded boundaries
-remain later decisions.
+specimen promotion and the other excluded boundaries remain later decisions. Document
+`26` subsequently approves the exact page-layout and measured title-region conditions
+for the wide `page-title` step.
 
 ## Research Convergence
 
@@ -158,15 +159,19 @@ Natural/default tracking and retained kerning apply to every composite. These va
 must be consumed through the semantic roles or approved aliases, not as page-local
 size, leading, weight, or tracking choices. The only approved responsive variant is
 the `page-title` step to proportional `32/40 · 700` in content-driven wide
-composition. Its exact threshold and integrated specimen promotion remain later
-gates.
+composition. Document `26` defines its exact `1056 CSS px` twelve-column and measured
+title-region activation conditions; integrated specimen promotion remains a later
+gate.
 
 ### Approved responsive role behavior
 
 - `page-title` uses `24/32 · 700` in mobile-first compact/default composition and
   `32/40 · 700` in the content-driven wide composition.
-- The exact threshold is selected with spacing, grid, and container work in `FTL-08`;
-  it is not a device-name rule or a copied framework breakpoint.
+- The wide step activates only when the owning page-layout query container has entered
+  the twelve-column tier at `1056 CSS px` or wider, the title text region spans at
+  least eight alignment tracks or otherwise measures at least `640 CSS px`, and the
+  title is not in a `reading` composition. These are container and content conditions,
+  not a device-name rule or a copied framework breakpoint.
 - The transition is stepped, not fluid. `clamp()` interpolation, intermediate values,
   locale-specific sizes, and page-local opt-in or opt-out are not approved.
 - `display`, `metric-display`, `section-title`, and every lower role retain their
@@ -477,28 +482,28 @@ permission, and destructive fixtures at `320px`, `390px`, intermediate widths,
 
 ## Decision Log
 
-| ID       | Decision                                                                                                                                                              | Status       |
-| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
-| `FSR-01` | Use the twelve shared semantic roles defined in this document                                                                                                         | `Approved`   |
-| `FSR-02` | Keep all physical type values unresolved until Batch B integrated specimen review                                                                                     | `Superseded` |
-| `FSR-03` | Require ordinary text to use approved roles and govern every physical exception explicitly                                                                            | `Approved`   |
-| `FSR-04` | Keep `display` rare and prohibit it as the default page, card, metric, or state style                                                                                 | `Approved`   |
-| `FSR-05` | Do not retain a global ordinary-UI `micro` role                                                                                                                       | `Approved`   |
-| `FSR-06` | Use tabular figures for comparable metrics and do not use monospace for ordinary domain values                                                                        | `Approved`   |
-| `FSR-07` | Keep enabled localized/read title above but visually subordinate to the original Music title                                                                          | `Approved`   |
-| `FSR-08` | Treat wordmark, artist, controls, badges, chart labels, and renderer data as governed aliases rather than new shared scales                                           | `Approved`   |
-| `FSR-09` | Keep Pretendard as an incumbent candidate without selecting the final font                                                                                            | `Superseded` |
-| `FSR-10` | Select Pretendard JP as the shared Korean, Japanese, and English NosLog 2.0 font family while retaining production validation                                         | `Approved`   |
-| `FSR-11` | Prohibit ordinary shared user-facing typography below `12px`; treat `12px` as a floor rather than a role assignment                                                   | `Approved`   |
-| `FSR-12` | Keep role sizes, line heights, weights, tracking, responsive behavior, fallback, and delivery unresolved until Batch B                                                | `Superseded` |
-| `FSR-13` | Recognize document `26`'s approved `12/14/16px` lower physical core without automatically assigning semantic roles                                                    | `Approved`   |
-| `FSR-14` | Recognize document `26`'s approved `16/20/24px` lower line-height axis and default lower pairings without assigning full semantic composite styles                    | `Approved`   |
-| `FSR-15` | Recognize document `26`'s approved `400/500/600/700` shared weight vocabulary without assigning every semantic role a final composite style                           | `Approved`   |
-| `FSR-16` | Recognize document `26`'s approved natural/default tracking and retained kerning across shared roles while governing every rare exception explicitly                  | `Approved`   |
-| `FSR-17` | Recognize document `26`'s approved `20/24/32px` ordinary upper core and gated `40px` display step without assigning final semantic composites                         | `Approved`   |
-| `FSR-18` | Recognize document `26`'s approved `28/32/40/48px` upper line-height axis and default upper pairings without assigning final semantic composites                      | `Approved`   |
-| `FSR-19` | Use document `26`'s exact twelve-role-to-nine-composite map, focused-entity and field-value precedence, tabular metric behavior, and rare display gate                | `Approved`   |
-| `FSR-20` | Recognize document `26`'s bounded stepped `page-title` substitution while keeping every other role fixed and deferring the exact content-driven threshold to `FTL-08` | `Approved`   |
+| ID       | Decision                                                                                                                                                                           | Status       |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| `FSR-01` | Use the twelve shared semantic roles defined in this document                                                                                                                      | `Approved`   |
+| `FSR-02` | Keep all physical type values unresolved until Batch B integrated specimen review                                                                                                  | `Superseded` |
+| `FSR-03` | Require ordinary text to use approved roles and govern every physical exception explicitly                                                                                         | `Approved`   |
+| `FSR-04` | Keep `display` rare and prohibit it as the default page, card, metric, or state style                                                                                              | `Approved`   |
+| `FSR-05` | Do not retain a global ordinary-UI `micro` role                                                                                                                                    | `Approved`   |
+| `FSR-06` | Use tabular figures for comparable metrics and do not use monospace for ordinary domain values                                                                                     | `Approved`   |
+| `FSR-07` | Keep enabled localized/read title above but visually subordinate to the original Music title                                                                                       | `Approved`   |
+| `FSR-08` | Treat wordmark, artist, controls, badges, chart labels, and renderer data as governed aliases rather than new shared scales                                                        | `Approved`   |
+| `FSR-09` | Keep Pretendard as an incumbent candidate without selecting the final font                                                                                                         | `Superseded` |
+| `FSR-10` | Select Pretendard JP as the shared Korean, Japanese, and English NosLog 2.0 font family while retaining production validation                                                      | `Approved`   |
+| `FSR-11` | Prohibit ordinary shared user-facing typography below `12px`; treat `12px` as a floor rather than a role assignment                                                                | `Approved`   |
+| `FSR-12` | Keep role sizes, line heights, weights, tracking, responsive behavior, fallback, and delivery unresolved until Batch B                                                             | `Superseded` |
+| `FSR-13` | Recognize document `26`'s approved `12/14/16px` lower physical core without automatically assigning semantic roles                                                                 | `Approved`   |
+| `FSR-14` | Recognize document `26`'s approved `16/20/24px` lower line-height axis and default lower pairings without assigning full semantic composite styles                                 | `Approved`   |
+| `FSR-15` | Recognize document `26`'s approved `400/500/600/700` shared weight vocabulary without assigning every semantic role a final composite style                                        | `Approved`   |
+| `FSR-16` | Recognize document `26`'s approved natural/default tracking and retained kerning across shared roles while governing every rare exception explicitly                               | `Approved`   |
+| `FSR-17` | Recognize document `26`'s approved `20/24/32px` ordinary upper core and gated `40px` display step without assigning final semantic composites                                      | `Approved`   |
+| `FSR-18` | Recognize document `26`'s approved `28/32/40/48px` upper line-height axis and default upper pairings without assigning final semantic composites                                   | `Approved`   |
+| `FSR-19` | Use document `26`'s exact twelve-role-to-nine-composite map, focused-entity and field-value precedence, tabular metric behavior, and rare display gate                             | `Approved`   |
+| `FSR-20` | Use document `26`'s bounded stepped `page-title` substitution and its `FTL-08E` twelve-column and measured-title-region activation conditions while keeping every other role fixed | `Approved`   |
 
 ## Completion Checklist
 
@@ -528,5 +533,7 @@ permission, and destructive fixtures at `320px`, `390px`, intermediate widths,
       entity, field-value, metric, display, and semantic-heading precedence rules.
 - [x] Responsive title and display substitutions compared; only the stepped wide
       `page-title` variant was approved.
+- [x] Exact wide `page-title` activation approved through the `FTL-08E`
+      twelve-column and measured-title-region conditions.
 - [ ] Integrated `S1`–`S6` specimens reviewed with the user.
 - [ ] Approved physical values promoted to Foundation v0.1.
