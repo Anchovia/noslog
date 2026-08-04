@@ -100,12 +100,12 @@ Semantic typography 및 Layout 계약을 관리합니다. 이 검증에서 충�
 축소하거나 난이도 Group을 숨기지 않고 이 압력을 흡수해야 합니다. Grid Card는 측정된 현재
 Card보다 약 `5.5px` 넓습니다.
 
-### 검토할 Grid 수용량 규칙 제안
+### 승인된 Grid 수용량 규칙
 
 승인된 탐색 기획서는 약 `168px`을 감사된 일반 Mobile Grid Card로 확인하고,
 `390px`에서 두 열을 요구하며, 더 넓은 결과 영역에서 세 열부터 다섯 열까지를
 의도합니다. Foundation Compact geometry는 독립적으로 `320px` 두 열을 요구합니다.
-따라서 다음 수용량 규칙은 **제안**이며 아직 승인되지 않았습니다.
+사용자는 2026-08-04에 다음 결과 Container 수용량 규칙을 승인했습니다.
 
 | 결과 영역 수용량 | 열 수    | 결과 규칙                                                                                      |
 | ---------------- | -------- | ---------------------------------------------------------------------------------------------- |
@@ -114,10 +114,57 @@ Card보다 약 `5.5px` 넓습니다.
 | `720–903px`      | `4`      | `4 × 168px + 3 × 16px`.                                                                        |
 | `904px` 이상     | 최대 `5` | `5 × 168px + 4 × 16px`; 더 조밀한 Artwork 열을 추가하는 대신 승인된 최대 다섯 열을 지킵니다.   |
 
-이 후보는 기기 이름이나 공유 `672/1056px` Page-grid 전환이 아니라 결과 Container
-수용량을 사용합니다. 승인 전에는 여전히 사용자가 `138px` 및 `173px` Specimen을
-검토해야 합니다. `200%` Text resize에서는 현재 Specimen이 Grid를 한 열로
-바꾸며, 이 Reflow는 별도의 미해결 검토 항목으로 남습니다.
+이 규칙은 기기 이름이나 공유 `672/1056px` Page-grid 전환이 아니라 결과 Container
+수용량을 사용합니다. `138px`은 `320px`에서 승인된 두 열 구성을 보존하기 위한
+비상 Compact 하한이며, 모든 Card가 `168px` 선호 너비를 유지하기 전에는 새로운
+일반 열을 추가하지 않습니다. `200%` Text resize에서는 현재 Specimen이 Grid를
+한 열로 바꾸며, 이 Reflow는 별도의 미해결 검토 항목으로 남습니다.
+
+### 승인된 필터 Rail 활성화와 넓은 구성
+
+사용자는 2026-08-04에 Component가 소유하는 두 번째 전환을 승인했습니다.
+
+- `1216px` Page-layout query-container 폭 미만에서는 하나의 Label된 **필터·정렬**
+  Trigger와 승인된 임시 변경 Layer를 유지합니다. 이는 기기 이름을 붙인 Mobile
+  전용 제품 모델이 아니라 공간이 제한된 구성입니다.
+- `1216px` 이상에서는 범위를 인식하는 검색창을 전체 Content 폭에 유지합니다.
+  그 아래에는 보이는 필터 Rail에 열두 Logical track 중 세 개, 영역 사이 `16px`
+  Gutter 하나, 결과에 나머지 아홉 Track을 사용합니다.
+- 활성화 임계점에서는 약 `292px` 필터 Rail과 `908px` 결과 영역이 만들어집니다.
+  따라서 Rail이 나타날 때 열 하나를 잃지 않고 승인된 `168px` Grid Card 다섯 개와
+  `16px` 간격 네 개를 결과 영역에 유지할 수 있습니다.
+- 정렬 버튼을 항상 가로로 나열하지 않고 결과 Toolbar에 별도로 Label된 선택기
+  하나를 유지합니다. 결과 요약, 적용 필터 제거 및 목록·Grid 보기 Control은
+  Collection 가까이에 둡니다.
+- 보이는 이산 필터는 즉시 적용합니다. 연속 범위는 Control 동작에 따라 Debounce
+  또는 명시적인 값 Commit을 사용합니다. 로그인 개인 기록 Group은 계속
+  Secondary이며 기본으로 접어둡니다.
+
+`1216px` 활성화는 공유 `1056px` 열두 Track Page 전환을 그대로 복사하지 않습니다.
+`1056px`에서 Rail을 활성화하면 결과 폭이 약 `788px`만 남아 Viewport가 커질 때
+전체 폭 다섯 열 Collection이 네 열로 역행할 수 있습니다. Desktop 기기 이름이
+아니라 Component 수용량이 이 전환을 소유합니다.
+
+레퍼런스의 수렴은 NosLog Surface styling이 아니라 구조를 지지합니다.
+[Shopify Storefront filtering](https://shopify.dev/docs/storefronts/themes/navigation-search/filtering/storefront-filtering/storefront-filtering-ux),
+[VA Search Filter](https://design.va.gov/components/search-filter),
+[Scottish Government Search Filters](https://designsystem.gov.scot/patterns/search-results/search-filters),
+[SAP Fiori Filter Bar](https://www.sap.com/design-system/fiori-design-web/ui-elements/filter-bar/),
+[Dell Filter](https://delldesignsystem.com/patterns/filter) 및
+[Baymard 필터 연구](https://baymard.com/learn/ecommerce-filter-ui)는 폭이 실제로
+지원할 때 보이는 필터, 제한된 Layout의 임시 Layer 및 보이는 적용 상태에 수렴합니다.
+[Apple Collections](https://developer.apple.com/design/human-interface-guidelines/collections),
+[Adobe Spectrum Cards](https://spectrum.adobe.com/page/cards/),
+[USWDS Card](https://designsystem.digital.gov/components/card/),
+[Carbon 2x Grid](https://carbondesignsystem.com/elements/2x-grid/overview/),
+[CSS Grid](https://www.w3.org/TR/css-grid/) 및
+[MDN Container Queries](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries)는
+Collection 또는 Container가 소유하는 수용량 전환을 지지합니다.
+[Steam Discovery](https://store.steampowered.com/about/newstore?l=english),
+[osu! 검색 분류](https://osu.ppy.sh/wiki/en/Beatmap/Genre_and_language),
+[BeatSaver](https://www.beatsaver.com/) 및 [Taiko.wiki](https://taiko.wiki/song?lang=en)는
+난이도 중심 세분화가 필요한 Domain 근거이지만 시각·상호작용 권위는 아닙니다.
+해당 서비스의 더 조밀한 Control 처리는 차용하지 않습니다.
 
 ### Catalog 압력 근거
 
@@ -281,15 +328,11 @@ Commit된 결과 요약과 Action은 두 Compact 검증 폭의 기본 Text size�
 Fixture에서 충돌이 발생하면 다른 Layout을 조용히 승인하지 않고 검증 실패로
 보고해야 합니다.
 
-남은 검토 질문은 다음과 같습니다.
+필터 전환과 악곡 Grid 수용량 질문은 이제 해결되었습니다. 남은 S1 검토 질문은
+승인된 Line limit 또는 위계가 긴 한국어·일본어·영어·혼합 Script Fixture나
+`200%` Text resize에서 실패하는지입니다.
 
-1. Compact Filter/Sort Layer가 보이는 Desktop Filter 및 Sort Control로 바뀌는
-   측정된 Component 폭;
-2. 측정된 악곡 Grid 최소 Card 폭과 그에 따른 Intermediate/Wide 열 수;
-3. 승인된 Line limit 또는 위계가 승인된 Type 및 Target 계약에서 실패하는지.
-
-위의 남은 항목은 사용자가 측정된 Specimen을 검토하기 전까지 승인되지 않습니다.
-후보가
+남은 항목은 사용자가 측정된 Specimen을 검토하기 전까지 승인되지 않습니다. 후보가
 새 Type size, 임의 Spacing 값, 숨겨진 주요 Action 또는 승인된 탐색 Content 순서
 변경을 요구하면 Local 예외가 되는 대신 실패로 판정합니다.
 
@@ -305,9 +348,11 @@ Fixture에서 충돌이 발생하면 다른 Layout을 조용히 승인하지 않
 | `S1V-06` | `320px` 및 `390px` 기본 Text size에서 Commit 결과 요약과 Action을 같은 시각 행에 둡니다.                  | `Approved`   |
 | `S1V-07` | 항상 분리된 기본 Compact 결과 Context Layout을 거절합니다.                                                | `Rejected`   |
 | `S1V-08` | 측정된 현재 `320px/390px` 목록 및 Grid 기준선을 이관 근거로 기록합니다.                                   | `Observed`   |
-| `S1V-09` | `138px` Compact 하한, `168px` 선호 Grid 너비, `536/720/904px` 수용량 임계점 및 최대 다섯 열을 사용합니다. | `Proposed`   |
+| `S1V-09` | `138px` Compact 하한, `168px` 선호 Grid 너비, `536/720/904px` 수용량 임계점 및 최대 다섯 열을 사용합니다. | `Approved`   |
 | `S1V-10` | 이전 방향은 목록과 Grid 모두 보이는 Caption·원문 제목·아티스트 행을 확보했습니다.                         | `Superseded` |
 | `S1V-11` | 이전 초안은 정사각형 목록 재킷을 행 높이와 독립된 `56 × 56px`로 고정했습니다.                             | `Superseded` |
 | `S1V-12` | 이전 방향은 보이는 번역 Caption을 위해 콘텐츠 기반 `64–84px` 목록 행을 허용했습니다.                      | `Superseded` |
 | `S1V-13` | 원문 제목과 아티스트만 각각 보이는 한 줄로 표시하고 번역·읽기 제목 별칭은 검색 가능하게 유지합니다.       | `Approved`   |
 | `S1V-14` | Compact 목록 행과 정사각형 재킷을 `64px`로 유지하고 Caption 높이를 예약하지 않습니다.                     | `Approved`   |
+| `S1V-15` | `1216px` 미만은 통합 임시 필터·정렬 Layer, `1216px`에서는 `3/12` Rail과 `9/12` 결과 영역을 사용합니다.    | `Approved`   |
+| `S1V-16` | 정렬은 결과 Toolbar의 Label된 선택기 하나로 유지하고 항상 보이는 가로 정렬·필터 버튼 행을 거절합니다.     | `Approved`   |

@@ -749,19 +749,26 @@ flashing a loading treatment.
 ### Wide Layout
 
 - Do not stretch a `390px` mobile canvas across a desktop.
-- Use additional width to keep results visible with an exposed filter rail or region
-  and to improve Music/difficulty comparison.
-- Keep Filter and Sort as separate directly labelled controls, with immediate
-  result-visible application.
+- Below a `1216px` page-layout query-container width, retain the one labelled
+  **Filter and sort** trigger and staged temporary layer. At `1216px` and wider,
+  place the full-width scope-aware search above a `3/12` visible filter rail, one
+  `16px` inter-region gutter, and a `9/12` result region.
+- At the `1216px` activation threshold, target approximately `292px` for the filter
+  rail and `908px` for results. This component-owned transition is independent of the
+  shared `1056px` twelve-track page-grid transition.
+- Keep Filter and Sort as separate directly labelled controls in the exposed
+  composition. Discrete filters apply immediately; continuous controls debounce or
+  commit according to their interaction. Sort remains one labelled selector in the
+  result toolbar rather than a permanent row of sort buttons.
 - Preserve one search and scope model rather than introducing desktop-only taxonomy.
 - Do not place unrelated announcements or navigation in space intended to support
   search, filtering, or result comparison.
-- Set a readable outer content boundary after representative result-card testing;
-  exact container and column tokens remain open.
 - Keep List cards at one column below approximately `440–460px` of usable width per
   card, use two columns only when that width is available for both, and never exceed
-  two List columns. Grid may add columns from roughly three through five according to
-  validated minimum card width.
+  two List columns. Grid uses result-container capacity: two columns at `288–535px`,
+  three at `536–719px`, four at `720–903px`, and a maximum of five at `904px` and
+  wider. `138px` is the compact emergency floor; ordinary new columns require the
+  `168px` preferred width.
 
 ## Accessibility Requirements
 
@@ -1689,6 +1696,8 @@ The later implementation must verify at minimum:
 | DISC-36 | Retrieval failure and retry     | Preserve committed state; show scope-specific one-line result-region error plus Retry; preserve retry focus while pending/failing and focus the result summary after success                                                                | `Approved`   |
 | DISC-37 | Request timeout                 | Require a documented finite timeout from production `p95`/`p99`, platform limits, and cancellation behavior before implementation acceptance; never invent a value now or wait indefinitely                                                 | `Approved`   |
 | DISC-38 | Localized-title discovery       | Keep approved Korean/English titles and Japanese readings searchable while showing canonical original titles only in repeated Music and Chart result cards                                                                                  | `Approved`   |
+| DISC-39 | Exposed filter-rail transition  | Below `1216px`, retain the combined staged Filter/Sort layer; at `1216px`, use a `3/12` visible rail and `9/12` results below full-width search                                                                                             | `Approved`   |
+| DISC-40 | Music Grid capacity             | Use result-container thresholds `288/536/720/904px`, a `138px` compact floor, `168px` preferred ordinary card width, and a five-column ceiling                                                                                              | `Approved`   |
 
 ## Phase Approval
 

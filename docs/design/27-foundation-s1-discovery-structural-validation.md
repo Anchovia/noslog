@@ -103,12 +103,13 @@ inset must absorb that pressure without compressing type or hiding the difficult
 group. The Grid card gains approximately `5.5px` over the measured current
 card.
 
-### Proposed Grid capacity rule for review
+### Approved Grid capacity rule
 
 The approved discovery brief identifies approximately `168px` as the audited ordinary
 mobile Grid card, requires two columns at `390px`, and intends three to five columns at
 wider result regions. Foundation compact geometry independently requires two columns
-at `320px`. The following capacity rule is therefore **Proposed**, not approved:
+at `320px`. The user approved the following result-container capacity rule on
+2026-08-04:
 
 | Result-region capacity | Columns     | Resulting rule                                                                                           |
 | ---------------------- | ----------- | -------------------------------------------------------------------------------------------------------- |
@@ -117,10 +118,59 @@ at `320px`. The following capacity rule is therefore **Proposed**, not approved:
 | `720–903px`            | `4`         | `4 × 168px + 3 × 16px`.                                                                                  |
 | `904px` and wider      | `5` maximum | `5 × 168px + 4 × 16px`; keep the approved five-column ceiling rather than adding denser artwork columns. |
 
-This candidate uses result-container capacity, not device names or the shared
-`672/1056px` page-grid transitions. It still requires user review of the `138px` and
-`173px` specimens before approval. At `200%` text resize the present specimen changes
-Grid to one column; that reflow remains a separate unresolved review item.
+This rule uses result-container capacity, not device names or the shared
+`672/1056px` page-grid transitions. The `138px` value is an emergency compact floor
+needed to preserve the approved two-column composition at `320px`; new ordinary
+columns are not added until every card can retain the `168px` preferred width. At
+`200%` text resize the present specimen changes Grid to one column; that reflow
+remains a separate unresolved review item.
+
+### Approved filter-rail activation and wide composition
+
+The user approved a second, component-owned transition on 2026-08-04:
+
+- Below a `1216px` page-layout query-container width, retain the one labelled
+  **Filter and sort** trigger and the approved staged temporary layer. This is a
+  constrained composition, not a device-labelled mobile-only product model.
+- At `1216px` and wider, keep the scope-aware search across the full content width.
+  Below it, use three of twelve logical tracks for the visible filter rail, one
+  `16px` inter-region gutter, and the remaining nine tracks for results.
+- At the activation threshold this yields an approximately `292px` filter rail and
+  `908px` result region. The result region can therefore retain the approved five
+  `168px` Grid cards plus four `16px` gaps instead of losing a column when the rail
+  appears.
+- Keep Sort as one separately labelled selector in the result toolbar rather than a
+  persistent row of sort buttons. Keep the result summary, applied-filter removal,
+  and List/Grid view control adjacent to the collection.
+- Visible discrete filters apply immediately. Continuous ranges debounce or require
+  an explicit value commit according to their control behavior. The signed-in
+  personal-record group remains secondary and collapsed by default.
+
+The `1216px` activation deliberately does not copy the shared `1056px` twelve-track
+page transition. Activating the rail at `1056px` would leave approximately `788px`
+for results and can make a full-width five-column collection regress to four columns
+as the viewport grows. Component capacity, rather than a desktop device name, owns
+this transition.
+
+Reference convergence supports the structure, not the NosLog surface styling:
+[Shopify storefront filtering](https://shopify.dev/docs/storefronts/themes/navigation-search/filtering/storefront-filtering/storefront-filtering-ux),
+[VA Search Filter](https://design.va.gov/components/search-filter),
+[Scottish Government Search Filters](https://designsystem.gov.scot/patterns/search-results/search-filters),
+[SAP Fiori Filter Bar](https://www.sap.com/design-system/fiori-design-web/ui-elements/filter-bar/),
+[Dell Filter](https://delldesignsystem.com/patterns/filter), and
+[Baymard filter research](https://baymard.com/learn/ecommerce-filter-ui) converge on
+visible filtering when width genuinely supports it, temporary layers on constrained
+layouts, and visible applied state. [Apple Collections](https://developer.apple.com/design/human-interface-guidelines/collections),
+[Adobe Spectrum Cards](https://spectrum.adobe.com/page/cards/),
+[USWDS Card](https://designsystem.digital.gov/components/card/),
+[Carbon 2x Grid](https://carbondesignsystem.com/elements/2x-grid/overview/),
+[CSS Grid](https://www.w3.org/TR/css-grid/), and
+[MDN Container Queries](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries)
+support collection- or container-owned capacity changes. [Steam Discovery](https://store.steampowered.com/about/newstore?l=english),
+[osu! search taxonomy](https://osu.ppy.sh/wiki/en/Beatmap/Genre_and_language),
+[BeatSaver](https://www.beatsaver.com/), and [Taiko.wiki](https://taiko.wiki/song?lang=en)
+confirm the domain need for difficulty-rich refinement but are not visual or
+interaction authorities; their denser control treatments are not copied.
 
 ### Catalog pressure evidence
 
@@ -288,17 +338,11 @@ default layout is rejected because it adds vertical separation without improving
 task hierarchy. If `200%` text resize or a localization fixture causes collision, the
 specimen must report that failure rather than silently approving a different layout.
 
-The remaining review questions are:
+The filter transition and Music-grid capacity questions are now resolved. The
+remaining S1 review question is whether any approved line limit or hierarchy fails
+under long Korean, Japanese, English, and mixed-script fixtures or `200%` text resize.
 
-1. the measured component width at which the compact Filter/Sort layer changes to
-   visible desktop Filter and Sort controls;
-2. the measured Music-grid minimum card width and resulting intermediate/wide column
-   counts;
-3. whether any approved line limit or hierarchy fails under the approved type and
-   target contracts.
-
-No remaining item above becomes approved until the user reviews the measured
-specimens. If a
+No remaining item becomes approved until the user reviews the measured specimens. If a
 candidate requires a new type size, arbitrary spacing value, hidden primary action,
 or change to the approved discovery content order, it fails rather than becoming a
 local exception.
@@ -315,9 +359,11 @@ local exception.
 | `S1V-06` | Keep committed result summary and actions in one visual row at `320px` and `390px` default text size.                      | `Approved`   |
 | `S1V-07` | Reject a permanently split default compact result-context layout.                                                          | `Rejected`   |
 | `S1V-08` | Record the measured current `320px/390px` List and Grid baseline as migration evidence.                                    | `Observed`   |
-| `S1V-09` | Use the `138px` compact floor, `168px` preferred Grid width, `536/720/904px` capacity thresholds, and five-column ceiling. | `Proposed`   |
+| `S1V-09` | Use the `138px` compact floor, `168px` preferred Grid width, `536/720/904px` capacity thresholds, and five-column ceiling. | `Approved`   |
 | `S1V-10` | Earlier direction reserved visible caption, original-title, and artist lines in both List and Grid.                        | `Superseded` |
 | `S1V-11` | Earlier draft fixed the square List jacket at `56 × 56px` independently of row height.                                     | `Superseded` |
 | `S1V-12` | Earlier direction allowed a content-driven `64–84px` List row to accommodate a visible localized-title caption.            | `Superseded` |
 | `S1V-13` | Show original title and artist only, each on one visible line, while translated/read-title aliases remain searchable.      | `Approved`   |
 | `S1V-14` | Keep the compact List row and its square jacket at `64px`; do not reserve caption-driven height.                           | `Approved`   |
+| `S1V-15` | Below `1216px`, use the combined staged Filter/Sort layer; at `1216px`, activate a `3/12` rail and `9/12` result region.   | `Approved`   |
+| `S1V-16` | Keep Sort as one labelled result-toolbar selector and reject a persistent horizontal row of sort and filter buttons.       | `Approved`   |
