@@ -526,17 +526,18 @@ state, results, and recovery controls must keep a clear semantic relationship.
 
 #### List view
 
-- Keep the jacket at `56px` and the compact trailing official-difficulty group at
-  approximately the current `92px` total width, using `20px` badges as the structural
-  baseline. Difficulty remains in this trailing group rather than moving to a
-  dedicated row.
+- Keep the jacket exactly square and match its edge to the content-driven List-card
+  height. A near-`64px` row therefore uses an approximately `64 × 64px` jacket, while
+  a localized/read-caption row near `80–84px` uses the same approximately `80–84px`
+  square edge. Keep the compact trailing official-difficulty group at approximately
+  the current `92px` total width, using `20px` badges as the structural baseline.
+  Difficulty remains in this trailing group rather than moving to a dedicated row.
 - Use content-driven card height instead of one enlarged fixed row. A short result
-  without a localized/read caption may remain near `64px`; a typical localized result
-  may grow to about `80px`; a two-line original title may grow to approximately
-  `96–100px`.
-- Limit the localized/read caption to one line, the original title to two lines, and
-  the artist to one line with ellipsis. Missing artist or localization must not leave
-  a blank structural row.
+  without a localized/read caption may remain near `64px`; a localized result may grow
+  only enough to accommodate its additional caption, approximately `80–84px` under
+  the approved type roles.
+- Limit the localized/read caption, original title, and artist to one line each with
+  ellipsis. Missing artist or localization must not leave a blank structural row.
 - At the audited `390px` baseline, the result card is approximately `343px` wide and
   the compact trailing difficulty group remains preferable to a vertical difficulty
   row.
@@ -550,9 +551,10 @@ state, results, and recovery controls must keep a clear semantic relationship.
 
 - Keep every jacket exactly square with `aspect-ratio: 1 / 1`. The complete card does
   not need to be square.
-- Let the information region below the jacket grow independently. Preserve a
-  consistent two-line artist slot across cards, truncating after the second line, so
-  difficulty positions and row alignment remain stable.
+- Let the information region below the jacket grow independently, but limit the
+  localized/read caption, original title, and artist to one line each with ellipsis.
+  Reserve consistent single-line identity slots across cards so difficulty positions
+  and row alignment remain stable without excessive card height.
 - Use the same localized/read caption → original title → artist hierarchy as List,
   with the category text badge over the jacket and official difficulty information
   below the identity.
@@ -560,9 +562,9 @@ state, results, and recovery controls must keep a clear semantic relationship.
   according to a validated minimum readable card width; exact Foundation breakpoints
   remain open, while the intended range is roughly three to five columns rather than
   stretching two cards.
-- The audited mobile card is approximately `168 × 261px`. Reserving one additional
-  artist line may increase it to about `168 × 279px`, roughly seven percent, without
-  distorting the square jacket.
+- The audited mobile card is approximately `168 × 261px`. The structural specimen
+  must preserve the square jacket while validating a compact one-line identity region;
+  it must not add a second title or artist line merely to avoid truncation.
 
 ### Approved Personal-Record Preview
 
@@ -857,10 +859,9 @@ flashing a loading treatment.
 - When the title-display preference is enabled, show the approved Korean/English title
   or Japanese reading above the original title as a smaller secondary caption without
   replacing the original title.
-- In List, cap the caption at one line, original title at two lines, and artist at one
-  line. In Grid, reserve two artist lines. Preserve complete values in the accessible
-  name and detail destination so visual truncation never removes the only complete
-  identifying text.
+- In both List and Grid, cap the caption, original title, and artist at one line each.
+  Preserve complete values in the accessible name and detail destination so visual
+  truncation never removes the only complete identifying text.
 - Text search and the `300ms` idle trigger must be composition-safe for Korean and
   Japanese IME input.
 - Dynamic result counts, visible ranges, and Load-more amounts require locale-aware
@@ -1103,9 +1104,9 @@ result-composition set above, current narrow and wide NosLog browser evidence, t
 local source-catalog length distribution, and the focused interaction references
 below. The sources converge on stable identity, predictable whole-card activation,
 capability-based hover enhancement, and square media that does not force the entire
-card to be square. They do not prescribe NosLog's exact dimensions; the `56px`,
-`20px`, `64–100px`, and `440–460px` boundaries preserve the audited useful compactness
-and must be validated as component specimens.
+card to be square. They do not prescribe NosLog's exact dimensions; the `64–84px`
+square List-jacket edge, `20px` difficulty badge, and `440–460px` List-column boundary
+preserve the audited useful compactness and must be validated as component specimens.
 
 | Source                                                                                                            | Observed principle                                                                                                          | NosLog fit and limitation                                                                                                                 |
 | ----------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
@@ -1460,8 +1461,8 @@ Approved synthesis:
 - **Dedicated difficulty row in Music List — Rejected:** It spends scarce vertical
   space on compact informational values that fit a stable trailing group.
 - **Universal `96–112px` Music List row — Rejected:** Use content-driven
-  `64–100px` height so short identities remain compact and long localized content gains
-  only the space it needs.
+  `64–84px` height so short identities remain compact and an enabled localized/read
+  caption gains only the space it needs.
 - **One full-width table-like desktop List — Rejected:** Add a second compact List
   column when each card can retain approximately `440–460px`; reserve denser multi-
   column artwork scanning for Grid.
@@ -1532,11 +1533,13 @@ The later implementation must verify at minimum:
   cross-group `AND`; and Unplayed conflict prevention;
 - Music list-default/grid switching and stable base identity with zero, one, and
   several matching difficulty records;
-- List title order, category badge placement, `56px` jacket, trailing difficulty group,
-  content-driven `64–100px` height, line limits, one-to-two-column switch, and no
-  horizontal overflow around the `440–460px` per-card boundary;
+- List title order, category badge placement, a square jacket whose edge matches the
+  content-driven `64–84px` row height, trailing difficulty group, one-line identity
+  limits, one-to-two-column switch, and no horizontal overflow around the
+  `440–460px` per-card boundary;
 - square Grid jackets, two columns at `390px`, independently growing information
-  regions, reserved two-line artist slots, and validated wider multi-column behavior;
+  regions, reserved single-line caption/title/artist slots, and validated wider
+  multi-column behavior;
 - grouped-list-only Chart results with no grid toggle;
 - capability-gated pointer-hover and equivalent keyboard-focus previews in fixed card
   dimensions; Escape dismissal, Enter activation, reduced motion, and direct touch

@@ -1,0 +1,935 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>NosLog 2.0 S1 Compact Structure Specimen</title>
+        <link
+            rel="stylesheet"
+            crossorigin
+            href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-jp.min.css"
+        />
+        <style>
+            :root {
+                color-scheme: dark;
+                font-family:
+                    "Pretendard JP Variable", "Pretendard JP", Pretendard,
+                    system-ui, sans-serif;
+                font-synthesis: none;
+                --canvas: #0d0d0f;
+                --frame: #111114;
+                --surface: #19191e;
+                --surface-strong: #222229;
+                --line: #34343d;
+                --line-strong: #54545f;
+                --text: #f2f2f4;
+                --text-secondary: #b4b4be;
+                --text-tertiary: #858590;
+                --focus: #f2f2f4;
+                --page-inline: 16px;
+                --space-1: 4px;
+                --space-2: 8px;
+                --space-3: 12px;
+                --space-4: 16px;
+                --space-5: 24px;
+                --radius: 8px;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            body {
+                margin: 0;
+                min-width: 320px;
+                background: var(--canvas);
+                color: var(--text);
+            }
+
+            button,
+            input {
+                color: inherit;
+                font: inherit;
+            }
+
+            button {
+                cursor: pointer;
+            }
+
+            button:focus-visible,
+            input:focus-visible {
+                outline: 2px solid var(--focus);
+                outline-offset: 2px;
+            }
+
+            .review-shell {
+                display: grid;
+                gap: 24px;
+                justify-items: center;
+                padding: 24px;
+            }
+
+            .review-controls {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                justify-content: center;
+                max-width: 720px;
+            }
+
+            .review-controls button {
+                min-height: 40px;
+                border: 1px solid var(--line);
+                border-radius: 8px;
+                background: var(--surface);
+                padding: 0 12px;
+                font-size: 14px;
+                line-height: 20px;
+                font-weight: 500;
+            }
+
+            .review-controls button[aria-pressed="true"] {
+                border-color: var(--text);
+                background: var(--text);
+                color: var(--canvas);
+            }
+
+            .review-note {
+                max-width: 720px;
+                margin: -12px 0 0;
+                color: var(--text-secondary);
+                font-size: 14px;
+                line-height: 20px;
+                text-align: center;
+            }
+
+            .specimen-frame {
+                --fs-12: 12px;
+                --fs-14: 14px;
+                --fs-16: 16px;
+                --fs-24: 24px;
+                --lh-16: 16px;
+                --lh-20: 20px;
+                --lh-24: 24px;
+                --lh-32: 32px;
+                width: 390px;
+                max-width: 100%;
+                overflow: hidden;
+                border: 1px solid var(--line-strong);
+                border-radius: 12px;
+                background: var(--frame);
+            }
+
+            .specimen-frame[data-width="320"] {
+                width: 320px;
+            }
+
+            .specimen-frame[data-text-scale="200"] {
+                --fs-12: 24px;
+                --fs-14: 28px;
+                --fs-16: 32px;
+                --fs-24: 48px;
+                --lh-16: 32px;
+                --lh-20: 40px;
+                --lh-24: 48px;
+                --lh-32: 64px;
+            }
+
+            .app-header {
+                display: flex;
+                min-height: 56px;
+                align-items: center;
+                justify-content: space-between;
+                border-bottom: 1px solid var(--line);
+                padding: 8px var(--page-inline);
+            }
+
+            .wordmark {
+                font-size: var(--fs-16);
+                line-height: var(--lh-24);
+                font-weight: 700;
+            }
+
+            .header-actions,
+            .result-actions,
+            .view-switch {
+                display: flex;
+                align-items: center;
+            }
+
+            .header-actions {
+                gap: 4px;
+            }
+
+            .icon-button,
+            .view-button {
+                display: inline-flex;
+                min-width: 44px;
+                min-height: 44px;
+                align-items: center;
+                justify-content: center;
+                border: 0;
+                background: transparent;
+            }
+
+            .profile-dot {
+                width: 28px;
+                height: 28px;
+                border: 1px solid var(--line-strong);
+                border-radius: 999px;
+                background: repeating-linear-gradient(
+                    45deg,
+                    #3a3a42,
+                    #3a3a42 4px,
+                    #25252b 4px,
+                    #25252b 8px
+                );
+            }
+
+            .menu-glyph,
+            .view-glyph {
+                font-size: var(--fs-16);
+                line-height: var(--lh-16);
+            }
+
+            .page-content {
+                display: grid;
+                gap: 16px;
+                padding: 24px var(--page-inline) 32px;
+            }
+
+            .page-title {
+                margin: 0;
+                font-size: var(--fs-24);
+                line-height: var(--lh-32);
+                font-weight: 700;
+            }
+
+            .search-control {
+                display: grid;
+                min-width: 0;
+                min-height: 48px;
+                grid-template-columns: 48px minmax(0, 1fr) 44px;
+                align-items: stretch;
+                border: 1px solid var(--line-strong);
+                border-radius: var(--radius);
+                background: var(--surface);
+            }
+
+            .scope-button,
+            .search-submit {
+                border: 0;
+                background: transparent;
+                font-size: var(--fs-14);
+                line-height: var(--lh-20);
+                font-weight: 600;
+            }
+
+            .scope-button {
+                border-right: 1px solid var(--line);
+            }
+
+            .search-input {
+                min-width: 0;
+                border: 0;
+                background: transparent;
+                padding: 0 12px;
+                font-size: var(--fs-16);
+                line-height: var(--lh-24);
+                font-weight: 400;
+                outline: 0;
+            }
+
+            .search-input::placeholder {
+                color: var(--text-tertiary);
+                opacity: 1;
+            }
+
+            .result-context {
+                display: grid;
+                gap: 8px;
+            }
+
+            .result-context[data-layout="row"] {
+                grid-template-columns: minmax(0, 1fr) auto;
+                align-items: center;
+            }
+
+            .result-summary {
+                min-width: 0;
+                margin: 0;
+                font-size: var(--fs-14);
+                line-height: var(--lh-20);
+                font-weight: 400;
+            }
+
+            .result-count {
+                font-weight: 500;
+                font-variant-numeric: tabular-nums;
+            }
+
+            .result-actions {
+                gap: 4px;
+                justify-content: flex-end;
+            }
+
+            .filter-sort {
+                min-height: 40px;
+                border: 1px solid var(--line-strong);
+                border-radius: var(--radius);
+                background: var(--surface);
+                padding: 0 12px;
+                font-size: var(--fs-14);
+                line-height: var(--lh-20);
+                font-weight: 500;
+                white-space: nowrap;
+            }
+
+            .view-switch {
+                overflow: hidden;
+                border: 1px solid var(--line-strong);
+                border-radius: var(--radius);
+            }
+
+            .view-button {
+                min-width: 40px;
+                min-height: 40px;
+                color: var(--text-secondary);
+            }
+
+            .view-button[aria-pressed="true"] {
+                background: var(--surface-strong);
+                color: var(--text);
+            }
+
+            .result-collection {
+                display: grid;
+                gap: 8px;
+                margin: 0;
+                padding: 0;
+                list-style: none;
+            }
+
+            .result-collection[data-view="grid"] {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 12px;
+            }
+
+            .music-card {
+                display: grid;
+                min-width: 0;
+                overflow: hidden;
+                border: 1px solid var(--line);
+                border-radius: var(--radius);
+                background: var(--surface);
+                color: inherit;
+                text-decoration: none;
+            }
+
+            .result-collection[data-view="list"] .music-card {
+                --list-row-edge: 84px;
+                min-height: var(--list-row-edge);
+                grid-template-columns: var(--list-row-edge) minmax(0, 1fr) 92px;
+                align-items: stretch;
+            }
+
+            .result-collection[data-view="list"]
+                .music-card:not(:has(.companion:not(:empty))) {
+                --list-row-edge: 64px;
+            }
+
+            .jacket {
+                position: relative;
+                overflow: hidden;
+                background:
+                    linear-gradient(135deg, #3a3a43 25%, transparent 25%) -8px
+                        0/16px 16px,
+                    linear-gradient(225deg, #3a3a43 25%, transparent 25%) -8px
+                        0/16px 16px,
+                    linear-gradient(315deg, #3a3a43 25%, transparent 25%) 0
+                        0/16px 16px,
+                    linear-gradient(45deg, #3a3a43 25%, #24242a 25%) 0 0/16px
+                        16px;
+            }
+
+            .result-collection[data-view="list"] .jacket {
+                width: var(--list-row-edge);
+                height: var(--list-row-edge);
+                aspect-ratio: 1 / 1;
+                align-self: stretch;
+            }
+
+            .category {
+                position: absolute;
+                top: 4px;
+                left: 4px;
+                border: 1px solid var(--line-strong);
+                border-radius: 4px;
+                background: rgba(13, 13, 15, 0.88);
+                padding: 1px 3px;
+                color: var(--text);
+                font-size: var(--fs-12);
+                line-height: var(--lh-16);
+                font-weight: 400;
+            }
+
+            .identity {
+                display: grid;
+                min-width: 0;
+                align-content: center;
+                gap: 4px;
+                padding: 8px 10px;
+            }
+
+            .result-collection[data-view="list"] .identity {
+                gap: 2px;
+            }
+
+            .companion,
+            .title,
+            .artist {
+                overflow: hidden;
+                margin: 0;
+                text-overflow: ellipsis;
+            }
+
+            .companion {
+                display: -webkit-box;
+                color: var(--text-secondary);
+                font-size: var(--fs-14);
+                line-height: var(--lh-20);
+                font-weight: 400;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 1;
+            }
+
+            .title {
+                font-size: var(--fs-16);
+                line-height: var(--lh-24);
+                font-weight: 600;
+                white-space: nowrap;
+            }
+
+            .artist {
+                color: var(--text-secondary);
+                font-size: var(--fs-14);
+                line-height: var(--lh-20);
+                font-weight: 400;
+                white-space: nowrap;
+            }
+
+            .difficulty-group {
+                display: grid;
+                grid-template-columns: repeat(4, 20px);
+                align-content: center;
+                justify-content: end;
+                gap: 4px;
+                padding: 8px 0;
+            }
+
+            .difficulty {
+                display: grid;
+                justify-items: center;
+            }
+
+            .difficulty-value {
+                display: grid;
+                width: 20px;
+                height: 20px;
+                place-items: center;
+                border: 1px solid var(--line-strong);
+                border-radius: 4px;
+                font-size: var(--fs-12);
+                line-height: var(--lh-16);
+                font-weight: 500;
+                font-variant-numeric: tabular-nums;
+            }
+
+            .result-collection[data-view="grid"] .music-card {
+                align-content: start;
+            }
+
+            .result-collection[data-view="grid"] .jacket {
+                aspect-ratio: 1 / 1;
+                width: 100%;
+            }
+
+            .result-collection[data-view="grid"] .identity {
+                align-content: start;
+                min-height: 96px;
+                padding: 12px;
+            }
+
+            .result-collection[data-view="grid"] .artist {
+                white-space: nowrap;
+            }
+
+            .result-collection[data-view="grid"] .difficulty-group {
+                grid-column: 1;
+                justify-content: start;
+                padding: 0 12px 12px;
+            }
+
+            .load-more {
+                min-height: 48px;
+                border: 1px solid var(--line-strong);
+                border-radius: var(--radius);
+                background: var(--surface);
+                font-size: var(--fs-14);
+                line-height: var(--lh-20);
+                font-weight: 500;
+            }
+
+            .progress-copy {
+                margin: -4px 0 0;
+                color: var(--text-secondary);
+                font-size: var(--fs-12);
+                line-height: var(--lh-16);
+                text-align: center;
+            }
+
+            .sr-only {
+                position: absolute;
+                width: 1px;
+                height: 1px;
+                overflow: hidden;
+                clip: rect(0, 0, 0, 0);
+                white-space: nowrap;
+            }
+
+            .specimen-frame[data-text-scale="200"] .app-header,
+            .specimen-frame[data-text-scale="200"] .page-content {
+                align-items: stretch;
+            }
+
+            .specimen-frame[data-text-scale="200"] .result-context,
+            .specimen-frame[data-text-scale="200"]
+                .result-context[data-layout="row"] {
+                grid-template-columns: 1fr;
+            }
+
+            .specimen-frame[data-text-scale="200"] .result-actions {
+                justify-content: flex-start;
+                flex-wrap: wrap;
+            }
+
+            .specimen-frame[data-text-scale="200"]
+                .result-collection[data-view="list"]
+                .music-card {
+                grid-template-columns: var(--list-row-edge) minmax(0, 1fr);
+            }
+
+            .specimen-frame[data-text-scale="200"]
+                .result-collection[data-view="list"]
+                .difficulty-group {
+                grid-column: 1 / -1;
+                justify-content: start;
+                padding: 8px 12px 12px;
+            }
+
+            .specimen-frame[data-text-scale="200"]
+                .result-collection[data-view="grid"] {
+                grid-template-columns: 1fr;
+            }
+
+            @media (max-width: 520px) {
+                .review-shell {
+                    padding: 16px 0 24px;
+                }
+
+                .review-controls,
+                .review-note {
+                    margin-inline: 16px;
+                }
+
+                .specimen-frame {
+                    border-right: 0;
+                    border-left: 0;
+                    border-radius: 0;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <main class="review-shell">
+            <div class="review-controls" aria-label="Specimen controls">
+                <button type="button" data-control="width" data-value="320">
+                    320px
+                </button>
+                <button
+                    type="button"
+                    data-control="width"
+                    data-value="390"
+                    aria-pressed="true"
+                >
+                    390px
+                </button>
+                <button
+                    type="button"
+                    data-control="locale"
+                    data-value="ko"
+                    aria-pressed="true"
+                >
+                    한국어
+                </button>
+                <button type="button" data-control="locale" data-value="ja">
+                    日本語
+                </button>
+                <button type="button" data-control="locale" data-value="en">
+                    English
+                </button>
+                <button
+                    type="button"
+                    data-control="view"
+                    data-value="list"
+                    aria-pressed="true"
+                >
+                    목록
+                </button>
+                <button type="button" data-control="view" data-value="grid">
+                    Grid
+                </button>
+                <button
+                    type="button"
+                    data-control="scale"
+                    data-value="100"
+                    aria-pressed="true"
+                >
+                    Text 100%
+                </button>
+                <button type="button" data-control="scale" data-value="200">
+                    Text 200%
+                </button>
+            </div>
+            <p class="review-note">
+                Structure specimen · neutral colors · no final visual styling
+            </p>
+
+            <section
+                class="specimen-frame"
+                data-width="390"
+                data-text-scale="100"
+                aria-label="NosLog discovery specimen"
+            >
+                <header class="app-header">
+                    <span class="wordmark">NosLog</span>
+                    <div class="header-actions">
+                        <button
+                            class="icon-button"
+                            type="button"
+                            aria-label="Profile"
+                        >
+                            <span class="profile-dot" aria-hidden="true"></span>
+                        </button>
+                        <button
+                            class="icon-button"
+                            type="button"
+                            aria-label="More"
+                        >
+                            <span class="menu-glyph" aria-hidden="true"
+                                >☰</span
+                            >
+                        </button>
+                    </div>
+                </header>
+
+                <div class="page-content">
+                    <h1 class="page-title" data-copy="pageTitle">악곡 검색</h1>
+
+                    <div class="search-control" role="search">
+                        <button
+                            class="scope-button"
+                            type="button"
+                            aria-haspopup="listbox"
+                            aria-expanded="false"
+                        >
+                            <span aria-hidden="true">♫⌄</span>
+                            <span class="sr-only" data-copy="scope"
+                                >악곡 검색</span
+                            >
+                        </button>
+                        <input
+                            class="search-input"
+                            type="search"
+                            data-placeholder="searchPlaceholder"
+                            placeholder="악곡명 · 아티스트 검색"
+                            aria-label="악곡명 · 아티스트 검색"
+                        />
+                        <button
+                            class="search-submit"
+                            type="button"
+                            data-copy-aria="searchAction"
+                            aria-label="검색"
+                        >
+                            <span aria-hidden="true">⌕</span>
+                        </button>
+                    </div>
+
+                    <section
+                        class="result-context"
+                        data-layout="row"
+                        aria-label="Committed result status"
+                    >
+                        <p class="result-summary" tabindex="-1">
+                            <span class="result-count" data-copy="resultCount"
+                                >악곡 583개</span
+                            >
+                            <span aria-hidden="true"> · </span>
+                            <span data-copy="sortValue">읽기순</span>
+                        </p>
+                        <div class="result-actions">
+                            <button
+                                class="filter-sort"
+                                type="button"
+                                data-copy="filterSort"
+                            >
+                                필터·정렬
+                            </button>
+                            <div class="view-switch" aria-label="Result view">
+                                <button
+                                    class="view-button"
+                                    type="button"
+                                    aria-label="목록 보기"
+                                    aria-pressed="true"
+                                >
+                                    <span class="view-glyph" aria-hidden="true"
+                                        >≡</span
+                                    >
+                                </button>
+                                <button
+                                    class="view-button"
+                                    type="button"
+                                    aria-label="그리드 보기"
+                                    aria-pressed="false"
+                                >
+                                    <span class="view-glyph" aria-hidden="true"
+                                        >⊞</span
+                                    >
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <ul
+                        class="result-collection"
+                        data-view="list"
+                        aria-label="Music results"
+                    >
+                        <li>
+                            <a class="music-card" href="#music-1">
+                                <div class="jacket" aria-label="Altale jacket">
+                                    <span class="category">Var</span>
+                                </div>
+                                <div class="identity">
+                                    <p
+                                        class="companion"
+                                        data-copy="companionShort"
+                                    >
+                                        알테일
+                                    </p>
+                                    <h2 class="title">Altale</h2>
+                                    <p class="artist">削除</p>
+                                </div>
+                                <div
+                                    class="difficulty-group"
+                                    aria-label="Normal 5, Hard 7, Expert 11, Real 2"
+                                >
+                                    <span class="difficulty"
+                                        ><span class="difficulty-value"
+                                            >5</span
+                                        ></span
+                                    >
+                                    <span class="difficulty"
+                                        ><span class="difficulty-value"
+                                            >7</span
+                                        ></span
+                                    >
+                                    <span class="difficulty"
+                                        ><span class="difficulty-value"
+                                            >11</span
+                                        ></span
+                                    >
+                                    <span class="difficulty"
+                                        ><span class="difficulty-value"
+                                            >2</span
+                                        ></span
+                                    >
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="music-card" href="#music-2">
+                                <div
+                                    class="jacket"
+                                    aria-label="Long title fixture jacket"
+                                >
+                                    <span class="category">BM</span>
+                                </div>
+                                <div class="identity">
+                                    <p
+                                        class="companion"
+                                        data-copy="companionLong"
+                                    >
+                                        Fixture only · 긴 번역 제목 검증
+                                    </p>
+                                    <h2 class="title">
+                                        Lachryma《Re:Queen’M》 (BEMANI SYMPHONY
+                                        NOSTALGIA mix)
+                                    </h2>
+                                    <p class="artist">
+                                        MAX MAXIMIZER VS DJ TOTTO (Arr.by BEMANI
+                                        Sound Team "Akhuta Works")
+                                    </p>
+                                </div>
+                                <div
+                                    class="difficulty-group"
+                                    aria-label="Normal 4, Hard 8, Expert 12, Real unavailable"
+                                >
+                                    <span class="difficulty"
+                                        ><span class="difficulty-value"
+                                            >4</span
+                                        ></span
+                                    >
+                                    <span class="difficulty"
+                                        ><span class="difficulty-value"
+                                            >8</span
+                                        ></span
+                                    >
+                                    <span class="difficulty"
+                                        ><span class="difficulty-value"
+                                            >12</span
+                                        ></span
+                                    >
+                                    <span class="difficulty"
+                                        ><span class="difficulty-value"
+                                            >–</span
+                                        ></span
+                                    >
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+
+                    <button
+                        class="load-more"
+                        type="button"
+                        data-copy="loadMore"
+                    >
+                        결과 20개 더 보기
+                    </button>
+                    <p class="progress-copy" data-copy="progress">
+                        583개 중 20개 표시
+                    </p>
+                </div>
+            </section>
+        </main>
+
+        <script>
+            const copy = {
+                ko: {
+                    pageTitle: "악곡 검색",
+                    scope: "악곡 검색",
+                    searchPlaceholder: "악곡명 · 아티스트 검색",
+                    searchAction: "검색",
+                    resultCount: "악곡 583개",
+                    sortValue: "읽기순",
+                    filterSort: "필터·정렬",
+                    companionShort: "알테일",
+                    companionLong: "Fixture only · 긴 번역 제목 검증",
+                    loadMore: "결과 20개 더 보기",
+                    progress: "583개 중 20개 표시",
+                },
+                ja: {
+                    pageTitle: "楽曲検索",
+                    scope: "楽曲検索",
+                    searchPlaceholder: "曲名・アーティストを検索",
+                    searchAction: "検索",
+                    resultCount: "楽曲 583件",
+                    sortValue: "読み仮名順",
+                    filterSort: "絞り込み・並べ替え",
+                    companionShort: "アルタイル",
+                    companionLong: "Fixture only・長い読み仮名の検証",
+                    loadMore: "結果をあと20件表示",
+                    progress: "583件中20件を表示",
+                },
+                en: {
+                    pageTitle: "Music search",
+                    scope: "Music search",
+                    searchPlaceholder: "Search title or artist",
+                    searchAction: "Search",
+                    resultCount: "583 songs",
+                    sortValue: "Reading order",
+                    filterSort: "Filter and sort",
+                    companionShort: "Altair",
+                    companionLong:
+                        "Fixture only · long translated title validation",
+                    loadMore: "Load 20 more results",
+                    progress: "Showing 20 of 583",
+                },
+            };
+
+            const frame = document.querySelector(".specimen-frame");
+            const resultCollection =
+                document.querySelector(".result-collection");
+            const viewButtons = document.querySelectorAll(".view-button");
+            let locale = "ko";
+
+            function selectControl(control, value) {
+                document
+                    .querySelectorAll(`[data-control="${control}"]`)
+                    .forEach((button) => {
+                        button.setAttribute(
+                            "aria-pressed",
+                            String(button.dataset.value === value)
+                        );
+                    });
+            }
+
+            function applyLocale(nextLocale) {
+                locale = nextLocale;
+                document.documentElement.lang = locale;
+                document.querySelectorAll("[data-copy]").forEach((node) => {
+                    node.textContent = copy[locale][node.dataset.copy];
+                });
+                document
+                    .querySelectorAll("[data-placeholder]")
+                    .forEach((node) => {
+                        const value = copy[locale][node.dataset.placeholder];
+                        node.placeholder = value;
+                        node.setAttribute("aria-label", value);
+                    });
+                document
+                    .querySelectorAll("[data-copy-aria]")
+                    .forEach((node) => {
+                        node.setAttribute(
+                            "aria-label",
+                            copy[locale][node.dataset.copyAria]
+                        );
+                    });
+            }
+
+            document.querySelectorAll("[data-control]").forEach((button) => {
+                button.addEventListener("click", () => {
+                    const { control, value } = button.dataset;
+                    selectControl(control, value);
+
+                    if (control === "width") frame.dataset.width = value;
+                    if (control === "locale") applyLocale(value);
+                    if (control === "scale") frame.dataset.textScale = value;
+                    if (control === "view") {
+                        resultCollection.dataset.view = value;
+                        viewButtons.forEach((viewButton, index) => {
+                            viewButton.setAttribute(
+                                "aria-pressed",
+                                String(
+                                    (value === "list" && index === 0) ||
+                                        (value === "grid" && index === 1)
+                                )
+                            );
+                        });
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>
