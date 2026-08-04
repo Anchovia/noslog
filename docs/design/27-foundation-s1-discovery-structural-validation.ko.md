@@ -2,7 +2,7 @@
 
 ## 문서 관리
 
-- 상태: `초안 — 관찰된 기준선 및 검증 Protocol만 포함`
+- 상태: `검증 완료 — Compact 첫 검토 Gate 완료`
 - 원본 언어: 영어
 - 영어 원본:
   [27-foundation-s1-discovery-structural-validation.md](./27-foundation-s1-discovery-structural-validation.md)
@@ -117,8 +117,9 @@ Card보다 약 `5.5px` 넓습니다.
 이 규칙은 기기 이름이나 공유 `672/1056px` Page-grid 전환이 아니라 결과 Container
 수용량을 사용합니다. `138px`은 `320px`에서 승인된 두 열 구성을 보존하기 위한
 비상 Compact 하한이며, 모든 Card가 `168px` 선호 너비를 유지하기 전에는 새로운
-일반 열을 추가하지 않습니다. `200%` Text resize에서는 현재 Specimen이 Grid를
-한 열로 바꾸며, 이 Reflow는 별도의 미해결 검토 항목으로 남습니다.
+일반 열을 추가하지 않습니다. `200%` Text resize에서 검증된 Specimen은 Grid를
+한 열로 바꿉니다. 두 Compact 폭과 세 UI Locale을 모두 직접 Browser에서
+검증한 결과, 이 Reflow는 가로 Overflow 없이 승인된 정체성 위계를 보존했습니다.
 
 ### 승인된 필터 Rail 활성화와 넓은 구성
 
@@ -316,10 +317,55 @@ Specimen을 연결된 Slice로 검토하여 최종 화면 Suite로 확장하지 
 | 영향을 받는 권위 문서          |               |
 | 사용자 결정 필요               | `Yes / No`    |
 
-## 첫 검토 Gate
+## Browser 검증 기록 — 2026-08-05
+
+편집 가능한 Specimen
+[s1-discovery-compact-structure.html](./specimens/s1-discovery-compact-structure.html)을
+Local static hosting으로 제공하고 Codex Browser에서 직접 테스트했습니다. 다음의
+모든 조합을 검증했습니다.
+
+- `320px` 및 `390px` Specimen 폭;
+- 한국어, 일본어, 영어 UI Copy;
+- 목록 및 Grid 결과;
+- 기본 및 `200%` Text size.
+
+총 `24`개 조합을 측정했습니다. 각 조합에서 Specimen 및 Content scroll width,
+Frame 밖으로 벗어난 영역, 잘린 Control, 정체성 외 Text clipping, 난이도 값
+Overflow, 정사각형 재킷 비율, 결과 Context Reflow, Grid 열 수 및 승인된 제목·
+아티스트 한 줄 처리를 확인했습니다. 불러온 Font stack은
+`Pretendard JP Variable`, `Pretendard JP`, `Pretendard`, `system-ui`, `sans-serif`로
+보고됐으며 `document.fonts.status`는 `loaded`였습니다.
+
+### 발견하고 수정한 실패
+
+첫 실행에서 기본 Text size 조합은 모두 통과했지만, `200%` Text size의 `12`개
+조합 전체에서 두 가지 실제 결함을 발견했습니다.
+
+1. 고정 `48px` 검색 범위 열이 확대된 범위 Glyph를 잘랐습니다.
+2. 고정 `20 × 20px` 난이도 상자가 승인된 확대 Metric Text를 담지 못해 눈에
+   띄게 겹쳤습니다.
+
+수정 과정에서 새 Type size를 추가하거나 Content를 숨기거나 승인된 Content
+순서를 바꾸거나 정체성 한 줄 결정을 다시 열지 않았습니다. `200%`에서 범위 열은
+이제 `56px`을 할당하고 각 난이도 값은 `36 × 36px`로 커집니다. 이미 승인된
+Reflow는 목록 난이도 Group을 두 번째 행으로 옮기고 Grid를 한 열로 바꿉니다.
+
+### 최종 결과
+
+| Matrix 구간 | 조합      | 가로 Overflow | 잘린 Control 또는 정체성 외 Text | 난이도 충돌 | 재킷 비율    | 필수 Reflow |
+| ----------- | --------- | ------------- | -------------------------------- | ----------- | ------------ | ----------- |
+| 기본 Text   | `12 / 12` | 통과          | 통과                             | 통과        | 통과 (`1:1`) | 통과        |
+| `200%` Text | `12 / 12` | 통과          | 통과                             | 통과        | 통과 (`1:1`) | 통과        |
+
+긴 원문 제목과 아티스트 Credit은 승인된 보이는 한 줄 말줄임을 계속 사용합니다.
+전체 정체성이 접근성 및 Data 계약으로 보존되므로 이 예상된 Truncation은 구조
+실패로 세지 않습니다. 이 Compact 다국어 Matrix에서 승인된 위계나 Line limit는
+실패하지 않았습니다.
+
+## 첫 검토 Gate — 완료
 
 첫 검토 묶음은 한국어·일본어·영어 및 혼합 Script 정체성 Fixture를 사용해
-`320px`과 `390px`에서 `S1-A`부터 `S1-D`까지 비교합니다.
+`320px`과 `390px`에서 `S1-A`부터 `S1-D`까지 비교했습니다.
 
 Commit된 결과 요약과 Action은 두 Compact 검증 폭의 기본 Text size에서 같은
 시각 행을 공유하도록 승인했습니다. 읽기 순서에서는 요약이 먼저이고 Filter/Sort
@@ -328,31 +374,34 @@ Commit된 결과 요약과 Action은 두 Compact 검증 폭의 기본 Text size�
 Fixture에서 충돌이 발생하면 다른 Layout을 조용히 승인하지 않고 검증 실패로
 보고해야 합니다.
 
-필터 전환과 악곡 Grid 수용량 질문은 이제 해결되었습니다. 남은 S1 검토 질문은
-승인된 Line limit 또는 위계가 긴 한국어·일본어·영어·혼합 Script Fixture나
-`200%` Text resize에서 실패하는지입니다.
+필터 전환, 악곡 Grid 수용량, Compact Localization 및 `200%` Text resize 질문은
+해결됐습니다. 측정한 Compact Matrix에서는 승인된 Line limit나 위계가 실패하지
+않았습니다. 따라서 이후 Foundation 권위가 문서화된 충돌을 만들지 않는 한
+`S1-A`부터 `S1-D`는 또 다른 Design 결정 검토가 필요하지 않습니다. 더 넓고
+State가 많은 `S1-E`부터 `S1-G` 검증은 이후 통합 Specimen Gate에 남지만, 이
+Compact 결과를 조용히 수정할 수 없습니다.
 
-남은 항목은 사용자가 측정된 Specimen을 검토하기 전까지 승인되지 않습니다. 후보가
-새 Type size, 임의 Spacing 값, 숨겨진 주요 Action 또는 승인된 탐색 Content 순서
-변경을 요구하면 Local 예외가 되는 대신 실패로 판정합니다.
+## 결정 및 검증 상태 기록
 
-## 초안 상태 기록
-
-| ID       | 항목                                                                                                      | 상태         |
-| -------- | --------------------------------------------------------------------------------------------------------- | ------------ |
-| `S1V-01` | 이 문서를 제한된 S1 구조 검증 Protocol로 사용합니다.                                                      | `Draft`      |
-| `S1V-02` | 위의 `S1-A`–`S1-G` 및 Fixture·측정 Matrix를 사용합니다.                                                   | `Draft`      |
-| `S1V-03` | 현재 UI와 현재 Font delivery를 이관 근거로만 취급합니다.                                                  | `Observed`   |
-| `S1V-04` | 이전 초안은 첫 검토 Gate의 네 결과를 모두 보류했지만 Compact 행 결과는 이제 승인되었습니다.               | `Superseded` |
-| `S1V-05` | 고정된 칸 순서와 접근 가능한 전체 이름을 보존하면서 반복되는 보이는 `N/H/E/R` Label을 생략합니다.         | `Approved`   |
-| `S1V-06` | `320px` 및 `390px` 기본 Text size에서 Commit 결과 요약과 Action을 같은 시각 행에 둡니다.                  | `Approved`   |
-| `S1V-07` | 항상 분리된 기본 Compact 결과 Context Layout을 거절합니다.                                                | `Rejected`   |
-| `S1V-08` | 측정된 현재 `320px/390px` 목록 및 Grid 기준선을 이관 근거로 기록합니다.                                   | `Observed`   |
-| `S1V-09` | `138px` Compact 하한, `168px` 선호 Grid 너비, `536/720/904px` 수용량 임계점 및 최대 다섯 열을 사용합니다. | `Approved`   |
-| `S1V-10` | 이전 방향은 목록과 Grid 모두 보이는 Caption·원문 제목·아티스트 행을 확보했습니다.                         | `Superseded` |
-| `S1V-11` | 이전 초안은 정사각형 목록 재킷을 행 높이와 독립된 `56 × 56px`로 고정했습니다.                             | `Superseded` |
-| `S1V-12` | 이전 방향은 보이는 번역 Caption을 위해 콘텐츠 기반 `64–84px` 목록 행을 허용했습니다.                      | `Superseded` |
-| `S1V-13` | 원문 제목과 아티스트만 각각 보이는 한 줄로 표시하고 번역·읽기 제목 별칭은 검색 가능하게 유지합니다.       | `Approved`   |
-| `S1V-14` | Compact 목록 행과 정사각형 재킷을 `64px`로 유지하고 Caption 높이를 예약하지 않습니다.                     | `Approved`   |
-| `S1V-15` | `1216px` 미만은 통합 임시 필터·정렬 Layer, `1216px`에서는 `3/12` Rail과 `9/12` 결과 영역을 사용합니다.    | `Approved`   |
-| `S1V-16` | 정렬은 결과 Toolbar의 Label된 선택기 하나로 유지하고 항상 보이는 가로 정렬·필터 버튼 행을 거절합니다.     | `Approved`   |
+| ID       | 항목                                                                                                                 | 상태         |
+| -------- | -------------------------------------------------------------------------------------------------------------------- | ------------ |
+| `S1V-01` | 이 문서를 제한된 S1 구조 검증 Protocol로 사용합니다.                                                                 | `Approved`   |
+| `S1V-02` | 위의 `S1-A`–`S1-G` 및 Fixture·측정 Matrix를 사용합니다.                                                              | `Approved`   |
+| `S1V-03` | 현재 UI와 현재 Font delivery를 이관 근거로만 취급합니다.                                                             | `Observed`   |
+| `S1V-04` | 이전 초안은 첫 검토 Gate의 네 결과를 모두 보류했지만 Compact 행 결과는 이제 승인되었습니다.                          | `Superseded` |
+| `S1V-05` | 고정된 칸 순서와 접근 가능한 전체 이름을 보존하면서 반복되는 보이는 `N/H/E/R` Label을 생략합니다.                    | `Approved`   |
+| `S1V-06` | `320px` 및 `390px` 기본 Text size에서 Commit 결과 요약과 Action을 같은 시각 행에 둡니다.                             | `Approved`   |
+| `S1V-07` | 항상 분리된 기본 Compact 결과 Context Layout을 거절합니다.                                                           | `Rejected`   |
+| `S1V-08` | 측정된 현재 `320px/390px` 목록 및 Grid 기준선을 이관 근거로 기록합니다.                                              | `Observed`   |
+| `S1V-09` | `138px` Compact 하한, `168px` 선호 Grid 너비, `536/720/904px` 수용량 임계점 및 최대 다섯 열을 사용합니다.            | `Approved`   |
+| `S1V-10` | 이전 방향은 목록과 Grid 모두 보이는 Caption·원문 제목·아티스트 행을 확보했습니다.                                    | `Superseded` |
+| `S1V-11` | 이전 초안은 정사각형 목록 재킷을 행 높이와 독립된 `56 × 56px`로 고정했습니다.                                        | `Superseded` |
+| `S1V-12` | 이전 방향은 보이는 번역 Caption을 위해 콘텐츠 기반 `64–84px` 목록 행을 허용했습니다.                                 | `Superseded` |
+| `S1V-13` | 원문 제목과 아티스트만 각각 보이는 한 줄로 표시하고 번역·읽기 제목 별칭은 검색 가능하게 유지합니다.                  | `Approved`   |
+| `S1V-14` | Compact 목록 행과 정사각형 재킷을 `64px`로 유지하고 Caption 높이를 예약하지 않습니다.                                | `Approved`   |
+| `S1V-15` | `1216px` 미만은 통합 임시 필터·정렬 Layer, `1216px`에서는 `3/12` Rail과 `9/12` 결과 영역을 사용합니다.               | `Approved`   |
+| `S1V-16` | 정렬은 결과 Toolbar의 Label된 선택기 하나로 유지하고 항상 보이는 가로 정렬·필터 버튼 행을 거절합니다.                | `Approved`   |
+| `S1V-17` | 측정된 두 가지 `200%` Text 결함을 수정한 뒤 직접 수행한 Compact Browser `24`개 조합이 모두 통과했습니다.             | `Observed`   |
+| `S1V-18` | `200%` Text size에서는 검색 범위와 난이도 값을 키우고, 목록 난이도를 정체성 아래로 옮기며 Grid는 한 열을 사용합니다. | `Approved`   |
+| `S1V-19` | 전체 접근 가능 정체성을 보존하면서 승인된 제목·아티스트 한 줄 말줄임을 예상된 표시 동작으로 취급합니다.              | `Approved`   |
+| `S1V-20` | `S1-A`–`S1-D` Compact Gate를 종료하며, 이후 Foundation 검증이 문서화된 충돌을 만들 때만 다시 엽니다.                 | `Approved`   |

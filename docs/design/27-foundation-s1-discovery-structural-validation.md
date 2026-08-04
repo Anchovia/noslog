@@ -2,7 +2,7 @@
 
 ## Document Control
 
-- Status: `Draft — observed baseline and validation protocol only`
+- Status: `Validated — compact First Review Gate complete`
 - Canonical language: English
 - Korean companion:
   [27-foundation-s1-discovery-structural-validation.ko.md](./27-foundation-s1-discovery-structural-validation.ko.md)
@@ -122,8 +122,9 @@ This rule uses result-container capacity, not device names or the shared
 `672/1056px` page-grid transitions. The `138px` value is an emergency compact floor
 needed to preserve the approved two-column composition at `320px`; new ordinary
 columns are not added until every card can retain the `168px` preferred width. At
-`200%` text resize the present specimen changes Grid to one column; that reflow
-remains a separate unresolved review item.
+At `200%` text resize, the validated specimen changes Grid to one column. Direct
+browser testing across both compact widths and all three UI locales confirmed that
+this reflow preserves the approved identity hierarchy without horizontal overflow.
 
 ### Approved filter-rail activation and wide composition
 
@@ -326,10 +327,56 @@ turning the exercise into a final screen suite.
 | Authority affected             |               |
 | User decision required         | `Yes / No`    |
 
-## First Review Gate
+## Browser Validation Record — 2026-08-05
 
-The first review batch will compare `S1-A` through `S1-D` at `320px` and `390px`
-using Korean, Japanese, English, and mixed-script identity fixtures.
+The editable specimen
+[s1-discovery-compact-structure.html](./specimens/s1-discovery-compact-structure.html)
+was served from local static hosting and tested directly in the Codex browser. The
+test covered every combination of:
+
+- `320px` and `390px` specimen widths;
+- Korean, Japanese, and English UI copy;
+- List and Grid results;
+- default and `200%` text size.
+
+This produced `24` measured combinations. Each combination checked the specimen and
+content scroll widths, escaped regions, clipped controls, non-identity text clipping,
+difficulty-value overflow, square-jacket ratio, result-context reflow, Grid column
+count, and the approved one-line title and artist treatment. The loaded font stack
+reported `Pretendard JP Variable`, `Pretendard JP`, `Pretendard`, `system-ui`, and
+`sans-serif`, with `document.fonts.status` equal to `loaded`.
+
+### Failure found and corrected
+
+The first run passed all default-size combinations but exposed two real defects in all
+`12` combinations at `200%` text size:
+
+1. the fixed `48px` search-scope column clipped its enlarged scope glyph; and
+2. the fixed `20 × 20px` difficulty boxes could not contain the approved enlarged
+   metric text and visibly collided.
+
+The correction did not add a type size, hide content, change the approved content
+order, or reopen the one-line identity decision. At `200%`, the scope column now
+allocates `56px`, and each difficulty value grows to `36 × 36px`. The already approved
+reflow still moves the List difficulty group to a second row and changes Grid to one
+column.
+
+### Final result
+
+| Matrix slice | Combinations | Horizontal overflow | Clipped controls or non-identity text | Difficulty collision | Jacket ratio | Required reflow |
+| ------------ | ------------ | ------------------- | ------------------------------------- | -------------------- | ------------ | --------------- |
+| Default text | `12 / 12`    | Pass                | Pass                                  | Pass                 | Pass (`1:1`) | Pass            |
+| `200%` text  | `12 / 12`    | Pass                | Pass                                  | Pass                 | Pass (`1:1`) | Pass            |
+
+Long original titles and artist credits continue to use the approved visible one-line
+ellipsis. That expected truncation is not counted as a structural failure because the
+full identity remains an accessibility and data contract. No approved hierarchy or
+line limit failed in this compact multilingual matrix.
+
+## First Review Gate — Complete
+
+The first review batch compared `S1-A` through `S1-D` at `320px` and `390px` using
+Korean, Japanese, English, and mixed-script identity fixtures.
 
 The committed result summary and its actions are approved to share one visual row at
 default text size for both compact validation widths. The summary remains first in
@@ -338,32 +385,34 @@ default layout is rejected because it adds vertical separation without improving
 task hierarchy. If `200%` text resize or a localization fixture causes collision, the
 specimen must report that failure rather than silently approving a different layout.
 
-The filter transition and Music-grid capacity questions are now resolved. The
-remaining S1 review question is whether any approved line limit or hierarchy fails
-under long Korean, Japanese, English, and mixed-script fixtures or `200%` text resize.
+The filter transition, Music-grid capacity, compact localization, and `200%` text
+resize questions are resolved. No approved line limit or hierarchy failed in the
+measured compact matrix. `S1-A` through `S1-D` therefore do not require another design
+decision pass unless a later Foundation authority introduces a documented conflict.
+The wider and state-heavy `S1-E` through `S1-G` coverage remains part of the later
+integrated specimen gate; it must not silently revise these compact outcomes.
 
-No remaining item becomes approved until the user reviews the measured specimens. If a
-candidate requires a new type size, arbitrary spacing value, hidden primary action,
-or change to the approved discovery content order, it fails rather than becoming a
-local exception.
+## Decision and Validation Status Log
 
-## Draft Status Log
-
-| ID       | Entry                                                                                                                      | Status       |
-| -------- | -------------------------------------------------------------------------------------------------------------------------- | ------------ |
-| `S1V-01` | Use this document as the bounded S1 structural validation protocol.                                                        | `Draft`      |
-| `S1V-02` | Use `S1-A` through `S1-G` and the fixture/measurement matrices above.                                                      | `Draft`      |
-| `S1V-03` | Treat current UI and current font delivery as migration evidence only.                                                     | `Observed`   |
-| `S1V-04` | Earlier draft deferred all four First Review Gate outcomes; the compact row outcome is now approved.                       | `Superseded` |
-| `S1V-05` | Omit repeated visible `N/H/E/R` labels while preserving fixed slot order and accessible full names.                        | `Approved`   |
-| `S1V-06` | Keep committed result summary and actions in one visual row at `320px` and `390px` default text size.                      | `Approved`   |
-| `S1V-07` | Reject a permanently split default compact result-context layout.                                                          | `Rejected`   |
-| `S1V-08` | Record the measured current `320px/390px` List and Grid baseline as migration evidence.                                    | `Observed`   |
-| `S1V-09` | Use the `138px` compact floor, `168px` preferred Grid width, `536/720/904px` capacity thresholds, and five-column ceiling. | `Approved`   |
-| `S1V-10` | Earlier direction reserved visible caption, original-title, and artist lines in both List and Grid.                        | `Superseded` |
-| `S1V-11` | Earlier draft fixed the square List jacket at `56 × 56px` independently of row height.                                     | `Superseded` |
-| `S1V-12` | Earlier direction allowed a content-driven `64–84px` List row to accommodate a visible localized-title caption.            | `Superseded` |
-| `S1V-13` | Show original title and artist only, each on one visible line, while translated/read-title aliases remain searchable.      | `Approved`   |
-| `S1V-14` | Keep the compact List row and its square jacket at `64px`; do not reserve caption-driven height.                           | `Approved`   |
-| `S1V-15` | Below `1216px`, use the combined staged Filter/Sort layer; at `1216px`, activate a `3/12` rail and `9/12` result region.   | `Approved`   |
-| `S1V-16` | Keep Sort as one labelled result-toolbar selector and reject a persistent horizontal row of sort and filter buttons.       | `Approved`   |
+| ID       | Entry                                                                                                                                 | Status       |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| `S1V-01` | Use this document as the bounded S1 structural validation protocol.                                                                   | `Approved`   |
+| `S1V-02` | Use `S1-A` through `S1-G` and the fixture/measurement matrices above.                                                                 | `Approved`   |
+| `S1V-03` | Treat current UI and current font delivery as migration evidence only.                                                                | `Observed`   |
+| `S1V-04` | Earlier draft deferred all four First Review Gate outcomes; the compact row outcome is now approved.                                  | `Superseded` |
+| `S1V-05` | Omit repeated visible `N/H/E/R` labels while preserving fixed slot order and accessible full names.                                   | `Approved`   |
+| `S1V-06` | Keep committed result summary and actions in one visual row at `320px` and `390px` default text size.                                 | `Approved`   |
+| `S1V-07` | Reject a permanently split default compact result-context layout.                                                                     | `Rejected`   |
+| `S1V-08` | Record the measured current `320px/390px` List and Grid baseline as migration evidence.                                               | `Observed`   |
+| `S1V-09` | Use the `138px` compact floor, `168px` preferred Grid width, `536/720/904px` capacity thresholds, and five-column ceiling.            | `Approved`   |
+| `S1V-10` | Earlier direction reserved visible caption, original-title, and artist lines in both List and Grid.                                   | `Superseded` |
+| `S1V-11` | Earlier draft fixed the square List jacket at `56 × 56px` independently of row height.                                                | `Superseded` |
+| `S1V-12` | Earlier direction allowed a content-driven `64–84px` List row to accommodate a visible localized-title caption.                       | `Superseded` |
+| `S1V-13` | Show original title and artist only, each on one visible line, while translated/read-title aliases remain searchable.                 | `Approved`   |
+| `S1V-14` | Keep the compact List row and its square jacket at `64px`; do not reserve caption-driven height.                                      | `Approved`   |
+| `S1V-15` | Below `1216px`, use the combined staged Filter/Sort layer; at `1216px`, activate a `3/12` rail and `9/12` result region.              | `Approved`   |
+| `S1V-16` | Keep Sort as one labelled result-toolbar selector and reject a persistent horizontal row of sort and filter buttons.                  | `Approved`   |
+| `S1V-17` | The direct `24`-combination compact browser matrix passes after correcting the two measured `200%` text defects.                      | `Observed`   |
+| `S1V-18` | At `200%` text size, let the search scope and difficulty values grow, move List difficulties below identity, and use one Grid column. | `Approved`   |
+| `S1V-19` | Treat approved one-line title and artist ellipsis as expected display behavior while preserving complete accessible identity.         | `Approved`   |
+| `S1V-20` | Close the `S1-A`–`S1-D` compact gate; reopen it only for a documented conflict introduced by later Foundation validation.             | `Approved`   |

@@ -329,7 +329,10 @@
             .result-collection[data-view="list"] .music-card {
                 --list-row-edge: 64px;
                 min-height: var(--list-row-edge);
-                grid-template-columns: var(--list-row-edge) minmax(0, 1fr) 104px;
+                grid-template-columns: var(--list-row-edge) minmax(
+                        0,
+                        1fr
+                    ) 104px;
                 align-items: stretch;
             }
 
@@ -482,6 +485,10 @@
                 align-items: stretch;
             }
 
+            .specimen-frame[data-text-scale="200"] .search-control {
+                grid-template-columns: 56px minmax(0, 1fr) 44px;
+            }
+
             .specimen-frame[data-text-scale="200"] .result-context,
             .specimen-frame[data-text-scale="200"]
                 .result-context[data-layout="row"] {
@@ -505,6 +512,15 @@
                 grid-column: 1 / -1;
                 justify-content: start;
                 padding: 8px 12px 12px;
+            }
+
+            .specimen-frame[data-text-scale="200"] .difficulty-group {
+                grid-template-columns: repeat(4, 36px);
+            }
+
+            .specimen-frame[data-text-scale="200"] .difficulty-value {
+                width: 36px;
+                height: 36px;
             }
 
             .specimen-frame[data-text-scale="200"]
