@@ -1,0 +1,1640 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>NosLog 2.0 S3 Global Rankings Structure Specimen</title>
+        <link
+            rel="stylesheet"
+            crossorigin
+            href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-jp.min.css"
+        />
+        <style>
+            :root {
+                color-scheme: dark;
+                font-family:
+                    "Pretendard JP Variable", "Pretendard JP", Pretendard,
+                    system-ui, sans-serif;
+                font-synthesis: none;
+                --canvas: #0d0d0f;
+                --frame: #111114;
+                --surface: #19191e;
+                --surface-strong: #222229;
+                --line: #34343d;
+                --line-strong: #565661;
+                --text: #f2f2f4;
+                --text-secondary: #b8b8c1;
+                --text-tertiary: #898994;
+                --focus: #f2f2f4;
+                --space-1: 4px;
+                --space-2: 8px;
+                --space-3: 12px;
+                --space-4: 16px;
+                --space-5: 24px;
+                --space-6: 32px;
+                --radius: 8px;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            [hidden] {
+                display: none !important;
+            }
+
+            html {
+                background: var(--canvas);
+            }
+
+            body {
+                min-width: 320px;
+                margin: 0;
+                background: var(--canvas);
+                color: var(--text);
+            }
+
+            button,
+            select,
+            a {
+                color: inherit;
+                font: inherit;
+            }
+
+            button:not(:disabled),
+            select,
+            a {
+                cursor: pointer;
+            }
+
+            button:focus-visible,
+            select:focus-visible,
+            a:focus-visible {
+                outline: 2px solid var(--focus);
+                outline-offset: 2px;
+            }
+
+            .review-shell {
+                display: grid;
+                gap: 24px;
+                justify-items: center;
+                padding: 24px;
+            }
+
+            .review-controls {
+                display: flex;
+                max-width: 1120px;
+                flex-wrap: wrap;
+                gap: 8px;
+                justify-content: center;
+            }
+
+            .review-controls button {
+                min-height: 40px;
+                border: 1px solid var(--line);
+                border-radius: var(--radius);
+                background: var(--surface);
+                padding: 0 12px;
+                font-size: 14px;
+                font-weight: 500;
+                line-height: 20px;
+            }
+
+            .review-controls button[aria-pressed="true"] {
+                border-color: var(--text);
+                background: var(--text);
+                color: var(--canvas);
+            }
+
+            .review-note {
+                max-width: 920px;
+                margin: -12px 0 0;
+                color: var(--text-secondary);
+                font-size: 14px;
+                line-height: 20px;
+                text-align: center;
+            }
+
+            .specimen-frame {
+                --fs-12: 12px;
+                --fs-14: 14px;
+                --fs-16: 16px;
+                --fs-20: 20px;
+                --fs-24: 24px;
+                --lh-16: 16px;
+                --lh-20: 20px;
+                --lh-24: 24px;
+                --lh-28: 28px;
+                --lh-32: 32px;
+                width: 390px;
+                max-width: 100%;
+                overflow: hidden;
+                border-radius: 12px;
+                background: var(--frame);
+                box-shadow: inset 0 0 0 1px var(--line-strong);
+                container-name: rankings;
+                container-type: inline-size;
+            }
+
+            .specimen-frame[data-width="320"] {
+                width: 320px;
+            }
+            .specimen-frame[data-width="360"] {
+                width: 360px;
+            }
+            .specimen-frame[data-width="390"] {
+                width: 390px;
+            }
+            .specimen-frame[data-width="430"] {
+                width: 430px;
+            }
+            .specimen-frame[data-width="479"] {
+                width: 479px;
+            }
+            .specimen-frame[data-width="480"] {
+                width: 480px;
+            }
+            .specimen-frame[data-width="481"] {
+                width: 481px;
+            }
+            .specimen-frame[data-width="639"] {
+                width: 639px;
+            }
+            .specimen-frame[data-width="640"] {
+                width: 640px;
+            }
+            .specimen-frame[data-width="641"] {
+                width: 641px;
+            }
+            .specimen-frame[data-width="671"] {
+                width: 671px;
+            }
+            .specimen-frame[data-width="672"] {
+                width: 672px;
+            }
+            .specimen-frame[data-width="673"] {
+                width: 673px;
+            }
+            .specimen-frame[data-width="767"] {
+                width: 767px;
+            }
+            .specimen-frame[data-width="768"] {
+                width: 768px;
+            }
+            .specimen-frame[data-width="769"] {
+                width: 769px;
+            }
+            .specimen-frame[data-width="1055"] {
+                width: 1055px;
+            }
+            .specimen-frame[data-width="1056"] {
+                width: 1056px;
+            }
+            .specimen-frame[data-width="1057"] {
+                width: 1057px;
+            }
+            .specimen-frame[data-width="1280"] {
+                width: 1280px;
+            }
+            .specimen-frame[data-width="1440"] {
+                width: 1440px;
+            }
+
+            .specimen-frame[data-text-scale="200"] {
+                --fs-12: 24px;
+                --fs-14: 28px;
+                --fs-16: 32px;
+                --fs-20: 40px;
+                --fs-24: 48px;
+                --lh-16: 32px;
+                --lh-20: 40px;
+                --lh-24: 48px;
+                --lh-28: 56px;
+                --lh-32: 64px;
+            }
+
+            .app-header {
+                display: flex;
+                min-height: 56px;
+                align-items: center;
+                justify-content: space-between;
+                border-bottom: 1px solid var(--line);
+                padding: 6px 16px;
+            }
+
+            .wordmark {
+                font-size: var(--fs-16);
+                font-weight: 700;
+                line-height: var(--lh-24);
+            }
+
+            .header-actions {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+            }
+
+            .icon-button {
+                display: inline-flex;
+                min-width: 44px;
+                min-height: 44px;
+                align-items: center;
+                justify-content: center;
+                border: 0;
+                background: transparent;
+            }
+
+            .profile-dot {
+                width: 28px;
+                height: 28px;
+                border: 1px solid var(--line-strong);
+                border-radius: 50%;
+                background: var(--surface-strong);
+            }
+
+            .rankings-page {
+                width: min(100%, 1120px);
+                margin-inline: auto;
+                padding: 24px 16px 32px;
+            }
+
+            .page-heading {
+                margin: 0;
+                font-size: var(--fs-24);
+                font-weight: 700;
+                line-height: var(--lh-32);
+            }
+
+            .page-intro {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: baseline;
+                justify-content: space-between;
+                gap: 4px 12px;
+                margin-top: 4px;
+            }
+
+            .page-intro p,
+            .result-count,
+            .basis-line,
+            .result-status {
+                margin: 0;
+                color: var(--text-secondary);
+                font-size: var(--fs-14);
+                line-height: var(--lh-20);
+            }
+
+            .control-stack {
+                display: grid;
+                gap: 12px;
+                margin-top: 24px;
+            }
+
+            .choice-group {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 4px;
+                padding: 4px;
+                border: 1px solid var(--line);
+                border-radius: var(--radius);
+                background: var(--surface);
+            }
+
+            .choice-group button {
+                min-height: 44px;
+                border: 0;
+                border-radius: 6px;
+                background: transparent;
+                font-size: var(--fs-14);
+                font-weight: 600;
+                line-height: var(--lh-20);
+            }
+
+            .choice-group button[aria-pressed="true"] {
+                background: var(--text);
+                color: var(--canvas);
+            }
+
+            .sub-controls {
+                display: grid;
+                gap: 12px;
+            }
+
+            .field {
+                display: grid;
+                gap: 4px;
+            }
+
+            .field-label {
+                color: var(--text-secondary);
+                font-size: var(--fs-12);
+                font-weight: 500;
+                line-height: var(--lh-16);
+            }
+
+            .field select {
+                width: 100%;
+                min-height: 44px;
+                border: 1px solid var(--line);
+                border-radius: var(--radius);
+                background: var(--surface);
+                padding: 0 36px 0 12px;
+                font-size: var(--fs-14);
+                line-height: var(--lh-20);
+            }
+
+            .basis-line {
+                margin-top: 8px;
+            }
+
+            .personal-summary {
+                display: grid;
+                gap: 12px;
+                margin-top: 20px;
+                border: 1px solid var(--line-strong);
+                border-radius: var(--radius);
+                background: var(--surface);
+                padding: 12px;
+            }
+
+            .personal-copy {
+                min-width: 0;
+            }
+
+            .personal-label {
+                display: block;
+                color: var(--text-secondary);
+                font-size: var(--fs-12);
+                line-height: var(--lh-16);
+            }
+
+            .personal-value {
+                display: block;
+                margin-top: 2px;
+                font-size: var(--fs-16);
+                font-weight: 700;
+                line-height: var(--lh-24);
+                font-variant-numeric: tabular-nums;
+            }
+
+            .personal-summary button,
+            .state-action {
+                min-height: 44px;
+                border: 1px solid var(--line-strong);
+                border-radius: var(--radius);
+                background: transparent;
+                padding: 0 12px;
+                font-size: var(--fs-14);
+                font-weight: 600;
+                line-height: var(--lh-20);
+            }
+
+            .results-region {
+                margin-top: 24px;
+            }
+
+            .results-heading {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: baseline;
+                justify-content: space-between;
+                gap: 4px 12px;
+                margin-bottom: 8px;
+            }
+
+            .results-heading h2 {
+                margin: 0;
+                font-size: var(--fs-20);
+                font-weight: 700;
+                line-height: var(--lh-28);
+            }
+
+            .ranking-table {
+                overflow: hidden;
+                border: 1px solid var(--line);
+                border-radius: var(--radius);
+                background: var(--surface);
+            }
+
+            .ranking-head,
+            .ranking-row {
+                display: grid;
+                grid-template-columns: 32px 40px minmax(0, 1fr) auto;
+                gap: 8px;
+                align-items: center;
+            }
+
+            .ranking-head {
+                display: none;
+                min-height: 44px;
+                border-bottom: 1px solid var(--line);
+                color: var(--text-secondary);
+                font-size: var(--fs-12);
+                font-weight: 600;
+                line-height: var(--lh-16);
+            }
+
+            .ranking-row {
+                min-height: 64px;
+                padding: 8px;
+                border-bottom: 1px solid var(--line);
+            }
+
+            .ranking-row:last-child {
+                border-bottom: 0;
+            }
+
+            .ranking-row[data-current="true"] {
+                box-shadow: inset 3px 0 0 var(--text);
+                background: var(--surface-strong);
+            }
+
+            .rank-cell,
+            .metric-cell {
+                font-size: var(--fs-14);
+                font-weight: 600;
+                line-height: var(--lh-20);
+                font-variant-numeric: tabular-nums;
+            }
+
+            .rank-cell {
+                text-align: center;
+            }
+
+            .avatar {
+                display: grid;
+                width: 40px;
+                height: 40px;
+                place-items: center;
+                overflow: hidden;
+                border: 1px solid var(--line-strong);
+                border-radius: 50%;
+                background: var(--surface-strong);
+                color: var(--text-secondary);
+                font-size: var(--fs-12);
+                font-weight: 600;
+                line-height: var(--lh-16);
+            }
+
+            .identity-cell {
+                position: relative;
+                display: flex;
+                min-width: 0;
+                min-height: 44px;
+                flex-direction: column;
+                justify-content: center;
+            }
+
+            .identity-line {
+                display: flex;
+                min-width: 0;
+                align-items: center;
+                gap: 4px;
+            }
+
+            .username {
+                min-width: 0;
+                overflow: hidden;
+                color: var(--text);
+                font-size: var(--fs-14);
+                font-weight: 600;
+                line-height: var(--lh-20);
+                text-decoration: none;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .username::after {
+                position: absolute;
+                inset: 0;
+                content: "";
+            }
+
+            .country {
+                flex: 0 0 auto;
+                color: var(--text-secondary);
+                font-size: var(--fs-12);
+                line-height: var(--lh-16);
+            }
+
+            .exam,
+            .current-marker {
+                display: block;
+                overflow: hidden;
+                margin-top: 2px;
+                color: var(--text-secondary);
+                font-size: var(--fs-12);
+                line-height: var(--lh-16);
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .current-marker {
+                display: block;
+                margin-top: 2px;
+                color: var(--text);
+                font-weight: 600;
+            }
+
+            .metric-cell {
+                min-width: 72px;
+                text-align: right;
+                white-space: nowrap;
+            }
+
+            .metric-label {
+                color: var(--text-secondary);
+                font-size: var(--fs-12);
+                font-weight: 500;
+            }
+
+            .state-panel {
+                display: grid;
+                min-height: 192px;
+                place-items: center;
+                padding: 24px;
+                text-align: center;
+            }
+
+            .state-panel p {
+                margin: 0;
+                color: var(--text-secondary);
+                font-size: var(--fs-14);
+                line-height: var(--lh-20);
+            }
+
+            .state-panel .state-action {
+                margin-top: 12px;
+            }
+
+            .pagination {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 4px;
+                margin-top: 16px;
+            }
+
+            .pagination a,
+            .pagination span {
+                display: inline-grid;
+                min-width: 44px;
+                min-height: 44px;
+                place-items: center;
+                border-radius: var(--radius);
+                color: var(--text-secondary);
+                font-size: var(--fs-14);
+                font-weight: 600;
+                line-height: var(--lh-20);
+                text-decoration: none;
+                font-variant-numeric: tabular-nums;
+            }
+
+            .pagination [aria-current="page"] {
+                background: var(--text);
+                color: var(--canvas);
+            }
+
+            .page-neighbor,
+            .page-ellipsis {
+                display: none !important;
+            }
+
+            @container rankings (min-width: 480px) {
+                .personal-summary {
+                    grid-template-columns: minmax(0, 1fr) auto;
+                    align-items: center;
+                }
+
+                .page-neighbor,
+                .page-ellipsis {
+                    display: inline-grid !important;
+                }
+            }
+
+            @container rankings (min-width: 640px) {
+                .rankings-page {
+                    padding-inline: 24px;
+                }
+
+                .control-stack {
+                    grid-template-columns: minmax(240px, 0.8fr) minmax(
+                            320px,
+                            1.2fr
+                        );
+                    align-items: end;
+                }
+
+                .sub-controls {
+                    grid-template-columns: 1fr;
+                    align-items: end;
+                }
+
+                .ranking-head {
+                    display: grid;
+                }
+
+                .ranking-head,
+                .ranking-row {
+                    grid-template-columns: 56px 48px minmax(0, 1fr) 144px;
+                    gap: 12px;
+                    padding-inline: 16px;
+                }
+
+                .ranking-row {
+                    min-height: 68px;
+                }
+
+                .avatar {
+                    width: 44px;
+                    height: 44px;
+                }
+
+                .metric-cell {
+                    min-width: 0;
+                }
+            }
+
+            @container rankings (min-width: 768px) {
+                .sub-controls {
+                    grid-template-columns: minmax(220px, 1fr) minmax(
+                            180px,
+                            0.72fr
+                        );
+                }
+            }
+
+            @container rankings (min-width: 1056px) {
+                .rankings-page {
+                    padding-inline: 32px;
+                }
+
+                .page-heading {
+                    font-size: 32px;
+                    line-height: 40px;
+                }
+
+                .ranking-head,
+                .ranking-row {
+                    grid-template-columns: 72px 52px minmax(0, 1fr) 176px;
+                }
+            }
+
+            .specimen-frame[data-text-scale="200"] .control-stack,
+            .specimen-frame[data-text-scale="200"] .sub-controls {
+                grid-template-columns: 1fr;
+            }
+
+            .specimen-frame[data-text-scale="200"] .ranking-head {
+                display: none;
+            }
+
+            .specimen-frame[data-text-scale="200"] .ranking-head,
+            .specimen-frame[data-text-scale="200"] .ranking-row {
+                grid-template-columns: 40px 44px minmax(0, 1fr);
+                gap: 8px;
+                padding-inline: 8px;
+            }
+
+            .specimen-frame[data-text-scale="200"] .ranking-row {
+                min-height: 128px;
+            }
+
+            .specimen-frame[data-text-scale="200"] .metric-cell {
+                grid-column: 3;
+                grid-row: 2;
+                min-width: 0;
+                text-align: left;
+            }
+
+            .specimen-frame[data-text-scale="200"] .rank-cell,
+            .specimen-frame[data-text-scale="200"] .avatar {
+                grid-row: 1 / span 2;
+            }
+
+            .specimen-frame[data-text-scale="200"] .page-neighbor,
+            .specimen-frame[data-text-scale="200"] .page-ellipsis {
+                display: none !important;
+            }
+
+            @container rankings (min-width: 1056px) {
+                .specimen-frame[data-text-scale="200"] .control-stack {
+                    grid-template-columns: minmax(280px, 0.8fr) minmax(
+                            560px,
+                            1.2fr
+                        );
+                }
+
+                .specimen-frame[data-text-scale="200"] .sub-controls {
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                }
+
+                .specimen-frame[data-text-scale="200"] .ranking-head {
+                    display: grid;
+                }
+
+                .specimen-frame[data-text-scale="200"] .ranking-head,
+                .specimen-frame[data-text-scale="200"] .ranking-row {
+                    grid-template-columns: 64px 48px minmax(0, 1fr) 184px;
+                    gap: 12px;
+                    padding-inline: 16px;
+                }
+
+                .specimen-frame[data-text-scale="200"] .rank-cell,
+                .specimen-frame[data-text-scale="200"] .avatar,
+                .specimen-frame[data-text-scale="200"] .metric-cell {
+                    grid-column: auto;
+                    grid-row: auto;
+                }
+
+                .specimen-frame[data-text-scale="200"] .metric-cell {
+                    text-align: right;
+                }
+
+                .specimen-frame[data-text-scale="200"] .page-neighbor,
+                .specimen-frame[data-text-scale="200"] .page-ellipsis {
+                    display: inline-grid !important;
+                }
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+                *,
+                *::before,
+                *::after {
+                    scroll-behavior: auto !important;
+                    transition: none !important;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <main class="review-shell">
+            <div class="review-controls" aria-label="검증 조건">
+                <button type="button" data-review="width" data-value="320">
+                    320
+                </button>
+                <button
+                    type="button"
+                    data-review="width"
+                    data-value="390"
+                    aria-pressed="true"
+                >
+                    390
+                </button>
+                <button type="button" data-review="width" data-value="640">
+                    640
+                </button>
+                <button type="button" data-review="width" data-value="768">
+                    768
+                </button>
+                <button type="button" data-review="width" data-value="1280">
+                    1280
+                </button>
+                <button type="button" data-review="width" data-value="1440">
+                    1440
+                </button>
+                <button
+                    type="button"
+                    data-review="locale"
+                    data-value="ko"
+                    aria-pressed="true"
+                >
+                    한국어
+                </button>
+                <button type="button" data-review="locale" data-value="ja">
+                    日本語
+                </button>
+                <button type="button" data-review="locale" data-value="en">
+                    English
+                </button>
+                <button
+                    type="button"
+                    data-review="scale"
+                    data-value="100"
+                    aria-pressed="true"
+                >
+                    100%
+                </button>
+                <button type="button" data-review="scale" data-value="200">
+                    200%
+                </button>
+                <button
+                    type="button"
+                    data-review="personal"
+                    data-value="offpage"
+                    aria-pressed="true"
+                >
+                    내 순위: 다른 페이지
+                </button>
+                <button
+                    type="button"
+                    data-review="personal"
+                    data-value="onpage"
+                >
+                    내 순위: 현재 페이지
+                </button>
+                <button
+                    type="button"
+                    data-review="state"
+                    data-value="results"
+                    aria-pressed="true"
+                >
+                    결과
+                </button>
+                <button type="button" data-review="state" data-value="loading">
+                    갱신 중
+                </button>
+                <button
+                    type="button"
+                    data-review="state"
+                    data-value="update-error"
+                >
+                    갱신 오류
+                </button>
+                <button type="button" data-review="state" data-value="empty">
+                    빈 결과
+                </button>
+                <button type="button" data-review="state" data-value="error">
+                    오류
+                </button>
+                <button
+                    type="button"
+                    data-review="state"
+                    data-value="unavailable"
+                >
+                    레이팅 사용 불가
+                </button>
+            </div>
+            <p class="review-note">
+                구조와 반응형 계약을 검증하는 회색조 Specimen입니다. 색상, 재질,
+                최종 크기와 최종 화면 디자인을 승인하지 않습니다.
+            </p>
+
+            <section
+                class="specimen-frame"
+                id="specimen"
+                data-width="390"
+                data-locale="ko"
+                data-text-scale="100"
+                data-personal="offpage"
+                data-state="results"
+                aria-label="S3 글로벌 랭킹 구조 예시"
+            >
+                <header class="app-header">
+                    <span class="wordmark">NosLog</span>
+                    <div class="header-actions">
+                        <button
+                            class="icon-button"
+                            type="button"
+                            aria-label="프로필"
+                        >
+                            <span class="profile-dot" aria-hidden="true"></span>
+                        </button>
+                        <button
+                            class="icon-button"
+                            type="button"
+                            aria-label="더보기"
+                        >
+                            ⋯
+                        </button>
+                    </div>
+                </header>
+
+                <div class="rankings-page">
+                    <h1 class="page-heading" data-copy="title">글로벌 랭킹</h1>
+                    <div class="page-intro">
+                        <p data-copy="description">
+                            선택한 기준에서 플레이어 순위를 비교합니다.
+                        </p>
+                        <span class="result-count" data-copy="count"
+                            >1,034명</span
+                        >
+                    </div>
+
+                    <div class="control-stack">
+                        <div
+                            class="choice-group"
+                            role="group"
+                            aria-label="모드"
+                        >
+                            <button
+                                type="button"
+                                data-mode="basic"
+                                aria-pressed="true"
+                            >
+                                Basic
+                            </button>
+                            <button
+                                type="button"
+                                data-mode="recital"
+                                aria-pressed="false"
+                            >
+                                Recital
+                            </button>
+                        </div>
+                        <div class="sub-controls">
+                            <div class="field" id="metric-field">
+                                <span
+                                    class="field-label"
+                                    data-copy="metricLabel"
+                                    >비교 기준</span
+                                >
+                                <div
+                                    class="choice-group"
+                                    role="group"
+                                    aria-label="비교 기준"
+                                >
+                                    <button
+                                        type="button"
+                                        data-metric="grade"
+                                        data-copy="grade"
+                                        aria-pressed="true"
+                                    >
+                                        공식 Grd
+                                    </button>
+                                    <button
+                                        type="button"
+                                        data-metric="rating"
+                                        data-copy="rating"
+                                        aria-pressed="false"
+                                    >
+                                        NosLog 레이팅
+                                    </button>
+                                </div>
+                            </div>
+                            <label class="field">
+                                <span
+                                    class="field-label"
+                                    data-copy="regionLabel"
+                                    >지역</span
+                                >
+                                <select id="region-select">
+                                    <option value="all" data-copy-option="all">
+                                        전체
+                                    </option>
+                                    <option value="kr" data-copy-option="kr">
+                                        대한민국
+                                    </option>
+                                    <option value="jp" data-copy-option="jp">
+                                        일본
+                                    </option>
+                                    <option
+                                        value="other"
+                                        data-copy-option="other"
+                                    >
+                                        기타 지역
+                                    </option>
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+
+                    <p
+                        class="basis-line"
+                        id="basis-line"
+                        hidden
+                        data-copy="basis"
+                    >
+                        공개된 Basic Pianist 서열 · 상위 70개 기록 기준
+                    </p>
+
+                    <section
+                        class="personal-summary"
+                        id="personal-summary"
+                        aria-label="내 순위"
+                    >
+                        <div class="personal-copy">
+                            <span class="personal-label" data-copy="myRank"
+                                >내 순위</span
+                            >
+                            <strong class="personal-value"
+                                >286위 / 1,034명 · Grd 5,713</strong
+                            >
+                        </div>
+                        <button type="button" data-copy="myPosition">
+                            내 위치 보기
+                        </button>
+                    </section>
+
+                    <section
+                        class="results-region"
+                        aria-labelledby="results-title"
+                        aria-live="polite"
+                    >
+                        <div class="results-heading">
+                            <h2 id="results-title" data-copy="results">순위</h2>
+                            <span>
+                                <span
+                                    class="result-status"
+                                    id="result-status"
+                                    data-copy="updated"
+                                    >방금 갱신됨</span
+                                >
+                                <button
+                                    class="state-action"
+                                    id="inline-retry"
+                                    type="button"
+                                    hidden
+                                    data-copy="retry"
+                                >
+                                    다시 시도
+                                </button>
+                            </span>
+                        </div>
+
+                        <div
+                            class="ranking-table"
+                            role="table"
+                            aria-label="플레이어 랭킹"
+                        >
+                            <div class="ranking-head" role="row">
+                                <span role="columnheader" data-copy="rank"
+                                    >순위</span
+                                >
+                                <span aria-hidden="true"></span>
+                                <span role="columnheader" data-copy="player"
+                                    >플레이어</span
+                                >
+                                <span role="columnheader" data-copy="value"
+                                    >공식 Grd</span
+                                >
+                            </div>
+                            <div id="ranking-body" role="rowgroup"></div>
+                            <div class="state-panel" id="state-panel" hidden>
+                                <div>
+                                    <p id="state-message">
+                                        랭킹 기록이 없습니다.
+                                    </p>
+                                    <button
+                                        class="state-action"
+                                        id="retry"
+                                        type="button"
+                                        hidden
+                                        data-copy="retry"
+                                    >
+                                        다시 시도
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <nav
+                            class="pagination"
+                            id="pagination"
+                            aria-label="페이지"
+                        >
+                            <a href="?page=5" aria-label="이전 페이지">‹</a>
+                            <a href="?page=1">1</a>
+                            <span class="page-ellipsis" aria-hidden="true"
+                                >…</span
+                            >
+                            <a class="page-neighbor" href="?page=5">5</a>
+                            <span aria-current="page">6</span>
+                            <a class="page-neighbor" href="?page=7">7</a>
+                            <span class="page-ellipsis" aria-hidden="true"
+                                >…</span
+                            >
+                            <a href="?page=42">42</a>
+                            <a href="?page=7" aria-label="다음 페이지">›</a>
+                        </nav>
+                    </section>
+                </div>
+            </section>
+        </main>
+
+        <script>
+            const specimen = document.querySelector("#specimen");
+            const rankingBody = document.querySelector("#ranking-body");
+            const statePanel = document.querySelector("#state-panel");
+            const stateMessage = document.querySelector("#state-message");
+            const retry = document.querySelector("#retry");
+            const pagination = document.querySelector("#pagination");
+            const status = document.querySelector("#result-status");
+            const metricField = document.querySelector("#metric-field");
+            const basisLine = document.querySelector("#basis-line");
+            const personalSummary = document.querySelector("#personal-summary");
+
+            const copy = {
+                ko: {
+                    title: "글로벌 랭킹",
+                    description: "선택한 기준에서 플레이어 순위를 비교합니다.",
+                    count: "1,034명",
+                    metricLabel: "비교 기준",
+                    regionLabel: "지역",
+                    grade: "공식 Grd",
+                    rating: "NosLog 레이팅",
+                    all: "전체",
+                    kr: "대한민국",
+                    jp: "일본",
+                    other: "기타 지역",
+                    basis: "공개된 Basic Pianist 서열 · 상위 70개 기록 기준",
+                    myRank: "내 순위",
+                    myPosition: "내 위치 보기",
+                    results: "순위",
+                    updated: "방금 갱신됨",
+                    updating: "랭킹을 갱신하고 있습니다.",
+                    updateError: "갱신하지 못했습니다.",
+                    empty: "랭킹 기록이 없습니다.",
+                    error: "랭킹을 불러오지 못했습니다.",
+                    unavailable:
+                        "NosLog 레이팅을 일시적으로 사용할 수 없습니다.",
+                    gradeRecovery: "공식 Grd 보기",
+                    retry: "다시 시도",
+                    rank: "순위",
+                    player: "플레이어",
+                    value: "공식 Grd",
+                    current: "내 순위",
+                    examBasic: "Basic 2급",
+                    examRecital: "Recital 3급",
+                },
+                ja: {
+                    title: "グローバルランキング",
+                    description: "選択した条件でプレーヤー順位を比較します。",
+                    count: "1,034人",
+                    metricLabel: "比較基準",
+                    regionLabel: "地域",
+                    grade: "公式Grd",
+                    rating: "NosLogレーティング",
+                    all: "すべて",
+                    kr: "韓国",
+                    jp: "日本",
+                    other: "その他地域",
+                    basis: "公開中のBasic Pianist難易度表・上位70記録を基準",
+                    myRank: "自分の順位",
+                    myPosition: "自分の位置を見る",
+                    results: "順位",
+                    updated: "たった今更新",
+                    updating: "ランキングを更新しています。",
+                    updateError: "更新できませんでした。",
+                    empty: "ランキング記録がありません。",
+                    error: "ランキングを読み込めませんでした。",
+                    unavailable: "NosLogレーティングは一時的に利用できません。",
+                    gradeRecovery: "公式Grdを見る",
+                    retry: "再試行",
+                    rank: "順位",
+                    player: "プレーヤー",
+                    value: "公式Grd",
+                    current: "自分の順位",
+                    examBasic: "Basic 2級",
+                    examRecital: "Recital 3級",
+                },
+                en: {
+                    title: "Global rankings",
+                    description:
+                        "Compare players in the selected ranking context.",
+                    count: "1,034 players",
+                    metricLabel: "Metric",
+                    regionLabel: "Region",
+                    grade: "Official Grd",
+                    rating: "NosLog Rating",
+                    all: "All",
+                    kr: "Korea",
+                    jp: "Japan",
+                    other: "Other regions",
+                    basis: "Published Basic Pianist tiers · top 70 eligible plays",
+                    myRank: "My rank",
+                    myPosition: "My position",
+                    results: "Ranking",
+                    updated: "Updated just now",
+                    updating: "Updating rankings.",
+                    updateError: "Could not update rankings.",
+                    empty: "No ranking records.",
+                    error: "Could not load rankings.",
+                    unavailable: "NosLog Rating is temporarily unavailable.",
+                    gradeRecovery: "View Official Grd",
+                    retry: "Retry",
+                    rank: "Rank",
+                    player: "Player",
+                    value: "Official Grd",
+                    current: "My rank",
+                    examBasic: "Basic Class 2",
+                    examRecital: "Recital Class 3",
+                },
+            };
+
+            const identities = [
+                ["HANABI", "KR", "H"],
+                ["月夜のピアニスト", "JP", "月"],
+                ["avery_long_player_name", "GL", "A"],
+                ["계롤", "KR", "계"],
+                ["奏でる猫と星空", "JP", "奏"],
+                ["NocturneArchive", "GL", "N"],
+                ["겨울밤의연주자", "KR", "겨"],
+                ["Pianissimo_2026", "GL", "P"],
+                ["春風コンチェルト", "JP", "春"],
+                ["cadence", "KR", "C"],
+                ["演奏記録研究会", "JP", "演"],
+                ["global-no-avatar", "GL", "?"],
+                ["Stella", "KR", "S"],
+                ["鍵盤の旅人", "JP", "鍵"],
+                ["ResonanceAndRhythm", "GL", "R"],
+                ["소리의궤적", "KR", "소"],
+                ["Opus_Archive", "GL", "O"],
+                ["白鍵と黒鍵", "JP", "白"],
+                ["allegretto", "KR", "A"],
+                ["MuseumOfScores", "GL", "M"],
+                ["밤의피아노", "KR", "밤"],
+                ["協奏曲メモ", "JP", "協"],
+                ["twenty_char_player_", "GL", "T"],
+                ["Klangfarben", "GL", "K"],
+                ["기록하는연주자", "KR", "기"],
+            ];
+
+            const grades = [
+                5921, 5894, 5870, 5713, 5713, 5688, 5661, 5630, 5598, 5564,
+                5521, 5502, 5480, 5455, 5422, 5398, 5360, 5328, 5290, 5264,
+                5231, 5199, 5168, 5130, 5104,
+            ];
+            const ratings = [
+                9984, 9927, 9895, 9812, 9812, 9744, 9680, 9621, 9570, 9528,
+                9481, 9432, 9380, 9331, 9282, 9230, 9181, 9130, 9084, 9033,
+                8980, 8924, 8870, 8812, 8754,
+            ];
+
+            const countryName = {
+                ko: { KR: "대한민국", JP: "일본", GL: "기타 지역" },
+                ja: { KR: "韓国", JP: "日本", GL: "その他地域" },
+                en: { KR: "Korea", JP: "Japan", GL: "Other regions" },
+            };
+
+            const countryGlyph = { KR: "🇰🇷", JP: "🇯🇵", GL: "◉" };
+
+            function currentLocale() {
+                return specimen.dataset.locale;
+            }
+
+            function selectedMode() {
+                return document.querySelector(
+                    "[data-mode][aria-pressed='true']"
+                ).dataset.mode;
+            }
+
+            function selectedMetric() {
+                return document.querySelector(
+                    "[data-metric][aria-pressed='true']"
+                ).dataset.metric;
+            }
+
+            function renderRows() {
+                const locale = currentLocale();
+                const strings = copy[locale];
+                const metric = selectedMetric();
+                const mode = selectedMode();
+                const currentOnPage = specimen.dataset.personal === "onpage";
+                const values = metric === "rating" ? ratings : grades;
+                const ranks = [];
+                let lastValue = null;
+                let lastRank = 0;
+
+                values.forEach((value, index) => {
+                    if (value !== lastValue) lastRank = index + 1;
+                    ranks.push(lastRank);
+                    lastValue = value;
+                });
+
+                rankingBody.innerHTML = identities
+                    .map(([name, country, fallback], index) => {
+                        const isCurrent = currentOnPage && index === 3;
+                        const exam =
+                            index === 11
+                                ? ""
+                                : mode === "recital"
+                                  ? strings.examRecital
+                                  : strings.examBasic;
+                        const metricPrefix =
+                            metric === "rating" ? "Rating" : "Grd";
+                        return `
+                        <div class="ranking-row" role="row" data-current="${isCurrent}">
+                            <span class="rank-cell" role="cell">${ranks[index]}</span>
+                            <span class="avatar" aria-hidden="true">${fallback}</span>
+                            <span class="identity-cell" role="rowheader">
+                                <span class="identity-line">
+                                    <a class="username" href="#player-${index}" aria-label="${name}">${name}</a>
+                                    <span class="country" role="img" aria-label="${countryName[locale][country]}">${countryGlyph[country]}</span>
+                                </span>
+                                ${exam ? `<span class="exam">${exam}</span>` : ""}
+                                ${isCurrent ? `<span class="current-marker">${strings.current}</span>` : ""}
+                            </span>
+                            <span class="metric-cell" role="cell"><span class="metric-label">${metricPrefix}</span> ${values[index].toLocaleString(locale)}</span>
+                        </div>`;
+                    })
+                    .join("");
+            }
+
+            function applyLocale() {
+                const strings = copy[currentLocale()];
+                document.documentElement.lang = currentLocale();
+                document.querySelectorAll("[data-copy]").forEach((element) => {
+                    element.textContent = strings[element.dataset.copy];
+                });
+                document
+                    .querySelectorAll("[data-copy-option]")
+                    .forEach((element) => {
+                        element.textContent =
+                            strings[element.dataset.copyOption];
+                    });
+                document.querySelector(
+                    ".ranking-head [data-copy='value']"
+                ).textContent =
+                    selectedMetric() === "rating"
+                        ? strings.rating
+                        : strings.grade;
+                renderRows();
+            }
+
+            function applyPersonalState() {
+                const retainedResult = [
+                    "results",
+                    "loading",
+                    "update-error",
+                ].includes(specimen.dataset.state);
+                personalSummary.hidden =
+                    specimen.dataset.personal !== "offpage" || !retainedResult;
+                renderRows();
+            }
+
+            function applyResultState() {
+                const state = specimen.dataset.state;
+                const strings = copy[currentLocale()];
+                const hasRows = ["results", "loading", "update-error"].includes(
+                    state
+                );
+                rankingBody.hidden = !hasRows;
+                statePanel.hidden = hasRows;
+                pagination.hidden = !["results", "update-error"].includes(
+                    state
+                );
+                status.textContent =
+                    state === "loading"
+                        ? strings.updating
+                        : state === "update-error"
+                          ? strings.updateError
+                          : strings.updated;
+                status
+                    .closest(".results-region")
+                    .setAttribute(
+                        "aria-busy",
+                        state === "loading" ? "true" : "false"
+                    );
+                document.querySelector("#inline-retry").hidden =
+                    state !== "update-error";
+                retry.hidden = !["error", "unavailable"].includes(state);
+                if (state === "empty") stateMessage.textContent = strings.empty;
+                if (state === "error") stateMessage.textContent = strings.error;
+                if (state === "unavailable") {
+                    stateMessage.textContent = strings.unavailable;
+                    retry.textContent = strings.gradeRecovery;
+                } else {
+                    retry.textContent = strings.retry;
+                }
+                applyPersonalState();
+            }
+
+            function applyMode() {
+                const mode = selectedMode();
+                if (mode === "recital") {
+                    document
+                        .querySelectorAll("[data-metric]")
+                        .forEach((button) =>
+                            button.setAttribute(
+                                "aria-pressed",
+                                String(button.dataset.metric === "grade")
+                            )
+                        );
+                }
+                metricField.hidden = mode === "recital";
+                basisLine.hidden = selectedMetric() !== "rating";
+                applyLocale();
+            }
+
+            document.querySelectorAll("[data-review]").forEach((button) => {
+                button.addEventListener("click", () => {
+                    const group = button.dataset.review;
+                    document
+                        .querySelectorAll(`[data-review="${group}"]`)
+                        .forEach((peer) =>
+                            peer.setAttribute("aria-pressed", "false")
+                        );
+                    button.setAttribute("aria-pressed", "true");
+                    if (group === "width")
+                        specimen.dataset.width = button.dataset.value;
+                    if (group === "locale") {
+                        specimen.dataset.locale = button.dataset.value;
+                        applyLocale();
+                        applyResultState();
+                    }
+                    if (group === "scale")
+                        specimen.dataset.textScale = button.dataset.value;
+                    if (group === "personal") {
+                        specimen.dataset.personal = button.dataset.value;
+                        applyPersonalState();
+                    }
+                    if (group === "state") {
+                        specimen.dataset.state = button.dataset.value;
+                        applyResultState();
+                    }
+                });
+            });
+
+            document.querySelectorAll("[data-mode]").forEach((button) => {
+                button.addEventListener("click", () => {
+                    document
+                        .querySelectorAll("[data-mode]")
+                        .forEach((peer) =>
+                            peer.setAttribute(
+                                "aria-pressed",
+                                String(peer === button)
+                            )
+                        );
+                    applyMode();
+                });
+            });
+
+            document.querySelectorAll("[data-metric]").forEach((button) => {
+                button.addEventListener("click", () => {
+                    document
+                        .querySelectorAll("[data-metric]")
+                        .forEach((peer) =>
+                            peer.setAttribute(
+                                "aria-pressed",
+                                String(peer === button)
+                            )
+                        );
+                    basisLine.hidden = selectedMetric() !== "rating";
+                    applyLocale();
+                });
+            });
+
+            window.__s3Specimen = {
+                set({
+                    width = "390",
+                    locale = "ko",
+                    scale = "100",
+                    personal = "offpage",
+                    state = "results",
+                    mode = "basic",
+                    metric = "grade",
+                } = {}) {
+                    specimen.dataset.width = String(width);
+                    specimen.dataset.locale = locale;
+                    specimen.dataset.textScale = String(scale);
+                    specimen.dataset.personal = personal;
+                    specimen.dataset.state = state;
+                    document
+                        .querySelectorAll("[data-mode]")
+                        .forEach((button) =>
+                            button.setAttribute(
+                                "aria-pressed",
+                                String(button.dataset.mode === mode)
+                            )
+                        );
+                    document
+                        .querySelectorAll("[data-metric]")
+                        .forEach((button) =>
+                            button.setAttribute(
+                                "aria-pressed",
+                                String(
+                                    button.dataset.metric ===
+                                        (mode === "recital" ? "grade" : metric)
+                                )
+                            )
+                        );
+                    applyMode();
+                    applyResultState();
+                },
+                measure() {
+                    const frameRect = specimen.getBoundingClientRect();
+                    const pageRect = document
+                        .querySelector(".rankings-page")
+                        .getBoundingClientRect();
+                    const rows = [
+                        ...document.querySelectorAll(
+                            ".ranking-row:not([hidden])"
+                        ),
+                    ];
+                    const visible = (element) => {
+                        const style = getComputedStyle(element);
+                        return (
+                            style.display !== "none" &&
+                            !element.hidden &&
+                            element.getClientRects().length > 0
+                        );
+                    };
+                    const escapes = [...specimen.querySelectorAll("*")].filter(
+                        (element) => {
+                            if (!visible(element)) return false;
+                            const rect = element.getBoundingClientRect();
+                            return (
+                                rect.left < frameRect.left - 0.5 ||
+                                rect.right > frameRect.right + 0.5
+                            );
+                        }
+                    );
+                    const targets = [
+                        ...specimen.querySelectorAll(
+                            "button:not([hidden]), select:not([hidden]), a:not([hidden])"
+                        ),
+                    ].filter(visible);
+                    return {
+                        frameWidth: frameRect.width,
+                        pageWidth: pageRect.width,
+                        rowCount: rows.length,
+                        tableHeaderVisible: visible(
+                            document.querySelector(".ranking-head")
+                        ),
+                        metricVisible: visible(metricField),
+                        personalVisible: visible(personalSummary),
+                        horizontalOverflow:
+                            specimen.scrollWidth > specimen.clientWidth + 1,
+                        escapingElements: escapes.map(
+                            (element) => element.className || element.tagName
+                        ),
+                        undersizedTargets: targets
+                            .filter((element) => {
+                                const rect = element.getBoundingClientRect();
+                                return rect.width < 44 || rect.height < 44;
+                            })
+                            .map(
+                                (element) =>
+                                    element.textContent.trim() ||
+                                    element.getAttribute("aria-label")
+                            ),
+                        currentRows: rows.filter(
+                            (row) => row.dataset.current === "true"
+                        ).length,
+                        duplicatePersonal:
+                            visible(personalSummary) &&
+                            rows.some((row) => row.dataset.current === "true"),
+                    };
+                },
+            };
+
+            const initial = new URLSearchParams(window.location.search);
+            const initialWidth = initial.get("width");
+            const initialLocale = initial.get("locale");
+            const initialScale = initial.get("scale");
+            const initialPersonal = initial.get("personal");
+            const initialState = initial.get("state");
+            const initialMode = initial.get("mode");
+            const initialMetric = initial.get("metric");
+
+            if (initialWidth) specimen.dataset.width = initialWidth;
+            if (["ko", "ja", "en"].includes(initialLocale))
+                specimen.dataset.locale = initialLocale;
+            if (["100", "200"].includes(initialScale))
+                specimen.dataset.textScale = initialScale;
+            if (["offpage", "onpage"].includes(initialPersonal))
+                specimen.dataset.personal = initialPersonal;
+            if (
+                [
+                    "results",
+                    "loading",
+                    "update-error",
+                    "empty",
+                    "error",
+                    "unavailable",
+                ].includes(initialState)
+            )
+                specimen.dataset.state = initialState;
+            if (["basic", "recital"].includes(initialMode)) {
+                document
+                    .querySelectorAll("[data-mode]")
+                    .forEach((button) =>
+                        button.setAttribute(
+                            "aria-pressed",
+                            String(button.dataset.mode === initialMode)
+                        )
+                    );
+            }
+            if (["grade", "rating"].includes(initialMetric)) {
+                document
+                    .querySelectorAll("[data-metric]")
+                    .forEach((button) =>
+                        button.setAttribute(
+                            "aria-pressed",
+                            String(button.dataset.metric === initialMetric)
+                        )
+                    );
+            }
+
+            document.querySelectorAll("[data-review]").forEach((button) => {
+                const group = button.dataset.review;
+                const selected =
+                    (group === "width" &&
+                        button.dataset.value === specimen.dataset.width) ||
+                    (group === "locale" &&
+                        button.dataset.value === specimen.dataset.locale) ||
+                    (group === "scale" &&
+                        button.dataset.value === specimen.dataset.textScale) ||
+                    (group === "personal" &&
+                        button.dataset.value === specimen.dataset.personal) ||
+                    (group === "state" &&
+                        button.dataset.value === specimen.dataset.state);
+                button.setAttribute("aria-pressed", String(selected));
+            });
+
+            applyMode();
+            applyResultState();
+        </script>
+    </body>
+</html>
