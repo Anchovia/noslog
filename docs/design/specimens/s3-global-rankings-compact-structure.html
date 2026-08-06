@@ -437,6 +437,7 @@
             .ranking-row {
                 min-height: 64px;
                 padding: 8px;
+                border-inline-start: 3px solid transparent;
                 border-bottom: 1px solid var(--line);
             }
 
@@ -445,7 +446,7 @@
             }
 
             .ranking-row[data-current="true"] {
-                box-shadow: inset 3px 0 0 var(--text);
+                border-inline-start-color: var(--text);
                 background: var(--surface-strong);
             }
 
@@ -517,8 +518,7 @@
                 line-height: var(--lh-16);
             }
 
-            .exam,
-            .current-marker {
+            .exam {
                 display: block;
                 overflow: hidden;
                 margin-top: 2px;
@@ -530,10 +530,15 @@
             }
 
             .current-marker {
-                display: block;
-                margin-top: 2px;
-                color: var(--text);
-                font-weight: 600;
+                position: absolute;
+                overflow: hidden;
+                width: 1px;
+                height: 1px;
+                margin: -1px;
+                padding: 0;
+                border: 0;
+                clip: rect(0 0 0 0);
+                white-space: nowrap;
             }
 
             .metric-cell {
@@ -1530,11 +1535,27 @@
                             );
                         }
                     );
-                    const targets = [
+                    const discreteTargets = [
                         ...specimen.querySelectorAll(
-                            "button:not([hidden]), select:not([hidden]), a:not([hidden])"
+                            "button:not([hidden]), select:not([hidden]), a:not([hidden]):not(.username)"
                         ),
                     ].filter(visible);
+                    const effectiveTargets = [
+                        ...discreteTargets.map((element) => ({
+                            element,
+                            label:
+                                element.textContent.trim() ||
+                                element.getAttribute("aria-label"),
+                        })),
+                        ...[...specimen.querySelectorAll(".identity-cell")]
+                            .filter(visible)
+                            .map((element) => ({
+                                element,
+                                label: element
+                                    .querySelector(".username")
+                                    .textContent.trim(),
+                            })),
+                    ];
                     return {
                         frameWidth: frameRect.width,
                         pageWidth: pageRect.width,
@@ -1549,16 +1570,12 @@
                         escapingElements: escapes.map(
                             (element) => element.className || element.tagName
                         ),
-                        undersizedTargets: targets
-                            .filter((element) => {
+                        undersizedTargets: effectiveTargets
+                            .filter(({ element }) => {
                                 const rect = element.getBoundingClientRect();
                                 return rect.width < 44 || rect.height < 44;
                             })
-                            .map(
-                                (element) =>
-                                    element.textContent.trim() ||
-                                    element.getAttribute("aria-label")
-                            ),
+                            .map(({ label }) => label),
                         currentRows: rows.filter(
                             (row) => row.dataset.current === "true"
                         ).length,

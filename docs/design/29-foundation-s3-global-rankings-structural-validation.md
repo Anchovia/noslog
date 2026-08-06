@@ -2,11 +2,12 @@
 
 ## Document Control
 
-- Status: `Draft — S3 First Review pending`
+- Status: `Approved — S3 First Review complete`
 - Canonical language: English
 - Korean companion:
   [29-foundation-s3-global-rankings-structural-validation.ko.md](./29-foundation-s3-global-rankings-structural-validation.ko.md)
 - Started: 2026-08-06
+- Approved: 2026-08-07
 - Scope: structural validation of the approved Foundation typography, spacing,
   grid, container, density, comparison, target, and state contracts on representative
   specimen `S3`
@@ -126,8 +127,9 @@ statistics merely because space exists.
 - If the current user is off-page, one compact summary shows rank, population, value,
   and My position.
 - If the current user is on-page, the summary disappears and that one row retains its
-  exam plus a visible and programmatic My rank marker.
-- A non-color structural marker accompanies any color support.
+  exam plus a programmatic My rank name. It does not repeat visible My rank copy.
+- A persistent inline-start structural marker accompanies optional tonal row support,
+  so the distinction does not depend on color alone.
 
 ### Pagination and state policy
 
@@ -335,7 +337,7 @@ the correct conditional metric presence.
 | Wide `page-title` substitution                  | `1056px` Foundation gate | `1056px` measured candidate | Remains governed by `FTL-09`, not ranking preference         |
 
 These are measured S3 component candidates, not generic device breakpoints or
-Foundation tokens. They require user approval at First Review.
+Foundation tokens. The user approved these S3-specific transitions at First Review.
 
 ### Interaction and state checks
 
@@ -361,10 +363,12 @@ Foundation tokens. They require user approval at First Review.
    escape because the nested scope group did not have enough inline capacity. Their
    side-by-side transition moved to the measured `768px` threshold.
 3. A current-row marker initially replaced the exam, violating the approved identity
-   contract. The corrected row preserves exam and adds My rank on its own supporting
-   line.
-4. Keeping exam and My rank in one non-wrapping line clipped the marker at
-   `320px + 200%` in Japanese and English. Separate supporting lines preserve both.
+   contract. The corrected row preserves exam and adds a localized programmatic My
+   rank name.
+4. A visible My rank supporting line increased only the current row's height and
+   repeated information the signed-in player can already recognize. User review
+   removed that visible copy; the row now combines an accessible name with a
+   persistent inline-start structural marker and optional tonal support.
 5. The initial candidate used a metric Select. Broad evidence and the approved
    high-frequency two-metric contract support a direct subordinate two-choice switch;
    region alone remains the disclosed multi-option scope.
@@ -375,19 +379,19 @@ Foundation tokens. They require user approval at First Review.
 | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- |
 | `S3V-01` | Treat the current fixed width, seven-row page, persistent region buttons, duplicate personal card, Recital redirect, and unique visible ties as migration evidence only. | `Observed` |
 | `S3V-02` | Preserve the approved page order, Basic/Recital meaning, Basic-only Rating, one region scope, shared ranks, integrated identity, personal position, and 25-row policy.   | `Approved` |
-| `S3V-03` | Use a direct Basic/Recital switch, a conditional direct Basic metric switch, and one region Select in S3.                                                                | `Proposed` |
-| `S3V-04` | Use one equivalent semantic dataset with a headerless compact expression and aligned visible headers from the measured capacity threshold.                               | `Proposed` |
-| `S3V-05` | Keep top ranks in the same row anatomy and leave restrained tie-safe visual accents to the later appearance gate; do not add a separate podium block.                    | `Proposed` |
-| `S3V-06` | At narrow `200%` text, reflow the active value below identity instead of clipping identity or violating target size.                                                     | `Proposed` |
-| `S3V-07` | Use measured thresholds `480`, `640`, `768`, and `1056px` only for their documented S3 transitions.                                                                      | `Proposed` |
-| `S3V-08` | Preserve exam and show the current-row My rank marker as a separate supporting line.                                                                                     | `Proposed` |
+| `S3V-03` | Use a direct Basic/Recital switch, a conditional direct Basic metric switch, and one region Select in S3.                                                                | `Approved` |
+| `S3V-04` | Use one equivalent semantic dataset with a headerless compact expression and aligned visible headers from the measured capacity threshold.                               | `Approved` |
+| `S3V-05` | Keep top ranks in the same row anatomy and leave restrained tie-safe visual accents to the later appearance gate; do not add a separate podium block.                    | `Approved` |
+| `S3V-06` | At narrow `200%` text, reflow the active value below identity instead of clipping identity or violating target size.                                                     | `Approved` |
+| `S3V-07` | Use measured thresholds `480`, `640`, `768`, and `1056px` only for their documented S3 transitions.                                                                      | `Approved` |
+| `S3V-08` | Preserve exam, omit visible My rank copy, and identify the current row with a programmatic name plus an inline-start structural marker and optional tonal support.       | `Approved` |
 | `S3V-09` | The final measured `618` structural combinations pass with zero failures.                                                                                                | `Observed` |
-| `S3V-10` | Keep final color, material, row geometry, avatar treatment, podium accent, and implementation outside this gate.                                                         | `Proposed` |
+| `S3V-10` | Keep final color, material, row geometry, avatar treatment, podium accent, and implementation outside this gate.                                                         | `Approved` |
 
-## First Review Gate
+## Approved First Review Gate — 2026-08-07
 
-The following decisions require explicit user approval before this document can move
-from Draft to Approved:
+The user approved the following structural decisions after reviewing the specimen and
+the revised current-row example:
 
 1. approve a direct two-choice Basic metric switch while region remains one Select;
 2. approve one equivalent dataset with compact header omission and measured wide
@@ -396,8 +400,10 @@ from Draft to Approved:
    accents to the later appearance phase;
 4. approve active-value reflow below identity at narrow `200%` text;
 5. approve the measured S3 transition candidates `480`, `640`, `768`, and `1056px`;
-6. approve preserving exam plus a separate visible My rank line on the current row.
+6. preserve exam, remove the visible My rank line, and identify the current row with a
+   programmatic name plus a persistent inline-start structural marker and optional
+   tonal support.
 
-Approval of this gate would validate structure and responsive behavior only. It would
+This approval validates structure and responsive behavior only. It does
 not approve final visual design, colors, material, exact dimensions, ranking logic
 implementation, or application code.

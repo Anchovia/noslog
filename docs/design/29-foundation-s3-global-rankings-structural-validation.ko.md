@@ -2,11 +2,12 @@
 
 ## 문서 관리
 
-- 상태: `초안 — S3 First Review 대기`
+- 상태: `승인 — S3 First Review 완료`
 - Canonical 언어: English
 - Canonical 문서:
   [29-foundation-s3-global-rankings-structural-validation.md](./29-foundation-s3-global-rankings-structural-validation.md)
 - 시작일: 2026-08-06
+- 승인일: 2026-08-07
 - 범위: 대표 Specimen `S3`에서 승인된 Foundation Typography, Spacing, Grid,
   Container, Density, Comparison, Target 및 State 계약을 구조적으로 검증
 - 승인 경계: 이 문서는 Color, Material, 최종 Row·Control Geometry, 최종 Podium
@@ -121,9 +122,10 @@ Region을 더 정확하게 정렬할 수 있지만 공간이 있다는 이유만
   없습니다.
 - 현재 사용자가 다른 Page에 있으면 간결한 요약 하나가 Rank, 모집단, 값 및 내 위치
   보기를 보여줍니다.
-- 현재 사용자가 현재 Page에 있으면 요약을 제거하고 그 Row 하나가 Exam과 함께 보이고
-  Programmatic한 내 순위 Marker를 유지합니다.
-- Color 지원과 함께 Non-color 구조 Marker를 사용합니다.
+- 현재 사용자가 현재 Page에 있으면 요약을 제거하고 그 Row 하나가 Exam과 함께 보이며
+  Programmatic한 내 순위 이름을 유지합니다. 보이는 내 순위 문구는 반복하지 않습니다.
+- 선택적인 Tone Row 지원과 함께 지속적인 Inline-start 구조 Marker를 사용하여 Color에만
+  의존하지 않습니다.
 
 ### Pagination 및 State 정책
 
@@ -325,7 +327,7 @@ Reflow만 검증합니다.
 | Wide `page-title` substitution             | `1056px` Foundation gate | `1056px` 측정 후보 | Ranking 취향이 아니라 `FTL-09`가 계속 지배            |
 
 이는 측정된 S3 Component 후보이며 일반 Device breakpoint나 Foundation token이
-아닙니다. First Review에서 사용자 승인이 필요합니다.
+아닙니다. 사용자는 First Review에서 이 S3 전용 전환을 승인했습니다.
 
 ### Interaction 및 State 확인
 
@@ -351,9 +353,11 @@ Reflow만 검증합니다.
    부족하여 Region field가 Escape했습니다. Side-by-side 전환을 측정된 `768px`로
    옮겼습니다.
 3. 초기 Current-row marker가 Exam을 대체하여 승인된 Identity 계약을 어겼습니다.
-   수정 Row는 Exam을 보존하고 내 순위를 별도 보조 줄에 추가합니다.
-4. Exam과 내 순위를 Non-wrapping 한 줄에 유지하면 일본어·영어 `320px + 200%`에서
-   Marker가 잘렸습니다. 별도 Supporting line이 둘 다 보존합니다.
+   수정 Row는 Exam을 보존하고 Localized Programmatic 내 순위 이름을 추가합니다.
+4. 보이는 내 순위 Supporting line은 현재 사용자 행만 높이고 로그인 사용자가 이미
+   알아볼 수 있는 정보를 반복했습니다. 사용자 검토에 따라 해당 보이는 문구를 제거하고,
+   Accessible name과 지속적인 Inline-start 구조 Marker 및 선택적인 Tone 지원을
+   결합했습니다.
 5. 초기 후보는 Metric Select를 사용했습니다. 광범위한 근거와 승인된 고빈도 두 Metric
    계약은 직접 Subordinate two-choice switch를 지지하며, Region만 공개된 Multi-option
    scope로 남습니다.
@@ -364,19 +368,19 @@ Reflow만 검증합니다.
 | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
 | `S3V-01` | 현행 Fixed width, 7 Row, 상시 Region button, 중복 Personal card, Recital redirect 및 고유 Visible tie를 Migration 근거로만 취급                      | `Observed` |
 | `S3V-02` | 승인된 Page order, Basic/Recital 의미, Basic 전용 Rating, Region scope 하나, Shared rank, Integrated identity, Personal position 및 25 Row 정책 보존 | `Approved` |
-| `S3V-03` | S3에서 직접 Basic/Recital switch, 조건부 직접 Basic metric switch 및 Region Select 하나 사용                                                         | `Proposed` |
-| `S3V-04` | Headerless compact 표현과 측정 Capacity부터 정렬 Header를 가진 동등한 Semantic dataset 하나 사용                                                     | `Proposed` |
-| `S3V-05` | 상위 Rank도 같은 Row anatomy를 사용하고 Tie-safe 시각 Accent는 Appearance gate에 남기며 별도 Podium block을 추가하지 않음                            | `Proposed` |
-| `S3V-06` | 좁은 `200%` Text에서 Identity clipping 또는 Target 위반 대신 Active value를 Identity 아래로 Reflow                                                   | `Proposed` |
-| `S3V-07` | 측정 Threshold `480`, `640`, `768`, `1056px`를 문서화한 S3 전환에만 사용                                                                             | `Proposed` |
-| `S3V-08` | Exam을 보존하고 Current row의 내 순위 Marker를 별도 Supporting line으로 표시                                                                         | `Proposed` |
+| `S3V-03` | S3에서 직접 Basic/Recital switch, 조건부 직접 Basic metric switch 및 Region Select 하나 사용                                                         | `Approved` |
+| `S3V-04` | Headerless compact 표현과 측정 Capacity부터 정렬 Header를 가진 동등한 Semantic dataset 하나 사용                                                     | `Approved` |
+| `S3V-05` | 상위 Rank도 같은 Row anatomy를 사용하고 Tie-safe 시각 Accent는 Appearance gate에 남기며 별도 Podium block을 추가하지 않음                            | `Approved` |
+| `S3V-06` | 좁은 `200%` Text에서 Identity clipping 또는 Target 위반 대신 Active value를 Identity 아래로 Reflow                                                   | `Approved` |
+| `S3V-07` | 측정 Threshold `480`, `640`, `768`, `1056px`를 문서화한 S3 전환에만 사용                                                                             | `Approved` |
+| `S3V-08` | Exam을 보존하고 보이는 내 순위 문구를 생략하며 Programmatic name, Inline-start 구조 Marker 및 선택적 Tone 지원으로 Current row를 식별                | `Approved` |
 | `S3V-09` | 최종 측정 `618`개 구조 조합이 실패 없이 통과                                                                                                         | `Observed` |
-| `S3V-10` | 최종 Color, Material, Row geometry, Avatar 처리, Podium accent 및 구현은 이번 Gate 밖에 유지                                                         | `Proposed` |
+| `S3V-10` | 최종 Color, Material, Row geometry, Avatar 처리, Podium accent 및 구현은 이번 Gate 밖에 유지                                                         | `Approved` |
 
-## First Review Gate
+## 승인된 First Review Gate — 2026-08-07
 
-다음 결정은 이 문서를 Draft에서 Approved로 옮기기 전에 명시적 사용자 승인이
-필요합니다.
+사용자는 Specimen과 수정된 Current-row 예시를 검토한 뒤 다음 구조 결정을
+승인했습니다.
 
 1. Region은 Select 하나로 유지하면서 Basic Metric을 직접 두 선택 Switch로 승인;
 2. Compact Header 생략 및 측정된 Wide 정렬을 가진 동등한 Dataset 하나 승인;
@@ -384,7 +388,8 @@ Reflow만 검증합니다.
    Appearance phase에 남기는 방향 승인;
 4. 좁은 `200%` Text에서 Active value를 Identity 아래로 Reflow하는 방향 승인;
 5. 측정된 S3 전환 후보 `480`, `640`, `768`, `1056px` 승인;
-6. Exam을 보존하고 Current row에 별도 Visible 내 순위 Line을 두는 방향 승인.
+6. Exam을 보존하고 보이는 내 순위 Line을 제거하며 Programmatic name, 지속적인
+   Inline-start 구조 Marker 및 선택적인 Tone 지원으로 Current row를 식별.
 
-이 Gate 승인은 구조와 반응형 동작만 검증합니다. 최종 시각 Design, Color, Material,
+이 승인은 구조와 반응형 동작만 검증합니다. 최종 시각 Design, Color, Material,
 정확한 Dimension, Ranking logic 구현 또는 Application code를 승인하지 않습니다.
