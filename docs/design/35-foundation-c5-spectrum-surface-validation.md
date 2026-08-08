@@ -3,7 +3,7 @@
 ## Document Control
 
 - Status: `Measured initial representative specimen — approved M-A surface mapping
-retained; foreground and boundary review remains open`
+retained; foreground later approved through C5M-04; boundary review remains open`
 - Canonical language: English
 - Korean companion:
   [35-foundation-c5-spectrum-surface-validation.ko.md](./35-foundation-c5-spectrum-surface-validation.ko.md)
@@ -45,6 +45,9 @@ The specimen uses only the approved `M-A` surface values:
 The visible content and boundary aliases are the document `34` proposals used as
 measurement instrumentation. Their presence in the specimen is not approval of
 `C5M-04` or `C5M-05`.
+
+Document `37` later supplied the dedicated foreground evidence, and the user approved
+`C5M-04` separately on 2026-08-09. `C5M-05` remains unapproved.
 
 ## Representative Fragment Matrix
 
@@ -169,9 +172,10 @@ This correction did not change any approved color. It enforces the `scrim` and
    text directly on a scrim is invalid.
 4. Boundary review must distinguish decorative grouping from boundaries that are a
    necessary component or state cue.
-5. Document `36` now supplies the required broad foreground comparison. The next unit
-   is the proposed `F-A` foreground specimen and adjacency record; `C5M-04` remains
-   open until that evidence is reviewed. `C5M-05` boundary mapping follows.
+5. Document `36` supplies the required broad foreground comparison and document `37`
+   supplies the completed specimen and adjacency record. The user approved exact
+   `F-A` and closed `C5M-04` on 2026-08-09. `C5M-05` boundary research and review
+   follows as a separate gate.
 
 ## Decision and Validation Status Log
 

@@ -2,8 +2,8 @@
 
 ## 문서 관리
 
-- 상태: `측정된 초기 대표 specimen — 승인된 M-A surface mapping 유지;
-foreground 및 boundary 검토는 계속 열림`
+- 상태: `측정된 초기 대표 specimen — 승인된 M-A surface mapping 유지; foreground는
+이후 C5M-04로 승인; boundary 검토는 계속 열림`
 - 정본 언어: 영어
 - 영어 정본:
   [35-foundation-c5-spectrum-surface-validation.md](./35-foundation-c5-spectrum-surface-validation.md)
@@ -44,6 +44,9 @@ Specimen은 승인된 `M-A` surface 값만 사용한다.
 
 보이는 content와 boundary alias는 측정 instrument로 사용한 문서 `34`의 제안안이다.
 Specimen에 나타난다고 해서 `C5M-04` 또는 `C5M-05`가 승인되는 것은 아니다.
+
+이후 문서 `37`이 dedicated foreground 근거를 제공했고 사용자가 2026-08-09에
+`C5M-04`를 별도로 승인했다. `C5M-05`는 계속 미승인이다.
 
 ## 대표 Fragment Matrix
 
@@ -168,9 +171,9 @@ content surface가 아니다. 교정된 구성은 message와 Retry control을 �
    한다. Scrim 위에 직접 둔 text는 무효다.
 4. Boundary 검토는 decorative grouping과 필수 component/state 단서가 되는 boundary를
    구분해야 한다.
-5. 이제 문서 `36`이 필수 broad foreground comparison을 제공한다. 다음 unit은 제안된
-   `F-A` foreground specimen 및 adjacency record다. `C5M-04`는 그 근거를 검토할
-   때까지 열려 있으며 `C5M-05` boundary mapping은 그 다음에 진행한다.
+5. 문서 `36`은 필수 broad foreground comparison을 제공하고 문서 `37`은 완료된 specimen
+   및 adjacency record를 제공한다. 사용자가 2026-08-09에 exact `F-A`를 승인하고
+   `C5M-04`를 종료했다. `C5M-05` boundary 조사와 검토는 별도 gate로 이어진다.
 
 ## 결정 및 검증 상태 로그
 

@@ -2,8 +2,9 @@
 
 ## 문서 제어
 
-- 상태: `조사 완료; 문서 37 검토 뒤 F-A visual direction 승인; C5M-04 기술 gate는
-열려 있음`
+- 상태: `조사 및 문서 37 기술 검증 완료; exact F-A를 최종 C5 foreground mapping으로
+승인; C5M-04 종료`
+- 최종 mapping 승인일: 2026-08-09
 - 정본 언어: 영어
 - 영어 정본:
   [36-foundation-c5-neutral-foreground-reference-comparison.md](./36-foundation-c5-neutral-foreground-reference-comparison.md)
@@ -14,9 +15,9 @@
 - 입력: 승인된 문서 `25`, `32`, `33`, `35`; 문서 `34`의 잠정 foreground 가설;
   현재 공식 design-system 출처; WCAG 2.2; 모든 승인된 `M-A` surface에 대한 측정
   contrast
-- 제외: 어떤 foreground token의 승인, boundary 및 focus mapping,
+- 제외: boundary 및 focus mapping,
   signature/feedback/domain/data-visualization chromatic color, component styling,
-  high-fidelity page design 및 application implementation
+  high-fidelity page design, production token 구현 및 application implementation
 
 이 조사는 `C5M-04` 전에 발견한 절차상 공백을 수정한다. 이전 foreground 표는
 Spectrum 기반의 잠정 가설이었으며 폭넓은 레퍼런스 비교가 아니었다. Surface mapping
@@ -179,16 +180,25 @@ responsibility와 실제 component state에도 맞아야 한다.
    value는 실제 NosLog content가 실패를 입증하고 사용자가 mapping 재검토를 승인한
    뒤에만 사용할 수 있다.
 
-이 권고는 다음 guide specimen을 만들고 측정할 권한만 제안한다. `C5M-04`나
-production token 승인이 아니다.
+이 권고는 처음에 다음 guide specimen을 만들고 측정할 권한만 부여했다. 최종 `C5M-04`
+승인은 별도의 명시적 사용자 결정을 요구했고 이후 그 결정을 받았다. Production 구현을
+승인하는 것은 아니다.
 
 ### 검토 결과 — 2026-08-08
 
 문서 `37`의 측정 specimen을 검토한 뒤 사용자는 `F-A`를 C5 foreground visual
 direction으로 승인했다. 이 승인은 exact Spectrum value, secondary와 tertiary
 responsibility가 공유하는 subdued value, interaction 전용 `gray-900`, 비필수 content
-전용 disabled contract를 유지한다. `C5M-04`를 닫거나 production token을 승인하는 것은
-아니며 실제 200% browser zoom과 active forced-colors 검증이 계속 필요하다.
+전용 disabled contract를 유지한다. 이 visual 승인 자체가 `C5M-04`를 닫거나 production
+token을 승인하지는 않는다.
+
+### 기술 검증 결과 — 2026-08-09
+
+문서 `37`은 desktop, `390px`, `320px` CSS width에서 실제 Chrome 200% zoom과 모든
+Dark/Light scene의 active forced-colors 검증을 측정된 실패 없이 완료했다. 이 근거로 조사
+gate가 완료됐다. Forced colors에서 보인 흰색 system outline은 일반 Dark-theme styling이
+아님을 확인한 뒤 사용자는 2026-08-09에 exact `F-A`를 최종 foreground mapping으로
+승인하고 `C5M-04`를 종료했다. Boundary와 focus는 별도 gate로 남는다.
 
 ## 필수 Foreground Specimen Gate
 
@@ -223,4 +233,4 @@ composition이다.
 | `C5F-05` | 현재 Spectrum S2 foreground alias를 `F-A`로 그대로 사용하고 secondary와 tertiary semantic alias는 처음에 subdued content를 공유한다.                      | `Approved visual direction — 2026-08-08`   |
 | `C5F-06` | `gray-600`은 Light `sunken`의 normal-text contrast에 실패하고 현재 Spectrum content alias ownership도 없으므로 universal tertiary text에 사용하지 않는다. | `Approved mapping constraint — 2026-08-08` |
 | `C5F-07` | 측정된 NosLog content가 material Spectrum failure를 확립할 때만 `FCM-12`를 다시 연다. 다른 system은 source와 혼합하지 않고 교체해야 한다.                 | `Proposed governance`                      |
-| `C5F-08` | `C5M-04` 결정 전에 필수 foreground specimen 및 adjacency record를 만든다.                                                                                 | `사용자 검토 완료; 기술 gate 열림`         |
+| `C5F-08` | `C5M-04` 결정 전에 필수 foreground specimen 및 adjacency record를 만든다.                                                                                 | `완료 — C5M-04 2026-08-09 승인`            |

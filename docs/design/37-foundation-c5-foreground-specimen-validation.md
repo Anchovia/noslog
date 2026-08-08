@@ -2,9 +2,11 @@
 
 ## Document Control
 
-- Status: `F-A visual direction approved — C5M-04 remains open pending actual 200%
-browser zoom and active forced-colors verification`
+- Status: `Exact F-A approved as the final C5 foreground mapping after completed
+technical validation; C5M-04 closed`
 - Visual-direction approval date: 2026-08-08
+- Technical-validation date: 2026-08-09
+- Final mapping approval date: 2026-08-09
 - Canonical language: English
 - Korean companion:
   [37-foundation-c5-foreground-specimen-validation.ko.md](./37-foundation-c5-foreground-specimen-validation.ko.md)
@@ -15,7 +17,7 @@ browser zoom and active forced-colors verification`
 - Inputs: approved documents `25`, `32`, `33`, and `35`; corrected mapping research in
   document `36`; exact Spectrum S2 aliases; approved structural specimens; and WCAG
   2.2 contrast criteria
-- Excludes: approval of `C5M-04`, boundary and focus mappings, chromatic
+- Excludes: boundary and focus mappings, chromatic
   signature/feedback/domain/data-visualization colors, final component geometry,
   high-fidelity screens, and application implementation
 
@@ -33,8 +35,8 @@ measurement instrumentation unless separately approved.
 ## Authority Boundary
 
 Approved `M-A` surfaces were held constant. The following `F-A` foreground aliases
-are approved as the visual direction and remain pending final `C5M-04` technical
-validation:
+have completed the recorded technical gates and are approved as the final C5
+foreground mapping under `C5M-04`:
 
 | Responsibility            | Spectrum alias                                        |     Light |      Dark | Specimen use                                                              |
 | ------------------------- | ----------------------------------------------------- | --------: | --------: | ------------------------------------------------------------------------- |
@@ -113,17 +115,55 @@ Native tab order reached the product fragment in this sequence:
 The unavailable control was skipped as expected. No `tabindex` was added. This proves
 reachability and disabled semantics, not final focus-ring color or geometry.
 
-### Open technical gates
+### Technical gate completion — 2026-08-09
 
-- The available local browser-control surface did not expose deterministic page-zoom
-  or forced-colors emulation. Attempted browser zoom shortcuts did not change the CSS
-  viewport or device scale, so no 200% zoom pass is claimed.
-- A below-minimum `273px` specimen reflow passed, but this is additional pressure
-  evidence and not a substitute for an actual 200% browser-zoom inspection.
-- The specimen includes a restrained `@media (forced-colors: active)` fallback and
-  allows user-agent color replacement, but active forced-colors behavior was not
-  runtime-exercised. `C5M-04` remains open until both checks are completed in a capable
-  browser environment.
+#### Actual 200% browser zoom
+
+Chrome's visible zoom control reported `200%`. On the default desktop host,
+`devicePixelRatio` progressed from `2` at 100% to `4` at 200%, and the page CSS
+viewport halved from `1450px` to `725px`. Temporary host overrides then exercised the
+same active 200% zoom at the representative and minimum compact CSS widths.
+
+| Host condition             | Chrome zoom | Page inner width | Document client width | Dark/Light × scenes | Result |
+| -------------------------- | ----------: | ---------------: | --------------------: | ------------------: | ------ |
+| Default desktop host       |      `200%` |          `725px` |               `718px` |                 `8` | Pass   |
+| `780 × 1200` host override |      `200%` |          `390px` |               `383px` |                 `8` | Pass   |
+| `640 × 1200` host override |      `200%` |          `320px` |               `313px` |                 `8` | Pass   |
+
+Across the `24` actual-zoom combinations:
+
+| Assertion                                                      |         Result |
+| -------------------------------------------------------------- | -------------: |
+| Document horizontal overflow                                   | `0 / 24` fails |
+| Specimen-frame horizontal overflow                             | `0 / 24` fails |
+| Visible content escaping document inline boundaries            | `0 / 24` fails |
+| Visible product button/input below `44px` effective CSS height | `0 / 24` fails |
+
+Presentation-only specimen controls are not product targets and were excluded from
+the product-control height assertion. The earlier `273px` reflow remains useful
+supplementary pressure evidence, but the actual 200% gate no longer depends on it.
+
+#### Active forced colors
+
+Chrome DevTools Rendering emulation was set to `forced-colors: active`, and runtime
+evaluation confirmed `matchMedia('(forced-colors: active)').matches === true` before
+measurement. Four scenes in both appearances produced `8` active combinations.
+
+| Assertion                                                                    |        Result |
+| ---------------------------------------------------------------------------- | ------------: |
+| Document or specimen-frame horizontal overflow                               | `0 / 8` fails |
+| Product descendants using `forced-color-adjust: none`                        |           `0` |
+| Dark and Light content replaced by the same user-agent system palette        |          Pass |
+| Selected product action retains `aria-pressed="true"`                        |          Pass |
+| Unavailable product action remains a native `disabled` control               |          Pass |
+| Tab sequence skips the disabled control and reaches the next required action |          Pass |
+| Focused required action retains a visible user-agent `auto` outline          |          Pass |
+
+System colors intentionally replaced the custom Spectrum values during emulation;
+the mapping did not attempt to defeat user preferences. The final focus-ring color
+and geometry remain outside C5 foreground authority. Emulation was explicitly reset
+to `No emulation`, runtime forced-colors returned `false`, DevTools was closed, and
+browser zoom plus temporary host overrides were restored before cleanup.
 
 ## Exact Adjacency Record
 
@@ -185,34 +225,37 @@ component values rather than inferred from variable declarations alone.
 5. The exact mapping remained restrained across sparse identity, dense rankings,
    empty/error copy, and overlay content. No Tailwind or local neutral was needed.
 
-The user accepted these observations as the visual direction on 2026-08-08. This
-acceptance does not replace the remaining technical gates.
+The user accepted these observations as the visual direction on 2026-08-08. The
+remaining technical gates were completed on 2026-08-09 without a measured failure.
 
 ## User Review Outcome and Next Gate
 
-The user approved retaining `F-A` as the sole C5 foreground visual direction. Do not
-approve `C5M-04` yet.
+After the required technical evidence was complete, the user explicitly approved
+exact `F-A` as the final C5 foreground mapping on 2026-08-09. `C5M-04` is closed.
 
-The remaining technical work is:
+This approval covers only the foreground responsibilities and exact Spectrum values
+recorded above. It does not approve the white system outlines observed during active
+forced-colors testing as normal Dark-theme boundaries. Those outlines remain a
+browser/user accessibility override, while normal-theme boundary selection remains
+the separate `C5M-05` gate and focus remains a later independent gate.
 
-1. verify actual 200% browser zoom at mobile and desktop host widths;
-2. activate forced-colors/high-contrast mode and inspect semantic reachability,
-   current-row structure, disabled states, and native focus indicators; and
-3. record any failure before deciding whether `F-A` can be promoted to `Approved`.
-
-Boundary and focus color selection do not begin until this foreground gate is closed.
+The next color-foundation task is therefore broad reference research and user review
+for normal-theme neutral boundaries. No boundary candidate is promoted by this
+foreground approval.
 
 ## Decision and Validation Log
 
-| ID       | Entry                                                                                                                                                              | Status                                        |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------- |
-| `C5V-01` | Exercise only exact `F-A` foreground aliases on approved `M-A` surfaces; do not add a local neutral or heading color.                                              | `Observed specimen rule`                      |
-| `C5V-02` | The corrected `48`-combination responsive/content matrix has zero recorded overflow, escape, target-height, or runtime failures.                                   | `Observed`                                    |
-| `C5V-03` | The corrected `12`-combination interaction matrix matches Spectrum default, subdued, state, and disabled values exactly.                                           | `Observed`                                    |
-| `C5V-04` | Static headings remain on default `gray-800`; `gray-900` remains interaction-state-only.                                                                           | `Approved visual direction — 2026-08-08`      |
-| `C5V-05` | Secondary and tertiary semantic responsibilities may continue sharing subdued `gray-700`; no distinct third value is currently justified.                          | `Approved visual direction — 2026-08-08`      |
-| `C5V-06` | Disabled `gray-400` is permitted only for genuinely unavailable, nonessential content with readable explanation elsewhere.                                         | `Approved visual contract — 2026-08-08`       |
-| `C5V-07` | Computed-value review caught and corrected subdued-rest inheritance from `gray-700` to `gray-800`.                                                                 | `Corrected`                                   |
-| `C5V-08` | Treat below-minimum reflow and the declared forced-colors fallback as supplementary evidence, not substitutes for actual 200% zoom and active forced-colors tests. | `Open technical gate`                         |
-| `C5V-09` | Keep `C5M-04` open until user visual review and the remaining technical gates are complete.                                                                        | `User review complete — technical gates open` |
-| `C5V-10` | Retain exact `F-A` as the sole C5 foreground visual direction without Tailwind, local neutral additions, or another system's values.                               | `Approved — 2026-08-08`                       |
+| ID       | Entry                                                                                                                                                                                          | Status                                   |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| `C5V-01` | Exercise only exact `F-A` foreground aliases on approved `M-A` surfaces; do not add a local neutral or heading color.                                                                          | `Observed specimen rule`                 |
+| `C5V-02` | The corrected `48`-combination responsive/content matrix has zero recorded overflow, escape, target-height, or runtime failures.                                                               | `Observed`                               |
+| `C5V-03` | The corrected `12`-combination interaction matrix matches Spectrum default, subdued, state, and disabled values exactly.                                                                       | `Observed`                               |
+| `C5V-04` | Static headings remain on default `gray-800`; `gray-900` remains interaction-state-only.                                                                                                       | `Approved visual direction — 2026-08-08` |
+| `C5V-05` | Secondary and tertiary semantic responsibilities may continue sharing subdued `gray-700`; no distinct third value is currently justified.                                                      | `Approved visual direction — 2026-08-08` |
+| `C5V-06` | Disabled `gray-400` is permitted only for genuinely unavailable, nonessential content with readable explanation elsewhere.                                                                     | `Approved visual contract — 2026-08-08`  |
+| `C5V-07` | Computed-value review caught and corrected subdued-rest inheritance from `gray-700` to `gray-800`.                                                                                             | `Corrected`                              |
+| `C5V-08` | Treat below-minimum reflow and the declared forced-colors fallback as supplementary evidence, not substitutes for actual 200% zoom and active forced-colors tests.                             | `Completed — 2026-08-09`                 |
+| `C5V-09` | Keep `C5M-04` open until user visual review and the remaining technical gates are complete; close it only after the final explicit user decision.                                              | `Completed — C5M-04 approved 2026-08-09` |
+| `C5V-10` | Retain exact `F-A` as the sole C5 foreground mapping without Tailwind, local neutral additions, or another system's values.                                                                    | `Approved — 2026-08-09`                  |
+| `C5V-11` | Actual Chrome 200% zoom passed all `24` Dark/Light scene combinations at desktop, `390px`, and `320px` CSS widths with no overflow or product-target-height failure.                           | `Observed — 2026-08-09`                  |
+| `C5V-12` | Active forced colors passed all `8` Dark/Light scene combinations with system-color replacement, semantic selected/disabled states, keyboard reachability, and no `forced-color-adjust: none`. | `Observed — 2026-08-09`                  |

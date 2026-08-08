@@ -2,9 +2,11 @@
 
 ## 문서 제어
 
-- 상태: `F-A visual direction 승인 — C5M-04는 실제 200% browser zoom 및 active
-forced-colors 검증을 기다리며 열려 있음`
+- 상태: `기술 검증 완료 뒤 exact F-A를 최종 C5 foreground mapping으로 승인;
+C5M-04 종료`
 - Visual-direction 승인일: 2026-08-08
+- 기술 검증일: 2026-08-09
+- 최종 mapping 승인일: 2026-08-09
 - Canonical language: English
 - Canonical 문서:
   [37-foundation-c5-foreground-specimen-validation.md](./37-foundation-c5-foreground-specimen-validation.md)
@@ -14,7 +16,7 @@ forced-colors 검증을 기다리며 열려 있음`
   측정과 수정 사항 기록
 - 입력: 승인된 문서 `25`, `32`, `33`, `35`; 문서 `36`의 수정된 mapping 조사; exact
   Spectrum S2 alias; 승인된 structural specimen; WCAG 2.2 contrast 기준
-- 제외: `C5M-04` 승인, boundary와 focus mapping, chromatic signature/feedback/domain/data
+- 제외: boundary와 focus mapping, chromatic signature/feedback/domain/data
   visualization color, 최종 component geometry, high-fidelity screen, application 구현
 
 이 specimen은 의사결정 근거이지 production interface나 최종 Claude Design screen이 아니다.
@@ -30,8 +32,8 @@ instrumentation이다.
 
 ## 권위 경계
 
-승인된 `M-A` surface는 고정했다. 다음 `F-A` foreground alias는 visual direction으로
-승인됐으며 최종 `C5M-04` 기술 검증을 기다린다.
+승인된 `M-A` surface는 고정했다. 다음 `F-A` foreground alias는 기록된 기술 gate를
+완료했으며 `C5M-04`에 따라 최종 C5 foreground mapping으로 승인됐다.
 
 | 책임                      | Spectrum alias                                        |     Light |      Dark | Specimen 용도                                                      |
 | ------------------------- | ----------------------------------------------------- | --------: | --------: | ------------------------------------------------------------------ |
@@ -110,16 +112,55 @@ Native tab order는 product fragment에 다음 순서로 도달했다.
 Unavailable control은 예상대로 건너뛰었다. `tabindex`는 추가하지 않았다. 이는 reachability와
 disabled semantics를 입증하지만 최종 focus-ring color나 geometry를 승인하지 않는다.
 
-### 열린 기술 gate
+### 기술 gate 완료 — 2026-08-09
 
-- 사용 가능한 local browser-control surface는 deterministic page zoom이나 forced-colors
-  emulation을 노출하지 않았다. Browser zoom shortcut 시도는 CSS viewport나 device scale을
-  바꾸지 않았으므로 200% zoom 통과를 주장하지 않는다.
-- Minimum보다 작은 `273px` specimen reflow는 통과했지만 추가 pressure evidence일 뿐,
-  실제 200% browser-zoom 검사를 대체하지 않는다.
-- Specimen은 절제된 `@media (forced-colors: active)` fallback을 포함하고 user-agent color
-  replacement를 허용하지만 active forced-colors behavior는 runtime에서 시험하지 못했다.
-  `C5M-04`는 두 검사가 가능한 browser 환경에서 완료될 때까지 열린 상태다.
+#### 실제 200% browser zoom
+
+Chrome의 표시 zoom control에서 `200%`를 확인했다. 기본 desktop host에서
+`devicePixelRatio`는 100%의 `2`에서 200%의 `4`로 바뀌었고 page CSS viewport는
+`1450px`에서 `725px`로 절반이 됐다. 이어 같은 실제 200% zoom을 유지한 채 임시 host
+override로 대표 compact CSS width와 최소 compact CSS width를 시험했다.
+
+| Host 조건                  | Chrome zoom | Page inner width | Document client width | Dark/Light × scene | 결과 |
+| -------------------------- | ----------: | ---------------: | --------------------: | -----------------: | ---- |
+| 기본 desktop host          |      `200%` |          `725px` |               `718px` |                `8` | 통과 |
+| `780 × 1200` host override |      `200%` |          `390px` |               `383px` |                `8` | 통과 |
+| `640 × 1200` host override |      `200%` |          `320px` |               `313px` |                `8` | 통과 |
+
+실제 zoom `24`개 조합의 결과는 다음과 같다.
+
+| Assertion                                                      |          결과 |
+| -------------------------------------------------------------- | ------------: |
+| Document horizontal overflow                                   | `0 / 24` 실패 |
+| Specimen-frame horizontal overflow                             | `0 / 24` 실패 |
+| 보이는 content가 document inline boundary 밖으로 이탈          | `0 / 24` 실패 |
+| 보이는 product button/input이 `44px` effective CSS height 미만 | `0 / 24` 실패 |
+
+Presentation 전용 specimen control은 product target이 아니므로 product-control height
+assertion에서 제외했다. 앞서 통과한 `273px` reflow는 계속 유용한 보충 pressure evidence지만
+실제 200% gate는 더 이상 그것에 의존하지 않는다.
+
+#### Active forced colors
+
+Chrome DevTools Rendering emulation을 `forced-colors: active`로 설정하고 측정 전에
+`matchMedia('(forced-colors: active)').matches === true`를 runtime에서 확인했다. 네 scene과
+두 appearance에서 active 조합 `8`개를 시험했다.
+
+| Assertion                                                      |         결과 |
+| -------------------------------------------------------------- | -----------: |
+| Document 또는 specimen-frame horizontal overflow               | `0 / 8` 실패 |
+| `forced-color-adjust: none`을 사용하는 product descendant      |          `0` |
+| Dark와 Light content가 같은 user-agent system palette로 대체   |         통과 |
+| 선택된 product action이 `aria-pressed="true"` 유지             |         통과 |
+| Unavailable product action이 native `disabled` control 유지    |         통과 |
+| Tab 순서가 disabled control을 건너뛰고 다음 필수 action에 도달 |         통과 |
+| Focus된 필수 action이 보이는 user-agent `auto` outline 유지    |         통과 |
+
+Emulation 중에는 system color가 custom Spectrum value를 의도적으로 대체했으며 mapping은
+사용자 preference를 무력화하지 않았다. 최종 focus-ring color와 geometry는 계속 C5 foreground
+권위 밖이다. 정리 전 emulation을 명시적으로 `No emulation`으로 되돌리고 runtime
+forced-colors가 `false`가 된 것을 확인했으며, DevTools를 닫고 browser zoom과 임시 host
+override도 복원했다.
 
 ## Exact Adjacency 기록
 
@@ -177,34 +218,35 @@ Selector ownership을 수정한 뒤 12-state browser matrix를 다시 실행해 
 5. Exact mapping은 sparse identity, dense rankings, empty/error copy, overlay content에서
    모두 절제된 상태를 유지했다. Tailwind나 local neutral은 필요하지 않았다.
 
-사용자는 2026-08-08에 이 관찰을 visual direction으로 수용했다. 이 수용은 남은 기술
-gate를 대체하지 않는다.
+사용자는 2026-08-08에 이 관찰을 visual direction으로 수용했다. 남은 기술 gate는 측정된
+실패 없이 2026-08-09에 완료됐다.
 
 ## 사용자 검토 결과 및 다음 gate
 
-사용자는 `F-A`를 유일한 C5 foreground visual direction으로 유지하는 안을 승인했다.
-아직 `C5M-04`를 승인하지 않는다.
+필수 기술 근거가 완료된 뒤 사용자는 2026-08-09에 exact `F-A`를 최종 C5 foreground
+mapping으로 명시적으로 승인했다. `C5M-04`는 종료됐다.
 
-남은 기술 작업은 다음과 같다.
+이 승인은 위에 기록된 foreground responsibility와 exact Spectrum value만 포함한다.
+Active forced-colors test에서 관찰된 흰색 system outline을 일반 Dark-theme boundary로
+승인하지 않는다. 해당 outline은 browser/user accessibility override로 유지하며 일반 theme
+boundary 선택은 별도 `C5M-05` gate, focus는 이후의 독립 gate로 남는다.
 
-1. Mobile 및 desktop host width에서 실제 200% browser zoom 검증
-2. Forced-colors/high-contrast mode를 활성화하고 semantic reachability, current-row
-   structure, disabled state, native focus indicator 검사
-3. `F-A`를 `Approved`로 승격할지 결정하기 전에 모든 실패 기록
-
-이 foreground gate가 닫히기 전에는 boundary 및 focus color 선정을 시작하지 않는다.
+따라서 다음 color-foundation 작업은 일반 theme neutral boundary에 대한 폭넓은 reference
+조사와 사용자 검토다. 이 foreground 승인으로 어떤 boundary 후보도 승격되지 않는다.
 
 ## 의사결정 및 검증 로그
 
-| ID       | 항목                                                                                                                                       | 상태                                     |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------- |
-| `C5V-01` | 승인된 `M-A` surface에서 exact `F-A` foreground alias만 시험하고 local neutral 또는 heading color를 추가하지 않는다.                       | `Observed specimen rule`                 |
-| `C5V-02` | 수정 후 `48`개 responsive/content 조합에서 기록된 overflow, escape, target-height, runtime 실패가 없다.                                    | `Observed`                               |
-| `C5V-03` | 수정 후 `12`개 interaction 조합이 Spectrum default, subdued, state, disabled value와 정확히 일치한다.                                      | `Observed`                               |
-| `C5V-04` | Static heading은 default `gray-800`을 유지하며 `gray-900`은 interaction-state 전용이다.                                                    | `Approved visual direction — 2026-08-08` |
-| `C5V-05` | Secondary와 tertiary semantic responsibility는 subdued `gray-700`을 계속 공유할 수 있으며 현재는 별도의 세 번째 value가 정당화되지 않는다. | `Approved visual direction — 2026-08-08` |
-| `C5V-06` | Disabled `gray-400`은 실제로 사용할 수 없고 비필수이며 readable explanation이 다른 곳에 있는 content에만 허용한다.                         | `Approved visual contract — 2026-08-08`  |
-| `C5V-07` | Computed-value 검토에서 subdued rest가 `gray-700` 대신 `gray-800`을 상속하던 문제를 발견하고 수정했다.                                     | `Corrected`                              |
-| `C5V-08` | Minimum 미만 reflow와 선언된 forced-colors fallback은 보충 근거일 뿐 실제 200% zoom 및 active forced-colors test를 대체하지 않는다.        | `Open technical gate`                    |
-| `C5V-09` | 사용자 visual review와 남은 기술 gate가 끝날 때까지 `C5M-04`를 열린 상태로 둔다.                                                           | `사용자 검토 완료 — 기술 gate 열림`      |
-| `C5V-10` | Tailwind, local neutral 추가 또는 다른 system value 없이 exact `F-A`를 유일한 C5 foreground visual direction으로 유지한다.                 | `Approved — 2026-08-08`                  |
+| ID       | 항목                                                                                                                                                                           | 상태                                     |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------- |
+| `C5V-01` | 승인된 `M-A` surface에서 exact `F-A` foreground alias만 시험하고 local neutral 또는 heading color를 추가하지 않는다.                                                           | `Observed specimen rule`                 |
+| `C5V-02` | 수정 후 `48`개 responsive/content 조합에서 기록된 overflow, escape, target-height, runtime 실패가 없다.                                                                        | `Observed`                               |
+| `C5V-03` | 수정 후 `12`개 interaction 조합이 Spectrum default, subdued, state, disabled value와 정확히 일치한다.                                                                          | `Observed`                               |
+| `C5V-04` | Static heading은 default `gray-800`을 유지하며 `gray-900`은 interaction-state 전용이다.                                                                                        | `Approved visual direction — 2026-08-08` |
+| `C5V-05` | Secondary와 tertiary semantic responsibility는 subdued `gray-700`을 계속 공유할 수 있으며 현재는 별도의 세 번째 value가 정당화되지 않는다.                                     | `Approved visual direction — 2026-08-08` |
+| `C5V-06` | Disabled `gray-400`은 실제로 사용할 수 없고 비필수이며 readable explanation이 다른 곳에 있는 content에만 허용한다.                                                             | `Approved visual contract — 2026-08-08`  |
+| `C5V-07` | Computed-value 검토에서 subdued rest가 `gray-700` 대신 `gray-800`을 상속하던 문제를 발견하고 수정했다.                                                                         | `Corrected`                              |
+| `C5V-08` | Minimum 미만 reflow와 선언된 forced-colors fallback은 보충 근거일 뿐 실제 200% zoom 및 active forced-colors test를 대체하지 않는다.                                            | `Completed — 2026-08-09`                 |
+| `C5V-09` | 사용자 visual review와 남은 기술 gate가 끝날 때까지 `C5M-04`를 열린 상태로 두고 최종 명시적 사용자 결정 뒤에만 종료한다.                                                       | `완료 — C5M-04 2026-08-09 승인`          |
+| `C5V-10` | Tailwind, local neutral 추가 또는 다른 system value 없이 exact `F-A`를 유일한 C5 foreground mapping으로 유지한다.                                                              | `Approved — 2026-08-09`                  |
+| `C5V-11` | 실제 Chrome 200% zoom이 desktop, `390px`, `320px` CSS width의 Dark/Light scene `24`개 조합에서 overflow나 product target-height 실패 없이 통과했다.                            | `Observed — 2026-08-09`                  |
+| `C5V-12` | Active forced colors가 system-color 대체, semantic selected/disabled state, keyboard reachability, `forced-color-adjust: none` 0건으로 Dark/Light scene `8`개 조합을 통과했다. | `Observed — 2026-08-09`                  |
