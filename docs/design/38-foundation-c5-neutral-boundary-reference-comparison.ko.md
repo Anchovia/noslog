@@ -2,8 +2,8 @@
 
 ## 문서 관리
 
-- 상태: `조사 완료; NB-A를 측정 표본 후보로 제안; 사용자 검토 대기;
-C5M-05 미종결`
+- 상태: `조사 완료; NB-A core specimen 검증 완료; 확장 actual-Chrome 교차 검증과
+사용자 검토 대기; C5M-05 미종결`
 - 정본 언어: 영어
 - 영어 정본:
   [38-foundation-c5-neutral-boundary-reference-comparison.md](./38-foundation-c5-neutral-boundary-reference-comparison.md)
@@ -30,6 +30,7 @@ C5M-05 미종결`
 - [C5 Spectrum surface validation](./35-foundation-c5-spectrum-surface-validation.ko.md)
 - [C5 neutral foreground comparison](./36-foundation-c5-neutral-foreground-reference-comparison.ko.md)
 - [C5 foreground specimen validation](./37-foundation-c5-foreground-specimen-validation.ko.md)
+- [C5 neutral boundary specimen 검증](./39-foundation-c5-neutral-boundary-specimen-validation.ko.md)
 
 ## 권위와 비교 규칙
 
@@ -227,13 +228,13 @@ component가 실패하면 먼저 semantic ownership, fill/spacing/shape를 수�
 
 ## 결정 로그
 
-| ID       | 항목                                                                                                                        | 상태                                 |
-| -------- | --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
-| `C5B-01` | Tailwind color, template, default border styling을 C5 boundary 권위 밖으로 둔다.                                            | `Approved governance — inherited`    |
-| `C5B-02` | 공식 출처 16개는 decorative separation과 필수 control/graphic boundary 분리에 수렴한다.                                     | `Observed`                           |
-| `C5B-03` | 현재 S2에는 단일 범용 neutral border alias가 없다. 네 단계는 공개 Spectrum 역할 지침을 승인된 S2 primitive에 매핑한 것이다. | `Observed correction`                |
-| `C5B-04` | 활성 forced-colors의 흰 outline은 browser/user override이며 정상 Dark-theme 후보가 아니다.                                  | `Approved clarification — inherited` |
-| `C5B-05` | 위 역할 계약과 값 쌍으로 `gray-200/300/400/600`을 `NB-A`로 사용한다.                                                        | `Proposed — user review pending`     |
-| `C5B-06` | 잠정 `border-strong` 계약에서 focus와 자동 selected-state ownership을 제거한다.                                             | `Proposed correction`                |
-| `C5B-07` | 유일한 필수 cue인 boundary는 모든 인접색과 `3:1`에 도달하는 측정 role을 써야 한다.                                          | `Required accessibility gate`        |
-| `C5B-08` | `C5M-05` 결정 전에 bilingual boundary specimen을 구축하고 검증한다.                                                         | `Proposed next step`                 |
+| ID       | 항목                                                                                                                        | 상태                                           |
+| -------- | --------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| `C5B-01` | Tailwind color, template, default border styling을 C5 boundary 권위 밖으로 둔다.                                            | `Approved governance — inherited`              |
+| `C5B-02` | 공식 출처 16개는 decorative separation과 필수 control/graphic boundary 분리에 수렴한다.                                     | `Observed`                                     |
+| `C5B-03` | 현재 S2에는 단일 범용 neutral border alias가 없다. 네 단계는 공개 Spectrum 역할 지침을 승인된 S2 primitive에 매핑한 것이다. | `Observed correction`                          |
+| `C5B-04` | 활성 forced-colors의 흰 outline은 browser/user override이며 정상 Dark-theme 후보가 아니다.                                  | `Approved clarification — inherited`           |
+| `C5B-05` | 위 역할 계약과 값 쌍으로 `gray-200/300/400/600`을 `NB-A`로 사용한다.                                                        | `Proposed — user review pending`               |
+| `C5B-06` | 잠정 `border-strong` 계약에서 focus와 자동 selected-state ownership을 제거한다.                                             | `Proposed correction`                          |
+| `C5B-07` | 유일한 필수 cue인 boundary는 모든 인접색과 `3:1`에 도달하는 측정 role을 써야 한다.                                          | `Required accessibility gate`                  |
+| `C5B-08` | `C5M-05` 결정 전에 bilingual boundary specimen을 구축하고 검증한다.                                                         | `진행 중 — 확장 교차 검증 및 사용자 검토 대기` |

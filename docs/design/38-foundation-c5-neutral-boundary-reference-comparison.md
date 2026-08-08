@@ -2,8 +2,8 @@
 
 ## Document Control
 
-- Status: `Research complete; NB-A proposed for a measured specimen; user review
-pending; C5M-05 remains open`
+- Status: `Research complete; NB-A core specimen validated; expanded actual-Chrome
+cross-check and user review pending; C5M-05 remains open`
 - Canonical language: English
 - Korean companion:
   [38-foundation-c5-neutral-boundary-reference-comparison.ko.md](./38-foundation-c5-neutral-boundary-reference-comparison.ko.md)
@@ -31,6 +31,7 @@ become authority merely because its values already appeared in a prior document.
 - [C5 Spectrum surface validation](./35-foundation-c5-spectrum-surface-validation.md)
 - [C5 neutral foreground comparison](./36-foundation-c5-neutral-foreground-reference-comparison.md)
 - [C5 foreground specimen validation](./37-foundation-c5-foreground-specimen-validation.md)
+- [C5 neutral boundary specimen validation](./39-foundation-c5-neutral-boundary-specimen-validation.md)
 
 ## Authority and Comparison Rules
 
@@ -235,13 +236,13 @@ value locally.
 
 ## Decision Log
 
-| ID       | Entry                                                                                                                                               | Status                               |
-| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
-| `C5B-01` | Treat Tailwind colors, templates, and default border styling as outside C5 boundary authority.                                                      | `Approved governance — inherited`    |
-| `C5B-02` | Sixteen official sources converge on separating decorative separation from a necessary control/graphic boundary.                                    | `Observed`                           |
-| `C5B-03` | Current S2 has no single universal neutral border alias; the four-step ladder is published Spectrum role guidance mapped to approved S2 primitives. | `Observed correction`                |
-| `C5B-04` | White active-forced-colors outlines are browser/user overrides, not normal Dark-theme candidates.                                                   | `Approved clarification — inherited` |
-| `C5B-05` | Use `gray-200/300/400/600` as `NB-A`, with the role contracts and value pairs above.                                                                | `Proposed — user review pending`     |
-| `C5B-06` | Remove focus and automatic selected-state ownership from the provisional `border-strong` contract.                                                  | `Proposed correction`                |
-| `C5B-07` | A boundary that is the only necessary cue must use a measured role that reaches `3:1` against every adjacent color.                                 | `Required accessibility gate`        |
-| `C5B-08` | Build and verify the bilingual boundary specimen before deciding `C5M-05`.                                                                          | `Proposed next step`                 |
+| ID       | Entry                                                                                                                                               | Status                                                       |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| `C5B-01` | Treat Tailwind colors, templates, and default border styling as outside C5 boundary authority.                                                      | `Approved governance — inherited`                            |
+| `C5B-02` | Sixteen official sources converge on separating decorative separation from a necessary control/graphic boundary.                                    | `Observed`                                                   |
+| `C5B-03` | Current S2 has no single universal neutral border alias; the four-step ladder is published Spectrum role guidance mapped to approved S2 primitives. | `Observed correction`                                        |
+| `C5B-04` | White active-forced-colors outlines are browser/user overrides, not normal Dark-theme candidates.                                                   | `Approved clarification — inherited`                         |
+| `C5B-05` | Use `gray-200/300/400/600` as `NB-A`, with the role contracts and value pairs above.                                                                | `Proposed — user review pending`                             |
+| `C5B-06` | Remove focus and automatic selected-state ownership from the provisional `border-strong` contract.                                                  | `Proposed correction`                                        |
+| `C5B-07` | A boundary that is the only necessary cue must use a measured role that reaches `3:1` against every adjacent color.                                 | `Required accessibility gate`                                |
+| `C5B-08` | Build and verify the bilingual boundary specimen before deciding `C5M-05`.                                                                          | `In progress — expanded cross-check and user review pending` |
