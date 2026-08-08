@@ -2,8 +2,8 @@
 
 ## 문서 관리
 
-- 상태: `조사 완료 — C1–C4 역할 구조와 C5 절제된 사용 경계 승인; 정확한 값과
-시그니처 색조 대기`
+- 상태: `조사 완료 — C1–C4 역할 구조, C5 절제된 사용 경계, Spectrum S2 neutral
+primitive source 승인; semantic mapping, 측정 검증, 시그니처 색조 대기`
 - 원본 언어: 영어
 - 영문 원본:
   [32-foundation-color-material-candidates.md](./32-foundation-color-material-candidates.md)
@@ -13,9 +13,9 @@
   v0.1 외관 구조
 - 입력: 승인된 문서 `01`–`31`, 현재 저장소 컬러 구현, `390 × 844`의 현재
   `/ko` 브라우저 근거, 아래의 집중 레퍼런스 매트릭스
-- 제외: 승인된 hexadecimal 또는 OKLCH 값, 최종 시그니처 색상, 최종 컴포넌트
-  스타일, 일러스트레이션, 아이콘 문법, 모션, 데이터 시각화 팔레트, Figma
-  프로덕션 화면, 애플리케이션 구현
+- 제외: 승인된 Spectrum S2 neutral primitive source를 넘어서는 최종 semantic
+  role 배정, 최종 시그니처 색상, 최종 컴포넌트 스타일, 일러스트레이션, 아이콘
+  문법, 모션, 데이터 시각화 팔레트, Figma 프로덕션 화면, 애플리케이션 구현
 
 이 문서는 근거, 후보 구조, 트레이드오프, 제안된 결정 묶음을 기록한다. 사용자가
 명시적으로 승인하기 전까지 `Proposed`로 표시된 내용은 승인된 NosLog 2.0 시각
@@ -120,7 +120,7 @@ score, rank, difficulty, Basic/Recital, genre, Discord 역할에 Dark와 Light �
 | [Fluent 2 design tokens](https://fluent2.microsoft.design/design-tokens), [Elevation](https://fluent2.microsoft.design/elevation)                                                                                     | global primitive가 semantic alias에 매핑되고 theme가 light, dark, high contrast, brand를 포괄하며 elevation은 통제된 시스템이다.                                              | primitive → semantic → component alias와 명시적 elevation 역할을 뒷받침한다.                              | Fluent shadow ramp는 NosLog가 필요로 하는 것보다 크다.                           |
 | [Atlassian elevation](https://atlassian.design/foundations/elevation), [Border](https://atlassian.design/foundations/border)                                                                                          | sunken, default, raised, overlay surface는 의도가 다르며 Dark에서는 shadow가 약해져 surface color를 사용하고 border width와 color를 상태별로 결합한다.                        | page, viewer/editor well, flat region, movable/raised content, overlay, selected, focus 역할에 잘 맞는다. | enterprise board 예시는 NosLog의 밀도나 시각 톤을 결정하지 않는다.               |
 | [Carbon color](https://carbondesignsystem.com/elements/color/overview/)                                                                                                                                               | neutral gray가 지배하고 미묘한 명도 차이가 콘텐츠를 조직하며 theme가 바뀌어도 role name은 유지되고 값만 바뀐다.                                                               | 조용한 shell, 제한적 accent, 변하지 않는 semantic token을 뒷받침한다.                                     | Carbon의 정확한 blue accent와 alternating layer는 채택하지 않는다.               |
-| [Adobe Spectrum color system](https://spectrum.adobe.com/page/color-system/), [Object styles](https://spectrum.adobe.com/page/object-styles/)                                                                         | 색상은 제한적이고 의도적이며 status에는 text/icon 지원이 필요하고 대부분의 component는 shadow보다 contrast/overlay를 사용하며 shadow는 일시적 dismissible content에 제한된다. | 절제된 status, 제한된 shadow, content-first hierarchy를 뒷받침한다.                                       | creative-tool 밀도와 정확한 gray가 NosLog 값을 정하지 않는다.                    |
+| [Adobe Spectrum color system](https://spectrum.adobe.com/page/color-system/), [Object styles](https://spectrum.adobe.com/page/object-styles/)                                                                         | 색상은 제한적이고 의도적이며 status에는 text/icon 지원이 필요하고 대부분의 component는 shadow보다 contrast/overlay를 사용하며 shadow는 일시적 dismissible content에 제한된다. | 절제된 status, 제한된 shadow, content-first hierarchy를 뒷받침한다.                                       | creative-tool 밀도와 semantic assignment는 NosLog 값을 정하지 않는다.            |
 | [Radix Colors use cases](https://www.radix-ui.com/colors/docs/palette-composition/understanding-the-scale), [Aliasing](https://www.radix-ui.com/colors/docs/overview/aliasing)                                        | background, interaction state, border, solid fill, text에 분리된 단계가 있고 alias는 component별 raw name 없이 Light/Dark를 재매핑한다.                                       | 현재 Radix stack과 state ramp 설계에 매우 직접적으로 적용된다.                                            | APCA 주장은 NosLog의 WCAG 2.2 AA 인수 테스트를 대체하지 않는다.                  |
 | [Shopify Polaris color tokens](https://polaris-react.shopify.com/design/colors/color-tokens)                                                                                                                          | semantic name은 element, role, prominence, state를 조합한다.                                                                                                                  | component에서 hue name이 아닌 `background/action/subtle/hover`식 소유권을 뒷받침한다.                     | commerce task와 현재 Polaris packaging은 NosLog 시각을 지배하지 않는다.          |
 | [GitHub Primer color usage](https://www.primer.style/product/getting-started/foundations/color-usage/)                                                                                                                | Light/Dark neutral scale이 기능적 role을 공유하고 background, border, text, state role에 측정 가능한 대비 책임이 있다.                                                        | multi-theme token 안정성, subdued/emphasis 변형, 대비 조정을 뒷받침한다.                                  | GitHub의 조밀한 개발자 UI는 구조 비교일 뿐이다.                                  |
@@ -303,6 +303,62 @@ control, avatar/status dot, compact chip, shape에 문서화된 목적이 있는
 - jacket과 avatar asset은 그 경계가 component 이해 또는 조작에 필요할 때만 edge
   treatment를 사용한다.
 
+## 승인된 C5 Neutral Primitive Source
+
+사용자는 2026-08-08
+[Adobe Spectrum S2 grayscale token data](https://opensource.adobe.com/spectrum-design-data/tokens/color-palette/)를
+NosLog 2.0 Dark/Light neutral foundation의 지배적인 primitive source로 승인했다.
+검토에서는 IBM Carbon, GitHub Primer, Adobe
+Spectrum S2, Microsoft Fluent 2, Atlassian, SAP Fiori Horizon, Radix Slate,
+Material 3, Ant Design, Red Hat PatternFly의 열 개 production system을 동일한 C5
+role 순서와 Dark/Light 구조로 비교했다. 현재 NosLog 값은 연속성 후보가 아니라
+거부된 migration evidence로 유지했고 과도하게 accent를 적용한 `FCM-11`/`SIG-07`
+specimen은 제외했다.
+
+승인 범위는 다음과 같이 정확히 제한한다.
+
+1. 공개된 Spectrum S2 grayscale 값을 Dark와 Light 모두의 유일한 neutral
+   primitive source로 사용한다.
+2. source 값을 정확히 보존한다. Tailwind 색상으로 대체하거나 현재 custom Dark
+   값과 TDS 기반 Light 값을 섞거나 role을 더 “NosLog답게” 보이게 하려는 로컬
+   hue shift를 도입하지 않는다.
+3. neutral primitive source만 채택하며 Adobe component styling, spacing,
+   typography, accent color, brand 표현, radius, shadow 또는 page composition은
+   채택하지 않는다.
+4. appearance 간 변하지 않는 primitive → semantic → component-alias 구조로 이
+   primitive를 승인된 NosLog role에 매핑한다. 정확한 role 배정은 측정한 대표
+   specimen을 검토하기 전까지 `Proposed`다.
+5. source primitive를 직접 매핑해서 contrast, state 구분, artwork 인접성 또는
+   forced-colors 요구를 충족할 수 없다면 primitive를 조용히 수정하지 않는다.
+   충돌을 보고하고 mapping 또는 source 결정을 다시 연다.
+
+### 승인된 source primitive
+
+다음 값은 공개된 Spectrum S2 grayscale data에서 그대로 가져왔다. source ramp에
+포함되는 값은 `Approved`이며 각 행을 NosLog semantic role에 배정하는 결정은 아직
+대기 상태다.
+
+| Spectrum S2 primitive | Light     | Dark      |
+| --------------------- | --------- | --------- |
+| `gray-25`             | `#ffffff` | `#111111` |
+| `gray-50`             | `#f8f8f8` | `#1b1b1b` |
+| `gray-75`             | `#f3f3f3` | `#222222` |
+| `gray-100`            | `#e9e9e9` | `#2c2c2c` |
+| `gray-200`            | `#e1e1e1` | `#323232` |
+| `gray-300`            | `#dadada` | `#393939` |
+| `gray-400`            | `#c6c6c6` | `#444444` |
+| `gray-500`            | `#8f8f8f` | `#6d6d6d` |
+| `gray-600`            | `#717171` | `#8a8a8a` |
+| `gray-700`            | `#505050` | `#afafaf` |
+| `gray-800`            | `#292929` | `#dbdbdb` |
+| `gray-900`            | `#131313` | `#f2f2f2` |
+| `gray-1000`           | `#000000` | `#ffffff` |
+
+이 승인은 C5를 진행시키지만 완료하지는 않는다. 다음 검토에서는 source primitive를
+`canvas`, `surface`, `sunken`, `raised`, `overlay`, neutral foreground, boundary,
+interaction-state role에 배정하고 필수 real-content specimen matrix에서 그 배정을
+검증해야 한다.
+
 ## 승인된 절제 컬러 예산
 
 사용자는 2026-08-08 과도하게 accent를 적용한 specimen을 거부한 뒤 다음 경계를
@@ -358,7 +414,7 @@ swatch만으로는 어떤 palette 값도 승인할 수 없다. 이후 시각 spe
 | `C2`  | 절제된 signature/accent 사용 후보와 독립 focus 소유권                              | `Approved — C2-B는 분리만 의미하며 neutral interaction이 기본` |
 | `C3`  | feedback/domain/data 충돌 정책                                                     | `Approved — semantic ownership 및 비색상 단서`                 |
 | `C4`  | border, radius, elevation, scrim 구조                                              | `역할 구조 승인 — 정확한 값은 C5 대기`                         |
-| `C5`  | 절제된 컬러 사용 경계, 측정된 specimen을 통한 정확한 Dark/Light 값과 시그니처 색조 | `사용 경계 승인, 정확한 neutral 값·signature 계약·색조 대기`   |
+| `C5`  | 절제된 컬러 사용 경계, 측정된 specimen을 통한 정확한 Dark/Light 값과 시그니처 색조 | `Primitive source 승인; mapping, 검증, signature 대기`         |
 | `C6`  | 통합 S1–S5 외관 검증과 Foundation 승격                                             | `C5에 의해 차단`                                               |
 
 한 batch의 승인이 다른 batch를 승인하지 않는다. 정확한 값은 그 값이 구현할 역할
@@ -376,9 +432,10 @@ swatch만으로는 어떤 palette 값도 승인할 수 없다. 이후 시각 spe
 | `FCM-06` | NOSTALGIA domain color를 분리된 role로 보존하고 비색상 단서와 collision 검토를 요구한다.                                                                                    | `Approved — 2026-08-08`            |
 | `FCM-07` | 정확한 값을 미룬 채 R-B의 세 목적 radius role과 full rounding을 사용한다.                                                                                                   | `Approved — 2026-08-08`            |
 | `FCM-08` | 기본 flat content에서 shadow를 제거하고 타당한 raised, overlay, scroll-boundary 관계에만 제한한다.                                                                          | `Approved — 2026-08-08`            |
-| `FCM-09` | 승인된 role specimen이 나오기 전까지 정확한 palette 값, signature hue, visualization color를 미룬다.                                                                        | `Proposed`                         |
+| `FCM-09` | 승인된 role specimen이 나올 때까지 semantic role mapping, signature hue, visualization color를 미루며 FCM-12는 neutral primitive source만 해결한다.                         | `남은 범위 Proposed`               |
 | `FCM-10` | container, link, filter, selection 및 일반 domain label은 neutral treatment를 기본으로 하고 signature color는 우선 identity와 별도 승인된 드문 primary action에만 제한한다. | `Approved — 2026-08-08`            |
 | `FCM-11` | selected container, filter state, link 및 여러 경쟁 요소에 accent를 칠한 과도한 signature-color 비교를 거부한다. 이는 guide 또는 production authority가 아니다.             | `Rejected — 2026-08-08`            |
+| `FCM-12` | 공개된 Adobe Spectrum S2 grayscale 값을 유일한 Dark/Light neutral primitive source로 채택하며 semantic mapping과 검증은 계속 대기한다.                                      | `Approved — 2026-08-08`            |
 
 ## 승인된 1차 검토 — 2026-08-08
 
@@ -426,3 +483,17 @@ focus의 분리를 뜻하며 모든 interaction state에 자동으로 color owne
 뜻이 아니다. 정확한 neutral 값, canonical master color의 존재 및 색조, 드문
 primary-action 예외는 새 검토에서 다룰 C5 질문으로 남는다. 이 checkpoint에서는
 어떤 color specimen도 승인되지 않았다.
+
+## 승인된 4차 검토 — Spectrum S2 Neutral Source — 2026-08-08
+
+neutral color가 interface 대부분을 차지하므로 더 넓은 비교가 필요하다는 사용자 요청에
+따라 동일한 C5 role 순서로 열 개 production system의 Dark/Light source를 검토했다.
+사용자는 Adobe Spectrum S2를 선택하고 `FCM-12`에 기록된 범위를 명시적으로
+승인했다. 공개된 grayscale primitive 값을 정확히 보존하고 Adobe의 component
+language나 다른 visual-system 결정을 가져오지 않은 채 NosLog semantic role에
+매핑한다.
+
+이는 master neutral primitive source와 그 공개 값의 승인이다. 비교 중 표시한
+임시 role mapping이나 signature, focus, feedback, domain, data visualization,
+border, shadow, radius 또는 component 값의 승인이 아니다. 해당 항목은 서로 분리된
+측정 결정으로 남는다.

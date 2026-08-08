@@ -2,8 +2,9 @@
 
 ## Document Control
 
-- Status: `Research complete — restrained-use boundary approved; signature contract,
-hue territory, and measured specimens pending`
+- Status: `Research complete — restrained-use boundary and Spectrum S2 neutral
+primitive source approved; signature contract, hue territory, and measured specimens
+pending`
 - Canonical language: English
 - Korean companion:
   [33-foundation-signature-color-research.ko.md](./33-foundation-signature-color-research.ko.md)
@@ -13,13 +14,18 @@ hue territory, and measured specimens pending`
   existing NOSTALGIA/NosLog domain colors
 - Inputs: approved documents `22`, `24`, and `32`; current NosLog logo, browser, and
   color-token evidence; and the focused comparison below
-- Excludes: an approved hue, hexadecimal or OKLCH values, a recolored logo, final
-  neutral values, data-visualization colors, high-fidelity screens, and application
+- Excludes: an approved signature hue or its hexadecimal/OKLCH values, a recolored
+  logo, final neutral semantic-role mapping beyond the approved Spectrum S2 primitive
+  source, data-visualization colors, high-fidelity screens, and application
   implementation
 
 This document narrows C5 without selecting a color by preference. Every candidate
 territory and contract remains `Proposed` until the user approves it and then reviews
 measured specimens.
+
+The Spectrum S2 grayscale primitive source is now approved upstream in `FCM-12` and
+is not reopened by this signature-color research. Its NosLog semantic-role mapping
+and measured validation remain pending.
 
 ## Related Documents
 
@@ -50,6 +56,9 @@ The signature-color decision cannot reopen these approved rules:
 6. The current monochrome N mark is retained. Whether and where a signature-colored
    field may sit behind or beside it is a later specimen decision; this research does
    not recolor or redraw the mark.
+7. Adobe Spectrum S2 is the approved exact neutral primitive source. Signature work
+   cannot replace it with another neutral system, tint it toward the signature hue,
+   or import Adobe accent and component styling.
 
 ## Current NosLog Evidence
 
@@ -224,10 +233,10 @@ candidate territories. It is a guide artifact, not a final page design.
 
 The next visual work requires two explicit approvals:
 
-1. After first approving neutral Dark/Light values, should NosLog use `SC-B`: one
-   canonical signature master plus a tightly bounded set of Light/Dark identity and
-   rare-action values, while keeping ordinary interaction and keyboard focus neutral
-   or independently governed?
+1. After separately approving and validating the Spectrum S2 → NosLog semantic-role
+   mapping, should NosLog use `SC-B`: one canonical signature master plus a tightly
+   bounded set of Light/Dark identity and rare-action values, while keeping ordinary
+   interaction and keyboard focus neutral or independently governed?
 2. Should the first equal-condition specimen compare `H1` ultramarine/blue-violet,
    `H2` warm amber/piano gold, `H3` rose-magenta, and the `H0` achromatic baseline?
 
@@ -245,6 +254,7 @@ a hue, value, logo recoloring, gradient, or component styling.
 | `SIG-05` | Compare H1, H2, H3, and H0 under one measured specimen matrix before selecting a hue.                                                                                                                        | `Proposed`                                             |
 | `SIG-06` | Do not advance green/lime, cyan/teal, or red/orange in the first specimen round because of current semantic and external-brand collision cost.                                                               | `Proposed`                                             |
 | `SIG-07` | The over-accented interactive comparison that colored links, filter state, selected containers, difficulty text, and several competing elements is rejected and has no design authority.                     | `Rejected — 2026-08-08`                                |
+| `SIG-08` | Use the exact published Adobe Spectrum S2 grayscale as the neutral primitive source; signature work cannot recolor or replace it, while semantic-role mapping remains pending in C5.                         | `Approved upstream — 2026-08-08`                       |
 
 ## Rejected Specimen Record — 2026-08-08
 
@@ -252,6 +262,6 @@ The interactive signature-color comparison created during this phase spread each
 candidate across too many repeated interface elements. It contradicted the approved
 quiet, content-led direction and demonstrated the failure mode rather than a valid
 NosLog proposal. It must not be handed to Claude Design or used as an implementation
-reference. A replacement comparison may be made only after neutral values are set,
-and it must limit color to identity plus at most one explicitly justified rare action
-case.
+reference. A replacement comparison may be made only after the Spectrum neutral
+semantic-role mapping is set, and it must limit color to identity plus at most one
+explicitly justified rare action case.

@@ -2,7 +2,8 @@
 
 ## 문서 관리
 
-- 상태: `조사 완료 — 절제된 사용 경계 승인, 시그니처 계약·색조 영역·측정 specimen 대기`
+- 상태: `조사 완료 — 절제된 사용 경계와 Spectrum S2 neutral primitive source
+승인, 시그니처 계약·색조 영역·측정 specimen 대기`
 - 정본 언어: 영어
 - 영어 정본:
   [33-foundation-signature-color-research.md](./33-foundation-signature-color-research.md)
@@ -12,11 +13,16 @@
   컬러 사이의 관계
 - 입력: 승인된 문서 `22`, `24`, `32`, 현재 NosLog 로고·브라우저·컬러 토큰
   근거 및 아래 집중 비교
-- 제외: 승인된 색조, hexadecimal 또는 OKLCH 값, 다시 칠한 로고, 최종 neutral
-  값, 데이터 시각화 컬러, high-fidelity 화면 및 애플리케이션 구현
+- 제외: 승인된 시그니처 색조 또는 그 hexadecimal/OKLCH 값, 다시 칠한 로고,
+  승인된 Spectrum S2 primitive source를 넘어서는 최종 neutral semantic-role
+  mapping, 데이터 시각화 컬러, high-fidelity 화면 및 애플리케이션 구현
 
 이 문서는 선호만으로 색을 선택하지 않고 C5 범위를 좁힌다. 모든 후보 영역과
 계약은 사용자가 승인하고 측정 specimen을 검토하기 전까지 `Proposed`다.
+
+Spectrum S2 grayscale primitive source는 이제 `FCM-12`에서 upstream 승인됐으며
+이 시그니처 컬러 조사가 다시 열지 않는다. NosLog semantic-role mapping과 측정
+검증은 계속 대기 상태다.
 
 ## 관련 문서
 
@@ -46,6 +52,9 @@
 6. 현재 monochrome N 마크를 유지한다. 시그니처 컬러 영역을 마크 뒤나 옆의 어느
    위치에 둘지는 이후 specimen 결정이며, 이 조사는 마크를 다시 칠하거나 그리지
    않는다.
+7. Adobe Spectrum S2는 승인된 정확한 neutral primitive source다. signature 작업은
+   이를 다른 neutral system으로 대체하거나 signature hue 쪽으로 tint하거나 Adobe
+   accent 및 component styling을 가져올 수 없다.
 
 ## 현재 NosLog 근거
 
@@ -220,10 +229,10 @@ illustration은 semantic interaction color가 되지 않는 경우에만 통제�
 
 다음 시각 작업에는 두 가지 명시적 승인이 필요하다.
 
-1. 먼저 neutral Dark/Light 값을 승인한 뒤 NosLog가 `SC-B`, 즉 하나의 canonical
-   signature master와 엄격히 제한된 Light/Dark identity 및 드문 action 값을
-   사용하고 일반 interaction과 keyboard focus는 neutral 또는 독립적으로 통제할
-   것인가?
+1. Spectrum S2 → NosLog semantic-role mapping을 별도로 승인하고 검증한 뒤 NosLog가
+   `SC-B`, 즉 하나의 canonical signature master와 엄격히 제한된 Light/Dark
+   identity 및 드문 action 값을 사용하고 일반 interaction과 keyboard focus는
+   neutral 또는 독립적으로 통제할 것인가?
 2. 첫 equal-condition specimen에서 `H1` ultramarine/blue-violet, `H2` warm
    amber/piano gold, `H3` rose-magenta 및 `H0` achromatic baseline을 비교할 것인가?
 
@@ -241,12 +250,13 @@ illustration은 semantic interaction color가 되지 않는 경우에만 통제�
 | `SIG-05` | 색조 선택 전 하나의 측정 specimen matrix에서 H1, H2, H3, H0를 비교한다.                                                                                                                                | `Proposed`                                             |
 | `SIG-06` | 현재 semantic 및 external-brand collision 비용 때문에 첫 specimen round에서 green/lime, cyan/teal 및 red/orange를 진행하지 않는다.                                                                     | `Proposed`                                             |
 | `SIG-07` | link, filter state, selected container, difficulty text 및 여러 경쟁 요소에 색을 칠한 과도한 interactive 비교는 거부되며 design authority가 없다.                                                      | `Rejected — 2026-08-08`                                |
+| `SIG-08` | 공개된 Adobe Spectrum S2 grayscale의 정확한 값을 neutral primitive source로 사용하며 signature 작업은 이를 다시 칠하거나 대체할 수 없고 semantic-role mapping은 C5에서 계속 대기한다.                  | `Approved upstream — 2026-08-08`                       |
 
 ## 거부된 specimen 기록 — 2026-08-08
 
 이 단계에서 만든 interactive signature-color 비교는 각 candidate를 너무 많은 반복
 interface 요소에 퍼뜨렸다. 이는 승인된 차분하고 content-led인 방향과 충돌했으며
 유효한 NosLog 제안이 아니라 실패 사례를 보여줬다. Claude Design에 전달하거나 구현
-reference로 사용해서는 안 된다. 대체 비교는 neutral 값을 먼저 확정한 뒤에만 만들 수
-있으며 color를 identity와 명시적으로 정당화한 드문 action 사례 최대 하나로 제한해야
-한다.
+reference로 사용해서는 안 된다. 대체 비교는 Spectrum neutral semantic-role
+mapping을 먼저 확정한 뒤에만 만들 수 있으며 color를 identity와 명시적으로 정당화한
+드문 action 사례 최대 하나로 제한해야 한다.

@@ -2,8 +2,9 @@
 
 ## Document Control
 
-- Status: `Research complete — C1–C4 role architecture and C5 restrained-use
-boundary approved; exact values and signature hue pending`
+- Status: `Research complete — C1–C4 role architecture, C5 restrained-use boundary,
+and the Spectrum S2 neutral primitive source approved; semantic mapping, measured
+validation, and signature hue pending`
 - Canonical language: English
 - Korean companion:
   [32-foundation-color-material-candidates.ko.md](./32-foundation-color-material-candidates.ko.md)
@@ -14,9 +15,10 @@ boundary approved; exact values and signature hue pending`
 - Inputs: approved documents `01`–`31`, current repository color implementation,
   current `/ko` browser evidence at `390 × 844`, and the focused reference matrix
   below
-- Excludes: approved hexadecimal or OKLCH values, final signature hue, final component
-  styling, illustration, icon grammar, motion, data-visualization palettes, Figma
-  production screens, and application implementation
+- Excludes: final semantic role assignment beyond the approved Spectrum S2 neutral
+  primitive source, final signature hue, final component styling, illustration, icon
+  grammar, motion, data-visualization palettes, Figma production screens, and
+  application implementation
 
 This document records evidence, candidate architectures, tradeoffs, and proposed
 decision batches. Nothing marked `Proposed` is an approved NosLog 2.0 visual rule
@@ -125,7 +127,7 @@ than one page, but each row is counted once so the source total is not inflated.
 | [Fluent 2 design tokens](https://fluent2.microsoft.design/design-tokens), [Elevation](https://fluent2.microsoft.design/elevation)                                                                                     | Global primitives map to semantic aliases; themes cover light, dark, high contrast, and brand; elevation is a controlled system.                                                      | Supports primitive → semantic → component alias and explicit elevation roles.                                     | Fluent's shadow ramp is larger than NosLog needs.                                                |
 | [Atlassian elevation](https://atlassian.design/foundations/elevation), [Border](https://atlassian.design/foundations/border)                                                                                          | Sunken, default, raised, and overlay surfaces have distinct intent; Dark uses surface color because shadows weaken; border width and color pair by state.                             | Strong fit for page, viewer/editor well, flat region, movable/raised content, overlay, selected, and focus roles. | Enterprise board examples do not determine NosLog density or visual tone.                        |
 | [Carbon color](https://carbondesignsystem.com/elements/color/overview/)                                                                                                                                               | Neutral gray dominates; subtle value shifts organize content; role names stay stable across themes while values change.                                                               | Supports a quiet shell, sparse accent, and invariant semantic tokens.                                             | Carbon's exact blue accent and alternating layers are not adopted.                               |
-| [Adobe Spectrum color system](https://spectrum.adobe.com/page/color-system/), [Object styles](https://spectrum.adobe.com/page/object-styles/)                                                                         | Color is sparse and intentional; status needs text/icon support; most components use contrast or overlay rather than shadows; shadows are reserved for transient dismissible content. | Supports restrained status, limited shadows, and content-first hierarchy.                                         | Creative-tool density and exact grays do not define NosLog values.                               |
+| [Adobe Spectrum color system](https://spectrum.adobe.com/page/color-system/), [Object styles](https://spectrum.adobe.com/page/object-styles/)                                                                         | Color is sparse and intentional; status needs text/icon support; most components use contrast or overlay rather than shadows; shadows are reserved for transient dismissible content. | Supports restrained status, limited shadows, and content-first hierarchy.                                         | Creative-tool density and semantic assignments do not define NosLog values.                      |
 | [Radix Colors use cases](https://www.radix-ui.com/colors/docs/palette-composition/understanding-the-scale), [Aliasing](https://www.radix-ui.com/colors/docs/overview/aliasing)                                        | Separate steps exist for backgrounds, interactive states, borders, solid fills, and text; aliases remap Light/Dark without component-specific raw names.                              | Highly relevant to the existing Radix stack and state-ramp design.                                                | APCA claims do not replace NosLog's WCAG 2.2 AA acceptance tests.                                |
 | [Shopify Polaris color tokens](https://polaris-react.shopify.com/design/colors/color-tokens)                                                                                                                          | Semantic names combine element, role, prominence, and state.                                                                                                                          | Supports `background/action/subtle/hover` style ownership rather than hue names in components.                    | Commerce tasks and current Polaris packaging do not govern NosLog visuals.                       |
 | [GitHub Primer color usage](https://www.primer.style/product/getting-started/foundations/color-usage/)                                                                                                                | Light/Dark neutral scales share functional roles; backgrounds, borders, text, and state roles have measured contrast responsibilities.                                                | Supports multi-theme token stability, subdued/emphasis variants, and contrast adjustment.                         | GitHub's dense developer UI is only a structural comparison.                                     |
@@ -310,6 +312,60 @@ controls whose shape has a documented purpose.
 - Jacket and avatar assets need edge treatment only when their boundary is necessary
   to understand or operate the component.
 
+## Approved C5 Neutral Primitive Source
+
+The user approved [Adobe Spectrum S2 grayscale token data](https://opensource.adobe.com/spectrum-design-data/tokens/color-palette/)
+as the governing primitive source for the NosLog 2.0 Dark/Light neutral foundation
+on 2026-08-08. The review compared the same C5 role
+order and Dark/Light structure across ten production systems: IBM Carbon, GitHub
+Primer, Adobe Spectrum S2, Microsoft Fluent 2, Atlassian, SAP Fiori Horizon, Radix
+Slate, Material 3, Ant Design, and Red Hat PatternFly. Current NosLog values remained
+rejected migration evidence rather than a continuity candidate, and the over-accented
+`FCM-11`/`SIG-07` specimen was excluded.
+
+The approval has the following exact boundary:
+
+1. Use the published Spectrum S2 grayscale values as the only neutral primitive
+   source for both Dark and Light.
+2. Preserve the source values exactly. Do not substitute Tailwind colors, merge the
+   current custom Dark values, retain the TDS-derived Light values, or introduce a
+   local hue shift to make a role look more “NosLog-like.”
+3. Adopt the neutral primitive source, not Adobe component styling, spacing,
+   typography, accent colors, brand expression, radius, shadow, or page composition.
+4. Map these primitives to the approved NosLog roles through the invariant primitive
+   → semantic → component-alias architecture. The exact role assignment remains
+   `Proposed` until measured representative specimens are reviewed.
+5. If a direct source-primitive mapping cannot satisfy contrast, state distinction,
+   artwork adjacency, or forced-colors requirements, do not silently alter the
+   primitive. Report the conflict and reopen the mapping or source decision.
+
+### Approved source primitives
+
+The following values are copied from the published Spectrum S2 grayscale data. Their
+membership in the source ramp is `Approved`; assigning any row to a NosLog semantic
+role is still pending.
+
+| Spectrum S2 primitive | Light     | Dark      |
+| --------------------- | --------- | --------- |
+| `gray-25`             | `#ffffff` | `#111111` |
+| `gray-50`             | `#f8f8f8` | `#1b1b1b` |
+| `gray-75`             | `#f3f3f3` | `#222222` |
+| `gray-100`            | `#e9e9e9` | `#2c2c2c` |
+| `gray-200`            | `#e1e1e1` | `#323232` |
+| `gray-300`            | `#dadada` | `#393939` |
+| `gray-400`            | `#c6c6c6` | `#444444` |
+| `gray-500`            | `#8f8f8f` | `#6d6d6d` |
+| `gray-600`            | `#717171` | `#8a8a8a` |
+| `gray-700`            | `#505050` | `#afafaf` |
+| `gray-800`            | `#292929` | `#dbdbdb` |
+| `gray-900`            | `#131313` | `#f2f2f2` |
+| `gray-1000`           | `#000000` | `#ffffff` |
+
+This approval advances C5 but does not complete it. The next review must assign the
+source primitives to `canvas`, `surface`, `sunken`, `raised`, `overlay`, neutral
+foreground, boundary, and interaction-state roles, then verify those assignments in
+the required real-content specimen matrix.
+
 ## Approved Restrained-Color Budget
 
 The user approved the following boundary after rejecting an over-accented specimen on
@@ -361,14 +417,14 @@ must include:
 
 ## Decision Batches
 
-| Batch | Decision                                                                                             | Current status                                                                       |
-| ----- | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| `C1`  | Neutral surface inventory and purpose                                                                | `Approved — C1-B`                                                                    |
-| `C2`  | Restrained signature/accent eligibility and independent focus ownership                              | `Approved — C2-B as separation only; neutral interaction remains default`            |
-| `C3`  | Feedback/domain/data collision policy                                                                | `Approved — semantic ownership and non-color cues`                                   |
-| `C4`  | Border, radius, elevation, and scrim architecture                                                    | `Approved architecture — exact values pending C5`                                    |
-| `C5`  | Restrained color-use boundary, exact Dark/Light values, and signature hue through measured specimens | `Usage boundary approved; exact neutral values, signature contract, and hue pending` |
-| `C6`  | Integrated S1–S5 appearance validation and Foundation promotion                                      | `Blocked by C5`                                                                      |
+| Batch | Decision                                                                                             | Current status                                                            |
+| ----- | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| `C1`  | Neutral surface inventory and purpose                                                                | `Approved — C1-B`                                                         |
+| `C2`  | Restrained signature/accent eligibility and independent focus ownership                              | `Approved — C2-B as separation only; neutral interaction remains default` |
+| `C3`  | Feedback/domain/data collision policy                                                                | `Approved — semantic ownership and non-color cues`                        |
+| `C4`  | Border, radius, elevation, and scrim architecture                                                    | `Approved architecture — exact values pending C5`                         |
+| `C5`  | Restrained color-use boundary, exact Dark/Light values, and signature hue through measured specimens | `Primitive source approved; mapping, validation, and signature pending`   |
+| `C6`  | Integrated S1–S5 appearance validation and Foundation promotion                                      | `Blocked by C5`                                                           |
 
 Approval of one batch does not approve another. Exact values cannot be chosen until
 the role architecture they instantiate is approved.
@@ -385,9 +441,10 @@ the role architecture they instantiate is approved.
 | `FCM-06` | Preserve NOSTALGIA domain colors under separate roles and require non-color cues and collision review.                                                                                                  | `Approved — 2026-08-08`            |
 | `FCM-07` | Use R-B's three purpose radius roles plus full rounding, with exact values deferred.                                                                                                                    | `Approved — 2026-08-08`            |
 | `FCM-08` | Keep shadows off default flat content and reserve them for justified raised, overlay, or scroll-boundary relationships.                                                                                 | `Approved — 2026-08-08`            |
-| `FCM-09` | Defer exact palette values, signature hue, and visualization colors until approved-role specimens.                                                                                                      | `Proposed`                         |
+| `FCM-09` | Defer semantic role mapping, signature hue, and visualization colors until approved-role specimens; FCM-12 resolves only the neutral primitive source.                                                  | `Proposed remainder`               |
 | `FCM-10` | Make neutral treatment the default for containers, links, filters, selection, and ordinary domain labels; reserve signature color first for identity and only separately approved rare primary actions. | `Approved — 2026-08-08`            |
 | `FCM-11` | Reject the over-accented signature-color comparison that colored selected containers, filter state, links, and multiple competing elements. It is not guide or production authority.                    | `Rejected — 2026-08-08`            |
+| `FCM-12` | Adopt the published Adobe Spectrum S2 grayscale values as the sole Dark/Light neutral primitive source; semantic mapping and validation remain pending.                                                 | `Approved — 2026-08-08`            |
 
 ## Approved First Review — 2026-08-08
 
@@ -436,3 +493,17 @@ means separation of signature/accent from focus, not automatic colored ownership
 all interaction states. Exact neutral values, the existence and hue of a canonical
 master color, and any rare primary-action exception remain C5 questions for a new
 review. No color specimen is approved at this checkpoint.
+
+## Approved Fourth Review — Spectrum S2 Neutral Source — 2026-08-08
+
+After requesting a broader comparison because neutral color occupies most of the
+interface, the user reviewed ten production-system Dark/Light sources under the same
+C5 role order. The user selected Adobe Spectrum S2 and explicitly approved the scope
+recorded in `FCM-12`: preserve its published grayscale primitive values exactly and
+map them to NosLog semantic roles without importing Adobe's component language or
+other visual-system decisions.
+
+This is approval of the master neutral primitive source and its published values. It
+is not approval of the provisional role mapping shown during comparison, nor of
+signature, focus, feedback, domain, data-visualization, border, shadow, radius, or
+component values. Those remain separate measured decisions.
