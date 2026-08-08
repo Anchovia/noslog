@@ -3,7 +3,8 @@
 ## Document Control
 
 - Status: `C5-2 surface mapping approved; broad foreground comparison completed in
-document 36; foreground, boundary, and ordinary interaction remain unapproved`
+document 36 and initial F-A specimen measured in document 37; foreground,
+boundary, and ordinary interaction remain unapproved`
 - Approval date: 2026-08-08
 - Canonical language: English
 - Korean companion:
@@ -30,6 +31,7 @@ interaction, and component-level validation remain open.
 - [Signature color research](./33-foundation-signature-color-research.md)
 - [C5 Spectrum surface validation](./35-foundation-c5-spectrum-surface-validation.md)
 - [C5 neutral foreground reference comparison](./36-foundation-c5-neutral-foreground-reference-comparison.md)
+- [C5 foreground specimen validation](./37-foundation-c5-foreground-specimen-validation.md)
 
 ## Focused Evidence
 

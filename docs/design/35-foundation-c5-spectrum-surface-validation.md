@@ -27,6 +27,7 @@ foreground, boundary, radius, or component geometry into Foundation authority.
 - [S4 Chart Viewer structural validation](./30-foundation-s4-chart-viewer-structural-validation.md)
 - [C5 Spectrum S2 semantic mapping](./34-foundation-c5-spectrum-semantic-mapping.md)
 - [C5 neutral foreground reference comparison](./36-foundation-c5-neutral-foreground-reference-comparison.md)
+- [C5 foreground specimen validation](./37-foundation-c5-foreground-specimen-validation.md)
 
 ## Authority Boundary
 

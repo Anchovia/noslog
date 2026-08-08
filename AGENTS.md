@@ -91,7 +91,7 @@ Sections:
   production implementation are separate approval gates. Approval of Adobe Spectrum
   S2 primitives does not by itself approve a proposed foreground, boundary,
   interaction, or component assignment.
-- Documents `32`–`36` under `docs/design/` record the current color authority and
+- Documents `32`–`37` under `docs/design/` record the current color authority and
   evidence. The over-accented `FCM-11` and `SIG-07` examples are `Rejected` and must
   not be reused as design evidence, downstream references, or implementation targets.
 

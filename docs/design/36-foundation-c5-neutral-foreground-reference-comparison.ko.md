@@ -2,7 +2,8 @@
 
 ## 문서 제어
 
-- 상태: `조사 완료 — 승인된 foreground mapping 없음`
+- 상태: `조사 완료; 문서 37에서 초기 F-A specimen 측정 — 승인된 foreground
+mapping 없음`
 - 정본 언어: 영어
 - 영어 정본:
   [36-foundation-c5-neutral-foreground-reference-comparison.md](./36-foundation-c5-neutral-foreground-reference-comparison.md)
@@ -28,6 +29,7 @@ Spectrum 기반의 잠정 가설이었으며 폭넓은 레퍼런스 비교가 �
 - [Signature color research](./33-foundation-signature-color-research.ko.md)
 - [C5 Spectrum S2 semantic mapping](./34-foundation-c5-spectrum-semantic-mapping.ko.md)
 - [C5 Spectrum surface validation](./35-foundation-c5-spectrum-surface-validation.ko.md)
+- [C5 foreground specimen 검증](./37-foundation-c5-foreground-specimen-validation.ko.md)
 
 ## 권위 및 비교 규칙
 
@@ -213,4 +215,4 @@ composition이다.
 | `C5F-05` | 현재 Spectrum S2 foreground alias를 `F-A`로 그대로 사용하고 secondary와 tertiary semantic alias는 처음에 subdued content를 공유한다.                      | `Proposed — 사용자 검토 필요`      |
 | `C5F-06` | `gray-600`은 Light `sunken`의 normal-text contrast에 실패하고 현재 Spectrum content alias ownership도 없으므로 universal tertiary text에 사용하지 않는다. | `Proposed — 사용자 검토 필요`      |
 | `C5F-07` | 측정된 NosLog content가 material Spectrum failure를 확립할 때만 `FCM-12`를 다시 연다. 다른 system은 source와 혼합하지 않고 교체해야 한다.                 | `Proposed governance`              |
-| `C5F-08` | `C5M-04` 결정 전에 필수 foreground specimen 및 adjacency record를 만든다.                                                                                 | `Proposed — 다음 검토`             |
+| `C5F-08` | `C5M-04` 결정 전에 필수 foreground specimen 및 adjacency record를 만든다.                                                                                 | `문서 37의 초기 근거`              |

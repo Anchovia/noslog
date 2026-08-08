@@ -2,7 +2,8 @@
 
 ## Document Control
 
-- Status: `Research complete — no foreground mapping approved`
+- Status: `Research complete; initial F-A specimen measured in document 37 — no
+foreground mapping approved`
 - Canonical language: English
 - Korean companion:
   [36-foundation-c5-neutral-foreground-reference-comparison.ko.md](./36-foundation-c5-neutral-foreground-reference-comparison.ko.md)
@@ -29,6 +30,7 @@ mapping document or validation specimen.
 - [Signature color research](./33-foundation-signature-color-research.md)
 - [C5 Spectrum S2 semantic mapping](./34-foundation-c5-spectrum-semantic-mapping.md)
 - [C5 Spectrum surface validation](./35-foundation-c5-spectrum-surface-validation.md)
+- [C5 foreground specimen validation](./37-foundation-c5-foreground-specimen-validation.md)
 
 ## Authority and Comparison Rules
 
@@ -216,4 +218,4 @@ gray substitution.
 | `C5F-05` | Use current Spectrum S2 foreground aliases intact as `F-A`; let secondary and tertiary semantic aliases initially share subdued content.                      | `Proposed — user review required`  |
 | `C5F-06` | Do not use `gray-600` as universal tertiary text because it fails normal-text contrast on Light `sunken` and has no current Spectrum content alias ownership. | `Proposed — user review required`  |
 | `C5F-07` | Reopen `FCM-12` only if measured NosLog content establishes a material Spectrum failure; another system must replace, not mix with, the source.               | `Proposed governance`              |
-| `C5F-08` | Build the required foreground specimen and adjacency record before deciding `C5M-04`.                                                                         | `Proposed — next review`           |
+| `C5F-08` | Build the required foreground specimen and adjacency record before deciding `C5M-04`.                                                                         | `Initial evidence in document 37`  |

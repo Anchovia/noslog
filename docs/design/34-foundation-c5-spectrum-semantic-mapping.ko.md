@@ -2,8 +2,9 @@
 
 ## 문서 관리
 
-- 상태: `C5-2 surface mapping 승인; 문서 36에서 broad foreground 비교 완료;
-foreground, boundary 및 일반 interaction은 미승인 상태`
+- 상태: `C5-2 surface mapping 승인; 문서 36에서 broad foreground 비교를 완료하고
+문서 37에서 초기 F-A specimen 측정; foreground, boundary 및 일반 interaction은
+미승인 상태`
 - 승인일: 2026-08-08
 - 정본 언어: 영어
 - 영어 정본:
@@ -29,6 +30,7 @@ component-level validation은 계속 열려 있다.
 - [시그니처 컬러 조사](./33-foundation-signature-color-research.ko.md)
 - [C5 Spectrum surface 검증](./35-foundation-c5-spectrum-surface-validation.ko.md)
 - [C5 neutral foreground 레퍼런스 비교](./36-foundation-c5-neutral-foreground-reference-comparison.ko.md)
+- [C5 foreground specimen 검증](./37-foundation-c5-foreground-specimen-validation.ko.md)
 
 ## 집중 근거
 

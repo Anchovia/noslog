@@ -27,6 +27,7 @@ component geometry를 Foundation 권위로 승격하지 않는다.
 - [S4 Chart Viewer 구조 검증](./30-foundation-s4-chart-viewer-structural-validation.ko.md)
 - [C5 Spectrum S2 semantic mapping](./34-foundation-c5-spectrum-semantic-mapping.ko.md)
 - [C5 neutral foreground 레퍼런스 비교](./36-foundation-c5-neutral-foreground-reference-comparison.ko.md)
+- [C5 foreground specimen 검증](./37-foundation-c5-foreground-specimen-validation.ko.md)
 
 ## 권위 경계
 
