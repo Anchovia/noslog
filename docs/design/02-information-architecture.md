@@ -6,7 +6,7 @@
 - Evidence status: `Current-product audit, repository inspection, browser evidence, and cited navigation guidance`
 - Date started: 2026-07-29
 - Date approved: 2026-07-30
-- Last decision update: 2026-08-03
+- Last decision update: 2026-08-08 (`IA-21` / Home `HOME-18`)
 - Canonical language: English
 - Korean companion:
   [02-information-architecture.ko.md](./02-information-architecture.ko.md)
@@ -33,6 +33,7 @@
 - **Observed:** Verified from the current product, repository, or browser.
 - **Proposed:** Recommended for discussion; not approved for implementation.
 - **Open:** Requires research, testing, or a user decision.
+- **Superseded:** Replaced by a later approved decision and retained for history.
 
 No proposed navigation or grouping in this document is approved merely because it is
 written here.
@@ -151,8 +152,9 @@ page briefs or visual design begin. It must:
   labeled header destination.
 - Music, rankings, and tiers currently occupy the header. In NosLog 2.0 they move into
   the More navigation blocks and the home grid, leaving the header visually restrained.
-- Data sync, feedback, and official news are useful but compete with core first-entry
-  tasks when always shown as independent home blocks.
+- Feedback and official news compete with core first-entry tasks when promoted as
+  independent primary Home blocks. Data Sync remains a required peer destination and
+  More-panel entry under the later approved Home contract.
 - The current secondary menu already keeps bingo, exams, arcades, and data sync as
   distinct links. The redesigned More panel must retain that separation while improving
   the responsive block layout.
@@ -316,12 +318,13 @@ Signed-out pages use a visible Login text button in the same account position.
 
 - Home retains direct grid-like navigation blocks for the separate service contents.
 - These blocks are page content, not a second global header and not a bottom navigation.
-- The home page brief will determine responsive column count, block proportions,
-  ordering, and icon treatment.
-- Keep Data Sync in a separate home row rather than adding it to the primary
-  navigation grid.
-- The grid may change columns and block dimensions with available space while retaining
-  the same destinations and semantic order.
+- The approved Home brief fixes eight equal peer destinations in the order Music →
+  Chart Viewer → Tiers → Rankings → Bingo → Exams → Arcades → Data Sync.
+- Keep Data Sync as the eighth Home block and as a stable More-panel entry. The former
+  separate Home row is superseded.
+- Use exactly four columns and two rows at every supported width. Block dimensions,
+  gaps, padding, and label wrapping may adapt to available space while retaining the
+  same destinations, semantic order, and `4 × 2` relationship.
 
 ## Confirmed Music and Chart Search Model
 
@@ -358,10 +361,9 @@ Home is an orientation and routing surface, not a miniature copy of every page.
 2. **Primary music search:** remain immediately available because music lookup is a
    high-frequency task. It includes the approved compact Music/Chart scope selector.
 3. **Navigation blocks:** retain separate direct blocks for Music, Chart Viewer,
-   Rankings, Tiers, Bingo, Exams, and Arcades. Do not introduce an umbrella content
-   label.
-4. **Play support:** keep Data Sync directly findable in its separate home row.
-5. **Editorial content:** show the newest three routine NosLog announcement links,
+   Rankings, Tiers, Bingo, Exams, Arcades, and Data Sync in the approved `4 × 2`
+   collection. Do not introduce an umbrella content label.
+4. **Editorial content:** show the newest three routine NosLog announcement links,
    followed by one latest official NOSTALGIA X post, after core product tasks.
 
 ### Explicitly Excluded Home Content
@@ -374,8 +376,8 @@ Home is an orientation and routing surface, not a miniature copy of every page.
 
 ### Retained Secondary Content
 
-- **Data sync:** do not remove it. Keep the separate home row and a stable More-panel
-  route.
+- **Data sync:** do not remove it. Keep it as the eighth peer in the Home destination
+  collection and retain a stable More-panel route.
 - **Feedback:** do not remove it. Move its existing dialog-based entry from Home to the
   consistent support area in the More panel. Do not duplicate it in the footer.
 - **Routine NosLog announcements:** show only the newest three title-and-publication-date
@@ -414,7 +416,7 @@ The exact block proportions remain open until representative layout work is appr
 - Tiers, Bingo, Exams, and Rankings must each remain independently reachable through
   the home grid and More panel.
 - Profile must be reachable through the signed-in identity control and public user links.
-- Data Sync must be reachable from its separate home row and the More panel.
+- Data Sync must be reachable from the Home destination collection and the More panel.
 - Settings must be reachable through one More-panel entry while signed out or signed
   in; authentication changes the available settings, not the destination identity.
 - Login must preserve one validated internal destination through Discord OAuth and
@@ -530,28 +532,29 @@ from its content rather than copied from GOV.UK, USWDS, or Carbon.
 
 ## Decision Register
 
-| ID    | Decision                        | Resolved direction or remaining question                                                                                                                 | Status     |
-| ----- | ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| IA-01 | Ordinary responsive navigation  | Top header: NosLog left; profile/account and More right; no bottom navigation                                                                            | `Approved` |
-| IA-02 | Chart-viewer shell              | Focused shell with reliable return path and fullscreen falling viewer                                                                                    | `Approved` |
-| IA-03 | Rankings navigation             | Access through its independent home block and More block, not a direct labeled header link                                                               | `Approved` |
-| IA-04 | Home signed-in personalization  | Do not add a stale-sync, recent-play, or unfinished-content card                                                                                         | `Rejected` |
-| IA-05 | Data Sync placement             | Keep the separate home row and a stable More entry                                                                                                       | `Approved` |
-| IA-06 | Feedback placement              | More-panel support utility on ordinary pages; retain the dialog flow, omit from Home and footer, decide focused-viewer access in its page brief          | `Approved` |
-| IA-07 | Official-news placement         | Show one latest `NOSTALGIA_573` source post through X's official widget after routine NosLog announcements; retain a localized official-channel fallback | `Approved` |
-| IA-08 | Tier/Bingo/Exam relationship    | Keep all three as independent page families and navigation blocks; no umbrella label                                                                     | `Approved` |
-| IA-09 | General desktop navigation      | Preserve the same top-header semantics; adapt More panel and content grid to available width                                                             | `Approved` |
-| IA-10 | Signed-out account control      | Show a visible Login text button in the account position                                                                                                 | `Approved` |
-| IA-11 | More-panel contents and order   | Use the approved two-column order for eight product destinations, a divider, Settings and Feedback utilities, then conditional Admin; no group heading   | `Approved` |
-| IA-12 | Header scroll behavior          | Compact layouts hide downward and reveal upward; wider desktop layouts remain persistently visible and sticky                                            | `Approved` |
-| IA-13 | Music/Chart search architecture | One shared search surface with a compact leading scope selector; Chart entry preselects Chart scope                                                      | `Approved` |
-| IA-14 | Persistent control density      | Avoid permanent button rows when a clear contextual selector or progressive disclosure preserves the task                                                | `Approved` |
-| IA-15 | Public Settings destination     | One `/[locale]/settings` entry for all users; guest experience preferences remain usable and account controls appear only after login                    | `Approved` |
-| IA-16 | Preference ownership            | Theme stays device-local; existing account language/title settings win after login, new accounts inherit explicit guest choices                          | `Approved` |
-| IA-17 | Footer destinations             | Keep Privacy and GitHub in the footer and do not duplicate them in More                                                                                  | `Approved` |
-| IA-18 | Routine announcement structure  | Home shows the newest three title-and-date links on every viewport; localized detail and archive retain complete history; omit the section when empty    | `Approved` |
-| IA-19 | Authentication and onboarding   | One Discord action, public-browse alternative, two-field completion, incomplete-profile gate, logout escape, and validated destination return            | `Approved` |
-| IA-20 | Official chart contribution     | Signed-in personal draft and immutable review submission for the official chart; administrator-only canonical publication; no alternate-chart catalog    | `Approved` |
+| ID    | Decision                        | Resolved direction or remaining question                                                                                                                 | Status       |
+| ----- | ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| IA-01 | Ordinary responsive navigation  | Top header: NosLog left; profile/account and More right; no bottom navigation                                                                            | `Approved`   |
+| IA-02 | Chart-viewer shell              | Focused shell with reliable return path and fullscreen falling viewer                                                                                    | `Approved`   |
+| IA-03 | Rankings navigation             | Access through its independent home block and More block, not a direct labeled header link                                                               | `Approved`   |
+| IA-04 | Home signed-in personalization  | Do not add a stale-sync, recent-play, or unfinished-content card                                                                                         | `Rejected`   |
+| IA-05 | Data Sync placement             | Superseded by `IA-21` and Home `HOME-18`; the earlier decision used a separate Home row while retaining a stable More entry                              | `Superseded` |
+| IA-06 | Feedback placement              | More-panel support utility on ordinary pages; retain the dialog flow, omit from Home and footer, decide focused-viewer access in its page brief          | `Approved`   |
+| IA-07 | Official-news placement         | Show one latest `NOSTALGIA_573` source post through X's official widget after routine NosLog announcements; retain a localized official-channel fallback | `Approved`   |
+| IA-08 | Tier/Bingo/Exam relationship    | Keep all three as independent page families and navigation blocks; no umbrella label                                                                     | `Approved`   |
+| IA-09 | General desktop navigation      | Preserve the same top-header semantics; adapt More panel and content grid to available width                                                             | `Approved`   |
+| IA-10 | Signed-out account control      | Show a visible Login text button in the account position                                                                                                 | `Approved`   |
+| IA-11 | More-panel contents and order   | Use the approved two-column order for eight product destinations, a divider, Settings and Feedback utilities, then conditional Admin; no group heading   | `Approved`   |
+| IA-12 | Header scroll behavior          | Compact layouts hide downward and reveal upward; wider desktop layouts remain persistently visible and sticky                                            | `Approved`   |
+| IA-13 | Music/Chart search architecture | One shared search surface with a compact leading scope selector; Chart entry preselects Chart scope                                                      | `Approved`   |
+| IA-14 | Persistent control density      | Avoid permanent button rows when a clear contextual selector or progressive disclosure preserves the task                                                | `Approved`   |
+| IA-15 | Public Settings destination     | One `/[locale]/settings` entry for all users; guest experience preferences remain usable and account controls appear only after login                    | `Approved`   |
+| IA-16 | Preference ownership            | Theme stays device-local; existing account language/title settings win after login, new accounts inherit explicit guest choices                          | `Approved`   |
+| IA-17 | Footer destinations             | Keep Privacy and GitHub in the footer and do not duplicate them in More                                                                                  | `Approved`   |
+| IA-18 | Routine announcement structure  | Home shows the newest three title-and-date links on every viewport; localized detail and archive retain complete history; omit the section when empty    | `Approved`   |
+| IA-19 | Authentication and onboarding   | One Discord action, public-browse alternative, two-field completion, incomplete-profile gate, logout escape, and validated destination return            | `Approved`   |
+| IA-20 | Official chart contribution     | Signed-in personal draft and immutable review submission for the official chart; administrator-only canonical publication; no alternate-chart catalog    | `Approved`   |
+| IA-21 | Home destination collection     | Use eight equal peer blocks including Data Sync in exactly four columns and two rows at every supported width; retain the separate Data Sync More entry  | `Approved`   |
 
 ## Phase Approval
 
@@ -561,7 +564,9 @@ register. At that approval, visual composition, exact responsive ordering, and
 page-specific states remained page-brief decisions; the approval did not silently
 resolve them. The
 user-approved Home brief later refined the editorial destinations recorded in `IA-07`
-and `IA-18` without changing the approved page-family hierarchy. The subsequently
+and `IA-18` without changing the approved page-family hierarchy. On 2026-08-08, Home
+`HOME-18` and `IA-21` also superseded `IA-05`'s separate Data Sync Home row and fixed
+the eight-peer destination collection at `4 × 2` across supported widths. The subsequently
 approved shared-discovery brief refined signed-out personal-control behavior and the
 Music/Chart scope contracts without changing that hierarchy. The subsequently approved
 shared-shell brief resolved the global destination order, compact modal, wide popover,
