@@ -2,15 +2,15 @@
 
 ## 문서 관리
 
-- 상태: `Core specimen 검증 완료; 확장 radio/switch/menu/popover actual-Chrome
-교차 검증 대기; NB-A 사용자 검토 대기; C5M-05 미종결`
+- 상태: `기술 검증 완료; NB-A 승인; C5M-05 종료`
 - 기술 검증일: 2026-08-09
+- 사용자 승인일: 2026-08-09
 - 정본 언어: 영어
 - 영어 정본:
   [39-foundation-c5-neutral-boundary-specimen-validation.md](./39-foundation-c5-neutral-boundary-specimen-validation.md)
-- 범위: `C5M-05` 결정 전에 문서 `38`에서 제안한 exact Spectrum S2 중립
-  boundary ladder `NB-A`를 승인된 `M-A` surface, 대표 NosLog 구조, 일반 state,
-  접근성 override에 적용
+- 범위: `C5M-05` 의사결정 근거로 문서 `38`의 exact Spectrum S2 중립 boundary
+  ladder `NB-A`를 승인된 `M-A` surface, 대표 NosLog 구조, 일반 state, 접근성
+  override에 적용
 - 입력: 승인된 문서 `25`, `35`, `37`; 문서 `38`의 boundary 조사; exact Spectrum
   S2 alias; 전용
   [interactive boundary specimen](./specimens/c5-neutral-boundary-specimen.html)
@@ -32,7 +32,7 @@
 
 ## 권위 경계
 
-승인된 `M-A` surface와 `F-A` foreground를 고정했다. Specimen은 다음의 제안된
+승인된 `M-A` surface와 `F-A` foreground를 고정했다. Specimen은 다음의 승인된
 `NB-A` boundary 값만 사용했다.
 
 | NosLog role      | Spectrum source |     Light |      Dark | 계약                                                                                                    |
@@ -101,7 +101,7 @@ Host padding과 vertical scrollbar가 좁은 browser width의 inner frame을 의
 필수 `320 CSS px` product minimum 아래의 추가 pressure를 제공하며, exact `320px`와
 대표 `390px` specimen canvas는 위 60개 조합 matrix에서 다뤘다.
 
-### Base native keyboard 순서
+### Native keyboard 순서
 
 Chrome native tab order는 Controls scene에 다음 순서로 도달했다.
 
@@ -109,16 +109,18 @@ Chrome native tab order는 Controls scene에 다음 순서로 도달했다.
 2. visible-content action
 3. 선택된 `aria-pressed="true"` action
 4. native checkbox
-5. focus-instrumentation action
-6. pressed/hover-content action
+5. native radio
+6. semantic `role="switch"` action
+7. focus-instrumentation action
+8. pressed/hover-content action
 
 Native disabled action은 건너뛰었다. `tabindex`는 추가하지 않았다. 정상 theme focus는
 browser `outline: auto`를 사용했다. 이는 reachability와 state semantics를 입증하지만
 NosLog focus-ring color 또는 geometry를 승인하지 않는다.
 
-확장 fixture는 이후 checkbox와 focus-instrumentation action 사이에 명시적 native radio와
-semantic switch를 추가했다. Source와 accessibility 순서는 올바르지만, `C5M-05`를 닫기
-전 확장 fixture의 최종 actual-Chrome Tab 순서를 교차 검증해야 한다.
+확장 fixture의 actual-Chrome 순서는 활성화된 control 8개에 source 순서대로 도달했다.
+Native disabled action은 순서에 들어오지 않았고 radio와 switch는 native/ARIA state
+semantics를 유지했다.
 
 ### 실제 200% Chrome zoom
 
@@ -144,24 +146,23 @@ Runtime 측정에서 `devicePixelRatio`가 `2`에서 `4`로, page CSS viewport�
 정리 전 Chrome zoom을 100%로 되돌리고 runtime 측정이 `devicePixelRatio: 2`로
 복원된 것을 확인했다.
 
-이 30-state 실제 zoom 실행은 명시적 radio/switch/menu/popover fixture 추가 전이었다.
-확장 specimen은 반복한 `60`개 canvas/text-scale matrix와 영향받는 실제 browser-width
-`16`개 state를 통과했으며, `320px`의 보충 200% text pressure도 포함한다. 최종 기술
-종결 전 영향받는 Controls와 Overlay scene을 실제 Chrome 200%에서 한 번 더 교차
-검증해야 한다.
+명시적 radio/switch/menu/popover fixture를 추가한 뒤 이 30-state 실행을 반복했다.
+현재 확장 specimen은 `30/30` state에서 exact value, target size, visible escape,
+specimen overflow, document overflow 검사를 모두 통과했다.
 
 ### Active forced colors
 
 Chrome DevTools Rendering emulation을 `forced-colors: active`로 설정했다. Runtime
 평가에서 `matchMedia('(forced-colors: active)').matches === true`를 확인했다.
 
-| Assertion                                                             | 결과 |
-| --------------------------------------------------------------------- | ---: |
-| `forced-color-adjust: none`을 쓰는 product descendant                 |  `0` |
-| Dark와 Light custom surface/boundary가 system color로 대체            | 통과 |
-| Native keyboard 순서가 disabled를 건너뛰고 이후 action에 도달         | 통과 |
-| Focus instrumentation이 보이는 user-agent `auto` outline을 유지       | 통과 |
-| 측정한 Controls composition의 specimen-frame horizontal overflow 없음 | 통과 |
+| Assertion                                                                             |           결과 |
+| ------------------------------------------------------------------------------------- | -------------: |
+| `320/390/768px`의 확장 Dark/Light Controls 및 Overlay state                           | `12 / 12` 통과 |
+| `forced-color-adjust: none`을 쓰는 product descendant                                 |            `0` |
+| Native radio, semantic switch, dialog, popover, menu item이 system-owned color로 대체 |           통과 |
+| 확장 8-control keyboard 순서가 disabled를 건너뛰고 이후 action에 도달                 |           통과 |
+| Focus instrumentation이 보이는 user-agent `auto` outline을 유지                       |           통과 |
+| 측정한 12개 state의 specimen-frame horizontal overflow 또는 visible escape            |            `0` |
 
 활성 system palette는 시험 환경에서 black Canvas, white CanvasText/boundary,
 보이는 cyan user-agent focus outline으로 계산됐다. 이 color는 forced colors가 활성일
@@ -170,9 +171,10 @@ Chrome DevTools Rendering emulation을 `forced-colors: active`로 설정했다. 
 Emulation을 `No emulation`으로 되돌리고 runtime forced colors가 `false`가 된 것을
 확인했으며, DevTools를 닫고 Chrome을 100%로 유지한 뒤 정리했다.
 
-이 active test는 base Controls composition을 다뤘다. 확장 radio, switch,
-menu/popover는 system color를 상속하고 갱신된 forced-colors stylesheet에 포함됐지만,
-해당 exact fixture의 active Chrome 검증은 남아 있다.
+확장 radio, switch, dialog, popover, menu-item fixture는 모두
+`forced-color-adjust: auto`로 계산됐다. Dark와 Light presentation control에서 active
+system color가 동일해 이 mode의 ownership이 `NB-A`가 아니라 user agent에 있음을
+확인했다.
 
 ## Exact 필수 경계 Adjacency
 
@@ -227,7 +229,7 @@ ownership을 주장하지 않았다.
 이 수정은 specimen reflow와 측정 정확도를 바꿨으며 `NB-A`, `M-A`, `F-A` 값은 바꾸지
 않았다.
 
-## 사용자 검토를 위한 초기 관찰
+## 승인된 관찰
 
 1. `divider`와 `border-subtle`은 두 appearance에서 의도적으로 조용하다. Structure가
    이미 관계를 전달하는 곳에서만 작동한다.
@@ -240,30 +242,32 @@ ownership을 주장하지 않았다.
 5. Exact Spectrum 네 step은 Tailwind value, local hue shift, 추가 neutral 없이 측정한
    responsibility를 모두 다룬다.
 
-이는 측정된 관찰이며 최종 사용자 승인이 아니다.
+사용자는 확장 specimen을 검토한 뒤 2026-08-09에 이 visual direction을 수용했다.
+따라서 이 관찰은 승인된 `NB-A` Foundation mapping을 뒷받침하지만 component alias나
+production styling을 승인하지 않는다.
 
 ## 사용자 검토 및 다음 gate
 
-문서 `38`이 요구한 core 기술 근거는 완료됐다. `C5M-05`를 닫기 전에 확장
-radio/switch/menu/popover fixture에 대해 영향받는 actual-Chrome 200%와 active
-forced-colors/Tab 교차 검증을 마쳐야 한다. 사용자가 specimen을 시각적으로 검토하고
-mapping을 명시적으로 수용하거나 기각할 때까지도 `NB-A`를 열린 상태로 둔다.
+확장 actual-Chrome 200%, active-forced-colors, Tab 교차 검증은 측정 실패 없이
+완료됐다. 사용자가 `NB-A`를 수용했고 문서 `34`, `38`, `39`는 이제 그 결정을
+동기화하며 `C5M-05`를 종료한다.
 
-사용자가 `NB-A`를 승인하면 다음 문서 작업은 문서 `34`, `38`, `39`를 동기화하고
-`C5M-05`를 종료하는 것이다. Component alias, focus, feedback, 자동 selected-state
-처리는 별도 gate로 유지한다. 이 Foundation mapping 승인은 production 구현이나
-Controls-scene instrumentation의 최종 component 복사를 허가하지 않는다.
+다음 color Foundation gate는 일반 neutral interaction 및 selection-state mapping인
+`C5M-06`이다. 별도의 폭넓은 reference 비교와 사용자 승인이 필요하다. Component
+alias, focus, feedback, 자동 selected-state boundary 처리는 계속 별도 gate다. `NB-A`
+승인은 production 구현이나 Controls-scene instrumentation의 최종 component 복사를
+허가하지 않는다.
 
 ## 의사결정 및 검증 로그
 
-| ID       | 항목                                                                                                                                                               | 상태                               |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------- |
-| `C5N-01` | 승인된 `M-A`와 `F-A`를 고정하고 exact `gray-200/300/400/600` `NB-A` 값만 시험한다.                                                                                 | `Observed specimen rule`           |
-| `C5N-02` | 최종 Dark/Light canvas, text-scale, scene matrix는 exact value와 함께 `60/60` state를 통과했고 frame overflow 또는 escape가 없다.                                  | `Observed — 2026-08-09`            |
-| `C5N-03` | 실제 browser width `320/390/560/1280px`는 document 또는 specimen horizontal overflow 없이 Dark/Light scene `40/40` state를 통과했다.                               | `Observed — 2026-08-09`            |
-| `C5N-04` | Base 실제 Chrome 200% zoom은 Dark/Light, canvas, scene `30/30` state를 통과했으며 확장 Controls/Overlay 교차 검증은 남아 있다.                                     | `Observed base — 확장 재검증 대기` |
-| `C5N-05` | Base native tab order는 disabled를 건너뛰고 reachability를 보존한다. 확장 radio/switch 순서는 actual-Chrome 확인이 남아 있다.                                      | `Observed base — 확장 재검증 대기` |
-| `C5N-06` | Base active forced colors는 custom color를 대체하고 `forced-color-adjust: none`을 0으로 유지하며 복원됐다. 확장 control/overlay fixture active 재검증이 남아 있다. | `Observed base — 확장 재검증 대기` |
-| `C5N-07` | Sole-cue ownership을 주장하는 모든 specimen boundary는 `border-strong`을 쓰고 내부와 외부 opaque color 양쪽에서 `3:1`을 넘는다.                                    | `Observed — 2026-08-09`            |
-| `C5N-08` | Focus, feedback, error hue, component alias, radius, elevation, 자동 selected-state boundary는 이 gate 밖에 남긴다.                                                | `Proposed boundary of authority`   |
-| `C5N-09` | 확장 기술 재검증과 별도의 명시적 사용자 시각 결정이 모두 끝나기 전에는 `C5M-05`를 닫거나 `NB-A`를 승격하지 않는다.                                                 | `기술 및 사용자 검토 대기`         |
+| ID       | 항목                                                                                                                                   | 상태                                       |
+| -------- | -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| `C5N-01` | 승인된 `M-A`와 `F-A`를 고정하고 exact `gray-200/300/400/600` `NB-A` 값만 시험한다.                                                     | `Observed specimen rule`                   |
+| `C5N-02` | 최종 Dark/Light canvas, text-scale, scene matrix는 exact value와 함께 `60/60` state를 통과했고 frame overflow 또는 escape가 없다.      | `Observed — 2026-08-09`                    |
+| `C5N-03` | 실제 browser width `320/390/560/1280px`는 document 또는 specimen horizontal overflow 없이 Dark/Light scene `40/40` state를 통과했다.   | `Observed — 2026-08-09`                    |
+| `C5N-04` | 현재 확장 actual Chrome 200% zoom은 document 또는 specimen overflow 없이 Dark/Light, canvas, scene `30/30` state를 통과했다.           | `Observed — 2026-08-09`                    |
+| `C5N-05` | 확장 native Tab 순서는 radio와 switch를 포함한 활성 control 8개에 source 순서대로 도달하고 disabled를 건너뛴다.                        | `Observed — 2026-08-09`                    |
+| `C5N-06` | 확장 active forced colors는 영향받는 Controls/Overlay `12/12` state를 통과하고 `forced-color-adjust: none`을 0으로 유지한 뒤 복원됐다. | `Observed — 2026-08-09`                    |
+| `C5N-07` | Sole-cue ownership을 주장하는 모든 specimen boundary는 `border-strong`을 쓰고 내부와 외부 opaque color 양쪽에서 `3:1`을 넘는다.        | `Observed — 2026-08-09`                    |
+| `C5N-08` | Focus, feedback, error hue, component alias, radius, elevation, 자동 selected-state boundary는 이 gate 밖에 남긴다.                    | `Approved authority boundary — 2026-08-09` |
+| `C5N-09` | 확장 기술 재검증과 명시적 사용자 시각 결정이 끝났으므로 `NB-A`를 승격하고 `C5M-05`를 종료한다.                                         | `Approved — 2026-08-09`                    |

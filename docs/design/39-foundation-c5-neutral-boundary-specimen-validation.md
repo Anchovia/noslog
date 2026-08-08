@@ -2,15 +2,15 @@
 
 ## Document Control
 
-- Status: `Core specimen validation complete; expanded radio/switch/menu/popover
-actual-Chrome cross-check pending; NB-A user review pending; C5M-05 remains open`
+- Status: `Technical validation complete; NB-A approved; C5M-05 closed`
 - Technical-validation date: 2026-08-09
+- User-approval date: 2026-08-09
 - Canonical language: English
 - Korean companion:
   [39-foundation-c5-neutral-boundary-specimen-validation.ko.md](./39-foundation-c5-neutral-boundary-specimen-validation.ko.md)
-- Scope: apply document `38` proposed `NB-A` exact Spectrum S2 neutral boundary
+- Scope: apply document `38` `NB-A` exact Spectrum S2 neutral boundary
   ladder to approved `M-A` surfaces, representative NosLog structures, ordinary
-  states, and accessibility overrides before deciding `C5M-05`
+  states, and accessibility overrides as decision evidence for `C5M-05`
 - Inputs: approved documents `25`, `35`, and `37`; boundary research in document
   `38`; exact Spectrum S2 aliases; and the dedicated
   [interactive boundary specimen](./specimens/c5-neutral-boundary-specimen.html)
@@ -33,7 +33,7 @@ measurement fixtures; their geometry is not a component recommendation.
 ## Authority Boundary
 
 Approved `M-A` surfaces and `F-A` foregrounds were held constant. The specimen used
-only the following proposed `NB-A` boundary values:
+only the following approved `NB-A` boundary values:
 
 | NosLog role      | Spectrum source |     Light |      Dark | Contract                                                                                                               |
 | ---------------- | --------------- | --------: | --------: | ---------------------------------------------------------------------------------------------------------------------- |
@@ -102,7 +102,7 @@ Document and specimen horizontal overflow were zero in all forty states. The
 the exact `320px` and representative `390px` specimen canvases were covered by the
 sixty-combination matrix above.
 
-### Base native keyboard sequence
+### Native keyboard sequence
 
 Chrome native tab order reached the Controls scene in this sequence:
 
@@ -110,17 +110,18 @@ Chrome native tab order reached the Controls scene in this sequence:
 2. visible-content action;
 3. selected `aria-pressed="true"` action;
 4. native checkbox;
-5. focus-instrumentation action;
-6. pressed/hover-content action.
+5. native radio;
+6. semantic `role="switch"` action;
+7. focus-instrumentation action;
+8. pressed/hover-content action.
 
 The native disabled action was skipped. No `tabindex` was added. Normal-theme focus
 used the browser `outline: auto`; this proves reachability and state semantics, not a
 NosLog focus-ring color or geometry.
 
-The expanded fixture subsequently added an explicit native radio and semantic switch
-between the checkbox and focus-instrumentation action. Their source and accessibility
-order are correct, but the final actual-Chrome Tab sequence for the expanded fixture
-remains a required cross-check before `C5M-05` can close.
+The expanded fixture's actual-Chrome sequence reached all eight enabled controls in
+source order. The native disabled action was not inserted into the sequence, and the
+radio and switch retained their native/ARIA state semantics.
 
 ### Actual 200% Chrome zoom
 
@@ -146,24 +147,23 @@ combinations were measured.
 Chrome zoom was restored to 100%, and runtime measurement returned to
 `devicePixelRatio: 2` before cleanup.
 
-This thirty-state actual-zoom run preceded the explicit radio/switch/menu/popover
-fixtures. The expanded specimen passed the repeated `60`-state canvas/text-scale
-matrix and the affected `16` actual-browser-width states, including `320px` at
-supplemental 200% text pressure. The affected Controls and Overlay scenes still need
-one actual-Chrome 200% cross-check before final technical closure.
+This thirty-state run was repeated after the explicit radio/switch/menu/popover
+fixtures were added. The current expanded specimen passed exact-value, target-size,
+visible-escape, specimen-overflow, and document-overflow checks in all `30/30` states.
 
 ### Active forced colors
 
 Chrome DevTools Rendering emulation was set to `forced-colors: active`. Runtime
 evaluation confirmed `matchMedia('(forced-colors: active)').matches === true`.
 
-| Assertion                                                               | Result |
-| ----------------------------------------------------------------------- | -----: |
-| Product descendants using `forced-color-adjust: none`                   |    `0` |
-| Dark and Light custom surfaces/boundaries replaced by system colors     |   Pass |
-| Native keyboard sequence skipped disabled and reached later actions     |   Pass |
-| Focus instrumentation retained a visible user-agent `auto` outline      |   Pass |
-| Specimen-frame horizontal overflow in the measured Controls composition |   Pass |
+| Assertion                                                                                      |         Result |
+| ---------------------------------------------------------------------------------------------- | -------------: |
+| Expanded Dark/Light Controls and Overlay states at `320/390/768px`                             | `12 / 12` pass |
+| Product descendants using `forced-color-adjust: none`                                          |            `0` |
+| Native radio, semantic switch, dialog, popover, and menu items replaced by system-owned colors |           Pass |
+| Expanded eight-control keyboard sequence skipped disabled and reached later actions            |           Pass |
+| Focus instrumentation retained a visible user-agent `auto` outline                             |           Pass |
+| Specimen-frame horizontal overflow or visible escape in the twelve measured states             |            `0` |
 
 The active system palette computed black Canvas, white CanvasText/boundaries,
 and a visible cyan user-agent focus outline in the tested environment. These colors
@@ -173,9 +173,10 @@ overrides and are not normal Dark-theme `NB-A` candidates.
 Emulation was reset to `No emulation`, runtime forced colors returned `false`,
 DevTools was closed, and Chrome remained at 100% before cleanup.
 
-This active test covered the base Controls composition. The expanded radio, switch,
-and menu/popover inherit system colors and were included in the updated forced-colors
-stylesheet, but active Chrome verification of those exact fixtures remains pending.
+The expanded radio, switch, dialog, popover, and menu-item fixtures all computed
+`forced-color-adjust: auto`. Their active system colors were identical across the
+Dark and Light presentation controls, confirming that the user-agent palette, not
+`NB-A`, owned this mode.
 
 ## Exact Necessary-Boundary Adjacency
 
@@ -234,7 +235,7 @@ not changed by the specimen.
 These corrections changed specimen reflow and measurement accuracy. They did not
 change any `NB-A`, `M-A`, or `F-A` value.
 
-## Initial Observations for User Review
+## Approved Observations
 
 1. `divider` and `border-subtle` remain intentionally quiet in both appearances;
    they work only where structure already communicates the relationship.
@@ -247,32 +248,32 @@ change any `NB-A`, `M-A`, or `F-A` value.
 5. The four exact Spectrum steps cover the measured responsibilities without a
    Tailwind value, local hue shift, or additional neutral.
 
-These are measured observations, not final user approval.
+The user accepted this visual direction on 2026-08-09 after reviewing the expanded
+specimen. These observations therefore support the approved `NB-A` Foundation
+mapping; they do not approve component aliases or production styling.
 
 ## User Review and Next Gate
 
-The core technical evidence required by document `38` is complete. Before `C5M-05`
-can close, the expanded radio/switch/menu/popover fixtures still require the affected
-actual-Chrome 200% and active-forced-colors/Tab cross-checks. `NB-A` also remains open
-until the user visually reviews the specimen and explicitly accepts or rejects the
-mapping.
+The expanded actual-Chrome 200%, active-forced-colors, and Tab cross-checks completed
+without a measured failure. The user accepted `NB-A`; documents `34`, `38`, and `39`
+now synchronize that decision, and `C5M-05` is closed.
 
-If the user approves `NB-A`, the next documentation task is to synchronize documents
-`34`, `38`, and `39`, close `C5M-05`, and preserve component aliases, focus, feedback,
-and automatic selected-state treatment as separate gates. Approval of this Foundation
-mapping will not authorize production implementation or copy the Controls-scene
-instrumentation into final components.
+The next color Foundation gate is `C5M-06`: ordinary neutral interaction and
+selection-state mapping. It requires its own broad reference comparison and user
+approval. Component aliases, focus, feedback, and automatic selected-state boundary
+treatment remain separate gates. `NB-A` approval does not authorize production
+implementation or copying the Controls-scene instrumentation into final components.
 
 ## Decision and Validation Log
 
-| ID       | Entry                                                                                                                                                                          | Status                                     |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------ |
-| `C5N-01` | Exercise exact `gray-200/300/400/600` `NB-A` values only, while holding approved `M-A` and `F-A` constant.                                                                     | `Observed specimen rule`                   |
-| `C5N-02` | Final Dark/Light canvas, text-scale, and scene matrix passed `60/60` states with exact values and no frame overflow or escape.                                                 | `Observed — 2026-08-09`                    |
-| `C5N-03` | Actual browser widths `320/390/560/1280px` passed `40/40` Dark/Light scene states without document or specimen horizontal overflow.                                            | `Observed — 2026-08-09`                    |
-| `C5N-04` | Base actual Chrome 200% zoom passed `30/30` Dark/Light, canvas, and scene states; expanded Controls/Overlay cross-check remains.                                               | `Observed base — expanded recheck pending` |
-| `C5N-05` | Base native tab order skips disabled and preserves reachability; the expanded radio/switch sequence still requires actual-Chrome confirmation.                                 | `Observed base — expanded recheck pending` |
-| `C5N-06` | Base active forced colors replaces custom colors, keeps `forced-color-adjust: none` at zero, and is reset; expanded control/overlay fixtures still require the active recheck. | `Observed base — expanded recheck pending` |
-| `C5N-07` | Every specimen boundary claiming sole-cue ownership uses `border-strong` and exceeds `3:1` against both inside and outside opaque colors.                                      | `Observed — 2026-08-09`                    |
-| `C5N-08` | Focus, feedback, error hue, component aliases, radius, elevation, and automatic selected-state boundary remain outside this gate.                                              | `Proposed boundary of authority`           |
-| `C5N-09` | Do not close `C5M-05` or promote `NB-A` until the expanded technical rechecks and a separate explicit user visual decision are complete.                                       | `Technical and user review pending`        |
+| ID       | Entry                                                                                                                                     | Status                                     |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| `C5N-01` | Exercise exact `gray-200/300/400/600` `NB-A` values only, while holding approved `M-A` and `F-A` constant.                                | `Observed specimen rule`                   |
+| `C5N-02` | Final Dark/Light canvas, text-scale, and scene matrix passed `60/60` states with exact values and no frame overflow or escape.            | `Observed — 2026-08-09`                    |
+| `C5N-03` | Actual browser widths `320/390/560/1280px` passed `40/40` Dark/Light scene states without document or specimen horizontal overflow.       | `Observed — 2026-08-09`                    |
+| `C5N-04` | Current expanded actual Chrome 200% zoom passed `30/30` Dark/Light, canvas, and scene states with no document or specimen overflow.       | `Observed — 2026-08-09`                    |
+| `C5N-05` | Expanded native Tab order reaches eight enabled controls in source order, including radio and switch, while skipping disabled.            | `Observed — 2026-08-09`                    |
+| `C5N-06` | Expanded active forced colors passed `12/12` affected Controls/Overlay states, kept `forced-color-adjust: none` at zero, and was reset.   | `Observed — 2026-08-09`                    |
+| `C5N-07` | Every specimen boundary claiming sole-cue ownership uses `border-strong` and exceeds `3:1` against both inside and outside opaque colors. | `Observed — 2026-08-09`                    |
+| `C5N-08` | Focus, feedback, error hue, component aliases, radius, elevation, and automatic selected-state boundary remain outside this gate.         | `Approved authority boundary — 2026-08-09` |
+| `C5N-09` | The expanded technical rechecks and explicit user visual decision are complete; promote `NB-A` and close `C5M-05`.                        | `Approved — 2026-08-09`                    |

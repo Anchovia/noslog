@@ -2,10 +2,11 @@
 
 ## Document Control
 
-- Status: `C5-2 surface mapping and exact F-A foreground mapping approved; C5M-04
-closed after document 37 technical validation; boundary and focus remain unapproved`
+- Status: `M-A surfaces, F-A foregrounds, and NB-A neutral boundaries approved;
+C5M-05 closed after document 39 technical validation; interaction and focus remain open`
 - Surface-mapping approval date: 2026-08-08
 - Foreground-mapping approval date: 2026-08-09
+- Neutral-boundary approval date: 2026-08-09
 - Canonical language: English
 - Korean companion:
   [34-foundation-c5-spectrum-semantic-mapping.ko.md](./34-foundation-c5-spectrum-semantic-mapping.ko.md)
@@ -15,15 +16,15 @@ closed after document 37 technical validation; boundary and focus remain unappro
   ordinary interaction roles
 - Inputs: approved documents `25`, `32`, and `33`; current Spectrum S2 token data;
   WCAG 2.2; and the previously reviewed equal-role palette comparison
-- Excludes: approval of boundary, ordinary interaction containers, focus,
+- Excludes: approval of ordinary interaction containers, focus,
   signature/feedback/domain or data-visualization hues, radius and shadow dimensions,
   component styling, high-fidelity screens, and application implementation
 
 This document does not reopen `FCM-12`. Adobe Spectrum S2 remains the approved exact
 Dark/Light neutral primitive source. `C5M-03` assigns the approved C1-B surface roles
-through the current Spectrum S2 aliases, and `C5M-04` assigns the approved exact
-`F-A` foreground mapping. Boundary, ordinary interaction-container, focus, and
-component-level validation remain open.
+through the current Spectrum S2 aliases, `C5M-04` assigns the approved exact `F-A`
+foreground mapping, and `C5M-05` assigns approved exact `NB-A` neutral boundaries.
+Ordinary interaction-container, focus, and component-level validation remain open.
 
 ## Related Documents
 
@@ -160,24 +161,25 @@ exact `F-A` as the final C5 foreground mapping and closed `C5M-04` on 2026-08-09
 `4.02:1` against Light `sunken`, and no current Spectrum content alias gives it that
 ownership.
 
-## Proposed Neutral Boundary Mapping
+## Approved Neutral Boundary Mapping
 
-| NosLog role      | Spectrum primitive | Light     | Dark      | Contract                                                                                               |
-| ---------------- | ------------------ | --------- | --------- | ------------------------------------------------------------------------------------------------------ |
-| `divider`        | `gray-200`         | `#e1e1e1` | `#323232` | Decorative rhythm and proximity grouping only                                                          |
-| `border-subtle`  | `gray-300`         | `#dadada` | `#393939` | Decorative framing and nonessential boundaries                                                         |
-| `border-default` | `gray-400`         | `#c6c6c6` | `#444444` | Field/container boundary when shape, label, and layout also identify the element                       |
-| `border-strong`  | `gray-600`         | `#717171` | `#8a8a8a` | Essential control or graphic boundary, selected emphasis, or another state requiring measured contrast |
+| NosLog role      | Spectrum primitive | Light     | Dark      | Contract                                                                                                                     |
+| ---------------- | ------------------ | --------- | --------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `divider`        | `gray-200`         | `#e1e1e1` | `#323232` | Decorative rhythm only; spacing, headings, or structure already express the relationship                                     |
+| `border-subtle`  | `gray-300`         | `#dadada` | `#393939` | Nonessential framing and the published disabled-border value; semantic aliases remain separate even when the value is shared |
+| `border-default` | `gray-400`         | `#c6c6c6` | `#444444` | Ordinary field/container boundary only when label, fill, shape, placement, or another sufficient cue already identifies it   |
+| `border-strong`  | `gray-600`         | `#717171` | `#8a8a8a` | Necessary neutral control or graphic boundary that must remain identifiable on every approved surface                        |
 
 The first three roles intentionally remain below `3:1` against some adjacent
 surfaces. They cannot be the only cue for a required control, selected state, or
-meaningful graphic. `border-strong` remains above `3:1` on all proposed M-A surfaces;
+meaningful graphic. `border-strong` remains above `3:1` on all approved M-A surfaces;
 its minimum measured pair is `4.02:1` in Light and `4.61:1` in Dark.
 
-This proposal does not inherit the white system outlines observed during active
+This approved mapping does not inherit the white system outlines observed during active
 forced-colors testing as normal Dark-theme styling. Those outlines are browser/user
-accessibility overrides. Normal-theme boundary values remain unapproved under
-`C5M-05`, and focus remains a separate later decision.
+accessibility overrides. The normal-theme boundary values were approved after the
+document `38` comparison and document `39` specimen; focus remains a separate later
+decision.
 
 ## Proposed Ordinary Neutral Interaction Mapping
 
@@ -229,8 +231,9 @@ are:
 
 The `C5M-03` surface approval by itself authorized representative guide specimens and
 measurement; it did not promote any other role. Foreground was approved separately
-through `C5M-04` after documents `36` and `37`. Boundary, interaction containers,
-focus, signature, component, and production implementation values remain unapproved.
+through `C5M-04` after documents `36` and `37`, and neutral boundaries through
+`C5M-05` after documents `38` and `39`. Interaction containers, focus, signature,
+component, and production implementation values remain unapproved.
 `M-B` may remain visible only as labeled historical evidence; it is not a fallback
 implementation path.
 
@@ -242,7 +245,7 @@ implementation path.
 | `C5M-02` | Treat the previous comparison's role assignment as a provisional source-selection specimen, not an approved semantic map.                                | `Observed`                 |
 | `C5M-03` | Map C1-B surfaces through `M-A`, preserving current Spectrum S2 base/layer/elevated/pasteboard/overlay aliases.                                          | `Approved — 2026-08-08`    |
 | `C5M-04` | Decide foreground mapping only after document `36` broad comparison and a dedicated `F-A` specimen; do not treat `gray-900` as generic heading emphasis. | `Approved — 2026-08-09`    |
-| `C5M-05` | Map decorative, subtle, default, and strong boundaries through `gray-200`, `gray-300`, `gray-400`, and `gray-600`.                                       | `Proposed — separate gate` |
+| `C5M-05` | Map decorative, subtle, default, and strong boundaries through `gray-200`, `gray-300`, `gray-400`, and `gray-600`.                                       | `Approved — 2026-08-09`    |
 | `C5M-06` | Keep ordinary interaction and selection neutral; allow official subtle/disabled aliases only under the documented component-level constraints.           | `Proposed — separate gate` |
 | `C5M-07` | Do not mix the older public background-layer table with current Spectrum S2 aliases in one mapping; record any future deviation explicitly.              | `Proposed governance rule` |
 | `C5M-08` | Retain `M-B` only as historical source-selection evidence; reject it as the C5 surface mapping and as an automatic fallback.                             | `Rejected — 2026-08-08`    |

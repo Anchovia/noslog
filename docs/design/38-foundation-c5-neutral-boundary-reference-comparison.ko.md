@@ -2,8 +2,8 @@
 
 ## 문서 관리
 
-- 상태: `조사 완료; NB-A core specimen 검증 완료; 확장 actual-Chrome 교차 검증과
-사용자 검토 대기; C5M-05 미종결`
+- 상태: `조사 및 확장 기술 검증 완료; NB-A 승인; C5M-05 종료`
+- 사용자 승인일: 2026-08-09
 - 정본 언어: 영어
 - 영어 정본:
   [38-foundation-c5-neutral-boundary-reference-comparison.md](./38-foundation-c5-neutral-boundary-reference-comparison.md)
@@ -18,9 +18,10 @@
   data-visualization 색, radius와 shadow 값, 최종 component alias, 고충실도 페이지
   디자인, production 구현
 
-이 조사는 문서 `34`의 경계 표가 유용한 Spectrum 기반 가설이었을 뿐, 폭넓은
-비교를 거친 승인 결과가 아니었기 때문에 필요하다. 이전 문서에 이미 값이
-등장했다는 이유만으로 권위가 되어서는 안 된다.
+이 조사는 문서 `34`의 경계 표가 처음에는 유용한 Spectrum 기반 가설이었을 뿐,
+폭넓은 비교를 거친 승인 결과가 아니었기 때문에 필요하다. 이 문서의 비교,
+문서 `39`의 측정 specimen, 2026-08-09 사용자 결정에 따라 이제 `NB-A`가 승인된
+C5 neutral-boundary Foundation mapping이다.
 
 ## 관련 문서
 
@@ -135,9 +136,9 @@ provenance는 정확히 표현해야 한다.
    ladder를 채택할 수 있다. component alias는 실제 NosLog content와 adjacency로
    나중에 검증해야 한다.
 
-## 후보 매핑
+## 승인된 매핑
 
-### `NB-A` — Spectrum의 공개 neutral boundary ladder 채택
+### `NB-A` — Spectrum의 공개 neutral boundary ladder
 
 | NosLog role      | Spectrum source |     Light |      Dark | 계약                                                                                                 |
 | ---------------- | --------------- | --------: | --------: | ---------------------------------------------------------------------------------------------------- |
@@ -169,7 +170,7 @@ semantic mapping이 Spectrum을 대체해야 하며 섞을 수 없다.
 
 ## 승인된 `M-A` 표면과의 측정 적합성
 
-다음 대비는 제안한 각 opaque boundary 값과 승인된 모든 opaque surface를 비교한다.
+다음 대비는 승인된 각 opaque boundary 값과 승인된 모든 opaque surface를 비교한다.
 값은 `Light / Dark`다.
 
 | Boundary           |      `canvas` |     `surface` |      `sunken` |      `raised` |     `overlay` | 계약 결과                                      |
@@ -182,10 +183,10 @@ semantic mapping이 Spectrum을 대체해야 하며 섞을 수 없다.
 이 측정은 모든 사용 가능한 control에 `gray-600`이 필요하다는 뜻이 아니다. 경계
 자체가 필수인 경우 첫 세 값은 승인된 표면에서 유일한 cue로 부적격이라는 뜻이다.
 
-## 사용자 검토 권고
+## 승인 결정
 
-아직 `C5M-05`를 승인하지 않고 `NB-A`를 전용 boundary specimen으로 진행할 것을
-권고한다.
+사용자는 전용 boundary specimen과 측정된 Dark/Light 동작을 검토한 뒤
+2026-08-09에 `NB-A`를 수용했다.
 
 근거:
 
@@ -199,12 +200,13 @@ semantic mapping이 Spectrum을 대체해야 하며 섞을 수 없다.
 5. 정상 Dark boundary를 neutral하고 절제되게 유지하며 browser가 만든 흰
    forced-colors outline은 정상 theme 밖에 둔다.
 
-사용자가 이 방향을 승인하면 이 권고는 다음 guide specimen과 measurement만
-허용한다. production token이나 application 구현은 허용하지 않는다.
+이 승인은 neutral-boundary Foundation role과 exact value만 확정한다. Production
+token, 최종 component alias, focus 또는 feedback color, 자동 selected-state
+boundary, application 구현은 허용하지 않는다.
 
-## 필수 Boundary Specimen Gate
+## 완료된 Boundary Specimen Gate
 
-`C5M-05`를 닫기 전에 specimen은 다음을 검증해야 한다.
+문서 `39`는 `C5M-05` 종료 전에 다음 필수 검사를 완료했다.
 
 1. Light/Dark의 모든 실제 `M-A` surface 위 `divider`, `border-subtle`,
    `border-default`, `border-strong`;
@@ -228,13 +230,13 @@ component가 실패하면 먼저 semantic ownership, fill/spacing/shape를 수�
 
 ## 결정 로그
 
-| ID       | 항목                                                                                                                        | 상태                                           |
-| -------- | --------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| `C5B-01` | Tailwind color, template, default border styling을 C5 boundary 권위 밖으로 둔다.                                            | `Approved governance — inherited`              |
-| `C5B-02` | 공식 출처 16개는 decorative separation과 필수 control/graphic boundary 분리에 수렴한다.                                     | `Observed`                                     |
-| `C5B-03` | 현재 S2에는 단일 범용 neutral border alias가 없다. 네 단계는 공개 Spectrum 역할 지침을 승인된 S2 primitive에 매핑한 것이다. | `Observed correction`                          |
-| `C5B-04` | 활성 forced-colors의 흰 outline은 browser/user override이며 정상 Dark-theme 후보가 아니다.                                  | `Approved clarification — inherited`           |
-| `C5B-05` | 위 역할 계약과 값 쌍으로 `gray-200/300/400/600`을 `NB-A`로 사용한다.                                                        | `Proposed — user review pending`               |
-| `C5B-06` | 잠정 `border-strong` 계약에서 focus와 자동 selected-state ownership을 제거한다.                                             | `Proposed correction`                          |
-| `C5B-07` | 유일한 필수 cue인 boundary는 모든 인접색과 `3:1`에 도달하는 측정 role을 써야 한다.                                          | `Required accessibility gate`                  |
-| `C5B-08` | `C5M-05` 결정 전에 bilingual boundary specimen을 구축하고 검증한다.                                                         | `진행 중 — 확장 교차 검증 및 사용자 검토 대기` |
+| ID       | 항목                                                                                                                        | 상태                                       |
+| -------- | --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| `C5B-01` | Tailwind color, template, default border styling을 C5 boundary 권위 밖으로 둔다.                                            | `Approved governance — inherited`          |
+| `C5B-02` | 공식 출처 16개는 decorative separation과 필수 control/graphic boundary 분리에 수렴한다.                                     | `Observed`                                 |
+| `C5B-03` | 현재 S2에는 단일 범용 neutral border alias가 없다. 네 단계는 공개 Spectrum 역할 지침을 승인된 S2 primitive에 매핑한 것이다. | `Observed correction`                      |
+| `C5B-04` | 활성 forced-colors의 흰 outline은 browser/user override이며 정상 Dark-theme 후보가 아니다.                                  | `Approved clarification — inherited`       |
+| `C5B-05` | 위 역할 계약과 값 쌍으로 `gray-200/300/400/600`을 `NB-A`로 사용한다.                                                        | `Approved — 2026-08-09`                    |
+| `C5B-06` | 잠정 `border-strong` 계약에서 focus와 자동 selected-state ownership을 제거한다.                                             | `Approved correction — 2026-08-09`         |
+| `C5B-07` | 유일한 필수 cue인 boundary는 모든 인접색과 `3:1`에 도달하는 측정 role을 써야 한다.                                          | `Approved accessibility gate — 2026-08-09` |
+| `C5B-08` | `C5M-05` 결정 전에 bilingual boundary specimen을 구축하고 검증한다.                                                         | `Completed — 2026-08-09`                   |

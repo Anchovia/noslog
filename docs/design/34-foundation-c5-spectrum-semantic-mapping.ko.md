@@ -2,10 +2,11 @@
 
 ## 문서 관리
 
-- 상태: `C5-2 surface mapping 및 exact F-A foreground mapping 승인; 문서 37 기술
-검증 뒤 C5M-04 종료; boundary와 focus는 미승인 상태`
+- 상태: `M-A surface, F-A foreground, NB-A neutral boundary 승인; 문서 39 기술
+검증 뒤 C5M-05 종료; interaction과 focus는 열린 상태`
 - Surface-mapping 승인일: 2026-08-08
 - Foreground-mapping 승인일: 2026-08-09
+- Neutral-boundary 승인일: 2026-08-09
 - 정본 언어: 영어
 - 영어 정본:
   [34-foundation-c5-spectrum-semantic-mapping.md](./34-foundation-c5-spectrum-semantic-mapping.md)
@@ -14,15 +15,15 @@
   surface role 및 neutral foreground, boundary, 일반 interaction 후보 role에 매핑
 - 입력: 승인된 문서 `25`, `32`, `33`, 현재 Spectrum S2 token data, WCAG 2.2 및
   앞서 검토한 동일 role palette 비교
-- 제외: boundary, 일반 interaction container, focus,
+- 제외: 일반 interaction container, focus,
   signature/feedback/domain 또는 data visualization 색조 승인, radius와 shadow
   치수, component styling, high-fidelity 화면, 애플리케이션 구현
 
 이 문서는 `FCM-12`를 다시 열지 않는다. Adobe Spectrum S2는 계속 승인된 정확한
 Dark/Light neutral primitive source다. `C5M-03`은 현재 Spectrum S2 alias를 통해 승인된
-C1-B surface role을 배정하고 `C5M-04`는 승인된 exact `F-A` foreground mapping을
-배정한다. Boundary, 일반 interaction-container, focus 및 component-level validation은
-계속 열려 있다.
+C1-B surface role을 배정하고 `C5M-04`는 승인된 exact `F-A` foreground mapping을,
+`C5M-05`는 승인된 exact `NB-A` neutral boundary를 배정한다. 일반
+interaction-container, focus 및 component-level validation은 계속 열려 있다.
 
 ## 관련 문서
 
@@ -157,23 +158,24 @@ mapping으로 승인해 `C5M-04`를 종료했다. `gray-600`은 Light `sunken`�
 불과하고 현재 Spectrum content alias도 그 ownership을 주지 않으므로 universal tertiary
 text에 계속 부적합하다.
 
-## 제안된 Neutral Boundary Mapping
+## 승인된 Neutral Boundary Mapping
 
-| NosLog role      | Spectrum primitive | Light     | Dark      | 계약                                                                            |
-| ---------------- | ------------------ | --------- | --------- | ------------------------------------------------------------------------------- |
-| `divider`        | `gray-200`         | `#e1e1e1` | `#323232` | decorative rhythm 및 proximity grouping 전용                                    |
-| `border-subtle`  | `gray-300`         | `#dadada` | `#393939` | decorative framing 및 비필수 boundary                                           |
-| `border-default` | `gray-400`         | `#c6c6c6` | `#444444` | shape, label, layout도 element를 식별하는 field/container boundary              |
-| `border-strong`  | `gray-600`         | `#717171` | `#8a8a8a` | 측정 대비가 필요한 필수 control/graphic boundary, selected 강조 또는 다른 state |
+| NosLog role      | Spectrum primitive | Light     | Dark      | 계약                                                                                                 |
+| ---------------- | ------------------ | --------- | --------- | ---------------------------------------------------------------------------------------------------- |
+| `divider`        | `gray-200`         | `#e1e1e1` | `#323232` | decorative rhythm 전용이며 spacing, heading 또는 structure가 이미 관계를 표현한다                    |
+| `border-subtle`  | `gray-300`         | `#dadada` | `#393939` | 비필수 framing과 공개 disabled-border 값이다. 값이 같아도 semantic alias는 분리한다                  |
+| `border-default` | `gray-400`         | `#c6c6c6` | `#444444` | label, fill, shape, placement 또는 다른 충분한 cue가 이미 식별하는 ordinary field/container에만 쓴다 |
+| `border-strong`  | `gray-600`         | `#717171` | `#8a8a8a` | 승인된 모든 surface에서 식별되어야 하는 필수 neutral control/graphic boundary다                      |
 
 앞의 세 role은 일부 인접 surface에서 의도적으로 `3:1`보다 낮다. 필수 control,
 selected state 또는 의미 있는 graphic의 유일한 단서가 될 수 없다. `border-strong`은
-제안된 모든 M-A surface에서 `3:1`보다 높고 측정된 최솟값은 Light `4.02:1`, Dark
+승인된 모든 M-A surface에서 `3:1`보다 높고 측정된 최솟값은 Light `4.02:1`, Dark
 `4.61:1`이다.
 
-이 제안은 active forced-colors test에서 관찰된 흰색 system outline을 일반 Dark-theme
+이 승인된 mapping은 active forced-colors test에서 관찰된 흰색 system outline을 일반 Dark-theme
 styling으로 상속하지 않는다. 해당 outline은 browser/user accessibility override다. 일반
-theme boundary 값은 `C5M-05`에서 계속 미승인 상태이며 focus도 별도의 후속 결정이다.
+theme boundary 값은 문서 `38` 비교와 문서 `39` specimen 뒤 승인됐으며 focus는 별도의
+후속 결정이다.
 
 ## 제안된 일반 Neutral Interaction Mapping
 
@@ -221,9 +223,10 @@ matrix에서 계속 검증해야 한다.
    `overlay #222222`, black `60%` scrim
 
 `C5M-03` surface 승인 자체는 대표 guide specimen과 측정만 허가했으며 다른 role을
-승격하지 않았다. Foreground는 문서 `36`, `37` 뒤 `C5M-04`에서 별도로 승인됐다.
-Boundary, interaction container, focus, signature, component 및 production 구현 값은
-계속 미승인이다. `M-B`는 명시적으로 표시된 과거 근거로만 남을 수 있으며 fallback 구현
+승격하지 않았다. Foreground는 문서 `36`, `37` 뒤 `C5M-04`에서, neutral boundary는
+문서 `38`, `39` 뒤 `C5M-05`에서 별도로 승인됐다. Interaction container, focus,
+signature, component 및 production 구현 값은 계속 미승인이다. `M-B`는 명시적으로
+표시된 과거 근거로만 남을 수 있으며 fallback 구현
 경로가 아니다.
 
 ## 결정 로그
@@ -234,7 +237,7 @@ Boundary, interaction container, focus, signature, component 및 production 구�
 | `C5M-02` | 이전 비교의 role 배정을 승인된 semantic map이 아니라 source 선택용 임시 specimen으로 취급한다.                                                    | `Observed`                 |
 | `C5M-03` | 현재 Spectrum S2 base/layer/elevated/pasteboard/overlay alias를 보존하는 `M-A`로 C1-B surface를 매핑한다.                                         | `Approved — 2026-08-08`    |
 | `C5M-04` | 문서 `36`의 broad comparison과 dedicated `F-A` specimen 뒤에만 foreground mapping을 결정하며 `gray-900`을 generic heading emphasis로 보지 않는다. | `Approved — 2026-08-09`    |
-| `C5M-05` | decorative, subtle, default, strong boundary를 `gray-200`, `gray-300`, `gray-400`, `gray-600`에 매핑한다.                                         | `Proposed — 별도 gate`     |
+| `C5M-05` | decorative, subtle, default, strong boundary를 `gray-200`, `gray-300`, `gray-400`, `gray-600`에 매핑한다.                                         | `Approved — 2026-08-09`    |
 | `C5M-06` | 일반 interaction과 selection은 neutral로 유지하고 공식 subtle/disabled alias는 문서화된 component-level 제약에서만 허용한다.                      | `Proposed — 별도 gate`     |
 | `C5M-07` | 오래된 공개 background-layer 표와 현재 Spectrum S2 alias를 하나의 mapping에 섞지 않으며 향후 이탈은 명시적으로 기록한다.                          | `Proposed governance rule` |
 | `C5M-08` | `M-B`는 과거 source-selection 근거로만 유지하고 C5 surface mapping 및 자동 fallback으로는 기각한다.                                               | `Rejected — 2026-08-08`    |
