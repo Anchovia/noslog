@@ -2,7 +2,7 @@
 
 ## Document Control
 
-- Status: `Measured draft — S5 First Review ready`
+- Status: `Approved — S5 First Review complete`
 - Canonical language: English
 - Korean companion:
   [31-foundation-s5-home-structural-validation.ko.md](./31-foundation-s5-home-structural-validation.ko.md)
@@ -292,12 +292,14 @@ popup overlay, announcement placement, or wide editorial balance.
 | `S5V-09` | Keep exact visual appearance, production dimensions, iconography, X integration, search implementation, and application code outside this gate.                                                                                                   | `Approved`   |
 | `S5V-10` | Use eight equal destinations as compact `3 × 3` below the measured available-width threshold and `4 × 2` otherwise; keep the final compact row leading and unstretched, use concise localized Chart labels, retain `14/20`, and do not ellipsize. | `Approved`   |
 
-## First Review Gate
+## Approved First Review Gate — 2026-08-08
 
-User review is still required before this measured draft is promoted:
+The user reviewed the remeasured compact specimen after `HOME-20`, including the
+leading incomplete final row, concise localized Chart labels, and the measured
+`3 × 3` to `4 × 2` transition. The user accepted the visual hierarchy and confirmed
+that the zero-failure matrix did not require another structural Foundation
+correction. This promotes the S5 record from `Measured draft` to `Approved`.
 
-1. visual acceptance of the remeasured adaptive destination fit and hierarchy,
-   including the compact incomplete final row;
-2. whether the measured structure requires any Foundation correction despite the
-   zero-failure matrix; and
-3. promotion of the validation record from `Measured draft` to `Approved`.
+The approval remains limited to structure, hierarchy, responsive behavior, content
+order, and the validation contract. Color, material, final geometry, iconography,
+production integration, and application implementation remain outside this gate.

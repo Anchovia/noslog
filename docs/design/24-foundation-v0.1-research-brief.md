@@ -526,12 +526,16 @@ Do not create empty placeholders. Add each artifact when its decision batch begi
 
 1. `25-foundation-semantic-role-map.md` and `.ko.md`;
 2. `26-foundation-typography-layout-candidates.md` and `.ko.md`;
-3. `27-foundation-color-material-candidates.md` and `.ko.md`;
-4. `28-foundation-icon-motion-visualization-candidates.md` and `.ko.md`;
-5. `29-foundation-v0.1-specification.md` and `.ko.md` after integrated approval;
-6. Figma variables and annotated guide specimens only when written candidate values
+3. `32-foundation-color-material-candidates.md` and `.ko.md`;
+4. `33-foundation-signature-color-research.md` and `.ko.md` as the focused C5
+   identity/accent decision artifact;
+5. a later numbered icon, motion, and visualization candidates document and its
+   `.ko.md` companion;
+6. a later numbered Foundation v0.1 specification and its `.ko.md` companion after
+   integrated approval;
+7. Figma variables and annotated guide specimens only when written candidate values
    are ready for visual validation; and
-7. a versioned PDF only after the editable milestone is stable and the user decides
+8. a versioned PDF only after the editable milestone is stable and the user decides
    its language packaging.
 
 The numbering is a proposed working sequence and may be changed if the approved work
@@ -779,5 +783,16 @@ truncation, component-specific layouts, color, material, or panel ratios.
 - [x] User approved the measured `672/1056 CSS px` page-grid transitions,
       component-specific container-failure separation, and exact wide `page-title`
       activation conditions as `FTL-08E` in document `26` on 2026-08-04.
+- [x] User approved the S1–S5 structural validation records in documents `27`–`31`.
+- [x] User approved Batch C surface, focus-separation, semantic color-ownership,
+      border, radius, elevation, and scrim architecture C1–C4 in document `32`.
+- [x] User approved the restrained-color budget and rejected automatic accent use on
+      ordinary containers, links, filters, selection, and difficulty labels on
+      2026-08-08.
+- [ ] Approve exact Dark/Light neutral values, the signature-color contract and hue,
+      and any separately justified rare primary-action color use in C5.
+- [ ] Complete Batch D iconography, motion/reduced-motion, and data-visualization
+      candidates and their representative validation.
+- [ ] Complete Gate 4 integrated Foundation v0.1 validation and promotion.
 - [ ] Validate Pretendard JP delivery, fallback metrics, and the floor in the required
       multilingual integrated specimens before production promotion.

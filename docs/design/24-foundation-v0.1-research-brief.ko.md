@@ -528,12 +528,15 @@ Artifact를 추가합니다.
 
 1. `25-foundation-semantic-role-map.md` 및 `.ko.md`
 2. `26-foundation-typography-layout-candidates.md` 및 `.ko.md`
-3. `27-foundation-color-material-candidates.md` 및 `.ko.md`
-4. `28-foundation-icon-motion-visualization-candidates.md` 및 `.ko.md`
-5. 통합 승인 후 `29-foundation-v0.1-specification.md` 및 `.ko.md`
-6. 작성된 후보 값과 비교 필요가 시각 검증을 정당화할 때만 Figma Variable 및
+3. `32-foundation-color-material-candidates.md` 및 `.ko.md`
+4. 집중 C5 identity/accent 결정 산출물인
+   `33-foundation-signature-color-research.md` 및 `.ko.md`
+5. 이후 번호가 부여될 아이콘·모션·시각화 후보 문서 및 `.ko.md` 동반 문서
+6. 통합 승인 후 이후 번호가 부여될 Foundation v0.1 specification 및 `.ko.md`
+   동반 문서
+7. 작성된 후보 값과 비교 필요가 시각 검증을 정당화할 때만 Figma Variable 및
    주석 Guide specimen
-7. 편집 가능한 Milestone이 안정되고 사용자가 언어 Packaging을 결정한 후에만
+8. 편집 가능한 Milestone이 안정되고 사용자가 언어 Packaging을 결정한 후에만
    Versioned PDF
 
 번호는 제안된 작업 순서이며 승인된 작업에 다른 Grouping이 더 적합하면 바꿀 수
@@ -777,5 +780,16 @@ Color, Material 또는 Panel ratio를 승인하지 않습니다.
 - [x] 사용자가 2026-08-04에 문서 `26`의 `FTL-08E`로 측정된 `672/1056 CSS px`
       Page-grid 전환, Component별 Container-failure 분리 및 정확한 Wide
       `page-title` 활성화 조건을 승인했습니다.
+- [x] 사용자가 문서 `27`–`31`의 S1–S5 구조 검증 기록을 승인했습니다.
+- [x] 사용자가 문서 `32`의 Batch C Surface, Focus 분리, Semantic color ownership,
+      Border, Radius, Elevation 및 Scrim 구조 C1–C4를 승인했습니다.
+- [x] 사용자가 2026-08-08 절제 컬러 예산을 승인하고 일반 Container, Link,
+      Filter, Selection 및 Difficulty label에 Accent를 자동 적용하는 방식을
+      거부했습니다.
+- [ ] C5에서 정확한 Dark/Light Neutral 값, Signature-color 계약과 색조 및 별도로
+      정당화한 드문 Primary-action 컬러 사용을 승인합니다.
+- [ ] Batch D Iconography, Motion/Reduced-motion, Data-visualization 후보와 대표
+      검증을 완료합니다.
+- [ ] Gate 4 통합 Foundation v0.1 검증과 승격을 완료합니다.
 - [ ] Production 승격 전에 필수 다국어 통합 Specimen에서 Pretendard JP
       delivery, fallback metric 및 하한을 검증합니다.

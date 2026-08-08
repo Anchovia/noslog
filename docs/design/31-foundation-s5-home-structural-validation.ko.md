@@ -2,7 +2,7 @@
 
 ## 문서 관리
 
-- 상태: `측정된 초안 — S5 1차 검토 준비 완료`
+- 상태: `승인 — S5 1차 검토 완료`
 - 문서 언어: 한국어 동기화본
 - 영어 원본:
   [31-foundation-s5-home-structural-validation.md](./31-foundation-s5-home-structural-validation.md)
@@ -278,11 +278,14 @@ Overlay, 공지 위치 및 Wide 편집 균형에 대한 사용자 검토를 대�
 | `S5V-09` | 정확한 Visual Appearance, 실제 Dimension, Iconography, X Integration, Search 구현 및 Application Code를 이 Gate 밖에 유지                                                                                        | `승인` |
 | `S5V-10` | 측정된 가용 너비 Threshold 아래에서 같은 크기 목적지 8개를 Compact `3 × 3`, 그 외에는 `4 × 2`로 사용하고 Compact 마지막 행을 앞쪽에 늘리지 않고 배치하며 간결한 다국어 채보 Label, `14/20`, Ellipsis 금지를 유지 | `승인` |
 
-## 1차 검토 Gate
+## 승인된 1차 검토 Gate — 2026-08-08
 
-다음 내용은 이 측정된 초안을 승격하기 전에 여전히 사용자 검토가 필요합니다.
+사용자는 `HOME-20` 이후 재측정한 Compact Specimen에서 앞쪽에 배치된 불완전한
+마지막 행, 간결한 다국어 채보 Label, 측정된 `3 × 3`에서 `4 × 2`로의 전환을
+검토했습니다. 사용자는 시각적 계층을 수용했고 실패 0건의 Matrix 결과가 추가
+구조 Foundation 수정을 요구하지 않는다고 확인했습니다. 이에 S5 기록을
+`측정된 초안`에서 `승인`으로 승격합니다.
 
-1. Compact의 불완전한 마지막 행을 포함한 재측정 적응형 목적지 Fit 및 계층의
-   시각적 수용
-2. Matrix 실패가 없더라도 측정된 구조가 Foundation 수정을 요구하는지 여부
-3. 검증 기록을 `측정된 초안`에서 `승인`으로 승격
+이 승인은 구조, 계층, 반응형 동작, Content 순서 및 검증 계약에 한정됩니다.
+Color, Material, 최종 Geometry, Iconography, Production 통합 및 Application
+구현은 계속 이 Gate 밖에 둡니다.
