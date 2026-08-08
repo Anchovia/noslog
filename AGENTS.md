@@ -63,6 +63,38 @@ Sections:
 - Keep changes scoped and verifiable.
 - Run lint/typecheck/build after implementation if the project provides those commands.
 
+## NosLog 2.0 Design-System Provenance
+
+- Tailwind CSS is an implementation and responsive-layout tool only. Its color
+  palette, default theme, starter templates, sample gradients, radii, shadows, and
+  component appearance are not NosLog 2.0 design authority.
+- Do not adopt Tailwind palette values or Tailwind-derived starter styling as NosLog
+  Foundation tokens merely because Tailwind is in the project stack. Official
+  Tailwind documentation may inform responsive, grid, and container-query
+  implementation only where the approved guide has already defined the design rule.
+- Before recommending or approving a material visual-foundation decision, compare at
+  least twelve independent, relevant, authoritative or production references, with
+  fifteen or more preferred when that many credible sources are available. Compare
+  equivalent semantic roles and actual Light/Dark values rather than unrelated
+  swatches or marketing examples.
+- Prefer adopting the published values and semantic mapping of one approved,
+  maintained design system intact. Do not create an unsourced hybrid by mixing values
+  from several systems, interpolating new steps, shifting hues, or making a role look
+  more "NosLog-like." If the upstream mapping fails measured NosLog content,
+  accessibility, or state requirements, report the failure and reopen the decision
+  with the user instead of silently modifying the source.
+- Adobe Spectrum S2 is the approved and exclusive Dark/Light neutral primitive source
+  for NosLog 2.0. Preserve its published grayscale values exactly. Do not replace
+  them with Tailwind colors or mix them with the current custom Dark ramp, TDS-based
+  Light values, or another system's gray steps.
+- Primitive-source approval, semantic-role mapping, component-alias mapping, and
+  production implementation are separate approval gates. Approval of Adobe Spectrum
+  S2 primitives does not by itself approve a proposed foreground, boundary,
+  interaction, or component assignment.
+- Documents `32`–`36` under `docs/design/` record the current color authority and
+  evidence. The over-accented `FCM-11` and `SIG-07` examples are `Rejected` and must
+  not be reused as design evidence, downstream references, or implementation targets.
+
 ## Requirement Clarity and Planning
 
 This is the most important working rule for this project:

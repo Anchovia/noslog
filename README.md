@@ -51,6 +51,18 @@ NOSTALGIA 플레이 기록을 모아 보고, 악곡별 성과·서열·랭킹과
 - Vercel, Vercel Blob, Vercel Cron
 - Vitest, Playwright, ESLint, Prettier, Husky
 
+### NosLog 2.0 디자인 권위
+
+Tailwind CSS는 스타일 구현과 반응형 layout을 위한 기술 스택이며, Tailwind의 기본
+palette·theme·starter template은 NosLog 2.0의 시각적 권위가 아닙니다. NosLog 2.0의
+색상과 visual Foundation은 승인된 `docs/design/` 문서와 `AGENTS.md`의 조사·승인
+규칙을 따릅니다.
+
+현재 Dark/Light neutral primitive source는 Adobe Spectrum S2로 승인되어 있습니다.
+공개된 원본값을 그대로 사용하며 Tailwind 색상, 현재 custom palette 또는 다른 design
+system의 값을 임의로 혼합하거나 보간하지 않습니다. Primitive source, semantic-role
+mapping, component mapping과 실제 구현은 각각 별도의 승인 단계입니다.
+
 ## 로컬 개발
 
 ### 준비 사항

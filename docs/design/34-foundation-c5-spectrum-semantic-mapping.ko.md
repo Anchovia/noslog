@@ -2,8 +2,8 @@
 
 ## 문서 관리
 
-- 상태: `C5-2 surface mapping 승인; neutral foreground, boundary 및 일반
-interaction mapping은 계속 제안 상태`
+- 상태: `C5-2 surface mapping 승인; 문서 36에서 broad foreground 비교 완료;
+foreground, boundary 및 일반 interaction은 미승인 상태`
 - 승인일: 2026-08-08
 - 정본 언어: 영어
 - 영어 정본:
@@ -28,6 +28,7 @@ component-level validation은 계속 열려 있다.
 - [Foundation 컬러 및 material 후보](./32-foundation-color-material-candidates.ko.md)
 - [시그니처 컬러 조사](./33-foundation-signature-color-research.ko.md)
 - [C5 Spectrum surface 검증](./35-foundation-c5-spectrum-surface-validation.ko.md)
+- [C5 neutral foreground 레퍼런스 비교](./36-foundation-c5-neutral-foreground-reference-comparison.ko.md)
 
 ## 집중 근거
 
@@ -135,20 +136,20 @@ Spectrum S2 semantic alias를 정확히 보여준 것은 아니다. 임시 mappi
 surface mapping으로는 기각한다. `M-A`가 실제 NosLog content에서 실패하면 문서화된
 이탈을 검토하기 전에 측정된 실패를 보고한다.
 
-## 제안된 Neutral Foreground Mapping
+## 대체된 조사 전 Foreground 가설
 
-| NosLog role                            | Spectrum primitive | Light     | Dark      | 계약                                                                                                 |
-| -------------------------------------- | ------------------ | --------- | --------- | ---------------------------------------------------------------------------------------------------- |
-| `text-primary`, `icon-primary`         | `gray-800`         | `#292929` | `#dbdbdb` | 기본 readable content                                                                                |
-| emphasized/interactive component alias | `gray-900`         | `#131313` | `#f2f2f2` | heading 또는 hover/down 강조 전용이며 `text-primary`를 전역 대체하지 않음                            |
-| `text-secondary`, `icon-secondary`     | `gray-700`         | `#505050` | `#afafaf` | secondary metadata 및 label                                                                          |
-| `text-tertiary`                        | alias `gray-700`   | `#505050` | `#afafaf` | 처음에는 안전한 subdued 값을 공유하며 별도 필요가 입증될 때까지 typography/placement로 계층을 표현함 |
-| `text-disabled`, disabled icon         | `gray-400`         | `#c6c6c6` | `#444444` | 실제 disabled인 비필수 content 전용                                                                  |
+원래 여기에 기록된 foreground 표는 필수 broad comparison보다 먼저 작성되었다. 이제
+문서 `36`이 현재 조사 기록으로 이를 대체한다. 두 가지 수정이 중요하다.
 
-`gray-600`은 universal tertiary text로 제안하지 않는다. Light `sunken` surface에서
-`4.02:1`에 불과해 일반 text 기준 `4.5:1`보다 낮다. semantic role은 `gray-700`을
-공유한 채 존재할 수 있다. 별도 token이 실제 hierarchy 요구 전에 별도 primitive 값을
-가질 필요는 없다.
+1. Spectrum `gray-900`은 generic heading 또는 global emphasis color가 아니라 default
+   interactive content의 hover/down/focus에 공개된 값이다.
+2. Spectrum subdued interactive content는 hover/down/selected에서 `gray-700`에서
+   `gray-800`으로 강해진다. 이 state relationship을 그대로 유지해야 한다.
+
+문서 `36`은 dedicated foreground specimen을 위해 exact Spectrum alias mapping
+`F-A`를 제안하지만 승인하지 않는다. `gray-600`은 Light `sunken`에서 `4.02:1`에
+불과하고 현재 Spectrum content alias도 그 ownership을 주지 않으므로 universal
+tertiary text에 계속 부적합하다.
 
 ## 제안된 Neutral Boundary Mapping
 
@@ -216,13 +217,13 @@ interaction, focus, signature, component 또는 production 값을 `Approved`로 
 
 ## 결정 로그
 
-| ID       | 항목                                                                                                                         | 상태                         |
-| -------- | ---------------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
-| `C5M-01` | 승인된 grayscale source 안에서는 현재 Spectrum S2 color alias를 주요 semantic-mapping 권위로 취급한다.                       | `Observed`                   |
-| `C5M-02` | 이전 비교의 role 배정을 승인된 semantic map이 아니라 source 선택용 임시 specimen으로 취급한다.                               | `Observed`                   |
-| `C5M-03` | 현재 Spectrum S2 base/layer/elevated/pasteboard/overlay alias를 보존하는 `M-A`로 C1-B surface를 매핑한다.                    | `Approved — 2026-08-08`      |
-| `C5M-04` | default, subdued, emphasized, disabled foreground role을 `gray-800`, `gray-700`, `gray-900`, `gray-400`에 매핑한다.          | `Proposed — surface 검토 후` |
-| `C5M-05` | decorative, subtle, default, strong boundary를 `gray-200`, `gray-300`, `gray-400`, `gray-600`에 매핑한다.                    | `Proposed — surface 검토 후` |
-| `C5M-06` | 일반 interaction과 selection은 neutral로 유지하고 공식 subtle/disabled alias는 문서화된 component-level 제약에서만 허용한다. | `Proposed — surface 검토 후` |
-| `C5M-07` | 오래된 공개 background-layer 표와 현재 Spectrum S2 alias를 하나의 mapping에 섞지 않으며 향후 이탈은 명시적으로 기록한다.     | `Proposed governance rule`   |
-| `C5M-08` | `M-B`는 과거 source-selection 근거로만 유지하고 C5 surface mapping 및 자동 fallback으로는 기각한다.                          | `Rejected — 2026-08-08`      |
+| ID       | 항목                                                                                                                                              | 상태                         |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
+| `C5M-01` | 승인된 grayscale source 안에서는 현재 Spectrum S2 color alias를 주요 semantic-mapping 권위로 취급한다.                                            | `Observed`                   |
+| `C5M-02` | 이전 비교의 role 배정을 승인된 semantic map이 아니라 source 선택용 임시 specimen으로 취급한다.                                                    | `Observed`                   |
+| `C5M-03` | 현재 Spectrum S2 base/layer/elevated/pasteboard/overlay alias를 보존하는 `M-A`로 C1-B surface를 매핑한다.                                         | `Approved — 2026-08-08`      |
+| `C5M-04` | 문서 `36`의 broad comparison과 dedicated `F-A` specimen 뒤에만 foreground mapping을 결정하며 `gray-900`을 generic heading emphasis로 보지 않는다. | `Open — 조사 수정됨`         |
+| `C5M-05` | decorative, subtle, default, strong boundary를 `gray-200`, `gray-300`, `gray-400`, `gray-600`에 매핑한다.                                         | `Proposed — surface 검토 후` |
+| `C5M-06` | 일반 interaction과 selection은 neutral로 유지하고 공식 subtle/disabled alias는 문서화된 component-level 제약에서만 허용한다.                      | `Proposed — surface 검토 후` |
+| `C5M-07` | 오래된 공개 background-layer 표와 현재 Spectrum S2 alias를 하나의 mapping에 섞지 않으며 향후 이탈은 명시적으로 기록한다.                          | `Proposed governance rule`   |
+| `C5M-08` | `M-B`는 과거 source-selection 근거로만 유지하고 C5 surface mapping 및 자동 fallback으로는 기각한다.                                               | `Rejected — 2026-08-08`      |

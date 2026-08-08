@@ -26,6 +26,7 @@ component geometry를 Foundation 권위로 승격하지 않는다.
 - [S3 Global Rankings 구조 검증](./29-foundation-s3-global-rankings-structural-validation.ko.md)
 - [S4 Chart Viewer 구조 검증](./30-foundation-s4-chart-viewer-structural-validation.ko.md)
 - [C5 Spectrum S2 semantic mapping](./34-foundation-c5-spectrum-semantic-mapping.ko.md)
+- [C5 neutral foreground 레퍼런스 비교](./36-foundation-c5-neutral-foreground-reference-comparison.ko.md)
 
 ## 권위 경계
 
@@ -166,8 +167,9 @@ content surface가 아니다. 교정된 구성은 message와 Retry control을 �
    한다. Scrim 위에 직접 둔 text는 무효다.
 4. Boundary 검토는 decorative grouping과 필수 component/state 단서가 되는 boundary를
    구분해야 한다.
-5. 다음 material 승인은 계속 `C5M-04` foreground mapping이다. `C5M-05` boundary
-   mapping은 위의 동일 값 및 dense-row 근거와 함께 그 다음에 진행한다.
+5. 이제 문서 `36`이 필수 broad foreground comparison을 제공한다. 다음 unit은 제안된
+   `F-A` foreground specimen 및 adjacency record다. `C5M-04`는 그 근거를 검토할
+   때까지 열려 있으며 `C5M-05` boundary mapping은 그 다음에 진행한다.
 
 ## 결정 및 검증 상태 로그
 
@@ -179,4 +181,4 @@ content surface가 아니다. 교정된 구성은 message와 Retry control을 �
 | `C5S-04` | Scrim은 background만 억제하며 recovery content에는 그 위의 불투명 overlay가 필요하다.                          | `Approved contract enforced`   |
 | `C5S-05` | Current ranking row의 neutral 구조 식별을 보존하고 surface 검증 중 selected hue를 추가하지 않는다.             | `Observed — prior S3 approval` |
 | `C5S-06` | Specimen에 보이는 foreground, boundary, radius, shadow 및 component geometry는 계속 비권위 상태로 둔다.        | `Proposed governance`          |
-| `C5S-07` | 정확한 foreground ownership 및 adjacency 측정을 다음 C5 approval unit으로 진행한다.                            | `Proposed — next review`       |
+| `C5S-07` | 문서 `36`이 제안한 `F-A` foreground ownership 및 adjacency 측정을 다음 C5 evidence unit으로 진행한다.          | `Proposed — next review`       |

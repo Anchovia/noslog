@@ -26,6 +26,7 @@ foreground, boundary, radius, or component geometry into Foundation authority.
 - [S3 Global Rankings structural validation](./29-foundation-s3-global-rankings-structural-validation.md)
 - [S4 Chart Viewer structural validation](./30-foundation-s4-chart-viewer-structural-validation.md)
 - [C5 Spectrum S2 semantic mapping](./34-foundation-c5-spectrum-semantic-mapping.md)
+- [C5 neutral foreground reference comparison](./36-foundation-c5-neutral-foreground-reference-comparison.md)
 
 ## Authority Boundary
 
@@ -167,8 +168,9 @@ This correction did not change any approved color. It enforces the `scrim` and
    text directly on a scrim is invalid.
 4. Boundary review must distinguish decorative grouping from boundaries that are a
    necessary component or state cue.
-5. The next material approval remains `C5M-04` foreground mapping. `C5M-05` boundary
-   mapping follows with the equal-value and dense-row evidence above.
+5. Document `36` now supplies the required broad foreground comparison. The next unit
+   is the proposed `F-A` foreground specimen and adjacency record; `C5M-04` remains
+   open until that evidence is reviewed. `C5M-05` boundary mapping follows.
 
 ## Decision and Validation Status Log
 
@@ -180,4 +182,4 @@ This correction did not change any approved color. It enforces the `scrim` and
 | `C5S-04` | A scrim suppresses background only; recovery content requires an opaque overlay above it.                                      | `Approved contract enforced`   |
 | `C5S-05` | Preserve neutral structural identification for the current ranking row; do not add a selected hue during surface validation.   | `Observed — prior S3 approval` |
 | `C5S-06` | Keep foreground, boundary, radius, shadow, and component geometry shown in the specimen non-authoritative.                     | `Proposed governance`          |
-| `C5S-07` | Advance exact foreground ownership and adjacency measurement as the next C5 approval unit.                                     | `Proposed — next review`       |
+| `C5S-07` | Advance document `36` proposed `F-A` foreground ownership and adjacency measurement as the next C5 evidence unit.              | `Proposed — next review`       |
