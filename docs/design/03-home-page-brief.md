@@ -6,7 +6,7 @@
 - Evidence status: `Repository and browser audit complete; reference comparison complete`
 - Date started: 2026-07-30
 - Date approved: 2026-07-31
-- Last amended: 2026-08-08 (`HOME-19`)
+- Last amended: 2026-08-08 (`HOME-20`)
 - Canonical language: English
 - Korean companion: [03-home-page-brief.ko.md](./03-home-page-brief.ko.md)
 - Parent information architecture:
@@ -257,8 +257,9 @@ The approved desktop composition is:
 3. keep the concise NosLog identity and scope-aware search centered as the strongest
    desktop Home zone, with a readable maximum width rather than full-container
    stretching;
-4. align the eight comparable destination blocks, including Data Sync, as a four-column
-   by two-row collection after search while preserving their approved reading order;
+4. align the eight comparable destination blocks, including Data Sync, after search;
+   use four columns by two rows when the collection has sufficient width and three
+   columns by three rows in the compact-width state while preserving source order;
 5. place routine NosLog announcements and official NOSTALGIA news only in the lower
    editorial zone;
 6. at sufficiently wide layouts, show the two editorial sections side by side, give
@@ -274,29 +275,34 @@ ratio between the two desktop editorial regions. Those values remain
 foundation and representative-example decisions that require real Korean, Japanese,
 and English content.
 
-### HOME-18 Focused Reference Comparison
+### HOME-18 / HOME-20 Focused Reference Comparison
 
 The destination-grid decision compared authoritative responsive and accessibility
 guidance, production navigation research, established grid and collection systems,
 and current NosLog evidence. The sources converge on shortening unnecessary mobile
 navigation length, keeping peer items on consistent spans and keylines, preserving
 meaningful reading order, and validating reflow at `320 CSS px`. They do not prescribe
-four columns for NosLog; the exact `4 × 2` geometry is the user-approved NosLog-specific
-resolution after comparing the row count, scanning cost, and eighth destination.
+one fixed column count for NosLog. The approved NosLog-specific resolution uses a
+`3 × 3` compact collection when four columns no longer give localized labels enough
+room, then returns to `4 × 2` when the collection is wide enough.
 
-| Reference class                      | Sources                                                                                                                                                                                                                                                                                                                                                                                                                                                    | Transferable principle and NosLog application                                                                                                                                                                                                                                 | Limitation                                                                                                           |
-| ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| Mobile Home and navigation evidence  | [Baymard: Mobile Homepage and Category Navigation](https://baymard.com/blog/mobile-homepage-usability), [Baymard: Main Navigation UX](https://baymard.com/blog/ecommerce-navigation-best-practice)                                                                                                                                                                                                                                                         | Mobile users rely on direct Home shortcuts, while long category collections make overview and movement slower. Eight compact NosLog destinations should avoid a four-row mobile list when a readable two-row collection fits.                                                 | Commerce categories are larger and more heterogeneous than NosLog's eight peer destinations.                         |
-| Hierarchy, reading order, and reflow | [Microsoft Fluent 2: Layout](https://fluent2.microsoft.design/layout), [Figma: UI Design Principles](https://www.figma.com/resource-library/ui-design-principles/), [Apple HIG: Layout](https://developer.apple.com/design/human-interface-guidelines/layout), [W3C: Reflow](https://www.w3.org/WAI/WCAG21/Understanding/reflow.html)                                                                                                                      | Keep priority content early, preserve source and focus order, align repeated controls, and avoid two-dimensional scrolling at `320 CSS px`. The `4 × 2` collection must therefore wrap long localized labels safely instead of clipping them or creating horizontal overflow. | These sources establish hierarchy and accessibility constraints, not a NosLog column count.                          |
-| Peer grid and collection systems     | [Carbon: 2x Grid](https://carbondesignsystem.com/elements/2x-grid/overview/), [USWDS: Layout Grid](https://designsystem.digital.gov/utilities/layout-grid/), [Adobe Spectrum: Cards](https://spectrum.adobe.com/page/cards/), [Atlassian: Applying Grid](https://atlassian.design/foundations/grid-beta/applying-grid/), [Primer: Grid](https://primer.style/brand/layout/Grid/), [Bootstrap: Grid System](https://getbootstrap.com/docs/5.0/layout/grid/) | Repeated peer items benefit from equal spans, repeatable keylines, and consistent collection rhythm. Use eight equal blocks; do not stretch the last item, vary spans without an approved hierarchy, or turn the collection into a single wide toolbar.                       | Their tokens, breakpoints, and surface styles are product-specific and are not NosLog values.                        |
-| Adaptive layout implementation       | [Android: Adapt Layout](https://developer.android.com/design/ui/mobile/guides/layout-and-content/adapt-layout), [Material 3: Canonical Layouts](https://m3.material.io/foundations/layout/canonical-examples/overview), [GOV.UK: Layout](https://design-system.service.gov.uk/styles/layout/), [Tailwind CSS: Responsive Design](https://tailwindcss.com/docs/responsive-design)                                                                           | Responsive composition should follow content constraints, and wider space does not automatically require more columns. Preserve the approved `4 × 2` relationship at small and large widths, then bound and align the desktop collection within the page grid.                | These references allow several valid adaptive outcomes; the fixed cross-width geometry is a NosLog product decision. |
-| Current NosLog evidence              | Current Home implementation and the reviewed 390px destination comparison                                                                                                                                                                                                                                                                                                                                                                                  | The current six-link Home demonstrates that compact peer shortcuts fit mobile, while adding Chart Viewer and Data Sync produces a balanced eight-item set. The approved `4 × 2` structure removes the awkward unmatched final row and avoids adding more vertical rows.       | The current visual treatment and dimensions are usability evidence only and are not the NosLog 2.0 final design.     |
+| Reference class                      | Sources                                                                                                                                                                                                                                                                                                                                                                                                                                                    | Transferable principle and NosLog application                                                                                                                                                                                                                                                                   | Limitation                                                                                                       |
+| ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| Mobile Home and navigation evidence  | [Baymard: Mobile Homepage and Category Navigation](https://baymard.com/blog/mobile-homepage-usability), [Baymard: Main Navigation UX](https://baymard.com/blog/ecommerce-navigation-best-practice)                                                                                                                                                                                                                                                         | Mobile users rely on direct Home shortcuts, while long category collections make overview and movement slower. Eight compact NosLog destinations should avoid a four-row mobile list; three rows are accepted when they materially improve label legibility.                                                    | Commerce categories are larger and more heterogeneous than NosLog's eight peer destinations.                     |
+| Hierarchy, reading order, and reflow | [Microsoft Fluent 2: Layout](https://fluent2.microsoft.design/layout), [Figma: UI Design Principles](https://www.figma.com/resource-library/ui-design-principles/), [Apple HIG: Layout](https://developer.apple.com/design/human-interface-guidelines/layout), [W3C: Reflow](https://www.w3.org/WAI/WCAG21/Understanding/reflow.html)                                                                                                                      | Keep priority content early, preserve source and focus order, align repeated controls, and avoid two-dimensional scrolling at `320 CSS px`. Compact `3 × 3` reflow protects labels without clipping, ellipsis, or micro-type; the final two peers remain equal and occupy the first two cells of the final row. | These sources establish hierarchy and accessibility constraints, not a NosLog column count.                      |
+| Peer grid and collection systems     | [Carbon: 2x Grid](https://carbondesignsystem.com/elements/2x-grid/overview/), [USWDS: Layout Grid](https://designsystem.digital.gov/utilities/layout-grid/), [Adobe Spectrum: Cards](https://spectrum.adobe.com/page/cards/), [Atlassian: Applying Grid](https://atlassian.design/foundations/grid-beta/applying-grid/), [Primer: Grid](https://primer.style/brand/layout/Grid/), [Bootstrap: Grid System](https://getbootstrap.com/docs/5.0/layout/grid/) | Repeated peer items benefit from equal spans, repeatable keylines, and consistent collection rhythm. Use eight equal blocks; do not stretch the last item, vary spans without an approved hierarchy, or turn the collection into a single wide toolbar.                                                         | Their tokens, breakpoints, and surface styles are product-specific and are not NosLog values.                    |
+| Adaptive layout implementation       | [Android: Adapt Layout](https://developer.android.com/design/ui/mobile/guides/layout-and-content/adapt-layout), [Material 3: Canonical Layouts](https://m3.material.io/foundations/layout/canonical-examples/overview), [GOV.UK: Layout](https://design-system.service.gov.uk/styles/layout/), [Tailwind CSS: Responsive Design](https://tailwindcss.com/docs/responsive-design)                                                                           | Responsive composition follows content constraints. Use `3 × 3` only while the destination region is compact, then change to bounded `4 × 2`; do not add columns merely because the viewport is wide.                                                                                                           | These references allow several valid adaptive outcomes; the exact transition is a NosLog product decision.       |
+| Current NosLog evidence              | Current Home implementation and the reviewed 320px/390px destination comparisons                                                                                                                                                                                                                                                                                                                                                                           | Three columns materially improve the available label measure over four at compact widths. Eight peers require one intentionally incomplete final row, but keeping every block equal and source ordered is preferable to stretching the eighth item or reducing type.                                            | The current visual treatment and dimensions are usability evidence only and are not the NosLog 2.0 final design. |
 
 Implementation and downstream design must still validate all Korean, Japanese, and
 English labels, `200%` text enlargement, minimum target sizes, and horizontal reflow at
-`320px`, `390px`, and intermediate widths. If content pressure appears, adjust the
-bounded collection width, gaps, padding, label wrapping, or shared block height; do
-not silently change the approved four-column relationship.
+`320px`, `390px`, and around the measured compact-to-standard transition. The S5
+specimen uses a `448px` destination-region threshold, equivalent to a `480px` frame
+with its current compact gutters, as a validation value rather than a universal device
+breakpoint. Production should trigger the same relationship from the destination
+container's available width. If content pressure remains, adjust gaps, padding, label
+wrapping, or shared block height; do not use ellipsis or reduce the control label below
+the approved type role.
 
 ### HOME-15 Focused Reference Comparison
 
@@ -446,9 +452,10 @@ The following hierarchy is approved:
    distinct official NOSTALGIA news grid containing the latest official X post.
 5. **Trust and project footer:** Privacy and GitHub.
 
-The destination collection is approved as four columns by two rows at every supported
-width. Exact card dimensions, container width, gutters, and high-fidelity composition
-remain foundation and representative-example decisions.
+The destination collection is approved as three columns by three rows in its compact
+width state and four columns by two rows when sufficient width is available. Exact
+card dimensions, container width, gutters, and high-fidelity composition remain
+foundation and representative-example decisions.
 
 ## Search Requirements
 
@@ -532,17 +539,22 @@ remain foundation and representative-example decisions.
 - Use one consistent destination component family and comparable target sizes. Being
   later in the order does not make Bingo, Exams, Arcades, or Data Sync hidden,
   disabled, or a More-panel-only destination.
-- Use exactly four columns and two rows for this collection at every supported
-  viewport width, including `320px`, `390px`, and wide desktop layouts. Do not collapse
-  it to two or three columns, expand it to a single desktop row, or stretch one block
-  across otherwise peer columns.
+- Use three columns and three rows when the destination region is narrower than its
+  validated `448px` content threshold, including representative `320px` and `390px`
+  frames. Use four columns and two rows at and above that available width. Keep the
+  final two compact items in source order at the leading edge of the third row; do not
+  stretch either item, center them through unequal spans, collapse to two columns, or
+  expand desktop to a single row.
 - Keep all eight blocks equal in width and visual weight. A localized label may wrap
   without clipping or truncation; let the shared row height accommodate the longest
   required label rather than shrinking text below the approved type system.
 - The entire visible destination block should have one predictable link target.
 - Each destination needs visible localized text; an icon cannot be its only label.
 - Music, Chart Viewer, Tiers, Bingo, and Exams must preserve their distinct NOSTALGIA
-  meanings. Do not replace them with a generic grouping label.
+  meanings. Do not replace them with a generic grouping label. Concise visible labels
+  may use `Music`, `Charts`, `Tiers`, `Rankings`, `Bingo`, `Exams`, `Arcades`, and
+  `Data Sync` in English; `Charts` remains the entry to the Chart Viewer collection,
+  not a renamed product feature.
 - Do not add descriptions to every block by default. Use supporting text only when
   research or localization testing shows that the label alone is insufficient.
 - Do not add permanent rows of extra mode or filter buttons to Home.
@@ -555,10 +567,11 @@ remain foundation and representative-example decisions.
 | Unequal card sizes or grid spans      | Give selected destinations visibly larger areas than the other peer destinations.                                                         | Makes hierarchy immediately visible.                                                               | Can create a noisy eight-item grid, complicate responsive consistency, and imply that smaller destinations are less complete. |
 | Separate labeled groups               | Divide the destinations into primary and secondary groups.                                                                                | Makes the distinction explicit in text.                                                            | Adds headings and fragmentation and risks inventing an inaccurate domain grouping.                                            |
 
-**Approved:** Use the first alternative as an equal `4 × 2` collection across all
-supported widths. Exact block dimensions remain foundation and representative-example
-decisions, but a future visual design must not create emphasis by assigning unrelated
-accent colors, arbitrary card sizes, or a full-width final block.
+**Approved:** Use the first alternative as equal peers in an adaptive `3 × 3` compact
+and `4 × 2` standard/wide collection. Exact block dimensions remain foundation and
+representative-example decisions, but a future visual design must not create emphasis
+by assigning unrelated accent colors, arbitrary card sizes, or a stretched final
+block.
 
 ## Notice and News Alternatives
 
@@ -693,9 +706,10 @@ component briefs.
 - Keep the non-modal popup aligned to the search control and inside the viewport. It
   may temporarily cover later Home content but must not push destination blocks,
   create document overflow, add a backdrop, or block the rest of Home.
-- Keep all eight destinations, including Data Sync, in exactly four columns and two
-  rows. Preserve this relationship at `320px` and `390px`; wrap long localized labels
-  and adapt gaps, padding, or shared block height without creating horizontal scroll.
+- Keep all eight destinations, including Data Sync, in three columns and three rows at
+  representative `320px` and `390px` compact frames. Keep the third cell of the final
+  row empty rather than resizing or reordering the final two peers. Wrap long localized
+  labels and adapt gaps, padding, or shared block height without horizontal scroll.
 - Destination labels remain readable in Korean, Japanese, and English.
 - Editorial content does not push search and destinations below unnecessary
   introductory content.
@@ -735,11 +749,12 @@ component briefs.
 ### Container Behavior
 
 Destination blocks and editorial summaries should adapt to the actual width of their
-containing region. For the Home destination collection, adaptation may change its
-bounded width, gap, padding, label wrap, and shared block height, but not the approved
-`4 × 2` relationship. Viewport breakpoints define major shell changes; container
-queries may adapt other reusable collections when the same component appears in a
-narrower region.
+containing region. For the Home destination collection, adaptation changes between the
+approved compact `3 × 3` and standard `4 × 2` relationships and may also change bounded
+width, gap, padding, label wrap, and shared block height. Base the production
+transition on the collection container, not a device label. Viewport breakpoints define
+major shell changes; container queries may adapt this and other reusable collections
+when the same component appears in a narrower region.
 
 ## Accessibility Requirements
 
@@ -826,7 +841,8 @@ The later design and implementation must verify:
   recovery, explicit submission, and continued access to every direct destination;
 - popup dismissal through selection, complete-results handoff, `Escape`, query clear,
   and outside interaction without clearing the query on `Escape`;
-- all eight destination links in the `4 × 2` collection, including Data Sync;
+- all eight destination links in compact `3 × 3` and standard/wide `4 × 2`
+  collections, including Data Sync and the leading two-item compact final row;
 - no service-critical notice and one service-critical notice;
 - zero, one, exactly three, and more than three published routine announcements,
   including correct newest-first truncation and complete archive access;
@@ -842,8 +858,8 @@ The later design and implementation must verify:
 - Every current Home function has an approved or rejected disposition.
 - No approved information-architecture destination disappears.
 - Content priority does not equate retention with equal visual weight.
-- Mobile and desktop behavior preserve the approved eight-item `4 × 2` destination
-  grid while leaving exact dimensions and spacing for representative validation.
+- Mobile and desktop behavior preserve the approved eight-item adaptive destination
+  grid: compact `3 × 3`, standard/wide `4 × 2`, with equal peer sizes and source order.
 - Three-language constraints include editorial data, not only UI labels.
 - Loading, empty, error, authentication, and reduced-motion states are covered.
 - No material Home behavior remains `Open` or `Proposed`; scheduled foundation,
@@ -853,27 +869,28 @@ The later design and implementation must verify:
 
 ## Decision Register
 
-| ID      | Decision                                | Direction or question                                                                                                                                                                                            | Status       |
-| ------- | --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
-| HOME-01 | Home role                               | Orientation and task-routing surface, not a dashboard or miniature copy of every page.                                                                                                                           | `Approved`   |
-| HOME-02 | Primary task                            | Shared Music/Chart search is the strongest Home task.                                                                                                                                                            | `Approved`   |
-| HOME-03 | Destination set                         | Music, Chart Viewer, Rankings, Tiers, Bingo, Exams, Arcades, and Data Sync remain separate peer destinations.                                                                                                    | `Approved`   |
-| HOME-04 | Data Sync                               | Superseded by `HOME-18`: replace the former separate play-support row with Data Sync as the eighth peer in the Home destination collection; retain the stable More-panel entry.                                  | `Superseded` |
-| HOME-05 | Feedback                                | Move to More; do not show on Home or duplicate in Footer.                                                                                                                                                        | `Approved`   |
-| HOME-06 | Personalization card                    | Do not add stale-sync, recent-play, or incomplete-content cards.                                                                                                                                                 | `Rejected`   |
-| HOME-07 | Destination prominence                  | Use one consistent block family; express priority through shared search and the order Music → Chart Viewer → Tiers → Rankings → Bingo → Exams → Arcades → Data Sync.                                             | `Approved`   |
-| HOME-08 | Notice placement rule                   | Give each notice one role and one placement: at most one active task-affecting notice before search; routine updates once below core tasks.                                                                      | `Approved`   |
-| HOME-09 | Official-news presentation              | Use X's official Embedded Timeline to show the latest `NOSTALGIA_573` source post once in a distinct grid after routine NosLog announcements.                                                                    | `Approved`   |
-| HOME-10 | Editorial localization                  | Require all three languages for NosLog-authored notices; localize the X section UI while preserving the embedded source post's original language.                                                                | `Approved`   |
-| HOME-11 | Empty search behavior                   | Treat empty and whitespace-only submission as explicit entry to the active scope's browse catalog; omit empty `q`, preserve scope, and defer catalog defaults to the shared discovery brief.                     | `Approved`   |
-| HOME-12 | Desktop composition                     | Use semantic zones beyond 390px: centered bounded search, a bounded four-column by two-row destination collection, then a larger NosLog-updates region beside smaller official news when space permits.          | `Approved`   |
-| HOME-13 | Routine NosLog announcement destination | Keep once on Home below the eight-destination collection, immediately before official NOSTALGIA news.                                                                                                            | `Approved`   |
-| HOME-14 | Empty official-news state               | Keep the localized official-channel link without an empty feed shell; core tasks remain unchanged.                                                                                                               | `Approved`   |
-| HOME-15 | Routine announcement presentation       | Show the newest three title-and-date links on every viewport; open localized detail pages, provide an archive link, and omit the section when empty.                                                             | `Approved`   |
-| HOME-16 | Search preview                          | After IME-safe `300ms` idle, show at most five ranked matches without internal scrolling or in-place expansion; use the approved four states and hand excess matches to shared discovery.                        | `Approved`   |
-| HOME-17 | Async preview feedback                  | Use an anchored non-modal popup, delayed `400ms` visual loading, immediate prior-result invalidation, stale-response rejection, and inline retryable failure without blocking Home or marking the query invalid. | `Approved`   |
-| HOME-18 | Destination grid geometry               | Use eight equal destination blocks, including Data Sync as the eighth peer, in exactly four columns and two rows at every supported width; never stretch the final item or expand desktop to one row.            | `Approved`   |
-| HOME-19 | Home `N` logo mark                      | Preserve the compact `N` mark in the Home identity region while retaining a visible `NosLog` heading and localized service description.                                                                          | `Approved`   |
+| ID      | Decision                                | Direction or question                                                                                                                                                                                                                                                  | Status       |
+| ------- | --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| HOME-01 | Home role                               | Orientation and task-routing surface, not a dashboard or miniature copy of every page.                                                                                                                                                                                 | `Approved`   |
+| HOME-02 | Primary task                            | Shared Music/Chart search is the strongest Home task.                                                                                                                                                                                                                  | `Approved`   |
+| HOME-03 | Destination set                         | Music, Chart Viewer, Rankings, Tiers, Bingo, Exams, Arcades, and Data Sync remain separate peer destinations.                                                                                                                                                          | `Approved`   |
+| HOME-04 | Data Sync                               | Superseded by `HOME-18`: replace the former separate play-support row with Data Sync as the eighth peer in the Home destination collection; retain the stable More-panel entry.                                                                                        | `Superseded` |
+| HOME-05 | Feedback                                | Move to More; do not show on Home or duplicate in Footer.                                                                                                                                                                                                              | `Approved`   |
+| HOME-06 | Personalization card                    | Do not add stale-sync, recent-play, or incomplete-content cards.                                                                                                                                                                                                       | `Rejected`   |
+| HOME-07 | Destination prominence                  | Use one consistent block family; express priority through shared search and the order Music → Chart Viewer → Tiers → Rankings → Bingo → Exams → Arcades → Data Sync.                                                                                                   | `Approved`   |
+| HOME-08 | Notice placement rule                   | Give each notice one role and one placement: at most one active task-affecting notice before search; routine updates once below core tasks.                                                                                                                            | `Approved`   |
+| HOME-09 | Official-news presentation              | Use X's official Embedded Timeline to show the latest `NOSTALGIA_573` source post once in a distinct grid after routine NosLog announcements.                                                                                                                          | `Approved`   |
+| HOME-10 | Editorial localization                  | Require all three languages for NosLog-authored notices; localize the X section UI while preserving the embedded source post's original language.                                                                                                                      | `Approved`   |
+| HOME-11 | Empty search behavior                   | Treat empty and whitespace-only submission as explicit entry to the active scope's browse catalog; omit empty `q`, preserve scope, and defer catalog defaults to the shared discovery brief.                                                                           | `Approved`   |
+| HOME-12 | Desktop composition                     | Use semantic zones beyond 390px: centered bounded search, a bounded four-column by two-row destination collection, then a larger NosLog-updates region beside smaller official news when space permits.                                                                | `Approved`   |
+| HOME-13 | Routine NosLog announcement destination | Keep once on Home below the eight-destination collection, immediately before official NOSTALGIA news.                                                                                                                                                                  | `Approved`   |
+| HOME-14 | Empty official-news state               | Keep the localized official-channel link without an empty feed shell; core tasks remain unchanged.                                                                                                                                                                     | `Approved`   |
+| HOME-15 | Routine announcement presentation       | Show the newest three title-and-date links on every viewport; open localized detail pages, provide an archive link, and omit the section when empty.                                                                                                                   | `Approved`   |
+| HOME-16 | Search preview                          | After IME-safe `300ms` idle, show at most five ranked matches without internal scrolling or in-place expansion; use the approved four states and hand excess matches to shared discovery.                                                                              | `Approved`   |
+| HOME-17 | Async preview feedback                  | Use an anchored non-modal popup, delayed `400ms` visual loading, immediate prior-result invalidation, stale-response rejection, and inline retryable failure without blocking Home or marking the query invalid.                                                       | `Approved`   |
+| HOME-18 | Destination grid geometry               | Superseded by `HOME-20`: formerly fixed eight equal destination blocks to four columns and two rows at every supported width.                                                                                                                                          | `Superseded` |
+| HOME-19 | Home `N` logo mark                      | Preserve the compact `N` mark in the Home identity region while retaining a visible `NosLog` heading and localized service description.                                                                                                                                | `Approved`   |
+| HOME-20 | Adaptive destination geometry           | Use eight equal peers as `3 × 3` below the validated compact content width and `4 × 2` when sufficient width is available; keep the final compact row source ordered and unstretched, preserve 14px control labels, and use concise localized labels without ellipsis. | `Approved`   |
 
 ## Phase Approval
 
@@ -884,13 +901,19 @@ interaction, responsive behavior, states, accessibility, localization, and downs
 handoff contracts.
 
 On 2026-08-08, the user approved `HOME-18`, superseding the former separate Data Sync
-Home row and the previously open destination column count. This amendment keeps Data
-Sync's More-panel entry and fixes the Home destination collection at eight equal
-blocks in a `4 × 2` relationship across supported widths.
+Home row and the previously open destination column count. The later `HOME-20`
+amendment keeps the same eight equal peers and Data Sync's More-panel entry, but
+supersedes the fixed cross-width geometry: compact regions use `3 × 3`, while regions
+with sufficient label measure use `4 × 2`.
 
 The same review approved `HOME-19`: the compact `N` logo mark remains part of the
 Home identity. It is not a substitute for the visible service name, semantic page
 heading, or localized description.
+
+The user approved `HOME-20` after reviewing the compact multilingual and `200%` text
+pressure. The visible destination role remains `14/20`; English `Chart Viewer` is
+shortened to `Charts` in this navigation context, with corresponding concise Korean
+and Japanese labels. Labels wrap when needed and are not ellipsized.
 
 Exact foundation tokens, final visual geometry and breakpoints, component styling,
 localized production copy, and scheduled representative specimens remain downstream

@@ -443,6 +443,11 @@
                 list-style: none;
             }
 
+            .specimen-frame[data-destination-layout="compact"]
+                .destination-list {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+
             .destination-link {
                 display: flex;
                 min-width: 0;
@@ -739,6 +744,9 @@
                 >
                     390
                 </button>
+                <button type="button" data-control="width" data-value="480">
+                    480
+                </button>
                 <button type="button" data-control="width" data-value="672">
                     672
                 </button>
@@ -844,6 +852,7 @@
                 id="s5-specimen"
                 data-width="390"
                 data-tier="compact"
+                data-destination-layout="compact"
                 data-locale="ko"
                 data-text-scale="100"
                 data-state="normal"
@@ -1063,7 +1072,7 @@
                                         <span
                                             class="destination-label"
                                             data-destination="1"
-                                            >채보 뷰어</span
+                                            >채보</span
                                         >
                                     </a>
                                 </li>
@@ -1276,7 +1285,7 @@
                     destinations: "주요 기능",
                     destinationLabels: [
                         "악곡",
-                        "채보 뷰어",
+                        "채보",
                         "서열",
                         "랭킹",
                         "빙고",
@@ -1316,7 +1325,7 @@
                     destinations: "主な機能",
                     destinationLabels: [
                         "楽曲",
-                        "譜面ビューア",
+                        "譜面",
                         "難易度表",
                         "ランキング",
                         "ビンゴ",
@@ -1356,7 +1365,7 @@
                     destinations: "Main destinations",
                     destinationLabels: [
                         "Music",
-                        "Chart Viewer",
+                        "Charts",
                         "Tiers",
                         "Rankings",
                         "Bingo",
@@ -1451,6 +1460,8 @@
 
             function applyWidth(width) {
                 specimen.dataset.width = width;
+                specimen.dataset.destinationLayout =
+                    Number(width) < 480 ? "compact" : "standard";
                 specimen.dataset.tier =
                     Number(width) >= 1056
                         ? "wide"
@@ -1485,7 +1496,8 @@
 
             function runValidationMatrix() {
                 const widths = [
-                    320, 390, 671, 672, 673, 1055, 1056, 1057, 1280, 1440,
+                    320, 390, 479, 480, 481, 671, 672, 673, 1055, 1056, 1057,
+                    1280, 1440,
                 ];
                 const locales = ["ko", "ja", "en"];
                 const scales = ["100", "200"];
@@ -1538,6 +1550,14 @@
                                         .trim()
                                         .split(/\s+/)
                                         .filter(Boolean);
+                                const compactDestinations = width < 480;
+                                const expectedDestinationColumns =
+                                    compactDestinations ? 3 : 4;
+                                const expectedDestinationRows =
+                                    compactDestinations ? 3 : 2;
+                                const destinationRects = destinationLinks.map(
+                                    (element) => element.getBoundingClientRect()
+                                );
                                 const popup =
                                     specimen.querySelector(".search-popup");
                                 const popupRect = popup.getBoundingClientRect();
@@ -1577,9 +1597,22 @@
                                         specimen.clientWidth,
                                     eightDestinations:
                                         destinationLinks.length === 8,
-                                    fourColumns:
-                                        destinationColumns.length === 4,
-                                    twoRows: destinationRows.length === 2,
+                                    destinationColumns:
+                                        destinationColumns.length ===
+                                        expectedDestinationColumns,
+                                    destinationRows:
+                                        destinationRows.length ===
+                                        expectedDestinationRows,
+                                    compactFinalRowLeading:
+                                        !compactDestinations ||
+                                        (Math.abs(
+                                            destinationRects[6].left -
+                                                destinationRects[0].left
+                                        ) < 1 &&
+                                            Math.abs(
+                                                destinationRects[7].left -
+                                                    destinationRects[1].left
+                                            ) < 1),
                                     targets: destinationLinks.every(
                                         (element) => {
                                             const rect =

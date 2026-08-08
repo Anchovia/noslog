@@ -8,7 +8,7 @@
   [31-foundation-s5-home-structural-validation.ko.md](./31-foundation-s5-home-structural-validation.ko.md)
 - Started: 2026-08-08
 - Scope: structural validation of the approved Home identity, shared search,
-  fixed destination collection, notice hierarchy, editorial composition,
+  adaptive destination collection, notice hierarchy, editorial composition,
   localization, state, target, and responsive contracts on representative specimen
   `S5`
 - Interactive specimen:
@@ -29,8 +29,9 @@
 - [Foundation typography and layout candidates](./26-foundation-typography-layout-candidates.md)
 
 The Home brief owns purpose, task hierarchy, destination meaning, search behavior,
-announcement placement, official-news role, state behavior, and the exact `4 × 2`
-destination relationship. The Announcement brief owns publication and Archive/Detail
+announcement placement, official-news role, state behavior, and the approved adaptive
+`3 × 3` compact / `4 × 2` standard destination relationship. The Announcement brief
+owns publication and Archive/Detail
 behavior. Documents `25` and `26` own shared typography, spacing, grid, container,
 density, and target contracts. This validation may expose a conflict but may not
 silently rewrite those authorities.
@@ -45,9 +46,10 @@ must answer:
    shared Music/Chart search form one restrained identity-and-task region?
 2. Can search remain the strongest Home task without removing the eight direct
    destinations that support alternative navigation?
-3. Can eight equal destinations remain exactly four columns by two rows at `320 CSS
-px`, across Korean/Japanese/English, and at `200%` text without clipping,
-   truncation, micro-type, or document horizontal scrolling?
+3. Can eight equal destinations reflow to three columns by three rows at `320 CSS px`
+   and return to four columns by two rows when sufficient width is available, across
+   Korean/Japanese/English and at `200%` text, without clipping, truncation, micro-type,
+   or document horizontal scrolling?
 4. Can intermediate and wide layouts bound search and destinations deliberately rather
    than retaining the current `390px` canvas or stretching four blocks indefinitely?
 5. Can one service-critical notice precede search without turning routine updates into
@@ -68,7 +70,7 @@ px`, across Korean/Japanese/English, and at `200%` text without clipping,
 - It does not implement the scope selector, IME-safe debounce, search API, X widget,
   announcement routes, or responsive application shell.
 - It does not personalize Home, add a fixed bottom navigation, add descriptions to
-  destination blocks, or reopen the destination order and `4 × 2` decision.
+  destination blocks, or reopen the destination order and approved adaptive geometry.
 - It does not move Feedback back to Home, move Privacy or GitHub out of the footer, or
   change the already approved announcement order.
 - It does not use the legacy NOSTORY Figma as current layout authority.
@@ -111,20 +113,26 @@ are not 2.0 design authority.
 
 The representative structure uses the approved page-grid tiers as follows:
 
-| Page-layout tier | Search and identity | Destination collection | Destination geometry |
-| ---------------- | ------------------- | ---------------------- | -------------------- |
-| Compact `<672`   | `4/4` tracks        | `4/4` tracks           | exactly `4 × 2`      |
-| Intermediate     | centered `6/8`      | `8/8` tracks           | exactly `4 × 2`      |
-| Wide `≥1056`     | centered `8/12`     | centered `8/12`        | exactly `4 × 2`      |
+| Page-layout tier                | Search and identity | Destination collection | Destination geometry |
+| ------------------------------- | ------------------- | ---------------------- | -------------------- |
+| Narrow compact region `<448px`  | `4/4` tracks        | `4/4` tracks           | exactly `3 × 3`      |
+| Compact region `≥448px`, `<672` | `4/4` tracks        | `4/4` tracks           | exactly `4 × 2`      |
+| Intermediate                    | centered `6/8`      | `8/8` tracks           | exactly `4 × 2`      |
+| Wide `≥1056`                    | centered `8/12`     | centered `8/12`        | exactly `4 × 2`      |
 
-The page-grid thresholds align regions; they do not change the number of destination
-columns. Search and destinations remain bounded at wide widths instead of stretching
-to the complete `standard` container.
+The `448px` value is the measured available destination-region width, equivalent to a
+`480px` specimen frame with current compact gutters; it is not a universal device
+breakpoint. Production should react to the collection container's available width.
+Page-grid thresholds continue to align larger regions. Search and destinations remain
+bounded at wide widths instead of stretching to the complete `standard` container.
 
 ### Destination component family
 
 - Use one semantic list of eight complete-link targets in the approved order: Music,
-  Chart Viewer, Tiers, Rankings, Bingo, Exams, Arcades, and Data Sync.
+  Chart Viewer, Tiers, Rankings, Bingo, Exams, Arcades, and Data Sync. The concise
+  visible navigation labels are `Music`, `Charts`, `Tiers`, `Rankings`, `Bingo`,
+  `Exams`, `Arcades`, and `Data Sync` in English, with `악곡`/`채보` and `楽曲`/`譜面`
+  equivalents for the first two entries.
 - Every peer uses the same navigational component anatomy: one non-essential icon and
   one visible localized label. No descriptions, status badges, nested buttons, or
   local filters are added.
@@ -136,7 +144,8 @@ to the complete `standard` container.
   widths they may align inline when complete labels fit. At `200%` text they return to
   stacking.
 - Labels wrap; they are never clipped, ellipsized, converted to icon-only controls, or
-  reduced below the approved type system. Rows grow from their longest required peer.
+  reduced below the approved `14/20` control role. Rows grow from their longest
+  required peer.
 
 ### Notice and editorial hierarchy
 
@@ -189,15 +198,15 @@ to the complete `standard` container.
   from bounded routine editorial content with a complete-history destination.
 - Rhythm-game and chart references support explicit domain destinations and
   source-separated official news, but do not define NosLog's exact destination count,
-  `4 × 2` relationship, or Music/Chart scope behavior. Those remain approved NosLog
-  decisions.
+  adaptive `3 × 3`/`4 × 2` relationship, or Music/Chart scope behavior. Those remain
+  approved NosLog decisions.
 
 ## Representative Fixture and State Matrix
 
 | ID        | Purpose                       | Specimen content                                                                        |
 | --------- | ----------------------------- | --------------------------------------------------------------------------------------- |
 | `HOME-01` | Identity and search           | `N` mark, visible `NosLog` heading, localized context, scope control, field, and submit |
-| `HOME-02` | Destination density           | eight icon-and-label peer links in exact `4 × 2` geometry                               |
+| `HOME-02` | Destination density           | eight icon-and-label peer links in compact `3 × 3` and standard/wide `4 × 2` geometry   |
 | `HOME-03` | Routine editorial hierarchy   | three title/date announcement rows, Archive link, and one official source region        |
 | `HOME-04` | Service interruption          | one concise service-critical notice with a detail handoff                               |
 | `HOME-05` | Preview results               | three representative matches plus complete-results handoff                              |
@@ -205,9 +214,10 @@ to the complete `standard` container.
 | `HOME-07` | Empty routine collection      | routine section omitted; official source remains after destinations                     |
 | `HOME-08` | Third-party failure           | no feed shell; localized failure copy and official-account link                         |
 
-The specimen exposes `320`, `390`, `672`, `1056`, `1280`, and `1440px` controls,
+The specimen exposes `320`, `390`, `480`, `672`, `1056`, `1280`, and `1440px` controls,
 Korean/Japanese/English content, default and `200%` text, and eight representative
-states. Automated measurement must additionally cover `671/672/673` and
+states. Automated measurement must additionally cover destination transition
+`479/480/481`, page-grid transition `671/672/673`, and wide transition
 `1055/1056/1057px`, every width/locale/text/state combination, target geometry,
 popup containment, and frame overflow.
 
@@ -217,7 +227,8 @@ popup containment, and frame overflow.
 2. `S5-B` — optional service-critical notice before the primary task;
 3. `S5-C` — restrained `N` mark, `NosLog` heading, context, and shared search;
 4. `S5-D` — anchored preview with results, delayed loading, empty, and error states;
-5. `S5-E` — eight equal whole-link destinations in fixed `4 × 2` geometry;
+5. `S5-E` — eight equal whole-link destinations in adaptive compact `3 × 3` and
+   standard/wide `4 × 2` geometry;
 6. `S5-F` — three-item routine Announcement collection plus Archive handoff;
 7. `S5-G` — separate one-post official source or direct-link fallback;
 8. `S5-H` — stacked compact/intermediate and `8/4` wide editorial composition;
@@ -225,65 +236,68 @@ popup containment, and frame overflow.
 
 ## Measurement Matrix
 
-| Group           | Required measurements                                                                                   |
-| --------------- | ------------------------------------------------------------------------------------------------------- |
-| Compact         | `320`, `390px` and `671px` adjacent threshold                                                           |
-| Intermediate    | `672`, `673px` and `1055px` adjacent threshold                                                          |
-| Wide            | `1056`, `1057`, `1280`, and `1440px` with `standard` maximum behavior                                   |
-| Text            | default and `200%`; production also requires browser zoom and WCAG text-spacing overrides               |
-| Language        | Korean, Japanese, and English long destination, notice, search, and official-fallback content           |
-| Search state    | closed, results, delayed loading, no match, and retrieval error                                         |
-| Editorial state | normal, service critical, no routine announcements, and official source unavailable                     |
-| Input           | keyboard/pointer scope, preview results, complete handoff, Escape, outside dismissal, and retry later   |
-| Structure       | no frame overflow, exact eight items and four columns/two rows, correct wide spans, no nested scrolling |
+| Group           | Required measurements                                                                                                                                                  |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Compact         | `320`, `390px`, destination threshold `479/480/481px`, and page-grid threshold `671px`                                                                                 |
+| Intermediate    | `672`, `673px` and `1055px` adjacent threshold                                                                                                                         |
+| Wide            | `1056`, `1057`, `1280`, and `1440px` with `standard` maximum behavior                                                                                                  |
+| Text            | default and `200%`; production also requires browser zoom and WCAG text-spacing overrides                                                                              |
+| Language        | Korean, Japanese, and English long destination, notice, search, and official-fallback content                                                                          |
+| Search state    | closed, results, delayed loading, no match, and retrieval error                                                                                                        |
+| Editorial state | normal, service critical, no routine announcements, and official source unavailable                                                                                    |
+| Input           | keyboard/pointer scope, preview results, complete handoff, Escape, outside dismissal, and retry later                                                                  |
+| Structure       | no frame overflow, exact eight items, `3 × 3` below and `4 × 2` at/above the destination threshold, leading compact final row, correct wide spans, no nested scrolling |
 
 ## Browser Validation Record
 
 Measured in the test browser on 2026-08-08.
 
-| Validation                   | Result                        | Evidence                                                                                                                                |
-| ---------------------------- | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| Automated structural matrix  | `Pass — 480/480`              | Ten widths (`320`, `390`, `671`, `672`, `673`, `1055`, `1056`, `1057`, `1280`, `1440`) × three locales × two text scales × eight states |
-| Document horizontal overflow | `Pass`                        | No tested case exceeded its specimen frame                                                                                              |
-| Destination relationship     | `Pass`                        | Every case retained exactly eight targets, four columns, and two rows                                                                   |
-| Target geometry              | `Pass`                        | Every destination target retained a minimum measured block size of `44px`                                                               |
-| Search preview containment   | `Pass`                        | Results, loading, empty, and error previews remained within the search region without internal scrolling                                |
-| Compact visual review        | `Pass with recorded tradeoff` | `390px` Korean default and `320px` English at `200%` retained order, labels, overlay behavior, and one-dimensional reflow               |
-| Wide visual review           | `Pass`                        | `1056px` Korean default retained centered `8/12` task regions and the `8/4` editorial relationship                                      |
-| Wide no-routine state        | `Pass`                        | With routine announcements omitted, official news occupied the approved leading `4/12` tracks rather than floating at the right edge    |
+| Validation                   | Result           | Evidence                                                                                                                                                            |
+| ---------------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Automated structural matrix  | `Pass — 624/624` | Thirteen widths (`320`, `390`, `479`, `480`, `481`, `671`, `672`, `673`, `1055`, `1056`, `1057`, `1280`, `1440`) × three locales × two text scales × eight states   |
+| Document horizontal overflow | `Pass`           | No tested case exceeded its specimen frame                                                                                                                          |
+| Destination relationship     | `Pass`           | `320`, `390`, and `479px` retained eight equal targets in `3 × 3`; `480px` and above retained `4 × 2`; the compact final row remained leading and unstretched       |
+| Destination transition       | `Pass`           | Adjacent `479/480/481px` checks changed only the approved destination geometry and created no frame overflow                                                        |
+| Target geometry              | `Pass`           | Every destination target retained a minimum measured block size of `44px`                                                                                           |
+| Search preview containment   | `Pass`           | Results, loading, empty, and error previews remained within the search region without internal scrolling                                                            |
+| Compact visual review        | `Pass`           | `390px` Korean default and `320px` English at `200%` used `3 × 3`, retained `14/20` at default scale, preserved order, and avoided ellipsis and horizontal overflow |
+| Wide visual review           | `Pass`           | `1056px` Korean default retained centered `8/12` task regions and the `8/4` editorial relationship                                                                  |
+| Wide no-routine state        | `Pass`           | With routine announcements omitted, official news occupied the approved leading `4/12` tracks rather than floating at the right edge                                |
 
-The first automated run exposed fifteen English `200%` cases at `320/390px` where a
-section heading row produced horizontal overflow. The correction allows the heading,
-archive/source link, and enlarged copy to reflow vertically instead of reducing type or
-clipping content. The complete matrix then passed with zero failures.
+The first pre-amendment automated run exposed fifteen English `200%` cases at
+`320/390px` where a section heading row produced horizontal overflow. The correction
+allows the heading, archive/source link, and enlarged copy to reflow vertically instead
+of reducing type or clipping content. After `HOME-20`, the expanded 624-case matrix
+also passed with zero failures.
 
-At the deliberately severe `320px` plus English `200%` combination, long destination
-labels wrap across several lines because the approved `4 × 2` relationship remains
-fixed. This is not clipping or horizontal overflow, but it is a visible density
-tradeoff that the First Review must accept explicitly. Numeric pass results still do
-not replace user review of N-mark emphasis, search priority, destination density,
+The prior deliberately severe `320px` plus English `200%` combination exposed the
+cost of a fixed four-column compact collection. `HOME-20` replaces that relationship
+with three columns, keeps the final two peers equal at the leading edge of the third
+row, and shortens only the visible Chart navigation label. Numeric pass results still
+do not replace user review of N-mark emphasis, search priority, destination density,
 popup overlay, announcement placement, or wide editorial balance.
 
 ## Decision and Validation Status Log
 
-| ID       | Entry                                                                                                                                                                       | Status     |
-| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| `S5V-01` | Treat current six-item `3 × 2` Home, separate Data Sync, Home Feedback, top routine notice, Music-only search, and fixed `390px` desktop canvas as migration evidence only. | `Observed` |
-| `S5V-02` | Preserve the compact `N` logo mark together with a visible `NosLog` heading and localized service description.                                                              | `Approved` |
-| `S5V-03` | Keep Home identity on `page-title`, not `display`, and make search strongest through task order and bounded composition.                                                    | `Approved` |
-| `S5V-04` | Use `4/4`, centered `6/8`, and centered `8/12` search relationships across compact, intermediate, and wide tiers.                                                           | `Approved` |
-| `S5V-05` | Keep destinations at exact `4 × 2` in every tier with one icon, one visible label, one whole-link target, and no visible group heading or description.                      | `Approved` |
-| `S5V-06` | Let the critical surface span the standard region while bounding its wide readable content to the centered eight-track task measure.                                        | `Approved` |
-| `S5V-07` | Stack editorial sections below wide and use routine `8/12` plus official `4/12` at wide widths, without moving either above destinations.                                   | `Approved` |
-| `S5V-08` | When routine announcements are absent at wide width, place the remaining official region at the leading `4/12` tracks instead of leaving it floating at the right edge.     | `Approved` |
-| `S5V-09` | Keep exact visual appearance, production dimensions, iconography, X integration, search implementation, and application code outside this gate.                             | `Approved` |
+| ID       | Entry                                                                                                                                                                                                                                             | Status       |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| `S5V-01` | Treat current six-item `3 × 2` Home, separate Data Sync, Home Feedback, top routine notice, Music-only search, and fixed `390px` desktop canvas as migration evidence only.                                                                       | `Observed`   |
+| `S5V-02` | Preserve the compact `N` logo mark together with a visible `NosLog` heading and localized service description.                                                                                                                                    | `Approved`   |
+| `S5V-03` | Keep Home identity on `page-title`, not `display`, and make search strongest through task order and bounded composition.                                                                                                                          | `Approved`   |
+| `S5V-04` | Use `4/4`, centered `6/8`, and centered `8/12` search relationships across compact, intermediate, and wide tiers.                                                                                                                                 | `Approved`   |
+| `S5V-05` | Formerly kept destinations at exact `4 × 2` in every tier. Superseded by `S5V-10` after compact multilingual and enlarged-text review.                                                                                                            | `Superseded` |
+| `S5V-06` | Let the critical surface span the standard region while bounding its wide readable content to the centered eight-track task measure.                                                                                                              | `Approved`   |
+| `S5V-07` | Stack editorial sections below wide and use routine `8/12` plus official `4/12` at wide widths, without moving either above destinations.                                                                                                         | `Approved`   |
+| `S5V-08` | When routine announcements are absent at wide width, place the remaining official region at the leading `4/12` tracks instead of leaving it floating at the right edge.                                                                           | `Approved`   |
+| `S5V-09` | Keep exact visual appearance, production dimensions, iconography, X integration, search implementation, and application code outside this gate.                                                                                                   | `Approved`   |
+| `S5V-10` | Use eight equal destinations as compact `3 × 3` below the measured available-width threshold and `4 × 2` otherwise; keep the final compact row leading and unstretched, use concise localized Chart labels, retain `14/20`, and do not ellipsize. | `Approved`   |
 
 ## First Review Gate
 
 User review is still required before this measured draft is promoted:
 
-1. visual acceptance of the measured fit and hierarchy, including the explicit
-   `320px` English `200%` destination-label wrapping tradeoff;
+1. visual acceptance of the remeasured adaptive destination fit and hierarchy,
+   including the compact incomplete final row;
 2. whether the measured structure requires any Foundation correction despite the
    zero-failure matrix; and
 3. promotion of the validation record from `Measured draft` to `Approved`.

@@ -6,7 +6,7 @@
 - 근거 상태: `저장소 및 브라우저 감사 완료, 레퍼런스 비교 완료`
 - 작성 시작일: 2026-07-30
 - 승인일: 2026-07-31
-- 최종 개정일: 2026-08-08 (`HOME-19`)
+- 최종 개정일: 2026-08-08 (`HOME-20`)
 - 문서 언어: 한국어 동기화본
 - 영어 원본: [03-home-page-brief.md](./03-home-page-brief.md)
 - 상위 정보 구조:
@@ -260,8 +260,9 @@ Template이 아닙니다.
 3. 간결한 NosLog 정체성과 범위 인식 검색을 데스크톱 홈에서 가장 강한 중앙
    구역으로 유지하고, 전체 Container로 늘리지 않고 읽기 좋은 최대 너비를
    사용합니다.
-4. 데이터 연동을 포함한 동등한 여덟 목적지 블록은 검색 뒤에 4열 2행
-   Collection으로 정렬하고 승인된 읽기 순서를 보존합니다.
+4. 데이터 연동을 포함한 동등한 여덟 목적지 블록은 검색 뒤에 배치합니다.
+   Collection 너비가 충분하면 4열 2행, Compact 너비에서는 3열 3행을 사용하고
+   승인된 Source 순서를 보존합니다.
 5. 일반 NosLog 공지와 NOSTALGIA 공식 소식은 하단 편집 구역에만 배치합니다.
 6. 충분히 넓은 레이아웃에서는 두 편집 Section을 나란히 배치하고 NosLog 공지
    Collection에 더 큰 비중을, 공식 소식에는 더 작은 동등 구역을 제공합니다.
@@ -274,29 +275,33 @@ Gutter, 카드 치수 또는 두 데스크톱 편집 영역의 정확한 비율�
 확정하지 않습니다. 해당 값은 실제 한국어·일본어·영어 콘텐츠가 필요한
 Foundation 및 대표 예시 결정으로 남깁니다.
 
-### HOME-18 집중 레퍼런스 비교
+### HOME-18 / HOME-20 집중 레퍼런스 비교
 
 목적지 Grid 결정은 권위 있는 반응형·접근성 지침, 프로덕션 내비게이션 조사,
 확립된 Grid·Collection System 및 현재 NosLog 근거를 비교했습니다. 자료는
 불필요하게 긴 모바일 탐색을 줄이고, 동등한 항목에 일관된 Span과 Keyline을
 적용하며, 의미 있는 읽기 순서를 보존하고, `320 CSS px` Reflow를 검증하는
-방향에서 수렴했습니다. 이 자료들이 NosLog에 4열을 직접 지시하지는 않습니다.
-정확한 `4 × 2` Geometry는 행 개수, 탐색 비용 및 여덟 번째 목적지를 비교한 뒤
-사용자가 승인한 NosLog 고유 결정입니다.
+방향에서 수렴했습니다. 이 자료들이 NosLog에 하나의 고정 열 개수를 직접
+지시하지는 않습니다. 승인된 NosLog 고유 해법은 네 열에서 다국어 Label 공간이
+부족해지는 Compact 상태에서는 `3 × 3`을 사용하고, 충분한 너비에서는 `4 × 2`로
+복귀합니다.
 
-| 레퍼런스 유형                 | 출처                                                                                                                                                                                                                                                                                                                                                                                                                                                       | 전환 가능한 원칙과 NosLog 적용                                                                                                                                                                                                               | 한계                                                                                               |
-| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| 모바일 홈과 내비게이션 근거   | [Baymard: Mobile Homepage and Category Navigation](https://baymard.com/blog/mobile-homepage-usability), [Baymard: Main Navigation UX](https://baymard.com/blog/ecommerce-navigation-best-practice)                                                                                                                                                                                                                                                         | 모바일 사용자는 홈의 직접 Shortcut에 의존하고, 긴 Category Collection은 전체 파악과 이동을 느리게 합니다. 읽을 수 있는 2행 Collection이 들어가는 한 여덟 개의 간결한 NosLog 목적지를 모바일 4행 목록으로 만들지 않습니다.                    | Commerce Category는 NosLog의 동등한 여덟 목적지보다 수가 많고 이질적입니다.                        |
-| 계층, 읽기 순서 및 Reflow     | [Microsoft Fluent 2: Layout](https://fluent2.microsoft.design/layout), [Figma: UI Design Principles](https://www.figma.com/resource-library/ui-design-principles/), [Apple HIG: Layout](https://developer.apple.com/design/human-interface-guidelines/layout), [W3C: Reflow](https://www.w3.org/WAI/WCAG21/Understanding/reflow.html)                                                                                                                      | 우선 콘텐츠를 먼저 보여주고 Source·Focus 순서를 보존하며 반복 Control을 정렬하고 `320 CSS px`에서 2차원 Scroll을 피합니다. 따라서 `4 × 2` Collection은 긴 다국어 라벨을 자르거나 가로 Overflow를 만들지 않고 안전하게 줄바꿈해야 합니다.     | 이 자료들은 계층과 접근성 제약을 정하지만 NosLog 열 개수를 정하지 않습니다.                        |
-| 동등 Grid와 Collection System | [Carbon: 2x Grid](https://carbondesignsystem.com/elements/2x-grid/overview/), [USWDS: Layout Grid](https://designsystem.digital.gov/utilities/layout-grid/), [Adobe Spectrum: Cards](https://spectrum.adobe.com/page/cards/), [Atlassian: Applying Grid](https://atlassian.design/foundations/grid-beta/applying-grid/), [Primer: Grid](https://primer.style/brand/layout/Grid/), [Bootstrap: Grid System](https://getbootstrap.com/docs/5.0/layout/grid/) | 반복되는 동등 항목에는 같은 Span, 반복 가능한 Keyline 및 일관된 Collection Rhythm이 적합합니다. 여덟 블록을 같은 크기로 사용하고 마지막 항목을 늘리거나 승인되지 않은 계층으로 Span을 바꾸거나 Collection을 한 줄 Toolbar로 만들지 않습니다. | 각 System의 Token, Breakpoint 및 Surface Style은 제품 고유 값이며 NosLog 값으로 채택하지 않습니다. |
-| 적응형 레이아웃 구현          | [Android: Adapt Layout](https://developer.android.com/design/ui/mobile/guides/layout-and-content/adapt-layout), [Material 3: Canonical Layouts](https://m3.material.io/foundations/layout/canonical-examples/overview), [GOV.UK: Layout](https://design-system.service.gov.uk/styles/layout/), [Tailwind CSS: Responsive Design](https://tailwindcss.com/docs/responsive-design)                                                                           | 반응형 구성은 콘텐츠 제약을 따라야 하며 넓은 공간이 자동으로 더 많은 열을 요구하지는 않습니다. 작은 화면과 큰 화면 모두 승인된 `4 × 2` 관계를 유지하고 데스크톱에서는 Collection 너비를 제한해 페이지 Grid에 정렬합니다.                     | 여러 적응형 결과가 유효할 수 있으며 너비 전반의 고정 Geometry는 NosLog 제품 결정입니다.            |
-| 현재 NosLog 근거              | 현재 홈 구현과 검토한 390px 목적지 비교안                                                                                                                                                                                                                                                                                                                                                                                                                  | 현재 여섯 Link 홈은 간결한 동등 Shortcut이 모바일에 들어간다는 근거이며 채보 뷰어와 데이터 연동을 더하면 균형 잡힌 여덟 항목이 됩니다. 승인된 `4 × 2` 구조는 어색하게 남는 마지막 행을 제거하고 세로 행 증가를 막습니다.                     | 현재의 시각 처리와 치수는 사용성 근거일 뿐 NosLog 2.0 최종 디자인이 아닙니다.                      |
+| 레퍼런스 유형                 | 출처                                                                                                                                                                                                                                                                                                                                                                                                                                                       | 전환 가능한 원칙과 NosLog 적용                                                                                                                                                                                                                                               | 한계                                                                                               |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| 모바일 홈과 내비게이션 근거   | [Baymard: Mobile Homepage and Category Navigation](https://baymard.com/blog/mobile-homepage-usability), [Baymard: Main Navigation UX](https://baymard.com/blog/ecommerce-navigation-best-practice)                                                                                                                                                                                                                                                         | 모바일 사용자는 홈의 직접 Shortcut에 의존하고, 긴 Category Collection은 전체 파악과 이동을 느리게 합니다. 여덟 목적지를 4행 목록으로 만들지 않되 Label 가독성이 실질적으로 좋아진다면 3행은 수용합니다.                                                                      | Commerce Category는 NosLog의 동등한 여덟 목적지보다 수가 많고 이질적입니다.                        |
+| 계층, 읽기 순서 및 Reflow     | [Microsoft Fluent 2: Layout](https://fluent2.microsoft.design/layout), [Figma: UI Design Principles](https://www.figma.com/resource-library/ui-design-principles/), [Apple HIG: Layout](https://developer.apple.com/design/human-interface-guidelines/layout), [W3C: Reflow](https://www.w3.org/WAI/WCAG21/Understanding/reflow.html)                                                                                                                      | 우선 콘텐츠를 먼저 보여주고 Source·Focus 순서를 보존하며 반복 Control을 정렬하고 `320 CSS px`에서 2차원 Scroll을 피합니다. Compact `3 × 3` Reflow는 Clipping, Ellipsis 또는 Micro-type 없이 Label을 보호하고 마지막 두 Peer는 같은 크기로 마지막 행의 앞 두 칸을 사용합니다. | 이 자료들은 계층과 접근성 제약을 정하지만 NosLog 열 개수를 정하지 않습니다.                        |
+| 동등 Grid와 Collection System | [Carbon: 2x Grid](https://carbondesignsystem.com/elements/2x-grid/overview/), [USWDS: Layout Grid](https://designsystem.digital.gov/utilities/layout-grid/), [Adobe Spectrum: Cards](https://spectrum.adobe.com/page/cards/), [Atlassian: Applying Grid](https://atlassian.design/foundations/grid-beta/applying-grid/), [Primer: Grid](https://primer.style/brand/layout/Grid/), [Bootstrap: Grid System](https://getbootstrap.com/docs/5.0/layout/grid/) | 반복되는 동등 항목에는 같은 Span, 반복 가능한 Keyline 및 일관된 Collection Rhythm이 적합합니다. 여덟 블록을 같은 크기로 사용하고 마지막 항목을 늘리거나 승인되지 않은 계층으로 Span을 바꾸거나 Collection을 한 줄 Toolbar로 만들지 않습니다.                                 | 각 System의 Token, Breakpoint 및 Surface Style은 제품 고유 값이며 NosLog 값으로 채택하지 않습니다. |
+| 적응형 레이아웃 구현          | [Android: Adapt Layout](https://developer.android.com/design/ui/mobile/guides/layout-and-content/adapt-layout), [Material 3: Canonical Layouts](https://m3.material.io/foundations/layout/canonical-examples/overview), [GOV.UK: Layout](https://design-system.service.gov.uk/styles/layout/), [Tailwind CSS: Responsive Design](https://tailwindcss.com/docs/responsive-design)                                                                           | 반응형 구성은 콘텐츠 제약을 따릅니다. 목적지 영역이 Compact한 동안만 `3 × 3`을 사용하고 이후 제한된 `4 × 2`로 바꾸며, Viewport가 넓다는 이유만으로 열을 더 늘리지 않습니다.                                                                                                  | 여러 적응형 결과가 유효할 수 있으며 정확한 전환점은 NosLog 제품 결정입니다.                        |
+| 현재 NosLog 근거              | 현재 홈 구현과 검토한 320px/390px 목적지 비교안                                                                                                                                                                                                                                                                                                                                                                                                            | Compact 너비에서 세 열은 네 열보다 Label 가용 폭을 실질적으로 늘립니다. 여덟 Peer 때문에 마지막 행 한 칸이 비지만, 모든 블록을 같은 크기와 Source 순서로 유지하는 편이 여덟 번째 항목을 늘리거나 Type을 줄이는 것보다 낫습니다.                                              | 현재의 시각 처리와 치수는 사용성 근거일 뿐 NosLog 2.0 최종 디자인이 아닙니다.                      |
 
-이후 구현과 디자인은 한국어·일본어·영어 라벨 전체, `200%` Text 확대, 최소
-Target 크기 및 `320px`, `390px`, 중간 너비의 가로 Reflow를 계속 검증해야
-합니다. 콘텐츠 압력이 생기면 제한된 Collection 너비, Gap, Padding, 라벨
-줄바꿈 또는 공용 블록 높이를 조정하되 승인된 4열 관계를 임의로 바꾸면 안
-됩니다.
+이후 구현과 디자인은 한국어·일본어·영어 Label 전체, `200%` Text 확대, 최소
+Target 크기 및 `320px`, `390px`와 측정된 Compact-to-standard 전환 주변의 가로
+Reflow를 계속 검증해야 합니다. S5 Specimen은 현재 Compact Gutter를 포함한
+`480px` Frame과 같은 `448px` 목적지 영역을 검증값으로 사용하며, 이는 보편적인
+기기 Breakpoint가 아닙니다. 실제 구현은 목적지 Container의 가용 너비에서 같은
+관계를 전환해야 합니다. Content 압력이 남으면 Gap, Padding, Label 줄바꿈 또는
+공용 블록 높이를 조정하고 Ellipsis 또는 승인된 Type Role보다 작은 Control
+Label을 사용하지 않습니다.
 
 ### HOME-15 집중 레퍼런스 비교
 
@@ -442,9 +447,9 @@ Query가 만든 결과가 아니라 탐색 Catalog로 Label해야 합니다.
    공식 X 최신 게시물을 담는 별도 NOSTALGIA 공식 소식 Grid를 표시
 5. **신뢰 및 프로젝트 푸터:** 개인정보처리방침과 GitHub
 
-목적지 Collection은 지원하는 모든 너비에서 4열 2행으로 승인됐습니다. 정확한
-카드 치수, Container 너비, Gutter 및 High-fidelity 구성은 Foundation과 대표
-예시 결정으로 남깁니다.
+목적지 Collection은 Compact 너비에서 3열 3행, 충분한 너비에서 4열 2행으로
+승인됐습니다. 정확한 Card 치수, Container 너비, Gutter 및 High-fidelity 구성은
+Foundation과 대표 예시에서 결정합니다.
 
 ## 검색 요구사항
 
@@ -526,10 +531,11 @@ Query가 만든 결과가 아니라 탐색 Catalog로 Label해야 합니다.
 - 하나의 일관된 목적지 컴포넌트 Family와 비슷한 조작 영역 크기를
   사용합니다. 뒤에 배치된다는 이유로 빙고, 검정, 오락실 또는 데이터 연동을
   숨기거나, 비활성화하거나, 더보기 Panel 전용 목적지로 만들면 안 됩니다.
-- `320px`, `390px` 및 넓은 데스크톱을 포함해 지원하는 모든 Viewport에서 이
-  Collection을 정확히 4열 2행으로 사용합니다. 2열이나 3열로 축소하거나
-  데스크톱 한 행으로 확장하거나 하나의 블록을 동등한 열 여러 개에 걸쳐
-  늘리면 안 됩니다.
+- 목적지 영역이 검증된 `448px` Content Threshold보다 좁으면 대표 `320px` 및
+  `390px` Frame을 포함해 3열 3행을 사용합니다. 해당 가용 너비 이상에서는 4열
+  2행을 사용합니다. Compact 마지막 두 항목은 Source 순서대로 세 번째 행 앞쪽에
+  두며, 항목을 늘리거나 불균등 Span으로 가운데 정렬하거나 2열로 축소하거나
+  데스크톱 한 행으로 확장하면 안 됩니다.
 - 여덟 블록의 너비와 시각적 비중을 동일하게 유지합니다. 다국어 라벨은
   잘리거나 생략되지 않게 줄바꿈할 수 있으며, Text를 승인된 Type System보다
   작게 줄이지 말고 가장 긴 필수 라벨에 맞춰 공용 행 높이를 조정합니다.
@@ -537,7 +543,10 @@ Query가 만든 결과가 아니라 탐색 Catalog로 Label해야 합니다.
 - 각 목적지는 보이는 다국어 Text가 필요하며 아이콘만 Label로 사용하면 안
   됩니다.
 - 악곡, 채보 뷰어, 서열, 빙고 및 검정은 서로 다른 NOSTALGIA 의미를
-  보존해야 합니다. 일반적인 통합 라벨로 대체하지 않습니다.
+  보존해야 합니다. 일반적인 통합 라벨로 대체하지 않습니다. 간결한 보이는
+  Label은 한국어에서 `악곡`, `채보`, `서열`, `랭킹`, `빙고`, `검정`, `오락실`,
+  `데이터 연동`을 사용할 수 있으며, `채보`는 제품 기능을 바꾸는 이름이 아니라
+  채보 뷰어 Collection 진입 Label입니다.
 - 모든 블록에 기본적으로 설명을 추가하지 않습니다. 라벨만으로 부족하다는
   조사 또는 다국어 검증 근거가 있을 때만 보조 Text를 사용합니다.
 - 홈에 모드 또는 Filter Button 행을 상시 추가하지 않습니다.
@@ -550,10 +559,11 @@ Query가 만든 결과가 아니라 탐색 Catalog로 Label해야 합니다.
 | 서로 다른 카드 크기 또는 Grid Span | 선택한 목적지에 다른 동등 목적지보다 넓은 영역을 제공합니다.                                                 | 계층이 즉시 보입니다.                                                  | 여덟 항목 Grid가 복잡해지고 반응형 일관성이 약해지며 작은 목적지가 덜 완전해 보일 수 있습니다. |
 | 별도 라벨 Group                    | 목적지를 주·보조 Group으로 나눕니다.                                                                         | Text로 구분을 명확히 합니다.                                           | 제목과 시각적 단절을 추가하고 잘못된 도메인 Grouping을 만들 위험이 있습니다.                   |
 
-**승인:** 첫 번째 대안을 지원하는 모든 너비에서 같은 크기의 `4 × 2`
-Collection으로 사용합니다. 정확한 블록 치수는 Foundation 및 대표 예시
-결정으로 남기지만, 이후 시각 디자인은 관련 없는 Accent Color, 임의의 카드
-크기 또는 마지막 항목을 가로 전체로 늘리는 방식으로 강조를 만들면 안 됩니다.
+**승인:** 첫 번째 대안을 같은 크기의 Peer로 사용하며 Compact에서는 `3 × 3`,
+Standard/Wide에서는 `4 × 2` Collection으로 배치합니다. 정확한 블록 치수는
+Foundation 및 대표 예시 결정으로 남기지만, 이후 시각 디자인은 관련 없는
+Accent Color, 임의의 Card 크기 또는 늘어난 마지막 Block으로 강조를 만들면 안
+됩니다.
 
 ## 공지 및 소식 대안
 
@@ -686,9 +696,10 @@ Timeline 구조에서 다시 시작해 연동 문제를 수정하고 지원 브�
 - 비모달 Popup을 검색 Control에 맞추고 Viewport 안에 유지합니다. 이후 홈
   콘텐츠를 일시적으로 가릴 수 있지만 목적지 블록을 밀거나 문서 Overflow를
   만들거나 배경막을 추가하거나 나머지 홈을 막으면 안 됩니다.
-- 데이터 연동을 포함한 여덟 목적지를 정확히 4열 2행으로 유지합니다.
-  `320px`과 `390px`에서도 이 관계를 보존하고, 긴 다국어 라벨은 줄바꿈하며
-  Gap, Padding 또는 공용 블록 높이를 조정하되 가로 Scroll을 만들지 않습니다.
+- 데이터 연동을 포함한 여덟 목적지를 대표 `320px` 및 `390px` Compact
+  Frame에서 3열 3행으로 유지합니다. 마지막 행 세 번째 칸은 마지막 두 Peer를
+  늘리거나 재정렬하지 않고 비워 둡니다. 긴 다국어 Label은 줄바꿈하며 가로
+  Scroll 없이 Gap, Padding 또는 공용 Block 높이를 조정합니다.
 - 한국어·일본어·영어 목적지 라벨이 읽을 수 있어야 합니다.
 - 편집 콘텐츠 때문에 검색과 목적지가 불필요한 소개 콘텐츠 아래로 밀리면 안
   됩니다.
@@ -725,11 +736,12 @@ Timeline 구조에서 다시 시작해 연동 문제를 수정하고 지원 브�
 
 ### Container 동작
 
-목적지 블록과 편집 요약은 해당 영역의 실제 너비에 반응해야 합니다. 홈 목적지
-Collection은 제한된 너비, Gap, Padding, 라벨 줄바꿈 및 공용 블록 높이를
-조정할 수 있지만 승인된 `4 × 2` 관계는 바꾸지 않습니다. Viewport Breakpoint는
-주요 셸 변경을 정의하고, 다른 재사용 가능한 모음은 더 좁은 영역에 배치될 때
-Container Query로 조정할 수 있습니다.
+목적지 Block과 편집 요약은 해당 영역의 실제 너비에 반응해야 합니다. 홈 목적지
+Collection은 승인된 Compact `3 × 3`과 Standard `4 × 2` 사이에서 전환하며 제한
+너비, Gap, Padding, Label 줄바꿈 및 공용 Block 높이도 조정할 수 있습니다. 실제
+전환은 기기 이름이 아니라 Collection Container를 기준으로 합니다. Viewport
+Breakpoint는 주요 Shell 변경을 정의하고, Container Query는 이 Collection과 더
+좁은 영역에서 쓰이는 다른 재사용 Collection을 조정할 수 있습니다.
 
 ## 접근성 요구사항
 
@@ -812,7 +824,8 @@ Container Query로 조정할 수 있습니다.
   모든 직접 목적지의 지속적인 접근
 - 결과 선택, 전체 결과 인계, `Escape`, Query 지우기 및 바깥 조작을 통한
   Popup 닫기와 `Escape` 시 Query 유지
-- 데이터 연동을 포함한 `4 × 2` Collection의 여덟 목적지 Link
+- 데이터 연동과 Compact 마지막 행의 선행 두 항목을 포함한 Compact `3 × 3` 및
+  Standard/Wide `4 × 2` Collection의 여덟 목적지 Link
 - 서비스 중요 공지 없음 및 서비스 중요 공지 하나
 - 공개된 일반 공지 0개, 1개, 정확히 3개 및 3개 초과 상태와 올바른 최신순
   제한 및 전체 Archive 접근
@@ -829,8 +842,8 @@ Container Query로 조정할 수 있습니다.
 - 현재의 모든 홈 기능에 승인 또는 거절 상태가 있습니다.
 - 승인된 정보 구조 목적지가 사라지지 않습니다.
 - 콘텐츠 유지가 동일한 시각적 비중을 의미하지 않습니다.
-- 모바일·데스크톱 동작은 승인된 여덟 항목 `4 × 2` 목적지 Grid를 보존하고,
-  정확한 치수와 Spacing은 대표 검증 대상으로 남깁니다.
+- 모바일·데스크톱 동작은 같은 Peer 크기와 Source 순서를 가진 승인된 여덟 항목
+  적응형 목적지 Grid, 즉 Compact `3 × 3`과 Standard/Wide `4 × 2`를 보존합니다.
 - UI 라벨뿐 아니라 편집 데이터에도 3개 언어 제약이 있습니다.
 - 로딩, 빈 상태, 오류, 로그인 및 모션 감소 상태를 다룹니다.
 - 중요한 홈 동작 중 `미확정` 또는 `제안`으로 남은 것은 없습니다. 예정된
@@ -840,27 +853,28 @@ Container Query로 조정할 수 있습니다.
 
 ## 결정 기록
 
-| ID      | 결정                    | 방향 또는 질문                                                                                                                                                                  | 상태   |
-| ------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
-| HOME-01 | 홈 역할                 | 모든 페이지의 축소판이나 Dashboard가 아닌 방향 파악 및 과업 이동 Surface                                                                                                        | `승인` |
-| HOME-02 | 주 과업                 | 공용 악곡·채보 검색을 가장 강한 홈 과업으로 사용                                                                                                                                | `승인` |
-| HOME-03 | 목적지 집합             | 악곡, 채보 뷰어, 랭킹, 서열, 빙고, 검정, 오락실 및 데이터 연동을 별도의 동등 목적지로 유지                                                                                      | `승인` |
-| HOME-04 | 데이터 연동             | `HOME-18`로 대체: 이전의 별도 플레이 지원 행을 홈 목적지 Collection의 여덟 번째 동등 블록으로 바꾸고 안정적인 더보기 Panel 진입은 유지                                          | `대체` |
-| HOME-05 | 피드백                  | 더보기로 이동하고 홈이나 푸터에 표시하지 않음                                                                                                                                   | `승인` |
-| HOME-06 | 개인화 카드             | 오래된 연동, 최근 플레이 또는 미완료 콘텐츠 카드를 추가하지 않음                                                                                                                | `거절` |
-| HOME-07 | 목적지 비중             | 하나의 일관된 블록 Family를 사용하고 공용 검색과 악곡 → 채보 뷰어 → 서열 → 랭킹 → 빙고 → 검정 → 오락실 → 데이터 연동 순서로 우선순위를 표현                                     | `승인` |
-| HOME-08 | 공지 배치 규칙          | 공지마다 역할과 위치를 하나만 지정: 활성 과업 영향 공지 최대 하나는 검색 앞, 일반 업데이트는 핵심 과업 아래 한 번만 표시                                                        | `승인` |
-| HOME-09 | 공식 소식 표시          | X 공식 Embedded Timeline으로 일반 NosLog 공지 뒤의 별도 Grid에 `NOSTALGIA_573` 최신 원문 게시물 하나를 한 번만 표시                                                             | `승인` |
-| HOME-10 | 편집 콘텐츠 다국어      | NosLog 작성 공지는 세 언어를 모두 요구하고 X Section UI는 다국어화하되 Embed 원문 언어는 보존                                                                                   | `승인` |
-| HOME-11 | 빈 검색 동작            | 빈 Query와 공백 Query 제출을 활성 범위 탐색 Catalog 진입으로 취급하고, 빈 `q`는 생략하며 범위는 보존하고 Catalog 기본값은 공용 탐색 기획서로 넘김                               | `승인` |
-| HOME-12 | 데스크톱 구성           | 390px보다 넓게 의미 구역 사용: 중앙의 제한된 검색, 제한된 4열 2행 목적지 Collection, 이후 공간이 충분할 때 더 큰 NosLog 업데이트와 더 작은 공식 소식 병렬 배치                  | `승인` |
-| HOME-13 | 일반 NosLog 공지 목적지 | 여덟 목적지 Collection 아래, NOSTALGIA 공식 소식 바로 앞에 홈에서 한 번만 유지                                                                                                  | `승인` |
-| HOME-14 | 공식 소식 빈 상태       | 빈 Feed Shell 없이 다국어 공식 채널 Link를 유지하고 핵심 과업은 그대로 유지                                                                                                     | `승인` |
-| HOME-15 | 일반 공지 표시 방식     | 모든 Viewport에서 최신 세 건의 제목·게시일 Link를 표시하고 다국어 상세·Archive를 제공하며 빈 경우 Section을 생략                                                                | `승인` |
-| HOME-16 | 검색 미리보기           | IME 안전 `300ms` 유휴 후 내부 스크롤이나 제자리 확장 없이 관련도순 결과를 최대 다섯 개 표시하고 승인된 네 상태와 초과 결과의 공용 탐색 인계를 사용                              | `승인` |
-| HOME-17 | 비동기 미리보기 피드백  | 검색창에 고정된 비모달 Popup, 지연 `400ms` 시각 Loading, 즉시 이전 결과 무효화, 오래된 응답 거부 및 홈을 막거나 Query를 잘못된 입력으로 표시하지 않는 Inline 재시도 실패를 사용 | `승인` |
-| HOME-18 | 목적지 Grid Geometry    | 데이터 연동을 여덟 번째 동등 항목으로 포함한 같은 크기의 목적지 블록 여덟 개를 지원하는 모든 너비에서 정확히 4열 2행으로 사용하고 마지막 항목 확대나 데스크톱 한 행 확장을 금지 | `승인` |
-| HOME-19 | 홈 `N` 로고 Mark        | 홈 정체성 영역에 Compact `N` Mark를 유지하면서 보이는 `NosLog` 제목과 다국어 서비스 설명을 함께 보존                                                                            | `승인` |
+| ID      | 결정                    | 방향 또는 질문                                                                                                                                                                                                                    | 상태   |
+| ------- | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| HOME-01 | 홈 역할                 | 모든 페이지의 축소판이나 Dashboard가 아닌 방향 파악 및 과업 이동 Surface                                                                                                                                                          | `승인` |
+| HOME-02 | 주 과업                 | 공용 악곡·채보 검색을 가장 강한 홈 과업으로 사용                                                                                                                                                                                  | `승인` |
+| HOME-03 | 목적지 집합             | 악곡, 채보 뷰어, 랭킹, 서열, 빙고, 검정, 오락실 및 데이터 연동을 별도의 동등 목적지로 유지                                                                                                                                        | `승인` |
+| HOME-04 | 데이터 연동             | `HOME-18`로 대체: 이전의 별도 플레이 지원 행을 홈 목적지 Collection의 여덟 번째 동등 블록으로 바꾸고 안정적인 더보기 Panel 진입은 유지                                                                                            | `대체` |
+| HOME-05 | 피드백                  | 더보기로 이동하고 홈이나 푸터에 표시하지 않음                                                                                                                                                                                     | `승인` |
+| HOME-06 | 개인화 카드             | 오래된 연동, 최근 플레이 또는 미완료 콘텐츠 카드를 추가하지 않음                                                                                                                                                                  | `거절` |
+| HOME-07 | 목적지 비중             | 하나의 일관된 블록 Family를 사용하고 공용 검색과 악곡 → 채보 뷰어 → 서열 → 랭킹 → 빙고 → 검정 → 오락실 → 데이터 연동 순서로 우선순위를 표현                                                                                       | `승인` |
+| HOME-08 | 공지 배치 규칙          | 공지마다 역할과 위치를 하나만 지정: 활성 과업 영향 공지 최대 하나는 검색 앞, 일반 업데이트는 핵심 과업 아래 한 번만 표시                                                                                                          | `승인` |
+| HOME-09 | 공식 소식 표시          | X 공식 Embedded Timeline으로 일반 NosLog 공지 뒤의 별도 Grid에 `NOSTALGIA_573` 최신 원문 게시물 하나를 한 번만 표시                                                                                                               | `승인` |
+| HOME-10 | 편집 콘텐츠 다국어      | NosLog 작성 공지는 세 언어를 모두 요구하고 X Section UI는 다국어화하되 Embed 원문 언어는 보존                                                                                                                                     | `승인` |
+| HOME-11 | 빈 검색 동작            | 빈 Query와 공백 Query 제출을 활성 범위 탐색 Catalog 진입으로 취급하고, 빈 `q`는 생략하며 범위는 보존하고 Catalog 기본값은 공용 탐색 기획서로 넘김                                                                                 | `승인` |
+| HOME-12 | 데스크톱 구성           | 390px보다 넓게 의미 구역 사용: 중앙의 제한된 검색, 제한된 4열 2행 목적지 Collection, 이후 공간이 충분할 때 더 큰 NosLog 업데이트와 더 작은 공식 소식 병렬 배치                                                                    | `승인` |
+| HOME-13 | 일반 NosLog 공지 목적지 | 여덟 목적지 Collection 아래, NOSTALGIA 공식 소식 바로 앞에 홈에서 한 번만 유지                                                                                                                                                    | `승인` |
+| HOME-14 | 공식 소식 빈 상태       | 빈 Feed Shell 없이 다국어 공식 채널 Link를 유지하고 핵심 과업은 그대로 유지                                                                                                                                                       | `승인` |
+| HOME-15 | 일반 공지 표시 방식     | 모든 Viewport에서 최신 세 건의 제목·게시일 Link를 표시하고 다국어 상세·Archive를 제공하며 빈 경우 Section을 생략                                                                                                                  | `승인` |
+| HOME-16 | 검색 미리보기           | IME 안전 `300ms` 유휴 후 내부 스크롤이나 제자리 확장 없이 관련도순 결과를 최대 다섯 개 표시하고 승인된 네 상태와 초과 결과의 공용 탐색 인계를 사용                                                                                | `승인` |
+| HOME-17 | 비동기 미리보기 피드백  | 검색창에 고정된 비모달 Popup, 지연 `400ms` 시각 Loading, 즉시 이전 결과 무효화, 오래된 응답 거부 및 홈을 막거나 Query를 잘못된 입력으로 표시하지 않는 Inline 재시도 실패를 사용                                                   | `승인` |
+| HOME-18 | 목적지 Grid Geometry    | `HOME-20`으로 대체: 이전에는 같은 크기의 목적지 블록 여덟 개를 지원하는 모든 너비에서 4열 2행으로 고정                                                                                                                            | `대체` |
+| HOME-19 | 홈 `N` 로고 Mark        | 홈 정체성 영역에 Compact `N` Mark를 유지하면서 보이는 `NosLog` 제목과 다국어 서비스 설명을 함께 보존                                                                                                                              | `승인` |
+| HOME-20 | 적응형 목적지 Geometry  | 검증된 Compact Content Width 아래에서는 같은 크기 Peer 여덟 개를 `3 × 3`, 충분한 너비에서는 `4 × 2`로 사용하고 Compact 마지막 행은 Source 순서와 동일 크기를 유지하며 14px Control Label과 Ellipsis 없는 간결한 다국어 Label 사용 | `승인` |
 
 ## 단계 승인
 
@@ -870,13 +884,20 @@ Container Query로 조정할 수 있습니다.
 하위 인계 계약을 확정합니다.
 
 2026-08-08에 사용자는 `HOME-18`을 승인해 이전의 별도 데이터 연동 홈 행과
-미확정이던 목적지 열 개수를 대체했습니다. 이 개정은 데이터 연동의 더보기
-Panel 진입을 유지하고 홈 목적지 Collection을 지원하는 모든 너비에서 같은
-크기의 여덟 블록과 `4 × 2` 관계로 확정합니다.
+미확정이던 목적지 열 개수를 대체했습니다. 이후 `HOME-20` 개정은 같은 크기의
+Peer 여덟 개와 데이터 연동의 더보기 Panel 진입을 유지하되 너비 전체의 고정
+Geometry를 대체합니다. Compact 영역은 `3 × 3`, Label 가용 폭이 충분한 영역은
+`4 × 2`를 사용합니다.
 
 같은 검토에서 `HOME-19`도 승인했습니다. Compact `N` 로고 Mark는 홈 정체성의
 일부로 유지되며 보이는 서비스 이름, Semantic page heading 또는 다국어 설명을
 대체하지 않습니다.
+
+사용자는 Compact 다국어 및 `200%` Text 압력을 검토한 뒤 `HOME-20`을
+승인했습니다. 보이는 목적지 Role은 `14/20`을 유지하고, 이 Navigation 맥락에서
+한국어 `채보 뷰어`는 `채보`, 영문 `Chart Viewer`는 `Charts`, 일본어
+`譜面ビューア`는 `譜面`으로 줄입니다. 필요한 경우 Label을 줄바꿈하며 Ellipsis는
+사용하지 않습니다.
 
 정확한 Foundation Token, 최종 시각 Geometry와 Breakpoint, 컴포넌트 Styling,
 실제 다국어 Copy 및 예정된 대표 Specimen은 후속 디자인 시스템 또는 콘텐츠

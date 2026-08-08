@@ -7,7 +7,7 @@
 - 영어 원본:
   [31-foundation-s5-home-structural-validation.md](./31-foundation-s5-home-structural-validation.md)
 - 작성 시작일: 2026-08-08
-- 범위: 대표 Specimen `S5`에서 승인된 홈 정체성, 공용 검색, 고정 목적지
+- 범위: 대표 Specimen `S5`에서 승인된 홈 정체성, 공용 검색, 적응형 목적지
   Collection, 공지 계층, 편집 콘텐츠 구성, 다국어, 상태, Target 및 반응형
   계약의 구조 검증
 - 인터랙티브 Specimen:
@@ -27,8 +27,9 @@
 - [Foundation Typography 및 Layout 후보](./26-foundation-typography-layout-candidates.ko.md)
 
 홈 기획서는 목적, 과업 계층, 목적지 의미, 검색 동작, 공지 배치, 공식 소식
-역할, 상태 동작 및 정확한 `4 × 2` 목적지 관계를 소유합니다. 공지 기획서는
-게시와 Archive/Detail 동작을 소유합니다. 문서 `25`와 `26`은 공용 Typography,
+역할, 상태 동작 및 승인된 적응형 Compact `3 × 3` / Standard `4 × 2` 목적지
+관계를 소유합니다. 공지 기획서는 게시와 Archive/Detail 동작을 소유합니다.
+문서 `25`와 `26`은 공용 Typography,
 Spacing, Grid, Container, Density 및 Target 계약을 소유합니다. 이 검증은 충돌을
 드러낼 수 있지만 이러한 권위 문서를 조용히 다시 작성할 수 없습니다.
 
@@ -42,9 +43,9 @@ Spacing, Grid, Container, Density 및 Target 계약을 소유합니다. 이 검�
    악곡/채보 검색을 절제된 정체성·과업 영역으로 묶을 수 있는가?
 2. 검색을 가장 강한 홈 과업으로 유지하면서 대체 Navigation을 지원하는 여덟
    직접 목적지도 보존할 수 있는가?
-3. 같은 크기의 목적지 여덟 개를 `320 CSS px`, 한국어/일본어/영어 및 `200%`
-   Text에서도 Clipping, Truncation, Micro-type 또는 문서 가로 스크롤 없이 정확히
-   4열 2행으로 유지할 수 있는가?
+3. 같은 크기의 목적지 여덟 개가 `320 CSS px`에서 3열 3행으로 Reflow되고 충분한
+   너비에서는 4열 2행으로 복귀하면서 한국어/일본어/영어 및 `200%` Text에서도
+   Clipping, Truncation, Micro-type 또는 문서 가로 Scroll을 피할 수 있는가?
 4. 중간 및 넓은 Layout에서 현재의 `390px` Canvas를 유지하거나 네 Block을
    끝없이 늘리지 않고 검색과 목적지를 의도적으로 제한할 수 있는가?
 5. 서비스 중요 공지 하나를 검색 앞에 두면서 일반 업데이트를 Alert로 만들거나
@@ -64,7 +65,7 @@ Spacing, Grid, Container, Density 및 Target 계약을 소유합니다. 이 검�
 - Scope selector, IME 안전 Debounce, Search API, X Widget, 공지 Route 또는
   반응형 Application Shell을 구현하지 않습니다.
 - 홈을 개인화하거나 고정 하단 Navigation을 추가하거나 목적지 Block 설명을
-  추가하거나 목적지 순서와 `4 × 2` 결정을 다시 열지 않습니다.
+  추가하거나 목적지 순서와 승인된 적응형 Geometry를 다시 열지 않습니다.
 - Feedback을 홈으로 되돌리거나 Privacy·GitHub를 Footer 밖으로 이동하거나 이미
   승인된 공지 순서를 바꾸지 않습니다.
 - Legacy NOSTORY Figma를 현재 Layout 권위로 사용하지 않습니다.
@@ -106,19 +107,26 @@ Geometry, Feedback 위치 및 공지 위치는 2.0 디자인 권위가 아닙니
 
 대표 구조는 승인된 Page-grid tier를 다음처럼 사용합니다.
 
-| Page-layout Tier | 검색 및 정체성 | 목적지 Collection | 목적지 Geometry |
-| ---------------- | -------------- | ----------------- | --------------- |
-| Compact `<672`   | `4/4` Track    | `4/4` Track       | 정확히 `4 × 2`  |
-| Intermediate     | 중앙 `6/8`     | `8/8` Track       | 정확히 `4 × 2`  |
-| Wide `≥1056`     | 중앙 `8/12`    | 중앙 `8/12`       | 정확히 `4 × 2`  |
+| Page-layout Tier              | 검색 및 정체성 | 목적지 Collection | 목적지 Geometry |
+| ----------------------------- | -------------- | ----------------- | --------------- |
+| Narrow compact 영역 `<448px`  | `4/4` Track    | `4/4` Track       | 정확히 `3 × 3`  |
+| Compact 영역 `≥448px`, `<672` | `4/4` Track    | `4/4` Track       | 정확히 `4 × 2`  |
+| Intermediate                  | 중앙 `6/8`     | `8/8` Track       | 정확히 `4 × 2`  |
+| Wide `≥1056`                  | 중앙 `8/12`    | 중앙 `8/12`       | 정확히 `4 × 2`  |
 
-Page-grid Threshold는 영역을 정렬하며 목적지 열 개수를 바꾸지 않습니다. Wide에서
-검색과 목적지는 전체 `standard` Container로 늘어나지 않고 제한됩니다.
+`448px`은 현재 Compact Gutter를 가진 `480px` Specimen Frame에 대응하는 측정된
+목적지 영역 가용 너비이며 보편적인 기기 Breakpoint가 아닙니다. 실제 구현은
+Collection Container의 가용 너비에 반응해야 합니다. Page-grid Threshold는 더 큰
+영역을 계속 정렬합니다. Wide에서 검색과 목적지는 전체 `standard` Container로
+늘어나지 않고 제한됩니다.
 
 ### 목적지 Component Family
 
 - 악곡, 채보 뷰어, 서열, 랭킹, 빙고, 검정, 오락실 및 데이터 연동의 승인 순서로
-  완전한 Link Target 8개의 Semantic list를 사용합니다.
+  완전한 Link Target 8개의 Semantic list를 사용합니다. 간결한 보이는 Navigation
+  Label은 한국어에서 `악곡`, `채보`, `서열`, `랭킹`, `빙고`, `검정`, `오락실`,
+  `데이터 연동`을 사용하고 첫 두 항목의 영문은 `Music`/`Charts`, 일본어는
+  `楽曲`/`譜面`을 사용합니다.
 - 각 Peer는 필수적이지 않은 Icon 하나와 보이는 다국어 Label 하나로 된 같은
   Navigation Component Anatomy를 사용합니다. 설명, 상태 Badge, 중첩 Button 또는
   지역 Filter를 추가하지 않습니다.
@@ -129,8 +137,8 @@ Page-grid Threshold는 영역을 정렬하며 목적지 열 개수를 바꾸지 
   넓은 Width에서는 전체 Label이 맞을 때 Inline 정렬할 수 있습니다. `200%`
   Text에서는 다시 쌓습니다.
 - Label은 줄바꿈하며 Clipping, Ellipsis, Icon-only Control 전환 또는 승인된
-  Type system 아래 축소를 사용하지 않습니다. Row는 필요한 가장 긴 Peer에
-  따라 커집니다.
+  `14/20` Control Role 아래 축소를 사용하지 않습니다. Row는 필요한 가장 긴
+  Peer에 따라 커집니다.
 
 ### 공지 및 편집 계층
 
@@ -178,15 +186,16 @@ Page-grid Threshold는 영역을 정렬하며 목적지 열 개수를 바꾸지 
 - Alert 및 Update 출처는 하나의 긴급 서비스 상태와 전체 이력 목적지가 있는 제한된
   일반 편집 콘텐츠를 분리하는 데 수렴합니다.
 - Rhythm-game 및 Chart Reference는 명시적인 Domain 목적지와 Source가 분리된
-  공식 소식을 지지하지만 NosLog의 정확한 목적지 개수, `4 × 2` 관계 또는
-  악곡/채보 Scope 동작은 정하지 않습니다. 이는 승인된 NosLog 결정입니다.
+  공식 소식을 지지하지만 NosLog의 정확한 목적지 개수, 적응형 `3 × 3`/`4 × 2`
+  관계 또는 악곡/채보 Scope 동작은 정하지 않습니다. 이는 승인된 NosLog
+  결정입니다.
 
 ## 대표 Fixture 및 상태 Matrix
 
 | ID        | 목적                    | Specimen Content                                                                  |
 | --------- | ----------------------- | --------------------------------------------------------------------------------- |
 | `HOME-01` | 정체성 및 검색          | `N` Mark, 보이는 `NosLog` Heading, 다국어 Context, Scope Control, Field 및 Submit |
-| `HOME-02` | 목적지 Density          | 정확한 `4 × 2` Geometry의 Icon-and-label 동등 Link 8개                            |
+| `HOME-02` | 목적지 Density          | Compact `3 × 3` 및 Standard/Wide `4 × 2` Geometry의 Icon-and-label 동등 Link 8개  |
 | `HOME-03` | 일반 편집 계층          | Title/Date 공지 행 3개, Archive Link 및 공식 Source 영역 하나                     |
 | `HOME-04` | 서비스 중단             | Detail 인계가 있는 간결한 서비스 중요 공지 하나                                   |
 | `HOME-05` | Preview 결과            | 대표 Match 3개와 전체 결과 인계                                                   |
@@ -194,10 +203,11 @@ Page-grid Threshold는 영역을 정렬하며 목적지 열 개수를 바꾸지 
 | `HOME-07` | 빈 일반 공지 Collection | 일반 Section 생략, 목적지 뒤에 공식 Source 유지                                   |
 | `HOME-08` | Third-party 실패        | Feed Shell 없이 다국어 실패 Copy와 공식 계정 Link                                 |
 
-Specimen은 `320`, `390`, `672`, `1056`, `1280`, `1440px` Control,
+Specimen은 `320`, `390`, `480`, `672`, `1056`, `1280`, `1440px` Control,
 한국어/일본어/영어 Content, 기본 및 `200%` Text, 대표 상태 8개를 노출합니다. 자동
-측정은 추가로 `671/672/673`, `1055/1056/1057px`, 모든 Width/Locale/Text/State
-조합, Target Geometry, Popup Containment 및 Frame Overflow를 포함해야 합니다.
+측정은 추가로 목적지 전환 `479/480/481`, Page-grid 전환 `671/672/673`, Wide
+전환 `1055/1056/1057px`, 모든 Width/Locale/Text/State 조합, Target Geometry,
+Popup Containment 및 Frame Overflow를 포함해야 합니다.
 
 ## S5 구조 Slice
 
@@ -205,7 +215,8 @@ Specimen은 `320`, `390`, `672`, `1056`, `1280`, `1440px` Control,
 2. `S5-B` — 주요 과업 앞의 선택적 서비스 중요 공지
 3. `S5-C` — 절제된 `N` Mark, `NosLog` Heading, Context 및 공용 검색
 4. `S5-D` — Results, 지연 Loading, Empty 및 Error 상태의 고정 Preview
-5. `S5-E` — 고정 `4 × 2` Geometry의 같은 크기 전체 Link 목적지 8개
+5. `S5-E` — 적응형 Compact `3 × 3` 및 Standard/Wide `4 × 2` Geometry의 같은
+   크기 전체 Link 목적지 8개
 6. `S5-F` — 공지 3개 Collection과 Archive 인계
 7. `S5-G` — 분리된 공식 원문 1개 또는 직접 Link Fallback
 8. `S5-H` — Compact/Intermediate Stack과 Wide `8/4` 편집 구성
@@ -213,63 +224,65 @@ Specimen은 `320`, `390`, `672`, `1056`, `1280`, `1440px` Control,
 
 ## 측정 Matrix
 
-| Group           | 필수 측정                                                                                                |
-| --------------- | -------------------------------------------------------------------------------------------------------- |
-| Compact         | `320`, `390px` 및 인접 Threshold `671px`                                                                 |
-| Intermediate    | `672`, `673px` 및 인접 Threshold `1055px`                                                                |
-| Wide            | `1056`, `1057`, `1280`, `1440px`과 `standard` 최대 동작                                                  |
-| Text            | 기본 및 `200%`; 실제 구현은 Browser Zoom과 WCAG Text-spacing Override도 요구                             |
-| Language        | 한국어, 일본어, 영어의 긴 목적지, 공지, 검색 및 공식 Fallback Content                                    |
-| Search State    | Closed, Results, Delayed Loading, No match 및 Retrieval Error                                            |
-| Editorial State | Normal, Service critical, No routine announcements 및 Official source unavailable                        |
-| Input           | Keyboard/Pointer Scope, Preview Result, Complete handoff, Escape, Outside dismissal 및 Retry는 이후 검증 |
-| Structure       | Frame Overflow 없음, 정확한 8개·4열 2행, 올바른 Wide Span, 중첩 스크롤 없음                              |
+| Group           | 필수 측정                                                                                                                                       |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| Compact         | `320`, `390px`, 목적지 Threshold `479/480/481px` 및 Page-grid Threshold `671px`                                                                 |
+| Intermediate    | `672`, `673px` 및 인접 Threshold `1055px`                                                                                                       |
+| Wide            | `1056`, `1057`, `1280`, `1440px`과 `standard` 최대 동작                                                                                         |
+| Text            | 기본 및 `200%`; 실제 구현은 Browser Zoom과 WCAG Text-spacing Override도 요구                                                                    |
+| Language        | 한국어, 일본어, 영어의 긴 목적지, 공지, 검색 및 공식 Fallback Content                                                                           |
+| Search State    | Closed, Results, Delayed Loading, No match 및 Retrieval Error                                                                                   |
+| Editorial State | Normal, Service critical, No routine announcements 및 Official source unavailable                                                               |
+| Input           | Keyboard/Pointer Scope, Preview Result, Complete handoff, Escape, Outside dismissal 및 Retry는 이후 검증                                        |
+| Structure       | Frame Overflow 없음, 정확한 8개, 목적지 Threshold 아래 `3 × 3` 및 이상 `4 × 2`, Compact 마지막 행 선행 배치, 올바른 Wide Span, 중첩 스크롤 없음 |
 
 ## 브라우저 검증 기록
 
 2026-08-08 Test Browser에서 측정했습니다.
 
-| 검증                     | 결과                          | 근거                                                                                                                         |
-| ------------------------ | ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| 자동 구조 Matrix         | `통과 — 480/480`              | Width 10개(`320`, `390`, `671`, `672`, `673`, `1055`, `1056`, `1057`, `1280`, `1440`) × 언어 3개 × Text scale 2개 × 상태 8개 |
-| Document 가로 Overflow   | `통과`                        | 검사한 모든 경우가 Specimen Frame을 넘지 않음                                                                                |
-| 목적지 관계              | `통과`                        | 모든 경우에서 Target 8개, 4열, 2행을 정확히 유지                                                                             |
-| Target Geometry          | `통과`                        | 모든 목적지 Target이 측정상 최소 `44px` Block size 유지                                                                      |
-| 검색 Preview Containment | `통과`                        | Results, Loading, Empty 및 Error Preview가 내부 스크롤 없이 검색 영역 안에 유지                                              |
-| Compact 시각 검토        | `기록된 Tradeoff와 함께 통과` | 한국어 기본 `390px` 및 영문 `200%` `320px`에서 순서, Label, Overlay 동작 및 1차원 Reflow 유지                                |
-| Wide 시각 검토           | `통과`                        | 한국어 기본 `1056px`에서 중앙 `8/12` 과업 영역과 `8/4` 편집 관계 유지                                                        |
-| Wide 일반 공지 없음 상태 | `통과`                        | 일반 공지를 생략했을 때 공식 소식이 오른쪽 끝에 뜨지 않고 승인된 선행 `4/12` Track을 사용                                    |
+| 검증                     | 결과             | 근거                                                                                                                                              |
+| ------------------------ | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 자동 구조 Matrix         | `통과 — 624/624` | Width 13개(`320`, `390`, `479`, `480`, `481`, `671`, `672`, `673`, `1055`, `1056`, `1057`, `1280`, `1440`) × 언어 3개 × Text scale 2개 × 상태 8개 |
+| Document 가로 Overflow   | `통과`           | 검사한 모든 경우가 Specimen Frame을 넘지 않음                                                                                                     |
+| 목적지 관계              | `통과`           | `320`, `390`, `479px`은 같은 크기 Target 8개를 `3 × 3`, `480px` 이상은 `4 × 2`로 유지하고 Compact 마지막 행은 앞쪽에 늘리지 않고 배치             |
+| 목적지 전환              | `통과`           | 인접 `479/480/481px` 검사에서 승인된 목적지 Geometry만 바뀌고 Frame Overflow는 발생하지 않음                                                      |
+| Target Geometry          | `통과`           | 모든 목적지 Target이 측정상 최소 `44px` Block size 유지                                                                                           |
+| 검색 Preview Containment | `통과`           | Results, Loading, Empty 및 Error Preview가 내부 스크롤 없이 검색 영역 안에 유지                                                                   |
+| Compact 시각 검토        | `통과`           | 한국어 기본 `390px` 및 영문 `200%` `320px`에서 `3 × 3`, 기본 Scale의 `14/20`, Source 순서, Ellipsis 없음 및 가로 Overflow 없음 확인               |
+| Wide 시각 검토           | `통과`           | 한국어 기본 `1056px`에서 중앙 `8/12` 과업 영역과 `8/4` 편집 관계 유지                                                                             |
+| Wide 일반 공지 없음 상태 | `통과`           | 일반 공지를 생략했을 때 공식 소식이 오른쪽 끝에 뜨지 않고 승인된 선행 `4/12` Track을 사용                                                         |
 
-첫 자동 실행에서는 영문 `200%`의 `320/390px` 열다섯 경우에서 Section Heading
-행이 가로 Overflow를 만들었습니다. Type을 줄이거나 Content를 자르는 대신 Heading,
-Archive/Source Link 및 확대된 Copy가 세로로 Reflow되도록 수정했습니다. 이후 전체
-Matrix가 실패 없이 통과했습니다.
+개정 전 첫 자동 실행에서는 영문 `200%`의 `320/390px` 열다섯 경우에서 Section
+Heading 행이 가로 Overflow를 만들었습니다. Type을 줄이거나 Content를 자르는
+대신 Heading, Archive/Source Link 및 확대된 Copy가 세로로 Reflow되도록
+수정했습니다. `HOME-20` 이후 확장된 624개 Matrix도 실패 없이 통과했습니다.
 
-의도적으로 가혹한 `320px` + 영문 `200%` 조합에서는 승인된 `4 × 2` 관계를
-고정하므로 긴 목적지 Label이 여러 줄로 줄바꿈됩니다. Clipping이나 가로 Overflow는
-아니지만 1차 검토에서 명시적으로 수용해야 할 눈에 보이는 Density Tradeoff입니다.
-숫자 Pass는 여전히 N Mark 강조, 검색 우선순위, 목적지 Density, Popup Overlay, 공지
-위치 및 Wide 편집 균형에 대한 사용자 검토를 대체하지 않습니다.
+이전의 의도적으로 가혹한 `320px` + 영문 `200%` 조합은 고정 네 열 Compact
+Collection의 비용을 드러냈습니다. `HOME-20`은 이 관계를 세 열로 바꾸고 마지막
+두 Peer를 세 번째 행 앞쪽에 같은 크기로 유지하며 보이는 채보 Navigation Label만
+줄입니다. 숫자 Pass는 여전히 N Mark 강조, 검색 우선순위, 목적지 Density, Popup
+Overlay, 공지 위치 및 Wide 편집 균형에 대한 사용자 검토를 대체하지 않습니다.
 
 ## 결정 및 검증 상태 기록
 
-| ID       | 내용                                                                                                                                                        | 상태   |
-| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
-| `S5V-01` | 현재 6개 `3 × 2` 홈, 별도 데이터 연동, 홈 Feedback, 상단 일반 공지, 악곡 전용 검색 및 고정 `390px` Desktop Canvas를 Migration 근거로만 취급                 | `관찰` |
-| `S5V-02` | 보이는 `NosLog` Heading 및 다국어 서비스 설명과 함께 Compact `N` Logo Mark 유지                                                                             | `승인` |
-| `S5V-03` | 홈 정체성은 `display`가 아닌 `page-title`로 유지하고 검색은 과업 순서와 제한된 구성을 통해 가장 강하게 만듦                                                 | `승인` |
-| `S5V-04` | Compact, Intermediate, Wide에서 `4/4`, 중앙 `6/8`, 중앙 `8/12` 검색 관계 사용                                                                               | `승인` |
-| `S5V-05` | 모든 Tier에서 목적지를 정확히 `4 × 2`로 유지하고 Icon 하나, 보이는 Label 하나, 전체 Link Target 하나를 사용하며 보이는 Group Heading과 설명을 추가하지 않음 | `승인` |
-| `S5V-06` | 중요 Surface는 Standard Region을 사용하되 Wide의 읽는 Content는 중앙 8-Track 과업 너비로 제한                                                               | `승인` |
-| `S5V-07` | Wide 아래에서 편집 Section을 쌓고 Wide에서 일반 `8/12`와 공식 `4/12`를 사용하며 둘 다 목적지 위로 이동하지 않음                                             | `승인` |
-| `S5V-08` | Wide에서 일반 공지가 없으면 남은 공식 영역을 오른쪽 끝에 띄우지 않고 선행 `4/12` Track에 배치                                                               | `승인` |
-| `S5V-09` | 정확한 Visual Appearance, 실제 Dimension, Iconography, X Integration, Search 구현 및 Application Code를 이 Gate 밖에 유지                                   | `승인` |
+| ID       | 내용                                                                                                                                                                                                             | 상태   |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| `S5V-01` | 현재 6개 `3 × 2` 홈, 별도 데이터 연동, 홈 Feedback, 상단 일반 공지, 악곡 전용 검색 및 고정 `390px` Desktop Canvas를 Migration 근거로만 취급                                                                      | `관찰` |
+| `S5V-02` | 보이는 `NosLog` Heading 및 다국어 서비스 설명과 함께 Compact `N` Logo Mark 유지                                                                                                                                  | `승인` |
+| `S5V-03` | 홈 정체성은 `display`가 아닌 `page-title`로 유지하고 검색은 과업 순서와 제한된 구성을 통해 가장 강하게 만듦                                                                                                      | `승인` |
+| `S5V-04` | Compact, Intermediate, Wide에서 `4/4`, 중앙 `6/8`, 중앙 `8/12` 검색 관계 사용                                                                                                                                    | `승인` |
+| `S5V-05` | 이전에는 모든 Tier에서 목적지를 정확히 `4 × 2`로 유지했으나 Compact 다국어 및 확대 Text 검토 후 `S5V-10`으로 대체                                                                                                | `대체` |
+| `S5V-06` | 중요 Surface는 Standard Region을 사용하되 Wide의 읽는 Content는 중앙 8-Track 과업 너비로 제한                                                                                                                    | `승인` |
+| `S5V-07` | Wide 아래에서 편집 Section을 쌓고 Wide에서 일반 `8/12`와 공식 `4/12`를 사용하며 둘 다 목적지 위로 이동하지 않음                                                                                                  | `승인` |
+| `S5V-08` | Wide에서 일반 공지가 없으면 남은 공식 영역을 오른쪽 끝에 띄우지 않고 선행 `4/12` Track에 배치                                                                                                                    | `승인` |
+| `S5V-09` | 정확한 Visual Appearance, 실제 Dimension, Iconography, X Integration, Search 구현 및 Application Code를 이 Gate 밖에 유지                                                                                        | `승인` |
+| `S5V-10` | 측정된 가용 너비 Threshold 아래에서 같은 크기 목적지 8개를 Compact `3 × 3`, 그 외에는 `4 × 2`로 사용하고 Compact 마지막 행을 앞쪽에 늘리지 않고 배치하며 간결한 다국어 채보 Label, `14/20`, Ellipsis 금지를 유지 | `승인` |
 
 ## 1차 검토 Gate
 
 다음 내용은 이 측정된 초안을 승격하기 전에 여전히 사용자 검토가 필요합니다.
 
-1. 명시된 `320px` 영문 `200%` 목적지 Label 줄바꿈 Tradeoff를 포함한 측정 Fit 및
-   계층의 시각적 수용
+1. Compact의 불완전한 마지막 행을 포함한 재측정 적응형 목적지 Fit 및 계층의
+   시각적 수용
 2. Matrix 실패가 없더라도 측정된 구조가 Foundation 수정을 요구하는지 여부
 3. 검증 기록을 `측정된 초안`에서 `승인`으로 승격
