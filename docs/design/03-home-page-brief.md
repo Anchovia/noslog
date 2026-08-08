@@ -6,7 +6,7 @@
 - Evidence status: `Repository and browser audit complete; reference comparison complete`
 - Date started: 2026-07-30
 - Date approved: 2026-07-31
-- Last amended: 2026-08-08 (`HOME-18`)
+- Last amended: 2026-08-08 (`HOME-19`)
 - Canonical language: English
 - Korean companion: [03-home-page-brief.ko.md](./03-home-page-brief.ko.md)
 - Parent information architecture:
@@ -89,6 +89,9 @@ A Home visit succeeds when the user can do one of the following without ambiguit
 - **Approved:** Ordinary pages use the responsive top header. Home does not introduce
   fixed bottom navigation.
 - **Approved:** Home keeps a page-level direct-navigation block collection.
+- **Approved:** Preserve the compact `N` logo mark in the Home identity region. The
+  mark supports, but never replaces, the visible `NosLog` heading and localized
+  service description.
 - **Approved:** Music and Chart search share one surface with a compact leading scope
   selector. The Chart Viewer entry opens the shared search with Chart scope selected.
 - **Approved:** Music, Chart Viewer, Rankings, Tiers, Bingo, Exams, Arcades, and Data
@@ -163,6 +166,7 @@ These observations identify functionality and risk. They do not approve the curr
 | ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ---------- |
 | Ordinary Header                 | Use the approved responsive shell; Home does not add a second global navigation system.                                             | `Approved` |
 | Service identity                | Keep a concise NosLog identity and NOSTALGIA context near the primary search.                                                       | `Approved` |
+| Home `N` logo mark              | Preserve the compact mark beside or above the identity; do not use it as the only accessible Home name.                             | `Approved` |
 | Service-critical notice         | Show at most the highest-impact active service notice before search; reserve no gap when none exists.                               | `Approved` |
 | Routine NosLog announcements    | Show the newest three as compact title-and-date links in a lower updates area; link to localized detail and archive pages.          | `Approved` |
 | Music and Chart search          | Make the shared scope-aware search the strongest Home task.                                                                         | `Approved` |
@@ -869,6 +873,7 @@ The later design and implementation must verify:
 | HOME-16 | Search preview                          | After IME-safe `300ms` idle, show at most five ranked matches without internal scrolling or in-place expansion; use the approved four states and hand excess matches to shared discovery.                        | `Approved`   |
 | HOME-17 | Async preview feedback                  | Use an anchored non-modal popup, delayed `400ms` visual loading, immediate prior-result invalidation, stale-response rejection, and inline retryable failure without blocking Home or marking the query invalid. | `Approved`   |
 | HOME-18 | Destination grid geometry               | Use eight equal destination blocks, including Data Sync as the eighth peer, in exactly four columns and two rows at every supported width; never stretch the final item or expand desktop to one row.            | `Approved`   |
+| HOME-19 | Home `N` logo mark                      | Preserve the compact `N` mark in the Home identity region while retaining a visible `NosLog` heading and localized service description.                                                                          | `Approved`   |
 
 ## Phase Approval
 
@@ -882,6 +887,10 @@ On 2026-08-08, the user approved `HOME-18`, superseding the former separate Data
 Home row and the previously open destination column count. This amendment keeps Data
 Sync's More-panel entry and fixes the Home destination collection at eight equal
 blocks in a `4 × 2` relationship across supported widths.
+
+The same review approved `HOME-19`: the compact `N` logo mark remains part of the
+Home identity. It is not a substitute for the visible service name, semantic page
+heading, or localized description.
 
 Exact foundation tokens, final visual geometry and breakpoints, component styling,
 localized production copy, and scheduled representative specimens remain downstream

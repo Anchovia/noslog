@@ -1,0 +1,1680 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>NosLog 2.0 S5 Home Structure Specimen</title>
+        <link
+            rel="stylesheet"
+            crossorigin
+            href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-jp.min.css"
+        />
+        <style>
+            :root {
+                color-scheme: dark;
+                font-family:
+                    "Pretendard JP Variable", "Pretendard JP", Pretendard,
+                    system-ui, sans-serif;
+                font-synthesis: none;
+                --canvas: #0d0d0f;
+                --frame: #111114;
+                --surface: #19191e;
+                --surface-strong: #222229;
+                --line: #34343d;
+                --line-strong: #54545f;
+                --text: #f2f2f4;
+                --text-secondary: #b4b4be;
+                --text-tertiary: #858590;
+                --focus: #f2f2f4;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            body {
+                min-width: 320px;
+                margin: 0;
+                background: var(--canvas);
+                color: var(--text);
+            }
+
+            button,
+            input {
+                color: inherit;
+                font: inherit;
+            }
+
+            button,
+            a {
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            button:focus-visible,
+            input:focus-visible,
+            a:focus-visible {
+                outline: 2px solid var(--focus);
+                outline-offset: 2px;
+            }
+
+            [hidden] {
+                display: none !important;
+            }
+
+            .review-shell {
+                display: grid;
+                gap: 24px;
+                justify-items: center;
+                padding: 24px;
+            }
+
+            .review-controls {
+                display: flex;
+                max-width: 1120px;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 8px;
+            }
+
+            .review-controls button {
+                min-height: 40px;
+                border: 1px solid var(--line);
+                border-radius: 8px;
+                background: var(--surface);
+                padding: 0 12px;
+                font-size: 14px;
+                line-height: 20px;
+                font-weight: 500;
+                cursor: pointer;
+            }
+
+            .review-controls button[aria-pressed="true"] {
+                border-color: var(--text);
+                background: var(--text);
+                color: var(--canvas);
+            }
+
+            .review-note {
+                max-width: 840px;
+                margin: -12px 0 0;
+                color: var(--text-secondary);
+                font-size: 14px;
+                line-height: 20px;
+                text-align: center;
+            }
+
+            .specimen-frame {
+                --fs-12: 12px;
+                --fs-14: 14px;
+                --fs-16: 16px;
+                --fs-20: 20px;
+                --fs-24: 24px;
+                --lh-16: 16px;
+                --lh-20: 20px;
+                --lh-24: 24px;
+                --lh-28: 28px;
+                --lh-32: 32px;
+                --page-inline: 16px;
+                --page-columns: 4;
+                --page-gutter: 12px;
+                width: 390px;
+                max-width: 100%;
+                overflow: hidden;
+                border: 1px solid var(--line-strong);
+                border-radius: 12px;
+                background: var(--frame);
+            }
+
+            .specimen-frame[data-tier="intermediate"] {
+                --page-inline: 24px;
+                --page-columns: 8;
+                --page-gutter: 16px;
+            }
+
+            .specimen-frame[data-tier="wide"] {
+                --page-inline: 32px;
+                --page-columns: 12;
+                --page-gutter: 16px;
+            }
+
+            .specimen-frame[data-text-scale="200"] {
+                --fs-12: 24px;
+                --fs-14: 28px;
+                --fs-16: 32px;
+                --fs-20: 40px;
+                --fs-24: 48px;
+                --lh-16: 32px;
+                --lh-20: 40px;
+                --lh-24: 48px;
+                --lh-28: 56px;
+                --lh-32: 64px;
+            }
+
+            .standard-container {
+                width: min(100%, 1280px);
+                margin-inline: auto;
+                padding-inline: var(--page-inline);
+            }
+
+            .page-grid {
+                display: grid;
+                grid-template-columns: repeat(
+                    var(--page-columns),
+                    minmax(0, 1fr)
+                );
+                column-gap: var(--page-gutter);
+            }
+
+            .app-header {
+                border-bottom: 1px solid var(--line);
+            }
+
+            .header-content {
+                display: flex;
+                min-height: 56px;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+            }
+
+            .wordmark {
+                color: var(--text);
+                font-size: var(--fs-16);
+                line-height: var(--lh-24);
+                font-weight: 700;
+                text-decoration: none;
+            }
+
+            .header-actions {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+            }
+
+            .header-button {
+                display: inline-flex;
+                min-width: 44px;
+                min-height: 44px;
+                align-items: center;
+                justify-content: center;
+                border: 0;
+                background: transparent;
+                cursor: pointer;
+            }
+
+            .profile-dot {
+                width: 28px;
+                height: 28px;
+                border: 1px solid var(--line-strong);
+                border-radius: 999px;
+                background: repeating-linear-gradient(
+                    45deg,
+                    #3a3a42,
+                    #3a3a42 4px,
+                    #25252b 4px,
+                    #25252b 8px
+                );
+            }
+
+            .page-main {
+                padding-block: 24px 48px;
+            }
+
+            .home-flow {
+                row-gap: 32px;
+            }
+
+            .service-alert,
+            .editorial-zone,
+            .page-footer-content {
+                grid-column: 1 / -1;
+            }
+
+            .service-alert {
+                display: grid;
+                grid-template-columns: subgrid;
+                border: 1px solid var(--line-strong);
+                border-radius: 8px;
+                background: var(--surface-strong);
+            }
+
+            .service-alert-inner {
+                grid-column: 1 / -1;
+                padding: 12px 16px;
+            }
+
+            .service-alert strong,
+            .service-alert a {
+                font-size: var(--fs-14);
+                line-height: var(--lh-20);
+            }
+
+            .service-alert p {
+                margin: 4px 0 0;
+                color: var(--text-secondary);
+                font-size: var(--fs-14);
+                line-height: var(--lh-20);
+            }
+
+            .service-alert a {
+                display: inline-block;
+                min-height: 44px;
+                margin-top: 4px;
+                color: var(--text);
+                line-height: 44px;
+            }
+
+            .identity-search,
+            .destinations {
+                grid-column: 1 / -1;
+            }
+
+            .identity-search {
+                position: relative;
+                display: grid;
+                min-width: 0;
+                gap: 24px;
+                justify-items: stretch;
+            }
+
+            .identity {
+                display: grid;
+                justify-items: center;
+                gap: 8px;
+                text-align: center;
+            }
+
+            .n-mark {
+                display: grid;
+                width: 44px;
+                height: 44px;
+                place-items: center;
+                border: 2px solid var(--line-strong);
+                border-radius: 999px;
+                font-size: var(--fs-16);
+                line-height: var(--lh-24);
+                font-weight: 700;
+            }
+
+            .home-title {
+                margin: 0;
+                font-size: var(--fs-24);
+                line-height: var(--lh-32);
+                font-weight: 700;
+            }
+
+            .tagline {
+                max-width: 44rem;
+                margin: 0;
+                color: var(--text-secondary);
+                font-size: var(--fs-16);
+                line-height: var(--lh-24);
+            }
+
+            .search-region {
+                position: relative;
+                min-width: 0;
+            }
+
+            .search-label {
+                position: absolute;
+                width: 1px;
+                height: 1px;
+                overflow: hidden;
+                clip: rect(0 0 0 0);
+                white-space: nowrap;
+            }
+
+            .search-control {
+                display: grid;
+                min-width: 0;
+                min-height: 48px;
+                grid-template-columns: 48px minmax(0, 1fr) 48px;
+                align-items: stretch;
+                border: 1px solid var(--line-strong);
+                border-radius: 8px;
+                background: var(--surface);
+            }
+
+            .scope-button,
+            .search-submit {
+                min-width: 44px;
+                min-height: 44px;
+                border: 0;
+                background: transparent;
+                font-size: var(--fs-14);
+                line-height: var(--lh-20);
+                font-weight: 600;
+                cursor: pointer;
+            }
+
+            .scope-button {
+                border-right: 1px solid var(--line);
+            }
+
+            .search-input {
+                min-width: 0;
+                border: 0;
+                background: transparent;
+                padding-inline: 12px;
+                font-size: var(--fs-16);
+                line-height: var(--lh-24);
+                outline: 0;
+            }
+
+            .search-input::placeholder {
+                color: var(--text-tertiary);
+                opacity: 1;
+            }
+
+            .search-popup {
+                position: absolute;
+                z-index: 5;
+                top: calc(100% + 8px);
+                right: 0;
+                left: 0;
+                border: 1px solid var(--line-strong);
+                border-radius: 8px;
+                background: var(--surface-strong);
+                box-shadow: 0 16px 32px rgb(0 0 0 / 35%);
+            }
+
+            .popup-row,
+            .popup-action,
+            .popup-message {
+                display: flex;
+                min-height: 48px;
+                align-items: center;
+                gap: 8px;
+                padding: 8px 12px;
+                font-size: var(--fs-14);
+                line-height: var(--lh-20);
+            }
+
+            .popup-row,
+            .popup-action {
+                color: var(--text);
+                text-decoration: none;
+            }
+
+            .popup-row + .popup-row,
+            .popup-action,
+            .popup-message + .popup-action {
+                border-top: 1px solid var(--line);
+            }
+
+            .popup-result-main {
+                min-width: 0;
+            }
+
+            .popup-result-main strong,
+            .popup-result-main span {
+                display: block;
+            }
+
+            .popup-result-main span,
+            .popup-message {
+                color: var(--text-secondary);
+            }
+
+            .popup-action {
+                justify-content: space-between;
+                font-weight: 600;
+            }
+
+            .retry-button {
+                min-height: 44px;
+                border: 0;
+                background: transparent;
+                color: var(--text);
+                font-size: inherit;
+                font-weight: 600;
+                text-decoration: underline;
+                cursor: pointer;
+            }
+
+            .destination-list {
+                display: grid;
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+                grid-auto-rows: 1fr;
+                gap: 12px;
+                margin: 0;
+                padding: 0;
+                list-style: none;
+            }
+
+            .destination-link {
+                display: flex;
+                min-width: 0;
+                min-height: 80px;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                border: 1px solid var(--line);
+                border-radius: 8px;
+                background: var(--surface);
+                color: var(--text);
+                font-size: var(--fs-14);
+                line-height: var(--lh-20);
+                font-weight: 600;
+                text-align: center;
+                text-decoration: none;
+            }
+
+            .destination-icon {
+                flex: 0 0 auto;
+                color: var(--text-secondary);
+                font-size: var(--fs-16);
+                line-height: var(--lh-24);
+            }
+
+            .destination-label {
+                min-width: 0;
+                overflow-wrap: anywhere;
+            }
+
+            .editorial-zone {
+                display: grid;
+                gap: 24px;
+            }
+
+            .editorial-section {
+                min-width: 0;
+            }
+
+            .section-heading-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 12px;
+                margin-bottom: 12px;
+            }
+
+            .section-heading {
+                min-width: 0;
+                margin: 0;
+                font-size: var(--fs-20);
+                line-height: var(--lh-28);
+                font-weight: 600;
+                overflow-wrap: anywhere;
+            }
+
+            .section-link {
+                display: inline-flex;
+                min-width: 0;
+                min-height: 44px;
+                align-items: center;
+                color: var(--text-secondary);
+                font-size: var(--fs-14);
+                line-height: var(--lh-20);
+                overflow-wrap: anywhere;
+            }
+
+            .announcement-list {
+                margin: 0;
+                padding: 0;
+                border-top: 1px solid var(--line);
+                list-style: none;
+            }
+
+            .announcement-link {
+                display: grid;
+                min-height: 56px;
+                grid-template-columns: minmax(0, 1fr) auto;
+                align-items: center;
+                gap: 12px;
+                border-bottom: 1px solid var(--line);
+                color: var(--text);
+                font-size: var(--fs-14);
+                line-height: var(--lh-20);
+                text-decoration: none;
+            }
+
+            .announcement-link span:first-child {
+                min-width: 0;
+                overflow-wrap: anywhere;
+            }
+
+            .announcement-link time {
+                color: var(--text-tertiary);
+                font-size: var(--fs-12);
+                line-height: var(--lh-16);
+                white-space: nowrap;
+            }
+
+            .official-card {
+                min-height: 176px;
+                border: 1px solid var(--line);
+                border-radius: 8px;
+                background: var(--surface);
+                padding: 16px;
+            }
+
+            .official-source {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                color: var(--text-secondary);
+                font-size: var(--fs-12);
+                line-height: var(--lh-16);
+            }
+
+            .official-card p {
+                margin: 16px 0 0;
+                font-size: var(--fs-14);
+                line-height: var(--lh-20);
+            }
+
+            .official-card .official-date {
+                margin-top: 12px;
+                color: var(--text-tertiary);
+                font-size: var(--fs-12);
+                line-height: var(--lh-16);
+            }
+
+            .official-fallback {
+                display: grid;
+                min-height: 176px;
+                align-content: center;
+                gap: 12px;
+                border: 1px solid var(--line);
+                border-radius: 8px;
+                padding: 16px;
+                color: var(--text-secondary);
+                font-size: var(--fs-14);
+                line-height: var(--lh-20);
+            }
+
+            .official-fallback a {
+                display: inline-flex;
+                min-height: 44px;
+                align-items: center;
+                color: var(--text);
+            }
+
+            .page-footer {
+                border-top: 1px solid var(--line);
+            }
+
+            .page-footer-content {
+                display: flex;
+                min-height: 72px;
+                flex-wrap: wrap;
+                align-items: center;
+                justify-content: space-between;
+                gap: 8px 16px;
+                color: var(--text-secondary);
+                font-size: var(--fs-12);
+                line-height: var(--lh-16);
+            }
+
+            .footer-links {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 4px 16px;
+            }
+
+            .footer-links a {
+                display: inline-flex;
+                min-height: 44px;
+                align-items: center;
+                color: var(--text-secondary);
+            }
+
+            .specimen-frame[data-state="normal"] .search-popup,
+            .specimen-frame:not([data-state="critical"]) .service-alert,
+            .specimen-frame[data-state="no-routine"] .routine-section,
+            .specimen-frame[data-state="official-failure"] .official-card,
+            .specimen-frame:not([data-state="official-failure"])
+                .official-fallback {
+                display: none;
+            }
+
+            .specimen-frame[data-state="search-results"]
+                [data-popup-state]:not([data-popup-state="results"]),
+            .specimen-frame[data-state="search-loading"]
+                [data-popup-state]:not([data-popup-state="loading"]),
+            .specimen-frame[data-state="search-empty"]
+                [data-popup-state]:not([data-popup-state="empty"]),
+            .specimen-frame[data-state="search-error"]
+                [data-popup-state]:not([data-popup-state="error"]),
+            .specimen-frame:not([data-state^="search-"]) .search-popup {
+                display: none;
+            }
+
+            @media (max-width: 520px) {
+                .review-shell {
+                    padding: 12px 0;
+                }
+
+                .review-controls,
+                .review-note {
+                    margin-inline: 12px;
+                }
+
+                .specimen-frame {
+                    border-right: 0;
+                    border-left: 0;
+                    border-radius: 0;
+                }
+            }
+
+            .specimen-frame[data-tier="compact"] .destination-link {
+                flex-direction: column;
+                padding: 12px 4px;
+            }
+
+            .specimen-frame[data-tier="intermediate"] .identity-search {
+                grid-column: 2 / 8;
+            }
+
+            .specimen-frame[data-tier="intermediate"] .destinations {
+                grid-column: 1 / -1;
+            }
+
+            .specimen-frame[data-tier="intermediate"] .destination-link,
+            .specimen-frame[data-tier="wide"] .destination-link {
+                padding: 12px;
+            }
+
+            .specimen-frame[data-tier="wide"] .identity-search,
+            .specimen-frame[data-tier="wide"] .destinations {
+                grid-column: 3 / 11;
+            }
+
+            .specimen-frame[data-tier="wide"] .service-alert-inner {
+                grid-column: 3 / 11;
+            }
+
+            .specimen-frame[data-tier="wide"] .editorial-zone {
+                grid-template-columns: repeat(12, minmax(0, 1fr));
+                gap: 16px;
+            }
+
+            .specimen-frame[data-tier="wide"] .routine-section {
+                grid-column: 1 / span 8;
+            }
+
+            .specimen-frame[data-tier="wide"] .official-section {
+                grid-column: 9 / span 4;
+            }
+
+            .specimen-frame[data-state="no-routine"][data-tier="wide"]
+                .official-section {
+                grid-column: 1 / span 4;
+            }
+
+            .specimen-frame[data-text-scale="200"] .destination-link {
+                flex-direction: column;
+                padding-block: 16px;
+            }
+
+            .specimen-frame[data-text-scale="200"] .announcement-link {
+                grid-template-columns: 1fr;
+                padding-block: 12px;
+            }
+
+            .specimen-frame[data-text-scale="200"] .announcement-link time {
+                white-space: normal;
+            }
+
+            .specimen-frame[data-text-scale="200"] .section-heading-row {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="review-shell">
+            <div class="review-controls" aria-label="Specimen controls">
+                <button type="button" data-control="width" data-value="320">
+                    320
+                </button>
+                <button
+                    type="button"
+                    data-control="width"
+                    data-value="390"
+                    aria-pressed="true"
+                >
+                    390
+                </button>
+                <button type="button" data-control="width" data-value="672">
+                    672
+                </button>
+                <button type="button" data-control="width" data-value="1056">
+                    1056
+                </button>
+                <button type="button" data-control="width" data-value="1280">
+                    1280
+                </button>
+                <button type="button" data-control="width" data-value="1440">
+                    1440
+                </button>
+                <button
+                    type="button"
+                    data-control="locale"
+                    data-value="ko"
+                    aria-pressed="true"
+                >
+                    KO
+                </button>
+                <button type="button" data-control="locale" data-value="ja">
+                    JA
+                </button>
+                <button type="button" data-control="locale" data-value="en">
+                    EN
+                </button>
+                <button
+                    type="button"
+                    data-control="scale"
+                    data-value="100"
+                    aria-pressed="true"
+                >
+                    100%
+                </button>
+                <button type="button" data-control="scale" data-value="200">
+                    200%
+                </button>
+                <button
+                    type="button"
+                    data-control="state"
+                    data-value="normal"
+                    aria-pressed="true"
+                >
+                    기본
+                </button>
+                <button
+                    type="button"
+                    data-control="state"
+                    data-value="critical"
+                >
+                    긴급 공지
+                </button>
+                <button
+                    type="button"
+                    data-control="state"
+                    data-value="search-results"
+                >
+                    검색 결과
+                </button>
+                <button
+                    type="button"
+                    data-control="state"
+                    data-value="search-loading"
+                >
+                    검색 중
+                </button>
+                <button
+                    type="button"
+                    data-control="state"
+                    data-value="search-empty"
+                >
+                    검색 없음
+                </button>
+                <button
+                    type="button"
+                    data-control="state"
+                    data-value="search-error"
+                >
+                    검색 오류
+                </button>
+                <button
+                    type="button"
+                    data-control="state"
+                    data-value="no-routine"
+                >
+                    공지 없음
+                </button>
+                <button
+                    type="button"
+                    data-control="state"
+                    data-value="official-failure"
+                >
+                    X 실패
+                </button>
+            </div>
+            <p class="review-note">
+                구조·계층·반응형 검증용 예시입니다. 색상, 재질, 아이콘, 정확한
+                카드 크기와 최종 화면 디자인은 승인하지 않습니다.
+            </p>
+
+            <div
+                class="specimen-frame"
+                id="s5-specimen"
+                data-width="390"
+                data-tier="compact"
+                data-locale="ko"
+                data-text-scale="100"
+                data-state="normal"
+            >
+                <header class="app-header">
+                    <div class="standard-container header-content">
+                        <a class="wordmark" href="#">NosLog</a>
+                        <div class="header-actions">
+                            <button
+                                class="header-button"
+                                type="button"
+                                data-aria="profile"
+                                aria-label="프로필"
+                            >
+                                <span
+                                    class="profile-dot"
+                                    aria-hidden="true"
+                                ></span>
+                            </button>
+                            <button
+                                class="header-button"
+                                type="button"
+                                data-aria="menu"
+                                aria-label="전체 메뉴"
+                            >
+                                <span aria-hidden="true">☰</span>
+                            </button>
+                        </div>
+                    </div>
+                </header>
+
+                <main class="page-main">
+                    <div class="standard-container page-grid home-flow">
+                        <aside
+                            class="service-alert"
+                            aria-label="서비스 중요 공지"
+                        >
+                            <div class="service-alert-inner">
+                                <strong data-i18n="criticalTitle"
+                                    >데이터 연동 점검 안내</strong
+                                >
+                                <p data-i18n="criticalBody">
+                                    점검 시간에는 새 기록 연동이 일시적으로
+                                    제한됩니다.
+                                </p>
+                                <a href="#" data-i18n="criticalLink"
+                                    >자세히 보기</a
+                                >
+                            </div>
+                        </aside>
+
+                        <section
+                            class="identity-search"
+                            aria-labelledby="home-title"
+                        >
+                            <div class="identity">
+                                <div class="n-mark" aria-hidden="true">N</div>
+                                <h1 class="home-title" id="home-title">
+                                    NosLog
+                                </h1>
+                                <p class="tagline" data-i18n="tagline">
+                                    NOSTALGIA 기록 · 랭킹 · 서열 · 채보 아카이브
+                                </p>
+                            </div>
+
+                            <div class="search-region">
+                                <label
+                                    class="search-label"
+                                    for="home-search"
+                                    data-i18n="searchLabel"
+                                    >악곡 또는 공개 채보 검색</label
+                                >
+                                <div
+                                    class="search-control"
+                                    role="combobox"
+                                    aria-expanded="false"
+                                    aria-haspopup="listbox"
+                                    aria-owns="home-search-popup"
+                                >
+                                    <button
+                                        class="scope-button"
+                                        type="button"
+                                        data-aria="scope"
+                                        aria-label="검색 범위: 악곡"
+                                    >
+                                        ♫⌄
+                                    </button>
+                                    <input
+                                        class="search-input"
+                                        id="home-search"
+                                        type="search"
+                                        placeholder="곡 제목 · 아티스트 검색"
+                                        autocomplete="off"
+                                    />
+                                    <button
+                                        class="search-submit"
+                                        type="button"
+                                        data-aria="submit"
+                                        aria-label="검색"
+                                    >
+                                        ⌕
+                                    </button>
+                                </div>
+                                <div
+                                    class="search-popup"
+                                    id="home-search-popup"
+                                    role="listbox"
+                                    aria-label="검색 미리보기"
+                                >
+                                    <div data-popup-state="results">
+                                        <a
+                                            class="popup-row"
+                                            role="option"
+                                            href="#"
+                                        >
+                                            <span aria-hidden="true">♫</span>
+                                            <span class="popup-result-main">
+                                                <strong>交響曲第9番</strong>
+                                                <span>Dvořák</span>
+                                            </span>
+                                        </a>
+                                        <a
+                                            class="popup-row"
+                                            role="option"
+                                            href="#"
+                                        >
+                                            <span aria-hidden="true">♫</span>
+                                            <span class="popup-result-main">
+                                                <strong>Altale</strong>
+                                                <span>Sakuzyo</span>
+                                            </span>
+                                        </a>
+                                        <a
+                                            class="popup-row"
+                                            role="option"
+                                            href="#"
+                                        >
+                                            <span aria-hidden="true">♫</span>
+                                            <span class="popup-result-main">
+                                                <strong
+                                                    >ピアノソナタ「熱情」</strong
+                                                >
+                                                <span>Beethoven</span>
+                                            </span>
+                                        </a>
+                                        <a class="popup-action" href="#">
+                                            <span data-i18n="viewAll"
+                                                >검색 결과 18개 모두 보기</span
+                                            >
+                                            <span aria-hidden="true">→</span>
+                                        </a>
+                                    </div>
+                                    <div
+                                        class="popup-message"
+                                        data-popup-state="loading"
+                                        role="status"
+                                        data-i18n="loading"
+                                    >
+                                        검색 중…
+                                    </div>
+                                    <div
+                                        class="popup-message"
+                                        data-popup-state="empty"
+                                        role="status"
+                                        data-i18n="empty"
+                                    >
+                                        일치하는 결과가 없습니다
+                                    </div>
+                                    <div
+                                        class="popup-message"
+                                        data-popup-state="error"
+                                        role="status"
+                                    >
+                                        <span data-i18n="error"
+                                            >검색 결과를 불러오지
+                                            못했습니다</span
+                                        >
+                                        <button
+                                            class="retry-button"
+                                            type="button"
+                                            data-i18n="retry"
+                                        >
+                                            다시 시도
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <nav
+                            class="destinations"
+                            data-aria="destinations"
+                            aria-label="주요 기능"
+                        >
+                            <ul class="destination-list">
+                                <li>
+                                    <a class="destination-link" href="#">
+                                        <span
+                                            class="destination-icon"
+                                            aria-hidden="true"
+                                            >♫</span
+                                        >
+                                        <span
+                                            class="destination-label"
+                                            data-destination="0"
+                                            >악곡</span
+                                        >
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="destination-link" href="#">
+                                        <span
+                                            class="destination-icon"
+                                            aria-hidden="true"
+                                            >♬</span
+                                        >
+                                        <span
+                                            class="destination-label"
+                                            data-destination="1"
+                                            >채보 뷰어</span
+                                        >
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="destination-link" href="#">
+                                        <span
+                                            class="destination-icon"
+                                            aria-hidden="true"
+                                            >≋</span
+                                        >
+                                        <span
+                                            class="destination-label"
+                                            data-destination="2"
+                                            >서열</span
+                                        >
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="destination-link" href="#">
+                                        <span
+                                            class="destination-icon"
+                                            aria-hidden="true"
+                                            >#</span
+                                        >
+                                        <span
+                                            class="destination-label"
+                                            data-destination="3"
+                                            >랭킹</span
+                                        >
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="destination-link" href="#">
+                                        <span
+                                            class="destination-icon"
+                                            aria-hidden="true"
+                                            >▦</span
+                                        >
+                                        <span
+                                            class="destination-label"
+                                            data-destination="4"
+                                            >빙고</span
+                                        >
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="destination-link" href="#">
+                                        <span
+                                            class="destination-icon"
+                                            aria-hidden="true"
+                                            >✓</span
+                                        >
+                                        <span
+                                            class="destination-label"
+                                            data-destination="5"
+                                            >검정</span
+                                        >
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="destination-link" href="#">
+                                        <span
+                                            class="destination-icon"
+                                            aria-hidden="true"
+                                            >⌖</span
+                                        >
+                                        <span
+                                            class="destination-label"
+                                            data-destination="6"
+                                            >오락실</span
+                                        >
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="destination-link" href="#">
+                                        <span
+                                            class="destination-icon"
+                                            aria-hidden="true"
+                                            >↻</span
+                                        >
+                                        <span
+                                            class="destination-label"
+                                            data-destination="7"
+                                            >데이터 연동</span
+                                        >
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+
+                        <div class="editorial-zone">
+                            <section class="editorial-section routine-section">
+                                <div class="section-heading-row">
+                                    <h2
+                                        class="section-heading"
+                                        data-i18n="announcements"
+                                    >
+                                        NosLog 공지
+                                    </h2>
+                                    <a
+                                        class="section-link"
+                                        href="#"
+                                        data-i18n="allAnnouncements"
+                                        >전체 공지</a
+                                    >
+                                </div>
+                                <ul class="announcement-list">
+                                    <li>
+                                        <a class="announcement-link" href="#">
+                                            <span data-i18n="notice1"
+                                                >NosLog 2.0 디자인 가이드 작업
+                                                안내</span
+                                            >
+                                            <time datetime="2026-08-08"
+                                                >2026. 08. 08.</time
+                                            >
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="announcement-link" href="#">
+                                            <span data-i18n="notice2"
+                                                >악곡 번역 데이터 검수
+                                                일정</span
+                                            >
+                                            <time datetime="2026-08-02"
+                                                >2026. 08. 02.</time
+                                            >
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="announcement-link" href="#">
+                                            <span data-i18n="notice3"
+                                                >개인정보 처리방침 개정
+                                                안내</span
+                                            >
+                                            <time datetime="2026-07-25"
+                                                >2026. 07. 25.</time
+                                            >
+                                        </a>
+                                    </li>
+                                </ul>
+                            </section>
+
+                            <section class="editorial-section official-section">
+                                <div class="section-heading-row">
+                                    <h2
+                                        class="section-heading"
+                                        data-i18n="officialHeading"
+                                    >
+                                        NOSTALGIA 공식 소식
+                                    </h2>
+                                    <a
+                                        class="section-link"
+                                        href="#"
+                                        data-i18n="officialAccount"
+                                        >공식 X</a
+                                    >
+                                </div>
+                                <article class="official-card">
+                                    <div class="official-source">
+                                        <span aria-hidden="true">X</span>
+                                        <strong>NOSTALGIA_573</strong>
+                                    </div>
+                                    <p>
+                                        ノスタルジアから最新のお知らせです。詳細は
+                                        公式投稿をご確認ください。
+                                    </p>
+                                    <p class="official-date">2026. 08. 08.</p>
+                                </article>
+                                <div class="official-fallback">
+                                    <span data-i18n="officialFallback"
+                                        >공식 소식을 불러오지 못했습니다.</span
+                                    >
+                                    <a href="#" data-i18n="officialFallbackLink"
+                                        >NOSTALGIA 공식 X에서 보기</a
+                                    >
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </main>
+
+                <footer class="page-footer">
+                    <div class="standard-container page-grid">
+                        <div class="page-footer-content">
+                            <span>© 2026 NosLog</span>
+                            <div class="footer-links">
+                                <a href="#" data-i18n="privacy"
+                                    >개인정보처리방침</a
+                                >
+                                <a href="#">GitHub</a>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+            <output id="s5-matrix-result" hidden></output>
+        </div>
+
+        <script>
+            const copy = {
+                ko: {
+                    tagline: "NOSTALGIA 기록 · 랭킹 · 서열 · 채보 아카이브",
+                    searchLabel: "악곡 또는 공개 채보 검색",
+                    searchPlaceholder: "곡 제목 · 아티스트 검색",
+                    profile: "프로필",
+                    menu: "전체 메뉴",
+                    scope: "검색 범위: 악곡",
+                    submit: "검색",
+                    destinations: "주요 기능",
+                    destinationLabels: [
+                        "악곡",
+                        "채보 뷰어",
+                        "서열",
+                        "랭킹",
+                        "빙고",
+                        "검정",
+                        "오락실",
+                        "데이터 연동",
+                    ],
+                    criticalTitle: "데이터 연동 점검 안내",
+                    criticalBody:
+                        "점검 시간에는 새 기록 연동이 일시적으로 제한됩니다.",
+                    criticalLink: "자세히 보기",
+                    viewAll: "검색 결과 18개 모두 보기",
+                    loading: "검색 중…",
+                    empty: "일치하는 결과가 없습니다",
+                    error: "검색 결과를 불러오지 못했습니다",
+                    retry: "다시 시도",
+                    announcements: "NosLog 공지",
+                    allAnnouncements: "전체 공지",
+                    notice1: "NosLog 2.0 디자인 가이드 작업 안내",
+                    notice2: "악곡 번역 데이터 검수 일정",
+                    notice3: "개인정보 처리방침 개정 안내",
+                    officialHeading: "NOSTALGIA 공식 소식",
+                    officialAccount: "공식 X",
+                    officialFallback: "공식 소식을 불러오지 못했습니다.",
+                    officialFallbackLink: "NOSTALGIA 공식 X에서 보기",
+                    privacy: "개인정보처리방침",
+                },
+                ja: {
+                    tagline:
+                        "NOSTALGIAの記録・ランキング・難易度表・譜面アーカイブ",
+                    searchLabel: "楽曲または公開譜面を検索",
+                    searchPlaceholder: "楽曲名・アーティストを検索",
+                    profile: "プロフィール",
+                    menu: "すべてのメニュー",
+                    scope: "検索範囲：楽曲",
+                    submit: "検索",
+                    destinations: "主な機能",
+                    destinationLabels: [
+                        "楽曲",
+                        "譜面ビューア",
+                        "難易度表",
+                        "ランキング",
+                        "ビンゴ",
+                        "検定",
+                        "ゲームセンター",
+                        "データ連携",
+                    ],
+                    criticalTitle: "データ連携メンテナンスのお知らせ",
+                    criticalBody:
+                        "メンテナンス中は新しい記録の連携が一時的に制限されます。",
+                    criticalLink: "詳しく見る",
+                    viewAll: "18件の検索結果をすべて見る",
+                    loading: "検索中…",
+                    empty: "一致する結果はありません",
+                    error: "検索結果を読み込めませんでした",
+                    retry: "再試行",
+                    announcements: "NosLogのお知らせ",
+                    allAnnouncements: "すべてのお知らせ",
+                    notice1: "NosLog 2.0デザインガイド作業のお知らせ",
+                    notice2: "楽曲翻訳データ確認日程",
+                    notice3: "プライバシーポリシー改定のお知らせ",
+                    officialHeading: "NOSTALGIA公式情報",
+                    officialAccount: "公式X",
+                    officialFallback: "公式情報を読み込めませんでした。",
+                    officialFallbackLink: "NOSTALGIA公式Xで見る",
+                    privacy: "プライバシーポリシー",
+                },
+                en: {
+                    tagline:
+                        "NOSTALGIA records, rankings, tiers, and chart archive",
+                    searchLabel: "Search music or published charts",
+                    searchPlaceholder: "Search title or artist",
+                    profile: "Profile",
+                    menu: "All destinations",
+                    scope: "Search scope: Music",
+                    submit: "Search",
+                    destinations: "Main destinations",
+                    destinationLabels: [
+                        "Music",
+                        "Chart Viewer",
+                        "Tiers",
+                        "Rankings",
+                        "Bingo",
+                        "Exams",
+                        "Arcades",
+                        "Data Sync",
+                    ],
+                    criticalTitle: "Data Sync maintenance",
+                    criticalBody:
+                        "New record sync is temporarily unavailable during maintenance.",
+                    criticalLink: "View details",
+                    viewAll: "View all 18 results",
+                    loading: "Searching…",
+                    empty: "No matching results",
+                    error: "Search results could not be loaded",
+                    retry: "Try again",
+                    announcements: "NosLog announcements",
+                    allAnnouncements: "All announcements",
+                    notice1: "NosLog 2.0 design guide work update",
+                    notice2: "Music-title translation review schedule",
+                    notice3: "Privacy policy revision notice",
+                    officialHeading: "Official NOSTALGIA news",
+                    officialAccount: "Official X",
+                    officialFallback: "Official news could not be loaded.",
+                    officialFallbackLink:
+                        "View the official NOSTALGIA X account",
+                    privacy: "Privacy",
+                },
+            };
+
+            const specimen = document.getElementById("s5-specimen");
+            const controls = Array.from(
+                document.querySelectorAll("[data-control]")
+            );
+
+            function setPressed(group, value) {
+                controls
+                    .filter((button) => button.dataset.control === group)
+                    .forEach((button) => {
+                        button.setAttribute(
+                            "aria-pressed",
+                            String(button.dataset.value === value)
+                        );
+                    });
+            }
+
+            function applyLocale(locale) {
+                const localeCopy = copy[locale];
+                specimen.dataset.locale = locale;
+                document.documentElement.lang = locale;
+                specimen.querySelectorAll("[data-i18n]").forEach((element) => {
+                    const key = element.dataset.i18n;
+                    if (localeCopy[key]) element.textContent = localeCopy[key];
+                });
+                specimen
+                    .querySelectorAll("[data-destination]")
+                    .forEach((element) => {
+                        element.textContent =
+                            localeCopy.destinationLabels[
+                                Number(element.dataset.destination)
+                            ];
+                    });
+                specimen.querySelector(".search-input").placeholder =
+                    localeCopy.searchPlaceholder;
+                specimen
+                    .querySelector('[data-aria="profile"]')
+                    .setAttribute("aria-label", localeCopy.profile);
+                specimen
+                    .querySelector('[data-aria="menu"]')
+                    .setAttribute("aria-label", localeCopy.menu);
+                specimen
+                    .querySelector('[data-aria="scope"]')
+                    .setAttribute("aria-label", localeCopy.scope);
+                specimen
+                    .querySelector('[data-aria="submit"]')
+                    .setAttribute("aria-label", localeCopy.submit);
+                specimen
+                    .querySelector('[data-aria="destinations"]')
+                    .setAttribute("aria-label", localeCopy.destinations);
+                setPressed("locale", locale);
+            }
+
+            function applyState(state) {
+                specimen.dataset.state = state;
+                const combobox = specimen.querySelector(".search-control");
+                combobox.setAttribute(
+                    "aria-expanded",
+                    String(state.startsWith("search-"))
+                );
+                setPressed("state", state);
+            }
+
+            function applyWidth(width) {
+                specimen.dataset.width = width;
+                specimen.dataset.tier =
+                    Number(width) >= 1056
+                        ? "wide"
+                        : Number(width) >= 672
+                          ? "intermediate"
+                          : "compact";
+                specimen.style.width = `${width}px`;
+                setPressed("width", width);
+            }
+
+            function applyScale(scale) {
+                specimen.dataset.textScale = scale;
+                setPressed("scale", scale);
+            }
+
+            controls.forEach((button) => {
+                button.addEventListener("click", () => {
+                    const { control, value } = button.dataset;
+                    if (control === "width") applyWidth(value);
+                    if (control === "locale") applyLocale(value);
+                    if (control === "scale") applyScale(value);
+                    if (control === "state") applyState(value);
+                });
+            });
+
+            window.s5Specimen = {
+                setWidth: applyWidth,
+                setLocale: applyLocale,
+                setScale: applyScale,
+                setState: applyState,
+            };
+
+            function runValidationMatrix() {
+                const widths = [
+                    320, 390, 671, 672, 673, 1055, 1056, 1057, 1280, 1440,
+                ];
+                const locales = ["ko", "ja", "en"];
+                const scales = ["100", "200"];
+                const states = [
+                    "normal",
+                    "critical",
+                    "search-results",
+                    "search-loading",
+                    "search-empty",
+                    "search-error",
+                    "no-routine",
+                    "official-failure",
+                ];
+                const failures = [];
+                let cases = 0;
+                const isVisible = (element) =>
+                    Boolean(element) &&
+                    getComputedStyle(element).display !== "none";
+
+                widths.forEach((width) => {
+                    locales.forEach((locale) => {
+                        scales.forEach((scale) => {
+                            states.forEach((state) => {
+                                applyWidth(String(width));
+                                applyLocale(locale);
+                                applyScale(scale);
+                                applyState(state);
+                                cases += 1;
+
+                                const destinationLinks = Array.from(
+                                    specimen.querySelectorAll(
+                                        ".destination-link"
+                                    )
+                                );
+                                const destinationRows = [
+                                    ...new Set(
+                                        destinationLinks.map((element) =>
+                                            Math.round(
+                                                element.getBoundingClientRect()
+                                                    .top
+                                            )
+                                        )
+                                    ),
+                                ];
+                                const destinationStyle = getComputedStyle(
+                                    specimen.querySelector(".destination-list")
+                                );
+                                const destinationColumns =
+                                    destinationStyle.gridTemplateColumns
+                                        .trim()
+                                        .split(/\s+/)
+                                        .filter(Boolean);
+                                const popup =
+                                    specimen.querySelector(".search-popup");
+                                const popupRect = popup.getBoundingClientRect();
+                                const frameRect =
+                                    specimen.getBoundingClientRect();
+                                const searchRect = specimen
+                                    .querySelector(".search-control")
+                                    .getBoundingClientRect();
+                                const contentRect = specimen
+                                    .querySelector(".home-flow")
+                                    .getBoundingClientRect();
+                                const routine =
+                                    specimen.querySelector(".routine-section");
+                                const official =
+                                    specimen.querySelector(".official-section");
+                                const routineRect =
+                                    routine.getBoundingClientRect();
+                                const officialRect =
+                                    official.getBoundingClientRect();
+                                const editorialRect = specimen
+                                    .querySelector(".editorial-zone")
+                                    .getBoundingClientRect();
+                                const fallback =
+                                    specimen.querySelector(
+                                        ".official-fallback"
+                                    );
+                                const officialCard =
+                                    specimen.querySelector(".official-card");
+                                const critical =
+                                    specimen.querySelector(".service-alert");
+                                const isSearchState =
+                                    state.startsWith("search-");
+
+                                const checks = {
+                                    noOverflow:
+                                        specimen.scrollWidth <=
+                                        specimen.clientWidth,
+                                    eightDestinations:
+                                        destinationLinks.length === 8,
+                                    fourColumns:
+                                        destinationColumns.length === 4,
+                                    twoRows: destinationRows.length === 2,
+                                    targets: destinationLinks.every(
+                                        (element) => {
+                                            const rect =
+                                                element.getBoundingClientRect();
+                                            return (
+                                                rect.height >= 44 &&
+                                                rect.width >= 44
+                                            );
+                                        }
+                                    ),
+                                    popupContainment:
+                                        !isSearchState ||
+                                        (popupRect.left >=
+                                            frameRect.left - 0.5 &&
+                                            popupRect.right <=
+                                                frameRect.right + 0.5),
+                                    popupNoScroll:
+                                        !isSearchState ||
+                                        popup.scrollHeight <=
+                                            popup.clientHeight,
+                                    searchContained:
+                                        searchRect.left >=
+                                            contentRect.left - 0.5 &&
+                                        searchRect.right <=
+                                            contentRect.right + 0.5,
+                                    criticalState:
+                                        state === "critical"
+                                            ? isVisible(critical)
+                                            : !isVisible(critical),
+                                    routineState:
+                                        state === "no-routine"
+                                            ? !isVisible(routine)
+                                            : isVisible(routine),
+                                    officialState:
+                                        state === "official-failure"
+                                            ? isVisible(fallback) &&
+                                              !isVisible(officialCard)
+                                            : !isVisible(fallback) &&
+                                              isVisible(officialCard),
+                                    wideEditorial:
+                                        width < 1056 ||
+                                        state === "no-routine" ||
+                                        (routineRect.width >
+                                            officialRect.width &&
+                                            routineRect.left <
+                                                officialRect.left),
+                                    emptyRoutineLead:
+                                        state !== "no-routine" ||
+                                        width < 1056 ||
+                                        Math.abs(
+                                            officialRect.left -
+                                                editorialRect.left
+                                        ) < 1,
+                                };
+
+                                const failed = Object.entries(checks)
+                                    .filter(([, passed]) => !passed)
+                                    .map(([name]) => name);
+                                if (failed.length) {
+                                    failures.push({
+                                        width,
+                                        locale,
+                                        scale,
+                                        state,
+                                        failed,
+                                        frameClient: specimen.clientWidth,
+                                        frameScroll: specimen.scrollWidth,
+                                        destinationRows: destinationRows.length,
+                                        destinationColumns:
+                                            destinationColumns.length,
+                                        popupClient: popup.clientHeight,
+                                        popupScroll: popup.scrollHeight,
+                                    });
+                                }
+                            });
+                        });
+                    });
+                });
+
+                applyWidth("390");
+                applyLocale("ko");
+                applyScale("100");
+                applyState("normal");
+
+                const result = { cases, failures };
+                document.getElementById("s5-matrix-result").textContent =
+                    JSON.stringify(result);
+                document.body.dataset.matrixComplete = "true";
+                return result;
+            }
+
+            window.addEventListener("load", async () => {
+                if (document.fonts?.ready) await document.fonts.ready;
+                runValidationMatrix();
+            });
+        </script>
+    </body>
+</html>
