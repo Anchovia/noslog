@@ -1,0 +1,232 @@
+# NosLog 2.0 C5 Spectrum S2 Semantic Mapping
+
+## Document Control
+
+- Status: `C5-2 surface mapping approved; neutral foreground, boundary, and ordinary
+interaction mappings remain proposed`
+- Approval date: 2026-08-08
+- Canonical language: English
+- Korean companion:
+  [34-foundation-c5-spectrum-semantic-mapping.ko.md](./34-foundation-c5-spectrum-semantic-mapping.ko.md)
+- Started: 2026-08-08
+- Scope: map the approved Spectrum S2 grayscale primitive source to the approved
+  NosLog C1-B neutral surface roles and candidate neutral foreground, boundary, and
+  ordinary interaction roles
+- Inputs: approved documents `25`, `32`, and `33`; current Spectrum S2 token data;
+  WCAG 2.2; and the previously reviewed equal-role palette comparison
+- Excludes: approval of neutral foreground, boundary, ordinary interaction, focus,
+  signature/feedback/domain or data-visualization hues, radius and shadow dimensions,
+  component styling, high-fidelity screens, and application implementation
+
+This document does not reopen `FCM-12`. Adobe Spectrum S2 remains the approved exact
+Dark/Light neutral primitive source. `C5M-03` now assigns the approved C1-B surface
+roles through the current Spectrum S2 aliases. Foreground, boundary, ordinary
+interaction, and component-level validation remain open.
+
+## Related Documents
+
+- [Foundation semantic role map](./25-foundation-semantic-role-map.md)
+- [Foundation color and material candidates](./32-foundation-color-material-candidates.md)
+- [Signature color research](./33-foundation-signature-color-research.md)
+- [C5 Spectrum surface validation](./35-foundation-c5-spectrum-surface-validation.md)
+
+## Focused Evidence
+
+The broad seventeen-source architecture matrix and ten-system neutral-source review
+remain authoritative in document `32`. This focused pass uses current primary Adobe
+sources to resolve mapping inside the already approved source family:
+
+| Source                                                                                               | Transferable evidence                                                                                                                       | NosLog use                                                                                    | Limitation                                                                                        |
+| ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| [Spectrum S2 color aliases](https://opensource.adobe.com/spectrum-design-data/tokens/color-aliases/) | Current resolved Light/Dark values for background base, layers, elevated surface, pasteboard, content, disabled, overlay, and state aliases | Primary authority for a mapping described as Spectrum S2 semantic fidelity                    | Spectrum role names do not exactly equal the approved NosLog C1-B spatial inventory               |
+| [Spectrum S2 color palette](https://opensource.adobe.com/spectrum-design-data/tokens/color-palette/) | Exact approved gray primitive values                                                                                                        | Prevents local hex modification or substitution                                               | A raw scale alone does not assign semantic ownership                                              |
+| [Spectrum using color](https://spectrum.adobe.com/page/using-color/)                                 | Background layers are large app-framing regions; use opaque tokens rather than custom colors or transparency                                | Governs layer purpose, opaque surfaces, and the ban on locally synthesized grays              | Some public layer examples describe the broader Spectrum model and differ from current S2 aliases |
+| [Spectrum color system](https://spectrum.adobe.com/page/color-system/)                               | Backgrounds, decorative borders, field/control borders, text, icons, and disabled content use deliberately separated gray ranges            | Supports distinct foreground and boundary responsibilities                                    | The page explains Spectrum principles rather than NosLog component requirements                   |
+| [Spectrum Web Components styles](https://opensource.adobe.com/spectrum-web-components/tools/styles/) | Spectrum 2 uses separate `tokens-v2` Light/Dark files and stable semantic custom-property names                                             | Confirms invariant semantic authorship with appearance-specific values                        | SWC implementation and component geometry are not adopted                                         |
+| [WCAG 2.2](https://www.w3.org/TR/WCAG22/)                                                            | Normal text requires `4.5:1`; meaningful component/graphic boundaries require `3:1` when they are the necessary cue                         | Sets acceptance thresholds for each actual foreground/background and control-boundary pairing | Does not select the palette or material hierarchy                                                 |
+
+### Current Spectrum S2 aliases relevant to C5
+
+| Spectrum S2 alias                         | Light                  | Dark                   | Published intent                          |
+| ----------------------------------------- | ---------------------- | ---------------------- | ----------------------------------------- |
+| `background-base-color`                   | `gray-25` · `#ffffff`  | `gray-25` · `#111111`  | Default background base                   |
+| `background-layer-1-color`                | `gray-50` · `#f8f8f8`  | `gray-50` · `#1b1b1b`  | First app-framing layer                   |
+| `background-layer-2-color`                | `#ffffff`              | `gray-75` · `#222222`  | Second app-framing layer                  |
+| `background-elevated-color`               | `#ffffff`              | `#222222`              | Elevated surface                          |
+| `background-pasteboard-color`             | `gray-100` · `#e9e9e9` | `gray-25` · `#111111`  | Receding professional editing area        |
+| `overlay-color` + `overlay-opacity`       | black at `0.4`         | black at `0.6`         | Modal/background suppression              |
+| `neutral-content-color-default`           | `gray-800` · `#292929` | `gray-800` · `#dbdbdb` | Default neutral content                   |
+| `neutral-subdued-content-color-default`   | `gray-700` · `#505050` | `gray-700` · `#afafaf` | Subdued neutral content                   |
+| `neutral-content-color-hover/down`        | `gray-900` · `#131313` | `gray-900` · `#f2f2f2` | Higher-emphasis interactive content state |
+| `disabled-background-color`               | `gray-100` · `#e9e9e9` | `gray-100` · `#2c2c2c` | Disabled component background             |
+| `disabled-border-color`                   | `gray-300` · `#dadada` | `gray-300` · `#393939` | Disabled boundary                         |
+| `disabled-content-color`                  | `gray-400` · `#c6c6c6` | `gray-400` · `#444444` | Disabled nonessential content             |
+| `neutral-subtle-background-color-default` | `gray-100` · `#e9e9e9` | `gray-300` · `#393939` | Low-emphasis neutral state background     |
+
+## Important Correction to the Previous Comparison
+
+The comparison that led to `FCM-12` used exact Spectrum S2 gray primitives, but its
+role assignment was explicitly provisional:
+
+- Light used `gray-50` as `canvas` and `gray-25` as `surface`;
+- Dark used `gray-25` as `canvas`, `gray-50` as `surface`, and `gray-100` as the
+  highest overlay step.
+
+That specimen validly established preference for the Spectrum source ramp. It did not
+show the current Spectrum S2 semantic aliases exactly. Treating its temporary mapping
+as already approved would collapse the approval gate recorded in `FCM-12`.
+
+## Surface Mapping Alternatives
+
+### `M-A` — Current Spectrum S2 alias fidelity
+
+| NosLog role | Spectrum source                        | Light     | Dark      | Use boundary                                                                                       |
+| ----------- | -------------------------------------- | --------- | --------- | -------------------------------------------------------------------------------------------------- |
+| `canvas`    | `background-base-color`                | `#ffffff` | `#111111` | Page and shell baseline                                                                            |
+| `surface`   | `background-layer-1-color`             | `#f8f8f8` | `#1b1b1b` | Flat grouped content; ordinary cards do not become raised                                          |
+| `sunken`    | `background-pasteboard-color`          | `#e9e9e9` | `#111111` | Viewer/editor/data wells that intentionally recede                                                 |
+| `raised`    | `background-elevated-color`            | `#ffffff` | `#222222` | Content with real lift, movement, overlap, or separately justified emphasis                        |
+| `overlay`   | elevated surface plus overlay boundary | `#ffffff` | `#222222` | Menu, popover, tooltip, sheet, and dialog; surface alone is not sufficient to express top stacking |
+| `scrim`     | black `overlay-color`                  | `40%`     | `60%`     | Modality/background suppression only                                                               |
+
+Advantages:
+
+- preserves both exact source values and current Spectrum S2 semantic aliases;
+- supplies every approved C1-B spatial role without inventing a neutral;
+- keeps Dark depth monotonic and Light hierarchy dependent on framing, boundary, and
+  justified shadow rather than arbitrary tinted cards; and
+- gives the future implementation the most stable upstream provenance.
+
+Risks and constraints:
+
+- Light `canvas` is white while ordinary `surface` is `#f8f8f8`, the reverse of the
+  previous comparison specimen;
+- adjacent surface contrast is intentionally subtle and cannot be the only required
+  grouping or state cue; and
+- `raised` and `overlay` share a fill, so overlay needs boundary, stacking, placement,
+  and the later approved shadow contract.
+
+### `M-B` — Previous comparison-specimen continuity
+
+| NosLog role | Light       | Dark        |
+| ----------- | ----------- | ----------- |
+| `canvas`    | `#f8f8f8`   | `#111111`   |
+| `surface`   | `#ffffff`   | `#1b1b1b`   |
+| `sunken`    | `#f3f3f3`   | `#111111`   |
+| `raised`    | `#ffffff`   | `#222222`   |
+| `overlay`   | `#ffffff`   | `#2c2c2c`   |
+| `scrim`     | black `40%` | black `60%` |
+
+Advantages:
+
+- matches the visual relationship the user preferred during source selection; and
+- makes ordinary Light surfaces white against an off-white page while giving Dark
+  overlays one additional value step.
+
+Risks and constraints:
+
+- uses only approved Spectrum primitives but does not preserve current Spectrum S2
+  semantic aliases;
+- introduces a NosLog-specific Light role reversal and Dark overlay step before real
+  content has demonstrated that the deviation is necessary; and
+- provides weaker upstream provenance for a decision explicitly motivated by adopting
+  a stable renowned reference.
+
+**Approved decision:** use `M-A` as C5-2. `M-B` remains historical comparison evidence
+and is rejected as the C5 surface mapping. If `M-A` fails real NosLog content, report
+the measured failure before considering a documented deviation.
+
+## Proposed Neutral Foreground Mapping
+
+| NosLog role                            | Spectrum primitive | Light     | Dark      | Contract                                                                                                        |
+| -------------------------------------- | ------------------ | --------- | --------- | --------------------------------------------------------------------------------------------------------------- |
+| `text-primary`, `icon-primary`         | `gray-800`         | `#292929` | `#dbdbdb` | Default readable content                                                                                        |
+| emphasized/interactive component alias | `gray-900`         | `#131313` | `#f2f2f2` | Heading or hover/down emphasis only; does not replace `text-primary` globally                                   |
+| `text-secondary`, `icon-secondary`     | `gray-700`         | `#505050` | `#afafaf` | Secondary metadata and labels                                                                                   |
+| `text-tertiary`                        | alias `gray-700`   | `#505050` | `#afafaf` | Initially shares the safe subdued value; hierarchy comes from typography/placement until another need is proven |
+| `text-disabled`, disabled icon         | `gray-400`         | `#c6c6c6` | `#444444` | Genuinely disabled, nonessential content only                                                                   |
+
+`gray-600` is not proposed for universal tertiary text. It reaches only `4.02:1`
+against the Light `sunken` surface, below the `4.5:1` normal-text baseline. The
+semantic role may exist while sharing `gray-700`; distinct tokens do not require
+distinct primitive values before a real hierarchy need is demonstrated.
+
+## Proposed Neutral Boundary Mapping
+
+| NosLog role      | Spectrum primitive | Light     | Dark      | Contract                                                                                               |
+| ---------------- | ------------------ | --------- | --------- | ------------------------------------------------------------------------------------------------------ |
+| `divider`        | `gray-200`         | `#e1e1e1` | `#323232` | Decorative rhythm and proximity grouping only                                                          |
+| `border-subtle`  | `gray-300`         | `#dadada` | `#393939` | Decorative framing and nonessential boundaries                                                         |
+| `border-default` | `gray-400`         | `#c6c6c6` | `#444444` | Field/container boundary when shape, label, and layout also identify the element                       |
+| `border-strong`  | `gray-600`         | `#717171` | `#8a8a8a` | Essential control or graphic boundary, selected emphasis, or another state requiring measured contrast |
+
+The first three roles intentionally remain below `3:1` against some adjacent
+surfaces. They cannot be the only cue for a required control, selected state, or
+meaningful graphic. `border-strong` remains above `3:1` on all proposed M-A surfaces;
+its minimum measured pair is `4.02:1` in Light and `4.61:1` in Dark.
+
+## Proposed Ordinary Neutral Interaction Mapping
+
+1. Default ordinary interactions remain transparent or inherit their neutral
+   surface. A colored or filled container is not the default affordance.
+2. A low-emphasis hover/down fill may use Spectrum's
+   `neutral-subtle-background-color-default`: Light `gray-100` (`#e9e9e9`) and Dark
+   `gray-300` (`#393939`). It must be tested per component and may not replace label,
+   geometry, cursor, or state semantics.
+3. Selection has no universal fill token. It remains neutral and uses a checkmark,
+   border weight, type weight, position, or structure. A component-specific subtle
+   fill requires separate evidence.
+4. Disabled background, border, and content may use the official disabled aliases,
+   but disabled content is not secondary copy and must not contain required
+   information.
+5. Focus remains outside this mapping. Spectrum's blue focus alias is not inherited;
+   NosLog focus is governed independently by approved C2-B and a later measured
+   decision.
+
+## Measured Contrast Summary for `M-A`
+
+Values were calculated from the exact sRGB pairs across `canvas`, `surface`,
+`sunken`, `raised`, and `overlay`.
+
+| Token use                | Minimum Light ratio | Minimum Dark ratio | Interpretation                                                             |
+| ------------------------ | ------------------: | -----------------: | -------------------------------------------------------------------------- |
+| `gray-900` emphasis      |             `15.30` |            `14.21` | Strong content contrast                                                    |
+| `gray-800` primary       |             `11.98` |            `11.49` | Strong default content contrast                                            |
+| `gray-700` secondary     |              `6.64` |             `7.25` | Passes normal-text baseline across all M-A surfaces                        |
+| `gray-600`               |              `4.02` |             `4.61` | Not universal normal text; suitable as a measured strong non-text boundary |
+| `gray-400` disabled      |              `1.41` |             `1.63` | Disabled/nonessential only                                                 |
+| `gray-300` subtle border |              `1.15` |             `1.38` | Decorative boundary only                                                   |
+| `gray-200` divider       |              `1.08` |             `1.24` | Decorative rhythm only                                                     |
+
+These ratios do not approve component states. Real adjacency, text size, border
+area, artwork, focus, disabled semantics, forced colors, and high contrast still need
+the required specimen matrix.
+
+## Surface Review Decision
+
+On 2026-08-08, the user approved `M-A`, current Spectrum S2 alias fidelity, as the C5
+neutral surface mapping to carry into measured NosLog specimens. The approved values
+are:
+
+1. Light `canvas #ffffff`, `surface #f8f8f8`, `sunken #e9e9e9`, `raised #ffffff`,
+   `overlay #ffffff`, and black `40%` scrim;
+2. Dark `canvas #111111`, `surface #1b1b1b`, `sunken #111111`, `raised #222222`,
+   `overlay #222222`, and black `60%` scrim.
+
+This approval authorizes representative guide specimens and measurement. It does not
+promote foreground, boundary, interaction, focus, signature, component, or production
+values to `Approved`. `M-B` may remain visible only as labeled historical evidence;
+it is not a fallback implementation path.
+
+## Decision Log
+
+| ID       | Entry                                                                                                                                          | Status                            |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------- |
+| `C5M-01` | Treat current Spectrum S2 color aliases as the primary semantic-mapping authority inside the approved grayscale source.                        | `Observed`                        |
+| `C5M-02` | Treat the previous comparison's role assignment as a provisional source-selection specimen, not an approved semantic map.                      | `Observed`                        |
+| `C5M-03` | Map C1-B surfaces through `M-A`, preserving current Spectrum S2 base/layer/elevated/pasteboard/overlay aliases.                                | `Approved — 2026-08-08`           |
+| `C5M-04` | Map default, subdued, emphasized, and disabled foreground roles through `gray-800`, `gray-700`, `gray-900`, and `gray-400`.                    | `Proposed — after surface review` |
+| `C5M-05` | Map decorative, subtle, default, and strong boundaries through `gray-200`, `gray-300`, `gray-400`, and `gray-600`.                             | `Proposed — after surface review` |
+| `C5M-06` | Keep ordinary interaction and selection neutral; allow official subtle/disabled aliases only under the documented component-level constraints. | `Proposed — after surface review` |
+| `C5M-07` | Do not mix the older public background-layer table with current Spectrum S2 aliases in one mapping; record any future deviation explicitly.    | `Proposed governance rule`        |
+| `C5M-08` | Retain `M-B` only as historical source-selection evidence; reject it as the C5 surface mapping and as an automatic fallback.                   | `Rejected — 2026-08-08`           |
