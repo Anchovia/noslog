@@ -2,8 +2,8 @@
 
 ## 문서 제어
 
-- 상태: `조사 완료; 문서 37에서 초기 F-A specimen 측정 — 승인된 foreground
-mapping 없음`
+- 상태: `조사 완료; 문서 37 검토 뒤 F-A visual direction 승인; C5M-04 기술 gate는
+열려 있음`
 - 정본 언어: 영어
 - 영어 정본:
   [36-foundation-c5-neutral-foreground-reference-comparison.md](./36-foundation-c5-neutral-foreground-reference-comparison.md)
@@ -182,6 +182,14 @@ responsibility와 실제 component state에도 맞아야 한다.
 이 권고는 다음 guide specimen을 만들고 측정할 권한만 제안한다. `C5M-04`나
 production token 승인이 아니다.
 
+### 검토 결과 — 2026-08-08
+
+문서 `37`의 측정 specimen을 검토한 뒤 사용자는 `F-A`를 C5 foreground visual
+direction으로 승인했다. 이 승인은 exact Spectrum value, secondary와 tertiary
+responsibility가 공유하는 subdued value, interaction 전용 `gray-900`, 비필수 content
+전용 disabled contract를 유지한다. `C5M-04`를 닫거나 production token을 승인하는 것은
+아니며 실제 200% browser zoom과 active forced-colors 검증이 계속 필요하다.
+
 ## 필수 Foreground Specimen Gate
 
 `C5M-04`를 승인하기 전에 specimen은 다음을 보여야 한다.
@@ -206,13 +214,13 @@ composition이다.
 
 ## 의사결정 로그
 
-| ID       | 항목                                                                                                                                                      | 상태                               |
-| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
-| `C5F-01` | Tailwind palette/default-theme value를 C5 foreground design authority 밖으로 둔다.                                                                        | `Approved governance — 2026-08-08` |
-| `C5F-02` | 16-source 비교는 raw gray 선택 대신 semantic default, lower-prominence, disabled ownership에 수렴한다.                                                    | `Observed`                         |
-| `C5F-03` | 별도의 세 번째 neutral reading value는 cross-system requirement가 아니다.                                                                                 | `Observed`                         |
-| `C5F-04` | Spectrum `gray-900`은 interactive content-state alias이며 generic heading/emphasis token의 근거가 아니다.                                                 | `Observed correction`              |
-| `C5F-05` | 현재 Spectrum S2 foreground alias를 `F-A`로 그대로 사용하고 secondary와 tertiary semantic alias는 처음에 subdued content를 공유한다.                      | `Proposed — 사용자 검토 필요`      |
-| `C5F-06` | `gray-600`은 Light `sunken`의 normal-text contrast에 실패하고 현재 Spectrum content alias ownership도 없으므로 universal tertiary text에 사용하지 않는다. | `Proposed — 사용자 검토 필요`      |
-| `C5F-07` | 측정된 NosLog content가 material Spectrum failure를 확립할 때만 `FCM-12`를 다시 연다. 다른 system은 source와 혼합하지 않고 교체해야 한다.                 | `Proposed governance`              |
-| `C5F-08` | `C5M-04` 결정 전에 필수 foreground specimen 및 adjacency record를 만든다.                                                                                 | `문서 37의 초기 근거`              |
+| ID       | 항목                                                                                                                                                      | 상태                                       |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| `C5F-01` | Tailwind palette/default-theme value를 C5 foreground design authority 밖으로 둔다.                                                                        | `Approved governance — 2026-08-08`         |
+| `C5F-02` | 16-source 비교는 raw gray 선택 대신 semantic default, lower-prominence, disabled ownership에 수렴한다.                                                    | `Observed`                                 |
+| `C5F-03` | 별도의 세 번째 neutral reading value는 cross-system requirement가 아니다.                                                                                 | `Observed`                                 |
+| `C5F-04` | Spectrum `gray-900`은 interactive content-state alias이며 generic heading/emphasis token의 근거가 아니다.                                                 | `Observed correction`                      |
+| `C5F-05` | 현재 Spectrum S2 foreground alias를 `F-A`로 그대로 사용하고 secondary와 tertiary semantic alias는 처음에 subdued content를 공유한다.                      | `Approved visual direction — 2026-08-08`   |
+| `C5F-06` | `gray-600`은 Light `sunken`의 normal-text contrast에 실패하고 현재 Spectrum content alias ownership도 없으므로 universal tertiary text에 사용하지 않는다. | `Approved mapping constraint — 2026-08-08` |
+| `C5F-07` | 측정된 NosLog content가 material Spectrum failure를 확립할 때만 `FCM-12`를 다시 연다. 다른 system은 source와 혼합하지 않고 교체해야 한다.                 | `Proposed governance`                      |
+| `C5F-08` | `C5M-04` 결정 전에 필수 foreground specimen 및 adjacency record를 만든다.                                                                                 | `사용자 검토 완료; 기술 gate 열림`         |

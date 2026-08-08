@@ -2,8 +2,9 @@
 
 ## 문서 제어
 
-- 상태: `초기 F-A specimen 측정 — 승인된 foreground mapping 없음; browser 확대 및
-active forced-colors 검증은 열려 있음`
+- 상태: `F-A visual direction 승인 — C5M-04는 실제 200% browser zoom 및 active
+forced-colors 검증을 기다리며 열려 있음`
+- Visual-direction 승인일: 2026-08-08
 - Canonical language: English
 - Canonical 문서:
   [37-foundation-c5-foreground-specimen-validation.md](./37-foundation-c5-foreground-specimen-validation.md)
@@ -29,7 +30,8 @@ instrumentation이다.
 
 ## 권위 경계
 
-승인된 `M-A` surface는 고정했다. 다음 제안 `F-A` foreground alias만 시험했다.
+승인된 `M-A` surface는 고정했다. 다음 `F-A` foreground alias는 visual direction으로
+승인됐으며 최종 `C5M-04` 기술 검증을 기다린다.
 
 | 책임                      | Spectrum alias                                        |     Light |      Dark | Specimen 용도                                                      |
 | ------------------------- | ----------------------------------------------------- | --------: | --------: | ------------------------------------------------------------------ |
@@ -175,14 +177,15 @@ Selector ownership을 수정한 뒤 12-state browser matrix를 다시 실행해 
 5. Exact mapping은 sparse identity, dense rankings, empty/error copy, overlay content에서
    모두 절제된 상태를 유지했다. Tailwind나 local neutral은 필요하지 않았다.
 
-이는 초기 관찰이며 visual hierarchy에 대한 사용자 승인이 아니다.
+사용자는 2026-08-08에 이 관찰을 visual direction으로 수용했다. 이 수용은 남은 기술
+gate를 대체하지 않는다.
 
-## 권고 및 다음 gate
+## 사용자 검토 결과 및 다음 gate
 
-`F-A`를 유일한 C5 foreground 후보로 유지하고 이 specimen을 사용자 visual review에
-제시한다. 아직 `C5M-04`를 승인하지 않는다.
+사용자는 `F-A`를 유일한 C5 foreground visual direction으로 유지하는 안을 승인했다.
+아직 `C5M-04`를 승인하지 않는다.
 
-사용자가 관찰된 visual direction을 수용하면 남은 기술 작업은 다음과 같다.
+남은 기술 작업은 다음과 같다.
 
 1. Mobile 및 desktop host width에서 실제 200% browser zoom 검증
 2. Forced-colors/high-contrast mode를 활성화하고 semantic reachability, current-row
@@ -193,14 +196,15 @@ Selector ownership을 수정한 뒤 12-state browser matrix를 다시 실행해 
 
 ## 의사결정 및 검증 로그
 
-| ID       | 항목                                                                                                                                       | 상태                     |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------ |
-| `C5V-01` | 승인된 `M-A` surface에서 exact `F-A` foreground alias만 시험하고 local neutral 또는 heading color를 추가하지 않는다.                       | `Observed specimen rule` |
-| `C5V-02` | 수정 후 `48`개 responsive/content 조합에서 기록된 overflow, escape, target-height, runtime 실패가 없다.                                    | `Observed`               |
-| `C5V-03` | 수정 후 `12`개 interaction 조합이 Spectrum default, subdued, state, disabled value와 정확히 일치한다.                                      | `Observed`               |
-| `C5V-04` | Static heading은 default `gray-800`을 유지하며 `gray-900`은 interaction-state 전용이다.                                                    | `Observed — F-A 지지`    |
-| `C5V-05` | Secondary와 tertiary semantic responsibility는 subdued `gray-700`을 계속 공유할 수 있으며 현재는 별도의 세 번째 value가 정당화되지 않는다. | `Observed — F-A 지지`    |
-| `C5V-06` | Disabled `gray-400`은 실제로 사용할 수 없고 비필수이며 readable explanation이 다른 곳에 있는 content에만 허용한다.                         | `Proposed contract`      |
-| `C5V-07` | Computed-value 검토에서 subdued rest가 `gray-700` 대신 `gray-800`을 상속하던 문제를 발견하고 수정했다.                                     | `Corrected`              |
-| `C5V-08` | Minimum 미만 reflow와 선언된 forced-colors fallback은 보충 근거일 뿐 실제 200% zoom 및 active forced-colors test를 대체하지 않는다.        | `Open technical gate`    |
-| `C5V-09` | 사용자 visual review와 남은 기술 gate가 끝날 때까지 `C5M-04`를 열린 상태로 둔다.                                                           | `Proposed — 다음 검토`   |
+| ID       | 항목                                                                                                                                       | 상태                                     |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------- |
+| `C5V-01` | 승인된 `M-A` surface에서 exact `F-A` foreground alias만 시험하고 local neutral 또는 heading color를 추가하지 않는다.                       | `Observed specimen rule`                 |
+| `C5V-02` | 수정 후 `48`개 responsive/content 조합에서 기록된 overflow, escape, target-height, runtime 실패가 없다.                                    | `Observed`                               |
+| `C5V-03` | 수정 후 `12`개 interaction 조합이 Spectrum default, subdued, state, disabled value와 정확히 일치한다.                                      | `Observed`                               |
+| `C5V-04` | Static heading은 default `gray-800`을 유지하며 `gray-900`은 interaction-state 전용이다.                                                    | `Approved visual direction — 2026-08-08` |
+| `C5V-05` | Secondary와 tertiary semantic responsibility는 subdued `gray-700`을 계속 공유할 수 있으며 현재는 별도의 세 번째 value가 정당화되지 않는다. | `Approved visual direction — 2026-08-08` |
+| `C5V-06` | Disabled `gray-400`은 실제로 사용할 수 없고 비필수이며 readable explanation이 다른 곳에 있는 content에만 허용한다.                         | `Approved visual contract — 2026-08-08`  |
+| `C5V-07` | Computed-value 검토에서 subdued rest가 `gray-700` 대신 `gray-800`을 상속하던 문제를 발견하고 수정했다.                                     | `Corrected`                              |
+| `C5V-08` | Minimum 미만 reflow와 선언된 forced-colors fallback은 보충 근거일 뿐 실제 200% zoom 및 active forced-colors test를 대체하지 않는다.        | `Open technical gate`                    |
+| `C5V-09` | 사용자 visual review와 남은 기술 gate가 끝날 때까지 `C5M-04`를 열린 상태로 둔다.                                                           | `사용자 검토 완료 — 기술 gate 열림`      |
+| `C5V-10` | Tailwind, local neutral 추가 또는 다른 system value 없이 exact `F-A`를 유일한 C5 foreground visual direction으로 유지한다.                 | `Approved — 2026-08-08`                  |

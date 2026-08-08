@@ -2,8 +2,9 @@
 
 ## Document Control
 
-- Status: `Measured initial F-A specimen — no foreground mapping approved; browser
-zoom and active forced-colors verification remain open`
+- Status: `F-A visual direction approved — C5M-04 remains open pending actual 200%
+browser zoom and active forced-colors verification`
+- Visual-direction approval date: 2026-08-08
 - Canonical language: English
 - Korean companion:
   [37-foundation-c5-foreground-specimen-validation.ko.md](./37-foundation-c5-foreground-specimen-validation.ko.md)
@@ -31,8 +32,9 @@ measurement instrumentation unless separately approved.
 
 ## Authority Boundary
 
-Approved `M-A` surfaces were held constant. Only the following proposed `F-A`
-foreground aliases were exercised:
+Approved `M-A` surfaces were held constant. The following `F-A` foreground aliases
+are approved as the visual direction and remain pending final `C5M-04` technical
+validation:
 
 | Responsibility            | Spectrum alias                                        |     Light |      Dark | Specimen use                                                              |
 | ------------------------- | ----------------------------------------------------- | --------: | --------: | ------------------------------------------------------------------------- |
@@ -183,14 +185,15 @@ component values rather than inferred from variable declarations alone.
 5. The exact mapping remained restrained across sparse identity, dense rankings,
    empty/error copy, and overlay content. No Tailwind or local neutral was needed.
 
-These are initial observations, not user approval of the visual hierarchy.
+The user accepted these observations as the visual direction on 2026-08-08. This
+acceptance does not replace the remaining technical gates.
 
-## Recommendation and Next Gate
+## User Review Outcome and Next Gate
 
-Retain `F-A` as the sole C5 foreground candidate and present this specimen for user
-visual review. Do not approve `C5M-04` yet.
+The user approved retaining `F-A` as the sole C5 foreground visual direction. Do not
+approve `C5M-04` yet.
 
-If the user accepts the observed visual direction, the remaining technical work is:
+The remaining technical work is:
 
 1. verify actual 200% browser zoom at mobile and desktop host widths;
 2. activate forced-colors/high-contrast mode and inspect semantic reachability,
@@ -201,14 +204,15 @@ Boundary and focus color selection do not begin until this foreground gate is cl
 
 ## Decision and Validation Log
 
-| ID       | Entry                                                                                                                                                              | Status                    |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------- |
-| `C5V-01` | Exercise only exact `F-A` foreground aliases on approved `M-A` surfaces; do not add a local neutral or heading color.                                              | `Observed specimen rule`  |
-| `C5V-02` | The corrected `48`-combination responsive/content matrix has zero recorded overflow, escape, target-height, or runtime failures.                                   | `Observed`                |
-| `C5V-03` | The corrected `12`-combination interaction matrix matches Spectrum default, subdued, state, and disabled values exactly.                                           | `Observed`                |
-| `C5V-04` | Static headings remain on default `gray-800`; `gray-900` remains interaction-state-only.                                                                           | `Observed — supports F-A` |
-| `C5V-05` | Secondary and tertiary semantic responsibilities may continue sharing subdued `gray-700`; no distinct third value is currently justified.                          | `Observed — supports F-A` |
-| `C5V-06` | Disabled `gray-400` is permitted only for genuinely unavailable, nonessential content with readable explanation elsewhere.                                         | `Proposed contract`       |
-| `C5V-07` | Computed-value review caught and corrected subdued-rest inheritance from `gray-700` to `gray-800`.                                                                 | `Corrected`               |
-| `C5V-08` | Treat below-minimum reflow and the declared forced-colors fallback as supplementary evidence, not substitutes for actual 200% zoom and active forced-colors tests. | `Open technical gate`     |
-| `C5V-09` | Keep `C5M-04` open until user visual review and the remaining technical gates are complete.                                                                        | `Proposed — next review`  |
+| ID       | Entry                                                                                                                                                              | Status                                        |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------- |
+| `C5V-01` | Exercise only exact `F-A` foreground aliases on approved `M-A` surfaces; do not add a local neutral or heading color.                                              | `Observed specimen rule`                      |
+| `C5V-02` | The corrected `48`-combination responsive/content matrix has zero recorded overflow, escape, target-height, or runtime failures.                                   | `Observed`                                    |
+| `C5V-03` | The corrected `12`-combination interaction matrix matches Spectrum default, subdued, state, and disabled values exactly.                                           | `Observed`                                    |
+| `C5V-04` | Static headings remain on default `gray-800`; `gray-900` remains interaction-state-only.                                                                           | `Approved visual direction — 2026-08-08`      |
+| `C5V-05` | Secondary and tertiary semantic responsibilities may continue sharing subdued `gray-700`; no distinct third value is currently justified.                          | `Approved visual direction — 2026-08-08`      |
+| `C5V-06` | Disabled `gray-400` is permitted only for genuinely unavailable, nonessential content with readable explanation elsewhere.                                         | `Approved visual contract — 2026-08-08`       |
+| `C5V-07` | Computed-value review caught and corrected subdued-rest inheritance from `gray-700` to `gray-800`.                                                                 | `Corrected`                                   |
+| `C5V-08` | Treat below-minimum reflow and the declared forced-colors fallback as supplementary evidence, not substitutes for actual 200% zoom and active forced-colors tests. | `Open technical gate`                         |
+| `C5V-09` | Keep `C5M-04` open until user visual review and the remaining technical gates are complete.                                                                        | `User review complete — technical gates open` |
+| `C5V-10` | Retain exact `F-A` as the sole C5 foreground visual direction without Tailwind, local neutral additions, or another system's values.                               | `Approved — 2026-08-08`                       |

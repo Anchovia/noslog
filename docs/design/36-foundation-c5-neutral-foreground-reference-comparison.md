@@ -2,8 +2,8 @@
 
 ## Document Control
 
-- Status: `Research complete; initial F-A specimen measured in document 37 — no
-foreground mapping approved`
+- Status: `Research complete; F-A visual direction approved after document 37 review;
+C5M-04 technical gates remain open`
 - Canonical language: English
 - Korean companion:
   [36-foundation-c5-neutral-foreground-reference-comparison.ko.md](./36-foundation-c5-neutral-foreground-reference-comparison.ko.md)
@@ -185,6 +185,15 @@ Rationale:
 This recommendation is permission to build and measure the next guide specimen only.
 It is not approval of `C5M-04` or production tokens.
 
+### Review outcome — 2026-08-08
+
+After reviewing the measured document `37` specimen, the user approved `F-A` as the
+C5 foreground visual direction. The approval retains the exact Spectrum values,
+shared subdued value for secondary and tertiary responsibilities, interaction-only
+`gray-900`, and the nonessential-only disabled contract. It does not close `C5M-04`
+or authorize production tokens; actual 200% browser zoom and active forced-colors
+verification remain required.
+
 ## Required Foreground Specimen Gate
 
 Before `C5M-04` can be approved, the specimen must show:
@@ -209,13 +218,13 @@ gray substitution.
 
 ## Decision Log
 
-| ID       | Entry                                                                                                                                                         | Status                             |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
-| `C5F-01` | Treat Tailwind palette/default-theme values as outside C5 foreground design authority.                                                                        | `Approved governance — 2026-08-08` |
-| `C5F-02` | The sixteen-source comparison converges on semantic default, lower-prominence, and disabled ownership rather than raw gray selection.                         | `Observed`                         |
-| `C5F-03` | A distinct third neutral reading value is not a cross-system requirement.                                                                                     | `Observed`                         |
-| `C5F-04` | Spectrum `gray-900` is an interactive content-state alias, not evidence for a generic heading/emphasis token.                                                 | `Observed correction`              |
-| `C5F-05` | Use current Spectrum S2 foreground aliases intact as `F-A`; let secondary and tertiary semantic aliases initially share subdued content.                      | `Proposed — user review required`  |
-| `C5F-06` | Do not use `gray-600` as universal tertiary text because it fails normal-text contrast on Light `sunken` and has no current Spectrum content alias ownership. | `Proposed — user review required`  |
-| `C5F-07` | Reopen `FCM-12` only if measured NosLog content establishes a material Spectrum failure; another system must replace, not mix with, the source.               | `Proposed governance`              |
-| `C5F-08` | Build the required foreground specimen and adjacency record before deciding `C5M-04`.                                                                         | `Initial evidence in document 37`  |
+| ID       | Entry                                                                                                                                                         | Status                                       |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| `C5F-01` | Treat Tailwind palette/default-theme values as outside C5 foreground design authority.                                                                        | `Approved governance — 2026-08-08`           |
+| `C5F-02` | The sixteen-source comparison converges on semantic default, lower-prominence, and disabled ownership rather than raw gray selection.                         | `Observed`                                   |
+| `C5F-03` | A distinct third neutral reading value is not a cross-system requirement.                                                                                     | `Observed`                                   |
+| `C5F-04` | Spectrum `gray-900` is an interactive content-state alias, not evidence for a generic heading/emphasis token.                                                 | `Observed correction`                        |
+| `C5F-05` | Use current Spectrum S2 foreground aliases intact as `F-A`; let secondary and tertiary semantic aliases initially share subdued content.                      | `Approved visual direction — 2026-08-08`     |
+| `C5F-06` | Do not use `gray-600` as universal tertiary text because it fails normal-text contrast on Light `sunken` and has no current Spectrum content alias ownership. | `Approved mapping constraint — 2026-08-08`   |
+| `C5F-07` | Reopen `FCM-12` only if measured NosLog content establishes a material Spectrum failure; another system must replace, not mix with, the source.               | `Proposed governance`                        |
+| `C5F-08` | Build the required foreground specimen and adjacency record before deciding `C5M-04`.                                                                         | `User review complete; technical gates open` |
