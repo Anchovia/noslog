@@ -177,6 +177,38 @@ This is the most important working rule for this project:
   by the current change.
 - Own debugging from root-cause investigation through the fix and final verification.
 
+## NosLog 2.0 Progress and Decision Integrity
+
+The `NosLog 2.0 design-guide progress baseline` section in `README.md` is the
+authoritative progress ledger for this initiative. It exists to prevent completed
+work from being rediscovered as pending when older documents contain stale future
+checklists.
+
+- Use the fixed eighteen-work-package denominator in the README for every design-guide
+  progress percentage. Do not switch between document count, workflow-phase count,
+  commit count, elapsed time, or estimated effort and still call the result the same
+  percentage.
+- Before describing any work as pending, search later-numbered documents, their decision
+  logs, and relevant Git history for an explicit completion, approval, rejection, or
+  supersession. A later explicit decision overrides an older plan, status sentence, or
+  unchecked checklist item covering the same scope.
+- Treat a work package marked `Complete` in the README as locked. Do not research,
+  redesign, revalidate, or count it as incomplete unless the user explicitly reopens
+  that exact decision or new evidence proves a recorded acceptance requirement failed.
+- Do not interpret a later integrated regression check as permission to redo its locked
+  inputs. In particular, `S1`–`S5` structural validation is complete; the future final
+  Foundation regression must reuse those fixtures and check only for regressions caused
+  by subsequently approved appearance rules. `S6` is the only missing structural slice.
+- Update the README ledger in the same task whenever a work package changes state. A
+  progress percentage must not decrease unless the user explicitly approves new scope
+  or reopens a completed package; record and explain either event beside the ledger.
+- Report both the package count and the percentage, and label the value as management
+  progress rather than a calendar or remaining-time estimate. Do not invent fractional
+  credit other than the explicit `0.5` used for the single package currently marked
+  `In progress`.
+- Historical documents remain valid evidence for the decisions they recorded, but their
+  stale status summaries and future checklists are not the current progress authority.
+
 ## Git Ownership
 
 - The user owns commits, pushes, branch creation or switching, and pull requests.

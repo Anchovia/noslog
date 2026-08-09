@@ -87,6 +87,46 @@ action·navigation·link·tool·동급 선택지는 낮은 neutral hierarchy를 
 `RPA-B`, `RPA-C`의 Radix action mapping은 Dark hover/pressed에서 `4.28:1`로 측정되어
 거절되었으며 downstream target으로 사용하지 않습니다.
 
+### NosLog 2.0 디자인 가이드 진행 상태 기준선
+
+이 표는 오래된 디자인 문서의 미완료 체크리스트가 이후 승인 결과를 다시 미완료로
+되돌리는 일을 막기 위한 현재 진행 권위입니다. 이후 번호 문서의 명시적 승인·거절·대체
+기록은 이전 문서의 계획 문구보다 우선합니다. `Complete` 항목은 사용자가 해당 결정을
+명시적으로 다시 열지 않는 한 재조사하거나 남은 작업으로 계산하지 않습니다.
+
+진행률은 아래 고정된 18개 작업 묶음만 사용합니다. 문서 수, 커밋 수, 예상 난이도 또는
+12단계 workflow 수로 분모를 바꾸지 않습니다. 이 값은 관리상 진행률이며 일정이나 남은
+시간의 백분율이 아닙니다.
+
+|   # | 작업 묶음                                                                               | 현재 상태     | 최신 근거                                                         |
+| --: | --------------------------------------------------------------------------------------- | ------------- | ----------------------------------------------------------------- |
+|   1 | 현재 제품 감사                                                                          | `Complete`    | 문서 `01`                                                         |
+|   2 | 정보 구조와 Navigation                                                                  | `Complete`    | 문서 `02`                                                         |
+|   3 | 전체 Page Brief                                                                         | `Complete`    | 문서 `03`–`20`                                                    |
+|   4 | 정합성 감사, 교차 원칙 및 예외 거버넌스                                                 | `Complete`    | 문서 `21`–`23`                                                    |
+|   5 | Typography role, scale 및 metric 계약                                                   | `Complete`    | 문서 `24`–`26`의 후속 승인 기록                                   |
+|   6 | Spacing, Grid, Container 및 Layout 계약                                                 | `Complete`    | 문서 `24`–`26`의 후속 승인 기록                                   |
+|   7 | `S1`–`S5` 구조 검증                                                                     | `Complete`    | 문서 `27`–`31`; `S5` matrix `624/624`                             |
+|   8 | Neutral surface, foreground 및 boundary                                                 | `Complete`    | 문서 `32`, `34`–`39`                                              |
+|   9 | Neutral interaction 및 focus                                                            | `Complete`    | 문서 `40`–`44`                                                    |
+|  10 | Signature identity source                                                               | `Complete`    | 문서 `33`, `45`–`47`; `SS-08`                                     |
+|  11 | Shell identity 및 rare primary-action alias                                             | `Complete`    | 문서 `48`–`51`; `ITA-C`, `RPA-A`                                  |
+|  12 | Material Geometry                                                                       | `In progress` | 문서 `52`; 정확값 비교와 초기 browser 검증 완료, 사용자 선택 대기 |
+|  13 | Feedback, status, domain 및 data color                                                  | `Not started` | 후속 Foundation gate                                              |
+|  14 | Iconography, motion 및 data-visualization 규칙                                          | `Not started` | 후속 Foundation gate                                              |
+|  15 | `S6` editor slice와 최종 Foundation 회귀·승격                                           | `Not started` | 기존 `S1`–`S5` fixture 재사용 필수                                |
+|  16 | Component alias·anatomy, pattern, template 및 desktop adaptation                        | `Not started` | Foundation 승격 이후                                              |
+|  17 | 접근성·다국어 acceptance, screen requirement, 구현 mapping, QA 및 Claude Design handoff | `Not started` | Downstream handoff 단계                                           |
+|  18 | Versioned 디자인 가이드 PDF                                                             | `Not started` | Editable source 안정화 이후                                       |
+
+현재 기준선은 완료 11개와 진행 중 1개에 대한 고정 `0.5`를 합산한
+`11.5 / 18 = 64%`입니다. 신규 범위를 추가하거나 완료 항목을 다시 여는 경우에는 먼저
+사용자 승인을 받고 이 표에 사유를 기록해야 하며, 그렇지 않으면 완료율을 낮출 수 없습니다.
+
+향후 `S1`–`S5` 통합 검사는 구조 작업의 반복이 아닙니다. 이후 승인되는 appearance
+규칙이 기존 fixture를 손상하지 않았는지만 확인하는 최종 회귀 검사이며, 새 구조 표본은
+`S6`만 남아 있습니다.
+
 ## 로컬 개발
 
 ### 준비 사항

@@ -1,0 +1,1190 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>NosLog 2.0 C5 Material Geometry Comparison</title>
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+
+            :root {
+                color-scheme: light;
+                font-family:
+                    Inter, Pretendard, "Noto Sans KR", "Noto Sans JP",
+                    system-ui, sans-serif;
+                background: #e9e9e9;
+                color: #292929;
+            }
+
+            body {
+                min-width: 0;
+                margin: 0;
+                background: #e9e9e9;
+            }
+
+            button {
+                font: inherit;
+            }
+
+            button:not(:disabled) {
+                cursor: pointer;
+            }
+
+            code {
+                font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            }
+
+            .review-shell {
+                container-name: review;
+                container-type: inline-size;
+                display: grid;
+                gap: 16px;
+                width: min(1560px, 100%);
+                margin: 0 auto;
+                padding: 16px;
+            }
+
+            .review-header,
+            .review-controls,
+            .review-note,
+            .candidate {
+                border: 1px solid #c6c6c6;
+                background: #ffffff;
+            }
+
+            .review-header,
+            .review-note {
+                padding: 16px;
+            }
+
+            .review-header h1,
+            .review-header p,
+            .review-note p {
+                margin: 0;
+            }
+
+            .review-kicker {
+                margin: 0 0 6px;
+                color: #717171;
+                font-size: 12px;
+                font-weight: 800;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+            }
+
+            .review-header h1 {
+                font-size: clamp(22px, 3vw, 34px);
+                line-height: 1.2;
+            }
+
+            .review-header p,
+            .review-note {
+                margin-top: 8px;
+                color: #505050;
+                font-size: 14px;
+                line-height: 1.65;
+            }
+
+            .review-controls {
+                display: grid;
+                gap: 10px;
+                padding: 12px;
+            }
+
+            .control-group {
+                display: grid;
+                grid-template-columns: 86px minmax(0, 1fr);
+                gap: 8px;
+                align-items: start;
+            }
+
+            .control-label {
+                padding-top: 13px;
+                color: #505050;
+                font-size: 12px;
+                font-weight: 800;
+            }
+
+            .button-row {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .review-controls button {
+                min-height: 44px;
+                border: 1px solid #c6c6c6;
+                border-radius: 0;
+                padding: 8px 12px;
+                background: #ffffff;
+                color: #505050;
+            }
+
+            .review-controls button[aria-pressed="true"] {
+                border-color: #717171;
+                color: #292929;
+                font-weight: 800;
+                box-shadow: inset 0 -3px 0 #292929;
+            }
+
+            .comparison-grid {
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 16px;
+                min-width: 0;
+            }
+
+            .candidate {
+                min-width: 0;
+                overflow: clip;
+            }
+
+            .candidate-heading {
+                display: grid;
+                grid-template-columns: minmax(0, 1fr) auto;
+                gap: 12px;
+                align-items: start;
+                padding: 14px;
+                border-bottom: 1px solid #e1e1e1;
+            }
+
+            .candidate-heading h2,
+            .candidate-heading p,
+            .candidate-values,
+            .candidate-footnote {
+                margin: 0;
+            }
+
+            .candidate-heading h2 {
+                font-size: 18px;
+                line-height: 1.35;
+            }
+
+            .candidate-heading p,
+            .candidate-values,
+            .candidate-footnote {
+                color: #505050;
+                font-size: 11px;
+                line-height: 1.55;
+            }
+
+            .candidate-heading p {
+                margin-top: 4px;
+            }
+
+            .candidate-values {
+                text-align: right;
+                white-space: nowrap;
+            }
+
+            .gate-badge {
+                display: inline-flex;
+                min-height: 24px;
+                align-items: center;
+                margin-top: 8px;
+                border: 1px solid #c6c6c6;
+                padding: 3px 7px;
+                color: #505050;
+                font-size: 11px;
+                font-weight: 800;
+            }
+
+            .candidate-body {
+                display: grid;
+                gap: 12px;
+                padding: 12px;
+            }
+
+            .appearance {
+                --canvas: #ffffff;
+                --surface: #f8f8f8;
+                --sunken: #e9e9e9;
+                --raised: #ffffff;
+                --overlay: #ffffff;
+                --fg: #292929;
+                --fg-secondary: #505050;
+                --fg-muted: #717171;
+                --border: #dadada;
+                --border-default: #c6c6c6;
+                --border-strong: #717171;
+                --focus-outer: #ffffff;
+                --focus-inner: #000000;
+                min-width: 0;
+                border: 1px solid var(--border-default);
+                background: var(--canvas);
+                color: var(--fg);
+            }
+
+            .appearance[data-appearance="dark"] {
+                color-scheme: dark;
+                --canvas: #111111;
+                --surface: #1b1b1b;
+                --sunken: #080808;
+                --raised: #222222;
+                --overlay: #292929;
+                --fg: #dbdbdb;
+                --fg-secondary: #b8b8b8;
+                --fg-muted: #8a8a8a;
+                --border: #393939;
+                --border-default: #444444;
+                --border-strong: #8a8a8a;
+                --focus-outer: #000000;
+                --focus-inner: #ffffff;
+            }
+
+            .candidate[data-source="spectrum"] {
+                --radius-control: 4px;
+                --radius-container: 8px;
+                --radius-overlay: 10px;
+                --radius-full: 50%;
+                --raised-shadow:
+                    0 2px 8px rgba(0, 0, 0, 0.08),
+                    0 1px 4px rgba(0, 0, 0, 0.04), 0 0 1px rgba(0, 0, 0, 0.08);
+                --overlay-shadow:
+                    0 4px 12px rgba(0, 0, 0, 0.08),
+                    0 2px 6px rgba(0, 0, 0, 0.04), 0 0 2px rgba(0, 0, 0, 0.12);
+                --dragged-shadow:
+                    0 12px 16px rgba(0, 0, 0, 0.08),
+                    0 6px 8px rgba(0, 0, 0, 0.04), 0 0 6px rgba(0, 0, 0, 0.16);
+                --scroll-shadow: none;
+                --scrim: rgba(0, 0, 0, 0.4);
+            }
+
+            .candidate[data-source="spectrum"]
+                .appearance[data-appearance="dark"] {
+                --raised-shadow:
+                    0 2px 8px rgba(0, 0, 0, 0.24),
+                    0 1px 4px rgba(0, 0, 0, 0.12), 0 0 1px rgba(0, 0, 0, 0.24);
+                --overlay-shadow:
+                    0 4px 12px rgba(0, 0, 0, 0.24),
+                    0 2px 6px rgba(0, 0, 0, 0.12), 0 0 2px rgba(0, 0, 0, 0.36);
+                --dragged-shadow:
+                    0 12px 16px rgba(0, 0, 0, 0.24),
+                    0 6px 8px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.48);
+                --scrim: rgba(0, 0, 0, 0.6);
+            }
+
+            .candidate[data-source="fluent"] {
+                --radius-control: 4px;
+                --radius-container: 8px;
+                --radius-overlay: 12px;
+                --radius-full: 10000px;
+                --raised-shadow:
+                    0 0 2px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.14);
+                --overlay-shadow:
+                    0 0 2px rgba(0, 0, 0, 0.12), 0 8px 16px rgba(0, 0, 0, 0.14);
+                --dialog-shadow:
+                    0 0 8px rgba(0, 0, 0, 0.12), 0 32px 64px rgba(0, 0, 0, 0.14);
+                --dragged-shadow:
+                    0 0 2px rgba(0, 0, 0, 0.12), 0 8px 16px rgba(0, 0, 0, 0.14);
+                --scroll-shadow: none;
+                --scrim: rgba(0, 0, 0, 0.4);
+            }
+
+            .candidate[data-source="fluent"]
+                .appearance[data-appearance="dark"] {
+                --raised-shadow:
+                    0 0 2px rgba(0, 0, 0, 0.24), 0 4px 8px rgba(0, 0, 0, 0.28);
+                --overlay-shadow:
+                    0 0 2px rgba(0, 0, 0, 0.24), 0 8px 16px rgba(0, 0, 0, 0.28);
+                --dialog-shadow:
+                    0 0 8px rgba(0, 0, 0, 0.24), 0 32px 64px rgba(0, 0, 0, 0.28);
+                --dragged-shadow:
+                    0 0 2px rgba(0, 0, 0, 0.24), 0 8px 16px rgba(0, 0, 0, 0.28);
+                --scrim: rgba(0, 0, 0, 0.5);
+            }
+
+            .candidate[data-source="atlassian"] {
+                --radius-control: 6px;
+                --radius-container: 8px;
+                --radius-overlay: 12px;
+                --radius-full: 9999px;
+                --raised-shadow: 0 1px 1px #1e1f2140, 0 0 1px #1e1f214f;
+                --overlay-shadow: 0 8px 12px #1e1f2126, 0 0 1px #1e1f214f;
+                --dialog-shadow: var(--overlay-shadow);
+                --dragged-shadow: var(--overlay-shadow);
+                --scroll-shadow: 0 0 8px #1e1f2129, 0 0 1px #1e1f211f;
+                --scrim: #050c1f75;
+            }
+
+            .candidate[data-source="atlassian"]
+                .appearance[data-appearance="dark"] {
+                --raised-shadow:
+                    0 0 0 1px #00000000, 0 1px 1px #01040480, 0 0 1px #01040480;
+                --overlay-shadow:
+                    0 0 0 1px #bdbdbd1f, 0 8px 12px #0104045c,
+                    0 0 1px 1px #01040480;
+                --dialog-shadow: var(--overlay-shadow);
+                --dragged-shadow: var(--overlay-shadow);
+                --scroll-shadow: 0 0 12px #0104048f, 0 0 1px #01040480;
+                --scrim: #10121499;
+            }
+
+            .scene {
+                display: grid;
+                gap: 10px;
+                min-width: 0;
+                padding: 12px;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .scene:last-child {
+                border-bottom: 0;
+            }
+
+            .scene-title {
+                display: flex;
+                justify-content: space-between;
+                gap: 8px;
+                color: var(--fg-secondary);
+                font-size: 11px;
+                font-weight: 800;
+                line-height: 1.4;
+                text-transform: uppercase;
+            }
+
+            .flat-list,
+            .sunken-well {
+                display: grid;
+                gap: 0;
+                min-width: 0;
+                border: 1px solid var(--border);
+                border-radius: var(--radius-container);
+                overflow: hidden;
+                background: var(--surface);
+            }
+
+            .list-row {
+                display: grid;
+                grid-template-columns: minmax(0, 1fr) auto;
+                gap: 10px;
+                align-items: center;
+                min-height: 48px;
+                padding: 9px 10px;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .list-row:last-child {
+                border-bottom: 0;
+            }
+
+            .list-row strong,
+            .list-row span {
+                display: block;
+                min-width: 0;
+            }
+
+            .list-row strong {
+                overflow: hidden;
+                font-size: 13px;
+                line-height: 1.45;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .list-row span {
+                margin-top: 2px;
+                color: var(--fg-muted);
+                font-size: 11px;
+            }
+
+            .rank {
+                color: var(--fg-secondary);
+                font-size: 12px;
+                font-variant-numeric: tabular-nums;
+            }
+
+            .movable-card {
+                position: relative;
+                display: grid;
+                grid-template-columns: auto minmax(0, 1fr) auto;
+                gap: 9px;
+                align-items: center;
+                min-height: 56px;
+                margin: 8px;
+                border: 1px solid var(--border-default);
+                border-radius: var(--radius-container);
+                padding: 9px;
+                background: var(--raised);
+                box-shadow: var(--raised-shadow);
+                transition: transform 120ms ease;
+            }
+
+            .appearance[data-dragged="true"] .movable-card {
+                z-index: 2;
+                box-shadow: var(--dragged-shadow);
+                transform: translateY(-4px) rotate(-0.35deg);
+            }
+
+            .drag-handle {
+                color: var(--fg-muted);
+                font-size: 16px;
+                letter-spacing: -4px;
+            }
+
+            .badge {
+                display: inline-flex;
+                min-height: 24px;
+                align-items: center;
+                border: 1px solid var(--border-default);
+                border-radius: var(--radius-full);
+                padding: 2px 8px;
+                color: var(--fg-secondary);
+                font-size: 11px;
+            }
+
+            .overlay-stage {
+                position: relative;
+                min-height: 232px;
+                overflow: hidden;
+                border: 1px solid var(--border);
+                border-radius: var(--radius-container);
+                background: var(--sunken);
+            }
+
+            .overlay-trigger {
+                position: absolute;
+                top: 12px;
+                left: 12px;
+                min-height: 40px;
+                border: 1px solid var(--border-default);
+                border-radius: var(--radius-control);
+                padding: 7px 10px;
+                background: var(--canvas);
+                color: var(--fg);
+            }
+
+            .popover {
+                position: absolute;
+                z-index: 2;
+                top: 60px;
+                left: 12px;
+                width: min(190px, calc(100% - 24px));
+                border: 1px solid var(--border);
+                border-radius: var(--radius-overlay);
+                padding: 6px;
+                background: var(--overlay);
+                box-shadow: var(--overlay-shadow);
+            }
+
+            .popover button {
+                width: 100%;
+                min-height: 36px;
+                border: 0;
+                border-radius: var(--radius-control);
+                padding: 6px 8px;
+                background: transparent;
+                color: var(--fg);
+                text-align: left;
+            }
+
+            .popover button:hover {
+                background: var(--surface);
+            }
+
+            .dialog-layer {
+                position: absolute;
+                z-index: 4;
+                inset: 0;
+                display: grid;
+                place-items: center;
+                padding: 14px;
+                background: var(--scrim);
+            }
+
+            .dialog {
+                width: min(250px, 100%);
+                border: 1px solid var(--border);
+                border-radius: var(--radius-overlay);
+                padding: 14px;
+                background: var(--overlay);
+                box-shadow: var(--dialog-shadow, var(--overlay-shadow));
+            }
+
+            .dialog h3,
+            .dialog p {
+                margin: 0;
+            }
+
+            .dialog h3 {
+                font-size: 15px;
+            }
+
+            .dialog p {
+                margin-top: 5px;
+                color: var(--fg-secondary);
+                font-size: 12px;
+                line-height: 1.5;
+            }
+
+            .dialog button {
+                position: relative;
+                min-height: 40px;
+                margin-top: 12px;
+                border: 1px solid var(--border-strong);
+                border-radius: var(--radius-control);
+                padding: 7px 10px;
+                background: var(--canvas);
+                color: var(--fg);
+            }
+
+            :where(
+                .overlay-trigger,
+                .popover button,
+                .dialog button
+            ):focus-visible {
+                outline: 2px solid var(--focus-inner);
+                outline-offset: 2px;
+                box-shadow: 0 0 0 4px var(--focus-outer);
+            }
+
+            .appearance[data-overlay="popover"] .dialog-layer,
+            .appearance[data-overlay="closed"] .dialog-layer,
+            .appearance[data-overlay="dialog"] .popover,
+            .appearance[data-overlay="closed"] .popover {
+                display: none;
+            }
+
+            .sunken-well {
+                position: relative;
+                height: 160px;
+                overflow: auto;
+                background: var(--sunken);
+            }
+
+            .sticky-boundary {
+                position: sticky;
+                z-index: 1;
+                top: 0;
+                display: flex;
+                justify-content: space-between;
+                gap: 8px;
+                min-height: 40px;
+                align-items: center;
+                border-bottom: 1px solid var(--border-default);
+                padding: 8px 10px;
+                background: var(--surface);
+                box-shadow: var(--scroll-shadow);
+                color: var(--fg-secondary);
+                font-size: 11px;
+                font-weight: 800;
+            }
+
+            .note-grid {
+                display: grid;
+                grid-template-columns: repeat(7, minmax(28px, 1fr));
+                gap: 4px;
+                min-width: 420px;
+                padding: 10px;
+            }
+
+            .note-cell {
+                height: 36px;
+                border: 1px solid var(--border);
+                border-radius: var(--radius-control);
+                background: var(--surface);
+            }
+
+            .nested-demo {
+                display: grid;
+                gap: 10px;
+                border: 1px solid var(--border-default);
+                border-radius: var(--radius-container);
+                padding: 10px;
+                background: var(--surface);
+            }
+
+            .nested-demo label {
+                color: var(--fg-secondary);
+                font-size: 11px;
+                font-weight: 800;
+            }
+
+            .nested-demo input {
+                width: 100%;
+                min-height: 44px;
+                border: 1px solid var(--border-default);
+                border-radius: var(--radius-control);
+                padding: 8px 10px;
+                background: var(--canvas);
+                color: var(--fg);
+                font: inherit;
+            }
+
+            .candidate-footnote {
+                padding: 10px 12px 12px;
+                border-top: 1px solid var(--border);
+                background: var(--surface);
+            }
+
+            .measurement {
+                display: grid;
+                gap: 3px;
+                margin-top: 7px;
+                color: var(--fg-muted);
+                font-size: 10px;
+            }
+
+            [data-text-scale="200"] .appearance {
+                font-size: 200%;
+            }
+
+            [data-text-scale="200"] .overlay-stage {
+                min-height: 420px;
+            }
+
+            @container review (max-width: 1040px) {
+                .comparison-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+
+            @container review (max-width: 480px) {
+                .review-shell {
+                    padding: 8px;
+                }
+
+                .control-group {
+                    grid-template-columns: 1fr;
+                }
+
+                .control-label {
+                    padding-top: 0;
+                }
+
+                .candidate-heading {
+                    grid-template-columns: 1fr;
+                }
+
+                .candidate-values {
+                    text-align: left;
+                    white-space: normal;
+                }
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+                .movable-card {
+                    transition: none;
+                }
+            }
+
+            @media (forced-colors: active) {
+                .appearance,
+                .flat-list,
+                .movable-card,
+                .overlay-stage,
+                .popover,
+                .dialog,
+                .sunken-well,
+                .nested-demo,
+                .nested-demo input {
+                    border-color: CanvasText;
+                    box-shadow: none;
+                    forced-color-adjust: auto;
+                }
+
+                .dialog-layer {
+                    background: Canvas;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <main class="review-shell" data-text-scale="100">
+            <header class="review-header">
+                <p class="review-kicker">MGR-07 · Research comparison</p>
+                <h1>NosLog Material Geometry</h1>
+                <p>
+                    승인된 Spectrum 표면·전경·경계와 Fluent 포커스는 고정하고,
+                    후보가 소유하는 radius·shadow·scrim만 비교합니다. 이 표본은
+                    선택 근거이며 승인 결과가 아닙니다.
+                </p>
+            </header>
+
+            <section class="review-controls" aria-label="Comparison controls">
+                <div class="control-group">
+                    <span class="control-label">Appearance</span>
+                    <div class="button-row">
+                        <button
+                            type="button"
+                            data-set="appearance"
+                            data-value="light"
+                            aria-pressed="true"
+                        >
+                            Light
+                        </button>
+                        <button
+                            type="button"
+                            data-set="appearance"
+                            data-value="dark"
+                            aria-pressed="false"
+                        >
+                            Dark
+                        </button>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <span class="control-label">Language</span>
+                    <div class="button-row">
+                        <button
+                            type="button"
+                            data-set="language"
+                            data-value="ko"
+                            aria-pressed="true"
+                        >
+                            한국어
+                        </button>
+                        <button
+                            type="button"
+                            data-set="language"
+                            data-value="ja"
+                            aria-pressed="false"
+                        >
+                            日本語
+                        </button>
+                        <button
+                            type="button"
+                            data-set="language"
+                            data-value="en"
+                            aria-pressed="false"
+                        >
+                            English
+                        </button>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <span class="control-label">Overlay</span>
+                    <div class="button-row">
+                        <button
+                            type="button"
+                            data-set="overlay"
+                            data-value="popover"
+                            aria-pressed="true"
+                        >
+                            Popover
+                        </button>
+                        <button
+                            type="button"
+                            data-set="overlay"
+                            data-value="dialog"
+                            aria-pressed="false"
+                        >
+                            Dialog
+                        </button>
+                        <button
+                            type="button"
+                            data-set="overlay"
+                            data-value="closed"
+                            aria-pressed="false"
+                        >
+                            Closed
+                        </button>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <span class="control-label">State</span>
+                    <div class="button-row">
+                        <button
+                            type="button"
+                            data-set="dragged"
+                            data-value="false"
+                            aria-pressed="true"
+                        >
+                            Rest
+                        </button>
+                        <button
+                            type="button"
+                            data-set="dragged"
+                            data-value="true"
+                            aria-pressed="false"
+                        >
+                            Dragged
+                        </button>
+                        <button
+                            type="button"
+                            data-set="text-scale"
+                            data-value="100"
+                            aria-pressed="true"
+                        >
+                            100%
+                        </button>
+                        <button
+                            type="button"
+                            data-set="text-scale"
+                            data-value="200"
+                            aria-pressed="false"
+                        >
+                            200%
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="comparison-grid" aria-label="Material candidates">
+                <article class="candidate" data-source="spectrum">
+                    <header class="candidate-heading">
+                        <div>
+                            <h2>MG-A · Adobe Spectrum S2</h2>
+                            <p>
+                                동일 provenance의 완전한 radius·shadow·scrim
+                                후보
+                            </p>
+                            <span class="gate-badge"
+                                >Candidate · not approved</span
+                            >
+                        </div>
+                        <p class="candidate-values">
+                            4 / 8 / 10 / 50%<br />3-layer shadows
+                        </p>
+                    </header>
+                    <div class="candidate-body">
+                        <div
+                            class="appearance"
+                            data-appearance="light"
+                            data-overlay="popover"
+                            data-dragged="false"
+                        ></div>
+                    </div>
+                </article>
+
+                <article class="candidate" data-source="fluent">
+                    <header class="candidate-heading">
+                        <div>
+                            <h2>MG-B · Microsoft Fluent 2</h2>
+                            <p>명확한 Light/Dark shadow와 넓은 overlay 단계</p>
+                            <span class="gate-badge">Candidate · role gap</span>
+                        </div>
+                        <p class="candidate-values">
+                            4 / 8 / 12 / full<br />shadow 8 / 16 / 64
+                        </p>
+                    </header>
+                    <div class="candidate-body">
+                        <div
+                            class="appearance"
+                            data-appearance="light"
+                            data-overlay="popover"
+                            data-dragged="false"
+                        ></div>
+                    </div>
+                </article>
+
+                <article class="candidate" data-source="atlassian">
+                    <header class="candidate-heading">
+                        <div>
+                            <h2>MG-C · Atlassian</h2>
+                            <p>
+                                NosLog 역할과 가장 가까운
+                                raised·overlay·overflow 구조
+                            </p>
+                            <span class="gate-badge"
+                                >Candidate · compatibility probe</span
+                            >
+                        </div>
+                        <p class="candidate-values">
+                            6 / 8 / 12 / full<br />paired elevation roles
+                        </p>
+                    </header>
+                    <div class="candidate-body">
+                        <div
+                            class="appearance"
+                            data-appearance="light"
+                            data-overlay="popover"
+                            data-dragged="false"
+                        ></div>
+                    </div>
+                </article>
+            </section>
+
+            <aside class="review-note">
+                <p>
+                    판정 경계: Spectrum은 현재 유일하게 승인된 neutral source와
+                    같은 provenance에서 모든 필수 geometry 값을 제공합니다.
+                    Fluent에는 공식 dragged·scroll-boundary alias가 없고,
+                    Atlassian elevation은 원래 자체 surface와의 pairing을
+                    요구하므로 두 후보의 해당 장면은 호환성 한계를 함께
+                    보여줍니다.
+                </p>
+            </aside>
+        </main>
+
+        <template id="scene-template">
+            <section class="scene">
+                <div class="scene-title">
+                    <span data-copy="flatTitle"></span
+                    ><span>flat + raised</span>
+                </div>
+                <div class="flat-list">
+                    <div class="list-row">
+                        <div>
+                            <strong data-copy="song1"></strong
+                            ><span data-copy="songMeta1"></span>
+                        </div>
+                        <b class="rank"># 01</b>
+                    </div>
+                    <div class="movable-card">
+                        <span class="drag-handle" aria-hidden="true">⠿</span>
+                        <div>
+                            <strong data-copy="song2"></strong
+                            ><span data-copy="songMeta2"></span>
+                        </div>
+                        <span class="badge" data-copy="moving"></span>
+                    </div>
+                    <div class="list-row">
+                        <div>
+                            <strong data-copy="song3"></strong
+                            ><span data-copy="songMeta3"></span>
+                        </div>
+                        <b class="rank"># 03</b>
+                    </div>
+                </div>
+            </section>
+            <section class="scene">
+                <div class="scene-title">
+                    <span data-copy="overlayTitle"></span
+                    ><span>popover + dialog</span>
+                </div>
+                <div class="overlay-stage">
+                    <button
+                        class="overlay-trigger"
+                        type="button"
+                        data-copy="openMenu"
+                    ></button>
+                    <div class="popover">
+                        <button type="button" data-copy="menu1"></button>
+                        <button type="button" data-copy="menu2"></button>
+                    </div>
+                    <div class="dialog-layer">
+                        <div class="dialog" role="dialog" aria-modal="true">
+                            <h3 data-copy="dialogTitle"></h3>
+                            <p data-copy="dialogBody"></p>
+                            <button type="button" data-copy="confirm"></button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="scene">
+                <div class="scene-title">
+                    <span data-copy="wellTitle"></span
+                    ><span>sunken + scroll boundary</span>
+                </div>
+                <div class="sunken-well">
+                    <div class="sticky-boundary">
+                        <span data-copy="editor"></span><span>4 / 4</span>
+                    </div>
+                    <div class="note-grid" aria-label="28-lane chart grid">
+                        <div class="note-cell"></div>
+                        <div class="note-cell"></div>
+                        <div class="note-cell"></div>
+                        <div class="note-cell"></div>
+                        <div class="note-cell"></div>
+                        <div class="note-cell"></div>
+                        <div class="note-cell"></div>
+                        <div class="note-cell"></div>
+                        <div class="note-cell"></div>
+                        <div class="note-cell"></div>
+                        <div class="note-cell"></div>
+                        <div class="note-cell"></div>
+                        <div class="note-cell"></div>
+                        <div class="note-cell"></div>
+                        <div class="note-cell"></div>
+                        <div class="note-cell"></div>
+                        <div class="note-cell"></div>
+                        <div class="note-cell"></div>
+                        <div class="note-cell"></div>
+                        <div class="note-cell"></div>
+                        <div class="note-cell"></div>
+                    </div>
+                </div>
+            </section>
+            <section class="scene">
+                <div class="scene-title">
+                    <span data-copy="nestedTitle"></span
+                    ><span>container + control</span>
+                </div>
+                <div class="nested-demo">
+                    <label data-copy="searchLabel"></label>
+                    <input
+                        type="search"
+                        data-copy-placeholder="searchPlaceholder"
+                    />
+                </div>
+                <div class="measurement" aria-live="polite"></div>
+            </section>
+            <p class="candidate-footnote"></p>
+        </template>
+
+        <script>
+            const copy = {
+                ko: {
+                    flatTitle: "랭킹과 이동 항목",
+                    song1: "노스텔지어를 위한 긴 악곡 제목",
+                    songMeta1: "Expert · 12 · 998,742",
+                    song2: "편집 중인 채보",
+                    songMeta2: "드래그 가능한 유일한 raised 항목",
+                    song3: "協奏曲第4番ホ短調",
+                    songMeta3: "Real · 13 · 992,410",
+                    moving: "이동",
+                    overlayTitle: "임시 레이어",
+                    openMenu: "정렬 메뉴 열기",
+                    menu1: "최근 플레이순",
+                    menu2: "개인 최고 기록순",
+                    dialogTitle: "공개 채보로 제출할까요?",
+                    dialogBody:
+                        "제출 후에는 검토가 끝날 때까지 이 버전을 편집할 수 없습니다.",
+                    confirm: "확인",
+                    wellTitle: "채보 편집 영역",
+                    editor: "28칸 채보 편집기",
+                    nestedTitle: "중첩 Geometry",
+                    searchLabel: "악곡 검색",
+                    searchPlaceholder: "제목, 아티스트 또는 별칭",
+                },
+                ja: {
+                    flatTitle: "ランキングと移動項目",
+                    song1: "ノスタルジアのための長い楽曲タイトル",
+                    songMeta1: "Expert · 12 · 998,742",
+                    song2: "編集中の譜面",
+                    songMeta2: "ドラッグ可能な唯一の raised 項目",
+                    song3: "協奏曲第4番ホ短調",
+                    songMeta3: "Real · 13 · 992,410",
+                    moving: "移動",
+                    overlayTitle: "一時レイヤー",
+                    openMenu: "並び替えメニューを開く",
+                    menu1: "最近のプレー順",
+                    menu2: "自己ベスト順",
+                    dialogTitle: "公開譜面として提出しますか？",
+                    dialogBody:
+                        "提出後はレビューが完了するまでこの版を編集できません。",
+                    confirm: "確認",
+                    wellTitle: "譜面編集領域",
+                    editor: "28レーン譜面エディター",
+                    nestedTitle: "ネスト Geometry",
+                    searchLabel: "楽曲検索",
+                    searchPlaceholder: "タイトル、アーティスト、別名",
+                },
+                en: {
+                    flatTitle: "Ranking and movable item",
+                    song1: "An intentionally long title for NOSTALGIA",
+                    songMeta1: "Expert · 12 · 998,742",
+                    song2: "Chart draft in progress",
+                    songMeta2: "The only justified raised movable item",
+                    song3: "Piano Concerto No. 4 in E minor",
+                    songMeta3: "Real · 13 · 992,410",
+                    moving: "Move",
+                    overlayTitle: "Temporary layers",
+                    openMenu: "Open sort menu",
+                    menu1: "Most recently played",
+                    menu2: "Personal best",
+                    dialogTitle: "Submit as a public chart?",
+                    dialogBody:
+                        "This version cannot be edited until its review is complete.",
+                    confirm: "Confirm",
+                    wellTitle: "Chart editing well",
+                    editor: "28-lane chart editor",
+                    nestedTitle: "Nested geometry",
+                    searchLabel: "Search music",
+                    searchPlaceholder: "Title, artist, or alias",
+                },
+            };
+
+            const footnotes = {
+                spectrum:
+                    "Complete upstream input: exact Spectrum radius, emphasized/elevated/dragged shadows, and Light/Dark overlay opacity.",
+                fluent: "Comparison limitation: shadow 8/16/64 are published component examples, but Fluent does not publish dragged or scroll-boundary aliases matching every NosLog role.",
+                atlassian:
+                    "Compatibility limitation: exact raised/overlay/overflow/blanket values are shown, while approved Spectrum surfaces stay fixed instead of Atlassian's required paired surfaces.",
+            };
+
+            const template = document.querySelector("#scene-template");
+            document.querySelectorAll(".appearance").forEach((appearance) => {
+                const source = appearance.closest(".candidate").dataset.source;
+                appearance.append(template.content.cloneNode(true));
+                appearance.querySelector(".candidate-footnote").textContent =
+                    footnotes[source];
+            });
+
+            const state = {
+                appearance: "light",
+                language: "ko",
+                overlay: "popover",
+                dragged: "false",
+                "text-scale": "100",
+            };
+
+            function updateCopy() {
+                const strings = copy[state.language];
+                document.documentElement.lang = state.language;
+                document.querySelectorAll("[data-copy]").forEach((node) => {
+                    node.textContent = strings[node.dataset.copy];
+                });
+                document
+                    .querySelectorAll("[data-copy-placeholder]")
+                    .forEach((node) => {
+                        node.placeholder =
+                            strings[node.dataset.copyPlaceholder];
+                    });
+            }
+
+            function updateMeasurements() {
+                document.querySelectorAll(".candidate").forEach((candidate) => {
+                    const appearance = candidate.querySelector(".appearance");
+                    const control = getComputedStyle(candidate)
+                        .getPropertyValue("--radius-control")
+                        .trim();
+                    const container = getComputedStyle(candidate)
+                        .getPropertyValue("--radius-container")
+                        .trim();
+                    const overlay = getComputedStyle(candidate)
+                        .getPropertyValue("--radius-overlay")
+                        .trim();
+                    const dialog = appearance.querySelector(".dialog");
+                    const measurement =
+                        appearance.querySelector(".measurement");
+                    measurement.innerHTML = "";
+                    [
+                        `radius: ${control} / ${container} / ${overlay}`,
+                        `dialog shadow: ${getComputedStyle(dialog).boxShadow}`,
+                        `overflow-x: ${appearance.scrollWidth > appearance.clientWidth ? "detected" : "none"}`,
+                    ].forEach((value) => {
+                        const line = document.createElement("code");
+                        line.textContent = value;
+                        measurement.append(line);
+                    });
+                });
+            }
+
+            function render() {
+                document.querySelector(".review-shell").dataset.textScale =
+                    state["text-scale"];
+                document
+                    .querySelectorAll(".appearance")
+                    .forEach((appearance) => {
+                        appearance.dataset.appearance = state.appearance;
+                        appearance.dataset.overlay = state.overlay;
+                        appearance.dataset.dragged = state.dragged;
+                    });
+                document.querySelectorAll("[data-set]").forEach((button) => {
+                    button.setAttribute(
+                        "aria-pressed",
+                        String(
+                            state[button.dataset.set] === button.dataset.value
+                        )
+                    );
+                });
+                updateCopy();
+                requestAnimationFrame(updateMeasurements);
+            }
+
+            document.querySelectorAll("[data-set]").forEach((button) => {
+                button.addEventListener("click", () => {
+                    state[button.dataset.set] = button.dataset.value;
+                    render();
+                });
+            });
+
+            window.addEventListener("resize", updateMeasurements);
+            render();
+        </script>
+    </body>
+</html>

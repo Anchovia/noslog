@@ -2,11 +2,13 @@
 
 ## Document control
 
-- Status: `Research draft — fourteen-source comparison complete; source-set extraction and visual gate pending`
+- Status: `Exact source-set extraction and initial browser validation complete; user decision pending`
 - Canonical language: English
 - Korean companion:
   [52-foundation-c5-material-geometry-reference-comparison.ko.md](./52-foundation-c5-material-geometry-reference-comparison.ko.md)
 - Date: 2026-08-10
+- Interactive artifact:
+  [C5 material-geometry comparison](./specimens/c5-material-geometry-comparison.html)
 - Scope: exact radius, elevation/shadow, and scrim-source candidates for the
   already approved `C4` material roles
 - Inputs: approved documents `24`, `26`, `32`, `34`–`51`; current repository
@@ -35,6 +37,20 @@ listed here.
 6. Tailwind radius, shadow, and starter-card styling are not design authority.
 7. A source set must be adopted intact for the roles it owns. Values from
    several systems may not be mixed or interpolated into a new NosLog ramp.
+
+## Version-pinned primary token evidence
+
+The comparison values were checked against current official published artifacts,
+not copied from screenshots or remembered defaults:
+
+| Source                  | Checked artifact                                                                                                                  | Use in this gate                                                                                                    |
+| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| Adobe Spectrum S2       | `@adobe/spectrum-tokens@14.15.0` plus the official layout-token reference                                                         | Exact radius aliases, three semantic drop shadows, and Light/Dark overlay opacity                                   |
+| Microsoft Fluent 2 Web  | `@fluentui/react-theme@9.2.1`, which publishes `@fluentui/tokens@1.0.0-alpha.23`, plus the official Shapes and Elevation guidance | Exact Web Light/Dark radius, shadow, and overlay values; official component examples used to identify role coverage |
+| Atlassian Design System | `@atlaskit/tokens@16.3.0` plus the official Radius and Elevation guidance                                                         | Exact Light/Dark raised, overlay, overflow, blanket, and radius values with their published ownership               |
+
+Package archives were used only as research evidence in a temporary directory and
+were not added as project dependencies.
 
 ## Equivalent roles compared
 
@@ -125,27 +141,37 @@ This is a candidate mapping from published Spectrum semantic aliases to the
 already approved NosLog roles. It does not alter any token value and does not
 adopt Spectrum component styling. Visual approval remains pending.
 
-### `MG-B` Fluent 2 — primitives complete, role subset pending
+### `MG-B` Fluent 2 — exact Web input complete; semantic coverage gap recorded
 
-- Radius input is exactly `0/2/4/8/12px/50%`.
-- Light low elevation uses key and ambient opacities of `14%`; Dark uses `28%`
-  key and `14%` ambient.
-- High elevation uses the documented `28` and `64` levels with different Light
-  and Dark secondary-blur equations.
-- `colorBackgroundOverlay` is black alpha `40` in Light and `50` in Dark.
-- Fluent publishes six elevation levels with different component examples. A
-  controlled NosLog candidate still needs an evidence-backed semantic subset;
-  selecting levels by visual preference would create a local hybrid.
+| Comparison role                                                          | Exact Fluent Web value                                                                         |
+| ------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
+| `radius-control` / `radius-container` / `radius-overlay` / `radius-full` | `4px` / `8px` / `12px` / `10000px` from the published radius tokens                            |
+| `elevation-raised`                                                       | `shadow8`: Light `0 0 2px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.14)`; Dark `.24` and `.28`    |
+| small `elevation-overlay`                                                | `shadow16`: Light `0 0 2px rgba(0,0,0,.12), 0 8px 16px rgba(0,0,0,.14)`; Dark `.24` and `.28`  |
+| dialog elevation                                                         | `shadow64`: Light `0 0 8px rgba(0,0,0,.12), 0 32px 64px rgba(0,0,0,.14)`; Dark `.24` and `.28` |
+| `scrim`                                                                  | `colorBackgroundOverlay`: Light `rgba(0,0,0,.4)`, Dark `rgba(0,0,0,.5)`                        |
 
-### `MG-C` Atlassian — roles and radius complete, exact effect values pending
+The official examples connect `shadow8` to raised cards, `shadow16` to callouts
+and hover cards, and `shadow64` to dialogs. Fluent does not publish equivalents
+for the required dragged and directional scroll-boundary roles. The specimen
+therefore repeats `shadow16` in the dragged scene only as a visibly labelled
+compatibility probe; that repetition is not an approvable NosLog alias.
 
-- Exact radius roles are available: interactive `6px`, containment/floating UI
-  `8px`, large containers/modals `12px`, full `999px`.
-- Exact semantic roles are available: `surface`, `sunken`, `raised`, `overlay`,
-  and `overflow`; dragged items use overlay elevation.
-- Current exact Light/Dark `elevation.shadow.*` and `color.blanket` resolved
-  values remain to be captured from the official current token artifact. Legacy
-  fallback values are not accepted as current authority.
+### `MG-C` Atlassian — exact input complete; surface-pairing conflict recorded
+
+| Role                                        | Light                                     | Dark                                                               |
+| ------------------------------------------- | ----------------------------------------- | ------------------------------------------------------------------ |
+| Radius control / container / overlay / full | `6px / 8px / 12px / 9999px`               | same                                                               |
+| `elevation.shadow.raised`                   | `0 1px 1px #1E1F2140, 0 0 1px #1E1F214F`  | `0 0 0 1px #00000000, 0 1px 1px #01040480, 0 0 1px #01040480`      |
+| `elevation.shadow.overlay`                  | `0 8px 12px #1E1F2126, 0 0 1px #1E1F214F` | `0 0 0 1px #BDBDBD1F, 0 8px 12px #0104045C, 0 0 1px 1px #01040480` |
+| `elevation.shadow.overflow`                 | `0 0 8px #1E1F2129, 0 0 1px #1E1F211F`    | `0 0 12px #0104048F, 0 0 1px #01040480`                            |
+| `color.blanket`                             | `#050C1F75`                               | `#10121499`                                                        |
+
+Atlassian explicitly requires the raised and overlay shadows to be paired with
+its matching elevation surfaces. The controlled specimen must keep the already
+approved Spectrum surfaces fixed, so `MG-C` is a compatibility probe rather than
+an intact downstream candidate unless that provenance conflict is reopened with
+the user. Dragged items correctly reuse Atlassian overlay elevation.
 
 ## Source-set finalists for extraction
 
@@ -164,8 +190,9 @@ The following are research finalists, not approved candidates.
 - Preserve Fluent's exact radius and Light/Dark key-plus-ambient elevation set.
 - Advantage: the most explicit appearance-specific shadow equations in the
   comparison.
-- Risk: the six-level elevation ramp must be reduced only through published
-  semantic aliases or a documented subset; NosLog may not invent a new mixture.
+- Blocking limitation: the published Web set has no dragged or directional
+  scroll-boundary alias matching the approved NosLog inventory. Reusing a nearby
+  level by preference would create a local semantic mapping.
 
 ### `MG-C` — Atlassian material set
 
@@ -173,12 +200,29 @@ The following are research finalists, not approved candidates.
   mapping as one set.
 - Advantage: its `sunken/default/raised/overlay/overflow` semantics align most
   directly with the approved NosLog role inventory.
-- Blocking extraction: exact current Light/Dark shadow values and blanket value.
+- Exact values are now extracted. The blocker is provenance: Atlassian requires
+  its shadows to be paired with Atlassian elevation surfaces, while Spectrum S2
+  is already the exclusive NosLog neutral surface source.
 
-No recommendation is final until the blocking values are extracted and the same
-NosLog content is rendered with the three intact candidates.
+`MG-A` is currently the only finalist with neither a missing semantic role nor a
+cross-source surface-pairing conflict. This is an evidence finding, not a final
+recommendation or approval; the controlled rendering and user decision remain
+required.
 
 ## Required visual-comparison gate
+
+The controlled comparison is now available at
+[c5-material-geometry-comparison.html](./specimens/c5-material-geometry-comparison.html).
+It identifies `MG-B` and `MG-C` compatibility limitations in the artifact rather
+than hiding them.
+
+Initial browser validation on 2026-08-10 covered all three candidates in the
+Light/Dark, Korean/Japanese/English, popover/dialog, rest/dragged, and
+`100%`/`200%` controls. The representative `390px` and required `320 CSS px`
+viewports produced no page-level or candidate-card horizontal overflow, and the
+browser console reported no warnings or errors. This is an artifact-integrity
+check, not material approval; user comparison and candidate-specific deep
+validation remain pending.
 
 The next specimen must hold typography, spacing, approved Spectrum surfaces and
 foregrounds, boundary mapping, `FI-C` focus, content, and layout constant. It may
@@ -205,13 +249,13 @@ reintroduce white Dark-theme outlines, or use Tailwind radius/shadow defaults.
 
 ## Decision log
 
-| ID       | Decision                                                                                         | Status                                                                   |
-| -------- | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------ |
-| `MGR-01` | Compare equivalent material roles across fourteen independent maintained systems                 | `Research complete — 2026-08-10`                                         |
-| `MGR-02` | Preserve the approved `C1-B`, `C4`, Spectrum neutral, `FI-C`, `ITA-C`, and `RPA-A` contracts     | `Required`                                                               |
-| `MGR-03` | Keep Tailwind radius/shadow and starter-card styling outside design authority                    | `Required`                                                               |
-| `MGR-04` | Shortlist `MG-A`, `MG-B`, and `MG-C` for complete source-set extraction                          | `Proposed`                                                               |
-| `MGR-05` | Mix radius from one system with shadow or scrim from another                                     | `Rejected by provenance contract`                                        |
-| `MGR-06` | Extract exact current shadow color/composition, scrim, and component ownership for all finalists | `MG-A complete; MG-B primitive set complete; MG-C exact effects pending` |
-| `MGR-07` | Build the controlled NosLog material-geometry comparison                                         | `Pending MGR-06`                                                         |
-| `MGR-08` | Approve an exact material source and component aliases                                           | `Pending user decision after visual validation`                          |
+| ID       | Decision                                                                                         | Status                                                                  |
+| -------- | ------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------- |
+| `MGR-01` | Compare equivalent material roles across fourteen independent maintained systems                 | `Research complete — 2026-08-10`                                        |
+| `MGR-02` | Preserve the approved `C1-B`, `C4`, Spectrum neutral, `FI-C`, `ITA-C`, and `RPA-A` contracts     | `Required`                                                              |
+| `MGR-03` | Keep Tailwind radius/shadow and starter-card styling outside design authority                    | `Required`                                                              |
+| `MGR-04` | Shortlist `MG-A`, `MG-B`, and `MG-C` for complete source-set extraction                          | `Proposed`                                                              |
+| `MGR-05` | Mix radius from one system with shadow or scrim from another                                     | `Rejected by provenance contract`                                       |
+| `MGR-06` | Extract exact current shadow color/composition, scrim, and component ownership for all finalists | `Complete — version-pinned official artifacts checked`                  |
+| `MGR-07` | Build the controlled NosLog material-geometry comparison                                         | `Artifact and initial browser validation complete; user review pending` |
+| `MGR-08` | Approve an exact material source and component aliases                                           | `Pending user decision after visual validation`                         |

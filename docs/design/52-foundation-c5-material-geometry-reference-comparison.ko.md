@@ -2,11 +2,13 @@
 
 ## 문서 관리
 
-- 상태: `조사 초안 — 14개 출처 비교 완료; source set 추출 및 시각 Gate 대기`
+- 상태: `정확한 source set 추출과 초기 browser 검증 완료; 사용자 결정 대기`
 - 정본 언어: 영어
 - 영어 정본:
   [52-foundation-c5-material-geometry-reference-comparison.md](./52-foundation-c5-material-geometry-reference-comparison.md)
 - 날짜: 2026-08-10
+- Interactive artifact:
+  [C5 material-geometry 비교](./specimens/c5-material-geometry-comparison.html)
 - 범위: 이미 승인된 `C4` material role을 위한 정확한 radius,
   elevation/shadow 및 scrim source 후보
 - 입력: 승인된 문서 `24`, `26`, `32`, `34`–`51`, 현재 저장소 component
@@ -32,6 +34,19 @@ Gate를 시작한다. 근거를 기록하고 온전한 source set 후보를 좁�
 6. Tailwind radius, shadow 및 starter-card styling은 design authority가 아니다.
 7. Source가 소유하는 role에는 하나의 source set을 온전히 채택한다. 여러 system의
    값을 섞거나 보간해 새로운 NosLog ramp를 만들 수 없다.
+
+## Version을 고정한 1차 Token 근거
+
+비교값은 screenshot이나 기억한 default가 아니라 현재 공식 배포 artifact로 확인했다.
+
+| Source                  | 확인한 artifact                                                                                               | 이번 Gate에서 사용한 범위                                                                     |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| Adobe Spectrum S2       | `@adobe/spectrum-tokens@14.15.0`과 공식 layout-token reference                                                | 정확한 radius alias, semantic drop shadow 세 개, Light/Dark overlay opacity                   |
+| Microsoft Fluent 2 Web  | `@fluentui/react-theme@9.2.1`이 배포하는 `@fluentui/tokens@1.0.0-alpha.23`, 공식 Shapes 및 Elevation guidance | 정확한 Web Light/Dark radius, shadow, overlay 값과 role coverage를 판정할 공식 component 예시 |
+| Atlassian Design System | `@atlaskit/tokens@16.3.0`, 공식 Radius 및 Elevation guidance                                                  | 공개 ownership을 포함한 정확한 Light/Dark raised, overlay, overflow, blanket 및 radius 값     |
+
+Package archive는 임시 directory에서 조사 근거로만 사용했으며 project dependency로
+추가하지 않았다.
 
 ## 비교한 동등 Role
 
@@ -117,26 +132,35 @@ source를 고를 수 없다.
 mapping이다. 어떤 token 값도 바꾸지 않으며 Spectrum component styling을 채택하지
 않는다. 시각 승인은 계속 대기 상태다.
 
-### `MG-B` Fluent 2 — Primitive 완료, Role subset 대기
+### `MG-B` Fluent 2 — 정확한 Web Input 완료, Semantic Coverage Gap 기록
 
-- Radius input은 정확히 `0/2/4/8/12px/50%`다.
-- Light low elevation은 key와 ambient opacity `14%`, Dark는 key `28%`와 ambient
-  `14%`를 사용한다.
-- High elevation은 서로 다른 Light/Dark secondary-blur 계산을 가진 공개 `28`, `64`
-  level을 사용한다.
-- `colorBackgroundOverlay`는 Light black alpha `40`, Dark black alpha `50`이다.
-- Fluent는 component 예시가 다른 여섯 elevation level을 공개한다. 통제된 NosLog
-  후보에는 근거가 있는 semantic subset이 더 필요하다. 외관 선호로 level을 고르면
-  local hybrid가 된다.
+| 비교 role                                                                | 정확한 Fluent Web 값                                                                        |
+| ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------- |
+| `radius-control` / `radius-container` / `radius-overlay` / `radius-full` | 공개 radius token의 `4px` / `8px` / `12px` / `10000px`                                      |
+| `elevation-raised`                                                       | `shadow8`: Light `0 0 2px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.14)`; Dark `.24`, `.28`    |
+| 작은 `elevation-overlay`                                                 | `shadow16`: Light `0 0 2px rgba(0,0,0,.12), 0 8px 16px rgba(0,0,0,.14)`; Dark `.24`, `.28`  |
+| Dialog elevation                                                         | `shadow64`: Light `0 0 8px rgba(0,0,0,.12), 0 32px 64px rgba(0,0,0,.14)`; Dark `.24`, `.28` |
+| `scrim`                                                                  | `colorBackgroundOverlay`: Light `rgba(0,0,0,.4)`, Dark `rgba(0,0,0,.5)`                     |
 
-### `MG-C` Atlassian — Role과 Radius 완료, 정확한 Effect 값 대기
+공식 예시는 `shadow8`을 raised card, `shadow16`을 callout과 hover card,
+`shadow64`를 dialog에 연결한다. Fluent에는 필요한 dragged 및 directional
+scroll-boundary role의 동등 alias가 없다. 따라서 specimen은 dragged scene에서
+`shadow16`을 compatibility probe로만 반복하며, 이는 승인 가능한 NosLog alias가 아니다.
 
-- 정확한 radius role은 interactive `6px`, containment/floating UI `8px`, large
-  container/modal `12px`, full `999px`이다.
-- 정확한 semantic role은 `surface`, `sunken`, `raised`, `overlay`, `overflow`이며
-  dragged item은 overlay elevation을 사용한다.
-- 공식 현재 token artifact에서 해석한 정확한 Light/Dark `elevation.shadow.*` 및
-  `color.blanket` 값은 아직 확보해야 한다. Legacy fallback 값은 현재 권위로 쓰지 않는다.
+### `MG-C` Atlassian — 정확한 Input 완료, Surface-pairing 충돌 기록
+
+| Role                                        | Light                                     | Dark                                                               |
+| ------------------------------------------- | ----------------------------------------- | ------------------------------------------------------------------ |
+| Radius control / container / overlay / full | `6px / 8px / 12px / 9999px`               | 동일                                                               |
+| `elevation.shadow.raised`                   | `0 1px 1px #1E1F2140, 0 0 1px #1E1F214F`  | `0 0 0 1px #00000000, 0 1px 1px #01040480, 0 0 1px #01040480`      |
+| `elevation.shadow.overlay`                  | `0 8px 12px #1E1F2126, 0 0 1px #1E1F214F` | `0 0 0 1px #BDBDBD1F, 0 8px 12px #0104045C, 0 0 1px 1px #01040480` |
+| `elevation.shadow.overflow`                 | `0 0 8px #1E1F2129, 0 0 1px #1E1F211F`    | `0 0 12px #0104048F, 0 0 1px #01040480`                            |
+| `color.blanket`                             | `#050C1F75`                               | `#10121499`                                                        |
+
+Atlassian은 raised와 overlay shadow를 대응 elevation surface와 함께 쓰도록 명시한다.
+통제된 specimen은 이미 승인된 Spectrum surface를 고정해야 하므로, 이 provenance
+충돌을 사용자와 다시 열지 않는 한 `MG-C`는 온전한 downstream 후보가 아닌
+compatibility probe다. Dragged item은 Atlassian 규칙대로 overlay elevation을 재사용한다.
 
 ## Source-set 추출 Finalist
 
@@ -154,8 +178,9 @@ mapping이다. 어떤 token 값도 바꾸지 않으며 Spectrum component stylin
 
 - Fluent의 정확한 radius와 Light/Dark key-plus-ambient elevation set을 보존한다.
 - 장점: 비교 중 appearance-specific shadow 계산이 가장 명확하다.
-- 위험: 여섯 단계 elevation ramp는 공개된 semantic alias나 문서화된 subset으로만
-  줄일 수 있다. NosLog가 새로운 혼합을 발명할 수 없다.
+- 차단 한계: 공개 Web set에는 승인된 NosLog inventory에 대응하는 dragged 또는
+  directional scroll-boundary alias가 없다. 가까운 level을 선호로 재사용하면 local
+  semantic mapping이 된다.
 
 ### `MG-C` — Atlassian material set
 
@@ -163,12 +188,27 @@ mapping이다. 어떤 token 값도 바꾸지 않으며 Spectrum component stylin
   set으로 보존한다.
 - 장점: `sunken/default/raised/overlay/overflow` 의미가 승인된 NosLog role
   inventory와 가장 직접적으로 맞는다.
-- 차단 추출 항목: 정확한 현재 Light/Dark shadow 값과 blanket 값.
+- 정확값 추출은 완료했다. 차단 항목은 provenance다. Atlassian은 shadow와 자체
+  elevation surface의 pairing을 요구하지만 Spectrum S2는 이미 NosLog의 유일한
+  neutral surface source다.
 
-차단 값을 추출하고 같은 NosLog content로 온전한 후보 세 개를 렌더링하기 전에는
-어떤 추천도 확정하지 않는다.
+현재 `MG-A`만 semantic role 누락과 cross-source surface-pairing 충돌이 모두 없다.
+이는 근거상의 발견이며 최종 추천이나 승인이 아니다. 통제된 rendering과 사용자
+결정이 계속 필요하다.
 
 ## 필수 시각 비교 Gate
+
+통제된 비교는
+[c5-material-geometry-comparison.html](./specimens/c5-material-geometry-comparison.html)에
+준비했다. `MG-B`, `MG-C`의 compatibility 한계를 artifact 안에서 숨기지 않고
+표시한다.
+
+2026-08-10 초기 browser 검증에서는 세 후보 모두에 대해 Light/Dark,
+한국어/일본어/영어, popover/dialog, rest/dragged, `100%`/`200%` control을
+확인했다. 대표 `390px`와 필수 `320 CSS px` viewport에서 page와 candidate card의
+가로 overflow가 발생하지 않았고 browser console warning과 error도 없었다. 이는
+artifact 무결성 검사이지 material 승인이 아니다. 사용자 비교와 선택 후보의 심층
+검증은 계속 대기 상태다.
 
 다음 specimen은 typography, spacing, 승인된 Spectrum surface와 foreground,
 boundary mapping, `FI-C` focus, content, layout을 고정한다. 후보가 소유한 radius,
@@ -191,13 +231,13 @@ Tailwind radius/shadow 기본값을 사용하면 안 된다.
 
 ## 결정 로그
 
-| ID       | 결정                                                                                    | 상태                                                        |
-| -------- | --------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
-| `MGR-01` | 독립적으로 유지 관리되는 system 14개의 동등 material role 비교                          | `Research complete — 2026-08-10`                            |
-| `MGR-02` | 승인된 `C1-B`, `C4`, Spectrum neutral, `FI-C`, `ITA-C`, `RPA-A` 계약 보존               | `Required`                                                  |
-| `MGR-03` | Tailwind radius/shadow 및 starter-card styling을 design authority 밖에 유지             | `Required`                                                  |
-| `MGR-04` | 완전한 source-set 추출 대상으로 `MG-A`, `MG-B`, `MG-C` shortlist                        | `Proposed`                                                  |
-| `MGR-05` | 한 system의 radius를 다른 system의 shadow 또는 scrim과 혼합                             | `Provenance 계약에 의해 Rejected`                           |
-| `MGR-06` | 모든 finalist의 정확한 현재 shadow color/composition, scrim 및 component ownership 추출 | `MG-A 완료; MG-B primitive set 완료; MG-C 정확 effect 대기` |
-| `MGR-07` | 통제된 NosLog material-geometry 비교 제작                                               | `MGR-06 대기`                                               |
-| `MGR-08` | 정확한 material source 및 component alias 승인                                          | `시각 검증 뒤 사용자 결정 대기`                             |
+| ID       | 결정                                                                                    | 상태                                                  |
+| -------- | --------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| `MGR-01` | 독립적으로 유지 관리되는 system 14개의 동등 material role 비교                          | `Research complete — 2026-08-10`                      |
+| `MGR-02` | 승인된 `C1-B`, `C4`, Spectrum neutral, `FI-C`, `ITA-C`, `RPA-A` 계약 보존               | `Required`                                            |
+| `MGR-03` | Tailwind radius/shadow 및 starter-card styling을 design authority 밖에 유지             | `Required`                                            |
+| `MGR-04` | 완전한 source-set 추출 대상으로 `MG-A`, `MG-B`, `MG-C` shortlist                        | `Proposed`                                            |
+| `MGR-05` | 한 system의 radius를 다른 system의 shadow 또는 scrim과 혼합                             | `Provenance 계약에 의해 Rejected`                     |
+| `MGR-06` | 모든 finalist의 정확한 현재 shadow color/composition, scrim 및 component ownership 추출 | `완료 — version 고정 공식 artifact 확인`              |
+| `MGR-07` | 통제된 NosLog material-geometry 비교 제작                                               | `Artifact와 초기 browser 검증 완료; 사용자 검토 대기` |
+| `MGR-08` | 정확한 material source 및 component alias 승인                                          | `시각 검증 뒤 사용자 결정 대기`                       |
