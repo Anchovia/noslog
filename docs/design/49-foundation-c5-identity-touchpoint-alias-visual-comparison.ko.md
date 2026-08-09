@@ -157,8 +157,10 @@ forced-colors 렌더링은 확인했다고 주장하지 않고 이후 acceptance
    최종 silhouette, clearance, 접근 가능한 Home name, exported size를 검증한다.
 4. **Radix 배치 — Pending:** downstream handoff 전 승인된 identity source가 다른
    제한된 identity alias를 받을지 문서화한다. Source 승인에서 배치를 추론하지 않는다.
-5. **Rare filled primary action — Pending:** 별도 component gate로 유지하며 `ITA-C`
-   선택으로 승인되지 않는다.
+5. **Rare filled primary action — 별도 승인:** 문서 `51`은 Spectrum-neutral
+   `RPA-A`를 승인하고 정확한 Dark hover/pressed text-contrast failure 뒤
+   `RPA-B/C`를 거절한다. `ITA-C`에서 이 결정을 추론하지 않았으며 Radix action
+   alias는 없다.
 
 ## 결정 로그
 
@@ -170,8 +172,9 @@ forced-colors 렌더링은 확인했다고 주장하지 않고 이후 acceptance
 | `IAV-04` | Desktop, `390px`, `320 CSS px`, Light/Dark, context control, target size, overflow, focus 검증 | `Completed — 2026-08-10`                         |
 | `IAV-05` | `ITA-C`를 identity touchpoint alias로 선택                                                     | `Approved — 2026-08-10`                          |
 | `IAV-06` | 최종 NosLog mark drawing 및 exported identity asset 승인                                       | `이후 gate 대기`                                 |
-| `IAV-07` | Rare primary action에 Radix filled treatment 승인                                              | `별도 gate 대기`                                 |
+| `IAV-07` | Rare primary action에 Radix filled treatment 승인                                              | `문서 51에서 RPA-B/C 측정 실패; 미승인`          |
 | `IAV-08` | `ITA-A` 또는 `ITA-B`를 통해 graphical mark나 mark field에 Indigo 적용                          | `Rejected — 2026-08-10`                          |
+| `IAV-09` | 별도 filled primary-action 정책으로 Spectrum-neutral `RPA-A` 승인                              | `문서 51에서 승인 — 2026-08-10`                  |
 
 ## 출처
 
@@ -179,5 +182,7 @@ forced-colors 렌더링은 확인했다고 주장하지 않고 이후 acceptance
 - [C5 최종 후보 실제 콘텐츠 비교](./47-foundation-c5-finalist-noslog-context-comparison.ko.md)
 - [Shared shell 및 navigation brief](./15-shared-shell-navigation-brief.ko.md)
 - [Foundation semantic role map](./25-foundation-semantic-role-map.ko.md)
+- [C5 rare primary-action 적격성 조사](./50-foundation-c5-rare-primary-action-eligibility-research.ko.md)
+- [C5 rare primary-action 정책 시각 비교](./51-foundation-c5-rare-primary-action-policy-visual-comparison.ko.md)
 - [Radix Colors scale 사용](https://www.radix-ui.com/colors/docs/palette-composition/understanding-the-scale)
 - [Adobe Spectrum: Using color](https://spectrum.adobe.com/page/using-color/)

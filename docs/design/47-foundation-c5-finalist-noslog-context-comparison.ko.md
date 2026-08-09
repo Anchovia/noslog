@@ -3,7 +3,7 @@
 ## 문서 관리
 
 - 상태: `SS-08 Radix Colors Indigo를 NosLog identity source로 유지; ITA-C
-achromatic shell identity 승인; action alias 대기`
+achromatic shell identity 및 RPA-A achromatic primary 승인`
 - 기준 언어: 영문
 - 영문 원문:
   [47-foundation-c5-finalist-noslog-context-comparison.md](./47-foundation-c5-finalist-noslog-context-comparison.md)
@@ -25,7 +25,9 @@ single-source 규칙을 측정 목적으로만 다시 열며, 그 규칙의 최�
 
 사용자는 세 후보를 검토한 뒤 2026-08-10 온전한 `SS-08` Radix Colors Indigo
 Light/Dark mapping을 NosLog identity source로 선택했다. Polaris와 `EXP-01`은 비교
-근거로 보존하지만 선택하지 않았다. 이 결정은 filled-action alias를 승인하지 않는다.
+근거로 보존하지만 선택하지 않았다. 이 identity-source 결정 자체는 filled-action
+alias를 승인하지 않았다. 문서 `51`이 이후 별도 Spectrum-neutral `RPA-A` 정책을
+승인하고 Radix action 사용을 거절했다.
 
 ## 정확한 최종 후보 계약
 
@@ -160,8 +162,9 @@ fixture 콘텐츠는 승인된 structural-validation artifact에서 가져왔으
    기록한다. Graphical mark와 보이는 wordmark는 appearance별 Spectrum S2 neutral
    foreground를 사용한다. Indigo mark treatment, Indigo field treatment, 이
    specimen의 identity rail은 rejected shell alias다.
-4. **Rare action eligibility — Pending:** 정확한 Radix filled-action mapping을 입증된
-   드문 primary action에 사용할지, action을 neutral로 유지할지 별도 결정한다.
+4. **Rare action eligibility — Approved:** 문서 `51`은 정확한 Dark Radix
+   hover/pressed text-contrast failure, `RPA-B/C` 거절, Spectrum-neutral `RPA-A`
+   승인을 기록한다. Radix action alias는 없다.
 
 이 선택은 `SC-B` single-source 계약을 보존한다. 일반 link, filter, selected
 container, domain value, focus 또는 monochrome N mark 재착색을 허가하지 않는다.
@@ -176,7 +179,7 @@ container, domain value, focus 또는 monochrome N mark 재착색을 허가하�
 | `FNC-04` | 후보 identity와 filled-action eligibility를 별도 approval gate로 취급한다.      | `Required`                                     |
 | `FNC-05` | Radix Indigo를 NosLog identity source로 선택한다.                               | `Approved — 2026-08-10`                        |
 | `FNC-06` | Shopify Polaris를 NosLog achromatic identity source로 선택한다.                 | `Not selected — 2026-08-10; evidence retained` |
-| `FNC-07` | 어느 source든 filled mapping을 rare primary action에 사용하도록 승인한다.       | `Pending; identity 선택에서 추론하지 않음`     |
+| `FNC-07` | 입증된 primary action에 filled mapping을 사용하도록 승인한다.                   | `문서 51에서 RPA-A 승인 — 2026-08-10`          |
 | `FNC-08` | 정확한 Polaris Light / Radix Dark 값을 `EXP-01`로 실측 비교한다.                | `Approved comparison scope — 2026-08-10`       |
 | `FNC-09` | `EXP-01`을 NosLog-owned adaptive signature mapping으로 선택한다.                | `Not selected — 2026-08-10; evidence retained` |
 | `FNC-10` | Identity rail을 비교 구조로 취급하고 문서 `48`에서 component-alias 조사를 연다. | `문서 49의 ITA-C 승인으로 해결 — 2026-08-10`   |
@@ -190,3 +193,5 @@ container, domain value, focus 또는 monochrome N mark 재착색을 허가하�
 - [C5 정보 서비스 컬러 확장](./46-foundation-c5-information-service-color-expansion.ko.md)
 - [C5 identity touchpoint alias 조사](./48-foundation-c5-identity-touchpoint-alias-research.ko.md)
 - [C5 identity touchpoint alias 시각 비교](./49-foundation-c5-identity-touchpoint-alias-visual-comparison.ko.md)
+- [C5 rare primary-action 적격성 조사](./50-foundation-c5-rare-primary-action-eligibility-research.ko.md)
+- [C5 rare primary-action 정책 시각 비교](./51-foundation-c5-rare-primary-action-policy-visual-comparison.ko.md)

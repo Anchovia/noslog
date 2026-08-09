@@ -3,7 +3,7 @@
 ## Document Control
 
 - Status: `SS-08 Radix Colors Indigo retained as the NosLog identity source;
-ITA-C achromatic shell identity approved; action alias pending`
+ITA-C achromatic shell identity and RPA-A achromatic primary approved`
 - Canonical language: English
 - Korean companion:
   [47-foundation-c5-finalist-noslog-context-comparison.ko.md](./47-foundation-c5-finalist-noslog-context-comparison.ko.md)
@@ -27,7 +27,9 @@ only. It does not approve a final rule change, any mapping, or an action.
 After reviewing all three candidates, the user selected the intact `SS-08` Radix
 Colors Indigo Light/Dark mapping as the NosLog identity source on 2026-08-10.
 Polaris and `EXP-01` remain documented comparison evidence but are not selected.
-This decision does not approve a filled-action alias.
+This identity-source decision did not approve a filled-action alias. Document `51`
+later approved the separate Spectrum-neutral `RPA-A` policy and rejected Radix action
+use.
 
 ## Exact Finalist Contract
 
@@ -165,9 +167,9 @@ into difficulty, mode, external-brand, or visualization roles.
    selection of `ITA-C`. The graphical mark and visible wordmark use adaptive
    Spectrum S2 neutral foregrounds. Indigo mark treatment, Indigo field treatment,
    and the identity rail in this specimen are rejected shell aliases.
-4. **Rare action eligibility — Pending:** decide separately whether the exact Radix
-   filled-action mapping may be used for a proven rare primary action or actions
-   remain neutral.
+4. **Rare action eligibility — Approved:** document `51` records the exact Dark Radix
+   hover/pressed text-contrast failure, rejection of `RPA-B/C`, and approval of
+   Spectrum-neutral `RPA-A`. Radix has no action alias.
 
 The selection preserves the `SC-B` single-source contract. It does not authorize
 recoloring ordinary links, filters, selected containers, domain values, focus, or the
@@ -183,7 +185,7 @@ monochrome N mark.
 | `FNC-04` | Treat candidate identity and filled-action eligibility as separate approval gates.                        | `Required`                                               |
 | `FNC-05` | Select Radix Indigo as the NosLog identity source.                                                        | `Approved — 2026-08-10`                                  |
 | `FNC-06` | Select Shopify Polaris as the NosLog achromatic identity source.                                          | `Not selected — 2026-08-10; evidence retained`           |
-| `FNC-07` | Approve either source's filled mapping for a rare primary action.                                         | `Pending; not implied by identity selection`             |
+| `FNC-07` | Approve a filled mapping for a proven primary action.                                                     | `RPA-A approved in document 51 — 2026-08-10`             |
 | `FNC-08` | Measure exact Polaris Light / Radix Dark values as `EXP-01`.                                              | `Approved comparison scope — 2026-08-10`                 |
 | `FNC-09` | Select `EXP-01` as a NosLog-owned adaptive signature mapping.                                             | `Not selected — 2026-08-10; evidence retained`           |
 | `FNC-10` | Treat the identity rail as comparison scaffolding and open the component-alias research in document `48`. | `Resolved by ITA-C approval in document 49 — 2026-08-10` |
@@ -197,3 +199,5 @@ monochrome N mark.
 - [C5 information-service color expansion](./46-foundation-c5-information-service-color-expansion.md)
 - [C5 identity touchpoint alias research](./48-foundation-c5-identity-touchpoint-alias-research.md)
 - [C5 identity touchpoint alias visual comparison](./49-foundation-c5-identity-touchpoint-alias-visual-comparison.md)
+- [C5 rare primary-action eligibility research](./50-foundation-c5-rare-primary-action-eligibility-research.md)
+- [C5 rare primary-action policy visual comparison](./51-foundation-c5-rare-primary-action-policy-visual-comparison.md)

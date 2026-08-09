@@ -90,9 +90,10 @@ Sections:
 - `SS-08` Radix Colors Indigo is the approved and exclusive signature identity source
   for NosLog 2.0. Preserve its published Light/Dark mapping as one intact source set;
   do not interpolate it, shift its hue, or replace one appearance or state with values
-  from another system. This source approval does not approve any identity component
-  alias, filled primary action, ordinary interaction color, logo recoloring, or broad
-  accent use. Those remain separate approval gates under the restrained color budget.
+  from another system. This source approval does not itself approve an identity
+  component alias, ordinary interaction color, logo recoloring, or broad accent use.
+  The separately approved `RPA-A` policy below governs filled primary actions and
+  assigns no action alias to Radix.
 - `ITA-C` is the approved shell identity alias. Render the graphical NosLog mark and
   visible `NosLog` wordmark with the approved adaptive Spectrum S2 neutral foreground;
   do not apply Indigo to the mark, place it on an Indigo field, or add a default white
@@ -101,6 +102,17 @@ Sections:
   triggered. Radix remains the approved identity source, but it currently has no
   approved shell identity alias; do not invent another placement without a separate
   user-approved gate.
+- `RPA-A · Achromatic primary` is the approved filled primary-action policy. A page,
+  bounded region, or temporary flow may have at most one proven non-destructive
+  internal primary action, and not every view needs one. Use the exact Spectrum S2
+  neutral mapping: Light default `#292929`, hover/pressed `#131313`, foreground
+  `#FFFFFF`; Dark default `#DBDBDB`, hover/pressed `#F2F2F2`, foreground `#111111`.
+  Keep ordinary actions, navigation, links, tools, and equal-priority choices neutral
+  and lower-emphasis. External-brand and destructive actions remain outside this
+  alias. Radix has no filled-action alias. `RPA-B` and `RPA-C` are `Rejected`; their
+  exact Dark hover/pressed `#5472E4` with `#FFFFFF` text measured `4.28:1`, below the
+  required `4.5:1`. Do not modify or revive those mappings without a new user-approved
+  research gate.
 - Shopify Polaris and the `EXP-01` Polaris Light / Radix Dark split were measured and
   not selected as the identity source. Preserve their evidence in document `47`, but
   do not use them as downstream design or implementation targets unless the user

@@ -166,21 +166,24 @@ check rather than a claimed visual result.
 4. **Radix placement — Pending:** document whether the approved identity source
    receives any other bounded identity alias before downstream handoff. No placement
    is inferred from source approval.
-5. **Rare filled primary action — Pending:** remains a separate component gate and
-   is not approved by the `ITA-C` selection.
+5. **Rare filled primary action — Approved separately:** document `51` approves
+   Spectrum-neutral `RPA-A` and rejects `RPA-B/C` after exact Dark hover/pressed
+   text-contrast failure. `ITA-C` did not imply this decision, and Radix has no action
+   alias.
 
 ## Decision Log
 
-| ID       | Item                                                                                                     | Status                                           |
-| -------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
-| `IAV-01` | Compare `ITA-A`, `ITA-B`, and `ITA-C` in the four approved shell contexts.                               | `Approved comparison scope — 2026-08-10`         |
-| `IAV-02` | Use one provisional filled geometric `N` without the current circular white outline.                     | `Comparison scaffold; not a logo approval`       |
-| `IAV-03` | Keep the `ITA-B` field square and free of radius, border, and shadow.                                    | `Historical comparison scaffold; ITA-B rejected` |
-| `IAV-04` | Validate desktop, `390px`, `320 CSS px`, Light/Dark, context controls, target size, overflow, and focus. | `Completed — 2026-08-10`                         |
-| `IAV-05` | Select `ITA-C` as the identity touchpoint alias.                                                         | `Approved — 2026-08-10`                          |
-| `IAV-06` | Approve the final NosLog mark drawing and exported identity asset.                                       | `Pending later gate`                             |
-| `IAV-07` | Approve Radix filled treatment for a rare primary action.                                                | `Pending separate gate`                          |
-| `IAV-08` | Apply Indigo to the graphical mark or mark field through `ITA-A` or `ITA-B`.                             | `Rejected — 2026-08-10`                          |
+| ID       | Item                                                                                                     | Status                                                  |
+| -------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| `IAV-01` | Compare `ITA-A`, `ITA-B`, and `ITA-C` in the four approved shell contexts.                               | `Approved comparison scope — 2026-08-10`                |
+| `IAV-02` | Use one provisional filled geometric `N` without the current circular white outline.                     | `Comparison scaffold; not a logo approval`              |
+| `IAV-03` | Keep the `ITA-B` field square and free of radius, border, and shadow.                                    | `Historical comparison scaffold; ITA-B rejected`        |
+| `IAV-04` | Validate desktop, `390px`, `320 CSS px`, Light/Dark, context controls, target size, overflow, and focus. | `Completed — 2026-08-10`                                |
+| `IAV-05` | Select `ITA-C` as the identity touchpoint alias.                                                         | `Approved — 2026-08-10`                                 |
+| `IAV-06` | Approve the final NosLog mark drawing and exported identity asset.                                       | `Pending later gate`                                    |
+| `IAV-07` | Approve Radix filled treatment for a rare primary action.                                                | `RPA-B/C measured failure in document 51; not approved` |
+| `IAV-08` | Apply Indigo to the graphical mark or mark field through `ITA-A` or `ITA-B`.                             | `Rejected — 2026-08-10`                                 |
+| `IAV-09` | Approve Spectrum-neutral `RPA-A` as the separate filled primary-action policy.                           | `Approved in document 51 — 2026-08-10`                  |
 
 ## Sources
 
@@ -188,5 +191,7 @@ check rather than a claimed visual result.
 - [C5 finalist actual-content comparison](./47-foundation-c5-finalist-noslog-context-comparison.md)
 - [Shared shell and navigation brief](./15-shared-shell-navigation-brief.md)
 - [Foundation semantic role map](./25-foundation-semantic-role-map.md)
+- [C5 rare primary-action eligibility research](./50-foundation-c5-rare-primary-action-eligibility-research.md)
+- [C5 rare primary-action policy visual comparison](./51-foundation-c5-rare-primary-action-policy-visual-comparison.md)
 - [Radix Colors scale usage](https://www.radix-ui.com/colors/docs/palette-composition/understanding-the-scale)
 - [Adobe Spectrum: Using color](https://spectrum.adobe.com/page/using-color/)

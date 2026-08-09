@@ -65,8 +65,9 @@ mapping, component mapping과 실제 구현은 각각 별도의 승인 단계입
 
 현재 signature identity source는 `SS-08` Radix Colors Indigo로 승인되어 있습니다.
 공개된 Light/Dark mapping을 하나의 온전한 source set으로 유지합니다. 이 승인은
-identity/action component alias, filled primary action, 일반 interaction 재착색 또는
-로고 재착색을 승인하지 않으며 해당 항목은 절제 컬러 예산 아래 별도 gate로 남습니다.
+그 자체로 identity/action component alias, 일반 interaction 재착색 또는 로고
+재착색을 승인하지 않습니다. Filled primary action은 아래의 별도 `RPA-A` 정책을
+따르며 Radix에는 action alias를 부여하지 않습니다.
 Shopify Polaris와 `EXP-01` Polaris Light / Radix Dark split은 문서 `47`에 비교 근거로
 보존하지만 현재 downstream design 또는 구현 source가 아닙니다.
 
@@ -74,7 +75,17 @@ Shell identity alias는 `ITA-C · Achromatic`으로 승인되었습니다. Graph
 mark와 보이는 `NosLog` wordmark는 appearance별 Spectrum S2 neutral foreground를
 사용하며 Indigo mark, Indigo field, 기본 white outline을 사용하지 않습니다. Radix
 identity source는 유지되지만 현재 승인된 shell 배치는 없으며, 다른 배치나 rare filled
-primary action은 각각 별도 사용자 승인 gate입니다.
+primary action을 Radix에 할당하지 않습니다. 다른 identity 배치는 별도 사용자 승인
+gate입니다.
+
+Filled primary-action 정책은 `RPA-A · Achromatic primary`로 승인되었습니다. 실제
+primary 자격이 입증된 non-destructive internal action은 page·bounded region·temporary
+flow당 최대 하나만 사용하며 모든 화면에 필수적이지 않습니다. Light는 Spectrum S2
+`#292929` default, `#131313` hover/pressed, `#FFFFFF` foreground를 사용하고 Dark는
+`#DBDBDB` default, `#F2F2F2` hover/pressed, `#111111` foreground를 사용합니다. 일반
+action·navigation·link·tool·동급 선택지는 낮은 neutral hierarchy를 유지합니다.
+`RPA-B`, `RPA-C`의 Radix action mapping은 Dark hover/pressed에서 `4.28:1`로 측정되어
+거절되었으며 downstream target으로 사용하지 않습니다.
 
 ## 로컬 개발
 
