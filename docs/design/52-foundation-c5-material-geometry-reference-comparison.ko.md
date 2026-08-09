@@ -1,5 +1,10 @@
 # NosLog 2.0 C5 Material Geometry 레퍼런스 비교
 
+> **대체 공지 — 2026-08-10:** 미래 회귀 예시에서 `S4` viewer 또는 `S6` editor를
+> 지목한 문구는 역사적 기록이며 실행하면 안 됩니다. Material 회귀와 승격은 해당되는
+> 일반 UI fixture만 사용하고 기존 viewer/editor 전체는 그대로 보존합니다.
+> [문서 57](./57-noslog-2.0-authoritative-remaining-work-audit.ko.md)을 따릅니다.
+
 ## 문서 관리
 
 - 상태: `승인 — MG-A Adobe Spectrum S2; MGR-08, 2026-08-10`

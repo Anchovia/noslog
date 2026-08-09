@@ -1,5 +1,12 @@
 # NosLog 2.0 C5 NOSTALGIA Domain Color Eligibility Research
 
+> **Scope correction — 2026-08-10:** Renderer-only preservation language below is
+> superseded by the full viewer/editor preservation lock. Package `13B` may inspect
+> only ordinary application UI outside both experiences. It may not change any
+> viewer/editor page, shell, control, responsive or accessibility behavior, renderer,
+> or editor behavior. See
+> [document 57](./57-noslog-2.0-authoritative-remaining-work-audit.md).
+
 ## Document control
 
 - Status: `Corrected — renderer hand colors preserved; UI difficulty mapping pending`

@@ -62,17 +62,18 @@ Sections:
 - Reuse existing components before creating new ones.
 - Keep changes scoped and verifiable.
 - Run lint/typecheck/build after implementation if the project provides those commands.
-- The existing chart viewer and chart editor rendering systems are locked preservation
-  exceptions for NosLog 2.0. Do not redesign, recolor, restyle, replace, or reinterpret
-  the PixiJS/WebGL Falling renderer, the Canvas Full-sheet renderer, their note and
-  left/right-hand palettes, renderer geometry, animation, chart mathematics, or editor
-  rendering model. Preserve the current implementation values and behavior exactly.
-  Foundation color, material, motion, iconography, and data-visualization decisions do
-  not apply inside those renderers and must not create specimens that propose changing
-  them. Viewer/editor DOM shell, controls, accessibility descriptions, and responsive
-  containment may follow their already approved page briefs, but any change that would
-  affect renderer output or editor rendering requires the user to explicitly reopen
-  this exception first.
+- The existing chart viewer and chart editor in their entirety are locked preservation
+  exceptions for NosLog 2.0. Preserve their current pages, DOM shell, controls, labels,
+  accessibility behavior, responsive composition and containment, PixiJS/WebGL Falling
+  renderer, Canvas Full-sheet renderer, note and left/right-hand palettes, renderer
+  geometry, animation, chart mathematics, and editor rendering model exactly. Do not
+  redesign, recolor, restyle, reorganize, replace, reinterpret, or create a 2.0 variant
+  of any part of either experience. Earlier viewer/editor page briefs and `S4`/`S6`
+  specimen plans are historical functional evidence only and do not authorize future
+  design or implementation work. Foundation color, material, motion, iconography,
+  data-visualization, component, template, responsive, and accessibility decisions do
+  not apply to these locked experiences. Only the user's explicit decision to reopen
+  the entire exception or a precisely named sub-scope can authorize a change.
 
 ## NosLog 2.0 Design-System Provenance
 
@@ -154,7 +155,8 @@ Sections:
 - Package `13B` domain-color research must preserve the locked chart viewer/editor
   exception above. Existing renderer note and left/right-hand colors are implementation
   constants, not open Foundation tokens, and must not enter an exact-source comparison.
-  Only difficulty markers outside the renderer, in proven repeated-scanning UI
+  Only difficulty markers outside the entire viewer/editor experience, in proven
+  repeated-scanning UI
   contexts, remain eligible for an exact-source comparison. Basic/Recital,
   rank/achievement, and genre remain neutral by default; score bands and FAST/SLOW
   visualization belong to `13C`. This boundary does not approve current non-renderer
@@ -228,9 +230,10 @@ This is the most important working rule for this project:
 ## NosLog 2.0 Progress and Decision Integrity
 
 The `NosLog 2.0 design-guide progress baseline` section in `README.md` is the
-authoritative progress ledger for this initiative. It exists to prevent completed
-work from being rediscovered as pending when older documents contain stale future
-checklists.
+authoritative package-state ledger, and document `57` is the authoritative
+remaining-scope and preservation audit. Read both before naming the next task. They
+exist to prevent completed, downstream, closed, or prohibited work from being
+rediscovered as pending when older documents contain stale future checklists.
 
 - Use the fixed eighteen-work-package denominator in the README for every design-guide
   progress percentage. Do not switch between document count, workflow-phase count,
@@ -244,9 +247,11 @@ checklists.
   redesign, revalidate, or count it as incomplete unless the user explicitly reopens
   that exact decision or new evidence proves a recorded acceptance requirement failed.
 - Do not interpret a later integrated regression check as permission to redo its locked
-  inputs. In particular, `S1`–`S5` structural validation is complete; the future final
-  Foundation regression must reuse those fixtures and check only for regressions caused
-  by subsequently approved appearance rules. `S6` is the only missing structural slice.
+  inputs. `S1`–`S5` structural validation is complete. There is no missing `S6` slice:
+  the former editor proposal is superseded by the full viewer/editor preservation lock.
+  The future final Foundation regression must reuse only ordinary-UI fixtures `S1`,
+  `S2`, `S3`, and `S5`, check regressions caused by subsequently approved appearance
+  rules, and exclude the locked `S4` viewer and all viewer/editor work entirely.
 - Update the README ledger in the same task whenever a work package changes state. A
   progress percentage must not decrease unless the user explicitly approves new scope
   or reopens a completed package; record and explain either event beside the ledger.
@@ -256,6 +261,9 @@ checklists.
   `In progress`.
 - Historical documents remain valid evidence for the decisions they recorded, but their
   stale status summaries and future checklists are not the current progress authority.
+- If an older document names `S4`, `S6`, viewer/editor adaptation, final mark drawing,
+  or Radix placement as future work, apply document `57`'s disposition instead of
+  repeating or executing that item.
 
 ## Git Ownership
 
@@ -275,8 +283,9 @@ checklists.
 - Keep audio files local to the user's browser; do not upload MP3 files to the NosLog
   server or database.
 - Preserve NosLog's records, rankings, archive, chart editor, and chart viewer focus.
-- Keep responsive chart visualizations readable based on their actual display area
-  rather than relying only on fixed pixel sizes.
+- Keep ordinary non-viewer data visualizations readable based on their actual display
+  area rather than relying only on fixed pixel sizes. This rule does not authorize any
+  change to the locked chart viewer/editor.
 
 ## NosLog 2.0 Design Initiative
 
@@ -425,8 +434,9 @@ content, interaction behavior, visual rules, or responsive behavior.
   Test intermediate widths instead of assuming that a successful `390px` specimen
   represents every compact viewport.
 - Desktop support remains required even if current traffic is small. Use the extra
-  space intentionally for comparison, dense record analysis, chart viewing/editing,
-  and administrative workflows rather than merely enlarging the mobile canvas.
+  space intentionally for comparison, dense record analysis, ordinary data
+  visualization, and administrative workflows rather than merely enlarging the mobile
+  canvas. Do not reinterpret this as viewer/editor redesign authority.
 - Decide responsive changes from content needs and component space, not device names
   alone. Use viewport breakpoints and container queries where each is appropriate.
 
@@ -468,8 +478,8 @@ approval before the next phase begins:
 8. Refine the foundations from those screens, then promote validated elements into
    documented components, patterns, and templates.
 9. Define desktop adaptations using the extra space for comparison, analysis,
-   visualization, editor, and administrative tasks, adding guide examples only where
-   necessary to make the rules unambiguous.
+   ordinary visualization, and administrative tasks, adding guide examples only where
+   necessary to make the rules unambiguous and excluding the locked viewer/editor.
 10. Define the content, layout, interaction, and state requirements for the remaining
     page families without silently removing verified product functionality or
     producing the final high-fidelity page suite.
@@ -480,8 +490,9 @@ approval before the next phase begins:
     and decisions for that milestone are stable.
 
 Representative guide examples should cover different product demands, including music
-discovery/listing, music detail, a dense record or ranking view, and the chart viewer.
-They validate and communicate the guide; they are not the final production screen set.
+discovery/listing, music detail, a dense record or ranking view, and a standard
+data-sync or administrative workflow. They validate and communicate the guide; they
+are not the final production screen set. Do not add viewer/editor specimens.
 
 ### Design Guide Artifacts and Source of Truth
 

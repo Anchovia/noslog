@@ -1,5 +1,11 @@
 # NosLog 2.0 C5 NOSTALGIA Domain Color 자격 조사
 
+> **범위 정정 — 2026-08-10:** 아래의 renderer-only 보존 문구는 viewer/editor 전체
+> 보존 잠금으로 대체됩니다. Package `13B`는 두 경험 밖의 일반 애플리케이션 UI만 조사할
+> 수 있습니다. Viewer/editor의 page, shell, control, responsive·accessibility behavior,
+> renderer 또는 editor behavior는 어떤 것도 변경할 수 없습니다.
+> [문서 57](./57-noslog-2.0-authoritative-remaining-work-audit.ko.md)을 따릅니다.
+
 ## 문서 관리
 
 - 상태: `Corrected — renderer hand color 보존; UI difficulty mapping 대기`

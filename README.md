@@ -41,12 +41,15 @@ NOSTALGIA 플레이 기록을 모아 보고, 악곡별 성과·서열·랭킹과
 
 편집 화면은 데스크톱과 가로형 태블릿을 기준으로 하며, 공개 뷰어는 모바일에서도 이용할 수 있습니다.
 
-NosLog 2.0에서도 기존 채보 viewer/editor renderer는 보존 예외입니다. PixiJS/WebGL
-낙하형 renderer, Canvas 전체 악보 renderer, note·left/right-hand palette, renderer
-geometry·animation·chart mathematics 및 editor rendering model을 재설계·재착색·교체하지
-않으며 현재 구현값과 동작을 그대로 유지합니다. Foundation color·material·motion·icon·data
-visualization 결정은 renderer 내부에 적용하지 않습니다. Renderer 출력에 영향을 주는 변경은
-사용자가 이 예외를 명시적으로 다시 열기 전에는 진행하지 않습니다.
+NosLog 2.0에서도 기존 채보 viewer와 editor 전체는 보존 예외입니다. Page, DOM shell,
+control, label, accessibility behavior, responsive composition·containment,
+PixiJS/WebGL 낙하형 renderer, Canvas 전체 악보 renderer, note·left/right-hand palette,
+renderer geometry·animation·chart mathematics 및 editor rendering model을 모두 현재
+구현 그대로 유지합니다. Foundation color·material·motion·icon·data visualization,
+component·template·responsive 규칙을 적용하거나 2.0 변형을 만들지 않습니다. 과거
+viewer/editor Page Brief와 `S4`/`S6` 계획은 기능을 기록한 역사적 근거일 뿐 변경 권한이
+아닙니다. 사용자가 전체 예외 또는 정확히 지목한 하위 범위를 명시적으로 다시 열기 전에는
+어떤 부분도 변경하지 않습니다.
 
 ## 기술 스택
 
@@ -111,9 +114,9 @@ Carbon은 neutral typography 원칙의 비교 근거일 뿐이며 Carbon·Tailwi
 값을 이 mapping에 섞지 않습니다. 이 승인은 `13A`만 완료하며 NOSTALGIA domain color
 `13B`와 comparison-local data color `13C`는 별도 승인 Gate로 남아 있습니다.
 
-NOSTALGIA domain color `13B`는 위의 채보 viewer/editor 보존 예외를 침범하지 않습니다.
+NOSTALGIA domain color `13B`는 위의 채보 viewer/editor 전체 보존 예외를 침범하지 않습니다.
 기존 renderer의 note·left/right-hand color는 Foundation token 후보가 아니며 exact-source
-비교에서 제외합니다. Renderer 밖의 UI에서 입증된 repeated-scanning difficulty marker만
+비교에서 제외합니다. Viewer/editor 전체 밖의 일반 UI에서 입증된 repeated-scanning difficulty marker만
 후속 exact-source 비교 대상입니다. Basic/Recital·rank/achievement·genre는 기본 neutral을
 유지하고 score band와 FAST/SLOW visualization은 `13C`에서 다룹니다. 이 경계는 현재
 비-renderer NosLog 값, screenshot sample, 다른 rhythm game palette 또는 어떤 신규 exact
@@ -130,35 +133,36 @@ Light/Dark mapping도 승인하지 않습니다.
 12단계 workflow 수로 분모를 바꾸지 않습니다. 이 값은 관리상 진행률이며 일정이나 남은
 시간의 백분율이 아닙니다.
 
-|   # | 작업 묶음                                                                               | 현재 상태     | 최신 근거                                                                                           |
-| --: | --------------------------------------------------------------------------------------- | ------------- | --------------------------------------------------------------------------------------------------- |
-|   1 | 현재 제품 감사                                                                          | `Complete`    | 문서 `01`                                                                                           |
-|   2 | 정보 구조와 Navigation                                                                  | `Complete`    | 문서 `02`                                                                                           |
-|   3 | 전체 Page Brief                                                                         | `Complete`    | 문서 `03`–`20`                                                                                      |
-|   4 | 정합성 감사, 교차 원칙 및 예외 거버넌스                                                 | `Complete`    | 문서 `21`–`23`                                                                                      |
-|   5 | Typography role, scale 및 metric 계약                                                   | `Complete`    | 문서 `24`–`26`의 후속 승인 기록                                                                     |
-|   6 | Spacing, Grid, Container 및 Layout 계약                                                 | `Complete`    | 문서 `24`–`26`의 후속 승인 기록                                                                     |
-|   7 | `S1`–`S5` 구조 검증                                                                     | `Complete`    | 문서 `27`–`31`; `S5` matrix `624/624`                                                               |
-|   8 | Neutral surface, foreground 및 boundary                                                 | `Complete`    | 문서 `32`, `34`–`39`                                                                                |
-|   9 | Neutral interaction 및 focus                                                            | `Complete`    | 문서 `40`–`44`                                                                                      |
-|  10 | Signature identity source                                                               | `Complete`    | 문서 `33`, `45`–`47`; `SS-08`                                                                       |
-|  11 | Shell identity 및 rare primary-action alias                                             | `Complete`    | 문서 `48`–`51`; `ITA-C`, `RPA-A`                                                                    |
-|  12 | Material Geometry                                                                       | `Complete`    | 문서 `52`; `MG-A`, `MGR-08` 승인                                                                    |
-|  13 | Feedback, status, domain 및 data color                                                  | `In progress` | 문서 `53`–`56`; `13A` `FS-BN`, renderer hand-color Gate 철회, UI difficulty mapping 검토·`13C` 대기 |
-|  14 | Iconography, motion 및 data-visualization 규칙                                          | `Not started` | 후속 Foundation gate                                                                                |
-|  15 | `S6` editor slice와 최종 Foundation 회귀·승격                                           | `Not started` | 기존 `S1`–`S5` fixture 재사용 필수                                                                  |
-|  16 | Component alias·anatomy, pattern, template 및 desktop adaptation                        | `Not started` | Foundation 승격 이후                                                                                |
-|  17 | 접근성·다국어 acceptance, screen requirement, 구현 mapping, QA 및 Claude Design handoff | `Not started` | Downstream handoff 단계                                                                             |
-|  18 | Versioned 디자인 가이드 PDF                                                             | `Not started` | Editable source 안정화 이후                                                                         |
+|   # | 작업 묶음                                                                               | 현재 상태     | 최신 근거                                                                                                |
+| --: | --------------------------------------------------------------------------------------- | ------------- | -------------------------------------------------------------------------------------------------------- |
+|   1 | 현재 제품 감사                                                                          | `Complete`    | 문서 `01`                                                                                                |
+|   2 | 정보 구조와 Navigation                                                                  | `Complete`    | 문서 `02`                                                                                                |
+|   3 | 전체 Page Brief                                                                         | `Complete`    | 문서 `03`–`20`                                                                                           |
+|   4 | 정합성 감사, 교차 원칙 및 예외 거버넌스                                                 | `Complete`    | 문서 `21`–`23`                                                                                           |
+|   5 | Typography role, scale 및 metric 계약                                                   | `Complete`    | 문서 `24`–`26`의 후속 승인 기록                                                                          |
+|   6 | Spacing, Grid, Container 및 Layout 계약                                                 | `Complete`    | 문서 `24`–`26`의 후속 승인 기록                                                                          |
+|   7 | `S1`–`S5` 구조 검증                                                                     | `Complete`    | 문서 `27`–`31`; `S5` matrix `624/624`                                                                    |
+|   8 | Neutral surface, foreground 및 boundary                                                 | `Complete`    | 문서 `32`, `34`–`39`                                                                                     |
+|   9 | Neutral interaction 및 focus                                                            | `Complete`    | 문서 `40`–`44`                                                                                           |
+|  10 | Signature identity source                                                               | `Complete`    | 문서 `33`, `45`–`47`; `SS-08`                                                                            |
+|  11 | Shell identity 및 rare primary-action alias                                             | `Complete`    | 문서 `48`–`51`; `ITA-C`, `RPA-A`                                                                         |
+|  12 | Material Geometry                                                                       | `Complete`    | 문서 `52`; `MG-A`, `MGR-08` 승인                                                                         |
+|  13 | Feedback, status, domain 및 data color                                                  | `In progress` | 문서 `53`–`57`; `13A` `FS-BN`, viewer/editor color Gate 철회, 일반 UI difficulty mapping 검토·`13C` 대기 |
+|  14 | 일반 UI Iconography, motion 및 data-visualization 규칙                                  | `Not started` | Viewer/editor 제외 후속 Foundation gate                                                                  |
+|  15 | 일반 UI 최종 Foundation 회귀·승격                                                       | `Not started` | `S6` 취소, 완료된 `S1`, `S2`, `S3`, `S5` fixture만 재사용; `S4` viewer/editor 제외                       |
+|  16 | 일반 UI Component alias·anatomy, pattern, template 및 desktop adaptation                | `Not started` | Foundation 승격 이후; viewer/editor 제외                                                                 |
+|  17 | 접근성·다국어 acceptance, screen requirement, 구현 mapping, QA 및 Claude Design handoff | `Not started` | Viewer/editor 변경안 없이 downstream handoff                                                             |
+|  18 | Versioned 디자인 가이드 PDF                                                             | `Not started` | Editable source 안정화 이후                                                                              |
 
 현재 기준선은 완료 12개와 진행 중 1개인 `12.5 / 18 = 69%`입니다. 진행 중 항목은 관리상
 `0.5`로만 계산하며 승인 Gate를 모두 통과하기 전에는 `Complete`로 올리지 않습니다. 신규
 범위를 추가하거나 완료 항목을 다시 여는 경우에는 먼저
 사용자 승인을 받고 이 표에 사유를 기록해야 하며, 그렇지 않으면 완료율을 낮출 수 없습니다.
 
-향후 `S1`–`S5` 통합 검사는 구조 작업의 반복이 아닙니다. 이후 승인되는 appearance
-규칙이 기존 fixture를 손상하지 않았는지만 확인하는 최종 회귀 검사이며, 새 구조 표본은
-`S6`만 남아 있습니다.
+향후 Foundation 통합 검사는 구조 작업의 반복이 아닙니다. 이후 승인되는 appearance
+규칙이 완료된 일반 UI `S1`, `S2`, `S3`, `S5` fixture를 손상하지 않았는지만 확인합니다. 새 `S6`
+editor 표본은 없으며 viewer/editor는 최종 회귀·component·template·handoff 변경 범위에서도
+제외합니다. 정확한 남은 범위와 오래된 문구의 처리 상태는 문서 `57`을 따릅니다.
 
 ## 로컬 개발
 

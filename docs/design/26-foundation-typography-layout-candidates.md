@@ -1,8 +1,14 @@
 # NosLog 2.0 Foundation Typography and Layout Candidates
 
+> **Supersession notice — 2026-08-10:** References to future integrated `S1`–`S6`
+> validation or fine-pointer viewer/editor adaptation are historical, not actionable.
+> `S1`–`S5` structural work is complete, `S6` is cancelled, and the existing viewer and
+> editor are preserved in their entirety. Use
+> [document 57](./57-noslog-2.0-authoritative-remaining-work-audit.md) for current scope.
+
 ## Document Control
 
-- Status: `In progress — typography and layout contracts approved through measured grid and page-title transitions; integrated specimen validation remains open`
+- Status: `Approved typography and layout contracts — stale integrated S6 validation superseded; final ordinary-UI regression governed by document 57`
 - Research date: 2026-08-04
 - Last decision update: 2026-08-04
 - Canonical language: English

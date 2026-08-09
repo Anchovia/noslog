@@ -1,5 +1,11 @@
 # NosLog 2.0 C5 Material Geometry Reference Comparison
 
+> **Supersession notice — 2026-08-10:** Any future regression example naming the `S4`
+> viewer or `S6` editor is historical and must not be executed. Material regression and
+> promotion use eligible ordinary-UI fixtures only; the existing viewer/editor is
+> preserved in its entirety. See
+> [document 57](./57-noslog-2.0-authoritative-remaining-work-audit.md).
+
 ## Document control
 
 - Status: `Approved — MG-A Adobe Spectrum S2; MGR-08, 2026-08-10`

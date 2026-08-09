@@ -1,5 +1,11 @@
 # NosLog 2.0 C5 Identity Touchpoint Alias 시각 비교
 
+> **Downstream 분류 공지 — 2026-08-10:** 최종 NosLog mark drawing은 승인된
+> `ITA-C` 제약을 따르는 Claude Design 산출물이며 미완료 Codex Foundation Gate가
+> 아닙니다. Radix에는 승인된 shell 배치가 없고, 사용자가 명시적으로 다시 열기 전에는
+> 배치 탐색도 종료된 상태입니다. [문서 57](./57-noslog-2.0-authoritative-remaining-work-audit.ko.md)을
+> 따릅니다.
+
 ## 문서 관리
 
 - 상태: `ITA-C achromatic shell identity 승인; 비교 근거 보존`
@@ -153,10 +159,11 @@ forced-colors 렌더링은 확인했다고 주장하지 않고 이후 acceptance
    mark와 neutral wordmark를 쓰는 `ITA-C`.
 2. **Chromatic logo alias — Rejected:** `ITA-A`, `ITA-B`; mark를 재착색하거나
    Indigo mark field를 도입하지 않는다.
-3. **최종 mark drawing — Pending:** 색상이나 기본 white outline에 의존하지 않고
-   최종 silhouette, clearance, 접근 가능한 Home name, exported size를 검증한다.
-4. **Radix 배치 — Pending:** downstream handoff 전 승인된 identity source가 다른
-   제한된 identity alias를 받을지 문서화한다. Source 승인에서 배치를 추론하지 않는다.
+3. **최종 mark drawing — Downstream Claude Design:** downstream designer가 승인된
+   `ITA-C` 제약 아래 최종 silhouette, clearance, 접근 가능한 Home name 및 exported
+   size를 검증한다. 이는 남은 Codex Foundation Gate가 아니다.
+4. **Radix 배치 — Closed:** 승인된 shell 배치가 없다. 사용자가 명시적으로 다시 열기
+   전에는 배치 탐색을 재개하지 않으며 source 승인만으로 배치 작업이 생기지 않는다.
 5. **Rare filled primary action — 별도 승인:** 문서 `51`은 Spectrum-neutral
    `RPA-A`를 승인하고 정확한 Dark hover/pressed text-contrast failure 뒤
    `RPA-B/C`를 거절한다. `ITA-C`에서 이 결정을 추론하지 않았으며 Radix action

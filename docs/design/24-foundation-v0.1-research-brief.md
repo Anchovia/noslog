@@ -1,5 +1,11 @@
 # NosLog 2.0 Foundation v0.1 Research Brief
 
+> **Supersession notice — 2026-08-10:** Every future-work reference to a chart
+> viewer/editor specimen, including `S4`, proposed `S6`, integrated `S1`–`S6`
+> validation, editor geometry, or viewer/editor adaptation, is historical and must not
+> be executed. The existing viewer and editor are preserved in their entirety. Use
+> [document 57](./57-noslog-2.0-authoritative-remaining-work-audit.md) for current scope.
+
 ## Document Control
 
 - Status: `Approved research protocol — Gate 0 complete; later typography, layout, measured transition, and page-title decisions recorded`

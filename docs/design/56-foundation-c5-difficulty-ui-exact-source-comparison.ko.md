@@ -13,9 +13,9 @@
   [문서 07, VIEW-07](./07-chart-viewer-page-brief.ko.md)
 - 시각 근거:
   [c5-difficulty-ui-source-comparison.html](./specimens/c5-difficulty-ui-source-comparison.html)
-- 범위: chart viewer/editor renderer 밖의 repeated-scanning DOM UI difficulty marker
-- 제외: 모든 PixiJS/WebGL 및 Canvas-rendered note, hand guide, renderer legend,
-  geometry, animation, chart calculation 및 editor rendering behavior
+- 범위: chart viewer/editor 전체 밖의 repeated-scanning 일반 DOM UI difficulty marker
+- 제외: 모든 viewer/editor page, shell, control, responsive behavior, accessibility
+  behavior, PixiJS/WebGL 또는 Canvas-rendered element, geometry, calculation 및 editor behavior
 
 ## 정정 기록
 
@@ -33,12 +33,12 @@ Superseded된 첫 draft는 chart-viewer hand color를 열린 Foundation 결정�
 
 ## 남은 질문
 
-열린 `13B` 질문은 하나뿐이다. Renderer 밖의 repeated-scanning difficulty UI에서 작은
-chromatic marker를 사용할지, 완전 neutral을 유지할지 결정한다.
+열린 `13B` 결정은 하나뿐이다. 완전 neutral difficulty UI를 승인할지, 아니면 새로운
+NosLog-owned semantic color 배정을 허용하도록 provenance 규칙을 명시적으로 다시 열지
+결정한다.
 
-Eligible UI 예시는 여러 chart difficulty를 보여 주는 music list, music detail
-difficulty summary 및 compact chart-selection result다. Chart viewer와 editor
-rendering surface는 절대 eligible하지 않다.
+Eligible UI 예시는 여러 chart difficulty를 보여 주는 music list와 music detail
+difficulty summary다. Viewer/editor page나 그 하위 component는 절대 eligible하지 않다.
 
 ## Source 필터 결과
 
@@ -50,8 +50,10 @@ Carbon 및 SAP chart palette는 data-visualization 전용이므로 global diffic
 green/orange/red/purple `visual-color` family를 공개한다.
 
 이 source 결과가 role assignment를 upstream Spectrum semantic으로 만들지는 않는다.
-Value는 exact source fact이며 Normal/Hard/Expert/Real assignment는 사용자 승인이 필요한
-NosLog 결정이다.
+Value는 exact source fact지만 Normal/Hard/Expert/Real assignment는 새로 만든 NosLog
+mapping이다. 따라서 승인된 source의 공개 value와 semantic mapping을 모두 그대로 유지하는
+현재 규칙을 통과하지 못한다. `DU-D1`은 비교 근거로 남길 수 있지만, 사용자가 custom
+semantic-mapping 예외를 명시적으로 승인하지 않으면 채택할 수 없다.
 
 ## 정확한 proposed 값
 
@@ -67,20 +69,20 @@ NosLog 결정이다.
 
 ## 통제된 후보
 
-| Candidate                          | Recipe                                                                                                            | 장점                                                                  | 위험                                                                              | 상태                          |
-| ---------------------------------- | ----------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ----------------------------- |
-| `DU-D1 · Spectrum adaptive marker` | 작은 non-text marker에 exact Spectrum value를 사용하고 label, level, fixed order 및 neutral selection을 유지한다. | Text, card 또는 container를 착색하지 않고 repeated scanning을 돕는다. | 4-role assignment는 published Spectrum semantic 계약이 아니라 NosLog mapping이다. | `Proposed — 사용자 검토 대기` |
-| `DU-D0 · Neutral pattern/order`    | 하나의 neutral family와 서로 다른 pattern/order를 사용하고 label, level 및 neutral selection을 유지한다.          | 신규 domain mapping이 없고 가장 절제된다.                             | 조밀한 반복 UI에서 difficulty color recognition을 포기한다.                       | `Valid fallback`              |
+| Candidate                          | Recipe                                                                                                                | 장점                                                      | 위험                                                                              | 상태                                      |
+| ---------------------------------- | --------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- | --------------------------------------------------------------------------------- | ----------------------------------------- |
+| `DU-D1 · Spectrum adaptive marker` | 작은 non-text marker에 exact Spectrum value를 사용하고 label, level, fixed order 및 neutral selection을 유지한다.     | 시험한 chromatic treatment 중 가장 절제된 안을 보여 준다. | 4-role assignment가 published Spectrum semantic 계약이 아닌 invented mapping이다. | `Reference only — provenance 예외 필요`   |
+| `DU-D0 · Neutral pattern/order`    | 하나의 neutral family와 서로 다른 pattern/order를 사용하고 label, level, fixed order 및 neutral selection을 유지한다. | Fabricated mapping 없이 승인된 neutral system을 유지한다. | 조밀한 반복 UI에서 difficulty color recognition을 포기한다.                       | `현재 provenance 규칙상 추천 — 승인 대기` |
 
 ## 엄격한 component 경계
 
-`DU-D1`이 승인되면 chroma는 renderer 밖의 repeated-scanning DOM UI에서 작은
+`DU-D1`이 승인되면 chroma는 viewer/editor 전체 밖의 repeated-scanning 일반 DOM UI에서 작은
 difficulty marker에만 나타날 수 있다. 다음은 착색할 수 없다.
 
 - Difficulty text, card background, section, navigation, link, button, selection,
   focus, validation 또는 feedback;
-- Chart viewer/editor canvas, WebGL output, note, path, hand guide, legend, piano,
-  timing guide 또는 renderer가 소유하는 모든 pixel;
+- Chart viewer/editor의 모든 page, shell, control, canvas, WebGL output, note, path,
+  hand guide, legend, piano, timing guide 또는 renderer가 소유하는 모든 pixel;
 - `13C`에 남는 score band 또는 FAST/SLOW data.
 
 Selection은 neutral boundary와 명시적인 selected label을 유지한다. Color는
@@ -111,17 +113,18 @@ viewer/editor를 test하거나 수정하지 않았다.
 
 ## Decision log
 
-| ID       | Entry                                                                                                                 | 상태                               |
-| -------- | --------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
-| `DUS-01` | 기존 viewer/editor renderer output, note/hand palette, chart mathematics 및 editor rendering model을 그대로 보존한다. | `Approved correction — 2026-08-10` |
-| `DUS-02` | 잘못된 hand-color exact-source 비교와 표본을 제거한다.                                                                | `Completed`                        |
-| `DUS-03` | Package `13B` exact-source 검토를 renderer 밖의 repeated-scanning difficulty DOM UI로 제한한다.                       | `Approved scope correction`        |
-| `DUS-04` | Exact Spectrum adaptive marker와 neutral fallback을 비교한다.                                                         | `Proposed evidence`                |
-| `DUS-05` | `DU-D1` 또는 `DU-D0`를 선택한다.                                                                                      | `사용자 검토 대기`                 |
-| `DUS-06` | 정정된 difficulty-only 표본을 desktop, `390px`, `320px`와 renderer element `0`개 조건으로 검증한다.                   | `Completed — 2026-08-10`           |
+| ID       | Entry                                                                                                                                                              | 상태                               |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------- |
+| `DUS-01` | 기존 viewer/editor의 page, control, responsive·accessibility behavior, renderer output, palette, mathematics 및 editor model을 포함한 전체 경험을 그대로 보존한다. | `Approved correction — 2026-08-10` |
+| `DUS-02` | 잘못된 hand-color exact-source 비교와 표본을 제거한다.                                                                                                             | `Completed`                        |
+| `DUS-03` | Package `13B` exact-source 검토를 viewer/editor 전체 밖의 repeated-scanning 일반 difficulty DOM UI로 제한한다.                                                     | `Approved scope correction`        |
+| `DUS-04` | Exact Spectrum adaptive marker를 비교 근거로 보존하지만 invented difficulty-role assignment는 현재 provenance 규칙 아래 승인하지 않는다.                           | `Provenance failure 기록`          |
+| `DUS-05` | `DU-D0`를 승인하거나 NosLog-owned semantic mapping을 위해 provenance 규칙을 명시적으로 다시 연다.                                                                  | `사용자 검토 대기`                 |
+| `DUS-06` | 정정된 difficulty-only 표본을 desktop, `390px`, `320px`와 renderer element `0`개 조건으로 검증한다.                                                                | `Completed — 2026-08-10`           |
 
 ## 승인 경계
 
-Difficulty mapping은 아직 승인되지 않았다. Renderer 보존 예외는 이미 승인되었고 이
-비교의 선택지가 아니다. Package `13B`는 진행 중이고 고정된 관리 진행률은
-`12.5 / 18 = 69%`이다.
+Difficulty mapping은 아직 승인되지 않았다. 현재 provenance 규칙 아래 승인 가능한 후보는
+`DU-D0`뿐이다. `DU-D1`은 명시적인 custom-mapping 예외가 필요하다. Viewer/editor 전체
+보존 예외는 이미 승인되었고 이 비교의 선택지가 아니다. Package `13B`는 진행 중이고
+고정된 관리 진행률은 `12.5 / 18 = 69%`이다.

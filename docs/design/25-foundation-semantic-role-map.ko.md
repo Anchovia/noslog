@@ -1,8 +1,13 @@
 # NosLog 2.0 Foundation Semantic Role Map
 
+> **대체 공지 — 2026-08-10:** `S6` editor row와 통합 `S1`–`S6` checklist는
+> 역사적 기록이며 실행하면 안 됩니다. `S1`–`S5` 구조 작업은 완료됐고 `S4`는 잠긴
+> viewer이며 `S6`은 취소됐습니다. 현재 회귀 범위는
+> [문서 57](./57-noslog-2.0-authoritative-remaining-work-audit.ko.md)이 정의합니다.
+
 ## 문서 관리
 
-- 상태: `승인된 Semantic-role 구조, 정확한 기본 Composite mapping 및 측정된 Page-title substitution — 통합 검증 미완료`
+- 상태: `승인된 Semantic-role 구조, 정확한 기본 Composite mapping 및 측정된 Page-title substitution — 오래된 S6 검증 대체됨`
 - 승인일: 2026-08-03
 - 마지막 결정 갱신일: 2026-08-04
 - 원본 언어: 영어

@@ -13,10 +13,11 @@
   [document 07, VIEW-07](./07-chart-viewer-page-brief.md)
 - Visual evidence:
   [c5-difficulty-ui-source-comparison.html](./specimens/c5-difficulty-ui-source-comparison.html)
-- Scope: difficulty markers in repeated-scanning DOM UI outside the chart viewer and
-  editor renderers
-- Excludes: every PixiJS/WebGL and Canvas-rendered note, hand guide, renderer legend,
-  geometry, animation, chart calculation, and editor rendering behavior
+- Scope: difficulty markers in repeated-scanning ordinary DOM UI outside the entire
+  chart viewer and editor experiences
+- Excludes: every viewer/editor page, shell, control, responsive behavior, accessibility
+  behavior, PixiJS/WebGL or Canvas-rendered element, geometry, calculation, and editor
+  behavior
 
 ## Correction record
 
@@ -36,12 +37,11 @@ document does not evaluate, normalize, remap, or recommend changing them.
 
 ## Remaining question
 
-Only one `13B` question remains open: should repeated-scanning difficulty UI outside
-the renderer use a compact chromatic marker, or remain fully neutral?
+Only one `13B` decision remains open: approve fully neutral difficulty UI, or explicitly
+reopen the provenance rule to authorize a new NosLog-owned semantic color assignment.
 
-Examples of eligible UI are a music list showing several chart difficulties, a music
-detail difficulty summary, and a compact chart-selection result. The chart viewer and
-editor rendering surfaces are never eligible.
+Examples of eligible UI are a music list showing several chart difficulties and a
+music-detail difficulty summary. No viewer/editor page or subcomponent is eligible.
 
 ## Source filter result
 
@@ -54,8 +54,11 @@ maintained source here that publishes a complete, non-deprecated adaptive
 green/orange/red/purple `visual-color` family.
 
 This source result does not make the role assignment an upstream Spectrum semantic.
-The values are exact source facts; Normal/Hard/Expert/Real assignment remains a NosLog
-decision requiring user approval.
+The values are exact source facts, but the Normal/Hard/Expert/Real assignment is an
+invented NosLog mapping. It therefore fails the current rule to preserve both an
+approved source's published values and semantic mapping intact. `DU-D1` may remain as
+comparison evidence, but cannot be approved unless the user explicitly authorizes a
+custom semantic-mapping exception.
 
 ## Exact proposed values
 
@@ -71,20 +74,20 @@ renderer palette.
 
 ## Controlled candidates
 
-| Candidate                          | Recipe                                                                                                     | Benefit                                                                 | Risk                                                                                      | Status                            |
-| ---------------------------------- | ---------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | --------------------------------- |
-| `DU-D1 · Spectrum adaptive marker` | Exact Spectrum values on a small non-text marker; label, level, fixed order, and neutral selection remain. | Supports repeated scanning without coloring text, cards, or containers. | The four-role assignment is a NosLog mapping, not a published Spectrum semantic contract. | `Proposed — awaiting user review` |
-| `DU-D0 · Neutral pattern/order`    | One neutral family with distinct pattern/order; label, level, and neutral selection remain.                | No new domain mapping and maximum restraint.                            | Gives up difficulty color recognition in dense repeated UI.                               | `Valid fallback`                  |
+| Candidate                          | Recipe                                                                                                     | Benefit                                                             | Risk                                                                              | Status                                                         |
+| ---------------------------------- | ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- | --------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| `DU-D1 · Spectrum adaptive marker` | Exact Spectrum values on a small non-text marker; label, level, fixed order, and neutral selection remain. | Shows the strongest restrained chromatic treatment tested.          | The four-role assignment is invented, not a published Spectrum semantic contract. | `Reference only — provenance exception required`               |
+| `DU-D0 · Neutral pattern/order`    | One neutral family with distinct pattern/order; label, level, fixed order, and neutral selection remain.   | Preserves the approved neutral system without a fabricated mapping. | Gives up difficulty color recognition in dense repeated UI.                       | `Recommended under current provenance rule — approval pending` |
 
 ## Hard component boundary
 
 If `DU-D1` is approved, chroma may appear only on the compact difficulty marker in
-repeated-scanning DOM UI outside the renderer. It must not color:
+repeated-scanning ordinary DOM UI outside the viewer/editor. It must not color:
 
 - difficulty text, card background, section, navigation, link, button, selection,
   focus, validation, or feedback;
-- the chart viewer/editor canvas, WebGL output, notes, paths, hand guides, legend,
-  piano, timing guide, or any renderer-owned pixel;
+- any chart viewer/editor page, shell, control, canvas, WebGL output, note, path, hand
+  guide, legend, piano, timing guide, or renderer-owned pixel;
 - score bands or FAST/SLOW data, which remain `13C`.
 
 Selection remains a neutral boundary and explicit selected label. Color never changes
@@ -115,17 +118,19 @@ boundary. It does not test or modify the production chart viewer/editor.
 
 ## Decision log
 
-| ID       | Entry                                                                                                                       | Status                             |
-| -------- | --------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
-| `DUS-01` | Preserve existing viewer/editor renderer output, note/hand palettes, chart mathematics, and editor rendering model exactly. | `Approved correction — 2026-08-10` |
-| `DUS-02` | Remove the incorrect hand-color exact-source comparison and specimen.                                                       | `Completed`                        |
-| `DUS-03` | Restrict Package `13B` exact-source review to repeated-scanning difficulty DOM UI outside the renderer.                     | `Approved scope correction`        |
-| `DUS-04` | Compare exact Spectrum adaptive markers with a neutral fallback.                                                            | `Proposed evidence`                |
-| `DUS-05` | Select `DU-D1` or `DU-D0`.                                                                                                  | `Awaiting user review`             |
-| `DUS-06` | Verify the corrected difficulty-only artifact at desktop, `390px`, and `320px` with zero renderer elements.                 | `Completed — 2026-08-10`           |
+| ID       | Entry                                                                                                                                                                                          | Status                             |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
+| `DUS-01` | Preserve the existing viewer/editor experiences in their entirety, including pages, controls, responsive and accessibility behavior, renderer output, palettes, mathematics, and editor model. | `Approved correction — 2026-08-10` |
+| `DUS-02` | Remove the incorrect hand-color exact-source comparison and specimen.                                                                                                                          | `Completed`                        |
+| `DUS-03` | Restrict Package `13B` exact-source review to repeated-scanning ordinary difficulty DOM UI outside the entire viewer/editor.                                                                   | `Approved scope correction`        |
+| `DUS-04` | Retain the exact Spectrum adaptive marker as reference evidence, but do not approve its invented difficulty-role assignment under the current provenance rule.                                 | `Provenance failure recorded`      |
+| `DUS-05` | Approve `DU-D0`, or explicitly reopen the provenance rule for a NosLog-owned semantic mapping.                                                                                                 | `Awaiting user review`             |
+| `DUS-06` | Verify the corrected difficulty-only artifact at desktop, `390px`, and `320px` with zero renderer elements.                                                                                    | `Completed — 2026-08-10`           |
 
 ## Approval boundary
 
-No difficulty mapping is approved yet. The renderer preservation exception is already
-approved and is not a choice in this comparison. Package `13B` remains in progress and
-the fixed management progress remains `12.5 / 18 = 69%`.
+No difficulty mapping is approved yet. Under the current provenance rule, `DU-D0` is
+the only approvable candidate. `DU-D1` requires an explicit custom-mapping exception;
+the full viewer/editor preservation exception is already approved and is not a choice
+in this comparison. Package `13B` remains in progress and the fixed management progress
+remains `12.5 / 18 = 69%`.

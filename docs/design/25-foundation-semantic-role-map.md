@@ -1,8 +1,13 @@
 # NosLog 2.0 Foundation Semantic Role Map
 
+> **Supersession notice — 2026-08-10:** The `S6` editor row and integrated `S1`–`S6`
+> checklist are historical and must not be executed. `S1`–`S5` structural work is
+> complete, `S4` is a locked viewer, `S6` is cancelled, and current regression scope is
+> defined by [document 57](./57-noslog-2.0-authoritative-remaining-work-audit.md).
+
 ## Document Control
 
-- Status: `Approved semantic-role architecture, exact default composite mapping, and measured page-title substitution — integrated validation remains open`
+- Status: `Approved semantic-role architecture, exact default composite mapping, and measured page-title substitution — stale S6 validation superseded`
 - Approval date: 2026-08-03
 - Last decision update: 2026-08-04
 - Canonical language: English

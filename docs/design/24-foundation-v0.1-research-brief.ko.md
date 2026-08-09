@@ -1,5 +1,11 @@
 # NosLog 2.0 파운데이션 v0.1 조사 브리프
 
+> **대체 공지 — 2026-08-10:** `S4`, 제안된 `S6`, 통합 `S1`–`S6` 검증,
+> editor geometry 또는 viewer/editor adaptation을 포함해 채보 viewer/editor 표본을
+> 미래 작업으로 적은 모든 문구는 역사적 기록이며 실행하면 안 됩니다. 기존 viewer와
+> editor 전체를 그대로 보존합니다. 현재 범위는
+> [문서 57](./57-noslog-2.0-authoritative-remaining-work-audit.ko.md)을 따릅니다.
+
 ## 문서 관리
 
 - 상태: `승인된 조사 프로토콜 — Gate 0 완료, 이후 Typography, Layout, 측정 전환 및 Page-title 결정 기록`

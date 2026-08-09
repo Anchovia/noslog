@@ -1,5 +1,11 @@
 # NosLog 2.0 C5 Identity Touchpoint Alias Visual Comparison
 
+> **Downstream classification notice — 2026-08-10:** The final NosLog mark drawing is
+> a Claude Design deliverable under the approved `ITA-C` constraints, not an unfinished
+> Codex Foundation gate. Radix has no approved shell placement; placement exploration
+> is closed unless the user explicitly reopens it. See
+> [document 57](./57-noslog-2.0-authoritative-remaining-work-audit.md).
+
 ## Document Control
 
 - Status: `ITA-C achromatic shell identity approved; comparison evidence retained`
@@ -160,12 +166,12 @@ check rather than a claimed visual result.
    adaptive neutral wordmark on a transparent field.
 2. **Chromatic logo aliases — Rejected:** `ITA-A` and `ITA-B`; do not recolor the
    mark or introduce an Indigo mark field.
-3. **Final mark drawing — Pending:** validate the final silhouette, clearance,
-   accessible Home name, and exported sizes without relying on color or a default
-   white outline.
-4. **Radix placement — Pending:** document whether the approved identity source
-   receives any other bounded identity alias before downstream handoff. No placement
-   is inferred from source approval.
+3. **Final mark drawing — Downstream Claude Design:** the downstream designer validates
+   the final silhouette, clearance, accessible Home name, and exported sizes under the
+   approved `ITA-C` constraints. This is not a remaining Codex Foundation gate.
+4. **Radix placement — Closed:** no shell placement is approved. Do not resume
+   placement exploration unless the user explicitly reopens it; source approval alone
+   creates no placement task.
 5. **Rare filled primary action — Approved separately:** document `51` approves
    Spectrum-neutral `RPA-A` and rejects `RPA-B/C` after exact Dark hover/pressed
    text-contrast failure. `ITA-C` did not imply this decision, and Radix has no action

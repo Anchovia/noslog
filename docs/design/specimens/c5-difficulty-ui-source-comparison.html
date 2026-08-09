@@ -79,11 +79,11 @@
         <main class="shell" id="shell">
             <header class="panel">
                 <p class="kicker">C5 · Package 13B · corrected scope</p>
-                <h1>Renderer 밖 Difficulty UI 비교</h1>
-                <p>악곡 목록·상세처럼 난이도를 반복해서 훑는 DOM UI만 비교합니다. 기존 WebGL/Canvas 채보 viewer와 editor의 note·hand color 및 renderer 출력은 이 작업에서 완전히 제외하며 그대로 보존합니다.</p>
+                <h1>Viewer/editor 밖 일반 Difficulty UI 비교</h1>
+                <p>악곡 목록·상세처럼 난이도를 반복해서 훑는 일반 DOM UI만 비교합니다. 기존 채보 viewer와 editor의 page, control, responsive·accessibility behavior 및 모든 renderer 출력은 이 작업에서 완전히 제외하며 그대로 보존합니다.</p>
             </header>
             <aside class="panel boundary">
-                <p><strong>잠긴 경계:</strong> PixiJS 낙하형, Canvas 전체 악보, note/path/hand guide, renderer legend, piano, geometry, animation, chart mathematics 및 editor rendering model은 변경 대상이 아닙니다.</p>
+                <p><strong>잠긴 경계:</strong> 채보 viewer/editor의 page와 shell, control, layout, responsive·accessibility behavior, PixiJS 낙하형, Canvas 전체 악보, note/path/hand guide, legend, piano, geometry, animation, chart mathematics 및 editor model은 모두 변경 대상이 아닙니다.</p>
             </aside>
             <section class="panel controls" aria-label="표본 제어">
                 <button type="button" aria-pressed="true" data-control="appearance" data-value="both">Light + Dark</button>
@@ -94,14 +94,14 @@
             </section>
             <section class="comparison" aria-label="Difficulty UI 후보 비교">
                 <article class="panel candidate chromatic">
-                    <div class="candidate-head"><span class="tag">Proposed · approval pending</span><h2>DU-D1 · Spectrum adaptive marker</h2><p>작은 marker만 chromatic · text/card/selection은 neutral</p></div>
+                    <div class="candidate-head"><span class="tag">Reference only · provenance exception required</span><h2>DU-D1 · Spectrum adaptive marker</h2><p>값은 Spectrum 원본 · difficulty 의미 배정은 upstream에 없는 NosLog 제안</p></div>
                     <div class="pair">
                         <div class="appearance" data-theme="light"><p class="theme">Light</p><div class="music"><div><h3>交響詩「悪夢」より</h3><p>Music detail · 4 charts</p></div><div class="list"><div class="row normal"><i class="marker"></i><div><p class="name">Normal</p><p class="meta">정확도 99.41%</p></div><span class="level">4</span></div><div class="row hard"><i class="marker"></i><div><p class="name">Hard</p><p class="meta">정확도 98.72%</p></div><span class="level">8</span></div><div class="row expert selected"><i class="marker"></i><div><p class="name">Expert</p><p class="meta">현재 선택 · 986,321</p></div><div><span class="level">12</span><br><span class="selected-label">SELECTED</span></div></div><div class="row real"><i class="marker"></i><div><p class="name">Real</p><p class="meta">기록 없음</p></div><span class="level">13</span></div></div></div></div>
                         <div class="appearance" data-theme="dark"><p class="theme">Dark</p><div class="music"><div><h3>交響詩「悪夢」より</h3><p>Music detail · 4 charts</p></div><div class="list"><div class="row normal"><i class="marker"></i><div><p class="name">Normal</p><p class="meta">정확도 99.41%</p></div><span class="level">4</span></div><div class="row hard"><i class="marker"></i><div><p class="name">Hard</p><p class="meta">정확도 98.72%</p></div><span class="level">8</span></div><div class="row expert selected"><i class="marker"></i><div><p class="name">Expert</p><p class="meta">현재 선택 · 986,321</p></div><div><span class="level">12</span><br><span class="selected-label">SELECTED</span></div></div><div class="row real"><i class="marker"></i><div><p class="name">Real</p><p class="meta">기록 없음</p></div><span class="level">13</span></div></div></div></div>
                     </div>
                 </article>
                 <article class="panel candidate neutral">
-                    <div class="candidate-head"><span class="tag">Valid fallback</span><h2>DU-D0 · Neutral pattern/order</h2><p>신규 domain color 없음 · label/level/order/pattern 유지</p></div>
+                    <div class="candidate-head"><span class="tag">Recommended under current provenance rule · approval pending</span><h2>DU-D0 · Neutral pattern/order</h2><p>신규 domain color 없음 · label/level/order/pattern 유지</p></div>
                     <div class="pair">
                         <div class="appearance" data-theme="light"><p class="theme">Light</p><div class="music"><div><h3>交響詩「悪夢」より</h3><p>Music detail · 4 charts</p></div><div class="list"><div class="row normal"><i class="marker"></i><div><p class="name">Normal</p><p class="meta">정확도 99.41%</p></div><span class="level">4</span></div><div class="row hard"><i class="marker"></i><div><p class="name">Hard</p><p class="meta">정확도 98.72%</p></div><span class="level">8</span></div><div class="row expert selected"><i class="marker"></i><div><p class="name">Expert</p><p class="meta">현재 선택 · 986,321</p></div><div><span class="level">12</span><br><span class="selected-label">SELECTED</span></div></div><div class="row real"><i class="marker"></i><div><p class="name">Real</p><p class="meta">기록 없음</p></div><span class="level">13</span></div></div></div></div>
                         <div class="appearance" data-theme="dark"><p class="theme">Dark</p><div class="music"><div><h3>交響詩「悪夢」より</h3><p>Music detail · 4 charts</p></div><div class="list"><div class="row normal"><i class="marker"></i><div><p class="name">Normal</p><p class="meta">정확도 99.41%</p></div><span class="level">4</span></div><div class="row hard"><i class="marker"></i><div><p class="name">Hard</p><p class="meta">정확도 98.72%</p></div><span class="level">8</span></div><div class="row expert selected"><i class="marker"></i><div><p class="name">Expert</p><p class="meta">현재 선택 · 986,321</p></div><div><span class="level">12</span><br><span class="selected-label">SELECTED</span></div></div><div class="row real"><i class="marker"></i><div><p class="name">Real</p><p class="meta">기록 없음</p></div><span class="level">13</span></div></div></div></div>
