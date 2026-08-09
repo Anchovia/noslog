@@ -62,6 +62,17 @@ Sections:
 - Reuse existing components before creating new ones.
 - Keep changes scoped and verifiable.
 - Run lint/typecheck/build after implementation if the project provides those commands.
+- The existing chart viewer and chart editor rendering systems are locked preservation
+  exceptions for NosLog 2.0. Do not redesign, recolor, restyle, replace, or reinterpret
+  the PixiJS/WebGL Falling renderer, the Canvas Full-sheet renderer, their note and
+  left/right-hand palettes, renderer geometry, animation, chart mathematics, or editor
+  rendering model. Preserve the current implementation values and behavior exactly.
+  Foundation color, material, motion, iconography, and data-visualization decisions do
+  not apply inside those renderers and must not create specimens that propose changing
+  them. Viewer/editor DOM shell, controls, accessibility descriptions, and responsive
+  containment may follow their already approved page briefs, but any change that would
+  affect renderer output or editor rendering requires the user to explicitly reopen
+  this exception first.
 
 ## NosLog 2.0 Design-System Provenance
 
@@ -140,6 +151,16 @@ Sections:
   `FS-A`, original `FS-B`, or `FS-C` component mappings into this alias without a new
   user-approved gate. This approval completes package gate `13A` only; NOSTALGIA
   domain color (`13B`) and comparison-local data color (`13C`) remain separate.
+- Package `13B` domain-color research must preserve the locked chart viewer/editor
+  exception above. Existing renderer note and left/right-hand colors are implementation
+  constants, not open Foundation tokens, and must not enter an exact-source comparison.
+  Only difficulty markers outside the renderer, in proven repeated-scanning UI
+  contexts, remain eligible for an exact-source comparison. Basic/Recital,
+  rank/achievement, and genre remain neutral by default; score bands and FAST/SLOW
+  visualization belong to `13C`. This boundary does not approve current non-renderer
+  NosLog values, sampled imagery, another rhythm game's palette, or any new exact
+  Light/Dark mapping. Keep the difficulty name, level, order, and selection visible so
+  color is never the sole cue.
 - Shopify Polaris and the `EXP-01` Polaris Light / Radix Dark split were measured and
   not selected as the identity source. Preserve their evidence in document `47`, but
   do not use them as downstream design or implementation targets unless the user
