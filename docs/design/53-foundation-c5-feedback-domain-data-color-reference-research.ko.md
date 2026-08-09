@@ -2,21 +2,25 @@
 
 ## 문서 관리
 
-- 상태: `Research draft — source matrix와 ownership audit 완료; palette 미승인`
+- 상태: `13A FS-BN 승인; 13B domain 및 13C data-color Gate 대기`
 - 정본 언어: English
 - 영문 정본:
   [53-foundation-c5-feedback-domain-data-color-reference-research.md](./53-foundation-c5-feedback-domain-data-color-reference-research.md)
 - 날짜: 2026-08-10
+- Controlled 시각 비교:
+  [문서 54](./54-foundation-c5-feedback-status-source-visual-comparison.ko.md) 및
+  [interactive artifact](./specimens/c5-feedback-status-source-comparison.html)
 - 범위: universal feedback/status color, NOSTALGIA domain color ownership,
   data-visualization color ownership 및 이들 사이 collision contract를 조사하는
   작업 묶음 `13`
 - 입력: 승인 문서 `24`, `26`, `32`, `34`–`52`; 현재 NosLog token 및 component
   근거; 독립적인 공식 접근성·design-system·production-service·domain 출처 17개
-- 제외: 정확한 feedback/domain/data 값 승인, component anatomy, iconography와
-  motion, production 구현, 최종 high-fidelity page
+- 제외: 정확한 domain 또는 data 값 승인, 승인된 `FS-BN` role boundary를 넘는 component
+  anatomy, iconography와 motion, production 구현 및 최종 high-fidelity page
 
-이 문서는 완료된 작업 묶음을 다시 열지 않고 고정 작업 묶음 `13`을 시작한다. 조사와
-후보 자격만 기록하며 아래에 포함됐다는 이유만으로 source나 값이 승인되지는 않는다.
+이 문서는 완료된 작업 묶음을 다시 열지 않고 고정 작업 묶음 `13`을 시작한다. 조사 근거와
+승인된 `13A` 결과를 기록한다. 아래에 포함됐다는 이유만으로 source나 값이 승인되지는
+않으며 universal feedback/status color에는 명시적인 `FS-BN` 승인 기록만 권위가 있다.
 
 ## 고정된 상위 권위
 
@@ -126,7 +130,8 @@ swatch 네 개가 아니라 동등한 component recipe를 비교해야 한다.
 
 ## 정확한 `13A` source 추출
 
-다음 값은 현재 공식 공개 artifact에서 추출했다. 근거일 뿐 승인된 NosLog alias가 아니다.
+다음 값은 현재 공식 공개 artifact에서 추출했다. Table은 source 근거로 유지하며 아래와
+문서 `54`에 기록된 명시적인 `FS-BN` mapping을 통해서만 값이 승인된 alias가 된다.
 
 ### `FS-A` — Adobe Spectrum S2 semantic visual + subtle background
 
@@ -154,10 +159,12 @@ color를 승인된 NosLog Spectrum surface에서 검증한다.
 
 ### `FS-C` — IBM Carbon notification recipe
 
-Carbon은 subtle semantic notification과 inverse-neutral notification을 명시적으로
-비교하므로 finalist architecture로 유지한다. Value-level specimen에 들어가기 전에 정확한
-현행 Light/Dark theme token을 version pin해야 한다. 기억하거나 수동 재구성한 Carbon hex는
-사용할 수 없다.
+Carbon은 `@carbon/themes@11.78.0`에 version pin했다. White는 info
+`#0043CE/#EDF5FF`, success `#24A148/#DEFBE6`, warning `#F1C21B/#FCF4D6`, error
+`#DA1E28/#FFF1F1` support/background pair를 사용한다. Dark `g100`은 공통 neutral
+notification background `#262626`과 support info `#4589FF`, success `#42BE65`, warning
+`#F1C21B`, error `#FA4D56`을 사용한다. 문서 `54`가 exact extraction, controlled
+specimen 및 Light warning pair의 측정 한계를 기록한다.
 
 ### 비교 전용 근거 — Microsoft Fluent Web
 
@@ -165,16 +172,18 @@ Carbon은 subtle semantic notification과 inverse-neutral notification을 명시
 있지만 동등한 Web status group에 대칭적인 information family가 없다. 중요한 architecture
 근거로는 유지하되 현재 intact한 네 role 채택 후보 자격은 없다.
 
-## 현재 `13A` shortlist 상태
+## 승인된 `13A` 결과
 
-| Candidate                | 현재 상태                            | 이유                                                                                             |
-| ------------------------ | ------------------------------------ | ------------------------------------------------------------------------------------------------ |
-| `FS-A` Adobe Spectrum S2 | `Controlled specimen 참가 자격 있음` | 완전한 네 role Light/Dark visual과 subtle-background source이며 provenance 연속성이 가장 강하다. |
-| `FS-B` Atlassian         | `Controlled specimen 참가 자격 있음` | 완전한 네 role Light/Dark text, icon 및 background mapping을 제공한다.                           |
-| `FS-C` IBM Carbon        | `정확한 추출 대기`                   | 가장 강한 neutral-body-text 대안이며 정확히 versioning된 값이 아직 필요하다.                     |
+| Candidate                                                     | 최종 상태               | 이유                                                                                                                                                                                                   |
+| ------------------------------------------------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `FS-BN` Atlassian semantic color + neutral message typography | `Approved — 2026-08-10` | Atlassian의 정확한 Light/Dark semantic background와 marker를 보존하고 조밀한 message title/body copy를 승인된 Spectrum neutral owner에 배정하며 field validation에는 Atlassian danger text를 유지한다. |
+| `FS-A` Adobe Spectrum S2                                      | `Not selected`          | 안정적인 contrast 근거는 보존하지만 사용자는 Atlassian의 semantic color 성격을 선호했다.                                                                                                               |
+| `FS-B` Atlassian                                              | `Superseded by FS-BN`   | 정확한 chromatic role은 `FS-BN` source로 유지하지만 colored message title은 승인된 neutral message typography로 의도적으로 교체했다.                                                                   |
+| `FS-C` IBM Carbon                                             | `Not selected`          | Neutral-typography 절제 원칙은 `FS-BN`에 참고했지만 Carbon color 값은 승인된 mapping에 들어가지 않는다.                                                                                                |
 
-아직 recommendation이나 approval은 없다. 다음 artifact는 palette strip이 아니라 실제 NosLog
-message를 비교해야 한다.
+이 role split은 출처 없는 palette hybrid가 아니다. Atlassian만 승인된 feedback chromatic을
+소유하고 이미 승인된 Spectrum S2 source가 neutral text를 계속 소유한다. 문서 `54`가 정확한
+값, 측정, component boundary 및 명시적인 사용자 승인을 기록한다.
 
 ## 제안된 `13B` domain ownership inventory
 
@@ -228,20 +237,22 @@ Carbon, GitLab Pajamas, SAP Fiori 및 Atlassian은 chart role, data type, surfac
 
 ## Decision log
 
-| ID       | Entry                                                                                                                               | Status                                          |
-| -------- | ----------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
-| `FDD-01` | 현재 Tailwind와 유사한 literal 및 CSS variable을 2.0 palette 권위가 아닌 migration 근거로 취급한다.                                 | `Observed`                                      |
-| `FDD-02` | 비색상 단서와 함께 feedback, domain 및 data ownership을 분리한 기존 승인을 보존한다.                                                | `Approved upstream`                             |
-| `FDD-03` | 작업 묶음 `13`을 별도 `13A`, `13B`, `13C` 승인 Gate로 해결한다.                                                                     | `Proposed`                                      |
-| `FDD-04` | `FS-A` Spectrum S2와 `FS-B` Atlassian을 controlled feedback specimen으로 올리고 `FS-C` Carbon은 exact extraction 후에만 참가시킨다. | `Proposed`                                      |
-| `FDD-05` | 대표 NosLog task가 visible color의 comprehension 개선을 입증할 때까지 일반 domain label을 neutral로 유지한다.                       | `Approved restraint rule에서 나온 Proposed`     |
-| `FDD-06` | UI status 및 domain color와 독립적으로 data type과 local comparison semantics에 따라 data color를 고른다.                           | `Proposed`                                      |
-| `FDD-07` | 세 owner 중 어디에도 Tailwind palette default, 남는 hue, generated ramp 또는 출처 없는 hybrid를 사용하지 않는다.                    | `Governing provenance에 따라 Rejected approach` |
-| `FDD-08` | Deprecated된 legacy Shopify Polaris token repository를 새 채택 결정의 주 source에서 제외한다.                                       | `Observed limitation`                           |
+| ID       | Entry                                                                                                                                | Status                                          |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------- |
+| `FDD-01` | 현재 Tailwind와 유사한 literal 및 CSS variable을 2.0 palette 권위가 아닌 migration 근거로 취급한다.                                  | `Observed`                                      |
+| `FDD-02` | 비색상 단서와 함께 feedback, domain 및 data ownership을 분리한 기존 승인을 보존한다.                                                 | `Approved upstream`                             |
+| `FDD-03` | 작업 묶음 `13`을 별도 `13A`, `13B`, `13C` 승인 Gate로 해결한다.                                                                      | `Proposed`                                      |
+| `FDD-04` | `FS-A` Spectrum S2와 `FS-B` Atlassian을 controlled feedback specimen으로 올리고 `FS-C` Carbon은 exact extraction 후에만 참가시킨다.  | `Completed evidence`                            |
+| `FDD-05` | 대표 NosLog task가 visible color의 comprehension 개선을 입증할 때까지 일반 domain label을 neutral로 유지한다.                        | `Approved restraint rule에서 나온 Proposed`     |
+| `FDD-06` | UI status 및 domain color와 독립적으로 data type과 local comparison semantics에 따라 data color를 고른다.                            | `Proposed`                                      |
+| `FDD-07` | 세 owner 중 어디에도 Tailwind palette default, 남는 hue, generated ramp 또는 출처 없는 hybrid를 사용하지 않는다.                     | `Governing provenance에 따라 Rejected approach` |
+| `FDD-08` | Deprecated된 legacy Shopify Polaris token repository를 새 채택 결정의 주 source에서 제외한다.                                        | `Observed limitation`                           |
+| `FDD-09` | 정확한 Atlassian feedback chromatic, 승인된 Spectrum neutral message typography 및 Atlassian danger field text의 `FS-BN`을 승인한다. | `Approved — 2026-08-10`                         |
 
-## 다음 검토 artifact
+## Controlled 검토 artifact
 
-다음 단위는 실제 content를 사용하는 controlled `13A` NosLog feedback 비교다.
+문서 `54`와 interactive artifact가 실제 content를 사용하는 controlled `13A` NosLog
+feedback 비교를 제공한다.
 
 - sync success 및 partial-failure summary
 - form validation error와 field association
@@ -254,5 +265,6 @@ Carbon, GitLab Pajamas, SAP Fiori 및 Atlassian은 chart role, data type, surfac
 - color-disabled, forced-colors 및 대표 color-vision-deficiency view
 - 측정된 text, icon, boundary 및 adjacent-color contrast
 
-Artifact는 `FS-A`, `FS-B` 및 version pin된 `FS-C` recipe를 비교한다. 사용자가 동등한 NosLog
-context를 검토하기 전에는 winner를 선택하지 않는다.
+Artifact는 `FS-A`, original `FS-B` 및 version pin된 `FS-C`를 비교 근거로 보존하고
+`FS-BN`을 승인된 `13A` 결과로 기록한다. 작업 묶음 `13`은 이제 별도 `13B`
+NOSTALGIA-domain color Gate로 진행하며 `13C`는 그 뒤까지 대기한다.

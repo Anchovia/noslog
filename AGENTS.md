@@ -123,6 +123,23 @@ Sections:
   the approved `1px` directional boundary. Do not substitute Tailwind geometry,
   interpolate new values, or revive the rejected `MG-B` Fluent and `MG-C` Atlassian
   mappings without a new user-approved gate.
+- `FS-BN · Atlassian semantic color + neutral message typography` is the approved
+  universal feedback/status mapping for NosLog 2.0. Preserve the exact Atlassian
+  Light background/marker pairs: information `#E9F2FE/#357DE8`, success
+  `#EFFFD6/#6A9A23`, warning `#FFF5DB/#E06C00`, and danger
+  `#FFECEB/#C9372C`; preserve the exact Dark pairs: information
+  `#1C2B42/#4688EC`, success `#28311B/#82B536`, warning
+  `#3A2C1F/#FBC828`, and danger `#42221F/#F15B50`. Message-container titles and
+  body copy use the approved Spectrum S2 neutral foreground (`#292929` Light,
+  `#DBDBDB` Dark). Field-error text and destructive text use Atlassian danger text
+  `#AE2E24` Light and `#FD9891` Dark; invalid-input borders, destructive borders,
+  icons, structural markers, and compact-status markers use the relevant Atlassian
+  marker. Keep explicit status text, symbol/shape, and programmatic semantics so color
+  is never the sole cue. IBM Carbon informed the neutral-typography restraint only;
+  do not import Carbon values, Tailwind values, interpolated steps, or the rejected
+  `FS-A`, original `FS-B`, or `FS-C` component mappings into this alias without a new
+  user-approved gate. This approval completes package gate `13A` only; NOSTALGIA
+  domain color (`13B`) and comparison-local data color (`13C`) remain separate.
 - Shopify Polaris and the `EXP-01` Polaris Light / Radix Dark split were measured and
   not selected as the identity source. Preserve their evidence in document `47`, but
   do not use them as downstream design or implementation targets unless the user

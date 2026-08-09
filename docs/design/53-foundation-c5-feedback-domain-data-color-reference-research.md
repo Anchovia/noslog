@@ -2,23 +2,28 @@
 
 ## Document control
 
-- Status: `Research draft — source matrix and ownership audit complete; no palette approved`
+- Status: `13A approved as FS-BN; 13B domain and 13C data-color gates pending`
 - Canonical language: English
 - Korean companion:
   [53-foundation-c5-feedback-domain-data-color-reference-research.ko.md](./53-foundation-c5-feedback-domain-data-color-reference-research.ko.md)
 - Date: 2026-08-10
+- Controlled visual comparison:
+  [document 54](./54-foundation-c5-feedback-status-source-visual-comparison.md) and
+  [interactive artifact](./specimens/c5-feedback-status-source-comparison.html)
 - Scope: Package `13` research for universal feedback/status color,
   NOSTALGIA-domain color ownership, data-visualization color ownership, and the
   collision contract between them
 - Inputs: approved documents `24`, `26`, `32`, and `34`–`52`; current NosLog
   token and component evidence; seventeen independent official accessibility,
   design-system, production-service, and domain sources
-- Excludes: approval of exact feedback, domain, or data values; component anatomy;
-  iconography and motion; production implementation; final high-fidelity pages
+- Excludes: approval of exact domain or data values; component anatomy beyond the
+  approved `FS-BN` role boundary; iconography and motion; production implementation;
+  final high-fidelity pages
 
 This document starts the fixed work package `13` without reopening any completed
-package. It records research and candidate eligibility only. A source or value is
-not approved merely because it appears below.
+package. It records the research basis and the approved `13A` result. A source or
+value is not approved merely because it appears below; only the explicit `FS-BN`
+approval record is authoritative for universal feedback/status color.
 
 ## Locked upstream authority
 
@@ -133,8 +138,9 @@ four isolated swatches.
 
 ## Exact `13A` source extraction
 
-The following values were extracted from current official published artifacts. They
-are evidence, not approved NosLog aliases.
+The following values were extracted from current official published artifacts. The
+tables remain source evidence; values become approved aliases only through the
+explicit `FS-BN` mapping recorded below and in document `54`.
 
 ### `FS-A` — Adobe Spectrum S2 semantic visual plus subtle background
 
@@ -162,10 +168,12 @@ without importing Atlassian neutrals, elevation, or brand colors.
 
 ### `FS-C` — IBM Carbon notification recipe
 
-Carbon remains a finalist architecture because it explicitly compares subtle
-semantic and inverse-neutral notifications. Exact current Light/Dark theme tokens
-must be version-pinned before it can enter a value-level specimen. No remembered or
-manually reconstructed Carbon hex values may be used.
+Carbon was version-pinned to `@carbon/themes@11.78.0`. White uses support/background
+pairs info `#0043CE/#EDF5FF`, success `#24A148/#DEFBE6`, warning
+`#F1C21B/#FCF4D6`, and error `#DA1E28/#FFF1F1`. Dark `g100` uses the shared neutral
+notification background `#262626` with support info `#4589FF`, success `#42BE65`,
+warning `#F1C21B`, and error `#FA4D56`. Document `54` records the exact extraction,
+controlled specimen, and measured limitation of the Light warning pair.
 
 ### Comparison-only evidence — Microsoft Fluent Web
 
@@ -174,16 +182,19 @@ are complete and published, but the equivalent Web status group lacks a symmetri
 information family. It remains valuable architecture evidence but is not currently
 eligible as an intact four-role adoption candidate.
 
-## Current `13A` shortlist status
+## Approved `13A` result
 
-| Candidate                | Current status                     | Reason                                                                                              |
-| ------------------------ | ---------------------------------- | --------------------------------------------------------------------------------------------------- |
-| `FS-A` Adobe Spectrum S2 | `Eligible for controlled specimen` | Complete four-role Light/Dark visual and subtle-background source; strongest provenance continuity. |
-| `FS-B` Atlassian         | `Eligible for controlled specimen` | Complete four-role Light/Dark text, icon, and background mapping.                                   |
-| `FS-C` IBM Carbon        | `Pending exact extraction`         | Strongest neutral-body-text alternative; exact versioned values still required.                     |
+| Candidate                                                     | Final status            | Reason                                                                                                                                                                                                         |
+| ------------------------------------------------------------- | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `FS-BN` Atlassian semantic color + neutral message typography | `Approved — 2026-08-10` | Preserves Atlassian's exact Light/Dark semantic backgrounds and markers, assigns dense message title/body copy to the approved Spectrum neutral owner, and retains Atlassian danger text for field validation. |
+| `FS-A` Adobe Spectrum S2                                      | `Not selected`          | Stable contrast evidence is preserved, but the user preferred Atlassian's semantic color character.                                                                                                            |
+| `FS-B` Atlassian                                              | `Superseded by FS-BN`   | Its exact chromatic roles remain the `FS-BN` source, but colored message titles were intentionally replaced by approved neutral message typography.                                                            |
+| `FS-C` IBM Carbon                                             | `Not selected`          | Its neutral-typography restraint informed `FS-BN`, but no Carbon color value enters the approved mapping.                                                                                                      |
 
-No recommendation or approval is recorded yet. The next artifact must compare real
-NosLog messages, not palette strips.
+This role split is not an unsourced palette hybrid. Atlassian exclusively owns the
+approved feedback chromatics, while the already approved Spectrum S2 source continues
+to own neutral text. Document `54` records the exact values, measurements, component
+boundary, and explicit user approval.
 
 ## Proposed `13B` domain ownership inventory
 
@@ -239,20 +250,22 @@ No exact data palette is shortlisted yet.
 
 ## Decision log
 
-| ID       | Entry                                                                                                                               | Status                                         |
-| -------- | ----------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| `FDD-01` | Treat current Tailwind-like literals and CSS variables as migration evidence, not 2.0 palette authority.                            | `Observed`                                     |
-| `FDD-02` | Preserve the already approved separation of feedback, domain, and data ownership with non-color cues.                               | `Approved upstream`                            |
-| `FDD-03` | Resolve package `13` through separate `13A`, `13B`, and `13C` approval gates.                                                       | `Proposed`                                     |
-| `FDD-04` | Advance `FS-A` Spectrum S2 and `FS-B` Atlassian to a controlled feedback specimen; admit `FS-C` Carbon only after exact extraction. | `Proposed`                                     |
-| `FDD-05` | Keep ordinary domain labels neutral until a representative NosLog task proves visible color improves comprehension.                 | `Proposed from approved restraint rule`        |
-| `FDD-06` | Select data colors by data type and local comparison semantics, independently from UI status and domain colors.                     | `Proposed`                                     |
-| `FDD-07` | Do not use Tailwind palette defaults, unused hues, generated ramps, or an unsourced hybrid for any of the three owners.             | `Rejected approach under governing provenance` |
-| `FDD-08` | Exclude the deprecated legacy Shopify Polaris token repository as the primary source for a new adoption decision.                   | `Observed limitation`                          |
+| ID       | Entry                                                                                                                                   | Status                                         |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| `FDD-01` | Treat current Tailwind-like literals and CSS variables as migration evidence, not 2.0 palette authority.                                | `Observed`                                     |
+| `FDD-02` | Preserve the already approved separation of feedback, domain, and data ownership with non-color cues.                                   | `Approved upstream`                            |
+| `FDD-03` | Resolve package `13` through separate `13A`, `13B`, and `13C` approval gates.                                                           | `Proposed`                                     |
+| `FDD-04` | Advance `FS-A` Spectrum S2 and `FS-B` Atlassian to a controlled feedback specimen; admit `FS-C` Carbon only after exact extraction.     | `Completed evidence`                           |
+| `FDD-05` | Keep ordinary domain labels neutral until a representative NosLog task proves visible color improves comprehension.                     | `Proposed from approved restraint rule`        |
+| `FDD-06` | Select data colors by data type and local comparison semantics, independently from UI status and domain colors.                         | `Proposed`                                     |
+| `FDD-07` | Do not use Tailwind palette defaults, unused hues, generated ramps, or an unsourced hybrid for any of the three owners.                 | `Rejected approach under governing provenance` |
+| `FDD-08` | Exclude the deprecated legacy Shopify Polaris token repository as the primary source for a new adoption decision.                       | `Observed limitation`                          |
+| `FDD-09` | Approve `FS-BN`: exact Atlassian feedback chromatics with approved Spectrum neutral message typography and Atlassian danger field text. | `Approved — 2026-08-10`                        |
 
-## Next review artifact
+## Controlled review artifact
 
-The next unit is a controlled `13A` NosLog feedback comparison using real content:
+Document `54` and its interactive artifact now provide the controlled `13A` NosLog
+feedback comparison using real content:
 
 - sync success and partial-failure summaries;
 - form validation error and field association;
@@ -265,5 +278,6 @@ The next unit is a controlled `13A` NosLog feedback comparison using real conten
 - color-disabled, forced-colors, and representative color-vision-deficiency views;
 - measured text, icon, boundary, and adjacent-color contrast.
 
-The artifact will compare `FS-A`, `FS-B`, and the version-pinned `FS-C` recipe. It
-will not select a winner until the user reviews the equivalent NosLog contexts.
+The artifact preserves `FS-A`, original `FS-B`, and version-pinned `FS-C` as comparison
+evidence and records `FS-BN` as the approved `13A` result. Package `13` now proceeds to
+the separate `13B` NOSTALGIA-domain color gate; `13C` remains pending after that gate.

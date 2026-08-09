@@ -1,0 +1,1281 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>NosLog 2.0 C5 Feedback Status Source Comparison</title>
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+
+            :root {
+                color-scheme: light;
+                font-family:
+                    Inter, Pretendard, "Noto Sans KR", "Noto Sans JP",
+                    system-ui, sans-serif;
+                background: #e9e9e9;
+                color: #292929;
+            }
+
+            body {
+                min-width: 0;
+                margin: 0;
+                background: #e9e9e9;
+            }
+
+            button,
+            input {
+                font: inherit;
+            }
+
+            button:not(:disabled) {
+                cursor: pointer;
+            }
+
+            code {
+                font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            }
+
+            .review-shell {
+                display: grid;
+                gap: 16px;
+                width: min(1560px, 100%);
+                margin: 0 auto;
+                padding: 16px;
+            }
+
+            .review-header,
+            .review-controls,
+            .review-note,
+            .candidate {
+                border: 1px solid #c6c6c6;
+                background: #ffffff;
+            }
+
+            .review-header,
+            .review-note {
+                padding: 16px;
+            }
+
+            .review-kicker,
+            .review-header h1,
+            .review-header p,
+            .review-note p {
+                margin: 0;
+            }
+
+            .review-kicker {
+                color: #717171;
+                font-size: 12px;
+                font-weight: 800;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+            }
+
+            .review-header h1 {
+                margin-top: 6px;
+                font-size: clamp(22px, 3vw, 34px);
+                line-height: 1.2;
+            }
+
+            .review-header p,
+            .review-note {
+                margin-top: 8px;
+                color: #505050;
+                font-size: 14px;
+                line-height: 1.65;
+            }
+
+            .review-controls {
+                display: grid;
+                gap: 10px;
+                padding: 12px;
+            }
+
+            .control-group {
+                display: grid;
+                grid-template-columns: 96px minmax(0, 1fr);
+                gap: 8px;
+                align-items: start;
+            }
+
+            .control-label {
+                padding-top: 13px;
+                color: #505050;
+                font-size: 12px;
+                font-weight: 800;
+            }
+
+            .button-row {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .review-controls button {
+                min-height: 44px;
+                border: 1px solid #c6c6c6;
+                border-radius: 4px;
+                padding: 8px 12px;
+                background: #ffffff;
+                color: #505050;
+            }
+
+            .review-controls button[aria-pressed="true"] {
+                border-color: #717171;
+                color: #292929;
+                font-weight: 800;
+                box-shadow: inset 0 -3px 0 #292929;
+            }
+
+            :where(button, input):focus-visible {
+                outline: 2px solid #000000;
+                outline-offset: 0;
+            }
+
+            .appearance[data-appearance="dark"]
+                :where(button, input):focus-visible {
+                outline-color: #ffffff;
+            }
+
+            .comparison-grid {
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 16px;
+                min-width: 0;
+            }
+
+            .proposal-grid {
+                display: grid;
+                min-width: 0;
+            }
+
+            .proposal-grid .candidate {
+                border-color: #717171;
+            }
+
+            .proposal-grid .candidate-heading {
+                background: #f8f8f8;
+            }
+
+            .proposal-grid .candidate-body {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .candidate {
+                min-width: 0;
+                overflow: clip;
+                border-radius: 8px;
+            }
+
+            .candidate-heading {
+                display: grid;
+                gap: 5px;
+                padding: 14px;
+                border-bottom: 1px solid #e1e1e1;
+            }
+
+            .candidate-heading h2,
+            .candidate-heading p {
+                margin: 0;
+            }
+
+            .candidate-heading h2 {
+                font-size: 18px;
+                line-height: 1.35;
+            }
+
+            .candidate-heading p,
+            .candidate-source {
+                color: #505050;
+                font-size: 12px;
+                line-height: 1.55;
+            }
+
+            .candidate-source {
+                display: inline-flex;
+                width: fit-content;
+                min-height: 24px;
+                align-items: center;
+                border: 1px solid #c6c6c6;
+                border-radius: 4px;
+                padding: 3px 7px;
+                font-weight: 800;
+            }
+
+            .candidate-body {
+                display: grid;
+                gap: 12px;
+                padding: 12px;
+            }
+
+            .appearance {
+                --canvas: #ffffff;
+                --surface: #f8f8f8;
+                --sunken: #e9e9e9;
+                --raised: #ffffff;
+                --fg: #292929;
+                --fg-secondary: #505050;
+                --border: #c6c6c6;
+                --divider: #e1e1e1;
+                min-width: 0;
+                overflow: clip;
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                background: var(--canvas);
+                color: var(--fg);
+            }
+
+            .appearance[data-appearance="dark"] {
+                --canvas: #111111;
+                --surface: #1b1b1b;
+                --sunken: #111111;
+                --raised: #222222;
+                --fg: #dbdbdb;
+                --fg-secondary: #afafaf;
+                --border: #444444;
+                --divider: #323232;
+                color-scheme: dark;
+            }
+
+            .appearance-header {
+                display: flex;
+                min-width: 0;
+                align-items: start;
+                justify-content: space-between;
+                gap: 8px;
+                padding: 10px 12px;
+                border-bottom: 1px solid var(--divider);
+                background: var(--surface);
+            }
+
+            .appearance-header strong {
+                font-size: 13px;
+            }
+
+            .appearance-header code {
+                color: var(--fg-secondary);
+                font-size: 10px;
+                line-height: 1.45;
+                text-align: right;
+            }
+
+            .product-fragment {
+                display: grid;
+                gap: 16px;
+                padding: 12px;
+                background: var(--canvas);
+            }
+
+            .fragment-heading {
+                display: grid;
+                gap: 3px;
+            }
+
+            .fragment-heading h3,
+            .fragment-heading p {
+                margin: 0;
+            }
+
+            .fragment-heading h3 {
+                font-size: 18px;
+                line-height: 1.3;
+            }
+
+            .fragment-heading p {
+                color: var(--fg-secondary);
+                font-size: 12px;
+                line-height: 1.5;
+            }
+
+            .message-stack {
+                display: grid;
+                gap: 8px;
+            }
+
+            .message {
+                --status-bg: var(--surface);
+                --status-marker: var(--fg);
+                --status-title: var(--fg);
+                --danger-text: var(--danger-title);
+                display: grid;
+                grid-template-columns: 24px minmax(0, 1fr);
+                gap: 9px;
+                min-width: 0;
+                border: 1px solid var(--border);
+                border-left: 3px solid var(--status-marker);
+                border-radius: 4px;
+                padding: 10px;
+                background: var(--status-bg);
+            }
+
+            .message[data-role="info"] {
+                --status-bg: var(--info-bg);
+                --status-marker: var(--info-marker);
+                --status-title: var(--info-title);
+            }
+
+            .message[data-role="success"] {
+                --status-bg: var(--success-bg);
+                --status-marker: var(--success-marker);
+                --status-title: var(--success-title);
+            }
+
+            .message[data-role="warning"] {
+                --status-bg: var(--warning-bg);
+                --status-marker: var(--warning-marker);
+                --status-title: var(--warning-title);
+            }
+
+            .message[data-role="danger"] {
+                --status-bg: var(--danger-bg);
+                --status-marker: var(--danger-marker);
+                --status-title: var(--danger-title);
+            }
+
+            .status-symbol {
+                display: inline-grid;
+                width: 22px;
+                height: 22px;
+                place-items: center;
+                border: 2px solid currentColor;
+                border-radius: 50%;
+                color: var(--status-marker);
+                font-size: 12px;
+                font-weight: 900;
+                line-height: 1;
+            }
+
+            .message-copy {
+                min-width: 0;
+            }
+
+            .message-title,
+            .message-body {
+                margin: 0;
+                overflow-wrap: anywhere;
+            }
+
+            .message-title {
+                color: var(--status-title);
+                font-size: 13px;
+                font-weight: 800;
+                line-height: 1.4;
+            }
+
+            .message-body {
+                margin-top: 2px;
+                color: var(--fg);
+                font-size: 12px;
+                line-height: 1.5;
+            }
+
+            .component-samples {
+                display: grid;
+                gap: 10px;
+            }
+
+            .sample {
+                display: grid;
+                gap: 8px;
+                border-top: 1px solid var(--divider);
+                padding-top: 12px;
+            }
+
+            .sample h4,
+            .sample p {
+                margin: 0;
+            }
+
+            .sample h4 {
+                font-size: 13px;
+            }
+
+            .field-label {
+                font-size: 12px;
+                font-weight: 700;
+            }
+
+            .field-input {
+                width: 100%;
+                min-height: 44px;
+                border: 2px solid var(--danger-marker);
+                border-radius: 4px;
+                padding: 8px 10px;
+                background: var(--raised);
+                color: var(--fg);
+            }
+
+            .field-error {
+                display: flex;
+                gap: 6px;
+                align-items: start;
+                color: var(--danger-text, var(--danger-title));
+                font-size: 12px;
+                font-weight: 700;
+                line-height: 1.45;
+            }
+
+            .field-error::before {
+                content: "!";
+                font-weight: 900;
+            }
+
+            .compact-row {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+
+            .compact-status {
+                --status-marker: var(--fg);
+                display: inline-flex;
+                min-height: 28px;
+                align-items: center;
+                gap: 5px;
+                border: 1px solid var(--border);
+                border-radius: 4px;
+                padding: 4px 7px;
+                color: var(--fg);
+                font-size: 11px;
+                font-weight: 700;
+            }
+
+            .compact-status::before {
+                width: 8px;
+                height: 8px;
+                border: 2px solid var(--status-marker);
+                border-radius: 50%;
+                content: "";
+            }
+
+            .compact-status[data-role="info"] {
+                --status-marker: var(--info-marker);
+            }
+
+            .compact-status[data-role="success"] {
+                --status-marker: var(--success-marker);
+            }
+
+            .compact-status[data-role="warning"] {
+                --status-marker: var(--warning-marker);
+            }
+
+            .compact-status[data-role="danger"] {
+                --status-marker: var(--danger-marker);
+            }
+
+            .destructive-row {
+                display: grid;
+                grid-template-columns: minmax(0, 1fr) auto;
+                gap: 10px;
+                align-items: center;
+                border: 1px solid var(--border);
+                border-left: 3px solid var(--danger-marker);
+                border-radius: 4px;
+                padding: 10px;
+                background: var(--surface);
+            }
+
+            .destructive-copy strong,
+            .destructive-copy span {
+                display: block;
+            }
+
+            .destructive-copy strong {
+                font-size: 12px;
+            }
+
+            .destructive-copy span {
+                margin-top: 2px;
+                color: var(--fg-secondary);
+                font-size: 11px;
+                line-height: 1.4;
+            }
+
+            .danger-action {
+                min-height: 40px;
+                border: 1px solid var(--danger-marker);
+                border-radius: 4px;
+                padding: 7px 10px;
+                background: transparent;
+                color: var(--danger-text, var(--danger-title));
+                font-size: 11px;
+                font-weight: 800;
+            }
+
+            .measurement {
+                display: grid;
+                gap: 6px;
+                border-top: 1px solid var(--divider);
+                padding: 10px 12px 12px;
+                background: var(--surface);
+            }
+
+            .measurement strong {
+                font-size: 11px;
+            }
+
+            .measurement-grid {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 4px 8px;
+            }
+
+            .measurement code {
+                color: var(--fg-secondary);
+                font-size: 9px;
+                line-height: 1.45;
+                overflow-wrap: anywhere;
+            }
+
+            .measurement code[data-pass="false"] {
+                color: var(--danger-title);
+                font-weight: 800;
+            }
+
+            .review-shell[data-appearance-mode="light"]
+                .appearance[data-appearance="dark"],
+            .review-shell[data-appearance-mode="dark"]
+                .appearance[data-appearance="light"] {
+                display: none;
+            }
+
+            .review-shell[data-cues="mono"] .message,
+            .review-shell[data-cues="mono"] .compact-status,
+            .review-shell[data-cues="mono"] .destructive-row,
+            .review-shell[data-cues="mono"] .field-error,
+            .review-shell[data-cues="mono"] .field-input {
+                --info-bg: var(--surface) !important;
+                --success-bg: var(--surface) !important;
+                --warning-bg: var(--surface) !important;
+                --danger-bg: var(--surface) !important;
+                --info-marker: var(--fg-secondary) !important;
+                --success-marker: var(--fg-secondary) !important;
+                --warning-marker: var(--fg-secondary) !important;
+                --danger-marker: var(--fg-secondary) !important;
+                --info-title: var(--fg) !important;
+                --success-title: var(--fg) !important;
+                --warning-title: var(--fg) !important;
+                --danger-title: var(--fg) !important;
+                --danger-text: var(--fg) !important;
+            }
+
+            .candidate[data-candidate="atlassian-neutral"]
+                .appearance[data-appearance="light"] {
+                --info-bg: #e9f2fe;
+                --info-marker: #357de8;
+                --info-title: var(--fg);
+                --success-bg: #efffd6;
+                --success-marker: #6a9a23;
+                --success-title: var(--fg);
+                --warning-bg: #fff5db;
+                --warning-marker: #e06c00;
+                --warning-title: var(--fg);
+                --danger-bg: #ffeceb;
+                --danger-marker: #c9372c;
+                --danger-title: var(--fg);
+                --danger-text: #ae2e24;
+            }
+
+            .candidate[data-candidate="atlassian-neutral"]
+                .appearance[data-appearance="dark"] {
+                --info-bg: #1c2b42;
+                --info-marker: #4688ec;
+                --info-title: var(--fg);
+                --success-bg: #28311b;
+                --success-marker: #82b536;
+                --success-title: var(--fg);
+                --warning-bg: #3a2c1f;
+                --warning-marker: #fbc828;
+                --warning-title: var(--fg);
+                --danger-bg: #42221f;
+                --danger-marker: #f15b50;
+                --danger-title: var(--fg);
+                --danger-text: #fd9891;
+            }
+
+            .candidate[data-candidate="spectrum"]
+                .appearance[data-appearance="light"] {
+                --info-bg: #e5f0fe;
+                --info-marker: #4b75ff;
+                --info-title: var(--fg);
+                --success-bg: #d7f7e1;
+                --success-marker: #079355;
+                --success-title: var(--fg);
+                --warning-bg: #ffeccf;
+                --warning-marker: #d45b00;
+                --warning-title: var(--fg);
+                --danger-bg: #ffebe8;
+                --danger-marker: #f03823;
+                --danger-title: var(--fg);
+            }
+
+            .candidate[data-candidate="spectrum"]
+                .appearance[data-appearance="dark"] {
+                --info-bg: #0c2175;
+                --info-marker: #5681ff;
+                --info-title: var(--fg);
+                --success-bg: #003326;
+                --success-marker: #099d59;
+                --success-title: var(--fg);
+                --warning-bg: #501b00;
+                --warning-marker: #e06400;
+                --warning-title: var(--fg);
+                --danger-bg: #571107;
+                --danger-marker: #fc432e;
+                --danger-title: var(--fg);
+            }
+
+            .candidate[data-candidate="atlassian"]
+                .appearance[data-appearance="light"] {
+                --info-bg: #e9f2fe;
+                --info-marker: #357de8;
+                --info-title: #1558bc;
+                --success-bg: #efffd6;
+                --success-marker: #6a9a23;
+                --success-title: #4c6b1f;
+                --warning-bg: #fff5db;
+                --warning-marker: #e06c00;
+                --warning-title: #9e4c00;
+                --danger-bg: #ffeceb;
+                --danger-marker: #c9372c;
+                --danger-title: #ae2e24;
+            }
+
+            .candidate[data-candidate="atlassian"]
+                .appearance[data-appearance="dark"] {
+                --info-bg: #1c2b42;
+                --info-marker: #4688ec;
+                --info-title: #8fb8f6;
+                --success-bg: #28311b;
+                --success-marker: #82b536;
+                --success-title: #b3df72;
+                --warning-bg: #3a2c1f;
+                --warning-marker: #fbc828;
+                --warning-title: #fbc828;
+                --danger-bg: #42221f;
+                --danger-marker: #f15b50;
+                --danger-title: #fd9891;
+            }
+
+            .candidate[data-candidate="carbon"]
+                .appearance[data-appearance="light"] {
+                --info-bg: #edf5ff;
+                --info-marker: #0043ce;
+                --info-title: var(--fg);
+                --success-bg: #defbe6;
+                --success-marker: #24a148;
+                --success-title: var(--fg);
+                --warning-bg: #fcf4d6;
+                --warning-marker: #f1c21b;
+                --warning-title: var(--fg);
+                --danger-bg: #fff1f1;
+                --danger-marker: #da1e28;
+                --danger-title: var(--fg);
+            }
+
+            .candidate[data-candidate="carbon"]
+                .appearance[data-appearance="dark"] {
+                --info-bg: #262626;
+                --info-marker: #4589ff;
+                --info-title: var(--fg);
+                --success-bg: #262626;
+                --success-marker: #42be65;
+                --success-title: var(--fg);
+                --warning-bg: #262626;
+                --warning-marker: #f1c21b;
+                --warning-title: var(--fg);
+                --danger-bg: #262626;
+                --danger-marker: #fa4d56;
+                --danger-title: var(--fg);
+            }
+
+            @media (max-width: 1120px) {
+                .comparison-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .candidate-body {
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                }
+
+                .review-shell[data-appearance-mode="light"] .candidate-body,
+                .review-shell[data-appearance-mode="dark"] .candidate-body {
+                    grid-template-columns: minmax(0, 1fr);
+                }
+            }
+
+            @media (forced-colors: active) {
+                :where(button, input):focus-visible {
+                    outline-color: Highlight;
+                }
+            }
+
+            @media (max-width: 720px) {
+                .review-shell {
+                    gap: 10px;
+                    padding: 8px;
+                }
+
+                .comparison-grid,
+                .proposal-grid .candidate-body,
+                .candidate-body {
+                    grid-template-columns: minmax(0, 1fr);
+                    gap: 10px;
+                }
+
+                .control-group {
+                    grid-template-columns: minmax(0, 1fr);
+                }
+
+                .control-label {
+                    padding-top: 0;
+                }
+
+                .review-controls button {
+                    flex: 1 1 90px;
+                }
+
+                .destructive-row {
+                    grid-template-columns: minmax(0, 1fr);
+                }
+
+                .danger-action {
+                    width: 100%;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <main
+            class="review-shell"
+            data-appearance-mode="both"
+            data-cues="color"
+        >
+            <header class="review-header">
+                <p class="review-kicker">Package 13A · Approved mapping</p>
+                <h1 data-copy="pageTitle">Feedback/status source comparison</h1>
+                <p data-copy="pageIntro">
+                    동일한 NosLog 문구 비교를 거쳐 FS-BN을 13A universal
+                    feedback/status mapping으로 승인했습니다. 나머지 세
+                    candidate는 비교 근거로 보존합니다.
+                </p>
+            </header>
+
+            <section class="review-controls" aria-label="Comparison controls">
+                <div class="control-group">
+                    <span class="control-label" data-copy="appearanceLabel"
+                        >Appearance</span
+                    >
+                    <div class="button-row">
+                        <button
+                            type="button"
+                            data-set="appearance"
+                            data-value="both"
+                            aria-pressed="true"
+                            data-copy="both"
+                        >
+                            Light + Dark
+                        </button>
+                        <button
+                            type="button"
+                            data-set="appearance"
+                            data-value="light"
+                            aria-pressed="false"
+                        >
+                            Light
+                        </button>
+                        <button
+                            type="button"
+                            data-set="appearance"
+                            data-value="dark"
+                            aria-pressed="false"
+                        >
+                            Dark
+                        </button>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <span class="control-label" data-copy="localeLabel"
+                        >Locale</span
+                    >
+                    <div class="button-row">
+                        <button
+                            type="button"
+                            data-set="locale"
+                            data-value="ko"
+                            aria-pressed="true"
+                        >
+                            한국어
+                        </button>
+                        <button
+                            type="button"
+                            data-set="locale"
+                            data-value="ja"
+                            aria-pressed="false"
+                        >
+                            日本語
+                        </button>
+                        <button
+                            type="button"
+                            data-set="locale"
+                            data-value="en"
+                            aria-pressed="false"
+                        >
+                            English
+                        </button>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <span class="control-label" data-copy="cueLabel"
+                        >Color cue</span
+                    >
+                    <div class="button-row">
+                        <button
+                            type="button"
+                            data-set="cues"
+                            data-value="color"
+                            aria-pressed="true"
+                            data-copy="colorOn"
+                        >
+                            Color on
+                        </button>
+                        <button
+                            type="button"
+                            data-set="cues"
+                            data-value="mono"
+                            aria-pressed="false"
+                            data-copy="colorOff"
+                        >
+                            Color off
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="proposal-grid"
+                aria-label="Approved feedback composition"
+            >
+                <article class="candidate" data-candidate="atlassian-neutral">
+                    <header class="candidate-heading">
+                        <span class="candidate-source">FS-BN · Approved</span>
+                        <h2>
+                            Atlassian semantic color + neutral message
+                            typography
+                        </h2>
+                        <p data-copy="atlassianNeutralSummary">
+                            Atlassian background·marker를 유지하고 message
+                            title/body는 승인된 neutral foreground를 사용합니다.
+                            Field error text는 Atlassian danger color를
+                            유지합니다.
+                        </p>
+                    </header>
+                    <div class="candidate-body"></div>
+                </article>
+            </section>
+
+            <section class="comparison-grid" aria-label="Comparison evidence">
+                <article class="candidate" data-candidate="spectrum">
+                    <header class="candidate-heading">
+                        <span class="candidate-source"
+                            >FS-A · Not selected</span
+                        >
+                        <h2>Adobe Spectrum S2</h2>
+                        <p data-copy="spectrumSummary">
+                            Semantic visual + subtle background. 제목과 본문은
+                            승인된 neutral foreground를 유지합니다.
+                        </p>
+                    </header>
+                    <div class="candidate-body"></div>
+                </article>
+
+                <article class="candidate" data-candidate="atlassian">
+                    <header class="candidate-heading">
+                        <span class="candidate-source">FS-B · Superseded</span>
+                        <h2>Atlassian</h2>
+                        <p data-copy="atlassianSummary">
+                            Semantic text + icon + background. 제목까지 상태
+                            색을 명시적으로 사용합니다.
+                        </p>
+                    </header>
+                    <div class="candidate-body"></div>
+                </article>
+
+                <article class="candidate" data-candidate="carbon">
+                    <header class="candidate-heading">
+                        <span class="candidate-source"
+                            >FS-C · Not selected</span
+                        >
+                        <h2>IBM Carbon 11.78.0</h2>
+                        <p data-copy="carbonSummary">
+                            Semantic marker + notification background.
+                            Dark에서는 네 상태 모두 같은 neutral background를
+                            사용합니다.
+                        </p>
+                    </header>
+                    <div class="candidate-body"></div>
+                </article>
+            </section>
+
+            <aside class="review-note">
+                <p data-copy="reviewNote">
+                    아이콘 문자는 비색상 단서 검증용 placeholder이며 최종
+                    iconography가 아닙니다. Contrast 표의 marker 값은 상태
+                    표시의 시각 강도 비교값이고, 명시적인 제목과 본문이 항상
+                    의미를 중복 전달합니다.
+                </p>
+            </aside>
+        </main>
+
+        <script>
+            const strings = {
+                ko: {
+                    pageTitle: "Feedback/status source 비교",
+                    pageIntro:
+                        "동일한 NosLog 문구 비교를 거쳐 FS-BN을 13A universal feedback/status mapping으로 승인했습니다. 나머지 세 candidate는 비교 근거로 보존합니다.",
+                    appearanceLabel: "Appearance",
+                    localeLabel: "Locale",
+                    cueLabel: "색상 단서",
+                    both: "Light + Dark",
+                    colorOn: "색상 켜기",
+                    colorOff: "색상 끄기",
+                    spectrumSummary:
+                        "Semantic visual + subtle background. 제목과 본문은 승인된 neutral foreground를 유지합니다.",
+                    atlassianSummary:
+                        "Semantic text + icon + background. 제목까지 상태 색을 명시적으로 사용합니다.",
+                    atlassianNeutralSummary:
+                        "Atlassian의 정확한 background·marker를 유지하고 message title/body는 승인된 neutral foreground를 사용합니다. Field error text는 Atlassian danger color를 유지합니다.",
+                    carbonSummary:
+                        "Semantic marker + notification background. Dark에서는 네 상태 모두 같은 neutral background를 사용합니다.",
+                    reviewNote:
+                        "아이콘 문자는 비색상 단서 검증용 placeholder이며 최종 iconography가 아닙니다. Contrast 표의 marker 값은 상태 표시의 시각 강도 비교값이고, 명시적인 제목과 본문이 항상 의미를 중복 전달합니다.",
+                    sectionTitle: "데이터 연동 결과",
+                    sectionBody: "2026년 8월 10일 · 최근 플레이 기록",
+                    infoTitle: "데이터 연동 안내",
+                    infoBody:
+                        "최근 플레이 기록을 불러오는 동안 이 창을 닫지 마세요.",
+                    successTitle: "기록 128건을 연동했습니다",
+                    successBody:
+                        "새 기록 12건과 갱신된 기록 116건이 반영되었습니다.",
+                    warningTitle: "일부 기록을 확인해 주세요",
+                    warningBody:
+                        "악곡 3개의 난이도 정보가 일치하지 않아 제외되었습니다.",
+                    dangerTitle: "데이터 연동에 실패했습니다",
+                    dangerBody:
+                        "세션이 만료되었습니다. 다시 로그인한 뒤 시도해 주세요.",
+                    fieldTitle: "Field validation",
+                    fieldLabel: "공개 이름",
+                    fieldValue: "NosLog Player Name That Is Too Long",
+                    fieldError: "공개 이름은 20자 이하여야 합니다.",
+                    compactTitle: "Compact status",
+                    compactInfo: "연동 중",
+                    compactSuccess: "정상",
+                    compactWarning: "검토 필요",
+                    compactDanger: "오류",
+                    destructiveTitle: "Destructive consequence",
+                    destructiveName: "동기화 기록 전체 삭제",
+                    destructiveBody: "삭제한 기록은 복구할 수 없습니다.",
+                    destructiveAction: "전체 삭제",
+                    contrastTitle: "실측 contrast",
+                },
+                ja: {
+                    pageTitle: "Feedback/status source の比較",
+                    pageIntro:
+                        "同じ NosLog の文言による比較を経て、FS-BN を 13A universal feedback/status mapping として承認しました。ほかの3候補は比較根拠として保存します。",
+                    appearanceLabel: "Appearance",
+                    localeLabel: "Locale",
+                    cueLabel: "色の手がかり",
+                    both: "Light + Dark",
+                    colorOn: "色を表示",
+                    colorOff: "色を非表示",
+                    spectrumSummary:
+                        "Semantic visual + subtle background。見出しと本文は承認済み neutral foreground を維持します。",
+                    atlassianSummary:
+                        "Semantic text + icon + background。見出しにも status color を明示的に使います。",
+                    atlassianNeutralSummary:
+                        "Atlassian の正確な background・marker を維持し、message title/body は承認済み neutral foreground を使います。Field error text は Atlassian danger color を維持します。",
+                    carbonSummary:
+                        "Semantic marker + notification background。Dark では4つの状態が同じ neutral background を使います。",
+                    reviewNote:
+                        "アイコン文字は非色覚手がかり確認用の placeholder であり、最終 iconography ではありません。状態名と本文が常に意味を重複して伝えます。",
+                    sectionTitle: "データ連携結果",
+                    sectionBody: "2026年8月10日 · 最近のプレー記録",
+                    infoTitle: "データ連携のお知らせ",
+                    infoBody:
+                        "最近のプレー記録を読み込む間、この画面を閉じないでください。",
+                    successTitle: "128件の記録を連携しました",
+                    successBody: "新規12件と更新116件を反映しました。",
+                    warningTitle: "一部の記録を確認してください",
+                    warningBody:
+                        "3曲の難易度情報が一致しなかったため除外しました。",
+                    dangerTitle: "データ連携に失敗しました",
+                    dangerBody:
+                        "セッションの有効期限が切れました。再ログインしてお試しください。",
+                    fieldTitle: "Field validation",
+                    fieldLabel: "公開名",
+                    fieldValue: "長すぎるNosLogプレイヤー名のサンプルです",
+                    fieldError: "公開名は20文字以内で入力してください。",
+                    compactTitle: "Compact status",
+                    compactInfo: "連携中",
+                    compactSuccess: "正常",
+                    compactWarning: "確認が必要",
+                    compactDanger: "エラー",
+                    destructiveTitle: "Destructive consequence",
+                    destructiveName: "同期記録をすべて削除",
+                    destructiveBody: "削除した記録は復元できません。",
+                    destructiveAction: "すべて削除",
+                    contrastTitle: "実測 contrast",
+                },
+                en: {
+                    pageTitle: "Feedback/status source comparison",
+                    pageIntro:
+                        "After comparison with identical NosLog content, FS-BN is approved as the 13A universal feedback/status mapping. The other three candidates remain comparison evidence.",
+                    appearanceLabel: "Appearance",
+                    localeLabel: "Locale",
+                    cueLabel: "Color cue",
+                    both: "Light + Dark",
+                    colorOn: "Color on",
+                    colorOff: "Color off",
+                    spectrumSummary:
+                        "Semantic visual + subtle background. Titles and body copy retain the approved neutral foreground.",
+                    atlassianSummary:
+                        "Semantic text + icon + background. Status color explicitly owns the title too.",
+                    atlassianNeutralSummary:
+                        "Keeps Atlassian's exact backgrounds and markers, uses the approved neutral foreground for message titles and body copy, and retains Atlassian danger text for field errors.",
+                    carbonSummary:
+                        "Semantic marker + notification background. Dark uses one neutral background for all four states.",
+                    reviewNote:
+                        "The character icons are placeholders for non-color-cue validation, not final iconography. Explicit titles and copy always repeat the meaning.",
+                    sectionTitle: "Data sync result",
+                    sectionBody: "August 10, 2026 · Recent play records",
+                    infoTitle: "Data sync information",
+                    infoBody:
+                        "Keep this window open while recent play records are imported.",
+                    successTitle: "128 records synced",
+                    successBody:
+                        "12 new records and 116 updated records were applied.",
+                    warningTitle: "Review some records",
+                    warningBody:
+                        "Three songs were excluded because their difficulty data did not match.",
+                    dangerTitle: "Data sync failed",
+                    dangerBody:
+                        "Your session expired. Sign in again and retry.",
+                    fieldTitle: "Field validation",
+                    fieldLabel: "Public name",
+                    fieldValue: "NosLog Player Name That Is Too Long",
+                    fieldError: "Public name must be 20 characters or fewer.",
+                    compactTitle: "Compact status",
+                    compactInfo: "Syncing",
+                    compactSuccess: "Healthy",
+                    compactWarning: "Review",
+                    compactDanger: "Error",
+                    destructiveTitle: "Destructive consequence",
+                    destructiveName: "Delete all synced records",
+                    destructiveBody: "Deleted records cannot be restored.",
+                    destructiveAction: "Delete all",
+                    contrastTitle: "Measured contrast",
+                },
+            };
+
+            const roles = [
+                { id: "info", symbol: "i" },
+                { id: "success", symbol: "✓" },
+                { id: "warning", symbol: "!" },
+                { id: "danger", symbol: "×" },
+            ];
+
+            const state = {
+                appearance: "both",
+                locale: "ko",
+                cues: "color",
+            };
+
+            let appearanceIndex = 0;
+
+            function createAppearance(mode) {
+                appearanceIndex += 1;
+                const fieldErrorId = `field-error-${appearanceIndex}`;
+                const article = document.createElement("section");
+                article.className = "appearance";
+                article.dataset.appearance = mode;
+                article.innerHTML = `
+                    <header class="appearance-header">
+                        <strong>${mode === "light" ? "Light" : "Dark"}</strong>
+                        <code></code>
+                    </header>
+                    <div class="product-fragment">
+                        <div class="fragment-heading">
+                            <h3 data-copy="sectionTitle"></h3>
+                            <p data-copy="sectionBody"></p>
+                        </div>
+                        <div class="message-stack"></div>
+                        <div class="component-samples">
+                            <section class="sample">
+                                <h4 data-copy="fieldTitle"></h4>
+                                <label class="field-label" data-copy="fieldLabel"></label>
+                                <input class="field-input" aria-invalid="true" aria-describedby="${fieldErrorId}" />
+                                <p class="field-error" id="${fieldErrorId}" data-copy="fieldError"></p>
+                            </section>
+                            <section class="sample">
+                                <h4 data-copy="compactTitle"></h4>
+                                <div class="compact-row"></div>
+                            </section>
+                            <section class="sample">
+                                <h4 data-copy="destructiveTitle"></h4>
+                                <div class="destructive-row">
+                                    <div class="destructive-copy">
+                                        <strong data-copy="destructiveName"></strong>
+                                        <span data-copy="destructiveBody"></span>
+                                    </div>
+                                    <button class="danger-action" type="button" data-copy="destructiveAction"></button>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                    <div class="measurement">
+                        <strong data-copy="contrastTitle"></strong>
+                        <div class="measurement-grid"></div>
+                    </div>`;
+
+                const messageStack = article.querySelector(".message-stack");
+                const compactRow = article.querySelector(".compact-row");
+                roles.forEach(({ id, symbol }) => {
+                    const message = document.createElement("article");
+                    message.className = "message";
+                    message.dataset.role = id;
+                    message.dataset.intendedRole =
+                        id === "danger" ? "alert" : "status";
+                    message.innerHTML = `
+                        <span class="status-symbol" aria-hidden="true">${symbol}</span>
+                        <div class="message-copy">
+                            <p class="message-title" data-copy="${id}Title"></p>
+                            <p class="message-body" data-copy="${id}Body"></p>
+                        </div>`;
+                    messageStack.append(message);
+
+                    const compact = document.createElement("span");
+                    compact.className = "compact-status";
+                    compact.dataset.role = id;
+                    compact.dataset.copy = `compact${id[0].toUpperCase()}${id.slice(1)}`;
+                    compactRow.append(compact);
+                });
+                return article;
+            }
+
+            document.querySelectorAll(".candidate-body").forEach((body) => {
+                body.append(
+                    createAppearance("light"),
+                    createAppearance("dark")
+                );
+            });
+
+            function luminance(hex) {
+                const rgb = hex
+                    .replace("#", "")
+                    .match(/.{2}/g)
+                    .map((value) => parseInt(value, 16) / 255)
+                    .map((value) =>
+                        value <= 0.04045
+                            ? value / 12.92
+                            : ((value + 0.055) / 1.055) ** 2.4
+                    );
+                return 0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2];
+            }
+
+            function toHex(color) {
+                const values = color
+                    .match(/[\d.]+/g)
+                    ?.slice(0, 3)
+                    .map(Number);
+                if (!values || values.length !== 3) return "#000000";
+                return `#${values.map((value) => Math.round(value).toString(16).padStart(2, "0")).join("")}`;
+            }
+
+            function contrast(a, b) {
+                const first = luminance(toHex(a));
+                const second = luminance(toHex(b));
+                return (
+                    (Math.max(first, second) + 0.05) /
+                    (Math.min(first, second) + 0.05)
+                );
+            }
+
+            function updateMeasurements() {
+                document
+                    .querySelectorAll(".appearance")
+                    .forEach((appearance) => {
+                        const grid =
+                            appearance.querySelector(".measurement-grid");
+                        const headerCode = appearance.querySelector(
+                            ".appearance-header code"
+                        );
+                        const candidate = appearance.closest(".candidate");
+                        grid.innerHTML = "";
+                        roles.forEach(({ id }) => {
+                            const message = appearance.querySelector(
+                                `[data-role="${id}"]`
+                            );
+                            const messageStyles = getComputedStyle(message);
+                            const marker = getComputedStyle(
+                                message.querySelector(".status-symbol")
+                            ).color;
+                            const title = getComputedStyle(
+                                message.querySelector(".message-title")
+                            ).color;
+                            const bg = messageStyles.backgroundColor;
+                            const markerRatio = contrast(marker, bg);
+                            const titleRatio = contrast(title, bg);
+                            const line = document.createElement("code");
+                            line.dataset.pass = String(titleRatio >= 4.5);
+                            line.textContent = `${id}: title ${titleRatio.toFixed(2)} · marker ${markerRatio.toFixed(2)}`;
+                            grid.append(line);
+                        });
+                        const firstMessage =
+                            appearance.querySelector(".message");
+                        const firstStyles = getComputedStyle(firstMessage);
+                        headerCode.textContent = `${candidate.dataset.candidate} · ${toHex(firstStyles.backgroundColor)} · overflow-x ${appearance.scrollWidth > appearance.clientWidth ? "detected" : "none"}`;
+                    });
+            }
+
+            function updateCopy() {
+                const copy = strings[state.locale];
+                document.documentElement.lang = state.locale;
+                document.querySelectorAll("[data-copy]").forEach((node) => {
+                    node.textContent = copy[node.dataset.copy];
+                });
+                document.querySelectorAll(".field-input").forEach((input) => {
+                    input.value = copy.fieldValue;
+                });
+            }
+
+            function render() {
+                const shell = document.querySelector(".review-shell");
+                shell.dataset.appearanceMode = state.appearance;
+                shell.dataset.cues = state.cues;
+                document.querySelectorAll("[data-set]").forEach((button) => {
+                    button.setAttribute(
+                        "aria-pressed",
+                        String(
+                            state[button.dataset.set] === button.dataset.value
+                        )
+                    );
+                });
+                updateCopy();
+                requestAnimationFrame(updateMeasurements);
+            }
+
+            document.querySelectorAll("[data-set]").forEach((button) => {
+                button.addEventListener("click", () => {
+                    state[button.dataset.set] = button.dataset.value;
+                    render();
+                });
+            });
+
+            window.addEventListener("resize", updateMeasurements);
+            render();
+        </script>
+    </body>
+</html>
