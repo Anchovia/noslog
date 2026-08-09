@@ -6,7 +6,7 @@
 
 | 필드           | 값                                                             |
 | -------------- | -------------------------------------------------------------- |
-| 상태           | `기술 검증 완료 — FI-C를 validation 대상으로 선택; gate Open`  |
+| 상태           | `종료 — FI-C 선택 후 문서 44에서 검증 및 승인`                 |
 | 날짜           | `2026-08-09`                                                   |
 | Canonical 언어 | English                                                        |
 | 결정 gate      | Source 선택 전 `C5F-04` 동일 조건 비교                         |
@@ -14,7 +14,9 @@
 
 이 문서는 [문서 42](42-foundation-c5-focus-indicator-reference-comparison.ko.md)가
 요구한 시각 비교를 기록한다. 사용자는 2026-08-09 Fluent 2 `FI-C`를 전용 measured
-validation 대상으로 선택했다. Production token, component alias, signature color,
+validation 대상으로 선택했고, 이후 승인은
+[문서 44](44-foundation-c5-fluent-focus-specimen-validation.ko.md)에 기록됐다.
+이 비교 자체는 Production token, component alias, signature color,
 feedback color, 최종 component geometry 또는 application 구현은 승인하지 않는다.
 
 ## Artifact
@@ -155,7 +157,8 @@ matrix에서 검증하지 않는다.
 ## 사용자 선택 gate
 
 사용자는 Fluent 2 `FI-C`를 선택했다.
-[문서 44](44-foundation-c5-fluent-focus-specimen-validation.ko.md)가 현재 진행 중인
-전용 validation을 기록한다. 이는 validation만 허용한다. Production token,
+[문서 44](44-foundation-c5-fluent-focus-specimen-validation.ko.md)는 완료된 native
+Tab, 실제 200% zoom 및 forced-colors 검증과 사용자의 최종 C5 focus-mapping 승인을
+기록한다. Production token,
 component alias, signature color, feedback color 또는 application 구현은 계속
 미승인이다.

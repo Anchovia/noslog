@@ -2,9 +2,9 @@
 
 ## Document Control
 
-- Status: `Research complete — C1–C4 role architecture, C5 restrained-use boundary,
-and the Spectrum S2 neutral primitive source approved; semantic mapping, measured
-validation, and signature hue pending`
+- Status: `Research complete — C1–C4 role architecture, exact Spectrum S2 neutral
+mappings, Fluent focus, and SS-08 Radix Indigo identity source approved; exact
+material dimensions and component aliases pending`
 - Canonical language: English
 - Korean companion:
   [32-foundation-color-material-candidates.ko.md](./32-foundation-color-material-candidates.ko.md)
@@ -15,10 +15,9 @@ validation, and signature hue pending`
 - Inputs: approved documents `01`–`31`, current repository color implementation,
   current `/ko` browser evidence at `390 × 844`, and the focused reference matrix
   below
-- Excludes: final semantic role assignment beyond the approved Spectrum S2 neutral
-  primitive source, final signature hue, final component styling, illustration, icon
-  grammar, motion, data-visualization palettes, Figma production screens, and
-  application implementation
+- Excludes: feedback and data-visualization colors, exact radius and shadow dimensions,
+  final identity/action component aliases and styling, illustration, icon grammar,
+  motion, Figma production screens, and application implementation
 
 This document records evidence, candidate architectures, tradeoffs, and proposed
 decision batches. Nothing marked `Proposed` is an approved NosLog 2.0 visual rule
@@ -29,6 +28,9 @@ until the user explicitly accepts it.
 - [Foundation v0.1 research brief](./24-foundation-v0.1-research-brief.md)
 - [Foundation semantic role map](./25-foundation-semantic-role-map.md)
 - [Foundation typography and layout candidates](./26-foundation-typography-layout-candidates.md)
+- [C5 Spectrum S2 semantic mapping](./34-foundation-c5-spectrum-semantic-mapping.md)
+- [C5 Fluent focus validation](./44-foundation-c5-fluent-focus-specimen-validation.md)
+- [C5 exact signature-system comparison](./45-foundation-c5-signature-system-reference-comparison.md)
 - [S1 discovery validation](./27-foundation-s1-discovery-structural-validation.md)
 - [S2 music-detail validation](./28-foundation-s2-music-detail-structural-validation.md)
 - [S3 rankings validation](./29-foundation-s3-global-rankings-structural-validation.md)
@@ -361,10 +363,11 @@ role is still pending.
 | `gray-900`            | `#131313` | `#f2f2f2` |
 | `gray-1000`           | `#000000` | `#ffffff` |
 
-This approval advances C5 but does not complete it. The next review must assign the
-source primitives to `canvas`, `surface`, `sunken`, `raised`, `overlay`, neutral
-foreground, boundary, and interaction-state roles, then verify those assignments in
-the required real-content specimen matrix.
+This source approval advanced C5 without completing it. Documents `34`–`44`
+subsequently assigned and validated the exact `M-A` surface, `F-A` foreground,
+`NB-A` boundary, `NI-A` interaction, and `FI-C` focus mappings. Signature color,
+feedback and visualization color, exact material dimensions, component aliases, and
+application implementation remain separate gates.
 
 ## Approved Restrained-Color Budget
 
@@ -417,34 +420,35 @@ must include:
 
 ## Decision Batches
 
-| Batch | Decision                                                                                             | Current status                                                            |
-| ----- | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| `C1`  | Neutral surface inventory and purpose                                                                | `Approved — C1-B`                                                         |
-| `C2`  | Restrained signature/accent eligibility and independent focus ownership                              | `Approved — C2-B as separation only; neutral interaction remains default` |
-| `C3`  | Feedback/domain/data collision policy                                                                | `Approved — semantic ownership and non-color cues`                        |
-| `C4`  | Border, radius, elevation, and scrim architecture                                                    | `Approved architecture — exact values pending C5`                         |
-| `C5`  | Restrained color-use boundary, exact Dark/Light values, and signature hue through measured specimens | `Primitive source approved; mapping, validation, and signature pending`   |
-| `C6`  | Integrated S1–S5 appearance validation and Foundation promotion                                      | `Blocked by C5`                                                           |
+| Batch | Decision                                                                                             | Current status                                                                                     |
+| ----- | ---------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `C1`  | Neutral surface inventory and purpose                                                                | `Approved — C1-B`                                                                                  |
+| `C2`  | Restrained signature/accent eligibility and independent focus ownership                              | `Approved — C2-B as separation only; neutral interaction remains default`                          |
+| `C3`  | Feedback/domain/data collision policy                                                                | `Approved — semantic ownership and non-color cues`                                                 |
+| `C4`  | Border, radius, elevation, and scrim architecture                                                    | `Approved architecture — exact values pending C5`                                                  |
+| `C5`  | Restrained color-use boundary, exact Dark/Light values, and signature hue through measured specimens | `Neutral/focus mapping and SS-08 identity source approved; material and component aliases pending` |
+| `C6`  | Integrated S1–S5 appearance validation and Foundation promotion                                      | `Blocked by C5`                                                                                    |
 
 Approval of one batch does not approve another. Exact values cannot be chosen until
 the role architecture they instantiate is approved.
 
 ## Decision Log
 
-| ID       | Entry                                                                                                                                                                                                   | Status                             |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
-| `FCM-01` | Treat the current neutral shell and token inventory as migration evidence, not the 2.0 palette.                                                                                                         | `Observed`                         |
-| `FCM-02` | Preserve complete System/Dark/Light support and Dark as the representative art-direction anchor.                                                                                                        | `Approved upstream`                |
-| `FCM-03` | Use a primitive → semantic → component-alias architecture with invariant semantic names across appearances.                                                                                             | `Proposed`                         |
-| `FCM-04` | Adopt the purpose-complete C1-B neutral surface inventory.                                                                                                                                              | `Approved — 2026-08-08`            |
-| `FCM-05` | Separate possible signature/accent ownership from focus through C2-B without requiring color on ordinary interactions.                                                                                  | `Approved; clarified — 2026-08-08` |
-| `FCM-06` | Preserve NOSTALGIA domain colors under separate roles and require non-color cues and collision review.                                                                                                  | `Approved — 2026-08-08`            |
-| `FCM-07` | Use R-B's three purpose radius roles plus full rounding, with exact values deferred.                                                                                                                    | `Approved — 2026-08-08`            |
-| `FCM-08` | Keep shadows off default flat content and reserve them for justified raised, overlay, or scroll-boundary relationships.                                                                                 | `Approved — 2026-08-08`            |
-| `FCM-09` | Defer semantic role mapping, signature hue, and visualization colors until approved-role specimens; FCM-12 resolves only the neutral primitive source.                                                  | `Proposed remainder`               |
-| `FCM-10` | Make neutral treatment the default for containers, links, filters, selection, and ordinary domain labels; reserve signature color first for identity and only separately approved rare primary actions. | `Approved — 2026-08-08`            |
-| `FCM-11` | Reject the over-accented signature-color comparison that colored selected containers, filter state, links, and multiple competing elements. It is not guide or production authority.                    | `Rejected — 2026-08-08`            |
-| `FCM-12` | Adopt the published Adobe Spectrum S2 grayscale values as the sole Dark/Light neutral primitive source; semantic mapping and validation remain pending.                                                 | `Approved — 2026-08-08`            |
+| ID       | Entry                                                                                                                                                                                                   | Status                                                                                                   |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `FCM-01` | Treat the current neutral shell and token inventory as migration evidence, not the 2.0 palette.                                                                                                         | `Observed`                                                                                               |
+| `FCM-02` | Preserve complete System/Dark/Light support and Dark as the representative art-direction anchor.                                                                                                        | `Approved upstream`                                                                                      |
+| `FCM-03` | Use a primitive → semantic → component-alias architecture with invariant semantic names across appearances.                                                                                             | `Proposed`                                                                                               |
+| `FCM-04` | Adopt the purpose-complete C1-B neutral surface inventory.                                                                                                                                              | `Approved — 2026-08-08`                                                                                  |
+| `FCM-05` | Separate possible signature/accent ownership from focus through C2-B without requiring color on ordinary interactions.                                                                                  | `Approved; clarified — 2026-08-08`                                                                       |
+| `FCM-06` | Preserve NOSTALGIA domain colors under separate roles and require non-color cues and collision review.                                                                                                  | `Approved — 2026-08-08`                                                                                  |
+| `FCM-07` | Use R-B's three purpose radius roles plus full rounding, with exact values deferred.                                                                                                                    | `Approved — 2026-08-08`                                                                                  |
+| `FCM-08` | Keep shadows off default flat content and reserve them for justified raised, overlay, or scroll-boundary relationships.                                                                                 | `Approved — 2026-08-08`                                                                                  |
+| `FCM-09` | Defer semantic role mapping, signature hue, and visualization colors until approved-role specimens; FCM-12 resolves only the neutral primitive source.                                                  | `Partially superseded; signature resolved in document 47; visualization and material remainder proposed` |
+| `FCM-10` | Make neutral treatment the default for containers, links, filters, selection, and ordinary domain labels; reserve signature color first for identity and only separately approved rare primary actions. | `Approved — 2026-08-08`                                                                                  |
+| `FCM-11` | Reject the over-accented signature-color comparison that colored selected containers, filter state, links, and multiple competing elements. It is not guide or production authority.                    | `Rejected — 2026-08-08`                                                                                  |
+| `FCM-12` | Adopt the published Adobe Spectrum S2 grayscale values as the sole Dark/Light neutral primitive source; this source approval does not itself approve a semantic mapping.                                | `Approved — 2026-08-08; mapping approved later in documents 34–44`                                       |
+| `FCM-13` | Adopt intact `SS-08` Radix Colors Indigo as the NosLog identity source while keeping exact identity/action component aliases and rare-action eligibility as later gates.                                | `Approved — 2026-08-10`                                                                                  |
 
 ## Approved First Review — 2026-08-08
 

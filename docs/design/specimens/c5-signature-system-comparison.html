@@ -1,0 +1,1591 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>NosLog 2.0 C5 Signature System Comparison</title>
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+
+            :root {
+                color-scheme: light;
+                font-family:
+                    Inter, Pretendard, "Noto Sans KR", "Noto Sans JP",
+                    system-ui, sans-serif;
+                background: #e9e9e9;
+                color: #292929;
+            }
+
+            body {
+                min-width: 0;
+                margin: 0;
+                background: #e9e9e9;
+            }
+
+            button {
+                font: inherit;
+                cursor: pointer;
+            }
+
+            code {
+                font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            }
+
+            .review-shell {
+                display: grid;
+                gap: 16px;
+                width: min(1480px, 100%);
+                margin: 0 auto;
+                padding: 16px;
+            }
+
+            .review-header,
+            .review-controls,
+            .review-note,
+            .selection-tray {
+                border: 1px solid #c6c6c6;
+                background: #ffffff;
+            }
+
+            .review-header,
+            .review-note,
+            .selection-tray {
+                padding: 16px;
+            }
+
+            .review-header h1,
+            .review-header p,
+            .review-note p,
+            .selection-tray p {
+                margin: 0;
+            }
+
+            .review-header h1 {
+                font-size: clamp(20px, 2vw, 30px);
+                line-height: 1.25;
+            }
+
+            .review-header p,
+            .review-note,
+            .selection-tray {
+                margin-top: 8px;
+                color: #505050;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+
+            .review-kicker {
+                color: #717171;
+                font-size: 12px;
+                font-weight: 750;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+            }
+
+            .review-controls {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                padding: 10px;
+            }
+
+            .review-controls button,
+            .pin-button {
+                min-height: 44px;
+                border: 1px solid #c6c6c6;
+                border-radius: 0;
+                padding: 8px 12px;
+                background: #ffffff;
+                color: #505050;
+            }
+
+            .review-controls button[aria-pressed="true"],
+            .pin-button[aria-pressed="true"] {
+                border-color: #717171;
+                color: #292929;
+                font-weight: 750;
+            }
+
+            :where(button, a) {
+                position: relative;
+                isolation: isolate;
+            }
+
+            :where(button, a):focus-visible {
+                outline: none;
+            }
+
+            :where(button, a):focus-visible::after {
+                position: absolute;
+                z-index: 4;
+                inset: -2px;
+                border: 2px solid #000000;
+                content: "";
+                pointer-events: none;
+            }
+
+            .selection-tray {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 8px 12px;
+                margin-top: 0;
+            }
+
+            .selection-tray strong {
+                color: #292929;
+            }
+
+            .selection-list {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 6px;
+                margin: 0;
+                padding: 0;
+                list-style: none;
+            }
+
+            .selection-list li {
+                border: 1px solid #c6c6c6;
+                padding: 4px 7px;
+                color: #292929;
+                font-size: 12px;
+            }
+
+            .candidate-grid {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 16px;
+                min-width: 0;
+            }
+
+            .candidate-card {
+                min-width: 0;
+                border: 1px solid #c6c6c6;
+                background: #ffffff;
+            }
+
+            .candidate-card[data-pinned="true"] {
+                border-color: #717171;
+                box-shadow: inset 4px 0 0 #292929;
+            }
+
+            .candidate-header {
+                display: grid;
+                grid-template-columns: minmax(0, 1fr) auto;
+                gap: 12px;
+                align-items: start;
+                padding: 14px;
+                border-bottom: 1px solid #e1e1e1;
+            }
+
+            .candidate-title,
+            .candidate-meta,
+            .candidate-limit {
+                margin: 0;
+            }
+
+            .candidate-title {
+                font-size: 17px;
+                line-height: 1.35;
+            }
+
+            .candidate-meta,
+            .candidate-limit {
+                margin-top: 4px;
+                color: #505050;
+                font-size: 12px;
+                line-height: 1.5;
+                overflow-wrap: anywhere;
+            }
+
+            .candidate-limit {
+                padding: 10px 14px 14px;
+                border-top: 1px solid #e1e1e1;
+            }
+
+            .theme-pair {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                min-width: 0;
+            }
+
+            .theme-panel {
+                --canvas: #ffffff;
+                --surface: #f8f8f8;
+                --raised: #ffffff;
+                --text: #292929;
+                --subdued: #505050;
+                --interactive: #131313;
+                --divider: #e1e1e1;
+                --border: #dadada;
+                --border-strong: #717171;
+                --neutral-hover: #e9e9e9;
+                --focus: #000000;
+
+                min-width: 0;
+                padding: 14px;
+                background: var(--canvas);
+                color: var(--text);
+            }
+
+            .theme-panel + .theme-panel {
+                border-left: 1px solid #e1e1e1;
+            }
+
+            .theme-panel[data-theme="dark"] {
+                color-scheme: dark;
+                --canvas: #111111;
+                --surface: #1b1b1b;
+                --raised: #222222;
+                --text: #dbdbdb;
+                --subdued: #afafaf;
+                --interactive: #f2f2f2;
+                --divider: #323232;
+                --border: #393939;
+                --border-strong: #8a8a8a;
+                --neutral-hover: #2c2c2c;
+                --focus: #ffffff;
+            }
+
+            .theme-panel :where(button, a):focus-visible::after {
+                border-color: var(--focus);
+            }
+
+            .theme-label {
+                display: flex;
+                justify-content: space-between;
+                gap: 8px;
+                margin-bottom: 10px;
+                color: var(--subdued);
+                font-size: 11px;
+                font-weight: 750;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+            }
+
+            .identity-line {
+                display: flex;
+                align-items: center;
+                gap: 9px;
+                min-width: 0;
+                padding-bottom: 12px;
+                border-bottom: 1px solid var(--divider);
+            }
+
+            .mark-tile {
+                position: relative;
+                flex: none;
+                width: 42px;
+                height: 42px;
+                overflow: hidden;
+                background: #111111;
+            }
+
+            .mark-tile::before {
+                position: absolute;
+                inset: 0 auto 0 0;
+                width: 4px;
+                background: var(--candidate-default);
+                content: "";
+            }
+
+            .mark-tile img {
+                display: block;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .identity-copy {
+                min-width: 0;
+            }
+
+            .identity-copy strong,
+            .identity-copy span {
+                display: block;
+                overflow-wrap: anywhere;
+            }
+
+            .identity-copy strong {
+                font-size: 14px;
+            }
+
+            .identity-copy span {
+                margin-top: 2px;
+                color: var(--subdued);
+                font-size: 11px;
+            }
+
+            .content-sample {
+                display: grid;
+                gap: 9px;
+                padding: 12px 0;
+            }
+
+            .song-row {
+                display: grid;
+                grid-template-columns: minmax(0, 1fr) auto;
+                gap: 8px;
+                align-items: center;
+                padding: 9px;
+                background: var(--surface);
+            }
+
+            .song-row strong,
+            .song-row span {
+                display: block;
+            }
+
+            .song-row strong {
+                font-size: 12px;
+            }
+
+            .song-row span,
+            .neutral-link {
+                color: var(--subdued);
+                font-size: 11px;
+            }
+
+            .neutral-link {
+                display: inline-flex;
+                min-height: 44px;
+                align-items: center;
+                color: var(--interactive);
+                text-decoration: underline;
+                text-underline-offset: 0.22em;
+            }
+
+            .difficulty {
+                border: 1px solid var(--border-strong);
+                padding: 3px 5px;
+                color: var(--text);
+                font-size: 10px;
+                font-weight: 750;
+            }
+
+            .action-row {
+                display: grid;
+                grid-template-columns: minmax(0, 1fr) auto;
+                gap: 10px;
+                align-items: center;
+            }
+
+            .action-note {
+                color: var(--subdued);
+                font-size: 10px;
+                line-height: 1.45;
+            }
+
+            .signature-action {
+                min-height: 44px;
+                border: 0;
+                border-radius: 0;
+                padding: 8px 11px;
+                background: var(--candidate-default);
+                color: var(--candidate-on);
+                font-size: 12px;
+                font-weight: 750;
+            }
+
+            .signature-action:hover {
+                background: var(--candidate-hover);
+                color: var(--candidate-hover-on, var(--candidate-on));
+            }
+
+            .signature-action:active {
+                background: var(--candidate-pressed);
+                color: var(--candidate-pressed-on, var(--candidate-on));
+                box-shadow: inset 0 0 0 1px
+                    var(--candidate-pressed-border, transparent);
+            }
+
+            .signature-action[data-action-eligible="false"] {
+                border: 1px solid var(--border);
+                background: transparent;
+                color: var(--interactive);
+            }
+
+            .state-strip {
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 5px;
+                padding-top: 11px;
+                border-top: 1px solid var(--divider);
+            }
+
+            .state-chip {
+                min-width: 0;
+            }
+
+            .state-swatch {
+                height: 18px;
+                border: 1px solid var(--border);
+                background: var(--swatch);
+            }
+
+            .state-swatch[data-missing="true"] {
+                border-style: dashed;
+                background: transparent;
+            }
+
+            .state-chip span,
+            .contrast-line {
+                display: block;
+                margin-top: 4px;
+                color: var(--subdued);
+                font-size: 9px;
+                line-height: 1.35;
+                overflow-wrap: anywhere;
+            }
+
+            .contrast-line {
+                margin-top: 9px;
+                font-variant-numeric: tabular-nums;
+            }
+
+            .section-heading {
+                display: grid;
+                gap: 5px;
+                margin: 8px 0 0;
+            }
+
+            .section-heading h2,
+            .section-heading p {
+                margin: 0;
+            }
+
+            .section-heading h2 {
+                font-size: clamp(18px, 1.8vw, 24px);
+                line-height: 1.3;
+            }
+
+            .section-heading p {
+                color: #505050;
+                font-size: 13px;
+                line-height: 1.6;
+            }
+
+            .audit-summary {
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                border: 1px solid #c6c6c6;
+                background: #ffffff;
+            }
+
+            .audit-stat {
+                min-width: 0;
+                padding: 14px;
+            }
+
+            .audit-stat + .audit-stat {
+                border-left: 1px solid #e1e1e1;
+            }
+
+            .audit-stat strong,
+            .audit-stat span {
+                display: block;
+            }
+
+            .audit-stat strong {
+                color: #292929;
+                font-size: 22px;
+            }
+
+            .audit-stat span {
+                margin-top: 4px;
+                color: #505050;
+                font-size: 12px;
+                line-height: 1.5;
+            }
+
+            .reference-grid {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 16px;
+                min-width: 0;
+            }
+
+            .reference-card {
+                min-width: 0;
+                border: 1px solid #c6c6c6;
+                background: #ffffff;
+            }
+
+            .reference-header {
+                display: grid;
+                gap: 5px;
+                padding: 14px;
+                border-bottom: 1px solid #e1e1e1;
+            }
+
+            .reference-header h3,
+            .reference-header p {
+                margin: 0;
+            }
+
+            .reference-header h3 {
+                font-size: 16px;
+                line-height: 1.35;
+            }
+
+            .reference-header p {
+                color: #505050;
+                font-size: 12px;
+                line-height: 1.5;
+            }
+
+            .reference-roles {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                min-width: 0;
+            }
+
+            .role-sample {
+                min-width: 0;
+                padding: 14px;
+                background: var(--role-canvas, #ffffff);
+                color: var(--role-text, #292929);
+            }
+
+            .role-sample + .role-sample {
+                border-left: 1px solid #e1e1e1;
+            }
+
+            .role-sample[data-missing="true"] {
+                background-image: repeating-linear-gradient(
+                    135deg,
+                    transparent 0,
+                    transparent 8px,
+                    rgba(0, 0, 0, 0.04) 8px,
+                    rgba(0, 0, 0, 0.04) 16px
+                );
+            }
+
+            .role-label,
+            .role-value,
+            .role-note {
+                display: block;
+                overflow-wrap: anywhere;
+            }
+
+            .role-label {
+                color: inherit;
+                font-size: 10px;
+                font-weight: 750;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+            }
+
+            .role-chip {
+                display: grid;
+                min-height: 72px;
+                margin-top: 9px;
+                place-items: center;
+                border: 1px solid var(--role-border, transparent);
+                background: var(--role-fill, transparent);
+                color: var(--role-on, #292929);
+                font-size: 13px;
+                font-weight: 750;
+                text-align: center;
+            }
+
+            .role-chip[data-split="true"] {
+                background: linear-gradient(
+                    90deg,
+                    var(--role-fill) 0 50%,
+                    var(--role-fill-secondary) 50% 100%
+                );
+            }
+
+            .role-value {
+                margin-top: 7px;
+                color: inherit;
+                font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+                font-size: 10px;
+            }
+
+            .role-note {
+                margin-top: 4px;
+                color: inherit;
+                font-size: 10px;
+                line-height: 1.45;
+                opacity: 0.78;
+            }
+
+            .reference-limit {
+                margin: 0;
+                padding: 11px 14px 14px;
+                border-top: 1px solid #e1e1e1;
+                color: #505050;
+                font-size: 11px;
+                line-height: 1.55;
+            }
+
+            .reference-limit strong {
+                color: #292929;
+            }
+
+            .visually-hidden {
+                position: absolute;
+                width: 1px;
+                height: 1px;
+                padding: 0;
+                margin: -1px;
+                overflow: hidden;
+                clip: rect(0, 0, 0, 0);
+                white-space: nowrap;
+                border: 0;
+            }
+
+            @media (max-width: 980px) {
+                .candidate-grid,
+                .reference-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+
+            @media (max-width: 560px) {
+                .review-shell {
+                    padding: 8px;
+                }
+
+                .candidate-header,
+                .theme-pair,
+                .audit-summary,
+                .reference-roles {
+                    grid-template-columns: 1fr;
+                }
+
+                .theme-panel + .theme-panel {
+                    border-top: 1px solid #e1e1e1;
+                    border-left: 0;
+                }
+
+                .audit-stat + .audit-stat,
+                .role-sample + .role-sample {
+                    border-top: 1px solid #e1e1e1;
+                    border-left: 0;
+                }
+
+                .pin-button {
+                    width: 100%;
+                }
+            }
+
+            @media (forced-colors: active) {
+                :where(button, a):focus-visible::after {
+                    border-color: Highlight;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <main class="review-shell">
+            <header class="review-header">
+                <p class="review-kicker">
+                    C5 · reference expansion · no color approved
+                </p>
+                <h1>정확한 시스템 10개 + 비파랑 역할 레퍼런스 10개</h1>
+                <p>
+                    기존 파란 계열 비교는 모두 보존했습니다. 아래 두 번째 영역은
+                    정보 전달 서비스에서 비파랑이 실제로 맡는
+                    identity·action·field 역할을 분리해 보여줍니다. Dark나 상태
+                    값이 없으면 만들지 않고 누락으로 표시합니다.
+                </p>
+            </header>
+
+            <section class="section-heading" aria-labelledby="exact-heading">
+                <p class="review-kicker">A · preserved exact systems</p>
+                <h2 id="exact-heading">기존 정확한 Light/Dark 시스템 10개</h2>
+                <p>
+                    공식 토큰의 채움·전경·상태를 한 소스 단위로 비교합니다. 이
+                    영역의 후보와 기존 검증 결과는 폐기되지 않았습니다.
+                </p>
+            </section>
+
+            <nav class="review-controls" aria-label="정확한 시스템 후보 필터">
+                <button type="button" data-filter="all" aria-pressed="true">
+                    전체 10개
+                </button>
+                <button type="button" data-filter="blue" aria-pressed="false">
+                    Blue 7개
+                </button>
+                <button type="button" data-filter="indigo" aria-pressed="false">
+                    Indigo 1개
+                </button>
+                <button
+                    type="button"
+                    data-filter="achromatic"
+                    aria-pressed="false"
+                >
+                    Achromatic 1개
+                </button>
+                <button
+                    type="button"
+                    data-filter="generic"
+                    aria-pressed="false"
+                >
+                    Generic-control 1개
+                </button>
+            </nav>
+
+            <section class="selection-tray" aria-live="polite">
+                <strong>검토 후보</strong>
+                <p id="selection-message">
+                    최대 3개까지 표시해 직접 비교할 수 있습니다.
+                </p>
+                <ul class="selection-list" id="selection-list"></ul>
+            </section>
+
+            <section
+                class="candidate-grid"
+                id="candidate-grid"
+                aria-label="정확한 시스템 후보"
+            ></section>
+
+            <aside class="review-note">
+                <p>
+                    <strong>고정 조건:</strong> surface·text·boundary·neutral
+                    state는 Adobe Spectrum S2 승인값, focus-visible은 Light 검정
+                    / Dark 흰색 Fluent 매핑입니다. 후보색은 일반 링크, 필터,
+                    선택 행, 난이도, 카드 외곽선에 사용되지 않습니다. Primer는
+                    완전한 일반 액션 상태군이 없어 아이덴티티 바만 색을
+                    사용합니다.
+                </p>
+            </aside>
+
+            <section
+                class="section-heading"
+                aria-labelledby="reference-heading"
+            >
+                <p class="review-kicker">B · information-service color audit</p>
+                <h2 id="reference-heading">
+                    비파랑 및 역할 분리 레퍼런스 10개
+                </h2>
+                <p>
+                    아래 카드는 완성 팔레트 후보가 아니라 role evidence입니다.
+                    파랑이 정보 interaction에 반복되는 이유와, 비파랑 identity가
+                    안전해지는 조건을 함께 보여줍니다.
+                </p>
+            </section>
+
+            <section class="audit-summary" aria-label="정보 서비스 조사 요약">
+                <div class="audit-stat">
+                    <strong>17 / 18</strong>
+                    <span
+                        >주요 읽기 필드를 neutral 또는 near-neutral로 유지</span
+                    >
+                </div>
+                <div class="audit-stat">
+                    <strong>10 / 18</strong>
+                    <span
+                        >표준 link·progressive·primary interaction에 blue
+                        사용</span
+                    >
+                </div>
+                <div class="audit-stat">
+                    <strong>7 / 18</strong>
+                    <span
+                        >neutral reading field 위에 제한된 non-blue identity
+                        사용</span
+                    >
+                </div>
+            </section>
+
+            <section
+                class="reference-grid"
+                id="reference-grid"
+                aria-label="비파랑 및 역할 분리 레퍼런스"
+            ></section>
+
+            <aside class="review-note">
+                <p>
+                    <strong>읽는 법:</strong> Material 3만 추가 조사에서 정확한
+                    Light/Dark primary·on-primary 기본 쌍을 공개합니다. 그래도
+                    web hover/pressed 상태 근거가 아직 불완전해 action 승인이
+                    아닙니다. Parliament·Ubuntu·Stack·Reuters는 identity 근거,
+                    GOV.UK·NHS는 green action 근거, FT는 editorial field
+                    근거이며 서로 섞어 하나의 팔레트를 만들 수 없습니다.
+                </p>
+            </aside>
+        </main>
+
+        <template id="candidate-template">
+            <article class="candidate-card">
+                <header class="candidate-header">
+                    <div>
+                        <h2 class="candidate-title"></h2>
+                        <p class="candidate-meta"></p>
+                    </div>
+                    <button
+                        class="pin-button"
+                        type="button"
+                        aria-pressed="false"
+                    >
+                        비교 표시
+                    </button>
+                </header>
+                <div class="theme-pair"></div>
+                <p class="candidate-limit"></p>
+            </article>
+        </template>
+
+        <template id="reference-template">
+            <article class="reference-card">
+                <header class="reference-header">
+                    <h3 class="reference-title"></h3>
+                    <p class="reference-meta"></p>
+                </header>
+                <div class="reference-roles"></div>
+                <p class="reference-limit"></p>
+            </article>
+        </template>
+
+        <script>
+            const candidates = [
+                {
+                    id: "SS-01",
+                    name: "Adobe Spectrum S2",
+                    group: "blue",
+                    release: "@adobe/spectrum-tokens 14.15.0",
+                    role: "accent-background-color-*",
+                    limit: "중립 소스 승인과 accent 승인은 별개입니다.",
+                    light: {
+                        d: "#3B63FB",
+                        h: "#274DEA",
+                        p: "#274DEA",
+                        on: "#FFFFFF",
+                    },
+                    dark: {
+                        d: "#4069FD",
+                        h: "#345BF8",
+                        p: "#345BF8",
+                        on: "#FFFFFF",
+                    },
+                },
+                {
+                    id: "SS-02",
+                    name: "Microsoft Fluent 2",
+                    group: "blue",
+                    release: "@fluentui/tokens 1.0.0-alpha.23",
+                    role: "colorBrandBackground*",
+                    limit: "보수적인 단색 파랑이며 일반 기업 UI 연상이 강합니다.",
+                    light: {
+                        d: "#0F6CBD",
+                        h: "#115EA3",
+                        p: "#0C3B5E",
+                        on: "#FFFFFF",
+                    },
+                    dark: {
+                        d: "#115EA3",
+                        h: "#0F6CBD",
+                        p: "#0C3B5E",
+                        on: "#FFFFFF",
+                    },
+                },
+                {
+                    id: "SS-03",
+                    name: "IBM Carbon",
+                    group: "blue",
+                    release: "@carbon/themes 11.78.0",
+                    role: "Button primary",
+                    limit: "테마 간 같은 기본값이며 IBM/기술 제품 인상이 강합니다.",
+                    light: {
+                        d: "#0F62FE",
+                        h: "#0050E6",
+                        p: "#002D9C",
+                        on: "#FFFFFF",
+                    },
+                    dark: {
+                        d: "#0F62FE",
+                        h: "#0050E6",
+                        p: "#002D9C",
+                        on: "#FFFFFF",
+                    },
+                },
+                {
+                    id: "SS-04",
+                    name: "GitHub Primer",
+                    group: "blue",
+                    release: "@primer/primitives 11.10.0",
+                    role: "bgColor-accent-emphasis",
+                    limit: "아이덴티티 근거만 완전합니다. 일반 채움 액션 상태는 합성하지 않습니다.",
+                    actionEligible: false,
+                    light: {
+                        d: "#0969DA",
+                        h: null,
+                        p: null,
+                        on: "#FFFFFF",
+                    },
+                    dark: {
+                        d: "#1F6FEB",
+                        h: null,
+                        p: null,
+                        on: "#FFFFFF",
+                    },
+                },
+                {
+                    id: "SS-05",
+                    name: "Atlassian",
+                    group: "blue",
+                    release: "@atlaskit/tokens 16.5.0",
+                    role: "background.brand.bold*",
+                    limit: "Dark의 밝은 cyan-blue가 왼손·차트 cyan과 경쟁할 수 있습니다.",
+                    light: {
+                        d: "#1868DB",
+                        h: "#1558BC",
+                        p: "#144794",
+                        on: "#FFFFFF",
+                    },
+                    dark: {
+                        d: "#669DF1",
+                        h: "#8FB8F6",
+                        p: "#ADCBFB",
+                        on: "#1F1F21",
+                    },
+                },
+                {
+                    id: "SS-06",
+                    name: "PatternFly 6",
+                    group: "blue",
+                    release: "@patternfly/patternfly 6.6.1",
+                    role: "Button primary → brand",
+                    limit: "Dark의 매우 밝은 채움은 조용한 셸에서 면적 무게가 큽니다.",
+                    light: {
+                        d: "#0066CC",
+                        h: "#004D99",
+                        p: "#004D99",
+                        on: "#FFFFFF",
+                    },
+                    dark: {
+                        d: "#92C5F9",
+                        h: "#B9DAFC",
+                        p: "#B9DAFC",
+                        on: "#1F1F1F",
+                    },
+                },
+                {
+                    id: "SS-07",
+                    name: "SAP Horizon",
+                    group: "blue",
+                    release: "@sap-theming/theming-base-content 11.36.5",
+                    role: "Emphasized Button",
+                    limit: "active는 단순한 어두운 스와치가 아니라 구조적 반전입니다.",
+                    light: {
+                        d: "#0070F2",
+                        h: "#0064D9",
+                        p: "#FFFFFF",
+                        on: "#FFFFFF",
+                        pon: "#0064D9",
+                        pb: "#0064D9",
+                    },
+                    dark: {
+                        d: "#0070F2",
+                        h: "#0064D9",
+                        p: "#213131",
+                        on: "#FFFFFF",
+                        hon: "#F5F6F7",
+                        pon: "#4DB1FF",
+                        pb: "#4DB1FF",
+                    },
+                },
+                {
+                    id: "SS-08",
+                    name: "Radix Colors Indigo",
+                    group: "indigo",
+                    release: "@radix-ui/colors 3.0.0",
+                    role: "Indigo 9 / 10 solid roles",
+                    limit: "Discord·Real·Twitch 및 보라 도메인 색과의 분리가 필요합니다.",
+                    light: {
+                        d: "#3E63DD",
+                        h: "#3358D4",
+                        p: "#3358D4",
+                        on: "#FFFFFF",
+                    },
+                    dark: {
+                        d: "#3E63DD",
+                        h: "#5472E4",
+                        p: "#5472E4",
+                        on: "#FFFFFF",
+                    },
+                },
+                {
+                    id: "SS-09",
+                    name: "Shopify Polaris",
+                    group: "achromatic",
+                    release: "@shopify/polaris-tokens 9.4.2",
+                    role: "color-bg-fill-brand*",
+                    limit: "도메인 색 충돌은 가장 적지만 유채색 시그니처를 만들지 않습니다.",
+                    light: {
+                        d: "#303030",
+                        h: "#1A1A1A",
+                        p: "#1A1A1A",
+                        on: "#FFFFFF",
+                    },
+                    dark: {
+                        d: "#FFFFFF",
+                        h: "#F3F3F3",
+                        p: "#F7F7F7",
+                        on: "#303030",
+                    },
+                },
+                {
+                    id: "SS-10",
+                    name: "MUI default",
+                    group: "generic",
+                    release: "@mui/material 9.3.1",
+                    role: "Primary contained Button",
+                    limit: "스타터 템플릿 인상이 가장 강해 채택 위험을 보여주는 대조군입니다.",
+                    light: {
+                        d: "#1976D2",
+                        h: "#1565C0",
+                        p: "#1565C0",
+                        on: "#FFFFFF",
+                    },
+                    dark: {
+                        d: "#90CAF9",
+                        h: "#42A5F5",
+                        p: "#42A5F5",
+                        on: "rgba(0,0,0,.87)",
+                    },
+                },
+            ];
+
+            const references = [
+                {
+                    id: "NB-01",
+                    name: "Material 3 baseline purple",
+                    meta: "공식 exact Light/Dark primary · on-primary",
+                    status: "정확한 dual default role · web hover/pressed gate 불완전",
+                    roles: [
+                        {
+                            label: "Light primary",
+                            fill: "#6750A4",
+                            on: "#FFFFFF",
+                            value: "#6750A4 / #FFFFFF",
+                            note: "published primary / onPrimary",
+                            chipText: "Primary",
+                        },
+                        {
+                            label: "Dark primary",
+                            fill: "#D0BCFF",
+                            on: "#381E72",
+                            canvas: "#111111",
+                            text: "#DBDBDB",
+                            value: "#D0BCFF / #381E72",
+                            note: "published primary / onPrimary",
+                            chipText: "Primary",
+                        },
+                    ],
+                },
+                {
+                    id: "NB-02",
+                    name: "UK Parliament",
+                    meta: "비파랑 identity + blue standard interaction",
+                    status: "identity role reference · complete Dark mapping 없음",
+                    roles: [
+                        {
+                            label: "Identity",
+                            fill: "#373151",
+                            on: "#FFFFFF",
+                            value: "Deep Purple #373151",
+                            note: "UK Parliament main brand",
+                            chipText: "Identity",
+                        },
+                        {
+                            label: "Interaction",
+                            fill: "#3569CC",
+                            on: "#FFFFFF",
+                            value: "Blue #3569CC",
+                            note: "standard interactive default",
+                            chipText: "Link / action",
+                        },
+                    ],
+                },
+                {
+                    id: "NB-03",
+                    name: "GitLab brand family",
+                    meta: "purple identity · orange brand · product semantic fencing",
+                    status: "reference only · one single-color dual set가 아님",
+                    roles: [
+                        {
+                            label: "Brand family",
+                            fill: "#7759C2",
+                            fillSecondary: "#FC6D26",
+                            on: "#171321",
+                            value: "#7759C2 / #FC6D26",
+                            note: "published purple and orange brand colors",
+                            split: true,
+                            chipText: "",
+                        },
+                        {
+                            label: "Product brand status",
+                            fill: "#E1D8F9",
+                            on: "#18171D",
+                            value: "#E1D8F9",
+                            note: "status.brand.background.color example",
+                            chipText: "Brand status",
+                        },
+                    ],
+                },
+                {
+                    id: "NB-04",
+                    name: "Ubuntu Vanilla",
+                    meta: "orange identity + blue routine link",
+                    status: "identity reference · orange brand button deprecated",
+                    roles: [
+                        {
+                            label: "Identity",
+                            fill: "#E95420",
+                            on: "#111111",
+                            value: "Ubuntu Orange #E95420",
+                            note: "published brand color",
+                            chipText: "",
+                        },
+                        {
+                            label: "Routine link",
+                            fill: "#0066CC",
+                            on: "#FFFFFF",
+                            value: "Link #0066CC",
+                            note: "interaction stays blue",
+                            chipText: "Link",
+                        },
+                    ],
+                },
+                {
+                    id: "NB-05",
+                    name: "Stack Overflow",
+                    meta: "vivid orange identity + preferred achromatic mark",
+                    status: "identity reference only · no complete action mapping",
+                    roles: [
+                        {
+                            label: "Identity",
+                            fill: "#FF5E00",
+                            on: "#201C1D",
+                            value: "Stack Orange #FF5E00",
+                            note: "distinct brand signature",
+                            chipText: "",
+                        },
+                        {
+                            label: "Preferred mark",
+                            fill: "#201C1D",
+                            fillSecondary: "#F0EFEE",
+                            on: "#FFFFFF",
+                            value: "#201C1D / #F0EFEE",
+                            note: "logo guidance prefers Off-Black or Off-White",
+                            split: true,
+                            chipText: "",
+                        },
+                    ],
+                },
+                {
+                    id: "NB-06",
+                    name: "Reuters Agency",
+                    meta: "current production editorial identity observation",
+                    status: "production observation only · public token contract 없음",
+                    roles: [
+                        {
+                            label: "Observed identity cue",
+                            fill: "#AB3300",
+                            on: "#FFFFFF",
+                            value: "Orange #AB3300",
+                            note: "computed on 2026-08-10",
+                            chipText: "Reuters cue",
+                        },
+                        {
+                            label: "Reading field",
+                            fill: "#FFFFFF",
+                            on: "#000000",
+                            border: "#C6C6C6",
+                            value: "White / Black",
+                            note: "dense editorial content stays achromatic",
+                            chipText: "Editorial",
+                        },
+                    ],
+                },
+                {
+                    id: "NB-07",
+                    name: "GOV.UK task action",
+                    meta: "blue information ownership + green transaction",
+                    status: "action-role reference only · site-wide Dark set 없음",
+                    roles: [
+                        {
+                            label: "Brand / link",
+                            fill: "#1D70B8",
+                            on: "#FFFFFF",
+                            value: "#1D70B8 / link #1A65A6",
+                            note: "information navigation remains blue",
+                            chipText: "Information",
+                        },
+                        {
+                            label: "Primary task",
+                            fill: "#0F7A52",
+                            on: "#FFFFFF",
+                            value: "Button #0F7A52",
+                            note: "current computed default button",
+                            chipText: "Save and continue",
+                        },
+                    ],
+                },
+                {
+                    id: "NB-08",
+                    name: "NHS task action",
+                    meta: "trusted blue information + green primary action",
+                    status: "action-role reference only · site-wide Dark set 없음",
+                    roles: [
+                        {
+                            label: "Brand / link",
+                            fill: "#005EB8",
+                            on: "#FFFFFF",
+                            value: "NHS Blue #005EB8",
+                            note: "recognition and navigation",
+                            chipText: "Information",
+                        },
+                        {
+                            label: "Primary task",
+                            fill: "#007F3B",
+                            on: "#FFFFFF",
+                            value: "Button #007F3B",
+                            note: "also owns success semantics",
+                            chipText: "Continue",
+                        },
+                    ],
+                },
+                {
+                    id: "NB-09",
+                    name: "Financial Times",
+                    meta: "warm editorial field + separate teal interaction",
+                    status: "field reference only · Spectrum neutral surfaces stay fixed",
+                    roles: [
+                        {
+                            label: "Page field",
+                            fill: "#FFF1E5",
+                            on: "#33302E",
+                            border: "#E6D9CE",
+                            value: "#FFF1E5 / #33302E",
+                            note: "current --o3-color-use-case-page-background",
+                            chipText: "Editorial field",
+                        },
+                        {
+                            label: "Interaction",
+                            fill: "#0D7680",
+                            on: "#FFFFFF",
+                            value: "Teal #0D7680",
+                            note: "observed production link/action family",
+                            chipText: "Read more",
+                        },
+                    ],
+                },
+                {
+                    id: "NB-10",
+                    name: "Mozilla Protocol",
+                    meta: "mostly black-and-white brand identity",
+                    status: "achromatic control · optional color page is Draft",
+                    roles: [
+                        {
+                            label: "Mozilla identity",
+                            fill: "#161616",
+                            fillSecondary: "#FAFAFA",
+                            on: "#FFFFFF",
+                            value: "#161616 / #FAFAFA",
+                            note: "brand theme is mostly black and white",
+                            split: true,
+                            chipText: "",
+                        },
+                        {
+                            label: "Chromatic signature",
+                            fill: "transparent",
+                            on: "#292929",
+                            border: "#717171",
+                            value: "선택적 supporting palette",
+                            note: "one canonical chromatic master is not published",
+                            missing: true,
+                            chipText: "미지정",
+                        },
+                    ],
+                },
+            ];
+
+            const pinned = new Set();
+            const grid = document.querySelector("#candidate-grid");
+            const template = document.querySelector("#candidate-template");
+            const referenceGrid = document.querySelector("#reference-grid");
+            const referenceTemplate = document.querySelector(
+                "#reference-template"
+            );
+            const selectionList = document.querySelector("#selection-list");
+            const selectionMessage =
+                document.querySelector("#selection-message");
+
+            function parseColor(value, background) {
+                if (value.startsWith("#")) {
+                    const hex = value.slice(1);
+                    return [0, 2, 4].map((index) =>
+                        Number.parseInt(hex.slice(index, index + 2), 16)
+                    );
+                }
+                const values = value.match(/[\d.]+/g).map(Number);
+                const alpha = values[3] ?? 1;
+                const base = parseColor(background, "#FFFFFF");
+                return values
+                    .slice(0, 3)
+                    .map((channel, index) =>
+                        Math.round(channel * alpha + base[index] * (1 - alpha))
+                    );
+            }
+
+            function luminance(rgb) {
+                return rgb
+                    .map((channel) => {
+                        const value = channel / 255;
+                        return value <= 0.04045
+                            ? value / 12.92
+                            : ((value + 0.055) / 1.055) ** 2.4;
+                    })
+                    .reduce(
+                        (total, value, index) =>
+                            total + value * [0.2126, 0.7152, 0.0722][index],
+                        0
+                    );
+            }
+
+            function contrast(foreground, background) {
+                const first = luminance(parseColor(foreground, background));
+                const second = luminance(parseColor(background, "#FFFFFF"));
+                return (
+                    (Math.max(first, second) + 0.05) /
+                    (Math.min(first, second) + 0.05)
+                );
+            }
+
+            function themePanel(candidate, themeName) {
+                const values = candidate[themeName];
+                const panel = document.createElement("section");
+                const label = themeName === "light" ? "Light" : "Dark";
+                const ratio = contrast(values.on, values.d);
+                panel.className = "theme-panel";
+                panel.dataset.theme = themeName;
+                panel.style.setProperty("--candidate-default", values.d);
+                panel.style.setProperty(
+                    "--candidate-hover",
+                    values.h ?? values.d
+                );
+                panel.style.setProperty(
+                    "--candidate-pressed",
+                    values.p ?? values.d
+                );
+                panel.style.setProperty("--candidate-on", values.on);
+                panel.style.setProperty(
+                    "--candidate-hover-on",
+                    values.hon ?? values.on
+                );
+                panel.style.setProperty(
+                    "--candidate-pressed-on",
+                    values.pon ?? values.on
+                );
+                panel.style.setProperty(
+                    "--candidate-pressed-border",
+                    values.pb ?? "transparent"
+                );
+                panel.innerHTML = `
+                    <div class="theme-label"><span>${label}</span><span>${values.d}</span></div>
+                    <div class="identity-line">
+                        <div class="mark-tile">
+                            <img src="./noslog-mark-96.png" alt="" />
+                        </div>
+                        <div class="identity-copy">
+                            <strong>NosLog</strong>
+                            <span>작은 고정 identity cue</span>
+                        </div>
+                    </div>
+                    <div class="content-sample">
+                        <div class="song-row">
+                            <div>
+                                <strong>neko fun jitter</strong>
+                                <span>Normal · Basic</span>
+                            </div>
+                            <span class="difficulty">Expert 12</span>
+                        </div>
+                        <div class="action-row">
+                            <a class="neutral-link" href="#selection-message">기록 자세히</a>
+                            <button class="signature-action" type="button" data-action-eligible="${candidate.actionEligible !== false}">
+                                ${candidate.actionEligible === false ? "액션 근거 미완료" : "데이터 동기화"}
+                            </button>
+                        </div>
+                    </div>
+                    <div class="state-strip" aria-label="${label} 상태 색">
+                        <div class="state-chip"><div class="state-swatch" style="--swatch:${values.d}"></div><span>default<br />${values.d}</span></div>
+                        <div class="state-chip"><div class="state-swatch" data-missing="${values.h === null}" style="--swatch:${values.h ?? "transparent"}"></div><span>hover<br />${values.h ?? "미공개"}</span></div>
+                        <div class="state-chip"><div class="state-swatch" data-missing="${values.p === null}" style="--swatch:${values.p ?? "transparent"}"></div><span>pressed<br />${values.p ?? "미공개"}</span></div>
+                    </div>
+                    <span class="contrast-line">default text ${ratio.toFixed(2)}:1 · ${ratio >= 4.5 ? "AA 통과" : "AA 미달"}</span>
+                `;
+                return { panel, ratio };
+            }
+
+            function referenceRole(reference, role) {
+                const sample = document.createElement("section");
+                sample.className = "role-sample";
+                sample.dataset.missing = String(role.missing === true);
+                sample.style.setProperty(
+                    "--role-canvas",
+                    role.canvas ?? "#FFFFFF"
+                );
+                sample.style.setProperty("--role-text", role.text ?? "#292929");
+                sample.style.setProperty("--role-fill", role.fill);
+                sample.style.setProperty("--role-on", role.on);
+                sample.style.setProperty(
+                    "--role-border",
+                    role.border ?? "transparent"
+                );
+                if (role.fillSecondary) {
+                    sample.style.setProperty(
+                        "--role-fill-secondary",
+                        role.fillSecondary
+                    );
+                }
+                sample.innerHTML = `
+                    <span class="role-label">${role.label}</span>
+                    <div
+                        class="role-chip"
+                        data-split="${role.split === true}"
+                        aria-label="${reference.id} ${role.label}: ${role.value}"
+                    >${role.chipText || ""}</div>
+                    <span class="role-value">${role.value}</span>
+                    <span class="role-note">${role.note}</span>
+                `;
+                return sample;
+            }
+
+            references.forEach((reference) => {
+                const fragment = referenceTemplate.content.cloneNode(true);
+                const card = fragment.querySelector(".reference-card");
+                card.dataset.reference = reference.id;
+                fragment.querySelector(".reference-title").textContent =
+                    `${reference.id} · ${reference.name}`;
+                fragment.querySelector(".reference-meta").textContent =
+                    reference.meta;
+                fragment.querySelector(".reference-limit").innerHTML =
+                    `<strong>게이트:</strong> ${reference.status}`;
+                const roles = fragment.querySelector(".reference-roles");
+                reference.roles.forEach((role) =>
+                    roles.append(referenceRole(reference, role))
+                );
+                referenceGrid.append(fragment);
+            });
+
+            function updateSelections() {
+                selectionList.replaceChildren();
+                pinned.forEach((id) => {
+                    const candidate = candidates.find((item) => item.id === id);
+                    const item = document.createElement("li");
+                    item.textContent = `${candidate.id} ${candidate.name}`;
+                    selectionList.append(item);
+                });
+                selectionMessage.textContent = pinned.size
+                    ? `${pinned.size}개 표시됨 · 아직 승인 아님`
+                    : "최대 3개까지 표시해 직접 비교할 수 있습니다.";
+            }
+
+            const report = [];
+            candidates.forEach((candidate) => {
+                const fragment = template.content.cloneNode(true);
+                const card = fragment.querySelector(".candidate-card");
+                const pinButton = fragment.querySelector(".pin-button");
+                fragment.querySelector(".candidate-title").textContent =
+                    `${candidate.id} · ${candidate.name}`;
+                fragment.querySelector(".candidate-meta").textContent =
+                    `${candidate.release} · ${candidate.role}`;
+                fragment.querySelector(".candidate-limit").textContent =
+                    candidate.limit;
+                card.dataset.group = candidate.group;
+                card.dataset.candidate = candidate.id;
+                card.dataset.pinned = "false";
+
+                const themePair = fragment.querySelector(".theme-pair");
+                ["light", "dark"].forEach((themeName) => {
+                    const result = themePanel(candidate, themeName);
+                    themePair.append(result.panel);
+                    report.push({
+                        candidate: candidate.id,
+                        theme: themeName,
+                        default: candidate[themeName].d,
+                        on: candidate[themeName].on,
+                        contrast: Number(result.ratio.toFixed(2)),
+                        normalTextPass: result.ratio >= 4.5,
+                    });
+                });
+
+                pinButton.addEventListener("click", () => {
+                    if (pinned.has(candidate.id)) {
+                        pinned.delete(candidate.id);
+                    } else if (pinned.size < 3) {
+                        pinned.add(candidate.id);
+                    } else {
+                        selectionMessage.textContent =
+                            "최대 3개입니다. 기존 표시 하나를 해제해 주세요.";
+                        return;
+                    }
+                    const isPinned = pinned.has(candidate.id);
+                    pinButton.setAttribute("aria-pressed", String(isPinned));
+                    pinButton.textContent = isPinned
+                        ? "✓ 비교 중"
+                        : "비교 표시";
+                    card.dataset.pinned = String(isPinned);
+                    updateSelections();
+                });
+
+                grid.append(fragment);
+            });
+
+            document.querySelectorAll("[data-filter]").forEach((button) => {
+                button.addEventListener("click", () => {
+                    document
+                        .querySelectorAll("[data-filter]")
+                        .forEach((item) =>
+                            item.setAttribute(
+                                "aria-pressed",
+                                String(item === button)
+                            )
+                        );
+                    document
+                        .querySelectorAll(".candidate-card")
+                        .forEach((card) => {
+                            card.hidden =
+                                button.dataset.filter !== "all" &&
+                                card.dataset.group !== button.dataset.filter;
+                        });
+                });
+            });
+
+            window.__noslogSignatureReport = {
+                candidateCount: candidates.length,
+                referenceCount: references.length,
+                totalDisplayedSources: candidates.length + references.length,
+                measuredPairs: report.length,
+                failedDefaultTextPairs: report.filter(
+                    (entry) => !entry.normalTextPass
+                ),
+                report,
+            };
+            document.documentElement.dataset.candidateCount = String(
+                candidates.length
+            );
+            document.documentElement.dataset.measuredPairs = String(
+                report.length
+            );
+            document.documentElement.dataset.referenceCount = String(
+                references.length
+            );
+            document.documentElement.dataset.totalDisplayedSources = String(
+                candidates.length + references.length
+            );
+            document.documentElement.dataset.failedDefaultTextPairs = String(
+                report.filter((entry) => !entry.normalTextPass).length
+            );
+        </script>
+    </body>
+</html>

@@ -2,8 +2,9 @@
 
 ## 문서 관리
 
-- 상태: `조사 완료 — C1–C4 역할 구조, C5 절제된 사용 경계, Spectrum S2 neutral
-primitive source 승인; semantic mapping, 측정 검증, 시그니처 색조 대기`
+- 상태: `조사 완료 — C1–C4 역할 구조, Spectrum S2의 정확한 neutral mapping,
+Fluent focus, SS-08 Radix Indigo identity source 승인; 정확한 material 치수와
+component alias 대기`
 - 원본 언어: 영어
 - 영문 원본:
   [32-foundation-color-material-candidates.md](./32-foundation-color-material-candidates.md)
@@ -13,9 +14,9 @@ primitive source 승인; semantic mapping, 측정 검증, 시그니처 색조 �
   v0.1 외관 구조
 - 입력: 승인된 문서 `01`–`31`, 현재 저장소 컬러 구현, `390 × 844`의 현재
   `/ko` 브라우저 근거, 아래의 집중 레퍼런스 매트릭스
-- 제외: 승인된 Spectrum S2 neutral primitive source를 넘어서는 최종 semantic
-  role 배정, 최종 시그니처 색상, 최종 컴포넌트 스타일, 일러스트레이션, 아이콘
-  문법, 모션, 데이터 시각화 팔레트, Figma 프로덕션 화면, 애플리케이션 구현
+- 제외: feedback 및 데이터 시각화 컬러, 정확한 radius와 shadow 치수, 최종
+  identity/action component alias와 스타일, 일러스트레이션, 아이콘 문법, 모션,
+  Figma 프로덕션 화면, 애플리케이션 구현
 
 이 문서는 근거, 후보 구조, 트레이드오프, 제안된 결정 묶음을 기록한다. 사용자가
 명시적으로 승인하기 전까지 `Proposed`로 표시된 내용은 승인된 NosLog 2.0 시각
@@ -26,6 +27,9 @@ primitive source 승인; semantic mapping, 측정 검증, 시그니처 색조 �
 - [Foundation v0.1 조사 브리프](./24-foundation-v0.1-research-brief.ko.md)
 - [Foundation 시맨틱 역할 맵](./25-foundation-semantic-role-map.ko.md)
 - [Foundation 타이포 및 레이아웃 후보](./26-foundation-typography-layout-candidates.ko.md)
+- [C5 Spectrum S2 semantic mapping](./34-foundation-c5-spectrum-semantic-mapping.ko.md)
+- [C5 Fluent focus 검증](./44-foundation-c5-fluent-focus-specimen-validation.ko.md)
+- [C5 정확한 signature system 비교](./45-foundation-c5-signature-system-reference-comparison.ko.md)
 - [S1 탐색 검증](./27-foundation-s1-discovery-structural-validation.ko.md)
 - [S2 악곡 상세 검증](./28-foundation-s2-music-detail-structural-validation.ko.md)
 - [S3 랭킹 검증](./29-foundation-s3-global-rankings-structural-validation.ko.md)
@@ -354,10 +358,10 @@ specimen은 제외했다.
 | `gray-900`            | `#131313` | `#f2f2f2` |
 | `gray-1000`           | `#000000` | `#ffffff` |
 
-이 승인은 C5를 진행시키지만 완료하지는 않는다. 다음 검토에서는 source primitive를
-`canvas`, `surface`, `sunken`, `raised`, `overlay`, neutral foreground, boundary,
-interaction-state role에 배정하고 필수 real-content specimen matrix에서 그 배정을
-검증해야 한다.
+이 source 승인은 C5를 진행시켰지만 완료하지는 않았다. 이후 문서 `34`–`44`가
+정확한 `M-A` surface, `F-A` foreground, `NB-A` boundary, `NI-A` interaction 및
+`FI-C` focus mapping을 배정하고 검증했다. 시그니처 컬러, feedback 및 visualization
+컬러, 정확한 material 치수, component alias와 애플리케이션 구현은 별도 Gate로 남는다.
 
 ## 승인된 절제 컬러 예산
 
@@ -408,34 +412,35 @@ swatch만으로는 어떤 palette 값도 승인할 수 없다. 이후 시각 spe
 
 ## 결정 묶음
 
-| Batch | 결정                                                                               | 현재 상태                                                      |
-| ----- | ---------------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| `C1`  | 중립 표면 목록과 목적                                                              | `Approved — C1-B`                                              |
-| `C2`  | 절제된 signature/accent 사용 후보와 독립 focus 소유권                              | `Approved — C2-B는 분리만 의미하며 neutral interaction이 기본` |
-| `C3`  | feedback/domain/data 충돌 정책                                                     | `Approved — semantic ownership 및 비색상 단서`                 |
-| `C4`  | border, radius, elevation, scrim 구조                                              | `역할 구조 승인 — 정확한 값은 C5 대기`                         |
-| `C5`  | 절제된 컬러 사용 경계, 측정된 specimen을 통한 정확한 Dark/Light 값과 시그니처 색조 | `Primitive source 승인; mapping, 검증, signature 대기`         |
-| `C6`  | 통합 S1–S5 외관 검증과 Foundation 승격                                             | `C5에 의해 차단`                                               |
+| Batch | 결정                                                                               | 현재 상태                                                                              |
+| ----- | ---------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `C1`  | 중립 표면 목록과 목적                                                              | `Approved — C1-B`                                                                      |
+| `C2`  | 절제된 signature/accent 사용 후보와 독립 focus 소유권                              | `Approved — C2-B는 분리만 의미하며 neutral interaction이 기본`                         |
+| `C3`  | feedback/domain/data 충돌 정책                                                     | `Approved — semantic ownership 및 비색상 단서`                                         |
+| `C4`  | border, radius, elevation, scrim 구조                                              | `역할 구조 승인 — 정확한 값은 C5 대기`                                                 |
+| `C5`  | 절제된 컬러 사용 경계, 측정된 specimen을 통한 정확한 Dark/Light 값과 시그니처 색조 | `Neutral/focus mapping과 SS-08 identity source 승인; material 및 component alias 대기` |
+| `C6`  | 통합 S1–S5 외관 검증과 Foundation 승격                                             | `C5에 의해 차단`                                                                       |
 
 한 batch의 승인이 다른 batch를 승인하지 않는다. 정확한 값은 그 값이 구현할 역할
 구조가 승인되기 전에는 선택할 수 없다.
 
 ## 결정 로그
 
-| ID       | 항목                                                                                                                                                                        | 상태                               |
-| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
-| `FCM-01` | 현재 neutral shell과 token inventory를 2.0 palette가 아니라 migration evidence로 취급한다.                                                                                  | `Observed`                         |
-| `FCM-02` | 완전한 System/Dark/Light 지원과 Dark를 대표 art-direction 기준으로 유지한다.                                                                                                | `Approved upstream`                |
-| `FCM-03` | appearance 간 invariant semantic name을 갖는 primitive → semantic → component-alias 구조를 사용한다.                                                                        | `Proposed`                         |
-| `FCM-04` | 목적 완결형 C1-B neutral surface inventory를 채택한다.                                                                                                                      | `Approved — 2026-08-08`            |
-| `FCM-05` | 일반 interaction에 색을 요구하지 않으면서 C2-B를 통해 가능한 signature/accent 소유권을 focus와 분리한다.                                                                    | `Approved; clarified — 2026-08-08` |
-| `FCM-06` | NOSTALGIA domain color를 분리된 role로 보존하고 비색상 단서와 collision 검토를 요구한다.                                                                                    | `Approved — 2026-08-08`            |
-| `FCM-07` | 정확한 값을 미룬 채 R-B의 세 목적 radius role과 full rounding을 사용한다.                                                                                                   | `Approved — 2026-08-08`            |
-| `FCM-08` | 기본 flat content에서 shadow를 제거하고 타당한 raised, overlay, scroll-boundary 관계에만 제한한다.                                                                          | `Approved — 2026-08-08`            |
-| `FCM-09` | 승인된 role specimen이 나올 때까지 semantic role mapping, signature hue, visualization color를 미루며 FCM-12는 neutral primitive source만 해결한다.                         | `남은 범위 Proposed`               |
-| `FCM-10` | container, link, filter, selection 및 일반 domain label은 neutral treatment를 기본으로 하고 signature color는 우선 identity와 별도 승인된 드문 primary action에만 제한한다. | `Approved — 2026-08-08`            |
-| `FCM-11` | selected container, filter state, link 및 여러 경쟁 요소에 accent를 칠한 과도한 signature-color 비교를 거부한다. 이는 guide 또는 production authority가 아니다.             | `Rejected — 2026-08-08`            |
-| `FCM-12` | 공개된 Adobe Spectrum S2 grayscale 값을 유일한 Dark/Light neutral primitive source로 채택하며 semantic mapping과 검증은 계속 대기한다.                                      | `Approved — 2026-08-08`            |
+| ID       | 항목                                                                                                                                                                        | 상태                                                                                          |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `FCM-01` | 현재 neutral shell과 token inventory를 2.0 palette가 아니라 migration evidence로 취급한다.                                                                                  | `Observed`                                                                                    |
+| `FCM-02` | 완전한 System/Dark/Light 지원과 Dark를 대표 art-direction 기준으로 유지한다.                                                                                                | `Approved upstream`                                                                           |
+| `FCM-03` | appearance 간 invariant semantic name을 갖는 primitive → semantic → component-alias 구조를 사용한다.                                                                        | `Proposed`                                                                                    |
+| `FCM-04` | 목적 완결형 C1-B neutral surface inventory를 채택한다.                                                                                                                      | `Approved — 2026-08-08`                                                                       |
+| `FCM-05` | 일반 interaction에 색을 요구하지 않으면서 C2-B를 통해 가능한 signature/accent 소유권을 focus와 분리한다.                                                                    | `Approved; clarified — 2026-08-08`                                                            |
+| `FCM-06` | NOSTALGIA domain color를 분리된 role로 보존하고 비색상 단서와 collision 검토를 요구한다.                                                                                    | `Approved — 2026-08-08`                                                                       |
+| `FCM-07` | 정확한 값을 미룬 채 R-B의 세 목적 radius role과 full rounding을 사용한다.                                                                                                   | `Approved — 2026-08-08`                                                                       |
+| `FCM-08` | 기본 flat content에서 shadow를 제거하고 타당한 raised, overlay, scroll-boundary 관계에만 제한한다.                                                                          | `Approved — 2026-08-08`                                                                       |
+| `FCM-09` | 승인된 role specimen이 나올 때까지 semantic role mapping, signature hue, visualization color를 미루며 FCM-12는 neutral primitive source만 해결한다.                         | `일부 Superseded; signature는 문서 47에서 해결; visualization 및 material 잔여 범위 Proposed` |
+| `FCM-10` | container, link, filter, selection 및 일반 domain label은 neutral treatment를 기본으로 하고 signature color는 우선 identity와 별도 승인된 드문 primary action에만 제한한다. | `Approved — 2026-08-08`                                                                       |
+| `FCM-11` | selected container, filter state, link 및 여러 경쟁 요소에 accent를 칠한 과도한 signature-color 비교를 거부한다. 이는 guide 또는 production authority가 아니다.             | `Rejected — 2026-08-08`                                                                       |
+| `FCM-12` | 공개된 Adobe Spectrum S2 grayscale 값을 유일한 Dark/Light neutral primitive source로 채택하며 이 source 승인 자체는 semantic mapping을 승인하지 않는다.                     | `Approved — 2026-08-08; mapping은 이후 문서 34–44에서 승인`                                   |
+| `FCM-13` | 온전한 `SS-08` Radix Colors Indigo를 NosLog identity source로 채택하며 정확한 identity/action component alias와 rare-action eligibility는 이후 gate로 유지한다.             | `Approved — 2026-08-10`                                                                       |
 
 ## 승인된 1차 검토 — 2026-08-08
 

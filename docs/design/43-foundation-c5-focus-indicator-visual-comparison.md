@@ -4,17 +4,19 @@
 
 ## Document Control
 
-| Field               | Value                                                                  |
-| ------------------- | ---------------------------------------------------------------------- |
-| Status              | `Technically verified — FI-C selected for validation; focus gate open` |
-| Date                | `2026-08-09`                                                           |
-| Canonical language  | English                                                                |
-| Decision gate       | `C5F-04` same-condition comparison before source selection             |
-| Inherited approvals | `M-A` surfaces, `F-A` foregrounds, `NB-A` boundaries, `NI-A` states    |
+| Field               | Value                                                               |
+| ------------------- | ------------------------------------------------------------------- |
+| Status              | `Closed — FI-C selected, validated, and approved in document 44`    |
+| Date                | `2026-08-09`                                                        |
+| Canonical language  | English                                                             |
+| Decision gate       | `C5F-04` same-condition comparison before source selection          |
+| Inherited approvals | `M-A` surfaces, `F-A` foregrounds, `NB-A` boundaries, `NI-A` states |
 
 This document records the visual comparison required by
 [document 42](42-foundation-c5-focus-indicator-reference-comparison.md). The user
-selected Fluent 2 `FI-C` for dedicated measured validation on 2026-08-09. It does not
+selected Fluent 2 `FI-C` for dedicated measured validation on 2026-08-09, and
+[document 44](44-foundation-c5-fluent-focus-specimen-validation.md) records its later
+approval. This comparison itself does not
 approve a production token, component alias, signature color, feedback color, final
 component geometry, or application implementation.
 
@@ -163,6 +165,7 @@ These are research findings, not an autonomous selection.
 
 The user selected Fluent 2 `FI-C`.
 [Document 44](44-foundation-c5-fluent-focus-specimen-validation.md) records the
-dedicated validation now in progress. This authorizes validation and nothing further.
+completed native Tab, actual 200% zoom, and forced-colors validation and the user's
+final C5 focus-mapping approval.
 Production tokens, component aliases, signature color, feedback color, and application
 implementation remain unapproved.

@@ -63,6 +63,13 @@ palette·theme·starter template은 NosLog 2.0의 시각적 권위가 아닙니�
 system의 값을 임의로 혼합하거나 보간하지 않습니다. Primitive source, semantic-role
 mapping, component mapping과 실제 구현은 각각 별도의 승인 단계입니다.
 
+현재 signature identity source는 `SS-08` Radix Colors Indigo로 승인되어 있습니다.
+공개된 Light/Dark mapping을 하나의 온전한 source set으로 유지합니다. 이 승인은
+identity/action component alias, filled primary action, 일반 interaction 재착색 또는
+로고 재착색을 승인하지 않으며 해당 항목은 절제 컬러 예산 아래 별도 gate로 남습니다.
+Shopify Polaris와 `EXP-01` Polaris Light / Radix Dark split은 문서 `47`에 비교 근거로
+보존하지만 현재 downstream design 또는 구현 source가 아닙니다.
+
 ## 로컬 개발
 
 ### 준비 사항

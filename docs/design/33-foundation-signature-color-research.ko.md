@@ -2,8 +2,8 @@
 
 ## 문서 관리
 
-- 상태: `조사 완료 — 절제된 사용 경계와 Spectrum S2 neutral primitive source
-승인, 시그니처 계약·색조 영역·측정 specimen 대기`
+- 상태: `SS-08 Radix Colors Indigo를 identity source로 승인 — 절제 사용, neutral,
+focus mapping 승인 유지; component alias 및 rare-action eligibility 대기`
 - 정본 언어: 영어
 - 영어 정본:
   [33-foundation-signature-color-research.md](./33-foundation-signature-color-research.md)
@@ -13,22 +13,29 @@
   컬러 사이의 관계
 - 입력: 승인된 문서 `22`, `24`, `32`, 현재 NosLog 로고·브라우저·컬러 토큰
   근거 및 아래 집중 비교
-- 제외: 승인된 시그니처 색조 또는 그 hexadecimal/OKLCH 값, 다시 칠한 로고,
-  승인된 Spectrum S2 primitive source를 넘어서는 최종 neutral semantic-role
-  mapping, 데이터 시각화 컬러, high-fidelity 화면 및 애플리케이션 구현
+- 제외: 다시 칠한 로고, feedback 및 데이터 시각화 컬러, 최종 identity/action
+  component alias, high-fidelity 화면 및 애플리케이션 구현
 
-이 문서는 선호만으로 색을 선택하지 않고 C5 범위를 좁힌다. 모든 후보 영역과
-계약은 사용자가 승인하고 측정 specimen을 검토하기 전까지 `Proposed`다.
+이 문서는 선호만으로 색을 선택하지 않고 C5 범위를 좁힌다. 후보 영역은 실측
+비교 전까지 `Proposed`였다. 사용자는 문서 `47`의 3개 후보 실제 콘텐츠 비교 후
+2026-08-10 온전한 `SS-08` Radix Colors Indigo mapping을 NosLog identity source로
+선택했다.
 
-Spectrum S2 grayscale primitive source는 이제 `FCM-12`에서 upstream 승인됐으며
-이 시그니처 컬러 조사가 다시 열지 않는다. NosLog semantic-role mapping과 측정
-검증은 계속 대기 상태다.
+Spectrum S2 grayscale primitive source는 `FCM-12`에서 upstream 승인됐으며 이
+시그니처 컬러 조사가 다시 열지 않는다. 이후 문서 `34`–`44`가 NosLog neutral 및
+focus mapping을 승인하고 측정했다. 이 Track은 이제 그 입력을 고정한 채 published
+시그니처 컬러 system을 비교한다.
 
 ## 관련 문서
 
 - [교차 레퍼런스 매트릭스](./22-cross-cutting-reference-matrix.ko.md)
 - [Foundation v0.1 조사 브리프](./24-foundation-v0.1-research-brief.ko.md)
 - [Foundation 컬러 및 material 후보](./32-foundation-color-material-candidates.ko.md)
+- [C5 Spectrum S2 semantic mapping](./34-foundation-c5-spectrum-semantic-mapping.ko.md)
+- [C5 Fluent focus 검증](./44-foundation-c5-fluent-focus-specimen-validation.ko.md)
+- [C5 정확한 signature system 비교](./45-foundation-c5-signature-system-reference-comparison.ko.md)
+- [C5 정보 서비스 컬러 확장](./46-foundation-c5-information-service-color-expansion.ko.md)
+- [C5 최종 후보 실제 콘텐츠 비교](./47-foundation-c5-finalist-noslog-context-comparison.ko.md)
 - [S1 탐색 검증](./27-foundation-s1-discovery-structural-validation.ko.md)
 - [S2 악곡 상세 검증](./28-foundation-s2-music-detail-structural-validation.ko.md)
 - [S3 랭킹 검증](./29-foundation-s3-global-rankings-structural-validation.ko.md)
@@ -154,14 +161,17 @@ theme-aware product ramp, content-led expression 및 semantic collision 통제�
   weight를 제공하기 어렵다. 또한 brand identity와 component accessibility를
   결합한다.
 
-### `SC-B` — 하나의 master color와 통제된 product ramp
+### `SC-B` — 하나의 유지 관리 source system과 공개된 adaptive mapping
 
-- 하나의 canonical `brand-master`가 identity와 배포 artifact에서 NosLog를 대표한다.
-- 제한된 동일 계열 ramp는 별도 승인된 identity 및 드문 action treatment에만 값을
-  공급할 수 있다. ramp를 정의하는 것은 모든 hover, selected, border, link 또는
-  text role로 확산해도 된다는 허가가 아니다.
-- Light와 Dark는 해당 역할을 서로 다른 명도와 채도에 매핑할 수 있다. 색조 이동이
-  필요하면 component별 즉흥 조정이 아니라 최소화하고 측정하며 문서화한다.
+- 하나의 승인되고 유지 관리되는 system이 NosLog가 채택할 정확한 Light/Dark
+  identity 및 드문 action 값을 공급한다. 전경과 공개된 state 관계를 온전히
+  유지한다.
+- source mapping은 별도 승인된 identity 및 드문 action treatment에만 값을 공급할
+  수 있다. 채택이 모든 hover, selected, border, link 또는 text role로 확산해도
+  된다는 허가는 아니다.
+- NosLog는 빠진 단계를 보간하거나 색조를 이동하거나 한 source의 Light mapping과
+  다른 source의 Dark 또는 state 값을 결합하지 않는다. 온전한 mapping이 실패하면
+  결정을 다시 연다.
 - monochrome N 마크는 계속 사용할 수 있다. Signature-colored logo field 또는
   인접 표현은 승인 전 별도로 시험한다.
 - 장점: 인지, 접근성, theme parity의 가장 강한 균형
@@ -174,16 +184,18 @@ theme-aware product ramp, content-led expression 및 semantic collision 통제�
 - 위험: 한 색상 기억을 약화하고 jacket 및 domain color와 충돌을 늘리며 대비를
   복잡하게 하고 content-led interface를 시끄럽게 만들 수 있음
 
-**제안 추천:** `SC-B`는 향후 master color와 측정된 appearance variant를 위한 기술
-모델 후보로만 유지하고 `SC-A`는 universal UI rule로 거부하며 `SC-C`는 Foundation
-v0.1에서 제외한다. 승인된 절제 사용 경계는 모든 안에 적용된다. 이후 campaign 또는
+**승인 방향:** 수정된 `SC-B`에 따라 공개된 Radix Indigo Light/Dark mapping을
+온전히 사용한다. `SC-A`는 universal UI rule로 거부하고 `SC-C`는 Foundation
+v0.1에서 제외한다. 승인된 절제 사용 경계는 계속 적용된다. 이후 campaign 또는
 illustration은 semantic interaction color가 되지 않는 경우에만 통제된 gradient를
 사용할 수 있다.
 
-## 색조 영역 shortlist
+## 대체된 색조 영역 shortlist
 
-이는 측정 비교를 위한 방향성 계열이며 승인된 색상이 아니다. 정확한 anchor는
-사용자가 shortlist를 승인한 뒤에만 생성한다.
+이전 제안은 후보를 임의의 색조 영역으로 묶었다. 승인된 적이 없으며, 정확한 공개
+Light/Dark 및 state mapping을 사용하는 유지 관리 system 10개를 비교하는 문서
+`45`가 비교 방식으로서 이를 대체한다. 아래 표는 결정 이력 보존용일 뿐이며 값을
+생성하거나 downstream specimen을 안내해서는 안 된다.
 
 | 영역                               | specimen 가치                                                                                                                                                         | 측정할 주요 위험                                                                                                                                                                    |
 | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -205,10 +217,10 @@ illustration은 semantic interaction color가 되지 않는 경우에만 통제�
 첫 specimen round는 identity와 collision의 균형 가능성이 더 높은 후보에 시간을
 사용한다는 뜻이다.
 
-## Shortlist 승인 후 필수 specimen 매트릭스
+## 정확한 source 선택 후 필수 specimen 매트릭스
 
-첫 color specimen은 모든 후보 영역에서 정확히 같은 구조와 콘텐츠를 비교해야 한다.
-이는 guide artifact이며 최종 page design이 아니다.
+측정 context specimen은 문서 `45`에서 진행한 모든 source에 대해 정확히 같은 구조와
+콘텐츠를 비교해야 한다. 이는 guide artifact이며 최종 page design이 아니다.
 
 1. neutral, candidate field, 대표 jacket edge 위의 유지된 흰색 N 마크
 2. Dark와 Light의 `canvas`, `surface`, `sunken`, `raised`, `overlay` 문맥
@@ -225,32 +237,33 @@ illustration은 semantic interaction color가 되지 않는 경우에만 통제�
 12. 측정된 text, non-text, state-to-state, adjacent-color contrast report와 대표
     color-vision-deficiency simulation
 
-## 다음 검토 질문
+## 남은 승인 gate
 
-다음 시각 작업에는 두 가지 명시적 승인이 필요하다.
+Identity-source 선택은 해결됐다. 다음 결정은 계속 분리한다.
 
-1. Spectrum S2 → NosLog semantic-role mapping을 별도로 승인하고 검증한 뒤 NosLog가
-   `SC-B`, 즉 하나의 canonical signature master와 엄격히 제한된 Light/Dark
-   identity 및 드문 action 값을 사용하고 일반 interaction과 keyboard focus는
-   neutral 또는 독립적으로 통제할 것인가?
-2. 첫 equal-condition specimen에서 `H1` ultramarine/blue-violet, `H2` warm
-   amber/piano gold, `H3` rose-magenta 및 `H0` achromatic baseline을 비교할 것인가?
+1. 승인된 Radix default 값을 어떤 안정적인 identity touchpoint에 배정할지;
+2. 입증된 드문 primary action에 정확한 공개 Radix filled-action mapping을 사용할지,
+   또는 일반 및 primary action을 모두 neutral로 유지할지;
+3. 유지된 monochrome N mark를 재착색하지 않으면서 logo field 또는 인접 treatment에
+   source를 사용할지.
 
-이 질문의 승인은 비교 specimen만 허가한다. 색조, 값, logo recoloring, gradient
-또는 component styling을 승인하지 않는다.
+2026-08-10 source 승인은 filled action, logo recoloring, gradient, component alias
+또는 application styling을 승인하지 않는다.
 
 ## 결정 로그
 
-| ID       | 항목                                                                                                                                                                                                   | 상태                                                   |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------ |
-| `SIG-01` | 현재 N 마크 형태를 유지하고 monochrome 사용을 유효한 identity asset으로 취급한다.                                                                                                                      | `Approved upstream`                                    |
-| `SIG-02` | 현재 `#3182f6` Light interaction blue 및 모든 현재 domain value를 승인된 signature가 아니라 migration evidence로 취급한다.                                                                             | `Observed`                                             |
-| `SIG-03` | `SC-B`를 통해 하나의 canonical master와 통제된 Light/Dark product ramp를 사용한다.                                                                                                                     | `Proposed`                                             |
-| `SIG-04` | signature color를 identity 우선으로 사용하고 일반 link, filter, selection, container, difficulty text, focus, feedback, hand, mode, rank, score, external brand 또는 data 의미에 자동 적용하지 않는다. | `Approved usage boundary / value pending — 2026-08-08` |
-| `SIG-05` | 색조 선택 전 하나의 측정 specimen matrix에서 H1, H2, H3, H0를 비교한다.                                                                                                                                | `Proposed`                                             |
-| `SIG-06` | 현재 semantic 및 external-brand collision 비용 때문에 첫 specimen round에서 green/lime, cyan/teal 및 red/orange를 진행하지 않는다.                                                                     | `Proposed`                                             |
-| `SIG-07` | link, filter state, selected container, difficulty text 및 여러 경쟁 요소에 색을 칠한 과도한 interactive 비교는 거부되며 design authority가 없다.                                                      | `Rejected — 2026-08-08`                                |
-| `SIG-08` | 공개된 Adobe Spectrum S2 grayscale의 정확한 값을 neutral primitive source로 사용하며 signature 작업은 이를 다시 칠하거나 대체할 수 없고 semantic-role mapping은 C5에서 계속 대기한다.                  | `Approved upstream — 2026-08-08`                       |
+| ID       | 항목                                                                                                                                                                                                   | 상태                                                                    |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------- |
+| `SIG-01` | 현재 N 마크 형태를 유지하고 monochrome 사용을 유효한 identity asset으로 취급한다.                                                                                                                      | `Approved upstream`                                                     |
+| `SIG-02` | 현재 `#3182f6` Light interaction blue 및 모든 현재 domain value를 승인된 signature가 아니라 migration evidence로 취급한다.                                                                             | `Observed`                                                              |
+| `SIG-03` | 수정된 `SC-B`를 통해 하나의 유지 관리 source system과 정확한 공개 Light/Dark 및 state mapping을 사용하고 NosLog ramp를 합성하지 않는다.                                                                | `Approved — 2026-08-10`                                                 |
+| `SIG-04` | signature color를 identity 우선으로 사용하고 일반 link, filter, selection, container, difficulty text, focus, feedback, hand, mode, rank, score, external brand 또는 data 의미에 자동 적용하지 않는다. | `Approved usage boundary — 2026-08-08`                                  |
+| `SIG-05` | 색조 선택 전 하나의 측정 specimen matrix에서 H1, H2, H3, H0를 비교한다.                                                                                                                                | `SSC-01로 대체 — 2026-08-09`                                            |
+| `SIG-06` | 현재 semantic 및 external-brand collision 비용 때문에 첫 specimen round에서 green/lime, cyan/teal 및 red/orange를 진행하지 않는다.                                                                     | `Proposed`                                                              |
+| `SIG-07` | link, filter state, selected container, difficulty text 및 여러 경쟁 요소에 색을 칠한 과도한 interactive 비교는 거부되며 design authority가 없다.                                                      | `Rejected — 2026-08-08`                                                 |
+| `SIG-08` | 공개된 Adobe Spectrum S2 grayscale의 정확한 값을 neutral primitive source로 사용하며 signature 작업은 이를 다시 칠하거나 대체할 수 없다.                                                               | `Approved upstream — 2026-08-08; neutral mapping은 문서 34–44에서 승인` |
+| `SIG-09` | Polaris Light와 Radix Dark의 수정하지 않은 공개값을 `EXP-01`로 실측하되 final mapping 또는 single-source 규칙 변경으로 간주하지 않는다.                                                                | `Completed comparison; not selected — 2026-08-10`                       |
+| `SIG-10` | 온전한 `SS-08` Radix Colors Indigo Light/Dark mapping을 NosLog identity source로 채택하며 identity alias와 filled-action eligibility는 별도로 유지한다.                                                | `Approved — 2026-08-10`                                                 |
 
 ## 거부된 specimen 기록 — 2026-08-08
 

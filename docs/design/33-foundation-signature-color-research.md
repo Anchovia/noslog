@@ -2,9 +2,9 @@
 
 ## Document Control
 
-- Status: `Research complete — restrained-use boundary and Spectrum S2 neutral
-primitive source approved; signature contract, hue territory, and measured specimens
-pending`
+- Status: `SS-08 Radix Colors Indigo approved as the identity source — restrained-use,
+neutral, and focus mappings remain approved; component aliases and rare-action
+eligibility pending`
 - Canonical language: English
 - Korean companion:
   [33-foundation-signature-color-research.ko.md](./33-foundation-signature-color-research.ko.md)
@@ -14,24 +14,29 @@ pending`
   existing NOSTALGIA/NosLog domain colors
 - Inputs: approved documents `22`, `24`, and `32`; current NosLog logo, browser, and
   color-token evidence; and the focused comparison below
-- Excludes: an approved signature hue or its hexadecimal/OKLCH values, a recolored
-  logo, final neutral semantic-role mapping beyond the approved Spectrum S2 primitive
-  source, data-visualization colors, high-fidelity screens, and application
-  implementation
+- Excludes: a recolored logo, feedback and data-visualization colors, final identity
+  and action component aliases, high-fidelity screens, and application implementation
 
-This document narrows C5 without selecting a color by preference. Every candidate
-territory and contract remains `Proposed` until the user approves it and then reviews
-measured specimens.
+This document narrows C5 without selecting a color by preference. Candidate territory
+remained `Proposed` until measured comparison. On 2026-08-10 the user selected the
+intact `SS-08` Radix Colors Indigo mapping as the NosLog identity source after the
+three-candidate actual-content round in document `47`.
 
-The Spectrum S2 grayscale primitive source is now approved upstream in `FCM-12` and
-is not reopened by this signature-color research. Its NosLog semantic-role mapping
-and measured validation remain pending.
+The Spectrum S2 grayscale primitive source is approved upstream in `FCM-12` and is
+not reopened by this signature-color research. Documents `34`–`44` have since
+approved and measured the NosLog neutral and focus mappings. This track now keeps
+those inputs fixed while comparing published signature-color systems.
 
 ## Related Documents
 
 - [Cross-cutting reference matrix](./22-cross-cutting-reference-matrix.md)
 - [Foundation v0.1 research brief](./24-foundation-v0.1-research-brief.md)
 - [Foundation color and material candidates](./32-foundation-color-material-candidates.md)
+- [C5 Spectrum S2 semantic mapping](./34-foundation-c5-spectrum-semantic-mapping.md)
+- [C5 Fluent focus validation](./44-foundation-c5-fluent-focus-specimen-validation.md)
+- [C5 exact signature-system comparison](./45-foundation-c5-signature-system-reference-comparison.md)
+- [C5 information-service color expansion](./46-foundation-c5-information-service-color-expansion.md)
+- [C5 finalist actual-content comparison](./47-foundation-c5-finalist-noslog-context-comparison.md)
 - [S1 discovery validation](./27-foundation-s1-discovery-structural-validation.md)
 - [S2 music-detail validation](./28-foundation-s2-music-detail-structural-validation.md)
 - [S3 rankings validation](./29-foundation-s3-global-rankings-structural-validation.md)
@@ -157,15 +162,17 @@ content-led expression, and semantic collision control.
   perceived weight on Dark and Light. It also couples brand identity to component
   accessibility.
 
-### `SC-B` — One master color plus controlled product ramps
+### `SC-B` — One maintained source system with its published adaptive mapping
 
-- One canonical `brand-master` represents NosLog in identity and distribution
-  artifacts.
-- A bounded same-family ramp may supply only the identity and rare action treatments
-  that are separately approved. Defining a ramp does not authorize spreading it to
-  every hover, selected, border, link, or text role.
-- Light and Dark may map those roles to different lightness and chroma. Any hue shift
-  must be minimal, measured, and documented rather than improvised per component.
+- One approved, maintained system supplies the exact Light/Dark identity and rare
+  action values that NosLog adopts. Its foreground and published state relationships
+  remain intact.
+- The source mapping may supply only the identity and rare action treatments that are
+  separately approved. Adoption does not authorize spreading it to every hover,
+  selected, border, link, or text role.
+- NosLog does not interpolate missing steps, shift hue, or combine one source's Light
+  mapping with another source's Dark or state values. If the intact mapping fails, the
+  decision reopens.
 - The monochrome N mark remains available. Signature-colored logo fields or adjacent
   treatments are tested separately before approval.
 - Advantage: strongest balance of recognition, accessibility, and theme parity.
@@ -178,16 +185,19 @@ content-led expression, and semantic collision control.
 - Risk: weakens one-color recall, increases collisions with jacket and domain colors,
   complicates contrast, and can make a content-led interface visually noisy.
 
-**Proposed recommendation:** retain `SC-B` only as the candidate technical model for
-a future master color and its measured appearance variants, reject `SC-A` as a
-universal UI rule, and keep `SC-C` out of Foundation v0.1. The approved restrained-use
-boundary applies to every option. A later campaign or illustration may use a
-controlled gradient only if it does not become the semantic interaction color.
+**Approved direction:** use revised `SC-B` with the intact published Radix Indigo
+Light/Dark mapping. Reject `SC-A` as a universal UI rule and keep `SC-C` out of
+Foundation v0.1. The approved restrained-use boundary still applies. A later campaign
+or illustration may use a controlled gradient only if it does not become the semantic
+interaction color.
 
-## Hue Territory Shortlist
+## Superseded Hue-Territory Shortlist
 
-These are directional families for measured comparison, not approved colors. Exact
-anchors will be generated only after the user approves the shortlist.
+This earlier proposal grouped candidates by invented hue territory. It was never
+approved and is superseded as a comparison method by document `45`, which compares
+ten maintained systems using their exact published Light/Dark and state mappings.
+The table remains only to preserve decision history; it must not generate values or
+guide a downstream specimen.
 
 | Territory                          | Why it deserves a specimen                                                                                                                                                                        | Main risks to measure                                                                                                                                                                       |
 | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -209,10 +219,11 @@ Not advancing a territory does not prove that every value in it is unusable. It 
 the first specimen round should spend time on candidates with a more plausible
 identity-to-collision balance.
 
-## Required Specimen Matrix After Shortlist Approval
+## Required Specimen Matrix After Exact-Source Selection
 
-The first color specimen must compare the exact same structure and content across all
-candidate territories. It is a guide artifact, not a final page design.
+The measured context specimen must compare the exact same structure and content
+across every source advanced from document `45`. It is a guide artifact, not a final
+page design.
 
 1. Retained white N mark on neutral, candidate field, and representative jacket edge;
 2. Dark and Light `canvas`, `surface`, `sunken`, `raised`, and `overlay` contexts;
@@ -229,32 +240,33 @@ candidate territories. It is a guide artifact, not a final page design.
 12. measured text, non-text, state-to-state, and adjacent-color contrast report plus
     representative color-vision-deficiency simulation.
 
-## Next Review Questions
+## Remaining Approval Gates
 
-The next visual work requires two explicit approvals:
+Identity-source selection is resolved. The following decisions remain separate:
 
-1. After separately approving and validating the Spectrum S2 → NosLog semantic-role
-   mapping, should NosLog use `SC-B`: one canonical signature master plus a tightly
-   bounded set of Light/Dark identity and rare-action values, while keeping ordinary
-   interaction and keyboard focus neutral or independently governed?
-2. Should the first equal-condition specimen compare `H1` ultramarine/blue-violet,
-   `H2` warm amber/piano gold, `H3` rose-magenta, and the `H0` achromatic baseline?
+1. which stable identity touchpoints, if any, receive the approved Radix default value;
+2. whether a proven rare primary action may use the exact published Radix filled-action
+   mapping or all ordinary and primary actions remain neutral; and
+3. whether any logo field or adjacent treatment uses the source without recoloring the
+   retained monochrome N mark.
 
-Approval of these questions authorizes comparison specimens only. It does not approve
-a hue, value, logo recoloring, gradient, or component styling.
+The 2026-08-10 source approval does not approve a filled action, logo recoloring,
+gradient, component alias, or application styling.
 
 ## Decision Log
 
-| ID       | Entry                                                                                                                                                                                                        | Status                                                 |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------ |
-| `SIG-01` | Retain the current N mark form and treat its monochrome use as a valid identity asset.                                                                                                                       | `Approved upstream`                                    |
-| `SIG-02` | Treat the current `#3182f6` Light interaction blue and all current domain values as migration evidence, not an approved signature.                                                                           | `Observed`                                             |
-| `SIG-03` | Use one canonical master plus controlled Light/Dark product ramps through `SC-B`.                                                                                                                            | `Proposed`                                             |
-| `SIG-04` | Keep signature color identity-first and prevent automatic use on ordinary links, filters, selection, containers, difficulty text, focus, feedback, hand, mode, rank, score, external brand, or data meaning. | `Approved usage boundary / value pending — 2026-08-08` |
-| `SIG-05` | Compare H1, H2, H3, and H0 under one measured specimen matrix before selecting a hue.                                                                                                                        | `Proposed`                                             |
-| `SIG-06` | Do not advance green/lime, cyan/teal, or red/orange in the first specimen round because of current semantic and external-brand collision cost.                                                               | `Proposed`                                             |
-| `SIG-07` | The over-accented interactive comparison that colored links, filter state, selected containers, difficulty text, and several competing elements is rejected and has no design authority.                     | `Rejected — 2026-08-08`                                |
-| `SIG-08` | Use the exact published Adobe Spectrum S2 grayscale as the neutral primitive source; signature work cannot recolor or replace it, while semantic-role mapping remains pending in C5.                         | `Approved upstream — 2026-08-08`                       |
+| ID       | Entry                                                                                                                                                                                                        | Status                                                                        |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------- |
+| `SIG-01` | Retain the current N mark form and treat its monochrome use as a valid identity asset.                                                                                                                       | `Approved upstream`                                                           |
+| `SIG-02` | Treat the current `#3182f6` Light interaction blue and all current domain values as migration evidence, not an approved signature.                                                                           | `Observed`                                                                    |
+| `SIG-03` | Use one maintained source system with its exact published Light/Dark and state mapping through revised `SC-B`; do not synthesize a NosLog ramp.                                                              | `Approved — 2026-08-10`                                                       |
+| `SIG-04` | Keep signature color identity-first and prevent automatic use on ordinary links, filters, selection, containers, difficulty text, focus, feedback, hand, mode, rank, score, external brand, or data meaning. | `Approved usage boundary — 2026-08-08`                                        |
+| `SIG-05` | Compare H1, H2, H3, and H0 under one measured specimen matrix before selecting a hue.                                                                                                                        | `Superseded by SSC-01 — 2026-08-09`                                           |
+| `SIG-06` | Do not advance green/lime, cyan/teal, or red/orange in the first specimen round because of current semantic and external-brand collision cost.                                                               | `Proposed`                                                                    |
+| `SIG-07` | The over-accented interactive comparison that colored links, filter state, selected containers, difficulty text, and several competing elements is rejected and has no design authority.                     | `Rejected — 2026-08-08`                                                       |
+| `SIG-08` | Use the exact published Adobe Spectrum S2 grayscale as the neutral primitive source; signature work cannot recolor or replace it.                                                                            | `Approved upstream — 2026-08-08; neutral mapping approved in documents 34–44` |
+| `SIG-09` | Measure unmodified published Polaris Light and Radix Dark values as `EXP-01` without treating the experiment as a final mapping or a change to the single-source rule.                                       | `Completed comparison; not selected — 2026-08-10`                             |
+| `SIG-10` | Adopt the intact `SS-08` Radix Colors Indigo Light/Dark mapping as the NosLog identity source while keeping identity aliases and filled-action eligibility separate.                                         | `Approved — 2026-08-10`                                                       |
 
 ## Rejected Specimen Record — 2026-08-08
 

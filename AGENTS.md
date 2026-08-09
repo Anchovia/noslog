@@ -87,6 +87,16 @@ Sections:
   for NosLog 2.0. Preserve its published grayscale values exactly. Do not replace
   them with Tailwind colors or mix them with the current custom Dark ramp, TDS-based
   Light values, or another system's gray steps.
+- `SS-08` Radix Colors Indigo is the approved and exclusive signature identity source
+  for NosLog 2.0. Preserve its published Light/Dark mapping as one intact source set;
+  do not interpolate it, shift its hue, or replace one appearance or state with values
+  from another system. This source approval does not approve any identity component
+  alias, filled primary action, ordinary interaction color, logo recoloring, or broad
+  accent use. Those remain separate approval gates under the restrained color budget.
+- Shopify Polaris and the `EXP-01` Polaris Light / Radix Dark split were measured and
+  not selected as the identity source. Preserve their evidence in document `47`, but
+  do not use them as downstream design or implementation targets unless the user
+  explicitly reopens the identity-source decision.
 - Primitive-source approval, semantic-role mapping, component-alias mapping, and
   production implementation are separate approval gates. Approval of Adobe Spectrum
   S2 primitives does not by itself approve a proposed foreground, boundary,
