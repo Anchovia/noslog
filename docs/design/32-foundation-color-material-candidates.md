@@ -367,7 +367,10 @@ This source approval advanced C5 without completing it. Documents `34`–`44`
 subsequently assigned and validated the exact `M-A` surface, `F-A` foreground,
 `NB-A` boundary, `NI-A` interaction, and `FI-C` focus mappings. Signature color,
 feedback and visualization color, exact material dimensions, component aliases, and
-application implementation remain separate gates.
+application implementation remain separate gates. Document `52` begins the exact
+material-geometry gate with a fourteen-source radius, elevation/shadow, and scrim
+comparison; its `MG-A`–`MG-C` shortlist remains `Proposed` until complete source-set
+extraction, a controlled NosLog specimen, and an explicit user decision.
 
 ## Approved Restrained-Color Budget
 

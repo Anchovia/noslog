@@ -362,6 +362,9 @@ specimen은 제외했다.
 정확한 `M-A` surface, `F-A` foreground, `NB-A` boundary, `NI-A` interaction 및
 `FI-C` focus mapping을 배정하고 검증했다. 시그니처 컬러, feedback 및 visualization
 컬러, 정확한 material 치수, component alias와 애플리케이션 구현은 별도 Gate로 남는다.
+문서 `52`는 14개 출처의 radius, elevation/shadow 및 scrim 비교로 정확한 material-
+geometry Gate를 시작한다. `MG-A`–`MG-C` shortlist는 완전한 source-set 추출, 통제된
+NosLog specimen 및 명시적 사용자 결정 전까지 `Proposed`로 유지한다.
 
 ## 승인된 절제 컬러 예산
 
