@@ -3,11 +3,13 @@
 ## Document Control
 
 - Status: `M-A surfaces, F-A foregrounds, NB-A neutral boundaries, and NI-A
-neutral interaction approved; C5M-03 through C5M-06 closed; focus remains open`
+neutral interaction approved; C5M-03 through C5M-06 closed; FI-C runtime validation
+complete; focus user approval remains open`
 - Surface-mapping approval date: 2026-08-08
 - Foreground-mapping approval date: 2026-08-09
 - Neutral-boundary approval date: 2026-08-09
 - Neutral-interaction approval date: 2026-08-09
+- Focus-runtime-validation completion date: 2026-08-09
 - Canonical language: English
 - Korean companion:
   [34-foundation-c5-spectrum-semantic-mapping.ko.md](./34-foundation-c5-spectrum-semantic-mapping.ko.md)
@@ -25,8 +27,9 @@ This document does not reopen `FCM-12`. Adobe Spectrum S2 remains the approved e
 Dark/Light neutral primitive source. `C5M-03` assigns the approved C1-B surface roles
 through the current Spectrum S2 aliases, `C5M-04` assigns the approved exact `F-A`
 foreground mapping, `C5M-05` assigns approved exact `NB-A` neutral boundaries, and
-`C5M-06` assigns the approved `NI-A` neutral interaction contract. Focus and final
-component-level aliases remain open.
+`C5M-06` assigns the approved `NI-A` neutral interaction contract. Document `44`
+completed `FI-C` runtime validation, but the focus mapping still awaits explicit user
+approval. Final component-level aliases remain open.
 
 ## Related Documents
 

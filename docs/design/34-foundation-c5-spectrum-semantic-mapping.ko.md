@@ -3,11 +3,13 @@
 ## 문서 관리
 
 - 상태: `M-A surface, F-A foreground, NB-A neutral boundary, NI-A neutral
-interaction 승인; C5M-03부터 C5M-06까지 종료; focus는 열린 상태`
+interaction 승인; C5M-03부터 C5M-06까지 종료; FI-C runtime 검증 완료; focus 사용자
+승인은 열린 상태`
 - Surface-mapping 승인일: 2026-08-08
 - Foreground-mapping 승인일: 2026-08-09
 - Neutral-boundary 승인일: 2026-08-09
 - Neutral-interaction 승인일: 2026-08-09
+- Focus-runtime-validation 완료일: 2026-08-09
 - 정본 언어: 영어
 - 영어 정본:
   [34-foundation-c5-spectrum-semantic-mapping.md](./34-foundation-c5-spectrum-semantic-mapping.md)
@@ -24,8 +26,9 @@ interaction 승인; C5M-03부터 C5M-06까지 종료; focus는 열린 상태`
 Dark/Light neutral primitive source다. `C5M-03`은 현재 Spectrum S2 alias를 통해 승인된
 C1-B surface role을 배정하고 `C5M-04`는 승인된 exact `F-A` foreground mapping을,
 `C5M-05`는 승인된 exact `NB-A` neutral boundary를, `C5M-06`은 승인된 `NI-A`
-neutral interaction 계약을 배정한다. Focus와 최종 component-level alias는 계속
-열려 있다.
+neutral interaction 계약을 배정한다. 문서 `44`는 `FI-C` runtime 검증을 완료했지만
+focus mapping은 아직 사용자의 명시적 승인을 기다린다. 최종 component-level alias는
+계속 열려 있다.
 
 ## 관련 문서
 

@@ -4,21 +4,22 @@
 
 ## Document Control
 
-| Field               | Value                                                                                 |
-| ------------------- | ------------------------------------------------------------------------------------- |
-| Status              | `Specimen prepared — base matrices pass; native/zoom/forced-colors gates remain open` |
-| Date                | `2026-08-09`                                                                          |
-| Canonical language  | English                                                                               |
-| Decision gate       | `C5F-06` measured validation of user-selected `FI-C`                                  |
-| Selected input      | Fluent 2 achromatic `colorStrokeFocus2` polarity                                      |
-| Inherited approvals | `M-A` surfaces, `F-A` foregrounds, `NB-A` boundaries, and `NI-A` neutral interaction  |
+| Field               | Value                                                                                               |
+| ------------------- | --------------------------------------------------------------------------------------------------- |
+| Status              | `Validation complete — native Tab, actual 200% zoom, and forced-colors pass; user approval pending` |
+| Date                | `2026-08-09`                                                                                        |
+| Canonical language  | English                                                                                             |
+| Decision gate       | `C5F-06` measured validation of user-selected `FI-C`                                                |
+| Selected input      | Fluent 2 achromatic `colorStrokeFocus2` polarity                                                    |
+| Inherited approvals | `M-A` surfaces, `F-A` foregrounds, `NB-A` boundaries, and `NI-A` neutral interaction                |
 
-This document records the first measured validation pass authorized after the user
+This document records the measured validation authorized after the user
 selected `FI-C` in
 [document 43](43-foundation-c5-focus-indicator-visual-comparison.md). It does not
 approve a production focus token, final component alias, signature color, feedback
-color, component geometry, or application implementation. The C5 focus gate remains
-open until the pending runtime gates and user review are complete.
+color, component geometry, or application implementation. All required runtime gates
+are complete. The C5 focus gate remains open only for the user's explicit review and
+approval.
 
 ## Authority Boundary
 
@@ -54,7 +55,7 @@ current Fluent UI `createFocusOutlineStyle` source:
 | `colorStrokeFocus2`    | `#000000`   | `#ffffff`   | Selected normal-theme keyboard-visible focus color                                |
 | Outline width          | `2px`       | `2px`       | Exact standard helper width                                                       |
 | Pseudo-element extent  | `-2px`      | `-2px`      | Zero-gap perimeter around the focused component                                   |
-| Forced-colors override | `Highlight` | `Highlight` | System color remains available; active runtime test is still pending              |
+| Forced-colors override | `Highlight` | `Highlight` | System color remains available; active Chrome runtime test passed                 |
 
 The HTML fixture uses a `data-keyboard-focus` harness attribute to reproduce the
 keyboard-modality ownership that Fluent React normally receives through its focus
@@ -154,27 +155,92 @@ The in-app browser verified the following in both Light and Dark:
 5. Focus did not recolor the menu item, selection fill, text, or neutral boundary.
 
 This confirms the keyboard-modality and composite-state logic available to the
-fixture. It does not substitute for browser-default `Tab` traversal.
+fixture. The following Chrome run supplied the browser-default traversal evidence
+that the harness alone could not provide.
 
-## Gates Still Open
+## Chrome Native Runtime Validation
 
-Three required runtime checks could not be completed in the current session and are
-explicitly not reported as passes:
+### Browser-default `Tab`
 
-1. **Native `Tab` entry and exit.** The in-app element-level keyboard API does not
-   perform browser-default Tab traversal. Chrome Computer Use access was unavailable,
-   so skip-link entry, disabled-skip behavior, and composite exit still need a native
-   run.
-2. **Actual browser 200% zoom.** The `200%` specimen control is a content-pressure
-   matrix only. Chrome's real zoom and CSS viewport change remain unmeasured.
-3. **Active forced colors.** The fixture contains the Fluent `Highlight` override and
-   has zero descendants using `forced-color-adjust: none`, but active runtime
-   emulation was unavailable and remains required.
+Chrome was connected through the installed browser extension and the specimen was
+operated with native key input rather than locator focus or scripted `.focus()`.
 
-Until these pass, the artifact is ready for inspection but `FI-C` must not be promoted
-to an approved production mapping. Any failure must reopen the source decision or a
-component-specific Fluent recipe; it may not be hidden by gray tinting, adding a
-Spectrum gap, or borrowing another system's inset geometry.
+1. From the final specimen control, the first `Tab` entered the visually hidden skip
+   link. It became visible and owned an exact `2px`, `-2px`-extent ring: Dark white
+   and Light black.
+2. The Dark path continued through the start action, search input, and the first
+   roving menu item. `ArrowDown` moved `tabindex="0"` to the second item, and `Enter`
+   moved `aria-checked="true"` plus the visible checkmark.
+3. The next `Tab` exited the composite to the following text link. One more `Tab`
+   left page focus; `document.activeElement` returned to `BODY` rather than trapping
+   focus in the menu.
+4. In the state-coexistence scene, traversal moved from the read-only error field
+   directly to the available `형식 안내` action. The native-disabled `내보내기` action
+   never became active.
+5. Activating the skip link with `Enter` moved focus to `#keyboard-target`, updated
+   the URL fragment, scrolled the target into view, and left no orphaned authored
+   ring.
+
+No native traversal step promoted a neutral boundary, changed selection ownership,
+or introduced a persistent white Dark outline.
+
+### Actual Chrome 200% zoom
+
+Chrome's own zoom UI was set to `200%`; the specimen's simulated `200%` control
+remained at `100%` so the two mechanisms were not compounded.
+
+| Runtime measure               | 100% baseline | 200% Chrome zoom |
+| ----------------------------- | ------------- | ---------------- |
+| Outer browser width           | `1450px`      | `1450px`         |
+| CSS viewport / document width | `1450px`      | `725px`          |
+| `devicePixelRatio`            | `2`           | `4`              |
+| `visualViewport.scale`        | `1`           | `1`              |
+
+The actual-zoom matrix covered
+`2 themes × 5 requested canvases × 5 scenes = 50 states`.
+
+| Requested specimen | Observed frame at actual 200% |
+| -----------------: | ----------------------------: |
+|            `320px` |                       `320px` |
+|            `390px` |                       `390px` |
+|            `560px` |                       `560px` |
+|            `768px` |                       `693px` |
+|           `1120px` |                       `693px` |
+
+The wider requests reflowed intrinsically inside the `725px` CSS viewport and guide
+shell padding. Across all `50 / 50` states, specimen/document overflow, escaping
+content, active-scene mismatch, focus-color mismatch, `2px` width failure, zero-gap
+geometry failure, and `forced-color-adjust: none` descendants were all zero. Chrome
+zoom was then restored to `100%`, returning the CSS viewport to `1450px` and
+`devicePixelRatio` to `2`.
+
+### Active forced colors
+
+Chrome DevTools Rendering emulation set
+`Emulate CSS media feature forced-colors` to `forced-colors: active` at normal browser
+zoom. `matchMedia("(forced-colors: active)").matches` was `true` for every measured
+state.
+
+The forced-colors matrix covered another
+`2 themes × 5 requested canvases × 5 scenes = 50 states`. The docked DevTools area
+constrained the requested `1120px` frame to `863px`; requested
+`320 / 390 / 560 / 768px` frames were reached exactly. All `50 / 50` states had zero
+overflow, escaping content, active-scene mismatch, ring-width failure, ring-geometry
+failure, or `forced-color-adjust: none` descendants.
+
+Native `Tab` entry was repeated in both themes while forced colors was active. The
+authored Light black / Dark white was correctly replaced by the system `Highlight`
+color while preserving `2px` width and `-2px` on all four sides:
+
+| Authored theme | Chrome/macOS computed `Highlight` | Width | Extent | `forced-color-adjust` |
+| -------------- | --------------------------------- | ----- | ------ | --------------------- |
+| Dark           | `rgba(26, 235, 255, 0.8)`         | `2px` | `-2px` | `auto`                |
+| Light          | `rgba(0, 230, 255, 0.8)`          | `2px` | `-2px` | `auto`                |
+
+These computed RGBA values are runtime evidence from this Chrome/macOS environment,
+not NosLog tokens. The normative authored override remains the system keyword
+`Highlight`. Emulation was reset to `No emulation`; `matchMedia` returned `false`,
+the authored theme color returned, and DevTools was closed.
 
 ## Decision Record
 
@@ -184,11 +250,13 @@ Spectrum gap, or borrowing another system's inset geometry.
 | `C5FV-02` | The corrected 100-state base matrix and 40-state actual-viewport matrix have no overflow, escape, color, or geometry failure. | `Observed — validated`           |
 | `C5FV-03` | Pointer activation is undecorated while keyboard modality produces the exact achromatic ring in both themes.                  | `Observed — harness validated`   |
 | `C5FV-04` | Roving menu movement and selection ownership coexist with the focus ring.                                                     | `Observed — validated`           |
-| `C5FV-05` | Native Tab, actual 200% zoom, and active forced-colors checks remain required before user approval.                           | `Open`                           |
+| `C5FV-05` | Native Tab, actual 200% zoom, and active forced-colors checks pass in Chrome with no measured failure.                        | `Completed — 2026-08-09`         |
 | `C5FV-06` | Production tokens, final component aliases, signature/feedback color, and application implementation remain unapproved.       | `Authority boundary — preserved` |
+| `C5FV-07` | Promote `FI-C` to the approved C5 focus mapping only after the user explicitly reviews and approves this completed evidence.  | `Open — user decision required`  |
 
 ## User Review Gate
 
-The specimen can now be reviewed visually, but the focus gate is not ready for final
-approval. Complete `C5FV-05`, record the measured results in both language versions,
-and then ask the user whether `FI-C` should become the approved C5 focus mapping.
+The technical preconditions are complete. The remaining gate is the user's explicit
+decision on whether `FI-C` should become the approved C5 focus mapping. That decision
+does not approve production tokens, final component aliases, signature/feedback
+color, component geometry, or application implementation.

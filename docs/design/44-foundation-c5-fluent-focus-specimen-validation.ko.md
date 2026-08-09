@@ -4,21 +4,21 @@
 
 ## 문서 관리
 
-| 필드           | 값                                                                           |
-| -------------- | ---------------------------------------------------------------------------- |
-| 상태           | `Specimen 준비 — 기본 matrix 통과; native/zoom/forced-colors gate는 Open`    |
-| 날짜           | `2026-08-09`                                                                 |
-| Canonical 언어 | English                                                                      |
-| 결정 gate      | 사용자가 선택한 `FI-C`의 `C5F-06` measured validation                        |
-| 선택 입력      | Fluent 2 achromatic `colorStrokeFocus2` polarity                             |
-| 상속 승인      | `M-A` surface, `F-A` foreground, `NB-A` boundary, `NI-A` neutral interaction |
+| 필드           | 값                                                                             |
+| -------------- | ------------------------------------------------------------------------------ |
+| 상태           | `검증 완료 — native Tab, 실제 200% zoom, forced-colors 통과; 사용자 승인 대기` |
+| 날짜           | `2026-08-09`                                                                   |
+| Canonical 언어 | English                                                                        |
+| 결정 gate      | 사용자가 선택한 `FI-C`의 `C5F-06` measured validation                          |
+| 선택 입력      | Fluent 2 achromatic `colorStrokeFocus2` polarity                               |
+| 상속 승인      | `M-A` surface, `F-A` foreground, `NB-A` boundary, `NI-A` neutral interaction   |
 
 이 문서는 사용자가
 [문서 43](43-foundation-c5-focus-indicator-visual-comparison.ko.md)에서 `FI-C`를
-선택한 뒤 허용된 첫 measured validation 결과를 기록한다. Production focus token,
+선택한 뒤 허용된 measured validation 결과를 기록한다. Production focus token,
 최종 component alias, signature color, feedback color, component geometry 또는
-application 구현을 승인하지 않는다. 남은 runtime gate와 사용자 검토가 끝날 때까지
-C5 focus gate는 Open이다.
+application 구현을 승인하지 않는다. 필수 runtime gate는 모두 완료됐다. C5 focus
+gate는 사용자의 명시적 검토와 승인만을 위해 Open이다.
 
 ## 권위 경계
 
@@ -53,7 +53,7 @@ Validation은 문서 `42`에 기록한 maintained Fluent 근거와 현재 Fluent
 | `colorStrokeFocus2`    | `#000000`   | `#ffffff`   | 선택된 normal-theme keyboard-visible focus color                            |
 | Outline width          | `2px`       | `2px`       | 정확한 표준 helper width                                                    |
 | Pseudo-element extent  | `-2px`      | `-2px`      | Focused component 주위의 zero-gap perimeter                                 |
-| Forced-colors override | `Highlight` | `Highlight` | System color를 허용하지만 active runtime 시험은 아직 미완료                 |
+| Forced-colors override | `Highlight` | `Highlight` | System color를 허용하며 active Chrome runtime 시험을 통과함                 |
 
 HTML fixture는 Fluent React가 일반적으로 focus management layer를 통해 받는
 keyboard-modality ownership을 재현하기 위해 `data-keyboard-focus` harness attribute를
@@ -147,27 +147,90 @@ In-app browser는 Light와 Dark 모두에서 다음을 확인했다.
 4. `Enter`가 focused item으로 `aria-checked="true"`와 visible checkmark를 옮겼다.
 5. Focus는 menu item, selection fill, text 또는 neutral boundary를 다시 칠하지 않았다.
 
-이는 fixture가 제공하는 keyboard-modality와 composite-state logic을 확인한다.
-Browser-default `Tab` traversal을 대체하지는 않는다.
+이는 fixture가 제공하는 keyboard-modality와 composite-state logic을 확인한다. 아래의
+Chrome run은 harness만으로는 제공할 수 없었던 browser-default traversal 근거를
+추가했다.
 
-## 아직 Open인 gate
+## Chrome native runtime 검증
 
-현재 세션에서 세 가지 필수 runtime check를 완료할 수 없었으며 통과로 기록하지 않는다.
+### Browser-default `Tab`
 
-1. **Native `Tab` 진입과 이탈.** In-app element-level keyboard API는
-   browser-default Tab traversal을 실행하지 않는다. Chrome Computer Use access도
-   사용할 수 없었으므로 skip-link 진입, disabled-skip behavior, composite exit은
-   native run이 필요하다.
-2. **실제 browser 200% zoom.** Specimen의 `200%` control은 content-pressure matrix일
-   뿐이다. Chrome의 실제 zoom과 CSS viewport 변화는 아직 측정하지 않았다.
-3. **Active forced colors.** Fixture는 Fluent `Highlight` override를 포함하며
-   `forced-color-adjust: none` descendant가 0이지만 active runtime emulation을 사용할
-   수 없어 계속 필수다.
+설치된 browser extension으로 Chrome을 연결하고 locator focus나 scripted `.focus()`가
+아닌 native key input으로 specimen을 조작했다.
 
-이들이 통과할 때까지 artifact는 검토 가능하지만 `FI-C`를 approved production
-mapping으로 승격하면 안 된다. 실패하면 source 결정 또는 component-specific Fluent
-recipe를 다시 열어야 한다. Gray tint, Spectrum gap 추가 또는 다른 system의 inset
-geometry로 실패를 숨겨서는 안 된다.
+1. 마지막 specimen control에서 첫 `Tab`은 시각적으로 숨겨진 skip link로 진입했다.
+   Link는 나타나며 정확한 `2px`, `-2px` extent ring을 가졌다. Dark는 white, Light는
+   black이다.
+2. Dark 경로는 start action, search input, 첫 roving menu item 순으로 이어졌다.
+   `ArrowDown`은 두 번째 item으로 `tabindex="0"`을 옮겼고 `Enter`는
+   `aria-checked="true"`와 visible checkmark를 옮겼다.
+3. 다음 `Tab`은 composite에서 후속 text link로 나갔다. 한 번 더 `Tab`하자 page
+   focus가 이탈했고 `document.activeElement`는 menu에 갇히지 않고 `BODY`로 돌아왔다.
+4. State-coexistence scene에서는 read-only error field 다음 traversal이 사용 가능한
+   `형식 안내` action으로 바로 이동했다. Native-disabled `내보내기` action은 active가
+   되지 않았다.
+5. Skip link를 `Enter`로 활성화하자 focus가 `#keyboard-target`으로 이동하고 URL
+   fragment가 갱신됐으며 target이 보이는 위치로 scroll됐다. 남겨진 authored ring은
+   없었다.
+
+Native traversal 어느 단계도 neutral boundary를 승격하거나 selection ownership을
+바꾸거나 persistent white Dark outline을 도입하지 않았다.
+
+### 실제 Chrome 200% zoom
+
+Chrome 자체 zoom UI를 `200%`로 설정했다. 두 메커니즘이 중첩되지 않도록 specimen의
+simulated `200%` control은 `100%`에 유지했다.
+
+| Runtime 측정                  | 100% baseline | 200% Chrome zoom |
+| ----------------------------- | ------------- | ---------------- |
+| Outer browser width           | `1450px`      | `1450px`         |
+| CSS viewport / document width | `1450px`      | `725px`          |
+| `devicePixelRatio`            | `2`           | `4`              |
+| `visualViewport.scale`        | `1`           | `1`              |
+
+Actual-zoom matrix는
+`2 themes × 5 requested canvases × 5 scenes = 50 states`를 다뤘다.
+
+| Requested specimen | 실제 200%에서 관찰 frame |
+| -----------------: | -----------------------: |
+|            `320px` |                  `320px` |
+|            `390px` |                  `390px` |
+|            `560px` |                  `560px` |
+|            `768px` |                  `693px` |
+|           `1120px` |                  `693px` |
+
+넓은 request는 `725px` CSS viewport와 guide shell padding 안에서 intrinsic하게
+reflow했다. `50 / 50` state 모두 specimen/document overflow, escaping content,
+active-scene mismatch, focus-color mismatch, `2px` width 실패, zero-gap geometry 실패,
+`forced-color-adjust: none` descendant가 0이었다. 그 뒤 Chrome zoom을 `100%`로
+복원해 CSS viewport `1450px`, `devicePixelRatio 2`로 돌아오는 것을 확인했다.
+
+### Active forced colors
+
+Normal browser zoom에서 Chrome DevTools Rendering emulation의
+`Emulate CSS media feature forced-colors`를 `forced-colors: active`로 설정했다.
+모든 측정 state에서 `matchMedia("(forced-colors: active)").matches`는 `true`였다.
+
+Forced-colors matrix는 다시
+`2 themes × 5 requested canvases × 5 scenes = 50 states`를 다뤘다. Docked DevTools
+영역 때문에 요청 `1120px` frame은 `863px`로 제한됐고 요청
+`320 / 390 / 560 / 768px` frame은 정확히 도달했다. `50 / 50` state 모두 overflow,
+escaping content, active-scene mismatch, ring-width 실패, ring-geometry 실패,
+`forced-color-adjust: none` descendant가 0이었다.
+
+Forced colors가 active인 동안 두 theme에서 native `Tab` 진입을 다시 실행했다.
+Authored Light black / Dark white는 system `Highlight`로 올바르게 대체되면서 `2px`
+width와 네 방향 `-2px`를 유지했다.
+
+| Authored theme | Chrome/macOS 계산 `Highlight` | Width | Extent | `forced-color-adjust` |
+| -------------- | ----------------------------- | ----- | ------ | --------------------- |
+| Dark           | `rgba(26, 235, 255, 0.8)`     | `2px` | `-2px` | `auto`                |
+| Light          | `rgba(0, 230, 255, 0.8)`      | `2px` | `-2px` | `auto`                |
+
+이 계산 RGBA 값은 현재 Chrome/macOS 환경의 runtime 근거이지 NosLog token이 아니다.
+Normative authored override는 system keyword `Highlight`로 유지된다. Emulation을
+`No emulation`으로 되돌리자 `matchMedia`는 `false`, authored theme color는 원래 값으로
+복원됐고 DevTools도 닫았다.
 
 ## 결정 기록
 
@@ -177,11 +240,13 @@ geometry로 실패를 숨겨서는 안 된다.
 | `C5FV-02` | 수정 후 100-state 기본 matrix와 40-state 실제 viewport matrix에 overflow, escape, color, geometry 실패가 없다.    | `Observed — validated`           |
 | `C5FV-03` | Pointer activation은 undecorated이며 keyboard modality는 두 theme에서 정확한 achromatic ring을 만든다.            | `Observed — harness validated`   |
 | `C5FV-04` | Roving menu 이동과 selection ownership이 focus ring과 공존한다.                                                   | `Observed — validated`           |
-| `C5FV-05` | 사용자 승인 전에 native Tab, 실제 200% zoom 및 active forced-colors 시험이 필요하다.                              | `Open`                           |
+| `C5FV-05` | Native Tab, 실제 200% zoom, active forced-colors 시험이 Chrome에서 측정 실패 없이 통과했다.                       | `Completed — 2026-08-09`         |
 | `C5FV-06` | Production token, 최종 component alias, signature/feedback color 및 application 구현은 미승인 상태다.             | `Authority boundary — preserved` |
+| `C5FV-07` | 사용자가 완료된 근거를 명시적으로 검토하고 승인한 뒤에만 `FI-C`를 approved C5 focus mapping으로 승격한다.         | `Open — user decision required`  |
 
 ## 사용자 검토 gate
 
-이제 specimen을 시각 검토할 수 있지만 focus gate의 최종 승인 단계는 아니다.
-`C5FV-05`를 완료하고 두 언어 문서에 측정 결과를 기록한 뒤 `FI-C`를 approved C5 focus
-mapping으로 승격할지 사용자에게 물어야 한다.
+기술 전제 조건은 완료됐다. 남은 gate는 `FI-C`를 approved C5 focus mapping으로
+승격할지에 대한 사용자의 명시적 결정이다. 그 결정은 production token, 최종 component
+alias, signature/feedback color, component geometry 또는 application 구현을 승인하지
+않는다.
