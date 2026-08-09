@@ -2,8 +2,8 @@
 
 ## Document Control
 
-- Status: `Research complete; candidate specimen scope proposed; no identity
-touchpoint alias approved`
+- Status: `Research retained; ITA-C achromatic shell identity approved in
+document 49`
 - Canonical language: English
 - Korean companion:
   [48-foundation-c5-identity-touchpoint-alias-research.ko.md](./48-foundation-c5-identity-touchpoint-alias-research.ko.md)
@@ -149,18 +149,19 @@ All bundles below are `Proposed`, `Control`, or `Do not advance`. None is approv
 
 | ID      | Alias bundle                                                                                                                                                                   | Reference provenance                                                              | Strength                                                                                                           | Risk                                                                                                                                                 | Gate status                                                                    |
 | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
-| `ITA-A` | **Indigo mark + adaptive neutral wordmark.** Apply `#3E63DD` only to a compact graphical NosLog mark; render `NosLog` with the approved neutral foreground for the appearance. | Canada signature, Atlassian property/app lockups, Ubuntu, GitLab                  | Smallest persistent chromatic area; mark remains visible on every approved neutral surface; wordmark stays legible | Requires a mark drawing that works without the current unapproved white outline; Dark raised contrast is only `3.06:1`                               | `Proposed for visual comparison`                                               |
-| `ITA-B` | **Static Indigo mark field + white monochrome mark + adaptive neutral wordmark.** Keep the field `#3E63DD` in both appearances and place an unoutlined white mark inside it.   | Atlassian app tile, NHS fielded mark, Spectrum static-color guidance              | Strong theme continuity; white-on-Indigo is `5.21:1`; compact asset can transfer to auth and recovery contexts     | Field geometry and radius are new decisions; a generic app-tile appearance must be avoided; must not nest the current circle in another container    | `Proposed for visual comparison`                                               |
-| `ITA-C` | **Achromatic identity control.** Keep mark and wordmark neutral/inverse and do not place Indigo in the shell identity.                                                         | BBC, Carbon, GitHub Primer, Stack Overflow, Mozilla, Polaris                      | Lowest collision and strongest content restraint; validates whether color is needed at all                         | Does not visibly exercise the approved identity source in the shell and may weaken cross-context color recognition                                   | `Control for visual comparison`                                                |
+| `ITA-A` | **Indigo mark + adaptive neutral wordmark.** Apply `#3E63DD` only to a compact graphical NosLog mark; render `NosLog` with the approved neutral foreground for the appearance. | Canada signature, Atlassian property/app lockups, Ubuntu, GitLab                  | Smallest persistent chromatic area; mark remains visible on every approved neutral surface; wordmark stays legible | Requires a mark drawing that works without the current unapproved white outline; Dark raised contrast is only `3.06:1`                               | `Rejected — chromatic logo treatment`                                          |
+| `ITA-B` | **Static Indigo mark field + white monochrome mark + adaptive neutral wordmark.** Keep the field `#3E63DD` in both appearances and place an unoutlined white mark inside it.   | Atlassian app tile, NHS fielded mark, Spectrum static-color guidance              | Strong theme continuity; white-on-Indigo is `5.21:1`; compact asset can transfer to auth and recovery contexts     | Field geometry and radius are new decisions; a generic app-tile appearance must be avoided; must not nest the current circle in another container    | `Rejected — chromatic logo treatment`                                          |
+| `ITA-C` | **Achromatic identity control.** Keep mark and wordmark neutral/inverse and do not place Indigo in the shell identity.                                                         | BBC, Carbon, GitHub Primer, Stack Overflow, Mozilla, Polaris                      | Lowest collision and strongest content restraint; validates whether color is needed at all                         | Does not visibly exercise the approved identity source in the shell and may weaken cross-context color recognition                                   | `Approved — 2026-08-10`                                                        |
 | `ITA-D` | **Full Indigo header field with white identity and controls.**                                                                                                                 | GOV.UK and NHS                                                                    | Strongest immediate origin cue and robust white foreground                                                         | Large persistent color area conflicts with documents `32`–`33`, competes with jackets and chart content, and risks recreating an over-accented shell | `Do not advance unless the restrained-color decision is reopened`              |
 | `ITA-E` | **Indigo wordmark text without a field.**                                                                                                                                      | General colored-lockup practice, but no strong match in the reviewed Dark systems | Minimal geometry change                                                                                            | Fails normal-text AA on every approved Dark surface and on Light sunken; couples identity legibility to size                                         | `Do not advance`                                                               |
 | `ITA-F` | **Thin Indigo rail or full-width header edge.** Preserve the document `47` comparison cue as the only chromatic identity element.                                              | Prior NosLog specimen only; no strong repeated source in this audit               | Very small color area and no logo-field decision                                                                   | Weak direct provenance, visually generic, and may be read as decoration or selection rather than identity                                            | `Do not advance as the default; retain only as historical comparison evidence` |
 
-## Proposed Visual-Comparison Gate
+## Approved Visual-Comparison Gate
 
-The evidence supports one small next specimen rather than another broad color
-gallery. If the user approves its scope, compare `ITA-A`, `ITA-B`, and achromatic
-control `ITA-C` with identical content in these four fragments:
+The evidence supported one small specimen rather than another broad color
+gallery. The user approved this comparison scope on 2026-08-10, and document
+`49` now compares `ITA-A`, `ITA-B`, and achromatic control `ITA-C` with identical
+content in these four fragments:
 
 1. ordinary compact header at `390px` and `320 CSS px`;
 2. minimal authentication shell identity;
@@ -187,14 +188,16 @@ Required checks:
 
 ## Research Outcome and Recommendation
 
-Advance `ITA-A`, `ITA-B`, and `ITA-C` to the same measured visual specimen. The
-comparison should decide whether NosLog needs an uncontained Indigo mark, a
-fielded Indigo mark, or no chromatic shell mark. Do not advance the full Indigo
-header, colored wordmark, or thin rail unless the user explicitly reopens the
-corresponding rejected or weakly sourced direction.
+`ITA-A`, `ITA-B`, and `ITA-C` advanced to the same measured visual specimen in
+document `49`. After reviewing it, the user approved `ITA-C`: both the graphical
+mark and visible `NosLog` wordmark remain achromatic through the approved adaptive
+Spectrum S2 neutral foreground. `ITA-A` and `ITA-B` are rejected because applying
+color to the identity logo is not the intended NosLog treatment. Do not advance
+the full Indigo header, colored wordmark, thin rail, or another chromatic shell
+alias unless the user explicitly reopens this decision.
 
-This is a recommendation for the next comparison only. It does not approve an
-identity alias, mark shape, or application change.
+This approval fixes the shell color mapping only. It does not approve the final
+mark drawing, exported asset, or application implementation.
 
 ## Decision Log
 
@@ -202,14 +205,17 @@ identity alias, mark shape, or application change.
 | -------- | ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
 | `ITA-01` | Preserve `SS-08` Radix Colors Indigo as the exclusive identity source while opening a separate component-alias gate.         | `Required`                                                          |
 | `ITA-02` | Compare at least fifteen independent official identity and shell references by equivalent placement and appearance behavior. | `Research complete — 2026-08-10`                                    |
-| `ITA-03` | Treat the vertical rail in document `47` as comparison scaffolding rather than an approved identity alias.                   | `Observed; final status pending user review`                        |
-| `ITA-04` | Advance `ITA-A`, `ITA-B`, and `ITA-C` to one four-context visual specimen.                                                   | `Proposed; pending user approval`                                   |
+| `ITA-03` | Treat the vertical rail in document `47` as comparison scaffolding rather than an approved identity alias.                   | `Rejected as a shell identity alias; evidence retained`             |
+| `ITA-04` | Advance `ITA-A`, `ITA-B`, and `ITA-C` to one four-context visual specimen.                                                   | `Approved comparison scope; completed in document 49 — 2026-08-10`  |
 | `ITA-05` | Approve a full Indigo header field.                                                                                          | `Not proposed; would require reopening restrained-color principles` |
 | `ITA-06` | Approve an Indigo small-text wordmark.                                                                                       | `Not proposed; measured Dark contrast failure`                      |
 | `ITA-07` | Decide rare primary-action eligibility.                                                                                      | `Pending separate gate; out of scope`                               |
+| `ITA-08` | Select `ITA-C`: adaptive neutral mark + adaptive neutral wordmark with no chromatic field.                                   | `Approved — 2026-08-10`                                             |
+| `ITA-09` | Apply Indigo to the graphical logo through `ITA-A` or `ITA-B`.                                                               | `Rejected — 2026-08-10`                                             |
 
 ## Sources
 
+- [Identity touchpoint alias visual comparison](./49-foundation-c5-identity-touchpoint-alias-visual-comparison.md)
 - [Adobe Spectrum: Using color](https://spectrum.adobe.com/page/using-color/)
 - [Atlassian: Logos](https://atlassian.design/foundations/logos)
 - [BBC GEL: Global Navigation](https://bbc.github.io/gel/components/global-navigation/)

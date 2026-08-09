@@ -70,6 +70,12 @@ identity/action component alias, filled primary action, 일반 interaction 재�
 Shopify Polaris와 `EXP-01` Polaris Light / Radix Dark split은 문서 `47`에 비교 근거로
 보존하지만 현재 downstream design 또는 구현 source가 아닙니다.
 
+Shell identity alias는 `ITA-C · Achromatic`으로 승인되었습니다. Graphical NosLog
+mark와 보이는 `NosLog` wordmark는 appearance별 Spectrum S2 neutral foreground를
+사용하며 Indigo mark, Indigo field, 기본 white outline을 사용하지 않습니다. Radix
+identity source는 유지되지만 현재 승인된 shell 배치는 없으며, 다른 배치나 rare filled
+primary action은 각각 별도 사용자 승인 gate입니다.
+
 ## 로컬 개발
 
 ### 준비 사항

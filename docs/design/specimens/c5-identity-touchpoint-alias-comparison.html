@@ -1,0 +1,1081 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>NosLog 2.0 C5 Identity Touchpoint Alias Comparison</title>
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+
+            :root {
+                color-scheme: light;
+                font-family:
+                    Inter, Pretendard, "Noto Sans KR", "Noto Sans JP",
+                    system-ui, sans-serif;
+                background: #e9e9e9;
+                color: #292929;
+            }
+
+            body {
+                min-width: 0;
+                margin: 0;
+                background: #e9e9e9;
+            }
+
+            button,
+            a {
+                font: inherit;
+            }
+
+            button {
+                cursor: pointer;
+            }
+
+            a {
+                color: inherit;
+                text-decoration: none;
+            }
+
+            .review-shell {
+                display: grid;
+                gap: 16px;
+                width: min(1480px, 100%);
+                margin: 0 auto;
+                padding: 16px;
+            }
+
+            .review-header,
+            .review-controls,
+            .review-note,
+            .candidate {
+                border: 1px solid #c6c6c6;
+                background: #ffffff;
+            }
+
+            .review-header,
+            .review-note {
+                padding: 16px;
+            }
+
+            .review-kicker,
+            .review-header h1,
+            .review-header p,
+            .review-note p {
+                margin: 0;
+            }
+
+            .review-kicker {
+                color: #717171;
+                font-size: 12px;
+                font-weight: 800;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+            }
+
+            .review-header h1 {
+                margin-top: 6px;
+                font-size: clamp(22px, 3vw, 34px);
+                line-height: 1.2;
+            }
+
+            .review-header p,
+            .review-note {
+                margin-top: 8px;
+                color: #505050;
+                font-size: 14px;
+                line-height: 1.65;
+            }
+
+            .review-controls {
+                display: grid;
+                gap: 12px;
+                padding: 12px;
+            }
+
+            .control-group {
+                display: grid;
+                grid-template-columns: 72px minmax(0, 1fr);
+                gap: 8px;
+                align-items: start;
+            }
+
+            .control-label {
+                padding-top: 13px;
+                color: #505050;
+                font-size: 12px;
+                font-weight: 800;
+            }
+
+            .button-row {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .review-controls button {
+                min-height: 44px;
+                border: 1px solid #c6c6c6;
+                border-radius: 0;
+                padding: 8px 12px;
+                background: #ffffff;
+                color: #505050;
+            }
+
+            .review-controls button[aria-pressed="true"] {
+                border-color: #717171;
+                color: #292929;
+                font-weight: 800;
+                box-shadow: inset 0 -3px 0 #292929;
+            }
+
+            :where(button, a) {
+                position: relative;
+                isolation: isolate;
+            }
+
+            :where(button, a):focus-visible {
+                outline: none;
+            }
+
+            :where(button, a):focus-visible::after,
+            .brand-lockup[data-focus-preview="true"]::after {
+                position: absolute;
+                z-index: 10;
+                inset: -2px;
+                border: 2px solid #000000;
+                content: "";
+                pointer-events: none;
+            }
+
+            .comparison-grid {
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 16px;
+                min-width: 0;
+            }
+
+            .candidate {
+                min-width: 0;
+            }
+
+            .candidate[data-gate="approved"] {
+                outline: 2px solid #292929;
+                outline-offset: -2px;
+            }
+
+            .candidate-heading {
+                display: grid;
+                grid-template-columns: minmax(0, 1fr) auto;
+                gap: 12px;
+                align-items: start;
+                padding: 14px;
+                border-bottom: 1px solid #e1e1e1;
+            }
+
+            .candidate-heading h2,
+            .candidate-heading p,
+            .candidate-values,
+            .candidate-footnote {
+                margin: 0;
+            }
+
+            .candidate-heading h2 {
+                font-size: 18px;
+                line-height: 1.35;
+            }
+
+            .candidate-heading p,
+            .candidate-values,
+            .candidate-footnote {
+                color: #505050;
+                font-size: 11px;
+                line-height: 1.55;
+            }
+
+            .candidate-heading p {
+                margin-top: 4px;
+            }
+
+            .candidate-values {
+                text-align: right;
+                font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+                white-space: nowrap;
+            }
+
+            .gate-badge {
+                display: inline-flex;
+                min-height: 24px;
+                align-items: center;
+                margin-top: 8px;
+                border: 1px solid #c6c6c6;
+                padding: 3px 7px;
+                color: #505050;
+                font-size: 11px;
+                font-weight: 800;
+            }
+
+            .candidate[data-gate="approved"] .gate-badge {
+                border-color: #292929;
+                background: #292929;
+                color: #ffffff;
+            }
+
+            .candidate-body {
+                display: grid;
+                gap: 12px;
+                padding: 12px;
+            }
+
+            .candidate-footnote {
+                padding: 12px 14px;
+                border-top: 1px solid #e1e1e1;
+            }
+
+            .context-card {
+                min-width: 0;
+                border: 1px solid var(--border);
+                background: var(--canvas);
+                color: var(--text);
+            }
+
+            .context-card[hidden] {
+                display: none;
+            }
+
+            .app-frame {
+                --canvas: #ffffff;
+                --surface: #f8f8f8;
+                --sunken: #e9e9e9;
+                --raised: #ffffff;
+                --text: #292929;
+                --subdued: #505050;
+                --disabled: #909090;
+                --interactive: #131313;
+                --divider: #e1e1e1;
+                --border: #dadada;
+                --border-strong: #717171;
+                --neutral-hover: #e9e9e9;
+                --focus: #000000;
+                --identity: #3e63dd;
+                --identity-on: #ffffff;
+
+                min-width: 0;
+                background: var(--canvas);
+                color: var(--text);
+            }
+
+            .app-frame[data-theme="dark"] {
+                color-scheme: dark;
+                --canvas: #111111;
+                --surface: #1b1b1b;
+                --sunken: #111111;
+                --raised: #222222;
+                --text: #dbdbdb;
+                --subdued: #afafaf;
+                --disabled: #747474;
+                --interactive: #f2f2f2;
+                --divider: #323232;
+                --border: #393939;
+                --border-strong: #8a8a8a;
+                --neutral-hover: #2c2c2c;
+                --focus: #ffffff;
+            }
+
+            .app-frame :where(button, a):focus-visible::after,
+            .app-frame .brand-lockup[data-focus-preview="true"]::after {
+                border-color: var(--focus);
+            }
+
+            .context-label {
+                display: flex;
+                min-height: 36px;
+                align-items: center;
+                justify-content: space-between;
+                gap: 8px;
+                border-bottom: 1px solid var(--divider);
+                padding: 7px 10px;
+                background: var(--sunken);
+                color: var(--subdued);
+                font-size: 10px;
+                font-weight: 800;
+                letter-spacing: 0.04em;
+                text-transform: uppercase;
+            }
+
+            .context-label code {
+                font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+                font-size: 9px;
+                font-weight: 500;
+                letter-spacing: 0;
+                text-transform: none;
+            }
+
+            .brand-lockup {
+                display: inline-flex;
+                min-width: 0;
+                min-height: 44px;
+                align-items: center;
+                gap: 8px;
+                color: var(--text);
+            }
+
+            .brand-lockup[data-size="large"] {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
+            }
+
+            .brand-mark {
+                display: inline-flex;
+                width: 28px;
+                height: 28px;
+                flex: 0 0 auto;
+                align-items: center;
+                justify-content: center;
+                background: transparent;
+            }
+
+            .brand-lockup[data-size="large"] .brand-mark {
+                width: 48px;
+                height: 48px;
+            }
+
+            .brand-glyph {
+                width: 62%;
+                height: 62%;
+                fill: var(--text);
+            }
+
+            .brand-lockup[data-alias="mark"] .brand-glyph {
+                fill: var(--identity);
+            }
+
+            .brand-lockup[data-alias="field"] .brand-mark {
+                background: var(--identity);
+            }
+
+            .brand-lockup[data-alias="field"] .brand-glyph {
+                fill: var(--identity-on);
+            }
+
+            .brand-lockup[data-alias="neutral"] .brand-glyph {
+                fill: var(--text);
+            }
+
+            .wordmark {
+                overflow: hidden;
+                color: var(--text);
+                font-size: 17px;
+                font-weight: 800;
+                letter-spacing: -0.02em;
+                line-height: 1;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .brand-lockup[data-size="large"] .wordmark {
+                font-size: 24px;
+            }
+
+            .ordinary-header {
+                display: flex;
+                min-width: 0;
+                min-height: 60px;
+                align-items: center;
+                gap: 8px;
+                border-bottom: 1px solid var(--divider);
+                padding: 8px 10px 8px 12px;
+                background: var(--canvas);
+            }
+
+            .header-actions {
+                display: flex;
+                min-width: 0;
+                flex: 0 0 auto;
+                align-items: center;
+                gap: 6px;
+                margin-left: auto;
+            }
+
+            .neutral-button,
+            .icon-button {
+                display: inline-flex;
+                min-height: 44px;
+                align-items: center;
+                justify-content: center;
+                border: 1px solid var(--border);
+                border-radius: 0;
+                background: var(--canvas);
+                color: var(--interactive);
+                font-weight: 700;
+            }
+
+            .neutral-button {
+                padding: 8px 12px;
+                font-size: 13px;
+            }
+
+            .icon-button {
+                width: 44px;
+                padding: 0;
+            }
+
+            .neutral-button:hover,
+            .icon-button:hover {
+                background: var(--neutral-hover);
+            }
+
+            .menu-glyph,
+            .back-glyph {
+                width: 18px;
+                height: 18px;
+                fill: none;
+                stroke: currentColor;
+                stroke-linecap: square;
+                stroke-width: 1.8;
+            }
+
+            .ordinary-preview {
+                display: grid;
+                gap: 8px;
+                padding: 16px;
+                background: var(--surface);
+            }
+
+            .ordinary-preview p,
+            .ordinary-preview strong {
+                margin: 0;
+            }
+
+            .ordinary-preview strong {
+                font-size: 18px;
+                line-height: 1.35;
+            }
+
+            .ordinary-preview p {
+                color: var(--subdued);
+                font-size: 12px;
+                line-height: 1.55;
+            }
+
+            .auth-fragment,
+            .recovery-fragment {
+                display: grid;
+                min-height: 300px;
+                place-items: center;
+                padding: 28px 18px;
+                background: var(--canvas);
+                text-align: center;
+            }
+
+            .auth-inner,
+            .recovery-inner {
+                display: grid;
+                width: min(280px, 100%);
+                justify-items: center;
+            }
+
+            .auth-copy,
+            .recovery-copy {
+                margin: 12px 0 0;
+                color: var(--subdued);
+                font-size: 12px;
+                line-height: 1.6;
+            }
+
+            .auth-action,
+            .recovery-action {
+                width: 100%;
+                margin-top: 24px;
+            }
+
+            .auth-note {
+                margin: 10px 0 0;
+                color: var(--disabled);
+                font-size: 10px;
+                line-height: 1.5;
+            }
+
+            .viewer-fragment {
+                min-width: 0;
+                background: var(--canvas);
+            }
+
+            .viewer-top {
+                display: grid;
+                grid-template-columns: 44px minmax(0, auto) minmax(0, 1fr);
+                gap: 8px;
+                align-items: center;
+                padding: 8px;
+                border-bottom: 1px solid var(--divider);
+            }
+
+            .viewer-home .wordmark {
+                font-size: 14px;
+            }
+
+            .viewer-home .brand-mark {
+                width: 24px;
+                height: 24px;
+            }
+
+            .chart-identity {
+                min-width: 0;
+                padding-left: 8px;
+                border-left: 1px solid var(--divider);
+            }
+
+            .chart-identity strong,
+            .chart-identity span {
+                display: block;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .chart-identity strong {
+                font-size: 12px;
+                line-height: 1.45;
+            }
+
+            .chart-identity span {
+                margin-top: 2px;
+                color: var(--subdued);
+                font-size: 10px;
+            }
+
+            .viewer-canvas {
+                display: grid;
+                min-height: 210px;
+                align-content: end;
+                gap: 10px;
+                padding: 16px;
+                background: var(--sunken);
+            }
+
+            .staff-lines {
+                display: grid;
+                gap: 8px;
+                padding: 16px 0;
+            }
+
+            .staff-lines span {
+                display: block;
+                height: 1px;
+                background: var(--border-strong);
+            }
+
+            .viewer-meta {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 6px 12px;
+                color: var(--subdued);
+                font-size: 10px;
+                line-height: 1.5;
+            }
+
+            .recovery-inner h3 {
+                margin: 18px 0 0;
+                font-size: 20px;
+                line-height: 1.35;
+            }
+
+            @media (max-width: 1040px) {
+                .comparison-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .candidate-body {
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                }
+
+                .candidate-footnote {
+                    min-height: auto;
+                }
+            }
+
+            @media (max-width: 620px) {
+                .review-shell {
+                    padding: 8px;
+                }
+
+                .control-group {
+                    grid-template-columns: 1fr;
+                }
+
+                .control-label {
+                    padding-top: 0;
+                }
+
+                .candidate-heading {
+                    grid-template-columns: 1fr;
+                }
+
+                .candidate-values {
+                    text-align: left;
+                }
+
+                .candidate-body {
+                    grid-template-columns: 1fr;
+                }
+
+                .viewer-top {
+                    grid-template-columns: 44px minmax(0, 1fr);
+                }
+
+                .viewer-home {
+                    min-width: 0;
+                }
+
+                .chart-identity {
+                    grid-column: 1 / -1;
+                    padding: 8px 0 0;
+                    border-top: 1px solid var(--divider);
+                    border-left: 0;
+                }
+            }
+
+            @media (forced-colors: active) {
+                :where(button, a):focus-visible::after,
+                .brand-lockup[data-focus-preview="true"]::after {
+                    border-color: Highlight;
+                }
+
+                .brand-lockup[data-alias="field"] .brand-mark {
+                    background: CanvasText;
+                    forced-color-adjust: auto;
+                }
+
+                .brand-lockup[data-alias="field"] .brand-glyph {
+                    fill: Canvas;
+                }
+
+                .brand-lockup[data-alias="mark"] .brand-glyph,
+                .brand-lockup[data-alias="neutral"] .brand-glyph {
+                    fill: CanvasText;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <main class="review-shell">
+            <header class="review-header">
+                <p class="review-kicker">
+                    C5 · identity touchpoint alias · ITA-C approved
+                </p>
+                <h1>NosLog identity를 어디에 둘 것인가</h1>
+                <p>
+                    승인된 Radix Indigo <code>#3E63DD</code>를 uncontained mark,
+                    static mark field, 또는 어디에도 쓰지 않는 achromatic
+                    control로 비교합니다. 세 후보는 동일한 provisional filled-N
+                    silhouette와 중립 wordmark를 사용합니다. 검토 결과
+                    <strong>ITA-C · Achromatic</strong>이 승인되었고 ITA-A와
+                    ITA-B는 Rejected입니다. 최종 로고 도형·action color를 정하는
+                    화면은 아닙니다.
+                </p>
+            </header>
+
+            <section class="review-controls" aria-label="비교 설정">
+                <div class="control-group">
+                    <span class="control-label">Appearance</span>
+                    <div class="button-row" data-control="theme">
+                        <button
+                            type="button"
+                            data-theme="light"
+                            aria-pressed="true"
+                        >
+                            Light
+                        </button>
+                        <button
+                            type="button"
+                            data-theme="dark"
+                            aria-pressed="false"
+                        >
+                            Dark
+                        </button>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <span class="control-label">Context</span>
+                    <div class="button-row" data-control="context">
+                        <button
+                            type="button"
+                            data-context="all"
+                            aria-pressed="true"
+                        >
+                            모두
+                        </button>
+                        <button
+                            type="button"
+                            data-context="ordinary"
+                            aria-pressed="false"
+                        >
+                            일반 header
+                        </button>
+                        <button
+                            type="button"
+                            data-context="auth"
+                            aria-pressed="false"
+                        >
+                            로그인
+                        </button>
+                        <button
+                            type="button"
+                            data-context="viewer"
+                            aria-pressed="false"
+                        >
+                            Chart viewer
+                        </button>
+                        <button
+                            type="button"
+                            data-context="recovery"
+                            aria-pressed="false"
+                        >
+                            복구
+                        </button>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <span class="control-label">Focus</span>
+                    <div class="button-row" data-control="focus">
+                        <button
+                            type="button"
+                            data-focus="off"
+                            aria-pressed="true"
+                        >
+                            기본
+                        </button>
+                        <button
+                            type="button"
+                            data-focus="preview"
+                            aria-pressed="false"
+                        >
+                            Identity focus preview
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="comparison-grid"
+                aria-label="Identity alias 후보 비교, ITA-C 승인"
+            >
+                <article
+                    class="candidate"
+                    data-candidate="mark"
+                    data-gate="rejected"
+                >
+                    <header class="candidate-heading">
+                        <div>
+                            <h2>ITA-A · Indigo mark</h2>
+                            <p>Uncontained graphical mark + neutral wordmark</p>
+                            <span class="gate-badge">Rejected</span>
+                        </div>
+                        <p class="candidate-values">
+                            mark #3E63DD<br />word neutral
+                        </p>
+                    </header>
+                    <div
+                        class="candidate-body app-frame"
+                        data-theme="light"
+                    ></div>
+                    <footer class="candidate-footnote">
+                        가장 작은 chromatic area입니다. Dark raised surface에서
+                        mark 대비는 3.06:1이므로 작은 text가 아니라 graphical
+                        mark로만 평가했습니다. Identity logo에 색을 적용하는
+                        treatment이므로 선택하지 않았습니다.
+                    </footer>
+                </article>
+
+                <article
+                    class="candidate"
+                    data-candidate="field"
+                    data-gate="rejected"
+                >
+                    <header class="candidate-heading">
+                        <div>
+                            <h2>ITA-B · Indigo field</h2>
+                            <p>Static field + white mark + neutral wordmark</p>
+                            <span class="gate-badge">Rejected</span>
+                        </div>
+                        <p class="candidate-values">
+                            field #3E63DD<br />mark #FFFFFF
+                        </p>
+                    </header>
+                    <div
+                        class="candidate-body app-frame"
+                        data-theme="light"
+                    ></div>
+                    <footer class="candidate-footnote">
+                        White-on-Indigo는 5.21:1입니다. 이번 비교의 정사각형
+                        field는 radius·shadow·최종 app icon을 승인하지 않기 위한
+                        zero-style scaffold였습니다. Identity logo에 chromatic
+                        field를 적용하므로 선택하지 않았습니다.
+                    </footer>
+                </article>
+
+                <article
+                    class="candidate"
+                    data-candidate="neutral"
+                    data-gate="approved"
+                >
+                    <header class="candidate-heading">
+                        <div>
+                            <h2>ITA-C · Achromatic</h2>
+                            <p>Neutral mark + neutral wordmark</p>
+                            <span class="gate-badge">Approved</span>
+                        </div>
+                        <p class="candidate-values">
+                            mark neutral<br />word neutral
+                        </p>
+                    </header>
+                    <div
+                        class="candidate-body app-frame"
+                        data-theme="light"
+                    ></div>
+                    <footer class="candidate-footnote">
+                        Mark와 wordmark를 appearance별 Spectrum S2 neutral
+                        foreground로 유지하는 승인안입니다. Radix identity
+                        source는 보존하지만 shell logo에는 배치하지 않습니다.
+                    </footer>
+                </article>
+            </section>
+
+            <aside class="review-note">
+                <p>
+                    비교 불변값: Spectrum S2 neutral, Fluent Light black / Dark
+                    white 2px zero-gap focus, 동일한 provisional filled-N
+                    silhouette, 동일한 wordmark와 shell content. Indigo는 mark
+                    또는 mark field 외의 link·button·page title·viewer data에
+                    적용되지 않습니다. Dark에서 기본 white outline은 없으며
+                    keyboard focus 때만 focus boundary가 나타납니다.
+                </p>
+            </aside>
+        </main>
+
+        <script>
+            const candidateCopy = {
+                mark: {
+                    alias: "mark",
+                    label: "Indigo graphical mark",
+                },
+                field: {
+                    alias: "field",
+                    label: "Indigo field with white mark",
+                },
+                neutral: {
+                    alias: "neutral",
+                    label: "Achromatic identity control",
+                },
+            };
+
+            const markSvg = `
+                <svg class="brand-glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M4 20V4h4l8 10V4h4v16h-4L8 10v10H4Z"></path>
+                </svg>`;
+
+            function lockup(alias, size = "compact", extraClass = "") {
+                return `
+                    <a class="brand-lockup ${extraClass}" data-alias="${alias}" data-size="${size}" href="#specimen-home" aria-label="NosLog 홈">
+                        <span class="brand-mark">${markSvg}</span>
+                        <span class="wordmark">NosLog</span>
+                    </a>`;
+            }
+
+            function ordinaryContext(alias) {
+                return `
+                    <section class="context-card" data-context-panel="ordinary">
+                        <div class="context-label"><span>Ordinary public shell</span><code>header</code></div>
+                        <header class="ordinary-header">
+                            ${lockup(alias)}
+                            <div class="header-actions">
+                                <a class="neutral-button" href="#login">로그인</a>
+                                <button class="icon-button" type="button" aria-label="전체 메뉴 열기">
+                                    <svg class="menu-glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>
+                                </button>
+                            </div>
+                        </header>
+                        <div class="ordinary-preview">
+                            <strong>악곡</strong>
+                            <p>1,052곡의 기록과 난이도 정보를 탐색합니다.</p>
+                        </div>
+                    </section>`;
+            }
+
+            function authContext(alias) {
+                return `
+                    <section class="context-card" data-context-panel="auth">
+                        <div class="context-label"><span>Minimal authentication shell</span><code>login</code></div>
+                        <div class="auth-fragment">
+                            <div class="auth-inner">
+                                ${lockup(alias, "large")}
+                                <p class="auth-copy">NOSTALGIA 기록과 랭킹을 한곳에서 확인하세요.</p>
+                                <a class="neutral-button auth-action" href="#discord-login">Discord로 계속</a>
+                                <p class="auth-note">Action은 alias gate에서 의도적으로 neutral입니다.</p>
+                            </div>
+                        </div>
+                    </section>`;
+            }
+
+            function viewerContext(alias) {
+                return `
+                    <section class="context-card" data-context-panel="viewer">
+                        <div class="context-label"><span>Focused chart-viewer shell</span><code>viewer identity</code></div>
+                        <div class="viewer-fragment">
+                            <div class="viewer-top">
+                                <button class="icon-button" type="button" aria-label="악곡 상세로 돌아가기">
+                                    <svg class="back-glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5-7 7 7 7"></path></svg>
+                                </button>
+                                ${lockup(alias, "compact", "viewer-home")}
+                                <div class="chart-identity">
+                                    <strong>교향곡 제9번 호단조 작품 95 ‘신세계로부터’</strong>
+                                    <span>Real Lv 2 · 전체 악보</span>
+                                </div>
+                            </div>
+                            <div class="viewer-canvas" aria-label="채보 영역 예시">
+                                <div class="staff-lines" aria-hidden="true">
+                                    <span></span><span></span><span></span><span></span><span></span>
+                                </div>
+                                <div class="viewer-meta"><span>BPM 90</span><span>4/4</span><span>28 lanes</span><span>Measure 17</span></div>
+                            </div>
+                        </div>
+                    </section>`;
+            }
+
+            function recoveryContext(alias) {
+                return `
+                    <section class="context-card" data-context-panel="recovery">
+                        <div class="context-label"><span>System-recovery shell</span><code>fatal state</code></div>
+                        <div class="recovery-fragment">
+                            <div class="recovery-inner">
+                                ${lockup(alias, "large")}
+                                <h3>서비스를 불러오지 못했습니다</h3>
+                                <p class="recovery-copy">잠시 후 다시 시도하거나 NosLog 홈으로 이동해 주세요.</p>
+                                <button class="neutral-button recovery-action" type="button">다시 시도</button>
+                            </div>
+                        </div>
+                    </section>`;
+            }
+
+            function renderCandidates() {
+                document
+                    .querySelectorAll("[data-candidate]")
+                    .forEach((candidate) => {
+                        const key = candidate.dataset.candidate;
+                        const { alias, label } = candidateCopy[key];
+                        const body = candidate.querySelector(".candidate-body");
+                        body.setAttribute("aria-label", label);
+                        body.innerHTML = [
+                            ordinaryContext(alias),
+                            authContext(alias),
+                            viewerContext(alias),
+                            recoveryContext(alias),
+                        ].join("");
+                    });
+            }
+
+            let currentTheme = "light";
+            let currentContext = "all";
+            let currentFocusPreview = false;
+
+            function applyTheme(theme) {
+                currentTheme = theme;
+                document.querySelectorAll(".app-frame").forEach((frame) => {
+                    frame.dataset.theme = theme;
+                });
+                document
+                    .querySelectorAll("[data-control='theme'] button")
+                    .forEach((button) => {
+                        button.setAttribute(
+                            "aria-pressed",
+                            String(button.dataset.theme === theme)
+                        );
+                    });
+            }
+
+            function applyContext(context) {
+                currentContext = context;
+                document
+                    .querySelectorAll("[data-context-panel]")
+                    .forEach((panel) => {
+                        panel.hidden =
+                            context !== "all" &&
+                            panel.dataset.contextPanel !== context;
+                    });
+                document
+                    .querySelectorAll("[data-control='context'] button")
+                    .forEach((button) => {
+                        button.setAttribute(
+                            "aria-pressed",
+                            String(button.dataset.context === context)
+                        );
+                    });
+            }
+
+            function applyFocusPreview(value) {
+                currentFocusPreview = value === "preview";
+                document.querySelectorAll(".brand-lockup").forEach((lockup) => {
+                    lockup.dataset.focusPreview = String(currentFocusPreview);
+                });
+                document
+                    .querySelectorAll("[data-control='focus'] button")
+                    .forEach((button) => {
+                        button.setAttribute(
+                            "aria-pressed",
+                            String(button.dataset.focus === value)
+                        );
+                    });
+            }
+
+            renderCandidates();
+            applyTheme(currentTheme);
+            applyContext(currentContext);
+            applyFocusPreview("off");
+
+            document
+                .querySelectorAll("[data-control='theme'] button")
+                .forEach((button) => {
+                    button.addEventListener("click", () =>
+                        applyTheme(button.dataset.theme)
+                    );
+                });
+
+            document
+                .querySelectorAll("[data-control='context'] button")
+                .forEach((button) => {
+                    button.addEventListener("click", () =>
+                        applyContext(button.dataset.context)
+                    );
+                });
+
+            document
+                .querySelectorAll("[data-control='focus'] button")
+                .forEach((button) => {
+                    button.addEventListener("click", () =>
+                        applyFocusPreview(button.dataset.focus)
+                    );
+                });
+
+            window.__noslogIdentityAliasSpecimen = {
+                candidateCount: 3,
+                contextsPerCandidate: 4,
+                currentContext: () => currentContext,
+                currentFocusPreview: () => currentFocusPreview,
+                currentTheme: () => currentTheme,
+                identitySource: "SS-08 Radix Colors Indigo",
+                identityValue: "#3E63DD",
+                identityAliasApproved: true,
+                approvedAlias: "ITA-C",
+                rejectedAliases: ["ITA-A", "ITA-B"],
+                shellIdentityChromatic: false,
+                markDrawingApproved: false,
+                rareActionApproved: false,
+                focusSource: "Fluent FI-C",
+                neutralSource: "Adobe Spectrum S2",
+                rejectedDirectionsRendered: false,
+            };
+        </script>
+    </body>
+</html>

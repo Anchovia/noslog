@@ -2,8 +2,8 @@
 
 ## 문서 관리
 
-- 상태: `SS-08 Radix Colors Indigo를 NosLog identity source로 승인; 비교 근거 보존;
-identity touchpoint 및 action alias 대기`
+- 상태: `SS-08 Radix Colors Indigo를 NosLog identity source로 유지; ITA-C
+achromatic shell identity 승인; action alias 대기`
 - 기준 언어: 영문
 - 영문 원문:
   [47-foundation-c5-finalist-noslog-context-comparison.md](./47-foundation-c5-finalist-noslog-context-comparison.md)
@@ -156,9 +156,10 @@ fixture 콘텐츠는 승인된 structural-validation artifact에서 가져왔으
    Light/Dark mapping을 분리할 수 없는 하나의 source set으로 유지한다.
 2. **Alternatives — Not selected:** Shopify Polaris와 `EXP-01`. 근거는 보존하며 승인
    source가 이후 실측 요구에서 실패할 때만 다시 열 수 있다.
-3. **Identity touchpoint alias — Pending:** 문서 `48`은 Indigo mark, Indigo mark
-   field 또는 achromatic control 중 무엇을 visual comparison으로 진행할지 별도로
-   조사한다. 이 specimen의 identity rail은 승인되지 않았다.
+3. **Identity touchpoint alias — Approved:** 문서 `49`는 사용자의 `ITA-C` 선택을
+   기록한다. Graphical mark와 보이는 wordmark는 appearance별 Spectrum S2 neutral
+   foreground를 사용한다. Indigo mark treatment, Indigo field treatment, 이
+   specimen의 identity rail은 rejected shell alias다.
 4. **Rare action eligibility — Pending:** 정확한 Radix filled-action mapping을 입증된
    드문 primary action에 사용할지, action을 neutral로 유지할지 별도 결정한다.
 
@@ -178,7 +179,7 @@ container, domain value, focus 또는 monochrome N mark 재착색을 허가하�
 | `FNC-07` | 어느 source든 filled mapping을 rare primary action에 사용하도록 승인한다.       | `Pending; identity 선택에서 추론하지 않음`     |
 | `FNC-08` | 정확한 Polaris Light / Radix Dark 값을 `EXP-01`로 실측 비교한다.                | `Approved comparison scope — 2026-08-10`       |
 | `FNC-09` | `EXP-01`을 NosLog-owned adaptive signature mapping으로 선택한다.                | `Not selected — 2026-08-10; evidence retained` |
-| `FNC-10` | Identity rail을 비교 구조로 취급하고 문서 `48`에서 component-alias 조사를 연다. | `Research opened; alias pending user approval` |
+| `FNC-10` | Identity rail을 비교 구조로 취급하고 문서 `48`에서 component-alias 조사를 연다. | `문서 49의 ITA-C 승인으로 해결 — 2026-08-10`   |
 
 ## 출처
 
@@ -188,3 +189,4 @@ container, domain value, focus 또는 monochrome N mark 재착색을 허가하�
 - [C5 정확한 system 비교](./45-foundation-c5-signature-system-reference-comparison.ko.md)
 - [C5 정보 서비스 컬러 확장](./46-foundation-c5-information-service-color-expansion.ko.md)
 - [C5 identity touchpoint alias 조사](./48-foundation-c5-identity-touchpoint-alias-research.ko.md)
+- [C5 identity touchpoint alias 시각 비교](./49-foundation-c5-identity-touchpoint-alias-visual-comparison.ko.md)

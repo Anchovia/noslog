@@ -93,6 +93,14 @@ Sections:
   from another system. This source approval does not approve any identity component
   alias, filled primary action, ordinary interaction color, logo recoloring, or broad
   accent use. Those remain separate approval gates under the restrained color budget.
+- `ITA-C` is the approved shell identity alias. Render the graphical NosLog mark and
+  visible `NosLog` wordmark with the approved adaptive Spectrum S2 neutral foreground;
+  do not apply Indigo to the mark, place it on an Indigo field, or add a default white
+  outline. `ITA-A` and `ITA-B` are `Rejected`. The approved Fluent focus indicator is
+  the only white/black boundary allowed around the identity when focus is actually
+  triggered. Radix remains the approved identity source, but it currently has no
+  approved shell identity alias; do not invent another placement without a separate
+  user-approved gate.
 - Shopify Polaris and the `EXP-01` Polaris Light / Radix Dark split were measured and
   not selected as the identity source. Preserve their evidence in document `47`, but
   do not use them as downstream design or implementation targets unless the user

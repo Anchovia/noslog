@@ -2,7 +2,7 @@
 
 ## 문서 관리
 
-- 상태: `조사 완료; 후보 specimen 범위 제안; identity touchpoint alias 미승인`
+- 상태: `조사 유지; 문서 49에서 ITA-C achromatic shell identity 승인`
 - canonical 언어: 영어
 - 영어 canonical:
   [48-foundation-c5-identity-touchpoint-alias-research.md](./48-foundation-c5-identity-touchpoint-alias-research.md)
@@ -150,18 +150,18 @@ Indigo field 안의 white monochrome mark는 지원한다. 색상이 Home link�
 
 | ID      | Alias 묶음                                                                                                                                                            | 레퍼런스 provenance                                                      | 강점                                                                                             | 위험                                                                                                                     | Gate 상태                                                      |
 | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------- |
-| `ITA-A` | **Indigo mark + appearance별 neutral wordmark.** Compact graphical NosLog mark에만 `#3E63DD`를 적용하고 `NosLog`는 appearance에 맞는 승인 neutral foreground로 렌더링 | Canada signature, Atlassian property/app lockup, Ubuntu, GitLab          | 지속 chromatic area가 가장 작음; 모든 승인 neutral surface에서 mark가 보임; wordmark 가독성 유지 | 현재 미승인 white outline 없이 작동하는 mark drawing 필요; Dark raised 대비는 `3.06:1`에 불과                            | `Visual comparison 제안`                                       |
-| `ITA-B` | **고정 Indigo mark field + white monochrome mark + appearance별 neutral wordmark.** 두 appearance에서 field를 `#3E63DD`로 유지하고 outline 없는 white mark 배치       | Atlassian app tile, NHS fielded mark, Spectrum static-color guidance     | 강한 theme 연속성; white-on-Indigo `5.21:1`; compact asset을 auth와 recovery 맥락으로 이전 가능  | Field geometry와 radius가 새 결정; generic app-tile 인상을 피해야 함; 현재 circle을 다른 container 안에 중첩해서는 안 됨 | `Visual comparison 제안`                                       |
-| `ITA-C` | **Achromatic identity control.** Mark와 wordmark를 neutral/inverse로 유지하고 shell identity에는 Indigo를 두지 않음                                                   | BBC, Carbon, GitHub Primer, Stack Overflow, Mozilla, Polaris             | 충돌이 가장 적고 콘텐츠 절제가 강함; 색상이 실제로 필요한지 검증                                 | Shell에서 승인 identity 소스를 가시적으로 사용하지 않아 맥락 간 색상 인식이 약해질 수 있음                               | `Visual comparison control`                                    |
+| `ITA-A` | **Indigo mark + appearance별 neutral wordmark.** Compact graphical NosLog mark에만 `#3E63DD`를 적용하고 `NosLog`는 appearance에 맞는 승인 neutral foreground로 렌더링 | Canada signature, Atlassian property/app lockup, Ubuntu, GitLab          | 지속 chromatic area가 가장 작음; 모든 승인 neutral surface에서 mark가 보임; wordmark 가독성 유지 | 현재 미승인 white outline 없이 작동하는 mark drawing 필요; Dark raised 대비는 `3.06:1`에 불과                            | `Rejected — chromatic logo treatment`                          |
+| `ITA-B` | **고정 Indigo mark field + white monochrome mark + appearance별 neutral wordmark.** 두 appearance에서 field를 `#3E63DD`로 유지하고 outline 없는 white mark 배치       | Atlassian app tile, NHS fielded mark, Spectrum static-color guidance     | 강한 theme 연속성; white-on-Indigo `5.21:1`; compact asset을 auth와 recovery 맥락으로 이전 가능  | Field geometry와 radius가 새 결정; generic app-tile 인상을 피해야 함; 현재 circle을 다른 container 안에 중첩해서는 안 됨 | `Rejected — chromatic logo treatment`                          |
+| `ITA-C` | **Achromatic identity control.** Mark와 wordmark를 neutral/inverse로 유지하고 shell identity에는 Indigo를 두지 않음                                                   | BBC, Carbon, GitHub Primer, Stack Overflow, Mozilla, Polaris             | 충돌이 가장 적고 콘텐츠 절제가 강함; 색상이 실제로 필요한지 검증                                 | Shell에서 승인 identity 소스를 가시적으로 사용하지 않아 맥락 간 색상 인식이 약해질 수 있음                               | `Approved — 2026-08-10`                                        |
 | `ITA-D` | **white identity와 control이 있는 전체 Indigo header field.**                                                                                                         | GOV.UK 및 NHS                                                            | 즉각적인 출처 단서가 가장 강하고 white foreground가 견고                                         | 넓고 지속적인 color area가 문서 `32`–`33`과 충돌하고 jacket 및 chart 콘텐츠와 경쟁하며 과도한 accent shell을 재현할 위험 | `절제 color 결정을 재개하지 않는 한 진행하지 않음`             |
 | `ITA-E` | **Field 없는 Indigo wordmark text.**                                                                                                                                  | 일반 colored-lockup 관행이지만 검토한 Dark system과 강하게 일치하지 않음 | Geometry 변경이 최소                                                                             | 모든 승인 Dark surface와 Light sunken에서 일반 text AA 실패; identity 가독성이 크기에 종속                               | `진행하지 않음`                                                |
 | `ITA-F` | **얇은 Indigo rail 또는 full-width header edge.** 문서 `47` 비교 단서를 유일한 chromatic identity element로 유지                                                      | 이전 NosLog specimen만 해당; 이 조사에서 강하게 반복되는 소스 없음       | Color area가 매우 작고 logo-field 결정을 요구하지 않음                                           | 직접 provenance가 약하고 시각적으로 generic하며 identity가 아니라 decoration 또는 selection으로 읽힐 수 있음             | `기본안으로 진행하지 않고 historical comparison 근거로만 보존` |
 
-## 제안하는 Visual Comparison Gate
+## 승인된 Visual Comparison Gate
 
-근거는 또 다른 넓은 color gallery가 아니라 작은 다음 specimen 하나를
-뒷받침한다. 사용자가 범위를 승인하면 동일 콘텐츠로 `ITA-A`, `ITA-B`,
-achromatic control `ITA-C`를 다음 네 fragment에서 비교한다.
+근거는 또 다른 넓은 color gallery가 아니라 작은 specimen 하나를 뒷받침했다.
+사용자는 2026-08-10 이 비교 범위를 승인했으며, 문서 `49`는 동일 콘텐츠로
+`ITA-A`, `ITA-B`, achromatic control `ITA-C`를 다음 네 fragment에서 비교한다.
 
 1. `390px` 및 `320 CSS px`의 일반 compact header;
 2. 최소 authentication shell identity;
@@ -189,29 +189,34 @@ typography, layout, neutral token, focus, 콘텐츠를 동일하게 유지해야
 
 ## 조사 결과 및 권고
 
-`ITA-A`, `ITA-B`, `ITA-C`를 동일한 측정 visual specimen으로 진행하는 것을
-권고한다. 비교를 통해 NosLog가 container 없는 Indigo mark, field가 있는
-Indigo mark, 또는 chromatic shell mark 없음 중 무엇을 필요로 하는지 결정해야
-한다. 사용자가 해당 rejected 또는 근거가 약한 방향을 명시적으로 다시 열지
-않는 한 전체 Indigo header, 컬러 wordmark, 얇은 rail은 진행하지 않는다.
+`ITA-A`, `ITA-B`, `ITA-C`는 문서 `49`의 동일한 측정 visual specimen으로
+진행되었다. 검토 후 사용자는 `ITA-C`를 승인했다. Graphical mark와 보이는
+`NosLog` wordmark 모두 승인된 appearance별 Spectrum S2 neutral foreground를
+통해 achromatic으로 유지한다. `ITA-A`와 `ITA-B`는 identity logo에 색을 적용하는
+방식이 의도한 NosLog treatment가 아니므로 Rejected다. 사용자가 이 결정을
+명시적으로 다시 열지 않는 한 전체 Indigo header, 컬러 wordmark, 얇은 rail 또는
+다른 chromatic shell alias를 진행하지 않는다.
 
-이는 다음 비교를 위한 권고일 뿐이다. Identity alias, mark shape 또는
-애플리케이션 변경을 승인하지 않는다.
+이 승인은 shell color mapping만 확정한다. 최종 mark drawing, exported asset 또는
+애플리케이션 구현은 승인하지 않는다.
 
 ## 결정 로그
 
-| ID       | 항목                                                                                             | 상태                                       |
-| -------- | ------------------------------------------------------------------------------------------------ | ------------------------------------------ |
-| `ITA-01` | 별도 component-alias gate를 열면서 `SS-08` Radix Colors Indigo를 유일한 identity 소스로 유지     | `Required`                                 |
-| `ITA-02` | 동일한 배치와 appearance 동작 기준으로 독립적인 공식 identity 및 shell 레퍼런스를 15개 이상 비교 | `조사 완료 — 2026-08-10`                   |
-| `ITA-03` | 문서 `47`의 세로 rail을 승인된 identity alias가 아니라 비교 구조로 취급                          | `Observed; 최종 상태 사용자 검토 대기`     |
-| `ITA-04` | `ITA-A`, `ITA-B`, `ITA-C`를 네 맥락 visual specimen 하나로 진행                                  | `Proposed; 사용자 승인 대기`               |
-| `ITA-05` | 전체 Indigo header field 승인                                                                    | `제안하지 않음; 절제 color 원칙 재개 필요` |
-| `ITA-06` | Indigo 작은 text wordmark 승인                                                                   | `제안하지 않음; 측정된 Dark 대비 실패`     |
-| `ITA-07` | 드문 primary-action 적격성 결정                                                                  | `별도 gate pending; 범위 밖`               |
+| ID       | 항목                                                                                             | 상태                                            |
+| -------- | ------------------------------------------------------------------------------------------------ | ----------------------------------------------- |
+| `ITA-01` | 별도 component-alias gate를 열면서 `SS-08` Radix Colors Indigo를 유일한 identity 소스로 유지     | `Required`                                      |
+| `ITA-02` | 동일한 배치와 appearance 동작 기준으로 독립적인 공식 identity 및 shell 레퍼런스를 15개 이상 비교 | `조사 완료 — 2026-08-10`                        |
+| `ITA-03` | 문서 `47`의 세로 rail을 승인된 identity alias가 아니라 비교 구조로 취급                          | `Shell identity alias로 Rejected; 근거 보존`    |
+| `ITA-04` | `ITA-A`, `ITA-B`, `ITA-C`를 네 맥락 visual specimen 하나로 진행                                  | `비교 범위 승인; 문서 49에서 완료 — 2026-08-10` |
+| `ITA-05` | 전체 Indigo header field 승인                                                                    | `제안하지 않음; 절제 color 원칙 재개 필요`      |
+| `ITA-06` | Indigo 작은 text wordmark 승인                                                                   | `제안하지 않음; 측정된 Dark 대비 실패`          |
+| `ITA-07` | 드문 primary-action 적격성 결정                                                                  | `별도 gate pending; 범위 밖`                    |
+| `ITA-08` | `ITA-C` 선택: chromatic field 없는 appearance별 neutral mark + neutral wordmark                  | `Approved — 2026-08-10`                         |
+| `ITA-09` | `ITA-A` 또는 `ITA-B`를 통해 graphical logo에 Indigo 적용                                         | `Rejected — 2026-08-10`                         |
 
 ## 출처
 
+- [Identity touchpoint alias 시각 비교](./49-foundation-c5-identity-touchpoint-alias-visual-comparison.ko.md)
 - [Adobe Spectrum: Using color](https://spectrum.adobe.com/page/using-color/)
 - [Atlassian: Logos](https://atlassian.design/foundations/logos)
 - [BBC GEL: Global Navigation](https://bbc.github.io/gel/components/global-navigation/)
