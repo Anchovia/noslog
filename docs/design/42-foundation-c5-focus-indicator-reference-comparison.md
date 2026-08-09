@@ -6,7 +6,7 @@
 
 | Field               | Value                                                                    |
 | ------------------- | ------------------------------------------------------------------------ |
-| Status              | `Research and runtime validation complete — FI-C awaits user approval`   |
+| Status              | `Approved — FI-C adopted after measured runtime validation`              |
 | Date                | `2026-08-09`                                                             |
 | Canonical language  | English                                                                  |
 | Decision gate       | C5 keyboard focus-indicator color and geometry                           |
@@ -17,7 +17,8 @@ focus token, component alias, or production implementation is approved. The user
 selected `FI-C`, Fluent 2 achromatic polarity, for dedicated measured validation on
 2026-08-09. Document `44` now records completed native Tab, actual 200% zoom, and
 active forced-colors validation. The source selection and completed validation still
-authorize a guide specimen only until the user explicitly approves the mapping.
+preserved the approval boundary until the user approved `FI-C` as the C5 focus mapping
+on 2026-08-09.
 
 ## Related Documents
 
@@ -287,20 +288,20 @@ achromatic values, add Spectrum's gap, or borrow another system's geometry.
 
 ## Decision Record
 
-| ID       | Statement                                                                                                                                                                   | Status                               |
-| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
-| `C5F-01` | Keep keyboard focus independent of signature, selection, error, and neutral boundary strength.                                                                              | `Approved upstream through C2-B`     |
-| `C5F-02` | Treat the Chrome normal/forced-colors results in document `41` as browser evidence, not normal-theme tokens.                                                                | `Observed`                           |
-| `C5F-03` | The exact Spectrum S2 pair and geometry exceed `3:1` on every approved `M-A` neutral surface without modification.                                                          | `Observed`                           |
-| `C5F-04` | Before selecting a source, build a same-condition visual comparison of the viable authored candidates, preserving each upstream system's exact color and geometry.          | `Completed — document 43`            |
-| `C5F-05` | Do not assign Fluent `colorStrokeFocus1` or a component-owned multi-stroke exception globally unless an exact equivalent component context requires it.                     | `Selected validation governance`     |
-| `C5F-06` | Keep the C5 focus gate open until browser, contrast, clipping, state-coexistence, zoom, localization, and forced-colors validation passes and the user approves the result. | `Runtime passed; user approval open` |
-| `C5F-07` | Take Fluent 2 achromatic polarity into dedicated measured validation while keeping persistent normal-Dark white boundaries prohibited.                                      | `Selected by user — 2026-08-09`      |
+| ID       | Statement                                                                                                                                                                   | Status                           |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
+| `C5F-01` | Keep keyboard focus independent of signature, selection, error, and neutral boundary strength.                                                                              | `Approved upstream through C2-B` |
+| `C5F-02` | Treat the Chrome normal/forced-colors results in document `41` as browser evidence, not normal-theme tokens.                                                                | `Observed`                       |
+| `C5F-03` | The exact Spectrum S2 pair and geometry exceed `3:1` on every approved `M-A` neutral surface without modification.                                                          | `Observed`                       |
+| `C5F-04` | Before selecting a source, build a same-condition visual comparison of the viable authored candidates, preserving each upstream system's exact color and geometry.          | `Completed — document 43`        |
+| `C5F-05` | Do not assign Fluent `colorStrokeFocus1` or a component-owned multi-stroke exception globally unless an exact equivalent component context requires it.                     | `Selected validation governance` |
+| `C5F-06` | Keep the C5 focus gate open until browser, contrast, clipping, state-coexistence, zoom, localization, and forced-colors validation passes and the user approves the result. | `Approved — 2026-08-09`          |
+| `C5F-07` | Take Fluent 2 achromatic polarity into dedicated measured validation while keeping persistent normal-Dark white boundaries prohibited.                                      | `Selected by user — 2026-08-09`  |
 
-## User Review Gate
+## Approval Record
 
 The user selected `FI-C` from document `43`, and document `44` completed the dedicated
-measured validation without a recorded failure. The remaining gate is the user's
-explicit approval or rejection of `FI-C` as the C5 focus mapping. Neither the earlier
-selection nor the completed runtime evidence approves production tokens, final
-component aliases, signature color, feedback color, or application implementation.
+measured validation without a recorded failure. The user then approved `FI-C` as the
+C5 focus mapping on 2026-08-09. This approval does not approve production token naming,
+final component aliases, signature color, feedback color, component geometry, or
+application implementation.

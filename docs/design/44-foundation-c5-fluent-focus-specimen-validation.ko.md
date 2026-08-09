@@ -4,21 +4,22 @@
 
 ## 문서 관리
 
-| 필드           | 값                                                                             |
-| -------------- | ------------------------------------------------------------------------------ |
-| 상태           | `검증 완료 — native Tab, 실제 200% zoom, forced-colors 통과; 사용자 승인 대기` |
-| 날짜           | `2026-08-09`                                                                   |
-| Canonical 언어 | English                                                                        |
-| 결정 gate      | 사용자가 선택한 `FI-C`의 `C5F-06` measured validation                          |
-| 선택 입력      | Fluent 2 achromatic `colorStrokeFocus2` polarity                               |
-| 상속 승인      | `M-A` surface, `F-A` foreground, `NB-A` boundary, `NI-A` neutral interaction   |
+| 필드           | 값                                                                           |
+| -------------- | ---------------------------------------------------------------------------- |
+| 상태           | `승인 — native Tab, 실제 200% zoom, forced-colors 검증 뒤 FI-C 채택`         |
+| 날짜           | `2026-08-09`                                                                 |
+| 승인일         | `2026-08-09`                                                                 |
+| Canonical 언어 | English                                                                      |
+| 결정 gate      | 사용자가 선택한 `FI-C`의 `C5F-06` measured validation                        |
+| 선택 입력      | Fluent 2 achromatic `colorStrokeFocus2` polarity                             |
+| 상속 승인      | `M-A` surface, `F-A` foreground, `NB-A` boundary, `NI-A` neutral interaction |
 
 이 문서는 사용자가
 [문서 43](43-foundation-c5-focus-indicator-visual-comparison.ko.md)에서 `FI-C`를
 선택한 뒤 허용된 measured validation 결과를 기록한다. Production focus token,
 최종 component alias, signature color, feedback color, component geometry 또는
-application 구현을 승인하지 않는다. 필수 runtime gate는 모두 완료됐다. C5 focus
-gate는 사용자의 명시적 검토와 승인만을 위해 Open이다.
+application 구현을 승인하지 않는다. 필수 runtime gate는 모두 완료됐다. 사용자는
+2026-08-09 결과를 검토하고 `FI-C`를 C5 focus mapping으로 승인했다.
 
 ## 권위 경계
 
@@ -242,11 +243,12 @@ Normative authored override는 system keyword `Highlight`로 유지된다. Emula
 | `C5FV-04` | Roving menu 이동과 selection ownership이 focus ring과 공존한다.                                                   | `Observed — validated`           |
 | `C5FV-05` | Native Tab, 실제 200% zoom, active forced-colors 시험이 Chrome에서 측정 실패 없이 통과했다.                       | `Completed — 2026-08-09`         |
 | `C5FV-06` | Production token, 최종 component alias, signature/feedback color 및 application 구현은 미승인 상태다.             | `Authority boundary — preserved` |
-| `C5FV-07` | 사용자가 완료된 근거를 명시적으로 검토하고 승인한 뒤에만 `FI-C`를 approved C5 focus mapping으로 승격한다.         | `Open — user decision required`  |
+| `C5FV-07` | 사용자가 완료된 근거를 명시적으로 검토하고 승인한 뒤에만 `FI-C`를 approved C5 focus mapping으로 승격한다.         | `Approved — 2026-08-09`          |
 
-## 사용자 검토 gate
+## 승인 기록
 
-기술 전제 조건은 완료됐다. 남은 gate는 `FI-C`를 approved C5 focus mapping으로
-승격할지에 대한 사용자의 명시적 결정이다. 그 결정은 production token, 최종 component
-alias, signature/feedback color, component geometry 또는 application 구현을 승인하지
-않는다.
+기술 전제 조건이 완료된 뒤 사용자는 2026-08-09 `FI-C`를 C5 focus mapping으로
+승인했다. 이 승인은 Light black / Dark white `colorStrokeFocus2`, `2px` zero-gap
+authored geometry, system `Highlight` forced-colors override를 확정한다. Production
+token naming, 최종 component alias, signature/feedback color, component geometry 또는
+application 구현은 승인하지 않는다.

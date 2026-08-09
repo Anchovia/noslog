@@ -6,7 +6,7 @@
 
 | 필드           | 값                                                                   |
 | -------------- | -------------------------------------------------------------------- |
-| 상태           | `조사 및 runtime 검증 완료 — FI-C 사용자 승인 대기`                  |
+| 상태           | `승인 — measured runtime 검증 뒤 FI-C 채택`                          |
 | 날짜           | `2026-08-09`                                                         |
 | Canonical 언어 | English                                                              |
 | 결정 gate      | C5 키보드 포커스 표시기 색상 및 geometry                             |
@@ -16,8 +16,8 @@
 전에 키보드 포커스의 시각 처리를 비교한다. 사용자는 2026-08-09 `FI-C`, Fluent 2의
 achromatic polarity를 전용 measured validation 대상으로 선택했다. 문서 `44`는 이제
 native Tab, 실제 200% zoom, active forced-colors 검증 완료를 기록한다. 사용자가
-mapping을 명시적으로 승인하기 전까지 source 선택과 완료된 검증은 계속 guide
-specimen만 허용한다.
+mapping을 명시적으로 승인하기 전까지 source 선택과 완료된 검증은 승인 경계를
+보존했다. 사용자는 2026-08-09 `FI-C`를 C5 focus mapping으로 승인했다.
 
 ## 관련 문서
 
@@ -288,20 +288,19 @@ mapping을 제공할 수 없다.
 
 ## 결정 기록
 
-| ID       | 문장                                                                                                                                                                       | 상태                             |
-| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
-| `C5F-01` | 키보드 포커스를 signature, selection, error 및 neutral boundary strength와 독립적으로 유지한다.                                                                            | `C2-B를 통해 상위 승인됨`        |
-| `C5F-02` | 문서 `41`의 Chrome normal/forced-colors 결과를 normal-theme token이 아닌 browser 근거로 취급한다.                                                                          | `Observed`                       |
-| `C5F-03` | 정확한 Spectrum S2 pair와 geometry는 수정 없이 승인된 모든 `M-A` neutral surface에서 `3:1`을 넘는다.                                                                       | `Observed`                       |
-| `C5F-04` | Source를 선택하기 전에 실행 가능한 authored 후보를 동일 조건으로 시각 비교하며 각 upstream system의 정확한 color와 geometry를 보존한다.                                    | `완료 — 문서 43`                 |
-| `C5F-05` | 정확히 동등한 component context가 요구하지 않는 한 Fluent `colorStrokeFocus1` 또는 component-owned multi-stroke 예외를 global로 배정하지 않는다.                           | `선택된 validation rule`         |
-| `C5F-06` | Browser, contrast, clipping, state coexistence, zoom, localization 및 forced-colors validation을 통과하고 사용자가 결과를 승인할 때까지 C5 focus gate를 Open으로 유지한다. | `Runtime 통과; 사용자 승인 Open` |
-| `C5F-07` | Persistent normal-Dark white boundary 금지를 유지하면서 Fluent 2 achromatic polarity를 전용 measured validation으로 가져간다.                                              | `사용자 선택 — 2026-08-09`       |
+| ID       | 문장                                                                                                                                                                       | 상태                       |
+| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
+| `C5F-01` | 키보드 포커스를 signature, selection, error 및 neutral boundary strength와 독립적으로 유지한다.                                                                            | `C2-B를 통해 상위 승인됨`  |
+| `C5F-02` | 문서 `41`의 Chrome normal/forced-colors 결과를 normal-theme token이 아닌 browser 근거로 취급한다.                                                                          | `Observed`                 |
+| `C5F-03` | 정확한 Spectrum S2 pair와 geometry는 수정 없이 승인된 모든 `M-A` neutral surface에서 `3:1`을 넘는다.                                                                       | `Observed`                 |
+| `C5F-04` | Source를 선택하기 전에 실행 가능한 authored 후보를 동일 조건으로 시각 비교하며 각 upstream system의 정확한 color와 geometry를 보존한다.                                    | `완료 — 문서 43`           |
+| `C5F-05` | 정확히 동등한 component context가 요구하지 않는 한 Fluent `colorStrokeFocus1` 또는 component-owned multi-stroke 예외를 global로 배정하지 않는다.                           | `선택된 validation rule`   |
+| `C5F-06` | Browser, contrast, clipping, state coexistence, zoom, localization 및 forced-colors validation을 통과하고 사용자가 결과를 승인할 때까지 C5 focus gate를 Open으로 유지한다. | `Approved — 2026-08-09`    |
+| `C5F-07` | Persistent normal-Dark white boundary 금지를 유지하면서 Fluent 2 achromatic polarity를 전용 measured validation으로 가져간다.                                              | `사용자 선택 — 2026-08-09` |
 
-## 사용자 검토 gate
+## 승인 기록
 
 사용자는 문서 `43`에서 `FI-C`를 선택했고 문서 `44`는 기록된 실패 없이 전용 measured
-validation을 완료했다. 남은 gate는 `FI-C`를 C5 focus mapping으로 승인할지 기각할지에
-대한 사용자의 명시적 결정이다. 앞선 선택과 완료된 runtime 근거 어느 쪽도 production
-token, 최종 component alias, signature color, feedback color 또는 application 구현을
-승인하지 않는다.
+validation을 완료했다. 사용자는 이어서 2026-08-09 `FI-C`를 C5 focus mapping으로
+승인했다. 이 승인은 production token naming, 최종 component alias, signature color,
+feedback color, component geometry 또는 application 구현을 승인하지 않는다.

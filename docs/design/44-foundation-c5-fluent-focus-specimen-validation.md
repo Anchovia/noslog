@@ -4,22 +4,23 @@
 
 ## Document Control
 
-| Field               | Value                                                                                               |
-| ------------------- | --------------------------------------------------------------------------------------------------- |
-| Status              | `Validation complete — native Tab, actual 200% zoom, and forced-colors pass; user approval pending` |
-| Date                | `2026-08-09`                                                                                        |
-| Canonical language  | English                                                                                             |
-| Decision gate       | `C5F-06` measured validation of user-selected `FI-C`                                                |
-| Selected input      | Fluent 2 achromatic `colorStrokeFocus2` polarity                                                    |
-| Inherited approvals | `M-A` surfaces, `F-A` foregrounds, `NB-A` boundaries, and `NI-A` neutral interaction                |
+| Field               | Value                                                                                      |
+| ------------------- | ------------------------------------------------------------------------------------------ |
+| Status              | `Approved — FI-C adopted after native Tab, actual 200% zoom, and forced-colors validation` |
+| Date                | `2026-08-09`                                                                               |
+| Approval date       | `2026-08-09`                                                                               |
+| Canonical language  | English                                                                                    |
+| Decision gate       | `C5F-06` measured validation of user-selected `FI-C`                                       |
+| Selected input      | Fluent 2 achromatic `colorStrokeFocus2` polarity                                           |
+| Inherited approvals | `M-A` surfaces, `F-A` foregrounds, `NB-A` boundaries, and `NI-A` neutral interaction       |
 
 This document records the measured validation authorized after the user
 selected `FI-C` in
 [document 43](43-foundation-c5-focus-indicator-visual-comparison.md). It does not
 approve a production focus token, final component alias, signature color, feedback
 color, component geometry, or application implementation. All required runtime gates
-are complete. The C5 focus gate remains open only for the user's explicit review and
-approval.
+are complete. The user reviewed the result and approved `FI-C` as the C5 focus mapping
+on 2026-08-09.
 
 ## Authority Boundary
 
@@ -252,11 +253,12 @@ the authored theme color returned, and DevTools was closed.
 | `C5FV-04` | Roving menu movement and selection ownership coexist with the focus ring.                                                     | `Observed — validated`           |
 | `C5FV-05` | Native Tab, actual 200% zoom, and active forced-colors checks pass in Chrome with no measured failure.                        | `Completed — 2026-08-09`         |
 | `C5FV-06` | Production tokens, final component aliases, signature/feedback color, and application implementation remain unapproved.       | `Authority boundary — preserved` |
-| `C5FV-07` | Promote `FI-C` to the approved C5 focus mapping only after the user explicitly reviews and approves this completed evidence.  | `Open — user decision required`  |
+| `C5FV-07` | Promote `FI-C` to the approved C5 focus mapping only after the user explicitly reviews and approves this completed evidence.  | `Approved — 2026-08-09`          |
 
-## User Review Gate
+## Approval Record
 
-The technical preconditions are complete. The remaining gate is the user's explicit
-decision on whether `FI-C` should become the approved C5 focus mapping. That decision
-does not approve production tokens, final component aliases, signature/feedback
-color, component geometry, or application implementation.
+After the technical preconditions were completed, the user approved `FI-C` as the C5
+focus mapping on 2026-08-09. This approval fixes Light black / Dark white
+`colorStrokeFocus2`, the `2px` zero-gap authored geometry, and the system `Highlight`
+forced-colors override. It does not approve production token naming, final component
+aliases, signature/feedback color, component geometry, or application implementation.

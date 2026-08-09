@@ -4,12 +4,13 @@
 
 - Status: `M-A surfaces, F-A foregrounds, NB-A neutral boundaries, and NI-A
 neutral interaction approved; C5M-03 through C5M-06 closed; FI-C runtime validation
-complete; focus user approval remains open`
+complete; FI-C focus mapping approved`
 - Surface-mapping approval date: 2026-08-08
 - Foreground-mapping approval date: 2026-08-09
 - Neutral-boundary approval date: 2026-08-09
 - Neutral-interaction approval date: 2026-08-09
 - Focus-runtime-validation completion date: 2026-08-09
+- Focus-mapping approval date: 2026-08-09
 - Canonical language: English
 - Korean companion:
   [34-foundation-c5-spectrum-semantic-mapping.ko.md](./34-foundation-c5-spectrum-semantic-mapping.ko.md)
@@ -28,8 +29,8 @@ Dark/Light neutral primitive source. `C5M-03` assigns the approved C1-B surface 
 through the current Spectrum S2 aliases, `C5M-04` assigns the approved exact `F-A`
 foreground mapping, `C5M-05` assigns approved exact `NB-A` neutral boundaries, and
 `C5M-06` assigns the approved `NI-A` neutral interaction contract. Document `44`
-completed `FI-C` runtime validation, but the focus mapping still awaits explicit user
-approval. Final component-level aliases remain open.
+completed `FI-C` runtime validation, and the user then approved `FI-C` as the C5 focus
+mapping on 2026-08-09. Final component-level aliases remain open.
 
 ## Related Documents
 
@@ -256,8 +257,9 @@ The `C5M-03` surface approval by itself authorized representative guide specimen
 measurement; it did not promote any other role. Foreground was approved separately
 through `C5M-04` after documents `36` and `37`, and neutral boundaries through
 `C5M-05` after documents `38` and `39`. Ordinary neutral interaction was approved
-separately through `C5M-06` after documents `40` and `41`. Focus, signature color,
-final component aliases and geometry, and production implementation remain
+separately through `C5M-06` after documents `40` and `41`. Focus was approved
+separately through documents `42`–`44`; signature color, production focus token
+naming, final component aliases and geometry, and production implementation remain
 unapproved.
 `M-B` may remain visible only as labeled historical evidence; it is not a fallback
 implementation path.
