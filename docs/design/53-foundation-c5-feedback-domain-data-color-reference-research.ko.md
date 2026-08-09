@@ -10,6 +10,8 @@
 - Controlled 시각 비교:
   [문서 54](./54-foundation-c5-feedback-status-source-visual-comparison.ko.md) 및
   [interactive artifact](./specimens/c5-feedback-status-source-comparison.html)
+- `13B` 자격 조사:
+  [문서 55](./55-foundation-c5-nostalgia-domain-color-eligibility-research.ko.md)
 - 범위: universal feedback/status color, NOSTALGIA domain color ownership,
   data-visualization color ownership 및 이들 사이 collision contract를 조사하는
   작업 묶음 `13`
@@ -268,3 +270,4 @@ feedback 비교를 제공한다.
 Artifact는 `FS-A`, original `FS-B` 및 version pin된 `FS-C`를 비교 근거로 보존하고
 `FS-BN`을 승인된 `13A` 결과로 기록한다. 작업 묶음 `13`은 이제 별도 `13B`
 NOSTALGIA-domain color Gate로 진행하며 `13C`는 그 뒤까지 대기한다.
+문서 `55`는 정확한 domain 값을 승인하지 않고 첫 `13B` role 자격 비교를 기록한다.

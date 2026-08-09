@@ -10,6 +10,8 @@
 - Controlled visual comparison:
   [document 54](./54-foundation-c5-feedback-status-source-visual-comparison.md) and
   [interactive artifact](./specimens/c5-feedback-status-source-comparison.html)
+- `13B` eligibility research:
+  [document 55](./55-foundation-c5-nostalgia-domain-color-eligibility-research.md)
 - Scope: Package `13` research for universal feedback/status color,
   NOSTALGIA-domain color ownership, data-visualization color ownership, and the
   collision contract between them
@@ -281,3 +283,5 @@ feedback comparison using real content:
 The artifact preserves `FS-A`, original `FS-B`, and version-pinned `FS-C` as comparison
 evidence and records `FS-BN` as the approved `13A` result. Package `13` now proceeds to
 the separate `13B` NOSTALGIA-domain color gate; `13C` remains pending after that gate.
+Document `55` records the first `13B` role-eligibility comparison without approving
+exact domain values.
