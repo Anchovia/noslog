@@ -113,6 +113,16 @@ Sections:
   exact Dark hover/pressed `#5472E4` with `#FFFFFF` text measured `4.28:1`, below the
   required `4.5:1`. Do not modify or revive those mappings without a new user-approved
   research gate.
+- `MG-A · Adobe Spectrum S2` is the approved Material Geometry source and component
+  alias mapping. Preserve the exact published mapping recorded by `MGR-08` in document
+  `52`: control/container/overlay/full radius `4px/8px/10px/50%`;
+  `drop-shadow-emphasized` for justified raised content, `drop-shadow-elevated` for
+  temporary overlays, `drop-shadow-dragged` for actively moved content; and Spectrum
+  overlay opacity `0.4` in Light and `0.6` in Dark. Flat canvas, surface, and sunken
+  content keep no default shadow. The scroll-boundary alias adds no shadow and keeps
+  the approved `1px` directional boundary. Do not substitute Tailwind geometry,
+  interpolate new values, or revive the rejected `MG-B` Fluent and `MG-C` Atlassian
+  mappings without a new user-approved gate.
 - Shopify Polaris and the `EXP-01` Polaris Light / Radix Dark split were measured and
   not selected as the identity source. Preserve their evidence in document `47`, but
   do not use them as downstream design or implementation targets unless the user

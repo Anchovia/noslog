@@ -2,25 +2,25 @@
 
 ## Document control
 
-- Status: `Exact source-set extraction and initial browser validation complete; user decision pending`
+- Status: `Approved — MG-A Adobe Spectrum S2; MGR-08, 2026-08-10`
 - Canonical language: English
 - Korean companion:
   [52-foundation-c5-material-geometry-reference-comparison.ko.md](./52-foundation-c5-material-geometry-reference-comparison.ko.md)
 - Date: 2026-08-10
 - Interactive artifact:
   [C5 material-geometry comparison](./specimens/c5-material-geometry-comparison.html)
-- Scope: exact radius, elevation/shadow, and scrim-source candidates for the
-  already approved `C4` material roles
+- Scope: exact radius, elevation/shadow, and scrim-source decision for the
+  already approved `C4` material roles, including the compared candidates
 - Inputs: approved documents `24`, `26`, `32`, `34`–`51`; current repository
   component inventory; fourteen independent maintained design-system sources
-- Excludes: final component aliases, feedback/domain/data color, motion,
-  iconography, final NosLog mark drawing, production implementation, and any
-  high-fidelity page suite
+- Excludes: non-material component anatomy and aliases, feedback/domain/data
+  color, motion, iconography, final NosLog mark drawing, production
+  implementation, and any high-fidelity page suite
 
-This document starts the next C5 gate after the neutral, focus, identity, and
-filled-primary-action decisions. It records evidence and narrows intact source
-sets. It does not approve a radius or shadow value merely because that value is
-listed here.
+This document records the completed C5 Material Geometry gate after the neutral,
+focus, identity, and filled-primary-action decisions. Values listed in the
+research comparison were not approved merely by inclusion; the exact `MG-A`
+mapping in `MGR-08` was approved by the user after controlled comparison.
 
 ## Governing decisions that remain fixed
 
@@ -120,12 +120,12 @@ familiarity is not enough to choose a source.
 
 ## Exact source-set extraction progress
 
-### `MG-A` Spectrum S2 — exact candidate input complete
+### `MG-A` Spectrum S2 — approved exact input
 
 The published Spectrum token data now provides a complete, non-interpolated
 candidate input:
 
-| Proposed NosLog role | Exact Spectrum alias/value                                                                                           |
+| Approved NosLog role | Exact Spectrum alias/value                                                                                           |
 | -------------------- | -------------------------------------------------------------------------------------------------------------------- |
 | `radius-control`     | `corner-radius-small-default` → `4px`                                                                                |
 | `radius-container`   | `corner-radius-medium-default` → `8px`                                                                               |
@@ -137,9 +137,10 @@ candidate input:
 | Shadow colors        | Ambient Light/Dark `rgba(0,0,0,.08/.24)`; transition `.04/.12`; key increases by semantic level exactly as published |
 | `scrim`              | `overlay-color` black with `overlay-opacity` Light `0.4`, Dark `0.6`                                                 |
 
-This is a candidate mapping from published Spectrum semantic aliases to the
-already approved NosLog roles. It does not alter any token value and does not
-adopt Spectrum component styling. Visual approval remains pending.
+This approved mapping connects published Spectrum semantic aliases to the
+already approved NosLog roles without altering a token value or adopting
+Spectrum component styling. The scroll-boundary alias adds no shadow; it keeps
+the approved `1px` directional boundary instead of inventing a fourth shadow.
 
 ### `MG-B` Fluent 2 — exact Web input complete; semantic coverage gap recorded
 
@@ -173,9 +174,9 @@ approved Spectrum surfaces fixed, so `MG-C` is a compatibility probe rather than
 an intact downstream candidate unless that provenance conflict is reopened with
 the user. Dragged items correctly reuse Atlassian overlay elevation.
 
-## Source-set finalists for extraction
+## Reviewed source-set finalists
 
-The following are research finalists, not approved candidates.
+The following were the research finalists considered by the completed gate.
 
 ### `MG-A` — Adobe Spectrum S2 material set
 
@@ -183,7 +184,7 @@ The following are research finalists, not approved candidates.
 - Advantage: simplest provenance beside the already approved Spectrum neutral
   primitives; smallest risk of an unsourced hybrid.
 - Exact radius, three semantic shadows, appearance-specific shadow colors, and
-  scrim are now extracted. The remaining gate is controlled NosLog rendering.
+  scrim were extracted and approved intact through `MGR-08`.
 
 ### `MG-B` — Microsoft Fluent 2 material set
 
@@ -204,12 +205,12 @@ The following are research finalists, not approved candidates.
   its shadows to be paired with Atlassian elevation surfaces, while Spectrum S2
   is already the exclusive NosLog neutral surface source.
 
-`MG-A` is currently the only finalist with neither a missing semantic role nor a
-cross-source surface-pairing conflict. This is an evidence finding, not a final
-recommendation or approval; the controlled rendering and user decision remain
-required.
+The user approved `MG-A` on 2026-08-10 because it is the only finalist with
+neither a missing semantic role nor a cross-source surface-pairing conflict.
+`MG-B` is rejected for the documented role gap, and `MG-C` is rejected for the
+documented provenance conflict.
 
-## Required visual-comparison gate
+## Completed visual-comparison gate and retained regression coverage
 
 The controlled comparison is now available at
 [c5-material-geometry-comparison.html](./specimens/c5-material-geometry-comparison.html).
@@ -220,15 +221,17 @@ Initial browser validation on 2026-08-10 covered all three candidates in the
 Light/Dark, Korean/Japanese/English, popover/dialog, rest/dragged, and
 `100%`/`200%` controls. The representative `390px` and required `320 CSS px`
 viewports produced no page-level or candidate-card horizontal overflow, and the
-browser console reported no warnings or errors. This is an artifact-integrity
-check, not material approval; user comparison and candidate-specific deep
-validation remain pending.
+browser console reported no warnings or errors. The comparison and user decision
+close the source and alias gate. Final integrated Foundation regression remains
+work package `15`; it must verify the approved mapping without reopening this
+decision or repeating the completed source research.
 
-The next specimen must hold typography, spacing, approved Spectrum surfaces and
-foregrounds, boundary mapping, `FI-C` focus, content, and layout constant. It may
-change only the candidate-owned radius, shadow, and scrim mapping.
+The comparison held typography, spacing, approved Spectrum surfaces and
+foregrounds, boundary mapping, `FI-C` focus, content, and layout constant. It
+changed only the candidate-owned radius, shadow, and scrim mapping.
 
-Required scenes:
+The following coverage contract now belongs to final integrated Foundation
+regression in work package `15`. It is not an incomplete source-selection gate:
 
 1. flat discovery/ranking rows beside one justified raised movable item;
 2. menu/popover and dialog over both Light and Dark approved surfaces;
@@ -249,13 +252,15 @@ reintroduce white Dark-theme outlines, or use Tailwind radius/shadow defaults.
 
 ## Decision log
 
-| ID       | Decision                                                                                         | Status                                                                  |
-| -------- | ------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------- |
-| `MGR-01` | Compare equivalent material roles across fourteen independent maintained systems                 | `Research complete — 2026-08-10`                                        |
-| `MGR-02` | Preserve the approved `C1-B`, `C4`, Spectrum neutral, `FI-C`, `ITA-C`, and `RPA-A` contracts     | `Required`                                                              |
-| `MGR-03` | Keep Tailwind radius/shadow and starter-card styling outside design authority                    | `Required`                                                              |
-| `MGR-04` | Shortlist `MG-A`, `MG-B`, and `MG-C` for complete source-set extraction                          | `Proposed`                                                              |
-| `MGR-05` | Mix radius from one system with shadow or scrim from another                                     | `Rejected by provenance contract`                                       |
-| `MGR-06` | Extract exact current shadow color/composition, scrim, and component ownership for all finalists | `Complete — version-pinned official artifacts checked`                  |
-| `MGR-07` | Build the controlled NosLog material-geometry comparison                                         | `Artifact and initial browser validation complete; user review pending` |
-| `MGR-08` | Approve an exact material source and component aliases                                           | `Pending user decision after visual validation`                         |
+| ID       | Decision                                                                                         | Status                                                            |
+| -------- | ------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------- |
+| `MGR-01` | Compare equivalent material roles across fourteen independent maintained systems                 | `Research complete — 2026-08-10`                                  |
+| `MGR-02` | Preserve the approved `C1-B`, `C4`, Spectrum neutral, `FI-C`, `ITA-C`, and `RPA-A` contracts     | `Required`                                                        |
+| `MGR-03` | Keep Tailwind radius/shadow and starter-card styling outside design authority                    | `Required`                                                        |
+| `MGR-04` | Shortlist `MG-A`, `MG-B`, and `MG-C` for complete source-set extraction                          | `Complete — research shortlist`                                   |
+| `MGR-05` | Mix radius from one system with shadow or scrim from another                                     | `Rejected by provenance contract`                                 |
+| `MGR-06` | Extract exact current shadow color/composition, scrim, and component ownership for all finalists | `Complete — version-pinned official artifacts checked`            |
+| `MGR-07` | Build the controlled NosLog material-geometry comparison                                         | `Complete — artifact and initial browser validation`              |
+| `MGR-08` | Approve `MG-A` Spectrum S2 as the exact material source and component-alias mapping              | `Approved by user — 2026-08-10`                                   |
+| `MGR-09` | Use `MG-B` Fluent as the downstream material mapping                                             | `Rejected — incomplete dragged and scroll-boundary role coverage` |
+| `MGR-10` | Use `MG-C` Atlassian while retaining Spectrum neutral surfaces                                   | `Rejected — required surface/elevation provenance conflict`       |

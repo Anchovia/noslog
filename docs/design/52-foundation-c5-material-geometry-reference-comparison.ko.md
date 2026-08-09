@@ -2,7 +2,7 @@
 
 ## 문서 관리
 
-- 상태: `정확한 source set 추출과 초기 browser 검증 완료; 사용자 결정 대기`
+- 상태: `승인 — MG-A Adobe Spectrum S2; MGR-08, 2026-08-10`
 - 정본 언어: 영어
 - 영어 정본:
   [52-foundation-c5-material-geometry-reference-comparison.md](./52-foundation-c5-material-geometry-reference-comparison.md)
@@ -10,15 +10,16 @@
 - Interactive artifact:
   [C5 material-geometry 비교](./specimens/c5-material-geometry-comparison.html)
 - 범위: 이미 승인된 `C4` material role을 위한 정확한 radius,
-  elevation/shadow 및 scrim source 후보
+  elevation/shadow 및 scrim source 결정과 비교 후보
 - 입력: 승인된 문서 `24`, `26`, `32`, `34`–`51`, 현재 저장소 component
   inventory, 독립적인 유지 관리 design system 출처 14개
-- 제외: 최종 component alias, feedback/domain/data color, motion,
-  iconography, 최종 NosLog mark drawing, production 구현 및 high-fidelity page suite
+- 제외: 이 Gate 밖의 non-material component anatomy와 alias,
+  feedback/domain/data color, motion, iconography, 최종 NosLog mark drawing,
+  production 구현 및 high-fidelity page suite
 
-이 문서는 neutral, focus, identity 및 filled-primary-action 결정 뒤의 다음 C5
-Gate를 시작한다. 근거를 기록하고 온전한 source set 후보를 좁히지만, 여기에 값이
-기록되었다는 이유만으로 radius나 shadow 값을 승인하지 않는다.
+이 문서는 neutral, focus, identity 및 filled-primary-action 결정 뒤 완료된 C5
+Material Geometry Gate를 기록한다. 조사 비교에 값이 포함되었다는 이유만으로 승인한
+것은 아니며, 통제된 비교 뒤 사용자가 `MGR-08`의 정확한 `MG-A` mapping을 승인했다.
 
 ## 고정 유지하는 지배 결정
 
@@ -112,11 +113,11 @@ source를 고를 수 없다.
 
 ## 정확한 Source-set 추출 진행 상태
 
-### `MG-A` Spectrum S2 — 정확한 후보 Input 완료
+### `MG-A` Spectrum S2 — 정확한 Input 승인
 
-공개된 Spectrum token data에서 보간하지 않은 완전한 후보 input을 확보했다.
+공개된 Spectrum token data에서 보간하지 않은 완전한 input을 확보했다.
 
-| 제안 NosLog role    | 정확한 Spectrum alias/value                                                                                    |
+| 승인 NosLog role    | 정확한 Spectrum alias/value                                                                                    |
 | ------------------- | -------------------------------------------------------------------------------------------------------------- |
 | `radius-control`    | `corner-radius-small-default` → `4px`                                                                          |
 | `radius-container`  | `corner-radius-medium-default` → `8px`                                                                         |
@@ -128,9 +129,10 @@ source를 고를 수 없다.
 | Shadow color        | Ambient Light/Dark `rgba(0,0,0,.08/.24)`, transition `.04/.12`, key는 공개된 semantic level에 따라 정확히 증가 |
 | `scrim`             | `overlay-color` black + `overlay-opacity` Light `0.4`, Dark `0.6`                                              |
 
-이는 공개된 Spectrum semantic alias를 이미 승인된 NosLog role에 연결한 후보
-mapping이다. 어떤 token 값도 바꾸지 않으며 Spectrum component styling을 채택하지
-않는다. 시각 승인은 계속 대기 상태다.
+승인된 이 mapping은 공개된 Spectrum semantic alias를 이미 승인된 NosLog role에
+연결하며 어떤 token 값도 바꾸거나 Spectrum component styling을 채택하지 않는다.
+Scroll-boundary alias는 shadow를 추가하지 않고, 네 번째 shadow를 발명하는 대신 이미
+승인된 `1px` directional boundary를 유지한다.
 
 ### `MG-B` Fluent 2 — 정확한 Web Input 완료, Semantic Coverage Gap 기록
 
@@ -162,9 +164,9 @@ Atlassian은 raised와 overlay shadow를 대응 elevation surface와 함께 쓰�
 충돌을 사용자와 다시 열지 않는 한 `MG-C`는 온전한 downstream 후보가 아닌
 compatibility probe다. Dragged item은 Atlassian 규칙대로 overlay elevation을 재사용한다.
 
-## Source-set 추출 Finalist
+## 검토한 Source-set Finalist
 
-다음은 조사 finalist이며 승인 후보가 아니다.
+다음은 완료된 Gate에서 검토한 조사 finalist다.
 
 ### `MG-A` — Adobe Spectrum S2 material set
 
@@ -172,7 +174,7 @@ compatibility probe다. Dragged item은 Atlassian 규칙대로 overlay elevation
 - 장점: 승인된 Spectrum neutral primitive와 함께 provenance가 가장 단순하고
   unsourced hybrid 위험이 가장 작다.
 - 정확한 radius, semantic shadow 세 개, appearance별 shadow color 및 scrim을
-  추출했다. 남은 Gate는 통제된 NosLog rendering이다.
+  추출했으며 `MGR-08`에서 온전한 set으로 승인했다.
 
 ### `MG-B` — Microsoft Fluent 2 material set
 
@@ -192,11 +194,11 @@ compatibility probe다. Dragged item은 Atlassian 규칙대로 overlay elevation
   elevation surface의 pairing을 요구하지만 Spectrum S2는 이미 NosLog의 유일한
   neutral surface source다.
 
-현재 `MG-A`만 semantic role 누락과 cross-source surface-pairing 충돌이 모두 없다.
-이는 근거상의 발견이며 최종 추천이나 승인이 아니다. 통제된 rendering과 사용자
-결정이 계속 필요하다.
+`MG-A`는 semantic role 누락과 cross-source surface-pairing 충돌이 모두 없는 유일한
+finalist이므로 사용자가 2026-08-10 승인했다. `MG-B`는 기록된 role gap으로,
+`MG-C`는 기록된 provenance 충돌로 거절했다.
 
-## 필수 시각 비교 Gate
+## 완료된 시각 비교 Gate와 유지할 회귀 Coverage
 
 통제된 비교는
 [c5-material-geometry-comparison.html](./specimens/c5-material-geometry-comparison.html)에
@@ -207,14 +209,16 @@ compatibility probe다. Dragged item은 Atlassian 규칙대로 overlay elevation
 한국어/일본어/영어, popover/dialog, rest/dragged, `100%`/`200%` control을
 확인했다. 대표 `390px`와 필수 `320 CSS px` viewport에서 page와 candidate card의
 가로 overflow가 발생하지 않았고 browser console warning과 error도 없었다. 이는
-artifact 무결성 검사이지 material 승인이 아니다. 사용자 비교와 선택 후보의 심층
-검증은 계속 대기 상태다.
+비교와 사용자 결정으로 source 및 alias Gate를 종료했다. 최종 통합 Foundation 회귀는
+작업 묶음 `15`에 남아 있으며, 완료된 source 조사를 반복하거나 이 결정을 다시 열지
+않고 승인 mapping의 회귀만 확인해야 한다.
 
-다음 specimen은 typography, spacing, 승인된 Spectrum surface와 foreground,
-boundary mapping, `FI-C` focus, content, layout을 고정한다. 후보가 소유한 radius,
-shadow, scrim mapping만 바꿀 수 있다.
+비교 specimen은 typography, spacing, 승인된 Spectrum surface와 foreground,
+boundary mapping, `FI-C` focus, content, layout을 고정하고 후보가 소유한 radius,
+shadow, scrim mapping만 변경했다.
 
-필수 scene:
+다음 coverage 계약은 작업 묶음 `15`의 최종 통합 Foundation 회귀가 소유한다.
+미완료 source-selection Gate가 아니다.
 
 1. 평면 discovery/ranking row와 타당한 raised movable item 하나;
 2. Light/Dark 승인 surface 위 menu/popover 및 dialog;
@@ -231,13 +235,15 @@ Tailwind radius/shadow 기본값을 사용하면 안 된다.
 
 ## 결정 로그
 
-| ID       | 결정                                                                                    | 상태                                                  |
-| -------- | --------------------------------------------------------------------------------------- | ----------------------------------------------------- |
-| `MGR-01` | 독립적으로 유지 관리되는 system 14개의 동등 material role 비교                          | `Research complete — 2026-08-10`                      |
-| `MGR-02` | 승인된 `C1-B`, `C4`, Spectrum neutral, `FI-C`, `ITA-C`, `RPA-A` 계약 보존               | `Required`                                            |
-| `MGR-03` | Tailwind radius/shadow 및 starter-card styling을 design authority 밖에 유지             | `Required`                                            |
-| `MGR-04` | 완전한 source-set 추출 대상으로 `MG-A`, `MG-B`, `MG-C` shortlist                        | `Proposed`                                            |
-| `MGR-05` | 한 system의 radius를 다른 system의 shadow 또는 scrim과 혼합                             | `Provenance 계약에 의해 Rejected`                     |
-| `MGR-06` | 모든 finalist의 정확한 현재 shadow color/composition, scrim 및 component ownership 추출 | `완료 — version 고정 공식 artifact 확인`              |
-| `MGR-07` | 통제된 NosLog material-geometry 비교 제작                                               | `Artifact와 초기 browser 검증 완료; 사용자 검토 대기` |
-| `MGR-08` | 정확한 material source 및 component alias 승인                                          | `시각 검증 뒤 사용자 결정 대기`                       |
+| ID       | 결정                                                                                    | 상태                                                      |
+| -------- | --------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| `MGR-01` | 독립적으로 유지 관리되는 system 14개의 동등 material role 비교                          | `Research complete — 2026-08-10`                          |
+| `MGR-02` | 승인된 `C1-B`, `C4`, Spectrum neutral, `FI-C`, `ITA-C`, `RPA-A` 계약 보존               | `Required`                                                |
+| `MGR-03` | Tailwind radius/shadow 및 starter-card styling을 design authority 밖에 유지             | `Required`                                                |
+| `MGR-04` | 완전한 source-set 추출 대상으로 `MG-A`, `MG-B`, `MG-C` shortlist                        | `완료 — 조사 shortlist`                                   |
+| `MGR-05` | 한 system의 radius를 다른 system의 shadow 또는 scrim과 혼합                             | `Provenance 계약에 의해 Rejected`                         |
+| `MGR-06` | 모든 finalist의 정확한 현재 shadow color/composition, scrim 및 component ownership 추출 | `완료 — version 고정 공식 artifact 확인`                  |
+| `MGR-07` | 통제된 NosLog material-geometry 비교 제작                                               | `완료 — artifact와 초기 browser 검증`                     |
+| `MGR-08` | `MG-A` Spectrum S2를 정확한 material source와 component-alias mapping으로 승인          | `사용자 승인 — 2026-08-10`                                |
+| `MGR-09` | `MG-B` Fluent를 downstream material mapping으로 사용                                    | `Rejected — dragged와 scroll-boundary role coverage 부족` |
+| `MGR-10` | Spectrum neutral surface를 유지하면서 `MG-C` Atlassian 사용                             | `Rejected — 필수 surface/elevation provenance 충돌`       |
