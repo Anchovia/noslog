@@ -3,7 +3,7 @@
 ## 문서 관리
 
 - 상태: `SS-08 Radix Colors Indigo를 NosLog identity source로 승인; 비교 근거 보존;
-action mapping 대기`
+identity touchpoint 및 action alias 대기`
 - 기준 언어: 영문
 - 영문 원문:
   [47-foundation-c5-finalist-noslog-context-comparison.md](./47-foundation-c5-finalist-noslog-context-comparison.md)
@@ -150,13 +150,16 @@ fixture 콘텐츠는 승인된 structural-validation artifact에서 가져왔으
 | `320 × 900`   | 후보가 `289px` 1열, frame이 `287px`로 쌓이며 가로 overflow 없이 정확값과 긴 콘텐츠가 container 안에서 reflow한다.                                    |
 | Focus         | Native keyboard focus가 승인된 `2px` zero-gap pseudo-boundary를 `inset: -2px`에 만들며 Light는 검정, Dark는 흰색이다.                                |
 
-## 선택 결과와 남은 gate
+## 선택 결과와 남은 gate들
 
 1. **Identity source — Approved:** 온전한 `SS-08` Radix Colors Indigo. 정확한 공개
    Light/Dark mapping을 분리할 수 없는 하나의 source set으로 유지한다.
 2. **Alternatives — Not selected:** Shopify Polaris와 `EXP-01`. 근거는 보존하며 승인
    source가 이후 실측 요구에서 실패할 때만 다시 열 수 있다.
-3. **Rare action eligibility — Pending:** 정확한 Radix filled-action mapping을 입증된
+3. **Identity touchpoint alias — Pending:** 문서 `48`은 Indigo mark, Indigo mark
+   field 또는 achromatic control 중 무엇을 visual comparison으로 진행할지 별도로
+   조사한다. 이 specimen의 identity rail은 승인되지 않았다.
+4. **Rare action eligibility — Pending:** 정확한 Radix filled-action mapping을 입증된
    드문 primary action에 사용할지, action을 neutral로 유지할지 별도 결정한다.
 
 이 선택은 `SC-B` single-source 계약을 보존한다. 일반 link, filter, selected
@@ -164,17 +167,18 @@ container, domain value, focus 또는 monochrome N mark 재착색을 허가하�
 
 ## 결정 로그
 
-| ID       | 항목                                                                       | 상태                                           |
-| -------- | -------------------------------------------------------------------------- | ---------------------------------------------- |
-| `FNC-01` | `SS-08`, `SS-09`를 동일한 실제 콘텐츠 비교로 진행한다.                     | `Approved comparison scope — 2026-08-10`       |
-| `FNC-02` | 정확한 source mapping과 승인된 고정 C5 neutral/focus 계약을 보존한다.      | `Required`                                     |
-| `FNC-03` | 대표 NosLog context 5개를 desktop, 대표 mobile, `320 CSS px`에서 검증한다. | `Completed — 2026-08-10`                       |
-| `FNC-04` | 후보 identity와 filled-action eligibility를 별도 approval gate로 취급한다. | `Required`                                     |
-| `FNC-05` | Radix Indigo를 NosLog identity source로 선택한다.                          | `Approved — 2026-08-10`                        |
-| `FNC-06` | Shopify Polaris를 NosLog achromatic identity source로 선택한다.            | `Not selected — 2026-08-10; evidence retained` |
-| `FNC-07` | 어느 source든 filled mapping을 rare primary action에 사용하도록 승인한다.  | `Pending; identity 선택에서 추론하지 않음`     |
-| `FNC-08` | 정확한 Polaris Light / Radix Dark 값을 `EXP-01`로 실측 비교한다.           | `Approved comparison scope — 2026-08-10`       |
-| `FNC-09` | `EXP-01`을 NosLog-owned adaptive signature mapping으로 선택한다.           | `Not selected — 2026-08-10; evidence retained` |
+| ID       | 항목                                                                            | 상태                                           |
+| -------- | ------------------------------------------------------------------------------- | ---------------------------------------------- |
+| `FNC-01` | `SS-08`, `SS-09`를 동일한 실제 콘텐츠 비교로 진행한다.                          | `Approved comparison scope — 2026-08-10`       |
+| `FNC-02` | 정확한 source mapping과 승인된 고정 C5 neutral/focus 계약을 보존한다.           | `Required`                                     |
+| `FNC-03` | 대표 NosLog context 5개를 desktop, 대표 mobile, `320 CSS px`에서 검증한다.      | `Completed — 2026-08-10`                       |
+| `FNC-04` | 후보 identity와 filled-action eligibility를 별도 approval gate로 취급한다.      | `Required`                                     |
+| `FNC-05` | Radix Indigo를 NosLog identity source로 선택한다.                               | `Approved — 2026-08-10`                        |
+| `FNC-06` | Shopify Polaris를 NosLog achromatic identity source로 선택한다.                 | `Not selected — 2026-08-10; evidence retained` |
+| `FNC-07` | 어느 source든 filled mapping을 rare primary action에 사용하도록 승인한다.       | `Pending; identity 선택에서 추론하지 않음`     |
+| `FNC-08` | 정확한 Polaris Light / Radix Dark 값을 `EXP-01`로 실측 비교한다.                | `Approved comparison scope — 2026-08-10`       |
+| `FNC-09` | `EXP-01`을 NosLog-owned adaptive signature mapping으로 선택한다.                | `Not selected — 2026-08-10; evidence retained` |
+| `FNC-10` | Identity rail을 비교 구조로 취급하고 문서 `48`에서 component-alias 조사를 연다. | `Research opened; alias pending user approval` |
 
 ## 출처
 
@@ -183,3 +187,4 @@ container, domain value, focus 또는 monochrome N mark 재착색을 허가하�
 - [Shopify Polaris color tokens](https://polaris-react.shopify.com/tokens/color)
 - [C5 정확한 system 비교](./45-foundation-c5-signature-system-reference-comparison.ko.md)
 - [C5 정보 서비스 컬러 확장](./46-foundation-c5-information-service-color-expansion.ko.md)
+- [C5 identity touchpoint alias 조사](./48-foundation-c5-identity-touchpoint-alias-research.ko.md)

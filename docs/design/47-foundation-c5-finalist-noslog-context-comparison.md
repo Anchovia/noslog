@@ -3,7 +3,7 @@
 ## Document Control
 
 - Status: `SS-08 Radix Colors Indigo approved as the NosLog identity source;
-comparison evidence retained; action mapping pending`
+comparison evidence retained; identity touchpoint and action aliases pending`
 - Canonical language: English
 - Korean companion:
   [47-foundation-c5-finalist-noslog-context-comparison.ko.md](./47-foundation-c5-finalist-noslog-context-comparison.ko.md)
@@ -154,14 +154,17 @@ into difficulty, mode, external-brand, or visualization roles.
 | `320 × 900`   | Candidates stack to one `289px` column with `287px` frames; exact-value copy and long content reflow inside their containers without horizontal overflow.                |
 | Focus         | Native keyboard focus produces the approved `2px` zero-gap pseudo-boundary at `inset: -2px`: black in Light and white in Dark.                                           |
 
-## Selection Outcome and Remaining Gate
+## Selection Outcome and Remaining Gates
 
 1. **Identity source — Approved:** intact `SS-08` Radix Colors Indigo. The exact
    published Light/Dark mapping remains one indivisible source set.
 2. **Alternatives — Not selected:** Shopify Polaris and `EXP-01`. Their evidence is
    retained and may be revisited only if the approved source fails a later measured
    requirement.
-3. **Rare action eligibility — Pending:** decide separately whether the exact Radix
+3. **Identity touchpoint alias — Pending:** document `48` separately researches
+   whether an Indigo mark, an Indigo mark field, or an achromatic control should
+   advance to visual comparison. The identity rail in this specimen is not approved.
+4. **Rare action eligibility — Pending:** decide separately whether the exact Radix
    filled-action mapping may be used for a proven rare primary action or actions
    remain neutral.
 
@@ -171,17 +174,18 @@ monochrome N mark.
 
 ## Decision Log
 
-| ID       | Item                                                                                              | Status                                         |
-| -------- | ------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| `FNC-01` | Advance `SS-08` and `SS-09` to the same actual-content comparison.                                | `Approved comparison scope — 2026-08-10`       |
-| `FNC-02` | Preserve exact source mappings and fixed approved C5 neutral/focus contracts.                     | `Required`                                     |
-| `FNC-03` | Validate five representative NosLog contexts at desktop, representative mobile, and `320 CSS px`. | `Completed — 2026-08-10`                       |
-| `FNC-04` | Treat candidate identity and filled-action eligibility as separate approval gates.                | `Required`                                     |
-| `FNC-05` | Select Radix Indigo as the NosLog identity source.                                                | `Approved — 2026-08-10`                        |
-| `FNC-06` | Select Shopify Polaris as the NosLog achromatic identity source.                                  | `Not selected — 2026-08-10; evidence retained` |
-| `FNC-07` | Approve either source's filled mapping for a rare primary action.                                 | `Pending; not implied by identity selection`   |
-| `FNC-08` | Measure exact Polaris Light / Radix Dark values as `EXP-01`.                                      | `Approved comparison scope — 2026-08-10`       |
-| `FNC-09` | Select `EXP-01` as a NosLog-owned adaptive signature mapping.                                     | `Not selected — 2026-08-10; evidence retained` |
+| ID       | Item                                                                                                      | Status                                         |
+| -------- | --------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| `FNC-01` | Advance `SS-08` and `SS-09` to the same actual-content comparison.                                        | `Approved comparison scope — 2026-08-10`       |
+| `FNC-02` | Preserve exact source mappings and fixed approved C5 neutral/focus contracts.                             | `Required`                                     |
+| `FNC-03` | Validate five representative NosLog contexts at desktop, representative mobile, and `320 CSS px`.         | `Completed — 2026-08-10`                       |
+| `FNC-04` | Treat candidate identity and filled-action eligibility as separate approval gates.                        | `Required`                                     |
+| `FNC-05` | Select Radix Indigo as the NosLog identity source.                                                        | `Approved — 2026-08-10`                        |
+| `FNC-06` | Select Shopify Polaris as the NosLog achromatic identity source.                                          | `Not selected — 2026-08-10; evidence retained` |
+| `FNC-07` | Approve either source's filled mapping for a rare primary action.                                         | `Pending; not implied by identity selection`   |
+| `FNC-08` | Measure exact Polaris Light / Radix Dark values as `EXP-01`.                                              | `Approved comparison scope — 2026-08-10`       |
+| `FNC-09` | Select `EXP-01` as a NosLog-owned adaptive signature mapping.                                             | `Not selected — 2026-08-10; evidence retained` |
+| `FNC-10` | Treat the identity rail as comparison scaffolding and open the component-alias research in document `48`. | `Research opened; alias pending user approval` |
 
 ## Sources
 
@@ -190,3 +194,4 @@ monochrome N mark.
 - [Shopify Polaris color tokens](https://polaris-react.shopify.com/tokens/color)
 - [C5 exact-system comparison](./45-foundation-c5-signature-system-reference-comparison.md)
 - [C5 information-service color expansion](./46-foundation-c5-information-service-color-expansion.md)
+- [C5 identity touchpoint alias research](./48-foundation-c5-identity-touchpoint-alias-research.md)
