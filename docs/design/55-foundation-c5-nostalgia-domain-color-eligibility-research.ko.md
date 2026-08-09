@@ -129,21 +129,21 @@ Source는 다음 일곱 판단으로 수렴한다.
 
 다음은 승인된 자격 정책이며 exact value 승인은 포함하지 않는다.
 
-| Domain family              | 제안된 visible-color 자격                                         | 필수 비색상 계약                                                                                                  | Exact-source 상태                                                                               |
-| -------------------------- | ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| Renderer hand guidance     | `Excluded — 현재 구현 보존`                                       | 기존 renderer와 paired legend가 현재 text/color 계약을 유지                                                       | Exact-source Gate 없음; 현재 PixiJS/Canvas 값을 그대로 유지                                     |
-| Difficulty                 | Renderer 밖의 repeated-scanning UI에서만 `Conditionally eligible` | 전체 Normal/Hard/Expert/Real 이름 또는 명확한 abbreviation, numeric level, fixed order 및 독립적인 selected state | 공식 vocabulary는 있지만 exact web 값은 공개되지 않아 미해결                                    |
-| Basic/Recital mode         | 기본 persistent hue `Not eligible`                                | 전체 mode label과 neutral exclusive-selection state                                                               | 안정적인 공식 color ownership을 찾지 못함                                                       |
-| Rank 및 achievement        | Generated global palette `Not eligible`                           | Rank/achievement name, score/criterion, order 및 optional authentic asset/icon                                    | 기존 공식 artwork는 literal artwork color를 유지할 수 있지만 generated service palette는 미승인 |
-| Score band                 | `13C로 이동`                                                      | Numeric threshold, named band, ordered axis 또는 table                                                            | Global domain token이 아니라 sequential/threshold data 조사 필요                                |
-| Genre                      | 기본 `Not eligible`                                               | 보이는 category label                                                                                             | 측정된 scanning 이점이나 공식 ownership을 찾지 못함                                             |
-| FAST/SLOW timing direction | Chart에서는 `13C로 이동`, ordinary copy에서는 neutral             | 명시적인 FAST/SLOW label, signed magnitude, midpoint 및 direction                                                 | Diverging local-data 비교가 필요하며 chart, Hard, info 또는 danger color를 재사용할 수 없음     |
+| Domain family              | 제안된 visible-color 자격                                               | 필수 비색상 계약                                                                                                  | Exact-source 상태                                                                               |
+| -------------------------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| Renderer hand guidance     | `Excluded — 현재 구현 보존`                                             | 기존 renderer와 paired legend가 현재 text/color 계약을 유지                                                       | Exact-source Gate 없음; 현재 PixiJS/Canvas 값을 그대로 유지                                     |
+| Difficulty                 | Viewer/editor 밖 repeated-scanning UI의 `Approved required distinction` | 전체 Normal/Hard/Expert/Real 이름 또는 명확한 abbreviation, numeric level, fixed order 및 독립적인 selected state | 서로 다른 네 색이 필요하며 정확한 authoritative Light/Dark 값은 미해결                          |
+| Basic/Recital mode         | 기본 persistent hue `Not eligible`                                      | 전체 mode label과 neutral exclusive-selection state                                                               | 안정적인 공식 color ownership을 찾지 못함                                                       |
+| Rank 및 achievement        | Generated global palette `Not eligible`                                 | Rank/achievement name, score/criterion, order 및 optional authentic asset/icon                                    | 기존 공식 artwork는 literal artwork color를 유지할 수 있지만 generated service palette는 미승인 |
+| Score band                 | `13C로 이동`                                                            | Numeric threshold, named band, ordered axis 또는 table                                                            | Global domain token이 아니라 sequential/threshold data 조사 필요                                |
+| Genre                      | 기본 `Not eligible`                                                     | 보이는 category label                                                                                             | 측정된 scanning 이점이나 공식 ownership을 찾지 못함                                             |
+| FAST/SLOW timing direction | Chart에서는 `13C로 이동`, ordinary copy에서는 neutral                   | 명시적인 FAST/SLOW label, signed magnitude, midpoint 및 direction                                                 | Diverging local-data 비교가 필요하며 chart, Hard, info 또는 danger color를 재사용할 수 없음     |
 
 ## 검토할 정책 대안
 
 | Candidate                                | 보이는 domain color                                                                             | 장점                                                                  | 비용/위험                                                               | 상태                               |
 | ---------------------------------------- | ----------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- | ----------------------------------------------------------------------- | ---------------------------------- |
-| `DE-A · Official minimum`                | 신규 non-renderer domain color 없음                                                             | 최대 절제이며 신규 mapping 없음                                       | 가능한 difficulty scanning 이점을 포기                                  | `Not selected`                     |
+| `DE-A · Official minimum`                | 신규 non-renderer domain color 없음                                                             | 최대 절제이며 신규 mapping 없음                                       | 필요한 difficulty 구분을 제거함                                         | `Rejected — distinct color 필요`   |
 | `DE-BR · Renderer-preserving task limit` | 입증된 repeated-scanning UI의 difficulty marker만 사용하고 기존 renderer hand color는 그대로 둠 | 잠긴 viewer/editor를 보존하면서 유일한 미해결 UI scanning case를 유지 | Difficulty-only exact-source Gate와 세밀한 context 경계 필요            | `Approved correction — 2026-08-10` |
 | `DE-C · Broad legacy-like`               | Difficulty, mode, rank, achievement, score 및 genre                                             | 최대한 많은 visible categorization                                    | 현재 충돌을 재현하고 content hierarchy와 경쟁하며 source ownership 없음 | `승인된 DE-BR 경계로 Rejected`     |
 
@@ -164,19 +164,21 @@ color는 승인하지 않는다.
    forced-colors, protanopia, deuteranopia, tritanopia view를 test한다.
 5. Difficulty mapping 사용자 승인을 받는다. Hand-color Gate는 열지 않는다.
 
-정확하고 출처가 명시된 mapping이 이 검사를 통과하지 못하면 NosLog palette를 발명하지
-않고 해당 role을 neutral로 유지한다.
+정확하고 출처가 명시된 mapping이 이 검사를 통과하지 못하면 실패를 보고하고 정확한 값
+결정을 사용자와 다시 연다. 승인된 서로 다른 difficulty role을 임의로 neutral 처리하거나
+대체 NosLog palette를 발명하지 않는다.
 
 ## Decision log
 
-| ID       | Entry                                                                                                   | Status                             |
-| -------- | ------------------------------------------------------------------------------------------------------- | ---------------------------------- |
-| `DCE-01` | 현재 1.x domain 값을 전부 2.0 권위가 아닌 migration 근거로 취급한다.                                    | `Observed`                         |
-| `DCE-02` | 기존 renderer hand palette를 그대로 보존하고 Foundation token 또는 exact-source Gate로 취급하지 않는다. | `Approved correction — 2026-08-10` |
-| `DCE-03` | Difficulty 이름, level, order 및 selection을 color와 독립적으로 유지한다.                               | `Approved — DE-BR`                 |
-| `DCE-04` | Basic/Recital, rank/achievement 및 genre를 기본적으로 neutral로 유지한다.                               | `Approved — DE-BR`                 |
-| `DCE-05` | Score-band와 FAST/SLOW visualization color를 `13C`로 이동한다.                                          | `Approved — DE-BR`                 |
-| `DCE-06` | `DE-B`를 renderer-preserving `DE-BR`로 supersede하고 UI difficulty 값만 비교한다.                       | `Approved correction — 2026-08-10` |
+| ID       | Entry                                                                                                            | Status                               |
+| -------- | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
+| `DCE-01` | 현재 1.x domain 값을 전부 2.0 권위가 아닌 migration 근거로 취급한다.                                             | `Observed`                           |
+| `DCE-02` | 기존 renderer hand palette를 그대로 보존하고 Foundation token 또는 exact-source Gate로 취급하지 않는다.          | `Approved correction — 2026-08-10`   |
+| `DCE-03` | Difficulty 이름, level, order 및 selection을 color와 독립적으로 유지한다.                                        | `Approved — DE-BR`                   |
+| `DCE-04` | Basic/Recital, rank/achievement 및 genre를 기본적으로 neutral로 유지한다.                                        | `Approved — DE-BR`                   |
+| `DCE-05` | Score-band와 FAST/SLOW visualization color를 `13C`로 이동한다.                                                   | `Approved — DE-BR`                   |
+| `DCE-06` | `DE-B`를 renderer-preserving `DE-BR`로 supersede하고 UI difficulty 값만 비교한다.                                | `Approved correction — 2026-08-10`   |
+| `DCE-07` | 해당 일반 UI에서 Normal, Hard, Expert, Real을 서로 다른 네 색으로 계속 구분하고 neutral 후보를 다시 열지 않는다. | `사용자 승인 및 재확인 — 2026-08-10` |
 
 ## 승인 기록과 경계
 
@@ -185,4 +187,5 @@ renderer와 note·left/right-hand palette는 구현된 그대로 유지하며 No
 redesign에 들어가지 않는다. `DE-BR`은 이전 `DE-B` 문구를 supersede한다. Renderer 밖의
 repeated-scanning UI difficulty marker만 exact-source 비교로 진행할 수 있다.
 Basic/Recital, rank/achievement 및 genre는 기본 neutral을 유지하고 score band와
-FAST/SLOW는 `13C`로 이동한다. Exact difficulty 값과 production 구현은 승인되지 않았다.
+FAST/SLOW는 `13C`로 이동한다. 네 난이도의 색상 구분은 필수이며 exact difficulty 값과
+production 구현은 아직 승인되지 않았다.

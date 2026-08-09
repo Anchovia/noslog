@@ -42,7 +42,7 @@ NosLog 2.0 변형을 만들 수 없습니다. 과거 viewer/editor Page Brief는
 
 | Package | 정확한 남은 범위                                                                                                                                                                                                                                           | 명시적 제외                                                                                                       | 완료 결과                                                          |
 | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
-| `13`    | 일반 difficulty UI를 neutral로 승인하거나 custom semantic-mapping 예외를 명시적으로 허용하고, 이어서 비교 지역에만 쓰는 score band, FAST/SLOW, series 및 threshold color를 조사·승인합니다.                                                                | Viewer/editor 전체. Basic/Recital, rank/achievement, genre는 별도로 다시 열지 않는 한 neutral입니다.              | `13B`, `13C` 승인 또는 명시적 종료 후 `Complete`.                  |
+| `13`    | 이미 필요한 것으로 확정된 Normal/Hard/Expert/Real distinct color의 정확한 authoritative Light/Dark 값과 네 role mapping을 선택·승인하고, 이어서 비교 지역에만 쓰는 score band, FAST/SLOW, series 및 threshold color를 조사·승인합니다.                     | Viewer/editor 전체. Basic/Recital, rank/achievement, genre는 별도로 다시 열지 않는 한 neutral입니다.              | `13B`, `13C` 승인 또는 명시적 종료 후 `Complete`.                  |
 | `14`    | Icon 문법, icon-only/label 정책, size/stroke와 accessible name 규칙, 일반 UI motion과 reduced-motion 규칙, 일반 data visualization의 axis, legend, tooltip/focus 및 non-color/table fallback을 정의합니다.                                                 | Viewer/editor 전체. Renderer, transport, editor control 또는 editor motion 표본 없음.                             | 승인된 일반 UI iconography, motion, data-visualization 규칙.       |
 | `15`    | 완료된 일반 UI fixture `S1`, `S2`, `S3`, `S5`만 사용해 이후 승인 appearance 규칙으로 생긴 drift를 최종 회귀 검증하고 Foundation v0.1을 승격합니다.                                                                                                         | `S4` 없음, `S6` 없음, 새 구조 표본 없음, 완료된 typography/layout/color 입력 재개방 없음.                         | 회귀 기록과 승인된 Foundation v0.1 승격.                           |
 | `16`    | 일반 애플리케이션의 component alias, anatomy, state, pattern, template 및 desktop adaptation을 통합합니다. Shell/navigation, action, form, selector, row/card, feedback, table, pagination, overlay, empty/loading/error 및 관련 관리자 흐름을 포함합니다. | Viewer/editor 전체 및 최종 high-fidelity page suite 제외.                                                         | 승인된 재사용 일반 UI system과 template 규칙.                      |
@@ -55,20 +55,14 @@ NosLog 2.0 변형을 만들 수 없습니다. 과거 viewer/editor Page Brief는
 ## Difficulty UI Gate 설명
 
 열린 difficulty 비교는 채보 note, hand color 또는 viewer/editor element를 다루지 않습니다.
-현재 일반 NosLog UI는 music card, music-detail selector, profile row, exam UI 및
-tier/admin UI에서 `Normal/Hard/Expert/Real`을 반복해서 다른 색으로 표시합니다. 따라서
-Package `13B`는 NosLog 2.0에서 다음 중 무엇을 할지 결정해야 합니다.
+해당 일반 UI에서는 `Normal/Hard/Expert/Real`을 서로 다른 네 가지 지속 색상으로 보이게
+구분하고 이름, numeric level, fixed order 및 명시적 selection을 함께 유지해야 합니다.
+이는 승인된 요구사항이며 color와 neutral 중 하나를 다시 고르는 결정이 아닙니다.
 
-1. 절제된 중복 color cue를 작은 marker로 유지합니다(`DU-D1`).
-2. 지속적인 difficulty color를 제거하고 보이는 이름, numeric level, fixed order,
-   pattern 및 명시적 selection에 의존합니다(`DU-D0`).
-
-제안된 Spectrum 값은 공개된 adaptive color 값이지만 Adobe가 이를 NOSTALGIA difficulty
-semantic으로 정의한 것은 아닙니다. Green/orange/red/purple을
-Normal/Hard/Expert/Real에 배정하는 것은 invented NosLog mapping이며 공개 value와
-semantic mapping을 함께 그대로 채택해야 한다는 현재 규칙을 통과하지 못합니다. 따라서
-현재 provenance 규칙에서 승인 가능한 후보는 `DU-D0`뿐입니다. `DU-D1`을 선택하려면 먼저
-사용자가 custom semantic-mapping 예외를 명시적으로 허용해야 합니다.
+Package `13B`는 이제 정확한 authoritative Light/Dark 값과 네 role mapping만 결정합니다.
+Spectrum adaptive marker는 후보 하나이며 neutral `DU-D0`는 Rejected 상태로 비교 근거만
+남깁니다. 어떤 후보도 provenance, contrast 및 content 요구를 통과하지 못하면 필요한 색상
+구분을 임의로 제거하지 않고 exact-value 실패를 사용자에게 다시 보고합니다.
 
 ## Superseded, downstream 및 closed 항목
 
@@ -92,18 +86,18 @@ semantic mapping을 함께 그대로 채택해야 한다는 현재 규칙을 통
 
 ## 열린 사용자 결정
 
-1. Package `13B`: `DU-D0` 완전 neutral difficulty UI를 승인하거나 custom NosLog
-   difficulty-color mapping을 허용하도록 provenance 규칙을 명시적으로 다시 엽니다.
+1. Package `13B`: 이미 승인된 Normal/Hard/Expert/Real distinct color의 정확한
+   authoritative Light/Dark source와 네 role mapping을 선택합니다.
 2. Package `13C`: 이후 일반 local data color의 exact-source 비교를 승인합니다.
 3. Package `14`–`18`: 근거가 제시될 때 각 material design 또는 packaging Gate를
    승인합니다. 이 roadmap은 그 디자인 선택을 미리 승인하지 않습니다.
 
 ## Decision log
 
-| ID       | Entry                                                                            | 상태                                     |
-| -------- | -------------------------------------------------------------------------------- | ---------------------------------------- |
-| `RWA-01` | 이 감사와 README 표를 현재 남은 작업 권위로 지정합니다.                          | `Approved scope correction — 2026-08-10` |
-| `RWA-02` | 기존 viewer/editor 전체를 보존하고 활성 `S4`/`S6` 디자인 작업을 모두 취소합니다. | `Approved correction — 2026-08-10`       |
-| `RWA-03` | 고정 18-package 분모와 현재 `12.5/18 = 69%` 진행률을 유지합니다.                 | `Confirmed`                              |
-| `RWA-04` | 최종 mark drawing을 downstream으로, Radix 배치 탐색을 closed로 분류합니다.       | `Scope classification`                   |
-| `RWA-05` | 일반 difficulty UI 선택을 열어 두고 명시적 사용자 승인을 요구합니다.             | `사용자 검토 대기`                       |
+| ID       | Entry                                                                                         | 상태                                            |
+| -------- | --------------------------------------------------------------------------------------------- | ----------------------------------------------- |
+| `RWA-01` | 이 감사와 README 표를 현재 남은 작업 권위로 지정합니다.                                       | `Approved scope correction — 2026-08-10`        |
+| `RWA-02` | 기존 viewer/editor 전체를 보존하고 활성 `S4`/`S6` 디자인 작업을 모두 취소합니다.              | `Approved correction — 2026-08-10`              |
+| `RWA-03` | 고정 18-package 분모와 현재 `12.5/18 = 69%` 진행률을 유지합니다.                              | `Confirmed`                                     |
+| `RWA-04` | 최종 mark drawing을 downstream으로, Radix 배치 탐색을 closed로 분류합니다.                    | `Scope classification`                          |
+| `RWA-05` | 일반 difficulty UI에 서로 다른 네 색을 유지하고 exact source 값과 role mapping만 열어 둡니다. | `요구사항 승인, exact mapping 사용자 검토 대기` |

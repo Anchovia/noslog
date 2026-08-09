@@ -35,10 +35,12 @@ values remain exactly as implemented:
 These are locked implementation constants, not Foundation token candidates. This
 document does not evaluate, normalize, remap, or recommend changing them.
 
-## Remaining question
+## Fixed requirement and remaining question
 
-Only one `13B` decision remains open: approve fully neutral difficulty UI, or explicitly
-reopen the provenance rule to authorize a new NosLog-owned semantic color assignment.
+Eligible repeated-scanning ordinary UI must distinguish Normal, Hard, Expert, and Real
+with four different persistent colors. That requirement is approved and is not an open
+color-versus-neutral choice. The remaining `13B` question is which exact authoritative
+Light/Dark source values and four-role mapping should implement it.
 
 Examples of eligible UI are a music list showing several chart difficulties and a
 music-detail difficulty summary. No viewer/editor page or subcomponent is eligible.
@@ -54,11 +56,11 @@ maintained source here that publishes a complete, non-deprecated adaptive
 green/orange/red/purple `visual-color` family.
 
 This source result does not make the role assignment an upstream Spectrum semantic.
-The values are exact source facts, but the Normal/Hard/Expert/Real assignment is an
-invented NosLog mapping. It therefore fails the current rule to preserve both an
-approved source's published values and semantic mapping intact. `DU-D1` may remain as
-comparison evidence, but cannot be approved unless the user explicitly authorizes a
-custom semantic-mapping exception.
+The values are exact source facts, while the Normal/Hard/Expert/Real assignment remains
+a proposed NosLog domain alias requiring explicit user approval. This limitation does
+not reopen the already approved requirement for four visibly distinct colors. If the
+candidate is insufficient, the exact-value research must continue or return to the
+user; it must not silently fall back to neutral.
 
 ## Exact proposed values
 
@@ -74,10 +76,10 @@ renderer palette.
 
 ## Controlled candidates
 
-| Candidate                          | Recipe                                                                                                     | Benefit                                                             | Risk                                                                              | Status                                                         |
-| ---------------------------------- | ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- | --------------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| `DU-D1 · Spectrum adaptive marker` | Exact Spectrum values on a small non-text marker; label, level, fixed order, and neutral selection remain. | Shows the strongest restrained chromatic treatment tested.          | The four-role assignment is invented, not a published Spectrum semantic contract. | `Reference only — provenance exception required`               |
-| `DU-D0 · Neutral pattern/order`    | One neutral family with distinct pattern/order; label, level, fixed order, and neutral selection remain.   | Preserves the approved neutral system without a fabricated mapping. | Gives up difficulty color recognition in dense repeated UI.                       | `Recommended under current provenance rule — approval pending` |
+| Candidate                          | Recipe                                                                                                     | Benefit                                                                | Risk                                                                                                      | Status                                       |
+| ---------------------------------- | ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| `DU-D1 · Spectrum adaptive marker` | Exact Spectrum values on a small non-text marker; label, level, fixed order, and neutral selection remain. | Meets the required four-way visual distinction with restrained chroma. | The four-role assignment is a proposed NosLog domain alias, not a published Spectrum difficulty contract. | `Candidate — exact mapping approval pending` |
+| `DU-D0 · Neutral pattern/order`    | One neutral family with distinct pattern/order; label, level, fixed order, and neutral selection remain.   | Retained only to show the loss of color scanning.                      | Violates the approved requirement for four different difficulty colors.                                   | `Rejected — distinct colors required`        |
 
 ## Hard component boundary
 
@@ -118,19 +120,19 @@ boundary. It does not test or modify the production chart viewer/editor.
 
 ## Decision log
 
-| ID       | Entry                                                                                                                                                                                          | Status                             |
-| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
-| `DUS-01` | Preserve the existing viewer/editor experiences in their entirety, including pages, controls, responsive and accessibility behavior, renderer output, palettes, mathematics, and editor model. | `Approved correction — 2026-08-10` |
-| `DUS-02` | Remove the incorrect hand-color exact-source comparison and specimen.                                                                                                                          | `Completed`                        |
-| `DUS-03` | Restrict Package `13B` exact-source review to repeated-scanning ordinary difficulty DOM UI outside the entire viewer/editor.                                                                   | `Approved scope correction`        |
-| `DUS-04` | Retain the exact Spectrum adaptive marker as reference evidence, but do not approve its invented difficulty-role assignment under the current provenance rule.                                 | `Provenance failure recorded`      |
-| `DUS-05` | Approve `DU-D0`, or explicitly reopen the provenance rule for a NosLog-owned semantic mapping.                                                                                                 | `Awaiting user review`             |
-| `DUS-06` | Verify the corrected difficulty-only artifact at desktop, `390px`, and `320px` with zero renderer elements.                                                                                    | `Completed — 2026-08-10`           |
+| ID       | Entry                                                                                                                                                                                          | Status                                                     |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| `DUS-01` | Preserve the existing viewer/editor experiences in their entirety, including pages, controls, responsive and accessibility behavior, renderer output, palettes, mathematics, and editor model. | `Approved correction — 2026-08-10`                         |
+| `DUS-02` | Remove the incorrect hand-color exact-source comparison and specimen.                                                                                                                          | `Completed`                                                |
+| `DUS-03` | Restrict Package `13B` exact-source review to repeated-scanning ordinary difficulty DOM UI outside the entire viewer/editor.                                                                   | `Approved scope correction`                                |
+| `DUS-04` | Retain exact Spectrum adaptive markers as one candidate for the required four-way distinction; the role mapping remains unapproved.                                                            | `Candidate evidence`                                       |
+| `DUS-05` | Keep four different difficulty colors and select the exact authoritative Light/Dark values and four-role mapping.                                                                              | `Requirement approved; exact mapping awaiting user review` |
+| `DUS-06` | Verify the corrected difficulty-only artifact at desktop, `390px`, and `320px` with zero renderer elements.                                                                                    | `Completed — 2026-08-10`                                   |
 
 ## Approval boundary
 
-No difficulty mapping is approved yet. Under the current provenance rule, `DU-D0` is
-the only approvable candidate. `DU-D1` requires an explicit custom-mapping exception;
-the full viewer/editor preservation exception is already approved and is not a choice
-in this comparison. Package `13B` remains in progress and the fixed management progress
-remains `12.5 / 18 = 69%`.
+Four different difficulty colors are approved and reconfirmed; neutral `DU-D0` is
+rejected. No exact Light/Dark values or four-role mapping are approved yet. The full
+viewer/editor preservation exception is already approved and is not a choice in this
+comparison. Package `13B` remains in progress and the fixed management progress remains
+`12.5 / 18 = 69%`.

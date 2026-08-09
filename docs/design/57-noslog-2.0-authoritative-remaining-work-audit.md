@@ -45,7 +45,7 @@ This is a management percentage, not an estimate of time or effort.
 
 | Package | Exact remaining scope                                                                                                                                                                                                                                                           | Explicit exclusions                                                                                               | Completion result                                                            |
 | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| `13`    | Approve neutral ordinary difficulty UI, or explicitly authorize a custom semantic-mapping exception; then research and approve comparison-local score-band, FAST/SLOW, series, and threshold colors.                                                                            | Entire viewer/editor; Basic/Recital, rank/achievement, and genre remain neutral unless separately reopened.       | `13B` and `13C` approved or explicitly closed; package becomes `Complete`.   |
+| `13`    | Select and approve the exact authoritative Light/Dark values and four-role mapping for the already required distinct Normal/Hard/Expert/Real colors; then research and approve comparison-local score-band, FAST/SLOW, series, and threshold colors.                            | Entire viewer/editor; Basic/Recital, rank/achievement, and genre remain neutral unless separately reopened.       | `13B` and `13C` approved or explicitly closed; package becomes `Complete`.   |
 | `14`    | Define icon grammar, icon-only/label policy, size/stroke and accessible-name rules; ordinary UI motion and reduced-motion rules; ordinary data-visualization axes, legends, tooltip/focus behavior, and non-color/table fallback.                                               | Entire viewer/editor; no renderer, transport, editor-control, or editor-motion specimen.                          | Approved ordinary-UI iconography, motion, and data-visualization rules.      |
 | `15`    | Run the final Foundation regression on eligible completed ordinary-UI fixtures `S1`, `S2`, `S3`, and `S5`, checking only drift caused by later approved appearance rules; promote Foundation v0.1.                                                                              | No `S4`; no `S6`; no new structural specimen; no reopening completed typography/layout/color inputs.              | Regression record and approved Foundation v0.1 promotion.                    |
 | `16`    | Consolidate ordinary application component aliases, anatomy, states, patterns, templates, and desktop adaptations: shell/navigation, actions, forms, selectors, rows/cards, feedback, tables, pagination, overlays, empty/loading/error, and relevant administrative workflows. | Entire viewer/editor; no final high-fidelity page suite.                                                          | Approved reusable ordinary-UI system and template rules.                     |
@@ -58,20 +58,16 @@ Expected fixed milestones after each package completes are `13/18 = 72%`, `14/18
 ## Difficulty UI Gate explained
 
 The open difficulty comparison does not concern chart notes, hand colors, or any
-viewer/editor element. The current ordinary NosLog UI repeatedly colors
-`Normal/Hard/Expert/Real` in music cards, music-detail selectors, profile rows, exam
-UI, and tier/admin UI. Package `13B` therefore has to decide whether NosLog 2.0:
+viewer/editor element. In eligible ordinary UI, `Normal/Hard/Expert/Real` must remain
+visibly distinguishable through four different persistent colors, reinforced by name,
+numeric level, fixed order, and explicit selection. This requirement is approved and
+must not be reopened as a color-versus-neutral decision.
 
-1. keeps a restrained redundant color cue as a small marker (`DU-D1`); or
-2. removes persistent difficulty color and relies on visible name, numeric level,
-   fixed order, pattern, and explicit selection (`DU-D0`).
-
-The proposed Spectrum values are published adaptive color values, but Adobe does not
-define them as NOSTALGIA difficulty semantics. Assigning green/orange/red/purple to
-Normal/Hard/Expert/Real is an invented NosLog mapping and fails the current rule to
-adopt both published values and semantic mapping intact. Therefore `DU-D0` is the only
-approvable candidate under current provenance rules. Choosing `DU-D1` would first
-require the user to explicitly authorize a custom semantic-mapping exception.
+Package `13B` now decides only the exact authoritative Light/Dark values and four-role
+mapping. Spectrum adaptive markers remain one candidate; neutral `DU-D0` is rejected
+and retained only as comparison evidence. If no candidate satisfies provenance,
+contrast, and content requirements, return the exact-value failure to the user rather
+than silently removing the required color distinction.
 
 ## Superseded, downstream, and closed items
 
@@ -95,8 +91,8 @@ drawing, final high-fidelity screens, or application implementation.
 
 ## Open user decisions
 
-1. Package `13B`: approve `DU-D0` fully neutral difficulty UI, or explicitly reopen
-   the provenance rule to authorize a custom NosLog difficulty-color mapping.
+1. Package `13B`: choose the exact authoritative Light/Dark source and four-role
+   mapping for the already approved distinct Normal/Hard/Expert/Real colors.
 2. Package `13C`: approve a later exact-source comparison for ordinary local data
    colors.
 3. Packages `14`–`18`: approve each material design or packaging gate when its evidence
@@ -104,10 +100,10 @@ drawing, final high-fidelity screens, or application implementation.
 
 ## Decision log
 
-| ID       | Entry                                                                                     | Status                                   |
-| -------- | ----------------------------------------------------------------------------------------- | ---------------------------------------- |
-| `RWA-01` | Make this audit and the README table the current remaining-work authority.                | `Approved scope correction — 2026-08-10` |
-| `RWA-02` | Preserve the entire existing viewer/editor and cancel every active `S4`/`S6` design task. | `Approved correction — 2026-08-10`       |
-| `RWA-03` | Keep the fixed eighteen-package denominator and current `12.5/18 = 69%` progress.         | `Confirmed`                              |
-| `RWA-04` | Classify final mark drawing as downstream and Radix placement exploration as closed.      | `Scope classification`                   |
-| `RWA-05` | Keep the ordinary difficulty UI choice open and require explicit user approval.           | `Awaiting user review`                   |
+| ID       | Entry                                                                                                       | Status                                                     |
+| -------- | ----------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| `RWA-01` | Make this audit and the README table the current remaining-work authority.                                  | `Approved scope correction — 2026-08-10`                   |
+| `RWA-02` | Preserve the entire existing viewer/editor and cancel every active `S4`/`S6` design task.                   | `Approved correction — 2026-08-10`                         |
+| `RWA-03` | Keep the fixed eighteen-package denominator and current `12.5/18 = 69%` progress.                           | `Confirmed`                                                |
+| `RWA-04` | Classify final mark drawing as downstream and Radix placement exploration as closed.                        | `Scope classification`                                     |
+| `RWA-05` | Keep four different ordinary difficulty colors; leave only their exact source values and role mapping open. | `Requirement approved; exact mapping awaiting user review` |

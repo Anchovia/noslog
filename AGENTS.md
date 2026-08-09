@@ -155,14 +155,18 @@ Sections:
 - Package `13B` domain-color research must preserve the locked chart viewer/editor
   exception above. Existing renderer note and left/right-hand colors are implementation
   constants, not open Foundation tokens, and must not enter an exact-source comparison.
-  Only difficulty markers outside the entire viewer/editor experience, in proven
-  repeated-scanning UI
-  contexts, remain eligible for an exact-source comparison. Basic/Recital,
+  Outside the entire viewer/editor experience, proven repeated-scanning difficulty UI
+  must distinguish Normal, Hard, Expert, and Real with four different persistent
+  colors. This product requirement is approved and must not be reopened as a
+  color-versus-neutral choice. The exact authoritative Light/Dark source values and
+  four-role mapping remain the open `13B` decision. Basic/Recital,
   rank/achievement, and genre remain neutral by default; score bands and FAST/SLOW
   visualization belong to `13C`. This boundary does not approve current non-renderer
   NosLog values, sampled imagery, another rhythm game's palette, or any new exact
   Light/Dark mapping. Keep the difficulty name, level, order, and selection visible so
-  color is never the sole cue.
+  color is never the sole cue. If research does not produce an acceptable sourced
+  mapping, report the failure to the user; do not silently neutralize the roles or
+  invent replacement values.
 - Shopify Polaris and the `EXP-01` Polaris Light / Radix Dark split were measured and
   not selected as the identity source. Preserve their evidence in document `47`, but
   do not use them as downstream design or implementation targets unless the user

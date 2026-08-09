@@ -131,21 +131,21 @@ The sources converge on seven findings:
 
 This table records the approved eligibility policy. It does not approve exact values.
 
-| Domain family              | Proposed visible-color eligibility                                         | Required non-color contract                                                                                                  | Exact-source status                                                                                      |
-| -------------------------- | -------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| Renderer hand guidance     | `Excluded — preserve current implementation`                               | Existing renderer and paired legend retain their current text/color contract                                                 | No exact-source Gate; current PixiJS/Canvas values remain unchanged                                      |
-| Difficulty                 | `Conditionally eligible` only in repeated-scanning UI outside the renderer | Full Normal/Hard/Expert/Real name or an unambiguous abbreviation, numeric level, fixed order, and independent selected state | Official vocabulary exists; exact web values are not published and remain unresolved                     |
-| Basic/Recital mode         | `Not eligible` for persistent hue by default                               | Full mode label and neutral exclusive-selection state                                                                        | No stable official color ownership found                                                                 |
-| Rank and achievement       | `Not eligible` for a generated global palette                              | Rank/achievement name, score/criterion, order, and optional authentic asset/icon                                             | Existing official artwork may retain literal artwork color, but no generated service palette is approved |
-| Score band                 | `Move to 13C`                                                              | Numeric threshold, named band, ordered axis or table                                                                         | Requires sequential/threshold data research, not a global domain token                                   |
-| Genre                      | `Not eligible` by default                                                  | Visible category label                                                                                                       | No measured scanning benefit or official ownership found                                                 |
-| FAST/SLOW timing direction | `Move to 13C` for charts; neutral in ordinary copy                         | Explicit FAST/SLOW label, signed magnitude, midpoint and direction                                                           | Requires a diverging local-data comparison; cannot reuse chart, Hard, info, or danger colors             |
+| Domain family              | Proposed visible-color eligibility                                                | Required non-color contract                                                                                                  | Exact-source status                                                                                      |
+| -------------------------- | --------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| Renderer hand guidance     | `Excluded — preserve current implementation`                                      | Existing renderer and paired legend retain their current text/color contract                                                 | No exact-source Gate; current PixiJS/Canvas values remain unchanged                                      |
+| Difficulty                 | `Approved required distinction` in repeated-scanning UI outside the viewer/editor | Full Normal/Hard/Expert/Real name or an unambiguous abbreviation, numeric level, fixed order, and independent selected state | Four different colors are required; exact authoritative Light/Dark values remain unresolved              |
+| Basic/Recital mode         | `Not eligible` for persistent hue by default                                      | Full mode label and neutral exclusive-selection state                                                                        | No stable official color ownership found                                                                 |
+| Rank and achievement       | `Not eligible` for a generated global palette                                     | Rank/achievement name, score/criterion, order, and optional authentic asset/icon                                             | Existing official artwork may retain literal artwork color, but no generated service palette is approved |
+| Score band                 | `Move to 13C`                                                                     | Numeric threshold, named band, ordered axis or table                                                                         | Requires sequential/threshold data research, not a global domain token                                   |
+| Genre                      | `Not eligible` by default                                                         | Visible category label                                                                                                       | No measured scanning benefit or official ownership found                                                 |
+| FAST/SLOW timing direction | `Move to 13C` for charts; neutral in ordinary copy                                | Explicit FAST/SLOW label, signed magnitude, midpoint and direction                                                           | Requires a diverging local-data comparison; cannot reuse chart, Hard, info, or danger colors             |
 
 ## Policy alternatives for review
 
 | Candidate                                | Visible domain color                                                                                   | Benefit                                                                                 | Cost/risk                                                                                 | Status                                |
 | ---------------------------------------- | ------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | ------------------------------------- |
-| `DE-A · Official minimum`                | No new non-renderer domain color                                                                       | Maximum restraint and no new mapping                                                    | Gives up possible difficulty scanning benefit                                             | `Not selected`                        |
+| `DE-A · Official minimum`                | No new non-renderer domain color                                                                       | Maximum restraint and no new mapping                                                    | Removes the required difficulty distinction                                               | `Rejected — distinct colors required` |
 | `DE-BR · Renderer-preserving task limit` | Difficulty markers only in proven repeated-scanning UI; existing renderer hand colors remain untouched | Preserves the locked viewer/editor while retaining the only unresolved UI scanning case | Requires one difficulty-only exact-source Gate and careful context boundaries             | `Approved correction — 2026-08-10`    |
 | `DE-C · Broad legacy-like`               | Difficulty, mode, rank, achievement, score, and genre                                                  | Maximum visible categorization                                                          | Recreates current collisions, competes with content hierarchy, and lacks source ownership | `Rejected by approved DE-BR boundary` |
 
@@ -167,19 +167,21 @@ markers outside the renderer remain open. No exact color is approved.
    forced-colors, protanopia, deuteranopia, and tritanopia views.
 5. Obtain user approval for the difficulty mapping. Do not open a hand-color Gate.
 
-If no exact attributable mapping survives these checks, the role remains neutral
-rather than receiving an invented NosLog palette.
+If no exact attributable mapping survives these checks, report the failure and reopen
+the exact-value decision with the user. Do not silently make the approved distinct
+difficulty roles neutral and do not invent a replacement NosLog palette.
 
 ## Decision log
 
-| ID       | Entry                                                                                                                    | Status                             |
-| -------- | ------------------------------------------------------------------------------------------------------------------------ | ---------------------------------- |
-| `DCE-01` | Treat all current 1.x domain values as migration evidence, not 2.0 authority.                                            | `Observed`                         |
-| `DCE-02` | Preserve the existing renderer hand palette exactly; do not treat it as a Foundation token or open an exact-source Gate. | `Approved correction — 2026-08-10` |
-| `DCE-03` | Keep difficulty names, levels, order, and selection independent from color.                                              | `Approved — DE-BR`                 |
-| `DCE-04` | Keep Basic/Recital, rank/achievement, and genre neutral by default.                                                      | `Approved — DE-BR`                 |
-| `DCE-05` | Move score-band and FAST/SLOW visualization color to `13C`.                                                              | `Approved — DE-BR`                 |
-| `DCE-06` | Supersede `DE-B` with renderer-preserving `DE-BR`; compare only UI difficulty values.                                    | `Approved correction — 2026-08-10` |
+| ID       | Entry                                                                                                                                          | Status                                          |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
+| `DCE-01` | Treat all current 1.x domain values as migration evidence, not 2.0 authority.                                                                  | `Observed`                                      |
+| `DCE-02` | Preserve the existing renderer hand palette exactly; do not treat it as a Foundation token or open an exact-source Gate.                       | `Approved correction — 2026-08-10`              |
+| `DCE-03` | Keep difficulty names, levels, order, and selection independent from color.                                                                    | `Approved — DE-BR`                              |
+| `DCE-04` | Keep Basic/Recital, rank/achievement, and genre neutral by default.                                                                            | `Approved — DE-BR`                              |
+| `DCE-05` | Move score-band and FAST/SLOW visualization color to `13C`.                                                                                    | `Approved — DE-BR`                              |
+| `DCE-06` | Supersede `DE-B` with renderer-preserving `DE-BR`; compare only UI difficulty values.                                                          | `Approved correction — 2026-08-10`              |
+| `DCE-07` | Keep Normal, Hard, Expert, and Real visibly distinct with four different colors in eligible ordinary UI; do not reopen neutral as a candidate. | `Approved and reconfirmed by user — 2026-08-10` |
 
 ## Approval record and boundary
 
@@ -189,4 +191,5 @@ exactly as implemented and must not enter NosLog 2.0 Foundation redesign. `DE-BR
 supersedes the earlier `DE-B` wording. Only difficulty markers in repeated-scanning UI
 outside the renderer may proceed to an exact-source comparison. Basic/Recital,
 rank/achievement, and genre remain neutral by default; score bands and FAST/SLOW move
-to `13C`. No exact difficulty value or production implementation is approved.
+to `13C`. The four-way color distinction is required, while exact difficulty values
+and production implementation remain unapproved.
