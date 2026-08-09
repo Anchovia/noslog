@@ -2,11 +2,12 @@
 
 ## 문서 관리
 
-- 상태: `M-A surface, F-A foreground, NB-A neutral boundary 승인; 문서 39 기술
-검증 뒤 C5M-05 종료; interaction과 focus는 열린 상태`
+- 상태: `M-A surface, F-A foreground, NB-A neutral boundary, NI-A neutral
+interaction 승인; C5M-03부터 C5M-06까지 종료; focus는 열린 상태`
 - Surface-mapping 승인일: 2026-08-08
 - Foreground-mapping 승인일: 2026-08-09
 - Neutral-boundary 승인일: 2026-08-09
+- Neutral-interaction 승인일: 2026-08-09
 - 정본 언어: 영어
 - 영어 정본:
   [34-foundation-c5-spectrum-semantic-mapping.md](./34-foundation-c5-spectrum-semantic-mapping.md)
@@ -15,15 +16,16 @@
   surface role 및 neutral foreground, boundary, 일반 interaction 후보 role에 매핑
 - 입력: 승인된 문서 `25`, `32`, `33`, 현재 Spectrum S2 token data, WCAG 2.2 및
   앞서 검토한 동일 role palette 비교
-- 제외: 일반 interaction container, focus,
-  signature/feedback/domain 또는 data visualization 색조 승인, radius와 shadow
-  치수, component styling, high-fidelity 화면, 애플리케이션 구현
+- 제외: focus, signature/feedback/domain 또는 data visualization 색조, radius와
+  shadow 치수, 최종 component alias와 geometry, high-fidelity 화면, 애플리케이션
+  구현
 
 이 문서는 `FCM-12`를 다시 열지 않는다. Adobe Spectrum S2는 계속 승인된 정확한
 Dark/Light neutral primitive source다. `C5M-03`은 현재 Spectrum S2 alias를 통해 승인된
 C1-B surface role을 배정하고 `C5M-04`는 승인된 exact `F-A` foreground mapping을,
-`C5M-05`는 승인된 exact `NB-A` neutral boundary를 배정한다. 일반
-interaction-container, focus 및 component-level validation은 계속 열려 있다.
+`C5M-05`는 승인된 exact `NB-A` neutral boundary를, `C5M-06`은 승인된 `NI-A`
+neutral interaction 계약을 배정한다. Focus와 최종 component-level alias는 계속
+열려 있다.
 
 ## 관련 문서
 
@@ -33,6 +35,10 @@ interaction-container, focus 및 component-level validation은 계속 열려 있
 - [C5 Spectrum surface 검증](./35-foundation-c5-spectrum-surface-validation.ko.md)
 - [C5 neutral foreground 레퍼런스 비교](./36-foundation-c5-neutral-foreground-reference-comparison.ko.md)
 - [C5 foreground specimen 검증](./37-foundation-c5-foreground-specimen-validation.ko.md)
+- [C5 neutral boundary 레퍼런스 비교](./38-foundation-c5-neutral-boundary-reference-comparison.ko.md)
+- [C5 neutral boundary specimen 검증](./39-foundation-c5-neutral-boundary-specimen-validation.ko.md)
+- [C5 neutral interaction 레퍼런스 비교](./40-foundation-c5-neutral-interaction-reference-comparison.ko.md)
+- [C5 neutral interaction specimen 검증](./41-foundation-c5-neutral-interaction-specimen-validation.ko.md)
 
 ## 집중 근거
 
@@ -177,21 +183,33 @@ styling으로 상속하지 않는다. 해당 outline은 browser/user accessibili
 theme boundary 값은 문서 `38` 비교와 문서 `39` specimen 뒤 승인됐으며 focus는 별도의
 후속 결정이다.
 
-## 제안된 일반 Neutral Interaction Mapping
+## 승인된 일반 Neutral Interaction Mapping — `NI-A`
 
-1. 일반 interaction의 기본값은 transparent이거나 neutral surface를 상속한다.
-   colored/filled container는 기본 affordance가 아니다.
-2. 낮은 강조의 hover/down fill은 Spectrum의
-   `neutral-subtle-background-color-default`, 즉 Light `gray-100` (`#e9e9e9`)과
-   Dark `gray-300` (`#393939`)를 사용할 수 있다. component별 검증이 필요하며 label,
-   geometry, cursor 또는 state semantics를 대체할 수 없다.
-3. selection에는 universal fill token이 없다. neutral을 유지하고 checkmark, border
-   weight, type weight, position 또는 structure를 사용한다. component별 subtle fill은
-   별도 근거가 필요하다.
-4. disabled background, border, content는 공식 disabled alias를 사용할 수 있지만
-   disabled content는 secondary copy가 아니며 필수 정보를 담을 수 없다.
-5. focus는 이 mapping 범위 밖이다. Spectrum의 blue focus alias는 상속하지 않는다.
-   NosLog focus는 승인된 C2-B와 이후 측정 결정으로 독립 지배한다.
+1. 일반 low-emphasis action은 동등한 정확한 Spectrum component family가 다른
+   composition을 지정하지 않는 한 transparent이거나 승인된 `M-A` surface를
+   상속한다.
+2. Foundation은 범용 `interaction-bg-hover`, `interaction-bg-pressed`,
+   `selection-bg` 값을 공개하지 않는다. 그 visual alias는 component가 소유한다.
+3. Component는 정확한 Spectrum Stack, Tree, Menu, Table 또는 동등한 recipe를
+   color, opacity, state의 완전한 mapping으로만 채택할 수 있다. 서로 다른
+   component family의 값과 state를 섞으면 안 된다.
+4. 승인된 `F-A` content state를 유지한다. Default interactive content는
+   `gray-900`, subdued interactive content는 `gray-800`로 강화할 수 있다. Content
+   변화가 새로운 container fill을 승인하지는 않는다.
+5. 승인된 `NB-A` boundary를 유지한다. Hover나 selection은 정상 Dark에 흰 outline을
+   추가하거나 boundary를 자동으로 `border-strong`으로 올리지 않는다.
+6. 일반 persistent selection은 neutral을 유지하며 programmatic state와 checkmark,
+   selected-control indicator, current-position marker 또는 측정된 다른 structural
+   cue 같은 persistent visible cue가 필요하다. Subtle fill은 보조 역할이며 유일한
+   필수 indicator가 될 수 없다.
+7. Disabled part는 정확한 Spectrum alias를 사용할 수 있다. Background
+   `#e9e9e9/#2c2c2c`, border `#dadada/#393939`, content
+   `#c6c6c6/#444444`이며 hover나 pressed state를 받지 않는다.
+8. `opacity-disabled: 0.3`은 정확한 Spectrum component token이 명시적으로 위임한
+   곳에서만 사용한다. Local composition은 세 disabled alias 위에 이를 중첩하면 안
+   된다.
+9. Focus, signature/유채색 selection, feedback, motion, 최종 component alias,
+   component geometry는 별도 approval gate로 남는다.
 
 ## `M-A` 측정 대비 요약
 
@@ -224,20 +242,28 @@ matrix에서 계속 검증해야 한다.
 
 `C5M-03` surface 승인 자체는 대표 guide specimen과 측정만 허가했으며 다른 role을
 승격하지 않았다. Foreground는 문서 `36`, `37` 뒤 `C5M-04`에서, neutral boundary는
-문서 `38`, `39` 뒤 `C5M-05`에서 별도로 승인됐다. Interaction container, focus,
-signature, component 및 production 구현 값은 계속 미승인이다. `M-B`는 명시적으로
-표시된 과거 근거로만 남을 수 있으며 fallback 구현
-경로가 아니다.
+문서 `38`, `39` 뒤 `C5M-05`에서 별도로 승인됐다. 일반 neutral interaction은 문서
+`40`, `41` 뒤 `C5M-06`에서 별도로 승인됐다. Focus, signature color, 최종 component
+alias와 geometry, production 구현은 계속 미승인이다. `M-B`는 명시적으로 표시된
+과거 근거로만 남을 수 있으며 fallback 구현 경로가 아니다.
+
+## Neutral Interaction 검토 결정
+
+2026-08-09 사용자는 측정된 문서 `41` specimen을 검토한 뒤 `NI-A`를 승인하고
+`C5M-06`을 종료했다. 이 승인은 위에 기록한 Spectrum component-family ownership,
+필수 persistent selection cue, 정확한 disabled alias를 확정한다. 범용 interaction
+fill, custom focus 처리, signature 또는 feedback color, motion, 최종 component alias,
+component geometry는 승인하지 않는다.
 
 ## 결정 로그
 
-| ID       | 항목                                                                                                                                              | 상태                       |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
-| `C5M-01` | 승인된 grayscale source 안에서는 현재 Spectrum S2 color alias를 주요 semantic-mapping 권위로 취급한다.                                            | `Observed`                 |
-| `C5M-02` | 이전 비교의 role 배정을 승인된 semantic map이 아니라 source 선택용 임시 specimen으로 취급한다.                                                    | `Observed`                 |
-| `C5M-03` | 현재 Spectrum S2 base/layer/elevated/pasteboard/overlay alias를 보존하는 `M-A`로 C1-B surface를 매핑한다.                                         | `Approved — 2026-08-08`    |
-| `C5M-04` | 문서 `36`의 broad comparison과 dedicated `F-A` specimen 뒤에만 foreground mapping을 결정하며 `gray-900`을 generic heading emphasis로 보지 않는다. | `Approved — 2026-08-09`    |
-| `C5M-05` | decorative, subtle, default, strong boundary를 `gray-200`, `gray-300`, `gray-400`, `gray-600`에 매핑한다.                                         | `Approved — 2026-08-09`    |
-| `C5M-06` | 일반 interaction과 selection은 neutral로 유지하고 공식 subtle/disabled alias는 문서화된 component-level 제약에서만 허용한다.                      | `Proposed — 별도 gate`     |
-| `C5M-07` | 오래된 공개 background-layer 표와 현재 Spectrum S2 alias를 하나의 mapping에 섞지 않으며 향후 이탈은 명시적으로 기록한다.                          | `Proposed governance rule` |
-| `C5M-08` | `M-B`는 과거 source-selection 근거로만 유지하고 C5 surface mapping 및 자동 fallback으로는 기각한다.                                               | `Rejected — 2026-08-08`    |
+| ID       | 항목                                                                                                                                                   | 상태                       |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------- |
+| `C5M-01` | 승인된 grayscale source 안에서는 현재 Spectrum S2 color alias를 주요 semantic-mapping 권위로 취급한다.                                                 | `Observed`                 |
+| `C5M-02` | 이전 비교의 role 배정을 승인된 semantic map이 아니라 source 선택용 임시 specimen으로 취급한다.                                                         | `Observed`                 |
+| `C5M-03` | 현재 Spectrum S2 base/layer/elevated/pasteboard/overlay alias를 보존하는 `M-A`로 C1-B surface를 매핑한다.                                              | `Approved — 2026-08-08`    |
+| `C5M-04` | 문서 `36`의 broad comparison과 dedicated `F-A` specimen 뒤에만 foreground mapping을 결정하며 `gray-900`을 generic heading emphasis로 보지 않는다.      | `Approved — 2026-08-09`    |
+| `C5M-05` | decorative, subtle, default, strong boundary를 `gray-200`, `gray-300`, `gray-400`, `gray-600`에 매핑한다.                                              | `Approved — 2026-08-09`    |
+| `C5M-06` | 일반 neutral interaction에서 Spectrum component-family ownership을 보존하고 `NI-A`에 따라 persistent selection cue와 정확한 disabled alias를 요구한다. | `Approved — 2026-08-09`    |
+| `C5M-07` | 오래된 공개 background-layer 표와 현재 Spectrum S2 alias를 하나의 mapping에 섞지 않으며 향후 이탈은 명시적으로 기록한다.                               | `Proposed governance rule` |
+| `C5M-08` | `M-B`는 과거 source-selection 근거로만 유지하고 C5 surface mapping 및 자동 fallback으로는 기각한다.                                                    | `Rejected — 2026-08-08`    |

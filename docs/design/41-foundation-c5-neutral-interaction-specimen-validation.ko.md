@@ -6,11 +6,11 @@
 
 | 항목           | 값                                               |
 | -------------- | ------------------------------------------------ |
-| 상태           | `기술 검증 완료 — NI-A 사용자 검토 대기`         |
+| 상태           | `승인 — NI-A 채택; C5M-06 종료`                  |
 | 날짜           | `2026-08-09`                                     |
 | Canonical 언어 | English                                          |
 | 결정 gate      | `C5M-06` neutral interaction behavior            |
-| 시험 후보      | `NI-A` — Spectrum component-family fidelity 보존 |
+| 승인 결과      | `NI-A` — Spectrum component-family fidelity 보존 |
 | 상속 승인      | `M-A` surface, `F-A` foreground, `NB-A` boundary |
 
 이 문서는
@@ -273,39 +273,37 @@ Specimen은 기술적으로 `NI-A`를 뒷받침한다.
    않는다.
 6. 기존 `M-A`, `F-A`, `NB-A` contract는 바뀌지 않았다.
 
-기술 성공이 visual 결정을 확정하지는 않는다. 사용자는 절제된 state 차이가
-NosLog에 적합한지, 그리고 comparison example이 Claude Design에 rule을 충분히
-명확하게 전달하는지 계속 검토해야 한다.
+2026-08-09 사용자는 이 측정 specimen을 검토한 뒤 `NI-A`를 승인했다. 기술 결과와
+사용자 결정은 `C5M-06`만 확정한다. 아래의 후속 gate는 승인하지 않는다.
 
 ## 남은 gate
 
 다음은 명시적으로 미해결이다.
 
-1. 최종 `C5M-06` 사용자 승인
-2. Focus indicator color와 geometry
-3. Signature/유채색 selection과 domain accent
-4. Error, warning, success, informational feedback color
-5. Motion과 transition behavior
-6. 최종 component alias, geometry, Menu arrow behavior, Tree roving focus,
+1. Focus indicator color와 geometry
+2. Signature/유채색 selection과 domain accent
+3. Error, warning, success, informational feedback color
+4. Motion과 transition behavior
+5. 최종 component alias, geometry, Menu arrow behavior, Tree roving focus,
    production implementation mapping
 
 이 specimen은 broad page design이나 production implementation을 허용하지 않는다.
 
 ## 결정 로그
 
-| ID       | 항목                                                                                                         | 상태                                     |
-| -------- | ------------------------------------------------------------------------------------------------------------ | ---------------------------------------- |
-| `C5V-01` | 정확한 Spectrum component-family interaction input이 측정 specimen matrix를 통과했다.                        | `Observed — validated`                   |
-| `C5V-02` | Stack, Tree, Menu, Table은 서로 다른 recipe로 남아야 하며 범용 neutral interaction fill은 정당화되지 않는다. | `NI-A에서 Proposed — specimen 검증 완료` |
-| `C5V-03` | Persistent ordinary selection에는 programmatic state와 non-fill visible cue가 필요하다.                      | `NI-A에서 Proposed — 수정 후 검증 완료`  |
-| `C5V-04` | 정확한 disabled background, border, content alias는 임의의 중첩 opacity 없이 작동한다.                       | `NI-A에서 Proposed — specimen 검증 완료` |
-| `C5V-05` | Normal Dark interaction은 흰 static outline이나 자동 strong border를 추가하지 않는다.                        | `상속 승인 rule — 보존`                  |
-| `C5V-06` | 이 specimen의 사용자 visual review 후에만 `NI-A`를 진행한다.                                                 | `사용자 결정 대기`                       |
-| `C5V-07` | 그 결정을 문서 34, 40과 Korean companion에 기록할 때까지 `C5M-06`를 open으로 유지한다.                       | `Open`                                   |
+| ID       | 항목                                                                                                         | 상태                             |
+| -------- | ------------------------------------------------------------------------------------------------------------ | -------------------------------- |
+| `C5V-01` | 정확한 Spectrum component-family interaction input이 측정 specimen matrix를 통과했다.                        | `Observed — validated`           |
+| `C5V-02` | Stack, Tree, Menu, Table은 서로 다른 recipe로 남아야 하며 범용 neutral interaction fill은 정당화되지 않는다. | `NI-A에서 Approved — 2026-08-09` |
+| `C5V-03` | Persistent ordinary selection에는 programmatic state와 non-fill visible cue가 필요하다.                      | `NI-A에서 Approved — 2026-08-09` |
+| `C5V-04` | 정확한 disabled background, border, content alias는 임의의 중첩 opacity 없이 작동한다.                       | `NI-A에서 Approved — 2026-08-09` |
+| `C5V-05` | Normal Dark interaction은 흰 static outline이나 자동 strong border를 추가하지 않는다.                        | `상속 승인 rule — 보존`          |
+| `C5V-06` | 사용자가 이 specimen을 시각 검토하고 `NI-A`를 승인했다.                                                      | `Approved — 2026-08-09`          |
+| `C5V-07` | 문서 34, 40, 41과 Korean companion에 결정을 기록한다.                                                        | `Closed — 기록 완료`             |
 
-## 사용자 검토 질문
+## 승인 기록
 
-정확한 component-family ownership과 mandatory persistent selection cue를 포함한
-`NI-A`를 NosLog 2.0 Foundation neutral interaction behavior rule로 승인하고,
-focus, signature color, feedback, motion, 최종 component alias는 후속 gate에
-남기는가?
+2026-08-09 사용자는 정확한 component-family ownership과 mandatory persistent
+selection cue를 포함한 `NI-A`를 NosLog 2.0 Foundation neutral interaction behavior
+rule로 승인했다. Focus, signature color, feedback, motion, 최종 component alias는
+후속 gate에 남는다.

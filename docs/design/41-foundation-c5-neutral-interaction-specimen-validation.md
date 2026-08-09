@@ -4,14 +4,14 @@
 
 ## Document Control
 
-| Field                | Value                                                       |
-| -------------------- | ----------------------------------------------------------- |
-| Status               | `Technical validation complete — NI-A awaiting user review` |
-| Date                 | `2026-08-09`                                                |
-| Canonical language   | English                                                     |
-| Decision gate        | `C5M-06` neutral interaction behavior                       |
-| Candidate under test | `NI-A` — preserve Spectrum component-family fidelity        |
-| Inherited approvals  | `M-A` surfaces, `F-A` foregrounds, and `NB-A` boundaries    |
+| Field               | Value                                                    |
+| ------------------- | -------------------------------------------------------- |
+| Status              | `Approved — NI-A adopted; C5M-06 closed`                 |
+| Date                | `2026-08-09`                                             |
+| Canonical language  | English                                                  |
+| Decision gate       | `C5M-06` neutral interaction behavior                    |
+| Approved result     | `NI-A` — preserve Spectrum component-family fidelity     |
+| Inherited approvals | `M-A` surfaces, `F-A` foregrounds, and `NB-A` boundaries |
 
 This document records the measured guide-specimen result authorized after the
 reference comparison in
@@ -277,39 +277,38 @@ The specimen technically supports `NI-A`:
 5. normal Dark interaction adds no white static outline or automatic strong border;
 6. existing `M-A`, `F-A`, and `NB-A` contracts remain unchanged.
 
-Technical success does not finalize the visual decision. User review must still
-confirm that the restrained state differences are appropriate for NosLog and that
-the comparison examples communicate the rule clearly enough for Claude Design.
+On 2026-08-09, after reviewing this measured specimen, the user approved `NI-A`.
+The technical result and user decision finalize `C5M-06` only. They do not approve
+the later gates listed below.
 
 ## Remaining Gates
 
 The following remain explicitly unresolved:
 
-1. final `C5M-06` user approval;
-2. focus-indicator color and geometry;
-3. signature/chromatic selection and domain accents;
-4. error, warning, success, and informational feedback colors;
-5. motion and transition behavior;
-6. final component aliases, geometry, Menu arrow behavior, Tree roving focus, and
+1. focus-indicator color and geometry;
+2. signature/chromatic selection and domain accents;
+3. error, warning, success, and informational feedback colors;
+4. motion and transition behavior;
+5. final component aliases, geometry, Menu arrow behavior, Tree roving focus, and
    production implementation mapping.
 
 No broad page design or production implementation is authorized by this specimen.
 
 ## Decision Log
 
-| ID       | Entry                                                                                                          | Status                                             |
-| -------- | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
-| `C5V-01` | Exact Spectrum component-family interaction inputs passed the measured specimen matrix.                        | `Observed — validated`                             |
-| `C5V-02` | Stack, Tree, Menu, and Table must remain separate recipes; no universal neutral interaction fill is justified. | `Proposed under NI-A — validated by specimen`      |
-| `C5V-03` | Persistent ordinary selection requires programmatic state plus a non-fill visible cue.                         | `Proposed under NI-A — validated after correction` |
-| `C5V-04` | Exact disabled background, border, and content aliases work without ad hoc compounded opacity.                 | `Proposed under NI-A — validated by specimen`      |
-| `C5V-05` | Normal Dark interaction must not add a white static outline or automatic strong border.                        | `Inherited approved rule — preserved`              |
-| `C5V-06` | Advance `NI-A` only after the user's visual review of this specimen.                                           | `Pending user decision`                            |
-| `C5V-07` | Keep `C5M-06` open until that decision is recorded in documents 34, 40, and their Korean companions.           | `Open`                                             |
+| ID       | Entry                                                                                                          | Status                                |
+| -------- | -------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
+| `C5V-01` | Exact Spectrum component-family interaction inputs passed the measured specimen matrix.                        | `Observed — validated`                |
+| `C5V-02` | Stack, Tree, Menu, and Table must remain separate recipes; no universal neutral interaction fill is justified. | `Approved under NI-A — 2026-08-09`    |
+| `C5V-03` | Persistent ordinary selection requires programmatic state plus a non-fill visible cue.                         | `Approved under NI-A — 2026-08-09`    |
+| `C5V-04` | Exact disabled background, border, and content aliases work without ad hoc compounded opacity.                 | `Approved under NI-A — 2026-08-09`    |
+| `C5V-05` | Normal Dark interaction must not add a white static outline or automatic strong border.                        | `Inherited approved rule — preserved` |
+| `C5V-06` | The user visually reviewed this specimen and approved `NI-A`.                                                  | `Approved — 2026-08-09`               |
+| `C5V-07` | Record the decision in documents 34, 40, and 41 and their Korean companions.                                   | `Closed — recorded`                   |
 
-## User Review Question
+## Approval Record
 
-Approve `NI-A` as the NosLog 2.0 Foundation rule for neutral interaction behavior,
-with exact component-family ownership and mandatory persistent selection cues, while
-keeping focus, signature color, feedback, motion, and final component aliases in
-their later gates?
+On 2026-08-09, the user approved `NI-A` as the NosLog 2.0 Foundation rule for neutral
+interaction behavior, including exact component-family ownership and mandatory
+persistent selection cues. Focus, signature color, feedback, motion, and final
+component aliases remain in later gates.

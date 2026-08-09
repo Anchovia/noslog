@@ -2,11 +2,12 @@
 
 ## Document Control
 
-- Status: `M-A surfaces, F-A foregrounds, and NB-A neutral boundaries approved;
-C5M-05 closed after document 39 technical validation; interaction and focus remain open`
+- Status: `M-A surfaces, F-A foregrounds, NB-A neutral boundaries, and NI-A
+neutral interaction approved; C5M-03 through C5M-06 closed; focus remains open`
 - Surface-mapping approval date: 2026-08-08
 - Foreground-mapping approval date: 2026-08-09
 - Neutral-boundary approval date: 2026-08-09
+- Neutral-interaction approval date: 2026-08-09
 - Canonical language: English
 - Korean companion:
   [34-foundation-c5-spectrum-semantic-mapping.ko.md](./34-foundation-c5-spectrum-semantic-mapping.ko.md)
@@ -16,15 +17,16 @@ C5M-05 closed after document 39 technical validation; interaction and focus rema
   ordinary interaction roles
 - Inputs: approved documents `25`, `32`, and `33`; current Spectrum S2 token data;
   WCAG 2.2; and the previously reviewed equal-role palette comparison
-- Excludes: approval of ordinary interaction containers, focus,
-  signature/feedback/domain or data-visualization hues, radius and shadow dimensions,
-  component styling, high-fidelity screens, and application implementation
+- Excludes: focus, signature/feedback/domain or data-visualization hues, radius and
+  shadow dimensions, final component aliases and geometry, high-fidelity screens,
+  and application implementation
 
 This document does not reopen `FCM-12`. Adobe Spectrum S2 remains the approved exact
 Dark/Light neutral primitive source. `C5M-03` assigns the approved C1-B surface roles
 through the current Spectrum S2 aliases, `C5M-04` assigns the approved exact `F-A`
-foreground mapping, and `C5M-05` assigns approved exact `NB-A` neutral boundaries.
-Ordinary interaction-container, focus, and component-level validation remain open.
+foreground mapping, `C5M-05` assigns approved exact `NB-A` neutral boundaries, and
+`C5M-06` assigns the approved `NI-A` neutral interaction contract. Focus and final
+component-level aliases remain open.
 
 ## Related Documents
 
@@ -34,6 +36,10 @@ Ordinary interaction-container, focus, and component-level validation remain ope
 - [C5 Spectrum surface validation](./35-foundation-c5-spectrum-surface-validation.md)
 - [C5 neutral foreground reference comparison](./36-foundation-c5-neutral-foreground-reference-comparison.md)
 - [C5 foreground specimen validation](./37-foundation-c5-foreground-specimen-validation.md)
+- [C5 neutral boundary reference comparison](./38-foundation-c5-neutral-boundary-reference-comparison.md)
+- [C5 neutral boundary specimen validation](./39-foundation-c5-neutral-boundary-specimen-validation.md)
+- [C5 neutral interaction reference comparison](./40-foundation-c5-neutral-interaction-reference-comparison.md)
+- [C5 neutral interaction specimen validation](./41-foundation-c5-neutral-interaction-specimen-validation.md)
 
 ## Focused Evidence
 
@@ -181,23 +187,34 @@ accessibility overrides. The normal-theme boundary values were approved after th
 document `38` comparison and document `39` specimen; focus remains a separate later
 decision.
 
-## Proposed Ordinary Neutral Interaction Mapping
+## Approved Ordinary Neutral Interaction Mapping — `NI-A`
 
-1. Default ordinary interactions remain transparent or inherit their neutral
-   surface. A colored or filled container is not the default affordance.
-2. A low-emphasis hover/down fill may use Spectrum's
-   `neutral-subtle-background-color-default`: Light `gray-100` (`#e9e9e9`) and Dark
-   `gray-300` (`#393939`). It must be tested per component and may not replace label,
-   geometry, cursor, or state semantics.
-3. Selection has no universal fill token. It remains neutral and uses a checkmark,
-   border weight, type weight, position, or structure. A component-specific subtle
-   fill requires separate evidence.
-4. Disabled background, border, and content may use the official disabled aliases,
-   but disabled content is not secondary copy and must not contain required
-   information.
-5. Focus remains outside this mapping. Spectrum's blue focus alias is not inherited;
-   NosLog focus is governed independently by approved C2-B and a later measured
-   decision.
+1. An ordinary low-emphasis action rests transparent or inherits its approved `M-A`
+   surface unless an exact equivalent Spectrum component family specifies another
+   composition.
+2. Foundation does not publish universal `interaction-bg-hover`,
+   `interaction-bg-pressed`, or `selection-bg` values. Those visual aliases remain
+   component-owned.
+3. A component may adopt an exact Spectrum Stack, Tree, Menu, Table, or other
+   equivalent recipe only as a complete mapping of color, opacity, and state. Values
+   and states from different component families may not be mixed.
+4. Approved `F-A` content states remain in force: default interactive content may
+   strengthen to `gray-900`, and subdued interactive content may strengthen to
+   `gray-800`. A content change does not authorize a new container fill.
+5. Approved `NB-A` boundaries remain in force. Hover or selection does not add a
+   white normal-Dark outline or automatically promote a boundary to `border-strong`.
+6. Ordinary persistent selection remains neutral and requires a programmatic state
+   plus a persistent visible cue such as a checkmark, selected-control indicator,
+   current-position marker, or another measured structural cue. A subtle fill is
+   supplemental and cannot be the only necessary indicator.
+7. Disabled parts may use exact Spectrum aliases: background
+   `#e9e9e9/#2c2c2c`, border `#dadada/#393939`, and content
+   `#c6c6c6/#444444`. They do not receive hover or pressed states.
+8. `opacity-disabled: 0.3` is used only where an exact Spectrum component token
+   explicitly delegates to it. Local composition must not compound it over the three
+   disabled aliases.
+9. Focus, signature/chromatic selection, feedback, motion, final component aliases,
+   and component geometry remain separate approval gates.
 
 ## Measured Contrast Summary for `M-A`
 
@@ -232,20 +249,30 @@ are:
 The `C5M-03` surface approval by itself authorized representative guide specimens and
 measurement; it did not promote any other role. Foreground was approved separately
 through `C5M-04` after documents `36` and `37`, and neutral boundaries through
-`C5M-05` after documents `38` and `39`. Interaction containers, focus, signature,
-component, and production implementation values remain unapproved.
+`C5M-05` after documents `38` and `39`. Ordinary neutral interaction was approved
+separately through `C5M-06` after documents `40` and `41`. Focus, signature color,
+final component aliases and geometry, and production implementation remain
+unapproved.
 `M-B` may remain visible only as labeled historical evidence; it is not a fallback
 implementation path.
 
+## Neutral Interaction Review Decision
+
+On 2026-08-09, after reviewing the measured document `41` specimen, the user approved
+`NI-A` and closed `C5M-06`. The approval fixes Spectrum component-family ownership,
+mandatory persistent selection cues, and the exact disabled aliases documented above.
+It does not authorize a universal interaction fill, custom focus treatment, signature
+or feedback color, motion, final component aliases, or component geometry.
+
 ## Decision Log
 
-| ID       | Entry                                                                                                                                                    | Status                     |
-| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
-| `C5M-01` | Treat current Spectrum S2 color aliases as the primary semantic-mapping authority inside the approved grayscale source.                                  | `Observed`                 |
-| `C5M-02` | Treat the previous comparison's role assignment as a provisional source-selection specimen, not an approved semantic map.                                | `Observed`                 |
-| `C5M-03` | Map C1-B surfaces through `M-A`, preserving current Spectrum S2 base/layer/elevated/pasteboard/overlay aliases.                                          | `Approved — 2026-08-08`    |
-| `C5M-04` | Decide foreground mapping only after document `36` broad comparison and a dedicated `F-A` specimen; do not treat `gray-900` as generic heading emphasis. | `Approved — 2026-08-09`    |
-| `C5M-05` | Map decorative, subtle, default, and strong boundaries through `gray-200`, `gray-300`, `gray-400`, and `gray-600`.                                       | `Approved — 2026-08-09`    |
-| `C5M-06` | Keep ordinary interaction and selection neutral; allow official subtle/disabled aliases only under the documented component-level constraints.           | `Proposed — separate gate` |
-| `C5M-07` | Do not mix the older public background-layer table with current Spectrum S2 aliases in one mapping; record any future deviation explicitly.              | `Proposed governance rule` |
-| `C5M-08` | Retain `M-B` only as historical source-selection evidence; reject it as the C5 surface mapping and as an automatic fallback.                             | `Rejected — 2026-08-08`    |
+| ID       | Entry                                                                                                                                                     | Status                     |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
+| `C5M-01` | Treat current Spectrum S2 color aliases as the primary semantic-mapping authority inside the approved grayscale source.                                   | `Observed`                 |
+| `C5M-02` | Treat the previous comparison's role assignment as a provisional source-selection specimen, not an approved semantic map.                                 | `Observed`                 |
+| `C5M-03` | Map C1-B surfaces through `M-A`, preserving current Spectrum S2 base/layer/elevated/pasteboard/overlay aliases.                                           | `Approved — 2026-08-08`    |
+| `C5M-04` | Decide foreground mapping only after document `36` broad comparison and a dedicated `F-A` specimen; do not treat `gray-900` as generic heading emphasis.  | `Approved — 2026-08-09`    |
+| `C5M-05` | Map decorative, subtle, default, and strong boundaries through `gray-200`, `gray-300`, `gray-400`, and `gray-600`.                                        | `Approved — 2026-08-09`    |
+| `C5M-06` | Preserve Spectrum component-family ownership for ordinary neutral interaction; require persistent selection cues and exact disabled aliases under `NI-A`. | `Approved — 2026-08-09`    |
+| `C5M-07` | Do not mix the older public background-layer table with current Spectrum S2 aliases in one mapping; record any future deviation explicitly.               | `Proposed governance rule` |
+| `C5M-08` | Retain `M-B` only as historical source-selection evidence; reject it as the C5 surface mapping and as an automatic fallback.                              | `Rejected — 2026-08-08`    |

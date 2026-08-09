@@ -2,7 +2,7 @@
 
 ## Document Control
 
-- Status: `Research complete; NI-A proposed for user review; C5M-06 remains open`
+- Status: `Approved — NI-A adopted after document 41 validation; C5M-06 closed`
 - Canonical language: English
 - Korean companion:
   [40-foundation-c5-neutral-interaction-reference-comparison.ko.md](./40-foundation-c5-neutral-interaction-reference-comparison.ko.md)
@@ -29,6 +29,7 @@ universal color exists in Spectrum S2 and whether it would be appropriate for No
 - [C5 foreground specimen validation](./37-foundation-c5-foreground-specimen-validation.md)
 - [C5 neutral boundary comparison](./38-foundation-c5-neutral-boundary-reference-comparison.md)
 - [C5 neutral boundary specimen validation](./39-foundation-c5-neutral-boundary-specimen-validation.md)
+- [C5 neutral interaction specimen validation](./41-foundation-c5-neutral-interaction-specimen-validation.md)
 
 ## Authority and Comparison Rules
 
@@ -206,9 +207,10 @@ that change.
 
 Status: `Available only after reopening FCM-12; not recommended now`.
 
-## Proposed `NI-A` Foundation Contract
+## Approved `NI-A` Foundation Contract
 
-If approved for the next specimen, `NI-A` means:
+On 2026-08-09, after reviewing the measured document `41` specimen, the user approved
+`NI-A`. The approved contract means:
 
 1. An ordinary low-emphasis action rests transparent or inherits its approved `M-A`
    surface unless an exact Spectrum component family specifies another composition.
@@ -239,8 +241,8 @@ If approved for the next specimen, `NI-A` means:
 
 ## Required Specimen Gate
 
-Approval of `NI-A` would authorize a dedicated guide specimen, not `C5M-06` closure.
-The specimen must show and measure:
+The proposal required a dedicated guide specimen before `C5M-06` could close.
+Document `41` fulfilled this gate by showing and measuring:
 
 1. transparent-rest low-emphasis actions and already-filled controls on all actual
    `M-A` surfaces in Light and Dark;
@@ -256,10 +258,11 @@ The specimen must show and measure:
 8. pointer, touch/no-hover, keyboard, forced-colors, and programmatic selected/disabled
    states without pre-approving the later custom focus treatment.
 
-## Recommendation for User Review
+## Approval Outcome
 
-Advance `NI-A` to the measured specimen and leave `C5M-06` open until that specimen is
-reviewed.
+The user approved `NI-A` on 2026-08-09 after reviewing the measured specimen, so
+`C5M-06` is closed. The approval is limited to ordinary neutral interaction behavior;
+the excluded later gates remain open.
 
 Rationale:
 
@@ -277,11 +280,11 @@ Rationale:
 
 ## Decision Log
 
-| ID       | Entry                                                                                                                                                  | Status                        |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------- |
-| `C5I-01` | Treat current Spectrum S2 component data, not `neutral-subtle-background-color-default` alone, as the authority for ordinary neutral container states. | `Observed`                    |
-| `C5I-02` | Do not create one global hover/pressed/selected neutral fill from a Stack primitive ladder or generic opacity.                                         | `Proposed under NI-A`         |
-| `C5I-03` | Require persistent ordinary selection to include a programmatic state and a measured non-fill cue; subtle neutral fill is supplemental.                | `Proposed under NI-A`         |
-| `C5I-04` | Adopt exact disabled background, border, and content aliases without ad hoc compounded opacity.                                                        | `Proposed under NI-A`         |
-| `C5I-05` | Keep focus, signature/chromatic selection, feedback, and final component aliases outside `C5M-06`.                                                     | `Observed scope boundary`     |
-| `C5M-06` | Preserve Spectrum component-family fidelity for ordinary neutral interaction and selection.                                                            | `Open — user review required` |
+| ID       | Entry                                                                                                                                                  | Status                                 |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------- |
+| `C5I-01` | Treat current Spectrum S2 component data, not `neutral-subtle-background-color-default` alone, as the authority for ordinary neutral container states. | `Observed`                             |
+| `C5I-02` | Do not create one global hover/pressed/selected neutral fill from a Stack primitive ladder or generic opacity.                                         | `Approved under NI-A — 2026-08-09`     |
+| `C5I-03` | Require persistent ordinary selection to include a programmatic state and a measured non-fill cue; subtle neutral fill is supplemental.                | `Approved under NI-A — 2026-08-09`     |
+| `C5I-04` | Adopt exact disabled background, border, and content aliases without ad hoc compounded opacity.                                                        | `Approved under NI-A — 2026-08-09`     |
+| `C5I-05` | Keep focus, signature/chromatic selection, feedback, and final component aliases outside `C5M-06`.                                                     | `Approved scope boundary — 2026-08-09` |
+| `C5M-06` | Preserve Spectrum component-family fidelity for ordinary neutral interaction and selection.                                                            | `Approved — 2026-08-09`                |

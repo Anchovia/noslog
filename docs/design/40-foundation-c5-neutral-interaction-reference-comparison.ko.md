@@ -2,7 +2,7 @@
 
 ## 문서 관리
 
-- 상태: `조사 완료; NI-A 사용자 검토 제안; C5M-06 미종료`
+- 상태: `승인 — 문서 41 검증 뒤 NI-A 채택; C5M-06 종료`
 - 정본 언어: 영어
 - 영어 정본:
   [40-foundation-c5-neutral-interaction-reference-comparison.md](./40-foundation-c5-neutral-interaction-reference-comparison.md)
@@ -29,6 +29,7 @@
 - [C5 foreground specimen validation](./37-foundation-c5-foreground-specimen-validation.ko.md)
 - [C5 neutral boundary comparison](./38-foundation-c5-neutral-boundary-reference-comparison.ko.md)
 - [C5 neutral boundary specimen validation](./39-foundation-c5-neutral-boundary-specimen-validation.ko.md)
+- [C5 neutral interaction specimen validation](./41-foundation-c5-neutral-interaction-specimen-validation.ko.md)
 
 ## 권위와 비교 규칙
 
@@ -201,9 +202,10 @@ surface, foreground, boundary, component alias 전체의 승인된 neutral 출�
 
 상태: `FCM-12 재개 후에만 가능; 현재 비권고`.
 
-## 제안하는 `NI-A` Foundation 계약
+## 승인된 `NI-A` Foundation 계약
 
-다음 specimen 진행이 승인되면 `NI-A`의 의미는 다음과 같다.
+2026-08-09 사용자는 측정된 문서 `41` specimen을 검토한 뒤 `NI-A`를 승인했다.
+승인된 계약의 의미는 다음과 같다.
 
 1. 일반 low-emphasis action은 정확한 Spectrum component family가 다른 조합을
    지정하지 않는 한 transparent이거나 승인된 `M-A` surface를 상속한다.
@@ -231,8 +233,8 @@ surface, foreground, boundary, component alias 전체의 승인된 neutral 출�
 
 ## 필수 specimen gate
 
-`NI-A` 승인은 전용 guide specimen만 허용하며 `C5M-06`를 종료하지 않는다.
-Specimen은 다음을 보여 주고 측정해야 한다.
+제안안은 `C5M-06`을 종료하기 전에 전용 guide specimen을 요구했다. 문서 `41`은
+다음을 보여 주고 측정하여 이 gate를 충족했다.
 
 1. 모든 실제 Light/Dark `M-A` surface에서 transparent-rest low-emphasis action과
    이미 채워진 control
@@ -247,9 +249,11 @@ Specimen은 다음을 보여 주고 측정해야 한다.
 8. 후속 custom focus 처리를 미리 승인하지 않는 pointer, touch/no-hover, keyboard,
    forced-colors, programmatic selected/disabled state
 
-## 사용자 검토 권고
+## 승인 결과
 
-`NI-A`를 측정 specimen으로 진행하고 specimen 검토 전까지 `C5M-06`를 열어 둔다.
+사용자는 측정 specimen을 검토한 뒤 2026-08-09 `NI-A`를 승인했으므로 `C5M-06`은
+종료됐다. 승인은 일반 neutral interaction behavior에만 한정되며 제외된 후속 gate는
+계속 열려 있다.
 
 근거:
 
@@ -267,11 +271,11 @@ Specimen은 다음을 보여 주고 측정해야 한다.
 
 ## 결정 로그
 
-| ID       | 항목                                                                                                                                        | 상태                      |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- |
-| `C5I-01` | 일반 neutral container state의 권위로 `neutral-subtle-background-color-default` 단독이 아니라 현재 Spectrum S2 component 데이터를 취급한다. | `Observed`                |
-| `C5I-02` | Stack primitive ladder나 generic opacity로 하나의 global hover/pressed/selected neutral fill을 만들지 않는다.                               | `NI-A에서 Proposed`       |
-| `C5I-03` | Persistent ordinary selection에 programmatic state와 측정된 non-fill cue를 요구하며 subtle neutral fill은 보조 역할로 한정한다.             | `NI-A에서 Proposed`       |
-| `C5I-04` | 임의의 중첩 opacity 없이 정확한 disabled background, border, content alias를 채택한다.                                                      | `NI-A에서 Proposed`       |
-| `C5I-05` | focus, signature/유채색 selection, feedback, 최종 component alias를 `C5M-06` 외부에 유지한다.                                               | `Observed scope boundary` |
-| `C5M-06` | 일반 neutral interaction과 selection에서 Spectrum component-family fidelity를 보존한다.                                                     | `Open — 사용자 검토 필요` |
+| ID       | 항목                                                                                                                                        | 상태                                   |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
+| `C5I-01` | 일반 neutral container state의 권위로 `neutral-subtle-background-color-default` 단독이 아니라 현재 Spectrum S2 component 데이터를 취급한다. | `Observed`                             |
+| `C5I-02` | Stack primitive ladder나 generic opacity로 하나의 global hover/pressed/selected neutral fill을 만들지 않는다.                               | `NI-A에서 Approved — 2026-08-09`       |
+| `C5I-03` | Persistent ordinary selection에 programmatic state와 측정된 non-fill cue를 요구하며 subtle neutral fill은 보조 역할로 한정한다.             | `NI-A에서 Approved — 2026-08-09`       |
+| `C5I-04` | 임의의 중첩 opacity 없이 정확한 disabled background, border, content alias를 채택한다.                                                      | `NI-A에서 Approved — 2026-08-09`       |
+| `C5I-05` | focus, signature/유채색 selection, feedback, 최종 component alias를 `C5M-06` 외부에 유지한다.                                               | `Approved scope boundary — 2026-08-09` |
+| `C5M-06` | 일반 neutral interaction과 selection에서 Spectrum component-family fidelity를 보존한다.                                                     | `Approved — 2026-08-09`                |
