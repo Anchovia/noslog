@@ -41,6 +41,8 @@ component-level aliases remain open.
 - [C5 neutral interaction reference comparison](./40-foundation-c5-neutral-interaction-reference-comparison.md)
 - [C5 neutral interaction specimen validation](./41-foundation-c5-neutral-interaction-specimen-validation.md)
 - [C5 focus indicator reference comparison](./42-foundation-c5-focus-indicator-reference-comparison.md)
+- [C5 focus-indicator visual comparison](./43-foundation-c5-focus-indicator-visual-comparison.md)
+- [C5 Fluent focus specimen validation](./44-foundation-c5-fluent-focus-specimen-validation.md)
 
 ## Focused Evidence
 

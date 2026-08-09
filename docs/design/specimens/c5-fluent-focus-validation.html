@@ -1,0 +1,1670 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>NosLog 2.0 C5 Fluent Focus Validation</title>
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+
+            :root {
+                color-scheme: light;
+                font-family:
+                    Inter, Pretendard, "Noto Sans KR", "Noto Sans JP",
+                    system-ui, sans-serif;
+                background: #e9e9e9;
+                color: #292929;
+            }
+
+            html {
+                scrollbar-width: none;
+            }
+
+            html::-webkit-scrollbar {
+                width: 0;
+                height: 0;
+            }
+
+            body {
+                min-width: 0;
+                margin: 0;
+                background: #e9e9e9;
+            }
+
+            button,
+            input {
+                font: inherit;
+            }
+
+            button,
+            a,
+            [tabindex] {
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            button:not(:disabled),
+            [role="menuitemradio"] {
+                cursor: pointer;
+            }
+
+            code {
+                font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            }
+
+            .review-shell {
+                display: grid;
+                gap: 16px;
+                width: min(1240px, 100%);
+                margin: 0 auto;
+                padding: 16px;
+            }
+
+            .review-header,
+            .review-controls,
+            .review-metrics {
+                border: 1px solid #c6c6c6;
+                background: #ffffff;
+            }
+
+            .review-header,
+            .review-metrics {
+                padding: 14px 16px;
+            }
+
+            .review-header h1,
+            .review-header p,
+            .review-metrics p {
+                margin: 0;
+            }
+
+            .review-header h1 {
+                font-size: 18px;
+                line-height: 1.35;
+            }
+
+            .review-header p,
+            .review-metrics {
+                margin-top: 6px;
+                color: #505050;
+                font-size: 13px;
+                line-height: 1.55;
+            }
+
+            .review-controls {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                padding: 10px;
+            }
+
+            .review-controls button {
+                min-height: 44px;
+                border: 1px solid #c6c6c6;
+                border-radius: 0;
+                padding: 8px 11px;
+                background: #ffffff;
+                color: #505050;
+            }
+
+            .review-controls button[aria-pressed="true"] {
+                border-color: #717171;
+                color: #292929;
+                font-weight: 700;
+            }
+
+            .review-stage {
+                display: grid;
+                min-width: 0;
+                justify-items: center;
+                overflow: auto;
+            }
+
+            .specimen-frame {
+                --canvas: #ffffff;
+                --surface: #f8f8f8;
+                --sunken: #e9e9e9;
+                --raised: #ffffff;
+                --overlay: #ffffff;
+                --text: #292929;
+                --text-subdued: #505050;
+                --text-interactive: #131313;
+                --divider: #e1e1e1;
+                --border-subtle: #dadada;
+                --border-default: #c6c6c6;
+                --border-strong: #717171;
+                --selected: rgba(41, 41, 41, 0.1);
+                --disabled-bg: #e9e9e9;
+                --disabled-border: #dadada;
+                --disabled-text: #c6c6c6;
+                --focus-1: #ffffff;
+                --focus-2: #000000;
+                --specimen-font-size: 16px;
+
+                width: min(var(--review-width, 390px), 100%);
+                min-width: 0;
+                overflow: hidden;
+                container-type: inline-size;
+                border: 1px solid var(--border-strong);
+                background: var(--canvas);
+                color: var(--text);
+                font-size: var(--specimen-font-size);
+            }
+
+            .specimen-frame[data-theme="dark"] {
+                color-scheme: dark;
+                --canvas: #111111;
+                --surface: #1b1b1b;
+                --sunken: #111111;
+                --raised: #222222;
+                --overlay: #222222;
+                --text: #dbdbdb;
+                --text-subdued: #afafaf;
+                --text-interactive: #f2f2f2;
+                --divider: #323232;
+                --border-subtle: #393939;
+                --border-default: #444444;
+                --border-strong: #8a8a8a;
+                --selected: rgba(219, 219, 219, 0.1);
+                --disabled-bg: #2c2c2c;
+                --disabled-border: #393939;
+                --disabled-text: #444444;
+                --focus-1: #000000;
+                --focus-2: #ffffff;
+            }
+
+            .specimen-frame[data-scale="200"] {
+                --specimen-font-size: 32px;
+            }
+
+            .specimen-frame[data-scale="200"] .ranking-row {
+                grid-template-columns: auto minmax(0, 1fr);
+            }
+
+            .specimen-frame[data-scale="200"] .ranking-score {
+                grid-column: 1 / -1;
+                padding-inline-start: 1.65em;
+            }
+
+            .specimen-header {
+                display: flex;
+                align-items: flex-start;
+                justify-content: space-between;
+                gap: 0.75em;
+                padding: 1em;
+                border-bottom: 1px solid var(--divider);
+                background: var(--canvas);
+            }
+
+            .specimen-frame[data-scale="200"] .specimen-header {
+                flex-direction: column;
+            }
+
+            .specimen-kicker,
+            .specimen-title,
+            .specimen-summary,
+            .scene h2,
+            .scene h3,
+            .scene p {
+                margin: 0;
+                overflow-wrap: anywhere;
+            }
+
+            .specimen-kicker {
+                color: var(--text-subdued);
+                font-size: 0.72em;
+                font-weight: 700;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+            }
+
+            .specimen-title {
+                margin-top: 0.2em;
+                font-size: 1.25em;
+                line-height: 1.3;
+            }
+
+            .specimen-title,
+            .scene h2,
+            .scene h3 {
+                word-break: keep-all;
+            }
+
+            .specimen-summary {
+                margin-top: 0.35em;
+                color: var(--text-subdued);
+                font-size: 0.78em;
+                line-height: 1.5;
+            }
+
+            .theme-label {
+                flex: none;
+                max-width: 100%;
+                border: 1px solid var(--border-default);
+                padding: 0.5em 0.65em;
+                color: var(--text-subdued);
+                font-size: 0.72em;
+                overflow-wrap: anywhere;
+            }
+
+            .scene {
+                display: none;
+                min-width: 0;
+                padding: 1em;
+            }
+
+            .scene[data-active="true"] {
+                display: grid;
+                gap: 1em;
+            }
+
+            .scene-heading {
+                display: grid;
+                gap: 0.35em;
+            }
+
+            .scene-heading h2 {
+                font-size: 1.08em;
+                line-height: 1.35;
+            }
+
+            .caption,
+            .fixture-note,
+            .surface-name,
+            .keyboard-status {
+                color: var(--text-subdued);
+                font-size: 0.76em;
+                line-height: 1.5;
+            }
+
+            .component-grid,
+            .state-grid,
+            .surface-grid,
+            .boundary-grid {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 0.8em;
+                min-width: 0;
+            }
+
+            .fixture,
+            .state-card,
+            .surface-card,
+            .boundary-card,
+            .keyboard-card {
+                min-width: 0;
+                border: 1px solid var(--border-subtle);
+                padding: 0.9em;
+                background: var(--surface);
+            }
+
+            .fixture {
+                display: grid;
+                align-content: start;
+                gap: 0.8em;
+            }
+
+            .fixture-label,
+            .state-label {
+                color: var(--text-subdued);
+                font-size: 0.7em;
+                font-weight: 700;
+                letter-spacing: 0.04em;
+                text-transform: uppercase;
+            }
+
+            .focus-target,
+            .field-control {
+                --focus-radius: 4px;
+                position: relative;
+                isolation: isolate;
+            }
+
+            .focus-target:focus,
+            .field-control input:focus {
+                outline: none;
+            }
+
+            .focus-target[data-keyboard-focus="true"]::after,
+            .focus-demo::after,
+            .field-control[data-keyboard-focus="true"]::after,
+            .field-control.focus-demo::after {
+                position: absolute;
+                z-index: 4;
+                inset: -2px;
+                border: 2px solid var(--focus-2);
+                border-radius: var(--focus-radius);
+                content: "";
+                pointer-events: none;
+            }
+
+            .text-link {
+                display: inline-block;
+                width: fit-content;
+                color: var(--text-interactive);
+                font-weight: 700;
+                line-height: 1.5;
+                text-decoration: underline;
+                text-underline-offset: 0.18em;
+            }
+
+            .icon-action,
+            .low-action,
+            .filled-action,
+            .chart-action,
+            .disabled-action,
+            .menu-item,
+            .row-action {
+                min-height: 44px;
+                min-width: 44px;
+                border-radius: 4px;
+                color: var(--text-interactive);
+            }
+
+            .icon-action,
+            .low-action,
+            .filled-action,
+            .chart-action,
+            .disabled-action {
+                border: 1px solid var(--border-default);
+                padding: 0.62em 0.78em;
+                background: transparent;
+            }
+
+            .icon-action {
+                display: grid;
+                width: 44px;
+                place-items: center;
+                padding: 0;
+                font-size: 1.1em;
+            }
+
+            .filled-action {
+                border-color: var(--border-strong);
+                background: var(--raised);
+                font-weight: 700;
+            }
+
+            .always-dark {
+                border-color: #444444;
+                background: #111111;
+                color: #f2f2f2;
+            }
+
+            .field {
+                display: grid;
+                gap: 0.4em;
+                min-width: 0;
+            }
+
+            .field label {
+                color: var(--text-subdued);
+                font-size: 0.76em;
+                font-weight: 700;
+            }
+
+            .field-control {
+                border-radius: 4px;
+            }
+
+            .field-control input {
+                width: 100%;
+                min-width: 0;
+                min-height: 44px;
+                border: 1px solid var(--border-strong);
+                border-radius: 4px;
+                padding: 0.62em 0.72em;
+                background: var(--canvas);
+                color: var(--text);
+            }
+
+            .menu-list,
+            .row-list,
+            .ranking-list,
+            .keyboard-path {
+                display: grid;
+                gap: 0.35em;
+                min-width: 0;
+                margin: 0;
+                padding: 0;
+                list-style: none;
+            }
+
+            .menu-item,
+            .row-action {
+                display: grid;
+                grid-template-columns: minmax(0, 1fr) auto;
+                align-items: center;
+                gap: 0.65em;
+                width: 100%;
+                border: 0;
+                padding: 0.62em 0.72em;
+                background: transparent;
+                text-align: start;
+            }
+
+            .menu-item[aria-checked="true"],
+            .row-action[aria-selected="true"],
+            .row-action[aria-current="page"] {
+                background: var(--selected);
+            }
+
+            .menu-item span:first-child,
+            .row-action span:first-child,
+            .ranking-main {
+                min-width: 0;
+                overflow-wrap: anywhere;
+            }
+
+            .state-card {
+                display: grid;
+                gap: 0.65em;
+                align-content: start;
+            }
+
+            .state-cue {
+                font-weight: 800;
+            }
+
+            .error-card {
+                border-left: 3px double var(--border-strong);
+            }
+
+            .error-note {
+                display: flex;
+                gap: 0.45em;
+                align-items: flex-start;
+                color: var(--text);
+                font-size: 0.78em;
+                line-height: 1.45;
+            }
+
+            .error-note strong {
+                flex: none;
+            }
+
+            .disabled-pair {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 0.6em;
+            }
+
+            .disabled-action:disabled {
+                cursor: not-allowed;
+                border-color: var(--disabled-border);
+                background: var(--disabled-bg);
+                color: var(--disabled-text);
+            }
+
+            .ranking-row {
+                --focus-radius: 0;
+                display: grid;
+                grid-template-columns: 2.4em minmax(0, 1fr) auto;
+                align-items: center;
+                gap: 0.55em;
+                min-height: 44px;
+                border-bottom: 1px solid var(--divider);
+                padding: 0.55em 0.4em;
+                color: var(--text);
+                text-decoration: none;
+            }
+
+            .ranking-score {
+                font-variant-numeric: tabular-nums;
+                font-weight: 700;
+            }
+
+            .chart-controls {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.5em;
+            }
+
+            .surface-card {
+                display: grid;
+                gap: 0.6em;
+                align-content: start;
+                min-height: 8em;
+            }
+
+            .surface-card[data-surface="canvas"] {
+                background: var(--canvas);
+            }
+
+            .surface-card[data-surface="surface"] {
+                background: var(--surface);
+            }
+
+            .surface-card[data-surface="sunken"] {
+                background: var(--sunken);
+            }
+
+            .surface-card[data-surface="raised"] {
+                border-color: var(--border-default);
+                background: var(--raised);
+            }
+
+            .surface-card[data-surface="overlay"] {
+                border-color: var(--border-strong);
+                background: var(--overlay);
+            }
+
+            .surface-focus {
+                display: grid;
+                min-height: 44px;
+                place-items: center;
+                border: 1px solid var(--border-default);
+                border-radius: 4px;
+                padding: 0.55em;
+                background: transparent;
+                color: var(--text-interactive);
+            }
+
+            .artwork-tile {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                min-height: 7em;
+                overflow: hidden;
+                border: 1px solid var(--border-strong);
+                padding: 0;
+                background: var(--canvas);
+            }
+
+            .artwork-tile span:nth-child(odd) {
+                background: #111111;
+            }
+
+            .artwork-tile span:nth-child(even) {
+                background: #f8f8f8;
+            }
+
+            .artwork-caption {
+                color: var(--text-subdued);
+                font-size: 0.72em;
+                line-height: 1.45;
+            }
+
+            .boundary-card {
+                display: grid;
+                gap: 0.65em;
+                align-content: start;
+            }
+
+            .scrollport {
+                max-height: 12em;
+                overflow: auto;
+                border: 1px solid var(--border-default);
+                padding: 4px;
+                background: var(--sunken);
+                scrollbar-width: thin;
+            }
+
+            .scrollport-sticky {
+                position: sticky;
+                z-index: 3;
+                top: 0;
+                border-bottom: 1px solid var(--border-default);
+                padding: 0.55em;
+                background: var(--raised);
+                font-size: 0.76em;
+                font-weight: 700;
+            }
+
+            .scroll-item {
+                --focus-radius: 0;
+                display: block;
+                width: 100%;
+                min-height: 44px;
+                scroll-margin-block: 3.2em 0.4em;
+                border: 0;
+                border-bottom: 1px solid var(--divider);
+                padding: 0.65em;
+                background: var(--canvas);
+                color: var(--text);
+                text-align: start;
+            }
+
+            .edge-safe-zone {
+                display: grid;
+                gap: 0.5em;
+                border: 1px solid var(--border-default);
+                padding: 4px;
+                background: var(--canvas);
+            }
+
+            .edge-safe-zone .focus-target {
+                min-height: 44px;
+                border: 1px solid var(--border-default);
+                border-radius: 4px;
+                background: transparent;
+                color: var(--text);
+            }
+
+            .keyboard-card {
+                display: grid;
+                gap: 0.8em;
+                position: relative;
+            }
+
+            .skip-link {
+                display: block;
+                width: fit-content;
+                min-height: 44px;
+                padding: 0.6em 0.7em;
+                background: var(--raised);
+                color: var(--text-interactive);
+                font-weight: 700;
+            }
+
+            .skip-link:not([data-keyboard-focus="true"]) {
+                position: absolute;
+                width: 1px;
+                height: 1px;
+                min-height: 0;
+                overflow: hidden;
+                clip: rect(0 0 0 0);
+                clip-path: inset(50%);
+                white-space: nowrap;
+            }
+
+            .keyboard-start {
+                min-height: 44px;
+                border: 1px solid var(--border-default);
+                border-radius: 4px;
+                padding: 0.62em 0.72em;
+                background: transparent;
+                color: var(--text-interactive);
+            }
+
+            .live-menu {
+                display: grid;
+                gap: 0.25em;
+                border: 1px solid var(--border-default);
+                padding: 0.35em;
+            }
+
+            .keyboard-target {
+                min-height: 3em;
+                border-top: 1px solid var(--divider);
+                padding-top: 0.8em;
+            }
+
+            .specimen-footer {
+                border-top: 1px solid var(--divider);
+                padding: 0.9em 1em;
+                color: var(--text-subdued);
+                font-size: 0.7em;
+                line-height: 1.5;
+            }
+
+            @container (max-width: 560px) {
+                .component-grid,
+                .state-grid,
+                .surface-grid,
+                .boundary-grid {
+                    grid-template-columns: minmax(0, 1fr);
+                }
+
+                .disabled-pair {
+                    grid-template-columns: minmax(0, 1fr);
+                }
+            }
+
+            @media (forced-colors: active) {
+                .focus-target[data-keyboard-focus="true"]::after,
+                .focus-demo::after,
+                .field-control[data-keyboard-focus="true"]::after,
+                .field-control.focus-demo::after {
+                    border-color: Highlight;
+                }
+            }
+
+            @media (max-width: 430px) {
+                .review-shell {
+                    padding-inline: 0;
+                }
+
+                .review-header,
+                .review-controls,
+                .review-metrics {
+                    border-inline: 0;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <main class="review-shell">
+            <header class="review-header">
+                <h1>C5F-06 · Fluent focus measured-validation specimen</h1>
+                <p>
+                    FI-C validation only. Light black / Dark white
+                    <code>colorStrokeFocus2</code> · 2px · zero gap · no
+                    Tailwind palette · no persistent white Dark boundary.
+                </p>
+            </header>
+
+            <nav class="review-controls" aria-label="Specimen controls">
+                <button
+                    data-control="theme"
+                    data-value="dark"
+                    aria-pressed="true"
+                >
+                    Dark
+                </button>
+                <button
+                    data-control="theme"
+                    data-value="light"
+                    aria-pressed="false"
+                >
+                    Light
+                </button>
+                <button
+                    data-control="width"
+                    data-value="320"
+                    aria-pressed="false"
+                >
+                    320
+                </button>
+                <button
+                    data-control="width"
+                    data-value="390"
+                    aria-pressed="true"
+                >
+                    390
+                </button>
+                <button
+                    data-control="width"
+                    data-value="560"
+                    aria-pressed="false"
+                >
+                    560
+                </button>
+                <button
+                    data-control="width"
+                    data-value="768"
+                    aria-pressed="false"
+                >
+                    768
+                </button>
+                <button
+                    data-control="width"
+                    data-value="1120"
+                    aria-pressed="false"
+                >
+                    1120
+                </button>
+                <button
+                    data-control="scale"
+                    data-value="100"
+                    aria-pressed="true"
+                >
+                    100%
+                </button>
+                <button
+                    data-control="scale"
+                    data-value="200"
+                    aria-pressed="false"
+                >
+                    200%
+                </button>
+                <button
+                    data-control="scene"
+                    data-value="components"
+                    aria-pressed="true"
+                >
+                    Components
+                </button>
+                <button
+                    data-control="scene"
+                    data-value="states"
+                    aria-pressed="false"
+                >
+                    State coexistence
+                </button>
+                <button
+                    data-control="scene"
+                    data-value="surfaces"
+                    aria-pressed="false"
+                >
+                    Surfaces / media
+                </button>
+                <button
+                    data-control="scene"
+                    data-value="clipping"
+                    aria-pressed="false"
+                >
+                    Clipping
+                </button>
+                <button
+                    data-control="scene"
+                    data-value="keyboard"
+                    aria-pressed="false"
+                >
+                    Live keyboard
+                </button>
+            </nav>
+
+            <div class="review-stage">
+                <article
+                    class="specimen-frame"
+                    id="specimen-frame"
+                    data-theme="dark"
+                    data-scale="100"
+                    style="--review-width: 390px"
+                >
+                    <header class="specimen-header">
+                        <div>
+                            <p class="specimen-kicker">
+                                NosLog 2.0 Foundation evidence
+                            </p>
+                            <h1 class="specimen-title">
+                                무채색 키보드 포커스 검증
+                            </h1>
+                            <p class="specimen-summary">
+                                검정/흰색은 포커스가 보이는 동안에만 사용한다.
+                                평상시 테두리는 승인된 Spectrum neutral
+                                boundary를 유지한다.
+                            </p>
+                        </div>
+                        <span class="theme-label" id="theme-label"
+                            >Dark · 390px · 100%</span
+                        >
+                    </header>
+
+                    <section
+                        class="scene"
+                        data-scene="components"
+                        data-active="true"
+                    >
+                        <header class="scene-heading">
+                            <h2>Component coverage</h2>
+                            <p class="caption">
+                                모든 링은 비교를 위해 표시한 focus 상태다. Fill,
+                                text, icon, neutral boundary는 포커스 때문에
+                                변하지 않는다.
+                            </p>
+                        </header>
+                        <div class="component-grid">
+                            <section class="fixture">
+                                <span class="fixture-label"
+                                    >Text link / icon</span
+                                >
+                                <a
+                                    class="text-link focus-target focus-demo"
+                                    href="#keyboard-target"
+                                    >악곡 상세 기록 보기</a
+                                >
+                                <button
+                                    class="icon-action focus-target focus-demo"
+                                    type="button"
+                                    aria-label="즐겨찾기 추가"
+                                >
+                                    ☆
+                                </button>
+                                <p class="fixture-note">
+                                    Inline link와 44px icon action.
+                                </p>
+                            </section>
+                            <section class="fixture">
+                                <span class="fixture-label"
+                                    >Low / filled action</span
+                                >
+                                <button
+                                    class="low-action focus-target focus-demo"
+                                    type="button"
+                                >
+                                    필터 초기화
+                                </button>
+                                <button
+                                    class="filled-action focus-target focus-demo"
+                                    type="button"
+                                >
+                                    데이터 연동 시작
+                                </button>
+                                <p class="fixture-note">
+                                    포커스는 강조 단계나 fill을 승격하지 않는다.
+                                </p>
+                            </section>
+                            <section class="fixture field">
+                                <span class="fixture-label">Form field</span>
+                                <label for="player-search-demo"
+                                    >플레이어 검색</label
+                                >
+                                <span class="field-control focus-demo">
+                                    <input
+                                        id="player-search-demo"
+                                        value="긴 한국어·日本語·English 혼합 이름"
+                                        readonly
+                                    />
+                                </span>
+                                <p class="fixture-note">
+                                    Input wrapper가 Fluent pseudo-element
+                                    recipe를 소유한다.
+                                </p>
+                            </section>
+                            <section class="fixture">
+                                <span class="fixture-label">Menu item</span>
+                                <div
+                                    class="menu-list"
+                                    role="menu"
+                                    aria-label="랭킹 기준 예시"
+                                >
+                                    <button
+                                        class="menu-item focus-target focus-demo"
+                                        type="button"
+                                        role="menuitemradio"
+                                        aria-checked="true"
+                                    >
+                                        <span>Basic 서열 레이팅</span
+                                        ><strong aria-hidden="true">✓</strong>
+                                    </button>
+                                </div>
+                                <p class="fixture-note">
+                                    Selection checkmark와 focus perimeter가 별도
+                                    책임을 가진다.
+                                </p>
+                            </section>
+                        </div>
+                    </section>
+
+                    <section
+                        class="scene"
+                        data-scene="states"
+                        data-active="false"
+                    >
+                        <header class="scene-heading">
+                            <h2>State coexistence and dense data</h2>
+                            <p class="caption">
+                                Selection, current, error, disabled 의미를
+                                지우거나 색 하나에 맡기지 않은 상태에서 포커스를
+                                겹쳐 본다.
+                            </p>
+                        </header>
+                        <div class="state-grid">
+                            <section class="state-card">
+                                <span class="state-label"
+                                    >Selected + focus</span
+                                >
+                                <button
+                                    class="row-action focus-target focus-demo"
+                                    type="button"
+                                    aria-selected="true"
+                                >
+                                    <span>ピアノソナタ「月光」第3楽章</span
+                                    ><strong
+                                        class="state-cue"
+                                        aria-hidden="true"
+                                        >✓</strong
+                                    >
+                                </button>
+                                <p class="fixture-note">
+                                    Neutral fill은 보조이며 checkmark가 지속
+                                    cue다.
+                                </p>
+                            </section>
+                            <section class="state-card">
+                                <span class="state-label">Current + focus</span>
+                                <a
+                                    class="row-action focus-target focus-demo"
+                                    href="#keyboard-target"
+                                    aria-current="page"
+                                >
+                                    <span>현재 보고 있는 플레이 기록</span
+                                    ><strong
+                                        class="state-cue"
+                                        aria-hidden="true"
+                                        >현재</strong
+                                    >
+                                </a>
+                                <p class="fixture-note">
+                                    <code>aria-current</code>와 visible label을
+                                    보존한다.
+                                </p>
+                            </section>
+                            <section class="state-card error-card">
+                                <span class="state-label">Error + focus</span>
+                                <div class="field">
+                                    <label for="sync-code-demo"
+                                        >연동 코드</label
+                                    >
+                                    <span class="field-control focus-demo">
+                                        <input
+                                            id="sync-code-demo"
+                                            value="NOSLOG-"
+                                            aria-invalid="true"
+                                            aria-describedby="sync-code-error"
+                                            readonly
+                                        />
+                                    </span>
+                                    <p class="error-note" id="sync-code-error">
+                                        <strong aria-hidden="true">!</strong
+                                        ><span
+                                            >입력 오류: 코드를 끝까지
+                                            입력하세요. Feedback color는 아직
+                                            미할당이다.</span
+                                        >
+                                    </p>
+                                </div>
+                            </section>
+                            <section class="state-card">
+                                <span class="state-label"
+                                    >Disabled neighbor</span
+                                >
+                                <div class="disabled-pair">
+                                    <button
+                                        class="disabled-action"
+                                        type="button"
+                                        disabled
+                                    >
+                                        내보내기
+                                    </button>
+                                    <button
+                                        class="low-action focus-target focus-demo"
+                                        type="button"
+                                    >
+                                        형식 안내
+                                    </button>
+                                </div>
+                                <p class="fixture-note">
+                                    Disabled control은 focus order에서 제외된다.
+                                </p>
+                            </section>
+                        </div>
+                        <section class="state-card">
+                            <span class="state-label">Dense ranking row</span>
+                            <div class="ranking-list">
+                                <a
+                                    class="ranking-row focus-target focus-demo"
+                                    href="#keyboard-target"
+                                >
+                                    <strong>1</strong
+                                    ><span class="ranking-main"
+                                        >Rin_奏 ·
+                                        ピアノソナタ「月光」第3楽章</span
+                                    ><span class="ranking-score">985,432</span>
+                                </a>
+                            </div>
+                            <div
+                                class="chart-controls"
+                                aria-label="채보 컨트롤 예시"
+                            >
+                                <button
+                                    class="chart-action focus-target focus-demo"
+                                    type="button"
+                                >
+                                    −
+                                </button>
+                                <button
+                                    class="chart-action focus-target focus-demo"
+                                    type="button"
+                                >
+                                    재생
+                                </button>
+                                <button
+                                    class="chart-action focus-target focus-demo"
+                                    type="button"
+                                >
+                                    ＋
+                                </button>
+                            </div>
+                        </section>
+                    </section>
+
+                    <section
+                        class="scene"
+                        data-scene="surfaces"
+                        data-active="false"
+                    >
+                        <header class="scene-heading">
+                            <h2>Approved surfaces and media edge</h2>
+                            <p class="caption">
+                                모든 고유 M-A surface에서 동일한 Fluent Focus2
+                                처리를 측정한다. Surface 값은 Spectrum S2 승인을
+                                그대로 유지한다.
+                            </p>
+                        </header>
+                        <div class="surface-grid">
+                            <section class="surface-card" data-surface="canvas">
+                                <span class="surface-name">Canvas</span>
+                                <button
+                                    class="surface-focus focus-target focus-demo"
+                                    type="button"
+                                >
+                                    기본 배경 action
+                                </button>
+                            </section>
+                            <section
+                                class="surface-card"
+                                data-surface="surface"
+                            >
+                                <span class="surface-name"
+                                    >Surface / layer 1</span
+                                >
+                                <button
+                                    class="surface-focus focus-target focus-demo"
+                                    type="button"
+                                >
+                                    그룹 surface action
+                                </button>
+                            </section>
+                            <section class="surface-card" data-surface="sunken">
+                                <span class="surface-name"
+                                    >Sunken / pasteboard</span
+                                >
+                                <button
+                                    class="surface-focus focus-target focus-demo"
+                                    type="button"
+                                >
+                                    채보 viewer control
+                                </button>
+                            </section>
+                            <section class="surface-card" data-surface="raised">
+                                <span class="surface-name"
+                                    >Raised / layer 2</span
+                                >
+                                <button
+                                    class="surface-focus focus-target focus-demo"
+                                    type="button"
+                                >
+                                    최근 기록 action
+                                </button>
+                            </section>
+                            <section
+                                class="surface-card"
+                                data-surface="overlay"
+                            >
+                                <span class="surface-name">Overlay</span>
+                                <button
+                                    class="surface-focus focus-target focus-demo"
+                                    type="button"
+                                >
+                                    메뉴 option
+                                </button>
+                            </section>
+                            <section
+                                class="surface-card"
+                                data-surface="surface"
+                            >
+                                <span class="surface-name"
+                                    >Dark filled control</span
+                                >
+                                <button
+                                    class="filled-action always-dark focus-target focus-demo"
+                                    type="button"
+                                >
+                                    고정 dark fill
+                                </button>
+                            </section>
+                            <section
+                                class="surface-card"
+                                data-surface="surface"
+                            >
+                                <span class="surface-name"
+                                    >Artwork/image edge</span
+                                >
+                                <button
+                                    class="artwork-tile focus-target focus-demo"
+                                    type="button"
+                                    aria-label="악곡 아트워크 열기"
+                                >
+                                    <span></span><span></span><span></span
+                                    ><span></span> <span></span><span></span
+                                    ><span></span><span></span>
+                                </button>
+                                <p class="artwork-caption">
+                                    Focused media tile의 perimeter는 바깥
+                                    neutral surface와 대비된다.
+                                </p>
+                            </section>
+                        </div>
+                    </section>
+
+                    <section
+                        class="scene"
+                        data-scene="clipping"
+                        data-active="false"
+                    >
+                        <header class="scene-heading">
+                            <h2>Clipping and obscuration boundaries</h2>
+                            <p class="caption">
+                                Zero-gap 2px perimeter를 잘라내지 않도록 scroll,
+                                sticky, rounded boundary, frame edge에 최소 2px
+                                안전 영역을 둔다.
+                            </p>
+                        </header>
+                        <div class="boundary-grid">
+                            <section class="boundary-card">
+                                <span class="fixture-label"
+                                    >Scroll / sticky</span
+                                >
+                                <div class="scrollport" tabindex="-1">
+                                    <div class="scrollport-sticky">
+                                        고정된 랭킹 header
+                                    </div>
+                                    <button
+                                        class="scroll-item focus-target focus-demo"
+                                        type="button"
+                                    >
+                                        1 · selected + focus row
+                                    </button>
+                                    <button
+                                        class="scroll-item focus-target"
+                                        type="button"
+                                    >
+                                        2 · ピアノ協奏曲 第1番
+                                    </button>
+                                    <button
+                                        class="scroll-item focus-target"
+                                        type="button"
+                                    >
+                                        3 · English title that wraps safely
+                                    </button>
+                                    <button
+                                        class="scroll-item focus-target"
+                                        type="button"
+                                    >
+                                        4 · 마지막 행
+                                    </button>
+                                </div>
+                                <p class="fixture-note">
+                                    Sticky 아래 이동 시
+                                    <code>scroll-margin</code>이 focused row를
+                                    가리지 않는다.
+                                </p>
+                            </section>
+                            <section class="boundary-card">
+                                <span class="fixture-label"
+                                    >Rounded / frame edge</span
+                                >
+                                <div class="edge-safe-zone">
+                                    <button
+                                        class="focus-target focus-demo"
+                                        type="button"
+                                    >
+                                        상단·좌측 ring 안전 영역
+                                    </button>
+                                    <button
+                                        class="focus-target focus-demo"
+                                        type="button"
+                                    >
+                                        하단·우측 ring 안전 영역
+                                    </button>
+                                </div>
+                                <p class="fixture-note">
+                                    Overflow container는 focused descendant
+                                    주위에 2px 이상 inset을 제공한다.
+                                </p>
+                            </section>
+                        </div>
+                    </section>
+
+                    <section
+                        class="scene"
+                        data-scene="keyboard"
+                        data-active="false"
+                    >
+                        <header class="scene-heading">
+                            <h2>Live keyboard path</h2>
+                            <p class="caption">
+                                이 scene에는 상시 demo ring이 없다. Tab으로
+                                진입하고, menu에서는 ArrowUp/ArrowDown과 Enter를
+                                사용한다.
+                            </p>
+                        </header>
+                        <section class="keyboard-card">
+                            <a
+                                class="skip-link focus-target"
+                                href="#keyboard-target"
+                                >검증 본문으로 건너뛰기</a
+                            >
+                            <button
+                                class="keyboard-start focus-target"
+                                id="keyboard-start"
+                                type="button"
+                            >
+                                키보드 경로 시작
+                            </button>
+                            <div class="field">
+                                <label for="live-search">악곡 검색</label>
+                                <span class="field-control">
+                                    <input
+                                        id="live-search"
+                                        value="熱情の律動 / Nostalgia archive"
+                                    />
+                                </span>
+                            </div>
+                            <div
+                                class="live-menu"
+                                role="menu"
+                                aria-label="정렬 기준"
+                            >
+                                <button
+                                    class="menu-item focus-target"
+                                    type="button"
+                                    role="menuitemradio"
+                                    aria-checked="true"
+                                    tabindex="0"
+                                >
+                                    <span>최근 플레이</span
+                                    ><strong aria-hidden="true">✓</strong>
+                                </button>
+                                <button
+                                    class="menu-item focus-target"
+                                    type="button"
+                                    role="menuitemradio"
+                                    aria-checked="false"
+                                    tabindex="-1"
+                                >
+                                    <span>개인 최고 점수</span
+                                    ><strong aria-hidden="true"></strong>
+                                </button>
+                                <button
+                                    class="menu-item focus-target"
+                                    type="button"
+                                    role="menuitemradio"
+                                    aria-checked="false"
+                                    tabindex="-1"
+                                >
+                                    <span>English alphabetical order</span
+                                    ><strong aria-hidden="true"></strong>
+                                </button>
+                            </div>
+                            <a
+                                class="text-link focus-target"
+                                href="#keyboard-target"
+                                >데이터 연동 방법 보기</a
+                            >
+                            <div
+                                class="keyboard-target"
+                                id="keyboard-target"
+                                tabindex="-1"
+                            >
+                                <strong>검증 본문</strong>
+                                <p
+                                    class="keyboard-status"
+                                    id="keyboard-status"
+                                    aria-live="polite"
+                                >
+                                    Focus event 대기 중
+                                </p>
+                            </div>
+                        </section>
+                    </section>
+
+                    <footer class="specimen-footer">
+                        Fluent 2 Focus2 polarity · exact 2px helper geometry ·
+                        Spectrum S2 neutral inputs preserved · chromatic focus
+                        없음 · persistent white Dark boundary 없음 · production
+                        승인 아님
+                    </footer>
+                </article>
+            </div>
+
+            <section class="review-metrics" aria-live="polite">
+                <p id="metrics">Preparing validation metrics…</p>
+            </section>
+        </main>
+
+        <script>
+            const frame = document.getElementById("specimen-frame");
+            const themeLabel = document.getElementById("theme-label");
+            const metrics = document.getElementById("metrics");
+            const keyboardStatus = document.getElementById("keyboard-status");
+            const state = {
+                theme: "dark",
+                width: "390",
+                scale: "100",
+                scene: "components",
+            };
+
+            const setControlPressed = (control, value) => {
+                document
+                    .querySelectorAll(`[data-control="${control}"]`)
+                    .forEach((button) => {
+                        button.setAttribute(
+                            "aria-pressed",
+                            String(button.dataset.value === value)
+                        );
+                    });
+            };
+
+            const pseudoMetrics = (element) => {
+                const style = getComputedStyle(element, "::after");
+                return {
+                    content: style.content,
+                    borderTopWidth: style.borderTopWidth,
+                    borderTopColor: style.borderTopColor,
+                    top: style.top,
+                    right: style.right,
+                    bottom: style.bottom,
+                    left: style.left,
+                };
+            };
+
+            const audit = () => {
+                const rect = frame.getBoundingClientRect();
+                const contentLeft = rect.left + frame.clientLeft;
+                const contentRight = contentLeft + frame.clientWidth;
+                const escaping = [...frame.querySelectorAll("*")].filter(
+                    (element) => {
+                        if (element.getClientRects().length === 0) return false;
+                        const child = element.getBoundingClientRect();
+                        return (
+                            child.right > contentRight + 0.5 ||
+                            child.left < contentLeft - 0.5
+                        );
+                    }
+                );
+                const demoTargets = [
+                    ...frame.querySelectorAll(".focus-demo"),
+                ].filter((element) => element.getClientRects().length > 0);
+                const pseudo = demoTargets.map(pseudoMetrics);
+                const noAdjustment = [...frame.querySelectorAll("*")].filter(
+                    (element) =>
+                        getComputedStyle(element).forcedColorAdjust === "none"
+                );
+                const active = document.activeElement;
+                const activeInside = frame.contains(active);
+                const livePseudo = activeInside
+                    ? pseudoMetrics(
+                          active.matches("input")
+                              ? active.closest(".field-control")
+                              : active
+                      )
+                    : null;
+                return {
+                    theme: state.theme,
+                    scene: state.scene,
+                    requestedWidth: Number(state.width),
+                    frameWidth: Number(rect.width.toFixed(2)),
+                    clientWidth: frame.clientWidth,
+                    scrollWidth: frame.scrollWidth,
+                    overflowX: frame.scrollWidth > frame.clientWidth,
+                    documentOverflowX:
+                        document.documentElement.scrollWidth >
+                        document.documentElement.clientWidth,
+                    escapingCount: escaping.length,
+                    activeSceneCount: frame.querySelectorAll(
+                        '.scene[data-active="true"]'
+                    ).length,
+                    visibleDemoCount: demoTargets.length,
+                    exactTwoPxCount: pseudo.filter(
+                        (entry) => entry.borderTopWidth === "2px"
+                    ).length,
+                    exactZeroGapGeometryCount: pseudo.filter(
+                        (entry) =>
+                            entry.top === "-2px" &&
+                            entry.right === "-2px" &&
+                            entry.bottom === "-2px" &&
+                            entry.left === "-2px"
+                    ).length,
+                    focusColor: getComputedStyle(frame)
+                        .getPropertyValue("--focus-2")
+                        .trim(),
+                    forcedColors: matchMedia("(forced-colors: active)").matches,
+                    forcedColorAdjustNoneCount: noAdjustment.length,
+                    activeElement:
+                        activeInside && active
+                            ? active.id ||
+                              active.textContent.trim().slice(0, 40)
+                            : null,
+                    activeFocusBorderWidth: livePseudo?.borderTopWidth ?? null,
+                    activeFocusBorderColor: livePseudo?.borderTopColor ?? null,
+                };
+            };
+
+            window.__c5FluentFocusAudit = audit;
+
+            const updateMetrics = () => {
+                const result = audit();
+                frame.dataset.audit = JSON.stringify(result);
+                metrics.textContent = `${result.theme} · ${result.scene} · frame ${result.frameWidth}px · scroll ${result.scrollWidth}/${result.clientWidth}px · overflow ${result.overflowX ? "FAIL" : "pass"} · escaping ${result.escapingCount} · demo ${result.exactTwoPxCount}/${result.visibleDemoCount} exact 2px · zero-gap geometry ${result.exactZeroGapGeometryCount}/${result.visibleDemoCount} · focus ${result.focusColor} · forced colors ${result.forcedColors}`;
+            };
+
+            const update = () => {
+                frame.dataset.theme = state.theme;
+                frame.dataset.scale = state.scale;
+                frame.style.setProperty("--review-width", `${state.width}px`);
+                frame.querySelectorAll("[data-scene]").forEach((scene) => {
+                    scene.dataset.active = String(
+                        scene.dataset.scene === state.scene
+                    );
+                });
+                Object.entries(state).forEach(([control, value]) =>
+                    setControlPressed(control, value)
+                );
+                themeLabel.textContent = `${state.theme === "dark" ? "Dark" : "Light"} · ${state.width}px · ${state.scale}%`;
+                requestAnimationFrame(updateMetrics);
+            };
+
+            document.querySelectorAll("[data-control]").forEach((button) => {
+                button.addEventListener("click", () => {
+                    state[button.dataset.control] = button.dataset.value;
+                    update();
+                });
+            });
+
+            let inputModality = "pointer";
+
+            const clearKeyboardFocus = () => {
+                frame
+                    .querySelectorAll('[data-keyboard-focus="true"]')
+                    .forEach((element) =>
+                        element.removeAttribute("data-keyboard-focus")
+                    );
+            };
+
+            const focusOwner = (element) => {
+                if (!element || !frame.contains(element)) return null;
+                if (element.matches("input")) {
+                    return element.closest(".field-control");
+                }
+                return element.closest(".focus-target");
+            };
+
+            const markKeyboardFocus = (element) => {
+                clearKeyboardFocus();
+                const owner = focusOwner(element);
+                if (owner) owner.dataset.keyboardFocus = "true";
+            };
+
+            document.addEventListener(
+                "pointerdown",
+                () => {
+                    inputModality = "pointer";
+                    clearKeyboardFocus();
+                    requestAnimationFrame(updateMetrics);
+                },
+                true
+            );
+
+            document.addEventListener(
+                "keydown",
+                (event) => {
+                    if (
+                        event.metaKey ||
+                        event.ctrlKey ||
+                        event.altKey ||
+                        event.key === "Shift"
+                    ) {
+                        return;
+                    }
+                    inputModality = "keyboard";
+                    markKeyboardFocus(document.activeElement);
+                    requestAnimationFrame(updateMetrics);
+                },
+                true
+            );
+
+            document.addEventListener("focusin", (event) => {
+                if (!frame.contains(event.target) || !keyboardStatus) return;
+                if (inputModality === "keyboard") {
+                    markKeyboardFocus(event.target);
+                }
+                const label =
+                    event.target.getAttribute("aria-label") ||
+                    event.target.textContent?.trim() ||
+                    event.target.id ||
+                    event.target.tagName;
+                keyboardStatus.textContent = `Focus: ${label.slice(0, 80)}`;
+                requestAnimationFrame(updateMetrics);
+            });
+
+            document.addEventListener("focusout", (event) => {
+                const owner = focusOwner(event.target);
+                if (owner) owner.removeAttribute("data-keyboard-focus");
+                requestAnimationFrame(updateMetrics);
+            });
+
+            const liveMenuItems = [
+                ...document.querySelectorAll(
+                    ".live-menu [role='menuitemradio']"
+                ),
+            ];
+            liveMenuItems.forEach((item, index) => {
+                item.addEventListener("keydown", (event) => {
+                    if (
+                        ![
+                            "ArrowDown",
+                            "ArrowUp",
+                            "Home",
+                            "End",
+                            "Enter",
+                            " ",
+                        ].includes(event.key)
+                    )
+                        return;
+                    event.preventDefault();
+                    if (event.key === "Enter" || event.key === " ") {
+                        liveMenuItems.forEach((candidate) => {
+                            const selected = candidate === item;
+                            candidate.setAttribute(
+                                "aria-checked",
+                                String(selected)
+                            );
+                            candidate.querySelector("strong").textContent =
+                                selected ? "✓" : "";
+                        });
+                        return;
+                    }
+                    let next = index;
+                    if (event.key === "ArrowDown")
+                        next = (index + 1) % liveMenuItems.length;
+                    if (event.key === "ArrowUp")
+                        next =
+                            (index - 1 + liveMenuItems.length) %
+                            liveMenuItems.length;
+                    if (event.key === "Home") next = 0;
+                    if (event.key === "End") next = liveMenuItems.length - 1;
+                    liveMenuItems.forEach((candidate, candidateIndex) => {
+                        candidate.tabIndex = candidateIndex === next ? 0 : -1;
+                    });
+                    liveMenuItems[next].focus();
+                });
+            });
+
+            update();
+        </script>
+    </body>
+</html>

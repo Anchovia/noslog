@@ -40,6 +40,8 @@ neutral interaction 계약을 배정한다. Focus와 최종 component-level alia
 - [C5 neutral interaction 레퍼런스 비교](./40-foundation-c5-neutral-interaction-reference-comparison.ko.md)
 - [C5 neutral interaction specimen 검증](./41-foundation-c5-neutral-interaction-specimen-validation.ko.md)
 - [C5 포커스 표시기 레퍼런스 비교](./42-foundation-c5-focus-indicator-reference-comparison.ko.md)
+- [C5 포커스 표시기 시각 비교](./43-foundation-c5-focus-indicator-visual-comparison.ko.md)
+- [C5 Fluent 포커스 표본 검증](./44-foundation-c5-fluent-focus-specimen-validation.ko.md)
 
 ## 집중 근거
 

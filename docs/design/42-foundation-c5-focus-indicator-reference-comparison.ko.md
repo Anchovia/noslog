@@ -6,15 +6,16 @@
 
 | 필드           | 값                                                                   |
 | -------------- | -------------------------------------------------------------------- |
-| 상태           | `조사 완료 — 시각 비교 및 사용자 선택 대기`                          |
+| 상태           | `조사 완료 — FI-C를 measured validation 대상으로 선택`               |
 | 날짜           | `2026-08-09`                                                         |
 | Canonical 언어 | English                                                              |
 | 결정 gate      | C5 키보드 포커스 표시기 색상 및 geometry                             |
 | 상속된 승인    | `M-A` surface, `F-A` foreground, `NB-A` boundary, `NI-A` interaction |
 
 이 문서는 NosLog 포커스 token, component alias 또는 production 구현을 승인하기
-전에 키보드 포커스의 시각 처리를 비교한다. 이 문서만으로 새로운 guide specimen
-작업을 승인하거나 후보를 선택하지 않는다.
+전에 키보드 포커스의 시각 처리를 비교한다. 사용자는 2026-08-09 `FI-C`, Fluent 2의
+achromatic polarity를 전용 measured validation 대상으로 선택했다. 이 선택은 guide
+specimen만 허용한다.
 
 ## 관련 문서
 
@@ -24,6 +25,8 @@
 - [C5 Spectrum S2 semantic mapping](34-foundation-c5-spectrum-semantic-mapping.ko.md)
 - [C5 neutral boundary specimen validation](39-foundation-c5-neutral-boundary-specimen-validation.ko.md)
 - [C5 neutral interaction specimen validation](41-foundation-c5-neutral-interaction-specimen-validation.ko.md)
+- [C5 포커스 표시기 시각 비교](43-foundation-c5-focus-indicator-visual-comparison.ko.md)
+- [C5 Fluent 포커스 표본 검증](44-foundation-c5-fluent-focus-specimen-validation.ko.md)
 
 ## 범위
 
@@ -106,7 +109,7 @@ NosLog 근거에 걸친 관련 항목 16개를 포함한다. 유지 관리 중�
 |   1 | [WCAG 2.2 Focus Visible](https://www.w3.org/WAI/WCAG22/Understanding/focus-visible), [Non-text Contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast) 및 [Focus Appearance](https://www.w3.org/WAI/WCAG22/Understanding/focus-appearance)  | Palette를 정하지 않는다. visible focus와 필요한 인접 non-text contrast는 AA이며, AAA appearance 목표는 `2 CSS px` perimeter-equivalent 면적과 focused/unfocused pixel 변화 `3:1`이다.                                                                               | 스타일을 정하지 않고 acceptance floor를 제공한다.                                             | NosLog 색상이나 ring architecture를 선택할 수 없다.                                                                             |
 |   2 | [WAI-ARIA APG keyboard interface](https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/)                                                                                                                                                             | Palette를 정하지 않는다. 포커스는 지속되고 쉽게 식별되며 selected state와 달라야 한다. high-contrast에서 사라지는 문제를 고려해야 한다.                                                                                                                             | 포커스와 selection에 별도의 시각 소유권이 필요함을 확인한다.                                  | 행동 지침이지 token data가 아니다.                                                                                              |
 |   3 | [Adobe Spectrum S2 color aliases](https://opensource.adobe.com/spectrum-design-data/tokens/color-aliases/) 및 [layout tokens](https://opensource.adobe.com/spectrum-design-data/tokens/layout/)                                                              | `focus-indicator-color`: Light `#4b75ff`, Dark `#4069fd`; `focus-indicator-thickness`: `2px`; `focus-ring-gap`: `2px`. 명시적인 static context용 black/white focus alias도 있다.                                                                                    | 하나의 유지 관리되는 source가 완전하고 절제된 dual-mode semantic color와 geometry를 공개한다. | 이미지 가장자리, clipped container 및 component 예외는 여전히 NosLog specimen이 필요하다.                                       |
-|   4 | [Fluent 2 web alias color tokens](https://fluent2.microsoft.design/color-tokens2/) 및 [interaction color guidance](https://fluent2.microsoft.design/color)                                                                                                   | `colorStrokeFocus1`: Light white, Dark black; `colorStrokeFocus2`: Light black, Dark white. 표준 web focus-outline helper는 두 번째 색을 `2px`로 사용하며 component recipe는 달라질 수 있다.                                                                        | Achromatic polarity는 대비를 극대화하며 brand 소유권을 피한다.                                | normal Dark white outline은 승인된 절제 boundary 방향과 이전 사용자 의견에 충돌한다.                                            |
+|   4 | [Fluent 2 web alias color tokens](https://fluent2.microsoft.design/color-tokens2/) 및 [interaction color guidance](https://fluent2.microsoft.design/color)                                                                                                   | `colorStrokeFocus1`: Light white, Dark black; `colorStrokeFocus2`: Light black, Dark white. 표준 web focus-outline helper는 두 번째 색을 `2px`로 사용하며 component recipe는 달라질 수 있다.                                                                        | Achromatic polarity는 대비를 극대화하며 brand 소유권을 피한다.                                | 강한 Dark white 처리는 일시적인 keyboard-visible focus로만 남아야 하며 일반 persistent boundary가 되어서는 안 된다.             |
 |   5 | [Atlassian focused border guidance](https://atlassian.design/foundations/border/) 및 [radius guidance](https://atlassian.design/foundations/radius/)                                                                                                         | `color.border.focused`와 `border.width.focused` `2px`; focus ring offset은 `2px`이며 radius는 element radius에서 증가한다. 배포된 default fallback은 Light `#388bff`다. 공개 페이지는 theme에 적응하지만 static content에 안정적인 Dark hex 하나를 노출하지 않는다. | 명확한 semantic 분리와 명시적인 geometry가 강점이다.                                          | 현재 theme artifact를 확인하기 전에는 완전하고 정확한 Light/Dark pair를 static 공개 근거에서 채택할 수 없다.                    |
 |   6 | [Carbon color overview](https://carbondesignsystem.com/elements/color/overview/) 및 [tokens](https://carbondesignsystem.com/elements/color/tokens/)                                                                                                          | 대부분의 focus는 `2px` border다. Light는 보통 Blue 60 `#0f62fe`, Dark는 보통 white를 쓴다. 필요할 때 `$focus-inset`이 contrast border를 추가한다.                                                                                                                   | 측정된 단색 기본값과 component-owned contrast band를 보여준다.                                | White Dark focus는 밝은 outline 문제를 반복하며 Carbon inset recipe를 Spectrum에 선택적으로 섞을 수 없다.                       |
 |   7 | [Primer color primitives](https://primer.style/product/primitives/color/) 및 [button focus implementation](https://primer.style/product/components/button/)                                                                                                  | `--focus-outlineColor`는 Light `#0969da`이며 theme이 mode별 값을 제공한다. Button은 `-2px` offset의 `2px` outline을 쓰고 primary button에는 inset on-emphasis band를 추가한다.                                                                                      | Component-owned geometry와 명시적인 filled-control 처리를 보여준다.                           | 공개 static token table은 완전한 표준 Dark pair를 노출하지 않으며 Primer inset recipe는 Spectrum recipe가 아니다.               |
@@ -195,7 +198,7 @@ Spectrum geometry는 승인된 neutral surface에서 WCAG `2.4.13` appearance �
 - static black/white alias: exact Spectrum-equivalent component context와 측정이
   정당화할 때만 사용 가능
 
-상태: `시각 비교를 위한 조사 권장안; 미선택·미승인`.
+상태: `시각 비교 후 미선택`.
 
 진행을 권장하는 이유: 유지 관리되는 완전한 Light/Dark semantic mapping이고,
 프로젝트가 채택한 Spectrum provenance를 보존하며, 수정 없이 승인된 neutral
@@ -203,7 +206,7 @@ surface contrast matrix를 통과하고, normal Dark white outline을 피한다.
 
 ### `FI-B` — Carbon의 완전한 Light-blue/Dark-white focus model 채택
 
-상태: `현재 권한에서는 권장하지 않음`.
+상태: `시각 비교 후 미선택`.
 
 완전하고 접근 가능하지만 focus만 교체하면 다른 system의 blue/inset 논리를
 도입하며, 절제된 normal-theme 방향에서 이미 제외한 밝은 white Dark outline을
@@ -211,11 +214,12 @@ surface contrast matrix를 통과하고, normal Dark white outline을 피한다.
 
 ### `FI-C` — Fluent의 achromatic polarity model 채택
 
-상태: `현재 권한에서는 권장하지 않음`.
+상태: `전용 measured validation 대상으로 선택 — 2026-08-09`.
 
-Brand color는 피하지만 normal Dark focus를 white, normal Light focus를 black으로
-만든다. 이 처리는 NosLog의 조용한 boundary를 압도하고 ordinary structure와 강한
-system override의 승인된 분리를 위반한다.
+유채색 focus를 피하고 미래 signature와 feedback palette를 선점하지 않는다. 사용자는
+이 일시적인 keyboard-visible signal을 거부된 persistent white normal-Dark boundary와
+명시적으로 구분했다. Light는 black, Dark는 white를 element가 보이는 키보드 포커스를
+소유하는 동안에만 사용한다.
 
 ### `FI-D` — GOV.UK의 완전한 yellow/black method 채택
 
@@ -233,19 +237,21 @@ UA focus는 유효한 fallback 및 forced-colors mechanism이지만 색상, 두�
 browser와 platform에 따라 다르다. 안정적인 Claude Design 또는 후속 production
 mapping을 제공할 수 없다.
 
-## 조건부 `FI-A` validation contract
+## 선택된 `FI-C` validation contract
 
-사용자가 동일 조건의 시각 비교 후 `FI-A`를 선택하면, 아직 production으로 승격하지
-않은 채 measured validation specimen이 다음 규칙을 고정해야 한다.
+전용 measured validation specimen은 `FI-C`를 아직 production으로 승격하지 않은 채
+다음 규칙을 고정해야 한다.
 
 1. Normal authored indicator는 keyboard-visible focus에 적용하며 지속적인
    pointer-click 장식으로 사용하지 않는다.
-2. Spectrum의 정확한 Light/Dark 색상, `2px` thickness 및 `2px` gap을 사용한다.
-   보간, 밝기 변경, 어둡게 변경, glow 추가 또는 Tailwind blue 대체를 하지 않는다.
+2. Fluent `colorStrokeFocus2`, 즉 Light `#000000`, Dark `#ffffff`와 공개된 `2px`
+   web focus-outline helper의 zero offset을 사용한다. 회색화, tint, 약화, gap이나
+   glow 추가 또는 Tailwind color 대체를 하지 않는다.
 3. 포커스를 받았다는 이유만으로 component fill, text, icon, boundary 또는
    selected state를 다시 칠하지 않는다.
-4. 기본 recipe에서 `focus-inner`를 미할당으로 둔다. 이미지 또는 filled context에서
-   exact Spectrum static contrast alias가 필요한지만 검증한다.
+4. 하나의 hybrid multi-stroke rule을 발명하지 않는다. Component와 동등한 Fluent
+   recipe가 `colorStrokeFocus1` 또는 다른 component-owned 처리를 요구하면 그 recipe를
+   그대로 보존하거나 결정을 다시 열며 global primitive로 승격하지 않는다.
 5. 포커스가 독립적으로 이동하는 동안 error와 selection semantic을 보존한다.
    Focused selected/error item은 두 책임을 모두 표시하되 두 element가 focus된 것처럼
    보여서는 안 된다.
@@ -264,7 +270,7 @@ mapping을 제공할 수 없다.
    control;
 3. Focus 단독, selected + focus, current + focus, error + focus 및 disabled
    neighbor를 necessary state에 color만 사용하지 않고 표시;
-4. 정확한 `2px` thickness와 `2px` gap, radius/shape following, clipping 및 visible
+4. 정확한 `2px` thickness와 zero offset, radius/shape following, clipping 및 visible
    perimeter area;
 5. `320px`, `390px`, 관련 intermediate width, desktop density, 실제 browser 200%
    zoom 및 authored sticky/overlay content에 의해 focus가 가려지지 않는지;
@@ -275,8 +281,8 @@ mapping을 제공할 수 없다.
 8. Korean, Japanese, English label 및 긴 NOSTALGIA content에서 ring이 layout을
    바꾸거나 2차원 overflow를 만들지 않는지.
 
-실패하면 source 결정을 다시 열어야 한다. Specimen이 Spectrum hue를 조용히
-조정하거나 새 inner band를 만들거나 다른 system의 geometry를 차용해서는 안 된다.
+실패하면 source 결정을 다시 열어야 한다. Specimen이 achromatic 값을 조용히
+약화하거나 Spectrum gap을 추가하거나 다른 system의 geometry를 차용해서는 안 된다.
 
 ## 결정 기록
 
@@ -285,14 +291,13 @@ mapping을 제공할 수 없다.
 | `C5F-01` | 키보드 포커스를 signature, selection, error 및 neutral boundary strength와 독립적으로 유지한다.                                                                            | `C2-B를 통해 상위 승인됨`  |
 | `C5F-02` | 문서 `41`의 Chrome normal/forced-colors 결과를 normal-theme token이 아닌 browser 근거로 취급한다.                                                                          | `Observed`                 |
 | `C5F-03` | 정확한 Spectrum S2 pair와 geometry는 수정 없이 승인된 모든 `M-A` neutral surface에서 `3:1`을 넘는다.                                                                       | `Observed`                 |
-| `C5F-04` | Source를 선택하기 전에 실행 가능한 authored 후보를 동일 조건으로 시각 비교하며 각 upstream system의 정확한 color와 geometry를 보존한다.                                    | `필수 다음 gate`           |
-| `C5F-05` | 측정된 component context가 필요성을 입증할 때까지 `focus-inner`와 static black/white 예외 mapping을 미할당으로 둔다.                                                       | `Proposed governance rule` |
+| `C5F-04` | Source를 선택하기 전에 실행 가능한 authored 후보를 동일 조건으로 시각 비교하며 각 upstream system의 정확한 color와 geometry를 보존한다.                                    | `완료 — 문서 43`           |
+| `C5F-05` | 정확히 동등한 component context가 요구하지 않는 한 Fluent `colorStrokeFocus1` 또는 component-owned multi-stroke 예외를 global로 배정하지 않는다.                           | `선택된 validation rule`   |
 | `C5F-06` | Browser, contrast, clipping, state coexistence, zoom, localization 및 forced-colors validation을 통과하고 사용자가 결과를 승인할 때까지 C5 focus gate를 Open으로 유지한다. | `Open`                     |
+| `C5F-07` | Persistent normal-Dark white boundary 금지를 유지하면서 Fluent 2 achromatic polarity를 전용 measured validation으로 가져간다.                                              | `사용자 선택 — 2026-08-09` |
 
 ## 사용자 검토 gate
 
-아직 어떤 후보도 선택되지 않았다. 다음 작업은 이 조사에서 도출한 실행 가능한 authored
-방식을 값이나 geometry를 혼합하지 않고 동일 조건으로 나열하는 시각 비교다. 사용자가
-그 비교에서 방향을 선택한 뒤에만 선택 후보를 전용 measured validation으로 진행한다.
-선택은 production token, 최종 component alias, signature color, feedback color 또는
-application 구현을 승인하지 않는다.
+사용자는 문서 `43`에서 `FI-C`를 선택했다. 다음 gate는 위에 정의한 전용 measured
+validation이다. 이 선택은 production token, 최종 component alias, signature color,
+feedback color 또는 application 구현을 승인하지 않는다.
