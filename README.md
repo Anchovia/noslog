@@ -120,15 +120,16 @@ canvas·surface·sunken에는 기본 shadow를 사용하지 않으며 scroll bou
 |  10 | Signature identity source                                                               | `Complete`    | 문서 `33`, `45`–`47`; `SS-08`         |
 |  11 | Shell identity 및 rare primary-action alias                                             | `Complete`    | 문서 `48`–`51`; `ITA-C`, `RPA-A`      |
 |  12 | Material Geometry                                                                       | `Complete`    | 문서 `52`; `MG-A`, `MGR-08` 승인      |
-|  13 | Feedback, status, domain 및 data color                                                  | `Not started` | 후속 Foundation gate                  |
+|  13 | Feedback, status, domain 및 data color                                                  | `In progress` | 문서 `53`; `13A` source 비교 조사     |
 |  14 | Iconography, motion 및 data-visualization 규칙                                          | `Not started` | 후속 Foundation gate                  |
 |  15 | `S6` editor slice와 최종 Foundation 회귀·승격                                           | `Not started` | 기존 `S1`–`S5` fixture 재사용 필수    |
 |  16 | Component alias·anatomy, pattern, template 및 desktop adaptation                        | `Not started` | Foundation 승격 이후                  |
 |  17 | 접근성·다국어 acceptance, screen requirement, 구현 mapping, QA 및 Claude Design handoff | `Not started` | Downstream handoff 단계               |
 |  18 | Versioned 디자인 가이드 PDF                                                             | `Not started` | Editable source 안정화 이후           |
 
-현재 기준선은 완료 12개인 `12 / 18 = 67%`입니다. 신규 범위를 추가하거나 완료 항목을
-다시 여는 경우에는 먼저
+현재 기준선은 완료 12개와 진행 중 1개인 `12.5 / 18 = 69%`입니다. 진행 중 항목은 관리상
+`0.5`로만 계산하며 승인 Gate를 모두 통과하기 전에는 `Complete`로 올리지 않습니다. 신규
+범위를 추가하거나 완료 항목을 다시 여는 경우에는 먼저
 사용자 승인을 받고 이 표에 사유를 기록해야 하며, 그렇지 않으면 완료율을 낮출 수 없습니다.
 
 향후 `S1`–`S5` 통합 검사는 구조 작업의 반복이 아닙니다. 이후 승인되는 appearance
