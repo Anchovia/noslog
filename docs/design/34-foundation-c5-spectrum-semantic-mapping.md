@@ -40,6 +40,7 @@ component-level aliases remain open.
 - [C5 neutral boundary specimen validation](./39-foundation-c5-neutral-boundary-specimen-validation.md)
 - [C5 neutral interaction reference comparison](./40-foundation-c5-neutral-interaction-reference-comparison.md)
 - [C5 neutral interaction specimen validation](./41-foundation-c5-neutral-interaction-specimen-validation.md)
+- [C5 focus indicator reference comparison](./42-foundation-c5-focus-indicator-reference-comparison.md)
 
 ## Focused Evidence
 
