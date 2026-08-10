@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>NosLog 2.0 C5 Local Data Color Comparison</title>
+        <style>
+            * { box-sizing: border-box; }
+            :root { color-scheme: light; font-family: Inter, Pretendard, "Noto Sans KR", system-ui, sans-serif; background: #e9e9e9; color: #292929; }
+            body { min-width: 0; margin: 0; background: #e9e9e9; }
+            button, a { font: inherit; }
+            a { color: inherit; }
+            button:focus-visible, a:focus-visible { outline: 2px solid #000; outline-offset: 2px; }
+            .shell { display: grid; gap: 16px; width: min(1480px, 100%); margin: 0 auto; padding: 16px; }
+            .panel { border: 1px solid #c6c6c6; border-radius: 8px; background: #fff; }
+            header, .boundary, .summary { padding: 16px; }
+            .kicker, h1, header p, .boundary p, .summary p { margin: 0; }
+            .kicker { color: #717171; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+            h1 { margin-top: 6px; font-size: clamp(22px, 4vw, 34px); line-height: 1.2; }
+            header p, .boundary p, .summary p { margin-top: 8px; color: #505050; font-size: 14px; line-height: 1.65; }
+            .boundary { border-color: #717171; }
+            .boundary strong, .summary strong { color: #292929; }
+            .summary { display: grid; gap: 7px; }
+            .summary p { margin: 0; }
+            .controls { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px; }
+            .controls button { min-height: 44px; border: 1px solid #c6c6c6; border-radius: 4px; padding: 8px 12px; background: #fff; color: #505050; cursor: pointer; }
+            .controls button[aria-pressed="true"] { border-color: #717171; color: #292929; font-weight: 800; box-shadow: inset 0 -3px 0 #292929; }
+            .comparison { display: grid; gap: 16px; min-width: 0; }
+            .candidate { min-width: 0; overflow: clip; }
+            .candidate-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 16px; align-items: start; padding: 14px 16px; border-bottom: 1px solid #e1e1e1; }
+            .candidate-head h2, .candidate-head p { margin: 0; }
+            .candidate-head h2 { font-size: 19px; }
+            .candidate-head p { margin-top: 5px; color: #505050; font-size: 12px; line-height: 1.55; }
+            .candidate-head a { color: #505050; font-size: 11px; }
+            .tag { width: fit-content; border: 1px solid #717171; border-radius: 4px; padding: 4px 7px; color: #292929; font-size: 11px; font-weight: 800; }
+            .tag.alt { border-color: #c6c6c6; color: #505050; }
+            .pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); min-width: 0; }
+            .appearance {
+                --canvas: #fff; --surface: #f8f8f8; --raised: #fff; --fg: #292929; --fg2: #505050; --fg3: #717171; --border: #c6c6c6; --divider: #e1e1e1; --struct: #717171;
+                min-width: 0; padding: 14px; background: var(--canvas); color: var(--fg);
+            }
+            .appearance + .appearance { border-left: 1px solid #c6c6c6; }
+            .appearance[data-theme="dark"] { color-scheme: dark; --canvas: #111; --surface: #1b1b1b; --raised: #222; --fg: #dbdbdb; --fg2: #afafaf; --fg3: #8a8a8a; --border: #393939; --divider: #2c2c2c; --struct: #8a8a8a; }
+            .theme { margin: 0 0 8px; color: var(--fg3); font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+            .content { display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(230px, .92fr); gap: 10px; }
+            .stack { display: grid; gap: 10px; min-width: 0; }
+            .module { min-width: 0; border: 1px solid var(--border); border-radius: 8px; padding: 12px; background: var(--raised); }
+            .module h3, .module p { margin: 0; }
+            .module-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 5px 10px; align-items: baseline; }
+            .module h3 { font-size: 13px; }
+            .meta { color: var(--fg2); font-size: 10px; }
+            .plot { width: 100%; height: auto; margin-top: 8px; overflow: visible; }
+            .grid-line { stroke: var(--divider); stroke-width: 1; }
+            .threshold { stroke: var(--struct); stroke-width: 1.5; stroke-dasharray: 4 4; }
+            .threshold-label { fill: var(--fg3); font: 8px/1 sans-serif; }
+            .single-line, .fast-line, .slow-line { fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+            .single-line { stroke: var(--single); }
+            .fast-line { stroke: var(--fast); }
+            .slow-line { stroke: var(--slow); stroke-dasharray: 5 4; }
+            .single-dot, .fast-dot { fill: var(--raised); stroke-width: 2; }
+            .single-dot { stroke: var(--single); }
+            .fast-dot { stroke: var(--fast); }
+            .slow-dot { fill: var(--slow); }
+            .legend { display: flex; flex-wrap: wrap; gap: 8px 12px; margin-top: 6px; color: var(--fg2); font-size: 10px; }
+            .legend span { display: inline-flex; align-items: center; gap: 5px; }
+            .key { width: 13px; height: 3px; background: var(--key); }
+            .key.dashed { background: repeating-linear-gradient(90deg, var(--key) 0 5px, transparent 5px 8px); }
+            .distribution { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 4px; align-items: end; height: 102px; margin-top: 10px; border-bottom: 1px solid var(--divider); }
+            .bucket { display: grid; grid-template-rows: 1fr auto; align-items: end; gap: 4px; min-width: 0; height: 100%; text-align: center; }
+            .bar { width: 100%; min-height: 4px; border-radius: 2px 2px 0 0; background: var(--bucket); }
+            .bucket small { overflow: hidden; color: var(--fg3); font-size: 8px; white-space: nowrap; text-overflow: ellipsis; }
+            .judgements { display: grid; gap: 7px; margin-top: 10px; }
+            .judge { display: grid; grid-template-columns: 42px minmax(0, 1fr) 34px; gap: 7px; align-items: center; color: var(--fg2); font-size: 9px; }
+            .track { height: 7px; overflow: hidden; border-radius: 2px; background: var(--surface); }
+            .fill { display: block; width: var(--size); height: 100%; background: var(--cat); }
+            .value { color: var(--fg); text-align: right; font-variant-numeric: tabular-nums; }
+            .tokens { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+            .swatch { display: inline-flex; align-items: center; gap: 4px; color: var(--fg3); font: 8px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace; }
+            .swatch i { width: 10px; height: 10px; border: 1px solid var(--border); border-radius: 2px; background: var(--swatch); }
+            .cue-off .single-line, .cue-off .fast-line { stroke: var(--fg); }
+            .cue-off .slow-line { stroke: var(--fg2); }
+            .cue-off .single-dot, .cue-off .fast-dot { stroke: var(--fg); }
+            .cue-off .slow-dot { fill: var(--fg2); }
+            .cue-off .key { background: var(--fg); }
+            .cue-off .key.dashed { background: repeating-linear-gradient(90deg, var(--fg2) 0 5px, transparent 5px 8px); }
+            .cue-off .bar { border: 1px solid var(--fg3); background: repeating-linear-gradient(135deg, transparent 0 3px, var(--fg3) 3px 4px); }
+            .cue-off .judge:nth-child(1) .fill { background: var(--fg); }
+            .cue-off .judge:nth-child(2) .fill { background: repeating-linear-gradient(90deg, var(--fg2) 0 5px, transparent 5px 8px); }
+            .cue-off .judge:nth-child(3) .fill { background: repeating-linear-gradient(135deg, var(--fg3) 0 2px, transparent 2px 4px); }
+            .cue-off .judge:nth-child(4) .fill { background: repeating-linear-gradient(45deg, var(--fg2) 0 2px, transparent 2px 5px); }
+            .cue-off .judge:nth-child(5) .fill { border: 1px solid var(--fg); background: transparent; }
+            .cue-off .swatch { visibility: hidden; }
+            .hidden { display: none; }
+            @media (max-width: 1050px) { .content { grid-template-columns: 1fr; } }
+            @media (max-width: 720px) {
+                .shell { padding: 10px; }
+                .pair { grid-template-columns: 1fr; }
+                .appearance + .appearance { border-top: 1px solid #c6c6c6; border-left: 0; }
+                .candidate-head { grid-template-columns: 1fr; }
+            }
+            @media (max-width: 340px) { .appearance { padding: 9px; } .module { padding: 9px; } .bucket small { font-size: 7px; } }
+            @media (forced-colors: active) {
+                .single-line, .fast-line, .slow-line, .threshold { stroke: CanvasText; }
+                .bar, .fill { border: 1px solid CanvasText; background: Canvas; }
+            }
+        </style>
+    </head>
+    <body>
+        <main class="shell" id="shell">
+            <header class="panel">
+                <p class="kicker">C5 · Block 1 complete · LD-03 approved</p>
+                <h1>일반 NosLog 기록 데이터에서 exact-source 비교</h1>
+                <p>같은 score trend, score bucket, FAST/SLOW, 판정 series를 세 저명한 출처 그대로 비교합니다. Tailwind palette와 임의 혼합값은 없습니다.</p>
+            </header>
+            <aside class="panel boundary">
+                <p><strong>범위:</strong> 일반 DOM/SVG 기록 UI만 다룹니다. 채보 viewer/editor의 page, control, renderer, Canvas/WebGL, note·hand palette, geometry, math, animation과 동작은 전부 잠겨 있으며 이 표본에 존재하지 않습니다.</p>
+            </aside>
+            <section class="panel summary" aria-label="판단 요약">
+                <p><strong>확정:</strong> LD-03 · SAP Fiori Horizon — Approved · 2026-08-10.</p>
+                <p><strong>선택 이유:</strong> Blue sequential score bucket은 차분하고 순서가 즉시 보이며, blue/orange FAST/SLOW와 다섯 category는 실제 NosLog 밀도에서 한눈에 구분됩니다.</p>
+                <p><strong>Not selected:</strong> LD-01 Carbon의 purple-led mapping은 시각적으로 부적합하고 Radix Indigo identity와 가까웠습니다. LD-02 GitLab은 비교 근거로만 보존합니다.</p>
+                <p>990,000 기준선은 세 후보 모두 색칠하지 않습니다. 이것은 error/success가 아니라 숫자 reference이므로 승인 Spectrum neutral owner를 유지합니다.</p>
+            </section>
+            <section class="panel controls" aria-label="표본 제어">
+                <button type="button" aria-pressed="true" data-control="appearance" data-value="both">Light + Dark</button>
+                <button type="button" aria-pressed="false" data-control="appearance" data-value="light">Light</button>
+                <button type="button" aria-pressed="false" data-control="appearance" data-value="dark">Dark</button>
+                <button type="button" aria-pressed="true" data-control="cue" data-value="on">Color on</button>
+                <button type="button" aria-pressed="false" data-control="cue" data-value="off">Color off</button>
+            </section>
+            <section class="comparison" id="comparison" aria-label="Local data color 후보 비교"></section>
+        </main>
+        <script>
+            const candidates = [
+                {
+                    id: "LD-01", name: "IBM Carbon Charts", tag: "Not selected", tagClass: "alt", source: "https://v10.carbondesignsystem.com/data-visualization/color-palettes/",
+                    note: "Purple–teal performance divergence, adaptive categorical sets, and theme-directed sequential values.",
+                    light: { single: "#6929C4", buckets: ["#E8DAFF", "#D4BBFF", "#BE95FF", "#A56EFF", "#8A3FFC", "#6929C4"], fast: "#6929C4", slow: "#009D9A", cats: ["#6929C4", "#1192E8", "#005D5D", "#9F1853", "#570408"] },
+                    dark: { single: "#D4BBFF", buckets: ["#6929C4", "#8A3FFC", "#A56EFF", "#BE95FF", "#D4BBFF", "#E8DAFF"], fast: "#8A3FFC", slow: "#08BDBA", cats: ["#8A3FFC", "#08BDBA", "#BAE6FF", "#4589FF", "#FF7EB6"] }
+                },
+                {
+                    id: "LD-02", name: "GitLab Pajamas", tag: "Not selected", tagClass: "alt", source: "https://design.gitlab.com/data-visualization/color/",
+                    note: "A dedicated data palette with surface-aware step direction and a restrained blue-led default.",
+                    light: { single: "#617AE2", buckets: ["#617AE2", "#4E65CD", "#3F51AE", "#374291", "#303470", "#2A2B59"], fast: "#617AE2", slow: "#0090B1", cats: ["#617AE2", "#C95D2E", "#0090B1", "#619025", "#CF4D81"] },
+                    dark: { single: "#617AE2", buckets: ["#617AE2", "#7992F5", "#97ACFF", "#B7C6FF", "#D2DCFF", "#E9EBFF"], fast: "#617AE2", slow: "#0090B1", cats: ["#617AE2", "#C95D2E", "#0090B1", "#619025", "#CF4D81"] }
+                },
+                {
+                    id: "LD-03", name: "SAP Fiori Horizon", tag: "Approved · 2026-08-10", tagClass: "", source: "https://experience.sap.com/fiori-design-web/values-and-names/",
+                    note: "Exact Horizon theme tokens. FAST/SLOW uses qualitative colors 1–2 rather than a purpose-specific diverging pair.",
+                    light: { single: "#168EFF", buckets: ["#62B3FF", "#3FA2FF", "#168EFF", "#0074E2", "#0065C3", "#0055A5"], fast: "#168EFF", slow: "#C87B00", cats: ["#168EFF", "#C87B00", "#75980B", "#DF1278", "#8B47D7"] },
+                    dark: { single: "#3278BE", buckets: ["#1D456D", "#275E96", "#3278BE", "#5291D1", "#7AABDC", "#A2C4E7"], fast: "#3278BE", slow: "#F2A634", cats: ["#3278BE", "#F2A634", "#B4CE35", "#FA4F96", "#8B47D7"] }
+                }
+            ];
+            const bucketLabels = ["950", "960", "970", "980", "990", "PIANIST"];
+            const bucketHeights = [28, 42, 55, 68, 83, 61];
+            const judges = [["S-Just", 86, "12,842"], ["Just", 51, "1,934"], ["Good", 22, "284"], ["Miss", 12, "41"], ["Near", 17, "76"]];
+            const swatches = (values) => [...new Set(values)].map((value) => `<span class="swatch"><i style="--swatch:${value}"></i>${value}</span>`).join("");
+            const scorePlot = () => `<svg class="plot" viewBox="0 0 320 105" role="img" aria-label="Score trend: 972,431에서 994,206으로 상승"><line class="grid-line" x1="8" y1="24" x2="312" y2="24"/><line class="grid-line" x1="8" y1="54" x2="312" y2="54"/><line class="grid-line" x1="8" y1="84" x2="312" y2="84"/><line class="threshold" x1="8" y1="39" x2="312" y2="39"/><text class="threshold-label" x="244" y="34">990,000 기준</text><polyline class="single-line" points="10,82 55,76 100,67 145,70 190,52 235,45 280,31 310,27"/>${[[10,82],[55,76],[100,67],[145,70],[190,52],[235,45],[280,31],[310,27]].map(([x,y]) => `<circle class="single-dot" cx="${x}" cy="${y}" r="3"/>`).join("")}</svg>`;
+            const timingPlot = () => `<svg class="plot" viewBox="0 0 320 105" role="img" aria-label="FAST와 SLOW count trend"><line class="grid-line" x1="8" y1="24" x2="312" y2="24"/><line class="grid-line" x1="8" y1="54" x2="312" y2="54"/><line class="grid-line" x1="8" y1="84" x2="312" y2="84"/><polyline class="fast-line" points="10,35 60,42 110,39 160,55 210,46 260,62 310,57"/><polyline class="slow-line" points="10,73 60,68 110,77 160,64 210,70 260,58 310,65"/>${[[10,35],[60,42],[110,39],[160,55],[210,46],[260,62],[310,57]].map(([x,y]) => `<circle class="fast-dot" cx="${x}" cy="${y}" r="3"/>`).join("")}${[[10,73],[60,68],[110,77],[160,64],[210,70],[260,58],[310,65]].map(([x,y]) => `<rect class="slow-dot" x="${x-3}" y="${y-3}" width="6" height="6"/>`).join("")}</svg>`;
+            const appearance = (candidate, theme) => {
+                const data = candidate[theme];
+                const vars = `--single:${data.single};--fast:${data.fast};--slow:${data.slow}`;
+                const buckets = bucketLabels.map((label, index) => `<div class="bucket"><i class="bar" style="--bucket:${data.buckets[index]};height:${bucketHeights[index]}%"></i><small title="${label}">${label}</small></div>`).join("");
+                const judgement = judges.map((row, index) => `<div class="judge"><span>${row[0]}</span><span class="track"><i class="fill" style="--cat:${data.cats[index]};--size:${row[1]}%"></i></span><span class="value">${row[2]}</span></div>`).join("");
+                const all = [data.single, ...data.buckets, data.fast, data.slow, ...data.cats];
+                return `<div class="appearance" data-theme="${theme}" style="${vars}"><p class="theme">${theme}</p><div class="content"><div class="stack"><section class="module"><div class="module-head"><h3>Score trend</h3><span class="meta">현재 최고 994,206</span></div>${scorePlot()}<div class="legend"><span><i class="key" style="--key:${data.single}"></i>Score</span><span><i class="key dashed" style="--key:var(--struct)"></i>990,000 neutral reference</span></div></section><section class="module"><div class="module-head"><h3>FAST / SLOW</h3><span class="meta">direct label + circle / square + solid / dash</span></div>${timingPlot()}<div class="legend"><span><i class="key" style="--key:${data.fast}"></i>FAST 28</span><span><i class="key dashed" style="--key:${data.slow}"></i>SLOW 17</span></div></section></div><div class="stack"><section class="module"><div class="module-head"><h3>Score distribution</h3><span class="meta">1,284 players</span></div><div class="distribution">${buckets}</div><p class="meta" style="margin-top:7px">숫자·label·고정 순서가 의미를 보존</p></section><section class="module"><div class="module-head"><h3>Judgement breakdown</h3><span class="meta">categorical local color</span></div><div class="judgements">${judgement}</div></section></div></div><div class="tokens" aria-label="사용된 exact color values">${swatches(all)}</div></div>`;
+            };
+            const orderedCandidates = [candidates[2], candidates[0], candidates[1]];
+            document.querySelector("#comparison").innerHTML = orderedCandidates.map((candidate) => `<article class="panel candidate"><div class="candidate-head"><div><h2>${candidate.id} · ${candidate.name}</h2><p>${candidate.note}</p></div><div><span class="tag ${candidate.tagClass}">${candidate.tag}</span><p><a href="${candidate.source}" target="_blank" rel="noreferrer">공식 출처 열기</a></p></div></div><div class="pair">${appearance(candidate, "light")}${appearance(candidate, "dark")}</div></article>`).join("");
+            const shell = document.querySelector("#shell");
+            document.querySelectorAll("button").forEach((button) => button.addEventListener("click", () => {
+                const control = button.dataset.control;
+                document.querySelectorAll(`button[data-control="${control}"]`).forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
+                if (control === "cue") shell.classList.toggle("cue-off", button.dataset.value === "off");
+                if (control === "appearance") {
+                    document.querySelectorAll(".appearance").forEach((item) => item.classList.toggle("hidden", button.dataset.value !== "both" && item.dataset.theme !== button.dataset.value));
+                    document.querySelectorAll(".pair").forEach((pair) => pair.style.gridTemplateColumns = button.dataset.value === "both" ? "" : "1fr");
+                }
+            }));
+        </script>
+    </body>
+</html>

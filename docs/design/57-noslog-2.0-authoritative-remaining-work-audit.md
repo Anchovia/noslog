@@ -2,12 +2,12 @@
 
 ## Document control
 
-- Status: `Corrected after history audit — six evidence-backed remaining blocks`
+- Status: `Block 1 complete — five evidence-backed blocks remain`
 - Canonical language: English
 - Korean companion:
   [57-noslog-2.0-authoritative-remaining-work-audit.ko.md](./57-noslog-2.0-authoritative-remaining-work-audit.ko.md)
 - Date: 2026-08-10
-- Inputs: root `AGENTS.md`, root `README.md`, documents `01`–`56`, current
+- Inputs: root `AGENTS.md`, root `README.md`, documents `01`–`58`, current
   repository evidence, and the user's explicit viewer/editor preservation correction
 - Purpose: prevent stale future checklists from reviving completed or prohibited work
 
@@ -40,23 +40,24 @@ Therefore `12.5/18 = 69%`, fractional package credit, and the eighteen-package l
 are superseded. Do not report another percentage until the user approves a denominator
 and counting method.
 
-## Exact remaining work
+## Authoritative block baseline and exact remaining work
 
-| Block                                      | Exact remaining scope                                                                                                                                                                                                 | Explicit exclusions                                                                                         | Completion result                                                        |
-| ------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| `1 · C5 color closeout`                    | `DU-01` exact difficulty-marker mapping is approved; continue with comparison-local score-band, FAST/SLOW, series, and threshold colors.                                                                              | Entire viewer/editor; Basic/Recital, rank/achievement, and genre remain neutral unless separately reopened. | Difficulty and local data-color decisions approved or explicitly closed. |
-| `2 · Iconography`                          | Define ordinary-UI icon grammar, icon-only/label policy, size/stroke, and accessible-name rules.                                                                                                                      | Entire viewer/editor and final logo drawing.                                                                | Approved ordinary-UI iconography rules.                                  |
-| `3 · Motion`                               | Define ordinary-UI motion purpose, duration/easing roles, and reduced-motion alternatives.                                                                                                                            | Entire viewer/editor, renderer timing, transport, and editor motion.                                        | Approved ordinary-UI motion contract.                                    |
-| `4 · Data visualization`                   | Define ordinary-data visualization axes, legends, exact values, tooltip/focus behavior, and non-color/table fallback.                                                                                                 | Entire viewer/editor and its chart rendering.                                                               | Approved ordinary data-visualization anatomy.                            |
-| `5 · Foundation promotion and reusable UI` | Run final regression on eligible `S1`, `S2`, `S3`, and `S5` fixtures, verify Pretendard JP delivery/fallback, promote Foundation v0.1, and consolidate validated component aliases, patterns, and templates.          | No `S4`, no `S6`, no new structural page work, and no reopening completed inputs.                           | Approved Foundation and reusable ordinary-UI guidance.                   |
-| `6 · Handoff and milestone export`         | Consolidate existing page briefs into screen requirements, implementation mapping, accessibility/localization QA, and Claude Design handoff; decide PDF language/packaging and export the stable versioned milestone. | Do not reopen page briefs, add viewer/editor changes, or create the final high-fidelity production design.  | Complete downstream handoff and versioned distribution artifact.         |
+| Block                                      | Exact remaining scope                                                                                                                                                                                                 | Explicit exclusions                                                                                         | Completion result                                                |
+| ------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| `1 · C5 color closeout`                    | `DU-01` difficulty markers and `LD-03` SAP Fiori Horizon ordinary local-data colors are approved.                                                                                                                     | Entire viewer/editor; Basic/Recital, rank/achievement, and genre remain neutral unless separately reopened. | `Complete — 2026-08-10`.                                         |
+| `2 · Iconography`                          | Define ordinary-UI icon grammar, icon-only/label policy, size/stroke, and accessible-name rules.                                                                                                                      | Entire viewer/editor and final logo drawing.                                                                | Approved ordinary-UI iconography rules.                          |
+| `3 · Motion`                               | Define ordinary-UI motion purpose, duration/easing roles, and reduced-motion alternatives.                                                                                                                            | Entire viewer/editor, renderer timing, transport, and editor motion.                                        | Approved ordinary-UI motion contract.                            |
+| `4 · Data visualization`                   | Define ordinary-data visualization axes, legends, exact values, tooltip/focus behavior, and non-color/table fallback.                                                                                                 | Entire viewer/editor and its chart rendering.                                                               | Approved ordinary data-visualization anatomy.                    |
+| `5 · Foundation promotion and reusable UI` | Run final regression on eligible `S1`, `S2`, `S3`, and `S5` fixtures, verify Pretendard JP delivery/fallback, promote Foundation v0.1, and consolidate validated component aliases, patterns, and templates.          | No `S4`, no `S6`, no new structural page work, and no reopening completed inputs.                           | Approved Foundation and reusable ordinary-UI guidance.           |
+| `6 · Handoff and milestone export`         | Consolidate existing page briefs into screen requirements, implementation mapping, accessibility/localization QA, and Claude Design handoff; decide PDF language/packaging and export the stable versioned milestone. | Do not reopen page briefs, add viewer/editor changes, or create the final high-fidelity production design.  | Complete downstream handoff and versioned distribution artifact. |
 
 Research, specimens, browser checks, bilingual updates, and export steps inside a block
 are subtasks. They must not be split into new top-level work to enlarge the count.
 
 ## Block-level execution cadence
 
-These six blocks are also the only user-facing units of execution. After starting one
+This fixed six-block baseline preserves completion history. With block `1` complete,
+blocks `2`–`6` are the only remaining user-facing units of execution. After starting one
 block, continue its research, candidate comparison, specimens, browser checks, required
 material user decisions, bilingual documentation, and consolidation within that same
 block. Pause only for a material decision that belongs to the user, missing authority,
@@ -65,9 +66,9 @@ then work resumes in that block; it never creates a new package or remaining ite
 Internal documents, candidates, gates, and validation passes must not be announced as
 the next task.
 
-## Difficulty UI Gate explained
+## Completed Difficulty UI Gate
 
-The open difficulty comparison does not concern chart notes, hand colors, or any
+The completed difficulty comparison does not concern chart notes, hand colors, or any
 viewer/editor element. In eligible ordinary UI, `Normal/Hard/Expert/Real` must remain
 visibly distinguishable through four different persistent colors, reinforced by name,
 numeric level, fixed order, and explicit selection. This requirement is approved and
@@ -105,17 +106,20 @@ drawing, final high-fidelity screens, or application implementation.
 
 ## Current material decision
 
-The exact Normal/Hard/Expert/Real marker mapping is approved. Block `1` now continues
-with the ordinary local data-color comparison. Blocks `2`–`6` start only after block
-`1` is complete; internal decisions do not become separate remaining work.
+The exact Normal/Hard/Expert/Real marker mapping and `LD-03 · SAP Fiori Horizon`
+ordinary local-data mapping are approved. Block `1` is complete. Block `2 ·
+Iconography` is the next remaining block; internal decisions do not become separate
+remaining work.
 
 ## Decision log
 
-| ID       | Entry                                                                                            | Status                                           |
-| -------- | ------------------------------------------------------------------------------------------------ | ------------------------------------------------ |
-| `RWA-01` | Make this audit and the README table the current remaining-work authority.                       | `Approved scope correction — 2026-08-10`         |
-| `RWA-02` | Preserve the entire existing viewer/editor and cancel every active `S4`/`S6` design task.        | `Approved correction — 2026-08-10`               |
-| `RWA-03` | Keep the fixed eighteen-package denominator and `12.5/18 = 69%` progress.                        | `Rejected and superseded — unsupported count`    |
-| `RWA-04` | Classify final mark drawing as downstream and Radix placement exploration as closed.             | `Scope classification`                           |
-| `RWA-05` | Use exact Spectrum S2 values for four ordinary-UI difficulty markers only.                       | `Approved — 2026-08-10`                          |
-| `RWA-06` | Track six evidence-backed remaining blocks without a completion percentage or fractional credit. | `Corrected after Git-history audit — 2026-08-10` |
+| ID       | Entry                                                                                                                | Status                                           |
+| -------- | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| `RWA-01` | Make this audit and the README table the current remaining-work authority.                                           | `Approved scope correction — 2026-08-10`         |
+| `RWA-02` | Preserve the entire existing viewer/editor and cancel every active `S4`/`S6` design task.                            | `Approved correction — 2026-08-10`               |
+| `RWA-03` | Keep the fixed eighteen-package denominator and `12.5/18 = 69%` progress.                                            | `Rejected and superseded — unsupported count`    |
+| `RWA-04` | Classify final mark drawing as downstream and Radix placement exploration as closed.                                 | `Scope classification`                           |
+| `RWA-05` | Use exact Spectrum S2 values for four ordinary-UI difficulty markers only.                                           | `Approved — 2026-08-10`                          |
+| `RWA-06` | Track the fixed six-block baseline, including completed state, without a completion percentage or fractional credit. | `Corrected after Git-history audit — 2026-08-10` |
+| `RWA-07` | Advance Carbon, GitLab Pajamas, and SAP Horizon as the three exact local-data finalists in document `58`.            | `Completed evidence`                             |
+| `RWA-08` | Adopt `LD-03 · SAP Fiori Horizon` and close remaining block `1`.                                                     | `Approved — 2026-08-10`                          |

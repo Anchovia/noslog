@@ -150,10 +150,10 @@ Sections:
   is never the sole cue. IBM Carbon informed the neutral-typography restraint only;
   do not import Carbon values, Tailwind values, interpolated steps, or the rejected
   `FS-A`, original `FS-B`, or `FS-C` component mappings into this alias without a new
-  user-approved gate. This approval completes the feedback/status gate only;
-  NOSTALGIA difficulty color and comparison-local data color remain separate material
-  decisions inside remaining block `1`; they are not separate work units.
-- Remaining block `1` C5 color research must preserve the locked chart viewer/editor
+  user-approved gate. This approval completed the feedback/status gate; the later
+  difficulty and local-data approvals below completed block `1` without creating
+  separate work units.
+- Block `1` C5 color research and its approved result preserve the locked chart viewer/editor
   exception above. Existing renderer note and left/right-hand colors are implementation
   constants, not open Foundation tokens, and must not enter an exact-source comparison.
   Outside the entire viewer/editor experience, proven repeated-scanning difficulty UI
@@ -165,13 +165,27 @@ Sections:
   only the four compact ordinary-UI marker colors. It does not color difficulty text,
   backgrounds, containers, selection, focus, feedback, actions, or any viewer/editor
   element. Basic/Recital,
-  rank/achievement, and genre remain neutral by default; score bands and FAST/SLOW
-  visualization follow later inside the same block. This boundary does not approve current non-renderer
-  NosLog values, sampled imagery, another rhythm game's palette, or any new exact
-  Light/Dark mapping. Keep the difficulty name, level, order, and selection visible so
-  color is never the sole cue. If research does not produce an acceptable sourced
-  mapping, report the failure to the user; do not silently neutralize the roles or
-  invent replacement values.
+  rank/achievement, and genre remain neutral by default. `LD-03 · SAP Fiori Horizon`
+  is the approved exclusive comparison-local data-color family for ordinary NosLog UI.
+  Preserve the exact `@sap-theming/theming-base-content@11.36.3` Light/Dark mapping
+  recorded in document `58`: single series `#168EFF/#3278BE`; six ordered score buckets
+  low-to-high Light `#62B3FF`, `#3FA2FF`, `#168EFF`, `#0074E2`, `#0065C3`, `#0055A5`
+  and Dark `#1D456D`, `#275E96`, `#3278BE`, `#5291D1`, `#7AABDC`, `#A2C4E7`;
+  FAST/SLOW Light `#168EFF/#C87B00` and Dark `#3278BE/#F2A634`; five categorical
+  series Light `#168EFF`, `#C87B00`, `#75980B`, `#DF1278`, `#8B47D7` and Dark
+  `#3278BE`, `#F2A634`, `#B4CE35`, `#FA4F96`, `#8B47D7`. Numeric
+  threshold/reference lines remain Spectrum neutral structural roles by default.
+  FAST/SLOW remain explicitly labeled independent directions with different marker or
+  line styles and never reuse universal danger/information or good/bad semantics.
+  Score-bucket numbers, labels, and order remain primary; SAP data color does not
+  become difficulty, achievement, rank, or feedback meaning. `LD-01` Carbon and
+  `LD-02` GitLab are `Not selected`; preserve them only as comparison evidence and do
+  not use them as downstream targets. This approval completes remaining block `1 · C5
+color closeout`. The comparison was internal evidence within that block, not a new
+  work unit. This boundary does not approve current non-renderer NosLog values,
+  sampled imagery, another rhythm game's palette, or any additional Light/Dark
+  mapping. Keep the difficulty name, level, order, and selection visible so color is
+  never the sole cue.
 - Shopify Polaris and the `EXP-01` Polaris Light / Radix Dark split were measured and
   not selected as the identity source. Preserve their evidence in document `47`, but
   do not use them as downstream design or implementation targets unless the user

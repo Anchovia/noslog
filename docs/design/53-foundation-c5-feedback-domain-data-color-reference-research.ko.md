@@ -2,7 +2,7 @@
 
 ## 문서 관리
 
-- 상태: `13A FS-BN 승인; 13B domain 및 13C data-color Gate 대기`
+- 상태: `13A FS-BN, 13B DU-01 및 13C LD-03 SAP Fiori Horizon 승인`
 - 정본 언어: English
 - 영문 정본:
   [53-foundation-c5-feedback-domain-data-color-reference-research.md](./53-foundation-c5-feedback-domain-data-color-reference-research.md)
@@ -12,17 +12,19 @@
   [interactive artifact](./specimens/c5-feedback-status-source-comparison.html)
 - `13B` 자격 조사:
   [문서 55](./55-foundation-c5-nostalgia-domain-color-eligibility-research.ko.md)
+- `13C` 정확한 출처 비교:
+  [문서 58](./58-foundation-c5-local-data-color-exact-source-comparison.ko.md)
 - 범위: universal feedback/status color, NOSTALGIA domain color ownership,
   data-visualization color ownership 및 이들 사이 collision contract를 조사하는
   작업 묶음 `13`
 - 입력: 승인 문서 `24`, `26`, `32`, `34`–`52`; 현재 NosLog token 및 component
   근거; 독립적인 공식 접근성·design-system·production-service·domain 출처 17개
-- 제외: 정확한 domain 또는 data 값 승인, 승인된 `FS-BN` role boundary를 넘는 component
-  anatomy, iconography와 motion, production 구현 및 최종 high-fidelity page
+- 제외: 승인된 color-role boundary를 넘는 component anatomy, iconography와 motion,
+  production 구현 및 최종 high-fidelity page
 
-이 문서는 완료된 작업 묶음을 다시 열지 않고 고정 작업 묶음 `13`을 시작한다. 조사 근거와
-승인된 `13A` 결과를 기록한다. 아래에 포함됐다는 이유만으로 source나 값이 승인되지는
-않으며 universal feedback/status color에는 명시적인 `FS-BN` 승인 기록만 권위가 있다.
+이 문서는 이전 작업 묶음을 다시 열지 않고 고정 작업 묶음 `13`의 조사 근거와 완료 결과를
+기록합니다. 아래에 포함됐다는 이유만으로 source나 값이 승인되지는 않으며 각 role에는
+명시적인 `FS-BN`, `DU-01`, `LD-03` 승인 기록만 권위가 있습니다.
 
 ## 고정된 상위 권위
 
@@ -51,8 +53,8 @@
 | `13B` | NOSTALGIA domain          | 왼손/오른손, difficulty, mode, rank, achievement, score band, genre  | 이 의미는 generic UI 관습이 아니라 게임과 NosLog task에서 나온다.                                           |
 | `13C` | Comparison-local data     | categorical, sequential, diverging, threshold, selection, grid, axis | Series hue는 chart나 comparison 안에서만 data를 식별하며 UI 또는 domain 의미를 우연히 물려받아서는 안 된다. |
 
-한 Gate의 승인이 다른 Gate를 승인하지 않는다. 작업 묶음 `13`은 세 Gate가 모두 승인되고
-collision test를 통과한 뒤에만 완료된다.
+한 Gate의 승인이 다른 Gate를 승인하지 않았습니다. 작업 묶음 `13`은 세 Gate가 각각
+승인되고 collision 제약을 통과한 뒤 완료됐습니다.
 
 ## 현재 NosLog migration audit
 
@@ -65,7 +67,7 @@ role과 collision을 확인했다.
 | `--danger`                      | error, destructive 의미 및 `FAST` judgment        | Generic error와 rhythm judgment가 하나의 hue를 공유하므로 owner가 모호하다.                                         |
 | `--score`                       | score 강조 및 sync health의 warning/attention     | Domain score와 generic warning이 하나의 hue를 공유하므로 status 변경이 score 강조처럼 보일 수 있다.                 |
 | `--chart`                       | 일부 맥락의 chart series, link 및 `SLOW` judgment | Data, interaction 및 rhythm judgment가 안정적으로 분리되지 않았다.                                                  |
-| difficulty color                | Normal, Hard, Expert, Real badge와 text           | Role은 유지해야 하지만 일반 list/grid label이 보이는 color를 자동으로 사용할 자격은 없다.                           |
+| difficulty color                | Normal, Hard, Expert, Real badge와 text           | `DU-01`이 일반 UI의 compact marker color를 소유하며 text, background, container는 neutral을 유지합니다.             |
 | Basic/Recital                   | mode label과 control                              | Mode는 domain 의미이며 success, warning 또는 identity ownership을 암묵적으로 재사용할 수 없다.                      |
 | rank, achievement, score band   | status처럼 보이는 badge와 metric                  | 이들은 universal success/warning state가 아니라 domain 결과다. Text, order, icon 또는 shape도 의미를 전달해야 한다. |
 | genre color                     | category 표현                                     | Category color는 선택 사항이며 scanning 이점을 입증해야 한다. Neutral genre label이 기본이다.                       |
@@ -187,23 +189,23 @@ specimen 및 Light warning pair의 측정 한계를 기록한다.
 소유하고 이미 승인된 Spectrum S2 source가 neutral text를 계속 소유한다. 문서 `54`가 정확한
 값, 측정, component boundary 및 명시적인 사용자 승인을 기록한다.
 
-## 제안된 `13B` domain ownership inventory
+## 해결된 `13B` domain ownership 처리
 
-이 inventory는 필요한 의미를 보존하지만 보이는 color 자격은 승인하지 않는다.
+이 inventory는 문서 `55`, `56` 이후의 최종 처리를 기록하며 추가 domain-color 작업을 만들지
+않습니다.
 
-| Domain family       | 필요한 semantic role               | 승인 전 기본 표현                                                      | 아직 필요한 근거                                                                                   |
-| ------------------- | ---------------------------------- | ---------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| Hand                | `hand-left`, `hand-right`          | 명시적인 `L`/`R` 또는 번역된 label과 position/shape; color는 보조 가능 | Info/danger와 충돌하지 않으면서 공식 blue/red 의미에서 접근 가능한 값을 도출할 수 있는지 검증한다. |
-| Difficulty          | `normal`, `hard`, `expert`, `real` | Text label과 level이 우선이며 일반 card는 neutral 유지                 | Color를 허용하기 전에 공식 game 근거와 실제 list/detail scanning task를 비교한다.                  |
-| Mode                | `basic`, `recital`                 | Text 또는 icon+text이며 neutral selector가 기본                        | Persistent color가 mode 인지를 개선하는지 입증한다.                                                |
-| Rank 및 achievement | 순서가 있는 rank/achievement state | Name, symbol 및 order가 의미 전달                                      | Achievement를 universal success와 분리하고 artwork ownership을 검증한다.                           |
-| Score band          | threshold 또는 grade 결과          | Numeric score와 이름 붙은 band가 의미 전달                             | Threshold truth를 정의하고 warning/status collision을 피한다.                                      |
-| Genre               | category identity                  | Neutral label                                                          | Color 추가 전 측정 가능한 scan 또는 comparison 이점을 보여 준다.                                   |
+| Domain family       | 필요한 semantic role               | 승인된 처리                                                                                              |
+| ------------------- | ---------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| Hand                | `hand-left`, `hand-right`          | 기존 viewer/editor 표현 전체를 잠그고 보존하며 일반 UI Foundation 재착색은 없습니다.                     |
+| Difficulty          | `normal`, `hard`, `expert`, `real` | `DU-01 · Adobe Spectrum S2`가 일반 UI의 compact marker 네 색을 소유하며 이름, level, 순서가 우선입니다.  |
+| Mode                | `basic`, `recital`                 | Text 또는 icon+text를 기본 neutral로 유지합니다.                                                         |
+| Rank 및 achievement | 순서가 있는 rank/achievement state | Name, symbol, order가 의미를 전달하며 기본 neutral입니다.                                                |
+| Score band          | threshold 또는 grade 결과          | Numeric score와 이름 붙은 band가 의미를 전달하며 승인된 local sequential data일 때만 color를 사용합니다. |
+| Genre               | category identity                  | 기본 neutral label입니다.                                                                                |
 
-기존 1.x 값은 migration 근거일 뿐이다. 정확한 `13B` 후보는 `13A` 해결 후 별도의 폭넓은
-공식/domain 조사와 사용자 승인이 필요하다.
+기존 1.x 값은 계속 migration 근거일 뿐이며 이 결과로 승격되지 않습니다.
 
-## 제안된 `13C` data ownership model
+## 승인된 `13C` data ownership model
 
 Data color는 visualization 또는 comparison에 local하며 같은 hex가 다른 곳에 보인다는
 이유만으로 global 의미가 되지 않는다.
@@ -218,9 +220,12 @@ Data color는 visualization 또는 comparison에 local하며 같은 hex가 다�
 | Structural chart | grid, axis, reference, selection, hover           | 별도 data 의미가 없으면 승인된 neutral/interaction role 사용                                   |
 
 Carbon, GitLab Pajamas, SAP Fiori 및 Atlassian은 chart role, data type, surface 및 accessibility를
-분리하므로 주요 `13C` 원칙 source다. 아직 exact data palette shortlist는 없다.
+분리하므로 유용한 `13C` 원칙 근거로 남습니다. 문서 `58`은 Carbon, GitLab Pajamas, SAP
+Horizon을 exact-family finalist로 비교하고 `LD-03 · SAP Fiori Horizon`을 승인 owner로
+기록합니다. Carbon과 GitLab은 선택되지 않았고, Atlassian은 sequential·divergent chart
+color를 제공하지 않아 온전한 owner 자격에서 제외됐습니다.
 
-## 검증할 collision contract
+## 승인된 collision contract
 
 1. Hue 이름이 ownership을 정하지 않으며 semantic token과 context가 정한다.
 2. Universal `danger`는 danger가 실제 의미가 아닌 한 `FAST`, difficulty, rank loss 또는
@@ -243,13 +248,14 @@ Carbon, GitLab Pajamas, SAP Fiori 및 Atlassian은 chart role, data type, surfac
 | -------- | ------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------- |
 | `FDD-01` | 현재 Tailwind와 유사한 literal 및 CSS variable을 2.0 palette 권위가 아닌 migration 근거로 취급한다.                                  | `Observed`                                      |
 | `FDD-02` | 비색상 단서와 함께 feedback, domain 및 data ownership을 분리한 기존 승인을 보존한다.                                                 | `Approved upstream`                             |
-| `FDD-03` | 작업 묶음 `13`을 별도 `13A`, `13B`, `13C` 승인 Gate로 해결한다.                                                                      | `Proposed`                                      |
+| `FDD-03` | 작업 묶음 `13`을 별도 `13A`, `13B`, `13C` 승인 Gate로 해결한다.                                                                      | `Completed — 2026-08-10`                        |
 | `FDD-04` | `FS-A` Spectrum S2와 `FS-B` Atlassian을 controlled feedback specimen으로 올리고 `FS-C` Carbon은 exact extraction 후에만 참가시킨다.  | `Completed evidence`                            |
-| `FDD-05` | 대표 NosLog task가 visible color의 comprehension 개선을 입증할 때까지 일반 domain label을 neutral로 유지한다.                        | `Approved restraint rule에서 나온 Proposed`     |
-| `FDD-06` | UI status 및 domain color와 독립적으로 data type과 local comparison semantics에 따라 data color를 고른다.                            | `Proposed`                                      |
+| `FDD-05` | 대표 NosLog task가 visible color의 comprehension 개선을 입증할 때까지 일반 domain label을 neutral로 유지한다.                        | `Approved restraint; DU-01은 입증된 예외`       |
+| `FDD-06` | UI status 및 domain color와 독립적으로 data type과 local comparison semantics에 따라 data color를 고른다.                            | `Approved — 2026-08-10`                         |
 | `FDD-07` | 세 owner 중 어디에도 Tailwind palette default, 남는 hue, generated ramp 또는 출처 없는 hybrid를 사용하지 않는다.                     | `Governing provenance에 따라 Rejected approach` |
 | `FDD-08` | Deprecated된 legacy Shopify Polaris token repository를 새 채택 결정의 주 source에서 제외한다.                                        | `Observed limitation`                           |
 | `FDD-09` | 정확한 Atlassian feedback chromatic, 승인된 Spectrum neutral message typography 및 Atlassian danger field text의 `FS-BN`을 승인한다. | `Approved — 2026-08-10`                         |
+| `FDD-10` | `LD-03 · SAP Fiori Horizon`을 정확한 일반 comparison-local data family로 승인한다.                                                   | `Approved — 2026-08-10`                         |
 
 ## Controlled 검토 artifact
 
@@ -267,7 +273,9 @@ feedback 비교를 제공한다.
 - color-disabled, forced-colors 및 대표 color-vision-deficiency view
 - 측정된 text, icon, boundary 및 adjacent-color contrast
 
-Artifact는 `FS-A`, original `FS-B` 및 version pin된 `FS-C`를 비교 근거로 보존하고
-`FS-BN`을 승인된 `13A` 결과로 기록한다. 작업 묶음 `13`은 이제 별도 `13B`
-NOSTALGIA-domain color Gate로 진행하며 `13C`는 그 뒤까지 대기한다.
-문서 `55`는 정확한 domain 값을 승인하지 않고 첫 `13B` role 자격 비교를 기록한다.
+이 artifact는 `FS-A`, original `FS-B`, version-pinned `FS-C`를 comparison evidence로
+보존하고 `FS-BN`을 승인된 `13A` 결과로 기록합니다. 이후 문서 `55`, `56`은 일반 UI
+difficulty-marker 결정을 `DU-01`로 종료했습니다. 문서 `58`은 `LD-03 · SAP Fiori
+Horizon`을 정확한 일반 local-data family로 사용자가 승인한 결과를 기록합니다. 이 이후
+승인이 이 research 문서의 오래된 순서와 proposed 상태 문구보다 우선하며 package `13`을
+완료합니다.

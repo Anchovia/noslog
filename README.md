@@ -111,11 +111,11 @@ background·marker·border·icon은 문서 `54`에 기록된 정확한 Atlassian
 사용하고, message container의 title과 body는 승인된 Spectrum S2 neutral foreground를
 사용합니다. Field error와 destructive text는 Atlassian danger text를 유지합니다. IBM
 Carbon은 neutral typography 원칙의 비교 근거일 뿐이며 Carbon·Tailwind 색상이나 보간한
-값을 이 mapping에 섞지 않습니다. 이 승인은 feedback/status Gate만 완료합니다.
-NOSTALGIA difficulty color와 comparison-local data color는 남은 블록 `1` 안에서 순서대로
-결정하며 별도 작업 단위로 세지 않습니다.
+값을 이 mapping에 섞지 않습니다. 이 승인은 feedback/status Gate만 완료했습니다.
+이후 NOSTALGIA difficulty color와 comparison-local data color도 같은 블록 `1` 안에서
+각각 승인됐으며 별도 작업 단위로 세지 않습니다.
 
-남은 블록 `1`의 C5 color 작업은 위의 채보 viewer/editor 전체 보존 예외를 침범하지 않습니다.
+완료된 블록 `1`의 C5 color 작업은 위의 채보 viewer/editor 전체 보존 예외를 침범하지 않습니다.
 기존 renderer의 note·left/right-hand color는 Foundation token 후보가 아니며 exact-source
 비교에서 제외합니다. Viewer/editor 전체 밖의 repeated-scanning 일반 UI에서는
 Normal·Hard·Expert·Real을 서로 다른 네 가지 지속 색상으로 구분합니다. 이는 승인된 제품
@@ -125,9 +125,16 @@ Hard는 `#E86A00/#E06400`, Expert는 `#F03823/#CD2E1D`, Real은
 `#A65CE7/#AD69E9`입니다. 이 승인은 일반 UI의 작은 난이도 marker 색만 정하며 난이도
 text·background·container·selection·focus·feedback·action 또는 viewer/editor 요소를
 재착색하지 않습니다. Basic/Recital,
-rank/achievement·genre는 기본 neutral을 유지하고 score band와 FAST/SLOW visualization은
-difficulty mapping 승인 뒤 같은 블록에서 이어서 다룹니다. 조사가 적합한 mapping을 찾지 못하면 사용자에게 다시 보고하며,
-임의로 neutral 처리하거나 대체 값을 만들지 않습니다.
+rank/achievement·genre는 기본 neutral을 유지합니다. 일반 UI의 comparison-local data
+color는 `LD-03 · SAP Fiori Horizon`으로 승인했습니다. 문서 `58`에 기록한 정확한
+`@sap-theming/theming-base-content@11.36.3` Light/Dark mapping을 사용합니다. Single
+series는 `#168EFF/#3278BE`, FAST/SLOW는 `#168EFF/#C87B00` 및
+`#3278BE/#F2A634`입니다. 여섯 score bucket과 다섯 categorical series의 전체 값도 문서
+`58`을 그대로 따르며 혼합·보간하지 않습니다. 숫자 threshold/reference line은 기본적으로
+Spectrum neutral structural role을 유지합니다. FAST/SLOW의 direct label과 서로 다른
+marker/line style, score bucket의 숫자·label·순서를 함께 유지합니다. Carbon과 GitLab은
+선택되지 않은 비교 근거일 뿐 downstream target이 아닙니다. 이 승인으로 블록 `1 · C5
+color 마감`이 완료됐습니다.
 
 ### NosLog 2.0 디자인 가이드 남은 작업 기준선
 
@@ -144,13 +151,16 @@ roadmap에서 나온 값이 아니라 2026-08-10 중간 문서화 과정에서 �
 완료된 범위는 제품 감사, IA/navigation, Page Brief, 교차 원칙과 예외 거버넌스,
 Typography·Spacing·Grid·Layout, `S1`–`S5` 구조 검증, neutral surface/foreground/
 boundary/interaction/focus, signature source, achromatic shell과 primary action,
-Material Geometry 및 `FS-BN` feedback mapping입니다. 이 항목들은 다시 남은 작업으로
-세지 않습니다.
+Material Geometry, `FS-BN` feedback mapping, `DU-01` difficulty marker 및 `LD-03`
+local data color를 포함한 C5 color 마감입니다. 이 항목들은 다시 남은 작업으로 세지
+않습니다.
 
-실제 남은 큰 작업은 아래 여섯 블록입니다. 한 블록의 조사·specimen·검증·문서화는
-그 블록의 하위 단계이며 새 top-level 작업으로 늘려 세지 않습니다.
+아래 표는 고정된 여섯 블록 기준선과 완료 이력을 함께 보존합니다. 블록 `1` 완료 뒤
+실제로 남은 큰 작업은 블록 `2`–`6`의 다섯 개입니다. 한 블록의
+조사·specimen·검증·문서화는 그 블록의 하위 단계이며 새 top-level 작업으로 늘려 세지
+않습니다.
 
-앞으로 사용자에게 제시하고 진행하는 작업 단위도 이 여섯 블록뿐입니다. 한 블록을
+앞으로 사용자에게 남은 작업으로 제시하고 진행하는 단위도 이 다섯 블록뿐입니다. 한 블록을
 시작하면 조사, 후보 비교, specimen, browser 검증, 사용자에게 필요한 핵심 결정,
 한영 문서 반영과 정리를 모두 같은 블록 안에서 이어서 수행합니다. 사용자의 material
 decision이 필요할 때만 잠시 확인하고, 승인 뒤에는 새 작업을 만들지 않고 같은 블록을
@@ -159,7 +169,7 @@ decision이 필요할 때만 잠시 확인하고, 승인 뒤에는 새 작업을
 
 |   # | 남은 작업 블록                        | 상태          | 정확한 범위                                                                                                       |
 | --: | ------------------------------------- | ------------- | ----------------------------------------------------------------------------------------------------------------- |
-|   1 | C5 color 마감                         | `In progress` | `DU-01` 난이도 marker mapping 승인 완료; score band·FAST/SLOW·series·threshold local data color 진행              |
+|   1 | C5 color 마감                         | `Complete`    | `DU-01` difficulty marker와 `LD-03` SAP Horizon local data color 승인 완료; viewer/editor 전체 제외               |
 |   2 | Iconography                           | `Not started` | 일반 UI icon 문법, label/icon-only, size/stroke, accessible name                                                  |
 |   3 | Motion / Reduced motion               | `Not started` | 일반 UI motion purpose, duration/easing, reduced-motion 대체                                                      |
 |   4 | Data-visualization anatomy            | `Not started` | 일반 UI axis, legend, exact value, tooltip/focus, non-color/table fallback                                        |

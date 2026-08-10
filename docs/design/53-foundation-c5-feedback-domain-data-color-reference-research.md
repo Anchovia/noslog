@@ -2,7 +2,7 @@
 
 ## Document control
 
-- Status: `13A approved as FS-BN; 13B domain and 13C data-color gates pending`
+- Status: `13A FS-BN, 13B DU-01, and 13C LD-03 SAP Fiori Horizon approved`
 - Canonical language: English
 - Korean companion:
   [53-foundation-c5-feedback-domain-data-color-reference-research.ko.md](./53-foundation-c5-feedback-domain-data-color-reference-research.ko.md)
@@ -12,20 +12,21 @@
   [interactive artifact](./specimens/c5-feedback-status-source-comparison.html)
 - `13B` eligibility research:
   [document 55](./55-foundation-c5-nostalgia-domain-color-eligibility-research.md)
+- `13C` exact-source comparison:
+  [document 58](./58-foundation-c5-local-data-color-exact-source-comparison.md)
 - Scope: Package `13` research for universal feedback/status color,
   NOSTALGIA-domain color ownership, data-visualization color ownership, and the
   collision contract between them
 - Inputs: approved documents `24`, `26`, `32`, and `34`–`52`; current NosLog
   token and component evidence; seventeen independent official accessibility,
   design-system, production-service, and domain sources
-- Excludes: approval of exact domain or data values; component anatomy beyond the
-  approved `FS-BN` role boundary; iconography and motion; production implementation;
-  final high-fidelity pages
+- Excludes: component anatomy beyond the approved color-role boundaries; iconography
+  and motion; production implementation; final high-fidelity pages
 
-This document starts the fixed work package `13` without reopening any completed
-package. It records the research basis and the approved `13A` result. A source or
-value is not approved merely because it appears below; only the explicit `FS-BN`
-approval record is authoritative for universal feedback/status color.
+This document records the research basis and completed results of fixed work package
+`13` without reopening any earlier package. A source or value is not approved merely
+because it appears below; only the explicit `FS-BN`, `DU-01`, and `LD-03` approval
+records are authoritative for their respective roles.
 
 ## Locked upstream authority
 
@@ -54,8 +55,8 @@ One palette cannot safely own every chromatic role in NosLog:
 | `13B` | NOSTALGIA domain          | left/right hand, difficulty, mode, rank, achievement, score band, genre | These meanings come from the game and NosLog tasks, not generic UI conventions.                                        |
 | `13C` | Comparison-local data     | categorical, sequential, diverging, threshold, selection, grid, axis    | A series hue identifies data only within a chart or comparison and must not inherit UI or domain meaning accidentally. |
 
-Approval of one gate will not approve another. Package `13` becomes complete only
-after all three gates are approved and their collision tests pass.
+Approval of one gate did not approve another. Package `13` became complete after all
+three gates were independently approved and their collision constraints passed.
 
 ## Current NosLog migration audit
 
@@ -68,7 +69,7 @@ The audit found these roles and collisions:
 | `--danger`                         | errors, destructive meaning, and `FAST` judgment          | Generic error and rhythm judgment share one hue, so the owner is ambiguous.                                              |
 | `--score`                          | score emphasis and warning/attention in sync health       | Domain score and generic warning share one hue, so a status change can resemble a score highlight.                       |
 | `--chart`                          | chart series, links, and `SLOW` judgment in some contexts | Data, interaction, and rhythm judgment are not reliably separated.                                                       |
-| difficulty colors                  | Normal, Hard, Expert, Real badges and text                | The roles must remain available, but ordinary list/grid labels are not automatically eligible for visible color.         |
+| difficulty colors                  | Normal, Hard, Expert, Real badges and text                | `DU-01` now owns compact ordinary-UI marker color; text, backgrounds, and containers remain neutral.                     |
 | Basic/Recital                      | mode labels and controls                                  | Mode is domain meaning; it cannot silently reuse success, warning, or identity ownership.                                |
 | rank, achievement, score band      | status-like badges and metrics                            | These are domain outcomes, not universal success/warning states. Text, order, icon, or shape must carry the meaning too. |
 | genre colors                       | category presentation                                     | Category color is optional and must prove a scanning benefit; neutral genre labels remain the default.                   |
@@ -198,24 +199,23 @@ approved feedback chromatics, while the already approved Spectrum S2 source cont
 to own neutral text. Document `54` records the exact values, measurements, component
 boundary, and explicit user approval.
 
-## Proposed `13B` domain ownership inventory
+## Resolved `13B` domain ownership disposition
 
-This inventory preserves required meanings while keeping visible color eligibility
-unapproved:
+This inventory records the final disposition after documents `55` and `56`; it does
+not create additional open domain-color work:
 
-| Domain family        | Required semantic roles            | Default presentation before approval                                             | Evidence still required                                                                               |
-| -------------------- | ---------------------------------- | -------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| Hand                 | `hand-left`, `hand-right`          | Explicit `L`/`R` or localized label plus position/shape; color may supplement it | Validate accessible values derived from official blue/red meaning without colliding with info/danger. |
-| Difficulty           | `normal`, `hard`, `expert`, `real` | Text label and level remain primary; ordinary cards stay neutral                 | Compare official game evidence and real list/detail scanning tasks before allowing color.             |
-| Mode                 | `basic`, `recital`                 | Text or icon-plus-text; neutral selector by default                              | Prove whether persistent color improves mode recognition.                                             |
-| Rank and achievement | ordered rank/achievement states    | Name, symbol, and order carry meaning                                            | Separate achievement from universal success and verify artwork ownership.                             |
-| Score band           | thresholds or grade outcomes       | Numeric score and named band carry meaning                                       | Define threshold truth and avoid warning/status collision.                                            |
-| Genre                | category identity                  | Neutral label                                                                    | Demonstrate a measurable scan or comparison benefit before adding color.                              |
+| Domain family        | Required semantic roles            | Approved disposition                                                                                              |
+| -------------------- | ---------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| Hand                 | `hand-left`, `hand-right`          | Existing viewer/editor presentation is locked and preserved; no ordinary-UI Foundation recoloring.                |
+| Difficulty           | `normal`, `hard`, `expert`, `real` | `DU-01 · Adobe Spectrum S2` owns four compact ordinary-UI marker colors; names, levels, and order remain primary. |
+| Mode                 | `basic`, `recital`                 | Text or icon-plus-text remains neutral by default.                                                                |
+| Rank and achievement | ordered rank/achievement states    | Name, symbol, and order carry meaning; neutral by default.                                                        |
+| Score band           | thresholds or grade outcomes       | Numeric score and named band carry meaning; neutral unless used as approved local sequential data.                |
+| Genre                | category identity                  | Neutral label by default.                                                                                         |
 
-Existing 1.x values are migration evidence only. Exact `13B` candidates require their
-own broad official/domain research and user approval after `13A` is resolved.
+Existing 1.x values remain migration evidence only. None are promoted by this result.
 
-## Proposed `13C` data ownership model
+## Approved `13C` data ownership model
 
 Data color is local to a visualization or comparison and does not become a global
 meaning merely because the same hex appears elsewhere.
@@ -229,11 +229,14 @@ meaning merely because the same hex appears elsewhere.
 | Semantic data    | threshold states that truly mean good/critical/bad | status text or symbol and threshold definition; not generic red/green alone                     |
 | Structural chart | grid, axis, reference, selection, hover            | approved neutral/interaction roles unless a separately defined data meaning applies             |
 
-Carbon, GitLab Pajamas, SAP Fiori, and Atlassian are the leading `13C` principle
-sources because they distinguish chart roles, data types, surfaces, and accessibility.
-No exact data palette is shortlisted yet.
+Carbon, GitLab Pajamas, SAP Fiori, and Atlassian remain useful `13C` principle
+evidence because they distinguish chart roles, data types, surfaces, and accessibility.
+Document `58` compared Carbon, GitLab Pajamas, and SAP Horizon as exact-family
+finalists and records `LD-03 · SAP Fiori Horizon` as the approved owner. Carbon and
+GitLab are not selected; Atlassian was ineligible as the intact owner because its
+guidance explicitly omits sequential and divergent chart colors.
 
-## Collision contract to validate
+## Approved collision contract
 
 1. A hue name never determines ownership; the semantic token and context do.
 2. Universal `danger` cannot represent `FAST`, a difficulty, rank loss, or a red data
@@ -252,17 +255,18 @@ No exact data palette is shortlisted yet.
 
 ## Decision log
 
-| ID       | Entry                                                                                                                                   | Status                                         |
-| -------- | --------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| `FDD-01` | Treat current Tailwind-like literals and CSS variables as migration evidence, not 2.0 palette authority.                                | `Observed`                                     |
-| `FDD-02` | Preserve the already approved separation of feedback, domain, and data ownership with non-color cues.                                   | `Approved upstream`                            |
-| `FDD-03` | Resolve package `13` through separate `13A`, `13B`, and `13C` approval gates.                                                           | `Proposed`                                     |
-| `FDD-04` | Advance `FS-A` Spectrum S2 and `FS-B` Atlassian to a controlled feedback specimen; admit `FS-C` Carbon only after exact extraction.     | `Completed evidence`                           |
-| `FDD-05` | Keep ordinary domain labels neutral until a representative NosLog task proves visible color improves comprehension.                     | `Proposed from approved restraint rule`        |
-| `FDD-06` | Select data colors by data type and local comparison semantics, independently from UI status and domain colors.                         | `Proposed`                                     |
-| `FDD-07` | Do not use Tailwind palette defaults, unused hues, generated ramps, or an unsourced hybrid for any of the three owners.                 | `Rejected approach under governing provenance` |
-| `FDD-08` | Exclude the deprecated legacy Shopify Polaris token repository as the primary source for a new adoption decision.                       | `Observed limitation`                          |
-| `FDD-09` | Approve `FS-BN`: exact Atlassian feedback chromatics with approved Spectrum neutral message typography and Atlassian danger field text. | `Approved — 2026-08-10`                        |
+| ID       | Entry                                                                                                                                   | Status                                              |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| `FDD-01` | Treat current Tailwind-like literals and CSS variables as migration evidence, not 2.0 palette authority.                                | `Observed`                                          |
+| `FDD-02` | Preserve the already approved separation of feedback, domain, and data ownership with non-color cues.                                   | `Approved upstream`                                 |
+| `FDD-03` | Resolve package `13` through separate `13A`, `13B`, and `13C` approval gates.                                                           | `Completed — 2026-08-10`                            |
+| `FDD-04` | Advance `FS-A` Spectrum S2 and `FS-B` Atlassian to a controlled feedback specimen; admit `FS-C` Carbon only after exact extraction.     | `Completed evidence`                                |
+| `FDD-05` | Keep ordinary domain labels neutral until a representative NosLog task proves visible color improves comprehension.                     | `Approved restraint; DU-01 is the proven exception` |
+| `FDD-06` | Select data colors by data type and local comparison semantics, independently from UI status and domain colors.                         | `Approved — 2026-08-10`                             |
+| `FDD-07` | Do not use Tailwind palette defaults, unused hues, generated ramps, or an unsourced hybrid for any of the three owners.                 | `Rejected approach under governing provenance`      |
+| `FDD-08` | Exclude the deprecated legacy Shopify Polaris token repository as the primary source for a new adoption decision.                       | `Observed limitation`                               |
+| `FDD-09` | Approve `FS-BN`: exact Atlassian feedback chromatics with approved Spectrum neutral message typography and Atlassian danger field text. | `Approved — 2026-08-10`                             |
+| `FDD-10` | Approve `LD-03 · SAP Fiori Horizon` as the exact ordinary comparison-local data family.                                                 | `Approved — 2026-08-10`                             |
 
 ## Controlled review artifact
 
@@ -281,7 +285,8 @@ feedback comparison using real content:
 - measured text, icon, boundary, and adjacent-color contrast.
 
 The artifact preserves `FS-A`, original `FS-B`, and version-pinned `FS-C` as comparison
-evidence and records `FS-BN` as the approved `13A` result. Package `13` now proceeds to
-the separate `13B` NOSTALGIA-domain color gate; `13C` remains pending after that gate.
-Document `55` records the first `13B` role-eligibility comparison without approving
-exact domain values.
+evidence and records `FS-BN` as the approved `13A` result. Documents `55` and `56`
+subsequently close the ordinary-UI difficulty-marker decision as `DU-01`. Document
+`58` records the user's approval of `LD-03 · SAP Fiori Horizon` as the exact ordinary
+local-data family. This later approval supersedes the older sequencing and proposed
+status language in this research document and completes package `13`.
