@@ -200,14 +200,14 @@ decision이 필요할 때만 잠시 확인하고, 승인 뒤에는 새 작업을
 계속합니다. 내부 단계·문서·후보·검증 횟수를 “다음 작업”, 별도 package 또는 남은 작업으로
 표현하지 않습니다.
 
-|   # | 남은 작업 블록                        | 상태          | 정확한 범위                                                                                                       |
-| --: | ------------------------------------- | ------------- | ----------------------------------------------------------------------------------------------------------------- |
-|   1 | C5 color 마감                         | `Complete`    | `DU-01` difficulty, `LD-03` SAP local data, `JD-02` Radix judgement color 승인 완료; viewer/editor 전체 제외      |
-|   2 | Iconography                           | `Complete`    | `IC-06` Lucide 20px/16px, 2px stroke, label/icon-only, target 및 accessible-name grammar 승인·검증 완료           |
-|   3 | Motion / Reduced motion               | `Complete`    | `MO-02` Atlassian exact duration/easing, semantic role, instant reduced 대체와 responsive·다국어 검증 완료        |
-|   4 | Data-visualization anatomy            | `Not started` | 일반 UI axis, legend, exact value, tooltip/focus, non-color/table fallback                                        |
-|   5 | Foundation 승격과 reusable UI 정리    | `Not started` | 완료된 일반 UI fixture 회귀, Pretendard JP delivery/fallback 검증, component·pattern·template 통합                |
-|   6 | Downstream handoff와 milestone export | `Not started` | 기존 Page Brief의 screen requirement·mapping·QA 통합, Claude Design handoff, 언어/packaging 결정 뒤 versioned PDF |
+|   # | 남은 작업 블록                        | 상태          | 정확한 범위                                                                                                                         |
+| --: | ------------------------------------- | ------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+|   1 | C5 color 마감                         | `Complete`    | `DU-01` difficulty, `LD-03` SAP local data, `JD-02` Radix judgement color 승인 완료; viewer/editor 전체 제외                        |
+|   2 | Iconography                           | `Complete`    | `IC-06` Lucide 20px/16px, 2px stroke, label/icon-only, target 및 accessible-name grammar 승인·검증 완료                             |
+|   3 | Motion / Reduced motion               | `Complete`    | `MO-02` Atlassian exact duration/easing, semantic role, instant reduced 대체와 responsive·다국어 검증 완료                          |
+|   4 | Data-visualization anatomy            | `In progress` | 문서 `62`의 일반 UI 출처 비교·동일 데이터 specimen에서 axis, legend, exact value, tooltip/focus, non-color/table fallback 선택 대기 |
+|   5 | Foundation 승격과 reusable UI 정리    | `Not started` | 완료된 일반 UI fixture 회귀, Pretendard JP delivery/fallback 검증, component·pattern·template 통합                                  |
+|   6 | Downstream handoff와 milestone export | `Not started` | 기존 Page Brief의 screen requirement·mapping·QA 통합, Claude Design handoff, 언어/packaging 결정 뒤 versioned PDF                   |
 
 향후 Foundation 통합 검사는 구조 작업의 반복이 아닙니다. 이후 승인되는 appearance
 규칙이 완료된 일반 UI `S1`, `S2`, `S3`, `S5` fixture를 손상하지 않았는지만 확인합니다. 새 `S6`
