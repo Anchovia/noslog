@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>NosLog 2.0 Motion Source Comparison</title>
+        <style>
+            * { box-sizing: border-box; }
+            :root { color-scheme: light; font-family: Inter, Pretendard, "Noto Sans KR", system-ui, sans-serif; background: #e9e9e9; color: #292929; }
+            body { min-width: 0; margin: 0; background: #e9e9e9; }
+            button { position: relative; isolation: isolate; font: inherit; }
+            button:focus-visible { outline: none; }
+            button:focus-visible::after { position: absolute; z-index: 20; inset: -2px; border: 2px solid #000; content: ""; pointer-events: none; }
+            body.dark button:focus-visible::after { border-color: #fff; }
+            .shell { display: grid; gap: 16px; width: min(1440px, 100%); margin: 0 auto; padding: 16px; }
+            .panel { min-width: 0; border: 1px solid #c6c6c6; border-radius: 8px; background: #fff; }
+            header, .scope, .legend { padding: 16px; }
+            h1, h2, h3, p { margin: 0; }
+            .kicker { color: #717171; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+            h1 { margin-top: 6px; font-size: clamp(22px, 4vw, 34px); line-height: 1.2; }
+            header p, .scope p, .legend p { margin-top: 8px; color: #505050; font-size: 14px; line-height: 1.65; }
+            .scope { border-color: #717171; }
+            .controls { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px; }
+            .controls button { min-height: 44px; border: 1px solid #c6c6c6; border-radius: 4px; padding: 8px 12px; background: #fff; color: #505050; cursor: pointer; }
+            .controls button[aria-pressed="true"] { border-color: #717171; color: #292929; font-weight: 800; box-shadow: inset 0 -3px 0 #292929; }
+            .comparison { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; min-width: 0; }
+            .candidate { --hover: 100ms; --selection: 100ms; --enter: 200ms; --exit: 150ms; --modal-in: 250ms; --modal-out: 200ms; --ease-state: ease; --ease-enter: ease-out; --ease-exit: ease-in; --ease-move: ease-in-out; overflow: clip; }
+            .candidate-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 16px; align-items: start; padding: 14px 16px; border-bottom: 1px solid #e1e1e1; }
+            .candidate-head h2 { font-size: 18px; }
+            .candidate-head p { margin-top: 5px; color: #505050; font-size: 12px; line-height: 1.55; }
+            .tag { width: fit-content; border: 1px solid #c6c6c6; border-radius: 4px; padding: 4px 7px; color: #505050; font-size: 11px; font-weight: 800; white-space: nowrap; }
+            .tag.recommended { border-color: #292929; color: #292929; }
+            .appearance { --canvas: #fff; --surface: #f8f8f8; --raised: #fff; --fg: #292929; --fg2: #505050; --fg3: #717171; --border: #c6c6c6; --divider: #e1e1e1; padding: 14px; background: var(--canvas); color: var(--fg); }
+            body.dark { color-scheme: dark; background: #050505; }
+            body.dark .panel { border-color: #393939; background: #111; }
+            body.dark header p, body.dark .scope p, body.dark .legend p, body.dark .candidate-head p { color: #afafaf; }
+            body.dark .kicker { color: #8a8a8a; }
+            body.dark .controls button { border-color: #393939; background: #1b1b1b; color: #afafaf; }
+            body.dark .controls button[aria-pressed="true"] { border-color: #8a8a8a; color: #dbdbdb; box-shadow: inset 0 -3px 0 #dbdbdb; }
+            body.dark .candidate-head { border-color: #2c2c2c; }
+            body.dark .tag { border-color: #393939; color: #afafaf; }
+            body.dark .tag.recommended { border-color: #dbdbdb; color: #dbdbdb; }
+            body.dark .appearance { --canvas: #111; --surface: #1b1b1b; --raised: #222; --fg: #dbdbdb; --fg2: #afafaf; --fg3: #8a8a8a; --border: #393939; --divider: #2c2c2c; }
+            .theme { margin-bottom: 8px; color: var(--fg3); font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+            .module { display: grid; gap: 12px; min-width: 0; border: 1px solid var(--border); border-radius: 8px; padding: 12px; background: var(--raised); }
+            .token-line { overflow-wrap: anywhere; color: var(--fg3); font: 10px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace; }
+            .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+            .chip, .plain-button, .trigger { min-height: 40px; border: 1px solid var(--border); border-radius: 4px; padding: 0 10px; background: var(--raised); color: var(--fg2); cursor: pointer; }
+            .plain-button, .trigger { transition: color var(--hover) var(--ease-state), background-color var(--hover) var(--ease-state), border-color var(--hover) var(--ease-state); }
+            .chip { transition: color var(--selection) var(--ease-state), background-color var(--selection) var(--ease-state), border-color var(--selection) var(--ease-state); }
+            .chip[aria-pressed="true"] { border-color: var(--fg); background: var(--fg); color: var(--canvas); }
+            .row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; align-items: center; min-height: 48px; border: 1px solid var(--border); border-radius: 6px; padding: 8px 10px; background: var(--surface); }
+            .row strong { display: block; font-size: 13px; }
+            .row small { display: block; margin-top: 2px; color: var(--fg3); font-size: 11px; }
+            .disclosure { display: grid; grid-template-rows: auto 46px; border: 1px solid var(--border); border-radius: 6px; overflow: clip; }
+            .disclosure > button { display: flex; min-height: 44px; align-items: center; justify-content: space-between; border: 0; padding: 0 10px; background: var(--raised); color: var(--fg); cursor: pointer; }
+            .chevron { display: inline-block; color: var(--fg3); transition: transform var(--enter) var(--ease-move); }
+            .disclosure[aria-expanded="false"] .chevron { transform: rotate(-90deg); }
+            .disclosure-copy { min-height: 46px; padding: 8px 10px; border-top: 1px solid var(--divider); background: var(--surface); color: var(--fg2); font-size: 12px; line-height: 1.45; transform: translateY(0); opacity: 1; transition: opacity var(--enter) var(--ease-enter), transform var(--enter) var(--ease-enter); }
+            .disclosure[aria-expanded="false"] .disclosure-copy { transform: translateY(-4px); opacity: 0; }
+            .playground { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+            .demo-slot { position: relative; min-width: 0; }
+            .trigger { width: 100%; }
+            .popup { position: absolute; z-index: 8; top: calc(100% + 4px); left: 0; width: min(220px, 85vw); border: 1px solid var(--border); border-radius: 8px; padding: 8px; background: var(--raised); box-shadow: 0 6px 16px rgb(0 0 0 / .16); color: var(--fg2); font-size: 12px; transform: translateY(-4px); opacity: 0; visibility: hidden; transition: opacity var(--exit) var(--ease-exit), transform var(--exit) var(--ease-exit), visibility 0s linear var(--exit); }
+            .demo-slot.open .popup { transform: translateY(0); opacity: 1; visibility: visible; transition: opacity var(--enter) var(--ease-enter), transform var(--enter) var(--ease-enter), visibility 0s; }
+            .dialog-stage { position: relative; min-height: 154px; overflow: hidden; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); }
+            .dialog-launch { position: absolute; inset: 50% auto auto 50%; transform: translate(-50%, -50%); }
+            .scrim { position: absolute; inset: 0; display: grid; place-items: center; padding: 12px; background: rgb(0 0 0 / .4); opacity: 0; visibility: hidden; transition: opacity var(--modal-out) var(--ease-exit), visibility 0s linear var(--modal-out); }
+            .dialog-stage.open .scrim { opacity: 1; visibility: visible; transition: opacity var(--modal-in) var(--ease-enter), visibility 0s; }
+            .dialog { width: min(280px, 100%); border: 1px solid var(--border); border-radius: 10px; padding: 12px; background: var(--raised); color: var(--fg); transform: scale(.95) translateY(4px); opacity: 0; transition: opacity var(--modal-out) var(--ease-exit), transform var(--modal-out) var(--ease-exit); }
+            .dialog-stage.open .dialog { transform: scale(1) translateY(0); opacity: 1; transition: opacity var(--modal-in) var(--ease-enter), transform var(--modal-in) var(--ease-move); }
+            .dialog p { margin-top: 4px; color: var(--fg2); font-size: 12px; line-height: 1.45; }
+            .dialog-actions { display: flex; justify-content: flex-end; margin-top: 10px; }
+            .loading { display: flex; min-height: 42px; align-items: center; gap: 9px; border-top: 1px solid var(--divider); padding-top: 10px; color: var(--fg2); font-size: 12px; }
+            .spinner { width: 16px; height: 16px; flex: 0 0 16px; border: 2px solid var(--border); border-top-color: var(--fg); border-radius: 50%; animation: spin 800ms linear infinite; }
+            .reduced .candidate { --hover: 0ms !important; --selection: 0ms !important; --enter: 0ms !important; --exit: 0ms !important; --modal-in: 0ms !important; --modal-out: 0ms !important; }
+            .reduced .spinner { animation: none; border-top-color: var(--border); }
+            @media (prefers-reduced-motion: reduce) { .candidate { --hover: 0ms !important; --selection: 0ms !important; --enter: 0ms !important; --exit: 0ms !important; --modal-in: 0ms !important; --modal-out: 0ms !important; } .spinner { animation: none; border-top-color: var(--border); } }
+            @keyframes spin { to { transform: rotate(1turn); } }
+            @media (max-width: 1080px) { .comparison { grid-template-columns: 1fr; } }
+            @media (max-width: 520px) { .shell { padding: 10px; } .candidate-head { grid-template-columns: 1fr; } }
+            @media (max-width: 340px) { .appearance { padding: 9px; } .module { padding: 9px; } .playground { grid-template-columns: 1fr; } }
+            @media (forced-colors: active) { .panel, .module, .chip, .plain-button, .trigger, .row, .disclosure, .dialog-stage, .dialog { border-color: CanvasText; } button:focus-visible::after { border-color: Highlight; } }
+        </style>
+    </head>
+    <body>
+        <main class="shell">
+            <header class="panel">
+                <p class="kicker">Block 3 · Motion · approved</p>
+                <h1 id="page-title">NosLog 일반 UI motion 6개 출처 비교</h1>
+                <p id="page-summary">색·geometry·type·focus는 고정하고 반복 state, disclosure, popup, dialog 및 reduced-motion 차이만 비교합니다. MO-02 · Atlassian이 승인됐고 나머지는 비교 근거로 보존합니다.</p>
+            </header>
+            <aside class="panel scope">
+                <p><strong>범위:</strong> 일반 UI만 해당합니다. 기존 chart viewer/editor 전체, renderer timing, transport, note animation 및 editor motion은 완전히 제외합니다.</p>
+            </aside>
+            <section class="panel legend">
+                <p><strong>사용법:</strong> 각 카드의 control을 직접 누르거나 “전체 동작 재생”으로 같은 sequence를 비교하세요. “Reduced · instant”에서는 spatial/scale motion과 spinner 회전을 제거해도 text와 state가 그대로 남아야 합니다.</p>
+            </section>
+            <section class="panel controls" aria-label="표본 제어">
+                <button type="button" aria-pressed="true" data-control="theme" data-value="light">Light</button>
+                <button type="button" aria-pressed="false" data-control="theme" data-value="dark">Dark</button>
+                <button type="button" aria-pressed="true" data-control="motion" data-value="default">Default motion</button>
+                <button type="button" aria-pressed="false" data-control="motion" data-value="reduced">Reduced · instant</button>
+                <button type="button" id="replay">전체 동작 재생</button>
+            </section>
+            <section class="comparison" id="comparison" aria-label="Motion 출처 후보 비교"></section>
+        </main>
+        <script>
+            const params = new URLSearchParams(location.search);
+            const lang = params.get("lang") || "ko";
+            const copy = {
+                ko: { normal: "Normal 8", expert: "Expert 12", result: "선택 결과", score: "개인 최고 982,341점", details: "기록 상세", detailText: "최근 플레이 18분 전 · FAST 12 · SLOW 8", filter: "필터 열기", popup: "난이도와 기록 조건을 선택합니다.", sync: "연동 안내 열기", dialogTitle: "데이터 연동 안내", dialogText: "북마클릿으로 가져온 기록은 검토 후 반영됩니다.", close: "닫기", loading: "기록을 동기화하는 중…", live: "선택한 난이도와 결과가 즉시 갱신됩니다." },
+                ja: { normal: "Normal 8", expert: "Expert 12", result: "選択結果", score: "自己ベスト 982,341点", details: "記録の詳細", detailText: "最近のプレイ 18分前 · FAST 12 · SLOW 8", filter: "フィルターを開く", popup: "難易度と記録条件を選択します。", sync: "連携案内を開く", dialogTitle: "データ連携のご案内", dialogText: "ブックマークレットから取得した記録は確認後に反映されます。", close: "閉じる", loading: "記録を同期しています…", live: "選択した難易度と結果はすぐに更新されます。" },
+                en: { normal: "Normal 8", expert: "Expert 12", result: "Selected result", score: "Personal best 982,341", details: "Record details", detailText: "Last played 18 min ago · FAST 12 · SLOW 8", filter: "Open filters", popup: "Choose difficulty and record conditions.", sync: "Open sync guide", dialogTitle: "Data sync guide", dialogText: "Bookmarklet records appear after review.", close: "Close", loading: "Syncing records…", live: "The selected difficulty and result update immediately." }
+            }[lang];
+            if (!copy) throw new Error(`Unsupported locale: ${lang}`);
+            const candidates = [
+                { id: "MO-01", name: "Adobe Spectrum", status: "Not selected", note: "hover/selection 130ms의 완만한 micro scale.", hover: 130, selection: 130, enter: 190, exit: 160, modalIn: 250, modalOut: 190, easeState: "cubic-bezier(0,0,.4,1)", easeEnter: "cubic-bezier(0,0,.4,1)", easeExit: "cubic-bezier(.5,0,1,1)", easeMove: "cubic-bezier(.45,0,.4,1)" },
+                { id: "MO-02", name: "Atlassian", status: "Approved", note: "hover 50ms / 지속 selection 150ms와 공식 instant reduced.", hover: 50, selection: 150, enter: 150, exit: 100, modalIn: 250, modalOut: 200, easeState: "cubic-bezier(.4,1,.6,1)", easeEnter: "cubic-bezier(0,.4,0,1)", easeExit: "cubic-bezier(.6,0,.8,.6)", easeMove: "cubic-bezier(.4,0,0,1)" },
+                { id: "MO-03", name: "IBM Carbon productive", status: "Not selected", note: "hover 70ms / selection 110ms의 compact productive scale.", hover: 70, selection: 110, enter: 150, exit: 110, modalIn: 240, modalOut: 150, easeState: "cubic-bezier(.2,0,.38,.9)", easeEnter: "cubic-bezier(0,0,.38,.9)", easeExit: "cubic-bezier(.2,0,1,.9)", easeMove: "cubic-bezier(.2,0,.38,.9)" },
+                { id: "MO-04", name: "Shopify Polaris", status: "Not selected", note: "hover/selection 100ms의 차분한 base token mapping.", hover: 100, selection: 100, enter: 200, exit: 150, modalIn: 250, modalOut: 200, easeState: "cubic-bezier(.25,.1,.25,1)", easeEnter: "cubic-bezier(.19,.91,.38,1)", easeExit: "cubic-bezier(.42,0,1,1)", easeMove: "cubic-bezier(.42,0,.58,1)" },
+                { id: "MO-05", name: "Material standard", status: "Not selected", note: "hover/selection 100ms의 complete standard mapping.", hover: 100, selection: 100, enter: 200, exit: 150, modalIn: 300, modalOut: 250, easeState: "cubic-bezier(.2,0,0,1)", easeEnter: "cubic-bezier(0,0,0,1)", easeExit: "cubic-bezier(.3,0,1,1)", easeMove: "cubic-bezier(.2,0,0,1)" },
+                { id: "MO-06", name: "SAP Fiori", status: "Not selected", note: "hover/selection 100ms와 150/50ms dialog asymmetry.", hover: 100, selection: 100, enter: 200, exit: 100, modalIn: 150, modalOut: 50, easeState: "cubic-bezier(0,0,.35,1)", easeEnter: "cubic-bezier(0,0,.35,1)", easeExit: "cubic-bezier(.65,0,1,1)", easeMove: "cubic-bezier(.5,0,.5,1)" }
+            ];
+            const card = candidate => `<article class="panel candidate" data-id="${candidate.id}" style="--hover:${candidate.hover}ms;--selection:${candidate.selection}ms;--enter:${candidate.enter}ms;--exit:${candidate.exit}ms;--modal-in:${candidate.modalIn}ms;--modal-out:${candidate.modalOut}ms;--ease-state:${candidate.easeState};--ease-enter:${candidate.easeEnter};--ease-exit:${candidate.easeExit};--ease-move:${candidate.easeMove}">
+                <div class="candidate-head"><div><h2>${candidate.id} · ${candidate.name}</h2><p>${candidate.note}</p></div><span class="tag ${candidate.status === "Approved" ? "recommended" : ""}">${candidate.status}</span></div>
+                <div class="appearance"><p class="theme">Light · ordinary UI</p><div class="module">
+                    <p class="token-line">hover/selection ${candidate.hover}/${candidate.selection} · enter/exit ${candidate.enter}/${candidate.exit} · modal ${candidate.modalIn}/${candidate.modalOut}ms</p>
+                    <div class="chips" aria-label="난이도 선택"><button class="chip" type="button" aria-pressed="true">${copy.normal}</button><button class="chip" type="button" aria-pressed="false">${copy.expert}</button></div>
+                    <div class="row" aria-live="polite"><span><strong>${copy.result}</strong><small>${copy.live}</small></span><strong>${copy.score}</strong></div>
+                    <div class="disclosure" aria-expanded="true"><button type="button"><span>${copy.details}</span><span class="chevron" aria-hidden="true">⌄</span></button><div class="disclosure-copy">${copy.detailText}</div></div>
+                    <div class="playground"><div class="demo-slot"><button class="trigger" type="button" aria-expanded="false">${copy.filter}</button><div class="popup" role="status">${copy.popup}</div></div><button class="plain-button sync-open" type="button">${copy.sync}</button></div>
+                    <div class="dialog-stage"><button class="plain-button dialog-launch" type="button">${copy.sync}</button><div class="scrim"><section class="dialog" role="dialog" aria-modal="true" aria-label="${copy.dialogTitle}"><strong>${copy.dialogTitle}</strong><p>${copy.dialogText}</p><div class="dialog-actions"><button class="plain-button dialog-close" type="button">${copy.close}</button></div></section></div></div>
+                    <div class="loading" aria-busy="true"><span class="spinner" aria-hidden="true"></span><span>${copy.loading}</span></div>
+                </div></div>
+            </article>`;
+            const comparison = document.querySelector("#comparison");
+            const visibleCandidates = params.get("selected") === "true" ? candidates.filter(candidate => candidate.id === "MO-02") : candidates;
+            comparison.innerHTML = visibleCandidates.map(card).join("");
+            if (params.get("selected") === "true") {
+                document.querySelector("#page-title").textContent = "MO-02 · Atlassian 선택 출처 검증";
+                document.querySelector("#page-summary").textContent = "승인된 Atlassian duration/easing만 동일한 NosLog 일반 UI 콘텐츠에서 검증합니다.";
+            }
+            const setTheme = value => {
+                document.body.classList.toggle("dark", value === "dark");
+                document.querySelectorAll(".theme").forEach(item => item.textContent = `${value === "dark" ? "Dark" : "Light"} · ordinary UI`);
+            };
+            const setMotion = value => document.body.classList.toggle("reduced", value === "reduced");
+            document.querySelectorAll("[data-control]").forEach(button => button.addEventListener("click", () => {
+                const control = button.dataset.control;
+                document.querySelectorAll(`[data-control="${control}"]`).forEach(item => item.setAttribute("aria-pressed", String(item === button)));
+                if (control === "theme") setTheme(button.dataset.value);
+                if (control === "motion") setMotion(button.dataset.value);
+            }));
+            document.querySelectorAll(".candidate").forEach(candidate => {
+                const chips = [...candidate.querySelectorAll(".chip")];
+                chips.forEach(chip => chip.addEventListener("click", () => chips.forEach(item => item.setAttribute("aria-pressed", String(item === chip)))));
+                const disclosure = candidate.querySelector(".disclosure");
+                disclosure.querySelector("button").addEventListener("click", () => disclosure.setAttribute("aria-expanded", String(disclosure.getAttribute("aria-expanded") !== "true")));
+                const slot = candidate.querySelector(".demo-slot");
+                const trigger = slot.querySelector(".trigger");
+                trigger.addEventListener("click", () => { const open = !slot.classList.contains("open"); slot.classList.toggle("open", open); trigger.setAttribute("aria-expanded", String(open)); });
+                const stage = candidate.querySelector(".dialog-stage");
+                const openDialog = () => { stage.classList.add("open"); stage.querySelector(".dialog-close").focus(); };
+                candidate.querySelector(".sync-open").addEventListener("click", openDialog);
+                candidate.querySelector(".dialog-launch").addEventListener("click", openDialog);
+                candidate.querySelector(".dialog-close").addEventListener("click", () => { stage.classList.remove("open"); candidate.querySelector(".sync-open").focus(); });
+            });
+            const reset = () => document.querySelectorAll(".candidate").forEach(candidate => {
+                const chips = candidate.querySelectorAll(".chip"); chips[0].setAttribute("aria-pressed", "true"); chips[1].setAttribute("aria-pressed", "false");
+                candidate.querySelector(".disclosure").setAttribute("aria-expanded", "false");
+                candidate.querySelector(".demo-slot").classList.remove("open");
+                candidate.querySelector(".trigger").setAttribute("aria-expanded", "false");
+                candidate.querySelector(".dialog-stage").classList.remove("open");
+            });
+            document.querySelector("#replay").addEventListener("click", () => {
+                reset();
+                setTimeout(() => document.querySelectorAll(".candidate .chip:nth-child(2)").forEach(button => button.click()), 120);
+                setTimeout(() => document.querySelectorAll(".candidate .disclosure > button").forEach(button => button.click()), 420);
+                setTimeout(() => document.querySelectorAll(".candidate .trigger").forEach(button => button.click()), 760);
+                setTimeout(() => document.querySelectorAll(".candidate .dialog-stage").forEach(stage => stage.classList.add("open")), 1150);
+                setTimeout(reset, 2050);
+            });
+            if (params.get("theme") === "dark") setTheme("dark");
+            if (params.get("motion") === "reduced") setMotion("reduced");
+        </script>
+    </body>
+</html>

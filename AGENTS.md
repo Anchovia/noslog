@@ -216,6 +216,26 @@ color closeout`. The comparison was internal evidence within that block, not a n
   installation convenience. It does not apply to the locked viewer/editor, final
   logo drawing, brand-service marks, flags, album jackets, illustrations, or
   data-visualization marks.
+- `MO-02 · Atlassian` is the approved and exclusive ordinary-UI motion source for
+  NosLog 2.0. Preserve its published duration scale and easing curves without mixing
+  Spectrum `130ms`, Tailwind defaults, or values from another system. Use
+  `instant 0ms` for focus, error, critical state and reduced-motion changes;
+  `xxshort 50ms` + `out.practical` (`cubic-bezier(.4,1,.6,1)`) for high-frequency
+  hover; `xshort 100ms` + `out.practical` for subtle pressed feedback or +
+  `in.practical` (`cubic-bezier(.6,0,.8,.6)`) for quick exits; `short 150ms` +
+  `out.practical` for persistent selection/emphasized interaction highlights and,
+  with `out.bold`
+  (`cubic-bezier(0,.4,0,1)`), small entrances; `medium 200ms` + `in.practical` for
+  modal/large exits; and `long 250ms` + `inout.bold` (`cubic-bezier(.4,0,0,1)`) for
+  modal entrance or justified in-place
+  scale/repositioning. `xlong 400ms` is only a proven large-transition ceiling;
+  `xxlong 600ms`, bounce, stagger, celebration, parallax, and page choreography are
+  unassigned without a new user-approved need. Under
+  `prefers-reduced-motion: reduce`, make every nonessential ordinary-UI transition
+  instant/none, keep visible state and programmatic semantics immediate, and replace
+  spinner motion with a
+  static cue plus persistent localized busy text and `aria-busy`. This authority is
+  recorded by document `61` and does not apply to the locked viewer/editor.
 - Primitive-source approval, semantic-role mapping, component-alias mapping, and
   production implementation are separate approval gates. Approval of Adobe Spectrum
   S2 primitives does not by itself approve a proposed foreground, boundary,
