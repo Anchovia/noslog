@@ -761,10 +761,11 @@ English-only copy to validate the page.
 | PRIV-B07 | X/Kakao/other nonessential external-load consent or just-in-time notice requirement                                                 | Legal review plus network/browser evidence                       | `Release blocker` |
 | PRIV-B08 | Korean/Japanese/English legally reviewed substantive parity and any governing-language clause                                       | Human legal translation review                                   | `Release blocker` |
 | PRIV-B09 | Fourteen-and-older account disclosure and a legally adequate, non-dark-pattern eligibility mechanism                                | Legal review, Auth design, and E2E                               | `Release blocker` |
-| PRIV-B10 | Contributor terms covering chart rights, warranties, moderation, and public attribution                                             | Qualified legal review and approved submission copy              | `Release blocker` |
 
 The release may not convert a blocker to `Approved` merely because a placeholder has
 been styled or the current policy already contains a similar sentence.
+The former chart-contribution blocker is superseded by `PRIV-33`, `PRIV-35`, and
+document `07`; it is not release work and must not be restored from older text.
 
 ## Browser and QA Acceptance
 

@@ -1489,7 +1489,7 @@ Approved synthesis:
   adds an avoidable step and lets a secondary ordering choice obstruct a primary
   membership filter.
 
-## Open Design Questions
+## No Open Product Questions
 
 No material shared-discovery product behavior remains open. Foundation tokens, exact
 skeleton quantity and styling, result-summary row composition, and exact Chart-row

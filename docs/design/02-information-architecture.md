@@ -6,7 +6,7 @@
 - Evidence status: `Current-product audit, repository inspection, browser evidence, and cited navigation guidance`
 - Date started: 2026-07-29
 - Date approved: 2026-07-30
-- Last decision update: 2026-08-08 (`IA-21` / Home `HOME-18`)
+- Last decision update: 2026-08-08 (`IA-21` refined by Home `HOME-20`)
 - Language: English
 - Input audit: [01-current-product-audit.md](./01-current-product-audit.md)
 - Approved shared-shell contract:
@@ -320,9 +320,10 @@ Signed-out pages use a visible Login text button in the same account position.
   Chart Viewer → Tiers → Rankings → Bingo → Exams → Arcades → Data Sync.
 - Keep Data Sync as the eighth Home block and as a stable More-panel entry. The former
   separate Home row is superseded.
-- Use exactly four columns and two rows at every supported width. Block dimensions,
-  gaps, padding, and label wrapping may adapt to available space while retaining the
-  same destinations, semantic order, and `4 × 2` relationship.
+- Use the Home `HOME-20` adaptive geometry: `3 × 3` while the destination region is
+  compact and `4 × 2` when sufficient width is available. Keep the final compact row
+  source ordered and unstretched. Block dimensions, gaps, padding, and label wrapping
+  adapt without changing destinations or semantic order.
 
 ## Confirmed Music and Chart Search Model
 
@@ -529,29 +530,29 @@ from its content rather than copied from GOV.UK, USWDS, or Carbon.
 
 ## Decision Register
 
-| ID    | Decision                        | Resolved direction or remaining question                                                                                                                 | Status                      |
-| ----- | ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- |
-| IA-01 | Ordinary responsive navigation  | Top header: NosLog left; profile/account and More right; no bottom navigation                                                                            | `Approved`                  |
-| IA-02 | Chart-viewer destination        | Preserve the complete existing viewer and its current entry/return behavior under document `07`                                                          | `Approved correction`       |
-| IA-03 | Rankings navigation             | Access through its independent home block and More block, not a direct labeled header link                                                               | `Approved`                  |
-| IA-04 | Home signed-in personalization  | Do not add a stale-sync, recent-play, or unfinished-content card                                                                                         | `Rejected`                  |
-| IA-05 | Data Sync placement             | Superseded by `IA-21` and Home `HOME-18`; the earlier decision used a separate Home row while retaining a stable More entry                              | `Superseded`                |
-| IA-06 | Feedback placement              | More-panel support utility on ordinary pages; retain the dialog flow and omit it from Home/footer; do not alter viewer feedback access                   | `Approved correction`       |
-| IA-07 | Official-news placement         | Show one latest `NOSTALGIA_573` source post through X's official widget after routine NosLog announcements; retain a localized official-channel fallback | `Approved`                  |
-| IA-08 | Tier/Bingo/Exam relationship    | Keep all three as independent page families and navigation blocks; no umbrella label                                                                     | `Approved`                  |
-| IA-09 | General desktop navigation      | Preserve the same top-header semantics; adapt More panel and content grid to available width                                                             | `Approved`                  |
-| IA-10 | Signed-out account control      | Show a visible Login text button in the account position                                                                                                 | `Approved`                  |
-| IA-11 | More-panel contents and order   | Use the approved two-column order for eight product destinations, a divider, Settings and Feedback utilities, then conditional Admin; no group heading   | `Approved`                  |
-| IA-12 | Header scroll behavior          | Compact layouts hide downward and reveal upward; wider desktop layouts remain persistently visible and sticky                                            | `Approved`                  |
-| IA-13 | Music/Chart search architecture | One shared search surface with a compact leading scope selector; Chart entry preselects Chart scope                                                      | `Approved`                  |
-| IA-14 | Persistent control density      | Avoid permanent button rows when a clear contextual selector or progressive disclosure preserves the task                                                | `Approved`                  |
-| IA-15 | Public Settings destination     | One `/[locale]/settings` entry for all users; guest experience preferences remain usable and account controls appear only after login                    | `Approved`                  |
-| IA-16 | Preference ownership            | Theme stays device-local; existing account language/title settings win after login, new accounts inherit explicit guest choices                          | `Approved`                  |
-| IA-17 | Footer destinations             | Keep Privacy and GitHub in the footer and do not duplicate them in More                                                                                  | `Approved`                  |
-| IA-18 | Routine announcement structure  | Home shows the newest three title-and-date links on every viewport; localized detail and archive retain complete history; omit the section when empty    | `Approved`                  |
-| IA-19 | Authentication and onboarding   | One Discord action, public-browse alternative, two-field completion, incomplete-profile gate, logout escape, and validated destination return            | `Approved`                  |
-| IA-20 | User-facing chart contribution  | Former proposal cancelled; preserve the existing administrator editor and create no new user editor/contribution flow                                    | `Superseded by document 07` |
-| IA-21 | Home destination collection     | Use eight equal peer blocks including Data Sync in exactly four columns and two rows at every supported width; retain the separate Data Sync More entry  | `Approved`                  |
+| ID    | Decision                        | Resolved direction or remaining question                                                                                                                                         | Status                          |
+| ----- | ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------- |
+| IA-01 | Ordinary responsive navigation  | Top header: NosLog left; profile/account and More right; no bottom navigation                                                                                                    | `Approved`                      |
+| IA-02 | Chart-viewer destination        | Preserve the complete existing viewer and its current entry/return behavior under document `07`                                                                                  | `Approved correction`           |
+| IA-03 | Rankings navigation             | Access through its independent home block and More block, not a direct labeled header link                                                                                       | `Approved`                      |
+| IA-04 | Home signed-in personalization  | Do not add a stale-sync, recent-play, or unfinished-content card                                                                                                                 | `Rejected`                      |
+| IA-05 | Data Sync placement             | Superseded by `IA-21` and Home `HOME-18`; the earlier decision used a separate Home row while retaining a stable More entry                                                      | `Superseded`                    |
+| IA-06 | Feedback placement              | More-panel support utility on ordinary pages; retain the dialog flow and omit it from Home/footer; do not alter viewer feedback access                                           | `Approved correction`           |
+| IA-07 | Official-news placement         | Show one latest `NOSTALGIA_573` source post through X's official widget after routine NosLog announcements; retain a localized official-channel fallback                         | `Approved`                      |
+| IA-08 | Tier/Bingo/Exam relationship    | Keep all three as independent page families and navigation blocks; no umbrella label                                                                                             | `Approved`                      |
+| IA-09 | General desktop navigation      | Preserve the same top-header semantics; adapt More panel and content grid to available width                                                                                     | `Approved`                      |
+| IA-10 | Signed-out account control      | Show a visible Login text button in the account position                                                                                                                         | `Approved`                      |
+| IA-11 | More-panel contents and order   | Use the approved two-column order for eight product destinations, a divider, Settings and Feedback utilities, then conditional Admin; no group heading                           | `Approved`                      |
+| IA-12 | Header scroll behavior          | Compact layouts hide downward and reveal upward; wider desktop layouts remain persistently visible and sticky                                                                    | `Approved`                      |
+| IA-13 | Music/Chart search architecture | One shared search surface with a compact leading scope selector; Chart entry preselects Chart scope                                                                              | `Approved`                      |
+| IA-14 | Persistent control density      | Avoid permanent button rows when a clear contextual selector or progressive disclosure preserves the task                                                                        | `Approved`                      |
+| IA-15 | Public Settings destination     | One `/[locale]/settings` entry for all users; guest experience preferences remain usable and account controls appear only after login                                            | `Approved`                      |
+| IA-16 | Preference ownership            | Theme stays device-local; existing account language/title settings win after login, new accounts inherit explicit guest choices                                                  | `Approved`                      |
+| IA-17 | Footer destinations             | Keep Privacy and GitHub in the footer and do not duplicate them in More                                                                                                          | `Approved`                      |
+| IA-18 | Routine announcement structure  | Home shows the newest three title-and-date links on every viewport; localized detail and archive retain complete history; omit the section when empty                            | `Approved`                      |
+| IA-19 | Authentication and onboarding   | One Discord action, public-browse alternative, two-field completion, incomplete-profile gate, logout escape, and validated destination return                                    | `Approved`                      |
+| IA-20 | User-facing chart contribution  | Former proposal cancelled; preserve the existing administrator editor and create no new user editor/contribution flow                                                            | `Superseded by document 07`     |
+| IA-21 | Home destination collection     | Use eight equal peer blocks including Data Sync; Home `HOME-20` governs adaptive `3 × 3` compact and `4 × 2` sufficient-width geometry; retain the separate Data Sync More entry | `Approved — refined by HOME-20` |
 
 ## Phase Approval
 
@@ -561,9 +562,10 @@ page-specific states remained page-brief decisions; the approval did not silentl
 resolve them. The
 user-approved Home brief later refined the editorial destinations recorded in `IA-07`
 and `IA-18` without changing the approved page-family hierarchy. On 2026-08-08, Home
-`HOME-18` and `IA-21` also superseded `IA-05`'s separate Data Sync Home row and fixed
-the eight-peer destination collection at `4 × 2` across supported widths. The subsequently
-approved shared-discovery brief refined signed-out personal-control behavior and the
+`HOME-18` and `IA-21` superseded `IA-05`'s separate Data Sync Home row. The later
+`HOME-20` refined the collection geometry to adaptive compact `3 × 3` and
+sufficient-width `4 × 2`. The subsequently approved shared-discovery brief refined
+signed-out personal-control behavior and the
 Music/Chart scope contracts without changing that hierarchy. The subsequently approved
 shared-shell brief resolved the global destination order, compact modal, wide popover,
 header visibility, shell variants, and footer ownership while preserving the same
@@ -596,7 +598,7 @@ complete chart viewer/editor preservation boundary in document `07`.
 - Korean, Japanese, and English constraints are included before labels are finalized.
 - The user approved the resolved decision register before page-brief work began.
 
-## Next Actions
+## Downstream Application Rules
 
 1. Apply the approved shared-shell contract consistently to later page briefs,
    Foundation specimens, downstream design, and implementation mapping.

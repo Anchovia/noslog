@@ -354,20 +354,17 @@ other verified features may be removed silently.
   maintenance only unless separately authorized.
 - A production-level administrator redesign may begin as a distinct post-2.0 phase.
 
-## Remaining Audit Follow-up Questions
+## Resolved Audit Follow-up Inputs
 
-These are audit questions, not design proposals:
+The later approved page briefs now identify representative real-data, long-content,
+private-state, and failure-state fixtures. Private or destructive states that cannot
+be reproduced safely remain code/schema evidence or use an isolated test environment;
+they are not missing design decisions. The downstream coverage index is document `64`.
 
-1. Are there private or rare states that cannot be safely reproduced in the development
-   database and should instead be documented from code?
-2. Which published chart, longest translated titles, and extreme record values should
-   become the formal stress-test fixtures?
+## Ongoing Inventory Rules
 
-## Next Audit Actions
-
-1. Identify representative stress-test data and any states that must remain code-only
-   evidence.
-2. Keep this inventory synchronized when approved 2.0 contracts add capabilities
+1. Keep this inventory synchronized when approved 2.0 contracts add capabilities
    without misrepresenting them as current code.
-3. Keep broad administrator redesign and the complete chart viewer/editor outside the
+2. Keep broad administrator redesign and the complete chart viewer/editor outside the
    current 2.0 design-guide scope.
+3. Do not report the former audit follow-up questions as pending work.

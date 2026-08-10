@@ -14,12 +14,14 @@ Use this order when project sources disagree:
 2. this file for process, scope, and preservation boundaries;
 3. `README.md` for the current product, setup, validation, deployment, privacy,
    versioning, and six-block progress baseline;
-4. `docs/design/57-design-guide-remaining-work-audit.md` for the current design
+4. `docs/design/57-design-guide-remaining-work-audit.md` for the completed six-block
    scope and disposition of obsolete work;
-5. `docs/design/24-foundation-v0.1.md` for approved normative Foundation rules;
-6. `docs/design/25-foundation-v0.1-provenance.md` for research provenance,
+5. `docs/design/64-downstream-design-implementation-handoff.md` for downstream
+   reading order, screen coverage, mapping, QA, and milestone packaging;
+6. `docs/design/24-foundation-v0.1.md` for approved normative Foundation rules;
+7. `docs/design/25-foundation-v0.1-provenance.md` for research provenance,
    approvals, rejections, and supersessions;
-7. the remaining current English design documents for product evidence, IA,
+8. the remaining current English design documents for product evidence, IA,
    flows, page briefs, and cross-cutting requirements.
 
 A later explicit `Approved`, `Rejected`, or `Superseded` decision overrides an
@@ -37,8 +39,9 @@ explicitly asks for historical evidence.
 - Korean, Japanese, and English remain required product locales and validation
   inputs. The English-only rule applies to design-guide source documents, not the
   user interface or localization requirements.
-- Ask the user which language and packaging to use before exporting a milestone
-  PDF.
+- The v0.1 milestone is one English PDF using the approved `ED-03 · GitHub Primer`
+  editorial system. Primer accent in that PDF is artifact-only notation, not a
+  product primitive, semantic role, component alias, or signature-color decision.
 
 ## Legacy design source
 
@@ -72,7 +75,6 @@ preservation exceptions for NosLog 2.0. Preserve their current:
   editor rendering model.
 
 Do not redesign, recolor, restyle, reorganize, replace, reinterpret, or create a
-2.0 variant of any part of either experience. Foundation color, material, motion,
 iconography, data-visualization, component, template, responsive, and
 accessibility decisions do not apply to them. Former viewer/editor page briefs,
 `S4`, `S6`, and contribution/editor proposals are superseded historical evidence,
@@ -157,8 +159,9 @@ The user is the final decision-maker for NosLog 2.0 product and design direction
 ## Progress integrity
 
 The only user-facing design-guide work units are the six blocks in `README.md` and
-document `57`. Blocks 1–5 are complete, and Block 6 has not started. Update both
-sources in the same task whenever a block changes state.
+document `57`. Blocks 1–6 are complete; no top-level design-guide block remains.
+Update both sources in the same task if a later explicit decision reopens a precise
+scope.
 
 - Do not report a completion percentage unless the user first approves a
   denominator and counting method.

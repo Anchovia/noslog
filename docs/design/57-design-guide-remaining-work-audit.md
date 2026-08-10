@@ -10,6 +10,8 @@
 - Foundation provenance: [document 25](./25-foundation-v0.1-provenance.md)
 - Completed Block 5 package:
   [document 63](./63-foundation-v0.1-reusable-ui-regression.md)
+- Completed Block 6 package:
+  [document 64](./64-downstream-design-implementation-handoff.md)
 
 ## Why this document exists
 
@@ -34,18 +36,19 @@ percentage is permitted until the user approves both a denominator and method.
 
 ## Fixed six-block baseline
 
-|   # | User-facing block                       | Status        | Completed or remaining result                                                                                                                                                               |
-| --: | --------------------------------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-|   1 | C5 color closeout                       | `Complete`    | Spectrum neutrals and difficulty, Fluent focus, Radix reserved signature/judgement, achromatic identity/action, Atlassian feedback, SAP local data; viewer/editor excluded                  |
-|   2 | Iconography                             | `Complete`    | Lucide ordinary-UI source, geometry, sizes, labels, targets, and accessibility grammar approved                                                                                             |
-|   3 | Motion / Reduced motion                 | `Complete`    | Atlassian exact duration/easing ownership and instant meaningful reduced mode approved                                                                                                      |
-|   4 | Data-visualization anatomy              | `Complete`    | GitHub Primer ordinary-UI anatomy, exact-value access, non-color cues, and semantic-table floor approved                                                                                    |
-|   5 | Foundation promotion and reusable UI    | `Complete`    | Foundation v0.1, Pretendard JP delivery, and the lean reusable ordinary-UI aliases and patterns in document `63` are approved                                                               |
-|   6 | Downstream handoff and milestone export | `Not started` | Consolidate screen requirements, implementation mapping, accessibility/localization/browser QA, Claude Design handoff, and export a versioned PDF after the user chooses language/packaging |
+|   # | User-facing block                       | Status     | Completed or remaining result                                                                                                                                              |
+| --: | --------------------------------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|   1 | C5 color closeout                       | `Complete` | Spectrum neutrals and difficulty, Fluent focus, Radix reserved signature/judgement, achromatic identity/action, Atlassian feedback, SAP local data; viewer/editor excluded |
+|   2 | Iconography                             | `Complete` | Lucide ordinary-UI source, geometry, sizes, labels, targets, and accessibility grammar approved                                                                            |
+|   3 | Motion / Reduced motion                 | `Complete` | Atlassian exact duration/easing ownership and instant meaningful reduced mode approved                                                                                     |
+|   4 | Data-visualization anatomy              | `Complete` | GitHub Primer ordinary-UI anatomy, exact-value access, non-color cues, and semantic-table floor approved                                                                   |
+|   5 | Foundation promotion and reusable UI    | `Complete` | Foundation v0.1, Pretendard JP delivery, and the lean reusable ordinary-UI aliases and patterns in document `63` are approved                                              |
+|   6 | Downstream handoff and milestone export | `Complete` | Document `64` consolidates screen requirements, mapping, QA, Claude Design boundaries, and the approved English ED-03 milestone export                                     |
 
-Only Block `6` remains. Research, candidates, specimens, browser checks,
-documentation, and approval gates inside a block are not additional blocks or “next
-tasks.”
+No top-level design-guide block remains. Research, candidates, specimens, browser
+checks, documentation, and approval gates inside a block are not additional blocks or
+“next tasks.” Privacy/legal/production-evidence blockers and the later Claude Design
+and implementation stages are not missing design-guide blocks.
 
 ## Completed scope that must not be reopened by stale text
 
@@ -82,17 +85,19 @@ and has no remaining approval gate.
 
 ## Block 6 result
 
-After Block 5 approval, Block 6 must produce one coherent downstream package:
+Block 6 produced one coherent downstream package:
 
 - current screen and page-family requirements linked to the approved briefs;
 - Foundation and reusable-pattern implementation mapping;
 - accessibility, localization, state, responsive, and browser acceptance matrix;
 - explicit chart viewer/editor preservation instruction;
 - Claude Design prompt/handoff boundaries and conflict escalation rule;
-- editable guide index and a versioned PDF after the user chooses its language and
-  packaging.
+- editable guide index and one English versioned PDF using the approved
+  `ED-03 · GitHub Primer` editorial system.
 
-Block 6 does not create the final high-fidelity page suite or implement the app.
+Block 6 does not create the final high-fidelity page suite or implement the app. The
+approved editable package is
+[document 64](./64-downstream-design-implementation-handoff.md).
 
 ## Current active design-document set
 
@@ -103,8 +108,9 @@ The active tree contains only:
 - document `22` for cross-cutting principles and exception governance;
 - document `24` for normative Foundation v0.1;
 - document `25` for consolidated provenance and decision history;
-- this document `57` for remaining scope; and
-- document `63` for the approved Block 5 package.
+- this document `57` for remaining scope;
+- document `63` for the approved Block 5 package; and
+- document `64` for the active Block 6 downstream package.
 
 All active design documents are English-only. Serial comparison documents, Korean
 companions, obsolete viewer/editor briefs, and historical specimens remain available
@@ -122,3 +128,4 @@ only through Git history.
 | `RWA-06` | Use official Pretendard JP `1.3.9` variable dynamic subsets as version-pinned, first-party self-hosted assets. | `Approved — 2026-08-11`      |
 | `RWA-07` | Promote the approved document `24` contracts together as the Foundation v0.1 normative authority.              | `Approved — 2026-08-11`      |
 | `RWA-08` | Approve the lean reusable ordinary-UI aliases and patterns in document `63` and complete Block 5.              | `Approved — 2026-08-11`      |
+| `RWA-09` | Approve document `64`, one English ED-03 milestone PDF, and complete Block 6 and the six-block guide.          | `Approved — 2026-08-11`      |
