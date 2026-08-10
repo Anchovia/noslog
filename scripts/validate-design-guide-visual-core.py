@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import hashlib
+import html
 import json
 import os
 import re
@@ -16,6 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "scripts" / "design-guide-visual-core-manifest.json"
 GENERATOR = ROOT / "scripts" / "generate-design-guide-visual-core.py"
 FOUNDATION = ROOT / "docs" / "design" / "24-foundation-v0.1.md"
+REUSABLE = ROOT / "docs" / "design" / "63-foundation-v0.1-reusable-ui-regression.md"
 PACKAGE = ROOT / "node_modules" / "lucide-react" / "package.json"
 SOURCE_ROOT = Path(os.environ.get("NOSLOG_GUIDE_SOURCE_DIR", "/private/tmp/noslog-guide-sources"))
 
@@ -42,6 +44,7 @@ def function_source(source: str, name: str) -> str:
 def main() -> None:
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
     foundation = FOUNDATION.read_text(encoding="utf-8")
+    reusable = REUSABLE.read_text(encoding="utf-8")
     generator = GENERATOR.read_text(encoding="utf-8")
 
     for source_name in ("pretendardJP", "spectrumTokens"):
@@ -52,6 +55,19 @@ def main() -> None:
         actual = sha256(archive)
         if actual != record["sha256"]:
             fail(f"Checksum mismatch for {archive.name}: {actual}")
+
+    for source_name, fields in (
+        ("atlassianMotion", (("snapshot", "sha256"), ("applyingSnapshot", "applyingSha256"))),
+        ("primerDataVisualization", (("snapshot", "sha256"),)),
+    ):
+        record = manifest["sources"][source_name]
+        for path_key, hash_key in fields:
+            snapshot = SOURCE_ROOT / record[path_key]
+            if not snapshot.exists():
+                fail(f"Missing pinned reference snapshot: {snapshot}")
+            actual = sha256(snapshot)
+            if actual != record[hash_key]:
+                fail(f"Checksum mismatch for {snapshot.name}: {actual}")
 
     for filename in (
         "PretendardJP-Regular.ttf",
@@ -110,6 +126,30 @@ def main() -> None:
         if fragment not in lucide_svg:
             fail(f"Lucide geometry changed: {fragment}")
 
+    atlassian_motion = (
+        SOURCE_ROOT / manifest["sources"]["atlassianMotion"]["applyingSnapshot"]
+    ).read_text(encoding="utf-8")
+    for fragment in (
+        "50ms", "100ms", "150ms", "200ms", "250ms", "400ms",
+        "cubic-bezier(.4,1,.6,1)", "cubic-bezier(0.6,0,0.8,0.6)",
+        "cubic-bezier(0,.4,0,1)", "cubic-bezier(.4,0,0,1)",
+        "prefers-reduced-motion",
+    ):
+        if fragment not in atlassian_motion:
+            fail(f"Atlassian motion snapshot no longer proves: {fragment}")
+
+    primer_chart_raw = (
+        SOURCE_ROOT / manifest["sources"]["primerDataVisualization"]["snapshot"]
+    ).read_text(encoding="utf-8")
+    primer_chart = re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", primer_chart_raw)))
+    for fragment in (
+        "Chart anatomy", "Header", "Subheader", "Legend", "Toolbar Menu",
+        "preview the data in a table", "download the data in a CSV",
+        "2px width", "solid style", "circle shape",
+    ):
+        if fragment not in primer_chart:
+            fail(f"Primer data-visualization snapshot no longer proves: {fragment}")
+
     for value in (
         "#FFFFFF", "#111111", "#F8F8F8", "#1B1B1B", "#292929", "#DBDBDB",
         "#0BA45D", "#E86A00", "#F03823", "#A65CE7", "#C2298A", "#FF8DCC",
@@ -117,6 +157,72 @@ def main() -> None:
     ):
         if value not in foundation or value not in generator:
             fail(f"Visual value is not traceable through Foundation and generator: {value}")
+
+    motion_plate = function_source(generator, "draw_motion") + function_source(generator, "draw_reduced_motion")
+    for fragment in ("0ms", "50ms", "100ms", "150ms", "200ms", "250ms", "400ms", "aria-busy"):
+        if fragment not in foundation or fragment not in motion_plate:
+            fail(f"Motion plate is not traceable through Foundation: {fragment}")
+    for fragment in ("static cue", "immediate state"):
+        if fragment not in foundation.lower() or fragment not in motion_plate.lower():
+            fail(f"Motion plate is not traceable through Foundation: {fragment}")
+    for source_curve, plate_curve in (
+        ("cubic-bezier(.4,1,.6,1)", "(.4, 1, .6, 1)"),
+        ("cubic-bezier(.6,0,.8,.6)", "(.6, 0, .8, .6)"),
+        ("cubic-bezier(0,.4,0,1)", "(0, .4, 0, 1)"),
+        ("cubic-bezier(.4,0,0,1)", "(.4, 0, 0, 1)"),
+    ):
+        if source_curve not in foundation or plate_curve not in motion_plate:
+            fail(f"Motion curve is not traceable through Foundation: {source_curve}")
+
+    data_plate = function_source(generator, "draw_data_visualization") + function_source(generator, "draw_data_equivalence")
+    for fragment in (
+        "Visible title", "Subtitle context", "Persistent legend", "Exact value",
+        "Same-data semantic table", "CSV optional", "Home / End", "#168EFF", "#C87B00",
+    ):
+        if fragment not in data_plate:
+            fail(f"Data-visualization plate is missing contract: {fragment}")
+
+    responsive_plate = function_source(generator, "draw_scaled_grid") + function_source(generator, "draw_responsive_grid") + function_source(generator, "draw_responsive_recomposition")
+    for fragment in ("320px", "390px", "672px", "1056px"):
+        if fragment not in foundation or fragment not in responsive_plate:
+            fail(f"Responsive plate is not traceable through Foundation: {fragment}")
+    for source_value, plate_label in (
+        ("`12px`", "12px gutter"), ("`16px`", "16px gutter"),
+        ("`16px`", "16px margin"), ("`24px`", "24px margin"),
+        ("`32px`", "32px margin"),
+    ):
+        if source_value not in foundation or plate_label not in responsive_plate:
+            fail(f"Responsive spacing is not traceable: {plate_label}")
+    for fragment in (
+        ', 4, "12px gutter", "16px margin")',
+        ', 8, "16px gutter", "24px margin")',
+        ', 12, "16px gutter", "32px margin")',
+    ):
+        if fragment not in responsive_plate:
+            fail(f"Responsive track mapping is missing: {fragment}")
+
+    reusable_plate = function_source(generator, "draw_reusable_map") + function_source(generator, "draw_reusable_anatomy")
+    for alias in (
+        "AppHeader", "SearchField", "ContentScopeSwitch", "FilterSortControl",
+        "ViewModeSwitch", "ResultCollection", "MusicEntityHeader", "DifficultySelector",
+        "MetricSummary", "DataTable", "Pagination", "StatusMessage", "FormField",
+        "Disclosure", "Overlay", "OrdinaryDataChart",
+    ):
+        if alias not in reusable or alias not in reusable_plate:
+            fail(f"Reusable alias is not traceable through document 63: {alias}")
+
+    fragment_source = function_source(generator, "draw_schematic_tag") + "".join(
+        function_source(generator, name)
+        for name in (
+            "draw_fragment_discovery", "draw_fragment_music_detail",
+            "draw_fragment_dense_ranking", "draw_fragment_sync_recovery",
+        )
+    )
+    if re.search(r"chart viewer|chart editor|renderer|webgl|pixi", fragment_source, re.I):
+        fail("Representative fragments crossed the locked viewer/editor boundary")
+    for phrase in ("SCHEMATIC", "NOT FINAL PAGE"):
+        if phrase not in fragment_source:
+            fail(f"Representative-fragment status is missing: {phrase}")
 
     chroma = re.findall(r"#[0-9A-Fa-f]{6}", function_source(generator, "draw_cover"))
     if any(value.upper() not in {"#FFFFFF", "#111111", "#1B1B1B", "#444444", "#AFAFAF", "#505050", "#292929", "#C6C6C6", "#717171"} for value in chroma):
@@ -147,5 +253,5 @@ if __name__ == "__main__":
     try:
         main()
     except Exception as error:
-        print(f"visual-core validation: FAIL — {error}", file=sys.stderr)
+        print(f"visual-core validation: FAIL - {error}", file=sys.stderr)
         raise

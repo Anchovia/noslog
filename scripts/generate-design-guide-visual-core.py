@@ -178,7 +178,7 @@ def page_header(c: canvas.Canvas, page: int, section: str, title: str, subtitle:
     c.setFillColor(hex_color("#FFFFFF"))
     c.rect(0, 0, PAGE_W, PAGE_H, fill=1, stroke=0)
     text(c, MARGIN, PAGE_H - 13 * mm, "NOSLOG / DESIGN SYSTEM", 7.2, "#505050")
-    right_text(c, PAGE_W - MARGIN, PAGE_H - 13 * mm, f"VISUAL CORE REVIEW  /  {page:02d}", 7.2)
+    right_text(c, PAGE_W - MARGIN, PAGE_H - 13 * mm, f"VISUAL SYSTEM REVIEW  /  {page:02d}", 7.2)
     c.setStrokeColor(hex_color("#E1E1E1"))
     c.setLineWidth(0.6)
     c.line(MARGIN, PAGE_H - 16 * mm, PAGE_W - MARGIN, PAGE_H - 16 * mm)
@@ -217,8 +217,8 @@ def draw_cover(c: canvas.Canvas) -> None:
         c.line(16 * mm, y, 22 * mm, y)
         text(c, 26 * mm, y - 1.8 * mm, label, 5.8, "#AFAFAF")
     text(c, 66 * mm, PAGE_H - 44 * mm, "NOSLOG / DESIGN SYSTEM", 8, "#505050")
-    text(c, 66 * mm, PAGE_H - 69 * mm, "Visual Core", 32, "#292929")
-    text(c, 66 * mm, PAGE_H - 83 * mm, "Review 01", 32, "#292929")
+    text(c, 66 * mm, PAGE_H - 69 * mm, "Visual System", 32, "#292929")
+    text(c, 66 * mm, PAGE_H - 83 * mm, "Review 02", 32, "#292929")
     c.setStrokeColor(hex_color("#C6C6C6"))
     c.setLineWidth(0.8)
     c.line(66 * mm, PAGE_H - 94 * mm, PAGE_W - MARGIN, PAGE_H - 94 * mm)
@@ -231,7 +231,7 @@ def draw_cover(c: canvas.Canvas) -> None:
     y -= 8 * mm
     for label, value in [
         ("STATUS", "Proposed for review"),
-        ("SCOPE", "Typography · color · material · iconography"),
+        ("SCOPE", "Foundation · motion · data · responsive · UI anatomy"),
         ("AUTHORITY", "Documents 24 and 63"),
         ("EXCLUDED", "Final screens · chart viewer/editor"),
     ]:
@@ -245,7 +245,7 @@ def draw_cover(c: canvas.Canvas) -> None:
 def draw_typography(c: canvas.Canvas) -> None:
     y = page_header(
         c, 2, "Foundation / Typography", "One family, explicit roles",
-        "The visual hierarchy comes from approved size, line-height, weight, and role boundaries—not decorative tracking or page-local invention.",
+        "The visual hierarchy comes from approved size, line-height, weight, and role boundaries - not decorative tracking or page-local invention.",
     )
     roles = [
         ("DISPLAY", "Archive without noise", "40 / 48 · 700", 40, 700),
@@ -568,7 +568,7 @@ def draw_iconography(c: canvas.Canvas) -> None:
     icon_chevron(c, MARGIN + 5 * mm, y - 29.3 * mm, 20 * CSS_PX)
     text(c, MARGIN + 15 * mm, y - 28.5 * mm, "Details", 8.5, "#292929")
     text(c, MARGIN + 65 * mm, y - 24 * mm, "Wayfinding", 8, "#292929")
-    text(c, MARGIN + 65 * mm, y - 31 * mm, "Icon supports—not replaces—the label", 7, "#717171")
+    text(c, MARGIN + 65 * mm, y - 31 * mm, "Icon supports - not replaces - the label", 7, "#717171")
     footer(c)
     c.showPage()
 
@@ -621,16 +621,620 @@ def draw_dos_donts(c: canvas.Canvas) -> None:
     c.showPage()
 
 
+def draw_motion_curve(c: canvas.Canvas, x: float, y: float, w: float, h: float,
+                      controls: tuple[float, float, float, float], label: str,
+                      token: str) -> None:
+    c.setFillColor(hex_color("#F8F8F8"))
+    c.setStrokeColor(hex_color("#DADADA"))
+    c.roundRect(x, y, w, h, 6, fill=1, stroke=1)
+    gx = x + 7 * mm
+    gy = y + 10 * mm
+    gw = w - 14 * mm
+    gh = h - 23 * mm
+    c.setStrokeColor(hex_color("#C6C6C6"))
+    c.setLineWidth(0.6)
+    c.line(gx, gy, gx + gw, gy)
+    c.line(gx, gy, gx, gy + gh)
+    x1, y1, x2, y2 = controls
+    path = c.beginPath()
+    path.moveTo(gx, gy)
+    path.curveTo(gx + x1 * gw, gy + y1 * gh, gx + x2 * gw, gy + y2 * gh, gx + gw, gy + gh)
+    c.setStrokeColor(hex_color("#292929"))
+    c.setLineWidth(1.4)
+    c.drawPath(path, fill=0, stroke=1)
+    text(c, x + 5 * mm, y + h - 7 * mm, label, 7.7, "#292929", weight=600)
+    text(c, x + 5 * mm, y + 3.5 * mm, token, 5.8, "#717171", mono=True)
+
+
+def draw_motion(c: canvas.Canvas) -> None:
+    y = page_header(
+        c, 10, "Foundation / Motion", "Time communicates role, not spectacle",
+        "MO-02 uses the published Atlassian duration ladder and cubic-bezier curves. Immediate semantics are never delayed by animation.",
+    )
+    text(c, MARGIN, y, "DURATION ROLES - EXACT TOKENS", 6.7, "#717171")
+    y -= 17 * mm
+    line_x = MARGIN + 5 * mm
+    line_w = CONTENT_W - 10 * mm
+    c.setStrokeColor(hex_color("#C6C6C6"))
+    c.setLineWidth(1)
+    c.line(line_x, y, line_x + line_w, y)
+    durations = [
+        (0, "0ms", "Immediate state"),
+        (50, "50ms", "Routine hover"),
+        (100, "100ms", "Press / quick exit"),
+        (150, "150ms", "Selection / small enter"),
+        (200, "200ms", "Modal / large exit"),
+        (250, "250ms", "Modal entrance"),
+        (400, "400ms", "Proven ceiling"),
+    ]
+    for idx, (duration, shown, role) in enumerate(durations):
+        x = line_x + duration / 400 * line_w
+        c.setFillColor(hex_color("#292929"))
+        c.circle(x, y, 1.7 * mm, fill=1, stroke=0)
+        anchor = x
+        if idx == 0:
+            anchor = x - 1 * mm
+        elif idx == len(durations) - 1:
+            anchor = x - 18 * mm
+        text(c, anchor, y - 8 * mm, shown, 6.2, "#292929", mono=True, weight=600)
+        if idx % 2 == 0:
+            text(c, anchor, y - 14 * mm, role, 5.6, "#717171")
+        else:
+            text(c, anchor, y + 7 * mm, role, 5.6, "#717171")
+    y -= 35 * mm
+    text(c, MARGIN, y, "EASING CURVES - EXACT NORMALIZED CONTROL POINTS", 6.7, "#717171")
+    y -= 55 * mm
+    gap = 5 * mm
+    card_w = (CONTENT_W - gap) / 2
+    draw_motion_curve(c, MARGIN, y, card_w, 45 * mm, (.4, 1, .6, 1),
+                      "Out practical", "cubic-bezier(.4,1,.6,1)")
+    draw_motion_curve(c, MARGIN + card_w + gap, y, card_w, 45 * mm, (.6, 0, .8, .6),
+                      "In practical", "cubic-bezier(.6,0,.8,.6)")
+    y -= 51 * mm
+    draw_motion_curve(c, MARGIN, y, card_w, 45 * mm, (0, .4, 0, 1),
+                      "Out bold", "cubic-bezier(0,.4,0,1)")
+    draw_motion_curve(c, MARGIN + card_w + gap, y, card_w, 45 * mm, (.4, 0, 0, 1),
+                      "In-out bold", "cubic-bezier(.4,0,0,1)")
+    text(c, MARGIN, y - 8 * mm, "Unassigned: 600ms, bounce, stagger, celebration, parallax, and page choreography.", 6.6, "#717171")
+    footer(c)
+    c.showPage()
+
+
+def draw_reduced_motion(c: canvas.Canvas) -> None:
+    y = page_header(
+        c, 11, "Foundation / Reduced motion", "Remove movement; preserve meaning",
+        "Reduced mode is an immediate semantic replacement, not a slower animation. Spatial and continuous motion disappear while state, focus, and recovery remain explicit.",
+    )
+    text(c, MARGIN, y, "STANDARD MOTION", 6.7, "#717171")
+    text(c, MARGIN + 91 * mm, y, "PREFERS-REDUCED-MOTION: REDUCE", 6.7, "#717171")
+    rows = [
+        ("Popup", "150ms enter from trigger", "0ms placement at destination", "Translate / scale removed"),
+        ("Selection and error", "150ms highlight; error is 0ms", "Immediate state and message", "No delayed semantics"),
+        ("Busy", "Spinner plus persistent busy text", "Static cue + persistent busy text", "aria-busy remains true"),
+    ]
+    top = y - 9 * mm
+    col_w = (CONTENT_W - 8 * mm) / 2
+    for idx, (name, standard, reduced, note) in enumerate(rows):
+        yy = top - idx * 55 * mm
+        for col, body in enumerate((standard, reduced)):
+            x = MARGIN + col * (col_w + 8 * mm)
+            c.setFillColor(hex_color("#F8F8F8"))
+            c.setStrokeColor(hex_color("#DADADA"))
+            c.roundRect(x, yy - 44 * mm, col_w, 42 * mm, 8, fill=1, stroke=1)
+            text(c, x + 6 * mm, yy - 11 * mm, name, 8.5, "#292929", weight=600)
+            if name == "Popup":
+                c.setFillColor(hex_color("#222222" if col == 0 else "#292929"))
+                c.roundRect(x + 6 * mm + col * 4 * mm, yy - 31 * mm, 30 * mm, 13 * mm, 6, fill=1, stroke=0)
+                text(c, x + 11 * mm + col * 4 * mm, yy - 26 * mm, "Options", 6.6, "#FFFFFF")
+            elif name == "Selection and error":
+                c.setFillColor(hex_color("#E9E9E9"))
+                c.roundRect(x + 6 * mm, yy - 31 * mm, 34 * mm, 12 * mm, 4, fill=1, stroke=0)
+                text(c, x + 11 * mm, yy - 26 * mm, "Selected", 6.6, "#292929")
+                text(c, x + 45 * mm, yy - 26 * mm, "Error shown", 6.6, "#AE2E24", weight=600)
+            else:
+                c.setStrokeColor(hex_color("#717171"))
+                c.setLineWidth(1.5)
+                c.circle(x + 12 * mm, yy - 25 * mm, 4 * mm, fill=0, stroke=1)
+                text(c, x + 22 * mm, yy - 27 * mm, "Syncing records...", 7, "#292929")
+            text(c, x + 6 * mm, yy - 39 * mm, body, 6.2, "#505050")
+        text(c, MARGIN + 91 * mm, yy - 49 * mm, note, 6.1, "#717171")
+    c.setFillColor(hex_color("#111111"))
+    c.roundRect(MARGIN, 25 * mm, CONTENT_W, 28 * mm, 8, fill=1, stroke=0)
+    text(c, MARGIN + 8 * mm, 42 * mm, "IMMEDIATE STATE", 7, "#AFAFAF", weight=600)
+    text(c, MARGIN + 8 * mm, 32 * mm, "Focus, error, critical status, completion, and availability never wait for motion.", 9, "#DBDBDB")
+    footer(c)
+    c.showPage()
+
+
+def draw_chart_plot(c: canvas.Canvas, x: float, y: float, w: float, h: float,
+                    compact: bool = False) -> None:
+    left = x + (11 if compact else 15) * mm
+    bottom = y + 10 * mm
+    plot_w = w - (17 if compact else 23) * mm
+    plot_h = h - 19 * mm
+    c.setStrokeColor(hex_color("#DADADA"))
+    c.setLineWidth(0.6)
+    for step in range(4):
+        yy = bottom + step * plot_h / 3
+        c.line(left, yy, left + plot_w, yy)
+        text(c, x + 2 * mm, yy - 1.7 * mm, f"{11 + step}M", 5.4, "#717171", mono=True)
+    c.setStrokeColor(hex_color("#717171"))
+    c.line(left, bottom, left, bottom + plot_h)
+    c.line(left, bottom, left + plot_w, bottom)
+    personal = [.18, .42, .38, .70, .63, .86]
+    benchmark = [.28, .34, .47, .55, .60, .68]
+    for series, color_value, dashed, filled in (
+        (personal, "#168EFF", False, False),
+        (benchmark, "#C87B00", True, True),
+    ):
+        c.setStrokeColor(hex_color(color_value))
+        c.setLineWidth(2 * CSS_PX)
+        if dashed:
+            c.setDash(4, 3)
+        points = []
+        for idx, value in enumerate(series):
+            px = left + idx * plot_w / (len(series) - 1)
+            py = bottom + value * plot_h
+            points.append((px, py))
+        for first, second in zip(points, points[1:]):
+            c.line(first[0], first[1], second[0], second[1])
+        c.setDash()
+        for px, py in points:
+            c.setFillColor(hex_color(color_value) if filled else hex_color("#FFFFFF"))
+            c.setStrokeColor(hex_color(color_value))
+            c.circle(px, py, 1.8 * mm, fill=1, stroke=1)
+    focus_x = left + 4 * plot_w / 5
+    c.setStrokeColor(hex_color("#717171"))
+    c.setDash(2, 2)
+    c.line(focus_x, bottom, focus_x, bottom + plot_h)
+    c.setDash()
+    text(c, focus_x - 12 * mm, bottom + plot_h + 3 * mm, "13,642,180", 6.1, "#292929", mono=True, weight=600)
+
+
+def draw_data_visualization(c: canvas.Canvas) -> None:
+    y = page_header(
+        c, 12, "Foundation / Data visualization", "Primer anatomy, NosLog meaning",
+        "DV-05 adopts Primer chart anatomy and interaction responsibilities while LD-03, JD-02, and DU-01 retain ownership of product colors.",
+    )
+    chart_y = y - 122 * mm
+    c.setFillColor(hex_color("#FFFFFF"))
+    c.setStrokeColor(hex_color("#C6C6C6"))
+    c.roundRect(MARGIN, chart_y, CONTENT_W, 118 * mm, 8, fill=1, stroke=1)
+    text(c, MARGIN + 8 * mm, chart_y + 105 * mm, "Recent score trend", 13, "#292929", weight=600)
+    text(c, MARGIN + 8 * mm, chart_y + 96 * mm, "Basic / Expert - last 6 plays - score", 7.5, "#505050")
+    c.setFillColor(hex_color("#F8F8F8"))
+    c.roundRect(MARGIN + CONTENT_W - 38 * mm, chart_y + 96 * mm, 30 * mm, 11 * mm, 4, fill=1, stroke=0)
+    text(c, MARGIN + CONTENT_W - 32 * mm, chart_y + 100 * mm, "View data", 7, "#292929", weight=500)
+    legend_y = chart_y + 84 * mm
+    c.setStrokeColor(hex_color("#168EFF"))
+    c.setLineWidth(2 * CSS_PX)
+    c.line(MARGIN + 8 * mm, legend_y, MARGIN + 23 * mm, legend_y)
+    c.setFillColor(hex_color("#FFFFFF"))
+    c.circle(MARGIN + 15.5 * mm, legend_y, 1.8 * mm, fill=1, stroke=1)
+    text(c, MARGIN + 27 * mm, legend_y - 2 * mm, "Personal", 6.8, "#292929")
+    c.setStrokeColor(hex_color("#C87B00"))
+    c.setDash(4, 3)
+    c.line(MARGIN + 58 * mm, legend_y, MARGIN + 73 * mm, legend_y)
+    c.setDash()
+    c.setFillColor(hex_color("#C87B00"))
+    c.circle(MARGIN + 65.5 * mm, legend_y, 1.8 * mm, fill=1, stroke=0)
+    text(c, MARGIN + 77 * mm, legend_y - 2 * mm, "Top 10% benchmark", 6.8, "#292929")
+    draw_chart_plot(c, MARGIN + 7 * mm, chart_y + 9 * mm, CONTENT_W - 14 * mm, 68 * mm)
+    callouts = [
+        ("01", "Visible title", "Measure is identifiable without interaction."),
+        ("02", "Subtitle context", "Dimension, range, and unit remain visible."),
+        ("03", "Persistent legend", "Plot order, stroke, and marker differ."),
+        ("04", "Exact value", "Pointer, keyboard, and touch expose the same value."),
+    ]
+    y = chart_y - 10 * mm
+    for idx, (num, title_value, body) in enumerate(callouts):
+        x = MARGIN + (idx % 2) * (CONTENT_W / 2)
+        yy = y - (idx // 2) * 19 * mm
+        text(c, x, yy, num, 6.4, "#717171", mono=True)
+        text(c, x + 10 * mm, yy, title_value, 7.2, "#292929", weight=600)
+        text(c, x + 10 * mm, yy - 6 * mm, body, 6.1, "#505050")
+    footer(c)
+    c.showPage()
+
+
+def draw_data_equivalence(c: canvas.Canvas) -> None:
+    y = page_header(
+        c, 13, "Foundation / Data access", "One dataset, equivalent paths",
+        "The chart is never the only source of meaning. Visible conclusions, exact-value interaction, and the active same-data semantic table remain connected.",
+    )
+    col_w = (CONTENT_W - 8 * mm) / 2
+    c.setFillColor(hex_color("#F8F8F8"))
+    c.roundRect(MARGIN, y - 92 * mm, col_w, 86 * mm, 8, fill=1, stroke=0)
+    text(c, MARGIN + 6 * mm, y - 17 * mm, "Current: 13,642,180 (+118,420)", 8, "#292929", weight=600)
+    draw_chart_plot(c, MARGIN + 3 * mm, y - 83 * mm, col_w - 6 * mm, 58 * mm, compact=True)
+    tx = MARGIN + col_w + 8 * mm
+    c.setFillColor(hex_color("#FFFFFF"))
+    c.setStrokeColor(hex_color("#C6C6C6"))
+    c.roundRect(tx, y - 92 * mm, col_w, 86 * mm, 8, fill=1, stroke=1)
+    text(c, tx + 6 * mm, y - 17 * mm, "Same-data semantic table", 8, "#292929", weight=600)
+    rows = [
+        ("Play", "Personal", "Benchmark"),
+        ("04 Aug", "13,285,220", "12,900,000"),
+        ("07 Aug", "13,523,760", "13,100,000"),
+        ("10 Aug", "13,642,180", "13,240,000"),
+    ]
+    for row, values in enumerate(rows):
+        yy = y - (29 + row * 12) * mm
+        if row == 0:
+            c.setFillColor(hex_color("#F8F8F8"))
+            c.rect(tx + 5 * mm, yy - 5 * mm, col_w - 10 * mm, 10 * mm, fill=1, stroke=0)
+        for col, value in enumerate(values):
+            text(c, tx + (6 + col * 24) * mm, yy, value, 5.9, "#292929", mono=col > 0, weight=600 if row == 0 else 400)
+        c.setStrokeColor(hex_color("#E1E1E1"))
+        c.line(tx + 5 * mm, yy - 6 * mm, tx + col_w - 5 * mm, yy - 6 * mm)
+    text(c, tx + 6 * mm, y - 82 * mm, "CSV optional - never replaces the table", 6.2, "#717171")
+    y -= 108 * mm
+    text(c, MARGIN, y, "INPUT EQUIVALENCE", 6.7, "#717171")
+    rules = [
+        ("Pointer / touch", "Dimension + series + Exact value + unit"),
+        ("Keyboard", "Arrow keys move points; Home / End reach series ends"),
+        ("Narrow", "Legend and actions recompose; no page overflow"),
+        ("Contained table", "Labeled focusable scroller only when inherently wide"),
+    ]
+    for idx, (label, body) in enumerate(rules):
+        yy = y - 14 * mm - idx * 18 * mm
+        c.setFillColor(hex_color("#F8F8F8"))
+        c.roundRect(MARGIN, yy - 8 * mm, CONTENT_W, 13 * mm, 5, fill=1, stroke=0)
+        text(c, MARGIN + 6 * mm, yy - 2 * mm, label, 7, "#292929", weight=600)
+        text(c, MARGIN + 45 * mm, yy - 2 * mm, body, 6.5, "#505050")
+    footer(c)
+    c.showPage()
+
+
+def draw_scaled_grid(c: canvas.Canvas, x: float, y: float, w: float, h: float,
+                     label: str, tracks: int, gutter_label: str, margin_label: str) -> None:
+    c.setFillColor(hex_color("#F8F8F8"))
+    c.setStrokeColor(hex_color("#DADADA"))
+    c.roundRect(x, y, w, h, 6, fill=1, stroke=1)
+    inner_x = x + 7 * mm
+    inner_w = w - 14 * mm
+    gap = 1.2 * mm
+    track_w = (inner_w - (tracks - 1) * gap) / tracks
+    for idx in range(tracks):
+        c.setFillColor(hex_color("#E9E9E9"))
+        c.rect(inner_x + idx * (track_w + gap), y + 11 * mm, track_w, h - 24 * mm, fill=1, stroke=0)
+    text(c, x + 5 * mm, y + h - 7 * mm, label, 7.4, "#292929", weight=600)
+    text(c, x + 5 * mm, y + 4 * mm, f"{tracks} tracks - {gutter_label} - {margin_label}", 5.8, "#717171", mono=True)
+
+
+def draw_responsive_grid(c: canvas.Canvas) -> None:
+    y = page_header(
+        c, 14, "Foundation / Responsive grid", "Container width chooses the tier",
+        "These are scaled diagrams. The numeric labels are normative; the miniature physical widths are editorial notation only.",
+    )
+    gap = 7 * mm
+    col_w = (CONTENT_W - gap) / 2
+    draw_scaled_grid(c, MARGIN, y - 63 * mm, col_w, 58 * mm, "320px compact validation", 4, "12px gutter", "16px margin")
+    draw_scaled_grid(c, MARGIN + col_w + gap, y - 63 * mm, col_w, 58 * mm, "390px representative", 4, "12px gutter", "16px margin")
+    draw_scaled_grid(c, MARGIN, y - 130 * mm, col_w, 58 * mm, "672px intermediate entry", 8, "16px gutter", "24px margin")
+    draw_scaled_grid(c, MARGIN + col_w + gap, y - 130 * mm, col_w, 58 * mm, "1056px wide entry", 12, "16px gutter", "32px margin")
+    y -= 145 * mm
+    rules = [
+        ("Compact", "Below 672px - reflow at 320px without page-level horizontal scrolling."),
+        ("Intermediate", "672-1055px - use measured content pressure, not a device label."),
+        ("Wide", "1056px+ - use space for comparison, analysis, or parallel reading."),
+        ("Nested", "Component recomposition uses its own measured failure point and container query."),
+    ]
+    for idx, (name, body) in enumerate(rules):
+        yy = y - idx * 16 * mm
+        text(c, MARGIN, yy, name, 7, "#292929", weight=600)
+        text(c, MARGIN + 31 * mm, yy, body, 6.5, "#505050")
+    footer(c)
+    c.showPage()
+
+
+def draw_reflow_block(c: canvas.Canvas, x: float, y: float, w: float, label: str,
+                      columns: int) -> None:
+    c.setFillColor(hex_color("#FFFFFF"))
+    c.setStrokeColor(hex_color("#C6C6C6"))
+    c.roundRect(x, y, w, 83 * mm, 7, fill=1, stroke=1)
+    text(c, x + 5 * mm, y + 73 * mm, label, 7, "#292929", weight=600)
+    blocks = [
+        ("1", "Search"), ("2", "Result status"), ("3", "Results"), ("4", "Filters"),
+    ]
+    if columns == 1:
+        for idx, (num, name) in enumerate(blocks):
+            yy = y + 58 * mm - idx * 13 * mm
+            c.setFillColor(hex_color("#F8F8F8"))
+            c.roundRect(x + 5 * mm, yy, w - 10 * mm, 9 * mm, 4, fill=1, stroke=0)
+            text(c, x + 8 * mm, yy + 2.5 * mm, f"{num}  {name}", 5.8, "#292929")
+    else:
+        left_w = (w - 15 * mm) * .64
+        for idx, (num, name) in enumerate(blocks[:3]):
+            yy = y + 58 * mm - idx * 17 * mm
+            c.setFillColor(hex_color("#F8F8F8"))
+            c.roundRect(x + 5 * mm, yy, left_w, 12 * mm, 4, fill=1, stroke=0)
+            text(c, x + 8 * mm, yy + 4 * mm, f"{num}  {name}", 5.8, "#292929")
+        c.setFillColor(hex_color("#F8F8F8"))
+        c.roundRect(x + 10 * mm + left_w, y + 24 * mm, w - left_w - 15 * mm, 46 * mm, 4, fill=1, stroke=0)
+        text(c, x + 13 * mm + left_w, y + 61 * mm, "4  Filters", 5.8, "#292929")
+    text(c, x + 5 * mm, y + 5 * mm, "Logical source order stays 1 -> 2 -> 3 -> 4", 5.6, "#717171")
+
+
+def draw_responsive_recomposition(c: canvas.Canvas) -> None:
+    y = page_header(
+        c, 15, "Foundation / Responsive adaptation", "Recompose after content fails",
+        "One logical source and focus order survives every composition. A layout transition needs a measured content-fit reason, not a framework breakpoint.",
+    )
+    gap = 6 * mm
+    narrow_w = 52 * mm
+    wide_w = CONTENT_W - 2 * narrow_w - 2 * gap
+    draw_reflow_block(c, MARGIN, y - 93 * mm, narrow_w, "320px", 1)
+    draw_reflow_block(c, MARGIN + narrow_w + gap, y - 93 * mm, narrow_w, "390px", 1)
+    draw_reflow_block(c, MARGIN + 2 * (narrow_w + gap), y - 93 * mm, wide_w, "Measured wide region", 2)
+    y -= 110 * mm
+    checks = [
+        ("Content-fit trigger", "Longest KO/JA/EN labels, controls, tables, and cards determine transition."),
+        ("Text growth", "200% text and 400% zoom keep required content and focus visible."),
+        ("Two-dimensional data", "Only inherently wide data receives a labeled contained scroller."),
+        ("Extra wide space", "Use for comparison or parallel reading; do not enlarge a phone column."),
+    ]
+    for idx, (title_value, body) in enumerate(checks):
+        yy = y - idx * 21 * mm
+        c.setFillColor(hex_color("#F8F8F8"))
+        c.roundRect(MARGIN, yy - 12 * mm, CONTENT_W, 16 * mm, 5, fill=1, stroke=0)
+        text(c, MARGIN + 6 * mm, yy - 3 * mm, title_value, 7, "#292929", weight=600)
+        text(c, MARGIN + 45 * mm, yy - 3 * mm, body, 6.4, "#505050")
+    footer(c)
+    c.showPage()
+
+
+def draw_alias_chip(c: canvas.Canvas, x: float, y: float, value: str, width: float) -> None:
+    c.setFillColor(hex_color("#FFFFFF"))
+    c.setStrokeColor(hex_color("#C6C6C6"))
+    c.roundRect(x, y, width, 8 * mm, 4, fill=1, stroke=1)
+    text(c, x + 3 * mm, y + 2.5 * mm, value, 5.9, "#292929", mono=True)
+
+
+def draw_reusable_map(c: canvas.Canvas) -> None:
+    y = page_header(
+        c, 16, "Reusable ordinary UI", "Aliases name responsibility, not appearance",
+        "FPR-04 stays lean. Each alias reuses behavior only where responsibility is genuinely shared and may not invent color, radius, shadow, or motion.",
+    )
+    groups = [
+        ("Shell and navigation", ["AppHeader", "Overlay", "Disclosure"]),
+        ("Search and refinement", ["SearchField", "ContentScopeSwitch", "FilterSortControl", "ViewModeSwitch"]),
+        ("Entity and result", ["ResultCollection", "MusicEntityHeader", "DifficultySelector", "MetricSummary"]),
+        ("Exact dense data", ["DataTable", "Pagination", "OrdinaryDataChart"]),
+        ("Forms and feedback", ["FormField", "StatusMessage"]),
+    ]
+    for idx, (group, aliases) in enumerate(groups):
+        yy = y - idx * 39 * mm
+        c.setFillColor(hex_color("#F8F8F8"))
+        c.roundRect(MARGIN, yy - 31 * mm, CONTENT_W, 28 * mm, 7, fill=1, stroke=0)
+        text(c, MARGIN + 6 * mm, yy - 12 * mm, group, 8, "#292929", weight=600)
+        x = MARGIN + 52 * mm
+        available = CONTENT_W - 58 * mm
+        chip_gap = 3 * mm
+        chip_w = (available - (len(aliases) - 1) * chip_gap) / len(aliases)
+        for alias in aliases:
+            draw_alias_chip(c, x, yy - 20 * mm, alias, chip_w)
+            x += chip_w + chip_gap
+    footer(c)
+    c.showPage()
+
+
+def draw_reusable_anatomy(c: canvas.Canvas) -> None:
+    y = page_header(
+        c, 17, "Reusable ordinary UI", "Anatomy protects the contract",
+        "These diagrams identify required parts and semantics. They do not approve one final visual component or a universal polymorphic overlay.",
+    )
+    col_w = (CONTENT_W - 8 * mm) / 2
+    c.setFillColor(hex_color("#F8F8F8"))
+    c.roundRect(MARGIN, y - 78 * mm, col_w, 72 * mm, 8, fill=1, stroke=0)
+    text(c, MARGIN + 6 * mm, y - 17 * mm, "FormField", 9, "#292929", weight=600)
+    text(c, MARGIN + 6 * mm, y - 28 * mm, "Public name", 7, "#292929", weight=500)
+    c.setFillColor(hex_color("#FFFFFF"))
+    c.setStrokeColor(hex_color("#C9372C"))
+    c.roundRect(MARGIN + 6 * mm, y - 47 * mm, col_w - 12 * mm, 13 * mm, 4 * CSS_PX, fill=1, stroke=1)
+    text(c, MARGIN + 10 * mm, y - 42 * mm, "A very long public name", 7.3, "#292929")
+    text(c, MARGIN + 6 * mm, y - 56 * mm, "Public name must be 20 characters or fewer.", 6.4, "#AE2E24", weight=600)
+    text(c, MARGIN + 6 * mm, y - 66 * mm, "Label - value - constraint - error association - preserved input", 5.7, "#717171")
+
+    ox = MARGIN + col_w + 8 * mm
+    c.setFillColor(hex_color("#F8F8F8"))
+    c.roundRect(ox, y - 78 * mm, col_w, 72 * mm, 8, fill=1, stroke=0)
+    text(c, ox + 6 * mm, y - 17 * mm, "Overlay family", 9, "#292929", weight=600)
+    overlays = [("Popover", "anchored context"), ("Menu", "action choice"), ("Dialog", "modal task"), ("Navigation", "new destination")]
+    for idx, (kind, role) in enumerate(overlays):
+        yy = y - (31 + idx * 10) * mm
+        text(c, ox + 6 * mm, yy, kind, 6.7, "#292929", weight=600)
+        text(c, ox + 30 * mm, yy, role, 6.3, "#505050")
+    text(c, ox + 6 * mm, y - 66 * mm, "Choose semantics, focus, dismissal, geometry, and MO-02 by role.", 5.7, "#717171")
+
+    y -= 94 * mm
+    c.setFillColor(hex_color("#FFFFFF"))
+    c.setStrokeColor(hex_color("#C6C6C6"))
+    c.roundRect(MARGIN, y - 76 * mm, CONTENT_W, 70 * mm, 8, fill=1, stroke=1)
+    text(c, MARGIN + 7 * mm, y - 18 * mm, "OrdinaryDataChart + DataTable", 9, "#292929", weight=600)
+    draw_chart_plot(c, MARGIN + 5 * mm, y - 67 * mm, 75 * mm, 42 * mm, compact=True)
+    text(c, MARGIN + 87 * mm, y - 28 * mm, "DataTable", 7, "#292929", weight=600)
+    for idx, label in enumerate(["Headers and row identity", "Exact values and units", "Current-user context", "Responsive priority", "Same data as chart"]):
+        text(c, MARGIN + 87 * mm, y - (39 + idx * 7) * mm, f"{idx + 1}. {label}", 6.4, "#505050")
+    footer(c)
+    c.showPage()
+
+
+def draw_schematic_tag(c: canvas.Canvas, x: float, y: float) -> None:
+    c.setFillColor(hex_color("#292929"))
+    c.roundRect(x, y, 38 * mm, 8 * mm, 4, fill=1, stroke=0)
+    text(c, x + 4 * mm, y + 2.5 * mm, "SCHEMATIC - NOT FINAL PAGE", 5.6, "#FFFFFF", weight=600)
+
+
+def draw_mobile_fragment_shell(c: canvas.Canvas, x: float, y: float, w: float, h: float,
+                               label: str) -> None:
+    c.setFillColor(hex_color("#FFFFFF"))
+    c.setStrokeColor(hex_color("#C6C6C6"))
+    c.roundRect(x, y, w, h, 9, fill=1, stroke=1)
+    c.setFillColor(hex_color("#F8F8F8"))
+    c.roundRect(x + 4 * mm, y + h - 15 * mm, w - 8 * mm, 9 * mm, 4, fill=1, stroke=0)
+    text(c, x + 7 * mm, y + h - 12 * mm, "NosLog", 6.5, "#292929", weight=700)
+    right_text(c, x + w - 7 * mm, y + h - 12 * mm, label, 5.7, "#717171", mono=True)
+
+
+def draw_fragment_discovery(c: canvas.Canvas) -> None:
+    y = page_header(
+        c, 18, "Representative fragment / Discovery", "Search, commit status, then scan",
+        "A controlled ordinary-UI fragment validates hierarchy and responsibilities. It is not a final Music page composition or a downstream visual target.",
+    )
+    draw_schematic_tag(c, MARGIN, y - 3 * mm)
+    shell_y = 31 * mm
+    gap = 9 * mm
+    shell_w = (CONTENT_W - gap) / 2
+    shell_h = y - 45 * mm
+    for idx, width_label in enumerate(("390 CSS px", "scaled 320 CSS px / 200% text")):
+        x = MARGIN + idx * (shell_w + gap)
+        draw_mobile_fragment_shell(c, x, shell_y, shell_w, shell_h, width_label)
+        text(c, x + 7 * mm, shell_y + shell_h - 28 * mm, "Find music", 12 if idx == 0 else 13, "#292929", weight=700)
+        c.setFillColor(hex_color("#FFFFFF"))
+        c.setStrokeColor(hex_color("#C6C6C6"))
+        c.roundRect(x + 7 * mm, shell_y + shell_h - 48 * mm, shell_w - 14 * mm, 13 * mm, 4 * CSS_PX, fill=1, stroke=1)
+        text(c, x + 11 * mm, shell_y + shell_h - 43 * mm, "Search title or artist", 6.5 if idx == 0 else 7.5, "#505050")
+        text(c, x + 7 * mm, shell_y + shell_h - 59 * mm, "128 results for 'NOSTALGIA'", 6.2 if idx == 0 else 7.2, "#505050")
+        c.setFillColor(hex_color("#F8F8F8"))
+        c.roundRect(x + shell_w - 29 * mm, shell_y + shell_h - 64 * mm, 22 * mm, 9 * mm, 4, fill=1, stroke=0)
+        text(c, x + shell_w - 25 * mm, shell_y + shell_h - 61 * mm, "Filters", 6, "#292929", weight=500)
+        for row, (title_value, difficulty, color_value) in enumerate([
+            ("Noah's song", "Expert 12", "#F03823"),
+            ("ネコノテ・カリタガリ", "Hard 9", "#E86A00"),
+            ("그랜드마스터 연습곡", "Normal 6", "#0BA45D"),
+        ]):
+            yy = shell_y + shell_h - (82 + row * (25 if idx == 0 else 31)) * mm
+            c.setStrokeColor(hex_color("#E1E1E1"))
+            c.line(x + 7 * mm, yy - 7 * mm, x + shell_w - 7 * mm, yy - 7 * mm)
+            text(c, x + 7 * mm, yy, title_value, 6.9 if idx == 0 else 8.1, "#292929", weight=600)
+            c.setFillColor(hex_color(color_value))
+            c.circle(x + 9 * mm, yy - 8 * mm, 1.4 * mm, fill=1, stroke=0)
+            text(c, x + 14 * mm, yy - 10 * mm, difficulty, 5.8 if idx == 0 else 7.0, "#505050")
+    footer(c)
+    c.showPage()
+
+
+def draw_fragment_music_detail(c: canvas.Canvas) -> None:
+    y = page_header(
+        c, 19, "Representative fragment / Music detail", "Identity first; analysis follows",
+        "The fragment exercises MusicEntityHeader, difficulty, neutral metrics, approved judgement markers, and ordinary data-chart anatomy only.",
+    )
+    draw_schematic_tag(c, MARGIN, y - 3 * mm)
+    panel_y = 30 * mm
+    panel_h = y - 45 * mm
+    c.setFillColor(hex_color("#FFFFFF"))
+    c.setStrokeColor(hex_color("#C6C6C6"))
+    c.roundRect(MARGIN, panel_y, CONTENT_W, panel_h, 8, fill=1, stroke=1)
+    text(c, MARGIN + 8 * mm, panel_y + panel_h - 18 * mm, "Noah's song", 16, "#292929", weight=700)
+    text(c, MARGIN + 8 * mm, panel_y + panel_h - 28 * mm, "Canon in the nostalgic rain", 7, "#505050")
+    for idx, (name, color_value) in enumerate([(n, l) for n, l, _ in DIFFICULTY]):
+        x = MARGIN + 8 * mm + idx * 31 * mm
+        c.setFillColor(hex_color("#F8F8F8"))
+        c.roundRect(x, panel_y + panel_h - 45 * mm, 27 * mm, 9 * mm, 4, fill=1, stroke=0)
+        c.setFillColor(hex_color(color_value))
+        c.circle(x + 4 * mm, panel_y + panel_h - 40.5 * mm, 1.3 * mm, fill=1, stroke=0)
+        text(c, x + 8 * mm, panel_y + panel_h - 43 * mm, name, 5.7, "#292929")
+    metrics = [("Best score", "13,642,180"), ("Grade", "S"), ("Rank", "128 / 8,402")]
+    for idx, (label, value) in enumerate(metrics):
+        x = MARGIN + 8 * mm + idx * 53 * mm
+        c.setFillColor(hex_color("#F8F8F8"))
+        c.roundRect(x, panel_y + panel_h - 74 * mm, 48 * mm, 20 * mm, 6, fill=1, stroke=0)
+        text(c, x + 5 * mm, panel_y + panel_h - 62 * mm, label, 5.8, "#505050")
+        text(c, x + 5 * mm, panel_y + panel_h - 70 * mm, value, 8.5, "#292929", mono=True, weight=600)
+    draw_chart_plot(c, MARGIN + 7 * mm, panel_y + 36 * mm, 104 * mm, 67 * mm)
+    text(c, MARGIN + 119 * mm, panel_y + 95 * mm, "Judgement breakdown", 7.5, "#292929", weight=600)
+    for idx, (name, light, _) in enumerate(JUDGEMENT):
+        yy = panel_y + 83 * mm - idx * 11 * mm
+        c.setFillColor(hex_color(light))
+        c.roundRect(MARGIN + 119 * mm, yy - 3 * mm, (35 - idx * 4) * mm, 4 * mm, 2, fill=1, stroke=0)
+        text(c, MARGIN + 158 * mm, yy - 2.5 * mm, name, 5.7, "#292929")
+    footer(c)
+    c.showPage()
+
+
+def draw_fragment_dense_ranking(c: canvas.Canvas) -> None:
+    y = page_header(
+        c, 20, "Representative fragment / Dense ranking", "Priority changes; relationships remain",
+        "The narrow view preserves row identity and exact values. The wide view adds comparison columns without duplicating the current user or flattening table semantics.",
+    )
+    draw_schematic_tag(c, MARGIN, y - 3 * mm)
+    top = y - 18 * mm
+    narrow_w = 63 * mm
+    wide_x = MARGIN + narrow_w + 9 * mm
+    wide_w = CONTENT_W - narrow_w - 9 * mm
+    for x, w, label in ((MARGIN, narrow_w, "320px priority"), (wide_x, wide_w, "Wide comparison")):
+        c.setFillColor(hex_color("#FFFFFF"))
+        c.setStrokeColor(hex_color("#C6C6C6"))
+        c.roundRect(x, 35 * mm, w, top - 35 * mm, 8, fill=1, stroke=1)
+        text(c, x + 6 * mm, top - 10 * mm, label, 7, "#292929", weight=600)
+        headers = ["Rank", "Player", "Rating"] if w == narrow_w else ["Rank", "Player", "Rating", "Best 70", "Region"]
+        column_x = [x + 6 * mm, x + 20 * mm, x + 46 * mm] if w == narrow_w else [x + 6 * mm, x + 22 * mm, x + 50 * mm, x + 72 * mm, x + 91 * mm]
+        hy = top - 25 * mm
+        c.setFillColor(hex_color("#F8F8F8"))
+        c.rect(x + 5 * mm, hy - 6 * mm, w - 10 * mm, 12 * mm, fill=1, stroke=0)
+        for cx, header in zip(column_x, headers):
+            text(c, cx, hy - 1 * mm, header, 5.6, "#505050", weight=600)
+        players = [("126", "pianist_a", "1,742"), ("127", "鍵盤奏者", "1,739"), ("128", "You", "1,736"), ("129", "very_long_name", "1,730"), ("130", "연주자", "1,728")]
+        for row, values in enumerate(players):
+            yy = hy - (18 + row * 17) * mm
+            if values[1] == "You":
+                c.setFillColor(hex_color("#E9E9E9"))
+                c.rect(x + 5 * mm, yy - 6 * mm, w - 10 * mm, 13 * mm, fill=1, stroke=0)
+            row_values = list(values) + (["1,704", "KR"] if w != narrow_w else [])
+            for cx, value in zip(column_x, row_values):
+                text(c, cx, yy, value, 5.8, "#292929", mono=value.replace(",", "").isdigit(), weight=600 if values[1] == "You" else 400)
+            c.setStrokeColor(hex_color("#E1E1E1"))
+            c.line(x + 5 * mm, yy - 7 * mm, x + w - 5 * mm, yy - 7 * mm)
+        text(c, x + 6 * mm, 44 * mm, "Exact values - semantic headers - current context", 5.6, "#717171")
+    footer(c)
+    c.showPage()
+
+
+def draw_fragment_sync_recovery(c: canvas.Canvas) -> None:
+    y = page_header(
+        c, 21, "Representative fragment / Data sync", "State and recovery stay explicit",
+        "This ordinary data-sync fragment tests loading, success, and recoverable failure with neutral message typography and approved Atlassian semantic chroma.",
+    )
+    draw_schematic_tag(c, MARGIN, y - 3 * mm)
+    states = [
+        ("Syncing", "#F8F8F8", "#717171", "Connecting local records...", "Static cue + aria-busy in reduced mode"),
+        ("128 records connected", "#EFFFD6", "#6A9A23", "Last updated just now", "Review imported records"),
+        ("Connection interrupted", "#FFECEB", "#C9372C", "Your existing records are unchanged.", "Try again"),
+    ]
+    y -= 20 * mm
+    for idx, (title_value, bg, marker, body, action) in enumerate(states):
+        yy = y - idx * 58 * mm
+        c.setFillColor(hex_color(bg))
+        c.roundRect(MARGIN, yy - 45 * mm, CONTENT_W, 40 * mm, 8, fill=1, stroke=0)
+        c.setFillColor(hex_color(marker))
+        c.circle(MARGIN + 10 * mm, yy - 20 * mm, 2.3 * mm, fill=1, stroke=0)
+        text(c, MARGIN + 18 * mm, yy - 17 * mm, title_value, 9.5, "#292929", weight=600)
+        text(c, MARGIN + 18 * mm, yy - 27 * mm, body, 7, "#292929")
+        if idx == 0:
+            c.setFillColor(hex_color("#E9E9E9"))
+            c.roundRect(MARGIN + CONTENT_W - 63 * mm, yy - 31 * mm, 54 * mm, 12 * mm, 4 * CSS_PX, fill=1, stroke=0)
+            text(c, MARGIN + CONTENT_W - 58 * mm, yy - 26.5 * mm, "REDUCED: static cue + aria-busy", 5.8, "#505050", weight=500)
+        else:
+            c.setFillColor(hex_color("#FFFFFF"))
+            c.setStrokeColor(hex_color("#C6C6C6"))
+            c.roundRect(MARGIN + CONTENT_W - 56 * mm, yy - 31 * mm, 47 * mm, 12 * mm, 4 * CSS_PX, fill=1, stroke=1)
+            text(c, MARGIN + CONTENT_W - 50 * mm, yy - 26.5 * mm, action, 6.4, "#292929", weight=500)
+        text(c, MARGIN + 18 * mm, yy - 37 * mm, "Named state - persistent copy - programmatic semantics - one recovery path", 5.8, "#505050")
+    footer(c)
+    c.showPage()
+
+
 def draw_review_gate(c: canvas.Canvas) -> None:
     y = page_header(
-        c, 10, "Review gate", "What approval of this draft means",
-        "Approval promotes a visual reading layer—not new Foundation values, component appearance, final pages, or production implementation.",
+        c, 22, "Review gate", "What approval of this draft means",
+        "Approval promotes a visual reading layer - not new Foundation values, component appearance, final pages, or production implementation.",
     )
     items = [
-        ("01", "Keep the editorial system", "White reading canvas, restrained dividers, compact metadata, and source-forward notation."),
-        ("02", "Integrate the visual core", "Place approved plates before the detailed specification appendix in the milestone PDF."),
-        ("03", "Build the remaining plates", "Motion, data-visualization anatomy, responsive diagrams, reusable UI anatomy, and representative page fragments."),
-        ("04", "Render and inspect", "Verify every page, bookmarks, links, overflow, multilingual text, and PDF metadata before release."),
+        ("01", "Verify exact sources", "Pinned Pretendard, Spectrum, Lucide, Atlassian, and Primer evidence must pass the fail-closed validator."),
+        ("02", "Approve the complete reading layer", "Visual core, motion, data access, responsive rules, reusable anatomy, and four controlled fragments are one review artifact."),
+        ("03", "Integrate only after approval", "Place approved plates before the detailed specification appendix in the milestone PDF without changing canonical Markdown."),
+        ("04", "Render the final milestone again", "Verify every integrated page, bookmarks, links, overflow, searchable text, and metadata before release."),
     ]
     for number, title_value, body in items:
         c.setFillColor(hex_color("#F8F8F8"))
@@ -653,15 +1257,15 @@ def build(output: Path) -> None:
         str(output),
         pagesize=A4,
         pageCompression=1,
-        title="NosLog 2.0 Visual Core Review",
+        title="NosLog 2.0 Visual System Review",
         author="NosLog",
-        subject="Proposed visual reading layer for approved Foundation v0.1",
+        subject="Proposed complete visual reading layer for approved Foundation v0.1",
         creator="NosLog visual-core review generator",
         keywords="NosLog, design system, visual core, Foundation v0.1",
     )
-    c.setTitle("NosLog 2.0 Visual Core Review")
+    c.setTitle("NosLog 2.0 Visual System Review")
     c.setAuthor("NosLog")
-    c.setSubject("Proposed visual reading layer for approved Foundation v0.1")
+    c.setSubject("Proposed complete visual reading layer for approved Foundation v0.1")
     c.setCreator("NosLog visual-core review generator")
     c.setKeywords("NosLog, design system, visual core, Foundation v0.1")
     draw_cover(c)
@@ -673,6 +1277,18 @@ def build(output: Path) -> None:
     draw_domain_color(c)
     draw_iconography(c)
     draw_dos_donts(c)
+    draw_motion(c)
+    draw_reduced_motion(c)
+    draw_data_visualization(c)
+    draw_data_equivalence(c)
+    draw_responsive_grid(c)
+    draw_responsive_recomposition(c)
+    draw_reusable_map(c)
+    draw_reusable_anatomy(c)
+    draw_fragment_discovery(c)
+    draw_fragment_music_detail(c)
+    draw_fragment_dense_ranking(c)
+    draw_fragment_sync_recovery(c)
     draw_review_gate(c)
     c.save()
 

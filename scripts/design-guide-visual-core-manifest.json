@@ -1,5 +1,5 @@
 {
-    "status": "Proposed review artifact — not normative authority",
+    "status": "Proposed review artifact - not normative authority",
     "normativeAuthority": "docs/design/24-foundation-v0.1.md",
     "sources": {
         "pretendardJP": {
@@ -20,6 +20,21 @@
             "version": "1.24.0",
             "source": "node_modules/lucide-react",
             "license": "ISC"
+        },
+        "atlassianMotion": {
+            "checkedOn": "2026-08-11",
+            "snapshot": "reference-pages/atlassian-motion.html",
+            "applyingSnapshot": "reference-pages/atlassian-applying-motion.html",
+            "url": "https://atlassian.design/foundations/motion",
+            "applyingUrl": "https://atlassian.design/foundations/motion/applying-motion",
+            "sha256": "448b5f4beb244f22ae5f7fe079e28063f49eb066b181056642829f6ea83fd507",
+            "applyingSha256": "0190d884a7737a2c17f8681c6f016fa02555224b91ffb2c7b6cd3a3284695c09"
+        },
+        "primerDataVisualization": {
+            "checkedOn": "2026-08-11",
+            "snapshot": "reference-pages/primer-data-visualization.html",
+            "url": "https://primer.style/product/ui-patterns/data-visualization/",
+            "sha256": "dfb6055c8b70080874e80c9707bad9c64907f79c9a111c676b86832e21c76cf2"
         }
     },
     "claimGates": [
@@ -46,6 +61,26 @@
         {
             "plate": "guardrails",
             "contract": "No rejected candidate reuse and no domain color outside an explicitly named domain role"
+        },
+        {
+            "plate": "motion-and-reduced-motion",
+            "contract": "Exact MO-02 Atlassian durations and cubic-bezier curves; reduced mode removes nonessential spatial motion and applies state immediately"
+        },
+        {
+            "plate": "data-visualization",
+            "contract": "DV-05 Primer anatomy with NosLog colors, exact-value interaction, non-color distinction, and same-data semantic table"
+        },
+        {
+            "plate": "responsive",
+            "contract": "Exact document 24 track, gutter, margin, and content-fit contracts; diagrams are explicitly scaled"
+        },
+        {
+            "plate": "reusable-ui",
+            "contract": "Only FPR-04 responsibility aliases and patterns; no new component appearance or universal overlay"
+        },
+        {
+            "plate": "representative-fragments",
+            "contract": "Approved ordinary-UI pressures only, visibly schematic, not final pages, and no chart viewer/editor content"
         }
     ]
 }
