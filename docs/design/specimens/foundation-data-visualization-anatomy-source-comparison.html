@@ -473,6 +473,25 @@
             .primer .chart-card {
                 box-shadow: 0 1px 0 rgb(0 0 0 / 0.03);
             }
+            .primer .swatch {
+                position: relative;
+            }
+            .primer .swatch::after {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 6px;
+                height: 6px;
+                border: 2px solid var(--data-1);
+                border-radius: 50%;
+                background: var(--raised);
+                content: "";
+                transform: translate(-50%, -50%);
+            }
+            .primer .swatch.second::after {
+                border-color: var(--raised);
+                background: var(--data-2);
+            }
             .gov .chart-header {
                 grid-template-columns: 1fr;
             }
@@ -587,13 +606,13 @@
         <main class="shell">
             <header class="panel intro">
                 <p class="kicker">
-                    Block 4 · ordinary data visualization · proposed
+                    Block 4 · ordinary data visualization · approved
                 </p>
                 <h1 id="page-title">일반 UI chart anatomy 6개 출처 비교</h1>
                 <p id="page-summary">
-                    모든 후보의 데이터·SAP Fiori 색·neutral·focus·geometry를
-                    고정하고 title, axis, legend/direct label, exact value,
-                    tooltip/focus 및 table fallback 배치만 비교합니다.
+                    승인된 DV-05 GitHub Primer anatomy를 표시합니다. 다른 후보는
+                    동일 데이터·SAP Fiori 색·neutral·focus·geometry로 통제한
+                    비교 근거입니다.
                 </p>
             </header>
             <aside class="panel boundary" id="boundary">
@@ -663,7 +682,7 @@
                 ko: {
                     title: "일반 UI chart anatomy 6개 출처 비교",
                     summary:
-                        "모든 후보의 데이터·SAP Fiori 색·neutral·focus·geometry를 고정하고 title, axis, legend/direct label, exact value, tooltip/focus 및 table fallback 배치만 비교합니다.",
+                        "승인된 DV-05 GitHub Primer anatomy를 표시합니다. 다른 후보는 동일 데이터·SAP Fiori 색·neutral·focus·geometry로 통제한 비교 근거입니다.",
                     boundary:
                         "<strong>잠긴 범위:</strong> 기존 chart viewer/editor 전체와 renderer는 이 표본에 포함되지 않으며 어떤 규칙도 적용되지 않습니다.",
                     chartTitle: "개인 최고 점수 추이",
@@ -705,8 +724,8 @@
                         ],
                         [
                             "DV-05 · GitHub Primer",
-                            "Header·axis·legend·crosshair·non-color stroke/marker·table preview를 한 source로 묶습니다.",
-                            "Recommended",
+                            "승인 · 내 점수는 빈 파란 원/실선, 상위 10% 기준은 채운 주황 원/점선으로 비교합니다.",
+                            "Approved",
                         ],
                         [
                             "DV-06 · GOV.UK",
@@ -718,7 +737,7 @@
                 ja: {
                     title: "一般UIチャート構造・6ソース比較",
                     summary:
-                        "データ、SAP Fioriカラー、ニュートラル、フォーカス、形状を固定し、タイトル、軸、凡例、正確な値、ツールチップと表の配置だけを比較します。",
+                        "承認済みDV-05 GitHub Primerの構造を表示します。他の候補は、同じデータ、SAP Fioriカラー、ニュートラル、フォーカス、形状で統制した比較根拠です。",
                     boundary:
                         "<strong>固定範囲:</strong> 既存のチャートビューアー／エディターとレンダラーには、この標本の規則を適用しません。",
                     chartTitle: "自己ベストスコアの推移",
@@ -760,8 +779,8 @@
                         ],
                         [
                             "DV-05 · GitHub Primer",
-                            "ヘッダー、軸、凡例、非色覚キュー、表プレビューを一つのソースで統合します。",
-                            "Recommended",
+                            "承認 · 自己ベストは青の中抜き円／実線、上位10%基準はオレンジの塗り円／破線で比較します。",
+                            "Approved",
                         ],
                         [
                             "DV-06 · GOV.UK",
@@ -773,7 +792,7 @@
                 en: {
                     title: "Six ordinary-UI chart anatomy sources",
                     summary:
-                        "Data, SAP Fiori color, neutrals, focus, and geometry stay fixed. Only titles, axes, legend/direct labels, exact values, tooltip/focus, and table placement change.",
+                        "The approved DV-05 GitHub Primer anatomy is shown. Other candidates remain controlled comparison evidence with the same data, SAP Fiori colors, neutrals, focus, and geometry.",
                     boundary:
                         "<strong>Locked scope:</strong> No rule in this specimen applies to the existing chart viewer/editor or its renderers.",
                     chartTitle: "Personal-best score trend",
@@ -816,8 +835,8 @@
                         ],
                         [
                             "DV-05 · GitHub Primer",
-                            "Combines header, axes, legend, crosshair, non-color marks, and table preview in one source.",
-                            "Recommended",
+                            "Approved · outlined blue circles/solid line for personal score, filled orange circles/dashed line for benchmark.",
+                            "Approved",
                         ],
                         [
                             "DV-06 · GOV.UK",
@@ -864,6 +883,7 @@
                     legend: true,
                     direct: false,
                     actions: "primer",
+                    roundBenchmark: true,
                 },
                 {
                     id: "DV-06",
@@ -906,7 +926,9 @@
                 const point = (row, index, key, seriesIndex) => {
                     const isB = key === "benchmark";
                     const shape =
-                        isB && candidate.kind !== "spectrum"
+                        isB &&
+                        candidate.kind !== "spectrum" &&
+                        !candidate.roundBenchmark
                             ? `<rect class="point point-b" data-series="${seriesIndex}" data-index="${index}" tabindex="0" role="graphics-symbol" aria-label="${row.date}, ${isB ? copy.benchmark : copy.personal}, ${nf().format(row[key])} ${copy.unit}" x="${x(index) - 4}" y="${y(row[key]) - 4}" width="8" height="8"/>`
                             : `<circle class="point ${isB ? "point-b" : "point-a"}" data-series="${seriesIndex}" data-index="${index}" tabindex="0" role="graphics-symbol" aria-label="${row.date}, ${isB ? copy.benchmark : copy.personal}, ${nf().format(row[key])} ${copy.unit}" cx="${x(index)}" cy="${y(row[key])}" r="4"/>`;
                     return shape;
@@ -945,7 +967,9 @@
             const card = (candidate, copy, index) => {
                 const info = copy.candidates[index];
                 const statusClass =
-                    info[2] === "Recommended" ? "recommended" : "";
+                    info[2] === "Recommended" || info[2] === "Approved"
+                        ? "recommended"
+                        : "";
                 const summary = candidate.summary
                     ? `<p class="chart-summary"><span>${copy.personal} <strong>${nf().format(rows.at(-1).personal)}</strong></span><span>${copy.benchmark} <strong>${nf().format(rows.at(-1).benchmark)}</strong></span></p>`
                     : "";

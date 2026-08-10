@@ -2,12 +2,12 @@
 
 ## 문서 관리
 
-- 상태: `블록 4 진행 중 — 출처 비교 후 사용자 결정 대기`
+- 상태: `블록 4 완료 — 근거가 확정된 두 블록만 남음`
 - 정본 언어: 영어
 - 영어 정본:
   [57-noslog-2.0-authoritative-remaining-work-audit.md](./57-noslog-2.0-authoritative-remaining-work-audit.md)
 - 날짜: 2026-08-10
-- 입력: 루트 `AGENTS.md`, 루트 `README.md`, 문서 `01`–`61`, 현재 저장소 근거,
+- 입력: 루트 `AGENTS.md`, 루트 `README.md`, 문서 `01`–`62`, 현재 저장소 근거,
   사용자의 명시적인 viewer/editor 보존 정정
 - 목적: 오래된 미래 체크리스트가 완료됐거나 금지된 작업을 되살리지 못하게 함
 
@@ -44,7 +44,7 @@ fractional package credit 및 18-package 표를 모두 supersede합니다. 사�
 | `1 · C5 color 마감`                 | `DU-01` difficulty marker, `LD-03` SAP 일반 local-data color와 `JD-02` Radix 판정 domain 보완 승인 완료.                                                                                                 | Viewer/editor 전체. Basic/Recital, rank/achievement, genre는 별도로 다시 열지 않는 한 neutral입니다.             | `Complete — 2026-08-10`.                             |
 | `2 · Iconography`                   | `IC-06 · Lucide`의 20px 기본, 16px compact supporting, 공개된 2px outline geometry, label/icon-only, target-size, color, localization 및 accessible-name 규칙을 승인했고 responsive 검증을 완료했습니다. | Viewer/editor 전체와 최종 logo drawing.                                                                          | `Complete — 2026-08-10`.                             |
 | `3 · Motion`                        | `MO-02 · Atlassian`의 exact duration/easing role, instant reduced-motion 대체, static busy fallback 및 responsive·다국어 검증을 승인했습니다.                                                            | Viewer/editor 전체, renderer timing, transport 및 editor motion.                                                 | `Complete — 2026-08-10`.                             |
-| `4 · Data visualization`            | 일반 data visualization의 axis, legend, exact value, tooltip/focus 및 non-color/table fallback을 정의합니다. 문서 `62`에서 독립 출처 16개에 맞춰 통제한 anatomy 후보 6개를 비교합니다.                   | Viewer/editor 전체와 그 chart rendering.                                                                         | `진행 중 — material 출처 결정 대기`.                 |
+| `4 · Data visualization`            | `DV-05 · GitHub Primer` 일반 UI anatomy, W3C table floor, exact-value interaction 및 outlined-personal/filled-benchmark circle 처리를 승인했습니다.                                                      | Viewer/editor 전체와 그 chart rendering.                                                                         | `Complete — 2026-08-10`.                             |
 | `5 · Foundation 승격과 reusable UI` | 완료된 `S1`, `S2`, `S3`, `S5` fixture를 최종 회귀 검증하고 Pretendard JP delivery/fallback을 확인한 뒤 Foundation v0.1을 승격하고 검증된 component alias·pattern·template을 통합합니다.                  | `S4` 없음, `S6` 없음, 새 구조 page 작업 없음, 완료된 입력 재개방 없음.                                           | 승인된 Foundation과 재사용 일반 UI guidance.         |
 | `6 · Handoff와 milestone export`    | 기존 Page Brief를 screen requirement, 구현 mapping, 접근성·다국어 QA 및 Claude Design handoff로 통합하고 PDF 언어/packaging 결정 뒤 안정된 versioned milestone을 export합니다.                           | Page Brief를 다시 열거나 viewer/editor 변경을 추가하거나 최종 high-fidelity production design을 만들지 않습니다. | 완전한 downstream handoff와 versioned 배포 artifact. |
 
@@ -53,7 +53,7 @@ fractional package credit 및 18-package 표를 모두 supersede합니다. 사�
 
 ## 큰 블록 단위 실행 방식
 
-이 고정 여섯 블록 기준선은 완료 이력도 보존합니다. 블록 `1`–`3` 완료 뒤에는 블록 `4`–`6`만
+이 고정 여섯 블록 기준선은 완료 이력도 보존합니다. 블록 `1`–`4` 완료 뒤에는 블록 `5`–`6`만
 사용자에게 제시하는 남은 실행 단위로 사용합니다. 한 블록을 시작하면 조사,
 후보 비교, specimen, browser 검증, 필요한 material 사용자 결정, 한영 문서 반영과 정리를
 모두 같은 블록 안에서 이어서 수행합니다. 사용자에게 속한 material decision, 필요한 권한
@@ -101,10 +101,10 @@ background, container, selection, focus, feedback, action 및 viewer/editor 전�
 정확한 Normal/Hard/Expert/Real marker mapping, `LD-03 · SAP Fiori Horizon` 일반
 local-data mapping, `JD-02 · Radix Colors 3.0.0` 판정 domain mapping, `IC-06 · Lucide`
 일반 UI icon grammar와 `MO-02 · Atlassian` 일반 UI motion 계약이 승인됐습니다. 블록
-`1`–`3`은 계속 완료 상태입니다. `4 · Data visualization`은 문서 `62`와 통제된 일반 UI
-specimen으로 진행 중입니다. 이 안의 조사, 후보 비교, specimen, 사용자 결정, 검증 및
-한영 통합은 별도 작업이 아니라 계속 하나의 블록입니다. 잠긴 viewer/editor는 계속
-제외하며, 블록 `4` 종료 뒤에는 블록 `5`와 `6`이 남습니다.
+`1`–`4`는 완료 상태입니다. `DV-05 · GitHub Primer` 일반 UI data-visualization anatomy는
+semantic-table floor, exact-value interaction 및 outlined-personal/filled-benchmark circle
+계약을 포함하되 Primer color를 가져오거나 FAST/SLOW를 바꾸지 않습니다. 잠긴
+viewer/editor는 계속 제외하며 블록 `5`와 `6`만 남습니다.
 
 ## Decision log
 
@@ -123,4 +123,5 @@ specimen으로 진행 중입니다. 이 안의 조사, 후보 비교, specimen, 
 | `RWA-11` | `IC-06 · Lucide`를 채택하고 일반 UI grammar와 responsive/localized fixture를 검증해 블록 `2`를 종료합니다.                                             | `Approved and complete — 2026-08-10`      |
 | `RWA-12` | 권위 있는 motion 출처 감사와 일반 UI default/reduced 통제 시편으로 블록 `3`을 시작합니다.                                                              | `Completed evidence`                      |
 | `RWA-13` | `MO-02 · Atlassian`을 채택하고 exact 일반 UI 및 instant reduced-motion 계약을 승인한 뒤 responsive·다국어 fixture를 다시 검증해 블록 `3`을 종료합니다. | `Approved and complete — 2026-08-10`      |
-| `RWA-14` | 문서 `62`, 독립 출처 16개 감사 및 통제된 일반 UI data-visualization anatomy 후보 6개로 블록 `4`를 시작합니다.                                          | `진행 중 — 사용자 결정 대기`              |
+| `RWA-14` | 문서 `62`, 독립 출처 16개 감사 및 통제된 일반 UI data-visualization anatomy 후보 6개로 블록 `4`를 시작합니다.                                          | `Completed evidence`                      |
+| `RWA-15` | `DV-05 · GitHub Primer`와 semantic-table·personal/benchmark marker 계약을 승인하고 통제 specimen을 검증해 블록 `4`를 닫습니다.                         | `Approved and complete — 2026-08-10`      |

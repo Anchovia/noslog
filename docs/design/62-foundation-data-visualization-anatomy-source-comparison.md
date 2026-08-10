@@ -2,7 +2,7 @@
 
 ## Document control
 
-- Status: `Proposed — Block 4 source decision pending`
+- Status: `Approved — DV-05 GitHub Primer; Block 4 complete`
 - Canonical language: English
 - Korean companion:
   [62-foundation-data-visualization-anatomy-source-comparison.ko.md](./62-foundation-data-visualization-anatomy-source-comparison.ko.md)
@@ -13,9 +13,9 @@
 - Specimen:
   [foundation-data-visualization-anatomy-source-comparison.html](./specimens/foundation-data-visualization-anatomy-source-comparison.html)
 
-## Decision being made
+## Approved decision
 
-Block `4 · Data visualization` chooses one governing anatomy and interaction source
+Block `4 · Data visualization` uses `DV-05 · GitHub Primer` as the governing anatomy and interaction source
 for ordinary UI charts: visible purpose, axes, units, legends or direct labels, exact
 values, pointer and keyboard detail, non-color distinction, and access to the same
 data as a semantic table. This is not a color decision. All candidates use the already
@@ -118,19 +118,19 @@ The specimen renders the same two-series NosLog score comparison in every card. 
 content, dimensions, numbers, `LD-03` colors, focus treatment, and responsive container
 are fixed. Only source-owned anatomy and alternative-data placement change.
 
-| ID      | Source anatomy       | Visible composition                                                                                                                    | Data alternative                                                                                | Evaluation                                                                                                                                              |
-| ------- | -------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `DV-01` | Adobe Spectrum 2.0.0 | Explicit axis titles, crosshair and point tooltip, conventional legend, keyboard point model.                                          | A fixed W3C table link follows the chart because Spectrum does not define a full table control. | Excellent point interaction, but the source's line/shape prohibition conflicts with approved FAST/SLOW reinforcement.                                   |
-| `DV-02` | IBM Carbon           | Direct end labels first; bottom legend only when direct labels do not fit; compact exact summary.                                      | Fixed W3C table disclosure below the frame.                                                     | Clearest low-clutter comparison; incomplete as one intact source for the table/focus contract.                                                          |
-| `DV-03` | SAP Fiori            | Title toolbar, visible legend, chart/table segmented switch, responsive overflow.                                                      | First-class table view in the same container.                                                   | Complete and aligned with the selected color system, but visually heavy for compact profile and music-detail charts.                                    |
-| `DV-04` | GitLab Pajamas       | Title and unit, legend with current values, structured point popover.                                                                  | Fixed W3C table disclosure below the frame.                                                     | Strong for dense dashboards; accessibility completion still depends on an external baseline.                                                            |
-| `DV-05` | GitHub Primer        | Required header/subheader, labeled axes, grid, points/crosshair/tooltip, persistent legend, non-color stroke/markers, compact toolbar. | Table preview and CSV are source-defined chart actions.                                         | **Recommended.** It covers the complete Block 4 anatomy in one system and matches the approved FAST/SLOW contract without adding an enterprise toolbar. |
-| `DV-06` | GOV.UK               | Message-led title/subtitle, direct annotation and source, restrained chart, no unnecessary chart interaction.                          | Visible data table immediately after the chart.                                                 | Best for static public explanation; too editorial to govern exploratory score trends alone.                                                             |
+| ID      | Source anatomy       | Visible composition                                                                                                                    | Data alternative                                                                                | Evaluation                                                                                                            |
+| ------- | -------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `DV-01` | Adobe Spectrum 2.0.0 | Explicit axis titles, crosshair and point tooltip, conventional legend, keyboard point model.                                          | A fixed W3C table link follows the chart because Spectrum does not define a full table control. | Excellent point interaction, but the source's line/shape prohibition conflicts with approved FAST/SLOW reinforcement. |
+| `DV-02` | IBM Carbon           | Direct end labels first; bottom legend only when direct labels do not fit; compact exact summary.                                      | Fixed W3C table disclosure below the frame.                                                     | Clearest low-clutter comparison; incomplete as one intact source for the table/focus contract.                        |
+| `DV-03` | SAP Fiori            | Title toolbar, visible legend, chart/table segmented switch, responsive overflow.                                                      | First-class table view in the same container.                                                   | Complete and aligned with the selected color system, but visually heavy for compact profile and music-detail charts.  |
+| `DV-04` | GitLab Pajamas       | Title and unit, legend with current values, structured point popover.                                                                  | Fixed W3C table disclosure below the frame.                                                     | Strong for dense dashboards; accessibility completion still depends on an external baseline.                          |
+| `DV-05` | GitHub Primer        | Required header/subheader, labeled axes, grid, points/crosshair/tooltip, persistent legend, non-color stroke/markers, compact toolbar. | Table preview and CSV are source-defined chart actions.                                         | **Approved.** Primer anatomy with outlined blue personal circles and filled orange benchmark circles.                 |
+| `DV-06` | GOV.UK               | Message-led title/subtitle, direct annotation and source, restrained chart, no unnecessary chart interaction.                          | Visible data table immediately after the chart.                                                 | Best for static public explanation; too editorial to govern exploratory score trends alone.                           |
 
-## Proposed universal acceptance contract
+## Approved universal acceptance contract
 
-Whichever source the user selects, W3C/accessibility requirements and already approved
-NosLog rules remain non-negotiable. The selected source owns the visual anatomy and
+W3C/accessibility requirements and already approved NosLog rules remain non-negotiable.
+GitHub Primer owns the visual anatomy and
 placement; this contract closes implementation gaps without mixing visual values.
 
 1. A chart container has a visible localized title and, where needed, a subtitle that
@@ -150,6 +150,9 @@ placement; this contract closes implementation gaps without mixing visual values
 6. FAST/SLOW retain the approved direct labels, solid/circle versus dashed/square
    treatment, and SAP colors. Judgement markers retain document `59`; difficulty
    markers retain document `56`.
+   An ordinary personal-versus-benchmark comparison is a separate role: the personal
+   series uses an outlined blue circle and solid line; the benchmark uses a filled
+   orange circle and dashed line. This does not alter the FAST/SLOW contract.
 7. Every analytical chart exposes a same-data semantic `<table>` with caption, column
    headers, row headers where useful, locale-formatted values, and the active filtered
    subset. A compact supporting chart may use an adjacent “View data table” disclosure;
@@ -183,29 +186,49 @@ placement; this contract closes implementation gaps without mixing visual values
 - Pointer/focus point labels expose date, series, exact localized value, and unit.
   Visible tables have captions plus column and row headers.
 - Dark color-disabled mode computes both data colors to the neutral foreground while
-  the dashed/square treatment and labels remain. Spectrum's intentionally preserved
-  same-stroke/same-shape conflict remains visible for evaluation.
+  line treatment, marker treatment, and labels remain. Spectrum's intentionally
+  preserved same-stroke/same-shape conflict remains visible for evaluation.
+- The revised `DV-05` renders both series with circular geometry: personal markers are
+  outlined and benchmark markers are filled. At `390px` Dark color-disabled mode,
+  outline/fill plus solid/dashed remain distinct; at `320px`, arrow-key series movement,
+  tooltip, crosshair, and page containment still pass.
 - No browser console warning or error was observed. The specimen changes no production
   component, dependency, viewer/editor file, or renderer behavior.
 
-## Recommendation and user gate
+## Approved source and marker contract
 
-Advance `DV-05 · GitHub Primer`. It is the only candidate whose published anatomy
+The user approved `DV-05 · GitHub Primer` on 2026-08-10. It is the only
+candidate whose published anatomy
 directly includes the visible chart context, persistent multi-series identification,
 non-color line/marker distinction, point tooltip/crosshair, chart limits, table preview,
 and CSV action in one maintained product system. It also fits the existing compact
 NosLog inventory without importing SAP's full analytical toolbar.
 
-The recommendation is `Proposed`, not approved. The user must select one candidate or
-request a corrected comparison before the document can define the final aliases and
-close Block 4.
+The comparison initially rendered the orange benchmark with a square marker. That
+shape is not required by the already approved FAST/SLOW rule because this specimen is
+personal score versus an external benchmark, not FAST versus SLOW. The revised
+`DV-05` therefore uses an outlined blue circle for the personal series and a filled
+orange circle for the benchmark while preserving solid versus dashed strokes, a
+persistent legend, exact-value focus, and the table view. In color-disabled mode,
+outline versus fill and solid versus dashed remain two independent non-color cues.
+
+Primer's published guidance asks markers to differ between series. The revised
+outlined-versus-filled circle is an explicit user-directed NosLog treatment rather
+than a literal different-shape reading of that guidance. It changes no source color
+or Foundation primitive and is recorded openly rather than presented as upstream
+Primer behavior. The user reviewed and approved the revised visual, exact-value and
+table behavior, responsive layouts, keyboard behavior, and non-color distinction.
+The other five candidates remain comparison evidence only. This approval closes
+Block 4.
 
 ## Decision log
 
-| ID       | Entry                                                                                    | Status                                |
-| -------- | ---------------------------------------------------------------------------------------- | ------------------------------------- |
-| `DVA-01` | Keep the entire chart viewer/editor outside Block 4.                                     | `Locked upstream`                     |
-| `DVA-02` | Hold `LD-03` colors and completed Foundation decisions constant while comparing anatomy. | `Approved upstream constraint`        |
-| `DVA-03` | Use sixteen independent sources and six controlled source candidates.                    | `Completed evidence`                  |
-| `DVA-04` | Apply the W3C semantic-table and equivalent-access floor to every candidate.             | `Proposed — user gate`                |
-| `DVA-05` | Advance `DV-05 · GitHub Primer` as the governing ordinary-UI anatomy.                    | `Recommended — user decision pending` |
+| ID       | Entry                                                                                                                               | Status                               |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
+| `DVA-01` | Keep the entire chart viewer/editor outside Block 4.                                                                                | `Locked upstream`                    |
+| `DVA-02` | Hold `LD-03` colors and completed Foundation decisions constant while comparing anatomy.                                            | `Approved upstream constraint`       |
+| `DVA-03` | Use sixteen independent sources and six controlled source candidates.                                                               | `Completed evidence`                 |
+| `DVA-04` | Apply the W3C semantic-table and equivalent-access floor to every candidate.                                                        | `Approved — 2026-08-10`              |
+| `DVA-05` | Select `DV-05 · GitHub Primer` as the governing ordinary-UI anatomy direction.                                                      | `Approved — 2026-08-10`              |
+| `DVA-06` | For personal-versus-benchmark charts, use outlined blue and filled orange circles with solid/dashed lines; do not change FAST/SLOW. | `Approved — 2026-08-10`              |
+| `DVA-07` | Close Block 4 after responsive, localized, keyboard, non-color, exact-value, and semantic-table validation.                         | `Approved and complete — 2026-08-10` |

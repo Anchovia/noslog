@@ -236,6 +236,18 @@ color closeout`. The comparison was internal evidence within that block, not a n
   spinner motion with a
   static cue plus persistent localized busy text and `aria-busy`. This authority is
   recorded by document `61` and does not apply to the locked viewer/editor.
+- `DV-05 · GitHub Primer` is the approved governing anatomy and interaction source
+  for ordinary non-viewer data visualizations. Preserve visible localized purpose,
+  axes and units unless an equivalent subtitle supplies them, persistent legend or
+  collision-free direct labels, pointer/focus/touch exact values, arrow and
+  `Home`/`End` point navigation, same-data semantic tables, explicit states, and
+  `320px`/`390px`/desktop plus Korean/Japanese/English reflow. CSV never replaces the
+  table. Primer does not supply NosLog chart colors: retain the approved `LD-03`,
+  `JD-02`, and `DU-01` mappings. Personal-versus-benchmark charts use an outlined blue
+  circle with a solid line versus a filled orange circle with a dashed line. The
+  separate FAST/SLOW circle/square contract remains unchanged. This authority is
+  recorded by document `62` and excludes the entire locked viewer/editor and every
+  renderer.
 - Primitive-source approval, semantic-role mapping, component-alias mapping, and
   production implementation are separate approval gates. Approval of Adobe Spectrum
   S2 primitives does not by itself approve a proposed foreground, boundary,

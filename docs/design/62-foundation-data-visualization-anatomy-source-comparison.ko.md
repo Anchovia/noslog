@@ -2,7 +2,7 @@
 
 ## 문서 관리
 
-- 상태: `Proposed — 블록 4 출처 결정 대기`
+- 상태: `승인 — DV-05 GitHub Primer; 블록 4 완료`
 - 정본 언어: 영어
 - 영어 정본:
   [62-foundation-data-visualization-anatomy-source-comparison.md](./62-foundation-data-visualization-anatomy-source-comparison.md)
@@ -13,10 +13,10 @@
 - Specimen:
   [foundation-data-visualization-anatomy-source-comparison.html](./specimens/foundation-data-visualization-anatomy-source-comparison.html)
 
-## 이번에 결정하는 것
+## 승인된 결정
 
-블록 `4 · Data visualization`에서는 일반 UI chart의 지배적인 anatomy·interaction
-출처 하나를 고릅니다. 범위는 눈에 보이는 목적, axis, unit, legend 또는 direct label,
+블록 `4 · Data visualization`에서는 `DV-05 · GitHub Primer`를 일반 UI chart의
+지배적인 anatomy·interaction 출처로 사용합니다. 범위는 눈에 보이는 목적, axis, unit, legend 또는 direct label,
 exact value, pointer·keyboard detail, non-color 구분 및 같은 data의 semantic table
 접근입니다. 이는 color 결정이 아닙니다. 모든 후보는 이미 승인한
 `LD-03 · SAP Fiori Horizon` Light/Dark data color와 승인된 neutral, focus, geometry,
@@ -115,19 +115,19 @@ Specimen은 모든 card에 같은 2-series NosLog score comparison을 그립니�
 content, dimension, number, `LD-03` color, focus treatment 및 responsive container는
 고정하고 source-owned anatomy와 alternative-data placement만 바꿉니다.
 
-| ID      | Source anatomy       | Visible composition                                                                                                              | Data alternative                                                               | 평가                                                                                                          |
-| ------- | -------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------- |
-| `DV-01` | Adobe Spectrum 2.0.0 | 명시적 axis title, crosshair·point tooltip, conventional legend, keyboard point model.                                           | Spectrum에 full table control이 없어 fixed W3C table link를 chart 뒤에 둡니다. | Point interaction은 뛰어나지만 source의 line/shape 금지가 승인된 FAST/SLOW 보강과 충돌합니다.                 |
-| `DV-02` | IBM Carbon           | Direct end label 우선, 맞지 않을 때만 bottom legend, compact exact summary.                                                      | Frame 아래 fixed W3C table disclosure.                                         | 가장 명료하고 clutter가 적지만 하나의 intact source로 table/focus 계약을 완성하지 못합니다.                   |
-| `DV-03` | SAP Fiori            | Title toolbar, visible legend, chart/table segmented switch, responsive overflow.                                                | 같은 container의 first-class table view.                                       | 완전하고 선택된 color system과 맞지만 compact profile·music-detail chart에는 visually heavy합니다.            |
-| `DV-04` | GitLab Pajamas       | Title·unit, current value를 포함한 legend, structured point popover.                                                             | Frame 아래 fixed W3C table disclosure.                                         | Dense dashboard에 강하지만 accessibility 완성은 external baseline에 의존합니다.                               |
-| `DV-05` | GitHub Primer        | 필수 header/subheader, labeled axis, grid, point/crosshair/tooltip, persistent legend, non-color stroke/marker, compact toolbar. | Table preview와 CSV가 source-defined chart action입니다.                       | **추천.** 한 system이 Block 4 전체 anatomy를 다루고 enterprise toolbar 없이 승인된 FAST/SLOW 계약과 맞습니다. |
-| `DV-06` | GOV.UK               | Message-led title/subtitle, direct annotation·source, restrained chart, 불필요한 chart interaction 없음.                         | Chart 바로 뒤 visible data table.                                              | Static public explanation에는 가장 좋지만 exploratory score trend 전체를 지배하기에는 너무 editorial합니다.   |
+| ID      | Source anatomy       | Visible composition                                                                                                              | Data alternative                                                               | 평가                                                                                                        |
+| ------- | -------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------- |
+| `DV-01` | Adobe Spectrum 2.0.0 | 명시적 axis title, crosshair·point tooltip, conventional legend, keyboard point model.                                           | Spectrum에 full table control이 없어 fixed W3C table link를 chart 뒤에 둡니다. | Point interaction은 뛰어나지만 source의 line/shape 금지가 승인된 FAST/SLOW 보강과 충돌합니다.               |
+| `DV-02` | IBM Carbon           | Direct end label 우선, 맞지 않을 때만 bottom legend, compact exact summary.                                                      | Frame 아래 fixed W3C table disclosure.                                         | 가장 명료하고 clutter가 적지만 하나의 intact source로 table/focus 계약을 완성하지 못합니다.                 |
+| `DV-03` | SAP Fiori            | Title toolbar, visible legend, chart/table segmented switch, responsive overflow.                                                | 같은 container의 first-class table view.                                       | 완전하고 선택된 color system과 맞지만 compact profile·music-detail chart에는 visually heavy합니다.          |
+| `DV-04` | GitLab Pajamas       | Title·unit, current value를 포함한 legend, structured point popover.                                                             | Frame 아래 fixed W3C table disclosure.                                         | Dense dashboard에 강하지만 accessibility 완성은 external baseline에 의존합니다.                             |
+| `DV-05` | GitHub Primer        | 필수 header/subheader, labeled axis, grid, point/crosshair/tooltip, persistent legend, non-color stroke/marker, compact toolbar. | Table preview와 CSV가 source-defined chart action입니다.                       | **승인.** Primer anatomy에 outlined blue personal circle과 filled orange benchmark circle을 사용합니다.     |
+| `DV-06` | GOV.UK               | Message-led title/subtitle, direct annotation·source, restrained chart, 불필요한 chart interaction 없음.                         | Chart 바로 뒤 visible data table.                                              | Static public explanation에는 가장 좋지만 exploratory score trend 전체를 지배하기에는 너무 editorial합니다. |
 
-## 제안하는 universal acceptance 계약
+## 승인된 universal acceptance 계약
 
-사용자가 어느 출처를 고르더라도 W3C/accessibility 요구와 이미 승인된 NosLog 규칙은
-바뀌지 않습니다. 선택 출처가 visual anatomy·placement를 소유하고, 이 계약은 visual
+W3C/accessibility 요구와 이미 승인된 NosLog 규칙은 바뀌지 않습니다. GitHub Primer가
+visual anatomy·placement를 소유하고, 이 계약은 visual
 value를 섞지 않으면서 구현 gap을 닫습니다.
 
 1. Chart container에는 visible localized title이 있고 필요하면 measure, dimension, date
@@ -146,6 +146,9 @@ value를 섞지 않으면서 구현 gap을 닫습니다.
    Tooltip은 critical information을 소유하지 않고 보완합니다.
 6. FAST/SLOW는 승인된 direct label, solid/circle 대 dashed/square treatment 및 SAP color를
    유지합니다. Judgement marker는 문서 `59`, difficulty marker는 문서 `56`을 유지합니다.
+   일반 personal-versus-benchmark 비교는 별도 역할입니다. Personal series는 outlined blue
+   circle·solid line, benchmark는 filled orange circle·dashed line을 사용하며 FAST/SLOW
+   계약은 바꾸지 않습니다.
 7. 모든 analytical chart는 같은 data의 semantic `<table>`을 제공합니다. Caption, column
    header, 필요한 row header, locale-formatted value 및 active filtered subset을 포함합니다.
    Compact supporting chart는 adjacent “데이터 표 보기” disclosure를 쓸 수 있고 control
@@ -178,29 +181,47 @@ value를 섞지 않으면서 구현 gap을 닫습니다.
   갱신됩니다.
 - Pointer/focus point label은 date, series, exact localized value 및 unit을 노출합니다.
   Visible table에는 caption, column header 및 row header가 있습니다.
-- Dark color-disabled mode에서 두 data color 모두 neutral foreground로 계산되지만
-  dashed/square treatment와 label은 남습니다. Spectrum의 same-stroke/same-shape 충돌은
-  평가할 수 있도록 의도적으로 그대로 보입니다.
+- Dark color-disabled mode에서 두 data color 모두 neutral foreground로 계산되지만 line
+  treatment, marker treatment 및 label은 남습니다. Spectrum의 same-stroke/same-shape
+  충돌은 평가할 수 있도록 의도적으로 그대로 보입니다.
+- 수정한 `DV-05`는 두 series 모두 circular geometry를 사용하며 personal marker는
+  outlined, benchmark marker는 filled입니다. `390px` Dark color-disabled에서도
+  outline/fill과 solid/dashed가 구분되고, `320px`에서는 arrow-key series 이동, tooltip,
+  crosshair 및 page containment가 계속 통과합니다.
 - Browser console warning·error는 없었습니다. Specimen은 production component,
   dependency, viewer/editor file 또는 renderer behavior를 변경하지 않습니다.
 
-## 추천과 사용자 gate
+## 승인된 출처와 marker 계약
 
-`DV-05 · GitHub Primer`를 추천합니다. 공개 anatomy 하나가 visible chart context,
+사용자는 2026-08-10 `DV-05 · GitHub Primer`를 승인했습니다. 공개 anatomy 하나가 visible chart context,
 persistent multi-series identification, non-color line/marker distinction, point
 tooltip/crosshair, chart limit, table preview 및 CSV action을 모두 직접 포함하는 유일한
 후보입니다. SAP의 full analytical toolbar를 가져오지 않으면서 현재 compact NosLog
 inventory와도 맞습니다.
 
-추천은 `Proposed`이며 승인되지 않았습니다. 사용자가 후보 하나를 선택하거나 수정된
-비교를 요청해야 final alias를 정의하고 블록 4를 닫을 수 있습니다.
+초기 비교는 주황색 benchmark에 square marker를 사용했습니다. 하지만 이 specimen은
+FAST 대 SLOW가 아니라 personal score 대 external benchmark이므로 이미 승인한 FAST/SLOW
+규칙이 square를 요구하지 않습니다. 수정한 `DV-05`는 personal series를 outlined blue
+circle, benchmark를 filled orange circle로 표시하고 solid 대 dashed stroke, persistent
+legend, exact-value focus 및 table view를 그대로 유지합니다. Color-disabled mode에서도
+outline 대 fill과 solid 대 dashed라는 두 가지 독립적인 non-color cue가 남습니다.
+
+Primer 공개 guidance는 series마다 marker가 달라야 한다고 요구합니다. 수정한
+outlined-versus-filled circle은 이를 서로 다른 shape로 문자 그대로 해석한 upstream
+Primer behavior가 아니라 사용자 지시에 따른 명시적 NosLog treatment입니다. Source
+color나 Foundation primitive는 바꾸지 않으며 이 차이를 숨기지 않고 기록합니다. 사용자는
+수정 visual, exact-value·table behavior, responsive layout, keyboard behavior 및 non-color
+구분을 확인하고 승인했습니다. 나머지 다섯 후보는 비교 근거로만 남깁니다. 이 승인으로
+블록 4를 닫습니다.
 
 ## Decision log
 
-| ID       | Entry                                                                   | 상태                             |
-| -------- | ----------------------------------------------------------------------- | -------------------------------- |
-| `DVA-01` | Chart viewer/editor 전체를 블록 4 밖에 둡니다.                          | `Locked upstream`                |
-| `DVA-02` | Anatomy 비교 동안 `LD-03` color와 완료된 Foundation 결정을 고정합니다.  | `Approved upstream constraint`   |
-| `DVA-03` | 독립 출처 16개와 통제된 source 후보 6개를 사용합니다.                   | `Completed evidence`             |
-| `DVA-04` | W3C semantic-table 및 equivalent-access floor를 모든 후보에 적용합니다. | `Proposed — 사용자 gate`         |
-| `DVA-05` | `DV-05 · GitHub Primer`를 governing ordinary-UI anatomy로 올립니다.     | `Recommended — 사용자 결정 대기` |
+| ID       | Entry                                                                                                                             | 상태                                 |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
+| `DVA-01` | Chart viewer/editor 전체를 블록 4 밖에 둡니다.                                                                                    | `Locked upstream`                    |
+| `DVA-02` | Anatomy 비교 동안 `LD-03` color와 완료된 Foundation 결정을 고정합니다.                                                            | `Approved upstream constraint`       |
+| `DVA-03` | 독립 출처 16개와 통제된 source 후보 6개를 사용합니다.                                                                             | `Completed evidence`                 |
+| `DVA-04` | W3C semantic-table 및 equivalent-access floor를 모든 후보에 적용합니다.                                                           | `Approved — 2026-08-10`              |
+| `DVA-05` | `DV-05 · GitHub Primer`를 governing ordinary-UI anatomy 방향으로 선택합니다.                                                      | `Approved — 2026-08-10`              |
+| `DVA-06` | Personal-versus-benchmark chart에 outlined blue와 filled orange circle, solid/dashed line을 사용하고 FAST/SLOW는 바꾸지 않습니다. | `Approved — 2026-08-10`              |
+| `DVA-07` | Responsive, 다국어, keyboard, non-color, exact-value 및 semantic-table 검증 뒤 블록 4를 닫습니다.                                 | `Approved and complete — 2026-08-10` |
