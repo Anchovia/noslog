@@ -157,8 +157,8 @@ The user is the final decision-maker for NosLog 2.0 product and design direction
 ## Progress integrity
 
 The only user-facing design-guide work units are the six blocks in `README.md` and
-document `57`. Blocks 1–4 are complete, Block 5 is in progress, and Block 6 has not
-started. Update both sources in the same task whenever a block changes state.
+document `57`. Blocks 1–5 are complete, and Block 6 has not started. Update both
+sources in the same task whenever a block changes state.
 
 - Do not report a completion percentage unless the user first approves a
   denominator and counting method.
@@ -170,10 +170,10 @@ started. Update both sources in the same task whenever a block changes state.
   decision, missing authority, or block completion.
 - Do not announce an internal subtask as a new remaining task. When reporting
   status, name completed decisions and the exact remaining blocks.
-- Block 5 may consolidate completed Foundation inputs; it does not authorize
-  redesigning them. `FPR-02` Pretendard JP delivery/fallback and `FPR-03`
-  Foundation v0.1 promotion are approved. Its only open gate is `FPR-04` reusable
-  aliases and patterns. There is no unresolved primitive or Foundation decision.
+- Block 5 is complete. `FPR-02` Pretendard JP delivery/fallback, `FPR-03`
+  Foundation v0.1 promotion, and `FPR-04` reusable aliases and patterns are
+  approved. Do not reopen it from an older proposal, specimen, or checklist. There
+  is no unresolved primitive, Foundation, or reusable ordinary-UI decision.
 - There is no pending viewer/editor slice or `S6`.
 
 ## Git ownership

@@ -2,7 +2,7 @@
 
 ## Document control
 
-- Status: `Proposed — FPR-04 approval pending`
+- Status: `Approved — Block 5 complete`
 - Language: English
 - Last updated: 2026-08-11
 - Normative Foundation: [document 24](./24-foundation-v0.1.md)
@@ -152,34 +152,45 @@ and [Next.js Font API](https://nextjs.org/docs/app/api-reference/components/font
 
 This resolves the only primitive-delivery decision in Block 5.
 
-## Proposed reusable component aliases — `FPR-04`
+## Approved reusable component aliases — `FPR-04`
 
 These aliases describe responsibilities, not appearance or a request to build a large
 library now.
 
-| Alias                | Responsibility                                                                                 |
-| -------------------- | ---------------------------------------------------------------------------------------------- |
-| `AppHeader`          | Achromatic identity, current navigation context, and labeled or accessible secondary actions   |
-| `SearchField`        | Accessible query, submit, loading, empty, error, and result-status relationships               |
-| `ContentScopeSwitch` | Switch content kind within one search/comparison task without pretending to be page navigation |
-| `FilterSortControl`  | Disclose secondary refinement without persistent option clutter                                |
-| `ViewModeSwitch`     | Change presentation of one result set with programmatic and persistent selected state          |
-| `ResultCollection`   | Flat scannable linked entities with stable identity, metadata, and narrow domain markers       |
-| `EntityHeader`       | Canonical Music identity, localized companion access, facts, and contextual actions            |
-| `DifficultySelector` | Neutral control with four persistent approved markers outside the locked viewer/editor         |
-| `MetricSummary`      | Label, exact value, unit/basis, and comparison context without decorative color                |
-| `DataTable`          | Semantic headers, row identity, exact values, current-user context, and responsive priority    |
-| `Pagination`         | Current/adjacent pages, ellipsis semantics, and previous/next actions                          |
-| `StatusMessage`      | Neutral title/body with approved Atlassian semantic marker, boundary, icon, and recovery       |
-| `Disclosure`         | Keyboard-operable reveal of secondary explanation or controls                                  |
-| `Overlay`            | Contextual popover/menu/dialog with approved geometry, focus, dismissal, and motion            |
-| `OrdinaryDataChart`  | Primer anatomy, exact-value interaction, non-color distinction, and same-data semantic table   |
+| Alias                | Responsibility                                                                                                                                     |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AppHeader`          | Achromatic identity, current navigation context, and labeled or accessible secondary actions                                                       |
+| `SearchField`        | Accessible query, submit, loading, empty, error, and result-status relationships                                                                   |
+| `ContentScopeSwitch` | Switch content kind within one search/comparison task without pretending to be page navigation                                                     |
+| `FilterSortControl`  | Disclose secondary refinement without persistent option clutter                                                                                    |
+| `ViewModeSwitch`     | Change presentation of one result set with programmatic and persistent selected state                                                              |
+| `ResultCollection`   | Flat scannable linked entities with stable identity, metadata, and narrow domain markers                                                           |
+| `MusicEntityHeader`  | Canonical Music identity, localized companion access, facts, and contextual actions                                                                |
+| `DifficultySelector` | Neutral control with four persistent approved markers outside the locked viewer/editor                                                             |
+| `MetricSummary`      | Label, exact value, unit/basis, and comparison context without decorative color                                                                    |
+| `DataTable`          | Semantic headers, row identity, exact values, current-user context, and responsive priority                                                        |
+| `Pagination`         | Current/adjacent pages, ellipsis semantics, and previous/next actions                                                                              |
+| `StatusMessage`      | Neutral title/body with approved Atlassian semantic marker, boundary, icon, and recovery                                                           |
+| `FormField`          | Persistent label, help/constraint, value and availability state, associated error, and safe input preservation                                     |
+| `Disclosure`         | Keyboard-operable reveal of secondary explanation or controls                                                                                      |
+| `Overlay`            | Family contract that selects the correct popover/menu/dialog semantics, focus, dismissal, geometry, and motion rather than one universal component |
+| `OrdinaryDataChart`  | Primer anatomy, exact-value interaction, non-color distinction, and same-data semantic table                                                       |
 
 Visible icon controls use Lucide. Icon-only controls need an accessible name and
 approved target. A local alias may not add a color, radius, shadow, or motion outside
 document `24`.
 
-## Proposed reusable patterns — `FPR-04`
+`FormField` is a shared responsibility across Settings and onboarding, not a visual
+field template. It covers persistent programmatic labels, help and constraints,
+disabled/read-only/busy state where applicable, associated validation feedback, and
+preservation of valid input after a failed submission. Native controls remain the
+default where they satisfy the approved semantics.
+
+`Overlay` is an interaction family, not permission to implement one polymorphic
+overlay for every case. Each use must choose the correct dialog, popover, disclosure,
+or ordinary navigation semantics from its owning page brief.
+
+## Approved reusable patterns — `FPR-04`
 
 | Pattern                  | Contract                                                                                                                                        |
 | ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -205,17 +216,20 @@ template in the 2.0 package.
 
 ## Block 5 decision log
 
-| ID       | Entry                                                                                                                     | Status                                      |
-| -------- | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
-| `FPR-01` | Use one self-contained artifact only as a collision/regression harness for approved ordinary UI.                          | `Accepted supporting evidence — 2026-08-11` |
-| `FPR-02` | Adopt version-pinned, first-party self-hosted Pretendard JP variable dynamic-subset delivery and official fallback order. | `Approved — 2026-08-11`                     |
-| `FPR-03` | Promote the approved document `24` contracts together as Foundation v0.1 without reopening source decisions.              | `Approved — 2026-08-11`                     |
-| `FPR-04` | Adopt or revise the reusable aliases and patterns above as the Block 5 package.                                           | `Awaiting user approval`                    |
-| `FPR-05` | Keep the complete viewer/editor outside regression, reusable UI, and downstream template work.                            | `Locked approved boundary`                  |
+| ID       | Entry                                                                                                                                          | Status                                      |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| `FPR-01` | Use one self-contained artifact only as a collision/regression harness for approved ordinary UI.                                               | `Accepted supporting evidence — 2026-08-11` |
+| `FPR-02` | Adopt version-pinned, first-party self-hosted Pretendard JP variable dynamic-subset delivery and official fallback order.                      | `Approved — 2026-08-11`                     |
+| `FPR-03` | Promote the approved document `24` contracts together as Foundation v0.1 without reopening source decisions.                                   | `Approved — 2026-08-11`                     |
+| `FPR-04` | Adopt the reusable aliases and patterns above, adding `FormField`, narrowing `MusicEntityHeader`, and treating `Overlay` as a family contract. | `Approved — 2026-08-11`                     |
+| `FPR-05` | Keep the complete viewer/editor outside regression, reusable UI, and downstream template work.                                                 | `Locked approved boundary`                  |
 
-## Block 5 completion gate
+## Block 5 completion
 
-Block 5 becomes complete only after the user approves or revises `FPR-04`; the
-controlled harness has already passed its stated checks and `FPR-02`–`FPR-03` are
-approved. At that point, update this document, document `57`, and the root README
-together. Do not create another package, percentage, or viewer/editor follow-up.
+Block 5 is complete. The controlled harness passed its stated checks, `FPR-02`
+approved the production font-delivery contract, `FPR-03` promoted Foundation v0.1,
+and `FPR-04` approved the lean reusable ordinary-UI package on 2026-08-11.
+
+Do not reopen Block 5 from an older proposal, specimen, checklist, or deleted
+comparison. Only a precise acceptance failure or a new explicit user decision may
+reopen a named contract. There is no viewer/editor follow-up.
