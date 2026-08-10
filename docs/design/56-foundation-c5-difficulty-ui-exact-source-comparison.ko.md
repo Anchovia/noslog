@@ -2,7 +2,7 @@
 
 ## 문서 관리
 
-- 상태: `Proposed — 정확한 4색 후보 11개 사용자 검토 대기`
+- 상태: `Approved — DU-01 Adobe Spectrum S2 difficulty marker`
 - 정본 언어: 영어
 - 영어 정본:
   [56-foundation-c5-difficulty-ui-exact-source-comparison.md](./56-foundation-c5-difficulty-ui-exact-source-comparison.md)
@@ -22,7 +22,7 @@
 
 대상 일반 UI는 서로 시각적으로 다른 네 난이도 색을 지속적으로 사용해야 합니다. 이
 요구사항은 승인됐습니다. Neutral-only `DU-D0`는 Rejected이며 이 비교의 후보가 아닙니다.
-열린 질문은 정확히 공개된 어떤 Light/Dark 값과 네 role alias를 승인할지뿐입니다.
+정확한 mapping은 이제 `DU-01 · Adobe Spectrum S2`로 승인됐습니다.
 
 이전 초안은 동등한 정확한 값 비교를 마치기 전에 Spectrum만 실질 후보로 제시해 너무
 좁았습니다. 이번 개정은 Spectrum을 유지하고 독립적으로 공개된 후보 10개를 더해 동일한
@@ -60,14 +60,14 @@ NosLog 콘텐츠에서 비교합니다. Tailwind 값, screenshot에서 추출한
 따라서 package version, 중복 documentation page 또는 Tailwind를 추가 reference로 세지
 않고도 12개 최소 기준을 넘습니다.
 
-## 정확한 후보 값
+## 정확한 후보 값과 승인 mapping
 
 값은 Normal / Hard / Expert / Real 순서입니다. Light와 Dark가 같은 행에 있으며 `Same as
 Light`는 두 theme에 동일한 출처 값을 사용한다는 뜻입니다.
 
 | ID      | 공개된 source recipe                               | Light 값                                      | Dark 값                                       | Provenance 상태                     |
 | ------- | -------------------------------------------------- | --------------------------------------------- | --------------------------------------------- | ----------------------------------- |
-| `DU-01` | Spectrum S2 green/orange/red/purple `visual-color` | `#0BA45D` / `#E86A00` / `#F03823` / `#A65CE7` | `#068850` / `#E06400` / `#CD2E1D` / `#AD69E9` | Maintained, adaptive                |
+| `DU-01` | Spectrum S2 green/orange/red/purple `visual-color` | `#0BA45D` / `#E86A00` / `#F03823` / `#A65CE7` | `#068850` / `#E06400` / `#CD2E1D` / `#AD69E9` | `Approved`, maintained, adaptive    |
 | `DU-02` | Radix green/orange/red/purple step `9`             | `#30A46C` / `#F76B15` / `#E5484D` / `#8E4EC6` | Light와 같음                                  | Maintained, fixed set               |
 | `DU-03` | Primer data green/orange/auburn/purple emphasis    | `#30A147` / `#EB670F` / `#9D615C` / `#894CEB` | `#2F6F37` / `#984B10` / `#EB3342` / `#975BF1` | Maintained, adaptive                |
 | `DU-04` | Atlassian categorical 1–4                          | `#357DE8` / `#82B536` / `#BF63F3` / `#F68909` | `#4688EC` / `#94C748` / `#C97CF4` / `#FCA700` | Maintained, adaptive                |
@@ -122,13 +122,13 @@ shortlist에서 제외합니다.
 - `DU-06 · SAP Fiori`도 통과하지만 blue → orange → green → pink라 Expert가 Hard보다
   더 심하다는 인상이 즉시 전달되지 않습니다.
 
-따라서 근거에 따른 권고는 `DU-01`이지만 상태는 Proposed입니다. 사용자가 실제 rendering을
-비교하고 정확한 mapping을 명시적으로 승인해야 합니다.
+근거에 따른 권고는 `DU-01`이었고 사용자가 2026-08-10 승인했습니다. Carbon과 SAP는
+비교 근거로 남지만 downstream target이 아닙니다.
 
 ## 강한 component 경계
 
-어떤 후보를 승인하더라도 chroma는 대상 반복 탐색용 일반 DOM UI의 작은 difficulty
-marker에만 나타날 수 있습니다. 다음에는 색을 넣지 않습니다.
+승인된 `DU-01` chroma는 대상 반복 탐색용 일반 DOM UI의 작은 difficulty marker에만
+나타날 수 있습니다. 다음에는 색을 넣지 않습니다.
 
 - difficulty text, card background, section, navigation, link, button, selection,
   focus, validation 또는 feedback;
@@ -142,29 +142,31 @@ marker에만 나타날 수 있습니다. 다음에는 색을 넣지 않습니다
 ## Browser 검증 — 2026-08-10
 
 개정한 artifact를 `1440px`, `390px`, `320px`에서 검증했습니다. 세 width 모두 가로
-overflow가 0이었습니다. 후보 11개와 Light/Dark appearance 22개를 렌더링했고 Dark-only
-control은 정확히 Dark appearance 11개만 노출했습니다. Color-off 상태에서도 서로 다른
-marker pattern 4개와 이름, level, fixed order, selected label이 남았습니다. DOM의
-`canvas`, SVG, WebGL 및 viewer/editor element는 0개였고 완료한 run에 console warning이나
-error가 없었습니다. 이 검증은 비교 artifact만의 근거이며 production viewer/editor code를
-test하거나 수정하지 않았습니다.
+overflow가 0이었습니다. 처음에는 maintained source이고 양쪽 surface를 통과한 후보 3개만
+보이며 `전체 11개` control로 전체 근거를 확인할 수 있습니다. Light/Dark appearance
+22개를 렌더링했고 Dark-only control은 정확히 Dark appearance 11개만 노출했습니다.
+Color-off 상태에서도 서로 다른 marker pattern 4개와 이름, level, fixed order, selected
+label이 남았습니다. DOM의 `canvas`, SVG, WebGL 및 viewer/editor element는 0개였고 완료한
+run에 console warning이나 error가 없었습니다. 이 검증은 비교 artifact만의 근거이며
+production viewer/editor code를 test하거나 수정하지 않았습니다.
 
 ## Decision log
 
-| ID       | Entry                                                                                   | 상태                                      |
-| -------- | --------------------------------------------------------------------------------------- | ----------------------------------------- |
-| `DUS-01` | 기존 viewer/editor 경험 전체를 보존합니다.                                              | `Approved correction — 2026-08-10`        |
-| `DUS-02` | 잘못된 renderer hand-color 비교를 제거합니다.                                           | `Completed`                               |
-| `DUS-03` | 이 결정을 반복 탐색용 일반 difficulty DOM UI에 한정합니다.                              | `Approved scope correction`               |
-| `DUS-04` | 지속적인 난이도별 네 색을 요구하고 neutral-only `DU-D0`를 거절합니다.                   | `Approved and reconfirmed`                |
-| `DUS-05` | Spectrum만 제시하지 않고 독립 출처의 정확한 후보 11개를 비교합니다.                     | `Completed research — visual review 대기` |
-| `DUS-06` | 원본 값이 두 승인 surface를 통과하는 maintained 후보만 shortlist에 남깁니다.            | `Proposed evaluation rule`                |
-| `DUS-07` | 통과한 Carbon·SAP보다 difficulty 인지를 잘 보존하는 `DU-01 · Spectrum S2`를 선호합니다. | `Proposed recommendation — 미승인`        |
+| ID       | Entry                                                                                   | 상태                               |
+| -------- | --------------------------------------------------------------------------------------- | ---------------------------------- |
+| `DUS-01` | 기존 viewer/editor 경험 전체를 보존합니다.                                              | `Approved correction — 2026-08-10` |
+| `DUS-02` | 잘못된 renderer hand-color 비교를 제거합니다.                                           | `Completed`                        |
+| `DUS-03` | 이 결정을 반복 탐색용 일반 difficulty DOM UI에 한정합니다.                              | `Approved scope correction`        |
+| `DUS-04` | 지속적인 난이도별 네 색을 요구하고 neutral-only `DU-D0`를 거절합니다.                   | `Approved and reconfirmed`         |
+| `DUS-05` | Spectrum만 제시하지 않고 독립 출처의 정확한 후보 11개를 비교합니다.                     | `Completed research and review`    |
+| `DUS-06` | 원본 값이 두 승인 surface를 통과하는 maintained 후보만 shortlist에 남깁니다.            | `Applied evaluation rule`          |
+| `DUS-07` | 통과한 Carbon·SAP보다 difficulty 인지를 잘 보존하는 `DU-01 · Spectrum S2`를 사용합니다. | `Approved — 2026-08-10`            |
 
 ## 승인 경계와 남은 작업 수
 
-정확한 4색 mapping은 아직 승인되지 않았습니다. 이 비교는 블록 `1`의 일부이며 새 작업
-11개가 아닙니다. 후보 11개는 하나의 material decision 안의 비교 근거입니다. 승인 뒤에는
-새 작업을 만들지 않고 같은 블록에서 score band, FAST/SLOW, series, threshold의 local
-data color를 이어서 다룹니다. 권위 있는 전체 잔여량은 문서 `57`의 top-level 6블록
-그대로이며 완료 퍼센트는 표시하지 않습니다.
+`DU-01`은 대상 일반 UI의 작은 difficulty marker 네 색에만 승인됐습니다. Difficulty
+text·background·container·selection·focus·feedback·action 또는 viewer/editor 요소를
+재착색하는 승인이 아닙니다. 후보 11개는 블록 `1` 안의 비교 근거이며 별도 작업이 아닙니다.
+이제 새 작업을 만들지 않고 같은 블록에서 score band, FAST/SLOW, series, threshold의
+local data color를 이어서 다룹니다. 권위 있는 전체 잔여량은 문서 `57`의 top-level
+6블록 그대로이며 완료 퍼센트는 표시하지 않습니다.

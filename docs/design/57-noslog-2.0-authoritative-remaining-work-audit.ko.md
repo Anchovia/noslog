@@ -39,14 +39,14 @@ fractional package credit 및 18-package 표를 모두 supersede합니다. 사�
 
 ## 정확한 남은 작업
 
-| 블록                                | 정확한 남은 범위                                                                                                                                                                                     | 명시적 제외                                                                                                      | 완료 결과                                                 |
-| ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
-| `1 · C5 color 마감`                 | 이미 필요한 것으로 확정된 Normal/Hard/Expert/Real distinct color의 정확한 authoritative Light/Dark 값과 네 role mapping을 선택하고, 이어서 score band·FAST/SLOW·series·threshold color를 승인합니다. | Viewer/editor 전체. Basic/Recital, rank/achievement, genre는 별도로 다시 열지 않는 한 neutral입니다.             | Difficulty와 local data-color 결정 승인 또는 명시적 종료. |
-| `2 · Iconography`                   | 일반 UI icon 문법, icon-only/label 정책, size/stroke 및 accessible-name 규칙을 정의합니다.                                                                                                           | Viewer/editor 전체와 최종 logo drawing.                                                                          | 승인된 일반 UI iconography 규칙.                          |
-| `3 · Motion`                        | 일반 UI motion purpose, duration/easing role 및 reduced-motion 대체를 정의합니다.                                                                                                                    | Viewer/editor 전체, renderer timing, transport 및 editor motion.                                                 | 승인된 일반 UI motion 계약.                               |
-| `4 · Data visualization`            | 일반 data visualization의 axis, legend, exact value, tooltip/focus 및 non-color/table fallback을 정의합니다.                                                                                         | Viewer/editor 전체와 그 chart rendering.                                                                         | 승인된 일반 data-visualization anatomy.                   |
-| `5 · Foundation 승격과 reusable UI` | 완료된 `S1`, `S2`, `S3`, `S5` fixture를 최종 회귀 검증하고 Pretendard JP delivery/fallback을 확인한 뒤 Foundation v0.1을 승격하고 검증된 component alias·pattern·template을 통합합니다.              | `S4` 없음, `S6` 없음, 새 구조 page 작업 없음, 완료된 입력 재개방 없음.                                           | 승인된 Foundation과 재사용 일반 UI guidance.              |
-| `6 · Handoff와 milestone export`    | 기존 Page Brief를 screen requirement, 구현 mapping, 접근성·다국어 QA 및 Claude Design handoff로 통합하고 PDF 언어/packaging 결정 뒤 안정된 versioned milestone을 export합니다.                       | Page Brief를 다시 열거나 viewer/editor 변경을 추가하거나 최종 high-fidelity production design을 만들지 않습니다. | 완전한 downstream handoff와 versioned 배포 artifact.      |
+| 블록                                | 정확한 남은 범위                                                                                                                                                                        | 명시적 제외                                                                                                      | 완료 결과                                                 |
+| ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| `1 · C5 color 마감`                 | `DU-01` exact difficulty-marker mapping은 승인됐으며 comparison-local score band·FAST/SLOW·series·threshold color를 이어서 결정합니다.                                                  | Viewer/editor 전체. Basic/Recital, rank/achievement, genre는 별도로 다시 열지 않는 한 neutral입니다.             | Difficulty와 local data-color 결정 승인 또는 명시적 종료. |
+| `2 · Iconography`                   | 일반 UI icon 문법, icon-only/label 정책, size/stroke 및 accessible-name 규칙을 정의합니다.                                                                                              | Viewer/editor 전체와 최종 logo drawing.                                                                          | 승인된 일반 UI iconography 규칙.                          |
+| `3 · Motion`                        | 일반 UI motion purpose, duration/easing role 및 reduced-motion 대체를 정의합니다.                                                                                                       | Viewer/editor 전체, renderer timing, transport 및 editor motion.                                                 | 승인된 일반 UI motion 계약.                               |
+| `4 · Data visualization`            | 일반 data visualization의 axis, legend, exact value, tooltip/focus 및 non-color/table fallback을 정의합니다.                                                                            | Viewer/editor 전체와 그 chart rendering.                                                                         | 승인된 일반 data-visualization anatomy.                   |
+| `5 · Foundation 승격과 reusable UI` | 완료된 `S1`, `S2`, `S3`, `S5` fixture를 최종 회귀 검증하고 Pretendard JP delivery/fallback을 확인한 뒤 Foundation v0.1을 승격하고 검증된 component alias·pattern·template을 통합합니다. | `S4` 없음, `S6` 없음, 새 구조 page 작업 없음, 완료된 입력 재개방 없음.                                           | 승인된 Foundation과 재사용 일반 UI guidance.              |
+| `6 · Handoff와 milestone export`    | 기존 Page Brief를 screen requirement, 구현 mapping, 접근성·다국어 QA 및 Claude Design handoff로 통합하고 PDF 언어/packaging 결정 뒤 안정된 versioned milestone을 export합니다.          | Page Brief를 다시 열거나 viewer/editor 변경을 추가하거나 최종 high-fidelity production design을 만들지 않습니다. | 완전한 downstream handoff와 versioned 배포 artifact.      |
 
 각 블록 안의 조사, specimen, browser 검증, 이중 언어 갱신 및 export 단계는 하위
 작업입니다. 갯수를 늘리기 위해 새 top-level 작업으로 분리하면 안 됩니다.
@@ -67,9 +67,11 @@ Gate와 검증 단계를 “다음 작업”이라고 발표하지 않습니다.
 구분하고 이름, numeric level, fixed order 및 명시적 selection을 함께 유지해야 합니다.
 이는 승인된 요구사항이며 color와 neutral 중 하나를 다시 고르는 결정이 아닙니다.
 
-블록 `1`은 먼저 정확한 authoritative Light/Dark 값과 네 role mapping을 결정합니다. 문서
-`56`은 정확히 공개된 후보 11개를 비교하며 1차 shortlist는 Spectrum S2, Carbon, SAP지만
-최종 mapping은 아직 미승인입니다. Neutral `DU-D0`는 Rejected이며 후보가 아닙니다. 어떤
+블록 `1`은 먼저 정확한 authoritative Light/Dark 값과 네 role mapping을 결정했습니다.
+문서 `56`은 정확히 공개된 후보 11개를 비교하며 사용자는 2026-08-10 일반 UI의 작은
+difficulty marker에만 `DU-01 · Adobe Spectrum S2`를 승인했습니다. Difficulty text,
+background, container, selection, focus, feedback, action 및 viewer/editor 전체는 이 승인
+밖입니다. Neutral `DU-D0`는 Rejected이며 후보가 아닙니다. 어떤
 후보도 provenance, contrast 및 content 요구를 통과하지 못하면 필요한 색상 구분을 임의로
 제거하지 않고 exact-value 실패를 사용자에게 다시 보고합니다.
 
@@ -95,18 +97,17 @@ Gate와 검증 단계를 “다음 작업”이라고 발표하지 않습니다.
 
 ## 현재 material decision
 
-블록 `1`에서는 현재 이미 승인된 Normal/Hard/Expert/Real distinct color의 정확한
-authoritative Light/Dark source와 네 role mapping을 사용자가 선택해야 합니다. 선택 뒤에는
-새 작업을 만들지 않고 같은 블록에서 일반 local data-color 비교를 이어갑니다. 블록
-`2`–`6`은 블록 `1` 완료 뒤에만 시작하며 내부 결정은 별도 남은 작업이 되지 않습니다.
+정확한 Normal/Hard/Expert/Real marker mapping은 승인됐습니다. 블록 `1`은 이제 새 작업을
+만들지 않고 일반 local data-color 비교를 이어갑니다. 블록 `2`–`6`은 블록 `1` 완료 뒤에만
+시작하며 내부 결정은 별도 남은 작업이 되지 않습니다.
 
 ## Decision log
 
-| ID       | Entry                                                                                         | 상태                                            |
-| -------- | --------------------------------------------------------------------------------------------- | ----------------------------------------------- |
-| `RWA-01` | 이 감사와 README 표를 현재 남은 작업 권위로 지정합니다.                                       | `Approved scope correction — 2026-08-10`        |
-| `RWA-02` | 기존 viewer/editor 전체를 보존하고 활성 `S4`/`S6` 디자인 작업을 모두 취소합니다.              | `Approved correction — 2026-08-10`              |
-| `RWA-03` | 고정 18-package 분모와 `12.5/18 = 69%` 진행률을 유지합니다.                                   | `Rejected 및 superseded — 근거 없는 계산`       |
-| `RWA-04` | 최종 mark drawing을 downstream으로, Radix 배치 탐색을 closed로 분류합니다.                    | `Scope classification`                          |
-| `RWA-05` | 일반 difficulty UI에 서로 다른 네 색을 유지하고 exact source 값과 role mapping만 열어 둡니다. | `요구사항 승인, exact mapping 사용자 검토 대기` |
-| `RWA-06` | 완료 퍼센트나 fractional credit 없이 근거 있는 남은 작업 6블록만 추적합니다.                  | `Git 이력 감사 후 정정 — 2026-08-10`            |
+| ID       | Entry                                                                            | 상태                                      |
+| -------- | -------------------------------------------------------------------------------- | ----------------------------------------- |
+| `RWA-01` | 이 감사와 README 표를 현재 남은 작업 권위로 지정합니다.                          | `Approved scope correction — 2026-08-10`  |
+| `RWA-02` | 기존 viewer/editor 전체를 보존하고 활성 `S4`/`S6` 디자인 작업을 모두 취소합니다. | `Approved correction — 2026-08-10`        |
+| `RWA-03` | 고정 18-package 분모와 `12.5/18 = 69%` 진행률을 유지합니다.                      | `Rejected 및 superseded — 근거 없는 계산` |
+| `RWA-04` | 최종 mark drawing을 downstream으로, Radix 배치 탐색을 closed로 분류합니다.       | `Scope classification`                    |
+| `RWA-05` | 일반 UI의 작은 difficulty marker 네 색에 정확한 Spectrum S2 값을 사용합니다.     | `Approved — 2026-08-10`                   |
+| `RWA-06` | 완료 퍼센트나 fractional credit 없이 근거 있는 남은 작업 6블록만 추적합니다.     | `Git 이력 감사 후 정정 — 2026-08-10`      |

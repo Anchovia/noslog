@@ -159,8 +159,12 @@ Sections:
   Outside the entire viewer/editor experience, proven repeated-scanning difficulty UI
   must distinguish Normal, Hard, Expert, and Real with four different persistent
   colors. This product requirement is approved and must not be reopened as a
-  color-versus-neutral choice. The exact authoritative Light/Dark source values and
-  four-role mapping remain the current open decision inside block `1`. Basic/Recital,
+  color-versus-neutral choice. `DU-01 · Adobe Spectrum S2` is the approved exact
+  difficulty-marker mapping: Normal `#0BA45D/#068850`, Hard `#E86A00/#E06400`, Expert
+  `#F03823/#CD2E1D`, and Real `#A65CE7/#AD69E9` for Light/Dark. This approval assigns
+  only the four compact ordinary-UI marker colors. It does not color difficulty text,
+  backgrounds, containers, selection, focus, feedback, actions, or any viewer/editor
+  element. Basic/Recital,
   rank/achievement, and genre remain neutral by default; score bands and FAST/SLOW
   visualization follow later inside the same block. This boundary does not approve current non-renderer
   NosLog values, sampled imagery, another rhythm game's palette, or any new exact

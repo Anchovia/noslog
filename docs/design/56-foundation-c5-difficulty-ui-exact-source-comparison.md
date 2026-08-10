@@ -2,7 +2,7 @@
 
 ## Document control
 
-- Status: `Proposed — eleven exact four-color candidates awaiting user review`
+- Status: `Approved — DU-01 Adobe Spectrum S2 difficulty markers`
 - Canonical language: English
 - Korean companion:
   [56-foundation-c5-difficulty-ui-exact-source-comparison.ko.md](./56-foundation-c5-difficulty-ui-exact-source-comparison.ko.md)
@@ -22,8 +22,8 @@
 
 Eligible ordinary UI must use four visibly different persistent difficulty colors.
 This requirement is approved. Neutral-only `DU-D0` is Rejected and is not a candidate
-in this comparison. The only open question is which exact published Light/Dark values
-and which four-role alias should be approved.
+in this comparison. The exact mapping is now approved as
+`DU-01 · Adobe Spectrum S2`.
 
 The previous draft was also too narrow because it presented Spectrum as the only real
 candidate before an equivalent exact-value comparison had been completed. This revision
@@ -63,14 +63,14 @@ surface or behavior.
 The comparison therefore exceeds the twelve-source minimum without counting package
 versions, duplicated documentation pages, or Tailwind as additional references.
 
-## Exact candidate values
+## Exact candidate values and approved mapping
 
 Values are shown in Normal / Hard / Expert / Real order. A repeated set means the
 source candidate uses the same values in both themes.
 
 | ID      | Published source recipe                            | Light values                                  | Dark values                                   | Provenance status                   |
 | ------- | -------------------------------------------------- | --------------------------------------------- | --------------------------------------------- | ----------------------------------- |
-| `DU-01` | Spectrum S2 green/orange/red/purple `visual-color` | `#0BA45D` / `#E86A00` / `#F03823` / `#A65CE7` | `#068850` / `#E06400` / `#CD2E1D` / `#AD69E9` | Maintained, adaptive                |
+| `DU-01` | Spectrum S2 green/orange/red/purple `visual-color` | `#0BA45D` / `#E86A00` / `#F03823` / `#A65CE7` | `#068850` / `#E06400` / `#CD2E1D` / `#AD69E9` | `Approved`, maintained, adaptive    |
 | `DU-02` | Radix green/orange/red/purple step `9`             | `#30A46C` / `#F76B15` / `#E5484D` / `#8E4EC6` | Same as Light                                 | Maintained, fixed set               |
 | `DU-03` | Primer data green/orange/auburn/purple emphasis    | `#30A147` / `#EB670F` / `#9D615C` / `#894CEB` | `#2F6F37` / `#984B10` / `#EB3342` / `#975BF1` | Maintained, adaptive                |
 | `DU-04` | Atlassian categorical 1–4                          | `#357DE8` / `#82B536` / `#BF63F3` / `#F68909` | `#4688EC` / `#94C748` / `#C97CF4` / `#FCA700` | Maintained, adaptive                |
@@ -127,13 +127,13 @@ shortlist because its source tokens are deprecated.
 - `DU-06 · SAP Fiori` also passes, but blue → orange → green → pink makes Expert less
   immediately severe than Hard.
 
-The evidence-supported recommendation is therefore `DU-01`, but it remains Proposed.
-The user must compare the rendered candidates and explicitly approve the exact mapping.
+The evidence-supported recommendation was `DU-01`. The user approved it on
+2026-08-10. Carbon and SAP remain comparison evidence and are not downstream targets.
 
 ## Hard component boundary
 
-Whichever candidate is approved, chroma may appear only on the compact difficulty
-marker in eligible repeated-scanning ordinary DOM UI. It must not color:
+The approved `DU-01` chroma may appear only on the compact difficulty marker in
+eligible repeated-scanning ordinary DOM UI. It must not color:
 
 - difficulty text, card background, section, navigation, link, button, selection,
   focus, validation, or feedback;
@@ -147,30 +147,33 @@ remain visible, so color is never the sole cue.
 ## Browser verification — 2026-08-10
 
 The revised artifact was verified at `1440px`, `390px`, and `320px`. All three widths
-had zero horizontal overflow. The page rendered eleven candidates and twenty-two
-Light/Dark appearances, the Dark-only control exposed exactly eleven Dark appearances,
-and color-off retained four different marker patterns with the names, levels, fixed
-order, and selected label. The DOM contained zero `canvas`, SVG, WebGL, or viewer/editor
-elements, and the completed run produced no console warning or error. Verification is
-evidence for the comparison artifact only; it did not test or modify production
-viewer/editor code.
+had zero horizontal overflow. It opens with the three maintained candidates that pass
+both surfaces and the `all eleven` control reveals the complete evidence set. The page
+renders twenty-two Light/Dark appearances, the Dark-only control exposes exactly eleven
+Dark appearances, and color-off retains four different marker patterns with the names,
+levels, fixed order, and selected label. The DOM contained zero `canvas`, SVG, WebGL, or
+viewer/editor elements, and the completed run produced no console warning or error.
+Verification is evidence for the comparison artifact only; it did not test or modify
+production viewer/editor code.
 
 ## Decision log
 
-| ID       | Entry                                                                                                                                | Status                                        |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------- |
-| `DUS-01` | Preserve the existing viewer/editor experiences in their entirety.                                                                   | `Approved correction — 2026-08-10`            |
-| `DUS-02` | Remove the incorrect renderer hand-color comparison.                                                                                 | `Completed`                                   |
-| `DUS-03` | Restrict this decision to repeated-scanning ordinary difficulty DOM UI.                                                              | `Approved scope correction`                   |
-| `DUS-04` | Require four different persistent difficulty colors; reject neutral-only `DU-D0`.                                                    | `Approved and reconfirmed`                    |
-| `DUS-05` | Compare eleven exact candidate mappings from independent published sources rather than presenting Spectrum alone.                    | `Completed research — awaiting visual review` |
-| `DUS-06` | Shortlist only maintained candidates whose unchanged values pass both approved surfaces.                                             | `Proposed evaluation rule`                    |
-| `DUS-07` | Prefer `DU-01 · Spectrum S2` over passing Carbon and SAP alternatives because its hue order better preserves difficulty recognition. | `Proposed recommendation — not approved`      |
+| ID       | Entry                                                                                                                             | Status                             |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
+| `DUS-01` | Preserve the existing viewer/editor experiences in their entirety.                                                                | `Approved correction — 2026-08-10` |
+| `DUS-02` | Remove the incorrect renderer hand-color comparison.                                                                              | `Completed`                        |
+| `DUS-03` | Restrict this decision to repeated-scanning ordinary difficulty DOM UI.                                                           | `Approved scope correction`        |
+| `DUS-04` | Require four different persistent difficulty colors; reject neutral-only `DU-D0`.                                                 | `Approved and reconfirmed`         |
+| `DUS-05` | Compare eleven exact candidate mappings from independent published sources rather than presenting Spectrum alone.                 | `Completed research and review`    |
+| `DUS-06` | Shortlist only maintained candidates whose unchanged values pass both approved surfaces.                                          | `Applied evaluation rule`          |
+| `DUS-07` | Use `DU-01 · Spectrum S2` over passing Carbon and SAP alternatives because its hue order better preserves difficulty recognition. | `Approved — 2026-08-10`            |
 
 ## Approval boundary and remaining-work count
 
-No exact four-color mapping is approved yet. This comparison remains part of block `1`,
-not eleven new tasks: the eleven candidates are evidence inside one material decision.
-After approval, work continues in the same block with local data color for score bands,
-FAST/SLOW, series, and thresholds. The authoritative total remains the six top-level
-blocks in document `57`; no completion percentage is reported.
+`DU-01` is approved only for the four compact difficulty-marker colors in eligible
+ordinary UI. It does not approve colored difficulty text, backgrounds, containers,
+selection, focus, feedback, actions, or any viewer/editor element. The eleven candidates
+remain evidence inside block `1`, not separate tasks. Work now continues in the same
+block with local data color for score bands, FAST/SLOW, series, and thresholds. The
+authoritative total remains the six top-level blocks in document `57`; no completion
+percentage is reported.

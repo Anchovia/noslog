@@ -119,8 +119,12 @@ NOSTALGIA difficulty color와 comparison-local data color는 남은 블록 `1` �
 기존 renderer의 note·left/right-hand color는 Foundation token 후보가 아니며 exact-source
 비교에서 제외합니다. Viewer/editor 전체 밖의 repeated-scanning 일반 UI에서는
 Normal·Hard·Expert·Real을 서로 다른 네 가지 지속 색상으로 구분합니다. 이는 승인된 제품
-요구사항이며 color와 neutral 중 하나를 다시 고르는 항목이 아닙니다. 아직 미확정인 것은
-정확한 authoritative Light/Dark source 값과 네 role mapping입니다. Basic/Recital,
+요구사항이며 color와 neutral 중 하나를 다시 고르는 항목이 아닙니다. 정확한 mapping은
+`DU-01 · Adobe Spectrum S2`로 승인했습니다. Normal은 Light/Dark `#0BA45D/#068850`,
+Hard는 `#E86A00/#E06400`, Expert는 `#F03823/#CD2E1D`, Real은
+`#A65CE7/#AD69E9`입니다. 이 승인은 일반 UI의 작은 난이도 marker 색만 정하며 난이도
+text·background·container·selection·focus·feedback·action 또는 viewer/editor 요소를
+재착색하지 않습니다. Basic/Recital,
 rank/achievement·genre는 기본 neutral을 유지하고 score band와 FAST/SLOW visualization은
 difficulty mapping 승인 뒤 같은 블록에서 이어서 다룹니다. 조사가 적합한 mapping을 찾지 못하면 사용자에게 다시 보고하며,
 임의로 neutral 처리하거나 대체 값을 만들지 않습니다.
@@ -153,14 +157,14 @@ decision이 필요할 때만 잠시 확인하고, 승인 뒤에는 새 작업을
 계속합니다. 내부 단계·문서·후보·검증 횟수를 “다음 작업”, 별도 package 또는 남은 작업으로
 표현하지 않습니다.
 
-|   # | 남은 작업 블록                        | 상태          | 정확한 범위                                                                                                                      |
-| --: | ------------------------------------- | ------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-|   1 | C5 color 마감                         | `In progress` | 승인된 distinct Normal/Hard/Expert/Real의 정확한 Light/Dark 4색 mapping, 이어서 score band·FAST/SLOW·series·threshold data color |
-|   2 | Iconography                           | `Not started` | 일반 UI icon 문법, label/icon-only, size/stroke, accessible name                                                                 |
-|   3 | Motion / Reduced motion               | `Not started` | 일반 UI motion purpose, duration/easing, reduced-motion 대체                                                                     |
-|   4 | Data-visualization anatomy            | `Not started` | 일반 UI axis, legend, exact value, tooltip/focus, non-color/table fallback                                                       |
-|   5 | Foundation 승격과 reusable UI 정리    | `Not started` | 완료된 일반 UI fixture 회귀, Pretendard JP delivery/fallback 검증, component·pattern·template 통합                               |
-|   6 | Downstream handoff와 milestone export | `Not started` | 기존 Page Brief의 screen requirement·mapping·QA 통합, Claude Design handoff, 언어/packaging 결정 뒤 versioned PDF                |
+|   # | 남은 작업 블록                        | 상태          | 정확한 범위                                                                                                       |
+| --: | ------------------------------------- | ------------- | ----------------------------------------------------------------------------------------------------------------- |
+|   1 | C5 color 마감                         | `In progress` | `DU-01` 난이도 marker mapping 승인 완료; score band·FAST/SLOW·series·threshold local data color 진행              |
+|   2 | Iconography                           | `Not started` | 일반 UI icon 문법, label/icon-only, size/stroke, accessible name                                                  |
+|   3 | Motion / Reduced motion               | `Not started` | 일반 UI motion purpose, duration/easing, reduced-motion 대체                                                      |
+|   4 | Data-visualization anatomy            | `Not started` | 일반 UI axis, legend, exact value, tooltip/focus, non-color/table fallback                                        |
+|   5 | Foundation 승격과 reusable UI 정리    | `Not started` | 완료된 일반 UI fixture 회귀, Pretendard JP delivery/fallback 검증, component·pattern·template 통합                |
+|   6 | Downstream handoff와 milestone export | `Not started` | 기존 Page Brief의 screen requirement·mapping·QA 통합, Claude Design handoff, 언어/packaging 결정 뒤 versioned PDF |
 
 향후 Foundation 통합 검사는 구조 작업의 반복이 아닙니다. 이후 승인되는 appearance
 규칙이 완료된 일반 UI `S1`, `S2`, `S3`, `S5` fixture를 손상하지 않았는지만 확인합니다. 새 `S6`
