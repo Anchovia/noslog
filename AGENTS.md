@@ -75,7 +75,8 @@ preservation exceptions for NosLog 2.0. Preserve their current:
   editor rendering model.
 
 Do not redesign, recolor, restyle, reorganize, replace, reinterpret, or create a
-iconography, data-visualization, component, template, responsive, and
+NosLog 2.0 variant of any part of either experience. Foundation color, material,
+motion, iconography, data-visualization, component, template, responsive, and
 accessibility decisions do not apply to them. Former viewer/editor page briefs,
 `S4`, `S6`, and contribution/editor proposals are superseded historical evidence,
 not future work. Only a new, explicit user decision reopening the whole exception

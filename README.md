@@ -74,9 +74,10 @@ NosLog 2.0 디자인 가이드의 활성 소스는 `docs/design/` 아래 **영�
 2. `AGENTS.md`의 작업·보존 경계
 3. 이 `README.md`의 제품 기준선과 여섯 블록 진행 상태
 4. [현재 남은 작업 감사](./docs/design/57-design-guide-remaining-work-audit.md)
-5. [Foundation v0.1 규범](./docs/design/24-foundation-v0.1.md)
-6. [Foundation v0.1 출처와 결정 이력](./docs/design/25-foundation-v0.1-provenance.md)
-7. 그 밖의 현재 영문 제품 감사·IA·Page Brief·교차 원칙 문서
+5. [Downstream 디자인·구현 handoff](./docs/design/64-downstream-design-implementation-handoff.md)
+6. [Foundation v0.1 규범](./docs/design/24-foundation-v0.1.md)
+7. [Foundation v0.1 출처와 결정 이력](./docs/design/25-foundation-v0.1-provenance.md)
+8. 그 밖의 현재 영문 제품 감사·IA·Page Brief·교차 원칙 문서
 
 이후 문서의 명시적 `Approved`·`Rejected`·`Superseded` 기록은 과거 제안, 체크리스트,
 specimen, 문서 번호보다 우선합니다. 삭제된 비교 문서는 Git 이력에만 보존하며 현재
