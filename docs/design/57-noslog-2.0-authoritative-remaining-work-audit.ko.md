@@ -2,12 +2,12 @@
 
 ## 문서 관리
 
-- 상태: `블록 1 완료 — 근거 있는 남은 작업 5블록`
+- 상태: `블록 2 완료 — 근거 있는 남은 작업 4블록`
 - 정본 언어: 영어
 - 영어 정본:
   [57-noslog-2.0-authoritative-remaining-work-audit.md](./57-noslog-2.0-authoritative-remaining-work-audit.md)
 - 날짜: 2026-08-10
-- 입력: 루트 `AGENTS.md`, 루트 `README.md`, 문서 `01`–`59`, 현재 저장소 근거,
+- 입력: 루트 `AGENTS.md`, 루트 `README.md`, 문서 `01`–`60`, 현재 저장소 근거,
   사용자의 명시적인 viewer/editor 보존 정정
 - 목적: 오래된 미래 체크리스트가 완료됐거나 금지된 작업을 되살리지 못하게 함
 
@@ -39,21 +39,21 @@ fractional package credit 및 18-package 표를 모두 supersede합니다. 사�
 
 ## 권위 있는 블록 기준선과 정확한 남은 작업
 
-| 블록                                | 정확한 남은 범위                                                                                                                                                                        | 명시적 제외                                                                                                      | 완료 결과                                            |
-| ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
-| `1 · C5 color 마감`                 | `DU-01` difficulty marker, `LD-03` SAP 일반 local-data color와 `JD-02` Radix 판정 domain 보완 승인 완료.                                                                                | Viewer/editor 전체. Basic/Recital, rank/achievement, genre는 별도로 다시 열지 않는 한 neutral입니다.             | `Complete — 2026-08-10`.                             |
-| `2 · Iconography`                   | 일반 UI icon 문법, icon-only/label 정책, size/stroke 및 accessible-name 규칙을 정의합니다.                                                                                              | Viewer/editor 전체와 최종 logo drawing.                                                                          | 승인된 일반 UI iconography 규칙.                     |
-| `3 · Motion`                        | 일반 UI motion purpose, duration/easing role 및 reduced-motion 대체를 정의합니다.                                                                                                       | Viewer/editor 전체, renderer timing, transport 및 editor motion.                                                 | 승인된 일반 UI motion 계약.                          |
-| `4 · Data visualization`            | 일반 data visualization의 axis, legend, exact value, tooltip/focus 및 non-color/table fallback을 정의합니다.                                                                            | Viewer/editor 전체와 그 chart rendering.                                                                         | 승인된 일반 data-visualization anatomy.              |
-| `5 · Foundation 승격과 reusable UI` | 완료된 `S1`, `S2`, `S3`, `S5` fixture를 최종 회귀 검증하고 Pretendard JP delivery/fallback을 확인한 뒤 Foundation v0.1을 승격하고 검증된 component alias·pattern·template을 통합합니다. | `S4` 없음, `S6` 없음, 새 구조 page 작업 없음, 완료된 입력 재개방 없음.                                           | 승인된 Foundation과 재사용 일반 UI guidance.         |
-| `6 · Handoff와 milestone export`    | 기존 Page Brief를 screen requirement, 구현 mapping, 접근성·다국어 QA 및 Claude Design handoff로 통합하고 PDF 언어/packaging 결정 뒤 안정된 versioned milestone을 export합니다.          | Page Brief를 다시 열거나 viewer/editor 변경을 추가하거나 최종 high-fidelity production design을 만들지 않습니다. | 완전한 downstream handoff와 versioned 배포 artifact. |
+| 블록                                | 정확한 남은 범위                                                                                                                                                                                         | 명시적 제외                                                                                                      | 완료 결과                                            |
+| ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| `1 · C5 color 마감`                 | `DU-01` difficulty marker, `LD-03` SAP 일반 local-data color와 `JD-02` Radix 판정 domain 보완 승인 완료.                                                                                                 | Viewer/editor 전체. Basic/Recital, rank/achievement, genre는 별도로 다시 열지 않는 한 neutral입니다.             | `Complete — 2026-08-10`.                             |
+| `2 · Iconography`                   | `IC-06 · Lucide`의 20px 기본, 16px compact supporting, 공개된 2px outline geometry, label/icon-only, target-size, color, localization 및 accessible-name 규칙을 승인했고 responsive 검증을 완료했습니다. | Viewer/editor 전체와 최종 logo drawing.                                                                          | `Complete — 2026-08-10`.                             |
+| `3 · Motion`                        | 일반 UI motion purpose, duration/easing role 및 reduced-motion 대체를 정의합니다.                                                                                                                        | Viewer/editor 전체, renderer timing, transport 및 editor motion.                                                 | 승인된 일반 UI motion 계약.                          |
+| `4 · Data visualization`            | 일반 data visualization의 axis, legend, exact value, tooltip/focus 및 non-color/table fallback을 정의합니다.                                                                                             | Viewer/editor 전체와 그 chart rendering.                                                                         | 승인된 일반 data-visualization anatomy.              |
+| `5 · Foundation 승격과 reusable UI` | 완료된 `S1`, `S2`, `S3`, `S5` fixture를 최종 회귀 검증하고 Pretendard JP delivery/fallback을 확인한 뒤 Foundation v0.1을 승격하고 검증된 component alias·pattern·template을 통합합니다.                  | `S4` 없음, `S6` 없음, 새 구조 page 작업 없음, 완료된 입력 재개방 없음.                                           | 승인된 Foundation과 재사용 일반 UI guidance.         |
+| `6 · Handoff와 milestone export`    | 기존 Page Brief를 screen requirement, 구현 mapping, 접근성·다국어 QA 및 Claude Design handoff로 통합하고 PDF 언어/packaging 결정 뒤 안정된 versioned milestone을 export합니다.                           | Page Brief를 다시 열거나 viewer/editor 변경을 추가하거나 최종 high-fidelity production design을 만들지 않습니다. | 완전한 downstream handoff와 versioned 배포 artifact. |
 
 각 블록 안의 조사, specimen, browser 검증, 이중 언어 갱신 및 export 단계는 하위
 작업입니다. 갯수를 늘리기 위해 새 top-level 작업으로 분리하면 안 됩니다.
 
 ## 큰 블록 단위 실행 방식
 
-이 고정 여섯 블록 기준선은 완료 이력도 보존합니다. 블록 `1` 완료 뒤에는 블록 `2`–`6`만
+이 고정 여섯 블록 기준선은 완료 이력도 보존합니다. 블록 `1`과 `2` 완료 뒤에는 블록 `3`–`6`만
 사용자에게 제시하는 남은 실행 단위로 사용합니다. 한 블록을 시작하면 조사,
 후보 비교, specimen, browser 검증, 필요한 material 사용자 결정, 한영 문서 반영과 정리를
 모두 같은 블록 안에서 이어서 수행합니다. 사용자에게 속한 material decision, 필요한 권한
@@ -99,20 +99,23 @@ background, container, selection, focus, feedback, action 및 viewer/editor 전�
 ## 현재 material decision
 
 정확한 Normal/Hard/Expert/Real marker mapping, `LD-03 · SAP Fiori Horizon` 일반
-local-data mapping과 `JD-02 · Radix Colors 3.0.0` 판정 domain mapping이
-승인됐습니다. 블록 `1`은 계속 완료 상태입니다. 다음 남은 블록은 `2 · Iconography`이며
-내부 결정은 별도 남은 작업이 되지 않습니다.
+local-data mapping, `JD-02 · Radix Colors 3.0.0` 판정 domain mapping과 `IC-06 · Lucide`
+일반 UI icon grammar가 승인됐습니다. 블록 `1`과 `2`는 계속 완료 상태입니다. 다음 남은
+블록은 `3 · Motion`입니다. Icon migration은 별도 남은 항목이 되지 않으며 잠긴
+viewer/editor는 계속 제외합니다.
 
 ## Decision log
 
-| ID       | Entry                                                                                           | 상태                                      |
-| -------- | ----------------------------------------------------------------------------------------------- | ----------------------------------------- |
-| `RWA-01` | 이 감사와 README 표를 현재 남은 작업 권위로 지정합니다.                                         | `Approved scope correction — 2026-08-10`  |
-| `RWA-02` | 기존 viewer/editor 전체를 보존하고 활성 `S4`/`S6` 디자인 작업을 모두 취소합니다.                | `Approved correction — 2026-08-10`        |
-| `RWA-03` | 고정 18-package 분모와 `12.5/18 = 69%` 진행률을 유지합니다.                                     | `Rejected 및 superseded — 근거 없는 계산` |
-| `RWA-04` | 최종 mark drawing을 downstream으로, Radix 배치 탐색을 closed로 분류합니다.                      | `Scope classification`                    |
-| `RWA-05` | 일반 UI의 작은 difficulty marker 네 색에 정확한 Spectrum S2 값을 사용합니다.                    | `Approved — 2026-08-10`                   |
-| `RWA-06` | 완료 상태를 포함한 고정 6블록 기준선을 완료 퍼센트나 fractional credit 없이 추적합니다.         | `Git 이력 감사 후 정정 — 2026-08-10`      |
-| `RWA-07` | 문서 `58`에서 Carbon, GitLab Pajamas, SAP Horizon을 세 exact local-data finalist로 올립니다.    | `Completed evidence`                      |
-| `RWA-08` | `LD-03 · SAP Fiori Horizon`을 채택하고 남은 블록 `1`을 종료합니다.                              | `Approved — 2026-08-10`                   |
-| `RWA-09` | `JD-02 · Radix Colors 3.0.0`을 판정 marker에 제한적으로 채택하며 블록 `1`을 다시 열지 않습니다. | `Approved amendment — 2026-08-10`         |
+| ID       | Entry                                                                                                      | 상태                                      |
+| -------- | ---------------------------------------------------------------------------------------------------------- | ----------------------------------------- |
+| `RWA-01` | 이 감사와 README 표를 현재 남은 작업 권위로 지정합니다.                                                    | `Approved scope correction — 2026-08-10`  |
+| `RWA-02` | 기존 viewer/editor 전체를 보존하고 활성 `S4`/`S6` 디자인 작업을 모두 취소합니다.                           | `Approved correction — 2026-08-10`        |
+| `RWA-03` | 고정 18-package 분모와 `12.5/18 = 69%` 진행률을 유지합니다.                                                | `Rejected 및 superseded — 근거 없는 계산` |
+| `RWA-04` | 최종 mark drawing을 downstream으로, Radix 배치 탐색을 closed로 분류합니다.                                 | `Scope classification`                    |
+| `RWA-05` | 일반 UI의 작은 difficulty marker 네 색에 정확한 Spectrum S2 값을 사용합니다.                               | `Approved — 2026-08-10`                   |
+| `RWA-06` | 완료 상태를 포함한 고정 6블록 기준선을 완료 퍼센트나 fractional credit 없이 추적합니다.                    | `Git 이력 감사 후 정정 — 2026-08-10`      |
+| `RWA-07` | 문서 `58`에서 Carbon, GitLab Pajamas, SAP Horizon을 세 exact local-data finalist로 올립니다.               | `Completed evidence`                      |
+| `RWA-08` | `LD-03 · SAP Fiori Horizon`을 채택하고 남은 블록 `1`을 종료합니다.                                         | `Approved — 2026-08-10`                   |
+| `RWA-09` | `JD-02 · Radix Colors 3.0.0`을 판정 marker에 제한적으로 채택하며 블록 `1`을 다시 열지 않습니다.            | `Approved amendment — 2026-08-10`         |
+| `RWA-10` | 문서 `60`의 권위 출처 감사와 통제된 일반 UI icon 시편으로 블록 `2`를 시작합니다.                           | `Completed evidence`                      |
+| `RWA-11` | `IC-06 · Lucide`를 채택하고 일반 UI grammar와 responsive/localized fixture를 검증해 블록 `2`를 종료합니다. | `Approved and complete — 2026-08-10`      |

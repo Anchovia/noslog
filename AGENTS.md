@@ -198,6 +198,24 @@ color closeout`. The comparison was internal evidence within that block, not a n
   not selected as the identity source. Preserve their evidence in document `47`, but
   do not use them as downstream design or implementation targets unless the user
   explicitly reopens the identity-source decision.
+- `IC-06 · Lucide` is the approved ordinary-UI iconography source for NosLog 2.0.
+  Preserve the published Lucide `24×24` source viewBox, `2px` stroke, round linecaps,
+  round linejoins, and outline treatment. Render routine action and wayfinding glyphs
+  at `20px`; use `16px` only for compact supporting or metadata icons with an adjacent
+  visible label; do not use ordinary-UI Lucide glyphs below `16px`. Reserve `24px` for
+  a genuinely prominent standalone affordance or empty state. Use visible labels for
+  primary, unfamiliar, destructive, and low-frequency actions. Limit icon-only
+  controls to universally understood contextual actions, give every one an explicit
+  accessible action name, and keep target size at least `44×44px` on mobile and
+  `40×40px` on eligible desktop. Decorative icons beside visible labels are
+  `aria-hidden`. Icons inherit the approved foreground or semantic control state; do
+  not add signature, difficulty, judgement, data, or feedback color merely for
+  emphasis, fill individual glyphs for selection, mix workflow icons from another
+  system, or redraw source paths. This approval comes from the document `60`
+  seventeen-source comparison and controlled NosLog specimen, not from Tailwind or
+  installation convenience. It does not apply to the locked viewer/editor, final
+  logo drawing, brand-service marks, flags, album jackets, illustrations, or
+  data-visualization marks.
 - Primitive-source approval, semantic-role mapping, component-alias mapping, and
   production implementation are separate approval gates. Approval of Adobe Spectrum
   S2 primitives does not by itself approve a proposed foreground, boundary,

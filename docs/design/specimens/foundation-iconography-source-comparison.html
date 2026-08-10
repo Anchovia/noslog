@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>NosLog 2.0 Iconography Source Comparison</title>
+        <style>
+            * { box-sizing: border-box; }
+            :root { color-scheme: light; font-family: Inter, Pretendard, "Noto Sans KR", system-ui, sans-serif; background: #e9e9e9; color: #292929; }
+            body { min-width: 0; margin: 0; background: #e9e9e9; }
+            button, input { font: inherit; }
+            button { position: relative; isolation: isolate; }
+            button:focus-visible, input:focus-visible { outline: none; }
+            button:focus-visible::after, .search:has(input:focus-visible)::after { position: absolute; z-index: 4; inset: -2px; border: 2px solid #000; content: ""; pointer-events: none; }
+            .appearance[data-theme="dark"] button:focus-visible::after, .appearance[data-theme="dark"] .search:has(input:focus-visible)::after { border-color: #fff; }
+            .sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+            .shell { display: grid; gap: 16px; width: min(1440px, 100%); margin: 0 auto; padding: 16px; }
+            .panel { border: 1px solid #c6c6c6; border-radius: 8px; background: #fff; }
+            header, .scope, .legend { padding: 16px; }
+            h1, h2, h3, p { margin: 0; }
+            .kicker { color: #717171; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+            h1 { margin-top: 6px; font-size: clamp(22px, 4vw, 34px); line-height: 1.2; }
+            header p, .scope p, .legend p { margin-top: 8px; color: #505050; font-size: 14px; line-height: 1.65; }
+            .scope { border-color: #717171; }
+            .controls { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px; }
+            .controls button { min-height: 44px; border: 1px solid #c6c6c6; border-radius: 4px; padding: 8px 12px; background: #fff; color: #505050; cursor: pointer; }
+            .controls button[aria-pressed="true"] { border-color: #717171; color: #292929; font-weight: 800; box-shadow: inset 0 -3px 0 #292929; }
+            .comparison { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; min-width: 0; }
+            .candidate { --glyph: var(--native); min-width: 0; overflow: clip; }
+            .normalized .candidate { --glyph: 20px; }
+            .compact .candidate { --glyph: 16px; }
+            .candidate-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 16px; align-items: start; padding: 14px 16px; border-bottom: 1px solid #e1e1e1; }
+            .candidate-head h2 { font-size: 18px; }
+            .candidate-head p { margin-top: 5px; color: #505050; font-size: 12px; line-height: 1.55; }
+            .tag { width: fit-content; border: 1px solid #c6c6c6; border-radius: 4px; padding: 4px 7px; color: #505050; font-size: 11px; font-weight: 800; white-space: nowrap; }
+            .tag.approved { border-color: #292929; color: #292929; }
+            .appearance { --canvas: #fff; --surface: #f8f8f8; --raised: #fff; --fg: #292929; --fg2: #505050; --fg3: #717171; --border: #c6c6c6; --divider: #e1e1e1; padding: 14px; background: var(--canvas); color: var(--fg); }
+            .appearance[data-theme="dark"] { color-scheme: dark; --canvas: #111; --surface: #1b1b1b; --raised: #222; --fg: #dbdbdb; --fg2: #afafaf; --fg3: #8a8a8a; --border: #393939; --divider: #2c2c2c; }
+            .theme { margin-bottom: 8px; color: var(--fg3); font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+            .module { display: grid; gap: 12px; min-width: 0; border: 1px solid var(--border); border-radius: 8px; padding: 12px; background: var(--raised); }
+            .search { position: relative; isolation: isolate; display: flex; align-items: center; gap: 8px; min-height: 44px; border: 1px solid var(--border); border-radius: 4px; padding: 0 12px; background: var(--surface); color: var(--fg2); }
+            .search input { width: 100%; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--fg); }
+            .search input::placeholder { color: var(--fg3); }
+            .actions { display: flex; flex-wrap: wrap; gap: 8px; }
+            .action { display: inline-flex; min-height: 40px; align-items: center; gap: 7px; border: 1px solid var(--border); border-radius: 4px; padding: 0 10px; background: var(--raised); color: var(--fg); }
+            .rows { overflow: hidden; border: 1px solid var(--border); border-radius: 6px; }
+            .row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 9px; align-items: center; min-height: 48px; padding: 8px 10px; }
+            .row + .row { border-top: 1px solid var(--divider); }
+            .row strong { display: block; font-size: 13px; }
+            .row small { display: block; margin-top: 2px; color: var(--fg3); font-size: 10px; }
+            .icon-only { display: flex; gap: 8px; align-items: center; }
+            .icon-button { display: inline-grid; width: 44px; height: 44px; flex: 0 0 44px; place-items: center; border: 1px solid var(--border); border-radius: 4px; background: var(--raised); color: var(--fg2); }
+            .a11y { min-width: 0; overflow-wrap: anywhere; color: var(--fg3); font: 10px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace; }
+            .strip { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 4px; }
+            .glyph { display: grid; min-width: 0; min-height: 42px; place-items: center; border-radius: 3px; background: var(--surface); }
+            .glyph svg { width: var(--glyph); height: var(--glyph); }
+            .icon { display: inline-grid; width: 20px; height: 20px; flex: 0 0 20px; place-items: center; color: currentColor; }
+            .icon svg { display: block; width: var(--glyph); height: var(--glyph); overflow: visible; }
+            .hidden { display: none; }
+            body.embed { background: transparent; }
+            body.embed header, body.embed .scope, body.embed .legend, body.embed .controls { display: none; }
+            body.embed .shell { width: 100%; padding: 0; }
+            body.embed .comparison { grid-template-columns: 1fr; }
+            @media (max-width: 1080px) { .comparison { grid-template-columns: 1fr; } }
+            @media (max-width: 520px) { .shell { padding: 10px; } .candidate-head { grid-template-columns: 1fr; } .strip { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+            @media (max-width: 340px) { .appearance { padding: 9px; } .module { padding: 9px; } .action { padding-inline: 8px; } }
+            @media (forced-colors: active) { .panel, .module, .search, .action, .rows, .icon-button { border-color: CanvasText; } button:focus-visible::after, .search:has(input:focus-visible)::after { border-color: Highlight; } }
+        </style>
+    </head>
+    <body>
+        <script src="./foundation-iconography-source-data.js"></script>
+        <main class="shell" id="shell">
+            <header class="panel">
+                <p class="kicker">Block 2 · Iconography · approved</p>
+                <h1>NosLog 일반 UI 아이콘 6개 출처 비교</h1>
+                <p>동일한 8개 의미와 NosLog 콘텐츠 비교 결과, IC-06 · Lucide를 일반 UI iconography source로 승인했습니다.</p>
+            </header>
+            <aside class="panel scope">
+                <p><strong>범위:</strong> 검색, 위치, 동기화, 설정, 업로드, 이동, 닫기, 삭제의 일반 UI만 비교합니다. 채보 viewer/editor 전체와 최종 logo drawing은 포함하지 않습니다. 아이콘은 전부 무채색이며 행동·상태 색상을 새로 만들지 않습니다.</p>
+            </aside>
+            <section class="panel legend">
+                <p><strong>승인 결과:</strong> Lucide 20px default, 16px compact supporting, 원본 24×24 viewBox와 2px round stroke를 유지합니다.</p>
+                <p><strong>Native size:</strong> 각 시스템이 작은 product UI에 권고하는 16/18/20px 크기를 유지합니다. <strong>Normalize 20px:</strong> 크기 차이를 제거하고 glyph 형태만 비교합니다. 모든 실제 button hit area는 40–44px입니다.</p>
+            </section>
+            <section class="panel controls" aria-label="표본 제어">
+                <button type="button" aria-pressed="true" data-control="theme" data-value="light">Light</button>
+                <button type="button" aria-pressed="false" data-control="theme" data-value="dark">Dark</button>
+                <button type="button" aria-pressed="true" data-control="size" data-value="native">Native size</button>
+                <button type="button" aria-pressed="false" data-control="size" data-value="normalized">Normalize 20px</button>
+            </section>
+            <section class="comparison" id="comparison" aria-label="아이콘 출처 후보 비교"></section>
+        </main>
+        <script>
+            const roles = ["search", "location", "sync", "settings", "upload", "chevron", "close", "delete"];
+            const params = new URLSearchParams(window.location.search);
+            const locale = params.get("lang") || "ko";
+            const copy = {
+                ko: { searchName: "곡명 검색", search: "곡명 또는 아티스트 검색", sync: "기록 동기화", import: "데이터 가져오기", settings: "설정", place1: "서울 강남 게임센터", place2: "경기 수원 뮤직존", recent: "최근 플레이 · 18분 전", records: "기록 128건", close: "패널 닫기", remove: "연동 기록 삭제" },
+                ja: { searchName: "楽曲検索", search: "曲名またはアーティストを検索", sync: "記録を同期", import: "データをインポート", settings: "設定", place1: "ソウル江南ゲームセンター", place2: "京畿水原ミュージックゾーン", recent: "最近のプレイ · 18分前", records: "128件の記録", close: "パネルを閉じる", remove: "連携記録を削除" },
+                en: { searchName: "Search songs", search: "Search by song or artist", sync: "Sync records", import: "Import data", settings: "Settings", place1: "Seoul Gangnam Game Center", place2: "Suwon Music Zone", recent: "Last played · 18 min ago", records: "128 records", close: "Close panel", remove: "Delete synced records" }
+            }[locale] || null;
+            if (!copy) throw new Error(`Unsupported specimen locale: ${locale}`);
+            const allCandidates = [
+                { id: "IC-01", key: "spectrum", name: "Adobe Spectrum S2", version: "1.12.2", native: 18, status: "Compared", note: "부드러운 단색 실루엣과 큰 내부 여백. 승인된 neutral source와 같은 생태계지만 별도 승인 대상." },
+                { id: "IC-02", key: "fluent", name: "Microsoft Fluent 2", version: "2.0.335", native: 20, status: "Not selected", note: "20px optical set의 Regular 형태. 정교한 곡선과 얇은 시각 무게가 정보 탐색 UI에 안정적." },
+                { id: "IC-03", key: "atlassian", name: "Atlassian Design System", version: "37.3.0", native: 16, status: "Not selected", note: "기본 16px에서 선명한 compact glyph. label 우선 정책과 작은 dense UI에 강함." },
+                { id: "IC-04", key: "carbon", name: "IBM Carbon", version: "11.85.0", native: 16, status: "Not selected", note: "기하학적이고 기술적인 16px 표현. 설정처럼 복잡한 glyph는 작은 크기에서 조밀함." },
+                { id: "IC-05", key: "primer", name: "GitHub Primer Octicons", version: "19.33.0", native: 16, status: "Not selected", note: "개발자 도구 계열의 강한 실루엣. compact action에서는 명확하지만 설정 glyph는 시각 무게가 큼." },
+                { id: "IC-06", key: "lucide", name: "Lucide", version: "1.24.0", native: 20, status: "Approved", note: "실제 NosLog 콘텐츠에서 label과 가장 적게 경쟁하며 Light/Dark 모두 명확해 일반 UI source로 승인." }
+            ];
+            const candidates = params.get("embed") === "lucide" ? allCandidates.filter(candidate => candidate.key === "lucide") : allCandidates;
+            const icon = (system, role) => `<span class="icon" aria-hidden="true">${window.NOSLOG_ICON_SOURCES[system][role]}</span>`;
+            const card = (candidate) => `<article class="panel candidate" id="candidate-${candidate.key}" style="--native:${candidate.native}px" data-key="${candidate.key}">
+                <div class="candidate-head"><div><h2>${candidate.id} · ${candidate.name}</h2><p>${candidate.note}</p></div><span class="tag ${candidate.status === "Approved" ? "approved" : ""}">${candidate.status} · ${candidate.version} · ${candidate.native}px</span></div>
+                <div class="appearance" data-theme="light"><p class="theme">Light · ordinary UI</p><div class="module">
+                    <label class="search">${icon(candidate.key, "search")}<input aria-label="${copy.searchName}" placeholder="${copy.search}" /></label>
+                    <div class="actions"><button class="action" type="button">${icon(candidate.key, "sync")}<span>${copy.sync}</span></button><button class="action" type="button">${icon(candidate.key, "upload")}<span>${copy.import}</span></button><button class="action" type="button">${icon(candidate.key, "settings")}<span>${copy.settings}</span></button></div>
+                    <div class="rows"><div class="row">${icon(candidate.key, "location")}<span><strong>${copy.place1}</strong><small>${copy.recent}</small></span>${icon(candidate.key, "chevron")}</div><div class="row">${icon(candidate.key, "location")}<span><strong>${copy.place2}</strong><small>${copy.records}</small></span>${icon(candidate.key, "chevron")}</div></div>
+                    <div class="icon-only"><button class="icon-button" type="button" aria-label="${copy.close}" title="${copy.close}">${icon(candidate.key, "close")}</button><button class="icon-button" type="button" aria-label="${copy.remove}" title="${copy.remove}">${icon(candidate.key, "delete")}</button><span class="a11y">accessible names: “${copy.close}” · “${copy.remove}”</span></div>
+                    <div class="strip" aria-label="8개 공통 glyph">${roles.map(role => `<span class="glyph">${icon(candidate.key, role)}</span>`).join("")}</div>
+                </div></div>
+            </article>`;
+            document.querySelector("#comparison").innerHTML = candidates.map(card).join("");
+            const shell = document.querySelector("#shell");
+            if (params.get("embed") === "lucide") document.body.classList.add("embed");
+            if (params.get("size") === "compact") shell.classList.add("compact");
+            if (params.get("theme") === "dark") {
+                document.querySelectorAll(".appearance").forEach(item => {
+                    item.dataset.theme = "dark";
+                    item.querySelector(".theme").textContent = "Dark · ordinary UI";
+                });
+            }
+            document.querySelectorAll("button[data-control]").forEach((button) => button.addEventListener("click", () => {
+                const control = button.dataset.control;
+                document.querySelectorAll(`button[data-control="${control}"]`).forEach(item => item.setAttribute("aria-pressed", String(item === button)));
+                if (control === "size") shell.classList.toggle("normalized", button.dataset.value === "normalized");
+                if (control === "theme") document.querySelectorAll(".appearance").forEach(item => {
+                    item.dataset.theme = button.dataset.value;
+                    item.querySelector(".theme").textContent = `${button.dataset.value[0].toUpperCase()}${button.dataset.value.slice(1)} · ordinary UI`;
+                });
+            }));
+        </script>
+    </body>
+</html>
