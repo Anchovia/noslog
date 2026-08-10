@@ -7,7 +7,7 @@
 - Korean companion:
   [57-noslog-2.0-authoritative-remaining-work-audit.ko.md](./57-noslog-2.0-authoritative-remaining-work-audit.ko.md)
 - Date: 2026-08-10
-- Inputs: root `AGENTS.md`, root `README.md`, documents `01`–`58`, current
+- Inputs: root `AGENTS.md`, root `README.md`, documents `01`–`59`, current
   repository evidence, and the user's explicit viewer/editor preservation correction
 - Purpose: prevent stale future checklists from reviving completed or prohibited work
 
@@ -44,7 +44,7 @@ and counting method.
 
 | Block                                      | Exact remaining scope                                                                                                                                                                                                 | Explicit exclusions                                                                                         | Completion result                                                |
 | ------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| `1 · C5 color closeout`                    | `DU-01` difficulty markers and `LD-03` SAP Fiori Horizon ordinary local-data colors are approved.                                                                                                                     | Entire viewer/editor; Basic/Recital, rank/achievement, and genre remain neutral unless separately reopened. | `Complete — 2026-08-10`.                                         |
+| `1 · C5 color closeout`                    | `DU-01` difficulty markers, `LD-03` SAP ordinary local-data colors, and the `JD-02` Radix judgement-domain amendment are approved.                                                                                    | Entire viewer/editor; Basic/Recital, rank/achievement, and genre remain neutral unless separately reopened. | `Complete — 2026-08-10`.                                         |
 | `2 · Iconography`                          | Define ordinary-UI icon grammar, icon-only/label policy, size/stroke, and accessible-name rules.                                                                                                                      | Entire viewer/editor and final logo drawing.                                                                | Approved ordinary-UI iconography rules.                          |
 | `3 · Motion`                               | Define ordinary-UI motion purpose, duration/easing roles, and reduced-motion alternatives.                                                                                                                            | Entire viewer/editor, renderer timing, transport, and editor motion.                                        | Approved ordinary-UI motion contract.                            |
 | `4 · Data visualization`                   | Define ordinary-data visualization axes, legends, exact values, tooltip/focus behavior, and non-color/table fallback.                                                                                                 | Entire viewer/editor and its chart rendering.                                                               | Approved ordinary data-visualization anatomy.                    |
@@ -106,10 +106,10 @@ drawing, final high-fidelity screens, or application implementation.
 
 ## Current material decision
 
-The exact Normal/Hard/Expert/Real marker mapping and `LD-03 · SAP Fiori Horizon`
-ordinary local-data mapping are approved. Block `1` is complete. Block `2 ·
-Iconography` is the next remaining block; internal decisions do not become separate
-remaining work.
+The exact Normal/Hard/Expert/Real marker mapping, `LD-03 · SAP Fiori Horizon`
+ordinary local-data mapping, and `JD-02 · Radix Colors 3.0.0` judgement-domain
+mapping are approved. Block `1` remains complete. Block `2 · Iconography` is the
+next remaining block; internal decisions do not become separate remaining work.
 
 ## Decision log
 
@@ -123,3 +123,4 @@ remaining work.
 | `RWA-06` | Track the fixed six-block baseline, including completed state, without a completion percentage or fractional credit. | `Corrected after Git-history audit — 2026-08-10` |
 | `RWA-07` | Advance Carbon, GitLab Pajamas, and SAP Horizon as the three exact local-data finalists in document `58`.            | `Completed evidence`                             |
 | `RWA-08` | Adopt `LD-03 · SAP Fiori Horizon` and close remaining block `1`.                                                     | `Approved — 2026-08-10`                          |
+| `RWA-09` | Adopt `JD-02 · Radix Colors 3.0.0` for judgement markers as a narrow amendment without reopening block `1`.          | `Approved amendment — 2026-08-10`                |

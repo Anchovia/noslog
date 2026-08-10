@@ -7,7 +7,7 @@
 - 영어 정본:
   [57-noslog-2.0-authoritative-remaining-work-audit.md](./57-noslog-2.0-authoritative-remaining-work-audit.md)
 - 날짜: 2026-08-10
-- 입력: 루트 `AGENTS.md`, 루트 `README.md`, 문서 `01`–`58`, 현재 저장소 근거,
+- 입력: 루트 `AGENTS.md`, 루트 `README.md`, 문서 `01`–`59`, 현재 저장소 근거,
   사용자의 명시적인 viewer/editor 보존 정정
 - 목적: 오래된 미래 체크리스트가 완료됐거나 금지된 작업을 되살리지 못하게 함
 
@@ -41,7 +41,7 @@ fractional package credit 및 18-package 표를 모두 supersede합니다. 사�
 
 | 블록                                | 정확한 남은 범위                                                                                                                                                                        | 명시적 제외                                                                                                      | 완료 결과                                            |
 | ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
-| `1 · C5 color 마감`                 | `DU-01` difficulty marker와 `LD-03` SAP Fiori Horizon 일반 local-data color 승인 완료.                                                                                                  | Viewer/editor 전체. Basic/Recital, rank/achievement, genre는 별도로 다시 열지 않는 한 neutral입니다.             | `Complete — 2026-08-10`.                             |
+| `1 · C5 color 마감`                 | `DU-01` difficulty marker, `LD-03` SAP 일반 local-data color와 `JD-02` Radix 판정 domain 보완 승인 완료.                                                                                | Viewer/editor 전체. Basic/Recital, rank/achievement, genre는 별도로 다시 열지 않는 한 neutral입니다.             | `Complete — 2026-08-10`.                             |
 | `2 · Iconography`                   | 일반 UI icon 문법, icon-only/label 정책, size/stroke 및 accessible-name 규칙을 정의합니다.                                                                                              | Viewer/editor 전체와 최종 logo drawing.                                                                          | 승인된 일반 UI iconography 규칙.                     |
 | `3 · Motion`                        | 일반 UI motion purpose, duration/easing role 및 reduced-motion 대체를 정의합니다.                                                                                                       | Viewer/editor 전체, renderer timing, transport 및 editor motion.                                                 | 승인된 일반 UI motion 계약.                          |
 | `4 · Data visualization`            | 일반 data visualization의 axis, legend, exact value, tooltip/focus 및 non-color/table fallback을 정의합니다.                                                                            | Viewer/editor 전체와 그 chart rendering.                                                                         | 승인된 일반 data-visualization anatomy.              |
@@ -98,19 +98,21 @@ background, container, selection, focus, feedback, action 및 viewer/editor 전�
 
 ## 현재 material decision
 
-정확한 Normal/Hard/Expert/Real marker mapping과 `LD-03 · SAP Fiori Horizon` 일반
-local-data mapping이 승인됐습니다. 블록 `1`은 완료됐습니다. 다음 남은 블록은
-`2 · Iconography`이며 내부 결정은 별도 남은 작업이 되지 않습니다.
+정확한 Normal/Hard/Expert/Real marker mapping, `LD-03 · SAP Fiori Horizon` 일반
+local-data mapping과 `JD-02 · Radix Colors 3.0.0` 판정 domain mapping이
+승인됐습니다. 블록 `1`은 계속 완료 상태입니다. 다음 남은 블록은 `2 · Iconography`이며
+내부 결정은 별도 남은 작업이 되지 않습니다.
 
 ## Decision log
 
-| ID       | Entry                                                                                        | 상태                                      |
-| -------- | -------------------------------------------------------------------------------------------- | ----------------------------------------- |
-| `RWA-01` | 이 감사와 README 표를 현재 남은 작업 권위로 지정합니다.                                      | `Approved scope correction — 2026-08-10`  |
-| `RWA-02` | 기존 viewer/editor 전체를 보존하고 활성 `S4`/`S6` 디자인 작업을 모두 취소합니다.             | `Approved correction — 2026-08-10`        |
-| `RWA-03` | 고정 18-package 분모와 `12.5/18 = 69%` 진행률을 유지합니다.                                  | `Rejected 및 superseded — 근거 없는 계산` |
-| `RWA-04` | 최종 mark drawing을 downstream으로, Radix 배치 탐색을 closed로 분류합니다.                   | `Scope classification`                    |
-| `RWA-05` | 일반 UI의 작은 difficulty marker 네 색에 정확한 Spectrum S2 값을 사용합니다.                 | `Approved — 2026-08-10`                   |
-| `RWA-06` | 완료 상태를 포함한 고정 6블록 기준선을 완료 퍼센트나 fractional credit 없이 추적합니다.      | `Git 이력 감사 후 정정 — 2026-08-10`      |
-| `RWA-07` | 문서 `58`에서 Carbon, GitLab Pajamas, SAP Horizon을 세 exact local-data finalist로 올립니다. | `Completed evidence`                      |
-| `RWA-08` | `LD-03 · SAP Fiori Horizon`을 채택하고 남은 블록 `1`을 종료합니다.                           | `Approved — 2026-08-10`                   |
+| ID       | Entry                                                                                           | 상태                                      |
+| -------- | ----------------------------------------------------------------------------------------------- | ----------------------------------------- |
+| `RWA-01` | 이 감사와 README 표를 현재 남은 작업 권위로 지정합니다.                                         | `Approved scope correction — 2026-08-10`  |
+| `RWA-02` | 기존 viewer/editor 전체를 보존하고 활성 `S4`/`S6` 디자인 작업을 모두 취소합니다.                | `Approved correction — 2026-08-10`        |
+| `RWA-03` | 고정 18-package 분모와 `12.5/18 = 69%` 진행률을 유지합니다.                                     | `Rejected 및 superseded — 근거 없는 계산` |
+| `RWA-04` | 최종 mark drawing을 downstream으로, Radix 배치 탐색을 closed로 분류합니다.                      | `Scope classification`                    |
+| `RWA-05` | 일반 UI의 작은 difficulty marker 네 색에 정확한 Spectrum S2 값을 사용합니다.                    | `Approved — 2026-08-10`                   |
+| `RWA-06` | 완료 상태를 포함한 고정 6블록 기준선을 완료 퍼센트나 fractional credit 없이 추적합니다.         | `Git 이력 감사 후 정정 — 2026-08-10`      |
+| `RWA-07` | 문서 `58`에서 Carbon, GitLab Pajamas, SAP Horizon을 세 exact local-data finalist로 올립니다.    | `Completed evidence`                      |
+| `RWA-08` | `LD-03 · SAP Fiori Horizon`을 채택하고 남은 블록 `1`을 종료합니다.                              | `Approved — 2026-08-10`                   |
+| `RWA-09` | `JD-02 · Radix Colors 3.0.0`을 판정 marker에 제한적으로 채택하며 블록 `1`을 다시 열지 않습니다. | `Approved amendment — 2026-08-10`         |

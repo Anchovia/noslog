@@ -125,13 +125,20 @@ Hard는 `#E86A00/#E06400`, Expert는 `#F03823/#CD2E1D`, Real은
 `#A65CE7/#AD69E9`입니다. 이 승인은 일반 UI의 작은 난이도 marker 색만 정하며 난이도
 text·background·container·selection·focus·feedback·action 또는 viewer/editor 요소를
 재착색하지 않습니다. Basic/Recital,
-rank/achievement·genre는 기본 neutral을 유지합니다. 일반 UI의 comparison-local data
-color는 `LD-03 · SAP Fiori Horizon`으로 승인했습니다. 문서 `58`에 기록한 정확한
+rank/achievement·genre는 기본 neutral을 유지합니다. 일반 UI의 기본 comparison-local
+data color는 `LD-03 · SAP Fiori Horizon`으로 승인했습니다. 문서 `58`에 기록한 정확한
 `@sap-theming/theming-base-content@11.36.3` Light/Dark mapping을 사용합니다. Single
 series는 `#168EFF/#3278BE`, FAST/SLOW는 `#168EFF/#C87B00` 및
-`#3278BE/#F2A634`입니다. 여섯 score bucket과 다섯 categorical series의 전체 값도 문서
-`58`을 그대로 따르며 혼합·보간하지 않습니다. 숫자 threshold/reference line은 기본적으로
-Spectrum neutral structural role을 유지합니다. FAST/SLOW의 direct label과 서로 다른
+`#3278BE/#F2A634`입니다. 여섯 score bucket과 일반 categorical series의 전체 값도 문서
+`58`을 그대로 따르며 혼합·보간하지 않습니다. 유일한 더 좁은 예외는 문서 `59`의
+`JD-02 · Radix Colors 3.0.0` 판정 domain mapping입니다. S-Just Light/Dark는
+`#C2298A/#FF8DCC`, Just는 `#AB6400/#FFCA16`, Good은 `#107D98/#4CCCE6`, Near는
+`#0D74CE/#70B8FF`, Miss는 `#646464/#B4B4B4`이며 모두 공개된 Radix step 11
+값입니다. 이 색은 판정 marker/bar에만 사용하고 label·count·percentage·surface·container는
+Spectrum neutral을 유지합니다. Radix `gray11`도 Foundation neutral primitive가 아니라
+판정 domain color이며 Adobe Spectrum S2의 neutral 권위를 대체하지 않습니다. 숫자
+threshold/reference line은 기본적으로 Spectrum neutral structural role을 유지합니다.
+FAST/SLOW의 direct label과 서로 다른
 marker/line style, score bucket의 숫자·label·순서를 함께 유지합니다. Carbon과 GitLab은
 선택되지 않은 비교 근거일 뿐 downstream target이 아닙니다. 이 승인으로 블록 `1 · C5
 color 마감`이 완료됐습니다.
@@ -151,9 +158,9 @@ roadmap에서 나온 값이 아니라 2026-08-10 중간 문서화 과정에서 �
 완료된 범위는 제품 감사, IA/navigation, Page Brief, 교차 원칙과 예외 거버넌스,
 Typography·Spacing·Grid·Layout, `S1`–`S5` 구조 검증, neutral surface/foreground/
 boundary/interaction/focus, signature source, achromatic shell과 primary action,
-Material Geometry, `FS-BN` feedback mapping, `DU-01` difficulty marker 및 `LD-03`
-local data color를 포함한 C5 color 마감입니다. 이 항목들은 다시 남은 작업으로 세지
-않습니다.
+Material Geometry, `FS-BN` feedback mapping, `DU-01` difficulty marker, `LD-03`
+local data color 및 `JD-02` judgement domain color를 포함한 C5 color 마감입니다. 이
+항목들은 다시 남은 작업으로 세지 않습니다.
 
 아래 표는 고정된 여섯 블록 기준선과 완료 이력을 함께 보존합니다. 블록 `1` 완료 뒤
 실제로 남은 큰 작업은 블록 `2`–`6`의 다섯 개입니다. 한 블록의
@@ -169,7 +176,7 @@ decision이 필요할 때만 잠시 확인하고, 승인 뒤에는 새 작업을
 
 |   # | 남은 작업 블록                        | 상태          | 정확한 범위                                                                                                       |
 | --: | ------------------------------------- | ------------- | ----------------------------------------------------------------------------------------------------------------- |
-|   1 | C5 color 마감                         | `Complete`    | `DU-01` difficulty marker와 `LD-03` SAP Horizon local data color 승인 완료; viewer/editor 전체 제외               |
+|   1 | C5 color 마감                         | `Complete`    | `DU-01` difficulty, `LD-03` SAP local data, `JD-02` Radix judgement color 승인 완료; viewer/editor 전체 제외      |
 |   2 | Iconography                           | `Not started` | 일반 UI icon 문법, label/icon-only, size/stroke, accessible name                                                  |
 |   3 | Motion / Reduced motion               | `Not started` | 일반 UI motion purpose, duration/easing, reduced-motion 대체                                                      |
 |   4 | Data-visualization anatomy            | `Not started` | 일반 UI axis, legend, exact value, tooltip/focus, non-color/table fallback                                        |

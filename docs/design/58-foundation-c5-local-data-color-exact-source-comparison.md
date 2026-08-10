@@ -39,7 +39,7 @@ identity, or interaction color.
 | Score, S-Just, Miss/Near trends | One line with a value, date, and tooltip               | `single-series`                                                                                       |
 | Score distribution              | Six fixed buckets from `950,000` through `Pianist`     | `sequential`; bucket label and order remain primary                                                   |
 | FAST/SLOW trend                 | Two independently measured and explicitly named counts | `two-direction comparison`; labels and distinct line markers are mandatory                            |
-| Judgement breakdown             | Five named categories with counts and percentages      | `categorical`; direct row labels remain primary                                                       |
+| Judgement breakdown             | Five named categories with counts and percentages      | `domain categorical`; document `59` supersedes the generic SAP order only for `judgement.*`           |
 | `990,000` or other reference    | A numeric reference, not automatically success/warning | `structural threshold`; use the approved neutral owner unless product semantics explicitly promote it |
 
 The existing use of universal `danger` for FAST, `score` for S-Just, and `chart` for
@@ -119,12 +119,12 @@ Status: `Approved — 2026-08-10`.
 Pinned implementation evidence: `@sap-theming/theming-base-content@11.36.3`, using
 the exact `sap_horizon` and `sap_horizon_dark` chart tokens.
 
-| Role                          | Light                                                            | Dark                                                             |
-| ----------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------- |
-| Single series                 | `sapChart_OrderedColor_1` `#168EFF`                              | `#3278BE`                                                        |
-| Six score buckets, low → high | `#62B3FF`, `#3FA2FF`, `#168EFF`, `#0074E2`, `#0065C3`, `#0055A5` | `#1D456D`, `#275E96`, `#3278BE`, `#5291D1`, `#7AABDC`, `#A2C4E7` |
-| FAST / SLOW                   | Ordered 1 `#168EFF` / Ordered 2 `#C87B00`                        | `#3278BE` / `#F2A634`                                            |
-| Five categorical series       | `#168EFF`, `#C87B00`, `#75980B`, `#DF1278`, `#8B47D7`            | `#3278BE`, `#F2A634`, `#B4CE35`, `#FA4F96`, `#8B47D7`            |
+| Role                            | Light                                                            | Dark                                                             |
+| ------------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------- |
+| Single series                   | `sapChart_OrderedColor_1` `#168EFF`                              | `#3278BE`                                                        |
+| Six score buckets, low → high   | `#62B3FF`, `#3FA2FF`, `#168EFF`, `#0074E2`, `#0065C3`, `#0055A5` | `#1D456D`, `#275E96`, `#3278BE`, `#5291D1`, `#7AABDC`, `#A2C4E7` |
+| FAST / SLOW                     | Ordered 1 `#168EFF` / Ordered 2 `#C87B00`                        | `#3278BE` / `#F2A634`                                            |
+| Five generic categorical series | `#168EFF`, `#C87B00`, `#75980B`, `#DF1278`, `#8B47D7`            | `#3278BE`, `#F2A634`, `#B4CE35`, `#FA4F96`, `#8B47D7`            |
 
 SAP is the approved exact-theme source. FAST/SLOW is represented by its first two
 qualitative colors rather than a purpose-documented neutral-performance diverging
@@ -134,8 +134,9 @@ pair; the approved role contract below addresses that known limitation.
 
 The approved SAP mapping follows this contract:
 
-1. `data.single`, `data.sequential.*`, `data.categorical.*`, and
-   `data.direction.fast/slow` remain local chart/comparison aliases.
+1. `data.single`, `data.sequential.*`, generic `data.categorical.*`, and
+   `data.direction.fast/slow` remain local chart/comparison aliases. The narrower
+   `judgement.*` aliases use the approved Radix mapping in document `59`.
 2. A score bucket never becomes warning, danger, success, rank, achievement, or
    difficulty color. The number, label, and fixed order carry its meaning.
 3. FAST and SLOW always retain direct labels. Where lines overlap, they also use
@@ -154,8 +155,10 @@ The approved SAP mapping follows this contract:
 
 [Open the local data-color comparison](./specimens/c5-local-data-color-source-comparison.html).
 It uses the same ordinary NosLog content for all three candidates in Light and Dark:
-score trend, six score buckets, FAST/SLOW, five judgement categories, and a neutral
-reference line. It also exposes color-off and narrow-width checks.
+score trend, six score buckets, FAST/SLOW, the then-generic five judgement categories,
+and a neutral reference line. It also exposes color-off and narrow-width checks. The
+SAP judgement rendering in this specimen is historical evidence; document `59`
+contains the later approved domain-specific replacement.
 
 ## Approved result
 
@@ -165,8 +168,8 @@ NosLog specimen in Light and Dark.
 - Its blue sequential score buckets are calm while preserving immediate order.
 - The blue/orange FAST/SLOW pair is more distinguishable at a glance than the other
   finalists in the actual NosLog chart density.
-- Its five qualitative values remain distinct without making the page feel dominated
-  by one vivid hue.
+- Its five qualitative values remain useful for generic categorical comparisons. The
+  later user-approved document `59` mapping supersedes them only for judgement roles.
 - Carbon's purple-led mapping was explicitly rejected as visually unsuitable in the
   NosLog specimen; it also sat too close to the separately approved Radix Indigo
   identity family. GitLab remains comparison evidence only.
@@ -177,17 +180,19 @@ independent counts, not a good/bad semantic continuum, and the non-color contrac
 direct labels, circle/square markers, and solid/dashed lines.
 
 This approval makes the exact values in `LD-03` authoritative for ordinary
-comparison-local data color. It does not authorize app implementation in this design
-guide session and does not apply to the locked chart viewer/editor.
+comparison-local data color except the narrower `judgement.*` aliases approved in
+document `59`. It does not authorize app implementation in this design guide session
+and does not apply to the locked chart viewer/editor.
 
 ## Decision log
 
-| ID       | Entry                                                                                            | Status                                                |
-| -------- | ------------------------------------------------------------------------------------------------ | ----------------------------------------------------- |
-| `LDC-01` | Treat score buckets as ordered quantitative data, not six achievement/status meanings.           | `Approved — 2026-08-10`                               |
-| `LDC-02` | Treat FAST/SLOW as a labeled two-direction comparison, never danger/info or good/bad.            | `Approved — 2026-08-10`                               |
-| `LDC-03` | Keep numeric threshold/reference lines neutral unless product semantics explicitly promote them. | `Approved — 2026-08-10`                               |
-| `LDC-04` | Advance Carbon, GitLab Pajamas, and SAP Horizon as exact-family visual finalists.                | `Completed evidence`                                  |
-| `LDC-05` | Recommend `LD-01 · IBM Carbon Charts`.                                                           | `Rejected and superseded by user review — 2026-08-10` |
-| `LDC-06` | Keep the entire chart viewer/editor outside this gate.                                           | `Locked upstream`                                     |
-| `LDC-07` | Adopt `LD-03 · SAP Fiori Horizon` as the exact ordinary local-data family.                       | `Approved — 2026-08-10`                               |
+| ID       | Entry                                                                                                                            | Status                                                |
+| -------- | -------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| `LDC-01` | Treat score buckets as ordered quantitative data, not six achievement/status meanings.                                           | `Approved — 2026-08-10`                               |
+| `LDC-02` | Treat FAST/SLOW as a labeled two-direction comparison, never danger/info or good/bad.                                            | `Approved — 2026-08-10`                               |
+| `LDC-03` | Keep numeric threshold/reference lines neutral unless product semantics explicitly promote them.                                 | `Approved — 2026-08-10`                               |
+| `LDC-04` | Advance Carbon, GitLab Pajamas, and SAP Horizon as exact-family visual finalists.                                                | `Completed evidence`                                  |
+| `LDC-05` | Recommend `LD-01 · IBM Carbon Charts`.                                                                                           | `Rejected and superseded by user review — 2026-08-10` |
+| `LDC-06` | Keep the entire chart viewer/editor outside this gate.                                                                           | `Locked upstream`                                     |
+| `LDC-07` | Adopt `LD-03 · SAP Fiori Horizon` as the exact ordinary local-data family.                                                       | `Approved — 2026-08-10`                               |
+| `LDC-08` | Preserve SAP for single, sequential, FAST/SLOW, and generic categorical roles while document `59` supersedes only `judgement.*`. | `Approved amendment — 2026-08-10`                     |

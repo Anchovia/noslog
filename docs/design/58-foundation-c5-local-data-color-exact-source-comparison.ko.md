@@ -36,7 +36,7 @@ color가 될 수 없습니다.
 | Score, S-Just, Miss/Near trend | 값, 날짜, tooltip이 있는 한 개 line                      | `single-series`                                                                              |
 | Score distribution             | `950,000`부터 `Pianist`까지 고정된 여섯 bucket           | `sequential`; bucket label과 순서가 계속 주된 단서                                           |
 | FAST/SLOW trend                | 독립적으로 측정되고 명시적으로 이름 붙은 두 count        | `two-direction comparison`; label과 서로 다른 line marker 필수                               |
-| 판정 breakdown                 | count와 percentage가 있는 이름 붙은 다섯 category        | `categorical`; 직접 row label이 주된 단서                                                    |
+| 판정 breakdown                 | count와 percentage가 있는 이름 붙은 다섯 category        | `domain categorical`; 문서 `59`가 `judgement.*`에 한해 일반 SAP 순서를 supersede합니다.      |
 | `990,000` 등의 reference       | 자동으로 success/warning이 되는 값이 아닌 숫자 reference | `structural threshold`; product 의미가 명시적으로 승격시키지 않는 한 승인 neutral owner 사용 |
 
 FAST에 universal `danger`, S-Just에 `score`, SLOW에 `chart`를 쓰는 기존 방식은 token
@@ -120,7 +120,7 @@ FAST/SLOW 어느 방향도 good, bad, success, failure가 아니므로 출처의
 | Single series                    | `sapChart_OrderedColor_1` `#168EFF`                              | `#3278BE`                                                        |
 | Score bucket 여섯 개, low → high | `#62B3FF`, `#3FA2FF`, `#168EFF`, `#0074E2`, `#0065C3`, `#0055A5` | `#1D456D`, `#275E96`, `#3278BE`, `#5291D1`, `#7AABDC`, `#A2C4E7` |
 | FAST / SLOW                      | Ordered 1 `#168EFF` / Ordered 2 `#C87B00`                        | `#3278BE` / `#F2A634`                                            |
-| Categorical series 다섯 개       | `#168EFF`, `#C87B00`, `#75980B`, `#DF1278`, `#8B47D7`            | `#3278BE`, `#F2A634`, `#B4CE35`, `#FA4F96`, `#8B47D7`            |
+| 일반 categorical series 다섯 개  | `#168EFF`, `#C87B00`, `#75980B`, `#DF1278`, `#8B47D7`            | `#3278BE`, `#F2A634`, `#B4CE35`, `#FA4F96`, `#8B47D7`            |
 
 SAP는 승인된 exact-theme 출처입니다. FAST/SLOW가 목적이 명시된 neutral-performance
 diverging pair가 아니라 첫 두 qualitative color로 표현된다는 알려진 한계는 아래의 승인된
@@ -130,8 +130,9 @@ role contract로 보완합니다.
 
 승인된 SAP mapping에는 다음 contract를 적용합니다.
 
-1. `data.single`, `data.sequential.*`, `data.categorical.*`,
-   `data.direction.fast/slow`는 local chart/comparison alias로만 남습니다.
+1. `data.single`, `data.sequential.*`, 일반 `data.categorical.*`,
+   `data.direction.fast/slow`는 local chart/comparison alias로만 남습니다. 더 좁은
+   `judgement.*` alias는 문서 `59`의 승인된 Radix mapping을 사용합니다.
 2. Score bucket은 warning, danger, success, rank, achievement, difficulty color가 되지
    않습니다. 숫자, label, 고정 순서가 의미를 전달합니다.
 3. FAST와 SLOW는 항상 직접 label을 유지합니다. Line이 겹칠 수 있으면 point shape이나
@@ -150,8 +151,9 @@ role contract로 보완합니다.
 
 [Local data-color 비교 열기](./specimens/c5-local-data-color-source-comparison.html).
 세 후보 모두 같은 일반 NosLog content를 Light/Dark로 보여줍니다. Score trend, 여섯 score
-bucket, FAST/SLOW, 다섯 판정 category, neutral reference line이 포함되며 color-off와
-narrow-width 점검도 제공합니다.
+bucket, FAST/SLOW, 당시 일반 categorical로 취급한 다섯 판정 category, neutral reference
+line이 포함되며 color-off와 narrow-width 점검도 제공합니다. 이 specimen의 SAP 판정
+표현은 역사적 근거이며 문서 `59`가 이후 승인된 domain-specific 대체값을 기록합니다.
 
 ## 승인 결과
 
@@ -161,8 +163,8 @@ narrow-width 점검도 제공합니다.
 - Blue sequential score bucket은 차분하면서 순서를 즉시 구분할 수 있습니다.
 - Blue/orange FAST/SLOW pair는 실제 NosLog chart density에서 다른 finalist보다 한눈에
   구분하기 쉽습니다.
-- 다섯 qualitative value는 page 전체를 하나의 선명한 hue가 지배하지 않으면서 서로
-  구별됩니다.
+- 다섯 qualitative value는 일반 categorical 비교에서 계속 사용할 수 있습니다. 이후
+  사용자 승인된 문서 `59` mapping이 판정 역할에 한해서만 이 값을 supersede합니다.
 - Carbon의 purple-led mapping은 NosLog specimen에서 시각적으로 부적합하다고 명시적으로
   거절됐으며, 별도로 승인된 Radix Indigo identity family와도 지나치게 가까웠습니다.
   GitLab은 comparison evidence로만 남습니다.
@@ -172,18 +174,19 @@ SAP FAST/SLOW 값은 목적 이름이 붙은 diverging scale이 아니라 qualit
 count이고, non-color contract가 direct label, circle/square marker, solid/dashed line을
 유지하므로 이 mapping을 승인합니다.
 
-이 승인은 `LD-03`의 정확한 값을 일반 comparison-local data color authority로 만듭니다.
-이 design-guide session에서 app 구현을 승인하지 않으며 잠긴 chart viewer/editor에는
-적용되지 않습니다.
+이 승인은 문서 `59`에서 승인한 더 좁은 `judgement.*` alias를 제외한 일반
+comparison-local data color에서 `LD-03`의 정확한 값을 권위로 만듭니다. 이 design-guide
+session에서 app 구현을 승인하지 않으며 잠긴 chart viewer/editor에는 적용되지 않습니다.
 
 ## Decision log
 
-| ID       | 항목                                                                                                    | 상태                                                |
-| -------- | ------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
-| `LDC-01` | Score bucket을 여섯 achievement/status 의미가 아니라 순서가 있는 quantitative data로 다룹니다.          | `Approved — 2026-08-10`                             |
-| `LDC-02` | FAST/SLOW를 label이 붙은 two-direction comparison으로 다루며 danger/info 또는 good/bad로 쓰지 않습니다. | `Approved — 2026-08-10`                             |
-| `LDC-03` | Product 의미가 명시적으로 승격시키지 않는 한 숫자 threshold/reference line을 neutral로 둡니다.          | `Approved — 2026-08-10`                             |
-| `LDC-04` | Carbon, GitLab Pajamas, SAP Horizon을 exact-family visual finalist로 올립니다.                          | `Completed evidence`                                |
-| `LDC-05` | `LD-01 · IBM Carbon Charts`를 권고합니다.                                                               | `Rejected 및 사용자 검토로 superseded — 2026-08-10` |
-| `LDC-06` | 채보 viewer/editor 전체를 이 gate 밖에 둡니다.                                                          | `Locked upstream`                                   |
-| `LDC-07` | `LD-03 · SAP Fiori Horizon`을 정확한 일반 local-data family로 채택합니다.                               | `Approved — 2026-08-10`                             |
+| ID       | 항목                                                                                                                 | 상태                                                |
+| -------- | -------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| `LDC-01` | Score bucket을 여섯 achievement/status 의미가 아니라 순서가 있는 quantitative data로 다룹니다.                       | `Approved — 2026-08-10`                             |
+| `LDC-02` | FAST/SLOW를 label이 붙은 two-direction comparison으로 다루며 danger/info 또는 good/bad로 쓰지 않습니다.              | `Approved — 2026-08-10`                             |
+| `LDC-03` | Product 의미가 명시적으로 승격시키지 않는 한 숫자 threshold/reference line을 neutral로 둡니다.                       | `Approved — 2026-08-10`                             |
+| `LDC-04` | Carbon, GitLab Pajamas, SAP Horizon을 exact-family visual finalist로 올립니다.                                       | `Completed evidence`                                |
+| `LDC-05` | `LD-01 · IBM Carbon Charts`를 권고합니다.                                                                            | `Rejected 및 사용자 검토로 superseded — 2026-08-10` |
+| `LDC-06` | 채보 viewer/editor 전체를 이 gate 밖에 둡니다.                                                                       | `Locked upstream`                                   |
+| `LDC-07` | `LD-03 · SAP Fiori Horizon`을 정확한 일반 local-data family로 채택합니다.                                            | `Approved — 2026-08-10`                             |
+| `LDC-08` | SAP를 single, sequential, FAST/SLOW 및 일반 categorical 역할에 유지하고 문서 `59`가 `judgement.*`만 supersede합니다. | `Approved amendment — 2026-08-10`                   |

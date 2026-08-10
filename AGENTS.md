@@ -166,14 +166,22 @@ Sections:
   backgrounds, containers, selection, focus, feedback, actions, or any viewer/editor
   element. Basic/Recital,
   rank/achievement, and genre remain neutral by default. `LD-03 · SAP Fiori Horizon`
-  is the approved exclusive comparison-local data-color family for ordinary NosLog UI.
+  is the approved base comparison-local data-color family for ordinary NosLog UI.
   Preserve the exact `@sap-theming/theming-base-content@11.36.3` Light/Dark mapping
   recorded in document `58`: single series `#168EFF/#3278BE`; six ordered score buckets
   low-to-high Light `#62B3FF`, `#3FA2FF`, `#168EFF`, `#0074E2`, `#0065C3`, `#0055A5`
   and Dark `#1D456D`, `#275E96`, `#3278BE`, `#5291D1`, `#7AABDC`, `#A2C4E7`;
-  FAST/SLOW Light `#168EFF/#C87B00` and Dark `#3278BE/#F2A634`; five categorical
-  series Light `#168EFF`, `#C87B00`, `#75980B`, `#DF1278`, `#8B47D7` and Dark
-  `#3278BE`, `#F2A634`, `#B4CE35`, `#FA4F96`, `#8B47D7`. Numeric
+  FAST/SLOW Light `#168EFF/#C87B00` and Dark `#3278BE/#F2A634`; five generic
+  categorical series Light `#168EFF`, `#C87B00`, `#75980B`, `#DF1278`,
+  `#8B47D7` and Dark `#3278BE`, `#F2A634`, `#B4CE35`, `#FA4F96`, `#8B47D7`.
+  The sole narrower exception is the approved `JD-02 · Radix Colors 3.0.0`
+  judgement-domain mapping in document `59`: S-Just Light/Dark
+  `#C2298A/#FF8DCC`, Just `#AB6400/#FFCA16`, Good `#107D98/#4CCCE6`, Near
+  `#0D74CE/#70B8FF`, and Miss `#646464/#B4B4B4`. These are the exact published
+  Radix step-11 values and may appear only in the local judgement marker/bar.
+  `gray11` is a judgement-domain color, not a neutral primitive; Adobe Spectrum S2
+  remains the exclusive neutral primitive owner. Judgement labels, counts,
+  percentages, surfaces, and containers remain Spectrum neutral. Numeric
   threshold/reference lines remain Spectrum neutral structural roles by default.
   FAST/SLOW remain explicitly labeled independent directions with different marker or
   line styles and never reuse universal danger/information or good/bad semantics.
@@ -184,8 +192,8 @@ Sections:
 color closeout`. The comparison was internal evidence within that block, not a new
   work unit. This boundary does not approve current non-renderer NosLog values,
   sampled imagery, another rhythm game's palette, or any additional Light/Dark
-  mapping. Keep the difficulty name, level, order, and selection visible so color is
-  never the sole cue.
+  mapping. Keep difficulty names, levels, order, and selection, and judgement labels,
+  counts, percentages, and order visible so color is never the sole cue.
 - Shopify Polaris and the `EXP-01` Polaris Light / Radix Dark split were measured and
   not selected as the identity source. Preserve their evidence in document `47`, but
   do not use them as downstream design or implementation targets unless the user

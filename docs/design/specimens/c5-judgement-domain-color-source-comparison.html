@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>NosLog 2.0 C5 Judgement Domain Color Comparison</title>
+        <style>
+            * { box-sizing: border-box; }
+            :root { color-scheme: light; font-family: Inter, Pretendard, "Noto Sans KR", system-ui, sans-serif; background: #e9e9e9; color: #292929; }
+            body { min-width: 0; margin: 0; background: #e9e9e9; }
+            button, a { font: inherit; }
+            a { color: inherit; }
+            button:focus-visible, a:focus-visible { outline: 2px solid #000; outline-offset: 2px; }
+            .shell { display: grid; gap: 16px; width: min(1440px, 100%); margin: 0 auto; padding: 16px; }
+            .panel { border: 1px solid #c6c6c6; border-radius: 8px; background: #fff; }
+            header, .boundary, .summary { padding: 16px; }
+            .kicker, h1, header p, .boundary p, .summary p { margin: 0; }
+            .kicker { color: #717171; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+            h1 { margin-top: 6px; font-size: clamp(22px, 4vw, 34px); line-height: 1.2; }
+            header p, .boundary p, .summary p { margin-top: 8px; color: #505050; font-size: 14px; line-height: 1.65; }
+            .boundary { border-color: #717171; }
+            .boundary strong, .summary strong { color: #292929; }
+            .summary { display: grid; gap: 7px; }
+            .summary p { margin: 0; }
+            .controls { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px; }
+            .controls button { min-height: 44px; border: 1px solid #c6c6c6; border-radius: 4px; padding: 8px 12px; background: #fff; color: #505050; cursor: pointer; }
+            .controls button[aria-pressed="true"] { border-color: #717171; color: #292929; font-weight: 800; box-shadow: inset 0 -3px 0 #292929; }
+            .comparison { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; min-width: 0; }
+            .candidate { min-width: 0; overflow: clip; }
+            .candidate-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 16px; align-items: start; padding: 14px 16px; border-bottom: 1px solid #e1e1e1; }
+            .candidate-head h2, .candidate-head p { margin: 0; }
+            .candidate-head h2 { font-size: 19px; }
+            .candidate-head p { margin-top: 5px; color: #505050; font-size: 12px; line-height: 1.55; }
+            .candidate-head a { color: #505050; font-size: 11px; }
+            .tag { width: fit-content; border: 1px solid #717171; border-radius: 4px; padding: 4px 7px; color: #292929; font-size: 11px; font-weight: 800; }
+            .tag.alt { border-color: #c6c6c6; color: #505050; }
+            .pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); min-width: 0; }
+            .appearance { --canvas: #fff; --surface: #f8f8f8; --raised: #fff; --fg: #292929; --fg2: #505050; --fg3: #717171; --border: #c6c6c6; --divider: #e1e1e1; min-width: 0; padding: 14px; background: var(--canvas); color: var(--fg); }
+            .appearance + .appearance { border-left: 1px solid #c6c6c6; }
+            .appearance[data-theme="dark"] { color-scheme: dark; --canvas: #111; --surface: #1b1b1b; --raised: #222; --fg: #dbdbdb; --fg2: #afafaf; --fg3: #8a8a8a; --border: #393939; --divider: #2c2c2c; }
+            .theme { margin: 0 0 8px; color: var(--fg3); font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+            .module { min-width: 0; border: 1px solid var(--border); border-radius: 8px; padding: 12px; background: var(--raised); }
+            .module-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 5px 10px; align-items: baseline; }
+            .module h3, .module p { margin: 0; }
+            .module h3 { font-size: 13px; }
+            .meta { color: var(--fg2); font-size: 10px; }
+            .judgements { display: grid; gap: 11px; margin-top: 14px; }
+            .judge { display: grid; grid-template-columns: 50px minmax(0, 1fr) 72px; gap: 8px; align-items: center; color: var(--fg2); font-size: 10px; }
+            .track { height: 10px; overflow: hidden; border-radius: 2px; background: var(--surface); }
+            .fill { display: block; width: var(--size); height: 100%; background: var(--cat); }
+            .value { color: var(--fg); text-align: right; font-variant-numeric: tabular-nums; }
+            .swatches { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 5px; margin-top: 12px; }
+            .swatch { display: grid; gap: 4px; min-width: 0; color: var(--fg3); font: 8px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace; }
+            .swatch i { width: 100%; height: 18px; border: 1px solid var(--border); border-radius: 2px; background: var(--swatch); }
+            .swatch span { overflow: hidden; text-overflow: ellipsis; }
+            .measure { margin-top: 10px !important; color: var(--fg3); font-size: 9px; line-height: 1.5; }
+            .cue-off .judge:nth-child(1) .fill { background: var(--fg); }
+            .cue-off .judge:nth-child(2) .fill { background: repeating-linear-gradient(90deg, var(--fg2) 0 5px, transparent 5px 8px); }
+            .cue-off .judge:nth-child(3) .fill { background: repeating-linear-gradient(135deg, var(--fg3) 0 2px, transparent 2px 4px); }
+            .cue-off .judge:nth-child(4) .fill { border: 1px solid var(--fg); background: transparent; }
+            .cue-off .judge:nth-child(5) .fill { background: repeating-linear-gradient(45deg, var(--fg2) 0 2px, transparent 2px 5px); }
+            .cue-off .swatches { visibility: hidden; }
+            .hidden { display: none; }
+            @media (max-width: 1080px) { .comparison { grid-template-columns: 1fr; } }
+            @media (max-width: 720px) {
+                .shell { padding: 10px; }
+                .pair { grid-template-columns: 1fr; }
+                .appearance + .appearance { border-top: 1px solid #c6c6c6; border-left: 0; }
+                .candidate-head { grid-template-columns: 1fr; }
+            }
+            @media (max-width: 340px) { .appearance { padding: 9px; } .module { padding: 9px; } .judge { grid-template-columns: 46px minmax(0, 1fr) 64px; gap: 6px; } }
+            @media (forced-colors: active) { .fill { border: 1px solid CanvasText; background: Canvas; } }
+        </style>
+    </head>
+    <body>
+        <main class="shell" id="shell">
+            <header class="panel">
+                <p class="kicker">C5 · Block 1 limited amendment · approved</p>
+                <h1>NOSTALGIA 계열 판정 5색 exact-source 비교</h1>
+                <p>S-Just rose, Just yellow, Good cyan, Near blue, Miss neutral이라는 같은 domain contract를 네 출처에 적용합니다. Screenshot pixel, Tailwind palette와 임의 혼합값은 없습니다.</p>
+            </header>
+            <aside class="panel boundary">
+                <p><strong>고정:</strong> FAST/SLOW는 승인된 SAP Light <code>#168EFF/#C87B00</code>, Dark <code>#3278BE/#F2A634</code>를 유지합니다. Single series와 score bucket도 SAP를 유지합니다. 채보 viewer/editor 전체는 이 표본에 없으며 변경하지 않습니다.</p>
+            </aside>
+            <section class="panel summary" aria-label="비교 요약">
+                <p><strong>승인 결과:</strong> JD-02 · Radix Colors 3.0.0 step 11.</p>
+                <p><strong>JD-01 Spectrum:</strong> Light/Dark에서 가장 균일한 대비와 절제된 밝기.</p>
+                <p><strong>JD-02 Radix:</strong> Light는 안정적이고 Dark에서 가장 명확하며 NOSTALGIA 계열을 가장 잘 전달해 선택됨.</p>
+                <p><strong>JD-03 Primer:</strong> 가장 차분하고 DataVis provenance가 명확하지만 대부분 3:1 근처.</p>
+                <p><strong>LD-03 SAP control:</strong> 기존 categorical mapping을 폐기하지 않고 차이를 확인하기 위한 역사적 기준으로 보존.</p>
+            </section>
+            <section class="panel controls" aria-label="표본 제어">
+                <button type="button" aria-pressed="true" data-control="appearance" data-value="both">Light + Dark</button>
+                <button type="button" aria-pressed="false" data-control="appearance" data-value="light">Light</button>
+                <button type="button" aria-pressed="false" data-control="appearance" data-value="dark">Dark</button>
+                <button type="button" aria-pressed="true" data-control="cue" data-value="on">Color on</button>
+                <button type="button" aria-pressed="false" data-control="cue" data-value="off">Color off</button>
+            </section>
+            <section class="comparison" id="comparison" aria-label="Judgement domain color 후보 비교"></section>
+        </main>
+        <script>
+            const candidates = [
+                {
+                    id: "JD-01", name: "Adobe Spectrum S2", tag: "Compared", tagClass: "alt", source: "https://opensource.adobe.com/spectrum-design-data/tokens/color-palette/",
+                    note: "Adaptive 900 chromatic steps + approved gray-700. Even contrast without a neon Dark treatment.",
+                    light: { colors: ["#CE2A92", "#9E6600", "#0B78B3", "#3B63FB", "#505050"], contrast: "4.80 · 4.82 · 4.83 · 4.81 · 8.06" },
+                    dark: { colors: ["#EC43AF", "#BA7C00", "#188EDC", "#5681FF", "#AFAFAF"], contrast: "5.38 · 5.37 · 5.34 · 5.38 · 8.61" }
+                },
+                {
+                    id: "JD-02", name: "Radix Colors 3.0.0", tag: "Approved", tagClass: "", source: "https://www.radix-ui.com/colors/docs/palette-composition/understanding-the-scale",
+                    note: "Published step 11 foreground values. The Dark set is intentionally much brighter.",
+                    light: { colors: ["#C2298A", "#AB6400", "#107D98", "#0D74CE", "#646464"], contrast: "5.28 · 4.61 · 4.76 · 4.77 · 5.92" },
+                    dark: { colors: ["#FF8DCC", "#FFCA16", "#4CCCE6", "#70B8FF", "#B4B4B4"], contrast: "8.93 · 12.33 · 9.97 · 8.98 · 9.11" }
+                },
+                {
+                    id: "JD-03", name: "GitHub Primer DataVis", tag: "Candidate", tagClass: "alt", source: "https://primer.style/product/primitives/color/#data-visualization",
+                    note: "Purpose-named adaptive DataVis emphasis tokens. Calm, with little contrast reserve.",
+                    light: { colors: ["#CE2C85", "#B88700", "#179B9B", "#006EDB", "#808FA3"], contrast: "4.86 · 3.23 · 3.39 · 4.94 · 3.29" },
+                    dark: { colors: ["#D34591", "#895906", "#106C70", "#0576FF", "#576270"], contrast: "4.52 · 3.14 · 3.06 · 4.53 · 3.04" }
+                },
+                {
+                    id: "LD-03", name: "SAP Fiori Horizon control", tag: "Current historical control", tagClass: "alt", source: "https://experience.sap.com/fiori-design-web/color-palettes/",
+                    note: "The approved generic categorical order shown only as the baseline being narrowly reconsidered for judgement.",
+                    light: { colors: ["#168EFF", "#C87B00", "#75980B", "#DF1278", "#8B47D7"], contrast: "3.31 · 3.34 · 3.36 · 4.67 · 5.28" },
+                    dark: { colors: ["#3278BE", "#F2A634", "#B4CE35", "#FA4F96", "#8B47D7"], contrast: "4.11 · 9.24 · 10.63 · 5.96 · 3.58" }
+                }
+            ];
+            const judges = [
+                ["S-Just", 86, "12,842 · 84.6%"],
+                ["Just", 51, "1,934 · 12.7%"],
+                ["Good", 22, "284 · 1.9%"],
+                ["Near", 17, "76 · 0.5%"],
+                ["Miss", 12, "41 · 0.3%"]
+            ];
+            const appearance = (candidate, theme) => {
+                const data = candidate[theme];
+                const rows = judges.map((row, index) => `<div class="judge"><span>${row[0]}</span><span class="track"><i class="fill" style="--cat:${data.colors[index]};--size:${row[1]}%"></i></span><span class="value">${row[2]}</span></div>`).join("");
+                const swatches = data.colors.map((color, index) => `<span class="swatch"><i style="--swatch:${color}"></i><span>${judges[index][0]}<br>${color}</span></span>`).join("");
+                return `<div class="appearance" data-theme="${theme}"><p class="theme">${theme}</p><section class="module"><div class="module-head"><h3>Judgement breakdown</h3><span class="meta">label · count · percentage</span></div><div class="judgements">${rows}</div><div class="swatches" aria-label="exact token values">${swatches}</div><p class="measure">Surface contrast: ${data.contrast}</p></section></div>`;
+            };
+            document.querySelector("#comparison").innerHTML = candidates.map((candidate) => `<article class="panel candidate"><div class="candidate-head"><div><h2>${candidate.id} · ${candidate.name}</h2><p>${candidate.note}</p></div><div><span class="tag ${candidate.tagClass}">${candidate.tag}</span><p><a href="${candidate.source}" target="_blank" rel="noreferrer">공식 출처 열기</a></p></div></div><div class="pair">${appearance(candidate, "light")}${appearance(candidate, "dark")}</div></article>`).join("");
+            const shell = document.querySelector("#shell");
+            document.querySelectorAll("button").forEach((button) => button.addEventListener("click", () => {
+                const control = button.dataset.control;
+                document.querySelectorAll(`button[data-control="${control}"]`).forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
+                if (control === "cue") shell.classList.toggle("cue-off", button.dataset.value === "off");
+                if (control === "appearance") {
+                    document.querySelectorAll(".appearance").forEach((item) => item.classList.toggle("hidden", button.dataset.value !== "both" && item.dataset.theme !== button.dataset.value));
+                    document.querySelectorAll(".pair").forEach((pair) => pair.style.gridTemplateColumns = button.dataset.value === "both" ? "" : "1fr");
+                }
+            }));
+        </script>
+    </body>
+</html>
