@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="ko" data-theme="dark">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>NosLog 2.0 · Foundation v0.1 integrated regression</title>
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+            :root {
+                color-scheme: dark;
+                font-family:
+                    -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+                --canvas: #111111;
+                --surface: #1b1b1b;
+                --raised: #222222;
+                --line: #323232;
+                --line-strong: #8a8a8a;
+                --text: #dbdbdb;
+                --subdued: #afafaf;
+                --active: #f2f2f2;
+            }
+            :root[data-theme="light"] {
+                color-scheme: light;
+                --canvas: #ffffff;
+                --surface: #f8f8f8;
+                --raised: #ffffff;
+                --line: #e1e1e1;
+                --line-strong: #717171;
+                --text: #292929;
+                --subdued: #505050;
+                --active: #131313;
+            }
+            body {
+                margin: 0;
+                background: var(--canvas);
+                color: var(--text);
+            }
+            button {
+                min-height: 40px;
+                border: 1px solid var(--line-strong);
+                border-radius: 4px;
+                background: var(--surface);
+                color: var(--text);
+                padding: 8px 12px;
+                font: inherit;
+                font-size: 14px;
+                font-weight: 500;
+                line-height: 20px;
+                cursor: pointer;
+            }
+            button[aria-pressed="true"] {
+                background: var(--active);
+                color: var(--canvas);
+            }
+            button:focus-visible {
+                outline: 2px solid var(--active);
+                outline-offset: 2px;
+            }
+            .shell {
+                width: min(100%, 1560px);
+                margin-inline: auto;
+                padding: 24px;
+            }
+            .intro {
+                max-width: 920px;
+                margin-bottom: 24px;
+            }
+            .kicker,
+            .scope {
+                color: var(--subdued);
+                font-size: 14px;
+                line-height: 20px;
+            }
+            h1 {
+                margin: 8px 0;
+                font-size: 32px;
+                line-height: 40px;
+            }
+            .controls {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                margin-bottom: 16px;
+                padding: 12px;
+                border: 1px solid var(--line);
+                border-radius: 8px;
+                background: var(--surface);
+            }
+            .frame-shell {
+                overflow: hidden;
+                border: 1px solid var(--line);
+                border-radius: 10px;
+                background: var(--raised);
+            }
+            iframe {
+                display: block;
+                width: 100%;
+                height: 900px;
+                border: 0;
+                background: var(--canvas);
+            }
+            @media (max-width: 600px) {
+                .shell {
+                    padding: 16px;
+                }
+                h1 {
+                    font-size: 24px;
+                    line-height: 32px;
+                }
+                iframe {
+                    height: 760px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <main class="shell">
+            <header class="intro">
+                <p class="kicker">Block 5 · integrated regression · Proposed</p>
+                <h1>Foundation v0.1 통합 회귀</h1>
+                <p class="scope">
+                    승인된 S1·S2·S3·S5 구조만 재사용합니다. Light/Dark neutral,
+                    Pretendard JP와 fallback, 320·390·wide, KO/JA/EN 및 100/200%
+                    text를 같은 구조에서 확인합니다. S4·S6·viewer/editor는
+                    포함하지 않습니다.
+                </p>
+            </header>
+
+            <section class="controls" aria-label="통합 회귀 제어">
+                <button
+                    data-control="fixture"
+                    data-value="s1"
+                    aria-pressed="true"
+                >
+                    S1 Discovery
+                </button>
+                <button data-control="fixture" data-value="s2">
+                    S2 Music Detail
+                </button>
+                <button data-control="fixture" data-value="s3">
+                    S3 Rankings
+                </button>
+                <button data-control="fixture" data-value="s5">S5 Home</button>
+                <button
+                    data-control="theme"
+                    data-value="dark"
+                    aria-pressed="true"
+                >
+                    Dark
+                </button>
+                <button data-control="theme" data-value="light">Light</button>
+                <button data-control="font" data-value="jp" aria-pressed="true">
+                    Pretendard JP
+                </button>
+                <button data-control="font" data-value="fallback">
+                    Fallback
+                </button>
+                <button data-control="width" data-value="320">320</button>
+                <button
+                    data-control="width"
+                    data-value="390"
+                    aria-pressed="true"
+                >
+                    390
+                </button>
+                <button data-control="width" data-value="1056">Wide</button>
+                <button
+                    data-control="locale"
+                    data-value="ko"
+                    aria-pressed="true"
+                >
+                    KO
+                </button>
+                <button data-control="locale" data-value="ja">JA</button>
+                <button data-control="locale" data-value="en">EN</button>
+                <button
+                    data-control="scale"
+                    data-value="100"
+                    aria-pressed="true"
+                >
+                    100%
+                </button>
+                <button data-control="scale" data-value="200">200%</button>
+            </section>
+
+            <section
+                class="frame-shell"
+                aria-label="선택한 Foundation 회귀 시편"
+            >
+                <iframe title="S1 Discovery Foundation regression"></iframe>
+            </section>
+        </main>
+        <script>
+            const files = {
+                s1: "s1-discovery-compact-structure.html",
+                s2: "s2-music-detail-compact-structure.html",
+                s3: "s3-global-rankings-compact-structure.html",
+                s5: "s5-home-structure.html",
+            };
+            const names = {
+                s1: "S1 Discovery",
+                s2: "S2 Music Detail",
+                s3: "S3 Rankings",
+                s5: "S5 Home",
+            };
+            const state = {
+                fixture: "s1",
+                theme: "dark",
+                font: "jp",
+                width: "390",
+                locale: "ko",
+                scale: "100",
+            };
+            const frame = document.querySelector("iframe");
+            const controls = document.querySelector(".controls");
+
+            const render = () => {
+                document.documentElement.dataset.theme = state.theme;
+                const query = new URLSearchParams({
+                    "foundation-theme": state.theme,
+                    "foundation-font": state.font,
+                    "foundation-width": state.width,
+                    "foundation-locale": state.locale,
+                    "foundation-scale": state.scale,
+                });
+                frame.src = `${files[state.fixture]}?${query.toString()}`;
+                frame.title = `${names[state.fixture]} Foundation regression`;
+                controls.querySelectorAll("button").forEach((button) => {
+                    button.setAttribute(
+                        "aria-pressed",
+                        String(
+                            state[button.dataset.control] ===
+                                button.dataset.value
+                        )
+                    );
+                });
+            };
+
+            controls.addEventListener("click", (event) => {
+                const button = event.target.closest("button[data-control]");
+                if (!button) return;
+                state[button.dataset.control] = button.dataset.value;
+                render();
+            });
+
+            render();
+        </script>
+    </body>
+</html>

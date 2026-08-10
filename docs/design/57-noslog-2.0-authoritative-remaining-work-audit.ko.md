@@ -2,7 +2,7 @@
 
 ## 문서 관리
 
-- 상태: `블록 4 완료 — 근거가 확정된 두 블록만 남음`
+- 상태: `블록 5 진행 중 — 블록 5–6만 남음`
 - 정본 언어: 영어
 - 영어 정본:
   [57-noslog-2.0-authoritative-remaining-work-audit.md](./57-noslog-2.0-authoritative-remaining-work-audit.md)
@@ -45,7 +45,7 @@ fractional package credit 및 18-package 표를 모두 supersede합니다. 사�
 | `2 · Iconography`                   | `IC-06 · Lucide`의 20px 기본, 16px compact supporting, 공개된 2px outline geometry, label/icon-only, target-size, color, localization 및 accessible-name 규칙을 승인했고 responsive 검증을 완료했습니다. | Viewer/editor 전체와 최종 logo drawing.                                                                          | `Complete — 2026-08-10`.                             |
 | `3 · Motion`                        | `MO-02 · Atlassian`의 exact duration/easing role, instant reduced-motion 대체, static busy fallback 및 responsive·다국어 검증을 승인했습니다.                                                            | Viewer/editor 전체, renderer timing, transport 및 editor motion.                                                 | `Complete — 2026-08-10`.                             |
 | `4 · Data visualization`            | `DV-05 · GitHub Primer` 일반 UI anatomy, W3C table floor, exact-value interaction 및 outlined-personal/filled-benchmark circle 처리를 승인했습니다.                                                      | Viewer/editor 전체와 그 chart rendering.                                                                         | `Complete — 2026-08-10`.                             |
-| `5 · Foundation 승격과 reusable UI` | 완료된 `S1`, `S2`, `S3`, `S5` fixture를 최종 회귀 검증하고 Pretendard JP delivery/fallback을 확인한 뒤 Foundation v0.1을 승격하고 검증된 component alias·pattern·template을 통합합니다.                  | `S4` 없음, `S6` 없음, 새 구조 page 작업 없음, 완료된 입력 재개방 없음.                                           | 승인된 Foundation과 재사용 일반 UI guidance.         |
+| `5 · Foundation 승격과 reusable UI` | 완료된 `S1`, `S2`, `S3`, `S5` fixture를 최종 회귀 검증하고 Pretendard JP delivery/fallback을 확인한 뒤 Foundation v0.1을 승격하고 검증된 component alias·pattern·template을 통합합니다.                  | `S4` 없음, `S6` 없음, 새 구조 page 작업 없음, 완료된 입력 재개방 없음.                                           | `진행 중 — 문서 63 사용자 승인 대기`.                |
 | `6 · Handoff와 milestone export`    | 기존 Page Brief를 screen requirement, 구현 mapping, 접근성·다국어 QA 및 Claude Design handoff로 통합하고 PDF 언어/packaging 결정 뒤 안정된 versioned milestone을 export합니다.                           | Page Brief를 다시 열거나 viewer/editor 변경을 추가하거나 최종 high-fidelity production design을 만들지 않습니다. | 완전한 downstream handoff와 versioned 배포 artifact. |
 
 각 블록 안의 조사, specimen, browser 검증, 이중 언어 갱신 및 export 단계는 하위
@@ -125,3 +125,4 @@ viewer/editor는 계속 제외하며 블록 `5`와 `6`만 남습니다.
 | `RWA-13` | `MO-02 · Atlassian`을 채택하고 exact 일반 UI 및 instant reduced-motion 계약을 승인한 뒤 responsive·다국어 fixture를 다시 검증해 블록 `3`을 종료합니다. | `Approved and complete — 2026-08-10`      |
 | `RWA-14` | 문서 `62`, 독립 출처 16개 감사 및 통제된 일반 UI data-visualization anatomy 후보 6개로 블록 `4`를 시작합니다.                                          | `Completed evidence`                      |
 | `RWA-15` | `DV-05 · GitHub Primer`와 semantic-table·personal/benchmark marker 계약을 승인하고 통제 specimen을 검증해 블록 `4`를 닫습니다.                         | `Approved and complete — 2026-08-10`      |
+| `RWA-16` | 승인된 `S1`, `S2`, `S3`, `S5` 통합 회귀와 문서 `63`의 Pretendard JP delivery·reusable UI 승격 제안으로 블록 `5`를 시작합니다.                          | `진행 중 — 2026-08-10`                    |

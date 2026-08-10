@@ -2,7 +2,7 @@
 
 ## Document control
 
-- Status: `Block 4 complete — two evidence-backed blocks remain`
+- Status: `Block 5 in progress — only Blocks 5–6 remain`
 - Canonical language: English
 - Korean companion:
   [57-noslog-2.0-authoritative-remaining-work-audit.ko.md](./57-noslog-2.0-authoritative-remaining-work-audit.ko.md)
@@ -48,7 +48,7 @@ and counting method.
 | `2 · Iconography`                          | `IC-06 · Lucide` is approved with 20px default, 16px compact supporting, published 2px outline geometry, label/icon-only, target-size, color, localization, and accessible-name rules; responsive validation is complete. | Entire viewer/editor and final logo drawing.                                                                | `Complete — 2026-08-10`.                                         |
 | `3 · Motion`                               | `MO-02 · Atlassian` is approved with exact duration/easing roles, instant reduced-motion alternatives, static busy fallback, and responsive/localized validation.                                                         | Entire viewer/editor, renderer timing, transport, and editor motion.                                        | `Complete — 2026-08-10`.                                         |
 | `4 · Data visualization`                   | `DV-05 · GitHub Primer` is approved for ordinary-UI anatomy with the W3C table floor, exact-value interaction, and outlined-personal/filled-benchmark circle treatment.                                                   | Entire viewer/editor and its chart rendering.                                                               | `Complete — 2026-08-10`.                                         |
-| `5 · Foundation promotion and reusable UI` | Run final regression on eligible `S1`, `S2`, `S3`, and `S5` fixtures, verify Pretendard JP delivery/fallback, promote Foundation v0.1, and consolidate validated component aliases, patterns, and templates.              | No `S4`, no `S6`, no new structural page work, and no reopening completed inputs.                           | Approved Foundation and reusable ordinary-UI guidance.           |
+| `5 · Foundation promotion and reusable UI` | Run final regression on eligible `S1`, `S2`, `S3`, and `S5` fixtures, verify Pretendard JP delivery/fallback, promote Foundation v0.1, and consolidate validated component aliases, patterns, and templates.              | No `S4`, no `S6`, no new structural page work, and no reopening completed inputs.                           | `In progress — document 63 awaiting user approval`.              |
 | `6 · Handoff and milestone export`         | Consolidate existing page briefs into screen requirements, implementation mapping, accessibility/localization QA, and Claude Design handoff; decide PDF language/packaging and export the stable versioned milestone.     | Do not reopen page briefs, add viewer/editor changes, or create the final high-fidelity production design.  | Complete downstream handoff and versioned distribution artifact. |
 
 Research, specimens, browser checks, bilingual updates, and export steps inside a block
@@ -117,20 +117,21 @@ excluded. Only blocks `5` and `6` remain.
 
 ## Decision log
 
-| ID       | Entry                                                                                                                                                        | Status                                           |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------ |
-| `RWA-01` | Make this audit and the README table the current remaining-work authority.                                                                                   | `Approved scope correction — 2026-08-10`         |
-| `RWA-02` | Preserve the entire existing viewer/editor and cancel every active `S4`/`S6` design task.                                                                    | `Approved correction — 2026-08-10`               |
-| `RWA-03` | Keep the fixed eighteen-package denominator and `12.5/18 = 69%` progress.                                                                                    | `Rejected and superseded — unsupported count`    |
-| `RWA-04` | Classify final mark drawing as downstream and Radix placement exploration as closed.                                                                         | `Scope classification`                           |
-| `RWA-05` | Use exact Spectrum S2 values for four ordinary-UI difficulty markers only.                                                                                   | `Approved — 2026-08-10`                          |
-| `RWA-06` | Track the fixed six-block baseline, including completed state, without a completion percentage or fractional credit.                                         | `Corrected after Git-history audit — 2026-08-10` |
-| `RWA-07` | Advance Carbon, GitLab Pajamas, and SAP Horizon as the three exact local-data finalists in document `58`.                                                    | `Completed evidence`                             |
-| `RWA-08` | Adopt `LD-03 · SAP Fiori Horizon` and close remaining block `1`.                                                                                             | `Approved — 2026-08-10`                          |
-| `RWA-09` | Adopt `JD-02 · Radix Colors 3.0.0` for judgement markers as a narrow amendment without reopening block `1`.                                                  | `Approved amendment — 2026-08-10`                |
-| `RWA-10` | Start block `2` with the document `60` authoritative-source audit and controlled ordinary-UI icon specimen.                                                  | `Completed evidence`                             |
-| `RWA-11` | Adopt `IC-06 · Lucide`, approve the ordinary-UI grammar, validate responsive/localized fixtures, and close block `2`.                                        | `Approved and complete — 2026-08-10`             |
-| `RWA-12` | Start block `3` with an authoritative-source motion audit and controlled ordinary-UI default/reduced specimen.                                               | `Completed evidence`                             |
-| `RWA-13` | Adopt `MO-02 · Atlassian`, approve the exact ordinary-UI and instant reduced-motion contract, revalidate responsive/localized fixtures, and close block `3`. | `Approved and complete — 2026-08-10`             |
-| `RWA-14` | Start block `4` with document `62`, a sixteen-source audit, and six controlled ordinary-UI data-visualization anatomy candidates.                            | `Completed evidence`                             |
-| `RWA-15` | Adopt `DV-05 · GitHub Primer`, approve the semantic-table and personal/benchmark marker contract, validate the controlled specimen, and close block `4`.     | `Approved and complete — 2026-08-10`             |
+| ID       | Entry                                                                                                                                                                  | Status                                           |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| `RWA-01` | Make this audit and the README table the current remaining-work authority.                                                                                             | `Approved scope correction — 2026-08-10`         |
+| `RWA-02` | Preserve the entire existing viewer/editor and cancel every active `S4`/`S6` design task.                                                                              | `Approved correction — 2026-08-10`               |
+| `RWA-03` | Keep the fixed eighteen-package denominator and `12.5/18 = 69%` progress.                                                                                              | `Rejected and superseded — unsupported count`    |
+| `RWA-04` | Classify final mark drawing as downstream and Radix placement exploration as closed.                                                                                   | `Scope classification`                           |
+| `RWA-05` | Use exact Spectrum S2 values for four ordinary-UI difficulty markers only.                                                                                             | `Approved — 2026-08-10`                          |
+| `RWA-06` | Track the fixed six-block baseline, including completed state, without a completion percentage or fractional credit.                                                   | `Corrected after Git-history audit — 2026-08-10` |
+| `RWA-07` | Advance Carbon, GitLab Pajamas, and SAP Horizon as the three exact local-data finalists in document `58`.                                                              | `Completed evidence`                             |
+| `RWA-08` | Adopt `LD-03 · SAP Fiori Horizon` and close remaining block `1`.                                                                                                       | `Approved — 2026-08-10`                          |
+| `RWA-09` | Adopt `JD-02 · Radix Colors 3.0.0` for judgement markers as a narrow amendment without reopening block `1`.                                                            | `Approved amendment — 2026-08-10`                |
+| `RWA-10` | Start block `2` with the document `60` authoritative-source audit and controlled ordinary-UI icon specimen.                                                            | `Completed evidence`                             |
+| `RWA-11` | Adopt `IC-06 · Lucide`, approve the ordinary-UI grammar, validate responsive/localized fixtures, and close block `2`.                                                  | `Approved and complete — 2026-08-10`             |
+| `RWA-12` | Start block `3` with an authoritative-source motion audit and controlled ordinary-UI default/reduced specimen.                                                         | `Completed evidence`                             |
+| `RWA-13` | Adopt `MO-02 · Atlassian`, approve the exact ordinary-UI and instant reduced-motion contract, revalidate responsive/localized fixtures, and close block `3`.           | `Approved and complete — 2026-08-10`             |
+| `RWA-14` | Start block `4` with document `62`, a sixteen-source audit, and six controlled ordinary-UI data-visualization anatomy candidates.                                      | `Completed evidence`                             |
+| `RWA-15` | Adopt `DV-05 · GitHub Primer`, approve the semantic-table and personal/benchmark marker contract, validate the controlled specimen, and close block `4`.               | `Approved and complete — 2026-08-10`             |
+| `RWA-16` | Start block `5` with integrated regression of approved `S1`, `S2`, `S3`, and `S5` plus the Pretendard JP delivery and reusable-UI promotion proposal in document `63`. | `In progress — 2026-08-10`                       |
