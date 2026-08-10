@@ -8,6 +8,7 @@ approves the visual communication system.
 
 from __future__ import annotations
 
+import os
 import sys
 from pathlib import Path
 
@@ -21,9 +22,11 @@ from reportlab.pdfgen import canvas
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUTPUT = ROOT / "output" / "pdf" / "noslog-2.0-visual-core-review.pdf"
+SOURCE_ROOT = Path(os.environ.get("NOSLOG_GUIDE_SOURCE_DIR", "/private/tmp/noslog-guide-sources"))
 PAGE_W, PAGE_H = A4
 MARGIN = 16 * mm
 CONTENT_W = PAGE_W - 2 * MARGIN
+CSS_PX = 0.75
 
 
 def hex_color(value: str) -> colors.Color:
@@ -88,14 +91,25 @@ LOCAL_LIGHT = ["#62B3FF", "#3FA2FF", "#168EFF", "#0074E2", "#0065C3", "#0055A5"]
 LOCAL_DARK = ["#1D456D", "#275E96", "#3278BE", "#5291D1", "#7AABDC", "#A2C4E7"]
 
 
-def register_fonts() -> tuple[str, str]:
-    cjk = Path("/System/Library/Fonts/Supplemental/AppleGothic.ttf")
-    latin = Path("/System/Library/Fonts/Supplemental/Arial.ttf")
+def register_fonts() -> tuple[dict[int, str], str]:
+    font_dir = SOURCE_ROOT / "pretendard-jp"
+    weight_files = {
+        400: font_dir / "PretendardJP-Regular.ttf",
+        500: font_dir / "PretendardJP-Medium.ttf",
+        600: font_dir / "PretendardJP-SemiBold.ttf",
+        700: font_dir / "PretendardJP-Bold.ttf",
+    }
     mono = Path("/System/Library/Fonts/SFNSMono.ttf")
-    if not cjk.exists() or not latin.exists():
-        raise FileNotFoundError("Required review fonts were not found")
-    pdfmetrics.registerFont(TTFont("ReviewCJK", str(cjk)))
-    pdfmetrics.registerFont(TTFont("ReviewSans", str(latin)))
+    missing = [str(path) for path in weight_files.values() if not path.exists()]
+    if missing:
+        raise FileNotFoundError(
+            "Official Pretendard JP 1.3.9 review fonts are missing: " + ", ".join(missing)
+        )
+    font_names: dict[int, str] = {}
+    for weight, path in weight_files.items():
+        name = f"PretendardJP{weight}"
+        pdfmetrics.registerFont(TTFont(name, str(path)))
+        font_names[weight] = name
     mono_name = "Courier"
     if mono.exists():
         try:
@@ -103,33 +117,34 @@ def register_fonts() -> tuple[str, str]:
             mono_name = "ReviewMono"
         except Exception:
             pass
-    return "ReviewCJK", mono_name
+    return font_names, mono_name
 
 
-CJK, MONO = register_fonts()
-SANS = "ReviewSans"
+SANS_BY_WEIGHT, MONO = register_fonts()
+SANS = SANS_BY_WEIGHT[400]
 
 
-def set_font(c: canvas.Canvas, size: float, color: str = "#292929", mono: bool = False) -> None:
-    c.setFont(MONO if mono else SANS, size)
+def set_font(c: canvas.Canvas, size: float, color: str = "#292929", mono: bool = False,
+             weight: int = 400) -> None:
+    c.setFont(MONO if mono else SANS_BY_WEIGHT[weight], size)
     c.setFillColor(hex_color(color))
 
 
 def text(c: canvas.Canvas, x: float, y: float, value: str, size: float = 9,
-         color: str = "#292929", mono: bool = False) -> None:
-    set_font(c, size, color, mono)
+         color: str = "#292929", mono: bool = False, weight: int = 400) -> None:
+    set_font(c, size, color, mono, weight)
     c.drawString(x, y, value)
 
 
 def right_text(c: canvas.Canvas, x: float, y: float, value: str, size: float = 8,
-               color: str = "#505050", mono: bool = False) -> None:
-    set_font(c, size, color, mono)
+               color: str = "#505050", mono: bool = False, weight: int = 400) -> None:
+    set_font(c, size, color, mono, weight)
     c.drawRightString(x, y, value)
 
 
 def cjk_text(c: canvas.Canvas, x: float, y: float, value: str, size: float = 9,
-             color: str = "#292929") -> None:
-    c.setFont(CJK, size)
+             color: str = "#292929", weight: int = 400) -> None:
+    c.setFont(SANS_BY_WEIGHT[weight], size)
     c.setFillColor(hex_color(color))
     c.drawString(x, y, value)
 
@@ -195,9 +210,12 @@ def draw_cover(c: canvas.Canvas) -> None:
     c.rect(0, 0, 54 * mm, PAGE_H, fill=1, stroke=0)
     c.setFillColor(hex_color("#1B1B1B"))
     c.rect(10 * mm, 22 * mm, 34 * mm, PAGE_H - 44 * mm, fill=1, stroke=0)
-    for idx, value in enumerate(["#0BA45D", "#E86A00", "#F03823", "#A65CE7"]):
-        c.setFillColor(hex_color(value))
-        c.circle(27 * mm, PAGE_H - 60 * mm - idx * 14 * mm, 2.2 * mm, fill=1, stroke=0)
+    for idx, label in enumerate(["TYPE", "COLOR", "MATERIAL", "ICON"]):
+        y = PAGE_H - 60 * mm - idx * 14 * mm
+        c.setStrokeColor(hex_color("#444444"))
+        c.setLineWidth(0.7)
+        c.line(16 * mm, y, 22 * mm, y)
+        text(c, 26 * mm, y - 1.8 * mm, label, 5.8, "#AFAFAF")
     text(c, 66 * mm, PAGE_H - 44 * mm, "NOSLOG / DESIGN SYSTEM", 8, "#505050")
     text(c, 66 * mm, PAGE_H - 69 * mm, "Visual Core", 32, "#292929")
     text(c, 66 * mm, PAGE_H - 83 * mm, "Review 01", 32, "#292929")
@@ -230,27 +248,28 @@ def draw_typography(c: canvas.Canvas) -> None:
         "The visual hierarchy comes from approved size, line-height, weight, and role boundaries—not decorative tracking or page-local invention.",
     )
     roles = [
-        ("DISPLAY", "Archive without noise", "40 / 48 · 700", 27),
-        ("PAGE TITLE", "Music detail", "24 / 32 · 700", 18),
-        ("SECTION TITLE", "Recent records", "20 / 28 · 600", 15),
-        ("COMPONENT TITLE", "Judgement breakdown", "16 / 24 · 600", 12),
-        ("BODY", "Compare exact values and keep the current context visible.", "16 / 24 · 400", 11),
-        ("METADATA", "UPDATED 12 MIN AGO", "12 / 16 · 400", 8.5),
+        ("DISPLAY", "Archive without noise", "40 / 48 · 700", 40, 700),
+        ("PAGE TITLE", "Music detail", "24 / 32 · 700", 24, 700),
+        ("SECTION TITLE", "Recent records", "20 / 28 · 600", 20, 600),
+        ("COMPONENT TITLE", "Judgement breakdown", "16 / 24 · 600", 16, 600),
+        ("BODY", "Compare exact values and keep the current context visible.", "16 / 24 · 400", 16, 400),
+        ("METADATA", "UPDATED 12 MIN AGO", "12 / 16 · 400", 12, 400),
     ]
-    for role, sample, spec, size in roles:
+    for role, sample, spec, css_px, weight in roles:
+        size = css_px * 0.75
         text(c, MARGIN, y, role, 6.5, "#717171")
-        text(c, MARGIN + 34 * mm, y - 1, sample, size, "#292929")
+        text(c, MARGIN + 34 * mm, y - 1, sample, size, "#292929", weight=weight)
         right_text(c, PAGE_W - MARGIN, y, spec, 7.2, "#505050", mono=True)
         y -= max(17 * mm, size * 0.7 * mm)
 
     box_y = 25 * mm
     c.setFillColor(hex_color("#F8F8F8"))
     c.roundRect(MARGIN, box_y, CONTENT_W, 39 * mm, 8, fill=1, stroke=0)
-    cjk_text(c, MARGIN + 6 * mm, box_y + 28 * mm, "KO  그랜드마스터 달성 기록", 11, "#292929")
-    cjk_text(c, MARGIN + 6 * mm, box_y + 20 * mm, "JA  グランドマスター達成記録", 11, "#292929")
-    text(c, MARGIN + 6 * mm, box_y + 12 * mm, "EN  Grandmaster achievement record", 11, "#292929")
-    text(c, MARGIN + 6 * mm, box_y + 4 * mm, "Review fallback only · Production source: Pretendard JP 1.3.9", 6.7, "#717171")
-    right_text(c, PAGE_W - MARGIN - 6 * mm, box_y + 4 * mm, "Mixed-script pressure", 6.7, "#717171")
+    cjk_text(c, MARGIN + 6 * mm, box_y + 28 * mm, "KO  그랜드마스터 달성 기록", 12, "#292929", 600)
+    cjk_text(c, MARGIN + 6 * mm, box_y + 20 * mm, "JA  グランドマスター達成記録", 12, "#292929", 600)
+    text(c, MARGIN + 6 * mm, box_y + 12 * mm, "EN  Grandmaster achievement record", 12, "#292929", weight=600)
+    text(c, MARGIN + 6 * mm, box_y + 4 * mm, "Official Pretendard JP 1.3.9 static TTFs · 400/500/600/700 embedded", 6.4, "#717171")
+    right_text(c, PAGE_W - MARGIN - 6 * mm, box_y + 4 * mm, "KO ss05 remains a browser-shaping check", 6.4, "#717171")
     footer(c)
     c.showPage()
 
@@ -303,22 +322,24 @@ def neutral_role_page(c: canvas.Canvas, page: int, mode: str, palette: dict[str,
     c.showPage()
 
 
-def shadow_card(c: canvas.Canvas, x: float, y: float, w: float, h: float,
-                radius: float, label: str, level: str) -> None:
-    layers = {
-        "raised": [(0, -2, 8, 0.08), (0, -1, 4, 0.04)],
-        "overlay": [(0, -4, 12, 0.08), (0, -2, 6, 0.04)],
-        "dragged": [(0, -12, 16, 0.08), (0, -6, 8, 0.04)],
-    }[level]
-    for dx, dy, blur, alpha in layers:
-        c.saveState()
-        c.setFillColor(colors.Color(0, 0, 0, alpha=alpha))
-        c.roundRect(x + dx, y + dy - blur / 4, w, h, radius, fill=1, stroke=0)
-        c.restoreState()
-    c.setFillColor(hex_color("#FFFFFF"))
-    c.roundRect(x, y, w, h, radius, fill=1, stroke=0)
-    text(c, x + 6 * mm, y + h - 10 * mm, label, 10, "#292929")
-    text(c, x + 6 * mm, y + 6 * mm, level, 7, "#717171", mono=True)
+SHADOW_LAYERS = {
+    "raised": [("Ambient", "0 2 8", ".08 / .24"), ("Transition", "0 1 4", ".04 / .12"), ("Key", "0 0 1", ".08 / .24")],
+    "elevated": [("Ambient", "0 4 12", ".08 / .24"), ("Transition", "0 2 6", ".04 / .12"), ("Key", "0 0 2", ".12 / .36")],
+    "dragged": [("Ambient", "0 12 16", ".08 / .24"), ("Transition", "0 6 8", ".04 / .12"), ("Key", "0 0 6", ".16 / .48")],
+}
+
+
+def shadow_anatomy(c: canvas.Canvas, x: float, y: float, w: float, h: float,
+                   label: str, level: str) -> None:
+    c.setFillColor(hex_color("#F8F8F8"))
+    c.setStrokeColor(hex_color("#DADADA"))
+    c.roundRect(x, y, w, h, 8, fill=1, stroke=1)
+    text(c, x + 5 * mm, y + h - 8 * mm, label, 8.5, "#292929", weight=600)
+    for idx, (layer, geometry, opacity) in enumerate(SHADOW_LAYERS[level]):
+        yy = y + h - (16 + idx * 7) * mm
+        text(c, x + 5 * mm, yy, layer, 6.3, "#505050")
+        text(c, x + 22 * mm, yy, geometry, 6.1, "#292929", mono=True)
+        right_text(c, x + w - 5 * mm, yy, opacity, 6.1, "#717171", mono=True)
 
 
 def draw_material(c: canvas.Canvas) -> None:
@@ -328,7 +349,12 @@ def draw_material(c: canvas.Canvas) -> None:
     )
     text(c, MARGIN, y, "APPROVED GEOMETRY", 6.7, "#717171")
     y -= 10 * mm
-    radius_specs = [("Control", 4, 4), ("Container", 8, 8), ("Overlay", 10, 10), ("Full", 20, 20)]
+    radius_specs = [
+        ("Control", 4 * CSS_PX, "4px"),
+        ("Container", 8 * CSS_PX, "8px"),
+        ("Overlay", 10 * CSS_PX, "10px"),
+        ("Full", 11 * mm, "50%"),
+    ]
     cell_w = CONTENT_W / 4
     for idx, (name, radius, shown) in enumerate(radius_specs):
         x = MARGIN + idx * cell_w
@@ -336,15 +362,15 @@ def draw_material(c: canvas.Canvas) -> None:
         c.setStrokeColor(hex_color("#C6C6C6"))
         c.roundRect(x, y - 22 * mm, cell_w - 5 * mm, 22 * mm, radius, fill=1, stroke=1)
         text(c, x, y - 29 * mm, name, 7.5, "#292929")
-        text(c, x, y - 35 * mm, "50%" if name == "Full" else f"{shown}px", 7, "#717171", mono=True)
+        text(c, x, y - 35 * mm, shown, 7, "#717171", mono=True)
     y -= 52 * mm
     text(c, MARGIN, y, "ELEVATION IS A STATE, NOT DECORATION", 6.7, "#717171")
     y -= 49 * mm
     card_w = (CONTENT_W - 12 * mm) / 3
-    shadow_card(c, MARGIN, y, card_w, 36 * mm, 8, "Raised content", "raised")
-    shadow_card(c, MARGIN + card_w + 6 * mm, y, card_w, 36 * mm, 10, "Overlay", "overlay")
-    shadow_card(c, MARGIN + 2 * (card_w + 6 * mm), y, card_w, 36 * mm, 10, "Dragged", "dragged")
-    text(c, MARGIN, y - 10 * mm, "Stack geometry shown; implementation retains Spectrum's source-defined key layer.", 6.5, "#717171")
+    shadow_anatomy(c, MARGIN, y, card_w, 36 * mm, "Raised / emphasized", "raised")
+    shadow_anatomy(c, MARGIN + card_w + 6 * mm, y, card_w, 36 * mm, "Overlay / elevated", "elevated")
+    shadow_anatomy(c, MARGIN + 2 * (card_w + 6 * mm), y, card_w, 36 * mm, "Dragged", "dragged")
+    text(c, MARGIN, y - 10 * mm, "Exact Spectrum layer anatomy · geometry is x y blur · opacity is Light / Dark.", 6.5, "#717171")
     y -= 23 * mm
     c.setFillColor(hex_color("#111111"))
     c.roundRect(MARGIN, 23 * mm, CONTENT_W, 55 * mm, 8, fill=1, stroke=0)
@@ -454,29 +480,49 @@ def icon_stroke(c: canvas.Canvas, x: float, y: float, size: float, color: str = 
     c.setLineJoin(1)
 
 
+def icon_point(x: float, y: float, size: float, px: float, py: float) -> tuple[float, float]:
+    scale = size / 24
+    return x + px * scale, y + (24 - py) * scale
+
+
 def icon_search(c: canvas.Canvas, x: float, y: float, size: float, color: str = "#292929") -> None:
     icon_stroke(c, x, y, size, color)
-    c.circle(x + size * .45, y + size * .56, size * .26, fill=0, stroke=1)
-    c.line(x + size * .64, y + size * .35, x + size * .84, y + size * .15)
+    cx, cy = icon_point(x, y, size, 11, 11)
+    c.circle(cx, cy, 8 * size / 24, fill=0, stroke=1)
+    x1, y1 = icon_point(x, y, size, 21, 21)
+    x2, y2 = icon_point(x, y, size, 16.66, 16.66)
+    c.line(x1, y1, x2, y2)
 
 
 def icon_info(c: canvas.Canvas, x: float, y: float, size: float, color: str = "#292929") -> None:
     icon_stroke(c, x, y, size, color)
-    c.circle(x + size / 2, y + size / 2, size * .38, fill=0, stroke=1)
-    c.circle(x + size / 2, y + size * .69, size * .025, fill=1, stroke=0)
-    c.line(x + size / 2, y + size * .50, x + size / 2, y + size * .28)
+    cx, cy = icon_point(x, y, size, 12, 12)
+    c.circle(cx, cy, 10 * size / 24, fill=0, stroke=1)
+    x1, y1 = icon_point(x, y, size, 12, 16)
+    x2, y2 = icon_point(x, y, size, 12, 12)
+    c.line(x1, y1, x2, y2)
+    x1, y1 = icon_point(x, y, size, 12, 8)
+    x2, y2 = icon_point(x, y, size, 12.01, 8)
+    c.line(x1, y1, x2, y2)
 
 
 def icon_x(c: canvas.Canvas, x: float, y: float, size: float, color: str = "#292929") -> None:
     icon_stroke(c, x, y, size, color)
-    c.line(x + size * .25, y + size * .25, x + size * .75, y + size * .75)
-    c.line(x + size * .75, y + size * .25, x + size * .25, y + size * .75)
+    x1, y1 = icon_point(x, y, size, 18, 6)
+    x2, y2 = icon_point(x, y, size, 6, 18)
+    c.line(x1, y1, x2, y2)
+    x1, y1 = icon_point(x, y, size, 6, 6)
+    x2, y2 = icon_point(x, y, size, 18, 18)
+    c.line(x1, y1, x2, y2)
 
 
 def icon_chevron(c: canvas.Canvas, x: float, y: float, size: float, color: str = "#292929") -> None:
     icon_stroke(c, x, y, size, color)
-    c.line(x + size * .38, y + size * .25, x + size * .63, y + size * .50)
-    c.line(x + size * .63, y + size * .50, x + size * .38, y + size * .75)
+    p1 = icon_point(x, y, size, 9, 18)
+    p2 = icon_point(x, y, size, 15, 12)
+    p3 = icon_point(x, y, size, 9, 6)
+    c.line(*p1, *p2)
+    c.line(*p2, *p3)
 
 
 def draw_iconography(c: canvas.Canvas) -> None:
@@ -489,7 +535,8 @@ def draw_iconography(c: canvas.Canvas) -> None:
     sizes = [(16, "Supporting beside label"), (20, "Routine action / wayfinding"), (24, "Prominent proven affordance")]
     for idx, (px, desc) in enumerate(sizes):
         x = MARGIN + idx * (CONTENT_W / 3)
-        icon_search(c, x, y - px, px)
+        draw_size = px * CSS_PX
+        icon_search(c, x, y - draw_size, draw_size)
         text(c, x + 11 * mm, y - 7 * mm, f"{px}px", 10, "#292929", mono=True)
         text(c, x, y - 17 * mm, desc, 7, "#505050")
         text(c, x, y - 23 * mm, "24×24 viewBox · 2px stroke", 6.3, "#717171")
@@ -503,7 +550,8 @@ def draw_iconography(c: canvas.Canvas) -> None:
         c.setFillColor(hex_color("#F8F8F8"))
         c.setStrokeColor(hex_color("#C6C6C6"))
         c.roundRect(x, y - side, side, side, 8, fill=1, stroke=1)
-        glyph(c, x + (side - 20) / 2, y - side + (side - 20) / 2, 20)
+        glyph_size = 20 * CSS_PX
+        glyph(c, x + (side - glyph_size) / 2, y - side + (side - glyph_size) / 2, glyph_size)
         text(c, x + side + 5 * mm, y - 8 * mm, label, 9, "#292929")
         text(c, x + side + 5 * mm, y - 15 * mm, f"≥ {target}×{target}px target", 7, "#717171", mono=True)
     y -= 47 * mm
@@ -511,13 +559,13 @@ def draw_iconography(c: canvas.Canvas) -> None:
     y -= 15 * mm
     c.setFillColor(hex_color("#292929"))
     c.roundRect(MARGIN, y - 11 * mm, 55 * mm, 11 * mm, 4, fill=1, stroke=0)
-    icon_search(c, MARGIN + 5 * mm, y - 8.3 * mm, 14, "#FFFFFF")
+    icon_search(c, MARGIN + 5 * mm, y - 8.3 * mm, 20 * CSS_PX, "#FFFFFF")
     text(c, MARGIN + 15 * mm, y - 7.5 * mm, "Search records", 8.5, "#FFFFFF")
     text(c, MARGIN + 65 * mm, y - 3 * mm, "Primary / unfamiliar", 8, "#292929")
     text(c, MARGIN + 65 * mm, y - 10 * mm, "Visible label remains", 7, "#717171")
     c.setFillColor(hex_color("#F8F8F8"))
     c.roundRect(MARGIN, y - 32 * mm, 40 * mm, 11 * mm, 4, fill=1, stroke=0)
-    icon_chevron(c, MARGIN + 5 * mm, y - 29.3 * mm, 14)
+    icon_chevron(c, MARGIN + 5 * mm, y - 29.3 * mm, 20 * CSS_PX)
     text(c, MARGIN + 15 * mm, y - 28.5 * mm, "Details", 8.5, "#292929")
     text(c, MARGIN + 65 * mm, y - 24 * mm, "Wayfinding", 8, "#292929")
     text(c, MARGIN + 65 * mm, y - 31 * mm, "Icon supports—not replaces—the label", 7, "#717171")
@@ -532,30 +580,30 @@ def draw_dos_donts(c: canvas.Canvas) -> None:
     )
     col_w = (CONTENT_W - 8 * mm) / 2
     cards = [
-        ("DO", MARGIN, "#0BA45D"),
-        ("DON'T", MARGIN + col_w + 8 * mm, "#C9372C"),
+        ("DO", MARGIN),
+        ("DON'T", MARGIN + col_w + 8 * mm),
     ]
-    for label, x, marker in cards:
-        text(c, x, y, label, 7.5, marker)
+    for label, x in cards:
+        text(c, x, y, label, 7.5, "#505050", weight=600)
         c.setFillColor(hex_color("#111111"))
         c.roundRect(x, y - 65 * mm, col_w, 58 * mm, 8, fill=1, stroke=0)
         if label == "DO":
             c.setFillColor(hex_color("#1B1B1B"))
             c.roundRect(x + 6 * mm, y - 57 * mm, col_w - 12 * mm, 39 * mm, 8, fill=1, stroke=0)
-            text(c, x + 11 * mm, y - 31 * mm, "Recent records", 10, "#DBDBDB")
-            text(c, x + 11 * mm, y - 42 * mm, "12,987,654", 16, "#DBDBDB")
+            text(c, x + 11 * mm, y - 31 * mm, "Difficulty", 8, "#AFAFAF")
             c.setFillColor(hex_color("#0BA45D"))
-            c.circle(x + col_w - 13 * mm, y - 34 * mm, 2.2 * mm, fill=1, stroke=0)
-            text(c, x + 11 * mm, y - 51 * mm, "Neutral hierarchy; narrow marker", 7, "#AFAFAF")
+            c.circle(x + 13 * mm, y - 42 * mm, 2.2 * mm, fill=1, stroke=0)
+            text(c, x + 19 * mm, y - 44 * mm, "Normal · 12", 11, "#DBDBDB", weight=600)
+            text(c, x + 11 * mm, y - 52 * mm, "Named role + compact marker", 7, "#AFAFAF")
         else:
             c.setFillColor(hex_color("#1B1B1B"))
             c.setStrokeColor(hex_color("#FFFFFF"))
             c.setLineWidth(1.8)
             c.roundRect(x + 6 * mm, y - 57 * mm, col_w - 12 * mm, 39 * mm, 8, fill=1, stroke=1)
-            c.setFillColor(hex_color("#A65CE7"))
+            c.setFillColor(hex_color("#222222"))
             c.roundRect(x + 10 * mm, y - 52 * mm, col_w - 20 * mm, 27 * mm, 6, fill=1, stroke=0)
-            text(c, x + 14 * mm, y - 35 * mm, "Everything competes", 9, "#FFFFFF")
-            text(c, x + 14 * mm, y - 46 * mm, "Color becomes decoration", 7, "#FFFFFF")
+            text(c, x + 14 * mm, y - 35 * mm, "Persistent white outline", 9, "#DBDBDB")
+            text(c, x + 14 * mm, y - 46 * mm, "Every container appears focused", 7, "#AFAFAF")
     y -= 78 * mm
     rules = [
         ("Neutral surfaces first", "Chroma only for approved semantic or domain roles."),

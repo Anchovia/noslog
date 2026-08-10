@@ -309,6 +309,17 @@ viewer/editor specimens.
   only when necessary. Leave the final page suite to Claude Design.
 - The PDF is a versioned distribution artifact, not the editable source of truth.
 - Do not create empty placeholder documents or components.
+- A visual plate is not trustworthy merely because it looks plausible. Trace every
+  product-facing color, type, geometry, icon, motion, and state claim to the exact
+  current authority and pinned upstream asset before it enters a milestone PDF.
+- Use the actual approved font weights and published icon geometry. Do not hand-draw
+  approximations or present a simulated shadow, scale, blur, or component appearance
+  as normative evidence. Label editorial notation, scaled diagrams, schematics, and
+  normative specimens distinctly.
+- Before reviewing or integrating a visual-core PDF, run
+  `scripts/validate-design-guide-visual-core.py` against the pinned source manifest.
+  A failed or unavailable source check blocks integration; it does not permit a
+  fallback visual.
 
 ## Reference roles
 

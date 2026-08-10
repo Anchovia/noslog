@@ -119,6 +119,13 @@ Block 6 downstream package는
 [NosLog 2.0 Design Guide v0.1 PDF](./output/pdf/noslog-2.0-design-guide-v0.1.pdf)입니다.
 과거 proposal·specimen·checklist로 완료된 블록을 다시 열지 않습니다.
 
+PDF에 추가하는 시각 자료는 외형만 보고 규범으로 승인하지 않습니다. 현재 Foundation
+권위와 고정된 upstream 원본을 일대일로 대조하고,
+`scripts/design-guide-visual-core-manifest.json` 및
+`scripts/validate-design-guide-visual-core.py` 검증을 통과한 review artifact만 사용자
+검토 대상으로 사용합니다. 대체 font, 손으로 근사한 icon, 추정 shadow 또는 역할 밖
+chroma는 검증 실패로 처리하며 milestone PDF에 통합하지 않습니다.
+
 ## 로컬 개발
 
 ### 준비 사항
