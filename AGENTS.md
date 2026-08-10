@@ -150,18 +150,19 @@ Sections:
   is never the sole cue. IBM Carbon informed the neutral-typography restraint only;
   do not import Carbon values, Tailwind values, interpolated steps, or the rejected
   `FS-A`, original `FS-B`, or `FS-C` component mappings into this alias without a new
-  user-approved gate. This approval completes package gate `13A` only; NOSTALGIA
-  domain color (`13B`) and comparison-local data color (`13C`) remain separate.
-- Package `13B` domain-color research must preserve the locked chart viewer/editor
+  user-approved gate. This approval completes the feedback/status gate only;
+  NOSTALGIA difficulty color and comparison-local data color remain separate material
+  decisions inside remaining block `1`; they are not separate work units.
+- Remaining block `1` C5 color research must preserve the locked chart viewer/editor
   exception above. Existing renderer note and left/right-hand colors are implementation
   constants, not open Foundation tokens, and must not enter an exact-source comparison.
   Outside the entire viewer/editor experience, proven repeated-scanning difficulty UI
   must distinguish Normal, Hard, Expert, and Real with four different persistent
   colors. This product requirement is approved and must not be reopened as a
   color-versus-neutral choice. The exact authoritative Light/Dark source values and
-  four-role mapping remain the open `13B` decision. Basic/Recital,
+  four-role mapping remain the current open decision inside block `1`. Basic/Recital,
   rank/achievement, and genre remain neutral by default; score bands and FAST/SLOW
-  visualization belong to `13C`. This boundary does not approve current non-renderer
+  visualization follow later inside the same block. This boundary does not approve current non-renderer
   NosLog values, sampled imagery, another rhythm game's palette, or any new exact
   Light/Dark mapping. Keep the difficulty name, level, order, and selection visible so
   color is never the sole cue. If research does not produce an acceptable sourced
@@ -233,36 +234,46 @@ This is the most important working rule for this project:
 
 ## NosLog 2.0 Progress and Decision Integrity
 
-The `NosLog 2.0 design-guide progress baseline` section in `README.md` is the
-authoritative package-state ledger, and document `57` is the authoritative
-remaining-scope and preservation audit. Read both before naming the next task. They
-exist to prevent completed, downstream, closed, or prohibited work from being
-rediscovered as pending when older documents contain stale future checklists.
+The `NosLog 2.0 design-guide remaining-work baseline` section in `README.md` and
+document `57` are the authoritative remaining-scope and preservation audit. Read both
+before naming the next task. They exist to prevent completed, downstream, closed, or
+prohibited work from being rediscovered as pending when older documents contain stale
+future checklists.
 
-- Use the fixed eighteen-work-package denominator in the README for every design-guide
-  progress percentage. Do not switch between document count, workflow-phase count,
-  commit count, elapsed time, or estimated effort and still call the result the same
-  percentage.
+- Do not report a design-guide completion percentage unless the user first approves a
+  denominator and counting method. The former fixed eighteen-package denominator was
+  introduced without an approved roadmap basis and is rejected. Never revive it or
+  derive progress from document count, commit count, workflow-phase count, elapsed
+  time, or estimated effort.
 - Before describing any work as pending, search later-numbered documents, their decision
   logs, and relevant Git history for an explicit completion, approval, rejection, or
   supersession. A later explicit decision overrides an older plan, status sentence, or
   unchecked checklist item covering the same scope.
-- Treat a work package marked `Complete` in the README as locked. Do not research,
-  redesign, revalidate, or count it as incomplete unless the user explicitly reopens
-  that exact decision or new evidence proves a recorded acceptance requirement failed.
+- Treat work listed as complete in the README as locked. Do not research, redesign,
+  revalidate, or count it as incomplete unless the user explicitly reopens that exact
+  decision or new evidence proves a recorded acceptance requirement failed.
 - Do not interpret a later integrated regression check as permission to redo its locked
   inputs. `S1`–`S5` structural validation is complete. There is no missing `S6` slice:
   the former editor proposal is superseded by the full viewer/editor preservation lock.
   The future final Foundation regression must reuse only ordinary-UI fixtures `S1`,
   `S2`, `S3`, and `S5`, check regressions caused by subsequently approved appearance
   rules, and exclude the locked `S4` viewer and all viewer/editor work entirely.
-- Update the README ledger in the same task whenever a work package changes state. A
-  progress percentage must not decrease unless the user explicitly approves new scope
-  or reopens a completed package; record and explain either event beside the ledger.
-- Report both the package count and the percentage, and label the value as management
-  progress rather than a calendar or remaining-time estimate. Do not invent fractional
-  credit other than the explicit `0.5` used for the single package currently marked
-  `In progress`.
+- Update the README and document `57` in the same task whenever a remaining work block
+  changes state. Count only the six evidence-backed blocks recorded there. Do not split
+  research, specimen, validation, documentation, handoff, or export subtasks into new
+  top-level work merely to manufacture a larger denominator.
+- Use those six blocks as the only user-facing units of work and as the normal execution
+  cadence. Once a block starts, continue its research, comparisons, specimens, checks,
+  bilingual documentation, and consolidation as one continuous block. Pause only when
+  the user must make a material design decision, when required authority is missing, or
+  when the whole block is complete.
+- Never announce an internal subtask, candidate, approval gate, document, specimen, or
+  validation pass as “the next task,” a new package, or an additional remaining item.
+  A user decision inside a block changes that block's state; it does not create another
+  block. After the decision, resume the same block until its stated completion result is
+  achieved.
+- When reporting status, name completed decisions and the exact remaining blocks. Do
+  not invent fractional package credit or convert the block count into a percentage.
 - Historical documents remain valid evidence for the decisions they recorded, but their
   stale status summaries and future checklists are not the current progress authority.
 - If an older document names `S4`, `S6`, viewer/editor adaptation, final mark drawing,

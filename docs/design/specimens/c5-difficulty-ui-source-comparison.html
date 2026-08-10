@@ -3,43 +3,45 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>NosLog 2.0 C5 Difficulty UI Source Comparison</title>
+        <title>NosLog 2.0 C5 Difficulty Four-Color Comparison</title>
         <style>
             * { box-sizing: border-box; }
             :root { color-scheme: light; font-family: Inter, Pretendard, "Noto Sans KR", system-ui, sans-serif; background: #e9e9e9; color: #292929; }
             body { min-width: 0; margin: 0; background: #e9e9e9; }
-            button { font: inherit; }
-            .shell { display: grid; gap: 16px; width: min(1180px, 100%); margin: 0 auto; padding: 16px; }
+            button, a { font: inherit; }
+            a { color: inherit; }
+            button:focus-visible, a:focus-visible { outline: 2px solid #000; outline-offset: 2px; }
+            .shell { display: grid; gap: 16px; width: min(1440px, 100%); margin: 0 auto; padding: 16px; }
             .panel { border: 1px solid #c6c6c6; border-radius: 8px; background: #fff; }
-            header, .boundary { padding: 16px; }
-            .kicker, h1, header p, .boundary p { margin: 0; }
+            header, .boundary, .summary { padding: 16px; }
+            .kicker, h1, header p, .boundary p, .summary p { margin: 0; }
             .kicker { color: #717171; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
             h1 { margin-top: 6px; font-size: clamp(22px, 4vw, 34px); line-height: 1.2; }
-            header p, .boundary p { margin-top: 8px; color: #505050; font-size: 14px; line-height: 1.65; }
+            header p, .boundary p, .summary p { margin-top: 8px; color: #505050; font-size: 14px; line-height: 1.65; }
             .boundary { border-color: #717171; }
-            .boundary strong { color: #292929; }
+            .boundary strong, .summary strong { color: #292929; }
+            .summary { display: grid; gap: 8px; }
+            .summary p { margin: 0; }
             .controls { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px; }
             .controls button { min-height: 44px; border: 1px solid #c6c6c6; border-radius: 4px; padding: 8px 12px; background: #fff; color: #505050; cursor: pointer; }
             .controls button[aria-pressed="true"] { border-color: #717171; color: #292929; font-weight: 800; box-shadow: inset 0 -3px 0 #292929; }
-            button:focus-visible { outline: 2px solid #000; outline-offset: 0; }
             .comparison { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; min-width: 0; }
             .candidate { min-width: 0; overflow: clip; }
-            .candidate-head { display: grid; gap: 5px; padding: 14px; border-bottom: 1px solid #e1e1e1; }
+            .candidate-head { display: grid; gap: 6px; padding: 14px; border-bottom: 1px solid #e1e1e1; }
             .candidate-head h2, .candidate-head p { margin: 0; }
             .candidate-head h2 { font-size: 18px; }
             .candidate-head p { color: #505050; font-size: 12px; line-height: 1.55; }
+            .candidate-head a { width: fit-content; color: #505050; font-size: 11px; }
             .tag { width: fit-content; border: 1px solid #c6c6c6; border-radius: 4px; padding: 3px 7px; color: #505050; font-size: 11px; font-weight: 800; }
+            .tag.pass { border-color: #717171; color: #292929; }
+            .tag.exclude { border-style: dashed; }
             .pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); min-width: 0; }
             .appearance {
                 --canvas: #fff; --surface: #f8f8f8; --raised: #fff; --fg: #292929; --fg2: #505050; --fg3: #717171; --border: #c6c6c6; --divider: #e1e1e1;
-                --normal: #0ba45d; --hard: #e86a00; --expert: #f03823; --real: #a65ce7;
                 min-width: 0; padding: 12px; background: var(--canvas); color: var(--fg);
             }
             .appearance + .appearance { border-left: 1px solid #c6c6c6; }
-            .appearance[data-theme="dark"] {
-                color-scheme: dark; --canvas: #111; --surface: #1b1b1b; --raised: #222; --fg: #dbdbdb; --fg2: #afafaf; --fg3: #8a8a8a; --border: #393939; --divider: #2c2c2c;
-                --normal: #068850; --hard: #e06400; --expert: #cd2e1d; --real: #ad69e9;
-            }
+            .appearance[data-theme="dark"] { color-scheme: dark; --canvas: #111; --surface: #1b1b1b; --raised: #222; --fg: #dbdbdb; --fg2: #afafaf; --fg3: #8a8a8a; --border: #393939; --divider: #2c2c2c; }
             .theme { margin: 0 0 8px; color: var(--fg3); font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
             .music { display: grid; gap: 12px; border: 1px solid var(--border); border-radius: 8px; padding: 12px; background: var(--raised); }
             .music h3, .music p { margin: 0; }
@@ -48,25 +50,23 @@
             .list { display: grid; gap: 6px; }
             .row { display: grid; grid-template-columns: 14px minmax(0, 1fr) auto; gap: 9px; align-items: center; min-height: 48px; border: 1px solid var(--divider); border-radius: 4px; padding: 7px 9px; background: var(--surface); }
             .row.selected { border-color: var(--fg3); background: var(--raised); box-shadow: inset 0 0 0 1px var(--fg3); }
-            .marker { width: 10px; height: 26px; border: 2px solid var(--fg3); border-radius: 2px; }
-            .chromatic .normal .marker { border-color: var(--normal); background: var(--normal); }
-            .chromatic .hard .marker { border-color: var(--hard); background: var(--hard); }
-            .chromatic .expert .marker { border-color: var(--expert); background: var(--expert); }
-            .chromatic .real .marker { border-color: var(--real); background: var(--real); }
-            .neutral .hard .marker { border-style: dashed; }
-            .neutral .expert .marker { background: repeating-linear-gradient(135deg, transparent 0 3px, var(--fg3) 3px 5px); }
-            .neutral .real .marker { background: var(--fg3); }
+            .marker { width: 10px; height: 26px; border: 2px solid var(--marker); border-radius: 2px; background: var(--marker); }
             .name, .meta { margin: 0; }
             .name { color: var(--fg); font-size: 13px; font-weight: 800; }
             .meta { margin-top: 2px; color: var(--fg2); font-size: 10px; }
+            .value { display: grid; justify-items: end; gap: 2px; }
             .level { color: var(--fg); font-size: 13px; font-weight: 900; }
+            .hex { color: var(--fg2); font: 9px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace; }
+            .ratio { border-radius: 3px; padding: 1px 3px; background: var(--surface); color: var(--fg2); font-size: 8px; font-weight: 800; }
+            .ratio.fail { text-decoration: underline wavy; text-underline-offset: 2px; }
             .selected-label { color: var(--fg2); font-size: 9px; font-weight: 800; }
-            .cue-off .chromatic .row .marker { border-color: var(--fg3); background: transparent; }
-            .cue-off .chromatic .hard .marker { border-style: dashed; }
-            .cue-off .chromatic .expert .marker { background: repeating-linear-gradient(135deg, transparent 0 3px, var(--fg3) 3px 5px); }
-            .cue-off .chromatic .real .marker { background: var(--fg3); }
+            .cue-off .row:nth-child(1) .marker { border-color: var(--fg3); background: transparent; }
+            .cue-off .row:nth-child(2) .marker { border-color: var(--fg3); border-style: dashed; background: transparent; }
+            .cue-off .row:nth-child(3) .marker { border-color: var(--fg3); background: repeating-linear-gradient(135deg, transparent 0 3px, var(--fg3) 3px 5px); }
+            .cue-off .row:nth-child(4) .marker { border-color: var(--fg3); background: var(--fg3); }
+            .cue-off .hex, .cue-off .ratio { visibility: hidden; }
             .hidden { display: none; }
-            @media (max-width: 850px) { .comparison { grid-template-columns: 1fr; } }
+            @media (max-width: 960px) { .comparison { grid-template-columns: 1fr; } }
             @media (max-width: 620px) {
                 .shell { padding: 10px; }
                 .pair { grid-template-columns: 1fr; }
@@ -78,13 +78,18 @@
     <body>
         <main class="shell" id="shell">
             <header class="panel">
-                <p class="kicker">C5 · Package 13B · corrected scope</p>
-                <h1>Viewer/editor 밖 일반 Difficulty UI 비교</h1>
-                <p>악곡 목록·상세처럼 난이도를 반복해서 훑는 일반 DOM UI만 비교합니다. 기존 채보 viewer와 editor의 page, control, responsive·accessibility behavior 및 모든 renderer 출력은 이 작업에서 완전히 제외하며 그대로 보존합니다.</p>
+                <p class="kicker">C5 · Remaining block 1 · exact source comparison</p>
+                <h1>저명한 출처의 난이도 4색 후보 비교</h1>
+                <p>색 사용 여부는 이미 확정했습니다. 아래는 각 출처의 공개 값을 수정하지 않고 Normal / Hard / Expert / Real에 배치한 Light·Dark 비교입니다. Tailwind 색과 임의 혼합값은 없습니다.</p>
             </header>
             <aside class="panel boundary">
-                <p><strong>잠긴 경계:</strong> 채보 viewer/editor의 page와 shell, control, layout, responsive·accessibility behavior, PixiJS 낙하형, Canvas 전체 악보, note/path/hand guide, legend, piano, geometry, animation, chart mathematics 및 editor model은 모두 변경 대상이 아닙니다.</p>
+                <p><strong>범위:</strong> 악곡 목록·상세의 반복 탐색용 일반 DOM marker만 비교합니다. 채보 viewer/editor의 page, control, renderer, palette, geometry, animation 및 동작은 전부 잠겨 있으며 이 표본에 존재하지 않습니다.</p>
             </aside>
+            <section class="panel summary" aria-label="1차 측정 요약">
+                <p><strong>Light와 Dark 모두 marker 3:1 통과:</strong> Adobe Spectrum S2, IBM Carbon Charts, SAP Fiori Horizon.</p>
+                <p><strong>값은 통과하지만 출처 token이 deprecated:</strong> GitLab Pajamas. 나머지는 적어도 한 theme 값이 3:1 미달입니다. 통과 여부는 최종 선택이 아니며, 의미 직관성과 네 role의 적합성은 함께 비교해야 합니다.</p>
+                <p>색을 끄면 이름, level, 고정 순서, pattern과 선택 표시가 남습니다. Rejected인 neutral-only 후보는 다시 선택지로 올리지 않았습니다.</p>
+            </section>
             <section class="panel controls" aria-label="표본 제어">
                 <button type="button" aria-pressed="true" data-control="appearance" data-value="both">Light + Dark</button>
                 <button type="button" aria-pressed="false" data-control="appearance" data-value="light">Light</button>
@@ -92,24 +97,43 @@
                 <button type="button" aria-pressed="true" data-control="cue" data-value="on">Color on</button>
                 <button type="button" aria-pressed="false" data-control="cue" data-value="off">Color off</button>
             </section>
-            <section class="comparison" aria-label="Difficulty UI 후보 비교">
-                <article class="panel candidate chromatic">
-                    <div class="candidate-head"><span class="tag">Candidate · exact mapping approval pending</span><h2>DU-D1 · Spectrum adaptive marker</h2><p>서로 다른 네 색 요구를 충족 · 값은 Spectrum 원본 · role mapping은 승인 대기</p></div>
-                    <div class="pair">
-                        <div class="appearance" data-theme="light"><p class="theme">Light</p><div class="music"><div><h3>交響詩「悪夢」より</h3><p>Music detail · 4 charts</p></div><div class="list"><div class="row normal"><i class="marker"></i><div><p class="name">Normal</p><p class="meta">정확도 99.41%</p></div><span class="level">4</span></div><div class="row hard"><i class="marker"></i><div><p class="name">Hard</p><p class="meta">정확도 98.72%</p></div><span class="level">8</span></div><div class="row expert selected"><i class="marker"></i><div><p class="name">Expert</p><p class="meta">현재 선택 · 986,321</p></div><div><span class="level">12</span><br><span class="selected-label">SELECTED</span></div></div><div class="row real"><i class="marker"></i><div><p class="name">Real</p><p class="meta">기록 없음</p></div><span class="level">13</span></div></div></div></div>
-                        <div class="appearance" data-theme="dark"><p class="theme">Dark</p><div class="music"><div><h3>交響詩「悪夢」より</h3><p>Music detail · 4 charts</p></div><div class="list"><div class="row normal"><i class="marker"></i><div><p class="name">Normal</p><p class="meta">정확도 99.41%</p></div><span class="level">4</span></div><div class="row hard"><i class="marker"></i><div><p class="name">Hard</p><p class="meta">정확도 98.72%</p></div><span class="level">8</span></div><div class="row expert selected"><i class="marker"></i><div><p class="name">Expert</p><p class="meta">현재 선택 · 986,321</p></div><div><span class="level">12</span><br><span class="selected-label">SELECTED</span></div></div><div class="row real"><i class="marker"></i><div><p class="name">Real</p><p class="meta">기록 없음</p></div><span class="level">13</span></div></div></div></div>
-                    </div>
-                </article>
-                <article class="panel candidate neutral">
-                    <div class="candidate-head"><span class="tag">Rejected · distinct difficulty colors required</span><h2>DU-D0 · Neutral pattern/order</h2><p>비교 기준으로만 보존 · 승인된 난이도별 색상 구분 요구를 충족하지 못함</p></div>
-                    <div class="pair">
-                        <div class="appearance" data-theme="light"><p class="theme">Light</p><div class="music"><div><h3>交響詩「悪夢」より</h3><p>Music detail · 4 charts</p></div><div class="list"><div class="row normal"><i class="marker"></i><div><p class="name">Normal</p><p class="meta">정확도 99.41%</p></div><span class="level">4</span></div><div class="row hard"><i class="marker"></i><div><p class="name">Hard</p><p class="meta">정확도 98.72%</p></div><span class="level">8</span></div><div class="row expert selected"><i class="marker"></i><div><p class="name">Expert</p><p class="meta">현재 선택 · 986,321</p></div><div><span class="level">12</span><br><span class="selected-label">SELECTED</span></div></div><div class="row real"><i class="marker"></i><div><p class="name">Real</p><p class="meta">기록 없음</p></div><span class="level">13</span></div></div></div></div>
-                        <div class="appearance" data-theme="dark"><p class="theme">Dark</p><div class="music"><div><h3>交響詩「悪夢」より</h3><p>Music detail · 4 charts</p></div><div class="list"><div class="row normal"><i class="marker"></i><div><p class="name">Normal</p><p class="meta">정확도 99.41%</p></div><span class="level">4</span></div><div class="row hard"><i class="marker"></i><div><p class="name">Hard</p><p class="meta">정확도 98.72%</p></div><span class="level">8</span></div><div class="row expert selected"><i class="marker"></i><div><p class="name">Expert</p><p class="meta">현재 선택 · 986,321</p></div><div><span class="level">12</span><br><span class="selected-label">SELECTED</span></div></div><div class="row real"><i class="marker"></i><div><p class="name">Real</p><p class="meta">기록 없음</p></div><span class="level">13</span></div></div></div></div>
-                    </div>
-                </article>
-            </section>
+            <section class="comparison" id="comparison" aria-label="Difficulty UI 4색 후보 비교"></section>
         </main>
         <script>
+            const candidates = [
+                { id: "DU-01", name: "Adobe Spectrum S2", status: "pass", statusText: "3:1 통과 · adaptive", note: "visual-color의 green / orange / red / purple. 익숙한 난이도 순서를 유지하는 NosLog alias 제안.", source: "https://opensource.adobe.com/spectrum-design-data/tokens/color-palette/", light: ["#0BA45D", "#E86A00", "#F03823", "#A65CE7"], dark: ["#068850", "#E06400", "#CD2E1D", "#AD69E9"] },
+                { id: "DU-02", name: "Radix Colors", status: "fail", statusText: "Light Hard 3:1 미달", note: "green / orange / red / purple의 공식 solid step 9. 두 theme에 동일한 값을 사용.", source: "https://www.radix-ui.com/colors/docs/palette-composition/understanding-the-scale", light: ["#30A46C", "#F76B15", "#E5484D", "#8E4EC6"], dark: ["#30A46C", "#F76B15", "#E5484D", "#8E4EC6"] },
+                { id: "DU-03", name: "GitHub Primer Primitives", status: "fail", statusText: "Dark Normal·Hard 3:1 미달", note: "data green / orange / auburn / purple emphasis 값. theme별 published primitive를 그대로 사용.", source: "https://primer.style/product/primitives/", light: ["#30A147", "#EB670F", "#9D615C", "#894CEB"], dark: ["#2F6F37", "#984B10", "#EB3342", "#975BF1"] },
+                { id: "DU-04", name: "Atlassian Design System", status: "fail", statusText: "Light Hard·Real 3:1 미달", note: "categorical color 1–4의 공식 순서. difficulty 의미를 출처가 제공하지는 않음.", source: "https://atlassian.design/foundations/color-new/data-visualization-color/", light: ["#357DE8", "#82B536", "#BF63F3", "#F68909"], dark: ["#4688EC", "#94C748", "#C97CF4", "#FCA700"] },
+                { id: "DU-05", name: "IBM Carbon Charts", status: "pass", statusText: "3:1 통과 · adaptive", note: "공식 four-series palette set 1. 대비는 통과하지만 purple / navy / teal / magenta 순서의 난이도 직관성은 낮음.", source: "https://carbondesignsystem.com/data-visualization/color-palettes/", light: ["#6929C4", "#012749", "#009D9A", "#EE5396"], dark: ["#8A3FFC", "#08BDBA", "#BAE6FF", "#4589FF"] },
+                { id: "DU-06", name: "SAP Fiori Horizon", status: "pass", statusText: "3:1 통과 · adaptive", note: "ordered qualitative 1–4. 대비는 통과하지만 blue / orange / green / pink 순서의 난이도 의미는 별도 학습이 필요.", source: "https://experience.sap.com/fiori-design-web/explore_group/data-visualization/", light: ["#168EFF", "#C87B00", "#75980B", "#DF1278"], dark: ["#3278BE", "#F2A634", "#B4CE35", "#FA4F96"] },
+                { id: "DU-07", name: "Elastic EUI", status: "fail", statusText: "Light 4색 모두 3:1 미달", note: "colorBlind palette 첫 4개 graphic color. 두 theme에 동일한 값을 사용.", source: "https://eui.elastic.co/v107.0.1/docs/utilities/color-palettes/", light: ["#16C5C0", "#A6EDEA", "#61A2FF", "#BFDBFF"], dark: ["#16C5C0", "#A6EDEA", "#61A2FF", "#BFDBFF"] },
+                { id: "DU-08", name: "PatternFly", status: "fail", statusText: "Light Real·Dark Normal 3:1 미달", note: "multi-color chart palette 첫 4개. 두 theme에 동일한 값을 사용.", source: "https://v5-archive.patternfly.org/charts/colors-for-charts/", light: ["#0066CC", "#63993D", "#37A3A3", "#DCA614"], dark: ["#0066CC", "#63993D", "#37A3A3", "#DCA614"] },
+                { id: "DU-09", name: "GitLab Pajamas", status: "exclude", statusText: "대비 통과 · source deprecated", note: "data-viz hue 500의 green / orange / magenta / blue. package가 해당 token을 deprecated로 표시해 채택 출처로는 부적합.", source: "https://design.gitlab.com/data-visualization/color/", light: ["#619025", "#C95D2E", "#CF4D81", "#617AE2"], dark: ["#619025", "#C95D2E", "#CF4D81", "#617AE2"] },
+                { id: "DU-10", name: "Tableau Classic 10", status: "fail", statusText: "Hard Light 3:1 미달", note: "공식 Classic 10 중 green / orange / red / purple의 정확한 값. difficulty alias는 NosLog 제안.", source: "https://help.tableau.com/current/pro/desktop/en-gb/formatting_create_custom_colors.htm", light: ["#2CA02C", "#FF7F0E", "#D62728", "#9467BD"], dark: ["#2CA02C", "#FF7F0E", "#D62728", "#9467BD"] },
+                { id: "DU-11", name: "ColorBrewer Set1", status: "fail", statusText: "Light Normal·Hard 3:1 미달", note: "Set1의 green / orange / red / purple exact swatch. difficulty alias는 NosLog 제안.", source: "https://colorbrewer2.org/learnmore/schemes_full.html", light: ["#4DAF4A", "#FF7F00", "#E41A1C", "#984EA3"], dark: ["#4DAF4A", "#FF7F00", "#E41A1C", "#984EA3"] }
+            ];
+            const labels = ["Normal", "Hard", "Expert", "Real"];
+            const levels = ["4", "8", "12", "13"];
+            const details = ["정확도 99.41%", "정확도 98.72%", "현재 선택 · 986,321", "기록 없음"];
+            const surface = { light: "#FFFFFF", dark: "#222222" };
+            const luminance = (hex) => {
+                const rgb = hex.slice(1).match(/../g).map((part) => parseInt(part, 16) / 255).map((value) => value <= .04045 ? value / 12.92 : Math.pow((value + .055) / 1.055, 2.4));
+                return .2126 * rgb[0] + .7152 * rgb[1] + .0722 * rgb[2];
+            };
+            const contrast = (a, b) => {
+                const values = [luminance(a), luminance(b)].sort((x, y) => y - x);
+                return (values[0] + .05) / (values[1] + .05);
+            };
+            const appearance = (candidate, theme) => {
+                const colors = candidate[theme];
+                const rows = labels.map((label, index) => {
+                    const ratio = contrast(colors[index], surface[theme]);
+                    return `<div class="row ${label.toLowerCase()}${index === 2 ? " selected" : ""}" style="--marker:${colors[index]}"><i class="marker" aria-hidden="true"></i><div><p class="name">${label}</p><p class="meta">${details[index]}</p></div><div class="value"><span class="level">${levels[index]}</span><span class="hex">${colors[index]}</span><span class="ratio${ratio < 3 ? " fail" : ""}">${ratio.toFixed(2)}:1${ratio < 3 ? " FAIL" : ""}</span>${index === 2 ? '<span class="selected-label">SELECTED</span>' : ""}</div></div>`;
+                }).join("");
+                return `<div class="appearance" data-theme="${theme}"><p class="theme">${theme}</p><div class="music"><div><h3>交響詩「悪夢」より</h3><p>Music detail · 4 charts</p></div><div class="list">${rows}</div></div></div>`;
+            };
+            document.querySelector("#comparison").innerHTML = candidates.map((candidate) => `<article class="panel candidate"><div class="candidate-head"><span class="tag ${candidate.status}">${candidate.statusText}</span><h2>${candidate.id} · ${candidate.name}</h2><p>${candidate.note}</p><a href="${candidate.source}" target="_blank" rel="noreferrer">공식 출처 열기</a></div><div class="pair">${appearance(candidate, "light")}${appearance(candidate, "dark")}</div></article>`).join("");
             const shell = document.querySelector("#shell");
             document.querySelectorAll("button").forEach((button) => button.addEventListener("click", () => {
                 const control = button.dataset.control;
