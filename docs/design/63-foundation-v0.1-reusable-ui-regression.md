@@ -2,7 +2,7 @@
 
 ## Document control
 
-- Status: `Proposed — FPR-03 and FPR-04 approval pending`
+- Status: `Proposed — FPR-04 approval pending`
 - Language: English
 - Last updated: 2026-08-11
 - Normative Foundation: [document 24](./24-foundation-v0.1.md)
@@ -99,6 +99,10 @@ user rejected while preserving the approved keyboard-visible indicator.
 
 The corrected summary intentionally does not assign Radix to primary actions, does not
 assign FAST/SLOW to `JD-02`, and does not rename `MG-A` as `MG-01`.
+
+`FPR-03` promoted all contracts in document `24` together as the approved Foundation
+v0.1 normative authority on 2026-08-11. This promotion changes no values, source
+selections, production files, final page composition, or viewer/editor boundary.
 
 ## Pretendard JP delivery and fallback decision
 
@@ -199,20 +203,19 @@ template in the 2.0 package.
 - Dark containers do not receive persistent white outlines.
 - Block 5 does not implement production code or authorize viewer/editor changes.
 
-## Proposed decision log
+## Block 5 decision log
 
-| ID       | Entry                                                                                                                     | Status                                         |
-| -------- | ------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| `FPR-01` | Use one self-contained artifact only as a collision/regression harness for approved ordinary UI.                          | `Validated evidence; awaiting material review` |
-| `FPR-02` | Adopt version-pinned, first-party self-hosted Pretendard JP variable dynamic-subset delivery and official fallback order. | `Approved — 2026-08-11`                        |
-| `FPR-03` | Promote the approved document `24` contracts together as Foundation v0.1 without reopening source decisions.              | `Awaiting user approval`                       |
-| `FPR-04` | Adopt or revise the reusable aliases and patterns above as the Block 5 package.                                           | `Awaiting user approval`                       |
-| `FPR-05` | Keep the complete viewer/editor outside regression, reusable UI, and downstream template work.                            | `Locked approved boundary`                     |
+| ID       | Entry                                                                                                                     | Status                                      |
+| -------- | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| `FPR-01` | Use one self-contained artifact only as a collision/regression harness for approved ordinary UI.                          | `Accepted supporting evidence — 2026-08-11` |
+| `FPR-02` | Adopt version-pinned, first-party self-hosted Pretendard JP variable dynamic-subset delivery and official fallback order. | `Approved — 2026-08-11`                     |
+| `FPR-03` | Promote the approved document `24` contracts together as Foundation v0.1 without reopening source decisions.              | `Approved — 2026-08-11`                     |
+| `FPR-04` | Adopt or revise the reusable aliases and patterns above as the Block 5 package.                                           | `Awaiting user approval`                    |
+| `FPR-05` | Keep the complete viewer/editor outside regression, reusable UI, and downstream template work.                            | `Locked approved boundary`                  |
 
 ## Block 5 completion gate
 
-Block 5 becomes complete only after the user approves or revises `FPR-03` and
-`FPR-04`; the controlled harness has already passed its stated checks. At that point,
-update this
-document, document `57`, and the root README together. Do not create another package,
-percentage, or viewer/editor follow-up.
+Block 5 becomes complete only after the user approves or revises `FPR-04`; the
+controlled harness has already passed its stated checks and `FPR-02`–`FPR-03` are
+approved. At that point, update this document, document `57`, and the root README
+together. Do not create another package, percentage, or viewer/editor follow-up.

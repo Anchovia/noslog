@@ -2,7 +2,7 @@
 
 ## Document control
 
-- Status: `Approved normative inputs — Block 5 promotion pending`
+- Status: `Approved — Foundation v0.1 normative authority`
 - Language: English
 - Last updated: 2026-08-11
 - Scope: default Foundation for eligible ordinary NosLog 2.0 UI
@@ -378,6 +378,6 @@ Eligible ordinary UI must retain all meaning and operation under:
   reduced motion, and color-disabled conditions;
 - loading, empty, partial, error, disabled, permission, and destructive states.
 
-Block 5 promotes these already approved inputs together only after the remaining
-Foundation-promotion and reusable-contract decisions in document `63` are explicitly
-resolved.
+`FPR-03` promoted these contracts together as the approved Foundation v0.1 normative
+authority on 2026-08-11. Reusable component and pattern responsibilities remain a
+separate `FPR-04` gate in document `63`; they do not reopen this Foundation.

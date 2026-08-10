@@ -57,6 +57,7 @@ was not current design evidence. The over-accented `FCM-11` and `SIG-07` example
 | Iconography                           | `IC-06 · Lucide`                                                   | 2026-08-10    | Eligible ordinary UI only                                                                                                              |
 | Motion                                | `MO-02 · Atlassian`                                                | 2026-08-10    | Eligible ordinary UI and instant reduced mode                                                                                          |
 | Data visualization anatomy            | `DV-05 · GitHub Primer`                                            | 2026-08-10    | Ordinary non-viewer charts; NosLog retains its approved colors                                                                         |
+| Foundation package                    | Document `24` contracts promoted together as Foundation v0.1       | 2026-08-11    | Approved normative authority for eligible ordinary UI under `FPR-03`; implementation remains downstream                                |
 
 ## Typography, spacing, and layout provenance
 

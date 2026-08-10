@@ -40,7 +40,7 @@ percentage is permitted until the user approves both a denominator and method.
 |   2 | Iconography                             | `Complete`    | Lucide ordinary-UI source, geometry, sizes, labels, targets, and accessibility grammar approved                                                                                             |
 |   3 | Motion / Reduced motion                 | `Complete`    | Atlassian exact duration/easing ownership and instant meaningful reduced mode approved                                                                                                      |
 |   4 | Data-visualization anatomy              | `Complete`    | GitHub Primer ordinary-UI anatomy, exact-value access, non-color cues, and semantic-table floor approved                                                                                    |
-|   5 | Foundation promotion and reusable UI    | `In progress` | Pretendard JP delivery is approved; approve/revise Foundation promotion and the reusable aliases and patterns in document `63`                                                              |
+|   5 | Foundation promotion and reusable UI    | `In progress` | Foundation v0.1 promotion and Pretendard JP delivery are approved; approve/revise only the reusable aliases and patterns in document `63`                                                   |
 |   6 | Downstream handoff and milestone export | `Not started` | Consolidate screen requirements, implementation mapping, accessibility/localization/browser QA, Claude Design handoff, and export a versioned PDF after the user chooses language/packaging |
 
 Only Blocks `5` and `6` remain. Research, candidates, specimens, browser checks,
@@ -68,12 +68,12 @@ approved contracts in document `24`.
 
 `FPR-02` is approved: use the version-pinned official Pretendard JP `1.3.9`
 variable dynamic subsets, first-party self-hosted with the official fallback order.
+`FPR-03` is approved: document `24` is the Foundation v0.1 normative authority for
+eligible ordinary UI.
 
 The current material decisions awaiting user review are:
 
-1. `FPR-03`: promote the approved Foundation inputs together without reopening their
-   source selections; and
-2. `FPR-04`: approve or revise the implementation-neutral reusable aliases and
+1. `FPR-04`: approve or revise the implementation-neutral reusable aliases and
    patterns recorded in document `63`.
 
 The regression HTML is evidence for these decisions, not a final NosLog page or a
@@ -119,3 +119,4 @@ only through Git history.
 | `RWA-04` | Report no completion percentage without an approved denominator and method.                                    | `Approved correction`        |
 | `RWA-05` | Consolidate active design authority to English-only current documents and rely on Git for superseded evidence. | `Approved — 2026-08-10`      |
 | `RWA-06` | Use official Pretendard JP `1.3.9` variable dynamic subsets as version-pinned, first-party self-hosted assets. | `Approved — 2026-08-11`      |
+| `RWA-07` | Promote the approved document `24` contracts together as the Foundation v0.1 normative authority.              | `Approved — 2026-08-11`      |

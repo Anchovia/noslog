@@ -171,9 +171,9 @@ started. Update both sources in the same task whenever a block changes state.
 - Do not announce an internal subtask as a new remaining task. When reporting
   status, name completed decisions and the exact remaining blocks.
 - Block 5 may consolidate completed Foundation inputs; it does not authorize
-  redesigning them. `FPR-02` Pretendard JP delivery/fallback is approved. Its open
-  gates are exactly `FPR-03` Foundation promotion and `FPR-04` reusable aliases
-  and patterns. There is no unresolved primitive-delivery decision.
+  redesigning them. `FPR-02` Pretendard JP delivery/fallback and `FPR-03`
+  Foundation v0.1 promotion are approved. Its only open gate is `FPR-04` reusable
+  aliases and patterns. There is no unresolved primitive or Foundation decision.
 - There is no pending viewer/editor slice or `S6`.
 
 ## Git ownership
