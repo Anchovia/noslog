@@ -4,7 +4,7 @@
 
 - Status: `Approved normative inputs — Block 5 promotion pending`
 - Language: English
-- Last updated: 2026-08-10
+- Last updated: 2026-08-11
 - Scope: default Foundation for eligible ordinary NosLog 2.0 UI
 - Provenance and decision history:
   [document 25](./25-foundation-v0.1-provenance.md)
@@ -41,8 +41,15 @@ or Git history.
   letter-spacing.
 - Apply the approved Korean glyph feature `ss05` only inside `lang="ko"`; do not force
   it onto Japanese or English.
-- The exact self-hosted dynamic-subset delivery is still `Proposed` in document `63`.
-  Do not claim the current bundled standard Pretendard file satisfies this family.
+- Delivery uses the official Pretendard JP `1.3.9` variable dynamic-subset CSS and
+  referenced WOFF2 slices, version-pinned and first-party self-hosted on the NosLog
+  origin. Preserve the upstream font data, license, `font-display: swap`, and official
+  fallback order; only asset URLs may be repackaged for the same origin.
+- Do not preload the complete `5.35 MB` variable file. A critical slice may be
+  preloaded only after later performance evidence justifies it.
+- The current bundled standard Pretendard file does not satisfy this family and stays
+  only until the future implementation migration passes multilingual and fallback
+  verification.
 
 ### Physical core
 
@@ -372,4 +379,5 @@ Eligible ordinary UI must retain all meaning and operation under:
 - loading, empty, partial, error, disabled, permission, and destructive states.
 
 Block 5 promotes these already approved inputs together only after the remaining
-delivery and reusable-contract decisions in document `63` are explicitly resolved.
+Foundation-promotion and reusable-contract decisions in document `63` are explicitly
+resolved.

@@ -2,9 +2,9 @@
 
 ## Document control
 
-- Status: `Proposed — Block 5 material approval pending`
+- Status: `Proposed — FPR-03 and FPR-04 approval pending`
 - Language: English
-- Last updated: 2026-08-10
+- Last updated: 2026-08-11
 - Normative Foundation: [document 24](./24-foundation-v0.1.md)
 - Provenance: [document 25](./25-foundation-v0.1-provenance.md)
 - Scope authority: [document 57](./57-design-guide-remaining-work-audit.md)
@@ -45,7 +45,7 @@ scope and token collisions rather than prescribing final composition.
 | Neutral hierarchy | Surfaces, text, ordinary interaction, boundaries, identity, and primary action retain their approved restrained roles        |
 | Narrow chroma     | Feedback, difficulty, local data, and judgement color remains inside its exact semantic marker/plot responsibility           |
 | Focus             | Keyboard-visible black Light / white Dark `2px` zero-gap perimeter; no persistent Dark outline                               |
-| Typography        | Approved composites, natural tracking, and real multilingual pressure; delivery method remains independently proposed        |
+| Typography        | Approved composites, natural tracking, real multilingual pressure, and approved first-party dynamic-subset delivery          |
 | Responsive        | No page-level horizontal overflow at `320px`, `390px`, or eligible wide arrangements                                         |
 | Text growth       | Content and controls remain available at `200%` text size without hiding required meaning                                    |
 | Non-color         | State, difficulty, judgement, FAST/SLOW, and chart comparison retain names, values, order, shape/pattern, or explicit status |
@@ -80,27 +80,27 @@ user rejected while preserving the approved keyboard-visible indicator.
 
 ## Corrected Foundation summary
 
-| Responsibility     | Approved contract                                                                                      |
-| ------------------ | ------------------------------------------------------------------------------------------------------ |
-| Typography         | Pretendard JP Variable family and document `24` composites; production delivery remains proposed below |
-| Neutral            | Adobe Spectrum S2 exact `M-A`, `F-A`, `NB-A`, and `NI-A`                                               |
-| Focus              | `FI-C` Fluent achromatic `2px` zero-gap perimeter                                                      |
-| Reserved signature | `SS-08` Radix Indigo has no current UI alias                                                           |
-| Identity           | `ITA-C` achromatic mark and wordmark                                                                   |
-| Filled primary     | `RPA-A` Spectrum-neutral, rare and bounded                                                             |
-| Material           | `MG-A` Adobe Spectrum S2                                                                               |
-| Feedback           | `FS-BN` Atlassian chroma with neutral message typography                                               |
-| Difficulty         | `DU-01` Spectrum four-marker mapping                                                                   |
-| Local data         | `LD-03` SAP single/sequential/FAST-SLOW/generic categorical mapping                                    |
-| Judgement          | `JD-02` Radix five judgement markers only                                                              |
-| Iconography        | `IC-06` Lucide                                                                                         |
-| Motion             | `MO-02` Atlassian `0/50/100/150/200/250ms` roles and `400ms` ceiling                                   |
-| Data visualization | `DV-05` Primer anatomy with NosLog colors and semantic-table floor                                     |
+| Responsibility     | Approved contract                                                                                |
+| ------------------ | ------------------------------------------------------------------------------------------------ |
+| Typography         | Pretendard JP Variable family, document `24` composites, and approved `FPR-02` delivery contract |
+| Neutral            | Adobe Spectrum S2 exact `M-A`, `F-A`, `NB-A`, and `NI-A`                                         |
+| Focus              | `FI-C` Fluent achromatic `2px` zero-gap perimeter                                                |
+| Reserved signature | `SS-08` Radix Indigo has no current UI alias                                                     |
+| Identity           | `ITA-C` achromatic mark and wordmark                                                             |
+| Filled primary     | `RPA-A` Spectrum-neutral, rare and bounded                                                       |
+| Material           | `MG-A` Adobe Spectrum S2                                                                         |
+| Feedback           | `FS-BN` Atlassian chroma with neutral message typography                                         |
+| Difficulty         | `DU-01` Spectrum four-marker mapping                                                             |
+| Local data         | `LD-03` SAP single/sequential/FAST-SLOW/generic categorical mapping                              |
+| Judgement          | `JD-02` Radix five judgement markers only                                                        |
+| Iconography        | `IC-06` Lucide                                                                                   |
+| Motion             | `MO-02` Atlassian `0/50/100/150/200/250ms` roles and `400ms` ceiling                             |
+| Data visualization | `DV-05` Primer anatomy with NosLog colors and semantic-table floor                               |
 
 The corrected summary intentionally does not assign Radix to primary actions, does not
 assign FAST/SLOW to `JD-02`, and does not rename `MG-A` as `MG-01`.
 
-## Pretendard JP delivery and fallback proposal
+## Pretendard JP delivery and fallback decision
 
 ### Repository finding
 
@@ -125,23 +125,28 @@ Primary sources:
 [version-pinned variable dynamic-subset CSS](https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-jp-dynamic-subset.min.css),
 and [Next.js Font API](https://nextjs.org/docs/app/api-reference/components/font).
 
-### Proposed production contract — `FPR-02`
+### Approved production contract — `FPR-02`
 
 1. Vendor the official Pretendard JP `1.3.9` variable dynamic-subset CSS and referenced
    WOFF2 subsets on the NosLog origin.
-2. Pin version and license/provenance; do not use an unversioned runtime CDN URL.
-3. Use the official family order beginning with `Pretendard JP Variable`, then
+2. Preserve the upstream font data. Repackage only the asset URLs needed to serve the
+   CSS and WOFF2 slices from the same NosLog origin.
+3. Pin version and SIL OFL 1.1 license/provenance; do not use an unversioned runtime
+   CDN URL.
+4. Use the official family order beginning with `Pretendard JP Variable`, then
    `Pretendard JP`, `Pretendard`, platform UI fonts, Japanese/Korean system fonts, and
    generic sans-serif.
-4. Apply `ss05` only in `lang="ko"`.
-5. Keep `font-display: swap`, validate fallback metrics in Korean/Japanese/English,
+5. Apply `ss05` only in `lang="ko"`.
+6. Keep `font-display: swap`, validate fallback metrics in Korean/Japanese/English,
    and remove the current standard Pretendard asset only after migration verification.
-6. Do not preload the complete `5.35 MB` variable file. Preload a critical subset only
+7. Do not preload the complete `5.35 MB` variable file. Preload a critical subset only
    if later performance evidence justifies it.
-7. The future implementation session performs the font migration; this design-guide
+8. Treat the official dynamic-subset stylesheet as the delivery mechanism rather than
+   replacing it with one complete `next/font/local` JP file.
+9. The future implementation session performs the font migration; this design-guide
    session changes no production font asset.
 
-This is the only unresolved primitive-delivery decision in Block 5.
+This resolves the only primitive-delivery decision in Block 5.
 
 ## Proposed reusable component aliases — `FPR-04`
 
@@ -199,14 +204,15 @@ template in the 2.0 package.
 | ID       | Entry                                                                                                                     | Status                                         |
 | -------- | ------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
 | `FPR-01` | Use one self-contained artifact only as a collision/regression harness for approved ordinary UI.                          | `Validated evidence; awaiting material review` |
-| `FPR-02` | Adopt version-pinned, first-party self-hosted Pretendard JP variable dynamic-subset delivery and official fallback order. | `Awaiting user approval`                       |
+| `FPR-02` | Adopt version-pinned, first-party self-hosted Pretendard JP variable dynamic-subset delivery and official fallback order. | `Approved — 2026-08-11`                        |
 | `FPR-03` | Promote the approved document `24` contracts together as Foundation v0.1 without reopening source decisions.              | `Awaiting user approval`                       |
 | `FPR-04` | Adopt or revise the reusable aliases and patterns above as the Block 5 package.                                           | `Awaiting user approval`                       |
 | `FPR-05` | Keep the complete viewer/editor outside regression, reusable UI, and downstream template work.                            | `Locked approved boundary`                     |
 
 ## Block 5 completion gate
 
-Block 5 becomes complete only after the user approves or revises `FPR-02`–`FPR-04`
-and the controlled harness passes its stated checks. At that point, update this
+Block 5 becomes complete only after the user approves or revises `FPR-03` and
+`FPR-04`; the controlled harness has already passed its stated checks. At that point,
+update this
 document, document `57`, and the root README together. Do not create another package,
 percentage, or viewer/editor follow-up.

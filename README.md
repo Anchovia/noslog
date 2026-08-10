@@ -107,7 +107,7 @@ top-level 작업으로 세지 않습니다. 사용자가 분모와 계산법을 
 |   2 | Iconography                           | `Complete`    | Lucide 일반 UI source, size, stroke, label, target 계약 승인 완료                                                |
 |   3 | Motion / Reduced motion               | `Complete`    | Atlassian duration/easing과 reduced-motion 대체 계약 승인 완료                                                   |
 |   4 | Data-visualization anatomy            | `Complete`    | GitHub Primer 기반 일반 UI anatomy·interaction 계약 승인 완료                                                    |
-|   5 | Foundation 승격과 reusable UI 정리    | `In progress` | 승인된 Foundation 통합 회귀와 reusable UI 계약 정리; 문서 63의 `FPR-02`–`FPR-04` approval 대기                   |
+|   5 | Foundation 승격과 reusable UI 정리    | `In progress` | Pretendard JP delivery 승인 완료; 문서 63의 `FPR-03`·`FPR-04` approval 대기                                      |
 |   6 | Downstream handoff와 milestone export | `Not started` | screen requirements·mapping·QA 통합, Claude Design handoff, 사용자와 PDF 언어·packaging 결정 후 versioned export |
 
 실제로 남은 큰 작업은 블록 `5`와 `6` 두 개입니다. 현재 Block 5의 상세 범위와 열려 있는

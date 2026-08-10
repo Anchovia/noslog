@@ -4,7 +4,7 @@
 
 - Status: `Approved current scope authority`
 - Language: English
-- Last updated: 2026-08-10
+- Last updated: 2026-08-11
 - Mirrors: the six-block table in the root `README.md`
 - Foundation authority: [document 24](./24-foundation-v0.1.md)
 - Foundation provenance: [document 25](./25-foundation-v0.1-provenance.md)
@@ -40,7 +40,7 @@ percentage is permitted until the user approves both a denominator and method.
 |   2 | Iconography                             | `Complete`    | Lucide ordinary-UI source, geometry, sizes, labels, targets, and accessibility grammar approved                                                                                             |
 |   3 | Motion / Reduced motion                 | `Complete`    | Atlassian exact duration/easing ownership and instant meaningful reduced mode approved                                                                                                      |
 |   4 | Data-visualization anatomy              | `Complete`    | GitHub Primer ordinary-UI anatomy, exact-value access, non-color cues, and semantic-table floor approved                                                                                    |
-|   5 | Foundation promotion and reusable UI    | `In progress` | Consolidate approved inputs in one current regression harness; resolve Pretendard JP delivery and approve/revise the reusable aliases and patterns in document `63`                         |
+|   5 | Foundation promotion and reusable UI    | `In progress` | Pretendard JP delivery is approved; approve/revise Foundation promotion and the reusable aliases and patterns in document `63`                                                              |
 |   6 | Downstream handoff and milestone export | `Not started` | Consolidate screen requirements, implementation mapping, accessibility/localization/browser QA, Claude Design handoff, and export a versioned PDF after the user chooses language/packaging |
 
 Only Blocks `5` and `6` remain. Research, candidates, specimens, browser checks,
@@ -66,13 +66,14 @@ precisely named item. Preference, an old unchecked box, or a deleted specimen ma
 Block 5 does not re-run old source comparisons. It packages and checks the already
 approved contracts in document `24`.
 
+`FPR-02` is approved: use the version-pinned official Pretendard JP `1.3.9`
+variable dynamic subsets, first-party self-hosted with the official fallback order.
+
 The current material decisions awaiting user review are:
 
-1. `FPR-02`: version-pinned, first-party self-hosted Pretendard JP variable dynamic
-   subsets and the official fallback order;
-2. `FPR-03`: promote the approved Foundation inputs together without reopening their
+1. `FPR-03`: promote the approved Foundation inputs together without reopening their
    source selections; and
-3. `FPR-04`: approve or revise the implementation-neutral reusable aliases and
+2. `FPR-04`: approve or revise the implementation-neutral reusable aliases and
    patterns recorded in document `63`.
 
 The regression HTML is evidence for these decisions, not a final NosLog page or a
@@ -117,3 +118,4 @@ only through Git history.
 | `RWA-03` | Keep the complete viewer/editor outside all remaining work.                                                    | `Approved absolute boundary` |
 | `RWA-04` | Report no completion percentage without an approved denominator and method.                                    | `Approved correction`        |
 | `RWA-05` | Consolidate active design authority to English-only current documents and rely on Git for superseded evidence. | `Approved — 2026-08-10`      |
+| `RWA-06` | Use official Pretendard JP `1.3.9` variable dynamic subsets as version-pinned, first-party self-hosted assets. | `Approved — 2026-08-11`      |
