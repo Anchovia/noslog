@@ -4,8 +4,11 @@
 from __future__ import annotations
 
 import html
+import importlib.util
 import math
+import os
 import re
+import subprocess
 import sys
 from datetime import date
 from pathlib import Path
@@ -19,9 +22,11 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import (
     BaseDocTemplate,
+    Flowable,
     HRFlowable,
     KeepTogether,
     LongTable,
+    NextPageTemplate,
     PageBreak,
     PageTemplate,
     Paragraph,
@@ -36,6 +41,8 @@ from reportlab.platypus.tableofcontents import TableOfContents
 ROOT = Path(__file__).resolve().parents[1]
 DESIGN = ROOT / "docs" / "design"
 DEFAULT_OUTPUT = ROOT / "output" / "pdf" / "noslog-2.0-design-guide-v0.1.pdf"
+VISUAL_GENERATOR = ROOT / "scripts" / "generate-design-guide-visual-core.py"
+VISUAL_VALIDATOR = ROOT / "scripts" / "validate-design-guide-visual-core.py"
 
 SOURCE_NAMES = [
     "57-design-guide-remaining-work-audit.md",
@@ -225,6 +232,7 @@ def make_styles() -> dict[str, ParagraphStyle]:
             spaceAfter=2.3 * mm,
             splitLongWords=True,
             wordWrap="CJK",
+            allowWidows=0,
         ),
         "small": ParagraphStyle(
             "Small",
@@ -478,7 +486,19 @@ class GuideDocTemplate(BaseDocTemplate):
             self.height,
             id="normal",
         )
-        self.addPageTemplates(PageTemplate(id="guide", frames=[frame], onPage=draw_page))
+        plate_frame = Frame(
+            self.leftMargin,
+            self.bottomMargin,
+            self.width,
+            self.height,
+            id="plate",
+        )
+        self.addPageTemplates(
+            [
+                PageTemplate(id="guide", frames=[frame], onPage=draw_page),
+                PageTemplate(id="plate", frames=[plate_frame]),
+            ]
+        )
 
     def afterFlowable(self, flowable):
         level = getattr(flowable, "_outlineLevel", None)
@@ -490,6 +510,69 @@ class GuideDocTemplate(BaseDocTemplate):
         self.canv.addOutlineEntry(title, anchor, level=level, closed=level > 0)
         if level <= 1:
             self.notify("TOCEntry", (level, title, self.page, anchor))
+
+
+class ApprovedVisualPlate(Flowable):
+    def __init__(self, visual_module, title: str, draw_plate, index: int):
+        super().__init__()
+        self.visual_module = visual_module
+        self.draw_plate = draw_plate
+        self.width = 1
+        self.height = 1
+        self._outlineLevel = 1
+        self._outlineTitle = title
+        self._bookmarkName = f"approved-plate-{slug(title)}"
+
+    def wrap(self, available_width, available_height):
+        return 1, 1
+
+    def drawOn(self, canvas, x, y, _sW=0):
+        self.visual_module.ARTIFACT_MODE = "milestone"
+        self.visual_module.AUTO_SHOW_PAGE = False
+        self.draw_plate(canvas)
+
+
+class ApprovedVisualSectionStart(Flowable):
+    def __init__(self):
+        super().__init__()
+        self.width = 1
+        self.height = 0.1
+        self._outlineLevel = 0
+        self._outlineTitle = "Approved visual system plates"
+        self._bookmarkName = "approved-visual-system-plates"
+
+    def wrap(self, available_width, available_height):
+        return 1, 0.1
+
+    def draw(self):
+        return None
+
+
+def load_visual_module():
+    spec = importlib.util.spec_from_file_location("noslog_visual_plates", VISUAL_GENERATOR)
+    if spec is None or spec.loader is None:
+        raise RuntimeError(f"Cannot load visual generator: {VISUAL_GENERATOR}")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def visual_plate_story() -> list:
+    environment = os.environ.copy()
+    subprocess.run(
+        [sys.executable, str(VISUAL_VALIDATOR)],
+        cwd=ROOT,
+        env=environment,
+        check=True,
+    )
+    visual_module = load_visual_module()
+    flows: list = [NextPageTemplate("plate"), PageBreak(), ApprovedVisualSectionStart()]
+    for index, (title, draw_plate) in enumerate(visual_module.PLATE_SPECS):
+        flows.append(ApprovedVisualPlate(visual_module, title, draw_plate, index))
+        if index < len(visual_module.PLATE_SPECS) - 1:
+            flows.append(PageBreak())
+    flows.append(NextPageTemplate("guide"))
+    return flows
 
 
 def draw_page(canvas, doc):
@@ -539,9 +622,12 @@ def parse_document(
     heading_counts: dict[str, int] = {}
     document_anchor = anchors[source.name]
 
-    def flush_paragraph():
+    def flush_paragraph(*, keep_together: bool = False):
         if paragraph_lines:
-            flows.append(paragraph(" ".join(part.strip() for part in paragraph_lines), "body", anchors))
+            flow = paragraph(
+                " ".join(part.strip() for part in paragraph_lines), "body", anchors
+            )
+            flows.append(KeepTogether([flow]) if keep_together else flow)
             paragraph_lines.clear()
 
     index = 0
@@ -632,7 +718,10 @@ def parse_document(
         paragraph_lines.append(stripped)
         index += 1
 
-    flush_paragraph()
+    # Keep a document's concluding prose as one editorial unit when it fits. This
+    # prevents a final line from being stranded on its own page without changing
+    # the canonical Markdown or forcing ordinary body paragraphs to stay whole.
+    flush_paragraph(keep_together=True)
     if in_code:
         flows.append(code_block(code_lines))
     return flows
@@ -715,6 +804,7 @@ def build(output: Path) -> None:
     anchors = {name: f"doc-{slug(Path(name).stem)}" for name in SOURCE_NAMES}
     doc = GuideDocTemplate(str(output))
     story = cover_story(anchors)
+    story.extend(visual_plate_story())
     for source_index, name in enumerate(SOURCE_NAMES):
         story.extend(parse_document(DESIGN / name, source_index, anchors, doc.width))
     doc.multiBuild(story)

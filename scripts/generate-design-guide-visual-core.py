@@ -27,6 +27,8 @@ PAGE_W, PAGE_H = A4
 MARGIN = 16 * mm
 CONTENT_W = PAGE_W - 2 * MARGIN
 CSS_PX = 0.75
+ARTIFACT_MODE = "review"
+AUTO_SHOW_PAGE = True
 
 
 def hex_color(value: str) -> colors.Color:
@@ -178,7 +180,12 @@ def page_header(c: canvas.Canvas, page: int, section: str, title: str, subtitle:
     c.setFillColor(hex_color("#FFFFFF"))
     c.rect(0, 0, PAGE_W, PAGE_H, fill=1, stroke=0)
     text(c, MARGIN, PAGE_H - 13 * mm, "NOSLOG / DESIGN SYSTEM", 7.2, "#505050")
-    right_text(c, PAGE_W - MARGIN, PAGE_H - 13 * mm, f"VISUAL SYSTEM REVIEW  /  {page:02d}", 7.2)
+    header_label = (
+        f"APPROVED VISUAL PLATE  /  {c.getPageNumber():03d}"
+        if ARTIFACT_MODE == "milestone"
+        else f"VISUAL SYSTEM REVIEW  /  {page:02d}"
+    )
+    right_text(c, PAGE_W - MARGIN, PAGE_H - 13 * mm, header_label, 7.2)
     c.setStrokeColor(hex_color("#E1E1E1"))
     c.setLineWidth(0.6)
     c.line(MARGIN, PAGE_H - 16 * mm, PAGE_W - MARGIN, PAGE_H - 16 * mm)
@@ -192,8 +199,18 @@ def footer(c: canvas.Canvas) -> None:
     c.setStrokeColor(hex_color("#E1E1E1"))
     c.setLineWidth(0.5)
     c.line(MARGIN, 12 * mm, PAGE_W - MARGIN, 12 * mm)
-    text(c, MARGIN, 8 * mm, "Proposed visual communication only · Normative values: document 24", 6.7, "#717171")
+    status = (
+        "Approved visual communication - Normative values: documents 24 and 63"
+        if ARTIFACT_MODE == "milestone"
+        else "Proposed visual communication only - Normative values: document 24"
+    )
+    text(c, MARGIN, 8 * mm, status, 6.7, "#717171")
     right_text(c, PAGE_W - MARGIN, 8 * mm, "Viewer/editor excluded", 6.7, "#717171")
+
+
+def finish_page(c: canvas.Canvas) -> None:
+    if AUTO_SHOW_PAGE:
+        c.showPage()
 
 
 def chip(c: canvas.Canvas, x: float, y: float, label: str, fill: str, foreground: str,
@@ -239,7 +256,7 @@ def draw_cover(c: canvas.Canvas) -> None:
         text(c, 96 * mm, y, value, 8.5, "#292929")
         y -= 9 * mm
     text(c, 66 * mm, 25 * mm, "2026-08-11  /  English", 8, "#717171")
-    c.showPage()
+    finish_page(c)
 
 
 def draw_typography(c: canvas.Canvas) -> None:
@@ -271,7 +288,7 @@ def draw_typography(c: canvas.Canvas) -> None:
     text(c, MARGIN + 6 * mm, box_y + 4 * mm, "Official Pretendard JP 1.3.9 static TTFs · 400/500/600/700 embedded", 6.4, "#717171")
     right_text(c, PAGE_W - MARGIN - 6 * mm, box_y + 4 * mm, "KO ss05 remains a browser-shaping check", 6.4, "#717171")
     footer(c)
-    c.showPage()
+    finish_page(c)
 
 
 def neutral_role_page(c: canvas.Canvas, page: int, mode: str, palette: dict[str, str]) -> None:
@@ -319,7 +336,7 @@ def neutral_role_page(c: canvas.Canvas, page: int, mode: str, palette: dict[str,
             text(c, x, y - 20 * mm, palette[name], 6.2, "#717171", mono=True)
         y -= 29 * mm
     footer(c)
-    c.showPage()
+    finish_page(c)
 
 
 SHADOW_LAYERS = {
@@ -384,7 +401,7 @@ def draw_material(c: canvas.Canvas) -> None:
     text(c, MARGIN + 94 * mm, 56 * mm, "Overlay", 10, "#DBDBDB")
     text(c, MARGIN + 94 * mm, 45 * mm, "Surface + justified boundary", 8, "#AFAFAF")
     footer(c)
-    c.showPage()
+    finish_page(c)
 
 
 def draw_semantic_color(c: canvas.Canvas) -> None:
@@ -419,7 +436,7 @@ def draw_semantic_color(c: canvas.Canvas) -> None:
     y -= 27 * mm
     paragraph(c, MARGIN, y, "Do not color difficulty text, backgrounds, containers, selection, focus, feedback, or actions.", CONTENT_W, 8.2, 12, "#505050")
     footer(c)
-    c.showPage()
+    finish_page(c)
 
 
 def draw_domain_color(c: canvas.Canvas) -> None:
@@ -470,7 +487,7 @@ def draw_domain_color(c: canvas.Canvas) -> None:
         c.circle(x + 3 * mm, y - 40 * mm, 2.1 * mm, fill=1, stroke=0)
         text(c, x + 8 * mm, y - 42 * mm, dark, 6.3, "#717171", mono=True)
     footer(c)
-    c.showPage()
+    finish_page(c)
 
 
 def icon_stroke(c: canvas.Canvas, x: float, y: float, size: float, color: str = "#292929") -> None:
@@ -570,7 +587,7 @@ def draw_iconography(c: canvas.Canvas) -> None:
     text(c, MARGIN + 65 * mm, y - 24 * mm, "Wayfinding", 8, "#292929")
     text(c, MARGIN + 65 * mm, y - 31 * mm, "Icon supports - not replaces - the label", 7, "#717171")
     footer(c)
-    c.showPage()
+    finish_page(c)
 
 
 def draw_dos_donts(c: canvas.Canvas) -> None:
@@ -618,7 +635,7 @@ def draw_dos_donts(c: canvas.Canvas) -> None:
         text(c, MARGIN + 6 * mm, yy - 9 * mm, title_value, 8.5, "#292929")
         text(c, MARGIN + 62 * mm, yy - 9 * mm, body, 7.5, "#505050")
     footer(c)
-    c.showPage()
+    finish_page(c)
 
 
 def draw_motion_curve(c: canvas.Canvas, x: float, y: float, w: float, h: float,
@@ -697,7 +714,7 @@ def draw_motion(c: canvas.Canvas) -> None:
                       "In-out bold", "cubic-bezier(.4,0,0,1)")
     text(c, MARGIN, y - 8 * mm, "Unassigned: 600ms, bounce, stagger, celebration, parallax, and page choreography.", 6.6, "#717171")
     footer(c)
-    c.showPage()
+    finish_page(c)
 
 
 def draw_reduced_motion(c: canvas.Canvas) -> None:
@@ -743,7 +760,7 @@ def draw_reduced_motion(c: canvas.Canvas) -> None:
     text(c, MARGIN + 8 * mm, 42 * mm, "IMMEDIATE STATE", 7, "#AFAFAF", weight=600)
     text(c, MARGIN + 8 * mm, 32 * mm, "Focus, error, critical status, completion, and availability never wait for motion.", 9, "#DBDBDB")
     footer(c)
-    c.showPage()
+    finish_page(c)
 
 
 def draw_chart_plot(c: canvas.Canvas, x: float, y: float, w: float, h: float,
@@ -834,7 +851,7 @@ def draw_data_visualization(c: canvas.Canvas) -> None:
         text(c, x + 10 * mm, yy, title_value, 7.2, "#292929", weight=600)
         text(c, x + 10 * mm, yy - 6 * mm, body, 6.1, "#505050")
     footer(c)
-    c.showPage()
+    finish_page(c)
 
 
 def draw_data_equivalence(c: canvas.Canvas) -> None:
@@ -883,7 +900,7 @@ def draw_data_equivalence(c: canvas.Canvas) -> None:
         text(c, MARGIN + 6 * mm, yy - 2 * mm, label, 7, "#292929", weight=600)
         text(c, MARGIN + 45 * mm, yy - 2 * mm, body, 6.5, "#505050")
     footer(c)
-    c.showPage()
+    finish_page(c)
 
 
 def draw_scaled_grid(c: canvas.Canvas, x: float, y: float, w: float, h: float,
@@ -925,7 +942,7 @@ def draw_responsive_grid(c: canvas.Canvas) -> None:
         text(c, MARGIN, yy, name, 7, "#292929", weight=600)
         text(c, MARGIN + 31 * mm, yy, body, 6.5, "#505050")
     footer(c)
-    c.showPage()
+    finish_page(c)
 
 
 def draw_reflow_block(c: canvas.Canvas, x: float, y: float, w: float, label: str,
@@ -981,7 +998,7 @@ def draw_responsive_recomposition(c: canvas.Canvas) -> None:
         text(c, MARGIN + 6 * mm, yy - 3 * mm, title_value, 7, "#292929", weight=600)
         text(c, MARGIN + 45 * mm, yy - 3 * mm, body, 6.4, "#505050")
     footer(c)
-    c.showPage()
+    finish_page(c)
 
 
 def draw_alias_chip(c: canvas.Canvas, x: float, y: float, value: str, width: float) -> None:
@@ -1016,7 +1033,7 @@ def draw_reusable_map(c: canvas.Canvas) -> None:
             draw_alias_chip(c, x, yy - 20 * mm, alias, chip_w)
             x += chip_w + chip_gap
     footer(c)
-    c.showPage()
+    finish_page(c)
 
 
 def draw_reusable_anatomy(c: canvas.Canvas) -> None:
@@ -1057,7 +1074,7 @@ def draw_reusable_anatomy(c: canvas.Canvas) -> None:
     for idx, label in enumerate(["Headers and row identity", "Exact values and units", "Current-user context", "Responsive priority", "Same data as chart"]):
         text(c, MARGIN + 87 * mm, y - (39 + idx * 7) * mm, f"{idx + 1}. {label}", 6.4, "#505050")
     footer(c)
-    c.showPage()
+    finish_page(c)
 
 
 def draw_schematic_tag(c: canvas.Canvas, x: float, y: float) -> None:
@@ -1112,7 +1129,7 @@ def draw_fragment_discovery(c: canvas.Canvas) -> None:
             c.circle(x + 9 * mm, yy - 8 * mm, 1.4 * mm, fill=1, stroke=0)
             text(c, x + 14 * mm, yy - 10 * mm, difficulty, 5.8 if idx == 0 else 7.0, "#505050")
     footer(c)
-    c.showPage()
+    finish_page(c)
 
 
 def draw_fragment_music_detail(c: canvas.Canvas) -> None:
@@ -1150,7 +1167,7 @@ def draw_fragment_music_detail(c: canvas.Canvas) -> None:
         c.roundRect(MARGIN + 119 * mm, yy - 3 * mm, (35 - idx * 4) * mm, 4 * mm, 2, fill=1, stroke=0)
         text(c, MARGIN + 158 * mm, yy - 2.5 * mm, name, 5.7, "#292929")
     footer(c)
-    c.showPage()
+    finish_page(c)
 
 
 def draw_fragment_dense_ranking(c: canvas.Canvas) -> None:
@@ -1188,7 +1205,7 @@ def draw_fragment_dense_ranking(c: canvas.Canvas) -> None:
             c.line(x + 5 * mm, yy - 7 * mm, x + w - 5 * mm, yy - 7 * mm)
         text(c, x + 6 * mm, 44 * mm, "Exact values - semantic headers - current context", 5.6, "#717171")
     footer(c)
-    c.showPage()
+    finish_page(c)
 
 
 def draw_fragment_sync_recovery(c: canvas.Canvas) -> None:
@@ -1222,7 +1239,7 @@ def draw_fragment_sync_recovery(c: canvas.Canvas) -> None:
             text(c, MARGIN + CONTENT_W - 50 * mm, yy - 26.5 * mm, action, 6.4, "#292929", weight=500)
         text(c, MARGIN + 18 * mm, yy - 37 * mm, "Named state - persistent copy - programmatic semantics - one recovery path", 5.8, "#505050")
     footer(c)
-    c.showPage()
+    finish_page(c)
 
 
 def draw_review_gate(c: canvas.Canvas) -> None:
@@ -1248,52 +1265,74 @@ def draw_review_gate(c: canvas.Canvas) -> None:
     text(c, MARGIN + 8 * mm, 49 * mm, "LOCKED SCOPE", 7, "#AFAFAF")
     text(c, MARGIN + 8 * mm, 39 * mm, "The complete chart viewer and editor remain unchanged and absent.", 10, "#DBDBDB")
     footer(c)
-    c.showPage()
+    finish_page(c)
 
 
-def build(output: Path) -> None:
+PLATE_SPECS = [
+    ("Typography", draw_typography),
+    ("Neutral roles - Light", lambda c: neutral_role_page(c, 3, "Light", LIGHT)),
+    ("Neutral roles - Dark", lambda c: neutral_role_page(c, 4, "Dark", DARK)),
+    ("Material geometry", draw_material),
+    ("Semantic color", draw_semantic_color),
+    ("Domain color", draw_domain_color),
+    ("Iconography", draw_iconography),
+    ("Foundation guardrails", draw_dos_donts),
+    ("Motion", draw_motion),
+    ("Reduced motion", draw_reduced_motion),
+    ("Data-visualization anatomy", draw_data_visualization),
+    ("Equivalent data access", draw_data_equivalence),
+    ("Responsive grid", draw_responsive_grid),
+    ("Responsive adaptation", draw_responsive_recomposition),
+    ("Reusable UI responsibilities", draw_reusable_map),
+    ("Reusable UI anatomy", draw_reusable_anatomy),
+    ("Discovery fragment", draw_fragment_discovery),
+    ("Music-detail fragment", draw_fragment_music_detail),
+    ("Dense-ranking fragment", draw_fragment_dense_ranking),
+    ("Data-sync fragment", draw_fragment_sync_recovery),
+]
+
+
+def build(output: Path, mode: str = "review") -> None:
+    global ARTIFACT_MODE, AUTO_SHOW_PAGE
+    if mode not in {"review", "milestone"}:
+        raise ValueError(f"Unsupported visual artifact mode: {mode}")
+    ARTIFACT_MODE = mode
+    AUTO_SHOW_PAGE = True
     output.parent.mkdir(parents=True, exist_ok=True)
+    review = mode == "review"
+    title_value = "NosLog 2.0 Visual System Review" if review else "NosLog 2.0 Approved Visual Plates"
+    subject_value = (
+        "Proposed complete visual reading layer for approved Foundation v0.1"
+        if review
+        else "Approved visual reading layer for NosLog 2.0 Design Guide v0.1"
+    )
     c = canvas.Canvas(
         str(output),
         pagesize=A4,
         pageCompression=1,
-        title="NosLog 2.0 Visual System Review",
+        title=title_value,
         author="NosLog",
-        subject="Proposed complete visual reading layer for approved Foundation v0.1",
+        subject=subject_value,
         creator="NosLog visual-core review generator",
         keywords="NosLog, design system, visual core, Foundation v0.1",
     )
-    c.setTitle("NosLog 2.0 Visual System Review")
+    c.setTitle(title_value)
     c.setAuthor("NosLog")
-    c.setSubject("Proposed complete visual reading layer for approved Foundation v0.1")
+    c.setSubject(subject_value)
     c.setCreator("NosLog visual-core review generator")
     c.setKeywords("NosLog, design system, visual core, Foundation v0.1")
-    draw_cover(c)
-    draw_typography(c)
-    neutral_role_page(c, 3, "Light", LIGHT)
-    neutral_role_page(c, 4, "Dark", DARK)
-    draw_material(c)
-    draw_semantic_color(c)
-    draw_domain_color(c)
-    draw_iconography(c)
-    draw_dos_donts(c)
-    draw_motion(c)
-    draw_reduced_motion(c)
-    draw_data_visualization(c)
-    draw_data_equivalence(c)
-    draw_responsive_grid(c)
-    draw_responsive_recomposition(c)
-    draw_reusable_map(c)
-    draw_reusable_anatomy(c)
-    draw_fragment_discovery(c)
-    draw_fragment_music_detail(c)
-    draw_fragment_dense_ranking(c)
-    draw_fragment_sync_recovery(c)
-    draw_review_gate(c)
+    if review:
+        draw_cover(c)
+    for _, draw_plate in PLATE_SPECS:
+        draw_plate(c)
+    if review:
+        draw_review_gate(c)
     c.save()
 
 
 if __name__ == "__main__":
-    output_path = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else DEFAULT_OUTPUT
-    build(output_path)
+    milestone = "--milestone-plates" in sys.argv[1:]
+    arguments = [value for value in sys.argv[1:] if value != "--milestone-plates"]
+    output_path = Path(arguments[0]).resolve() if arguments else DEFAULT_OUTPUT
+    build(output_path, mode="milestone" if milestone else "review")
     print(output_path)
