@@ -2,667 +2,324 @@
 
 ## Product
 
-This project implements NosLog, a NOSTALGIA records/ranking/archive app.
+NosLog is a NOSTALGIA records, ranking, and archive application. `NosLog` is
+the service and project name, `NOSTORY` is a legacy design reference, and
+`NOSTALGIA` is the game covered by the service.
 
-NosLog is the service and project name. NOSTORY is the name of the legacy
-design reference, and NOSTALGIA is the game covered by the service.
+## Current authority
 
-## Design Source
+Use this order when project sources disagree:
+
+1. the user's latest explicit decision;
+2. this file for process, scope, and preservation boundaries;
+3. `README.md` for the current product, setup, validation, deployment, privacy,
+   versioning, and six-block progress baseline;
+4. `docs/design/57-design-guide-remaining-work-audit.md` for the current design
+   scope and disposition of obsolete work;
+5. `docs/design/24-foundation-v0.1.md` for approved normative Foundation rules;
+6. `docs/design/25-foundation-v0.1-provenance.md` for research provenance,
+   approvals, rejections, and supersessions;
+7. the remaining current English design documents for product evidence, IA,
+   flows, page briefs, and cross-cutting requirements.
+
+A later explicit `Approved`, `Rejected`, or `Superseded` decision overrides an
+older proposal, status sentence, checklist, specimen, or file number. File count,
+document number, commit count, and workflow phase are never progress authority.
+Do not recover pending work from Git history or deleted documents unless the user
+explicitly asks for historical evidence.
+
+## English-only design documentation
+
+- Keep `docs/design/` documentation in English only.
+- Do not create `.ko.md` companions or require bilingual document parity.
+- Do not duplicate normative token ledgers or decision tables in `README.md` or
+  this file. Link to the current authority instead.
+- Korean, Japanese, and English remain required product locales and validation
+  inputs. The English-only rule applies to design-guide source documents, not the
+  user interface or localization requirements.
+- Ask the user which language and packaging to use before exporting a milestone
+  PDF.
+
+## Legacy design source
 
 Legacy NOSTORY reference:
 https://www.figma.com/design/MigCZljcnwEdJF2JhnjKcj/Nostory?node-id=3-3
 
-Frame `3:3`, named `NOSTORY 와이어프레임 정리`, records an early wireframe
-direction. It predates substantial changes to the implemented product and the
-approved NosLog 2.0 decisions.
+Frame `3:3`, `NOSTORY 와이어프레임 정리`, records an early wireframe covering
+Home, Music list, Music detail, Rankings, Data sync guide, Tiers, Bingo,
+Profile, Login, Exams, and a style guide. It predates substantial product work
+and the approved NosLog 2.0 decisions.
 
-Sections:
+- Do not treat the legacy file as current layout, hierarchy, content, behavior,
+  component, or visual authority.
+- Do not use it to resolve an open 2.0 decision or override current code, browser
+  evidence, the approved guide, or the decision log.
+- Consult it only when historical intent or provenance is materially useful and
+  label findings as legacy evidence.
+- Before accessing or modifying any Figma file, tell the user which file or
+  artifact will be used, exactly what will be inspected or changed, and why.
+  Obtain approval when access is not already explicit in the request.
 
-1. Home
-2. Music list
-3. Music detail
-4. Rankings
-5. Data sync guide
-6. Tiers
-7. Bingo
-8. Profile
-9. Login
-10. Exams
-11. Style guide
+## Absolute chart viewer and editor preservation boundary
 
-- Do not treat this legacy Figma file as the current NosLog 2.0 layout, visual,
-  hierarchy, content, behavior, or component authority.
-- Do not use it to resolve an open 2.0 design decision or to override current code,
-  browser evidence, approved design-guide documents, or the decision log.
-- Consult it only when historical intent or provenance is materially useful, and label
-  any finding from it as legacy evidence.
-- The approved NosLog 2.0 design guide is the governing product and design authority.
-  After the guide is complete, the final Claude Design output becomes the visual and
-  layout source within the guide's approved rules.
-- Before accessing or modifying any Figma file, tell the user which file or artifact
-  will be used, exactly what will be inspected or changed, and why it is necessary.
-  Obtain approval before continuing when the access is not already explicit in the
-  user's request.
+The existing chart viewer and chart editor in their entirety are locked
+preservation exceptions for NosLog 2.0. Preserve their current:
 
-## Implementation Rules
+- pages, DOM shell, controls, labels, accessibility behavior, responsive
+  composition, and containment;
+- PixiJS/WebGL Falling renderer and Canvas Full-sheet renderer;
+- note and left/right-hand palettes, geometry, animation, chart mathematics, and
+  editor rendering model.
 
-- For maintenance work outside the NosLog 2.0 initiative, do not redesign the UI
-  unless the user explicitly requests it.
-- NosLog 2.0 is an explicitly authorized, production-level UI/UX redesign. For
-  2.0 design work, treat the current UI as a functional inventory and usability
-  baseline, not as a visual constraint.
-- Preserve the approved dark NosLog visual direction without copying the legacy
-  NOSTORY surface treatment.
-- Use the existing project stack, components, routing, and styling conventions.
-- Do not use the legacy NOSTORY Figma as a source of current layout intent.
-- Implement mobile-first, using `390px` as a representative mobile design and
-  validation canvas rather than a fixed width or universal breakpoint. Verify
-  accessible reflow down to `320 CSS px`, and choose actual layout transitions from
-  content and component constraints rather than by copying the legacy wireframe.
-- Reuse existing components before creating new ones.
-- Keep changes scoped and verifiable.
-- Run lint/typecheck/build after implementation if the project provides those commands.
-- The existing chart viewer and chart editor in their entirety are locked preservation
-  exceptions for NosLog 2.0. Preserve their current pages, DOM shell, controls, labels,
-  accessibility behavior, responsive composition and containment, PixiJS/WebGL Falling
-  renderer, Canvas Full-sheet renderer, note and left/right-hand palettes, renderer
-  geometry, animation, chart mathematics, and editor rendering model exactly. Do not
-  redesign, recolor, restyle, reorganize, replace, reinterpret, or create a 2.0 variant
-  of any part of either experience. Earlier viewer/editor page briefs and `S4`/`S6`
-  specimen plans are historical functional evidence only and do not authorize future
-  design or implementation work. Foundation color, material, motion, iconography,
-  data-visualization, component, template, responsive, and accessibility decisions do
-  not apply to these locked experiences. Only the user's explicit decision to reopen
-  the entire exception or a precisely named sub-scope can authorize a change.
+Do not redesign, recolor, restyle, reorganize, replace, reinterpret, or create a
+2.0 variant of any part of either experience. Foundation color, material, motion,
+iconography, data-visualization, component, template, responsive, and
+accessibility decisions do not apply to them. Former viewer/editor page briefs,
+`S4`, `S6`, and contribution/editor proposals are superseded historical evidence,
+not future work. Only a new, explicit user decision reopening the whole exception
+or a precisely named sub-scope can authorize a change.
 
-## NosLog 2.0 Design-System Provenance
+## Implementation rules
 
-- Tailwind CSS is an implementation and responsive-layout tool only. Its color
-  palette, default theme, starter templates, sample gradients, radii, shadows, and
-  component appearance are not NosLog 2.0 design authority.
-- Do not adopt Tailwind palette values or Tailwind-derived starter styling as NosLog
-  Foundation tokens merely because Tailwind is in the project stack. Official
-  Tailwind documentation may inform responsive, grid, and container-query
-  implementation only where the approved guide has already defined the design rule.
-- Before recommending or approving a material visual-foundation decision, compare at
-  least twelve independent, relevant, authoritative or production references, with
-  fifteen or more preferred when that many credible sources are available. Compare
-  equivalent semantic roles and actual Light/Dark values rather than unrelated
-  swatches or marketing examples.
-- Prefer adopting the published values and semantic mapping of one approved,
-  maintained design system intact. Do not create an unsourced hybrid by mixing values
-  from several systems, interpolating new steps, shifting hues, or making a role look
-  more "NosLog-like." If the upstream mapping fails measured NosLog content,
-  accessibility, or state requirements, report the failure and reopen the decision
-  with the user instead of silently modifying the source.
-- Adobe Spectrum S2 is the approved and exclusive Dark/Light neutral primitive source
-  for NosLog 2.0. Preserve its published grayscale values exactly. Do not replace
-  them with Tailwind colors or mix them with the current custom Dark ramp, TDS-based
-  Light values, or another system's gray steps.
-- `SS-08` Radix Colors Indigo is the approved and exclusive signature identity source
-  for NosLog 2.0. Preserve its published Light/Dark mapping as one intact source set;
-  do not interpolate it, shift its hue, or replace one appearance or state with values
-  from another system. This source approval does not itself approve an identity
-  component alias, ordinary interaction color, logo recoloring, or broad accent use.
-  The separately approved `RPA-A` policy below governs filled primary actions and
-  assigns no action alias to Radix.
-- `ITA-C` is the approved shell identity alias. Render the graphical NosLog mark and
-  visible `NosLog` wordmark with the approved adaptive Spectrum S2 neutral foreground;
-  do not apply Indigo to the mark, place it on an Indigo field, or add a default white
-  outline. `ITA-A` and `ITA-B` are `Rejected`. The approved Fluent focus indicator is
-  the only white/black boundary allowed around the identity when focus is actually
-  triggered. Radix remains the approved identity source, but it currently has no
-  approved shell identity alias; do not invent another placement without a separate
-  user-approved gate.
-- `RPA-A · Achromatic primary` is the approved filled primary-action policy. A page,
-  bounded region, or temporary flow may have at most one proven non-destructive
-  internal primary action, and not every view needs one. Use the exact Spectrum S2
-  neutral mapping: Light default `#292929`, hover/pressed `#131313`, foreground
-  `#FFFFFF`; Dark default `#DBDBDB`, hover/pressed `#F2F2F2`, foreground `#111111`.
-  Keep ordinary actions, navigation, links, tools, and equal-priority choices neutral
-  and lower-emphasis. External-brand and destructive actions remain outside this
-  alias. Radix has no filled-action alias. `RPA-B` and `RPA-C` are `Rejected`; their
-  exact Dark hover/pressed `#5472E4` with `#FFFFFF` text measured `4.28:1`, below the
-  required `4.5:1`. Do not modify or revive those mappings without a new user-approved
-  research gate.
-- `MG-A · Adobe Spectrum S2` is the approved Material Geometry source and component
-  alias mapping. Preserve the exact published mapping recorded by `MGR-08` in document
-  `52`: control/container/overlay/full radius `4px/8px/10px/50%`;
-  `drop-shadow-emphasized` for justified raised content, `drop-shadow-elevated` for
-  temporary overlays, `drop-shadow-dragged` for actively moved content; and Spectrum
-  overlay opacity `0.4` in Light and `0.6` in Dark. Flat canvas, surface, and sunken
-  content keep no default shadow. The scroll-boundary alias adds no shadow and keeps
-  the approved `1px` directional boundary. Do not substitute Tailwind geometry,
-  interpolate new values, or revive the rejected `MG-B` Fluent and `MG-C` Atlassian
-  mappings without a new user-approved gate.
-- `FS-BN · Atlassian semantic color + neutral message typography` is the approved
-  universal feedback/status mapping for NosLog 2.0. Preserve the exact Atlassian
-  Light background/marker pairs: information `#E9F2FE/#357DE8`, success
-  `#EFFFD6/#6A9A23`, warning `#FFF5DB/#E06C00`, and danger
-  `#FFECEB/#C9372C`; preserve the exact Dark pairs: information
-  `#1C2B42/#4688EC`, success `#28311B/#82B536`, warning
-  `#3A2C1F/#FBC828`, and danger `#42221F/#F15B50`. Message-container titles and
-  body copy use the approved Spectrum S2 neutral foreground (`#292929` Light,
-  `#DBDBDB` Dark). Field-error text and destructive text use Atlassian danger text
-  `#AE2E24` Light and `#FD9891` Dark; invalid-input borders, destructive borders,
-  icons, structural markers, and compact-status markers use the relevant Atlassian
-  marker. Keep explicit status text, symbol/shape, and programmatic semantics so color
-  is never the sole cue. IBM Carbon informed the neutral-typography restraint only;
-  do not import Carbon values, Tailwind values, interpolated steps, or the rejected
-  `FS-A`, original `FS-B`, or `FS-C` component mappings into this alias without a new
-  user-approved gate. This approval completed the feedback/status gate; the later
-  difficulty and local-data approvals below completed block `1` without creating
-  separate work units.
-- Block `1` C5 color research and its approved result preserve the locked chart viewer/editor
-  exception above. Existing renderer note and left/right-hand colors are implementation
-  constants, not open Foundation tokens, and must not enter an exact-source comparison.
-  Outside the entire viewer/editor experience, proven repeated-scanning difficulty UI
-  must distinguish Normal, Hard, Expert, and Real with four different persistent
-  colors. This product requirement is approved and must not be reopened as a
-  color-versus-neutral choice. `DU-01 · Adobe Spectrum S2` is the approved exact
-  difficulty-marker mapping: Normal `#0BA45D/#068850`, Hard `#E86A00/#E06400`, Expert
-  `#F03823/#CD2E1D`, and Real `#A65CE7/#AD69E9` for Light/Dark. This approval assigns
-  only the four compact ordinary-UI marker colors. It does not color difficulty text,
-  backgrounds, containers, selection, focus, feedback, actions, or any viewer/editor
-  element. Basic/Recital,
-  rank/achievement, and genre remain neutral by default. `LD-03 · SAP Fiori Horizon`
-  is the approved base comparison-local data-color family for ordinary NosLog UI.
-  Preserve the exact `@sap-theming/theming-base-content@11.36.3` Light/Dark mapping
-  recorded in document `58`: single series `#168EFF/#3278BE`; six ordered score buckets
-  low-to-high Light `#62B3FF`, `#3FA2FF`, `#168EFF`, `#0074E2`, `#0065C3`, `#0055A5`
-  and Dark `#1D456D`, `#275E96`, `#3278BE`, `#5291D1`, `#7AABDC`, `#A2C4E7`;
-  FAST/SLOW Light `#168EFF/#C87B00` and Dark `#3278BE/#F2A634`; five generic
-  categorical series Light `#168EFF`, `#C87B00`, `#75980B`, `#DF1278`,
-  `#8B47D7` and Dark `#3278BE`, `#F2A634`, `#B4CE35`, `#FA4F96`, `#8B47D7`.
-  The sole narrower exception is the approved `JD-02 · Radix Colors 3.0.0`
-  judgement-domain mapping in document `59`: S-Just Light/Dark
-  `#C2298A/#FF8DCC`, Just `#AB6400/#FFCA16`, Good `#107D98/#4CCCE6`, Near
-  `#0D74CE/#70B8FF`, and Miss `#646464/#B4B4B4`. These are the exact published
-  Radix step-11 values and may appear only in the local judgement marker/bar.
-  `gray11` is a judgement-domain color, not a neutral primitive; Adobe Spectrum S2
-  remains the exclusive neutral primitive owner. Judgement labels, counts,
-  percentages, surfaces, and containers remain Spectrum neutral. Numeric
-  threshold/reference lines remain Spectrum neutral structural roles by default.
-  FAST/SLOW remain explicitly labeled independent directions with different marker or
-  line styles and never reuse universal danger/information or good/bad semantics.
-  Score-bucket numbers, labels, and order remain primary; SAP data color does not
-  become difficulty, achievement, rank, or feedback meaning. `LD-01` Carbon and
-  `LD-02` GitLab are `Not selected`; preserve them only as comparison evidence and do
-  not use them as downstream targets. This approval completes remaining block `1 · C5
-color closeout`. The comparison was internal evidence within that block, not a new
-  work unit. This boundary does not approve current non-renderer NosLog values,
-  sampled imagery, another rhythm game's palette, or any additional Light/Dark
-  mapping. Keep difficulty names, levels, order, and selection, and judgement labels,
-  counts, percentages, and order visible so color is never the sole cue.
-- Shopify Polaris and the `EXP-01` Polaris Light / Radix Dark split were measured and
-  not selected as the identity source. Preserve their evidence in document `47`, but
-  do not use them as downstream design or implementation targets unless the user
-  explicitly reopens the identity-source decision.
-- `IC-06 · Lucide` is the approved ordinary-UI iconography source for NosLog 2.0.
-  Preserve the published Lucide `24×24` source viewBox, `2px` stroke, round linecaps,
-  round linejoins, and outline treatment. Render routine action and wayfinding glyphs
-  at `20px`; use `16px` only for compact supporting or metadata icons with an adjacent
-  visible label; do not use ordinary-UI Lucide glyphs below `16px`. Reserve `24px` for
-  a genuinely prominent standalone affordance or empty state. Use visible labels for
-  primary, unfamiliar, destructive, and low-frequency actions. Limit icon-only
-  controls to universally understood contextual actions, give every one an explicit
-  accessible action name, and keep target size at least `44×44px` on mobile and
-  `40×40px` on eligible desktop. Decorative icons beside visible labels are
-  `aria-hidden`. Icons inherit the approved foreground or semantic control state; do
-  not add signature, difficulty, judgement, data, or feedback color merely for
-  emphasis, fill individual glyphs for selection, mix workflow icons from another
-  system, or redraw source paths. This approval comes from the document `60`
-  seventeen-source comparison and controlled NosLog specimen, not from Tailwind or
-  installation convenience. It does not apply to the locked viewer/editor, final
-  logo drawing, brand-service marks, flags, album jackets, illustrations, or
-  data-visualization marks.
-- `MO-02 · Atlassian` is the approved and exclusive ordinary-UI motion source for
-  NosLog 2.0. Preserve its published duration scale and easing curves without mixing
-  Spectrum `130ms`, Tailwind defaults, or values from another system. Use
-  `instant 0ms` for focus, error, critical state and reduced-motion changes;
-  `xxshort 50ms` + `out.practical` (`cubic-bezier(.4,1,.6,1)`) for high-frequency
-  hover; `xshort 100ms` + `out.practical` for subtle pressed feedback or +
-  `in.practical` (`cubic-bezier(.6,0,.8,.6)`) for quick exits; `short 150ms` +
-  `out.practical` for persistent selection/emphasized interaction highlights and,
-  with `out.bold`
-  (`cubic-bezier(0,.4,0,1)`), small entrances; `medium 200ms` + `in.practical` for
-  modal/large exits; and `long 250ms` + `inout.bold` (`cubic-bezier(.4,0,0,1)`) for
-  modal entrance or justified in-place
-  scale/repositioning. `xlong 400ms` is only a proven large-transition ceiling;
-  `xxlong 600ms`, bounce, stagger, celebration, parallax, and page choreography are
-  unassigned without a new user-approved need. Under
-  `prefers-reduced-motion: reduce`, make every nonessential ordinary-UI transition
-  instant/none, keep visible state and programmatic semantics immediate, and replace
-  spinner motion with a
-  static cue plus persistent localized busy text and `aria-busy`. This authority is
-  recorded by document `61` and does not apply to the locked viewer/editor.
-- `DV-05 · GitHub Primer` is the approved governing anatomy and interaction source
-  for ordinary non-viewer data visualizations. Preserve visible localized purpose,
-  axes and units unless an equivalent subtitle supplies them, persistent legend or
-  collision-free direct labels, pointer/focus/touch exact values, arrow and
-  `Home`/`End` point navigation, same-data semantic tables, explicit states, and
-  `320px`/`390px`/desktop plus Korean/Japanese/English reflow. CSV never replaces the
-  table. Primer does not supply NosLog chart colors: retain the approved `LD-03`,
-  `JD-02`, and `DU-01` mappings. Personal-versus-benchmark charts use an outlined blue
-  circle with a solid line versus a filled orange circle with a dashed line. The
-  separate FAST/SLOW circle/square contract remains unchanged. This authority is
-  recorded by document `62` and excludes the entire locked viewer/editor and every
-  renderer.
-- Primitive-source approval, semantic-role mapping, component-alias mapping, and
-  production implementation are separate approval gates. Approval of Adobe Spectrum
-  S2 primitives does not by itself approve a proposed foreground, boundary,
-  interaction, or component assignment.
-- Documents `32`–`37` under `docs/design/` record the current color authority and
-  evidence. The over-accented `FCM-11` and `SIG-07` examples are `Rejected` and must
-  not be reused as design evidence, downstream references, or implementation targets.
+- For maintenance outside NosLog 2.0, do not redesign UI unless explicitly asked.
+- NosLog 2.0 is an authorized production-level redesign. Treat current UI as a
+  functional inventory and usability baseline, not a visual constraint.
+- Preserve the approved dark NosLog direction without copying legacy NOSTORY
+  surface styling.
+- Use the existing stack, components, routing, and styling conventions. Reuse
+  existing components before creating new ones.
+- Implement mobile-first. Use `390px` as a representative review canvas, not a
+  fixed application width or universal breakpoint. Verify accessible reflow down
+  to `320 CSS px` and choose transitions from content constraints.
+- Keep changes scoped and verifiable. Run the provided lint, typecheck, tests, and
+  build in proportion to the change.
 
-## Requirement Clarity and Planning
+## Foundation provenance guardrails
 
-This is the most important working rule for this project:
+- Tailwind CSS is an implementation and responsive-layout tool only. Its palette,
+  starter theme, sample gradients, radii, shadows, and component appearance are
+  not NosLog design authority.
+- Before recommending a material visual-foundation decision, compare at least
+  twelve independent, relevant, authoritative or production references; prefer
+  fifteen or more when credible sources are available. Compare equivalent roles
+  and actual Light/Dark values.
+- Prefer the published values and semantic mapping of one approved maintained
+  system intact. Do not create an unsourced hybrid, interpolate steps, shift hues,
+  or silently repair a failed upstream mapping.
+- Primitive approval, semantic-role mapping, component-alias mapping, and
+  production implementation are separate gates.
+- Adobe Spectrum S2 is the exclusive approved Dark/Light neutral primitive source.
+  Preserve its published grayscale values exactly.
+- The exact approved color, material, iconography, motion, and data-visualization
+  contracts are centralized in document `24`; their sources and rejected options
+  are centralized in document `25`.
+- The over-accented `FCM-11` and `SIG-07` examples are `Rejected` and must not be
+  reused as evidence or implementation targets.
 
-- Do not make ambiguous product, design, or behavior decisions based on assumptions.
-- Before implementation, inspect the relevant code and current UI and identify every
-  unresolved requirement that could materially change the result.
-- Ask the user all necessary questions and continue the discussion until there are no
-  meaningful uncertainties left.
-- Do not start implementation while important requirements or expected behavior remain
-  unclear.
-- Agree with the user on a concrete implementation plan before making code changes.
-- First investigate questions that can be answered from the repository, current UI,
-  existing tests, or project documentation. Do not make the user answer facts that can
-  be discovered directly.
-- Actively find relevant references, including existing project patterns, current
-  browser evidence, approved design-guide documents, official documentation, and
-  suitable comparable examples. Use the legacy Figma only under the limited conditions
-  defined in `Design Source`.
-- Share useful reference findings, possible approaches, and meaningful tradeoffs with
-  the user so the direction can be decided together before implementation.
-- References should inform the implementation without overriding the existing NosLog
-  design direction or established project conventions.
-- Once the requirements and plan are clear, proceed with the implementation and handle
-  debugging autonomously through verification.
-
-## Working Process
-
-- Before responding to any project task, reopen and read the root `AGENTS.md`
-  completely. Do not rely only on memory, prior-turn context, or a session summary for
-  project instructions.
-- Before planning or editing project work, read the root `README.md` completely and
-  use its current product, setup, validation, deployment, privacy, and versioning
-  guidance as the repository baseline.
-- Before editing, check the repository status and inspect existing changes.
-- Preserve the user's existing changes and do not modify or revert unrelated files.
-- When repository freshness matters, inspect the current branch and upstream state
-  without performing pull, merge, rebase, reset, or other history-changing operations.
-- Implement UI work in small, reviewable units.
-- After changing one meaningful UI unit, verify it in the test browser before moving to
-  the next unit.
-- Prefer the user's already running `http://localhost:3000` development server instead
-  of starting a duplicate server.
-- If authentication is required for testing, ask the user to sign in instead of trying
-  to bypass authentication.
-- For responsive UI, verify both narrow mobile layouts and appropriate desktop widths.
-- Do not treat lint or typechecking as a substitute for testing the actual UI and
-  interaction in the browser.
-- Investigate test failures and distinguish pre-existing failures from failures caused
-  by the current change.
-- Own debugging from root-cause investigation through the fix and final verification.
-
-## NosLog 2.0 Progress and Decision Integrity
-
-The `NosLog 2.0 design-guide remaining-work baseline` section in `README.md` and
-document `57` are the authoritative remaining-scope and preservation audit. Read both
-before naming the next task. They exist to prevent completed, downstream, closed, or
-prohibited work from being rediscovered as pending when older documents contain stale
-future checklists.
-
-- Do not report a design-guide completion percentage unless the user first approves a
-  denominator and counting method. The former fixed eighteen-package denominator was
-  introduced without an approved roadmap basis and is rejected. Never revive it or
-  derive progress from document count, commit count, workflow-phase count, elapsed
-  time, or estimated effort.
-- Before describing any work as pending, search later-numbered documents, their decision
-  logs, and relevant Git history for an explicit completion, approval, rejection, or
-  supersession. A later explicit decision overrides an older plan, status sentence, or
-  unchecked checklist item covering the same scope.
-- Treat work listed as complete in the README as locked. Do not research, redesign,
-  revalidate, or count it as incomplete unless the user explicitly reopens that exact
-  decision or new evidence proves a recorded acceptance requirement failed.
-- Do not interpret a later integrated regression check as permission to redo its locked
-  inputs. `S1`–`S5` structural validation is complete. There is no missing `S6` slice:
-  the former editor proposal is superseded by the full viewer/editor preservation lock.
-  The future final Foundation regression must reuse only ordinary-UI fixtures `S1`,
-  `S2`, `S3`, and `S5`, check regressions caused by subsequently approved appearance
-  rules, and exclude the locked `S4` viewer and all viewer/editor work entirely.
-- Update the README and document `57` in the same task whenever a remaining work block
-  changes state. Count only the six evidence-backed blocks recorded there. Do not split
-  research, specimen, validation, documentation, handoff, or export subtasks into new
-  top-level work merely to manufacture a larger denominator.
-- Use those six blocks as the only user-facing units of work and as the normal execution
-  cadence. Once a block starts, continue its research, comparisons, specimens, checks,
-  bilingual documentation, and consolidation as one continuous block. Pause only when
-  the user must make a material design decision, when required authority is missing, or
-  when the whole block is complete.
-- Never announce an internal subtask, candidate, approval gate, document, specimen, or
-  validation pass as “the next task,” a new package, or an additional remaining item.
-  A user decision inside a block changes that block's state; it does not create another
-  block. After the decision, resume the same block until its stated completion result is
-  achieved.
-- When reporting status, name completed decisions and the exact remaining blocks. Do
-  not invent fractional package credit or convert the block count into a percentage.
-- Historical documents remain valid evidence for the decisions they recorded, but their
-  stale status summaries and future checklists are not the current progress authority.
-- If an older document names `S4`, `S6`, viewer/editor adaptation, final mark drawing,
-  or Radix placement as future work, apply document `57`'s disposition instead of
-  repeating or executing that item.
-
-## Git Ownership
-
-- The user owns commits, pushes, branch creation or switching, and pull requests.
-- Do not commit, push, create or switch branches, or create pull requests unless the
-  user explicitly changes this rule for a specific task.
-- Write every recommended commit title and every commit title created on the user's
-  behalf in Conventional Commits form: an appropriate English type such as `feat`,
-  `fix`, `docs`, `refactor`, `test`, or `chore`, followed by `: ` and a Korean
-  description. Keep product names and code identifiers in their original form when
-  necessary. Example: `docs: 2.0 정보 구조 초안 추가`.
-- At completion, report the changed scope, verification results, remaining caveats, and
-  a recommended commit title.
-
-## Product and Audio Boundaries
-
-- Keep audio files local to the user's browser; do not upload MP3 files to the NosLog
-  server or database.
-- Preserve NosLog's records, rankings, archive, chart editor, and chart viewer focus.
-- Keep ordinary non-viewer data visualizations readable based on their actual display
-  area rather than relying only on fixed pixel sizes. This rule does not authorize any
-  change to the locked chart viewer/editor.
-
-## NosLog 2.0 Design Initiative
-
-NosLog 2.0 is the planned production-complete release for the service's new
-interface. It is not a cosmetic refresh. The work may redefine information
-architecture, navigation, typography, hierarchy, layout, component patterns,
-responsive behavior, and the visual system while preserving the verified product
-features, data, and domain logic.
-
-The design guide must be completed before broad screen-by-screen implementation.
-Do not reduce its scope to an arbitrary page or frame limit. It may become a long
-document if that detail is necessary to make decisions explicit and reusable.
-
-### Session Scope and Downstream Design
-
-The objective of this Codex design session is to produce the complete, authoritative
-NosLog 2.0 design guide. It is not to create the final production website design,
-the complete high-fidelity Figma screen set, or the redesigned application itself.
-
-Use the following three-stage delivery pipeline:
-
-1. This Codex design session completes and packages the authoritative NosLog 2.0
-   design guide.
-2. Claude Design reads the approved guide and creates the final high-fidelity website
-   and Figma design in accordance with it.
-3. A separate future Codex implementation session reads both the approved guide and
-   the final Claude Design output, then implements and verifies NosLog 2.0 in the
-   application.
-
-- The approved guide becomes the governing product and design direction for all
-  NosLog 2.0 implementation.
-- Claude Design is the downstream designer that will use the completed guide as its
-  authoritative input and create the final website design.
-- In the later implementation session, treat the approved guide as the authority for
-  product behavior, hierarchy, accessibility, localization, responsive rules, states,
-  and implementation constraints. Treat the final Claude Design output as the visual
-  and layout source within those approved rules.
-- If the downstream design conflicts with the guide, omits a required state, or
-  requires a material decision that the guide did not resolve, do not silently choose
-  or implement an interpretation. Report the conflict to the user and obtain approval
-  for the necessary guide or design revision first.
-- Do not begin the downstream high-fidelity design or application implementation in
-  this design-guide session unless the user explicitly changes the session scope.
-- Codex may use Figma or another visual tool only when the guide itself needs visual
-  evidence or a normative example. Appropriate artifacts include color and typography
-  specimens, spacing and grid diagrams, component anatomy, interaction and state
-  examples, mandatory layout schematics, and representative examples needed to explain
-  or validate a rule.
-- Export or embed those guide visuals as PNG, PDF, or another suitable format when
-  needed so the written guide and its distributed artifacts remain understandable.
-- Guide examples may be visually detailed when precision is necessary, but do not
-  expand them into a complete final page suite or silently treat them as the final
-  production design.
-- The guide should be sufficiently explicit that the downstream designer does not need
-  to invent product behavior, content hierarchy, accessibility requirements,
-  responsive rules, states, or implementation-critical constraints.
-
-### Design Working Principles
-
-- Begin with product and reference research, not typography or component drawing.
-- Before offering any product or design opinion, direction, alternative, or
-  recommendation, first research and compare the relevant authoritative guidance,
-  production references, current NosLog evidence, and domain behavior. Present the
-  sources, transferable principles, NosLog fit, limitations, and tradeoffs before the
-  recommendation. If the evidence is not yet sufficient, state that clearly and
-  continue research instead of recommending from personal preference.
-- Do not generalize from a small reference set. For a material product or design
-  decision, build a broad and diverse comparison set of at least twelve independent,
-  relevant sources, with fifteen or more recommended when that many credible sources
-  are available. Cover authoritative guidance, production services, domain
-  comparables, and current NosLog evidence. Continue until additional sources no
-  longer materially change the identified patterns, alternatives, risks, or
-  exceptions. Cite the sources, distinguish convergence from disagreement, and
-  explain applicability and limitations; never inflate the count with weak, duplicate,
-  or irrelevant examples merely to meet the numeric threshold.
-- Do not introduce speculative features, content modules, grouping labels, or
-  navigation patterns merely because they are common elsewhere. First establish that
-  they solve an approved NosLog user need and do not distort NOSTALGIA domain meaning.
-- Do not treat the current NosLog feature set as the ceiling for the 2.0 experience.
-  Actively identify, research, and propose capabilities that NosLog does not yet have
-  when they would materially improve user effectiveness, efficiency, accessibility,
-  clarity, or task completion.
-- After the user explicitly approves a well-supported new capability, include it in
-  the authoritative guide and downstream design and implementation scope even when it
-  increases development work. The absence of an existing implementation is not a
-  reason to omit a necessary 2.0 requirement.
-- This permission to add capabilities does not permit speculative feature growth.
-  Every addition must still be grounded in verified user needs, domain behavior,
-  current-product evidence, broad reference research, discussed tradeoffs, and the
-  existing approval gates.
-- Base decisions on cited references, observed user context, current UI evidence,
-  product requirements, and accessibility guidance. Do not present personal taste
-  or unverified assumptions as design rationale.
-- Discuss findings, open questions, alternatives, and tradeoffs with the user.
-  Resolve meaningful uncertainty before fixing a guideline or starting implementation.
-- Use references to extract transferable principles such as proportion, hierarchy,
-  rhythm, density, grid behavior, and interaction patterns. Do not copy a reference's
-  surface styling without a NosLog-specific reason.
-- Keep the initial design system deliberately lean and revisable. Establish enough
-  foundations and components to test representative screens, then refine the system
-  using those results instead of over-investing in an unvalidated library.
-- Treat typography, color, spacing, grid, and component proportions as one system;
-  do not finalize them independently without representative content.
-- Avoid accumulating persistent buttons, tabs, and filter controls merely to expose
-  every available action at once. Preserve visual hierarchy through contextual
-  controls, compact selectors, menus, and progressive disclosure when the action is
-  secondary or mode-dependent; do not hide genuinely primary or high-frequency
-  actions without evidence.
-- Document rejected alternatives and the reason for the final choice when the
-  decision materially affects the product.
-
-### Design Decision Authority and Approval Gates
+## Requirement clarity and approval gates
 
 The user is the final decision-maker for NosLog 2.0 product and design direction.
-Do not autonomously add or finalize product requirements, information hierarchy,
-content, interaction behavior, visual rules, or responsive behavior.
 
-- Repository and UI observations, route and feature inventories, test results, and
-  cited reference findings may be researched and recorded without prior approval.
-  Clearly distinguish observed facts from proposals and unresolved assumptions.
-- Design drafts and alternatives may be prepared to support discussion, but keep them
-  marked as draft or proposed until the user explicitly approves them.
-- Review every material decision with the user. This includes information architecture,
-  page contents and functions, content removal or progressive disclosure, navigation,
-  visual direction, foundation tokens, component behavior, responsive adaptation,
-  localization behavior, accessibility tradeoffs, and domain-specific visualization.
-- Present related decisions in small, clearly enumerated groups with evidence,
-  alternatives, tradeoffs, and a recommendation. Do not infer approval for one item
-  from approval of another item in the same phase.
-- Continue asking questions until the user confirms that the relevant requirements
-  and expected behavior are clear. Do not move a disputed or unresolved decision into
-  a downstream design artifact or implementation.
-- Maintain a decision log using statuses such as `Observed`, `Proposed`, `Approved`,
-  `Rejected`, and `Superseded`, including the rationale and relevant references.
-- Obtain explicit user agreement at the end of each major phase before beginning the
-  next phase. Approval to research or draft is not approval to finalize or implement.
+- Do not make ambiguous product, design, behavior, responsive, accessibility, or
+  localization decisions from assumptions.
+- First inspect the relevant code, current UI, tests, current authority documents,
+  and official references. Do not ask the user for facts the repository can answer.
+- Before implementation, identify every unresolved requirement that could
+  materially change the result, discuss evidence and tradeoffs, and agree on a
+  concrete plan.
+- Observations, audits, and cited research may be recorded without approval. Mark
+  proposals as `Proposed` until the user explicitly approves them.
+- Review every material decision with the user. Approval to research or draft is
+  not approval to finalize or implement.
+- Maintain decision states such as `Observed`, `Proposed`, `Approved`, `Rejected`,
+  and `Superseded`, with rationale and sources.
+- If an approved upstream mapping fails NosLog content, accessibility, or state
+  requirements, report the failure and reopen the decision instead of silently
+  altering it.
 
-### Device Strategy
+## Working process
 
-- Mobile is the primary context because NosLog is commonly used around arcade play.
-- Design the mobile experience first and use `390px` as its representative review
-  canvas because it maps to a common current phone viewport. It is not an industry
-  standard, fixed application width, minimum supported width, or breakpoint.
-- Require information and functionality to reflow without two-dimensional scrolling
-  at `320 CSS px` except for content whose meaning genuinely requires two dimensions.
-  Test intermediate widths instead of assuming that a successful `390px` specimen
-  represents every compact viewport.
-- Desktop support remains required even if current traffic is small. Use the extra
-  space intentionally for comparison, dense record analysis, ordinary data
-  visualization, and administrative workflows rather than merely enlarging the mobile
-  canvas. Do not reinterpret this as viewer/editor redesign authority.
-- Decide responsive changes from content needs and component space, not device names
-  alone. Use viewport breakpoints and container queries where each is appropriate.
+- Before responding to any project task, reopen and read this root `AGENTS.md`
+  completely. Do not rely on memory or a session summary.
+- Before planning or editing, read the root `README.md` completely.
+- Before editing, inspect repository status and existing changes. Preserve user
+  work and do not modify unrelated files.
+- When freshness matters, inspect branch and upstream state without pulling,
+  merging, rebasing, resetting, or otherwise changing history.
+- Implement UI work in small reviewable units and verify each meaningful unit in
+  the test browser. Check narrow mobile and appropriate desktop widths.
+- Prefer an already-running `http://localhost:3000` server. If authentication is
+  required, ask the user to sign in rather than bypassing it.
+- Do not treat lint or typechecking as a substitute for browser interaction checks.
+- Investigate failures and distinguish pre-existing failures from regressions.
+  Own debugging through final verification.
 
-### Page Brief Requirement
+## Progress integrity
 
-Before designing a page family, create and agree on a page brief that covers:
+The only user-facing design-guide work units are the six blocks in `README.md` and
+document `57`. Blocks 1–4 are complete, Block 5 is in progress, and Block 6 has not
+started. Update both sources in the same task whenever a block changes state.
 
-1. page purpose and primary user context;
+- Do not report a completion percentage unless the user first approves a
+  denominator and counting method.
+- Before naming work as pending, check the current authority order above. Never use
+  an older checklist to reopen completed, rejected, downstream, or prohibited work.
+- Do not split research, candidates, specimens, approval gates, validation passes,
+  documentation, or exports into additional top-level work.
+- Once a block starts, continue it as one block. Pause only for a material user
+  decision, missing authority, or block completion.
+- Do not announce an internal subtask as a new remaining task. When reporting
+  status, name completed decisions and the exact remaining blocks.
+- Block 5 may consolidate completed Foundation inputs; it does not authorize
+  redesigning them. Its open gates are exactly `FPR-02` Pretendard JP
+  delivery/fallback, `FPR-03` Foundation promotion, and `FPR-04` reusable aliases
+  and patterns. `FPR-02` is the only unresolved primitive-delivery decision.
+- There is no pending viewer/editor slice or `S6`.
+
+## Git ownership
+
+- The user owns commits, pushes, branch creation or switching, and pull requests.
+- Do not perform those operations unless the user explicitly authorizes the exact
+  task.
+- Recommended and user-authorized commit titles use Conventional Commits with an
+  English type and Korean description, for example
+  `docs: 2.0 정보 구조 초안 추가`.
+- At completion, report changed scope, verification, remaining caveats, and a
+  recommended commit title.
+
+## Product and audio boundaries
+
+- Keep audio files local to the user's browser; never upload MP3 files to the
+  NosLog server or database.
+- Preserve NosLog's records, rankings, archive, chart editor, and chart viewer
+  product focus.
+- Ordinary non-viewer data visualizations must remain readable from their actual
+  display area rather than fixed pixel assumptions. This does not authorize any
+  viewer/editor change.
+
+## NosLog 2.0 design-session scope
+
+This session produces the complete authoritative NosLog 2.0 design guide. It does
+not produce the final high-fidelity page suite or implement the redesigned app.
+
+Use this delivery pipeline:
+
+1. this Codex session completes and packages the guide;
+2. Claude Design creates the final high-fidelity website and Figma design within
+   the guide's approved rules;
+3. a later Codex implementation session uses both sources to implement and verify
+   NosLog 2.0.
+
+The guide governs product behavior, hierarchy, accessibility, localization,
+responsive rules, states, and implementation constraints. Claude Design becomes
+the visual and layout source only within those rules. If a downstream design
+conflicts with the guide or exposes an unresolved material decision, report it and
+obtain approval instead of inventing an interpretation.
+
+Codex may create guide specimens, diagrams, or annotated examples only when they
+are needed to explain or validate a rule. Do not expand them into a final page suite.
+
+## Design working principles
+
+- Begin with product and reference research, not component drawing.
+- Before offering a design recommendation, research relevant authoritative
+  guidance, production references, current NosLog evidence, and domain behavior.
+  Explain sources, transferable principles, fit, limits, and tradeoffs.
+- Do not generalize from a small or duplicated reference set. Continue until new
+  credible sources no longer materially change the patterns, risks, or exceptions.
+- Do not introduce speculative features or navigation patterns because they are
+  common elsewhere. Establish an approved NosLog user need first.
+- The current feature set is not a ceiling. Evidence-backed new capabilities may be
+  proposed and, after explicit approval, added to the guide.
+- Extract proportion, hierarchy, rhythm, density, grid, and interaction principles;
+  do not copy surface styling without a NosLog-specific reason.
+- Keep the initial system lean and revisable. Validate typography, color, spacing,
+  grid, and component proportions together with representative content.
+- Avoid persistent controls that flatten hierarchy. Use progressive disclosure for
+  secondary or mode-dependent actions without hiding genuinely primary actions.
+- Record materially rejected alternatives and rationale.
+
+## Device strategy
+
+- Mobile is primary because NosLog is commonly used around arcade play.
+- Use `390px` for representative mobile review and require one-dimensional reflow
+  down to `320 CSS px`, except content whose meaning genuinely requires two axes.
+- Test intermediate widths instead of assuming `390px` covers all compact layouts.
+- Desktop remains required. Use extra space for comparison, dense analysis,
+  visualization, editor, and administrative workflows rather than enlarging mobile.
+  The locked editor itself remains outside redesign scope.
+- Choose viewport breakpoints and container queries from content needs.
+
+## Page brief requirement
+
+Before designing a page family, agree on a brief covering:
+
+1. purpose and primary context;
 2. primary task and success condition;
-3. information priority and content that can be removed or progressively disclosed;
+3. information priority and progressive disclosure;
 4. main and secondary actions;
-5. real data requirements and representative content lengths;
+5. real data and representative content lengths;
 6. loading, empty, error, disabled, permission, and destructive states;
-7. mobile and desktop layout behavior;
-8. keyboard, focus, contrast, semantics, and other accessibility needs;
+7. mobile and desktop behavior;
+8. keyboard, focus, contrast, semantics, and accessibility;
 9. Korean, Japanese, and English localization constraints;
-10. acceptance criteria and browser verification targets.
+10. acceptance criteria and browser targets.
 
-### Design Guide Workflow
+The chart viewer and editor preservation boundary overrides this requirement: do
+not create redesign briefs for those locked experiences.
 
-Follow this sequence. Each phase should produce reviewable evidence and receive user
-approval before the next phase begins:
+## Design guide workflow
 
-1. Audit the current product: routes, page states, features, data, permissions,
-   responsive behavior, existing components, and known usability problems.
-2. Group pages into page families and document the information architecture,
-   navigation model, and important user flows.
-3. Create and agree on page briefs that define the required content, elements,
-   functions, priorities, actions, states, and success criteria.
-4. Research references by role and create a reference matrix recording the transferable
-   principle, NosLog applicability, limitations, and source.
-5. Agree on NosLog design principles and the intended product hierarchy.
-6. Create a lean `v0.1` foundation covering typography, color, spacing, grid, layout,
-   borders, radius, elevation, iconography, motion, and data visualization.
-7. Test the foundation on several representative `390px` guide examples or screen
-   fragments with real, long, empty, error, and Korean/Japanese/English content, then
-   verify `320 CSS px` reflow and the intermediate widths where content changes the
-   composition.
-8. Refine the foundations from those screens, then promote validated elements into
-   documented components, patterns, and templates.
-9. Define desktop adaptations using the extra space for comparison, analysis,
-   ordinary visualization, and administrative tasks, adding guide examples only where
-   necessary to make the rules unambiguous and excluding the locked viewer/editor.
-10. Define the content, layout, interaction, and state requirements for the remaining
-    page families without silently removing verified product functionality or
-    producing the final high-fidelity page suite.
-11. Produce screen requirements, implementation mappings, accessibility checks,
-    localization checks, browser acceptance criteria, and the downstream design
-    handoff.
-12. Assemble and export a versioned design guide PDF only after the editable sources
-    and decisions for that milestone are stable.
+Each phase must produce reviewable evidence and receive user approval before the
+next phase:
 
-Representative guide examples should cover different product demands, including music
-discovery/listing, music detail, a dense record or ranking view, and a standard
-data-sync or administrative workflow. They validate and communicate the guide; they
-are not the final production screen set. Do not add viewer/editor specimens.
+1. audit routes, states, features, data, permissions, responsive behavior,
+   components, and usability problems;
+2. group page families and define IA, navigation, and important flows;
+3. agree on page briefs;
+4. research references by role and record applicability and limits;
+5. agree on principles and product hierarchy;
+6. define a lean Foundation covering typography, color, spacing, grid, layout,
+   borders, radius, elevation, iconography, motion, and data visualization;
+7. validate representative ordinary-UI fragments at `390px`, `320px`,
+   intermediate widths, and Korean/Japanese/English content;
+8. refine and promote validated elements into components, patterns, and templates;
+9. define desktop adaptations;
+10. define remaining page-family requirements without removing verified functions;
+11. produce screen requirements, implementation mappings, accessibility and
+    localization checks, browser criteria, and the downstream handoff;
+12. export a versioned milestone PDF after editable sources and decisions are stable.
 
-### Design Guide Artifacts and Source of Truth
+Representative guide examples should cover music discovery, music detail, a dense
+record or ranking view, and a data-sync or administrative workflow. Do not add
+viewer/editor specimens.
 
-The PDF is a versioned reading and distribution artifact, not the only editable source
-of truth.
+## Design guide artifacts
 
-- Keep research, product audits, page inventories, page briefs, reference analysis,
-  decision records, accessibility rules, localization rules, screen specifications,
-  and QA checklists as version-controlled documentation under `docs/design/`.
-- Keep visual foundations, variables, component variants, patterns, templates,
-  required mobile and desktop examples, and annotated specifications in Figma when
-  those artifacts are necessary to communicate the guide.
-- Leave the complete final high-fidelity page design and production screen suite to
-  Claude Design after the guide is complete.
-- Later implementation should map approved Figma variables and components to code
-  tokens and reusable application components.
-- Export a PDF snapshot at agreed milestones. The PDF should identify its version and
-  date so it is not mistaken for newer Figma, documentation, or code.
-- Do not create every possible document or component as an empty placeholder. Add
-  artifacts as their corresponding research or design phase begins.
+- Keep product audits, IA, flows, page briefs, research, decisions, accessibility,
+  localization, screen requirements, mappings, and QA under `docs/design/`.
+- Keep only current authority and the minimum normative specimens needed to make a
+  rule unambiguous. Git history preserves superseded comparisons; do not keep stale
+  copies in the active guide tree.
+- Use Figma for variables, components, patterns, templates, or annotated examples
+  only when necessary. Leave the final page suite to Claude Design.
+- The PDF is a versioned distribution artifact, not the editable source of truth.
+- Do not create empty placeholder documents or components.
 
-#### Bilingual Design Documentation
+## Reference roles
 
-- Write the canonical design documentation in English so it remains precise and
-  machine-readable.
-- For every canonical English document, maintain a complete Korean companion for the
-  user. Use the same base name with a `.ko.md` suffix, for example
-  `01-current-product-audit.md` and `01-current-product-audit.ko.md`.
-- The Korean companion must contain the same substantive information as the English
-  source. Do not replace it with a summary or omit tables, statuses, evidence,
-  unresolved questions, decisions, or acceptance criteria.
-- Link the two versions to each other and identify which file is canonical.
-- Update both language versions in the same task whenever content changes. If a
-  temporary synchronization gap is unavoidable, mark it clearly and do not treat the
-  affected phase as approved until both documents match.
-- Preserve code identifiers, routes, token names, decision statuses, and other
-  technical terms when translating them would make implementation mapping ambiguous.
-- Decide the language and packaging of exported milestone PDFs with the user before
-  export; do not assume that the English and Korean PDFs must use the same layout.
+Keep reference classes distinct:
 
-Recommended version-controlled document groups:
+- principles and evaluation: Figma UI principles, WCAG, and authoritative
+  usability/accessibility guidance;
+- typography and editorial hierarchy: MUSINSA, Plus X, and comparable Korean
+  production work;
+- art direction and layout exploration: TURN.STUDIO and curated Behance work;
+- responsive implementation: official Tailwind responsive, grid, and container
+  query documentation after design rules are approved;
+- secondary learning: practitioner material verified against primary sources.
 
-- product context and current-product audit;
-- page and feature inventory;
-- information architecture and user flows;
-- reference research and decision log;
-- page briefs grouped by page family;
-- foundations, components, patterns, and templates guidance;
-- accessibility and Korean/Japanese/English localization guidance;
-- screen specifications, implementation mapping, and QA checklists.
-
-Recommended Figma pages:
-
-1. Cover and index
-2. Research
-3. Product and information architecture
-4. Foundations
-5. Component specimens and anatomy
-6. Patterns, interactions, and states
-7. Templates and mandatory layout diagrams
-8. Required mobile guide examples
-9. Required desktop guide examples
-10. Specifications, exports, and archive
-
-### Reference Roles
-
-Use multiple reference classes and keep their roles distinct:
-
-- **Principles and evaluation:** Figma UI design principles, WCAG, and other
-  authoritative usability/accessibility guidance.
-- **Typography and editorial hierarchy:** MUSINSA brand pages, Plus X portfolio and
-  comparable Korean production work.
-- **Art direction and layout exploration:** TURN.STUDIO and curated Behance projects.
-- **Responsive implementation:** official Tailwind CSS responsive, grid, and container
-  query documentation.
-- **Secondary learning material:** practitioner articles such as the supplied
-  responsive web design guide; verify important claims against primary sources.
-
-Starting reference set:
+Starting references:
 
 - https://www.figma.com/ko-kr/resource-library/ui-design-principles/
 - https://www.behance.net/gallery/252216015/Creative-Agency-Website-TURNSTUDIO

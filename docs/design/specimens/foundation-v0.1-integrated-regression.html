@@ -1,251 +1,1635 @@
 <!doctype html>
-<html lang="ko" data-theme="dark">
+<html lang="ko" data-theme="dark" data-scale="100" data-input="pointer">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>NosLog 2.0 · Foundation v0.1 integrated regression</title>
+        <title>NosLog 2.0 · Foundation v0.1 controlled regression</title>
         <style>
             * {
                 box-sizing: border-box;
             }
+
             :root {
                 color-scheme: dark;
                 font-family:
-                    -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+                    "Pretendard JP Variable",
+                    "Pretendard JP",
+                    Pretendard,
+                    -apple-system,
+                    BlinkMacSystemFont,
+                    "Segoe UI",
+                    sans-serif;
+                font-size: 16px;
                 --canvas: #111111;
                 --surface: #1b1b1b;
+                --sunken: #111111;
                 --raised: #222222;
-                --line: #323232;
-                --line-strong: #8a8a8a;
+                --overlay: #222222;
                 --text: #dbdbdb;
                 --subdued: #afafaf;
-                --active: #f2f2f2;
+                --interactive: #f2f2f2;
+                --divider: #323232;
+                --border-subtle: #393939;
+                --border: #444444;
+                --border-strong: #8a8a8a;
+                --hover: #2c2c2c;
+                --selected-hover: #323232;
+                --selected-pressed: #393939;
+                --disabled-bg: #2c2c2c;
+                --disabled-text: #444444;
+                --focus: #ffffff;
+                --primary: #dbdbdb;
+                --primary-hover: #f2f2f2;
+                --primary-text: #111111;
+                --info-bg: #1c2b42;
+                --info-mark: #4688ec;
+                --success-bg: #28311b;
+                --success-mark: #82b536;
+                --warning-bg: #3a2c1f;
+                --warning-mark: #fbc828;
+                --danger-bg: #42221f;
+                --danger-mark: #f15b50;
+                --danger-text: #fd9891;
+                --difficulty-normal: #068850;
+                --difficulty-hard: #e06400;
+                --difficulty-expert: #cd2e1d;
+                --difficulty-real: #ad69e9;
+                --data-blue: #3278be;
+                --data-orange: #f2a634;
+                --judgement-sjust: #ff8dcc;
+                --judgement-just: #ffca16;
+                --judgement-good: #4ccce6;
+                --judgement-near: #70b8ff;
+                --judgement-miss: #b4b4b4;
+                --review-width: 390px;
+                --radius-control: 4px;
+                --radius-container: 8px;
+                --radius-overlay: 10px;
             }
+
             :root[data-theme="light"] {
                 color-scheme: light;
                 --canvas: #ffffff;
                 --surface: #f8f8f8;
+                --sunken: #e9e9e9;
                 --raised: #ffffff;
-                --line: #e1e1e1;
-                --line-strong: #717171;
+                --overlay: #ffffff;
                 --text: #292929;
                 --subdued: #505050;
-                --active: #131313;
+                --interactive: #131313;
+                --divider: #e1e1e1;
+                --border-subtle: #dadada;
+                --border: #c6c6c6;
+                --border-strong: #717171;
+                --hover: #e9e9e9;
+                --selected-hover: #e1e1e1;
+                --selected-pressed: #dadada;
+                --disabled-bg: #e9e9e9;
+                --disabled-text: #c6c6c6;
+                --focus: #000000;
+                --primary: #292929;
+                --primary-hover: #131313;
+                --primary-text: #ffffff;
+                --info-bg: #e9f2fe;
+                --info-mark: #357de8;
+                --success-bg: #efffd6;
+                --success-mark: #6a9a23;
+                --warning-bg: #fff5db;
+                --warning-mark: #e06c00;
+                --danger-bg: #ffeceb;
+                --danger-mark: #c9372c;
+                --danger-text: #ae2e24;
+                --difficulty-normal: #0ba45d;
+                --difficulty-hard: #e86a00;
+                --difficulty-expert: #f03823;
+                --difficulty-real: #a65ce7;
+                --data-blue: #168eff;
+                --data-orange: #c87b00;
+                --judgement-sjust: #c2298a;
+                --judgement-just: #ab6400;
+                --judgement-good: #107d98;
+                --judgement-near: #0d74ce;
+                --judgement-miss: #646464;
             }
+
+            :root[data-scale="200"] {
+                font-size: 32px;
+            }
+
             body {
                 margin: 0;
                 background: var(--canvas);
                 color: var(--text);
             }
-            button {
-                min-height: 40px;
-                border: 1px solid var(--line-strong);
-                border-radius: 4px;
-                background: var(--surface);
-                color: var(--text);
-                padding: 8px 12px;
+
+            button,
+            input {
                 font: inherit;
-                font-size: 14px;
-                font-weight: 500;
-                line-height: 20px;
-                cursor: pointer;
             }
-            button[aria-pressed="true"] {
-                background: var(--active);
-                color: var(--canvas);
+
+            button {
+                color: inherit;
             }
-            button:focus-visible {
-                outline: 2px solid var(--active);
-                outline-offset: 2px;
+
+            .focusable,
+            .field {
+                position: relative;
             }
+
+            .focusable {
+                outline: none;
+            }
+
+            :root[data-input="keyboard"] .focusable:focus-visible::after,
+            :root[data-input="keyboard"]
+                .field:has(input:focus-visible)::after {
+                position: absolute;
+                z-index: 5;
+                inset: -2px;
+                border: 2px solid var(--focus);
+                border-radius: calc(
+                    var(--focus-radius, var(--radius-control)) + 2px
+                );
+                content: "";
+                pointer-events: none;
+            }
+
             .shell {
-                width: min(100%, 1560px);
+                width: min(100%, 1512px);
                 margin-inline: auto;
-                padding: 24px;
+                padding: 24px max(16px, env(safe-area-inset-right)) 48px
+                    max(16px, env(safe-area-inset-left));
             }
+
             .intro {
-                max-width: 920px;
-                margin-bottom: 24px;
+                max-width: 68rem;
             }
-            .kicker,
-            .scope {
+
+            .eyebrow,
+            .meta,
+            .helper {
                 color: var(--subdued);
-                font-size: 14px;
-                line-height: 20px;
             }
+
+            .eyebrow {
+                margin: 0;
+                font-size: 0.75rem;
+                font-weight: 400;
+                line-height: 1rem;
+            }
+
             h1 {
                 margin: 8px 0;
-                font-size: 32px;
-                line-height: 40px;
+                font-size: 1.5rem;
+                line-height: 2rem;
             }
-            .controls {
+
+            h2 {
+                margin: 0;
+                font-size: 1.25rem;
+                font-weight: 600;
+                line-height: 1.75rem;
+            }
+
+            h3 {
+                margin: 0;
+                font-size: 1rem;
+                font-weight: 600;
+                line-height: 1.5rem;
+            }
+
+            p {
+                margin: 0;
+                font-size: 1rem;
+                line-height: 1.5rem;
+            }
+
+            .notice {
+                margin-top: 16px;
+                padding: 16px;
+                border-left: 4px solid var(--info-mark);
+                border-radius: var(--radius-container);
+                background: var(--info-bg);
+            }
+
+            .notice strong {
+                display: block;
+                margin-bottom: 4px;
+                font-size: 0.875rem;
+                line-height: 1.25rem;
+            }
+
+            .notice p {
+                font-size: 0.875rem;
+                line-height: 1.25rem;
+            }
+
+            .toolbar {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 12px;
+                margin: 24px 0;
+                padding: 16px;
+                border-radius: var(--radius-container);
+                background: var(--surface);
+            }
+
+            .control-group {
+                display: flex;
+                flex: 1 1 190px;
+                flex-wrap: wrap;
+                gap: 4px;
+                min-width: 0;
+                padding: 4px;
+                border-radius: var(--radius-container);
+                background: var(--sunken);
+            }
+
+            .control-group > span {
+                flex: 1 0 100%;
+                padding: 0 8px 4px;
+                color: var(--subdued);
+                font-size: 0.75rem;
+                line-height: 1rem;
+            }
+
+            .tool-button,
+            .secondary-button,
+            .primary-button,
+            .icon-button,
+            .difficulty-button {
+                min-height: 40px;
+                border: 1px solid var(--border);
+                border-radius: var(--radius-control);
+                background: transparent;
+                padding: 8px 12px;
+                font-size: 0.875rem;
+                font-weight: 500;
+                line-height: 1.25rem;
+                cursor: pointer;
+            }
+
+            .tool-button {
+                flex: 1 1 auto;
+                min-width: 0;
+                border-color: transparent;
+            }
+
+            .tool-button:hover,
+            .secondary-button:hover,
+            .icon-button:hover,
+            .difficulty-button:hover {
+                background: var(--hover);
+            }
+
+            .tool-button[aria-pressed="true"] {
+                background: var(--selected-hover);
+            }
+
+            .primary-button {
+                border-color: transparent;
+                background: var(--primary);
+                color: var(--primary-text);
+            }
+
+            .primary-button:hover {
+                background: var(--primary-hover);
+            }
+
+            .icon-button {
+                display: inline-grid;
+                width: 44px;
+                min-width: 44px;
+                min-height: 44px;
+                padding: 0;
+                place-items: center;
+            }
+
+            .icon-button svg {
+                width: 20px;
+                height: 20px;
+                fill: none;
+                stroke: currentcolor;
+                stroke-width: 2;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+            }
+
+            .review-frame {
+                width: min(100%, var(--review-width));
+                margin-inline: auto;
+                container-type: inline-size;
+                border-radius: var(--radius-container);
+                background: var(--canvas);
+            }
+
+            .specimen {
+                display: grid;
+                gap: 32px;
+            }
+
+            .fragment {
+                overflow: clip;
+                border-radius: var(--radius-container);
+                background: var(--surface);
+            }
+
+            .fragment-header,
+            .section {
+                padding: 16px;
+            }
+
+            .fragment-header {
+                display: flex;
+                align-items: flex-start;
+                justify-content: space-between;
+                gap: 12px;
+                border-bottom: 1px solid var(--divider);
+            }
+
+            .mark {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                min-width: 0;
+            }
+
+            .mark-symbol {
+                display: grid;
+                width: 32px;
+                height: 32px;
+                flex: 0 0 auto;
+                color: var(--text);
+                font-size: 1rem;
+                font-weight: 700;
+                place-items: center;
+            }
+
+            .mark-name {
+                font-size: 1rem;
+                font-weight: 600;
+                line-height: 1.5rem;
+            }
+
+            .section {
+                display: grid;
+                gap: 16px;
+            }
+
+            .section + .section {
+                border-top: 1px solid var(--divider);
+            }
+
+            .field {
+                --focus-radius: var(--radius-control);
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                min-height: 44px;
+                border: 1px solid var(--border);
+                border-radius: var(--radius-control);
+                background: var(--canvas);
+                padding: 0 12px;
+            }
+
+            .field svg {
+                width: 20px;
+                height: 20px;
+                flex: 0 0 auto;
+                fill: none;
+                stroke: var(--subdued);
+                stroke-width: 2;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+            }
+
+            .field input {
+                width: 100%;
+                min-width: 0;
+                border: 0;
+                outline: 0;
+                background: transparent;
+                color: var(--text);
+                font-size: 1rem;
+                line-height: 1.5rem;
+            }
+
+            .result-list {
+                display: grid;
+                gap: 0;
+            }
+
+            .result {
+                display: grid;
+                grid-template-columns: 56px minmax(0, 1fr) auto;
+                gap: 12px;
+                align-items: center;
+                min-width: 0;
+                padding: 12px 0;
+            }
+
+            .result + .result {
+                border-top: 1px solid var(--divider);
+            }
+
+            .jacket {
+                width: 56px;
+                aspect-ratio: 1;
+                border-radius: var(--radius-control);
+                background:
+                    linear-gradient(
+                        135deg,
+                        transparent 48%,
+                        var(--border) 49% 51%,
+                        transparent 52%
+                    ),
+                    var(--sunken);
+            }
+
+            .identity {
+                min-width: 0;
+            }
+
+            .identity strong,
+            .identity span {
+                display: block;
+                overflow-wrap: anywhere;
+            }
+
+            .identity strong {
+                font-size: 1rem;
+                font-weight: 600;
+                line-height: 1.5rem;
+            }
+
+            .identity span {
+                color: var(--subdued);
+                font-size: 0.75rem;
+                line-height: 1rem;
+            }
+
+            .difficulty-marker {
+                width: 12px;
+                height: 12px;
+                flex: 0 0 auto;
+                background: var(--marker);
+            }
+
+            .difficulty-marker.normal {
+                --marker: var(--difficulty-normal);
+                border-radius: 50%;
+            }
+
+            .difficulty-marker.hard {
+                --marker: var(--difficulty-hard);
+                border-radius: 2px;
+            }
+
+            .difficulty-marker.expert {
+                --marker: var(--difficulty-expert);
+                clip-path: polygon(50% 0, 100% 100%, 0 100%);
+            }
+
+            .difficulty-marker.real {
+                --marker: var(--difficulty-real);
+                transform: rotate(45deg) scale(0.8);
+            }
+
+            .difficulty-set {
+                display: grid;
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+                gap: 4px;
+            }
+
+            .difficulty-button {
+                display: flex;
+                min-width: 0;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+                padding-inline: 6px;
+            }
+
+            .difficulty-button[aria-pressed="true"] {
+                background: var(--selected-hover);
+            }
+
+            .metrics {
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 8px;
+            }
+
+            .metric {
+                min-width: 0;
+                padding: 12px;
+                border-radius: var(--radius-control);
+                background: var(--canvas);
+            }
+
+            .metric span,
+            .metric strong {
+                display: block;
+                overflow-wrap: anywhere;
+            }
+
+            .metric span {
+                color: var(--subdued);
+                font-size: 0.75rem;
+                line-height: 1rem;
+            }
+
+            .metric strong {
+                margin-top: 4px;
+                font-size: 0.875rem;
+                font-variant-numeric: tabular-nums;
+                font-weight: 500;
+                line-height: 1.25rem;
+            }
+
+            .judgements {
+                display: grid;
+                gap: 8px;
+            }
+
+            .judgement {
+                display: grid;
+                grid-template-columns: 12px minmax(0, 1fr) auto;
+                gap: 8px;
+                align-items: center;
+                font-size: 0.875rem;
+                line-height: 1.25rem;
+            }
+
+            .judgement-dot {
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                background: var(--judgement-color);
+            }
+
+            .judgement strong {
+                font-variant-numeric: tabular-nums;
+                font-weight: 500;
+            }
+
+            .directions {
+                display: grid;
+                gap: 12px;
+            }
+
+            .direction {
+                display: grid;
+                grid-template-columns: 64px minmax(0, 1fr) 48px;
+                gap: 8px;
+                align-items: center;
+                font-size: 0.875rem;
+                line-height: 1.25rem;
+            }
+
+            .direction-line {
+                position: relative;
+                height: 4px;
+                background: repeating-linear-gradient(
+                    90deg,
+                    var(--line-color) 0 10px,
+                    transparent 10px 15px
+                );
+            }
+
+            .direction.fast .direction-line {
+                height: 3px;
+                background: var(--data-blue);
+            }
+
+            .direction-line::before {
+                position: absolute;
+                top: 50%;
+                left: 65%;
+                width: 10px;
+                height: 10px;
+                border: 2px solid var(--line-color);
+                background: var(--canvas);
+                content: "";
+                transform: translate(-50%, -50%);
+            }
+
+            .direction.fast .direction-line::before {
+                border-radius: 50%;
+            }
+
+            .direction.slow .direction-line::before {
+                background: var(--data-orange);
+            }
+
+            .direction strong {
+                text-align: right;
+                font-variant-numeric: tabular-nums;
+                font-weight: 500;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                table-layout: fixed;
+            }
+
+            th,
+            td {
+                padding: 12px 8px;
+                border-bottom: 1px solid var(--divider);
+                text-align: left;
+                overflow-wrap: anywhere;
+            }
+
+            th {
+                color: var(--subdued);
+                font-size: 0.75rem;
+                font-weight: 400;
+                line-height: 1rem;
+            }
+
+            td {
+                font-size: 0.875rem;
+                line-height: 1.25rem;
+            }
+
+            th:first-child,
+            td:first-child {
+                width: 48px;
+                text-align: center;
+            }
+
+            th:last-child,
+            td:last-child {
+                width: 92px;
+                text-align: right;
+                font-variant-numeric: tabular-nums;
+            }
+
+            tr[aria-current="true"] {
+                background: var(--hover);
+            }
+
+            .status-stack {
+                display: grid;
+                gap: 8px;
+            }
+
+            .status {
+                display: grid;
+                grid-template-columns: 4px minmax(0, 1fr);
+                gap: 12px;
+                overflow: hidden;
+                border-radius: var(--radius-container);
+                background: var(--status-bg);
+            }
+
+            .status::before {
+                background: var(--status-mark);
+                content: "";
+            }
+
+            .status-body {
+                padding: 12px 12px 12px 0;
+            }
+
+            .status strong,
+            .status span {
+                display: block;
+            }
+
+            .status strong {
+                font-size: 0.875rem;
+                line-height: 1.25rem;
+            }
+
+            .status span {
+                margin-top: 4px;
+                font-size: 0.875rem;
+                line-height: 1.25rem;
+            }
+
+            .actions {
                 display: flex;
                 flex-wrap: wrap;
                 gap: 8px;
-                margin-bottom: 16px;
-                padding: 12px;
-                border: 1px solid var(--line);
-                border-radius: 8px;
-                background: var(--surface);
             }
-            .frame-shell {
+
+            dialog {
+                width: min(calc(100% - 32px), 480px);
+                border: 1px solid var(--border);
+                border-radius: var(--radius-overlay);
+                background: var(--overlay);
+                color: var(--text);
+                padding: 0;
+                box-shadow:
+                    0 4px 12px rgb(0 0 0 / 24%),
+                    0 2px 6px rgb(0 0 0 / 12%);
+            }
+
+            :root[data-theme="light"] dialog {
+                box-shadow:
+                    0 4px 12px rgb(0 0 0 / 8%),
+                    0 2px 6px rgb(0 0 0 / 4%);
+            }
+
+            dialog::backdrop {
+                background: rgb(0 0 0 / 60%);
+            }
+
+            :root[data-theme="light"] dialog::backdrop {
+                background: rgb(0 0 0 / 40%);
+            }
+
+            .dialog-header,
+            .dialog-body,
+            .dialog-actions {
+                padding: 16px;
+            }
+
+            .dialog-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                border-bottom: 1px solid var(--divider);
+            }
+
+            .dialog-body {
+                display: grid;
+                gap: 12px;
+            }
+
+            .dialog-actions {
+                display: flex;
+                justify-content: flex-end;
+                gap: 8px;
+                border-top: 1px solid var(--divider);
+            }
+
+            .token-note {
+                margin-top: 24px;
+                color: var(--subdued);
+                font-size: 0.75rem;
+                line-height: 1rem;
+            }
+
+            .visually-hidden {
+                position: absolute;
+                width: 1px;
+                height: 1px;
+                padding: 0;
+                margin: -1px;
                 overflow: hidden;
-                border: 1px solid var(--line);
-                border-radius: 10px;
-                background: var(--raised);
-            }
-            iframe {
-                display: block;
-                width: 100%;
-                height: 900px;
+                clip: rect(0, 0, 0, 0);
+                white-space: nowrap;
                 border: 0;
-                background: var(--canvas);
             }
-            @media (max-width: 600px) {
-                .shell {
-                    padding: 16px;
+
+            @container (max-width: 359px) {
+                .result {
+                    grid-template-columns: 48px minmax(0, 1fr);
                 }
+
+                .result .difficulty-marker {
+                    grid-column: 2;
+                }
+
+                .jacket {
+                    width: 48px;
+                }
+
+                .metrics {
+                    grid-template-columns: 1fr;
+                }
+
+                .difficulty-button {
+                    flex-direction: column;
+                }
+            }
+
+            @container (min-width: 960px) {
+                .specimen {
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                }
+            }
+
+            @media (min-width: 1056px) {
                 h1 {
-                    font-size: 24px;
-                    line-height: 32px;
+                    font-size: 2rem;
+                    line-height: 2.5rem;
                 }
-                iframe {
-                    height: 760px;
+
+                .icon-button {
+                    width: 40px;
+                    min-width: 40px;
+                    min-height: 40px;
+                }
+            }
+
+            @media (prefers-reduced-motion: no-preference) {
+                .tool-button,
+                .secondary-button,
+                .primary-button,
+                .icon-button,
+                .difficulty-button {
+                    transition:
+                        background-color 50ms cubic-bezier(0.4, 1, 0.6, 1),
+                        color 50ms cubic-bezier(0.4, 1, 0.6, 1);
+                }
+
+                dialog[open] {
+                    animation: enter 250ms cubic-bezier(0.4, 0, 0, 1);
+                }
+
+                @keyframes enter {
+                    from {
+                        opacity: 0;
+                        transform: scale(0.98);
+                    }
+                }
+            }
+
+            @media (forced-colors: active) {
+                :root[data-input="keyboard"] .focusable:focus-visible::after,
+                :root[data-input="keyboard"]
+                    .field:has(input:focus-visible)::after {
+                    border-color: Highlight;
+                }
+
+                .difficulty-marker,
+                .judgement-dot {
+                    border: 1px solid CanvasText;
+                }
+
+                .status::before,
+                .direction-line {
+                    forced-color-adjust: none;
+                }
+            }
+
+            @media (max-width: 520px) {
+                .shell {
+                    padding-top: 16px;
+                }
+
+                .toolbar {
+                    padding: 12px;
                 }
             }
         </style>
     </head>
     <body>
         <main class="shell">
-            <header class="intro">
-                <p class="kicker">Block 5 · integrated regression · Proposed</p>
-                <h1>Foundation v0.1 통합 회귀</h1>
-                <p class="scope">
-                    승인된 S1·S2·S3·S5 구조만 재사용합니다. Light/Dark neutral,
-                    Pretendard JP와 fallback, 320·390·wide, KO/JA/EN 및 100/200%
-                    text를 같은 구조에서 확인합니다. S4·S6·viewer/editor는
-                    포함하지 않습니다.
+            <div class="intro">
+                <p class="eyebrow">BLOCK 5 · CONTROLLED GUIDE EVIDENCE</p>
+                <h1 data-i18n="title">Foundation v0.1 통합 회귀</h1>
+                <p data-i18n="intro">
+                    승인된 일반 UI 토큰의 충돌만 확인합니다. 최종 페이지
+                    디자인이 아닙니다.
                 </p>
-            </header>
+                <div class="notice" role="note">
+                    <strong data-i18n="scopeTitle">범위 잠금</strong>
+                    <p data-i18n="scopeBody">
+                        채보 뷰어·에디터, renderer, S4/S6는 포함하지 않으며 어떤
+                        변경도 제안하지 않습니다.
+                    </p>
+                </div>
+            </div>
 
-            <section class="controls" aria-label="통합 회귀 제어">
-                <button
-                    data-control="fixture"
-                    data-value="s1"
-                    aria-pressed="true"
-                >
-                    S1 Discovery
-                </button>
-                <button data-control="fixture" data-value="s2">
-                    S2 Music Detail
-                </button>
-                <button data-control="fixture" data-value="s3">
-                    S3 Rankings
-                </button>
-                <button data-control="fixture" data-value="s5">S5 Home</button>
-                <button
-                    data-control="theme"
-                    data-value="dark"
-                    aria-pressed="true"
-                >
-                    Dark
-                </button>
-                <button data-control="theme" data-value="light">Light</button>
-                <button data-control="font" data-value="jp" aria-pressed="true">
-                    Pretendard JP
-                </button>
-                <button data-control="font" data-value="fallback">
-                    Fallback
-                </button>
-                <button data-control="width" data-value="320">320</button>
-                <button
-                    data-control="width"
-                    data-value="390"
-                    aria-pressed="true"
-                >
-                    390
-                </button>
-                <button data-control="width" data-value="1056">Wide</button>
-                <button
-                    data-control="locale"
-                    data-value="ko"
-                    aria-pressed="true"
-                >
-                    KO
-                </button>
-                <button data-control="locale" data-value="ja">JA</button>
-                <button data-control="locale" data-value="en">EN</button>
-                <button
-                    data-control="scale"
-                    data-value="100"
-                    aria-pressed="true"
-                >
-                    100%
-                </button>
-                <button data-control="scale" data-value="200">200%</button>
+            <section class="toolbar" aria-label="Regression controls">
+                <div class="control-group" data-control="theme">
+                    <span data-i18n="theme">테마</span>
+                    <button
+                        class="tool-button focusable"
+                        type="button"
+                        data-value="light"
+                    >
+                        Light
+                    </button>
+                    <button
+                        class="tool-button focusable"
+                        type="button"
+                        data-value="dark"
+                        aria-pressed="true"
+                    >
+                        Dark
+                    </button>
+                </div>
+                <div class="control-group" data-control="language">
+                    <span data-i18n="language">언어</span>
+                    <button
+                        class="tool-button focusable"
+                        type="button"
+                        data-value="ko"
+                        aria-pressed="true"
+                    >
+                        한국어
+                    </button>
+                    <button
+                        class="tool-button focusable"
+                        type="button"
+                        data-value="ja"
+                    >
+                        日本語
+                    </button>
+                    <button
+                        class="tool-button focusable"
+                        type="button"
+                        data-value="en"
+                    >
+                        English
+                    </button>
+                </div>
+                <div class="control-group" data-control="width">
+                    <span data-i18n="width">검토 폭</span>
+                    <button
+                        class="tool-button focusable"
+                        type="button"
+                        data-value="320"
+                    >
+                        320
+                    </button>
+                    <button
+                        class="tool-button focusable"
+                        type="button"
+                        data-value="390"
+                        aria-pressed="true"
+                    >
+                        390
+                    </button>
+                    <button
+                        class="tool-button focusable"
+                        type="button"
+                        data-value="wide"
+                    >
+                        Wide
+                    </button>
+                </div>
+                <div class="control-group" data-control="scale">
+                    <span data-i18n="textScale">텍스트</span>
+                    <button
+                        class="tool-button focusable"
+                        type="button"
+                        data-value="100"
+                        aria-pressed="true"
+                    >
+                        100%
+                    </button>
+                    <button
+                        class="tool-button focusable"
+                        type="button"
+                        data-value="200"
+                    >
+                        200%
+                    </button>
+                </div>
             </section>
 
-            <section
-                class="frame-shell"
-                aria-label="선택한 Foundation 회귀 시편"
-            >
-                <iframe title="S1 Discovery Foundation regression"></iframe>
-            </section>
+            <div class="review-frame">
+                <div class="specimen">
+                    <article class="fragment" aria-labelledby="discovery-title">
+                        <header class="fragment-header">
+                            <div class="mark">
+                                <span class="mark-symbol" aria-hidden="true"
+                                    >N</span
+                                >
+                                <span class="mark-name">NosLog</span>
+                            </div>
+                            <button
+                                class="icon-button focusable"
+                                type="button"
+                                aria-label="More"
+                            >
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <circle cx="5" cy="12" r="1"></circle>
+                                    <circle cx="12" cy="12" r="1"></circle>
+                                    <circle cx="19" cy="12" r="1"></circle>
+                                </svg>
+                            </button>
+                        </header>
+                        <div class="section">
+                            <div>
+                                <h2 id="discovery-title" data-i18n="discovery">
+                                    악곡 찾기
+                                </h2>
+                                <p class="helper" data-i18n="discoveryHelp">
+                                    제목, 아티스트 또는 별칭으로 검색합니다.
+                                </p>
+                            </div>
+                            <label class="field">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <path d="m21 21-4.35-4.35"></path>
+                                </svg>
+                                <span class="visually-hidden"></span>
+                                <input
+                                    data-i18n-placeholder="search"
+                                    placeholder="악곡 검색"
+                                />
+                            </label>
+                            <div class="result-list">
+                                <div class="result">
+                                    <div
+                                        class="jacket"
+                                        aria-hidden="true"
+                                    ></div>
+                                    <div class="identity">
+                                        <strong
+                                            >50th Memorial Songs -二人の時
+                                            ～under the cherry
+                                            blossoms～-</strong
+                                        >
+                                        <span data-i18n="artist"
+                                            >BEMANI Sound Team</span
+                                        >
+                                    </div>
+                                    <span
+                                        class="difficulty-marker real"
+                                        role="img"
+                                        aria-label="Real"
+                                    ></span>
+                                </div>
+                                <div class="result">
+                                    <div
+                                        class="jacket"
+                                        aria-hidden="true"
+                                    ></div>
+                                    <div class="identity">
+                                        <strong
+                                            >協奏曲第1番ホ長調 RV
+                                            269「春」より第一楽章</strong
+                                        >
+                                        <span>Antonio Vivaldi</span>
+                                    </div>
+                                    <span
+                                        class="difficulty-marker expert"
+                                        role="img"
+                                        aria-label="Expert"
+                                    ></span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="fragment" aria-labelledby="detail-title">
+                        <div class="section">
+                            <div>
+                                <p class="eyebrow" data-i18n="music">악곡</p>
+                                <h2 id="detail-title">Altale</h2>
+                                <p class="helper">Sakuzyo</p>
+                            </div>
+                            <div class="difficulty-set" aria-label="Difficulty">
+                                <button
+                                    class="difficulty-button focusable"
+                                    type="button"
+                                >
+                                    <span
+                                        class="difficulty-marker normal"
+                                        aria-hidden="true"
+                                    ></span
+                                    >Normal
+                                </button>
+                                <button
+                                    class="difficulty-button focusable"
+                                    type="button"
+                                >
+                                    <span
+                                        class="difficulty-marker hard"
+                                        aria-hidden="true"
+                                    ></span
+                                    >Hard
+                                </button>
+                                <button
+                                    class="difficulty-button focusable"
+                                    type="button"
+                                >
+                                    <span
+                                        class="difficulty-marker expert"
+                                        aria-hidden="true"
+                                    ></span
+                                    >Expert
+                                </button>
+                                <button
+                                    class="difficulty-button focusable"
+                                    type="button"
+                                    aria-pressed="true"
+                                >
+                                    <span
+                                        class="difficulty-marker real"
+                                        aria-hidden="true"
+                                    ></span
+                                    >Real
+                                </button>
+                            </div>
+                            <div class="metrics">
+                                <div class="metric">
+                                    <span data-i18n="bestScore">최고 점수</span
+                                    ><strong>976,654</strong>
+                                </div>
+                                <div class="metric">
+                                    <span>Grade</span><strong>S · FC</strong>
+                                </div>
+                                <div class="metric">
+                                    <span>Grd</span><strong>112</strong>
+                                </div>
+                            </div>
+                            <div>
+                                <h3 data-i18n="judgement">판정 상세</h3>
+                                <div class="judgements">
+                                    <div class="judgement">
+                                        <span
+                                            class="judgement-dot"
+                                            style="
+                                                --judgement-color: var(
+                                                    --judgement-sjust
+                                                );
+                                            "
+                                        ></span
+                                        ><span>S-Just</span
+                                        ><strong>1,248</strong>
+                                    </div>
+                                    <div class="judgement">
+                                        <span
+                                            class="judgement-dot"
+                                            style="
+                                                --judgement-color: var(
+                                                    --judgement-just
+                                                );
+                                            "
+                                        ></span
+                                        ><span>Just</span><strong>182</strong>
+                                    </div>
+                                    <div class="judgement">
+                                        <span
+                                            class="judgement-dot"
+                                            style="
+                                                --judgement-color: var(
+                                                    --judgement-good
+                                                );
+                                            "
+                                        ></span
+                                        ><span>Good</span><strong>31</strong>
+                                    </div>
+                                    <div class="judgement">
+                                        <span
+                                            class="judgement-dot"
+                                            style="
+                                                --judgement-color: var(
+                                                    --judgement-near
+                                                );
+                                            "
+                                        ></span
+                                        ><span>Near</span><strong>7</strong>
+                                    </div>
+                                    <div class="judgement">
+                                        <span
+                                            class="judgement-dot"
+                                            style="
+                                                --judgement-color: var(
+                                                    --judgement-miss
+                                                );
+                                            "
+                                        ></span
+                                        ><span>Miss</span><strong>2</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="directions">
+                                <div class="direction fast">
+                                    <span>FAST</span
+                                    ><span
+                                        class="direction-line"
+                                        style="--line-color: var(--data-blue)"
+                                    ></span
+                                    ><strong>18</strong>
+                                </div>
+                                <div class="direction slow">
+                                    <span>SLOW</span
+                                    ><span
+                                        class="direction-line"
+                                        style="--line-color: var(--data-orange)"
+                                    ></span
+                                    ><strong>11</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="fragment" aria-labelledby="ranking-title">
+                        <div class="section">
+                            <div>
+                                <h2 id="ranking-title" data-i18n="ranking">
+                                    전체 랭킹
+                                </h2>
+                                <p class="helper" data-i18n="rankingHelp">
+                                    Basic · Official Grd
+                                </p>
+                            </div>
+                            <table>
+                                <caption class="visually-hidden">
+                                    Basic Official Grd ranking
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col" data-i18n="rank">
+                                            순위
+                                        </th>
+                                        <th scope="col" data-i18n="player">
+                                            플레이어
+                                        </th>
+                                        <th scope="col">Grd</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>ピアノを弾く人</td>
+                                        <td>9,842</td>
+                                    </tr>
+                                    <tr aria-current="true">
+                                        <td>8</td>
+                                        <td>NosLog Player</td>
+                                        <td>9,412</td>
+                                    </tr>
+                                    <tr>
+                                        <td>9</td>
+                                        <td>건반 위의 여행자</td>
+                                        <td>9,398</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="actions">
+                                <button
+                                    class="secondary-button focusable"
+                                    type="button"
+                                    data-i18n="previous"
+                                >
+                                    이전
+                                </button>
+                                <button
+                                    class="secondary-button focusable"
+                                    type="button"
+                                    data-i18n="next"
+                                >
+                                    다음
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="fragment" aria-labelledby="state-title">
+                        <div class="section">
+                            <div>
+                                <h2 id="state-title" data-i18n="states">
+                                    상태와 복구
+                                </h2>
+                                <p class="helper" data-i18n="statesHelp">
+                                    색상 없이도 제목, 설명, 구조와 작업이
+                                    남습니다.
+                                </p>
+                            </div>
+                            <div class="status-stack">
+                                <div
+                                    class="status"
+                                    style="
+                                        --status-bg: var(--info-bg);
+                                        --status-mark: var(--info-mark);
+                                    "
+                                >
+                                    <div class="status-body">
+                                        <strong data-i18n="syncInfo"
+                                            >데이터 연동 안내</strong
+                                        ><span data-i18n="syncInfoBody"
+                                            >최근 기록을 안전하게 가져올 준비가
+                                            되었습니다.</span
+                                        >
+                                    </div>
+                                </div>
+                                <div
+                                    class="status"
+                                    style="
+                                        --status-bg: var(--success-bg);
+                                        --status-mark: var(--success-mark);
+                                    "
+                                >
+                                    <div class="status-body">
+                                        <strong data-i18n="syncSuccess"
+                                            >기록 128건을 연동했습니다</strong
+                                        ><span data-i18n="syncSuccessBody"
+                                            >새 기록 12건과 갱신 116건을
+                                            확인했습니다.</span
+                                        >
+                                    </div>
+                                </div>
+                                <div
+                                    class="status"
+                                    style="
+                                        --status-bg: var(--danger-bg);
+                                        --status-mark: var(--danger-mark);
+                                    "
+                                >
+                                    <div class="status-body">
+                                        <strong data-i18n="errorTitle"
+                                            >공개 이름을 확인해 주세요</strong
+                                        ><span data-i18n="errorBody"
+                                            >공개 이름은 20자 이하여야
+                                            합니다.</span
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="actions">
+                                <button
+                                    class="primary-button focusable"
+                                    type="button"
+                                    data-i18n="sync"
+                                >
+                                    기록 연동
+                                </button>
+                                <button
+                                    id="open-dialog"
+                                    class="secondary-button focusable"
+                                    type="button"
+                                    data-i18n="details"
+                                >
+                                    세부 정보
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+            <p class="token-note" data-i18n="footer">
+                이 artifact는 승인 토큰의 회귀 증거일 뿐, 최종 layout·component
+                외형·페이지 디자인이 아닙니다.
+            </p>
         </main>
-        <script>
-            const files = {
-                s1: "s1-discovery-compact-structure.html",
-                s2: "s2-music-detail-compact-structure.html",
-                s3: "s3-global-rankings-compact-structure.html",
-                s5: "s5-home-structure.html",
-            };
-            const names = {
-                s1: "S1 Discovery",
-                s2: "S2 Music Detail",
-                s3: "S3 Rankings",
-                s5: "S5 Home",
-            };
-            const state = {
-                fixture: "s1",
-                theme: "dark",
-                font: "jp",
-                width: "390",
-                locale: "ko",
-                scale: "100",
-            };
-            const frame = document.querySelector("iframe");
-            const controls = document.querySelector(".controls");
 
-            const render = () => {
-                document.documentElement.dataset.theme = state.theme;
-                const query = new URLSearchParams({
-                    "foundation-theme": state.theme,
-                    "foundation-font": state.font,
-                    "foundation-width": state.width,
-                    "foundation-locale": state.locale,
-                    "foundation-scale": state.scale,
-                });
-                frame.src = `${files[state.fixture]}?${query.toString()}`;
-                frame.title = `${names[state.fixture]} Foundation regression`;
-                controls.querySelectorAll("button").forEach((button) => {
+        <dialog id="detail-dialog" aria-labelledby="dialog-title">
+            <div class="dialog-header">
+                <h2 id="dialog-title" data-i18n="dialogTitle">
+                    연동 세부 정보
+                </h2>
+                <button
+                    id="close-dialog"
+                    class="icon-button focusable"
+                    type="button"
+                    aria-label="Close"
+                >
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M18 6 6 18"></path>
+                        <path d="m6 6 12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="dialog-body">
+                <p data-i18n="dialogBody">
+                    최근 연동 범위와 제외된 기록을 확인할 수 있습니다.
+                </p>
+            </div>
+            <div class="dialog-actions">
+                <button
+                    class="secondary-button focusable"
+                    type="button"
+                    data-close
+                    data-i18n="close"
+                >
+                    닫기
+                </button>
+            </div>
+        </dialog>
+
+        <script>
+            const copy = {
+                ko: {
+                    title: "Foundation v0.1 통합 회귀",
+                    intro: "승인된 일반 UI 토큰의 충돌만 확인합니다. 최종 페이지 디자인이 아닙니다.",
+                    scopeTitle: "범위 잠금",
+                    scopeBody:
+                        "채보 뷰어·에디터, renderer, S4/S6는 포함하지 않으며 어떤 변경도 제안하지 않습니다.",
+                    theme: "테마",
+                    language: "언어",
+                    width: "검토 폭",
+                    textScale: "텍스트",
+                    discovery: "악곡 찾기",
+                    discoveryHelp: "제목, 아티스트 또는 별칭으로 검색합니다.",
+                    search: "악곡 검색",
+                    artist: "BEMANI Sound Team",
+                    music: "악곡",
+                    bestScore: "최고 점수",
+                    judgement: "판정 상세",
+                    ranking: "전체 랭킹",
+                    rankingHelp: "Basic · Official Grd",
+                    rank: "순위",
+                    player: "플레이어",
+                    previous: "이전",
+                    next: "다음",
+                    states: "상태와 복구",
+                    statesHelp:
+                        "색상 없이도 제목, 설명, 구조와 작업이 남습니다.",
+                    syncInfo: "데이터 연동 안내",
+                    syncInfoBody:
+                        "최근 기록을 안전하게 가져올 준비가 되었습니다.",
+                    syncSuccess: "기록 128건을 연동했습니다",
+                    syncSuccessBody:
+                        "새 기록 12건과 갱신 116건을 확인했습니다.",
+                    errorTitle: "공개 이름을 확인해 주세요",
+                    errorBody: "공개 이름은 20자 이하여야 합니다.",
+                    sync: "기록 연동",
+                    details: "세부 정보",
+                    footer: "이 artifact는 승인 토큰의 회귀 증거일 뿐, 최종 layout·component 외형·페이지 디자인이 아닙니다.",
+                    dialogTitle: "연동 세부 정보",
+                    dialogBody:
+                        "최근 연동 범위와 제외된 기록을 확인할 수 있습니다.",
+                    close: "닫기",
+                },
+                ja: {
+                    title: "Foundation v0.1 統合回帰",
+                    intro: "承認済みの一般UIトークンの衝突だけを確認します。最終ページデザインではありません。",
+                    scopeTitle: "スコープ固定",
+                    scopeBody:
+                        "譜面ビューアー・エディター、renderer、S4/S6は含めず、変更も提案しません。",
+                    theme: "テーマ",
+                    language: "言語",
+                    width: "確認幅",
+                    textScale: "テキスト",
+                    discovery: "楽曲を探す",
+                    discoveryHelp: "タイトル、アーティスト、別名で検索します。",
+                    search: "楽曲検索",
+                    artist: "BEMANI Sound Team",
+                    music: "楽曲",
+                    bestScore: "ベストスコア",
+                    judgement: "判定詳細",
+                    ranking: "総合ランキング",
+                    rankingHelp: "Basic · Official Grd",
+                    rank: "順位",
+                    player: "プレイヤー",
+                    previous: "前へ",
+                    next: "次へ",
+                    states: "状態と回復",
+                    statesHelp:
+                        "色がなくても見出し、説明、構造、操作が残ります。",
+                    syncInfo: "データ連携のご案内",
+                    syncInfoBody:
+                        "最近の記録を安全に取り込む準備ができました。",
+                    syncSuccess: "128件の記録を連携しました",
+                    syncSuccessBody: "新規12件、更新116件を確認しました。",
+                    errorTitle: "公開名を確認してください",
+                    errorBody: "公開名は20文字以内で入力してください。",
+                    sync: "記録を連携",
+                    details: "詳細",
+                    footer: "このartifactは承認トークンの回帰証拠であり、最終レイアウトやページデザインではありません。",
+                    dialogTitle: "連携の詳細",
+                    dialogBody:
+                        "最近の連携範囲と除外された記録を確認できます。",
+                    close: "閉じる",
+                },
+                en: {
+                    title: "Foundation v0.1 integrated regression",
+                    intro: "This checks collisions among approved ordinary-UI tokens. It is not a final page design.",
+                    scopeTitle: "Locked scope",
+                    scopeBody:
+                        "The chart viewer/editor, renderers, S4, and S6 are absent and no change to them is proposed.",
+                    theme: "Theme",
+                    language: "Language",
+                    width: "Review width",
+                    textScale: "Text",
+                    discovery: "Find music",
+                    discoveryHelp:
+                        "Search by title, artist, or approved alias.",
+                    search: "Search music",
+                    artist: "BEMANI Sound Team",
+                    music: "Music",
+                    bestScore: "Best score",
+                    judgement: "Judgement breakdown",
+                    ranking: "Global rankings",
+                    rankingHelp: "Basic · Official Grd",
+                    rank: "Rank",
+                    player: "Player",
+                    previous: "Previous",
+                    next: "Next",
+                    states: "States and recovery",
+                    statesHelp:
+                        "Titles, explanations, structure, and actions remain without color.",
+                    syncInfo: "Data sync guidance",
+                    syncInfoBody:
+                        "Your recent records are ready to import safely.",
+                    syncSuccess: "128 records synced",
+                    syncSuccessBody:
+                        "12 new and 116 updated records were confirmed.",
+                    errorTitle: "Check your public name",
+                    errorBody:
+                        "Your public name must be 20 characters or fewer.",
+                    sync: "Sync records",
+                    details: "Details",
+                    footer: "This artifact is regression evidence for approved tokens, not final layout, component appearance, or page design.",
+                    dialogTitle: "Sync details",
+                    dialogBody:
+                        "Review the recent sync range and any excluded records.",
+                    close: "Close",
+                },
+            };
+
+            const root = document.documentElement;
+            const frame = document.querySelector(".review-frame");
+
+            document.addEventListener(
+                "pointerdown",
+                () => {
+                    root.dataset.input = "pointer";
+                },
+                true
+            );
+
+            document.addEventListener(
+                "keydown",
+                (event) => {
+                    if (
+                        [
+                            "Tab",
+                            "ArrowUp",
+                            "ArrowDown",
+                            "ArrowLeft",
+                            "ArrowRight",
+                            "Home",
+                            "End",
+                        ].includes(event.key)
+                    ) {
+                        root.dataset.input = "keyboard";
+                    }
+                },
+                true
+            );
+
+            function setPressed(group, value) {
+                group.querySelectorAll("button").forEach((button) => {
                     button.setAttribute(
                         "aria-pressed",
-                        String(
-                            state[button.dataset.control] ===
-                                button.dataset.value
-                        )
+                        String(button.dataset.value === value)
                     );
                 });
-            };
+            }
 
-            controls.addEventListener("click", (event) => {
-                const button = event.target.closest("button[data-control]");
-                if (!button) return;
-                state[button.dataset.control] = button.dataset.value;
-                render();
+            document.querySelectorAll("[data-control]").forEach((group) => {
+                group.addEventListener("click", (event) => {
+                    const button = event.target.closest("button[data-value]");
+                    if (!button) return;
+                    const value = button.dataset.value;
+                    setPressed(group, value);
+
+                    if (group.dataset.control === "theme")
+                        root.dataset.theme = value;
+                    if (group.dataset.control === "scale")
+                        root.dataset.scale = value;
+                    if (group.dataset.control === "width") {
+                        frame.style.setProperty(
+                            "--review-width",
+                            value === "wide" ? "100%" : value + "px"
+                        );
+                    }
+                    if (group.dataset.control === "language") {
+                        root.lang = value;
+                        document
+                            .querySelectorAll("[data-i18n]")
+                            .forEach((node) => {
+                                node.textContent =
+                                    copy[value][node.dataset.i18n];
+                            });
+                        document
+                            .querySelectorAll("[data-i18n-placeholder]")
+                            .forEach((node) => {
+                                node.placeholder =
+                                    copy[value][node.dataset.i18nPlaceholder];
+                            });
+                    }
+                });
             });
 
-            render();
+            const dialog = document.querySelector("#detail-dialog");
+            const opener = document.querySelector("#open-dialog");
+            const closer = document.querySelector("#close-dialog");
+
+            opener.addEventListener("click", () => {
+                dialog.showModal();
+                closer.focus();
+            });
+
+            function closeDialog() {
+                dialog.close();
+                opener.focus();
+            }
+
+            closer.addEventListener("click", closeDialog);
+            dialog
+                .querySelector("[data-close]")
+                .addEventListener("click", closeDialog);
+            dialog.addEventListener("cancel", (event) => {
+                event.preventDefault();
+                closeDialog();
+            });
         </script>
     </body>
 </html>

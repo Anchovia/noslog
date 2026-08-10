@@ -15,9 +15,7 @@ accessibility, internationalization, design-system, platform, and production
 references; and the user-approved decision record`
 - Date started: 2026-08-03
 - Last decision update: 2026-08-04
-- Canonical language: English
-- Korean companion:
-  [16-settings-account-page-brief.ko.md](./16-settings-account-page-brief.ko.md)
+- Language: English
 - Parent information architecture:
   [02-information-architecture.md](./02-information-architecture.md)
 - Shared-shell contract:

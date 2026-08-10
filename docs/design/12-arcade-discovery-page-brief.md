@@ -15,9 +15,7 @@ mapping, place-card, cartography, freshness, rhythm-game arcade, accessibility,
 privacy, and internationalization references; and the user-approved decision record`
 - Date started: 2026-08-03
 - Last decision update: 2026-08-03
-- Canonical language: English
-- Korean companion:
-  [12-arcade-discovery-page-brief.ko.md](./12-arcade-discovery-page-brief.ko.md)
+- Language: English
 - Parent information architecture:
   [02-information-architecture.md](./02-information-architecture.md)
 - Related contracts:

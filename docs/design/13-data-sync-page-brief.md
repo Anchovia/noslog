@@ -16,9 +16,7 @@ accessibility, responsive, and disclosure references; and the user-approved deci
 record`
 - Date started: 2026-08-03
 - Last decision update: 2026-08-03
-- Canonical language: English
-- Korean companion:
-  [13-data-sync-page-brief.ko.md](./13-data-sync-page-brief.ko.md)
+- Language: English
 - Parent information architecture:
   [02-information-architecture.md](./02-information-architecture.md)
 - Related Home contract:

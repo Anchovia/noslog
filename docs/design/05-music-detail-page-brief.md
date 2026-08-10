@@ -20,9 +20,7 @@ reflow, localization, browser-support, assistive-technology, and infrastructure
 guidance`
 - Date started: 2026-07-31
 - Last decision update: 2026-08-02
-- Canonical language: English
-- Korean companion:
-  [05-music-detail-page-brief.ko.md](./05-music-detail-page-brief.ko.md)
+- Language: English
 - Parent information architecture:
   [02-information-architecture.md](./02-information-architecture.md)
 - Upstream discovery brief:
@@ -34,6 +32,10 @@ guidance`
   design, focused chart-viewer composition, and administrator Music or chart editing
 
 ## Decision Labels
+
+> **Preservation override:** Music Detail may retain the current View chart entry and
+> availability state. Document `07` supersedes every historical viewer/editor shell,
+> layout, control, behavior, and Foundation direction in this brief.
 
 - **Observed:** Verified from the current repository, browser, or approved upstream
   artifact.

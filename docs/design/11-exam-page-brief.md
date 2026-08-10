@@ -7,7 +7,7 @@
 Recital, and Event modes; official requirements; mode-specific score semantics;
 supported practice analysis; permanent Event reference; Basic/Recital proof and
 certification; proof evidence, review, privacy, and retention; URL restoration;
-responsive behavior; accessibility; localization; future Recital-chart boundary;
+responsive behavior; accessibility; localization; viewer/editor preservation boundary;
 and browser acceptance`
 - Evidence status: `Repository, schema, seed, current-interface, and authenticated
 workflow inspection; NOSTALGIA official guidance; original Basic and Recital result
@@ -16,8 +16,7 @@ rhythm-game exam, task, tabs, file-upload, security, responsive, accessibility, 
 internationalization references; and the user-approved decision record`
 - Date started: 2026-08-03
 - Last decision update: 2026-08-03
-- Canonical language: English
-- Korean companion: [11-exam-page-brief.ko.md](./11-exam-page-brief.ko.md)
+- Language: English
 - Parent information architecture:
   [02-information-architecture.md](./02-information-architecture.md)
 - Related contracts:
@@ -180,8 +179,8 @@ bests equal a successful sequential Exam run.
 10. `ExamAchievement` or its normalized successor is the authoritative certification
     source. Legacy `exam_basic` and `exam_recital` are migration/compatibility inputs,
     not parallel authorities.
-11. Current chart editor and WebGL viewers remain Basic in NosLog 2.0. Recital chart
-    authoring and visualization are explicit Future Work.
+11. The complete existing chart viewer/editor is outside this brief and remains
+    unchanged under document `07`; Exam requirements do not create future chart work.
 
 ## Approved Information Hierarchy
 
@@ -613,7 +612,7 @@ into one `status` or a page-global `loading` boolean.
 | Achievement source    | `ExamAchievement`, legacy `exam_basic`, and `exam_recital` in [`prisma/schema.prisma`](../../prisma/schema.prisma)                                                                           | Migrate to one authoritative normalized source and derive easier Grades from the highest approved Grade                                         |
 | Privacy cleanup       | Current private-image retention jobs and Privacy contract                                                                                                                                    | Delete evidence/notes after six months while preserving approved achievement and account-deletion cascade                                       |
 | Localization          | [`lib/i18n/messageCatalogs`](../../lib/i18n/messageCatalogs)                                                                                                                                 | Add complete KO/JA/EN selection, scoring, analysis, proof, review, error, and fallback strings                                                  |
-| Chart system boundary | [`lib/chart-pattern/schema.ts`](../../lib/chart-pattern/schema.ts) and chart editor/viewers                                                                                                  | Keep 2.0 chart behavior Basic; preserve extension seams for separately approved future Recital dynamics data                                    |
+| Chart system boundary | [Viewer/editor preservation contract](./07-chart-viewer-editor-preservation.md)                                                                                                              | Make no viewer/editor, renderer, schema, palette, geometry, or Recital-dynamics change under this brief                                         |
 
 ## Representative Fixtures
 
@@ -787,54 +786,38 @@ Validate at minimum:
   retention-limited.
 - **Keep desktop inside a fixed mobile-width shell — Rejected:** `390px` is a
   representative review canvas, not a desktop layout width.
-- **Add Recital strong/weak chart backgrounds in 2.0 without a separate domain study —
-  Deferred to Future Work:** the current editor/viewer is Basic and needs explicit
-  dynamics data and accessible rendering rules first.
-
-## Future Work: Recital Chart Authoring and Viewing
-
-- NosLog 2.0 preserves the current Basic chart editor and full/falling viewers without
-  pretending they encode Recital performance.
-- A future Recital project must research and model strong/weak input regions, described
-  by the user as blue and red chart backgrounds, independently from the current
-  blue/red left/right-hand note guidance.
-- The future work must define dynamics segment data, schema/export versioning, editor
-  tools, full-sheet and falling-viewer rendering, WebGL behavior, mode selection,
-  keyboard and non-color cues, localization, responsive performance, and migration.
-- Current 2.0 implementation should avoid architecture that makes a future chart mode
-  impossible, but it must not add placeholder dynamics fields, guessed colors, or
-  incomplete Recital controls.
-- Research and user approval are required before this Future Work enters the
-  authoritative current scope.
+- **Add Recital strong/weak chart backgrounds or any related editor/viewer behavior —
+  Rejected from this scope:** the complete viewer/editor is a locked preservation
+  exception. This brief does not register that idea as future NosLog 2.0 work.
 
 ## Decision Log
 
-| ID      | Decision                                                                                                               | Status     |
-| ------- | ---------------------------------------------------------------------------------------------------------------------- | ---------- |
-| EXAM-01 | Exams remain an independent public NOSTALGIA page family                                                               | `Approved` |
-| EXAM-02 | Basic, Recital, and Event are the only top-level peer modes                                                            | `Approved` |
-| EXAM-03 | Show one selected Exam with one compact Grade/Event selector                                                           | `Approved` |
-| EXAM-04 | Every selected Exam has a stable localized slug route and restorable history                                           | `Approved` |
-| EXAM-05 | Official Grade, fee, reward, stage order, allowed charts, and conditions precede personal tools                        | `Approved` |
-| EXAM-06 | Basic promotion conditions preserve single then cumulative score semantics                                             | `Approved` |
-| EXAM-07 | Recital uses four categories ×10, 40 per tune, 120 total, and its own cumulative point semantics                       | `Approved` |
-| EXAM-08 | Personal derived content is named Practice analysis and never predicts an official pass                                | `Approved` |
-| EXAM-09 | Basic and score Events may use independent-best Practice analysis with an explicit limitation                          | `Approved` |
-| EXAM-10 | Recital and Recital-point Event analysis is omitted until reliable Recital details exist                               | `Approved` |
-| EXAM-11 | All eight seeded Event Exams are permanent reference content with no archive/version split                             | `Approved` |
-| EXAM-12 | Multi-chart stages expose every allowed chart and never imply the first stored chart is official                       | `Approved` |
-| EXAM-13 | Event has no proof, NosLog certification, achievement, or Profile Exam title                                           | `Approved` |
-| EXAM-14 | Basic/Recital proof requires authentication, official Grade eligibility, and no pending/equal-or-higher approval       | `Approved` |
-| EXAM-15 | One proof image must show final result, mode, Grade, `合格`, and matching upper-right player name                      | `Approved` |
-| EXAM-16 | Proof supports crop/rotation/perspective/compression but not missing regions, stitching, or result/name alteration     | `Approved` |
-| EXAM-17 | Proof does not require full cabinet, second image, video, date, handwritten code, or EXIF                              | `Approved` |
-| EXAM-18 | File flow is one JPEG/PNG/WebP up to 4 MB with choose, preview, explicit submit, and recoverable states                | `Approved` |
-| EXAM-19 | Proof is private, server-authorized, moderator-reviewed, and deleted after six months while achievement remains        | `Approved` |
-| EXAM-20 | Synchronized `nostalgia_name` is the private comparison identity even when hidden publicly                             | `Approved` |
-| EXAM-21 | Higher approved Grade implies easier same-mode Grades; Profile shows the highest title only                            | `Approved` |
-| EXAM-22 | Normalized Exam achievement becomes authoritative after legacy reconciliation                                          | `Approved` |
-| EXAM-23 | Compact layouts reflow through 320 CSS px and wide layouts use meaningful comparison space                             | `Approved` |
-| EXAM-24 | Current 2.0 chart editor/viewers remain Basic; Recital dynamics authoring/rendering is separately approved Future Work | `Approved` |
+| ID      | Decision                                                                                                                          | Status                |
+| ------- | --------------------------------------------------------------------------------------------------------------------------------- | --------------------- |
+| EXAM-01 | Exams remain an independent public NOSTALGIA page family                                                                          | `Approved`            |
+| EXAM-02 | Basic, Recital, and Event are the only top-level peer modes                                                                       | `Approved`            |
+| EXAM-03 | Show one selected Exam with one compact Grade/Event selector                                                                      | `Approved`            |
+| EXAM-04 | Every selected Exam has a stable localized slug route and restorable history                                                      | `Approved`            |
+| EXAM-05 | Official Grade, fee, reward, stage order, allowed charts, and conditions precede personal tools                                   | `Approved`            |
+| EXAM-06 | Basic promotion conditions preserve single then cumulative score semantics                                                        | `Approved`            |
+| EXAM-07 | Recital uses four categories ×10, 40 per tune, 120 total, and its own cumulative point semantics                                  | `Approved`            |
+| EXAM-08 | Personal derived content is named Practice analysis and never predicts an official pass                                           | `Approved`            |
+| EXAM-09 | Basic and score Events may use independent-best Practice analysis with an explicit limitation                                     | `Approved`            |
+| EXAM-10 | Recital and Recital-point Event analysis is omitted until reliable Recital details exist                                          | `Approved`            |
+| EXAM-11 | All eight seeded Event Exams are permanent reference content with no archive/version split                                        | `Approved`            |
+| EXAM-12 | Multi-chart stages expose every allowed chart and never imply the first stored chart is official                                  | `Approved`            |
+| EXAM-13 | Event has no proof, NosLog certification, achievement, or Profile Exam title                                                      | `Approved`            |
+| EXAM-14 | Basic/Recital proof requires authentication, official Grade eligibility, and no pending/equal-or-higher approval                  | `Approved`            |
+| EXAM-15 | One proof image must show final result, mode, Grade, `合格`, and matching upper-right player name                                 | `Approved`            |
+| EXAM-16 | Proof supports crop/rotation/perspective/compression but not missing regions, stitching, or result/name alteration                | `Approved`            |
+| EXAM-17 | Proof does not require full cabinet, second image, video, date, handwritten code, or EXIF                                         | `Approved`            |
+| EXAM-18 | File flow is one JPEG/PNG/WebP up to 4 MB with choose, preview, explicit submit, and recoverable states                           | `Approved`            |
+| EXAM-19 | Proof is private, server-authorized, moderator-reviewed, and deleted after six months while achievement remains                   | `Approved`            |
+| EXAM-20 | Synchronized `nostalgia_name` is the private comparison identity even when hidden publicly                                        | `Approved`            |
+| EXAM-21 | Higher approved Grade implies easier same-mode Grades; Profile shows the highest title only                                       | `Approved`            |
+| EXAM-22 | Normalized Exam achievement becomes authoritative after legacy reconciliation                                                     | `Approved`            |
+| EXAM-23 | Compact layouts reflow through 320 CSS px and wide layouts use meaningful comparison space                                        | `Approved`            |
+| EXAM-24 | Exam requirements do not authorize any viewer/editor or Recital-dynamics change; document `07` preserves the complete experiences | `Approved correction` |
 
 ## Handoff Boundary
 

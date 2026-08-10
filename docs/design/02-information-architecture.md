@@ -7,9 +7,7 @@
 - Date started: 2026-07-29
 - Date approved: 2026-07-30
 - Last decision update: 2026-08-08 (`IA-21` / Home `HOME-18`)
-- Canonical language: English
-- Korean companion:
-  [02-information-architecture.ko.md](./02-information-architecture.ko.md)
+- Language: English
 - Input audit: [01-current-product-audit.md](./01-current-product-audit.md)
 - Approved shared-shell contract:
   [15-shared-shell-navigation-brief.md](./15-shared-shell-navigation-brief.md)
@@ -19,14 +17,19 @@
   [18-privacy-data-practices-page-brief.md](./18-privacy-data-practices-page-brief.md)
 - Approved system-recovery states contract:
   [19-system-recovery-states-page-brief.md](./19-system-recovery-states-page-brief.md)
-- Approved chart-contribution editor contract:
-  [20-chart-editor-contribution-page-brief.md](./20-chart-editor-contribution-page-brief.md)
+- Chart viewer/editor preservation contract:
+  [07-chart-viewer-editor-preservation.md](./07-chart-viewer-editor-preservation.md)
 - Scope: User-facing NosLog 2.0 page families, information architecture,
   navigation, and important cross-page flows
 - Excluded: Administrator-interface redesign, page-level visual composition,
   component styling, and final route migration
 
 ## Decision Labels
+
+> **Preservation override:** Every chart-viewer/editor reference in this document is
+> limited to product reachability and historical evidence. Document `07` supersedes
+> any shell, layout, responsive, component, or behavior direction inside either
+> locked experience.
 
 - **Confirmed:** Explicitly agreed with the user and usable as a downstream
   requirement.
@@ -167,18 +170,17 @@ page briefs or visual design begin. It must:
 Page families group related user goals and screen templates. They are not automatically
 global-navigation labels.
 
-| Page family                       | User question or goal                                                   | Included routes and functions                                                                                                                                 | Confirmed or proposed relationship                                    |
-| --------------------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
-| Entry and orientation             | “Where can I go, and what information is immediately useful?”           | Home, routine-announcement summary, localized announcement archive and detail, global music search, direct navigation blocks, official news, feedback entry   | Primary entry and routing hub                                         |
-| Music discovery and understanding | “Which music am I looking for, and what do its chart and records mean?” | Music search/list, music detail, difficulty switching, chart information, personal record, chart ranking, evaluation, published chart viewer                  | Primary product family                                                |
-| Tier-list planning                | “Which chart should I play next for this goal?”                         | Tier lists, mode/goal selection, filters, tier bands, personal record context                                                                                 | Independent NOSTALGIA-related planning content                        |
-| Bingo unlock and rewards          | “What bingo progress unlocks music or earns NOS?”                       | Bingo list/detail, 5×5 missions, line/cell progress, music unlock and NOS reward context                                                                      | Independent NOSTALGIA content; not a generic challenge branch         |
-| Exam and certification            | “What is my assessed skill level and which title can I earn?”           | Exam selection, requirements, stages, allowed charts, simulation/advice, NOS use, title/reward and proof submission                                           | Independent NOSTALGIA skill-assessment content                        |
-| Records and comparison            | “How am I progressing, and how do I compare?”                           | Global rankings, public profile, grade/rating trends, best and recent plays, judgement analytics, public profile links                                        | Cross-cuts music and separate NOSTALGIA content                       |
-| Play support                      | “Where can I play, and how do I bring my records into NosLog?”          | Arcade discovery, preferred arcade, data-sync guide, token and sync state                                                                                     | Secondary but essential operational support                           |
-| Identity, preferences, and trust  | “How do I enter, configure, and trust the service?”                     | Login, onboarding, public settings, authenticated profile/account settings, locale, theme, privacy, account deletion, maintenance, error and not-found states | Utility and lifecycle family                                          |
-| Focused chart experience          | “How does this chart play over time?”                                   | Chart-scoped discovery entry, falling chart view, fullscreen falling view, full-sheet view, local audio, playback controls, metronome, strict performance     | Specialized child context of music with a direct discovery entry      |
-| Official chart contribution       | “How can I help improve the official NosLog chart?”                     | Personal chart draft, local-audio authoring, preview, revision history, immutable review submission, change request, rejection, accepted contributor credit   | Signed-in contribution workflow; not a public alternate-chart catalog |
+| Page family                       | User question or goal                                                   | Included routes and functions                                                                                                                                 | Confirmed or proposed relationship                               |
+| --------------------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| Entry and orientation             | “Where can I go, and what information is immediately useful?”           | Home, routine-announcement summary, localized announcement archive and detail, global music search, direct navigation blocks, official news, feedback entry   | Primary entry and routing hub                                    |
+| Music discovery and understanding | “Which music am I looking for, and what do its chart and records mean?” | Music search/list, music detail, difficulty switching, chart information, personal record, chart ranking, evaluation, published chart viewer                  | Primary product family                                           |
+| Tier-list planning                | “Which chart should I play next for this goal?”                         | Tier lists, mode/goal selection, filters, tier bands, personal record context                                                                                 | Independent NOSTALGIA-related planning content                   |
+| Bingo unlock and rewards          | “What bingo progress unlocks music or earns NOS?”                       | Bingo list/detail, 5×5 missions, line/cell progress, music unlock and NOS reward context                                                                      | Independent NOSTALGIA content; not a generic challenge branch    |
+| Exam and certification            | “What is my assessed skill level and which title can I earn?”           | Exam selection, requirements, stages, allowed charts, simulation/advice, NOS use, title/reward and proof submission                                           | Independent NOSTALGIA skill-assessment content                   |
+| Records and comparison            | “How am I progressing, and how do I compare?”                           | Global rankings, public profile, grade/rating trends, best and recent plays, judgement analytics, public profile links                                        | Cross-cuts music and separate NOSTALGIA content                  |
+| Play support                      | “Where can I play, and how do I bring my records into NosLog?”          | Arcade discovery, preferred arcade, data-sync guide, token and sync state                                                                                     | Secondary but essential operational support                      |
+| Identity, preferences, and trust  | “How do I enter, configure, and trust the service?”                     | Login, onboarding, public settings, authenticated profile/account settings, locale, theme, privacy, account deletion, maintenance, error and not-found states | Utility and lifecycle family                                     |
+| Focused chart experience          | “How does this chart play over time?”                                   | Chart-scoped discovery entry, falling chart view, fullscreen falling view, full-sheet view, local audio, playback controls, metronome, strict performance     | Specialized child context of music with a direct discovery entry |
 
 ### Family Rules
 
@@ -191,17 +193,15 @@ global-navigation labels.
   corresponding music detail where the data identifies a chart.
 - Tier lists, bingo, and exams remain independent page families, navigation blocks, and
   product concepts. Do not create a shared umbrella label or combined landing page.
-- The chart viewer remains a child of music, with a focused shell that removes ordinary
-  global navigation while preserving orientation and a reliable return path.
+- The chart viewer remains reachable as the current child destination of Music; its
+  complete existing shell and behavior are preserved under document `07`.
 - The Home and More Chart Viewer entries open the shared music-search surface with
   Chart search already selected. They do not bypass chart selection or create a
   separate duplicate catalog.
-- The falling viewer provides fullscreen entry and exit. Full-sheet viewing remains a
-  separate tab and is not silently converted into the falling-view fullscreen mode.
-- The user-facing editor reuses the chart workspace for contributions to the official
-  NosLog chart. Each author owns their draft and review submission; only an
-  administrator can replace the published canonical chart. It does not create a
-  public community-chart catalog.
+- Preserve the current falling/full-sheet and fullscreen behavior exactly; this
+  information architecture does not redefine it.
+- The chart editor remains the current administrator experience and is not a new
+  user-facing page family. Document `07` preserves it in full.
 - Legacy tier URLs remain compatibility redirects and are not navigation destinations.
 
 ## Approved Structural Map
@@ -220,7 +220,6 @@ flowchart TD
     SUPPORT["Play support<br/>Arcades · data sync"]
     TRUST["Identity, preferences, and trust<br/>Login · onboarding · settings · privacy"]
     VIEWER["Focused chart experience<br/>Falling · full sheet"]
-    AUTHOR["Official chart contribution<br/>Personal draft · review submission"]
 
     ROOT --> HOME
     ROOT --> MUSIC
@@ -231,7 +230,6 @@ flowchart TD
     ROOT --> SUPPORT
     ROOT --> TRUST
     MUSIC --> VIEWER
-    MUSIC --> AUTHOR
     TIERS -. "chart context" .-> MUSIC
     BINGO -. "mission music" .-> MUSIC
     EXAMS -. "exam charts" .-> MUSIC
@@ -460,13 +458,11 @@ from its content rather than copied from GOV.UK, USWDS, or Carbon.
 
 ### Chart Viewer: Focused Shell
 
-- Remove ordinary global navigation inside the chart viewer.
-- Preserve a clear return route and visible music/chart identity.
-- Keep the falling and full-sheet tabs.
-- Add fullscreen entry to the falling/curved-path viewer.
-- Fullscreen preserves essential playback controls and provides an explicit exit.
-- Preserve viewer state when entering/exiting fullscreen or returning to music detail
-  where technically feasible.
+- Preserve the existing chart-viewer route, shell, navigation, identity, tabs,
+  fullscreen behavior, controls, state, and return behavior exactly.
+- This information architecture may retain entry into the existing destination but
+  may not add, remove, reorganize, or reinterpret anything inside it.
+- Document `07` supersedes every earlier viewer-shell proposal.
 
 ### Rejected or Superseded Alternatives
 
@@ -507,7 +503,8 @@ from its content rather than copied from GOV.UK, USWDS, or Carbon.
   visible text labels in the opened menu, and reinforces the active scope through the
   field cue and results.
 - A skip link and a single page-level `main` landmark remain required in ordinary pages.
-- The chart viewer must eliminate the currently observed nested `main` landmarks.
+- The chart viewer's currently observed landmark structure is recorded as audit
+  evidence only; NosLog 2.0 does not change it under document `07`.
 - Interactive targets must meet WCAG 2.2 minimum target-size or spacing requirements;
   frequent mobile destinations should aim larger than the minimum.
 - Visual reordering at wider widths must not create an illogical reading or focus order.
@@ -532,35 +529,34 @@ from its content rather than copied from GOV.UK, USWDS, or Carbon.
 
 ## Decision Register
 
-| ID    | Decision                        | Resolved direction or remaining question                                                                                                                 | Status       |
-| ----- | ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
-| IA-01 | Ordinary responsive navigation  | Top header: NosLog left; profile/account and More right; no bottom navigation                                                                            | `Approved`   |
-| IA-02 | Chart-viewer shell              | Focused shell with reliable return path and fullscreen falling viewer                                                                                    | `Approved`   |
-| IA-03 | Rankings navigation             | Access through its independent home block and More block, not a direct labeled header link                                                               | `Approved`   |
-| IA-04 | Home signed-in personalization  | Do not add a stale-sync, recent-play, or unfinished-content card                                                                                         | `Rejected`   |
-| IA-05 | Data Sync placement             | Superseded by `IA-21` and Home `HOME-18`; the earlier decision used a separate Home row while retaining a stable More entry                              | `Superseded` |
-| IA-06 | Feedback placement              | More-panel support utility on ordinary pages; retain the dialog flow, omit from Home and footer, decide focused-viewer access in its page brief          | `Approved`   |
-| IA-07 | Official-news placement         | Show one latest `NOSTALGIA_573` source post through X's official widget after routine NosLog announcements; retain a localized official-channel fallback | `Approved`   |
-| IA-08 | Tier/Bingo/Exam relationship    | Keep all three as independent page families and navigation blocks; no umbrella label                                                                     | `Approved`   |
-| IA-09 | General desktop navigation      | Preserve the same top-header semantics; adapt More panel and content grid to available width                                                             | `Approved`   |
-| IA-10 | Signed-out account control      | Show a visible Login text button in the account position                                                                                                 | `Approved`   |
-| IA-11 | More-panel contents and order   | Use the approved two-column order for eight product destinations, a divider, Settings and Feedback utilities, then conditional Admin; no group heading   | `Approved`   |
-| IA-12 | Header scroll behavior          | Compact layouts hide downward and reveal upward; wider desktop layouts remain persistently visible and sticky                                            | `Approved`   |
-| IA-13 | Music/Chart search architecture | One shared search surface with a compact leading scope selector; Chart entry preselects Chart scope                                                      | `Approved`   |
-| IA-14 | Persistent control density      | Avoid permanent button rows when a clear contextual selector or progressive disclosure preserves the task                                                | `Approved`   |
-| IA-15 | Public Settings destination     | One `/[locale]/settings` entry for all users; guest experience preferences remain usable and account controls appear only after login                    | `Approved`   |
-| IA-16 | Preference ownership            | Theme stays device-local; existing account language/title settings win after login, new accounts inherit explicit guest choices                          | `Approved`   |
-| IA-17 | Footer destinations             | Keep Privacy and GitHub in the footer and do not duplicate them in More                                                                                  | `Approved`   |
-| IA-18 | Routine announcement structure  | Home shows the newest three title-and-date links on every viewport; localized detail and archive retain complete history; omit the section when empty    | `Approved`   |
-| IA-19 | Authentication and onboarding   | One Discord action, public-browse alternative, two-field completion, incomplete-profile gate, logout escape, and validated destination return            | `Approved`   |
-| IA-20 | Official chart contribution     | Signed-in personal draft and immutable review submission for the official chart; administrator-only canonical publication; no alternate-chart catalog    | `Approved`   |
-| IA-21 | Home destination collection     | Use eight equal peer blocks including Data Sync in exactly four columns and two rows at every supported width; retain the separate Data Sync More entry  | `Approved`   |
+| ID    | Decision                        | Resolved direction or remaining question                                                                                                                 | Status                      |
+| ----- | ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- |
+| IA-01 | Ordinary responsive navigation  | Top header: NosLog left; profile/account and More right; no bottom navigation                                                                            | `Approved`                  |
+| IA-02 | Chart-viewer destination        | Preserve the complete existing viewer and its current entry/return behavior under document `07`                                                          | `Approved correction`       |
+| IA-03 | Rankings navigation             | Access through its independent home block and More block, not a direct labeled header link                                                               | `Approved`                  |
+| IA-04 | Home signed-in personalization  | Do not add a stale-sync, recent-play, or unfinished-content card                                                                                         | `Rejected`                  |
+| IA-05 | Data Sync placement             | Superseded by `IA-21` and Home `HOME-18`; the earlier decision used a separate Home row while retaining a stable More entry                              | `Superseded`                |
+| IA-06 | Feedback placement              | More-panel support utility on ordinary pages; retain the dialog flow and omit it from Home/footer; do not alter viewer feedback access                   | `Approved correction`       |
+| IA-07 | Official-news placement         | Show one latest `NOSTALGIA_573` source post through X's official widget after routine NosLog announcements; retain a localized official-channel fallback | `Approved`                  |
+| IA-08 | Tier/Bingo/Exam relationship    | Keep all three as independent page families and navigation blocks; no umbrella label                                                                     | `Approved`                  |
+| IA-09 | General desktop navigation      | Preserve the same top-header semantics; adapt More panel and content grid to available width                                                             | `Approved`                  |
+| IA-10 | Signed-out account control      | Show a visible Login text button in the account position                                                                                                 | `Approved`                  |
+| IA-11 | More-panel contents and order   | Use the approved two-column order for eight product destinations, a divider, Settings and Feedback utilities, then conditional Admin; no group heading   | `Approved`                  |
+| IA-12 | Header scroll behavior          | Compact layouts hide downward and reveal upward; wider desktop layouts remain persistently visible and sticky                                            | `Approved`                  |
+| IA-13 | Music/Chart search architecture | One shared search surface with a compact leading scope selector; Chart entry preselects Chart scope                                                      | `Approved`                  |
+| IA-14 | Persistent control density      | Avoid permanent button rows when a clear contextual selector or progressive disclosure preserves the task                                                | `Approved`                  |
+| IA-15 | Public Settings destination     | One `/[locale]/settings` entry for all users; guest experience preferences remain usable and account controls appear only after login                    | `Approved`                  |
+| IA-16 | Preference ownership            | Theme stays device-local; existing account language/title settings win after login, new accounts inherit explicit guest choices                          | `Approved`                  |
+| IA-17 | Footer destinations             | Keep Privacy and GitHub in the footer and do not duplicate them in More                                                                                  | `Approved`                  |
+| IA-18 | Routine announcement structure  | Home shows the newest three title-and-date links on every viewport; localized detail and archive retain complete history; omit the section when empty    | `Approved`                  |
+| IA-19 | Authentication and onboarding   | One Discord action, public-browse alternative, two-field completion, incomplete-profile gate, logout escape, and validated destination return            | `Approved`                  |
+| IA-20 | User-facing chart contribution  | Former proposal cancelled; preserve the existing administrator editor and create no new user editor/contribution flow                                    | `Superseded by document 07` |
+| IA-21 | Home destination collection     | Use eight equal peer blocks including Data Sync in exactly four columns and two rows at every supported width; retain the separate Data Sync More entry  | `Approved`                  |
 
 ## Phase Approval
 
 The user approved this information-architecture phase as a whole on 2026-07-30 after
-reviewing the synchronized English and Korean artifacts and the resolved decision
-register. At that approval, visual composition, exact responsive ordering, and
+reviewing the resolved decision register. At that approval, visual composition, exact responsive ordering, and
 page-specific states remained page-brief decisions; the approval did not silently
 resolve them. The
 user-approved Home brief later refined the editorial destinations recorded in `IA-07`
@@ -583,9 +579,8 @@ information-architecture decisions. The subsequently approved system-recovery br
 resolved the distinct ordinary-shell Not-found and recoverable-error states and the
 minimal-shell fatal-error and planned-Maintenance states without adding a navigation
 destination. Page-specific composition and states remain governed by their page briefs.
-The subsequently approved chart-contribution editor brief adds a signed-in child flow
-under Music without exposing the administrator shell or creating another discovery
-catalog.
+The former user-facing chart-contribution child flow was later cancelled by the
+complete chart viewer/editor preservation boundary in document `07`.
 
 ## Acceptance Criteria for This Artifact
 

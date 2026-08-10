@@ -63,167 +63,55 @@ viewer/editor Page Brief와 `S4`/`S6` 계획은 기능을 기록한 역사적 �
 
 ### NosLog 2.0 디자인 권위
 
-Tailwind CSS는 스타일 구현과 반응형 layout을 위한 기술 스택이며, Tailwind의 기본
-palette·theme·starter template은 NosLog 2.0의 시각적 권위가 아닙니다. NosLog 2.0의
-색상과 visual Foundation은 승인된 `docs/design/` 문서와 `AGENTS.md`의 조사·승인
-규칙을 따릅니다.
+NosLog 2.0 디자인 가이드의 활성 소스는 `docs/design/` 아래 **영문 문서만** 사용합니다.
+더 이상 `.ko.md` companion을 만들거나 한영 문서 동기화를 요구하지 않습니다. 이 정책은
+디자인 문서에만 적용되며, 제품 UI의 한국어·일본어·영어 지원과 다국어 검증 요구는 그대로
+유지합니다.
 
-현재 Dark/Light neutral primitive source는 Adobe Spectrum S2로 승인되어 있습니다.
-공개된 원본값을 그대로 사용하며 Tailwind 색상, 현재 custom palette 또는 다른 design
-system의 값을 임의로 혼합하거나 보간하지 않습니다. Primitive source, semantic-role
-mapping, component mapping과 실제 구현은 각각 별도의 승인 단계입니다.
+현재 권위는 다음 순서로 판단합니다.
 
-현재 signature identity source는 `SS-08` Radix Colors Indigo로 승인되어 있습니다.
-공개된 Light/Dark mapping을 하나의 온전한 source set으로 유지합니다. 이 승인은
-그 자체로 identity/action component alias, 일반 interaction 재착색 또는 로고
-재착색을 승인하지 않습니다. Filled primary action은 아래의 별도 `RPA-A` 정책을
-따르며 Radix에는 action alias를 부여하지 않습니다.
-Shopify Polaris와 `EXP-01` Polaris Light / Radix Dark split은 문서 `47`에 비교 근거로
-보존하지만 현재 downstream design 또는 구현 source가 아닙니다.
+1. 사용자의 가장 최근 명시적 결정
+2. `AGENTS.md`의 작업·보존 경계
+3. 이 `README.md`의 제품 기준선과 여섯 블록 진행 상태
+4. [현재 남은 작업 감사](./docs/design/57-design-guide-remaining-work-audit.md)
+5. [Foundation v0.1 규범](./docs/design/24-foundation-v0.1.md)
+6. [Foundation v0.1 출처와 결정 이력](./docs/design/25-foundation-v0.1-provenance.md)
+7. 그 밖의 현재 영문 제품 감사·IA·Page Brief·교차 원칙 문서
 
-Shell identity alias는 `ITA-C · Achromatic`으로 승인되었습니다. Graphical NosLog
-mark와 보이는 `NosLog` wordmark는 appearance별 Spectrum S2 neutral foreground를
-사용하며 Indigo mark, Indigo field, 기본 white outline을 사용하지 않습니다. Radix
-identity source는 유지되지만 현재 승인된 shell 배치는 없으며, 다른 배치나 rare filled
-primary action을 Radix에 할당하지 않습니다. 다른 identity 배치는 별도 사용자 승인
-gate입니다.
+이후 문서의 명시적 `Approved`·`Rejected`·`Superseded` 기록은 과거 제안, 체크리스트,
+specimen, 문서 번호보다 우선합니다. 삭제된 비교 문서는 Git 이력에만 보존하며 현재
+남은 작업을 복원하는 근거로 사용하지 않습니다. 정확한 token·alias·source 값은 문서
+`24`와 `25`에만 유지하고 이 README나 AGENTS.md에 중복 복사하지 않습니다.
 
-Filled primary-action 정책은 `RPA-A · Achromatic primary`로 승인되었습니다. 실제
-primary 자격이 입증된 non-destructive internal action은 page·bounded region·temporary
-flow당 최대 하나만 사용하며 모든 화면에 필수적이지 않습니다. Light는 Spectrum S2
-`#292929` default, `#131313` hover/pressed, `#FFFFFF` foreground를 사용하고 Dark는
-`#DBDBDB` default, `#F2F2F2` hover/pressed, `#111111` foreground를 사용합니다. 일반
-action·navigation·link·tool·동급 선택지는 낮은 neutral hierarchy를 유지합니다.
-`RPA-B`, `RPA-C`의 Radix action mapping은 Dark hover/pressed에서 `4.28:1`로 측정되어
-거절되었으며 downstream target으로 사용하지 않습니다.
+Tailwind CSS는 구현과 반응형 layout 도구일 뿐 palette·starter theme·sample component의
+시각적 권위가 아닙니다. 현재 승인된 Foundation은 저명한 design system의 공개 원본값과
+사용자 승인 기록을 따르며, 임의 혼합·보간·색조 이동을 허용하지 않습니다.
 
-Material Geometry는 `MG-A · Adobe Spectrum S2`로 승인되었습니다. 정확한 component
-alias는 control/container/overlay/full radius `4px/8px/10px/50%`, justified raised
-content의 `drop-shadow-emphasized`, temporary overlay의 `drop-shadow-elevated`, actively
-moved content의 `drop-shadow-dragged`, Light/Dark scrim opacity `0.4/0.6`입니다. Flat
-canvas·surface·sunken에는 기본 shadow를 사용하지 않으며 scroll boundary는 새 shadow
-없이 승인된 `1px` directional boundary를 유지합니다. Fluent `MG-B`와 Atlassian
-`MG-C`는 각각 semantic role 누락과 surface provenance 충돌로 거절되었습니다.
-
-일반 UI iconography source는 문서 `60`의 17개 출처와 동일 NosLog 콘텐츠 비교 뒤
-`IC-06 · Lucide`로 승인되었습니다. 원본 `24×24` viewBox, `2px` round stroke와 outline
-treatment를 유지하며 routine action·wayfinding은 `20px`, visible label이 인접한 compact
-supporting·metadata icon만 `16px`를 사용합니다. 일반 UI icon은 `16px`보다 작게 쓰지
-않습니다. Primary·unfamiliar·destructive·low-frequency action은 visible label을
-유지하고, icon-only control은 보편적인 contextual action으로 제한해 explicit accessible
-action name과 mobile `44×44px`, 해당 desktop `40×40px` 이상의 target을 제공합니다.
-Icon은 승인된 foreground 또는 semantic control state를 상속하며 임의의 signature·data·
-difficulty·judgement·feedback color, selection fill, 다른 system glyph 혼합 또는 source path
-수정을 사용하지 않습니다. Tailwind나 설치 편의를 출처 권위로 삼은 결정이 아니며,
-viewer/editor 전체와 logo·brand mark·data-visualization mark에는 적용하지 않습니다.
-
-일반 UI motion source는 문서 `61`의 14개 외부 권위와 6개 exact-source 후보 비교 뒤
-`MO-02 · Atlassian`으로 승인되었습니다. 다른 system의 값을 섞지 않고
-`0/50/100/150/200/250ms` 역할과 공개된 Atlassian easing을 그대로 사용합니다. 고빈도
-hover는 `50ms`,
-지속 selection·interaction highlight와 작은 entrance는 `150ms`, 빠른 exit는 `100ms`,
-modal exit/entrance는 `200/250ms`입니다. `400ms`는 입증된 큰 일반 transition의 상한일
-뿐이고 `600ms`, bounce·stagger·celebration·parallax·page choreography는 승인된 역할이
-없습니다. Reduced motion에서는 모든 비필수 일반 UI motion을 instant/none으로 만들되
-보이는 state, focus, error, busy semantics와 announcement를 즉시 유지합니다. Spinner는
-static cue와 persistent localized busy text·`aria-busy`로 대체합니다. Spectrum `130ms`,
-Tailwind 기본 transition 또는 다른 source timing을 이 계약에 섞지 않으며 viewer/editor
-전체에는 적용하지 않습니다.
-
-일반 UI data-visualization anatomy는 문서 `62`의 16개 독립 출처 감사와 통제된 후보
-6개 비교 뒤 `DV-05 · GitHub Primer`로 승인되었습니다. Visible localized purpose,
-axis·unit, persistent legend 또는 충돌 없는 direct label, pointer·focus·touch exact value,
-arrow와 `Home`/`End` point navigation, same-data semantic table 및 명시적 state를
-유지합니다. CSV는 table을 대체하지 않습니다. Primer color는 가져오지 않고 승인된
-`LD-03`, `JD-02`, `DU-01` mapping을 유지합니다. Personal-versus-benchmark는 outlined
-blue circle·solid line 대 filled orange circle·dashed line을 사용하며, 별도의 FAST/SLOW
-circle/square 계약은 바꾸지 않습니다. 이 규칙은 잠긴 viewer/editor 전체와 모든
-renderer에 적용하지 않습니다.
-
-Universal feedback/status mapping은 `FS-BN · Atlassian semantic color + neutral
-message typography`로 승인되었습니다. Information·success·warning·danger의
-background·marker·border·icon은 문서 `54`에 기록된 정확한 Atlassian Light/Dark 값을
-사용하고, message container의 title과 body는 승인된 Spectrum S2 neutral foreground를
-사용합니다. Field error와 destructive text는 Atlassian danger text를 유지합니다. IBM
-Carbon은 neutral typography 원칙의 비교 근거일 뿐이며 Carbon·Tailwind 색상이나 보간한
-값을 이 mapping에 섞지 않습니다. 이 승인은 feedback/status Gate만 완료했습니다.
-이후 NOSTALGIA difficulty color와 comparison-local data color도 같은 블록 `1` 안에서
-각각 승인됐으며 별도 작업 단위로 세지 않습니다.
-
-완료된 블록 `1`의 C5 color 작업은 위의 채보 viewer/editor 전체 보존 예외를 침범하지 않습니다.
-기존 renderer의 note·left/right-hand color는 Foundation token 후보가 아니며 exact-source
-비교에서 제외합니다. Viewer/editor 전체 밖의 repeated-scanning 일반 UI에서는
-Normal·Hard·Expert·Real을 서로 다른 네 가지 지속 색상으로 구분합니다. 이는 승인된 제품
-요구사항이며 color와 neutral 중 하나를 다시 고르는 항목이 아닙니다. 정확한 mapping은
-`DU-01 · Adobe Spectrum S2`로 승인했습니다. Normal은 Light/Dark `#0BA45D/#068850`,
-Hard는 `#E86A00/#E06400`, Expert는 `#F03823/#CD2E1D`, Real은
-`#A65CE7/#AD69E9`입니다. 이 승인은 일반 UI의 작은 난이도 marker 색만 정하며 난이도
-text·background·container·selection·focus·feedback·action 또는 viewer/editor 요소를
-재착색하지 않습니다. Basic/Recital,
-rank/achievement·genre는 기본 neutral을 유지합니다. 일반 UI의 기본 comparison-local
-data color는 `LD-03 · SAP Fiori Horizon`으로 승인했습니다. 문서 `58`에 기록한 정확한
-`@sap-theming/theming-base-content@11.36.3` Light/Dark mapping을 사용합니다. Single
-series는 `#168EFF/#3278BE`, FAST/SLOW는 `#168EFF/#C87B00` 및
-`#3278BE/#F2A634`입니다. 여섯 score bucket과 일반 categorical series의 전체 값도 문서
-`58`을 그대로 따르며 혼합·보간하지 않습니다. 유일한 더 좁은 예외는 문서 `59`의
-`JD-02 · Radix Colors 3.0.0` 판정 domain mapping입니다. S-Just Light/Dark는
-`#C2298A/#FF8DCC`, Just는 `#AB6400/#FFCA16`, Good은 `#107D98/#4CCCE6`, Near는
-`#0D74CE/#70B8FF`, Miss는 `#646464/#B4B4B4`이며 모두 공개된 Radix step 11
-값입니다. 이 색은 판정 marker/bar에만 사용하고 label·count·percentage·surface·container는
-Spectrum neutral을 유지합니다. Radix `gray11`도 Foundation neutral primitive가 아니라
-판정 domain color이며 Adobe Spectrum S2의 neutral 권위를 대체하지 않습니다. 숫자
-threshold/reference line은 기본적으로 Spectrum neutral structural role을 유지합니다.
-FAST/SLOW의 direct label과 서로 다른
-marker/line style, score bucket의 숫자·label·순서를 함께 유지합니다. Carbon과 GitLab은
-선택되지 않은 비교 근거일 뿐 downstream target이 아닙니다. 이 승인으로 블록 `1 · C5
-color 마감`이 완료됐습니다.
+기존 채보 viewer와 editor 전체는 NosLog 2.0 보존 예외입니다. Page, DOM shell, control,
+label, accessibility behavior, responsive composition·containment, PixiJS/WebGL Falling
+renderer, Canvas Full-sheet renderer, note·left/right-hand palette, geometry, animation,
+chart mathematics와 editor rendering model을 현재 구현 그대로 유지합니다. 일반 UI
+Foundation·component·template·handoff 규칙을 적용하거나 새 specimen을 만들지 않습니다.
+정확한 경계는 [보존 계약](./docs/design/07-chart-viewer-editor-preservation.md)을 따릅니다.
 
 ### NosLog 2.0 디자인 가이드 남은 작업 기준선
 
-이 표는 오래된 디자인 문서의 미완료 체크리스트가 이후 승인 결과를 다시 미완료로
-되돌리는 일을 막기 위한 현재 진행 권위입니다. 이후 번호 문서의 명시적 승인·거절·대체
-기록은 이전 문서의 계획 문구보다 우선합니다. `Complete` 항목은 사용자가 해당 결정을
-명시적으로 다시 열지 않는 한 재조사하거나 남은 작업으로 계산하지 않습니다.
+고정된 사용자 대면 작업 단위는 아래 여섯 블록뿐입니다. 완료된 블록을 오래된 문서의
+미완료 문구로 다시 열지 않으며, 조사·후보·specimen·검증·문서화 같은 내부 단계를 새
+top-level 작업으로 세지 않습니다. 사용자가 분모와 계산법을 따로 승인하기 전에는 완료
+퍼센트를 표시하지 않습니다.
 
-Git 이력 감사 결과, 이전의 고정 `18` package 분모와 `69%` 표시는 사전에 승인된
-roadmap에서 나온 값이 아니라 2026-08-10 중간 문서화 과정에서 새로 만들어진 관리
-분류였습니다. 사용자가 이 분류가 실제 남은 작업을 부풀렸다고 명시적으로 거부했으므로
-폐기합니다. 새 분모가 별도로 승인되기 전에는 완료 퍼센트를 표시하지 않습니다.
+|   # | 작업 블록                             | 상태          | 현재 범위                                                                                                        |
+| --: | ------------------------------------- | ------------- | ---------------------------------------------------------------------------------------------------------------- |
+|   1 | C5 color 마감                         | `Complete`    | difficulty, local-data, judgement color 승인 완료; viewer/editor 제외                                            |
+|   2 | Iconography                           | `Complete`    | Lucide 일반 UI source, size, stroke, label, target 계약 승인 완료                                                |
+|   3 | Motion / Reduced motion               | `Complete`    | Atlassian duration/easing과 reduced-motion 대체 계약 승인 완료                                                   |
+|   4 | Data-visualization anatomy            | `Complete`    | GitHub Primer 기반 일반 UI anatomy·interaction 계약 승인 완료                                                    |
+|   5 | Foundation 승격과 reusable UI 정리    | `In progress` | 승인된 Foundation 통합 회귀와 reusable UI 계약 정리; 문서 63의 `FPR-02`–`FPR-04` approval 대기                   |
+|   6 | Downstream handoff와 milestone export | `Not started` | screen requirements·mapping·QA 통합, Claude Design handoff, 사용자와 PDF 언어·packaging 결정 후 versioned export |
 
-완료된 범위는 제품 감사, IA/navigation, Page Brief, 교차 원칙과 예외 거버넌스,
-Typography·Spacing·Grid·Layout, `S1`–`S5` 구조 검증, neutral surface/foreground/
-boundary/interaction/focus, signature source, achromatic shell과 primary action,
-Material Geometry, `FS-BN` feedback mapping, `DU-01` difficulty marker, `LD-03`
-local data color 및 `JD-02` judgement domain color를 포함한 C5 color 마감, `IC-06`
-Lucide 일반 UI iconography, `MO-02` Atlassian motion과 reduced-motion 계약입니다. 이
-항목들과 `DV-05` GitHub Primer 일반 UI data-visualization anatomy는 다시 남은 작업으로
-세지 않습니다.
-
-아래 표는 고정된 여섯 블록 기준선과 완료 이력을 함께 보존합니다. 블록 `1`–`4` 완료 뒤
-실제로 남은 큰 작업은 블록 `5`–`6`의 두 개입니다. 한 블록의
-조사·specimen·검증·문서화는 그 블록의 하위 단계이며 새 top-level 작업으로 늘려 세지
-않습니다.
-
-앞으로 사용자에게 남은 작업으로 제시하고 진행하는 단위도 이 두 블록뿐입니다. 한 블록을
-시작하면 조사, 후보 비교, specimen, browser 검증, 사용자에게 필요한 핵심 결정,
-한영 문서 반영과 정리를 모두 같은 블록 안에서 이어서 수행합니다. 사용자의 material
-decision이 필요할 때만 잠시 확인하고, 승인 뒤에는 새 작업을 만들지 않고 같은 블록을
-계속합니다. 내부 단계·문서·후보·검증 횟수를 “다음 작업”, 별도 package 또는 남은 작업으로
-표현하지 않습니다.
-
-|   # | 남은 작업 블록                        | 상태          | 정확한 범위                                                                                                                   |
-| --: | ------------------------------------- | ------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-|   1 | C5 color 마감                         | `Complete`    | `DU-01` difficulty, `LD-03` SAP local data, `JD-02` Radix judgement color 승인 완료; viewer/editor 전체 제외                  |
-|   2 | Iconography                           | `Complete`    | `IC-06` Lucide 20px/16px, 2px stroke, label/icon-only, target 및 accessible-name grammar 승인·검증 완료                       |
-|   3 | Motion / Reduced motion               | `Complete`    | `MO-02` Atlassian exact duration/easing, semantic role, instant reduced 대체와 responsive·다국어 검증 완료                    |
-|   4 | Data-visualization anatomy            | `Complete`    | `DV-05` Primer anatomy, exact-value·focus·same-data table·non-color 계약과 personal/benchmark 원형 marker 처리 승인·검증 완료 |
-|   5 | Foundation 승격과 reusable UI 정리    | `In progress` | S1·S2·S3·S5 통합 회귀와 Pretendard JP delivery/fallback 제안을 문서 `63`에서 검증·승인 대기 중                                |
-|   6 | Downstream handoff와 milestone export | `Not started` | 기존 Page Brief의 screen requirement·mapping·QA 통합, Claude Design handoff, 언어/packaging 결정 뒤 versioned PDF             |
-
-향후 Foundation 통합 검사는 구조 작업의 반복이 아닙니다. 이후 승인되는 appearance
-규칙이 완료된 일반 UI `S1`, `S2`, `S3`, `S5` fixture를 손상하지 않았는지만 확인합니다. 새 `S6`
-editor 표본은 없으며 viewer/editor는 최종 회귀·component·template·handoff 변경 범위에서도
-제외합니다. 정확한 남은 범위와 오래된 문구의 처리 상태는 문서 `57`을 따릅니다.
+실제로 남은 큰 작업은 블록 `5`와 `6` 두 개입니다. 현재 Block 5의 상세 범위와 열려 있는
+결정은 [문서 63](./docs/design/63-foundation-v0.1-reusable-ui-regression.md)에만 기록합니다.
 
 ## 로컬 개발
 

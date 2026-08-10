@@ -16,9 +16,7 @@ security, design-system, production-service, and rhythm-game references; and the
 user-approved decision record`
 - Date started: 2026-08-03
 - Last decision update: 2026-08-04
-- Canonical language: English
-- Korean companion:
-  [17-authentication-onboarding-page-brief.ko.md](./17-authentication-onboarding-page-brief.ko.md)
+- Language: English
 - Parent information architecture:
   [02-information-architecture.md](./02-information-architecture.md)
 - Shared-shell contract:

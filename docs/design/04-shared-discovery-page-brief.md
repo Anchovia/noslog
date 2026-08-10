@@ -10,9 +10,7 @@ no-result-recovery, transient-response, rhythm-game-record, result-card,
 responsive-interaction, and accessibility guidance`
 - Date started: 2026-07-30
 - Date approved: 2026-07-31
-- Canonical language: English
-- Korean companion:
-  [04-shared-discovery-page-brief.ko.md](./04-shared-discovery-page-brief.ko.md)
+- Language: English
 - Parent information architecture:
   [02-information-architecture.md](./02-information-architecture.md)
 - Upstream Home brief:
@@ -23,6 +21,10 @@ responsive-interaction, and accessibility guidance`
   chart search, final visual styling, and route implementation details
 
 ## Decision Labels
+
+> **Preservation override:** Discovery may expose published-chart availability and
+> link to the current viewer route. It may not alter the target viewer/editor; document
+> `07` overrides every historical composition or behavior reference inside them.
 
 - **Observed:** Verified from the current repository, browser, or approved upstream
   artifact.
@@ -1701,8 +1703,8 @@ The later implementation must verify at minimum:
 
 ## Phase Approval
 
-The user approved the synchronized English and Korean shared-discovery brief as a
-complete phase deliverable, updated on 2026-08-04 after reviewing the resolved decision
+The user approved the shared-discovery brief as a complete phase deliverable, updated
+on 2026-08-04 after reviewing the resolved decision
 register and cross-document audit. No material Music/Chart discovery behavior remains
 `Open` or `Proposed`.
 

@@ -2,14 +2,12 @@
 
 ## Document Control
 
-- Status: `Approved for information-architecture planning`
+- Status: `Approved current-product evidence — audit phase complete`
 - Evidence status: `Observed from repository and representative browser pass`
-- Browser verification: `Pass 1 complete; rare and unpublished states pending`
+- Browser verification: `Representative pass complete; unreproduced rare states remain code-evidence limits, not a pending design block`
 - Date started: 2026-07-29
 - Scope decisions confirmed: 2026-07-29
-- Canonical language: English
-- Korean companion:
-  [01-current-product-audit.ko.md](./01-current-product-audit.ko.md)
+- Language: English
 - Scope: NosLog v1.6.0 user application, shared system states, and administrator
   application
 - Decision authority: This document records the current product. It does not approve
@@ -20,8 +18,8 @@
 
 This audit captures the product functions and states that must be understood before
 NosLog 2.0 page briefs or design decisions are made. Repository observations are
-recorded as facts. Missing browser evidence, ambiguous behavior, proposed changes, and
-future decisions remain explicitly unresolved.
+recorded as facts. Evidence limits below identify confidence boundaries; they do not
+reopen the completed audit phase or add work outside the six-block baseline.
 
 ## Evidence Reviewed
 
@@ -292,8 +290,8 @@ a layout response.
 - The inspected chart had an administrator preview but no published public revision:
   its public pattern URL correctly rendered the localized not-found state.
 - The administrator preview currently renders two nested `main` landmarks. This is an
-  observed accessibility-structure issue to address during the appropriate design or
-  implementation phase.
+  observed issue only; the NosLog 2.0 initiative does not change it under the complete
+  viewer/editor preservation boundary.
 
 #### Observed Usability Symptoms
 
@@ -310,7 +308,7 @@ a layout response.
 These symptoms identify investigation targets only. They do not yet authorize a
 specific grid, breakpoint, maximum width, navigation model, or content removal.
 
-### Browser Evidence Still Required
+### Browser Evidence Limits Recorded for Later Implementation QA
 
 - signed-out login, browsing, and localized first-entry behavior in a clean session;
 - a published public chart revision, because the inspected chart was preview-only;
@@ -318,8 +316,8 @@ specific grid, breakpoint, maximum width, navigation model, or content removal.
   states where they can be reproduced safely;
 - long translated music titles and extreme real record values in all three locales;
 - keyboard traversal, visible focus, menu focus management, and reduced-motion behavior;
-- representative screenshots after the audit decisions determine which states must be
-  retained as formal comparison evidence.
+- representative screenshots may be added during the later implementation QA only
+  when a current acceptance test needs them.
 
 ## Confirmed Audit Decisions
 
@@ -369,7 +367,7 @@ These are audit questions, not design proposals:
 
 1. Identify representative stress-test data and any states that must remain code-only
    evidence.
-2. Keep this inventory synchronized when approved 2.0 contracts add capabilities such
-   as user official-chart contribution without misrepresenting them as current code.
-3. Keep broad administrator redesign outside 2.0 while documenting the review workflow
-   required by an approved user contribution feature.
+2. Keep this inventory synchronized when approved 2.0 contracts add capabilities
+   without misrepresenting them as current code.
+3. Keep broad administrator redesign and the complete chart viewer/editor outside the
+   current 2.0 design-guide scope.

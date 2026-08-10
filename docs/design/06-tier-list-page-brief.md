@@ -13,9 +13,7 @@ guidance, rhythm-game comparables, responsive systems, accessibility guidance, a
 the user-approved decision record`
 - Date started: 2026-08-01
 - Last decision update: 2026-08-02
-- Canonical language: English
-- Korean companion:
-  [06-tier-list-page-brief.ko.md](./06-tier-list-page-brief.ko.md)
+- Language: English
 - Parent information architecture:
   [02-information-architecture.md](./02-information-architecture.md)
 - Downstream destination contract:

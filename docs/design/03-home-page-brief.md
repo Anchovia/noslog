@@ -7,8 +7,7 @@
 - Date started: 2026-07-30
 - Date approved: 2026-07-31
 - Last amended: 2026-08-08 (`HOME-20`)
-- Canonical language: English
-- Korean companion: [03-home-page-brief.ko.md](./03-home-page-brief.ko.md)
+- Language: English
 - Parent information architecture:
   [02-information-architecture.md](./02-information-architecture.md)
 - Input audit: [01-current-product-audit.md](./01-current-product-audit.md)
@@ -17,6 +16,10 @@
   administrator redesign, and application implementation
 
 ## Decision Labels
+
+> **Preservation override:** Home may retain the current viewer destination, but this
+> brief authorizes no change inside the chart viewer/editor. Document `07` governs the
+> complete locked experiences.
 
 - **Observed:** Verified in the repository, current UI, or browser.
 - **Approved:** Explicitly agreed by the user or inherited from an approved artifact.
@@ -894,8 +897,8 @@ The later design and implementation must verify:
 
 ## Phase Approval
 
-The user approved the synchronized English and Korean Home brief as a complete phase
-deliverable on 2026-07-31 after reviewing the resolved decision register and
+The user approved the Home brief as a complete phase deliverable on 2026-07-31 after
+reviewing the resolved decision register and
 cross-document audit. This approval fixes the documented Home hierarchy, content,
 interaction, responsive behavior, states, accessibility, localization, and downstream
 handoff contracts.

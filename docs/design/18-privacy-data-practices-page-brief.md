@@ -18,9 +18,7 @@ contracts; more than twenty cited regulatory, accessibility, provider, and
 production-service references; and the user-approved decision record`
 - Date started: 2026-08-03
 - Last decision update: 2026-08-03
-- Canonical language: English
-- Korean companion:
-  [18-privacy-data-practices-page-brief.ko.md](./18-privacy-data-practices-page-brief.ko.md)
+- Language: English
 - Parent information architecture:
   [02-information-architecture.md](./02-information-architecture.md)
 - Shared-shell contract:
@@ -31,8 +29,8 @@ production-service references; and the user-approved decision record`
   [17-authentication-onboarding-page-brief.md](./17-authentication-onboarding-page-brief.md)
 - Profile privacy contract: [09-profile-page-brief.md](./09-profile-page-brief.md)
 - Data Sync contract: [13-data-sync-page-brief.md](./13-data-sync-page-brief.md)
-- Chart-contribution contract:
-  [20-chart-editor-contribution-page-brief.md](./20-chart-editor-contribution-page-brief.md)
+- Chart viewer/editor preservation contract:
+  [07-chart-viewer-editor-preservation.md](./07-chart-viewer-editor-preservation.md)
 - Scope: public Privacy route, data-practice disclosure, public-data consequences,
   retention and deletion explanation, cookies and device storage, processors and
   external services, international transfers, age eligibility, privacy rights and
@@ -236,9 +234,8 @@ The page must answer nine questions in this order:
 - **Observed:** Theme, chart-viewer metronome volume, and Strict Performance preference
   use browser local storage. These values remain on the device and are not account
   profile fields.
-- **Observed and approved future scope:** Chart-editor piano visibility also uses local
-  storage. The approved user contribution editor keeps this device-local preference
-  and must disclose it alongside other editor preferences before release.
+- **Observed:** Chart-editor piano visibility also uses local storage. This is current
+  product privacy inventory only and does not authorize viewer/editor design work.
 - **Observed:** The current codebase has no product analytics, advertising SDK,
   tracking pixel, or marketing profile dependency.
 - **Observed:** The deployment uses Vercel Functions in `sin1`, and the configured Neon
@@ -461,9 +458,6 @@ not reserve that practice speculatively.
 - Explain that rankings, tier-related voting, chart evaluations, and reactions may
   associate a contribution with the user's public NosLog identity where that feature's
   approved contract requires it.
-- Explain that chart drafts and review submissions are account-private, while an
-  accepted official-chart contribution preserves public contributor credit after the
-  advance submission disclosure.
 - Explain that public avatars are stored in a public Blob and may appear in Profile,
   Rankings, comments, or generated Share artifacts.
 - Explain that hiding a field removes it from subsequent public payloads and Share
@@ -481,12 +475,9 @@ not reserve that practice speculatively.
 - Use a scannable category/purpose/retention table or an accessible reflowing
   equivalent.
 - Distinguish active account data, immutable or accumulated record history, public
-  contribution data, private submissions, temporary upload controls, session cookies,
+  community data, private submissions, temporary upload controls, session cookies,
   language cookies, local-device preferences, provider logs, backups, and abandoned
   uploads.
-- Distinguish personal chart drafts, immutable review snapshots, review events,
-  accepted canonical chart history, and public contributor attribution. Their exact
-  account-deletion treatment remains a release blocker rather than an inferred rule.
 - Preserve the approved six-month feedback and exam rules.
 - Explain account deletion as deletion from active NosLog systems and linked known
   uploads, subject to verified backup/provider expiration and any narrowly applicable
@@ -771,7 +762,6 @@ English-only copy to validate the page.
 | PRIV-B08 | Korean/Japanese/English legally reviewed substantive parity and any governing-language clause                                       | Human legal translation review                                   | `Release blocker` |
 | PRIV-B09 | Fourteen-and-older account disclosure and a legally adequate, non-dark-pattern eligibility mechanism                                | Legal review, Auth design, and E2E                               | `Release blocker` |
 | PRIV-B10 | Contributor terms covering chart rights, warranties, moderation, and public attribution                                             | Qualified legal review and approved submission copy              | `Release blocker` |
-| PRIV-B11 | Account-deletion treatment for private chart work, review records, accepted canonical history, and contributor attribution          | Product decision, legal review, schema, and deletion tests       | `Release blocker` |
 
 The release may not convert a blocker to `Approved` merely because a placeholder has
 been styled or the current policy already contains a similar sentence.
@@ -915,43 +905,43 @@ verification.
 
 ## Decision Log
 
-| ID      | Decision                                                                                                       | Status            |
-| ------- | -------------------------------------------------------------------------------------------------------------- | ----------------- |
-| PRIV-01 | Keep Privacy public at every locale-prefixed `/privacy` route                                                  | `Approved`        |
-| PRIV-02 | Keep Privacy in the ordinary Footer and out of More                                                            | `Approved`        |
-| PRIV-03 | Add contextual Privacy links at Login, deletion, uploads, sync, and material collection points                 | `Approved`        |
-| PRIV-04 | Use an at-a-glance first layer plus the complete policy                                                        | `Approved`        |
-| PRIV-05 | Use in-page navigation and keep full policy sections visible                                                   | `Approved`        |
-| PRIV-06 | Show separate Last-updated and Effective dates                                                                 | `Approved`        |
-| PRIV-07 | Maintain stable previous-version history                                                                       | `Approved`        |
-| PRIV-08 | Limit NosLog account creation/use to age fourteen and older                                                    | `Approved`        |
-| PRIV-09 | Preserve public browsing without an account                                                                    | `Approved`        |
-| PRIV-10 | Do not add under-fourteen guardian flows without a new approved contract                                       | `Approved`        |
-| PRIV-11 | Explicitly disclose approved always-public and five user-controlled Profile groups                             | `Approved`        |
-| PRIV-12 | Explain public Rankings, community contributions, and Share-artifact consequences                              | `Approved`        |
-| PRIV-13 | State verified Discord and BEMANI credential/token exclusions                                                  | `Approved`        |
-| PRIV-14 | State that local chart audio never reaches the server                                                          | `Approved`        |
-| PRIV-15 | State no precise geolocation, advertising, behavioral analytics, payment data, sale, or advertising sharing    | `Approved`        |
-| PRIV-16 | Treat verified non-collection statements as product invariants that require prior policy revision to change    | `Approved`        |
-| PRIV-17 | Distinguish processor, international transfer, independent external service, and content-source roles          | `Approved`        |
-| PRIV-18 | Disclose both session and locale cookies                                                                       | `Approved`        |
-| PRIV-19 | Disclose theme, metronome-volume, and Strict-Performance device-local storage                                  | `Approved`        |
-| PRIV-20 | Preserve six-month feedback and exam retention rules                                                           | `Approved`        |
-| PRIV-21 | Preserve complete meaningful record history until account deletion without equating preview count to retention | `Approved`        |
-| PRIV-22 | Keep Settings self-service plus email-based human privacy requests                                             | `Approved`        |
-| PRIV-23 | Do not add a raw self-service account-data export in 2.0                                                       | `Approved`        |
-| PRIV-24 | Use service announcements and history for policy changes, not promised account email                           | `Approved`        |
-| PRIV-25 | Require semantic headings, accessible TOC, 320px Reflow, wide editorial layout, and print completeness         | `Approved`        |
-| PRIV-26 | Preserve substantive Korean/Japanese/English parity                                                            | `Approved`        |
-| PRIV-27 | Defer real operator-name publication; do not invent or autonomously publish it                                 | `Approved`        |
-| PRIV-28 | Resolve legally sufficient operator/controller disclosure before release                                       | `Release blocker` |
-| PRIV-29 | Resolve legal bases, consent points, rights timing, and jurisdiction details before release                    | `Release blocker` |
-| PRIV-30 | Verify logs, backups, regions, subprocessors, external embeds, and deletion lifecycles before release          | `Release blocker` |
-| PRIV-31 | Implement and prove abandoned-upload cleanup before release                                                    | `Release blocker` |
-| PRIV-32 | Obtain human legal translation review and decide any governing-language clause before release                  | `Release blocker` |
-| PRIV-33 | Disclose private chart work and public accepted-contributor consequences                                       | `Approved`        |
-| PRIV-34 | Limit Profile share artifacts to approved public-safe fields and invalidate caches after visibility changes    | `Approved`        |
-| PRIV-35 | Resolve contributor terms and account-deletion attribution before user chart contribution launches             | `Release blocker` |
+| ID      | Decision                                                                                                       | Status                      |
+| ------- | -------------------------------------------------------------------------------------------------------------- | --------------------------- |
+| PRIV-01 | Keep Privacy public at every locale-prefixed `/privacy` route                                                  | `Approved`                  |
+| PRIV-02 | Keep Privacy in the ordinary Footer and out of More                                                            | `Approved`                  |
+| PRIV-03 | Add contextual Privacy links at Login, deletion, uploads, sync, and material collection points                 | `Approved`                  |
+| PRIV-04 | Use an at-a-glance first layer plus the complete policy                                                        | `Approved`                  |
+| PRIV-05 | Use in-page navigation and keep full policy sections visible                                                   | `Approved`                  |
+| PRIV-06 | Show separate Last-updated and Effective dates                                                                 | `Approved`                  |
+| PRIV-07 | Maintain stable previous-version history                                                                       | `Approved`                  |
+| PRIV-08 | Limit NosLog account creation/use to age fourteen and older                                                    | `Approved`                  |
+| PRIV-09 | Preserve public browsing without an account                                                                    | `Approved`                  |
+| PRIV-10 | Do not add under-fourteen guardian flows without a new approved contract                                       | `Approved`                  |
+| PRIV-11 | Explicitly disclose approved always-public and five user-controlled Profile groups                             | `Approved`                  |
+| PRIV-12 | Explain public Rankings, community contributions, and Share-artifact consequences                              | `Approved`                  |
+| PRIV-13 | State verified Discord and BEMANI credential/token exclusions                                                  | `Approved`                  |
+| PRIV-14 | State that local chart audio never reaches the server                                                          | `Approved`                  |
+| PRIV-15 | State no precise geolocation, advertising, behavioral analytics, payment data, sale, or advertising sharing    | `Approved`                  |
+| PRIV-16 | Treat verified non-collection statements as product invariants that require prior policy revision to change    | `Approved`                  |
+| PRIV-17 | Distinguish processor, international transfer, independent external service, and content-source roles          | `Approved`                  |
+| PRIV-18 | Disclose both session and locale cookies                                                                       | `Approved`                  |
+| PRIV-19 | Disclose theme, metronome-volume, and Strict-Performance device-local storage                                  | `Approved`                  |
+| PRIV-20 | Preserve six-month feedback and exam retention rules                                                           | `Approved`                  |
+| PRIV-21 | Preserve complete meaningful record history until account deletion without equating preview count to retention | `Approved`                  |
+| PRIV-22 | Keep Settings self-service plus email-based human privacy requests                                             | `Approved`                  |
+| PRIV-23 | Do not add a raw self-service account-data export in 2.0                                                       | `Approved`                  |
+| PRIV-24 | Use service announcements and history for policy changes, not promised account email                           | `Approved`                  |
+| PRIV-25 | Require semantic headings, accessible TOC, 320px Reflow, wide editorial layout, and print completeness         | `Approved`                  |
+| PRIV-26 | Preserve substantive Korean/Japanese/English parity                                                            | `Approved`                  |
+| PRIV-27 | Defer real operator-name publication; do not invent or autonomously publish it                                 | `Approved`                  |
+| PRIV-28 | Resolve legally sufficient operator/controller disclosure before release                                       | `Release blocker`           |
+| PRIV-29 | Resolve legal bases, consent points, rights timing, and jurisdiction details before release                    | `Release blocker`           |
+| PRIV-30 | Verify logs, backups, regions, subprocessors, external embeds, and deletion lifecycles before release          | `Release blocker`           |
+| PRIV-31 | Implement and prove abandoned-upload cleanup before release                                                    | `Release blocker`           |
+| PRIV-32 | Obtain human legal translation review and decide any governing-language clause before release                  | `Release blocker`           |
+| PRIV-33 | Do not introduce a user chart-contribution privacy contract; the former feature proposal is cancelled          | `Superseded correction`     |
+| PRIV-34 | Limit Profile share artifacts to approved public-safe fields and invalidate caches after visibility changes    | `Approved`                  |
+| PRIV-35 | Former user chart-contribution launch blocker                                                                  | `Superseded by document 07` |
 
 ## Handoff Boundary
 

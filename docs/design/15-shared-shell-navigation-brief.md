@@ -15,15 +15,13 @@ accessibility, design-system, production-service, and rhythm-game references; an
 the user-approved decision record`
 - Date started: 2026-08-03
 - Last decision update: 2026-08-03
-- Canonical language: English
-- Korean companion:
-  [15-shared-shell-navigation-brief.ko.md](./15-shared-shell-navigation-brief.ko.md)
+- Language: English
 - Parent information architecture:
   [02-information-architecture.md](./02-information-architecture.md)
 - Authentication and onboarding contract:
   [17-authentication-onboarding-page-brief.md](./17-authentication-onboarding-page-brief.md)
 - Focused-viewer contract:
-  [07-chart-viewer-page-brief.md](./07-chart-viewer-page-brief.md)
+  [07-chart-viewer-editor-preservation.md](./07-chart-viewer-editor-preservation.md)
 - System-recovery states contract:
   [19-system-recovery-states-page-brief.md](./19-system-recovery-states-page-brief.md)
 - Scope: repeated public-user shells, ordinary header, account and navigation
@@ -37,6 +35,10 @@ the user-approved decision record`
   implementation in this design-guide session
 
 ## Decision Labels
+
+> **Preservation override:** The ordinary shell may continue to reach the existing
+> chart viewer. This brief does not redesign or redefine the locked viewer/editor shell;
+> document `07` is the complete authority for those experiences.
 
 - **Observed:** Verified in the repository, current browser evidence, an approved
   upstream artifact, or a cited source.
@@ -330,15 +332,11 @@ The ordinary footer contains only the stable trust and project layer required he
 
 ## Focused Chart-Viewer Shell Boundary
 
-- The focused chart viewer does not render the ordinary header, More panel, or footer.
-- It provides its own reliable return path and visible music/chart identity.
-- Viewer tabs, falling-view fullscreen, playback, local audio, metronome, strict
-  performance, responsive rendering, and state preservation follow
-  [07-chart-viewer-page-brief.md](./07-chart-viewer-page-brief.md).
-- Entering or leaving fullscreen must not create a second ordinary shell or nested
-  `main` landmark.
-- Feedback access inside the focused viewer remains governed by the viewer brief and
-  must not be inferred from the ordinary More panel.
+- The entire existing chart-viewer shell is preserved exactly under
+  [document 07](./07-chart-viewer-editor-preservation.md).
+- Ordinary-shell work may retain the current destination but cannot add, remove, or
+  restyle a header, footer, More panel, return path, identity, feedback access,
+  landmark, tab, fullscreen control, or any other viewer element.
 
 ## System-Recovery Shell
 
@@ -438,8 +436,8 @@ The ordinary footer contains only the stable trust and project layer required he
   create a modal interaction and must have coherent keyboard containment.
 - **Auto-hide on every viewport — Superseded:** compact layouts may auto-hide; wider
   desktop keeps a persistent sticky header.
-- **Ordinary shell inside the chart viewer — Rejected:** the focused viewer needs the
-  available canvas and its own orientation controls.
+- **Any ordinary-shell migration inside the chart viewer — Rejected from this scope:**
+  the complete current viewer shell is locked, irrespective of ordinary-shell rules.
 
 ## Implementation Mapping
 
@@ -531,33 +529,33 @@ are not substitutes.
 
 ## Decision Log
 
-| ID       | Decision                                                                                                      | Status     |
-| -------- | ------------------------------------------------------------------------------------------------------------- | ---------- |
-| SHELL-01 | Use one responsive top-shell taxonomy; do not add persistent bottom navigation                                | `Approved` |
-| SHELL-02 | Ordinary header contains NosLog, account state, and one navigation trigger only                               | `Approved` |
-| SHELL-03 | Signed-out account position uses a visible Login text control                                                 | `Approved` |
-| SHELL-04 | Use a navigation/hamburger trigger rather than an ellipsis                                                    | `Approved` |
-| SHELL-05 | Keep eight product destinations in the approved row and semantic order                                        | `Approved` |
-| SHELL-06 | Put Settings and Feedback / Error Report after a divider with no group heading                                | `Approved` |
-| SHELL-07 | Keep Admin conditional and separate after ordinary utilities                                                  | `Approved` |
-| SHELL-08 | Use icon plus concise text label; do not add descriptions                                                     | `Approved` |
-| SHELL-09 | Compact navigation is a full-width two-column modal below the header                                          | `Approved` |
-| SHELL-10 | Compact open state uses scrim, body lock, focus containment, and reliable close/focus return                  | `Approved` |
-| SHELL-11 | Wide navigation is a right-anchored two-column non-modal popover without body lock                            | `Approved` |
-| SHELL-12 | Choose the modal/popover transition from content fit, not the current `1024px` implementation                 | `Approved` |
-| SHELL-13 | Compact header hides downward and reveals upward; wide desktop header remains sticky and visible              | `Approved` |
-| SHELL-14 | Keep the header visible during open navigation, header/panel focus, and route entry                           | `Approved` |
-| SHELL-15 | Reduced motion removes header sliding                                                                         | `Approved` |
-| SHELL-16 | Ordinary footer owns Privacy, GitHub, and copyright                                                           | `Approved` |
-| SHELL-17 | Privacy and GitHub do not appear in the header or More panel                                                  | `Approved` |
-| SHELL-18 | Login and onboarding use a minimal identity-plus-footer shell without More/profile                            | `Approved` |
-| SHELL-19 | Login body includes concise Discord-data disclosure and an inline Privacy link under the authentication brief | `Approved` |
-| SHELL-20 | Focused chart viewer omits ordinary header and footer                                                         | `Approved` |
-| SHELL-21 | Maintenance and fatal errors use a minimal identity and recovery shell; exact state behavior follows Brief 19 | `Approved` |
-| SHELL-22 | Opened destinations remain native link navigation, not ARIA menu semantics                                    | `Approved` |
-| SHELL-23 | Preserve identical destination identity and semantic order across ko, ja, and en                              | `Approved` |
-| SHELL-24 | Exact Foundation tokens, dimensions, breakpoint, and final localized strings remain downstream work           | `Approved` |
-| SHELL-25 | Signed-out Feedback preserves validated locale/route/query and reopens the dialog after Login                 | `Approved` |
+| ID       | Decision                                                                                                      | Status                |
+| -------- | ------------------------------------------------------------------------------------------------------------- | --------------------- |
+| SHELL-01 | Use one responsive top-shell taxonomy; do not add persistent bottom navigation                                | `Approved`            |
+| SHELL-02 | Ordinary header contains NosLog, account state, and one navigation trigger only                               | `Approved`            |
+| SHELL-03 | Signed-out account position uses a visible Login text control                                                 | `Approved`            |
+| SHELL-04 | Use a navigation/hamburger trigger rather than an ellipsis                                                    | `Approved`            |
+| SHELL-05 | Keep eight product destinations in the approved row and semantic order                                        | `Approved`            |
+| SHELL-06 | Put Settings and Feedback / Error Report after a divider with no group heading                                | `Approved`            |
+| SHELL-07 | Keep Admin conditional and separate after ordinary utilities                                                  | `Approved`            |
+| SHELL-08 | Use icon plus concise text label; do not add descriptions                                                     | `Approved`            |
+| SHELL-09 | Compact navigation is a full-width two-column modal below the header                                          | `Approved`            |
+| SHELL-10 | Compact open state uses scrim, body lock, focus containment, and reliable close/focus return                  | `Approved`            |
+| SHELL-11 | Wide navigation is a right-anchored two-column non-modal popover without body lock                            | `Approved`            |
+| SHELL-12 | Choose the modal/popover transition from content fit, not the current `1024px` implementation                 | `Approved`            |
+| SHELL-13 | Compact header hides downward and reveals upward; wide desktop header remains sticky and visible              | `Approved`            |
+| SHELL-14 | Keep the header visible during open navigation, header/panel focus, and route entry                           | `Approved`            |
+| SHELL-15 | Reduced motion removes header sliding                                                                         | `Approved`            |
+| SHELL-16 | Ordinary footer owns Privacy, GitHub, and copyright                                                           | `Approved`            |
+| SHELL-17 | Privacy and GitHub do not appear in the header or More panel                                                  | `Approved`            |
+| SHELL-18 | Login and onboarding use a minimal identity-plus-footer shell without More/profile                            | `Approved`            |
+| SHELL-19 | Login body includes concise Discord-data disclosure and an inline Privacy link under the authentication brief | `Approved`            |
+| SHELL-20 | Preserve the complete current chart-viewer shell; this brief authorizes no internal shell change              | `Approved correction` |
+| SHELL-21 | Maintenance and fatal errors use a minimal identity and recovery shell; exact state behavior follows Brief 19 | `Approved`            |
+| SHELL-22 | Opened destinations remain native link navigation, not ARIA menu semantics                                    | `Approved`            |
+| SHELL-23 | Preserve identical destination identity and semantic order across ko, ja, and en                              | `Approved`            |
+| SHELL-24 | Exact Foundation tokens, dimensions, breakpoint, and final localized strings remain downstream work           | `Approved`            |
+| SHELL-25 | Signed-out Feedback preserves validated locale/route/query and reopens the dialog after Login                 | `Approved`            |
 
 ## Handoff Boundary
 

@@ -16,8 +16,7 @@ activity-profile, privacy, dashboard, responsive, accessibility, and
 internationalization references, and the user-approved decision record`
 - Date started: 2026-08-02
 - Last decision update: 2026-08-03
-- Canonical language: English
-- Korean companion: [09-profile-page-brief.ko.md](./09-profile-page-brief.ko.md)
+- Language: English
 - Parent information architecture:
   [02-information-architecture.md](./02-information-architecture.md)
 - Related contracts:
