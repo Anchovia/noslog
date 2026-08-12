@@ -4,7 +4,7 @@
 
 - Status: `Approved — Block 5 complete`
 - Language: English
-- Last updated: 2026-08-11
+- Last updated: 2026-08-12
 - Normative Foundation: [document 24](./24-foundation-v0.1.md)
 - Provenance: [document 25](./25-foundation-v0.1-provenance.md)
 - Scope authority: [document 57](./57-design-guide-remaining-work-audit.md)
@@ -164,7 +164,7 @@ library now.
 | `ContentScopeSwitch` | Switch content kind within one search/comparison task without pretending to be page navigation                                                     |
 | `FilterSortControl`  | Disclose secondary refinement without persistent option clutter                                                                                    |
 | `ViewModeSwitch`     | Change presentation of one result set with programmatic and persistent selected state                                                              |
-| `ResultCollection`   | Flat scannable linked entities with stable identity, metadata, and narrow domain markers                                                           |
+| `ResultCollection`   | Flat scannable linked entities with stable identity, metadata, and narrow domain markers; hover/focus never substitutes personal-record content    |
 | `MusicEntityHeader`  | Canonical Music identity, localized companion access, facts, and contextual actions                                                                |
 | `DifficultySelector` | Neutral control with four persistent approved markers outside the locked viewer/editor                                                             |
 | `MetricSummary`      | Label, exact value, unit/basis, and comparison context without decorative color                                                                    |

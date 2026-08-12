@@ -180,6 +180,10 @@ C 색        바인딩 100%(하드코딩 0) · NI-A 위반 0 · Light/Dark 양�
     - 렌더 20px(일반 액션) / 16px(라벨 옆 보조) / 24px(강조)
     - **아이콘 전용 컨트롤 타겟: 모바일 44×44, 데스크톱 40×40**
 - 도메인 색: DU-01 난이도 4 / JD-02 판정 5(FAST/SLOW 아님) / LD-03 SAP / FS-BN 피드백
+- **`border/empty-slot`** ⭑ 신규 별칭 토큰(2026-08-13 승인, CONFLICT-17) — 아트 없는 자켓 슬롯의 1px 경계.
+  Light = `surface/sunken` 별칭(자켓 fill 과 동일 → 비가시) / Dark = `border/subtle` 별칭(#393939).
+  Dark 에서 `surface/sunken` = `surface/canvas`(#111111) 이라 슬롯이 사라지는 문제 해결. 이미지 fill 이
+  들어오면 stroke 를 제거한다. **문서 24 에 없는 값 → 문서 24 개정 필요.**
 - grid: Compact <672(4col g12 m16) / Intermediate 672–1055(8col g16 m24) / Wide 1056+(12col g16 m32)
 - container: reading 768 / standard 1280 / wide 1440 / workspace fluid
 
@@ -203,27 +207,34 @@ C 색        바인딩 100%(하드코딩 0) · NI-A 위반 0 · Light/Dark 양�
 - **폰트**: 규범값은 `Pretendard JP Variable`이나 이 Figma 렌더러가 로드 불가
   → 렌더는 `IBM Plex Sans KR/JP/Latin` + 수치는 `IBM Plex Mono`
   → 교체는 `font/family/ko·ja·latin` 변수 3개만 바꾸면 됨 (교체 후 레이아웃 재검수 필요)
-- 상태 파일: 스크래치패드 `state.json`, `R2-conflicts.md`, `audit.js`, `brief-contracts-notes.md`
+- 상태 파일 위치: **`~/.claude/projects/-Users-carol-Desktop-project-noslog/design-state/`**
+  (`state.json` · `R2-conflicts.md` · `audit.js` · `brief-contracts-notes.md`)
+  ⚠️ **세션 스크래치패드에 쓰지 말 것** — 2026-08-12 에 작업 중 통째로 삭제됐다.
+  트랜스크립트 `.jsonl` 재생으로 복구했으나 같은 사고를 반복하지 않도록 위 영구 경로만 쓴다.
 
 ---
 
 ## 6. 사용자 결정 기록
 
-| 항목              | 결정                                                           | 일자       |
-| ----------------- | -------------------------------------------------------------- | ---------- |
-| focus indicator   | **2겹 ring**(1px 분리 띠 + 2px focus ring) — 문서 24 개정 필요 | 2026-08-11 |
-| 필터 적용 표시    | **배경 없음** + 배지 + `border/strong`                         | 2026-08-11 |
-| 뷰모드 선택 표시  | **surface/raised 세그먼트**(sunken 트랙 위)                    | 2026-08-11 |
-| 대체 폰트         | IBM Plex 사용, 완성 후 사용자가 Pretendard로 교체              | 2026-08-11 |
-| 강조 라벨         | `emphasis-label 14/20 · 600` **신규 composite** (§3.1 ⭑)       | 2026-08-11 |
-| 수치 표기         | **mono 폐기** — 배지=`metadata` / 비교수치=`metric-value`      | 2026-08-11 |
-| Text Style        | C1~C5 **소급 적용 완료**(222 노드). 앞으로 raw 지정 금지       | 2026-08-11 |
-| 스캐폴딩 라벨     | 문서 장치 라벨도 `metadata`(12/16·400) 준수                    | 2026-08-11 |
-| 판정 바 radius    | JudgementMarker 28×10 바 = `radius/full`(알약)                 | 2026-08-11 |
-| C3·C4 Dark        | DARK VERIFICATION 플레이트 추가 완료                           | 2026-08-11 |
-| 선택-채보 마커    | **D안** — 이름+레벨 묶음 폭에 맞춘 상단 액센트 바(높이 2)      | 2026-08-12 |
-| `View chart` 라벨 | **`채보 보기`** (짝 라벨 `플레이 영상`은 `05:223` 기승인)      | 2026-08-12 |
-| Dark 빈 자켓 슬롯 | **보류** — 대비 1.00 으로 사라지나 결정 유예 (R2 CONFLICT-17)  | 2026-08-12 |
+| 항목              | 결정                                                                                                                                                                                                                                                           | 일자       |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| focus indicator   | **2겹 ring**(1px 분리 띠 + 2px focus ring) — 문서 24 개정 필요                                                                                                                                                                                                 | 2026-08-11 |
+| 필터 적용 표시    | **배경 없음** + 배지 + `border/strong`                                                                                                                                                                                                                         | 2026-08-11 |
+| 뷰모드 선택 표시  | **surface/raised 세그먼트**(sunken 트랙 위)                                                                                                                                                                                                                    | 2026-08-11 |
+| 대체 폰트         | IBM Plex 사용, 완성 후 사용자가 Pretendard로 교체                                                                                                                                                                                                              | 2026-08-11 |
+| 강조 라벨         | `emphasis-label 14/20 · 600` **신규 composite** (§3.1 ⭑)                                                                                                                                                                                                       | 2026-08-11 |
+| 수치 표기         | **mono 폐기** — 배지=`metadata` / 비교수치=`metric-value`                                                                                                                                                                                                      | 2026-08-11 |
+| Text Style        | C1~C5 **소급 적용 완료**(222 노드). 앞으로 raw 지정 금지                                                                                                                                                                                                       | 2026-08-11 |
+| 스캐폴딩 라벨     | 문서 장치 라벨도 `metadata`(12/16·400) 준수                                                                                                                                                                                                                    | 2026-08-11 |
+| 판정 바 radius    | JudgementMarker 28×10 바 = `radius/full`(알약)                                                                                                                                                                                                                 | 2026-08-11 |
+| C3·C4 Dark        | DARK VERIFICATION 플레이트 추가 완료                                                                                                                                                                                                                           | 2026-08-11 |
+| 선택-채보 마커    | **D안** — 이름+레벨 묶음 폭에 맞춘 상단 액센트 바(높이 2)                                                                                                                                                                                                      | 2026-08-12 |
+| `View chart` 라벨 | **`채보 보기`** (짝 라벨 `플레이 영상`은 `05:223` 기승인)                                                                                                                                                                                                      | 2026-08-12 |
+| Dark 빈 자켓 슬롯 | **해결** — 1px `border/empty-slot`(§3.3 ⭑). Light 비가시·Dark 만 표시                                                                                                                                                                                          | 2026-08-13 |
+| 상세 자켓 크기    | **96×96** (리스트 64 / 그리드 173 과 별개)                                                                                                                                                                                                                     | 2026-08-12 |
+| 헤더 난이도 반복  | **제거** — 바로 아래 DifficultySelector 가 4개 전부 표시                                                                                                                                                                                                       | 2026-08-12 |
+| Real 없는 곡      | **칸 제거** — 3개로 채움 (비활성 잔여 칸 두지 않음)                                                                                                                                                                                                            | 2026-08-12 |
+| 긴 제목 맞추기    | **A안** — 예산(자켓 96) 안에 들어오는 **가장 큰** composite 선택: `page-title 24/32` → `section-title 20/28` → `component-title 16/24`. 아티스트는 `body-secondary` 고정. 폭 확장안은 번역 트리거 44 때문에 총합이 늘어 기각. **문서 24 개정 필요**(역할 확장) | 2026-08-13 |
 
 > **폰트 교체 전제 복구됨** — 이전에는 텍스트가 Text Style 을 참조하지 않아
 > `font/family/ko·ja·latin` 3개를 바꿔도 전파되지 않았다. 소급 적용으로 이제 동작한다.

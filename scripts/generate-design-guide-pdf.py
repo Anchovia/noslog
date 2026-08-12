@@ -761,7 +761,7 @@ def cover_story(anchors: dict[str, str]) -> list:
         Table(
             [[
                 Paragraph("<b>VERSION</b><br/>0.1", STYLES["cover_meta"]),
-                Paragraph("<b>DATE</b><br/>2026-08-11", STYLES["cover_meta"]),
+                Paragraph("<b>DATE</b><br/>2026-08-12", STYLES["cover_meta"]),
                 Paragraph("<b>LANGUAGE</b><br/>English", STYLES["cover_meta"]),
             ]],
             colWidths=[55 * mm, 55 * mm, 55 * mm],

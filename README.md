@@ -119,6 +119,11 @@ Block 6 downstream package는
 [NosLog 2.0 Design Guide v0.1 PDF](./output/pdf/noslog-2.0-design-guide-v0.1.pdf)입니다.
 과거 proposal·specimen·checklist로 완료된 블록을 다시 열지 않습니다.
 
+2026-08-12 사용자 결정에 따라 악곡 검색 결과의 개인 기록 hover/focus preview는
+`Superseded`되었습니다. 결과 카드는 입력 방식과 관계없이 악곡 정체성을 유지하고,
+개인 성과 상세는 적용 상태 요약 또는 악곡 상세에서 제공합니다. 이 정정은 완료된 여섯
+블록을 다시 열거나 chart viewer/editor 경계를 변경하지 않습니다.
+
 PDF에 추가하는 시각 자료는 외형만 보고 규범으로 승인하지 않습니다. 현재 Foundation
 권위와 고정된 upstream 원본을 일대일로 대조하고,
 `scripts/design-guide-visual-core-manifest.json` 및

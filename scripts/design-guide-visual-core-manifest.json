@@ -22,19 +22,19 @@
             "license": "ISC"
         },
         "atlassianMotion": {
-            "checkedOn": "2026-08-11",
+            "checkedOn": "2026-08-12",
             "snapshot": "reference-pages/atlassian-motion.html",
             "applyingSnapshot": "reference-pages/atlassian-applying-motion.html",
             "url": "https://atlassian.design/foundations/motion",
             "applyingUrl": "https://atlassian.design/foundations/motion/applying-motion",
-            "sha256": "448b5f4beb244f22ae5f7fe079e28063f49eb066b181056642829f6ea83fd507",
-            "applyingSha256": "0190d884a7737a2c17f8681c6f016fa02555224b91ffb2c7b6cd3a3284695c09"
+            "sha256": "accdf17502808a904279002047cbb67b9f395bce22ebe34db64db67a9ada5021",
+            "applyingSha256": "66ef8aa1ed89093829c4d1defff451fe61881d14f6b52310b3ed7035d6bae110"
         },
         "primerDataVisualization": {
-            "checkedOn": "2026-08-11",
+            "checkedOn": "2026-08-12",
             "snapshot": "reference-pages/primer-data-visualization.html",
             "url": "https://primer.style/product/ui-patterns/data-visualization/",
-            "sha256": "dfb6055c8b70080874e80c9707bad9c64907f79c9a111c676b86832e21c76cf2"
+            "sha256": "015183029d64cf2cb93999ba2085a460f93245a387a602e64d9ff764f58d1e7c"
         }
     },
     "claimGates": [
