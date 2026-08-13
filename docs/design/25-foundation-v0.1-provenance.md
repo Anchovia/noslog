@@ -121,6 +121,22 @@ Two later user decisions close measured gaps without reopening the source scale:
   line. The user approved `店舗`, `ご意見・報告`, and `Feedback` as concise destination
   copy. Smaller text, clipping, ellipsis, hidden destinations, and geometry changes
   made only to force one line remain rejected; two lines are the final reflow fallback.
+- Re-measured 2026-08-14 with each locale bound to its own font family. Exactly four
+  labels exceed the measured compact text slot at `14/20` and therefore take the fit
+  step: the Korean data-synchronization label, the Japanese chart-viewer and
+  feedback labels, and the English chart-viewer label. All four fit on one line at
+  `12/16`, so the approved concise-copy step is not reached at `320px`.
+- The first specimen additionally reduced the Japanese arcade label and the English
+  feedback label, which the measurement does not support: both fit on one line at
+  `14/20` with substantial room. They were restored to `14/20` under the standing rule
+  that the larger step returns whenever the measured cell permits it.
+- Cause of that error, recorded so it is not repeated: the Japanese and English
+  specimens carried Korean-locale text styles, so their labels were measured and drawn
+  in the Korean font. That font substitutes some kanji at a different advance width —
+  one two-character Japanese label measured half its true width — which makes any fit
+  conclusion drawn from it unreliable. Locale-specific styles are therefore a
+  measurement precondition, not only a rendering preference, and every text node in the
+  file was corrected to the style matching its own script.
 
 ## Neutral and focus provenance
 

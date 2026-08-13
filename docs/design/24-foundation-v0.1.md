@@ -102,6 +102,14 @@ of two lines is the final reflow fallback. Never resolve below `12px`, truncate,
 clip, hide, or change the icon, target, padding, row, column, or destination order to
 force one line. This exception does not create a general small-control role.
 
+The composite inventory contains no `12/16 · 500` or `12/16 · 600` entry, so this step
+is carried by two dedicated bounded styles rather than by raw type values or by
+`metadata`: one ordinary fit style at `12/16 · 500` and one current-destination fit
+style at `12/16 · 600`, each provided per locale so a later font-family change still
+propagates to them. Raw type values are not acceptable here, because a label that
+carries its size and family directly is silently skipped when the family variables are
+repointed. These two styles are valid only inside this exception.
+
 At a twelve-column page-layout container of at least `1056 CSS px`, `page-title` may
 step to `32/40 · 700` only when its governed region spans at least eight tracks or has
 at least `640 CSS px` of measured inline space and is not a `reading` composition.
