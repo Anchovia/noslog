@@ -117,6 +117,25 @@ There is no fluid interpolation, locale-specific size, or page-local title size.
 Do not use `2px` for ordinary layout spacing. Do not introduce arbitrary local values
 or use `48/64px` merely to make a sparse surface appear premium.
 
+### Edge icon-only control optical padding — approved 2026-08-13
+
+An icon-only control keeps its `44×44` mobile or `40×40` desktop target, so the icon
+sits inside that target with `(target − icon) / 2` of internal space on every side.
+When such a control is the first or last child of a container whose two edges are
+pinned, subtract that internal space from the container padding on that side so the
+icon reads as optically aligned with the opposite edge.
+
+- Both values stay on the spacing scale. `AppHeader` uses `16px` left and `8px` right
+  because its trailing `44` target holds a `24` icon (`10px` internal space): the icon
+  box then lands `18px` from the edge against the `17.6px` left text ink.
+- The declared padding may therefore be asymmetric on purpose. Record the reason,
+  because a symmetric declaration is what produces the visible imbalance here.
+- Do not reduce the padding below the point where the target itself touches the
+  container edge. `SearchField` keeps `8px` right padding for this reason: applying the
+  subtraction would leave `0`, and its optical error is only `4px`.
+- This corrects padding only. Never shrink the target, the icon, or the icon's own
+  internal space to make an edge look tighter.
+
 ### Page alignment
 
 | Tier         | Query-container width | Columns | Gutter |   Minimum inline margin |
