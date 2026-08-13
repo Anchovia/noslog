@@ -46,7 +46,7 @@ internationalization references, and the user-approved decision record`
 This brief is authoritative for the approved Profile behavior, content hierarchy,
 privacy meaning, responsive contract, and states. Exact typography, color, spacing,
 radius, elevation, chart styling, avatar treatment, control dimensions, grid tracks,
-and content-driven transition values remain Foundation and downstream Claude Design
+and content-driven transition values remain Foundation and active high-fidelity design
 work. Later visual decisions may refine expression but must not remove or reinterpret
 this product contract.
 
@@ -846,14 +846,14 @@ Validate at minimum:
 
 ## Handoff Boundary
 
-Claude Design may determine the final type scale, visual emphasis, surfaces, chart
+The active high-fidelity design stage may determine the final type scale, visual emphasis, surfaces, chart
 appearance, column proportions, grid tracks, spacing, avatar fallback, country-marker
 treatment, control styling, responsive transition points, and motion after Foundation
 approval. It must preserve the approved source hierarchy, scoped Basic/Recital
 behavior, metric meanings, privacy groups, five-item previews, complete-list access,
 sync trust context, states, accessibility, localization, and acceptance criteria.
 
-The later Codex implementation session must compare the Claude output against this
+The later Codex implementation session must compare the final approved Figma output against this
 brief. It must request a guide or design revision before implementing any result that
 reintroduces the NosLog join date, exposes hidden content, treats Basic/Recital as a
 global page mode, fabricates Recital Rating, overlays Grd and Rating, caps retained

@@ -49,7 +49,7 @@ This brief is authoritative for the Exam family's content, scoring meaning,
 interaction, certification, privacy, responsive behavior, states, and acceptance
 criteria. Exact typography, color, spacing, radius, elevation, stage-card treatment,
 control dimensions, grid tracks, proof-preview styling, and content-driven transition
-values remain Foundation and downstream Claude Design work. Later visual work may
+values remain Foundation and active high-fidelity design work. Later visual work may
 refine expression but must not remove or reinterpret this product contract.
 
 ## Purpose
@@ -219,7 +219,7 @@ analysis and proof are subordinate utilities, not competing dashboard summaries.
 - Use one accessible exclusive mode control. If tabs are used, implement complete tab
   keyboard and controlled-panel semantics.
 - Use one compact Grade/Event selector such as a select, combobox, or popover. Its
-  exact visual form remains Foundation/Claude Design work.
+  exact visual form remains Foundation/active high-fidelity design work.
 - Options communicate Grade/Event identity and concise eligibility or achievement
   state without turning the control into a wall of badges.
 - Do not hide official Exams that the current user cannot yet enter. Eligibility
@@ -821,7 +821,7 @@ Validate at minimum:
 
 ## Handoff Boundary
 
-Claude Design may determine final type scale, visual emphasis, surface treatment,
+The active high-fidelity design stage may determine final type scale, visual emphasis, surface treatment,
 mode-control appearance, selector pattern, stage-card anatomy, cumulative connectors,
 column proportions, grid tracks, gaps, proof-preview styling, status treatment,
 responsive transition points, and motion after Foundation approval. It must preserve
@@ -829,7 +829,7 @@ the official-first hierarchy, mode/scoring distinctions, permanent Event meaning
 supported-analysis boundary, one-image evidence criteria, private proof lifecycle,
 Grade inheritance, localization, accessibility, and acceptance criteria.
 
-The later Codex implementation session must compare the Claude output against this
+The later Codex implementation session must compare the final approved Figma output against this
 brief. It must request a guide or design revision before implementing any design that
 combines Exams with Tier/Bingo, exposes a button wall, hides official requirements,
 predicts a pass from independent bests, fabricates Recital analysis, archives permanent

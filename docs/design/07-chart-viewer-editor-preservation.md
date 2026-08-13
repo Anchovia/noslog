@@ -69,7 +69,7 @@ page, stop and ask the user to reopen that exact sub-scope.
 
 ## Downstream handoff
 
-- Claude Design must not redesign, recreate, annotate as a new visual target, or use
+- The active high-fidelity design stage must not redesign, recreate, annotate as a new visual target, or use
   either locked experience as an ordinary-UI Foundation specimen.
 - The future implementation session must leave the relevant viewer/editor files and
   runtime behavior unchanged except for an independently authorized maintenance fix.

@@ -46,7 +46,7 @@ references; and the user-approved decision record`
 
 This brief is authoritative for settings membership, information order, behavior,
 ownership, states, responsive adaptation, accessibility, and acceptance criteria.
-Claude Design may define the final visual composition within the later approved
+The active high-fidelity design stage may define the final visual composition within the later approved
 Foundation, but it must not change which settings exist, how they are saved, who can
 use them, or the consequences of sensitive actions.
 
@@ -804,7 +804,7 @@ localized responsive interactions.
 
 ## Handoff Boundary
 
-Claude Design must preserve the approved categories, order, authentication scope,
+The active high-fidelity design stage must preserve the approved categories, order, authentication scope,
 immediate versus explicit-save boundaries, profile concepts, positive privacy meaning,
 Discord constraints, and deletion safeguards. It may determine final typography,
 spacing, component styling, and content-driven transition within the future approved

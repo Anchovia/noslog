@@ -47,7 +47,7 @@ This brief is authoritative for the Arcade family's product meaning, content,
 navigation, data semantics, interaction, privacy, responsive behavior, states, and
 acceptance criteria. Exact typography, color, spacing, radius, elevation, map style,
 marker artwork, sheet geometry, card treatment, control dimensions, grid tracks, and
-content-driven transition values remain Foundation and downstream Claude Design work.
+content-driven transition values remain Foundation and active high-fidelity design work.
 Later visual work may refine expression but must not remove or reinterpret this
 product contract.
 
@@ -913,7 +913,7 @@ area` preserves control and prevents unexpected churn.
 
 ## Handoff Boundary
 
-Claude Design may determine final type scale, visual hierarchy, surfaces, map style,
+The active high-fidelity design stage may determine final type scale, visual hierarchy, surfaces, map style,
 cluster and marker artwork, preference legend, sheet/panel geometry, list-card anatomy,
 action styling, cabinet-row composition, photo crops, spacing, grid tracks, responsive
 transition values, and motion after Foundation approval. It must preserve the shared
@@ -922,7 +922,7 @@ meaning, stable detail navigation, approved information order, per-cabinet state
 semantics, verification/report lifecycle, limited photo policy, international data
 meaning, accessibility, and acceptance criteria.
 
-The future Codex implementation session must compare Claude output with this brief.
+The future Codex implementation session must compare the final approved Figma output with this brief.
 It must request a guide or design revision before implementing any result that splits
 map/list truth, auto-prompts location, defaults to popularity, exposes small preference
 counts, uses region-relative bubbles, implies live occupancy, collapses cabinet

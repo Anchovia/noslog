@@ -58,7 +58,7 @@ production-service references; and the user-approved decision record`
 
 This brief governs the NosLog 2.0 privacy experience and the consistency contract
 between what the interface says and what the product actually processes. It is not a
-substitute for legal review. Claude Design may define the final visual composition
+substitute for legal review. The active high-fidelity design stage may define the final visual composition
 inside the approved Foundation, but it must not simplify away a required disclosure,
 invent a data practice, imply consent where no valid consent occurred, hide a public
 consequence, or present a release blocker as resolved.
@@ -635,7 +635,7 @@ contact` for every user; neither visually outranks the policy itself.
 - Use wide space for navigation, retention/provider comparison, and scanning—not for
   decorative empty panels or marketing content.
 - Exact container width, column proportions, gaps, and sticky transition remain later
-  Foundation and Claude Design decisions, tested with English's longest content.
+  Foundation and active high-fidelity design decisions, tested with English's longest content.
 - Keep ordinary shared Header and Footer alignment while allowing the policy body to
   use an appropriate editorial container.
 
@@ -946,7 +946,7 @@ verification.
 
 ## Handoff Boundary
 
-Claude Design must preserve the at-a-glance/full-policy relationship, section order,
+The active high-fidelity design stage must preserve the at-a-glance/full-policy relationship, section order,
 public-data consequences, verified non-collection statements, Settings and email
 control paths, age rule, version history, accessible in-page navigation, complete
 compact content, wide editorial adaptation, print behavior, and every visible release

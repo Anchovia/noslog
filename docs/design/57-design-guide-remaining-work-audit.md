@@ -4,7 +4,7 @@
 
 - Status: `Approved current scope authority`
 - Language: English
-- Last updated: 2026-08-12
+- Last updated: 2026-08-13
 - Mirrors: the six-block table in the root `README.md`
 - Foundation authority: [document 24](./24-foundation-v0.1.md)
 - Foundation provenance: [document 25](./25-foundation-v0.1-provenance.md)
@@ -30,8 +30,8 @@ percentage is permitted until the user approves both a denominator and method.
   [document 07](./07-chart-viewer-editor-preservation.md).
 - There is no pending viewer/editor redesign, Foundation migration, component,
   specimen, responsive pass, accessibility reinterpretation, or contribution flow.
-- Final high-fidelity pages and production application implementation belong to the
-  later Claude Design and Codex stages, respectively.
+- Final high-fidelity pages belong to the current user-authorized Claude design stage;
+  production application implementation remains a later, separate Codex stage.
 - Final logo drawing is downstream visual design, not a missing Foundation decision.
 
 ## Fixed six-block baseline
@@ -43,12 +43,12 @@ percentage is permitted until the user approves both a denominator and method.
 |   3 | Motion / Reduced motion                 | `Complete` | Atlassian exact duration/easing ownership and instant meaningful reduced mode approved                                                                                     |
 |   4 | Data-visualization anatomy              | `Complete` | GitHub Primer ordinary-UI anatomy, exact-value access, non-color cues, and semantic-table floor approved                                                                   |
 |   5 | Foundation promotion and reusable UI    | `Complete` | Foundation v0.1, Pretendard JP delivery, and the lean reusable ordinary-UI aliases and patterns in document `63` are approved                                              |
-|   6 | Downstream handoff and milestone export | `Complete` | Document `64` consolidates screen requirements, mapping, QA, Claude Design boundaries, and the approved English ED-03 milestone export                                     |
+|   6 | Downstream handoff and milestone export | `Complete` | Document `64` consolidates screen requirements, mapping, QA, downstream-design boundaries, and the approved English ED-03 milestone export                                 |
 
 No top-level design-guide block remains. Research, candidates, specimens, browser
 checks, documentation, and approval gates inside a block are not additional blocks or
-“next tasks.” Privacy/legal/production-evidence blockers and the later Claude Design
-and implementation stages are not missing design-guide blocks.
+“next tasks.” Privacy/legal/production-evidence blockers, the active high-fidelity
+design stage, and later implementation are not missing design-guide blocks.
 
 ## Completed scope that must not be reopened by stale text
 
@@ -91,7 +91,7 @@ Block 6 produced one coherent downstream package:
 - Foundation and reusable-pattern implementation mapping;
 - accessibility, localization, state, responsive, and browser acceptance matrix;
 - explicit chart viewer/editor preservation instruction;
-- Claude Design prompt/handoff boundaries and conflict escalation rule;
+- downstream design prompt/handoff boundaries and conflict escalation rule;
 - editable guide index and one English versioned PDF using the approved
   `ED-03 · GitHub Primer` editorial system.
 
@@ -118,15 +118,17 @@ only through Git history.
 
 ## Decision log
 
-| ID       | Decision                                                                                                                       | Status                             |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------- |
-| `RWA-01` | Use exactly six top-level blocks and never convert internal steps into more blocks.                                            | `Approved correction`              |
-| `RWA-02` | Treat Blocks 1–5 as complete and locked unless a precise failure or user decision reopens one.                                 | `Approved`                         |
-| `RWA-03` | Keep the complete viewer/editor outside all remaining work.                                                                    | `Approved absolute boundary`       |
-| `RWA-04` | Report no completion percentage without an approved denominator and method.                                                    | `Approved correction`              |
-| `RWA-05` | Consolidate active design authority to English-only current documents and rely on Git for superseded evidence.                 | `Approved — 2026-08-10`            |
-| `RWA-06` | Use official Pretendard JP `1.3.9` variable dynamic subsets as version-pinned, first-party self-hosted assets.                 | `Approved — 2026-08-11`            |
-| `RWA-07` | Promote the approved document `24` contracts together as the Foundation v0.1 normative authority.                              | `Approved — 2026-08-11`            |
-| `RWA-08` | Approve the lean reusable ordinary-UI aliases and patterns in document `63` and complete Block 5.                              | `Approved — 2026-08-11`            |
-| `RWA-09` | Approve document `64`, one English ED-03 milestone PDF, and complete Block 6 and the six-block guide.                          | `Approved — 2026-08-11`            |
-| `RWA-10` | Supersede the Music-result personal-record hover/focus preview with stable cross-input identity; keep all six blocks complete. | `Approved correction — 2026-08-12` |
+| ID       | Decision                                                                                                                                     | Status                             |
+| -------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
+| `RWA-01` | Use exactly six top-level blocks and never convert internal steps into more blocks.                                                          | `Approved correction`              |
+| `RWA-02` | Treat Blocks 1–5 as complete and locked unless a precise failure or user decision reopens one.                                               | `Approved`                         |
+| `RWA-03` | Keep the complete viewer/editor outside all remaining work.                                                                                  | `Approved absolute boundary`       |
+| `RWA-04` | Report no completion percentage without an approved denominator and method.                                                                  | `Approved correction`              |
+| `RWA-05` | Consolidate active design authority to English-only current documents and rely on Git for superseded evidence.                               | `Approved — 2026-08-10`            |
+| `RWA-06` | Use official Pretendard JP `1.3.9` variable dynamic subsets as version-pinned, first-party self-hosted assets.                               | `Approved — 2026-08-11`            |
+| `RWA-07` | Promote the approved document `24` contracts together as the Foundation v0.1 normative authority.                                            | `Approved — 2026-08-11`            |
+| `RWA-08` | Approve the lean reusable ordinary-UI aliases and patterns in document `63` and complete Block 5.                                            | `Approved — 2026-08-11`            |
+| `RWA-09` | Approve document `64`, one English ED-03 milestone PDF, and complete Block 6 and the six-block guide.                                        | `Approved — 2026-08-11`            |
+| `RWA-10` | Supersede the Music-result personal-record hover/focus preview with stable cross-input identity; keep all six blocks complete.               | `Approved correction — 2026-08-12` |
+| `RWA-11` | Transfer the active high-fidelity Figma stage from Claude to Codex without reopening the six completed guide blocks or implementation stage. | `Approved correction — 2026-08-13` |
+| `RWA-12` | Integrate the approved focus, type, compact-difficulty, empty-image, and Music-detail precision corrections into current authority.          | `Approved correction — 2026-08-13` |

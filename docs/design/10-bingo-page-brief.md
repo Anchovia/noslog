@@ -41,7 +41,7 @@ and the user-approved decision record`
 This brief is authoritative for Bingo purpose, content hierarchy, state meaning,
 interaction, localization, responsive behavior, and acceptance. Exact typography,
 color, spacing, radius, elevation, cover treatment, control dimensions, grid gaps,
-and content-driven transition values remain Foundation and downstream Claude Design
+and content-driven transition values remain Foundation and active high-fidelity design
 work. Later visual work may refine expression but must not reinterpret this contract.
 
 ## Purpose
@@ -663,7 +663,7 @@ Validate at minimum:
 - **Keep desktop inside a fixed mobile-width shell — Rejected:** `390px` is a review
   canvas, not a desktop layout width.
 - **Treat the structural discussion example as final high fidelity — Rejected:** it
-  communicated hierarchy only; Foundation and Claude Design own final visual form.
+  communicated hierarchy only; Foundation and the active high-fidelity design stage own final visual form.
 
 ## Decision Log
 
@@ -688,11 +688,11 @@ Validate at minimum:
 | BINGO-17 | Mission instructions follow page locale independently from the Music Detail-only translation disclosure      | `Approved` |
 | BINGO-18 | Missing approved KO/EN mission text falls back to verified Japanese with `lang="ja"`                         | `Approved` |
 | BINGO-19 | Compact layouts reflow through 320 CSS px; wide layouts use added catalog and board/mission comparison space | `Approved` |
-| BINGO-20 | Final high-fidelity styling remains Foundation and Claude Design work within this product contract           | `Approved` |
+| BINGO-20 | Final high-fidelity styling remains Foundation and active design-stage work within this product contract     | `Approved` |
 
 ## Handoff Boundary
 
-Claude Design may determine final typography, visual emphasis, surfaces, cover and
+The active high-fidelity design stage may determine final typography, visual emphasis, surfaces, cover and
 mini-board treatment, card proportions, column tracks, gaps, selected/check/chance
 styling, control appearance, dialog appearance, responsive transition points, and
 motion after Foundation approval. It must preserve the permanent catalog, manual-only
@@ -700,7 +700,7 @@ truth model, signed-out omissions, reward meanings, central board, synchronized
 mission structure, reset boundary, localization provenance and fallback, state
 contract, accessibility, and acceptance criteria.
 
-The later Codex implementation session must compare the Claude output against this
+The later Codex implementation session must compare the final approved Figma output against this
 brief. It must request a guide or design revision before implementing any design that
 invents live game state, auto-completes missions, hides public reference content,
 shows fake signed-out progress, merges unlock and full-board meaning, adds attempt

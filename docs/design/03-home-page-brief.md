@@ -29,7 +29,7 @@
 - **Superseded:** Replaced by a later approved decision and retained for history.
 
 This brief defines required content, behavior, states, and responsive intent. It does
-not authorize Claude Design or a later Codex implementation session to invent missing
+not authorize the active high-fidelity design stage or a later Codex implementation session to invent missing
 product decisions.
 
 ## Page Purpose and User Context

@@ -4,7 +4,7 @@
 
 - Status: `Approved — Foundation v0.1 normative authority`
 - Language: English
-- Last updated: 2026-08-11
+- Last updated: 2026-08-13
 - Scope: default Foundation for eligible ordinary NosLog 2.0 UI
 - Provenance and decision history:
   [document 25](./25-foundation-v0.1-provenance.md)
@@ -69,6 +69,7 @@ or Git history.
 | `component-title`  | `16/24 · 600` | Proportional | Dialog, drawer, panel, or grouped-module identity                                |
 | `entity-title`     | `16/24 · 600` | Proportional | Ordinary list/card entity identity                                               |
 | `entity-companion` | `14/20 · 400` | Proportional | Optional localized/read identity in the approved Music Detail popover            |
+| `emphasis-label`   | `14/20 · 600` | Proportional | Compact message title or persistent selected label in an approved component      |
 | `body`             | `16/24 · 400` | Proportional | Ordinary reading, explanation, and system-message copy                           |
 | `body-secondary`   | `14/20 · 400` | Proportional | Concise supporting context, never the only critical meaning                      |
 | `control`          | `14/20 · 500` | Proportional | Visible action, choice, field-label, or navigation label                         |
@@ -79,6 +80,17 @@ or Git history.
 Focused entities use `page-title` while retaining correct HTML heading semantics.
 Entered and selected field values use `body`, while the label/action uses `control`.
 Only metric roles enable tabular figures by default.
+
+`emphasis-label` is not a general-purpose bold-body role. Use it only where the
+component contract needs a compact non-color distinction, including an approved
+selected label or `StatusMessage` title. Ordinary controls remain `control`.
+
+Music Detail has one approved content-fit exception for its `96px` identity row.
+Choose the largest composite that keeps the original title, the `4px` title-to-artist
+gap, and artist text within the row: `page-title`, then `section-title`, then
+`component-title`. Preserve the title's heading semantics, translation trigger, and
+full accessible name. This measured ladder is not a locale-specific assignment or
+permission to shrink other page titles.
 
 At a twelve-column page-layout container of at least `1056 CSS px`, `page-title` may
 step to `32/40 · 700` only when its governed region spans at least eight tracks or has
@@ -159,15 +171,21 @@ decorative emphasis. Disabled information needs an available explanation elsewhe
 
 ### Neutral boundaries — `NB-A`
 
-| Role             | Light     | Dark      | Contract                                                                                  |
-| ---------------- | --------- | --------- | ----------------------------------------------------------------------------------------- |
-| `divider`        | `#E1E1E1` | `#323232` | Decorative rhythm only                                                                    |
-| `border-subtle`  | `#DADADA` | `#393939` | Nonessential framing and disabled boundary                                                |
-| `border-default` | `#C6C6C6` | `#444444` | Ordinary edge when another cue already identifies the object                              |
-| `border-strong`  | `#717171` | `#8A8A8A` | Necessary neutral control or graphic boundary that must independently remain identifiable |
+| Role                | Light                        | Dark                        | Contract                                                                                  |
+| ------------------- | ---------------------------- | --------------------------- | ----------------------------------------------------------------------------------------- |
+| `divider`           | `#E1E1E1`                    | `#323232`                   | Decorative rhythm only                                                                    |
+| `border-subtle`     | `#DADADA`                    | `#393939`                   | Nonessential framing and disabled boundary                                                |
+| `border-default`    | `#C6C6C6`                    | `#444444`                   | Ordinary edge when another cue already identifies the object                              |
+| `border-strong`     | `#717171`                    | `#8A8A8A`                   | Necessary neutral control or graphic boundary that must independently remain identifiable |
+| `border/empty-slot` | `surface/sunken` → `#E9E9E9` | `border-subtle` → `#393939` | `1px` inside edge for an artwork or image slot only while no image is available           |
 
 The quiet roles are intentionally below `3:1` on some surfaces and must never become
 the sole necessary cue. Do not outline every Dark container or selected row.
+`border/empty-slot` is a bounded appearance alias, not a new neutral primitive. Its
+Light edge intentionally disappears into the approved sunken fill; its Dark edge
+keeps an otherwise canvas-matching empty jacket or avatar slot locatable. Remove the
+edge when real imagery fills the slot, and keep the approved icon/text fallback as
+the semantic cue.
 
 ### Neutral interaction — `NI-A`
 
@@ -186,20 +204,45 @@ Spectrum component-family recipes:
 
 Selection requires programmatic state plus a persistent non-fill cue such as a
 checkmark, current indicator, or explicit label. Hover and selection do not add a
-white Dark-theme outline or automatically promote to `border-strong`.
+white Dark-theme outline and do not promote to `border-strong` automatically.
 
-### Keyboard focus — `FI-C`, Fluent 2
+**Approved exception — segmented selection, 2026-08-13.** Where an approved segmented
+control would otherwise identify its selected segment by fill alone, that selected
+segment carries a `1px` inside `border-strong` boundary as its persistent non-fill
+cue. This is a named audited exception, not an automatic promotion: it covers the
+selected segment of `ViewModeSwitch` and `DifficultySelector` only, keeps the approved
+`surface/raised` selected fill on the `surface/sunken` track, and changes no hover or
+pressed recipe. Measured non-text contrast against the selected fill is `4.88:1`
+Light and `4.61:1` Dark, replacing a fill-only difference of `1.21:1` and `1.19:1`.
+Any further segmented family needs its own decision rather than inheriting this one.
 
-- Light focus color: `#000000`.
-- Dark focus color: `#FFFFFF`.
-- Width: `2px`.
-- Geometry: zero-gap perimeter rendered outside the focused object with a
-  pseudo-element extent of `-2px`.
+### Keyboard focus — `FI-C` polarity with single-border geometry
+
+Revised 2026-08-13 by user decision. The former two-layer geometry is `Superseded`;
+see `FOCUS-1B` in document `22`.
+
+- Light focus color: `#000000`. Dark focus color: `#FFFFFF`.
+- Geometry: **one `1px` inside border on the focused control itself**. Stroke alignment
+  is inside, so a focused control never changes size, position, or surrounding layout,
+  and no ring is drawn outside the object.
+- A control that already carries a resting `1px` boundary keeps that boundary and only
+  exchanges its color for the focus color, exactly as the invalid state exchanges it
+  for `feedback/destructive-border`.
+- A control with no resting boundary gains the `1px` focus border only while focused.
+  Its resting appearance is unchanged.
+- The focus border must reach at least `3:1` against the surface it is drawn on. Where
+  the focus color cannot (a filled control such as `RPA-A` primary), use the approved
+  on-fill color for that surface instead of the polarity color.
 - Show only for keyboard-visible focus; pointer focus does not leave a persistent
-  outline.
-- Do not recolor the component, selection, identity, or semantic state.
-- In forced colors, use the system `Highlight` color and preserve a visible perimeter.
+  border.
+- Do not recolor the component, selection, identity, or semantic state beyond that
+  single boundary.
+- In forced colors, use system `Highlight` for the focus border.
 - Prevent clipping at scroll, rounded, sticky, and frame boundaries.
+
+Known consequence recorded with the decision: a `1px` color-only indicator satisfies
+WCAG 2.2 SC 2.4.7 but not the `2px` minimum in SC 2.4.13. The user accepted this
+after review, preferring a single border consistent with ordinary state coloring.
 
 ## Identity and primary action
 
@@ -276,6 +319,12 @@ repeated-scanning ordinary DOM UI. Names, levels, order, and pattern/selected cu
 remain visible. Do not color difficulty text, backgrounds, containers, selection,
 focus, feedback, or actions.
 
+The approved compressed result marker is exactly `20×20px`: a `12×2px`
+`radius-full` difficulty-color line, a `2px` optical gap, and a neutral `metadata`
+level value. It has no fill or container. Four markers use fixed
+Normal → Hard → Expert → Real order with `4px` gaps for a total `92px` group. The
+number and fixed order remain the non-color cues.
+
 ## Local data color — `LD-03`, SAP Fiori Horizon
 
 Use exact `sap_horizon` / `sap_horizon_dark` chart tokens.
@@ -343,6 +392,28 @@ Under `prefers-reduced-motion: reduce`, remove nonessential translate/scale/rota
 parallax, stagger, and auto-scrolling motion rather than slowing it. Apply visible and
 programmatic state immediately. Replace spinner motion with a static cue, persistent
 localized busy text, and `aria-busy`.
+
+### Pressed feedback scale — approved 2026-08-13
+
+A pressed small control uses `transform: scale(0.98)` on the existing `100ms`
+`Pressed feedback` row (`out.practical` on press, `in.practical` on release). The
+constant is `motion/press-scale`.
+
+- This is a transform, so the control's box, layout, and surrounding flow do not
+  change. Do not implement the reduced footprint as a layout size.
+- Eligible: small controls only — buttons, icon-only buttons, and page-number
+  controls. Do not scale list rows, grid cards, tables, panels, or page regions.
+- Under `prefers-reduced-motion: reduce` the scale is removed with the rest of
+  nonessential transforms. `Neutral` and `Ghost` still change fill
+  (`interaction/hover` to `interaction/selected-pressed`); `RPA-A` primary and the
+  destructive action then have no pressed change, which is accepted.
+- Why a NosLog-local constant: `primary/hover` already sits at `#131313`, one step from
+  the end of the Spectrum neutral ramp, so every remaining step differs from hover by
+  only `1.02:1` to `1.17:1`. The destructive red ramp is equally tight at `1.26:1`.
+  Colour alone cannot express pressed for those two styles, and the approved motion
+  source publishes no press-scale token, so the amount is recorded here rather than
+  invented per component. `primary/pressed` and
+  `feedback/destructive-border-pressed` remain as the reduced-motion residue only.
 
 ## Ordinary data visualization — `DV-05`, GitHub Primer
 

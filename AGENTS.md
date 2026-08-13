@@ -203,25 +203,27 @@ scope.
 
 ## NosLog 2.0 design-session scope
 
-This session produces the complete authoritative NosLog 2.0 design guide. It does
-not produce the final high-fidelity page suite or implement the redesigned app.
+The authoritative NosLog 2.0 design guide is complete. The current user-authorized
+stage continues the final high-fidelity Figma design in Claude from the existing
+downstream work; it does not implement the redesigned app.
 
 Use this delivery pipeline:
 
-1. this Codex session completes and packages the guide;
-2. Claude Design creates the final high-fidelity website and Figma design within
-   the guide's approved rules;
-3. a later Codex implementation session uses both sources to implement and verify
+1. the completed guide package remains the product and design-system authority;
+2. the current Claude design session creates and verifies the final high-fidelity
+   website and Figma design within the guide's approved rules;
+3. a later, separate Codex implementation session uses both sources to implement and verify
    NosLog 2.0.
 
 The guide governs product behavior, hierarchy, accessibility, localization,
-responsive rules, states, and implementation constraints. Claude Design becomes
+responsive rules, states, and implementation constraints. The approved downstream Figma design becomes
 the visual and layout source only within those rules. If a downstream design
 conflicts with the guide or exposes an unresolved material decision, report it and
 obtain approval instead of inventing an interpretation.
 
-Codex may create guide specimens, diagrams, or annotated examples only when they
-are needed to explain or validate a rule. Do not expand them into a final page suite.
+The completed guide remains limited to normative specimens and annotated examples.
+The separately identified downstream Figma artifact may now expand into the final
+page suite because the user explicitly authorized the current design stage.
 
 ## Design working principles
 
@@ -305,8 +307,9 @@ viewer/editor specimens.
 - Keep only current authority and the minimum normative specimens needed to make a
   rule unambiguous. Git history preserves superseded comparisons; do not keep stale
   copies in the active guide tree.
-- Use Figma for variables, components, patterns, templates, or annotated examples
-  only when necessary. Leave the final page suite to Claude Design.
+- Keep guide-owned Figma material limited to variables, components, patterns,
+  templates, or annotated examples. Build the final page suite only in the explicitly
+  identified downstream Figma artifact during the authorized design stage.
 - The PDF is a versioned distribution artifact, not the editable source of truth.
 - Do not create empty placeholder documents or components.
 - A visual plate is not trustworthy merely because it looks plausible. Trace every

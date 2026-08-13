@@ -4,7 +4,7 @@
 
 - Status: `Approved — Block 6 complete`
 - Language: English canonical source
-- Last updated: 2026-08-12
+- Last updated: 2026-08-13
 - Milestone: `NosLog 2.0 Design Guide v0.1`
 - Scope authority: [document 57](./57-design-guide-remaining-work-audit.md)
 - Foundation authority: [document 24](./24-foundation-v0.1.md)
@@ -47,11 +47,11 @@ revision when a material conflict remains.
 
 ## Three-stage delivery boundary
 
-| Stage                     | Owner               | Required result                                                                                                                      | Prohibited expansion                                                                     |
-| ------------------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------- |
-| Guide packaging           | This Codex session  | Complete editable authority, downstream index, QA contract, and versioned milestone export                                           | Final page suite or production implementation                                            |
-| High-fidelity design      | Claude Design       | Final website and Figma design inside the approved product, Foundation, state, responsive, accessibility, and localization contracts | New product behavior, omitted required state, viewer/editor redesign, or unsourced token |
-| Production implementation | Later Codex session | Map the approved guide and Claude output to the existing stack, code, data, and verified browser behavior                            | Silently resolving guide/design conflicts or changing the locked experiences             |
+| Stage                     | Owner                        | Required result                                                                                                                                        | Prohibited expansion                                                                     |
+| ------------------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------- |
+| Guide packaging           | Completed Codex guide stage  | Complete editable authority, downstream index, QA contract, and versioned milestone export                                                             | Final page suite or production implementation                                            |
+| High-fidelity design      | Current Claude design stage  | Continue the existing `NosLog v2.0.0` Figma file inside the approved product, Foundation, state, responsive, accessibility, and localization contracts | New product behavior, omitted required state, viewer/editor redesign, or unsourced token |
+| Production implementation | Later separate Codex session | Map the approved guide and final Figma output to the existing stack, code, data, and verified browser behavior                                         | Silently resolving guide/design conflicts or changing the locked experiences             |
 
 ## Active source index
 
@@ -80,7 +80,7 @@ downstream design output and the acceptance risk that must remain visible.
 | Music and Chart discovery     | `/[locale]/music` with Music or Chart scope                                         | [04](./04-shared-discovery-page-brief.md)                                                    | One shared search surface, scope-aware results, stable Music-card identity, staged compact filters, visible wide refinement, explicit continuation | URL/history restoration, exact filter logic, no hover/focus record substitution, IME timing, finite measured timeout, no infinite scroll, direct viewer entry without target changes |
 | Music detail                  | `/[locale]/music/[index]/[difficulty]`                                              | [05](./05-music-detail-page-brief.md)                                                        | Stable Music/chart context, four content areas, resource actions, record/ranking/tier/evaluation and community evidence                            | Atomic target state, freshness/retry rules, exact score/tie/tier meanings, eligibility, semantic tables, return focus, viewer link only                                              |
 | Tier planning                 | `/[locale]/tiers`                                                                   | [06](./06-tier-list-page-brief.md)                                                           | Mode/goal hierarchy, band navigation, staged compact filters, compact/detailed result presentations                                                | Official/community separation, restorable state, exact per-chart context, no voting or automatic reordering inside Tier cards                                                        |
-| Chart viewer and editor       | Existing routes and implementation only                                             | [07](./07-chart-viewer-editor-preservation.md)                                               | No new Claude Design screen, specimen, component, annotation, or Foundation application                                                            | Preserve entire page, DOM, controls, accessibility, responsive behavior, renderers, palettes, geometry, animation, audio, and editor model                                           |
+| Chart viewer and editor       | Existing routes and implementation only                                             | [07](./07-chart-viewer-editor-preservation.md)                                               | No new high-fidelity screen, specimen, component, annotation, or Foundation application                                                            | Preserve entire page, DOM, controls, accessibility, responsive behavior, renderers, palettes, geometry, animation, audio, and editor model                                           |
 | Global rankings               | `/[locale]/rankings`                                                                | [08](./08-global-rankings-page-brief.md)                                                     | Mode/metric/region hierarchy, integrated player identity, exact values, conditional personal position, 25-row pagination                           | Shared-rank semantics, population truth, semantic table relationships, responsive priority, current-user context without duplication                                                 |
 | Public profile                | `/[locale]/profile/[id]` plus complete Best/Recent destinations                     | [09](./09-profile-page-brief.md)                                                             | Public performance identity, mode-scoped summary, progress, five-item previews, full-list access, owner sync context, public-safe share            | Five privacy groups, no fabricated Recital Rating, exact retention, cache invalidation, hidden-state and owner/public separation                                                     |
 | Bingo                         | `/[locale]/bingo`, `/[locale]/bingo/[id]`                                           | [10](./10-bingo-page-brief.md)                                                               | Permanent catalog, central 5×5 board, synchronized mission list, reward meaning, signed-in manual completion and reset                             | No live-state fabrication or automatic completion, public signed-out reference, checkbox semantics, save rollback, localized mission provenance                                      |
@@ -96,7 +96,7 @@ downstream design output and the acceptance risk that must remain visible.
 
 ## Foundation application contract
 
-Claude Design and later implementation must:
+The active design stage and later implementation must:
 
 1. map every ordinary Light, Dark, and System appearance to the exact semantic roles
    in document `24`;
@@ -205,7 +205,7 @@ recorded in a Page Brief remain authoritative for that exact pattern.
 ## State and interaction acceptance matrix
 
 Each family must cover only applicable states, but no required state may be omitted
-from Claude Design merely because implementation will occur later.
+from high-fidelity design merely because implementation will occur later.
 
 | State class             | Required evidence                                                                                                                                                |
 | ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -275,13 +275,14 @@ records evidence for:
 The cancelled user chart-contribution proposal is not a blocker, screen, component,
 legal-copy task, or implementation task.
 
-## Claude Design handoff
+## Active high-fidelity design handoff
 
-Claude Design must produce the final high-fidelity website and Figma design, including
+The current Claude design stage continues the existing `NosLog v2.0.0` Figma file
+(`cVbWCxhkfxFfHmAKLCyKrD`) and must produce the final high-fidelity website design, including
 the applicable ordinary page families, required states, content-driven compact and
 wide adaptations, reusable responsibilities, and Foundation variables/components.
 
-For every page family, Claude Design must:
+For every page family, the active design stage must:
 
 1. cite the governing Page Brief and preserve its source order, hierarchy, action,
    state, domain, privacy, and responsive contract;
@@ -293,7 +294,7 @@ For every page family, Claude Design must:
    than inventing a product rule; and
 6. report any conflict or missing required state before finalizing the affected design.
 
-Claude Design must not:
+The active design stage must not:
 
 - use the legacy NOSTORY Figma as current authority;
 - copy the integrated regression harness as page composition;
@@ -309,7 +310,7 @@ Before coding, the later Codex session must:
 
 1. reread root `AGENTS.md`, `README.md`, this document, documents `07`, `22`, `24`,
    `25`, `57`, and `63`, then the owning Page Brief;
-2. inspect the current code, schema, tests, runtime UI, and final Claude Design output;
+2. inspect the current code, schema, tests, runtime UI, and final approved Figma output;
 3. produce a guide/design/code reconciliation report and stop on material conflicts;
 4. identify all locked viewer/editor routes and files before global shell, font, token,
    or component migration;
@@ -370,7 +371,7 @@ exactly to the distribution artifact:
 Use the accent only for links, chapter markers, and restrained document notation.
 This editorial mapping is not a NosLog product primitive, semantic role, component
 alias, or signature-color decision. It does not override document `24`, transfer to
-Claude Design or production UI, or apply to the locked chart viewer/editor.
+high-fidelity design or production UI, or apply to the locked chart viewer/editor.
 
 The approved export path is
 `output/pdf/noslog-2.0-design-guide-v0.1.pdf`. The export must retain searchable text,

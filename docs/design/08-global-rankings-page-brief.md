@@ -38,7 +38,7 @@ user-approved decision record`
 This brief is authoritative for the approved Global-rankings behavior, hierarchy,
 responsive contract, and states. Exact typography, color, spacing, radius, shadows,
 avatar treatment, control dimensions, podium styling, and content-driven transition
-values remain Foundation and downstream Claude Design work. Later visual decisions
+values remain Foundation and active high-fidelity design work. Later visual decisions
 may refine expression but must not remove or reinterpret this product contract.
 
 ## Purpose
@@ -612,13 +612,13 @@ Validate at minimum:
 
 ## Handoff Boundary
 
-Claude Design may decide final type scale, control and row proportions, color,
+The active high-fidelity design stage may decide final type scale, control and row proportions, color,
 spacing, avatar fallback style, podium treatment, borders, surfaces, loading
 indicator, and exact content-driven layout transitions after the Foundation is
 approved. It must preserve the hierarchy, conditional controls, population meaning,
 integrated player identity, shared-rank semantics, personal-position behavior,
 pagination, states, and acceptance criteria above. A later Codex implementation
-session must compare the Claude output with this brief and request a guide or design
+session must compare the final approved Figma output with this brief and request a guide or design
 revision if it reintroduces misleading controls, unique ranks for equal published
 values, separate country/exam columns, duplicate current-user content, a fixed phone
 shell, or another conflicting behavior.

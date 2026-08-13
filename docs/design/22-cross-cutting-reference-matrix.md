@@ -125,17 +125,47 @@ repetition never promotes it automatically.
 
 ## Current specialized and bounded records
 
-| ID            | Contract                                                    | Boundary and current disposition                                                                                                                                                   |
-| ------------- | ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `PRES-01`     | Complete chart viewer/editor preservation                   | Scope boundary governed only by document `07`; it is not a reusable 2.0 pattern.                                                                                                   |
-| `SP-05`       | Single-series five-axis community-pattern radar             | Keep one stable learned five-axis order and scale, visible axis labels, exact supporting values, and a semantic alternative. Do not use it for precise or multi-series comparison. |
-| `SP-06`       | Supplementary official X content                            | Load after core content, disclose third-party behavior, preserve a first-party summary/link and failure fallback, and never make it the only carrier of an announcement.           |
-| `DATA-2D`     | Inherently dimensional ordinary data table or visualization | Contain overflow inside a labeled region and provide a semantic summary/table; ordinary page chrome still reflows.                                                                 |
-| `AUDIO-LOCAL` | User-selected chart audio remains device-local              | Do not upload MP3 data to NosLog servers or databases.                                                                                                                             |
+| ID            | Contract                                                    | Boundary and current disposition                                                                                                                                                                                                         |
+| ------------- | ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `PRES-01`     | Complete chart viewer/editor preservation                   | Scope boundary governed only by document `07`; it is not a reusable 2.0 pattern.                                                                                                                                                         |
+| `SP-05`       | Single-series five-axis community-pattern radar             | Keep one stable learned five-axis order and scale, visible axis labels, exact supporting values, and a semantic alternative. Do not use it for precise or multi-series comparison.                                                       |
+| `SP-06`       | Supplementary official X content                            | Load after core content, disclose third-party behavior, preserve a first-party summary/link and failure fallback, and never make it the only carrier of an announcement.                                                                 |
+| `DATA-2D`     | Inherently dimensional ordinary data table or visualization | Contain overflow inside a labeled region and provide a semantic summary/table; ordinary page chrome still reflows.                                                                                                                       |
+| `AUDIO-LOCAL` | User-selected chart audio remains device-local              | Do not upload MP3 data to NosLog servers or databases.                                                                                                                                                                                   |
+| `FOCUS-1B`    | Single-border keyboard-visible focus geometry               | Eligible ordinary UI only: one `1px` inside focus border on the control itself, recoloring an existing resting boundary or appearing only while focused; pointer focus and the locked viewer/editor are excluded. Supersedes `FOCUS-2L`. |
 
 The first four former viewer/editor entries are superseded by the single stronger
 `PRES-01` boundary. They must not be interpreted as authorization to redesign or
 apply ordinary Foundation rules inside those experiences.
+
+### `FOCUS-1B` governed record — supersedes `FOCUS-2L` (2026-08-13)
+
+- **Verified need:** the two-layer indicator read as a doubled outline and grew the
+  focused object outward. The user rejected it on 2026-08-13 and required a single
+  border that changes color the way an invalid field changes its border color.
+- **Superseded rule:** `FOCUS-2L` (a `1px` separation edge plus a `2px` outer
+  perimeter) is `Superseded`. Its geometry, external extent, and separation band no
+  longer apply anywhere in ordinary NosLog 2.0 UI.
+- **Smallest boundary:** keyboard-visible focus on eligible ordinary NosLog 2.0 UI;
+  no pointer perimeter and no change inside the locked viewer/editor.
+- **Equivalent path or fallback:** forced colors use system `Highlight` for the focus
+  border; native semantics and focus order remain unchanged.
+- **Cross-cutting impact:** none outward. The border is inside the control, so bounds,
+  layout, scroll containment, and sticky regions are unaffected. Where the focus color
+  cannot reach `3:1` on a filled control, the approved on-fill color is used instead.
+  The indicator never recolors identity, selection, status, or content.
+- **Accepted limitation:** a `1px` color-only indicator meets SC 2.4.7 but not the
+  `2px` minimum of SC 2.4.13. Recorded with the decision rather than hidden.
+- **Validation:** inspect all four sides in Light and Dark, bordered and borderless
+  controls, rounded controls, overlays, scroll regions, keyboard navigation, zoom,
+  text growth, and forced colors. Confirm the focused control's box is byte-identical
+  to its resting box, and that the focus border differs measurably from the resting
+  boundary color.
+- **Lifecycle and owner:** permanent Foundation correction owned by document `24`;
+  only the user may supersede it after equivalent cross-component evidence.
+- **Rejected alternatives:** the former zero-gap ring, the two-layer separation
+  geometry, thickness changes on focus, persistent pointer/Dark outlines, and
+  decorative focus shadows.
 
 ## Focused source pool
 
@@ -154,7 +184,7 @@ failures, and user decisions are consolidated in document `25`.
 
 ## Downstream handoff
 
-- Claude Design may refine composition only inside approved page briefs, document
+- The active high-fidelity design stage may refine composition only inside approved page briefs, document
   `24`, and the records above. It may propose but not silently create an exception.
 - Future implementation maps each active record to code and appropriate automated plus
   manual checks.

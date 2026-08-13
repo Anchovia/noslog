@@ -37,7 +37,7 @@ the user-approved decision record`
 
 This brief is authoritative for the approved Tier-list page behavior and information
 hierarchy. Exact typography, color, spacing, radius, icon drawing, card dimensions,
-and final breakpoint values remain Foundation and downstream Claude Design work.
+and final breakpoint values remain Foundation and active high-fidelity design work.
 Those later decisions may refine expression but must not remove or reinterpret the
 approved product contract.
 
@@ -592,11 +592,11 @@ as a template.
 
 ## Handoff Boundary
 
-Claude Design may decide final typography, color, spacing, surface hierarchy,
+The active high-fidelity design stage may decide final typography, color, spacing, surface hierarchy,
 iconography, jacket-overlay treatment, minimum card widths, and exact transition
 points after the Foundation is approved. It must preserve the decisions and
 acceptance contract above. A later Codex implementation session must compare the
-Claude output with this brief and request a guide or design revision if the output
+final approved Figma output with this brief and request a guide or design revision if the output
 removes a required state, changes domain meaning, introduces a mandatory modal, fixes
 the product to 390px, or conflicts with the approved responsive behavior.
 It must also preserve the official-versus-community boundary: no inline Tier-card

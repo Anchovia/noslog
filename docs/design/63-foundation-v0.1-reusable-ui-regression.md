@@ -4,7 +4,7 @@
 
 - Status: `Approved — Block 5 complete`
 - Language: English
-- Last updated: 2026-08-12
+- Last updated: 2026-08-13
 - Normative Foundation: [document 24](./24-foundation-v0.1.md)
 - Provenance: [document 25](./25-foundation-v0.1-provenance.md)
 - Scope authority: [document 57](./57-design-guide-remaining-work-audit.md)
@@ -22,7 +22,7 @@ historical specimen styling, or create a new page family.
 
 The controlled artifact is a self-contained regression harness. It must not iframe,
 copy, or depend on old serial comparison pages. It is not a final NosLog page or a
-Claude Design visual target.
+high-fidelity design target.
 
 ## Regression contract
 
@@ -38,18 +38,18 @@ It exposes Light/Dark appearance, Korean/Japanese/English content, representativ
 `320px`, `390px`, and wide content regions, and 100/200% text conditions. It validates
 scope and token collisions rather than prescribing final composition.
 
-| Gate              | Required result                                                                                                              |
-| ----------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| Scope             | No viewer/editor, renderer, `S4`, `S6`, or production file reference                                                         |
-| Authority         | Values come only from document `24`; no Tailwind palette, old comparison candidate, or local hybrid                          |
-| Neutral hierarchy | Surfaces, text, ordinary interaction, boundaries, identity, and primary action retain their approved restrained roles        |
-| Narrow chroma     | Feedback, difficulty, local data, and judgement color remains inside its exact semantic marker/plot responsibility           |
-| Focus             | Keyboard-visible black Light / white Dark `2px` zero-gap perimeter; no persistent Dark outline                               |
-| Typography        | Approved composites, natural tracking, real multilingual pressure, and approved first-party dynamic-subset delivery          |
-| Responsive        | No page-level horizontal overflow at `320px`, `390px`, or eligible wide arrangements                                         |
-| Text growth       | Content and controls remain available at `200%` text size without hiding required meaning                                    |
-| Non-color         | State, difficulty, judgement, FAST/SLOW, and chart comparison retain names, values, order, shape/pattern, or explicit status |
-| Accessibility     | Semantic headings, labels, tables, visible focus, named icon-only controls, and explicit states remain intact                |
+| Gate              | Required result                                                                                                                   |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| Scope             | No viewer/editor, renderer, `S4`, `S6`, or production file reference                                                              |
+| Authority         | Values come only from document `24`; no Tailwind palette, old comparison candidate, or local hybrid                               |
+| Neutral hierarchy | Surfaces, text, ordinary interaction, boundaries, identity, and primary action retain their approved restrained roles             |
+| Narrow chroma     | Feedback, difficulty, local data, and judgement color remains inside its exact semantic marker/plot responsibility                |
+| Focus             | Keyboard-visible two-layer perimeter: `1px` surface separation plus black Light / white Dark `2px` outer ring; no pointer outline |
+| Typography        | Approved composites, natural tracking, real multilingual pressure, and approved first-party dynamic-subset delivery               |
+| Responsive        | No page-level horizontal overflow at `320px`, `390px`, or eligible wide arrangements                                              |
+| Text growth       | Content and controls remain available at `200%` text size without hiding required meaning                                         |
+| Non-color         | State, difficulty, judgement, FAST/SLOW, and chart comparison retain names, values, order, shape/pattern, or explicit status      |
+| Accessibility     | Semantic headings, labels, tables, visible focus, named icon-only controls, and explicit states remain intact                     |
 
 Historical glyph placeholders and temporary controls are not icon or component
 authority. Downstream design must use the approved Lucide and semantic contracts, not
@@ -68,7 +68,7 @@ composition or settle the material decisions below.
 | Japanese, Light, `390px`, 100% text  | Content reflows without horizontal overflow and the Japanese title/content switch is applied.                                                                  |
 | Korean, Dark, wide region, 100% text | Two-column comparison uses the available region without root, frame, or fragment overflow.                                                                     |
 | Pointer focus                        | Pointer activation produces no decorative perimeter, including when the browser still reports `:focus-visible`.                                                |
-| Keyboard focus                       | The input-modality-owned perimeter is exactly black in Light and white in Dark, `2px`, zero-gap, with a `-2px` pseudo-element extent.                          |
+| Keyboard focus                       | Superseded historical result: the 2026-08-10 harness used the former `2px` zero-gap perimeter; the 2026-08-13 correction below replaces it.                    |
 | Overlay focus                        | Opening the details dialog focuses its named close control; closing it restores focus to the invoking `Details` button.                                        |
 | Scope and dependencies               | The document contains no `iframe`, `canvas`, external resource, viewer/editor fragment, renderer dependency, or historical specimen dependency.                |
 | Semantics and runtime                | Four labeled `article` regions, one semantic ranking table, named controls, and explicit status copy remain present; no console warning or error was observed. |
@@ -78,13 +78,19 @@ now owned by an explicit input-modality attribute rather than the browser's
 `:focus-visible` heuristic alone. This prevents the persistent Dark white outline the
 user rejected while preserving the approved keyboard-visible indicator.
 
+On 2026-08-13 the controlled artifact was aligned to the user's 2026-08-11 geometry
+correction: a `1px` `surface/canvas` separation edge at `-1px` plus the existing
+achromatic `2px` perimeter reaching `-3px`. This supersedes the historical zero-gap
+geometry without changing modality ownership, focus order, polarity, or forced-color
+behavior.
+
 ## Corrected Foundation summary
 
 | Responsibility     | Approved contract                                                                                |
 | ------------------ | ------------------------------------------------------------------------------------------------ |
 | Typography         | Pretendard JP Variable family, document `24` composites, and approved `FPR-02` delivery contract |
 | Neutral            | Adobe Spectrum S2 exact `M-A`, `F-A`, `NB-A`, and `NI-A`                                         |
-| Focus              | `FI-C` Fluent achromatic `2px` zero-gap perimeter                                                |
+| Focus              | `FI-C` achromatic single `1px` inside border on the control (`FOCUS-1B`)                         |
 | Reserved signature | `SS-08` Radix Indigo has no current UI alias                                                     |
 | Identity           | `ITA-C` achromatic mark and wordmark                                                             |
 | Filled primary     | `RPA-A` Spectrum-neutral, rare and bounded                                                       |

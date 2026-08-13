@@ -102,14 +102,14 @@ Foundation·component·template·handoff 규칙을 적용하거나 새 specimen�
 top-level 작업으로 세지 않습니다. 사용자가 분모와 계산법을 따로 승인하기 전에는 완료
 퍼센트를 표시하지 않습니다.
 
-|   # | 작업 블록                             | 상태       | 현재 범위                                                                                           |
-| --: | ------------------------------------- | ---------- | --------------------------------------------------------------------------------------------------- |
-|   1 | C5 color 마감                         | `Complete` | difficulty, local-data, judgement color 승인 완료; viewer/editor 제외                               |
-|   2 | Iconography                           | `Complete` | Lucide 일반 UI source, size, stroke, label, target 계약 승인 완료                                   |
-|   3 | Motion / Reduced motion               | `Complete` | Atlassian duration/easing과 reduced-motion 대체 계약 승인 완료                                      |
-|   4 | Data-visualization anatomy            | `Complete` | GitHub Primer 기반 일반 UI anatomy·interaction 계약 승인 완료                                       |
-|   5 | Foundation 승격과 reusable UI 정리    | `Complete` | Foundation v0.1, Pretendard JP delivery, 문서 63의 lean reusable UI alias·pattern 승인 완료         |
-|   6 | Downstream handoff와 milestone export | `Complete` | 문서 64의 screen requirements·mapping·QA·Claude Design 경계와 English ED-03 milestone PDF 승인 완료 |
+|   # | 작업 블록                             | 상태       | 현재 범위                                                                                               |
+| --: | ------------------------------------- | ---------- | ------------------------------------------------------------------------------------------------------- |
+|   1 | C5 color 마감                         | `Complete` | difficulty, local-data, judgement color 승인 완료; viewer/editor 제외                                   |
+|   2 | Iconography                           | `Complete` | Lucide 일반 UI source, size, stroke, label, target 계약 승인 완료                                       |
+|   3 | Motion / Reduced motion               | `Complete` | Atlassian duration/easing과 reduced-motion 대체 계약 승인 완료                                          |
+|   4 | Data-visualization anatomy            | `Complete` | GitHub Primer 기반 일반 UI anatomy·interaction 계약 승인 완료                                           |
+|   5 | Foundation 승격과 reusable UI 정리    | `Complete` | Foundation v0.1, Pretendard JP delivery, 문서 63의 lean reusable UI alias·pattern 승인 완료             |
+|   6 | Downstream handoff와 milestone export | `Complete` | 문서 64의 screen requirements·mapping·QA·downstream design 경계와 English ED-03 milestone PDF 승인 완료 |
 
 여섯 블록이 모두 완료되어 남은 top-level 디자인 가이드 작업은 없습니다. 완료된 Block 5 package는
 [문서 63](./docs/design/63-foundation-v0.1-reusable-ui-regression.md)에 기록되어 있으며,
@@ -123,6 +123,11 @@ Block 6 downstream package는
 `Superseded`되었습니다. 결과 카드는 입력 방식과 관계없이 악곡 정체성을 유지하고,
 개인 성과 상세는 적용 상태 요약 또는 악곡 상세에서 제공합니다. 이 정정은 완료된 여섯
 블록을 다시 열거나 chart viewer/editor 경계를 변경하지 않습니다.
+
+2026-08-13 사용자 결정에 따라 현재 downstream high-fidelity Figma 작업은 Claude가
+계속 담당합니다(Codex 검수 세션을 거친 뒤 사용자가 Claude 진행을 재확인). 문서 `24`·`25`·`63`의 승인 후 정밀 보정과 문서 `05`의
+Music Detail 후속 결정도 현재 권위에 반영했습니다. 이는 완료된 여섯 디자인 가이드
+블록을 다시 열지 않으며, 구현은 이후의 별도 Codex 세션에 남습니다.
 
 PDF에 추가하는 시각 자료는 외형만 보고 규범으로 승인하지 않습니다. 현재 Foundation
 권위와 고정된 upstream 원본을 일대일로 대조하고,

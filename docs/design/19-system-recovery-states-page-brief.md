@@ -182,7 +182,7 @@ The family answers four ordered questions:
 - A decorative icon or NosLog mark may support recognition, but text carries the state
   meaning. Do not require a large illustration or mascot scene.
 - Final typography, color, icon drawing, spacing, and action styling belong to the
-  approved Foundation and Claude Design. Visual treatment must preserve the hierarchy
+  approved Foundation and the active high-fidelity design stage. Visual treatment must preserve the hierarchy
   and shell contract defined here.
 
 ## Approved Not-Found Contract
@@ -563,7 +563,7 @@ reflow, focus visibility, first-paint locale, or action clarity.
 
 ## Handoff Boundary
 
-Claude Design must preserve each state's meaning, shell, hierarchy, actions, timing
+The active high-fidelity design stage must preserve each state's meaning, shell, hierarchy, actions, timing
 rules, locale parity, and semantic requirements. It may create a restrained shared
 visual language within the later approved Foundation, but must not merge states, add
 unsupported actions, turn error codes into the focal point, invent an estimate, or

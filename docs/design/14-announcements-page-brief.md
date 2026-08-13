@@ -44,7 +44,7 @@ This brief is authoritative for the public announcement system's product meaning
 content hierarchy, publication behavior, localization, responsive behavior, states,
 accessibility, metadata, and acceptance criteria. Exact typography, color, spacing,
 surface treatment, radius, elevation, control dimensions, grid tracks, and
-content-driven transition values remain Foundation and downstream Claude Design work.
+content-driven transition values remain Foundation and active high-fidelity design work.
 Later visual work may refine expression but must not remove or reinterpret this
 product contract.
 
@@ -549,7 +549,7 @@ boundary.
 - Added width may improve framing, title/date alignment, and pagination placement
   without duplicating content or changing source order.
 - Exact maximum measure and content-driven transition values remain Foundation and
-  downstream Claude Design decisions.
+  active high-fidelity design decisions.
 
 ### Zoom and Short Viewports
 
@@ -874,7 +874,7 @@ Required checks:
 
 ## Handoff Boundary
 
-Claude Design may determine the final type scale, editorial measure, surfaces, critical
+The active high-fidelity design stage may determine the final type scale, editorial measure, surfaces, critical
 notice emphasis, row dividers, date treatment, pagination appearance, Markdown rhythm,
 spacing, grid tracks, responsive transition values, and restrained motion after
 Foundation approval. It must preserve the approved two Home roles, non-duplicated
@@ -883,7 +883,7 @@ restricted Markdown, lifecycle, translation gate, stable slug, transparent
 locale-specific modifications, public access, semantic structure, and acceptance
 criteria.
 
-The future Codex implementation session must compare Claude output with this brief. It
+The future Codex implementation session must compare the final approved Figma output with this brief. It
 must request a guide or design revision before implementing any result that restores
 inline Home bodies, duplicates notices across Home roles, mixes official X content into
 the Archive, hides or truncates Archive titles, adds unapproved catalog controls,

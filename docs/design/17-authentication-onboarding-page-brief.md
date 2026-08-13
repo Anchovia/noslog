@@ -47,7 +47,7 @@ user-approved decision record`
 
 This brief is authoritative for the authentication and onboarding product meaning,
 information order, transitions, permissions, recovery, responsive adaptation,
-accessibility, and acceptance criteria. Claude Design may define final visual
+accessibility, and acceptance criteria. The active high-fidelity design stage may define final visual
 composition within the later approved Foundation, but it must not add login methods,
 split Login and registration, collect additional onboarding data, change the
 incomplete-profile gate, or remove the approved public-browsing escape.
@@ -664,7 +664,7 @@ build checks do not substitute for this stateful browser verification.
 
 ## Handoff Boundary
 
-Claude Design must preserve the single Discord action, public-browse alternative,
+The active high-fidelity design stage must preserve the single Discord action, public-browse alternative,
 destination context, adjacent disclosure, two-field onboarding, connected-account
 confirmation, incomplete-profile gate, logout escape, safe return, error
 classification, semantic order, and responsive/accessibility contracts. It may define

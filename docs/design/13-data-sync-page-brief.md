@@ -45,7 +45,7 @@ information hierarchy, data semantics, interaction, recovery, security, privacy,
 responsive behavior, states, and acceptance criteria. Exact typography, color,
 spacing, radius, elevation, illustration treatment, media framing, card treatment,
 control dimensions, grid tracks, and content-driven transition values remain
-Foundation and downstream Claude Design work. Later visual work may refine expression
+Foundation and active high-fidelity design work. Later visual work may refine expression
 but must not remove or reinterpret this product contract.
 
 ## Purpose
@@ -953,7 +953,7 @@ Validate at least:
 
 ## Handoff Boundary
 
-Claude Design may determine the final type scale, surfaces, status treatment,
+The active high-fidelity design stage may determine the final type scale, surfaces, status treatment,
 illustration and GIF framing, process-list anatomy, card hierarchy, metric layout,
 preview-row styling, disclosure treatment, modal appearance, spacing, grid tracks,
 responsive transition values, and restrained motion after Foundation approval. It must
@@ -962,7 +962,7 @@ coverage distinction, state timing, partial completion, bounded previews/history
 recovery, security/privacy explanation, text-led media contract, accessibility, and
 acceptance criteria.
 
-The future Codex implementation session must compare Claude output with this brief. It
+The future Codex implementation session must compare the final approved Figma output with this brief. It
 must request a guide or design revision before implementing any result that puts setup
 above returning-user status, creates a fake stepper or progress percentage, treats
 recent-only as failure, implies earlier full data was deleted, merges attempt and

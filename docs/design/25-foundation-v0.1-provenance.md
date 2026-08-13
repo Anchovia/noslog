@@ -4,7 +4,7 @@
 
 - Status: `Approved — consolidated current decision record`
 - Language: English
-- Last updated: 2026-08-11
+- Last updated: 2026-08-13
 - Normative values: [document 24](./24-foundation-v0.1.md)
 - Current scope: [document 57](./57-design-guide-remaining-work-audit.md)
 - Purpose: preserve selected sources, candidate disposition, measured limitations,
@@ -37,27 +37,27 @@ was not current design evidence. The over-accented `FCM-11` and `SIG-07` example
 
 ## Consolidated approval register
 
-| Responsibility                        | Approved result                                                    | Date          | Current boundary                                                                                                                       |
-| ------------------------------------- | ------------------------------------------------------------------ | ------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| Typography family and delivery        | Pretendard JP Variable                                             | 2026-08-04/11 | Family and hierarchy approved; official `1.3.9` variable dynamic subsets are version-pinned and first-party self-hosted under `FPR-02` |
-| Type scale, spacing, grid, containers | NosLog role map derived from focused official reference comparison | 2026-08-04–08 | Exact normative map in document `24`; no Tailwind value authority                                                                      |
-| Neutral primitives and surfaces       | `M-A · Adobe Spectrum S2`                                          | 2026-08-08    | Exclusive Light/Dark neutral source                                                                                                    |
-| Neutral foreground                    | `F-A · Adobe Spectrum S2`                                          | 2026-08-09    | Exact content aliases only                                                                                                             |
-| Neutral boundary                      | `NB-A · Adobe Spectrum S2`                                         | 2026-08-09    | Quiet roles are not sole necessary cues                                                                                                |
-| Neutral interaction                   | `NI-A · Spectrum component-family fidelity`                        | 2026-08-09    | No universal interaction fill                                                                                                          |
-| Keyboard focus                        | `FI-C · Microsoft Fluent 2 achromatic focus`                       | 2026-08-09    | Black Light / white Dark, `2px`, zero gap                                                                                              |
-| Reserved signature source             | `SS-08 · Radix Colors Indigo`                                      | 2026-08-10    | No approved current UI alias                                                                                                           |
-| Shell identity                        | `ITA-C · Achromatic`                                               | 2026-08-10    | Neutral mark and wordmark; no Indigo field or default outline                                                                          |
-| Filled primary action                 | `RPA-A · Achromatic primary`                                       | 2026-08-10    | Spectrum neutral; at most one proven action per bounded context                                                                        |
-| Material geometry                     | `MG-A · Adobe Spectrum S2`                                         | 2026-08-10    | Exact radius, shadow, scrim mapping                                                                                                    |
-| Feedback/status                       | `FS-BN · Atlassian semantic color + neutral message typography`    | 2026-08-10    | Atlassian chroma, Spectrum message copy                                                                                                |
-| Difficulty markers                    | `DU-01 · Adobe Spectrum S2`                                        | 2026-08-10    | Four compact ordinary-UI markers only                                                                                                  |
-| Local data                            | `LD-03 · SAP Fiori Horizon`                                        | 2026-08-10    | Single, score buckets, FAST/SLOW, generic categories                                                                                   |
-| Judgement markers                     | `JD-02 · Radix Colors 3.0.0`                                       | 2026-08-10    | Five judgement markers only; not FAST/SLOW                                                                                             |
-| Iconography                           | `IC-06 · Lucide`                                                   | 2026-08-10    | Eligible ordinary UI only                                                                                                              |
-| Motion                                | `MO-02 · Atlassian`                                                | 2026-08-10    | Eligible ordinary UI and instant reduced mode                                                                                          |
-| Data visualization anatomy            | `DV-05 · GitHub Primer`                                            | 2026-08-10    | Ordinary non-viewer charts; NosLog retains its approved colors                                                                         |
-| Foundation package                    | Document `24` contracts promoted together as Foundation v0.1       | 2026-08-11    | Approved normative authority for eligible ordinary UI under `FPR-03`; implementation remains downstream                                |
+| Responsibility                        | Approved result                                                     | Date                              | Current boundary                                                                                                                       |
+| ------------------------------------- | ------------------------------------------------------------------- | --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| Typography family and delivery        | Pretendard JP Variable                                              | 2026-08-04/11                     | Family and hierarchy approved; official `1.3.9` variable dynamic subsets are version-pinned and first-party self-hosted under `FPR-02` |
+| Type scale, spacing, grid, containers | NosLog role map derived from focused official reference comparison  | 2026-08-04–13                     | Exact normative map in document `24`; later approved bounded composites and fit rules are recorded below                               |
+| Neutral primitives and surfaces       | `M-A · Adobe Spectrum S2`                                           | 2026-08-08                        | Exclusive Light/Dark neutral source                                                                                                    |
+| Neutral foreground                    | `F-A · Adobe Spectrum S2`                                           | 2026-08-09                        | Exact content aliases only                                                                                                             |
+| Neutral boundary                      | `NB-A · Adobe Spectrum S2`                                          | 2026-08-09                        | Quiet roles are not sole necessary cues                                                                                                |
+| Neutral interaction                   | `NI-A · Spectrum component-family fidelity`                         | 2026-08-09                        | No universal interaction fill                                                                                                          |
+| Keyboard focus                        | `FI-C · Fluent achromatic polarity + NosLog single-border geometry` | 2026-08-09/11, revised 2026-08-13 | Black Light / white Dark `1px` inside border on the control; the earlier two-layer geometry is `Superseded`                            |
+| Reserved signature source             | `SS-08 · Radix Colors Indigo`                                       | 2026-08-10                        | No approved current UI alias                                                                                                           |
+| Shell identity                        | `ITA-C · Achromatic`                                                | 2026-08-10                        | Neutral mark and wordmark; no Indigo field or default outline                                                                          |
+| Filled primary action                 | `RPA-A · Achromatic primary`                                        | 2026-08-10                        | Spectrum neutral; at most one proven action per bounded context                                                                        |
+| Material geometry                     | `MG-A · Adobe Spectrum S2`                                          | 2026-08-10                        | Exact radius, shadow, scrim mapping                                                                                                    |
+| Feedback/status                       | `FS-BN · Atlassian semantic color + neutral message typography`     | 2026-08-10                        | Atlassian chroma, Spectrum message copy                                                                                                |
+| Difficulty markers                    | `DU-01 · Adobe Spectrum S2`                                         | 2026-08-10/11                     | Four compact ordinary-UI markers plus the approved neutral-label `20px` result anatomy                                                 |
+| Local data                            | `LD-03 · SAP Fiori Horizon`                                         | 2026-08-10                        | Single, score buckets, FAST/SLOW, generic categories                                                                                   |
+| Judgement markers                     | `JD-02 · Radix Colors 3.0.0`                                        | 2026-08-10                        | Five judgement markers only; not FAST/SLOW                                                                                             |
+| Iconography                           | `IC-06 · Lucide`                                                    | 2026-08-10                        | Eligible ordinary UI only                                                                                                              |
+| Motion                                | `MO-02 · Atlassian`                                                 | 2026-08-10                        | Eligible ordinary UI and instant reduced mode                                                                                          |
+| Data visualization anatomy            | `DV-05 · GitHub Primer`                                             | 2026-08-10                        | Ordinary non-viewer charts; NosLog retains its approved colors                                                                         |
+| Foundation package                    | Document `24` contracts promoted together as Foundation v0.1        | 2026-08-11                        | Approved normative authority for eligible ordinary UI under `FPR-03`; implementation remains downstream                                |
 
 ## Typography, spacing, and layout provenance
 
@@ -105,6 +105,16 @@ transitions: the selected margins, gutters, and 4/8/12 columns produce entry tra
 widths of approximately `63/64/68px`. Framework breakpoints were comparison evidence,
 not the reason for those values.
 
+Two later user decisions close measured gaps without reopening the source scale:
+
+- `emphasis-label 14/20 · 600` is the thirteenth semantic composite. It owns compact
+  message titles and persistent selected labels only; ordinary controls remain
+  `control`.
+- Music Detail may step an original title through `page-title` → `section-title` →
+  `component-title`, choosing the largest composite that keeps the title, `4px` gap,
+  and artist within the approved `96px` identity row. Wider title geometry was
+  rejected because the required translation trigger increased total pressure.
+
 ## Neutral and focus provenance
 
 The neutral review compared maintained Light/Dark systems including Adobe Spectrum,
@@ -139,6 +149,20 @@ Adobe Spectrum, Atlassian, Carbon, Primer, Material, Shopify, GitLab, SAP, USWDS
 GOV.UK, Ant Design, and browser forced-colors behavior. The approved Fluent polarity
 measured at least `15.91:1` across approved surfaces and passed native Tab, `200%` zoom,
 clipping, roving-focus, and forced-colors checks.
+
+On 2026-08-11, the user superseded only the zero-gap geometry after it visually merged
+with control boundaries. The approved NosLog rendering keeps Fluent's achromatic
+polarity but, since 2026-08-13, draws a single `1px` inside border instead of a `2px`
+outer perimeter with a separation edge.
+The exact extents are `-1px` and `-3px`; forced colors use `Canvas` and `Highlight`.
+Single zero-gap rings, persistent pointer outlines, state recoloring, and decorative
+shadows were rejected. The two-layer geometry itself was superseded on 2026-08-13.
+The full governed record is `FOCUS-1B` in document `22`.
+
+The later `border/empty-slot` alias is not a new neutral source. It maps Light to the
+existing `surface/sunken` value and Dark to `border-subtle`, only for missing artwork
+or image slots. The real image removes the edge; the approved fallback remains the
+semantic cue.
 
 ## Signature, identity, and action provenance
 
@@ -207,6 +231,11 @@ because green → orange → red → purple most clearly preserved the learned d
 progression. Carbon and SAP remained valid comparison evidence but were not selected.
 Neutral-only `DU-D0` was rejected because the user requirement is four persistent,
 different difficulty colors in ordinary repeated-scanning UI.
+
+The user later approved one constrained `20×20px` result anatomy so all four levels
+fit the brief's `92px` trailing group without colored text, fill, or container. The
+`12×2px` rounded color line remains a non-text marker; the neutral metadata number and
+fixed Normal → Hard → Expert → Real order preserve meaning without color.
 
 ### Local data
 

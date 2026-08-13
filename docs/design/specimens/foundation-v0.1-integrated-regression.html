@@ -145,11 +145,12 @@
                 .field:has(input:focus-visible)::after {
                 position: absolute;
                 z-index: 5;
-                inset: -2px;
-                border: 2px solid var(--focus);
+                inset: -1px;
+                border: 1px solid var(--canvas);
                 border-radius: calc(
-                    var(--focus-radius, var(--radius-control)) + 2px
+                    var(--focus-radius, var(--radius-control)) + 1px
                 );
+                box-shadow: 0 0 0 2px var(--focus);
                 content: "";
                 pointer-events: none;
             }
@@ -855,7 +856,8 @@
                 :root[data-input="keyboard"] .focusable:focus-visible::after,
                 :root[data-input="keyboard"]
                     .field:has(input:focus-visible)::after {
-                    border-color: Highlight;
+                    border-color: Canvas;
+                    box-shadow: 0 0 0 2px Highlight;
                 }
 
                 .difficulty-marker,
