@@ -92,6 +92,16 @@ gap, and artist text within the row: `page-title`, then `section-title`, then
 full accessible name. This measured ladder is not a locale-specific assignment or
 permission to shrink other page titles.
 
+`DestinationPanel` has one separate approved content-fit exception for compact
+localized navigation labels. Start with `control` at `14/20`; if the real label does
+not fit on one line in its measured cell, step only that label to `12/16` while
+preserving its existing `500` ordinary or `600` current-state weight. Restore
+`14/20` whenever the measured cell fits it. If `12/16` still wraps, use only
+separately approved concise copy that preserves the destination meaning; a maximum
+of two lines is the final reflow fallback. Never resolve below `12px`, truncate,
+clip, hide, or change the icon, target, padding, row, column, or destination order to
+force one line. This exception does not create a general small-control role.
+
 At a twelve-column page-layout container of at least `1056 CSS px`, `page-title` may
 step to `32/40 · 700` only when its governed region spans at least eight tracks or has
 at least `640 CSS px` of measured inline space and is not a `reading` composition.

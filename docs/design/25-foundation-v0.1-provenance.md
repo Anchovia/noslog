@@ -114,6 +114,13 @@ Two later user decisions close measured gaps without reopening the source scale:
   `component-title`, choosing the largest composite that keeps the title, `4px` gap,
   and artist within the approved `96px` identity row. Wider title geometry was
   rejected because the required translation trigger increased total pressure.
+- DestinationPanel compact labels use a separate measured `14/20` → `12/16` fit
+  step, preserving the existing control-state weight and restoring `14/20` when the
+  cell permits it. `320px` Korean, Japanese, and English Figma specimens established
+  the bounded need; `390px` and Wide specimens restored every label to `14/20` on one
+  line. The user approved `店舗`, `ご意見・報告`, and `Feedback` as concise destination
+  copy. Smaller text, clipping, ellipsis, hidden destinations, and geometry changes
+  made only to force one line remain rejected; two lines are the final reflow fallback.
 
 ## Neutral and focus provenance
 
