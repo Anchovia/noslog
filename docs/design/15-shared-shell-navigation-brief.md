@@ -14,7 +14,7 @@ approved information architecture and page briefs; more than twenty cited
 accessibility, design-system, production-service, and rhythm-game references; and
 the user-approved decision record`
 - Date started: 2026-08-03
-- Last decision update: 2026-08-12
+- Last decision update: 2026-08-14
 - Language: English
 - Parent information architecture:
   [02-information-architecture.md](./02-information-architecture.md)
@@ -212,21 +212,21 @@ The approved visual rows and semantic sequence are:
 The linear DOM, reading, and keyboard order follows each row left-to-right and then
 top-to-bottom. If CSS changes the visual tracks, it must not reorder this sequence.
 
-### Approved Korean Shell Labels
+### Approved Shell Labels
 
-| Role                                  | Korean                        |
-| ------------------------------------- | ----------------------------- |
-| Signed-out account                    | `로그인`                      |
-| Music / Chart Viewer                  | `악곡` / `채보 뷰어`          |
-| Rankings / Tiers                      | `랭킹` / `서열`               |
-| Bingo / Exams                         | `빙고` / `시험`               |
-| Arcades / Data Sync                   | `오락실` / `데이터 동기화`    |
-| Settings / Feedback or Error Report   | `설정` / `피드백 · 오류 신고` |
-| Conditional administrator destination | `관리자`                      |
+| Role                                  | Korean                        | Japanese                              | English                                   |
+| ------------------------------------- | ----------------------------- | ------------------------------------- | ----------------------------------------- |
+| Music / Chart Viewer                  | `악곡` / `채보 뷰어`          | `楽曲` / `譜面ビューア`               | `Music` / `Chart Viewer`                  |
+| Rankings / Tiers                      | `랭킹` / `서열`               | `ランキング` / `難易度表`             | `Rankings` / `Tiers`                      |
+| Bingo / Exams                         | `빙고` / `시험`               | `ビンゴ` / `検定`                     | `Bingo` / `Exams`                         |
+| Arcades / Data Sync                   | `오락실` / `데이터 동기화`    | `ゲームセンター` / `データ連携`       | `Arcades` / `Data Sync`                   |
+| Settings / Feedback or Error Report   | `설정` / `피드백 · 오류 신고` | `設定` / `フィードバック・不具合報告` | `Settings` / `Feedback · Report an Issue` |
+| Conditional administrator destination | `관리자`                      | `管理`                                | `Admin`                                   |
 
-These labels preserve the approved destination identity and row order. Japanese and
-English final strings remain explicit localization work; do not derive them from the
-Korean wording or replace the product meanings with shorter generic labels.
+The Korean signed-out account label is `로그인`. The destination labels above preserve
+the approved identity and row order in all three product locales. Do not replace the
+approved product meanings with shorter generic labels. Other localized shell copy
+remains subject to its applicable page brief and localization validation.
 
 ### Content Rules
 
@@ -393,8 +393,9 @@ The ordinary footer contains only the stable trust and project layer required he
 
 - Preserve the same destination identity and relative order in Korean, Japanese, and
   English.
-- Final labels are validated as part of the localization phase; this brief approves
-  destination meanings, not an unreviewed translation string set.
+- Use the approved destination labels recorded above. Validate any remaining shell copy
+  through the applicable page brief and localization phase rather than deriving it from
+  another locale.
 - Test representative long labels, including Chart Viewer, Feedback / Error Report,
   Data Sync, localized Login, and administrator wording.
 - Do not abbreviate a translation until it changes meaning merely to preserve one line.
@@ -545,34 +546,35 @@ are not substitutes.
 
 ## Decision Log
 
-| ID       | Decision                                                                                                                  | Status                         |
-| -------- | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------ |
-| SHELL-01 | Use one responsive top-shell taxonomy; do not add persistent bottom navigation                                            | `Approved`                     |
-| SHELL-02 | Ordinary header contains NosLog, account state, and one navigation trigger only                                           | `Approved`                     |
-| SHELL-03 | Signed-out account position uses a visible Login text control                                                             | `Approved`                     |
-| SHELL-04 | Use a navigation/hamburger trigger rather than an ellipsis                                                                | `Approved`                     |
-| SHELL-05 | Keep eight product destinations in the approved row and semantic order                                                    | `Approved`                     |
-| SHELL-06 | Put Settings and Feedback / Error Report after a divider with no group heading                                            | `Approved`                     |
-| SHELL-07 | Keep Admin conditional and separate after ordinary utilities                                                              | `Approved`                     |
-| SHELL-08 | Use icon plus concise text label; do not add descriptions                                                                 | `Approved`                     |
-| SHELL-09 | Compact navigation is a full-width two-column modal below the header                                                      | `Approved`                     |
-| SHELL-10 | Compact open state uses scrim, body lock, focus containment, and reliable close/focus return                              | `Approved`                     |
-| SHELL-11 | Wide navigation is a right-anchored two-column non-modal popover without body lock                                        | `Approved`                     |
-| SHELL-12 | Choose the modal/popover transition from content fit, not the current `1024px` implementation                             | `Approved`                     |
-| SHELL-13 | Compact header hides downward and reveals upward; wide desktop header remains sticky and visible                          | `Approved`                     |
-| SHELL-14 | Keep the header visible during open navigation, header/panel focus, and route entry                                       | `Approved`                     |
-| SHELL-15 | Reduced motion removes header sliding                                                                                     | `Approved`                     |
-| SHELL-16 | Ordinary footer owns Privacy, GitHub, and copyright                                                                       | `Approved`                     |
-| SHELL-17 | Privacy and GitHub do not appear in the header or More panel                                                              | `Approved`                     |
-| SHELL-18 | Login and onboarding use a minimal identity-plus-footer shell without More/profile                                        | `Approved`                     |
-| SHELL-19 | Login body includes concise Discord-data disclosure and an inline Privacy link under the authentication brief             | `Approved`                     |
-| SHELL-20 | Preserve the complete current chart-viewer shell; this brief authorizes no internal shell change                          | `Approved correction`          |
-| SHELL-21 | Maintenance and fatal errors use a minimal identity and recovery shell; exact state behavior follows Brief 19             | `Approved`                     |
-| SHELL-22 | Opened destinations remain native link navigation, not ARIA menu semantics                                                | `Approved`                     |
-| SHELL-23 | Preserve identical destination identity and semantic order across ko, ja, and en                                          | `Approved`                     |
-| SHELL-24 | Exact Foundation tokens, dimensions, breakpoint, and unapproved Japanese/English localized strings remain downstream work | `Approved`                     |
-| SHELL-25 | Signed-out Feedback preserves validated locale/route/query and reopens the dialog after Login                             | `Approved`                     |
-| SHELL-26 | Use the approved Korean account and destination labels recorded above without changing the destination order              | `Approved Korean — 2026-08-12` |
+| ID       | Decision                                                                                                                    | Status                         |
+| -------- | --------------------------------------------------------------------------------------------------------------------------- | ------------------------------ |
+| SHELL-01 | Use one responsive top-shell taxonomy; do not add persistent bottom navigation                                              | `Approved`                     |
+| SHELL-02 | Ordinary header contains NosLog, account state, and one navigation trigger only                                             | `Approved`                     |
+| SHELL-03 | Signed-out account position uses a visible Login text control                                                               | `Approved`                     |
+| SHELL-04 | Use a navigation/hamburger trigger rather than an ellipsis                                                                  | `Approved`                     |
+| SHELL-05 | Keep eight product destinations in the approved row and semantic order                                                      | `Approved`                     |
+| SHELL-06 | Put Settings and Feedback / Error Report after a divider with no group heading                                              | `Approved`                     |
+| SHELL-07 | Keep Admin conditional and separate after ordinary utilities                                                                | `Approved`                     |
+| SHELL-08 | Use icon plus concise text label; do not add descriptions                                                                   | `Approved`                     |
+| SHELL-09 | Compact navigation is a full-width two-column modal below the header                                                        | `Approved`                     |
+| SHELL-10 | Compact open state uses scrim, body lock, focus containment, and reliable close/focus return                                | `Approved`                     |
+| SHELL-11 | Wide navigation is a right-anchored two-column non-modal popover without body lock                                          | `Approved`                     |
+| SHELL-12 | Choose the modal/popover transition from content fit, not the current `1024px` implementation                               | `Approved`                     |
+| SHELL-13 | Compact header hides downward and reveals upward; wide desktop header remains sticky and visible                            | `Approved`                     |
+| SHELL-14 | Keep the header visible during open navigation, header/panel focus, and route entry                                         | `Approved`                     |
+| SHELL-15 | Reduced motion removes header sliding                                                                                       | `Approved`                     |
+| SHELL-16 | Ordinary footer owns Privacy, GitHub, and copyright                                                                         | `Approved`                     |
+| SHELL-17 | Privacy and GitHub do not appear in the header or More panel                                                                | `Approved`                     |
+| SHELL-18 | Login and onboarding use a minimal identity-plus-footer shell without More/profile                                          | `Approved`                     |
+| SHELL-19 | Login body includes concise Discord-data disclosure and an inline Privacy link under the authentication brief               | `Approved`                     |
+| SHELL-20 | Preserve the complete current chart-viewer shell; this brief authorizes no internal shell change                            | `Approved correction`          |
+| SHELL-21 | Maintenance and fatal errors use a minimal identity and recovery shell; exact state behavior follows Brief 19               | `Approved`                     |
+| SHELL-22 | Opened destinations remain native link navigation, not ARIA menu semantics                                                  | `Approved`                     |
+| SHELL-23 | Preserve identical destination identity and semantic order across ko, ja, and en                                            | `Approved`                     |
+| SHELL-24 | Exact Foundation tokens, dimensions, breakpoint, and localized shell copy beyond the approved labels remain downstream work | `Approved`                     |
+| SHELL-25 | Signed-out Feedback preserves validated locale/route/query and reopens the dialog after Login                               | `Approved`                     |
+| SHELL-26 | Use the approved Korean account and destination labels recorded above without changing the destination order                | `Approved Korean — 2026-08-12` |
+| SHELL-27 | Use the approved Japanese and English destination labels recorded above without changing the destination order              | `Approved ja/en — 2026-08-14`  |
 
 ## Handoff Boundary
 

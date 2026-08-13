@@ -124,8 +124,8 @@ Block 6 downstream package는
 개인 성과 상세는 적용 상태 요약 또는 악곡 상세에서 제공합니다. 이 정정은 완료된 여섯
 블록을 다시 열거나 chart viewer/editor 경계를 변경하지 않습니다.
 
-2026-08-13 사용자 결정에 따라 현재 downstream high-fidelity Figma 작업은 Claude가
-계속 담당합니다(Codex 검수 세션을 거친 뒤 사용자가 Claude 진행을 재확인). 문서 `24`·`25`·`63`의 승인 후 정밀 보정과 문서 `05`의
+현재 downstream high-fidelity Figma 작업은 기존 `NosLog v2.0.0` 파일에서 이어집니다.
+특정 도구 이름은 권위가 아니며, 문서 `24`·`25`·`63`의 승인 후 정밀 보정과 문서 `05`의
 Music Detail 후속 결정도 현재 권위에 반영했습니다. 이는 완료된 여섯 디자인 가이드
 블록을 다시 열지 않으며, 구현은 이후의 별도 Codex 세션에 남습니다.
 

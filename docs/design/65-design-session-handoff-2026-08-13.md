@@ -1,5 +1,10 @@
 # 65 · 디자인 세션 인수인계 (2026-08-13)
 
+> **Stale reference — not current authority.** This historical handoff mixes states
+> from several 2026-08-13 checkpoints. Use the current authority order in
+> `AGENTS.md`, document `24`, and the verified Figma file instead of treating pending
+> or document-update notes below as current facts.
+
 > **다음 작업자(Codex 또는 다른 세션)가 이 문서만 읽고 이어받을 수 있도록 쓴 인수인계 기록이다.**
 > 산출물은 Figma 파일 `NosLog v2.0.0`(key `cVbWCxhkfxFfHmAKLCyKrD`)에 있고, 이 문서는
 > 그 안의 무엇이 승인됐고 무엇이 미결인지, 무엇을 건드리면 안 되는지를 정리한다.
@@ -143,7 +148,7 @@ Compact 390 셸 3개(Information · 내 기록 · 패널 열림). **랭킹·서�
 
 ### 4.1 Focus 표시 전면 교체 — `FOCUS-1B`
 
-이전 2겹 ring(1px 분리 띠 + 2px 외곽 링) **폐기**. 새 계약:
+현재 계약:
 
 - 포커스는 **컨트롤 자신의 1px INSIDE 경계 색**으로만 표시
 - 평상시 경계가 있으면 **그 색만** focus 색으로 교체 (invalid가 빨강으로 바뀌는 것과 같은 방식)

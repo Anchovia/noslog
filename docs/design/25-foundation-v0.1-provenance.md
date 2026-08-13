@@ -150,13 +150,14 @@ GOV.UK, Ant Design, and browser forced-colors behavior. The approved Fluent pola
 measured at least `15.91:1` across approved surfaces and passed native Tab, `200%` zoom,
 clipping, roving-focus, and forced-colors checks.
 
-On 2026-08-11, the user superseded only the zero-gap geometry after it visually merged
-with control boundaries. The approved NosLog rendering keeps Fluent's achromatic
-polarity but, since 2026-08-13, draws a single `1px` inside border instead of a `2px`
-outer perimeter with a separation edge.
-The exact extents are `-1px` and `-3px`; forced colors use `Canvas` and `Highlight`.
-Single zero-gap rings, persistent pointer outlines, state recoloring, and decorative
-shadows were rejected. The two-layer geometry itself was superseded on 2026-08-13.
+The approved NosLog rendering keeps Fluent's achromatic polarity and, since
+2026-08-13, draws one `1px` inside border on the control. Forced colors use the
+platform focus colors while preserving the same single-boundary geometry. Persistent
+pointer outlines, state recoloring, and decorative shadows were rejected.
+
+`Rejected — excessive double outer focus; must not be restored.` The earlier
+separation edge plus outer-ring proposal was visually noisy and is not an active
+specimen, implementation option, audit allowance, or downstream design reference.
 The full governed record is `FOCUS-1B` in document `22`.
 
 The later `border/empty-slot` alias is not a new neutral source. It maps Light to the

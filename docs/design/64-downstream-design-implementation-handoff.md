@@ -47,11 +47,11 @@ revision when a material conflict remains.
 
 ## Three-stage delivery boundary
 
-| Stage                     | Owner                        | Required result                                                                                                                                        | Prohibited expansion                                                                     |
-| ------------------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------- |
-| Guide packaging           | Completed Codex guide stage  | Complete editable authority, downstream index, QA contract, and versioned milestone export                                                             | Final page suite or production implementation                                            |
-| High-fidelity design      | Current Claude design stage  | Continue the existing `NosLog v2.0.0` Figma file inside the approved product, Foundation, state, responsive, accessibility, and localization contracts | New product behavior, omitted required state, viewer/editor redesign, or unsourced token |
-| Production implementation | Later separate Codex session | Map the approved guide and final Figma output to the existing stack, code, data, and verified browser behavior                                         | Silently resolving guide/design conflicts or changing the locked experiences             |
+| Stage                     | Owner                           | Required result                                                                                                                                        | Prohibited expansion                                                                     |
+| ------------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------- |
+| Guide packaging           | Completed Codex guide stage     | Complete editable authority, downstream index, QA contract, and versioned milestone export                                                             | Final page suite or production implementation                                            |
+| High-fidelity design      | Current downstream design stage | Continue the existing `NosLog v2.0.0` Figma file inside the approved product, Foundation, state, responsive, accessibility, and localization contracts | New product behavior, omitted required state, viewer/editor redesign, or unsourced token |
+| Production implementation | Later separate Codex session    | Map the approved guide and final Figma output to the existing stack, code, data, and verified browser behavior                                         | Silently resolving guide/design conflicts or changing the locked experiences             |
 
 ## Active source index
 
@@ -277,7 +277,7 @@ legal-copy task, or implementation task.
 
 ## Active high-fidelity design handoff
 
-The current Claude design stage continues the existing `NosLog v2.0.0` Figma file
+The current downstream design stage continues the existing `NosLog v2.0.0` Figma file
 (`cVbWCxhkfxFfHmAKLCyKrD`) and must produce the final high-fidelity website design, including
 the applicable ordinary page families, required states, content-driven compact and
 wide adaptations, reusable responsibilities, and Foundation variables/components.

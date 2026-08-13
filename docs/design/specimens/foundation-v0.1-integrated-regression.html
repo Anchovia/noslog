@@ -145,14 +145,21 @@
                 .field:has(input:focus-visible)::after {
                 position: absolute;
                 z-index: 5;
-                inset: -1px;
-                border: 1px solid var(--canvas);
-                border-radius: calc(
-                    var(--focus-radius, var(--radius-control)) + 1px
-                );
-                box-shadow: 0 0 0 2px var(--focus);
+                inset: 0;
+                border: 1px solid var(--focus);
+                border-radius: inherit;
                 content: "";
                 pointer-events: none;
+            }
+
+            .stale-notice {
+                margin: 0 0 24px;
+                padding: 12px 16px;
+                border: 1px solid var(--border-strong);
+                border-radius: var(--radius-control);
+                color: var(--text);
+                font-size: 0.875rem;
+                line-height: 1.25rem;
             }
 
             .shell {
@@ -382,7 +389,6 @@
             }
 
             .field {
-                --focus-radius: var(--radius-control);
                 display: flex;
                 align-items: center;
                 gap: 8px;
@@ -856,8 +862,7 @@
                 :root[data-input="keyboard"] .focusable:focus-visible::after,
                 :root[data-input="keyboard"]
                     .field:has(input:focus-visible)::after {
-                    border-color: Canvas;
-                    box-shadow: 0 0 0 2px Highlight;
+                    border-color: Highlight;
                 }
 
                 .difficulty-marker,
@@ -884,6 +889,12 @@
     </head>
     <body>
         <main class="shell">
+            <p class="stale-notice" role="note">
+                <strong>Stale reference — not current authority.</strong>
+                This controlled regression harness predates later downstream Figma work.
+                Use it only for bounded regression evidence together with the current
+                Foundation authority.
+            </p>
             <div class="intro">
                 <p class="eyebrow">BLOCK 5 · CONTROLLED GUIDE EVIDENCE</p>
                 <h1 data-i18n="title">Foundation v0.1 통합 회귀</h1>

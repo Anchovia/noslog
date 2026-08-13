@@ -204,13 +204,13 @@ scope.
 ## NosLog 2.0 design-session scope
 
 The authoritative NosLog 2.0 design guide is complete. The current user-authorized
-stage continues the final high-fidelity Figma design in Claude from the existing
-downstream work; it does not implement the redesigned app.
+stage continues the final high-fidelity Figma design from the existing downstream
+work; it does not implement the redesigned app.
 
 Use this delivery pipeline:
 
 1. the completed guide package remains the product and design-system authority;
-2. the current Claude design session creates and verifies the final high-fidelity
+2. the current downstream design session creates and verifies the final high-fidelity
    website and Figma design within the guide's approved rules;
 3. a later, separate Codex implementation session uses both sources to implement and verify
    NosLog 2.0.

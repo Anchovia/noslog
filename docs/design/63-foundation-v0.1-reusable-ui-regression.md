@@ -38,18 +38,18 @@ It exposes Light/Dark appearance, Korean/Japanese/English content, representativ
 `320px`, `390px`, and wide content regions, and 100/200% text conditions. It validates
 scope and token collisions rather than prescribing final composition.
 
-| Gate              | Required result                                                                                                                   |
-| ----------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| Scope             | No viewer/editor, renderer, `S4`, `S6`, or production file reference                                                              |
-| Authority         | Values come only from document `24`; no Tailwind palette, old comparison candidate, or local hybrid                               |
-| Neutral hierarchy | Surfaces, text, ordinary interaction, boundaries, identity, and primary action retain their approved restrained roles             |
-| Narrow chroma     | Feedback, difficulty, local data, and judgement color remains inside its exact semantic marker/plot responsibility                |
-| Focus             | Keyboard-visible two-layer perimeter: `1px` surface separation plus black Light / white Dark `2px` outer ring; no pointer outline |
-| Typography        | Approved composites, natural tracking, real multilingual pressure, and approved first-party dynamic-subset delivery               |
-| Responsive        | No page-level horizontal overflow at `320px`, `390px`, or eligible wide arrangements                                              |
-| Text growth       | Content and controls remain available at `200%` text size without hiding required meaning                                         |
-| Non-color         | State, difficulty, judgement, FAST/SLOW, and chart comparison retain names, values, order, shape/pattern, or explicit status      |
-| Accessibility     | Semantic headings, labels, tables, visible focus, named icon-only controls, and explicit states remain intact                     |
+| Gate              | Required result                                                                                                              |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| Scope             | No viewer/editor, renderer, `S4`, `S6`, or production file reference                                                         |
+| Authority         | Values come only from document `24`; no Tailwind palette, old comparison candidate, or local hybrid                          |
+| Neutral hierarchy | Surfaces, text, ordinary interaction, boundaries, identity, and primary action retain their approved restrained roles        |
+| Narrow chroma     | Feedback, difficulty, local data, and judgement color remains inside its exact semantic marker/plot responsibility           |
+| Focus             | Keyboard-visible `FOCUS-1B`: one achromatic `1px` inside border on the control; no pointer outline                           |
+| Typography        | Approved composites, natural tracking, real multilingual pressure, and approved first-party dynamic-subset delivery          |
+| Responsive        | No page-level horizontal overflow at `320px`, `390px`, or eligible wide arrangements                                         |
+| Text growth       | Content and controls remain available at `200%` text size without hiding required meaning                                    |
+| Non-color         | State, difficulty, judgement, FAST/SLOW, and chart comparison retain names, values, order, shape/pattern, or explicit status |
+| Accessibility     | Semantic headings, labels, tables, visible focus, named icon-only controls, and explicit states remain intact                |
 
 Historical glyph placeholders and temporary controls are not icon or component
 authority. Downstream design must use the approved Lucide and semantic contracts, not
@@ -68,21 +68,16 @@ composition or settle the material decisions below.
 | Japanese, Light, `390px`, 100% text  | Content reflows without horizontal overflow and the Japanese title/content switch is applied.                                                                  |
 | Korean, Dark, wide region, 100% text | Two-column comparison uses the available region without root, frame, or fragment overflow.                                                                     |
 | Pointer focus                        | Pointer activation produces no decorative perimeter, including when the browser still reports `:focus-visible`.                                                |
-| Keyboard focus                       | Superseded historical result: the 2026-08-10 harness used the former `2px` zero-gap perimeter; the 2026-08-13 correction below replaces it.                    |
+| Keyboard focus                       | The controlled artifact now uses the approved achromatic single `1px` inside border and does not expose a pointer-only outline.                                |
 | Overlay focus                        | Opening the details dialog focuses its named close control; closing it restores focus to the invoking `Details` button.                                        |
 | Scope and dependencies               | The document contains no `iframe`, `canvas`, external resource, viewer/editor fragment, renderer dependency, or historical specimen dependency.                |
 | Semantics and runtime                | Four labeled `article` regions, one semantic ranking table, named controls, and explicit status copy remain present; no console warning or error was observed. |
 
-The pointer/keyboard result required one harness correction: the focus perimeter is
-now owned by an explicit input-modality attribute rather than the browser's
-`:focus-visible` heuristic alone. This prevents the persistent Dark white outline the
-user rejected while preserving the approved keyboard-visible indicator.
-
-On 2026-08-13 the controlled artifact was aligned to the user's 2026-08-11 geometry
-correction: a `1px` `surface/canvas` separation edge at `-1px` plus the existing
-achromatic `2px` perimeter reaching `-3px`. This supersedes the historical zero-gap
-geometry without changing modality ownership, focus order, polarity, or forced-color
-behavior.
+The pointer/keyboard result uses an explicit input-modality attribute rather than the
+browser's `:focus-visible` heuristic alone. This prevents a persistent Dark outline
+for pointer activation while preserving the approved keyboard-visible indicator.
+The indicator uses only the control's achromatic `1px` inside boundary and does not
+change its size, position, radius, or surrounding layout.
 
 ## Corrected Foundation summary
 

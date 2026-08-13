@@ -67,8 +67,8 @@
       ③ 같은 행 텍스트끼리 baseline 어긋남 없음
       ④ 세로로 쌓인 라벨/값의 좌측 정렬선 일치
 - [ ] **원형 요소** — 원이어야 하는 것(배지·dot·아바타)은 width=height 고정
-- [ ] **radius 역할** — control `4` / container `8` / overlay `10` / full `50%`
-      (focus ring 파생값 5·6·7·9·11만 예외)
+- [ ] **radius 역할** — control `4` / container `8` / overlay `10` / full `50%`.
+      focus 는 컨트롤의 기존 radius 를 그대로 사용하며 파생 radius 를 만들지 않는다
 - [ ] **strokeWeight** — 1 또는 2
 - [ ] **페이지 겹침** — top-level 노드 간 bounding box 교차 0
 - [ ] **텍스트 넘침** — 부모 가용폭 초과 0
@@ -79,8 +79,8 @@
 ### B. 타이포 감사
 
 - [ ] **Text Style만 사용** — 노드에 size/weight/line-height를 직접 찍지 않는다.
-      36개 Text Style(12 composite × ko/ja/latin) 중 하나를 적용
-- [ ] **composite 정확 일치** — size/line-height/weight 조합이 §3 표의 **12종 중 하나와 정확히 일치**.
+      39개 Text Style(13 composite × ko/ja/latin) 중 하나를 적용
+- [ ] **composite 정확 일치** — size/line-height/weight 조합이 §3 표의 **13종 중 하나와 정확히 일치**.
       임의 조합(예: 16/20, 14/24) 금지
 - [ ] **weight** — `400·500·600·700`만. `100–300`·`800–900`·중간값 금지
 - [ ] **최소 크기** — 사용자 대면 텍스트에 12px 미만 없음
@@ -141,7 +141,7 @@
 ```
 A 레이아웃  spacing 0위반 · 패딩역할 OK · 크기일관 OK · 아이콘 20/16 OK · 타겟 40×40 OK
             정렬 centerY 최대오차 0.0px · 겹침 0 · 넘침 0 · radius OK · stroke OK
-B 타이포    Text Style 100% · composite 12종 내 · weight OK · tabular 위치 OK
+B 타이포    Text Style 100% · composite 13종 내 · weight OK · tabular 위치 OK
 C 색        바인딩 100%(하드코딩 0) · NI-A 위반 0 · Light/Dark 양쪽 확인
 ```
 
@@ -149,7 +149,7 @@ C 색        바인딩 100%(하드코딩 0) · NI-A 위반 0 · Light/Dark 양�
 
 ## 3. Foundation 핵심 값 (문서 24) — **이 집합 밖의 값은 만들지 않는다**
 
-### 3.1 타이포 composite 12종 (이외 조합 금지)
+### 3.1 타이포 composite 13종 (이외 조합 금지)
 
 | Role               | size/line-height · weight | Figures      | 용도 경계                                  |
 | ------------------ | ------------------------- | ------------ | ------------------------------------------ |
@@ -167,9 +167,8 @@ C 색        바인딩 100%(하드코딩 0) · NI-A 위반 0 · Light/Dark 양�
 | `metric-value`     | `14/20 · 500`             | **tabular**  | 행·그룹·시각화 안의 비교 가능한 수치       |
 | `emphasis-label` ⭑ | `14/20 · 600`             | proportional | StatusMessage 제목 · 선택된 세그먼트 라벨  |
 
-⭑ **13번째 composite. 2026-08-11 사용자 승인**(R2 CONFLICT-05). 문서 24 는 FS-BN 에서
-메시지 제목 타이포를 Spectrum 에 위임만 하고 수치를 적어두지 않았다 — 그 공백을 메운 값이다.
-**문서 24 개정 필요.** Text Style `emphasis-label/ko·ja·latin` 3개 생성 완료(총 39개).
+⭑ **13번째 composite. 2026-08-11 사용자 승인**(R2 CONFLICT-05).
+Text Style `emphasis-label/ko·ja·latin` 3개를 포함해 문서 24와 Figma에 반영 완료(총 39개).
 
 - weight는 `400·500·600·700`만. 사용자 대면 텍스트 12px 미만 없음.
 - **수치에 IBM Plex Mono 를 쓰지 않는다**(2026-08-11 결정, R2 CONFLICT-06).
@@ -189,7 +188,7 @@ C 색        바인딩 100%(하드코딩 0) · NI-A 위반 0 · Light/Dark 양�
 
 - 중립 = **Adobe Spectrum S2 정확값** (Tailwind 금지)
 - focus = **FI-C** Light `#000000` / Dark `#FFFFFF` · **컨트롤 자신의 1px INSIDE 경계 하나**
-  (`FOCUS-1B`, 2026-08-13 사용자 결정. 이전 2겹 기하는 **폐기**)
+  (`FOCUS-1B`, 2026-08-13 사용자 결정)
     - 평상시 경계가 있으면 **그 색만** focus 색으로 교체 (invalid 가 빨강으로 바뀌는 것과 같은 방식)
     - 평상시 경계가 없으면 **포커스에서만** 1px 경계를 부여. 평상시 외형은 그대로
     - INSIDE 라서 크기·위치·주변 레이아웃이 변하지 않는다. **두께를 바꾸지 않는다**
@@ -213,7 +212,7 @@ C 색        바인딩 100%(하드코딩 0) · NI-A 위반 0 · Light/Dark 양�
 - **`border/empty-slot`** ⭑ 신규 별칭 토큰(2026-08-13 승인, CONFLICT-17) — 아트 없는 자켓 슬롯의 1px 경계.
   Light = `surface/sunken` 별칭(자켓 fill 과 동일 → 비가시) / Dark = `border/subtle` 별칭(#393939).
   Dark 에서 `surface/sunken` = `surface/canvas`(#111111) 이라 슬롯이 사라지는 문제 해결. 이미지 fill 이
-  들어오면 stroke 를 제거한다. **문서 24 에 없는 값 → 문서 24 개정 필요.**
+  들어오면 stroke 를 제거한다. 문서 24와 Figma에 반영 완료.
 - grid: Compact <672(4col g12 m16) / Intermediate 672–1055(8col g16 m24) / Wide 1056+(12col g16 m32)
 - container: reading 768 / standard 1280 / wide 1440 / workspace fluid
 
@@ -248,7 +247,7 @@ C 색        바인딩 100%(하드코딩 0) · NI-A 위반 0 · Light/Dark 양�
 
 | 항목                 | 결정                                                                                                                                                                                                                                                                                                                                     | 일자       |
 | -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| focus indicator      | ~~2겹 ring~~ → **단일 1px INSIDE 경계**(`FOCUS-1B`) · 평상시 경계 있으면 색만 교체 / 없으면 포커스에서만 부여 · 두께·크기 불변. 문서 22·24·25·63 개정 완료                                                                                                                                                                               | 2026-08-13 |
+| focus indicator      | **단일 1px INSIDE 경계**(`FOCUS-1B`) · 평상시 경계 있으면 색만 교체 / 없으면 포커스에서만 부여 · 두께·크기 불변. 문서 22·24·25·63 개정 완료                                                                                                                                                                                              | 2026-08-13 |
 | 필터 적용 표시       | **배경 없음** + 배지 + `border/strong`                                                                                                                                                                                                                                                                                                   | 2026-08-11 |
 | 뷰모드 선택 표시     | **surface/raised 세그먼트**(sunken 트랙 위)                                                                                                                                                                                                                                                                                              | 2026-08-11 |
 | 대체 폰트            | IBM Plex 사용, 완성 후 사용자가 Pretendard로 교체                                                                                                                                                                                                                                                                                        | 2026-08-11 |

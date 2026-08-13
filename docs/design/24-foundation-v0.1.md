@@ -237,8 +237,7 @@ Any further segmented family needs its own decision rather than inheriting this 
 
 ### Keyboard focus — `FI-C` polarity with single-border geometry
 
-Revised 2026-08-13 by user decision. The former two-layer geometry is `Superseded`;
-see `FOCUS-1B` in document `22`.
+Revised 2026-08-13 by user decision; see `FOCUS-1B` in document `22`.
 
 - Light focus color: `#000000`. Dark focus color: `#FFFFFF`.
 - Geometry: **one `1px` inside border on the focused control itself**. Stroke alignment
