@@ -1,318 +1,400 @@
-# 66 · 디자인 세션 인수인계 (2026-08-14)
+# 66 · Design Session Handoff (2026-08-14)
 
-> 이 문서가 **현재 권위**다. `docs/design/65-design-session-handoff-2026-08-13.md` 는
-> 역사 기록이며 그 안의 "미착수 / 미결 / 노드 수"를 현재 사실로 쓰지 않는다.
-> 이 문서와 실제 Figma 파일, 그리고 각 Page Brief 가 판단 근거다.
-
----
-
-## 0. 이 단계가 무엇인지
-
-디자인 가이드(문서 01~25, 57, 63, 64)는 완료됐다. 지금은 **기존 Figma 파일 위에서
-최종 high-fidelity 화면을 완성하는 단계**다.
-
-- 기존 Figma 가 베이스라인이다. 처음부터 다시 만들지 않는다.
-- 아직 만들어지지 않은 부분만 이어서 만든다.
-- 화면 하나 때문에 전역 타이포·색·간격 토큰을 바꾸지 않는다.
-- 구현 코드는 아직 쓰지 않는다. (에셋 추가는 했다 — §4.6)
-- 중요한 변경은 Before → After 로 보여주고 승인받은 뒤 적용한다.
-- 승인 없이 여러 페이지로 패턴을 전파하지 않는다.
-
-### 권위 순서
-
-① 사용자의 최신 결정 → ② `AGENTS.md` → ③ `README.md` · 문서 57 → ④ 문서 64
-→ ⑤ **문서 07(뷰어/에디터 절대 보존)** → ⑥ 문서 24 → ⑦ 문서 25 → ⑧ 해당 Page Brief
-→ ⑨ 문서 22 · 63
-
-`CLAUDE.md` 는 작업 규칙 파일이다. **작업 시작 전 매번 읽는다.**
+> This is an operational handoff. It does not alter the authority order in
+> `AGENTS.md`. Document `65` is historical evidence; its statements about work not
+> started, unresolved items, or node counts are not current facts. Verify current
+> state against the repository, the active Figma file, and the owning Page Brief.
 
 ---
 
-## 1. 절대 보존 경계
+## 0. Current stage
 
-- **채보 viewer/editor 전체 잠금**(문서 07) — 재설계·recolor·재배치·Foundation 적용 금지.
-  새 variant/specimen 생성 금지. PixiJS/WebGL·palette·geometry·animation·chart math 불변.
-  **진입 링크만** 다룬다.
-- 관리자 `/admin/*` 광범위 재설계 없음. 신규 user chart-contribution/editor 흐름 없음.
-- 로컬 MP3 는 브라우저에 머무르며 업로드하지 않는다.
-- raw sync token 을 단독 텍스트로 렌더·복사·로깅하지 않는다.
-- 시험 증빙 이미지는 비공개 Blob, 공개 URL 없음.
-- p.eagate 비밀번호·세션 쿠키는 NosLog 로 전송하지 않는다.
-- 레거시 NOSTORY Figma 는 현재 권위가 아니다.
-- 문서 63 regression harness 를 최종 구성으로 복사하지 않는다.
-- 문서 18 개인정보 release blocker 를 해결된 UI 로 위장하지 않는다.
+The design guide in documents 01–25, 57, 63, and 64 is complete. The active stage is
+to finish the final high-fidelity screens in the existing Figma file.
+
+- The existing Figma file is the baseline. Do not restart from scratch.
+- Extend only the portions that have not yet been designed.
+- Do not change global typography, color, or spacing tokens to solve one screen.
+- Do not write implementation code yet. Repository assets were added as described in
+  section 4.6.
+- Show material changes as an exact Before → After comparison and obtain approval
+  before applying them.
+- Do not propagate a new pattern across pages before its first representative unit is
+  approved.
+
+### Authority order
+
+1. The user's latest explicit decision.
+2. `AGENTS.md`.
+3. `README.md` and document 57.
+4. Document 64.
+5. Document 07, the absolute chart viewer/editor preservation contract.
+6. Document 24.
+7. Document 25.
+8. The owning Page Brief.
+9. Documents 22 and 63.
+
+`CLAUDE.md` is a working-rules file and must be read before every design task.
 
 ---
 
-## 2. 작업 환경
+## 1. Absolute preservation boundaries
+
+- The complete chart viewer and editor are locked by document 07. Do not redesign,
+  recolor, rearrange, apply Foundation, or create variants or specimens. Preserve
+  PixiJS/WebGL, palettes, geometry, animation, chart mathematics, and the editor
+  rendering model. Only the entry link is in scope.
+- Do not broadly redesign `/admin/*` or create a user chart-contribution/editor flow.
+- Local MP3 files remain in the browser and are never uploaded.
+- Never render, copy, or log a raw sync token as standalone text.
+- Exam evidence images remain private Blob assets with no public URL.
+- Never send a p.eagate password or session cookie to NosLog.
+- Legacy NOSTORY Figma is not current authority.
+- Do not copy the document 63 regression harness as final page composition.
+- Do not disguise document 18 privacy release blockers as resolved UI.
+
+---
+
+## 2. Working environment
 
 **Figma**: `NosLog v2.0.0` · key `cVbWCxhkfxFfHmAKLCyKrD`
 
-| 페이지                 | id          | 상태                                                |
-| ---------------------- | ----------- | --------------------------------------------------- |
-| 01~03 Foundation       | `70:238` 외 | ✅                                                  |
-| C1 Icons               | `86:3`      | ✅ Lucide 36                                        |
-| C2 Actions             | `86:4`      | ✅                                                  |
-| C3 Markers             | `86:5`      | ✅                                                  |
-| C4 Forms & Feedback    | `86:6`      | ✅                                                  |
-| C5 Search & Refinement | `86:7`      | ✅                                                  |
-| C6 Entity & Result     | `86:8`      | ✅                                                  |
-| C7 Dense Data          | `86:9`      | ✅ **감사 위반 0**                                  |
-| C8 Overlays & Shell    | `86:10`     | ✅ 셸·Focus·모달/팝오버 조립 완료 (푸터 focus 제외) |
-| P1 Music Detail 조립   | `242:2`     | 4영역 Light·Dark 완료. **서열·평가는 부분 조립**    |
-| Z1 결정 기록           | `268:2`     | 승인 `268:3` / 보류 `268:11` — **보류 0건**         |
+| Page                     | ID                         | Current state                                                                                |
+| ------------------------ | -------------------------- | -------------------------------------------------------------------------------------------- |
+| 01–03 Foundation         | `70:238` and related pages | Complete                                                                                     |
+| C1 Icons                 | `86:3`                     | Complete · 36 Lucide icons                                                                   |
+| C2 Actions               | `86:4`                     | Complete                                                                                     |
+| C3 Markers               | `86:5`                     | Complete                                                                                     |
+| C4 Forms & Feedback      | `86:6`                     | Complete                                                                                     |
+| C5 Search & Refinement   | `86:7`                     | Complete                                                                                     |
+| C6 Entity & Result       | `86:8`                     | Complete                                                                                     |
+| C7 Dense Data            | `86:9`                     | Complete · audit violations 0                                                                |
+| C8 Overlays & Shell      | `86:10`                    | Shell, focus, modal, and popover assembly complete; footer-link focus intentionally excluded |
+| P1 Music Detail assembly | `242:2`                    | Four areas in Light and Dark; Tier & Evaluation remains partially assembled                  |
+| Z1 decision record       | `268:2`                    | Approved `268:3`; pending `268:11`; pending items 0                                          |
 
-- Color 컬렉션 `VariableCollectionId:70:3` · 모드 Light `70:1` / Dark `70:2`
-- **Text Style 45개** = 13 composite × ko/ja/latin(39) + `nav-fit/*`·`nav-fit-current/*`(6)
-- 폰트: 규범은 `Pretendard JP Variable`, 현재 렌더는 `IBM Plex Sans KR/JP/Latin`.
-  교체는 `font/family/ko·ja·latin` 3개만 바꾸면 전파된다. **교체 후 레이아웃 재검수 필요.**
+- Color collection: `VariableCollectionId:70:3`; Light `70:1`; Dark `70:2`.
+- Text styles: 45 total = 13 composites × `ko`/`ja`/`latin` (39) plus six
+  `nav-fit/*` and `nav-fit-current/*` styles.
+- Normative font: `Pretendard JP Variable`. The current renderer uses
+  `IBM Plex Sans KR/JP/Latin`. Repointing the three
+  `font/family/ko·ja·latin` variables propagates the family change. Revalidate all
+  layouts after the replacement.
 
-**상태 파일**(레포 밖, 참고용): `~/.claude/projects/-Users-carol-Desktop-project-noslog/design-state/`
-— `audit.js`(A/B/C 전수 감사) · `R2-conflicts.md` · `state.json` · `brief-contracts-notes.md`.
-현재 사실은 이 문서와 Figma 로 확인한다.
-
----
-
-## 3. 반드시 지킬 작업 규칙 (어긴 이력이 있음)
-
-1. 사용자가 **"시작"** 이라고 말하기 전에 만들지 않는다.
-2. 만들기 전에 해당 Page Brief 를 **끝까지** 읽는다.
-3. 문서에 없는 값(패딩·정렬·색·구조·컬럼·라벨)을 감으로 정하지 않는다.
-4. 근거 없는 시각 결정은 **Z1 에 비교 시안을 그려서** 묻는다. 말로만 묻지 않는다.
-5. 만든 직후 A/B/C 전수 감사를 돌린다. 스크립트가 에러 없이 돈 것은 검증이 아니다.
-6. **안 돌린 검사를 "검증했다"고 말하지 않는다.**
-7. Light·Dark 양쪽을 만든다.
-8. 값은 문서 24 집합 안에서만 고른다. 근사값·중간값을 만들지 않는다.
-9. 결정이 끝난 Z1 시안은 즉시 승인 섹션으로 옮기고 미채택 칸은 `폐기 · …` 로 표시한다.
-10. 설명 문장은 보이는 텍스트가 아니라 **dev 주석(annotations)** 에 넣는다.
-11. 폐기·비교 보드는 제품 컴포넌트 페이지(C1~C8·P1)에 두지 않고 Z1 로 옮긴다.
-
-### Figma API 함정 (이번 세션에 실제로 당한 것)
-
-- **auto-layout 부모에서 `appendChild` 는 z-순서뿐 아니라 flow 위치를 바꾼다.**
-  P1 셸에서 헤더가 flow 끝으로 밀려 화면에서 사라졌다. 오버레이 z 는
-  `layoutPositioning='ABSOLUTE'` 로 풀고 flow 순서는 건드리지 않는다.
-- **인스턴스 서브레이어를 `visible=false` 로 숨기면 이 API 의 `children` 에서 사라진다.**
-  게다가 auto-layout 에서 열이 붕괴한다. "값 없음"은 숨기지 말고 **내용만 비운다**
-  (텍스트 `''` + `strokes = []`).
-- `vectorPaths` 를 넣으면 경로가 노드 bbox 기준으로 재정렬된다. 좌표계를 유지하려면
-  할당 후 노드 `x/y` 를 의도한 bbox 최소점으로 되돌린다.
-- 절대배치 오버레이(focus-border 등)는 부모 크기 변경을 따라가지 않는다.
-  `constraints = STRETCH/STRETCH` 를 걸고, 부모 크기를 바꾸면 반드시 재확인한다.
-- 클론할 원본이 `DARK VERIFICATION` 안에 있으면 Dark 색이 딸려온다. 원본의 실효 모드를 먼저 본다.
-- 복제 후에는 바인딩 paint 의 raw 값을 **실효 모드 값으로 다시 기록**한다.
-  특히 `surface/scrim` 은 알파가 paint opacity 에 저장된다(Light 0.4 / Dark 0.6).
-- `createImageAsync` 는 이 API 버전에 없다. 플러그인은 로컬 파일도 못 읽는다.
-  → Figma 안에 비트맵을 넣을 수 없다. 이미지 자리는 **슬롯 + 자리표시**로 둔다.
-- 노드 삭제는 id 를 먼저 모으고 나중에 지운다. 순회 중 삭제하면 크래시한다.
-- 폰트는 쓰기 전에 항상 `loadFontAsync`. `textAutoResize` 변경에도 필요하다.
+External state files are reference material only:
+`~/.claude/projects/-Users-carol-Desktop-project-noslog/design-state/` contains
+`audit.js`, `R2-conflicts.md`, `state.json`, and `brief-contracts-notes.md`. Current
+facts must still be verified against this handoff's higher authorities and Figma.
 
 ---
 
-## 4. 이번 세션(2026-08-14)에 한 일
+## 3. Mandatory working rules
 
-### 4.1 로케일 Text Style 전면 정정 — 268곳
+1. Do not create anything before the user explicitly says `시작`.
+2. Read the owning Page Brief completely before drawing.
+3. Do not guess undocumented padding, alignment, color, structure, columns, or labels.
+4. For an unresolved visual decision, draw comparison options in Z1 and ask the user;
+   do not ask only in prose.
+5. Run the complete A/B/C audit immediately after creating a unit. A script completing
+   without an error is not proof that the result is correct.
+6. Report only checks that were actually executed.
+7. Produce both Light and Dark appearances.
+8. Use only values allowed by document 24. Do not invent approximations or
+   intermediate values.
+9. Move decided Z1 options to the approved section immediately and mark unselected
+   options `폐기 · …`.
+10. Put explanatory sentences in dev annotations, not visible product text.
+11. Keep rejected and comparison boards in Z1, not C1–C8 or P1.
 
-`*/ko·ja·latin` 은 **폰트 패밀리 스위치이자 폭 측정 전제**다. 일본어에 `*/ko` 가 걸리면
-한자 폭이 절반으로 측정된다(`楽曲` 14px vs 28px). 이 때문에 이전 세션의 "320px 에서
-6개 라벨이 12/16 필요" 라는 결론이 틀렸다. 파일 전체를 정정했고 **현재 잔여 0**이다.
+### Figma API traps encountered in this work
 
-### 4.2 내비 라벨 fit — 전용 스타일 6개
+- In an auto-layout parent, `appendChild` changes flow position as well as z-order.
+  A P1 header was moved to the end of the flow and disappeared. Use
+  `layoutPositioning='ABSOLUTE'` for overlay z-order and preserve flow order.
+- Hiding an instance sublayer with `visible=false` removes it from this API's
+  `children` collection and can collapse an auto-layout column. For an absent value,
+  preserve the slot and clear only its content (`''` text and `strokes = []`).
+- Assigning `vectorPaths` repositions paths around the node bounding box. Restore the
+  node `x/y` to the intended bounding-box minimum after assignment.
+- Absolute focus-border overlays do not follow parent resizing automatically. Use
+  `constraints = STRETCH/STRETCH` and recheck after parent-size changes.
+- A source cloned from `DARK VERIFICATION` carries effective Dark paints. Inspect its
+  effective mode before cloning.
+- After cloning, rewrite bound paint raw values to the effective-mode values.
+  `surface/scrim` alpha lives in paint opacity: Light `0.4`, Dark `0.6`.
+- `createImageAsync` is unavailable in this API, and the plugin cannot read local
+  files. Keep bitmap locations as slots and placeholders in Figma.
+- Collect node IDs first and delete afterward. Deleting during traversal can crash the
+  operation.
+- Always call `loadFontAsync` before text writes, including `textAutoResize` changes.
 
-`12/16 · 500` 은 13 composite 에 없으므로 raw 값 대신 전용 스타일로 처리한다.
-`nav-fit/ko·ja·latin`(500) · `nav-fit-current/ko·ja·latin`(600). 전부 `font/family/*` 에
-바인딩돼 폰트 교체가 전파된다. **320px 에서 fit 이 필요한 라벨은 4개**(`데이터 동기화` ·
-`譜面ビューア` · `ご意見・報告` · `Chart Viewer`). `店舗` 와 `Feedback` 은 근거가 없어
-`14/20` 으로 복귀시켰다. 390·Wide 에서는 전부 `14/20`.
+---
 
-### 4.3 C8 셸 Focus — `State=Focus` 5개 추가
+## 4. Work completed on 2026-08-14
 
-AppHeader · DestinationPanel Compact/Wide · AreaSwitcher Compact/Wide.
-FOCUS-1B(컨트롤 자신의 1px INSIDE 경계). 평상시 경계가 있으면 색만 교체(AreaSwitcher 트리거),
-없으면 포커스에서만 부여. **세트당 대표 컨트롤 하나만** variant 로 남기고 나머지 대상은
-같은 규칙임을 컴포넌트 설명에 적었다(SHELL-30·31). 실측 대비 Light 19.77~~21.0 / Dark 15.91~~18.88.
-**푸터 링크 focus 는 사용자 결정으로 이번 범위에서 제외.**
+### 4.1 Locale text-style correction — 268 nodes
 
-### 4.4 C8 모달 / 팝오버 조립 + 접합 규칙
+`*/ko·ja·latin` is both a font-family switch and a text-width measurement
+precondition. Applying `*/ko` to Japanese caused some kanji to measure at half width
+(`楽曲` measured 14px instead of 28px), invalidating the previous claim that six
+labels needed `12/16` at 320px. All affected nodes were corrected; the recorded
+remaining count is 0.
 
-- Compact modal 390·320, Wide popover 1280 을 Light·Dark 로 조립(섹션 `596:1389`).
-- **접합 규칙(문서 24 `Joined overlay edge`)**: 모달은 헤더에 gap 0 으로 붙이고 접합 변
-  radius 0, 접합 변의 자기 경계는 그리지 않는다(2px 이중선 방지). 비모달 팝오버는 트리거
-  아래 8 오프셋 + 네 모서리 radius 유지. **성격별로 다르고 하나의 숫자를 공유하지 않는다**(SHELL-33).
-- 320px reflow 검증 포함(가용 폭 288, 셀 134, 텍스트 슬롯 78).
-- 동작(스크롤 잠금·포커스 containment·Escape·외부 클릭)은 Figma 로 표현할 수 없어 **dev 주석**에만 있다.
+### 4.2 Navigation-label fit — six dedicated styles
 
-### 4.5 푸터 3로케일 문구 (문서 15 `SHELL-32`)
+The 13 composites do not contain `12/16 · 500`, so the bounded navigation exception
+uses dedicated styles rather than raw values:
 
-| 로케일 | 문구                                                                                   |
+- `nav-fit/ko·ja·latin` at weight 500.
+- `nav-fit-current/ko·ja·latin` at weight 600.
+
+All are bound to `font/family/*`. At 320px, exactly four labels need the fit step:
+`데이터 동기화`, `譜面ビューア`, `ご意見・報告`, and `Chart Viewer`. `店舗` and
+`Feedback` returned to `14/20` because measurement did not justify reduction. All
+labels use `14/20` at 390px and Wide.
+
+### 4.3 C8 shell focus — five `State=Focus` variants
+
+Focus variants were added for AppHeader, Compact and Wide DestinationPanel, and
+Compact and Wide AreaSwitcher. They implement FOCUS-1B: one 1px inside boundary on
+the control. A resting boundary changes color; a borderless control gains the boundary
+only during focus. Each set retains one representative focus variant, and its
+description records that the same rule applies to the remaining controls
+(`SHELL-30`, `SHELL-31`). Measured contrast ranges were Light 19.77–21.0 and Dark
+15.91–18.88. Footer-link focus was explicitly excluded from this work unit.
+
+### 4.4 C8 modal and popover assembly
+
+- Compact modal at 390px and 320px and Wide popover at 1280px were assembled in Light
+  and Dark in section `596:1389`.
+- Document 24's `Joined overlay edge` rule applies to the compact modal: zero gap to
+  the header, zero radius on the joined corners, and no duplicate self-border on the
+  joined edge. The non-modal Wide popover retains four rounded corners and an 8px
+  anchor offset. These are different usage contracts and do not share one offset.
+- The 320px check used 288px available width, 134px cells, and 78px text slots.
+- Scroll locking, focus containment, Escape, and outside-click behavior are recorded
+  only as dev annotations because static Figma cannot execute them.
+
+### 4.5 Footer copy in three locales (`SHELL-32`)
+
+| Locale | Approved copy                                                                          |
 | ------ | -------------------------------------------------------------------------------------- |
 | KO     | `© 2026 NosLog · NOSTALGIA 기록·랭킹·아카이브 비공식 팬 서비스`                        |
 | JA     | `© 2026 NosLog · NOSTALGIA の記録・ランキング・アーカイブ非公式ファンサービス`         |
 | EN     | `© 2026 NosLog · Unofficial fan service for NOSTALGIA records, rankings, and archives` |
 
-상표 귀속 문장은 **어느 로케일에도 승인된 것이 없다.** 추가는 3로케일 동시 결정 사안.
+No trademark-attribution sentence is approved in any locale. Adding one requires one
+coordinated three-locale decision.
 
-### 4.6 등급 이미지 정적화 — **레포 변경 있음**
+### 4.6 Self-hosted grade images — repository assets added
 
-`public/grade/` 에 공식 등급 이미지 8종을 저장했다(`grade_p·s·a2·a·b2·b·c·d.png`, 40×40).
-기존 구현은 `p.eagate.573.jp` 를 hotlink 하고 있었고, 서버 장애 시 표시가 사라지므로
-자체 호스팅으로 바꾸기로 했다.
+Eight official 40×40 grade images are tracked in `public/grade/`:
+`grade_p·s·a2·a·b2·b·c·d.png`. The current implementation hot-links p.eagate, so a
+third-party outage can blank the grade column.
 
-**아직 안 한 것**: `components/music/ranking/rankImage.tsx` 는 여전히 원격 URL 을 본다.
-구현 단계에서 `public/grade/` 로 바꿔야 한다. 이번 세션은 구현 코드를 건드리지 않았다.
+Not yet implemented: `components/music/ranking/rankImage.tsx` still uses the remote
+URL. Change it to `public/grade/` only during the later implementation stage. No
+implementation code was changed in this design session.
 
-### 4.7 성취 색 역할 신설 — 문서 24 `AC-01`
+### 4.7 Achievement color roles — document 24 `AC-01`
 
-`achievement/full-combo`(초록) · `achievement/pianist`(앰버). 값은 **SAP Fiori Horizon**
-primitive 별칭(LD-03 과 같은 승인 출처). categorical 은 비의미 팔레트라 값 재사용에서
-의미 충돌이 없다. 현재 제품의 Tailwind lime `#a3e635` 는 **출처가 없어 채택하지 않았다.**
-`FC`·`P` 라벨을 항상 함께 둔다(색만으로 전달 금지).
+`achievement/full-combo` uses green and `achievement/pianist` uses amber. Both alias
+the already approved SAP Fiori Horizon primitives from LD-03. Always pair the colors
+with the labels `FC` and `P`. The existing Tailwind lime `#a3e635` has no approved
+source and is not adopted.
 
-### 4.8 랭킹 행 전면 재구성 (문서 05 `MDET-84`)
+### 4.8 Leaderboard row reconstruction — document 05 `MDET-89`
 
-한 줄 + 고정 열. **파일 전체 68행이 단일 열 패턴**:
+All 68 rows use one fixed one-line column pattern:
 
+```text
+rank 0:28 | profile 36:24 | name 68:130 | grade 206:18 | score 232:68 | achievement 308:26   (gap 8)
 ```
-순위 0:28 | 프로필 36:24 | 이름 68:130 | 등급 206:18 | 점수 232:68 | 성취 308:26   (간격 8)
-```
 
-- 이름만 FILL. **값이 없어도 열이 유지된다**(성취 없는 행에서 점수가 밀리지 않는다).
-- 점수 열은 최대 점수폭(`1,000,000` 계열 67px)에 맞췄고 헤더 `점수` 는 그 열 중앙.
-- 보이는 헤더는 `순위`·`플레이어`·`점수` 뿐. 프로필·등급·성취는 **접근성 이름만**.
-- 등급은 18px **이미지 슬롯**(Figma 는 자리표시 글자, 실제는 `public/grade/`).
-- `MyRankSummary` 3 state 도 같은 열 좌표·같은 마크 문법. 컨테이너 recipe 는 표와 동일
-  (`surface/surface` + `radius/container` + 패딩 12 · **경계선 없음** — 넣으면 요약이 표보다 강해진다).
-- 플레이어 이름의 로케일 스타일은 **이름 문자 체계를 따른다**(한·일·라틴 혼재).
+- Only the name column fills available width. Empty values preserve their columns, so
+  a missing achievement never shifts the score.
+- The score column fits the widest `1,000,000`-family value, and the visible `점수`
+  header is centered over that column.
+- Only rank, player, and score have visible headers. Profile, grade, and achievement
+  have accessible names only.
+- Grade uses an 18px image slot. Figma uses placeholder text; implementation uses
+  `public/grade/`.
+- The three `MyRankSummary` states use the same coordinates and mark grammar. Their
+  container matches the table recipe: `surface/surface`, `radius/container`, 12px
+  padding, and no boundary.
+- Player-name locale style follows the writing system of the name itself because one
+  ranking mixes Korean, Japanese, and Latin names.
 
-### 4.9 P1 4영역 조립 + Dark
+### 4.9 P1 four-area assembly and Dark appearance
 
-Information · 내 기록 · **랭킹** · **서열·평가** · 목적지 패널 열림 — **Light·Dark 각 5셸**.
-영역 패널 안 블록 간격은 **32** 로 통일. AreaSwitcher 는 영역별 variant 로 전환.
+Information, My Record, Ranking, Tier & Evaluation, and the open DestinationPanel are
+assembled as five Light and five Dark shells. Blocks inside an area panel use a 32px
+gap, and AreaSwitcher changes to the matching area variant.
 
-### 4.10 사용자가 잡아낸 결함들 (전부 수정 완료)
+### 4.10 User-reported defects corrected
 
-- 그리드 카드 **죽은 여백 20px**(297 고정 vs 내용 277) → 카드·body HUG 로 277
-- 그리드 카드 **이중 갭**(카드 gap 8 + body padding 12 = 상단 20 / 하단 12) →
-  카드 gap 0 · 패딩 0, body 패딩 12 사방 → **상하 12 대칭**, 카드 269
-- **포커스링이 카드보다 20px 초과** → 부모에 맞추고 `STRETCH` 로 고정
-- **자켓 배지가 음표 아이콘에 가려짐** → `category` 를 z 최상단으로 (C6 12곳 + Z1 6곳)
-- **헤더가 사라짐**(P1) → auto-layout flow 순서 복구
-- **점수 열 붕괴** → 빈 마크를 숨기지 않고 내용만 비우도록 변경
-- 설명 문장이 보이는 텍스트로 들어감(C2·C6·C7) → dev 주석으로 이동
+- Music Grid dead space: a fixed 297px card held 277px of content. Card and body now
+  hug content.
+- Music Grid double gap: card gap 8 plus body top padding 12 created 20px above and
+  12px below. Card gap and padding are 0; body padding is 12px on every side.
+- A focus border extended 20px beyond its card. It now stretches to the parent.
+- The jacket category badge was obscured by the music-note icon. `category` is now at
+  the highest z-position in 12 C6 and 6 Z1 cases.
+- The P1 header disappeared after an auto-layout flow reorder. Flow order was restored.
+- Empty achievement slots collapsed the score column. Slots now remain while only
+  their content is cleared.
+- Visible explanatory sentences in C2, C6, and C7 were moved to dev annotations.
 
 ---
 
-## 5. 지금 레포 상태
+## 5. Current repository state
 
-```
- M CLAUDE.md
- M docs/design/05-music-detail-page-brief.md
- M docs/design/15-shared-shell-navigation-brief.md
- M docs/design/24-foundation-v0.1.md
-?? public/grade/            (신규 · 등급 이미지 8종)
-```
-
-**커밋하지 않았다.** `prettier --check` 통과 · `git diff --check` 통과.
-직전 커밋은 `9b0cdc0 docs: 로케일 텍스트 스타일 전제와 내비 fit 전용 스타일 확정`.
-
-추천 커밋 제목: `docs: 랭킹 행 열 계약과 성취 색 역할 확정`
+- Branch `dev` is synchronized with `origin/dev` at commit `e029ead`:
+  `docs: 랭킹 행 열 계약과 성취 색 역할 확정`.
+- The working tree was clean when this handoff was reconciled on 2026-08-14.
+- The eight `public/grade/` assets are committed.
+- `components/music/ranking/rankImage.tsx` still references the remote p.eagate URL;
+  the local-asset code change remains implementation-stage work.
 
 ---
 
-## 6. 다음에 할 일 — 순서대로
+## 6. Remaining work, in order
 
-### 1단계 · P1 서열·평가 영역 완성 (문서 05 · 926-942)
+### Stage 1 · Complete P1 Tier & Evaluation
 
-현재 ①②③ 만 조립돼 있고 **④⑤ 가 없다.** 해당 셸 dev 주석에 "부분 조립"이라고 적혀 있다.
+The current shell contains only units 1–3. Units 4 and 5 are absent and the shell dev
+annotation marks it as partial.
 
-**④ 현재 사용자의 투표·평가 폼**
+#### 4. Current-user vote and evaluation forms
 
-- 6범위 투표: Basic/Recital × S/Full Combo/Pianist, 값 `1.0`–`14.5` `0.1` 단위,
-  사용자·채보·모드·목표당 1개, 범위별 독립 수정·삭제
-- 자격 상태 5종: 로그인 안 됨 / 해당 채보 검증 기록 없음 / Recital 미참가 / 자격 있음 / 이미 투표함
-  — **자격 없는 이유를 접근 가능하게 보여줘야 한다.** disabled 만 두고 설명 생략 금지
-- Basic: S ≥ 950,000 · Full Combo `fc_type >= 2` 또는 1,000,000 · Pianist `fc_type === 3` 또는 1,000,000
-- Recital: 같은 목표 조건 + `grade_recital > 0`
-- 5축 패턴 평가: `계단·연타·폴리리듬·즈레·동시치기`, **`미평가`(결측) ≠ `0`(없음)**,
-  누락 축을 0 으로 prefill 금지, 명시적 `미평가` 상태 제공
-- 삭제 범위 3종(의견만 / 일반 평가 전체 / 범위별 투표)이 서로 독립
+- Six vote scopes: Basic/Recital × S/Full Combo/Pianist.
+- Values `1.0`–`14.5` in `0.1` increments.
+- One vote per user, chart, mode, and goal; independent edit and deletion per scope.
+- Five eligibility states: signed out, no verified record for the exact chart, no
+  Recital participation, eligible, and already voted. Every unavailable action needs
+  an accessible reason; an unexplained disabled control is prohibited.
+- Basic predicates: S score ≥950,000; Full Combo `fc_type >= 2` or score 1,000,000;
+  Pianist `fc_type === 3` or score 1,000,000.
+- Recital requires the same goal predicate plus `grade_recital > 0`.
+- Five pattern axes: Stairs, Repetition, Polyrhythm, Offset, and Chords.
+  `Not rated` is missing data and remains distinct from valid `0 · None`. Never
+  prefill an omitted axis as 0.
+- Three independent deletion scopes: opinion only, complete general evaluation, and
+  one exact vote scope.
 
-**⑤ 커뮤니티 의견** — Helpful · 정렬 2종 · Load more · 삭제 2종 · overflow 는 상시 버튼이
-아니라 메뉴. **의견 행마다 5축 값을 반복하지 않는다**(집계는 레이더가 소유).
+#### 5. Community opinions
 
-### 2단계 · 나머지 Page Brief (13개 미착수)
+Include Helpful, exactly two sorts, explicit Load more, the approved deletion scopes,
+and an overflow menu rather than permanent row actions. Do not repeat all five pattern
+values in each opinion; the aggregate radar owns that information.
 
-03 Home · 04 Shared Discovery · 06 Tier List · 08 Global Rankings · 09 Profile ·
-10 Bingo · 11 Exam · 12 Arcade Discovery · 13 Data Sync · 14 Announcements ·
-16 Settings & Account · 17 Authentication & Onboarding · 19 System Recovery States
+### Stage 2 · Remaining Page Briefs
 
-문서 07 은 제작 대상이 아니라 보존 계약. 문서 18 은 release blocker 라 UI 로 위장 금지.
+The remaining downstream page families are:
 
-### 3단계 · 밀린 공용 항목
+- 03 Home.
+- 04 Shared Discovery.
+- 06 Tier List.
+- 08 Global Rankings.
+- 09 Profile.
+- 10 Bingo.
+- 11 Exam.
+- 12 Arcade Discovery.
+- 13 Data Sync.
+- 14 Announcements.
+- 16 Settings & Account.
+- 17 Authentication & Onboarding.
+- 19 System Recovery States.
 
-- pressed `scale(0.98)` 을 나머지 작은 컨트롤(아이콘 버튼·페이지 번호)로 전파
-- 데스크톱 랭킹 컬럼 분해(`05:757`) · Wide 레이아웃 일반
-- C8 푸터 링크 focus (이번엔 제외 결정 — 필요해지면 그때)
-- Pretendard 교체 후 전체 레이아웃 재검수
+Document 07 is a preservation contract, not a design target. Document 18 contains
+release blockers that must not be disguised as completed UI.
 
----
+### Stage 3 · Deferred shared follow-ups
 
-## 7. 미결·미승인 목록
-
-**미승인 문구**
-
-- 랭킹: `순위` · `플레이어` · `점수` (ko 임시)
-- 서열: `평균` · `투표 N명` · `Basic 풀콤보 분포`
-- 레이더: `패턴 성향` · `패턴 성향 기준` · `평가 N명`
-- 참가자 0명 `ScoreDistribution` 문구
-- **위 전부 ja/en 미확정**. 푸터 문구만 3로케일 확정됐다(§4.5)
-
-**미결 CONFLICT** — 11(시각코어 PDF 표현) · 12(C5 `A2_padSym` 19건 근거) ·
-15 후속(`채보 보기` 일본어) · 16(번역 팝오버 로케일 라벨) · 참고-25(unavailable 문구) ·
-참고-26(사용자 기록 픽스처 부재)
-
-**보류** — 선택 세그먼트 표시: 사용자는 `border/strong` 을 골랐으나 문서 24 NI-A 가
-"selection … automatically promote to border-strong" 를 명시 금지한다. **재확인 필요.**
-
-**만들지 않기로 한 것**(근거 있음, 누락 아님)
-
-- 레이더 계열 반투명 채움 — 승인된 불투명도 값 없음
-- 분포 색의 4단 순위 표현 — 램프 폭 3.31:1 로 물리적 불가
-- 서열 하위 컴포넌트의 Error/Loading — 실패 문구는 섹션 레벨 1회 원칙
-- Primary·Destructive 의 pressed 색 구분 — 승인 램프에 여유 없음(scale 로 해결)
-- 등급 아이콘 자체 제작 — 공식 이미지를 쓰기로 함
-
-**감사 도구의 알려진 오탐 2종**
-
-- `A1_spacing2` 판정 정규식이 경로 문자열 기반이라 새 한글 경로에서 오탐 가능
-- NI-A 분류기가 `State=Hover` 형식만 인식해 `cells / Hover / Button` 같은 경로를 놓침
+- Propagate pressed `scale(0.98)` to remaining eligible small controls such as icon
+  buttons and page-number controls.
+- Complete desktop ranking-column separation (`05:757`) and general Wide layouts.
+- Add C8 footer-link focus only if that explicitly excluded unit is reopened.
+- Revalidate every layout after the eventual Pretendard replacement.
 
 ---
 
-## 8. 마지막 감사 결과 (2026-08-14)
+## 7. Unresolved or unapproved items
 
+### Unapproved copy
+
+- Ranking: `순위`, `플레이어`, and `점수` are temporary Korean strings.
+- Tier: `평균`, `투표 N명`, and `Basic 풀콤보 분포`.
+- Radar: `패턴 성향`, `패턴 성향 기준`, and `평가 N명`.
+- Zero-participant ScoreDistribution copy.
+- Japanese and English remain unapproved for all of the above. Only the footer copy
+  in section 4.5 is approved in all three locales.
+
+### Remaining conflict records
+
+- 11: visual-core PDF representation.
+- 12: evidence for 19 C5 `A2_padSym` findings.
+- 15 follow-up: Japanese label for `채보 보기`.
+- 16: localized-title popover locale labels.
+- Reference 25: unavailable-state copy.
+- Reference 26: missing user-record fixture.
+
+### Resolved segmented-selection status
+
+There is no pending segmented-selection decision. Document 24 contains an approved,
+named exception: only the selected segment of `ViewModeSwitch` and
+`DifficultySelector` uses a 1px inside `border/strong` boundary as the persistent
+non-fill cue. It is not an automatic rule for any other segmented family.
+
+### Intentionally not created
+
+- Translucent radar fill: no approved opacity exists.
+- Four-level distribution ranking by color: the approved ramp spans only about
+  3.31:1, so it cannot carry four reliable ranks.
+- Error/Loading variants for Tier subcomponents: failure copy appears once at the
+  section level.
+- Separate Primary/Destructive pressed colors: the approved ramps have insufficient
+  visual range; motion scale carries pressed feedback.
+- Custom grade icons: official images are the approved source.
+
+### Known audit false positives
+
+- `A1_spacing2` uses a path-based regular expression and can misclassify new Korean
+  paths.
+- The NI-A classifier recognizes `State=Hover` but can miss paths such as
+  `cells / Hover / Button`.
+
+---
+
+## 8. Last recorded audit (2026-08-14)
+
+```text
+C6 (1401 nodes · Dark 642)   findings: 6 asymmetric-padding cases = Music List 0/12, intentional jacket-bleed structure
+C7 (2025 nodes · Dark 878)   findings: 0
+P1 (2035 nodes · Dark 1017)  findings: 10 asymmetric-padding cases = AppHeader 16/8, approved optical padding
+C8 (3253 nodes · Dark 1271)  findings: 24 asymmetric-padding cases = same approved reason
+All pages: hardcoded 0 · raw mismatch 0 · RAW text 0 · locale mismatch 0 ·
+           dead space 0 · overlap 0 · section escape 0 · focus-border mismatch 0
+Leaderboard column pattern: all 68 rows use one pattern
+Z1 pending section: 0 items
 ```
-C6 (1401 노드 · Dark 642)   위반: 패딩 비대칭 6 = Music List 0/12 (자켓 bleed 구조상 의도)
-C7 (2025 노드 · Dark 878)   위반 0
-P1 (2035 노드 · Dark 1017)  위반: 패딩 비대칭 10 = AppHeader 16/8 (승인된 광학 패딩)
-C8 (3253 노드 · Dark 1271)  위반: 패딩 비대칭 24 = 동일 사유
-전 페이지 공통: 하드코딩 0 · raw 불일치 0 · RAW 텍스트 0 · 로케일 불일치 0 ·
-                죽은 여백 0 · 겹침 0 · 섹션 이탈 0 · 포커스링 불일치 0
-리더보드 열 패턴: 68행 전부 단일 패턴
-Z1 보류 섹션: 0건
-```
 
-`A2_padSym` 은 전부 **의도된 비대칭**이다 — AppHeader 16/8 은 가장자리 아이콘 광학 패딩
-(문서 24), Music List 0/12 는 자켓이 좌측 경계까지 bleed 하는 구조다.
+Every `A2_padSym` finding above is intentional. AppHeader 16/8 follows document 24's
+edge icon optical-padding rule; Music List 0/12 allows the jacket to bleed to the left
+boundary.
 
 ---
 
-## 9. 새 세션 첫 행동
+## 9. First actions in a new session
 
-1. `AGENTS.md` · `README.md` · 문서 64 · 문서 24 · 해당 Page Brief 를 직접 읽는다.
-2. `CLAUDE.md` 를 읽는다.
-3. `git status` 로 §5 의 미커밋 변경을 확인한다. **reset·checkout·덮어쓰기 금지.**
-4. Figma 에서 P1 `242:2` 의 서열·평가 셸과 그 dev 주석을 읽는다(부분 조립 표시).
-5. 문서 05 의 926-942 와 1041-1250 을 끝까지 읽는다.
-6. 무엇을 어떻게 만들지 Before → After 로 제안한다.
-7. 사용자가 **"시작"** 이라고 한 뒤 작업하고, 만든 직후 감사를 돌려 항목별로 보고한다.
+1. Read `AGENTS.md`, `README.md`, document 64, document 24, and the owning Page Brief
+   directly.
+2. Read `CLAUDE.md`.
+3. Inspect `git status`; never reset, check out, or overwrite user work.
+4. In Figma, inspect P1 `242:2`, its Tier & Evaluation shell, and its partial-assembly
+   dev annotation.
+5. Read the full relevant contracts in document 05, especially the Tier & Evaluation,
+   voting, general evaluation, and community-opinion sections.
+6. Present the intended change as an exact Before → After proposal.
+7. Create only after the user says `시작`, then run and report every completed audit
+   item immediately after the unit is built.

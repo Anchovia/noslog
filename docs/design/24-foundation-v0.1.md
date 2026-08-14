@@ -4,7 +4,7 @@
 
 - Status: `Approved — Foundation v0.1 normative authority`
 - Language: English
-- Last updated: 2026-08-13
+- Last updated: 2026-08-14
 - Scope: default Foundation for eligible ordinary NosLog 2.0 UI
 - Provenance and decision history:
   [document 25](./25-foundation-v0.1-provenance.md)

@@ -4,7 +4,7 @@
 
 - Status: `Approved — consolidated current decision record`
 - Language: English
-- Last updated: 2026-08-13
+- Last updated: 2026-08-14
 - Normative values: [document 24](./24-foundation-v0.1.md)
 - Current scope: [document 57](./57-design-guide-remaining-work-audit.md)
 - Purpose: preserve selected sources, candidate disposition, measured limitations,

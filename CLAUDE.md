@@ -256,7 +256,8 @@ Text Style `emphasis-label/ko·ja·latin` 3개를 포함해 문서 24와 Figma�
 
 - Figma 파일: `NosLog v2.0.0` (`cVbWCxhkfxFfHmAKLCyKrD`)
 - **폰트**: 규범값은 `Pretendard JP Variable`이나 이 Figma 렌더러가 로드 불가
-  → 렌더는 `IBM Plex Sans KR/JP/Latin` + 수치는 `IBM Plex Mono`
+  → 현재 렌더는 `IBM Plex Sans KR/JP/Latin`. 수치는 문서 24의 proportional/tabular
+  figures 계약을 따르며 `IBM Plex Mono`를 사용하지 않는다
   → 교체는 `font/family/ko·ja·latin` 변수 3개만 바꾸면 됨 (교체 후 레이아웃 재검수 필요)
 - 상태 파일 위치: **`~/.claude/projects/-Users-carol-Desktop-project-noslog/design-state/`**
   (`state.json` · `R2-conflicts.md` · `audit.js` · `brief-contracts-notes.md`)
@@ -287,7 +288,7 @@ Text Style `emphasis-label/ko·ja·latin` 3개를 포함해 문서 24와 Figma�
 | Real 없는 곡         | **칸 제거** — 3개로 채움 (비활성 잔여 칸 두지 않음)                                                                                                                                                                                                                                                                                      | 2026-08-12 |
 | Neutral 버튼 경계    | **`border/strong`** (CONFLICT-18 A) — 3:1 통과 4.88/5.47. 문서 24 NB-A 준수 수정이라 개정 불필요                                                                                                                                                                                                                                         | 2026-08-13 |
 | MetricSummary 타이포 | **A** (CONFLICT-24) — label `control` / dominant `metric-display` / grouped `metric-value` / unit·비교 `body-secondary`. 기존 빌드와 동일                                                                                                                                                                                                | 2026-08-13 |
-| 선택 세그먼트        | **⏸ 보류** — 사용자는 A(`border/strong`) 선택했으나 문서 24 NI-A 가 "selection … automatically promote to `border-strong`" 를 **명시 금지**. 문서는 checkmark·current indicator·explicit label 을 요구 → B(2px underline) 가 문구 부합. **재확인 필요**                                                                                  | 2026-08-13 |
+| 선택 세그먼트        | **Approved** — `ViewModeSwitch`와 `DifficultySelector`의 선택 세그먼트만 지속적인 비색상 단서로 1px inside `border/strong` 경계를 사용한다. 다른 세그먼트 계열로 자동 확장하지 않는다. 문서 24의 명시적 예외와 동일                                                                                                                      | 2026-08-14 |
 | 로케일 Text Style    | **측정 전제다** — `*/ko·ja·latin`은 폰트 패밀리 스위치이므로 내용의 문자 체계와 반드시 일치. 일본어에 `*/ko`가 걸리면 한자 폭이 절반으로 오산돼(`楽曲` 14px vs 28px) fit 판정이 통째로 틀린다. 파일 전체 268곳 정정 완료                                                                                                                 | 2026-08-14 |
 | 내비 라벨 fit 스타일 | `12/16·500`은 13 composite에 없으므로 **전용 스타일** `nav-fit/ko·ja·latin`(500) · `nav-fit-current/ko·ja·latin`(600) 6개로 처리. raw 값 금지 — 폰트 변수 재지정 시 누락된다. 320px fit 대상은 **4개**(데이터 동기화·譜面ビューア·ご意見・報告·Chart Viewer), `店舗`·`Feedback`은 14/20 복귀                                             | 2026-08-14 |
 | 패턴 레이더 대비     | **Q1-A** 패널 면을 `surface/surface` 로 (계열 대비 Light 3.12 / Dark 3.74 → 3:1 통과. sunken 면은 2.73 미달) · **Q2-A** 격자·축선 `border/default` (격자는 0–4 를 세는 근거라 장식 아님) · 계열 반투명 채움 **미제작**(승인 불투명도 없음 → 문서 24 개정 사안) · 1단위 = 격자 한 겹 24px                                                 | 2026-08-13 |
