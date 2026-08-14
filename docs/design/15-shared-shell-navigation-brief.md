@@ -266,7 +266,10 @@ remains subject to its applicable page brief and localization validation.
 ### Compact Modal Adaptation
 
 - The panel spans the available content width directly below the visible header and
-  uses two equal semantic columns.
+  uses two equal semantic columns. It is joined flush to the header with no offset, its
+  joined-edge corners resolve to square, and it does not repeat the header's boundary
+  line on that edge, so the open state reads as an extension of the header rather than
+  as a separate floating sheet. The joined-edge treatment itself is Foundation.
 - A scrim separates the open navigation state from page content.
 - Page scrolling is locked while the panel is open.
 - Keyboard focus is contained within the navigation interaction scope until it closes.
@@ -283,7 +286,9 @@ remains subject to its applicable page brief and localization validation.
 ### Wide Popover Adaptation
 
 - The panel becomes a right-aligned two-column non-modal popover anchored to the
-  navigation trigger.
+  navigation trigger. Unlike the compact modal it is offset from its anchor rather than
+  joined to it, and it keeps the overlay radius on all four corners, so it reads as
+  floating above a page that is still live.
 - The page remains scrollable and does not receive a modal scrim or body lock.
 - Outside pointer action, Escape, destination activation, or trigger toggle closes it.
 - Focus is not forcibly trapped, but keyboard traversal and focus return remain
@@ -333,6 +338,21 @@ The ordinary footer contains only the stable trust and project layer required he
   deferred to the authentication page brief. The current inline link is not itself an
   approved 2.0 requirement.
 - The footer must not become a second full site map.
+
+The service notice carries the same meaning in all three locales, including the
+unofficial-fan-service statement, and is not shortened in any of them:
+
+| Locale   | Service notice                                                                         |
+| -------- | -------------------------------------------------------------------------------------- |
+| Korean   | `© 2026 NosLog · NOSTALGIA 기록·랭킹·아카이브 비공식 팬 서비스`                        |
+| Japanese | `© 2026 NosLog · NOSTALGIA の記録・ランキング・アーカイブ非公式ファンサービス`         |
+| English  | `© 2026 NosLog · Unofficial fan service for NOSTALGIA records, rankings, and archives` |
+
+- Keep the approved localized term for rankings rather than transliterating it again.
+- The unofficial-service qualifier is part of the notice in every locale. Do not reduce
+  it to a copyright line.
+- No trademark-attribution sentence is approved yet in any locale. Adding one is a
+  three-locale decision, not a per-locale edit.
 
 ## Minimal Authentication Shell
 
@@ -553,37 +573,41 @@ are not substitutes.
 
 ## Decision Log
 
-| ID       | Decision                                                                                                                                                                                                            | Status                             |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
-| SHELL-01 | Use one responsive top-shell taxonomy; do not add persistent bottom navigation                                                                                                                                      | `Approved`                         |
-| SHELL-02 | Ordinary header contains NosLog, account state, and one navigation trigger only                                                                                                                                     | `Approved`                         |
-| SHELL-03 | Signed-out account position uses a visible Login text control                                                                                                                                                       | `Approved`                         |
-| SHELL-04 | Use a navigation/hamburger trigger rather than an ellipsis                                                                                                                                                          | `Approved`                         |
-| SHELL-05 | Keep eight product destinations in the approved row and semantic order                                                                                                                                              | `Approved`                         |
-| SHELL-06 | Put Settings and Feedback / Error Report after a divider with no group heading                                                                                                                                      | `Approved`                         |
-| SHELL-07 | Keep Admin conditional and separate after ordinary utilities                                                                                                                                                        | `Approved`                         |
-| SHELL-08 | Use icon plus concise text label; do not add descriptions                                                                                                                                                           | `Approved`                         |
-| SHELL-09 | Compact navigation is a full-width two-column modal below the header                                                                                                                                                | `Approved`                         |
-| SHELL-10 | Compact open state uses scrim, body lock, focus containment, and reliable close/focus return                                                                                                                        | `Approved`                         |
-| SHELL-11 | Wide navigation is a right-anchored two-column non-modal popover without body lock                                                                                                                                  | `Approved`                         |
-| SHELL-12 | Choose the modal/popover transition from content fit, not the current `1024px` implementation                                                                                                                       | `Approved`                         |
-| SHELL-13 | Compact header hides downward and reveals upward; wide desktop header remains sticky and visible                                                                                                                    | `Approved`                         |
-| SHELL-14 | Keep the header visible during open navigation, header/panel focus, and route entry                                                                                                                                 | `Approved`                         |
-| SHELL-15 | Reduced motion removes header sliding                                                                                                                                                                               | `Approved`                         |
-| SHELL-16 | Ordinary footer owns Privacy, GitHub, and copyright                                                                                                                                                                 | `Approved`                         |
-| SHELL-17 | Privacy and GitHub do not appear in the header or More panel                                                                                                                                                        | `Approved`                         |
-| SHELL-18 | Login and onboarding use a minimal identity-plus-footer shell without More/profile                                                                                                                                  | `Approved`                         |
-| SHELL-19 | Login body includes concise Discord-data disclosure and an inline Privacy link under the authentication brief                                                                                                       | `Approved`                         |
-| SHELL-20 | Preserve the complete current chart-viewer shell; this brief authorizes no internal shell change                                                                                                                    | `Approved correction`              |
-| SHELL-21 | Maintenance and fatal errors use a minimal identity and recovery shell; exact state behavior follows Brief 19                                                                                                       | `Approved`                         |
-| SHELL-22 | Opened destinations remain native link navigation, not ARIA menu semantics                                                                                                                                          | `Approved`                         |
-| SHELL-23 | Preserve identical destination identity and semantic order across ko, ja, and en                                                                                                                                    | `Approved`                         |
-| SHELL-24 | Exact Foundation tokens, dimensions, breakpoint, and localized shell copy beyond the approved labels remain downstream work                                                                                         | `Approved`                         |
-| SHELL-25 | Signed-out Feedback preserves validated locale/route/query and reopens the dialog after Login                                                                                                                       | `Approved`                         |
-| SHELL-26 | Use the approved Korean account and destination labels recorded above without changing the destination order                                                                                                        | `Approved Korean — 2026-08-12`     |
-| SHELL-27 | Use the approved Japanese and English destination labels recorded above without changing the destination order                                                                                                      | `Approved ja/en — 2026-08-14`      |
-| SHELL-28 | Shorten the visible feedback/report destination to `피드백 · 신고`, `ご意見・報告`, and `Feedback`; use Japanese `店舗` for the arcade-location destination; preserve the same routes, dialog behavior, and meaning | `Approved correction — 2026-08-14` |
-| SHELL-29 | Prefer a single-line DestinationPanel label through measured `14/20` → `12/16` fitting and approved concise copy; restore `14/20` when space permits and allow at most two lines only as the final reflow fallback  | `Approved — 2026-08-14`            |
+| ID       | Decision                                                                                                                                                                                                                                                                                  | Status                             |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
+| SHELL-01 | Use one responsive top-shell taxonomy; do not add persistent bottom navigation                                                                                                                                                                                                            | `Approved`                         |
+| SHELL-02 | Ordinary header contains NosLog, account state, and one navigation trigger only                                                                                                                                                                                                           | `Approved`                         |
+| SHELL-03 | Signed-out account position uses a visible Login text control                                                                                                                                                                                                                             | `Approved`                         |
+| SHELL-04 | Use a navigation/hamburger trigger rather than an ellipsis                                                                                                                                                                                                                                | `Approved`                         |
+| SHELL-05 | Keep eight product destinations in the approved row and semantic order                                                                                                                                                                                                                    | `Approved`                         |
+| SHELL-06 | Put Settings and Feedback / Error Report after a divider with no group heading                                                                                                                                                                                                            | `Approved`                         |
+| SHELL-07 | Keep Admin conditional and separate after ordinary utilities                                                                                                                                                                                                                              | `Approved`                         |
+| SHELL-08 | Use icon plus concise text label; do not add descriptions                                                                                                                                                                                                                                 | `Approved`                         |
+| SHELL-09 | Compact navigation is a full-width two-column modal below the header                                                                                                                                                                                                                      | `Approved`                         |
+| SHELL-10 | Compact open state uses scrim, body lock, focus containment, and reliable close/focus return                                                                                                                                                                                              | `Approved`                         |
+| SHELL-11 | Wide navigation is a right-anchored two-column non-modal popover without body lock                                                                                                                                                                                                        | `Approved`                         |
+| SHELL-12 | Choose the modal/popover transition from content fit, not the current `1024px` implementation                                                                                                                                                                                             | `Approved`                         |
+| SHELL-13 | Compact header hides downward and reveals upward; wide desktop header remains sticky and visible                                                                                                                                                                                          | `Approved`                         |
+| SHELL-14 | Keep the header visible during open navigation, header/panel focus, and route entry                                                                                                                                                                                                       | `Approved`                         |
+| SHELL-15 | Reduced motion removes header sliding                                                                                                                                                                                                                                                     | `Approved`                         |
+| SHELL-16 | Ordinary footer owns Privacy, GitHub, and copyright                                                                                                                                                                                                                                       | `Approved`                         |
+| SHELL-17 | Privacy and GitHub do not appear in the header or More panel                                                                                                                                                                                                                              | `Approved`                         |
+| SHELL-18 | Login and onboarding use a minimal identity-plus-footer shell without More/profile                                                                                                                                                                                                        | `Approved`                         |
+| SHELL-19 | Login body includes concise Discord-data disclosure and an inline Privacy link under the authentication brief                                                                                                                                                                             | `Approved`                         |
+| SHELL-20 | Preserve the complete current chart-viewer shell; this brief authorizes no internal shell change                                                                                                                                                                                          | `Approved correction`              |
+| SHELL-21 | Maintenance and fatal errors use a minimal identity and recovery shell; exact state behavior follows Brief 19                                                                                                                                                                             | `Approved`                         |
+| SHELL-22 | Opened destinations remain native link navigation, not ARIA menu semantics                                                                                                                                                                                                                | `Approved`                         |
+| SHELL-23 | Preserve identical destination identity and semantic order across ko, ja, and en                                                                                                                                                                                                          | `Approved`                         |
+| SHELL-24 | Exact Foundation tokens, dimensions, breakpoint, and localized shell copy beyond the approved labels remain downstream work                                                                                                                                                               | `Approved`                         |
+| SHELL-25 | Signed-out Feedback preserves validated locale/route/query and reopens the dialog after Login                                                                                                                                                                                             | `Approved`                         |
+| SHELL-26 | Use the approved Korean account and destination labels recorded above without changing the destination order                                                                                                                                                                              | `Approved Korean — 2026-08-12`     |
+| SHELL-27 | Use the approved Japanese and English destination labels recorded above without changing the destination order                                                                                                                                                                            | `Approved ja/en — 2026-08-14`      |
+| SHELL-28 | Shorten the visible feedback/report destination to `피드백 · 신고`, `ご意見・報告`, and `Feedback`; use Japanese `店舗` for the arcade-location destination; preserve the same routes, dialog behavior, and meaning                                                                       | `Approved correction — 2026-08-14` |
+| SHELL-29 | Prefer a single-line DestinationPanel label through measured `14/20` → `12/16` fitting and approved concise copy; restore `14/20` when space permits and allow at most two lines only as the final reflow fallback                                                                        | `Approved — 2026-08-14`            |
+| SHELL-30 | Every focusable shell control shows focus as a single `1px` inside border on the control itself: a control that already has a resting border only changes that border's colour, and a control without one gains the border only while focused, so size and surrounding layout never shift | `Approved — 2026-08-14`            |
+| SHELL-31 | Record one representative focused control per shell rather than one variant per focusable target, and state in the component description that the remaining targets follow the same rule                                                                                                  | `Approved — 2026-08-14`            |
+| SHELL-32 | Localize the footer service notice in all three locales, keeping the unofficial-fan-service qualifier; no trademark-attribution sentence is approved                                                                                                                                      | `Approved — 2026-08-14`            |
+| SHELL-33 | Join the compact modal panel flush to the header with squared joined-edge corners and no duplicated border on that edge, and offset the wide popover from its anchor so it reads as floating; the two treatments differ by role rather than sharing one arbitrary number                  | `Approved — 2026-08-14`            |
 
 ## Handoff Boundary
 

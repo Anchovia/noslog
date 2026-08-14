@@ -110,6 +110,25 @@ propagates to them. Raw type values are not acceptable here, because a label tha
 carries its size and family directly is silently skipped when the family variables are
 repointed. These two styles are valid only inside this exception.
 
+### Joined overlay edge — approved 2026-08-14
+
+An overlay that is deliberately joined to the edge of a persistent surface, such as the
+compact navigation panel opening directly below the header, treats the joined edge as
+structure rather than as its own boundary:
+
+- The joined edge sits flush against the persistent surface with no offset.
+- The two corner radii on the joined edge resolve to `0`. The remaining corners keep
+  the overlay radius, so the shape reads as an extension of the surface it joins.
+- The overlay does not draw its own border on the joined edge, because the persistent
+  surface already draws that line. Two adjacent one-pixel borders would render as a
+  doubled two-pixel line that belongs to neither element.
+- An overlay that is _not_ joined — an anchored non-modal popover — keeps the overlay
+  radius on all four corners and is offset from its anchor, so that it reads as
+  floating rather than attached.
+
+Joining is a property of the usage site, not of the overlay component, so it is applied
+where the overlay is placed rather than by adding a variant to the component.
+
 At a twelve-column page-layout container of at least `1056 CSS px`, `page-title` may
 step to `32/40 · 700` only when its governed region spans at least eight tracks or has
 at least `640 CSS px` of measured inline space and is not a `reading` composition.
@@ -391,6 +410,32 @@ The five colors apply only to local judgement markers/bars. Labels, counts,
 percentages, surfaces, and containers remain neutral. Radix `gray11` is a
 judgement-domain color, not a Foundation neutral. **JD-02 does not own FAST/SLOW**;
 that pair remains `LD-03` SAP.
+
+## Achievement marks — `AC-01`, SAP Fiori Horizon — approved 2026-08-14
+
+A player's clear achievement on a chart is its own domain role, distinct from system
+feedback and from data-visualization series:
+
+| Role         | Source value                        | Applies to                              |
+| ------------ | ----------------------------------- | --------------------------------------- |
+| `full-combo` | SAP Fiori Horizon categorical green | The Full Combo clear mark, labeled `FC` |
+| `pianist`    | SAP Fiori Horizon categorical amber | The Pianist clear mark, labeled `P`     |
+
+- The values are the already-approved `LD-03` primitives, so no new source enters the
+  system. The role is new; the primitive is not. A categorical palette is deliberately
+  non-semantic, which is why reusing its values here creates no meaning collision.
+- The mark always carries its short label. Colour never conveys the achievement alone,
+  and the two achievements differ in hue as well as label so they are not distinguished
+  by intensity.
+- Do not use these two roles for series, buckets, difficulty, judgement, or feedback,
+  and do not introduce further achievement colours without a new approved role.
+- The current implementation's clear-mark colour is a framework default with no recorded
+  source and is superseded by this role.
+
+Score grade is **not** a colour role. It is delivered as the official grade image,
+self-hosted from the game's published grade assets rather than hot-linked, so a
+third-party outage cannot blank the column. Grade therefore needs an image slot and an
+accessible name, not a token.
 
 ## Iconography — `IC-06`, Lucide
 
