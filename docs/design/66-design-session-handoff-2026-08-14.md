@@ -276,9 +276,19 @@ annotation marks it as partial.
 - Basic predicates: S score ≥950,000; Full Combo `fc_type >= 2` or score 1,000,000;
   Pianist `fc_type === 3` or score 1,000,000.
 - Recital requires the same goal predicate plus `grade_recital > 0`.
-- Five pattern axes: Stairs, Repetition, Polyrhythm, Offset, and Chords.
-  `Not rated` is missing data and remains distinct from valid `0 · None`. Never
-  prefill an omitted axis as 0.
+- Five pattern axes: Stairs, Repetition, Polyrhythm, Offset, and Chords. Show only
+  `0`–`4`; keep an omitted axis unselected and nullable; expose **Clear selection**
+  only after that axis has a value. Never prefill an omitted axis as 0.
+- Keep every pattern-axis row `109px` high with a `44px` label/action header and
+  `48px` numeric choices. Align each marker and number horizontally with a `6px` gap;
+  preserve `12px` from divider to title, `12px` from title to choices, and `16px` from
+  choices to the next divider. Use subdued unchecked choices and page/default checked
+  choices without adding explanatory copy for 0.
+- Keep `12px` between the tier-value control, range helper, and following action. In
+  the save-error state, keep `12px` before the error panel and `16px` after it.
+- Expand a selected tier-vote distribution immediately below its scope row, before
+  the next goal or mode group, and change the disclosure indicator from right to down
+  while expanded.
 - Three independent deletion scopes: opinion only, complete general evaluation, and
   one exact vote scope.
 
