@@ -162,6 +162,22 @@ The ordinary header contains only:
 Music, Chart Viewer, Rankings, Tiers, Bingo, Exams, Arcades, Data Sync, Settings,
 Feedback, Privacy, GitHub, and Admin are not persistent labeled header controls.
 
+### Width Beyond the Content Container
+
+- **Approved (2026-08-19):** When the viewport exceeds the page family's content
+  container maximum, the header and footer occupy the full viewport width while only
+  the page content is capped and centred. The shell surface never becomes a cropped
+  band floating inside a wider viewport.
+- The header keeps its own edge padding rather than re-aligning to the content
+  container keyline, so at very wide viewports the identity sits closer to the viewport
+  edge than the content does. This is the same relationship already approved at the
+  container width, extended; it is intentional, not a defect.
+- Re-aligning the header's inner content to the container keyline would require an
+  `AppHeader` composition change and off-scale padding. Treat it as a separate
+  component decision if it is ever reopened.
+- This rule belongs to the shell and therefore applies to every page family, not only
+  the one where it was first validated.
+
 ### Service Identity
 
 - The visible identity is `NosLog`; do not substitute the legacy `NOSTORY` name.
@@ -611,6 +627,7 @@ are not substitutes.
 | SHELL-31 | Record one representative focused control per shell rather than one variant per focusable target, and state in the component description that the remaining targets follow the same rule                                                                                                                              | `Approved — 2026-08-14`            |
 | SHELL-32 | Localize the footer service notice in all three locales, keeping the unofficial-fan-service qualifier; no trademark-attribution sentence is approved                                                                                                                                                                  | `Approved — 2026-08-14`            |
 | SHELL-33 | Join the compact modal panel flush to the header with squared joined-edge corners and no duplicated border on that edge, and offset the wide popover from its anchor so it reads as floating; the two treatments differ by role rather than sharing one arbitrary number                                              | `Approved — 2026-08-14`            |
+| SHELL-34 | Beyond the content-container maximum the header and footer span the full viewport while only page content is capped and centred; the header keeps its own edge padding rather than re-aligning to the container keyline                                                                                               | `Approved — 2026-08-19`            |
 
 ## Handoff Boundary
 
