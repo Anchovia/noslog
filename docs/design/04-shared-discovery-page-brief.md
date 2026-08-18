@@ -536,11 +536,16 @@ state, results, and recovery controls must keep a clear semantic relationship.
 - At the audited `390px` baseline, the result card is approximately `343px` wide and
   the compact trailing difficulty group remains preferable to a vertical difficulty
   row.
-- Use one List column while the result region cannot give each card approximately
-  `440–460px` of usable width. Add a second column only when both cards can preserve
-  that minimum. List view stops at two columns; denser artwork browsing belongs to
-  Grid view. This switch follows result-container capacity, not a device-name
-  breakpoint.
+- **Amended 2026-08-19:** Use exactly one List column at every width. The card spans
+  the full result-region width, so a list row always carries one Music entry. The
+  earlier allowance for a second List column above `440–460px` per card is
+  `Superseded`: a two-per-row list weakens the one-row-one-entry reading that
+  distinguishes List from Grid, and removing it also removes the per-card width
+  threshold and the column change that would otherwise occur when the filter rail
+  appears. Denser artwork browsing remains Grid view, which keeps its
+  result-container capacity rule.
+- The whitespace between the left identity and the trailing difficulty group on a wide
+  row is normal list behaviour, not a defect. It separates identity from metadata.
 
 #### Grid view
 
@@ -751,9 +756,8 @@ flashing a loading treatment.
 - Preserve one search and scope model rather than introducing desktop-only taxonomy.
 - Do not place unrelated announcements or navigation in space intended to support
   search, filtering, or result comparison.
-- Keep List cards at one column below approximately `440–460px` of usable width per
-  card, use two columns only when that width is available for both, and never exceed
-  two List columns. Grid uses result-container capacity: two columns at `288–535px`,
+- Keep List at one column at every width; the card spans the result region
+  (`DISC-42`). Grid uses result-container capacity: two columns at `288–535px`,
   three at `536–719px`, four at `720–903px`, and a maximum of five at `904px` and
   wider. `138px` is the compact emergency floor; ordinary new columns require the
   `168px` preferred width.
@@ -1658,7 +1662,7 @@ The later implementation must verify at minimum:
 | DISC-13 | Progressive state               | Provide count/range, busy, retry, end, URL/history, loaded-state, and meaningful scroll restoration                                                                                                                                         | `Approved`                |
 | DISC-14 | Initial ordering                | Empty Music uses `title_kana` ascending; empty Chart uses latest published-chart group descending                                                                                                                                           | `Approved`                |
 | DISC-15 | Filter and sort taxonomy        | Public category/difficulty/level filters; approved scope sort sets; personal record criteria remain secondary                                                                                                                               | `Approved`                |
-| DISC-16 | Music result composition        | Compact content-driven List with trailing difficulties; square-jacket Grid with flexible information region; stable identity and direct detail activation                                                                                   | `Approved`                |
+| DISC-16 | Music result composition        | Compact content-driven List with trailing difficulties; square-jacket Grid with flexible information region; stable identity and direct detail activation. Amended by `DISC-42` for List column count                                       | `Approved`                |
 | DISC-17 | Batch size and copy             | Initial and appended batches use `20` result units; localize actual-next-amount and exact progress copy; focus the first new result; keep ephemeral loaded state in browser history                                                         | `Approved`                |
 | DISC-18 | No-result recovery              | Separate failure and service-level catalog absence; classify filter constraint, text mismatch, and publication absence internally; preserve committed state and show only concise scope-appropriate copy with recovery in existing controls | `Approved`                |
 | DISC-19 | Mobile post-commit focus        | Commit focuses the visible result summary; cancel restores trigger and prior context; announce one settled pending outcome; defer row composition to specimens                                                                              | `Approved`                |
@@ -1684,6 +1688,7 @@ The later implementation must verify at minimum:
 | DISC-39 | Exposed filter-rail transition  | Below `1216px`, retain the combined staged Filter/Sort layer; at `1216px`, use a `3/12` visible rail and `9/12` results below full-width search                                                                                             | `Approved`                |
 | DISC-40 | Music Grid capacity             | Use result-container thresholds `288/536/720/904px`, a `138px` compact floor, `168px` preferred ordinary card width, and a five-column ceiling                                                                                              | `Approved`                |
 | DISC-41 | Stable result identity          | Preserve title, artist, category, jacket, and official difficulties on rest, hover, and focus; show personal performance only in applied-state summary or destination detail                                                                | `Approved — 2026-08-12`   |
+| DISC-42 | List column count               | Use exactly one List column at every width; the card spans the result region. The former two-column allowance above `440–460px` per card is superseded, together with its per-card width threshold                                          | `Approved — 2026-08-19`   |
 
 ## Phase Approval
 
