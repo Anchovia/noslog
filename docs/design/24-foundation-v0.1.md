@@ -221,9 +221,19 @@ published exact values below.
 | `content-interactive`         | `#131313` | `#F2F2F2` | Default interactive content during hover/pressed/content-focus |
 | `content-subdued-interactive` | `#292929` | `#DBDBDB` | Subdued interaction during hover/pressed/focus/selected        |
 | `content-disabled`            | `#C6C6C6` | `#444444` | Genuinely unavailable nonessential content only                |
+| `content-pending`             | `#717171` | `#8A8A8A` | Valid content held while its request is in flight only         |
 
 Static headings remain `content-default`; do not use the higher state value for
 decorative emphasis. Disabled information needs an available explanation elsewhere.
+
+`content-pending` marks valid content that is temporarily held while a request is in
+flight, such as retained results during a slow replacement. Use `content-subdued` for
+ordinarily secondary content and `content-disabled` for genuinely unavailable content;
+`content-pending` is neither. It is the lightest neutral step that still clears `4.5:1`
+for body text on `canvas` and `surface`, and it must not be used for text on `sunken`,
+where it measures `4.02` in Light. The colour never carries the state alone: a progress
+indication, the region's busy state, and blocked activation accompany it. Content
+opacity is not a Foundation mechanism and must not be used to express this state.
 
 ### Neutral boundaries — `NB-A`
 
