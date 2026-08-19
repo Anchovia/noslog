@@ -179,26 +179,87 @@ grade image, self-hosted from the game's published assets, and it needs an image
 plus an accessible name. The frames therefore show a `24 × 24` slot at the jacket's
 top-right, with `S` standing in for the artwork.
 
-The current implementation hot-links these images from
-`p.eagate.573.jp/game/nostalgia/op3/img/pdata/music_data/grade`. Document 06 prohibits
-sourcing achievement icons from unstable external URLs without an approved asset and
-licensing strategy, and `AC-01` requires self-hosting so a third-party outage cannot
-blank the column. **This must change during implementation.**
+The frames now carry the **real asset**: `public/grade/grade_s.png`, uploaded into the
+Figma file and applied to all 129 grade slots. The letter `S` that previously stood in for
+the artwork is gone.
 
-### 5.3 Full Combo and Pianist are colour roles
+The self-hosted set already exists in the repository — `grade_s`, `grade_p`, `grade_a`,
+`grade_a2`, `grade_b`, `grade_b2`, `grade_c`, `grade_d`, each `40 × 40`. **The code does
+not use it.** These five call sites still hot-link
+`p.eagate.573.jp/game/nostalgia/op3/img/pdata/music_data/grade`:
 
-For the `fc` and `pianist` goals the achievement mark uses `achievement/full-combo`
-(green) and `achievement/pianist` (amber) with the short labels `FC` and `P`. The mark
-always carries its label; colour never conveys the achievement alone. Those goal
-variants are **not yet drawn** (§8.2).
+- `components/tiers/tierChartCard.tsx`
+- `components/music/ranking/rankImage.tsx`
+- `components/music/recentPlayRow.tsx`
+- `components/music/musicRecordTab.tsx`
+- `lib/constants.ts`
 
-### 5.4 What was deliberately not carried over
+So the change required by document 06 and `AC-01` is smaller than it looks: repoint the
+references, not source new assets.
+
+The code maps `FC → fc_bg`, but `public/grade/` has no `grade_fc_bg.png`. Under the
+design in §5.3 this no longer blocks anything, because Full Combo is reported by the
+ring and the `FC` label rather than by an icon. Add the asset only if the icon is
+wanted elsewhere.
+
+### 5.3 Two independent axes: rank icon and achievement ring
+
+Score rank and combo achievement are **different axes**. A chart can be `S` _and_ Full
+Combo at the same time, so they cannot share one slot:
+
+| Axis              | Carrier                                           | Values                                                                 |
+| ----------------- | ------------------------------------------------- | ---------------------------------------------------------------------- |
+| Score rank        | the official grade image, top-right of the jacket | `S` `A+` `A` `B+` `B` `C` `D` and `P`                                  |
+| Combo achievement | a 2px ring on the jacket border                   | Full Combo → `achievement/full-combo`; Pianist → `achievement/pianist` |
+
+The current implementation collapses this with a priority chain
+(`pianist > fc > s > a_plus > rank`) and shows only one icon. The design shows both: the
+`S` image stays in the icon slot while a green ring reports the Full Combo.
+
+`AC-01` requires that the mark always carries a short label and that colour never conveys
+the achievement alone. That label sits **next to the score**, not over the icon:
+
+- Detailed card — the `media-scrim` band runs the full jacket width, so `FC` sits at its
+  left and the score at its right.
+- Compact card — `FC` follows the score. Placing it first would move the score's start
+  position from card to card, since not every card has it.
+
+The label uses a **neutral** foreground, not the achievement colour: `content/on-media` on
+the band, `content/subdued` under the jacket. `achievement/full-combo` measures `3.36`
+against `surface/canvas` and cannot carry text at `4.5:1`. Colour therefore lives on the
+ring, and the letters carry the meaning — which is exactly what `AC-01` asks for.
+
+Measured: `FC` label Light `8.06` on the card and `6.56` on the band; Dark `8.61` and
+`20.17`. Ring against the jacket, Light `2.77` and Dark `10.63` — the ring is supportive,
+so the 3:1 non-text threshold does not gate it.
+
+Pianist needs no label: `grade_p.png` occupies the icon slot and is itself the non-colour
+cue. This also removes the earlier blocker — a missing `grade_fc_bg.png` no longer
+prevents identifying Full Combo, because the `FC` letters do that.
+
+### 5.4 Unplayed keeps its current treatment
+
+An unplayed chart is distinguished by two non-colour cues: **no rank icon**, and the
+`tiers.unplayed` value in place of a score. Document 06 requires that value — "present a
+truthful concise unplayed value rather than a fabricated zero score" — so the text stays;
+an empty slot would read as loading or missing data.
+
+Two alternatives were rejected:
+
+- **Disabled tokens.** Document 24 reserves `disabled` for genuinely unavailable content,
+  and an unplayed card opens normally. It also has almost no visual effect: in Light,
+  `surface/sunken` and `interaction/disabled-bg` are both `#E9E9E9`, so only the border
+  changes, and it becomes _darker_.
+- **Weakening the jacket's placeholder icon.** That music glyph appears only when no
+  artwork is available. In production `getJacketUrl` resolves real jacket art for played
+  and unplayed charts alike, so the treatment would do nothing. It only looked effective
+  in the specimen because the specimens use empty slots.
+
+### 5.5 What was deliberately not carried over
 
 The current product dims unachieved cards with `opacity-55`. Content opacity is not a
 Foundation mechanism, so the design does not reproduce it. Where a state genuinely needs
 weakening, use the approved foreground roles.
-
----
 
 ## 6. States
 
@@ -266,7 +327,9 @@ Final audit over the whole page — 7 sections, 32 frames, 4,486 nodes, 1,087 te
 
 ### 8.2 Not executed — not a pass
 
-- **`fc` and `pianist` goal variants.** Only `Basic · S` is drawn. The achievement marks
+- **`fc` and `pianist` goal frames.** Only `Basic · S` is drawn. Full Combo and Pianist
+  appear inside that frame as ring plus label (§5.3), but no frame shows those goals
+  selected, and the NosLog rating contribution row for `Basic · Pianist` has no specimen. The achievement marks
   in §5.3 and the NosLog rating contribution row for `Basic · Pianist` have no specimen.
 - **`Recital` mode frames.** The segmented control shows the state; no Recital content
   exists.
@@ -334,9 +397,13 @@ promotes it to the visible filter-layer title.
 
 ## 11. Implementation requirements
 
-1. Self-host grade images; stop hot-linking `p.eagate.573.jp` (§5.2).
+1. Repoint the five hot-linking call sites to the self-hosted `public/grade/` assets that
+   already exist, and add the missing `grade_fc_bg.png` (§5.2).
 2. Do not dim unachieved cards with opacity (§5.4).
 3. Derive desktop column count from the result container, not a fixed number (§4.3).
+   3a. Keep rank and combo achievement on separate axes. Do not collapse them with the
+   current `pianist > fc > s > a_plus` priority chain — a chart that is `S` and Full
+   Combo must show both (§5.3).
 4. Keep the three level concepts distinct in code and copy (§2).
 5. Mobile stages filters and commits once; desktop applies immediately (§7).
 6. The pending state needs `aria-busy`, blocked activation on retained results, focus
