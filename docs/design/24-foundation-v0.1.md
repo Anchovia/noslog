@@ -203,14 +203,28 @@ published exact values below.
 
 ### Surfaces — `M-A`
 
-| Role      | Light          | Dark           | Contract                                                                             |
-| --------- | -------------- | -------------- | ------------------------------------------------------------------------------------ |
-| `canvas`  | `#FFFFFF`      | `#111111`      | Page and shell baseline                                                              |
-| `surface` | `#F8F8F8`      | `#1B1B1B`      | Flat grouped content; ordinary cards remain unraised                                 |
-| `sunken`  | `#E9E9E9`      | `#111111`      | An intentionally receding ordinary data or work well                                 |
-| `raised`  | `#FFFFFF`      | `#222222`      | Content with real lift, movement, overlap, or justified emphasis                     |
-| `overlay` | `#FFFFFF`      | `#222222`      | Menu, popover, tooltip, sheet, dialog; placement/boundary also communicates stacking |
-| `scrim`   | black at `40%` | black at `60%` | Modal background suppression only                                                    |
+| Role          | Light          | Dark           | Contract                                                                             |
+| ------------- | -------------- | -------------- | ------------------------------------------------------------------------------------ |
+| `canvas`      | `#FFFFFF`      | `#111111`      | Page and shell baseline                                                              |
+| `surface`     | `#F8F8F8`      | `#1B1B1B`      | Flat grouped content; ordinary cards remain unraised                                 |
+| `sunken`      | `#E9E9E9`      | `#111111`      | An intentionally receding ordinary data or work well                                 |
+| `raised`      | `#FFFFFF`      | `#222222`      | Content with real lift, movement, overlap, or justified emphasis                     |
+| `overlay`     | `#FFFFFF`      | `#222222`      | Menu, popover, tooltip, sheet, dialog; placement/boundary also communicates stacking |
+| `scrim`       | black at `40%` | black at `60%` | Modal background suppression only                                                    |
+| `media-scrim` | black at `60%` | black at `60%` | Legibility ground for text placed over uncontrolled artwork only                     |
+
+`media-scrim` is a legibility device, not a state device. It exists because artwork
+luminance is not controlled: a jacket may be near-white or near-black, so text placed
+directly on it has no guaranteed contrast. `60%` is the value at which a white
+foreground clears `4.5:1` even over pure white artwork (`5.74`); the calculated minimum
+is `55%`, and `40%` fails (`2.85` over white artwork, `3.37` over an empty slot). The
+same `60%` already serves Dark `scrim`, so this role introduces no new primitive value.
+
+It is distinct from `scrim`, which suppresses a modal background, and it must never be
+used to weaken content — that remains `content-pending`, `content-subdued`, or
+`content-disabled`. Use a flat band, not a gradient: gradient is not a Foundation
+mechanism. A `media-scrim` band takes its height from its content rather than a fixed
+number.
 
 ### Foregrounds — `F-A`
 
@@ -222,6 +236,7 @@ published exact values below.
 | `content-subdued-interactive` | `#292929` | `#DBDBDB` | Subdued interaction during hover/pressed/focus/selected        |
 | `content-disabled`            | `#C6C6C6` | `#444444` | Genuinely unavailable nonessential content only                |
 | `content-pending`             | `#717171` | `#8A8A8A` | Valid content held while its request is in flight only         |
+| `content-on-media`            | `#FFFFFF` | `#FFFFFF` | Foreground on `media-scrim` only; identical in both modes      |
 
 Static headings remain `content-default`; do not use the higher state value for
 decorative emphasis. Disabled information needs an available explanation elsewhere.
@@ -234,6 +249,12 @@ for body text on `canvas` and `surface`, and it must not be used for text on `su
 where it measures `4.02` in Light. The colour never carries the state alone: a progress
 indication, the region's busy state, and blocked activation accompany it. Content
 opacity is not a Foundation mechanism and must not be used to express this state.
+
+`content-on-media` is the only foreground approved for a `media-scrim` band. It does not
+change between modes because the band is dark in both. The existing foregrounds cannot
+serve this position: `primary/on-primary` inverts to `#111111` in Dark, and
+`content-default` measures `4.10` in Dark over a scrimmed near-white jacket. Use it only
+where `media-scrim` is present; on any ordinary surface the normal foregrounds apply.
 
 ### Neutral boundaries — `NB-A`
 
@@ -347,6 +368,7 @@ Radix has no filled-action alias.
 | `elevation-dragged` | `drop-shadow-dragged`: `0 12px 16px` ambient + `0 6px 8px` transition + `0 0 6px` key                                                 |
 | Shadow colors       | Use the exact appearance-specific published alias; ambient Light/Dark `.08/.24`, transition `.04/.12`, and source-defined key opacity |
 | `scrim`             | Black at Light `0.4`, Dark `0.6`                                                                                                      |
+| `media-scrim`       | Black at `0.6` in both modes                                                                                                          |
 
 Flat `canvas`, `surface`, and `sunken` have no default shadow. Dark depth needs surface
 or boundary support in addition to shadow. Directional scroll boundaries retain the
