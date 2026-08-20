@@ -586,7 +586,7 @@ Final audit over the whole page — 11 sections, 74 frames:
 | Text styles: raw values, composites, sub-12px       | 0 / 0 / 0                                                                    |
 | Locale text-style mapping                           | 0 mismatches                                                                 |
 | Variable binding                                    | 0 unbound visible fills or strokes                                           |
-| WCAG contrast, per effective mode, scrim composited | 2,332 texts, **0 failures**; minimum `4.88`                                  |
+| WCAG contrast, per effective mode, scrim composited | 3,248 texts (1,885 Light, 1,363 Dark), **0 failures**; minimum `4.88`        |
 | Light↔Dark symmetry                                 | identical frame sizes and text counts                                        |
 | 320 reflow                                          | column counts hold in KO/JA/EN Light and KO Dark                             |
 | Band header total vs cards shown                    | 0 mismatches (new check)                                                     |
