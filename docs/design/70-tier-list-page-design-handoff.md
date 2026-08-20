@@ -19,17 +19,17 @@ Page: `P4 · Tier List 조립` — `1291:2`
 
 ### 1.1 Product frames
 
-| Section                                 | Node         | Frames                                                                                                                                                                                                                                                                                                                                                                                         |
-| --------------------------------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Tier · Compact 390`                    | `1291:3`     | Signed-out base `1291:4` (390×1114) · Signed-in compact `1321:104` (390×1186) · Detailed two-column `1323:191` (390×1695) · Filter layer `1334:267` (390×844) · Guide expanded Basic·S `1394:1989` (390×1599) · Basic·Full Combo `1397:2068` · Basic·Pianist `1397:2225` · Guide expanded Basic·Pianist `1397:27469` (390×1691) · Recital·S `1398:2313` · Guide expanded Recital·S `1398:2474` |
-| `Tier · Intermediate 768 / 1024`        | `1428:2973`  | 768 five-column `1428:2974` (768×1198) · 1024 seven-column `1428:3120` (1024×1181)                                                                                                                                                                                                                                                                                                             |
-| `Tier · Wide 1280`                      | `1348:371`   | Rail exposed `1348:372` (1280×1252)                                                                                                                                                                                                                                                                                                                                                            |
-| `Tier · 결과 영역 상태 (셸 반복 없음)`  | `1344:359`   | Compact state board `1344:360` (1950×339, five states)                                                                                                                                                                                                                                                                                                                                         |
-| `Tier · 결과 영역 상태 · Wide 908`      | `1429:29791` | Light `1429:29792` · Dark `1429:29882` (both 4700×344, same five states at the Wide result-region width)                                                                                                                                                                                                                                                                                       |
-| `Tier · Compact 390 · Dark`             | `1352:492`   | `1352:493` · `1352:536` · `1352:613` · `1352:696` · `1398:27749` · `1398:27854` · `1398:27928` · `1398:28247` · `1398:28371` · `1398:28445`                                                                                                                                                                                                                                                    |
-| `Tier · Intermediate 768 / 1024 · Dark` | `1429:3211`  | `1429:3212` · `1429:3319`                                                                                                                                                                                                                                                                                                                                                                      |
-| `Tier · Wide 1280 · Dark`               | `1352:26270` | `1352:26271` (1280×1252)                                                                                                                                                                                                                                                                                                                                                                       |
-| `Tier · 결과 영역 상태 · Dark`          | `1352:26219` | `1352:26220`                                                                                                                                                                                                                                                                                                                                                                                   |
+| Section                                 | Node         | Frames                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| --------------------------------------- | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Tier · Compact 390`                    | `1291:3`     | Signed-out base `1291:4` (390×1114) · Signed-in compact `1321:104` (390×1186) · Detailed two-column `1323:191` (390×1695) · Filter layer `1334:267` (390×844) · Guide expanded Basic·S `1394:1989` (390×1599) · Basic·Full Combo `1397:2068` · Basic·Pianist `1397:2225` · Guide expanded Basic·Pianist `1397:27469` (390×1691) · Recital·S `1398:2313` · Guide expanded Recital·S `1398:2474` · Range-selection mode `1474:4956` · Narrowed bands with tokens `1474:31026` |
+| `Tier · Intermediate 768 / 1024`        | `1428:2973`  | 768 five-column `1428:2974` (768×1198) · 1024 seven-column `1428:3120` (1024×1181)                                                                                                                                                                                                                                                                                                                                                                                          |
+| `Tier · Wide 1280`                      | `1348:371`   | Rail exposed `1348:372` (1280×1252)                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `Tier · 결과 영역 상태 (셸 반복 없음)`  | `1344:359`   | Compact state board `1344:360` (1950×339, five states)                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `Tier · 결과 영역 상태 · Wide 908`      | `1429:29791` | Light `1429:29792` · Dark `1429:29882` (both 4700×344, same five states at the Wide result-region width)                                                                                                                                                                                                                                                                                                                                                                    |
+| `Tier · Compact 390 · Dark`             | `1352:492`   | `1352:493` · `1352:536` · `1352:613` · `1352:696` · `1398:27749` · `1398:27854` · `1398:27928` · `1398:28247` · `1398:28371` · `1398:28445` · `1474:31325` · `1474:31427`                                                                                                                                                                                                                                                                                                   |
+| `Tier · Intermediate 768 / 1024 · Dark` | `1429:3211`  | `1429:3212` · `1429:3319`                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| `Tier · Wide 1280 · Dark`               | `1352:26270` | `1352:26271` (1280×1252)                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `Tier · 결과 영역 상태 · Dark`          | `1352:26219` | `1352:26220`                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 
 Light and Dark sections hold ten frames each in Compact and two each in Intermediate. The six `밴드 선택 열림` frames were deleted with `TIER-26` (§7.1); frame heights grew substantially because every result region is now a band stack.
 Dark frames are clones with `setExplicitVariableModeForCollection(Color, '70:2')`.
@@ -455,9 +455,36 @@ locales, and matches the difficulty and level sections' construction exactly, so
 introduced **no new strings**. The `전체 표시` / `범위로 선택` / `전체 해제` labels that appear
 on the Z1 decision boards are placeholders and were deliberately not carried into the page.
 
+**Range selection (decided 2026-08-20).** The band list itself is the control: activating
+`범위 선택` puts the list into a range mode, and tapping two rows turns on every band between
+them. No control is added and the checkbox list stays the only surface that writes the
+selection; the cost is one extra mode state. A two-handle slider was rejected — the form is
+approved in Discovery for level ranges, but there the slider is the only control, whereas here
+it would share state with the checkbox list and create a second surface writing the same value.
+Two start/end Selects were rejected for the reason Discovery already recorded: minimum and
+maximum dropdowns lose the sense of a range.
+
+Specimen: `1474:4956` (Dark `1474:31325`). In range mode the action takes the default
+foreground, the guidance line appears under the section header, and the chosen start row is
+marked with `interaction/menu-set`. The start row's checkbox stays unchecked, because marking a
+start point is not yet a selection.
+
+**Applied-condition tokens (decided 2026-08-20).** With the page-level navigator gone, the
+committed band selection is carried by the removable applied-condition tokens document 06
+already allows. A contiguous selection collapses to one token showing the band values
+(`12.5–13.5`); removing it drops the band constraint and returns to the unconstrained state,
+which is exactly the `TIER-29` rule. Non-contiguous selections fold with `tiers.moreSelected`,
+already real in all three locales. One token per band was rejected — eleven bands wrap to three
+rows and bury the difficulty and level tokens; a bare count was rejected because the token no
+longer says which bands are committed.
+
+The token label carries only the band values, so it needs no new string: level tokens already
+prefix with `Lv.`, which keeps the two distinguishable, and document 06 requires exact decimal
+band labels anyway. Token construction: `radius/control` 4, 1px `border/default`, `control`
+label, `Icon/x` at 16. Specimen: `1474:31026` (Dark `1474:31427`).
+
 **Not settled.** The sticky header's final surface and border treatment; how the band selection
-is expressed in the filter button's badge and in the applied-condition tokens; the form and
-wording of a range-select control, which document 06 requires but which has no approved string.
+is expressed in the filter button's applied badge.
 
 **What the rework changed.** The page-level `zone · 밴드 내비` (label plus trigger) is gone
 from every compact frame; that vertical space returned to the results. The filter button is
@@ -478,7 +505,7 @@ which show each band's achieved count while scrolling.
 
 ### 8.1 Executed and passed
 
-Final audit over the whole page — 11 sections, 50 frames:
+Final audit over the whole page — 11 sections, 54 frames:
 
 | Check                                               | Result                                           |
 | --------------------------------------------------- | ------------------------------------------------ |
@@ -493,7 +520,7 @@ Final audit over the whole page — 11 sections, 50 frames:
 | Text styles: raw values, composites, sub-12px       | 0 / 0 / 0                                        |
 | Locale text-style mapping                           | 0 mismatches                                     |
 | Variable binding                                    | 0 unbound visible fills or strokes               |
-| WCAG contrast, per effective mode, scrim composited | 1,890 texts, **0 failures**; minimum `4.88`      |
+| WCAG contrast, per effective mode, scrim composited | 2,910 texts, **0 failures**; minimum `4.88`      |
 | Light↔Dark symmetry                                 | identical frame sizes and text counts            |
 | 320 reflow                                          | column counts hold in KO/JA/EN Light and KO Dark |
 | Intermediate 672–1055                               | 768 and 1024 built and measured                  |
@@ -518,10 +545,11 @@ being run**, and both hid real defects:
 - **`Recital` beyond `Recital · S`.** Recital Full Combo and Recital Pianist have no frame.
 - **Intermediate in the filter-layer, band-open and detailed states.** Only the signed-in
   compact state is built at 768 and 1024.
-- **Range selection.** Document 06 requires a way to select a contiguous range without
-  toggling every step. No frame shows one, and no approved string exists for it.
-- **Band state in the filter button and applied-condition tokens.** The mechanisms are
-  approved but the band-specific expression is not drawn.
+- **Band state in the filter button's applied badge.** The badge mechanism is approved
+  (2026-08-11) but how a band range counts inside it is not drawn.
+- **Japanese and English for the two range keys** (§11.2).
+- **Range mode and narrowed-band specimens at 320 and in the locale rows.** Both exist at 390
+  in Light and Dark only.
 - **Browser measurement, Pretendard re-check, runtime behaviour** (`aria-busy`, blocked
   activation, focus retention, Back restoration). These cannot be executed in Figma.
 
@@ -635,13 +663,22 @@ curve.
 
 ### 11.2 New catalogue keys
 
-| Key                  | ko                                   | ja                                     | en                              |
-| -------------------- | ------------------------------------ | -------------------------------------- | ------------------------------- |
-| `tiers.detailedView` | `상세 보기`                          | `詳細表示`                             | `Detailed view`                 |
-| `tiers.loadError`    | `서열 데이터를 불러오지 못했습니다.` | `難易度データを読み込めませんでした。` | `Could not load the tier data.` |
+| Key                    | ko                                   | ja                                     | en                              |
+| ---------------------- | ------------------------------------ | -------------------------------------- | ------------------------------- |
+| `tiers.detailedView`   | `상세 보기`                          | `詳細表示`                             | `Detailed view`                 |
+| `tiers.loadError`      | `서열 데이터를 불러오지 못했습니다.` | `難易度データを読み込めませんでした。` | `Could not load the tier data.` |
+| `tiers.selectRange`    | `범위 선택`                          | deferred                               | deferred                        |
+| `tiers.selectRangeEnd` | `끝 구간을 고르세요`                 | deferred                               | deferred                        |
 
 `tiers.retry` already exists and stays a separate action, so neither sentence repeats a
 "try again" instruction.
+
+The two range keys are Korean-approved only. Japanese and English follow the precedent set on
+Home, where document 03's phase approval deferred localized production copy downstream; the
+`범위 선택` nodes in the JA and EN filter layers are named to say they temporarily show Korean.
+Everything else the band rework needed already existed — `tiers.bands`, `tiers.selectAll`,
+`tiers.achieved`, `tiers.songCount` and `tiers.moreSelected` are all real in three locales — so
+the band section introduced no other string.
 
 ### 11.3 Open items this design did not settle
 
